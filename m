@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D18C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC79C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A204620857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92CCA20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344486;
-	bh=iXyhKhh+1fNQQ4ERHn54u278GymZAlFq0J2Td5h58IE=;
+	s=default; t=1588344501;
+	bh=qoesf/pikHW5qumVbLYfFVF8BO0lhg2hToZMNW2/WYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYmo3FDD6CzdIcI8uhBBuynImELwQuIObJW+mYPfm1HsZ6gSeVp2LfZIczvUa5tcX
-	 aQZW1TYGlgroyWPebeEltRvT82KT8/Aj66sFOJsQcK14k4pYxi7H3nTZhRKcTF9vyC
-	 4VhXbhTF7oBq5MkQNyOUMw3zTSmdTEcNafrPy/GU=
+	b=LfiCQt/2OQimy+x79d53y2HrBt0/XzNTK2A7zdSFUpwGUuO2thF/Hq4nTB0/k310n
+	 CiHNcAU0kqR16S0JbU8xD/TDKbY4w2H8Z5rS2nyYXlcM8+koTj7Z/yvXIFGSp0vOHO
+	 ghupwVGufswvVtrPfUbo+2ZJ9NC22kLiFeZyYnQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgEAOry (ORCPT
+        id S1730474AbgEAOsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729429AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:08 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB06124980;
+        by mail.kernel.org (Postfix) with ESMTPSA id EDDBA24984;
         Fri,  1 May 2020 14:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344306;
-        bh=iXyhKhh+1fNQQ4ERHn54u278GymZAlFq0J2Td5h58IE=;
+        bh=qoesf/pikHW5qumVbLYfFVF8BO0lhg2hToZMNW2/WYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZsYIcuRRt1RHBXRYygOd4y0HG2lcZMHsjP5ps2tWPLrSktUpr9ufUhnXcwEWngXl
-         thzMqEAOQF8g1VaKg6q4Cgc0pNb5TQP8QDULjkzPhj+2EX9XomHr20mT2VE0m0lzrU
-         XpgLU9KuRDL3SFuwbsDIc6TCSXLm3NfyTrPYn1S4=
+        b=1IK3gHy0D0n8UNJ3VhvGaAePgymDzKvpkMLHAOsFFqg7sRN380hN1bqFDaS2ywSHa
+         maVfamgBbyk3GP+AXlSxwMm3n3tp+h555xuXR5MXqut0iajv8PUtRUM1SdA0JsUXaB
+         SNr6Kd9h/junPAB2H2AJ6UcfrHIvfWjP4leYYW00=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCdy-MS; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCdE-Fe; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 18/37] docs: networking: device drivers: convert davicom/dm9000.txt to ReST
-Date:   Fri,  1 May 2020 16:44:40 +0200
-Message-Id: <d55ecefde142ab8d033d85b654ad98ed5481c884.1588344146.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 10/37] docs: networking: convert xfrm_sysctl.txt to ReST
+Date:   Fri,  1 May 2020 16:44:32 +0200
+Message-Id: <2c800246ef016f9a3773bcc1617ed55c8da37e37.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -61,110 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Not much to be done here:
+
 - add SPDX header;
 - add a document title;
-- mark lists as such;
-- mark tables as such;
-- mark code blocks and literals as such;
-- use the right horizontal tag markup;
-- adjust identation, whitespaces and blank lines where needed;
+- add a chapter's markup;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../davicom/{dm9000.txt => dm9000.rst}        | 24 +++++++++++--------
- .../networking/device_drivers/index.rst       |  1 +
- 2 files changed, 15 insertions(+), 10 deletions(-)
- rename Documentation/networking/device_drivers/davicom/{dm9000.txt => dm9000.rst} (92%)
+ Documentation/networking/index.rst                         | 1 +
+ .../networking/{xfrm_sysctl.txt => xfrm_sysctl.rst}        | 7 +++++++
+ 2 files changed, 8 insertions(+)
+ rename Documentation/networking/{xfrm_sysctl.txt => xfrm_sysctl.rst} (52%)
 
-diff --git a/Documentation/networking/device_drivers/davicom/dm9000.txt b/Documentation/networking/device_drivers/davicom/dm9000.rst
-similarity index 92%
-rename from Documentation/networking/device_drivers/davicom/dm9000.txt
-rename to Documentation/networking/device_drivers/davicom/dm9000.rst
-index 5552e2e575c5..d5458da01083 100644
---- a/Documentation/networking/device_drivers/davicom/dm9000.txt
-+++ b/Documentation/networking/device_drivers/davicom/dm9000.rst
-@@ -1,7 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=====================
- DM9000 Network driver
- =====================
- 
- Copyright 2008 Simtec Electronics,
-+
- 	  Ben Dooks <ben@simtec.co.uk> <ben-linux@fluff.org>
- 
- 
-@@ -30,9 +34,9 @@ These resources should be specified in that order, as the ordering of the
- two address regions is important (the driver expects these to be address
- and then data).
- 
--An example from arch/arm/mach-s3c2410/mach-bast.c is:
-+An example from arch/arm/mach-s3c2410/mach-bast.c is::
- 
--static struct resource bast_dm9k_resource[] = {
-+  static struct resource bast_dm9k_resource[] = {
- 	[0] = {
- 		.start = S3C2410_CS5 + BAST_PA_DM9000,
- 		.end   = S3C2410_CS5 + BAST_PA_DM9000 + 3,
-@@ -48,14 +52,14 @@ static struct resource bast_dm9k_resource[] = {
- 		.end   = IRQ_DM9000,
- 		.flags = IORESOURCE_IRQ | IORESOURCE_IRQ_HIGHLEVEL,
- 	}
--};
-+  };
- 
--static struct platform_device bast_device_dm9k = {
-+  static struct platform_device bast_device_dm9k = {
- 	.name		= "dm9000",
- 	.id		= 0,
- 	.num_resources	= ARRAY_SIZE(bast_dm9k_resource),
- 	.resource	= bast_dm9k_resource,
--};
-+  };
- 
- Note the setting of the IRQ trigger flag in bast_dm9k_resource[2].flags,
- as this will generate a warning if it is not present. The trigger from
-@@ -64,13 +68,13 @@ handler to ensure that the IRQ is setup correctly.
- 
- This shows a typical platform device, without the optional configuration
- platform data supplied. The next example uses the same resources, but adds
--the optional platform data to pass extra configuration data:
-+the optional platform data to pass extra configuration data::
- 
--static struct dm9000_plat_data bast_dm9k_platdata = {
-+  static struct dm9000_plat_data bast_dm9k_platdata = {
- 	.flags		= DM9000_PLATF_16BITONLY,
--};
-+  };
- 
--static struct platform_device bast_device_dm9k = {
-+  static struct platform_device bast_device_dm9k = {
- 	.name		= "dm9000",
- 	.id		= 0,
- 	.num_resources	= ARRAY_SIZE(bast_dm9k_resource),
-@@ -78,7 +82,7 @@ static struct platform_device bast_device_dm9k = {
- 	.dev		= {
- 		.platform_data = &bast_dm9k_platdata,
- 	}
--};
-+  };
- 
- The platform data is defined in include/linux/dm9000.h and described below.
- 
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 0b39342e2a1f..e8db57fef2e9 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -33,6 +33,7 @@ Contents:
-    aquantia/atlantic
-    chelsio/cxgb
-    cirrus/cs89x0
-+   davicom/dm9000
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index ec83bd95e4e9..1630801cec19 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -120,6 +120,7 @@ Contents:
+    xfrm_device
+    xfrm_proc
+    xfrm_sync
++   xfrm_sysctl
  
  .. only::  subproject and html
  
+diff --git a/Documentation/networking/xfrm_sysctl.txt b/Documentation/networking/xfrm_sysctl.rst
+similarity index 52%
+rename from Documentation/networking/xfrm_sysctl.txt
+rename to Documentation/networking/xfrm_sysctl.rst
+index 5bbd16792fe1..47b9bbdd0179 100644
+--- a/Documentation/networking/xfrm_sysctl.txt
++++ b/Documentation/networking/xfrm_sysctl.rst
+@@ -1,4 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++============
++XFRM Syscall
++============
++
+ /proc/sys/net/core/xfrm_* Variables:
++====================================
+ 
+ xfrm_acq_expires - INTEGER
+ 	default 30 - hard timeout in seconds for acquire requests
 -- 
 2.25.4
 
