@@ -2,117 +2,240 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E61C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA8CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E58D220757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="XDbg+zVS"
+	by mail.kernel.org (Postfix) with ESMTP id 7C98E20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340931;
+	bh=P2FPlNLwFu1BCj1FNepdbv+lSCP7PjbV+bjvFbzBD9g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kLN2RN595M3xfaTp1FgGk8+9GCNo1Dex2YhtMNnAAWl490wADbgDC0ebl684oEhba
+	 HuAvE7USo2AdWOu1SBiyXmDri7lbkCDuTH+GlOaBdjcF4zDZaeToTZRNaBAb8m2+hF
+	 zkdMIZOwlDpFMszqsDClFcauXgpAHcpo532I1C/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731801AbgEANso (ORCPT
+        id S1731766AbgEANsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:48:44 -0400
-Received: from mail-eopbgr1410137.outbound.protection.outlook.com ([40.107.141.137]:40640
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730592AbgEANsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:48:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I0ptF97QstfrVmGsYIbSrcrz3ckEROtsITQXvwxICpvq+AXxUrs0mGnynfC5Q2sjK6hcNaHscCf82SKCgaCV4VChf6IW/Stm/AG+UUjmIn73l1FFa7Gqa2tiALGqOfb7+1TY/dtXw6gBD+AyijnAYxNao1FDiUhdA2X4iUTX4sS7zI93T0URgMjzVhkNonOTCPlgEuhDVhOUjD5EP2rsPiAI9V6o5EDvyGU8I2x1862LnE3URvgPzg5xTqkiV3KLGq0RM0pq+v7BNMLTdaKi92izAu7B3alBx5Dvg7n/czwjM9/4lujBTr0CAwU+vBxG2wTWwWIeIr8QcrXgq0z5AQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PJ3owCfNI/HXKrhwoCNX5LYcb3JgafrPaJsvDzcv6Y4=;
- b=T5xyIjnCsbFm1t3ZKPWcOSeBWwC7CUqi4P5iIoUggxdh4pDjBGVcjjlv29uPAKFxcSfq8dN0kwIZtQGlMb/lfgG3xs2WXXHMIFlfea77jSPAbyw78kg7O23AKRzOc+JaY8g4kv1SO+hDfPp6GSWDwPUak+wDWlDtvqLz8kaR+E0FPUyf9s46ApeYBacxdKtYPyMBl9lYk2xTehoeRhTqRJNQsIiQjbE+1xsTGPmO8SvQX3RpYIZxjixuQeWQ+hbrqcCc8Ul2hnWPG7DpaynUNV7zz05TViar2eM0vfiPDKuvVFKT/GarnSQqSq9qUJADjR30VElUBO2Rzyyko4FXqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PJ3owCfNI/HXKrhwoCNX5LYcb3JgafrPaJsvDzcv6Y4=;
- b=XDbg+zVSD/CSH0kl3qU16I5F6K52uAJ4Qer0no7VCbCLNL4A1VcBadtbDEWsKFi4DwMHoVCN6puQtj10lIKbL+2SdBYM26W0eSqjJIDenqXmz1D3BmHHpcJ3ywc3aAlt2cSS5Tsp/7jUKxYT1Hv5HrTEQUz/z5LMXYooC3kgThM=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=renesas.com;
-Received: from TYAPR01MB4735.jpnprd01.prod.outlook.com (20.179.186.82) by
- TYAPR01MB5264.jpnprd01.prod.outlook.com (20.179.187.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.20; Fri, 1 May 2020 13:48:36 +0000
-Received: from TYAPR01MB4735.jpnprd01.prod.outlook.com
- ([fe80::5079:4b36:6c93:3a5b]) by TYAPR01MB4735.jpnprd01.prod.outlook.com
- ([fe80::5079:4b36:6c93:3a5b%7]) with mapi id 15.20.2958.019; Fri, 1 May 2020
- 13:48:36 +0000
-Date:   Fri, 1 May 2020 09:48:24 -0400
-From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next 1/3] ptp: Add adjphase function to support phase
- offset control.
-Message-ID: <20200501134822.GA19989@renesas.com>
-References: <1588206505-21773-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1588206505-21773-2-git-send-email-vincent.cheng.xh@renesas.com>
- <20200501033734.GA31749@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200501033734.GA31749@localhost>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: BY5PR17CA0027.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::40) To TYAPR01MB4735.jpnprd01.prod.outlook.com
- (2603:1096:404:12b::18)
+        Fri, 1 May 2020 09:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731468AbgEANmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99626205C9;
+        Fri,  1 May 2020 13:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340529;
+        bh=P2FPlNLwFu1BCj1FNepdbv+lSCP7PjbV+bjvFbzBD9g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tJxdBPhyPOZwbqPlVZOio4p/yaSSvM8mtnF7K76L6sMFwTqQQd7ffUosMZusza9ov
+         aWwbQV8ni7VdzsPVXFR+y47lcPRtJ5BJmoS+yS7i35tSaXmGQZkzqhy3WHRAG8D8xX
+         kRYdNUGqPPmcwZBohWdyzF7D0n1/jSx3ObW3Y4z4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 019/106] ASoC: samsung: s3c24xx-i2s: Fix build after removal of DAI suspend/resume
+Date:   Fri,  1 May 2020 15:22:52 +0200
+Message-Id: <20200501131546.455042594@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from renesas.com (173.195.53.163) by BY5PR17CA0027.namprd17.prod.outlook.com (2603:10b6:a03:1b8::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 13:48:35 +0000
-X-Originating-IP: [173.195.53.163]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7bd19677-f244-43da-54ec-08d7edd658bb
-X-MS-TrafficTypeDiagnostic: TYAPR01MB5264:
-X-Microsoft-Antispam-PRVS: <TYAPR01MB52645F7AD6A8DC2E8E54F488D2AB0@TYAPR01MB5264.jpnprd01.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0390DB4BDA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2Tf8rrKAYeKVfjucJTRwEksSbctxvEo3Z+rBfPy+TxVT6kfYGCkObMWl2h5dp7PsoCIVJ+uZv7NXlXFApw4gDfOWi8687MRDu+Oq7k7rqRvis9nxyDcUwpRJUZ0W/OYSFK9qgOaNZzcN8PJ1e2OonSsr0OlqOMrkhHvw3D6Io7opjOcqI2BUR/9qkFsNLzYUNfXhrte16j6uCEKNQ6wOe0nj8/oWnb1zyrYykkF6YWi/7sPgTIm0ELSzT+He6wyexSpFyr7JE9DPnKI6FvGG3txeuDrzhNMUNtZJiAJwGEjmbg+RNshOBMSbF5BlQ1uiajXYrncCLu1/+Qh7bCDZgWnx72B28MV46NzjgeV0RWeq96GNYMXbab9i3xpgvgbjeUvh56pAaR8eXpZ1bTbnYUE1bYOgzDZ3MaGu/iub0mAxRGGP04UM/m2VhqmmFtAx
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4735.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(5660300002)(66476007)(1076003)(6666004)(66946007)(66556008)(4744005)(86362001)(36756003)(52116002)(6916009)(7696005)(186003)(956004)(16526019)(2906002)(26005)(478600001)(8936002)(33656002)(316002)(8676002)(2616005)(4326008)(55016002)(8886007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: X6OiBQgPIB6u9MNlSdyyZtom/yxgnknwnpMu3AMtX+sUzr4IkyqIQjqPC+EkW9S4mBCIiFiBLpKFTtcJvC9QFqhvuevS4Bky2qF0mhILBVfSXVRP7Cz4D0DVFLWpv+uj7NfkO2WJp3aPzt8DRg4N/HLFMhlPwpVE4A3J+eG6Wg5ozE+bITneIRVsm2MVWFCXsZvEY/L4MGBWTDIvfAd6F+TYrHkUmNwxEB4j3vPC10WbTWUpUH1bAaeupju9I+3b2HyGZECP8ktu44nKxw0WACyHt0id0/mdDAGzaA1TKEIpeVxmTkxBiV3PW/AUfYDFzRiM8asd5Nvgl3xEWoT56LVgmpz1sEAW4ZW16gi1+noKjAoViiOU+yGyhTxLilSjt0IYW2DEEIyPYy+YtNCjBBCyRj8VV/QirrifTyK4e7EhG8NZRqB4ExduLvUD5aBSkU7VYP1TDZAWwT6k+s4Rw5fRIC3TtLZ61skcwYfS/i1Ps66KsMg6B1UO7nscX7XS0nhI6aC7eXRr5i5gPuBUc3uLsm3aI4d/Pr5F+W+piIL/kJQvUZXYIWTEYClPRhl4c/Mw6KzNebaCJWqDYvTWYjRbLxkmAx7pg9p4Z/WGz/ldGbk6Cc9+VHrcKmkmB/zfHuiM/pSxE9OeHLShKo+QSVn1YK6664JR0GJ9gKB6ZNc+Q4u7CiC7E2rr40VW0DJS4Ws4hkw+TNk6lHof3YBbDYqkaTPdpbZB+WNhEkj5K8ovb82rnshyoJTV4BX0g/ndcQRVXp8CnZLcXMmDrJG1d1mgYaJ2lJWbAU27tTkYs/g=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bd19677-f244-43da-54ec-08d7edd658bb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 13:48:36.5449
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S4Rm15b3t6UuwfgIExhDtBY06EkxljUFDsa7hrpDpnH8wor1YySjTxqKZ+5S/yrWrLUNJ46i+p2wL6AxLGbYGIsa+bXZDxCwYuTCbg1UpPo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5264
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:37:34PM EDT, Richard Cochran wrote:
->On Wed, Apr 29, 2020 at 08:28:23PM -0400, vincent.cheng.xh@renesas.com wrote:
->> diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
->> index acabbe7..c46ff98 100644
->> --- a/drivers/ptp/ptp_clock.c
->> +++ b/drivers/ptp/ptp_clock.c
->> @@ -146,6 +146,8 @@ static int ptp_clock_adjtime(struct posix_clock *pc, struct __kernel_timex *tx)
->>  		else
->>  			err = ops->adjfreq(ops, ppb);
->>  		ptp->dialed_frequency = tx->freq;
->> +	} else if (tx->modes & ADJ_OFFSET) {
->> +		err = ops->adjphase(ops, tx->offset);
->
->This is a new method, and no drivers have it, so there must be a check
->that the function pointer is non-null.
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-Yes, good point.  Will fix and resubmit.
+commit ec21bdc6dd16d74b3674ef1fd12ae8e4e7418603 upstream.
 
-Thanks,
-Vincent
+Commit 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
+removed the DAI side suspend/resume hooks and switched entirely to
+component suspend/resume.  However the Samsung SoC s3c-i2s-v2 driver was
+not updated.
+
+Move the suspend/resume hooks from s3c-i2s-v2.c to s3c2412-i2s.c while
+changing dai to component which allows to keep the struct
+snd_soc_component_driver const.
+
+This fixes build errors:
+
+    sound/soc/samsung/s3c-i2s-v2.c: In function ‘s3c_i2sv2_register_component’:
+    sound/soc/samsung/s3c-i2s-v2.c:730:9: error: ‘struct snd_soc_dai_driver’ has no member named ‘suspend’
+      dai_drv->suspend = s3c2412_i2s_suspend;
+
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 450312b640f9 ("ASoC: soc-core: remove DAI suspend/resume")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Link: https://lore.kernel.org/r/20200413124548.28197-1-krzk@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+
+---
+ sound/soc/samsung/s3c-i2s-v2.c  |   57 ----------------------------------------
+ sound/soc/samsung/s3c2412-i2s.c |   56 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 57 deletions(-)
+
+--- a/sound/soc/samsung/s3c-i2s-v2.c
++++ b/sound/soc/samsung/s3c-i2s-v2.c
+@@ -656,60 +656,6 @@ void s3c_i2sv2_cleanup(struct snd_soc_da
+ }
+ EXPORT_SYMBOL_GPL(s3c_i2sv2_cleanup);
+ 
+-#ifdef CONFIG_PM
+-static int s3c2412_i2s_suspend(struct snd_soc_dai *dai)
+-{
+-	struct s3c_i2sv2_info *i2s = to_info(dai);
+-	u32 iismod;
+-
+-	if (dai->active) {
+-		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
+-		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
+-		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
+-
+-		/* some basic suspend checks */
+-
+-		iismod = readl(i2s->regs + S3C2412_IISMOD);
+-
+-		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
+-			pr_warn("%s: RXDMA active?\n", __func__);
+-
+-		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
+-			pr_warn("%s: TXDMA active?\n", __func__);
+-
+-		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
+-			pr_warn("%s: IIS active\n", __func__);
+-	}
+-
+-	return 0;
+-}
+-
+-static int s3c2412_i2s_resume(struct snd_soc_dai *dai)
+-{
+-	struct s3c_i2sv2_info *i2s = to_info(dai);
+-
+-	pr_info("dai_active %d, IISMOD %08x, IISCON %08x\n",
+-		dai->active, i2s->suspend_iismod, i2s->suspend_iiscon);
+-
+-	if (dai->active) {
+-		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
+-		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
+-		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
+-
+-		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
+-		       i2s->regs + S3C2412_IISFIC);
+-
+-		ndelay(250);
+-		writel(0x0, i2s->regs + S3C2412_IISFIC);
+-	}
+-
+-	return 0;
+-}
+-#else
+-#define s3c2412_i2s_suspend NULL
+-#define s3c2412_i2s_resume  NULL
+-#endif
+-
+ int s3c_i2sv2_register_component(struct device *dev, int id,
+ 			   const struct snd_soc_component_driver *cmp_drv,
+ 			   struct snd_soc_dai_driver *dai_drv)
+@@ -727,9 +673,6 @@ int s3c_i2sv2_register_component(struct
+ 	if (!ops->delay)
+ 		ops->delay = s3c2412_i2s_delay;
+ 
+-	dai_drv->suspend = s3c2412_i2s_suspend;
+-	dai_drv->resume = s3c2412_i2s_resume;
+-
+ 	return devm_snd_soc_register_component(dev, cmp_drv, dai_drv, 1);
+ }
+ EXPORT_SYMBOL_GPL(s3c_i2sv2_register_component);
+--- a/sound/soc/samsung/s3c2412-i2s.c
++++ b/sound/soc/samsung/s3c2412-i2s.c
+@@ -117,6 +117,60 @@ static int s3c2412_i2s_hw_params(struct
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM
++static int s3c2412_i2s_suspend(struct snd_soc_component *component)
++{
++	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
++	u32 iismod;
++
++	if (component->active) {
++		i2s->suspend_iismod = readl(i2s->regs + S3C2412_IISMOD);
++		i2s->suspend_iiscon = readl(i2s->regs + S3C2412_IISCON);
++		i2s->suspend_iispsr = readl(i2s->regs + S3C2412_IISPSR);
++
++		/* some basic suspend checks */
++
++		iismod = readl(i2s->regs + S3C2412_IISMOD);
++
++		if (iismod & S3C2412_IISCON_RXDMA_ACTIVE)
++			pr_warn("%s: RXDMA active?\n", __func__);
++
++		if (iismod & S3C2412_IISCON_TXDMA_ACTIVE)
++			pr_warn("%s: TXDMA active?\n", __func__);
++
++		if (iismod & S3C2412_IISCON_IIS_ACTIVE)
++			pr_warn("%s: IIS active\n", __func__);
++	}
++
++	return 0;
++}
++
++static int s3c2412_i2s_resume(struct snd_soc_component *component)
++{
++	struct s3c_i2sv2_info *i2s = snd_soc_component_get_drvdata(component);
++
++	pr_info("component_active %d, IISMOD %08x, IISCON %08x\n",
++		component->active, i2s->suspend_iismod, i2s->suspend_iiscon);
++
++	if (component->active) {
++		writel(i2s->suspend_iiscon, i2s->regs + S3C2412_IISCON);
++		writel(i2s->suspend_iismod, i2s->regs + S3C2412_IISMOD);
++		writel(i2s->suspend_iispsr, i2s->regs + S3C2412_IISPSR);
++
++		writel(S3C2412_IISFIC_RXFLUSH | S3C2412_IISFIC_TXFLUSH,
++		       i2s->regs + S3C2412_IISFIC);
++
++		ndelay(250);
++		writel(0x0, i2s->regs + S3C2412_IISFIC);
++	}
++
++	return 0;
++}
++#else
++#define s3c2412_i2s_suspend NULL
++#define s3c2412_i2s_resume  NULL
++#endif
++
+ #define S3C2412_I2S_RATES \
+ 	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 | SNDRV_PCM_RATE_16000 | \
+ 	SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \
+@@ -146,6 +200,8 @@ static struct snd_soc_dai_driver s3c2412
+ 
+ static const struct snd_soc_component_driver s3c2412_i2s_component = {
+ 	.name		= "s3c2412-i2s",
++	.suspend	= s3c2412_i2s_suspend,
++	.resume		= s3c2412_i2s_resume,
+ };
+ 
+ static int s3c2412_iis_dev_probe(struct platform_device *pdev)
+
+
