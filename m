@@ -2,125 +2,192 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3B4C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC349C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1C220757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:16:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCmm1wMV"
+	by mail.kernel.org (Postfix) with ESMTP id B6A2124953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588339125;
+	bh=J0kG6Z5B+5vJ4yJTDzvDaFXRmJr/dRrJSSeRvMvltRY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CuLmn2Z2TKJGHs3mnengvU6N5Wu9uxHMQhljQBMxi6oH73byDlNNMwMQQvAjpnZsg
+	 giV3nbWjbvHXetf1kesxZzEzglWSGs8XgGn7fLO54I6rHNAes6hnnCXeSFcTuLMyVD
+	 uJqy8X4fI6QsVzb/VMv9tclyob0JZdrOxy/0MBlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgEANQq (ORCPT
+        id S1728843AbgEANSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728809AbgEANQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:16:45 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E30C061A0C;
-        Fri,  1 May 2020 06:16:45 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l20so4538885pgb.11;
-        Fri, 01 May 2020 06:16:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b2+/9XXY8Y1RxQllaPBwEstw2gB8BpLP9hF+BFGMRto=;
-        b=GCmm1wMVqYxnGfNpvKp1cw9fbv2U2gMWk1CMbTh48Hm7wPNMne/GbW31xoR7mD00S6
-         +uYXr4iDO7nSP6i6NtmbZ50/3IbLNNl4H21oYebEd34ccm62tuScRjfDRf1UWetYkb65
-         odnWO7yMmFF0syGwu/kMQNNJLwLW9Ij93HzkYPKmRli9xqzyC1VZ3EEehyJPysb8KWdz
-         T+7Umkferm/ayeT9tP5ghbICCAKDJv7XaRspMAl82ljUL/xT1Jwb2cPlduJ7JsQ0OhsH
-         Ld0vBtmY9g6MuytPotItD3U+UU2gcrdRAg8rKiiJr6QVPNe7h5eDislLZN2nuhtD84Cl
-         FNAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b2+/9XXY8Y1RxQllaPBwEstw2gB8BpLP9hF+BFGMRto=;
-        b=rSy2Pt8N0sREFiUERz8cWRLX2mHTohJw2fT5eigFfXMfLUQzc3qHvHRue2jVjaGUI/
-         VR34jNs9etyCCfSGSFiQ+qru15W00f3vuCLK7Dy5lHPrV67ARCLJEpDu4GMTwt48PYUy
-         rhgKzlsOaUIEco1lUnS/3NXBr31UrN8Kzq9f5Z4iDDhWUlxhC6kKJdsUeG0hll77mVUb
-         4ttdvcAe/zcFtEnCMkRhsEBYFZZohH4wfI15vUaoWIGbofxpnWAHBVlcX8awxV1gkTtc
-         hbdVTdoO5RLzFb3mbvMCEW9fCPAeom8SJyy35wLST1h4A06vCwX3Uvu4vyU+CDIWjVVy
-         XvLw==
-X-Gm-Message-State: AGi0PuYoN+I/RNTF0N84qwVotjlKp2qxAS4946m9YtiyghtNcGfLi178
-        XYnxUFnlfFQDOpctkA1NRW2C8sMDGHBhH9mWShc=
-X-Google-Smtp-Source: APiQypKHDrDQjerRe+W1cA8mxnGSdNgtk0He587ZvD8AdxHMslTtV5DWvxC7LaTDqCSIrv6W6qI497cIXQBPbgQab8o=
-X-Received: by 2002:a62:f908:: with SMTP id o8mr4034258pfh.170.1588339005327;
- Fri, 01 May 2020 06:16:45 -0700 (PDT)
+        Fri, 1 May 2020 09:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728586AbgEANSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:18:44 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78FC24956;
+        Fri,  1 May 2020 13:18:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588339123;
+        bh=J0kG6Z5B+5vJ4yJTDzvDaFXRmJr/dRrJSSeRvMvltRY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CCC1NvG06y+cp5Ef4bDAo0TGr7/wKVfHCYsbNi6phG34DeG7zHEH8n9cUhx89gV7p
+         xs/wTiWcKEkFMpRqHpvur/SWssP111UJiom0RO4dL7Aq92MluXx+OSVYeywH+J7CMy
+         jSZtmz6eupHTAUExYeqa9bBVMcPQuvvA9RpFd+do=
+Received: by mail-oi1-f180.google.com with SMTP id o24so2673074oic.0;
+        Fri, 01 May 2020 06:18:43 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYOLVFKDFP5fJrG2AjdajA5ldqUN800eex565/E1g34i/kvElNK
+        fMHUU9aJi/14U3W0QqDWFD1Yz6QdG2NfHNu+gA==
+X-Google-Smtp-Source: APiQypKJRTSvBINORuAGd9rJ+1Od8gsw+57/nIuNYUtVMWxRmUA03OTpX3lvdJrg6eQMtcKjF7yl4OwXe6mhJ2HgSzY=
+X-Received: by 2002:a05:6808:24f:: with SMTP id m15mr3083301oie.152.1588339122764;
+ Fri, 01 May 2020 06:18:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
- <20200501013044.GA288759@jagdpanzerIV.localdomain> <818ba356-ba35-68de-b7bf-f145a89280f1@gmail.com>
-In-Reply-To: <818ba356-ba35-68de-b7bf-f145a89280f1@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 1 May 2020 16:16:33 +0300
-Message-ID: <CAHp75VeZRwUp+CpOct4dCAQAfyJZBAY7=qSKwRQh935KEMWw+g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] Prefer working VT console over SPCR and
- device-tree chosen stdout-path
-To:     Alper Nebi Yasak <alpernebiyasak@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Sam Ravnborg <sam@ravnborg.org>
+References: <20200417165519.4979-1-tony@atomide.com> <20200417165519.4979-3-tony@atomide.com>
+ <62be90e2-7dbe-410d-4171-c0ad0cddc7a3@linaro.org> <20200427143144.GQ37466@atomide.com>
+ <29f39839-b3ed-cac3-1dea-c137286320b1@linaro.org> <20200427152329.GR37466@atomide.com>
+ <20200430140040.GA8363@bogus> <20200430153119.GX37466@atomide.com>
+In-Reply-To: <20200430153119.GX37466@atomide.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 1 May 2020 08:18:31 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
+Message-ID: <CAL_Jsq+Xqv0JByAK-tYj8aHDhuB5rYrn0NXQxkm97j0P1zqGPg@mail.gmail.com>
+Subject: Re: [PATCH 02/14] clocksource/drivers/timer-ti-dm: Add clockevent and
+ clocksource support
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 2:11 PM Alper Nebi Yasak
-<alpernebiyasak@gmail.com> wrote:
-> On 01/05/2020 04:30, Sergey Senozhatsky wrote:
-
-> I'm assuming "by default" here means "without console arguments"
-> regardless of firmware requests. This paragraph (with small changes) is
-> repeated on many other Kconfig descriptions (drivers/tty/serial/Kconfig,
-> drivers/tty/serial/8250/Kconfig, arch/sparc/Kconfig from grepping for
-> '/dev/tty0' on **/Kconfig).
+On Thu, Apr 30, 2020 at 10:31 AM Tony Lindgren <tony@atomide.com> wrote:
 >
-> From Documentation/admin-guide/serial-console.rst:
->
-> > You can specify multiple console= options on the kernel command line.
-> > [...]
-> > Note that you can only define one console per device type (serial, video).
+> * Rob Herring <robh@kernel.org> [200430 14:01]:
+> > On Mon, Apr 27, 2020 at 08:23:29AM -0700, Tony Lindgren wrote:
+> > > * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 15:03]:
+> > > > On 27/04/2020 16:31, Tony Lindgren wrote:
+> > > > > Hi,
+> > > > >
+> > > > > * Daniel Lezcano <daniel.lezcano@linaro.org> [200427 09:19]:
+> > > > >> On 17/04/2020 18:55, Tony Lindgren wrote:
+> > > > >>> --- a/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > > > >>> +++ b/Documentation/devicetree/bindings/timer/ti,timer.txt
+> > > > >>> @@ -14,6 +14,8 @@ Required properties:
+> > > > >>>                       ti,omap5430-timer (applicable to OMAP543x devices)
+> > > > >>>                       ti,am335x-timer (applicable to AM335x devices)
+> > > > >>>                       ti,am335x-timer-1ms (applicable to AM335x devices)
+> > > > >>> +                     ti,dmtimer-clockevent (when used as for clockevent)
+> > > > >>> +                     ti,dmtimer-clocksource (when used as for clocksource)
+> > > > >>
+> > > > >> Please, submit a separate patch for this.
+> > > > >>
+> > > > >> Before you resend as is, this will be nacked as clocksource / clockevent
+> > > > >> is not a hardware description but a Linux thing.
+> > > > >>
+> > > > >> Finding a way to characterize that from the DT is an endless discussion
+> > > > >> since years, so I suggest to use a single property for the timer eg
+> > > > >> <ti,dmtimer> and initialize the clocksource and the clockevent in the
+> > > > >> driver.
+> > > > >
+> > > > > Hmm good point. We still need to specify which timer is a clocksource
+> > > > > and which one a clockevent somehow.
+> > > > >
+> > > > > Maybe we could have a generic properties like the clock framework such as:
+> > > > >
+> > > > > assigned-system-clocksource
+> > > > > assigned-system-clockevent
+> > > >
+> > > > I think that will be the same problem :/
+> > >
+> > > Seems like other SoCs have the same issue too with multiple timers
+> > > to configure.
+> > >
+> > > > Is it possible to check the interrupt for the clockevent ? A timer node
+> > > > with the interrrupt is the clockevent, without it is a clocksource.
+> > >
+> > > OK let's try that. So the configuration would become then:
+> > >
+> > > compatible = "ti,dmtimer;   /* reserved for system timers */
+> > > /delete-property/interrupts;        /* ok so it's a clocksource */
+> > > /delete-property/interrupts-extended;
 > >
-> > If no console device is specified, the first device found capable of
-> > acting as a system console will be used. At this time, the system
-> > first looks for a VGA card and then for a serial port. So if you don't
-> > have a VGA card in your system the first serial port will automatically
-> > become the console.
+> > That's not really what was meant.
 >
-> and later on:
+> OK, so let's figure out something better then.
 >
-> > Note that if you boot without a ``console=`` option (or with
-> > ``console=/dev/tty0``), ``/dev/console`` is the same as ``/dev/tty0``.
-> > In that case everything will still work.
+> > Let's say you have N timers. Either every timer is exactly the same and
+> > the OS can just assign them however it wants or there is some difference
+> > in the h/w making certain timer better for certain functions. Describe
+> > that difference. It could be clock rate, number of counter bits, always
+> > on, secure mode access only, has or doesn't have output compare or input
+> > capture, etc.
+>
+> Hmm. Trying to detect this automatically will get messy. For example,
+> we have few omap3 boards with the following options that also need to
+> consider if the separate 32KiHz counter is available:
+>
+> 1. The best case scenario
+>
+> ti,omap-counter32k clocksource
+> ti,sysc-omap2-timer ti,timer-alwon clockevent (timer1)
+>
+> 2. Boards relying on internal clock with unusable 32k counter
+>
+> ti,sysc-omap2-timer ti,timer-alwon clocksource (timer12)
+> ti,sysc-omap2-timer clockevent (typically gpt2)
+>
+> In the second case, the 32k counter is unusable, and timer1
+> is unusable with the external 32k always on clock. But timer1
+> can be used with the system clock just fine for other purposes.
+> So ideally we would not tag timer1 as disabled :)
 
-I'm wondering if behaviour is changed if you put console=tty1 instead
-of console=tty0.
+I'm perfectly fine with a 'broken 32k clk' type property.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Though I think the compatibility story is not good changing DT for
+stuff needed to boot and needed early in boot. It's one thing to break
+something not required to get a system booted.
+
+> For the second case, we could remove ti,timer-alwon property
+> for timer1, and tag the 32k counter as disabled as the source
+> clock is unreliable. Then somewhere in the code we would need
+> to check if ti,omap-counter32k is availabe, then check if
+> timer1 is always-on, then use timer12 if not a secure device
+> like n900.
+
+IIRC, there's some OMAP timer properties for secure vs. non-secure.
+(It's not the first time we've had this discussion on TI timers.)
+
+> If the board wants to use the system clock as the source for
+> a higher resolution with assigned-clock-parents, then we'd need
+> to ignore the always-on property and not use the 32k counter as
+> the clocksource. Basically to somehow figure out that a higher
+> resolution configuration is preferred over a
+> low-power configuration.
+
+That could be something you want to pick at run-time.
+
+> So what's your take on just adding the generic properties for
+> assigned-system-clocksource and clockevent?
+
+I'm tired of discussing this for 10 years...
+
+Rob
