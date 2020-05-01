@@ -2,99 +2,206 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEF5C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C06C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F04F24957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588347655;
-	bh=0j6iKzudNGaTWFi+ujr0qfeHuN6vDP8imrT9T+Alri4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bN1LK6uKk3o1DR+hhSpz574p1PGidHIIuxHmiLwMeKllr9aE+8+I8Hx7eyReGxiWU
-	 S46gA95isdn2yDfFGIuUxGRwwOqZ7puhfR3+q1d90TA2ModSZx8h/bXuIUksCU2p4+
-	 ROU1PX+0nYzXHUN2KxIMRfVnkx1ANXmCrrQktTHY=
+	by mail.kernel.org (Postfix) with ESMTP id 79EEC20731
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yU6H5lg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgEAPky (ORCPT
+        id S1729945AbgEAPlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:40:54 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40644 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgEAPkx (ORCPT
+        Fri, 1 May 2020 11:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgEAPlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:40:53 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n16so4701410pgb.7;
-        Fri, 01 May 2020 08:40:53 -0700 (PDT)
+        Fri, 1 May 2020 11:41:14 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1DECC08E859
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 08:41:13 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l25so2371901pgc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 08:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YJ4KJlZHvfOajTJzZlfCxHLt+Kv+rjkwCB+Y1R+uJUM=;
+        b=yU6H5lg+Ogqt0uxmHyzEVixr4IRtEVo4kUtz8FfGnz0/8CiyJZ/GtOjyzeWKVrdlKy
+         Z9LxroihzSaj93D6pfE7osVuQL1LPZLVQUjZSOSa1bHClVrYPYT6QfGX9abQl6FgNh1c
+         BdHW25Aan2llomz+UCvvStDBB4NQ3mZqC+Yyp9c1+01e6D0RqK3yoveZDC7358iSIlYD
+         FthoYsnXQ1ntEDD496WvXHAXdJ6S6XXUuPVIeuqTaJz+wn09aGpGu1pI3E9uYfvVsTso
+         6qSfEk8GbXcevP6xs3Qf1EokZ6+gaIuSTymt4x0ZHf7iuHaAQZkswETQYvmOoVHnOvBm
+         QGuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EZb14EGk3wI78w7Kr9UulRwJ6g15wvU8vvLNiIxNBjg=;
-        b=p85/pEcepwCvDEMMuhC3JtSmlyDv7wucv6fCJKJoOAAIKM5hQv/D2z5jGvE+6W5T4E
-         YYGCEgIVBwjV1fuaCg9+9NVvz8GhxVXEUMpRychYvBIT2xpm6UkCcDidhbecyQ8D+7EX
-         ZUIbf3hQcjZfr1UdnSWEkKswDIJ9/tHKD7Hjx1qUalMvC3XLu4UE/NE5KXyfZ9lgjq6o
-         2mrC40+CCN8tbjPTGqNJGv9H2kD4b1hDspIlLA2KsJ7rYULRTaTTrzuyLmEYn0+AZplA
-         pBuQEnGASwnvZVIsOqRb1hqd8S4Vs5Vdj+U61MimKImtAgSR6V4aaW+sYh7005ldgPxu
-         HnTQ==
-X-Gm-Message-State: AGi0Pub6twUk4nU1LhE4DOeW5krnmdLe7No9nNSaImdTiODX4mkORswY
-        TKQUbYSrc7un02EG6VBDWq0=
-X-Google-Smtp-Source: APiQypIKENGcjQ8wEJnG/jVN4jklP+/LYCHW7WJrZ1nUigoylvteSvXK0XEmW6rptAeYZk2lCgDJWg==
-X-Received: by 2002:a63:3d05:: with SMTP id k5mr4023956pga.302.1588347652702;
-        Fri, 01 May 2020 08:40:52 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id p65sm2305859pgp.51.2020.05.01.08.40.51
+        bh=YJ4KJlZHvfOajTJzZlfCxHLt+Kv+rjkwCB+Y1R+uJUM=;
+        b=fO7xr3Ws/jTpLTQpHhSTW3vKE1FjhgUSG/o+LVBB09dYduby4UFWFWwVQMrEzbYHfG
+         LrppMi47UnuWJ83IxxbJnkguXQU+rqpy9u2TzSLzDEvhl94Ww/KcL5D26z5wDn07NMSP
+         /pdQSWgl334FmG2DzbdIwpEt9RrabqE0DnKarIqwqJ6Pu1xfSNGzuhjfD/h7wnOMrLwy
+         fXB4w8pYBgcTJIEbRW4UFuMKVnE9w+CYyUksxnmi0kSQLKWEEKE15Wdu5NV8mgPlibrH
+         yqLMWTMdsjEieJrD4TpJrD9HyMRZ+cn6zxkdiknv9bP3CdXg+hatRspZEWL+1sT24/wI
+         axBQ==
+X-Gm-Message-State: AGi0PuY3es2hS8n0y3nbrt+P68pUHQ+rslf7ZQsr+f8KGRaIT9HtvkYo
+        JR8GswBFCOQqp2vmaav3viSObg==
+X-Google-Smtp-Source: APiQypK6nmlhA9hedaldYEm5FVJoURCFe+MI7wLhRHr1XRgxqm6Z55fay8Dm845ScS3+RkkmQvfcuQ==
+X-Received: by 2002:a63:6543:: with SMTP id z64mr4722206pgb.260.1588347673275;
+        Fri, 01 May 2020 08:41:13 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id gl12sm21394pjb.27.2020.05.01.08.41.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 08:40:51 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D6D414046C; Fri,  1 May 2020 15:40:50 +0000 (UTC)
-Date:   Fri, 1 May 2020 15:40:50 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, bvanassche@acm.org, rostedt@goodmis.org,
-        mingo@redhat.com, jack@suse.cz, ming.lei@redhat.com,
-        nstange@suse.de, akpm@linux-foundation.org, mhocko@suse.com,
-        yukuai3@huawei.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] blktrace: break out of blktrace setup on
- concurrent calls
-Message-ID: <20200501154050.GO11244@42.do-not-panic.com>
-References: <20200429074627.5955-1-mcgrof@kernel.org>
- <20200429074627.5955-6-mcgrof@kernel.org>
- <20200429094937.GB2081185@kroah.com>
- <20200501150626.GM11244@42.do-not-panic.com>
- <20200501153423.GA12469@infradead.org>
+        Fri, 01 May 2020 08:41:12 -0700 (PDT)
+Date:   Fri, 1 May 2020 09:41:10 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Chris Lew <clew@codeaurora.org>, Sibi <sibis@codeaurora.org>,
+        Siddharth Gupta <sidgup@codeaurora.org>
+Subject: Re: [PATCH 1/4] remoteproc: qcom: Pass ssr_name to glink subdevice
+Message-ID: <20200501154110.GA30509@xps15>
+References: <20200423003736.2027371-1-bjorn.andersson@linaro.org>
+ <20200423003736.2027371-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501153423.GA12469@infradead.org>
+In-Reply-To: <20200423003736.2027371-2-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 08:34:23AM -0700, Christoph Hellwig wrote:
-> On Fri, May 01, 2020 at 03:06:26PM +0000, Luis Chamberlain wrote:
-> > > You have access to a block device here, please use dev_warn() instead
-> > > here for that, that makes it obvious as to what device a "concurrent
-> > > blktrace" was attempted for.
-> > 
-> > The block device may be empty, one example is for scsi-generic, but I'll
-> > use buts->name.
+Good morning Bjorn,
+
+On Wed, Apr 22, 2020 at 05:37:33PM -0700, Bjorn Andersson wrote:
+> Pass ssr_name to glink subdevice in preparation for tying glink_ssr to
+> the glink subdevice, rather than having its own "ssr subdevice".
 > 
-> Is blktrace on /dev/sg something we intentionally support, or just by
-> some accident of history?  Given all the pains it causes I'd be tempted
-> to just remove the support and see if anyone screams.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/remoteproc/qcom_common.c    | 9 ++++++++-
+>  drivers/remoteproc/qcom_common.h    | 5 ++++-
+>  drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
+>  drivers/remoteproc/qcom_q6v5_mss.c  | 2 +-
+>  drivers/remoteproc/qcom_q6v5_pas.c  | 2 +-
+>  5 files changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+> index 60650bcc8c67..ff26f2b68752 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -46,8 +46,10 @@ static void glink_subdev_stop(struct rproc_subdev *subdev, bool crashed)
+>   * qcom_add_glink_subdev() - try to add a GLINK subdevice to rproc
+>   * @rproc:	rproc handle to parent the subdevice
+>   * @glink:	reference to a GLINK subdev context
+> + * @ssr_name:	identifier of the associated remoteproc for ssr notifications
+>   */
+> -void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink)
+> +void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink,
+> +			   const char *ssr_name)
+>  {
+>  	struct device *dev = &rproc->dev;
+>  
+> @@ -55,6 +57,10 @@ void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink)
+>  	if (!glink->node)
+>  		return;
+>  
+> +	glink->ssr_name = kstrdup_const(ssr_name, GFP_KERNEL);
+> +	if (!glink->ssr_name)
+> +		return;
+> +
 
-From what I can tell I think it was a historic and brutal mistake. I am
-more than happy to remove it.
+In case or an error with the allocation of ->ssr_name an
+of_node_put(glink->node) needs to be done.  That way qcom_add_glink_subdev()
+cleans up after itself if things go wrong.  On the flip side the same
+of_node_put() will be done when the driver is removed.  So I'm ambivalent on
+this one.  With or without this change:
 
-Re-adding support would just be a symlink.
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>  
 
-  Luis
+>  	glink->dev = dev;
+>  	glink->subdev.start = glink_subdev_start;
+>  	glink->subdev.stop = glink_subdev_stop;
+> @@ -74,6 +80,7 @@ void qcom_remove_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glin
+>  		return;
+>  
+>  	rproc_remove_subdev(rproc, &glink->subdev);
+> +	kfree_const(glink->ssr_name);
+>  	of_node_put(glink->node);
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_remove_glink_subdev);
+> diff --git a/drivers/remoteproc/qcom_common.h b/drivers/remoteproc/qcom_common.h
+> index 58de71e4781c..34e5188187dc 100644
+> --- a/drivers/remoteproc/qcom_common.h
+> +++ b/drivers/remoteproc/qcom_common.h
+> @@ -11,6 +11,8 @@ struct qcom_sysmon;
+>  struct qcom_rproc_glink {
+>  	struct rproc_subdev subdev;
+>  
+> +	const char *ssr_name;
+> +
+>  	struct device *dev;
+>  	struct device_node *node;
+>  	struct qcom_glink *edge;
+> @@ -30,7 +32,8 @@ struct qcom_rproc_ssr {
+>  	const char *name;
+>  };
+>  
+> -void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink);
+> +void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink,
+> +			   const char *ssr_name);
+>  void qcom_remove_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink);
+>  
+>  int qcom_register_dump_segments(struct rproc *rproc, const struct firmware *fw);
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index c60dabc6939e..d2a2574dcf35 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -461,7 +461,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto disable_pm;
+>  
+> -	qcom_add_glink_subdev(rproc, &adsp->glink_subdev);
+> +	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
+>  	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
+>  	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
+>  					      desc->sysmon_name,
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 7af1d0c987e0..b5dd36775b77 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -1762,7 +1762,7 @@ static int q6v5_probe(struct platform_device *pdev)
+>  
+>  	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
+>  	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
+> -	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
+> +	qcom_add_glink_subdev(rproc, &qproc->glink_subdev, "mpss");
+>  	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
+>  	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
+>  	qcom_add_ipa_notify_subdev(rproc, &qproc->ipa_notify_subdev);
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 8ecc157f1ed1..fc6658b523b6 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -436,7 +436,7 @@ static int adsp_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto detach_proxy_pds;
+>  
+> -	qcom_add_glink_subdev(rproc, &adsp->glink_subdev);
+> +	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
+>  	qcom_add_smd_subdev(rproc, &adsp->smd_subdev);
+>  	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
+>  	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
+> -- 
+> 2.24.0
+> 
