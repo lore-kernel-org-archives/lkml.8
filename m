@@ -2,125 +2,82 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8E6C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02853C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2734020757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D650B20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:17:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgEAORQ (ORCPT
+        id S1729435AbgEAORZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:17:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36650 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728840AbgEAORO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:17:14 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041EDOVo167060;
-        Fri, 1 May 2020 10:17:02 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30r825ts9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 10:17:01 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 041EG4uh013887;
-        Fri, 1 May 2020 14:17:00 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5vu75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 14:17:00 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 041EGvQp57016532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 May 2020 14:16:57 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50247AE045;
-        Fri,  1 May 2020 14:16:57 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA5C9AE053;
-        Fri,  1 May 2020 14:16:55 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.65.217.16])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 May 2020 14:16:55 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v2] powerpc/ima: fix secure boot rules in ima arch policy
-Date:   Fri,  1 May 2020 10:16:52 -0400
-Message-Id: <1588342612-14532-1-git-send-email-nayna@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_07:2020-04-30,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- impostorscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- priorityscore=1501 malwarescore=0 suspectscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005010107
+        Fri, 1 May 2020 10:17:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728840AbgEAORV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:17:21 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6240620757;
+        Fri,  1 May 2020 14:17:20 +0000 (UTC)
+Date:   Fri, 1 May 2020 10:17:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Subject: Re: [PATCH 2/3] selftests/ftrace: Pick only the first kprobe event
+ to test
+Message-ID: <20200501101718.5a15e557@gandalf.local.home>
+In-Reply-To: <158834027133.28357.11196486193798517250.stgit@devnote2>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834027133.28357.11196486193798517250.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent verifying the kernel module appended signature twice
-(finit_module), once by the module_sig_check() and again by IMA, powerpc
-secure boot rules define an IMA architecture specific policy rule
-only if CONFIG_MODULE_SIG_FORCE is not enabled. This, unfortunately, does
-not take into account the ability of enabling "sig_enforce" on the boot
-command line (module.sig_enforce=1).
+On Fri,  1 May 2020 22:37:51 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Including the IMA module appraise rule results in failing the finit_module
-syscall, unless the module signing public key is loaded onto the IMA
-keyring.
+> Since the kprobe/kprobe_args_type.tc reads out all event logs
+> from the trace buffer, the test can fail if there is another
+> fork event happens.
+> Use head command to pick only the first kprobe event from
+> the trace buffer to test the argument types.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  .../ftrace/test.d/kprobe/kprobe_args_type.tc       |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> index 1bcb67dcae26..81490ecaaa92 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> @@ -38,7 +38,7 @@ for width in 64 32 16 8; do
+>    echo 0 > events/kprobes/testprobe/enable
+>  
+>    : "Confirm the arguments is recorded in given types correctly"
+> -  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+> +  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+>    check_types $ARGS $width
+>  
+>    : "Clear event for next loop"
 
-This patch fixes secure boot policy rules to be based on CONFIG_MODULE_SIG
-instead.
+I think I've manually added this exact change to my tests to keep it from
+failing.
 
-Fixes: 4238fad366a6 ("powerpc/ima: Add support to initialize ima policy rules")
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
-v2:
-* Fixes the patch description to specify the problem more clearly as asked 
-by Michael Ellerman.
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
- arch/powerpc/kernel/ima_arch.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index e34116255ced..957abd592075 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -19,12 +19,12 @@ bool arch_ima_get_secureboot(void)
-  * to be stored as an xattr or as an appended signature.
-  *
-  * To avoid duplicate signature verification as much as possible, the IMA
-- * policy rule for module appraisal is added only if CONFIG_MODULE_SIG_FORCE
-+ * policy rule for module appraisal is added only if CONFIG_MODULE_SIG
-  * is not enabled.
-  */
- static const char *const secure_rules[] = {
- 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
--#ifndef CONFIG_MODULE_SIG_FORCE
-+#ifndef CONFIG_MODULE_SIG
- 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
-@@ -50,7 +50,7 @@ static const char *const secure_and_trusted_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
- 	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
--#ifndef CONFIG_MODULE_SIG_FORCE
-+#ifndef CONFIG_MODULE_SIG
- 	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
--- 
-2.18.1
-
+-- Steve
