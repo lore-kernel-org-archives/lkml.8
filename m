@@ -2,177 +2,204 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0986C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32320C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEBAC2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:09:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+7irlew"
+	by mail.kernel.org (Postfix) with ESMTP id 13D9F2192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgEALJK (ORCPT
+        id S1728674AbgEALJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728532AbgEALJJ (ORCPT
+        Fri, 1 May 2020 07:09:19 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:50268 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728646AbgEALJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:09:09 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F373C08E859;
-        Fri,  1 May 2020 04:09:07 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id f8so3613418lfe.12;
-        Fri, 01 May 2020 04:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JbMZH52YEWSxdCQl8+jIQlPQEAuYbjyzNeqiNbuukKE=;
-        b=U+7irlew5ltgB9neJ2IUW9PFrMwsCCgcyWeEJKaaQtm1AN/QWS8zwTw5fMSCNsLDag
-         A4bQA4vEuetXw/3nPDcycMnRS0CZdgF10nDi8vKpNePilWT0vFCalcmGy6eyQSrpiCn9
-         GAdlJhJhJsJD7/sRBPHjcKe4F6G5b6I0SrFci4/YYke7JHMBqNuXaQVxZiv4C4OEY8ND
-         i1+mNIM2n+t7osIVAz+hwD3HG4cDIbDbec9CYYoO6OF5RjjFx2WNN3yghLU5XlLjOKWL
-         z71GvyadUkZIo/D5hP7/rpXHuTXrrOh0msvzT1rJCtDXKkgKFheJi4IDnmoBHlhI74DT
-         IKNg==
+        Fri, 1 May 2020 07:09:17 -0400
+Received: by mail-il1-f199.google.com with SMTP id e8so4396766ile.17
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 04:09:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JbMZH52YEWSxdCQl8+jIQlPQEAuYbjyzNeqiNbuukKE=;
-        b=OGC957zT2vZHwZVtSFDpA4UD3Gg7Dy7SOHlToYUkrZScsK0LAn+3vZtW6zssw0dFqv
-         7y7RreQ2A3tyIHPuzuTNyyAElKUvspVSmJmPLlRMXIGLbYQTZdqdhaLH3gPNhj3gl41O
-         hIY2uCvg51meWNnWvz5cKy/2W/iGjNZjRn7ICVDsvgNTu5iU/1dgZWXxD+yZQ1b+LkwV
-         o9kDssRNsz0LfHUHAi2fd+hNgBUyWieh0rj3eOSAwk0wVp7R1XH12Z+vyfRht5r6TWKW
-         fpQ1f39qZQxcVFBcTW1sBO9cKZuRjGPoVeZn/OHOslbTcicdVMpuAs5UtqMi1PZX3+Mq
-         jApg==
-X-Gm-Message-State: AGi0Pua2sU1lmzJ1GdF2/XMGlYNp6quI8d7VHU27hac7hiNnPVO85vNH
-        vymqVYeb1MTJuHMm1RtOFfw=
-X-Google-Smtp-Source: APiQypIsazxBBI9m765GGp7qZdwhkRJkVk9sBcmxyN15Eo1/skHafCF+d9fBKRIPWxxi6ZBDSafi7Q==
-X-Received: by 2002:a05:6512:44d:: with SMTP id y13mr1940676lfk.118.1588331345952;
-        Fri, 01 May 2020 04:09:05 -0700 (PDT)
-Received: from [192.168.0.74] ([178.233.178.9])
-        by smtp.gmail.com with ESMTPSA id t16sm1755806ljg.41.2020.05.01.04.09.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 04:09:05 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/3] Prefer working VT console over SPCR and
- device-tree chosen stdout-path
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
-        linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
- <20200501013044.GA288759@jagdpanzerIV.localdomain>
-From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
-Message-ID: <818ba356-ba35-68de-b7bf-f145a89280f1@gmail.com>
-Date:   Fri, 1 May 2020 14:08:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=6NqdmlOfSLvBUqffTv0jBBGWaw7cUouN9KdGAg4Bx/E=;
+        b=DXEy2MYTX4TPB325vkuQQbQrspKIlOHmurRx9mGGQ9G9IZuTkmZ9bDbo6/jRbsCMDo
+         fn8KqFfSx9rM9jcbL9ikwyQn5CLK+SZId4DZ2NTFYHKwVntq3ag3QHsQMu4SF4EZ34Hp
+         VE0NEor0oKvqYAfAqvPYYE1BoFfVB48Tb7BelQSXCAe4Z3tEGI2fDHQmQRMKtyDEmtzf
+         7vtJ9XzOYy2B/dgkVZRYVsooIWOzek3vljGcYVgdDYENc78jx21+5BEoK7eVq2hwapZd
+         6U3uCm2KgFxm7XWUkq3gP7QUjmHsFeUKW40t8rTHhok371670WAKWhUCB4K+DAZ5EMg7
+         bhZQ==
+X-Gm-Message-State: AGi0PuZYxgQpIBj0KRJy6Qq0tlKhcpbDw2lW1ghbFtErDsGif6pFnFyN
+        R7TdYEpclzApfLzTj98lIE4bolRwS35lmzYBNHZMtaBxh8Sh
+X-Google-Smtp-Source: APiQypLDPLjtEZ9aO52H75iqwbBI0TXJXelwsH8OX9v0vpsHpW5HM81A6E2w5pzvFSeE58tVjKErKzbEjn9KvdeiZE/hYMu7cPaG
 MIME-Version: 1.0
-In-Reply-To: <20200501013044.GA288759@jagdpanzerIV.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:2a2:: with SMTP id d2mr2772738jaq.104.1588331357046;
+ Fri, 01 May 2020 04:09:17 -0700 (PDT)
+Date:   Fri, 01 May 2020 04:09:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000052913105a4943655@google.com>
+Subject: KASAN: use-after-free Read in inet_diag_bc_sk
+From:   syzbot <syzbot+13bef047dbfffa5cd1af@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/05/2020 04:30, Sergey Senozhatsky wrote:> Well, if there is a "mandated console", then why would we prefer
-> any other console?
+Hello,
 
-From what I understand, the firmware provides serial console settings to
-be used as the preferred _serial_ console (where it would be OK to
-switch to graphical consoles later on) and the kernel currently
-understands that such a console should be the preferred _system_ console
-(always preferred over even graphical ones). By "mandated" I'm referring
-to the kernel's current behavior, not to (in my understanding) the
-firmware's intentions.
+syzbot found the following crash on:
 
-Even if the firmware/specifications is really asking the kernel to (tell
-userspace programs to) always use the serial console instead of the
-framebuffer console, while on e.g. a laptop-like device intended to be
-used with a keyboard and display -- is that the correct thing to do?
+HEAD commit:    37ecb5b8 hinic: Use kmemdup instead of kzalloc and memcpy
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=141e54bc100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b1494ce3fbc02154
+dashboard link: https://syzkaller.appspot.com/bug?extid=13bef047dbfffa5cd1af
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12296e60100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150c6f02100000
 
-From the userspace, under the conditions:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+13bef047dbfffa5cd1af@syzkaller.appspotmail.com
 
-- CONFIG_VT_CONSOLE is enabled
-- There is a working graphics adapter and a display
-- There is no console argument given in the kernel command line
+==================================================================
+BUG: KASAN: use-after-free in cgroup_id include/linux/cgroup.h:312 [inline]
+BUG: KASAN: use-after-free in inet_diag_bc_sk+0xb6e/0xc70 net/ipv4/inet_diag.c:749
+Read of size 8 at addr ffff88821b2c9f08 by task syz-executor674/7229
 
-I expect that:
+CPU: 1 PID: 7229 Comm: syz-executor674 Not tainted 5.7.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
+ __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ cgroup_id include/linux/cgroup.h:312 [inline]
+ inet_diag_bc_sk+0xb6e/0xc70 net/ipv4/inet_diag.c:749
+ inet_diag_dump_icsk+0xbe4/0x1306 net/ipv4/inet_diag.c:1061
+ __inet_diag_dump+0x8d/0x240 net/ipv4/inet_diag.c:1113
+ netlink_dump+0x50b/0xf50 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x63f/0x910 net/netlink/af_netlink.c:2353
+ netlink_dump_start include/linux/netlink.h:246 [inline]
+ inet_diag_handler_cmd+0x263/0x2c0 net/ipv4/inet_diag.c:1278
+ __sock_diag_cmd net/core/sock_diag.c:233 [inline]
+ sock_diag_rcv_msg+0x2fe/0x3e0 net/core/sock_diag.c:264
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ sock_diag_rcv+0x26/0x40 net/core/sock_diag.c:275
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ sock_write_iter+0x289/0x3c0 net/socket.c:1004
+ call_write_iter include/linux/fs.h:1907 [inline]
+ do_iter_readv_writev+0x5a8/0x850 fs/read_write.c:694
+ do_iter_write fs/read_write.c:999 [inline]
+ do_iter_write+0x18b/0x600 fs/read_write.c:980
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1072
+ do_writev+0x27f/0x300 fs/read_write.c:1115
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x443d69
+Code: e8 8c 07 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 3b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffea5636068 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443d69
+RDX: 0000000000000001 RSI: 0000000020000200 RDI: 0000000000000006
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000e475
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-- tty0 is included in the /proc/consoles list [1]
-- tty0 is the preferred console and /dev/console refers to it [2]
+Allocated by task 1:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ slab_post_alloc_hook mm/slab.h:586 [inline]
+ slab_alloc mm/slab.c:3320 [inline]
+ kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
+ kmem_cache_zalloc include/linux/slab.h:659 [inline]
+ __kernfs_new_node+0xd4/0x690 fs/kernfs/dir.c:627
+ kernfs_new_node+0x93/0x120 fs/kernfs/dir.c:689
+ __kernfs_create_file+0x51/0x350 fs/kernfs/file.c:1001
+ sysfs_add_file_mode_ns+0x224/0x520 fs/sysfs/file.c:305
+ create_files fs/sysfs/group.c:64 [inline]
+ internal_create_group+0x327/0xba0 fs/sysfs/group.c:149
+ kernel_add_sysfs_param kernel/params.c:795 [inline]
+ param_sysfs_builtin kernel/params.c:832 [inline]
+ param_sysfs_init+0x3a0/0x430 kernel/params.c:953
+ do_one_initcall+0x10a/0x7d0 init/main.c:1157
+ do_initcall_level init/main.c:1230 [inline]
+ do_initcalls init/main.c:1246 [inline]
+ do_basic_setup init/main.c:1266 [inline]
+ kernel_init_freeable+0x501/0x5ae init/main.c:1450
+ kernel_init+0xd/0x1bb init/main.c:1357
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-With SPCR both are false, and with stdout-path only the second is false.
-Again, I'm OK with these being false during earlier stages until
-graphics start working, but I'm arguing they should be true after then.
+Freed by task 1:
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ kasan_set_free_info mm/kasan/common.c:317 [inline]
+ __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
+ __cache_free mm/slab.c:3426 [inline]
+ kmem_cache_free+0x7f/0x320 mm/slab.c:3694
+ kernfs_put fs/kernfs/dir.c:537 [inline]
+ kernfs_put+0x2f9/0x570 fs/kernfs/dir.c:506
+ __kernfs_remove fs/kernfs/dir.c:1344 [inline]
+ __kernfs_remove+0x690/0x950 fs/kernfs/dir.c:1282
+ kernfs_remove_by_name_ns+0x51/0xb0 fs/kernfs/dir.c:1516
+ kernfs_remove_by_name include/linux/kernfs.h:593 [inline]
+ remove_files.isra.0+0x76/0x190 fs/sysfs/group.c:28
+ sysfs_remove_group+0xb3/0x1b0 fs/sysfs/group.c:289
+ kernel_add_sysfs_param kernel/params.c:790 [inline]
+ param_sysfs_builtin kernel/params.c:832 [inline]
+ param_sysfs_init+0x333/0x430 kernel/params.c:953
+ do_one_initcall+0x10a/0x7d0 init/main.c:1157
+ do_initcall_level init/main.c:1230 [inline]
+ do_initcalls init/main.c:1246 [inline]
+ do_basic_setup init/main.c:1266 [inline]
+ kernel_init_freeable+0x501/0x5ae init/main.c:1450
+ kernel_init+0xd/0x1bb init/main.c:1357
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-In the patches I tried to keep these serial consoles still enabled and
-preferred during early stages of boot, by trying to switch to vt only
-after a real working graphical backend for it is initialized.
+The buggy address belongs to the object at ffff88821b2c9e80
+ which belongs to the cache kernfs_node_cache of size 168
+The buggy address is located 136 bytes inside of
+ 168-byte region [ffff88821b2c9e80, ffff88821b2c9f28)
+The buggy address belongs to the page:
+page:ffffea00086cb240 refcount:1 mapcount:0 mapping:00000000c46c458d index:0xffff88821b2c9000
+flags: 0x57ffe0000000200(slab)
+raw: 057ffe0000000200 ffffea00086cb288 ffffea00086cb148 ffff88821bc508c0
+raw: ffff88821b2c9000 ffff88821b2c9000 0000000100000009 0000000000000000
+page dumped because: kasan: bad access detected
 
-I mean, if my expectations are unreasonable and the current kernel
-behaviour is considered correct, these patches would be conceptually
-wrong; so please tell me if I got anything right/wrong in all this.
+Memory state around the buggy address:
+ ffff88821b2c9e00: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff88821b2c9e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88821b2c9f00: fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc
+                      ^
+ ffff88821b2c9f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88821b2ca000: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+==================================================================
 
 
-[1] From the descripion of CONFIG_VT_CONSOLE:
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> [...] If you answer Y here, a virtual terminal (the device used to
-> interact with a physical terminal) can be used as system console.
-> [...] you should say Y here unless you want the kernel messages be
-> output only to a serial port [...]
-
-and by "as a prerequisite of [2]"
-
-
-[2] From the descripion of CONFIG_VT_CONSOLE:
-
-> If you do say Y here, by default the currently visible virtual
-> terminal (/dev/tty0) will be used as system console. You can change
-> that with a kernel command line option such as "console=tty3" which
-> would use the third virtual terminal as system console. [...]
-
-I'm assuming "by default" here means "without console arguments"
-regardless of firmware requests. This paragraph (with small changes) is
-repeated on many other Kconfig descriptions (drivers/tty/serial/Kconfig,
-drivers/tty/serial/8250/Kconfig, arch/sparc/Kconfig from grepping for
-'/dev/tty0' on **/Kconfig).
-
-From Documentation/admin-guide/serial-console.rst:
-
-> You can specify multiple console= options on the kernel command line.
-> [...]
-> Note that you can only define one console per device type (serial, video).
->
-> If no console device is specified, the first device found capable of
-> acting as a system console will be used. At this time, the system
-> first looks for a VGA card and then for a serial port. So if you don't
-> have a VGA card in your system the first serial port will automatically
-> become the console.
-
-and later on:
-
-> Note that if you boot without a ``console=`` option (or with
-> ``console=/dev/tty0``), ``/dev/console`` is the same as ``/dev/tty0``.
-> In that case everything will still work.
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
