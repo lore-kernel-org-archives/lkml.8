@@ -2,100 +2,183 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F2DC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF2CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21E3421775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588357319;
-	bh=Um7RoGUIHgQ8GZBTGxBQtb71GMGyRZ5tADvfvjI5JZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1oKNAv5lJYWfMIg+sYpWGvQBgVOY61Yy1GLAM/MA9sgpLBU+7kdGsDkZ8hovyQsiH
-	 Ee0aaQAFtnKNcutI/WvjlGDOVpW0ShwwX2+T60C18mhk1NctHbAYExx5dKVZApsqK8
-	 w5Hc2ASNnrTzTwn1AB0o6GAheqR4gk0olpyqC0oA=
+	by mail.kernel.org (Postfix) with ESMTP id 000B22184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgEASV6 (ORCPT
+        id S1730456AbgEASWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729599AbgEASV5 (ORCPT
+        Fri, 1 May 2020 14:22:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36575 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729599AbgEASWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:21:57 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E08C061A0C;
-        Fri,  1 May 2020 11:21:57 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id l78so10075217qke.7;
-        Fri, 01 May 2020 11:21:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KiYd6hVsmrnt0vWm34SLnLpgGlMhVF862REnMZFBaRo=;
-        b=gn94t0znEkJj8IzRShTGjgN6+qdPrjiLurgsaTfax0JU9ifHIxoDcu0vsJhsZSyoKA
-         4zKbH0y7TJn3Defs77/2hgzXXqx0rUP3IYBZPYzXGN9jB6bBpEQ55fbEWogJuGTENxpP
-         LrEqERrEPea7wnM0W6mtsXbsulbNJq5kPqqheRLOOhZ2PUyPm7UBHGNttFHYLWIbPluF
-         G5bVeX5o/IeZVGDfc8iaSVMzFFfZwbLZjgT/Jk64vsO5NG0QOY0gbc1lVrmg2KDARZqG
-         /6wIGR5Qga7AzLsjKap9/K9tHa0ud06hNYmMXXHEmxDwtVIevikLnnDexnfn32VzIIv0
-         Ul9Q==
+        Fri, 1 May 2020 14:22:08 -0400
+Received: by mail-lj1-f193.google.com with SMTP id u15so3415225ljd.3;
+        Fri, 01 May 2020 11:22:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=KiYd6hVsmrnt0vWm34SLnLpgGlMhVF862REnMZFBaRo=;
-        b=LdUUajCXLsLWUtj3offLbyIzVK5rOgN8OR0A10oNMijg7Wncq0T7BQIf1lRp8DfHGH
-         HT4N5HRkIeVOu7iM/e3VC6fgSxn6pslbG71oa/xINBearEMstWzG8FKqwXVZ5/FDcasZ
-         bLbmu1SystX3KQB3nrd7REdZ6lbBCd/JPJ/417YywCuewcbAeWLfCrv0gWZNw37PXcUf
-         iWPUxSOEvotgLU5YiV2+Bib59nGYDZBz3s2VzA5QGZUeqBAFmROiUHtI1PSMi4XyIkEM
-         mDKN2j392wSlZxpu2TKOQO7PZcxkpuYvghSsqUH2RVMxYhHtsE6rc3kohKvPF+31t8UB
-         T5xw==
-X-Gm-Message-State: AGi0PuY97TXqACcP7OaTcvqCI04wBSO3IiIw2Sk8DdIhPb6rn+v5J46B
-        5UjxoBvrXZN8JSSJirq7iPY=
-X-Google-Smtp-Source: APiQypK3gqYshcrDQKI0pZ8y57MCQ65ILdE0a3EDJg6ikVyB2Cdtx/qrnZep5+DsFZXjxC29bJ0T2Q==
-X-Received: by 2002:a37:a049:: with SMTP id j70mr4711692qke.193.1588357316620;
-        Fri, 01 May 2020 11:21:56 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:e6fd])
-        by smtp.gmail.com with ESMTPSA id c23sm3130133qka.12.2020.05.01.11.21.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 11:21:55 -0700 (PDT)
-Date:   Fri, 1 May 2020 14:21:54 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "J. Bruce Fields" <bfields@redhat.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200501182154.GG5462@mtj.thefacebook.com>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8+Jd8UCtLAIGXZVwCPsEaZASdfjfz3pNWNDidIes4aw=;
+        b=dRRsAnjqiO0Y/IRyiyuai5zwBNd3KeGPMbwXZk3b9EB0W/L1eP3dEqK5WWmQOHE4BH
+         abMjQ7vV1U/hv5DCXHE9dggAbPTYHmYW8CqLyeuuaDYeyCoTVmFl/InhR6aCSU80JwCr
+         Fjk02IEYIUkbSmNe03Gx1ylnlJCRx/h4TexrfFRpezPtCxNxvZW16RSwBzAxaUCqv/co
+         vK1KPnu5zizR5YcdXwRuKU4cZQdZ6tkerJlBpccXyldtwbAvyymxhqjSg4ZgDpRYiAB8
+         MlN+ywOpXaRX3B0b6E+TaeWjPgJ0yv5vInaEAa0DvjtbfhLTBzDPqX5kxesd7Ev176ID
+         EnJg==
+X-Gm-Message-State: AGi0PubznVb4QtzoHEWXY6qZbezo4u5Xg+bFBtenCn/EwVT53+z8bQh0
+        lJpa6WyVhn4Yd4xXBeC7+7u4ue9nNOE=
+X-Google-Smtp-Source: APiQypJPJtx5E/RLyGfj5dMr7YO7W0i075oInSAkD8SLpPniCHZoIHXbKMaf3nv8oMfCWbp0x8Cozw==
+X-Received: by 2002:a2e:553:: with SMTP id 80mr3094778ljf.147.1588357325092;
+        Fri, 01 May 2020 11:22:05 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.150.177])
+        by smtp.gmail.com with ESMTPSA id o20sm2681967lfc.39.2020.05.01.11.22.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 11:22:04 -0700 (PDT)
+To:     Joe Perches <joe@perches.com>, linux-block@vger.kernel.org
+Cc:     Willy Tarreau <w@1wt.eu>, Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <20200501134416.72248-1-efremov@linux.com>
+ <c05138cb12f43498299d2b438173d082be2ebf17.camel@perches.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ mQINBFsJUXwBEADDnzbOGE/X5ZdHqpK/kNmR7AY39b/rR+2Wm/VbQHV+jpGk8ZL07iOWnVe1
+ ZInSp3Ze+scB4ZK+y48z0YDvKUU3L85Nb31UASB2bgWIV+8tmW4kV8a2PosqIc4wp4/Qa2A/
+ Ip6q+bWurxOOjyJkfzt51p6Th4FTUsuoxINKRMjHrs/0y5oEc7Wt/1qk2ljmnSocg3fMxo8+
+ y6IxmXt5tYvt+FfBqx/1XwXuOSd0WOku+/jscYmBPwyrLdk/pMSnnld6a2Fp1zxWIKz+4VJm
+ QEIlCTe5SO3h5sozpXeWS916VwwCuf8oov6706yC4MlmAqsQpBdoihQEA7zgh+pk10sCvviX
+ FYM4gIcoMkKRex/NSqmeh3VmvQunEv6P+hNMKnIlZ2eJGQpz/ezwqNtV/przO95FSMOQxvQY
+ 11TbyNxudW4FBx6K3fzKjw5dY2PrAUGfHbpI3wtVUNxSjcE6iaJHWUA+8R6FLnTXyEObRzTS
+ fAjfiqcta+iLPdGGkYtmW1muy/v0juldH9uLfD9OfYODsWia2Ve79RB9cHSgRv4nZcGhQmP2
+ wFpLqskh+qlibhAAqT3RQLRsGabiTjzUkdzO1gaNlwufwqMXjZNkLYu1KpTNUegx3MNEi2p9
+ CmmDxWMBSMFofgrcy8PJ0jUnn9vWmtn3gz10FgTgqC7B3UvARQARAQABtCFEZW5pcyBFZnJl
+ bW92IDxlZnJlbW92QGxpbnV4LmNvbT6JAlcEEwEIAEECGwMFCQPCZwAFCwkIBwIGFQoJCAsC
+ BBYCAwECHgECF4AWIQR2VAM2ApQN8ZIP5AO1IpWwM1AwHwUCW3qdrQIZAQAKCRC1IpWwM1Aw
+ HwF5D/sHp+jswevGj304qvG4vNnbZDr1H8VYlsDUt+Eygwdg9eAVSVZ8yr9CAu9xONr4Ilr1
+ I1vZRCutdGl5sneXr3JBOJRoyH145ExDzQtHDjqJdoRHyI/QTY2l2YPqH/QY1hsLJr/GKuRi
+ oqUJQoHhdvz/NitR4DciKl5HTQPbDYOpVfl46i0CNvDUsWX7GjMwFwLD77E+wfSeOyXpFc2b
+ tlC9sVUKtkug1nAONEnP41BKZwJ/2D6z5bdVeLfykOAmHoqWitCiXgRPUg4Vzc/ysgK+uKQ8
+ /S1RuUA83KnXp7z2JNJ6FEcivsbTZd7Ix6XZb9CwnuwiKDzNjffv5dmiM+m5RaUmLVVNgVCW
+ wKQYeTVAspfdwJ5j2gICY+UshALCfRVBWlnGH7iZOfmiErnwcDL0hLEDlajvrnzWPM9953i6
+ fF3+nr7Lol/behhdY8QdLLErckZBzh+tr0RMl5XKNoB/kEQZPUHK25b140NTSeuYGVxAZg3g
+ 4hobxbOGkzOtnA9gZVjEWxteLNuQ6rmxrvrQDTcLTLEjlTQvQ0uVK4ZeDxWxpECaU7T67khA
+ ja2B8VusTTbvxlNYbLpGxYQmMFIUF5WBfc76ipedPYKJ+itCfZGeNWxjOzEld4/v2BTS0o02
+ 0iMx7FeQdG0fSzgoIVUFj6durkgch+N5P1G9oU+H37kCDQRbCVF8ARAA3ITFo8OvvzQJT2cY
+ nPR718Npm+UL6uckm0Jr0IAFdstRZ3ZLW/R9e24nfF3A8Qga3VxJdhdEOzZKBbl1nadZ9kKU
+ nq87te0eBJu+EbcuMv6+njT4CBdwCzJnBZ7ApFpvM8CxIUyFAvaz4EZZxkfEpxaPAivR1Sa2
+ 2x7OMWH/78laB6KsPgwxV7fir45VjQEyJZ5ac5ydG9xndFmb76upD7HhV7fnygwf/uIPOzNZ
+ YVElGVnqTBqisFRWg9w3Bqvqb/W6prJsoh7F0/THzCzp6PwbAnXDedN388RIuHtXJ+wTsPA0
+ oL0H4jQ+4XuAWvghD/+RXJI5wcsAHx7QkDcbTddrhhGdGcd06qbXe2hNVgdCtaoAgpCEetW8
+ /a8H+lEBBD4/iD2La39sfE+dt100cKgUP9MukDvOF2fT6GimdQ8TeEd1+RjYyG9SEJpVIxj6
+ H3CyGjFwtIwodfediU/ygmYfKXJIDmVpVQi598apSoWYT/ltv+NXTALjyNIVvh5cLRz8YxoF
+ sFI2VpZ5PMrr1qo+DB1AbH00b0l2W7HGetSH8gcgpc7q3kCObmDSa3aTGTkawNHzbceEJrL6
+ mRD6GbjU4GPD06/dTRIhQatKgE4ekv5wnxBK6v9CVKViqpn7vIxiTI9/VtTKndzdnKE6C72+
+ jTwSYVa1vMxJABtOSg8AEQEAAYkCPAQYAQgAJhYhBHZUAzYClA3xkg/kA7UilbAzUDAfBQJb
+ CVF8AhsMBQkDwmcAAAoJELUilbAzUDAfB8cQALnqSjpnPtFiWGfxPeq4nkfCN8QEAjb0Rg+a
+ 3fy1LiquAn003DyC92qphcGkCLN75YcaGlp33M/HrjrK1cttr7biJelb5FncRSUZqbbm0Ymj
+ U4AKyfNrYaPz7vHJuijRNUZR2mntwiKotgLV95yL0dPyZxvOPPnbjF0cCtHfdKhXIt7Syzjb
+ M8k2fmSF0FM+89/hP11aRrs6+qMHSd/s3N3j0hR2Uxsski8q6x+LxU1aHS0FFkSl0m8SiazA
+ Gd1zy4pXC2HhCHstF24Nu5iVLPRwlxFS/+o3nB1ZWTwu8I6s2ZF5TAgBfEONV5MIYH3fOb5+
+ r/HYPye7puSmQ2LCXy7X5IIsnAoxSrcFYq9nGfHNcXhm5x6WjYC0Kz8l4lfwWo8PIpZ8x57v
+ gTH1PI5R4WdRQijLxLCW/AaiuoEYuOLAoW481XtZb0GRRe+Tm9z/fCbkEveyPiDK7oZahBM7
+ QdWEEV8mqJoOZ3xxqMlJrxKM9SDF+auB4zWGz5jGzCDAx/0qMUrVn2+v8i4oEKW6IUdV7axW
+ Nk9a+EF5JSTbfv0JBYeSHK3WRklSYLdsMRhaCKhSbwo8Xgn/m6a92fKd3NnObvRe76iIEMSw
+ 60iagNE6AFFzuF/GvoIHb2oDUIX4z+/D0TBWH9ADNptmuE+LZnlPUAAEzRgUFtlN5LtJP8ph
+Subject: Re: [PATCH v3 0/4] floppy: suppress UBSAN warning in
+ setup_rw_floppy()
+Message-ID: <2c506547-236e-02e2-53f1-9484ba6ae453@linux.com>
+Date:   Fri, 1 May 2020 21:22:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
+In-Reply-To: <c05138cb12f43498299d2b438173d082be2ebf17.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 5/1/20 9:02 PM, Joe Perches wrote:
+> On Fri, 2020-05-01 at 16:44 +0300, Denis Efremov wrote:
+>> These patches are based on Willy's cleanup patches
+>> https://lkml.org/lkml/2020/3/31/609.
+> 
+> Maybe add pr_fmt and clean up a few messages so
+> all the logging output is prefixed too.
+>
 
-On Fri, May 01, 2020 at 10:59:24AM -0700, Linus Torvalds wrote:
-> Which kind of makes me want to point a finger at Tejun. But it's been
-> mostly PeterZ touching this file lately..
+Yes, I'm preparing next patchset with almost the same pr_fmt patch in it.
+However, simply adding pr_fmt is not enough. We need to remove DPRINT macro
+from the driver because it uses current_drive and this is wrong after Willy's cleanups.
 
-Looks fine to me too. I don't quite understand the usecase tho. It looks
-like all it's being used for is to tag some kthreads as belonging to the
-same group. Can't that be done with kthread_data()?
+#define DPRINT(format, args...) \                                                
+        pr_info("floppy%d: " format, current_drive, ##args)
 
-Thanks.
-
--- 
-tejun
+I also don't like debug_dcl and how it is used.
+ 
+> ---
+>  drivers/block/floppy.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+> index c3daa64..b26bb1 100644
+> --- a/drivers/block/floppy.c
+> +++ b/drivers/block/floppy.c
+> @@ -145,6 +145,8 @@
+>   * Better audit of register_blkdev.
+>   */
+>  
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+>  #undef  FLOPPY_SILENT_DCL_CLEAR
+>  
+>  #define REALLY_SLOW_IO
+> @@ -1724,7 +1726,7 @@ irqreturn_t floppy_interrupt(int irq, void *dev_id)
+>  	if (current_fdc >= N_FDC || fdc_state[current_fdc].address == -1) {
+>  		/* we don't even know which FDC is the culprit */
+>  		pr_info("DOR0=%x\n", fdc_state[0].dor);
+> -		pr_info("floppy interrupt on bizarre fdc %d\n", current_fdc);
+> +		pr_info("interrupt on bizarre fdc %d\n", current_fdc);
+>  		pr_info("handler=%ps\n", handler);
+>  		is_alive(__func__, "bizarre fdc");
+>  		return IRQ_NONE;
+> @@ -2276,7 +2278,7 @@ static void request_done(int uptodate)
+>  	reschedule_timeout(MAXTIMEOUT, msg);
+>  
+>  	if (!req) {
+> -		pr_info("floppy.c: no request in request_done\n");
+> +		pr_info("no request in request_done\n");
+>  		return;
+>  	}
+>  
+> @@ -4181,8 +4183,7 @@ static void floppy_rb0_cb(struct bio *bio)
+>  	int drive = cbdata->drive;
+>  
+>  	if (bio->bi_status) {
+> -		pr_info("floppy: error %d while reading block 0\n",
+> -			bio->bi_status);
+> +		pr_info("error %d while reading block 0\n", bio->bi_status);
+>  		set_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags);
+>  	}
+>  	complete(&cbdata->complete);
+> @@ -4954,7 +4955,7 @@ static void floppy_release_irq_and_dma(void)
+>  #endif
+>  
+>  	if (delayed_work_pending(&fd_timeout))
+> -		pr_info("floppy timer still active:%s\n", timeout_message);
+> +		pr_info("timer still active:%s\n", timeout_message);
+>  	if (delayed_work_pending(&fd_timer))
+>  		pr_info("auxiliary floppy timer still active\n");
+>  	if (work_pending(&floppy_work))
+> 
+> 
