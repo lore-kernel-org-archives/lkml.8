@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED988C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CF0C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B0E24956
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBFC24956
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340162;
-	bh=qD6bBSu2ZmstztKjHgRkJXOnn8LSOtvA6gBtfCm4XtM=;
+	s=default; t=1588340166;
+	bh=WM6Psp5MWsVb3j3Aezr/CMsEltwqmJ+7sheXVHai2yI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sf/4JDoTiEvRRum8Ul+8LRGUclh6j0KNZkp08MJqz8agrhqrEpfzLcsDXTY5UonZE
-	 UJ7srgiIuSfxzDHGxfM7R+O2y+e12ERWXvzJQFTnBYPibszbJv768XWGF7HkUTF9xd
-	 AFP/jNOrOsa905cbUKtyMN8EuugnJB0azNg7ZHy0=
+	b=gQiuihQaQDjxYtnAxhm+dWNkq1+uIsMPxXoV8rqJ8yyBwkOKRplBvF6xZyHFByp4Z
+	 VtMES9JR9GYfHZ7E+5Frl4PFWw9UyPCucxwMls50FNVkU346Ymx+tBE7Coug0Q5aBk
+	 ey00MFJgSg3+/ahRR8XECj30eEoQ2Zxdggf0Qo8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbgEANgC (ORCPT
+        id S1730817AbgEANgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34348 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbgEANf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:59 -0400
+        id S1730327AbgEANgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC9D524957;
-        Fri,  1 May 2020 13:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98317216FD;
+        Fri,  1 May 2020 13:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340158;
-        bh=qD6bBSu2ZmstztKjHgRkJXOnn8LSOtvA6gBtfCm4XtM=;
+        s=default; t=1588340161;
+        bh=WM6Psp5MWsVb3j3Aezr/CMsEltwqmJ+7sheXVHai2yI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D6YjrdvZU5eNeA4svb5tHdjdHJSo002OAc7U8xGZZxhDJyt14eBwdawitEB9flbvo
-         5CNOVnDCxYiuSNL90bb6kGmYTi5a8t+P7mzDkXb6oEwnG4zvbQWGvKedNUVueC29uh
-         uGharmzYThNesuHHI6JSdw8heNml7w40ZyvSckWA=
+        b=Hierap/HkwRAZiaqCbcTh+iZjJ+OuOoZuSmkSz0MrINS09FSBEhNRFOiJsZSRdLyn
+         sEftq9aK63o+kbrxF6eR313XCmmfYYEbubaHQxaRtpSbwegZSXxZ18D9mrQsy/CQiY
+         VG5sdMd7Fo5o7StTAzUwjJ+InD0EiFobnlobZSvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@canonical.com>,
-        Todd Kjos <tkjos@android.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 04/46] binder: take read mode of mmap_sem in binder_alloc_free_page()
-Date:   Fri,  1 May 2020 15:22:29 +0200
-Message-Id: <20200501131500.358343650@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 4.19 05/46] usb: dwc3: gadget: Do link recovery for SS and SSP
+Date:   Fri,  1 May 2020 15:22:30 +0200
+Message-Id: <20200501131501.161306362@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -60,64 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@canonical.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 60d4885710836595192c42d3e04b27551d30ec91 upstream.
+commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 upstream.
 
-Restore the behavior of locking mmap_sem for reading in
-binder_alloc_free_page(), as was first done in commit 3013bf62b67a
-("binder: reduce mmap_sem write-side lock"). That change was
-inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
-munmap() and direct reclaim").
+The controller always supports link recovery for device in SS and SSP.
+Remove the speed limit check. Also, when the device is in RESUME or
+RESET state, it means the controller received the resume/reset request.
+The driver must send the link recovery to acknowledge the request. They
+are valid states for the driver to send link recovery.
 
-In addition, change the name of the label for the error path to
-accurately reflect that we're taking the lock for reading.
-
-Backporting note: This fix is only needed when *both* of the commits
-mentioned above are applied. That's an unlikely situation since they
-both landed during the development of v5.1 but only one of them is
-targeted for stable.
-
-Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
-Acked-by: Todd Kjos <tkjos@android.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/dwc3/gadget.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -970,8 +970,8 @@ enum lru_status binder_alloc_free_page(s
- 	mm = alloc->vma_vm_mm;
- 	if (!mmget_not_zero(mm))
- 		goto err_mmget;
--	if (!down_write_trylock(&mm->mmap_sem))
--		goto err_down_write_mmap_sem_failed;
-+	if (!down_read_trylock(&mm->mmap_sem))
-+		goto err_down_read_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1577,7 +1577,6 @@ static int __dwc3_gadget_wakeup(struct d
+ 	u32			reg;
  
- 	list_lru_isolate(lru, item);
-@@ -986,7 +986,7 @@ enum lru_status binder_alloc_free_page(s
+ 	u8			link_state;
+-	u8			speed;
  
- 		trace_binder_unmap_user_end(alloc, index);
- 	}
--	up_write(&mm->mmap_sem);
-+	up_read(&mm->mmap_sem);
- 	mmput(mm);
+ 	/*
+ 	 * According to the Databook Remote wakeup request should
+@@ -1587,16 +1586,13 @@ static int __dwc3_gadget_wakeup(struct d
+ 	 */
+ 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
  
- 	trace_binder_unmap_kernel_start(alloc, index);
-@@ -1001,7 +1001,7 @@ enum lru_status binder_alloc_free_page(s
- 	mutex_unlock(&alloc->mutex);
- 	return LRU_REMOVED_RETRY;
+-	speed = reg & DWC3_DSTS_CONNECTSPD;
+-	if ((speed == DWC3_DSTS_SUPERSPEED) ||
+-	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
+-		return 0;
+-
+ 	link_state = DWC3_DSTS_USBLNKST(reg);
  
--err_down_write_mmap_sem_failed:
-+err_down_read_mmap_sem_failed:
- 	mmput_async(mm);
- err_mmget:
- err_page_already_freed:
+ 	switch (link_state) {
++	case DWC3_LINK_STATE_RESET:
+ 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
+ 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
++	case DWC3_LINK_STATE_RESUME:
+ 		break;
+ 	default:
+ 		return -EINVAL;
 
 
