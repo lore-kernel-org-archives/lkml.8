@@ -2,235 +2,98 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB6C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE72C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372EA21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588368472;
-	bh=NWlmAira+mPxNuaLftUpDW0u05XoE7uY8FHaaXYMwOI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=YOvBh4GqoklF4iBlKO47An1ht/IsGpoN+fRjWW/I0FcsbqYrbBnfDa8117d1duO8R
-	 /WIiVqJ5hoIkG0oDVyugYbASvtPC29FwAFhTOKlk0xUr7RYnVGpoIIV3omV3BjK4WO
-	 HxrjspVur81FK1Ns5hlHciHY4eORfoZkcDPjidiM=
+	by mail.kernel.org (Postfix) with ESMTP id 598AC21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:29:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="D8WrYKrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgEAV1v (ORCPT
+        id S1726501AbgEAV3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAV1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:27:50 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D9420857;
-        Fri,  1 May 2020 21:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588368470;
-        bh=NWlmAira+mPxNuaLftUpDW0u05XoE7uY8FHaaXYMwOI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=y9RQZAwDuEiN9HY9CIl8SJmt2D/CyanMKITJPwx7U1hqRKPhKifd+vhkETRN71rMH
-         qaWEztYBans2o3wRBYR7CUtgBEgt7S4d1z6g+KvJcdkpKp54B5lNWaKWRR9HRJp+U2
-         djl45Th9NlPi+Do+Ewi0+mD9WlIrf+D7P62dRIXM=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F287E3522B72; Fri,  1 May 2020 14:27:49 -0700 (PDT)
-Date:   Fri, 1 May 2020 14:27:49 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-Message-ID: <20200501212749.GD7560@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-10-urezki@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428205903.61704-10-urezki@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 1 May 2020 17:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgEAV3W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:29:22 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9691C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:29:21 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id h6so5393911qvz.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WJSxCtUrQ4kbv8PP6ebxsDg8QOID1HZc/ULg/GKvJlA=;
+        b=D8WrYKrrFN3udsD0VgK1xx4C9GIV4kL38qjZF50x4kbItrsynRr8+ZrIXxtMSK3Urn
+         yBnFHKDZxe6JUAPzCMqktSXvf3IrDQNU8F9kwmtpg7bf1xxsgSIUOyAskggSfpPK3b8z
+         GqI7k3Nl5cgI8MChemP/HfDxgTa7rbf4GSclSMnRR5l00LHo3vTZbYgDb+0SmO9dblA7
+         47R4nkXfwxO1yKsSrOhWr9RVewkel6yVSJguRlzWShCI8FNxG6iIW7WmOgWChiyZsl5L
+         Gh6KqpGH5lfs+t1T2KXrtRCWQXypG2aqu9hjnVeEmWLrs7iXwvFA1gXl9u4IjtFFi+V8
+         p/wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=WJSxCtUrQ4kbv8PP6ebxsDg8QOID1HZc/ULg/GKvJlA=;
+        b=dzJYzFMBLt3YFKP3ZEYtJt/TuTZOGMDfZb8vYHP4Jw5q8MwTMP0NR577U6EtGEfF+V
+         Dm9Pp+bnTVZo5Ppa/C9Kz+KE2NMGsxSjA0ELo/3fsI74jdlMid1z8I5nYYcildCrpSpI
+         OoeYAMs3bkCYo9awxPKNzpOeHfv3/9k/yKYCO7DLe/3QEucxwJcTBOpmwvtmRoFKfbvd
+         JiMs0ipJCFGmBs4SMPuL0nWlAotLIUfu2CK6atOmJ05sx470ZilEeIkzibUTzZZcOabA
+         VzYySTMkdt2eITWeb8uGpw5ME08DUVAxWeLBW8fNrKjfXIW5uqI2DsaWA3TqyQZaz0yv
+         uYQg==
+X-Gm-Message-State: AGi0PuYpVOlZMwaD/8qX0YsJkJ60Qdj3dzsEPSlCIkg965v8soN0dwRZ
+        Jv/+xO4II0h5qTnjFF2unTRl8A==
+X-Google-Smtp-Source: APiQypKthgZJy1bXq0ePWD+aiR6wfk47apKr7P5G8WpkjIgDoImhnTRPKotO/I9RsAvYTC+h347F1w==
+X-Received: by 2002:a0c:f90c:: with SMTP id v12mr5927106qvn.21.1588368561078;
+        Fri, 01 May 2020 14:29:21 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y6sm3493568qky.133.2020.05.01.14.29.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 14:29:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] mm: slub: add panic_on_error to the debug facilities
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200501211540.71216-1-aquini@redhat.com>
+Date:   Fri, 1 May 2020 17:29:19 -0400
+Cc:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, iamjoonsoo.kim@lge.com,
+        rientjes@google.com, penberg@kernel.org, cl@linux.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <21CF143C-B9D1-4D3F-A875-370924265593@lca.pw>
+References: <20200501211540.71216-1-aquini@redhat.com>
+To:     Rafael Aquini <aquini@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:58:48PM +0200, Uladzislau Rezki (Sony) wrote:
-> Cache some extra objects per-CPU. During reclaim process
-> some pages are cached instead of releasing by linking them
-> into the list. Such approach provides O(1) access time to
-> the cache.
-> 
-> That reduces number of requests to the page allocator, also
-> that makes it more helpful if a low memory condition occurs.
-> 
-> A parameter reflecting the minimum allowed pages to be
-> cached per one CPU is propagated via sysfs, it is read
-> only, the name is "rcu_min_cached_objs".
-> 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  kernel/rcu/tree.c | 64 ++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 60 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 89e9ca3f4e3e..d8975819b1c9 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -178,6 +178,14 @@ module_param(gp_init_delay, int, 0444);
->  static int gp_cleanup_delay;
->  module_param(gp_cleanup_delay, int, 0444);
->  
-> +/*
-> + * This rcu parameter is read-only, but can be write also.
 
-You mean that although the parameter is read-only, you see no reason
-why it could not be converted to writeable?
 
-If it was writeable, and a given CPU had the maximum numbr of cached
-objects, the rcu_min_cached_objs value was decreased, but that CPU never
-saw another kfree_rcu(), would the number of cached objects change?
+> On May 1, 2020, at 5:15 PM, Rafael Aquini <aquini@redhat.com> wrote:
+>=20
+> Sometimes it is desirable to override SLUB's debug facilities
+> default behavior upon stumbling on a cache or object error
+> and just stop the execution in order to grab a coredump, at
+> the error-spotting time, instead of trying to fix the issue
+> and report in an attempt to keep the system rolling.
+>=20
+> This patch introduces a new debug flag SLAB_PANIC_ON_ERROR,
+> along with its related SLUB-machinery, in order to extend
+> current slub_debug facilites and provide the aforementioned
+> behavior override.
 
-(Just curious, not asking for a change in functionality.)
-
-> + * It reflects the minimum allowed number of objects which
-> + * can be cached per-CPU. Object size is equal to one page.
-> + */
-> +int rcu_min_cached_objs = 2;
-> +module_param(rcu_min_cached_objs, int, 0444);
-> +
->  /* Retrieve RCU kthreads priority for rcutorture */
->  int rcu_get_gp_kthreads_prio(void)
->  {
-> @@ -2887,7 +2895,6 @@ struct kfree_rcu_cpu_work {
->   * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
->   * @head: List of kfree_rcu() objects not yet waiting for a grace period
->   * @bhead: Bulk-List of kfree_rcu() objects not yet waiting for a grace period
-> - * @bcached: Keeps at most one object for later reuse when build chain blocks
->   * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
->   * @lock: Synchronize access to this structure
->   * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
-> @@ -2902,7 +2909,6 @@ struct kfree_rcu_cpu_work {
->  struct kfree_rcu_cpu {
->  	struct rcu_head *head;
->  	struct kfree_rcu_bulk_data *bhead;
-> -	struct kfree_rcu_bulk_data *bcached;
->  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
->  	raw_spinlock_t lock;
->  	struct delayed_work monitor_work;
-> @@ -2910,6 +2916,15 @@ struct kfree_rcu_cpu {
->  	bool initialized;
->  	// Number of objects for which GP not started
->  	int count;
-> +
-> +	/*
-> +	 * Number of cached objects which are queued into
-> +	 * the lock-less list. This cache is used by the
-> +	 * kvfree_call_rcu() function and as of now its
-> +	 * size is static.
-> +	 */
-> +	struct llist_head bkvcache;
-> +	int nr_bkv_objs;
->  };
->  
->  static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc) = {
-> @@ -2946,6 +2961,31 @@ krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
->  	local_irq_restore(flags);
->  }
->  
-> +static inline struct kfree_rcu_bulk_data *
-> +get_cached_bnode(struct kfree_rcu_cpu *krcp)
-> +{
-> +	if (!krcp->nr_bkv_objs)
-> +		return NULL;
-> +
-> +	krcp->nr_bkv_objs--;
-> +	return (struct kfree_rcu_bulk_data *)
-> +		llist_del_first(&krcp->bkvcache);
-> +}
-> +
-> +static inline bool
-> +put_cached_bnode(struct kfree_rcu_cpu *krcp,
-> +	struct kfree_rcu_bulk_data *bnode)
-> +{
-> +	/* Check the limit. */
-> +	if (krcp->nr_bkv_objs >= rcu_min_cached_objs)
-> +		return false;
-> +
-> +	llist_add((struct llist_node *) bnode, &krcp->bkvcache);
-> +	krcp->nr_bkv_objs++;
-> +	return true;
-> +
-> +}
-> +
->  /*
->   * This function is invoked in workqueue context after a grace period.
->   * It frees all the objects queued on ->bhead_free or ->head_free.
-> @@ -2981,7 +3021,12 @@ static void kfree_rcu_work(struct work_struct *work)
->  		kfree_bulk(bhead->nr_records, bhead->records);
->  		rcu_lock_release(&rcu_callback_map);
->  
-> -		if (cmpxchg(&krcp->bcached, NULL, bhead))
-> +		krcp = krc_this_cpu_lock(&flags);
-
-Presumably the list can also be accessed without holding this lock,
-because otherwise we shouldn't need llist...
-
-							Thanx, Paul
-
-> +		if (put_cached_bnode(krcp, bhead))
-> +			bhead = NULL;
-> +		krc_this_cpu_unlock(krcp, flags);
-> +
-> +		if (bhead)
->  			free_page((unsigned long) bhead);
->  
->  		cond_resched_tasks_rcu_qs();
-> @@ -3114,7 +3159,7 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
->  	/* Check if a new block is required. */
->  	if (!krcp->bhead ||
->  			krcp->bhead->nr_records == KFREE_BULK_MAX_ENTR) {
-> -		bnode = xchg(&krcp->bcached, NULL);
-> +		bnode = get_cached_bnode(krcp);
->  		if (!bnode) {
->  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
->  
-> @@ -4167,12 +4212,23 @@ static void __init kfree_rcu_batch_init(void)
->  
->  	for_each_possible_cpu(cpu) {
->  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
-> +		struct kfree_rcu_bulk_data *bnode;
->  
->  		for (i = 0; i < KFREE_N_BATCHES; i++) {
->  			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
->  			krcp->krw_arr[i].krcp = krcp;
->  		}
->  
-> +		for (i = 0; i < rcu_min_cached_objs; i++) {
-> +			bnode = (struct kfree_rcu_bulk_data *)
-> +				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> +
-> +			if (bnode)
-> +				put_cached_bnode(krcp, bnode);
-> +			else
-> +				pr_err("Failed to preallocate for %d CPU!\n", cpu);
-> +		}
-> +
->  		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
->  		krcp->initialized = true;
->  	}
-> -- 
-> 2.20.1
-> 
+Instead of adding those things everywhere. How about adding something =
+like panic_on_taint? Then, you could write specific taint flags you are =
+interested in to that file because slab_bug() will taint it =
+TAINT_BAD_PAGE.=
