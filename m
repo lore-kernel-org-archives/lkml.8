@@ -2,215 +2,160 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B912C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D06C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB9A216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588366661;
-	bh=zQmw8TbV6rcDNsLeJ9F8FOdkMTGIKtNq4ynWn7aeG6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SapYcjPQHvRcrrNQfJFZCz7mVHa9pg4eYwxoBxqO9UrSRioHsfhgwss/NrGx0iewF
-	 ZH1QH3LK3Dd+Y1bp3C+iy1Qk/dWgzuqL58m61lYc+2dKw34X9k9nOUJA2CR51jM02X
-	 4lng8BNXrz+c1/lyyejVgzqjntz9t1SDBMG/Qsbs=
+	by mail.kernel.org (Postfix) with ESMTP id B489021973
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:57:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcG701du"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgEAU5k (ORCPT
+        id S1726762AbgEAU57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:57:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgEAU5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:57:40 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F52C208DB;
-        Fri,  1 May 2020 20:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588366659;
-        bh=zQmw8TbV6rcDNsLeJ9F8FOdkMTGIKtNq4ynWn7aeG6w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rJrOsfG54lH/5iT4LJGsZVvBobr/BVhEDqwOCe0/S5MOBZSKNYFyrxyUHWYUrsfcC
-         McZLRJYs9dVMs92X+SmecC1U0Ym7h3sK4u9sTi6n3ufcRYkRTHYkdrHyZCSUzmbvDg
-         egc92ej29iM0zVZH4TUEGfCkIc/aL354VLXA5j5s=
-Received: by pali.im (Postfix)
-        id D011FA55; Fri,  1 May 2020 22:57:36 +0200 (CEST)
-Date:   Fri, 1 May 2020 22:57:36 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jan Kara <jack@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Steven J. Magnani" <steve@digidescorp.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 09/15] udf: avoid gcc-10 zero-length-bounds warnings
-Message-ID: <20200501205736.uztnq4wlr4ckkhvm@pali>
-References: <20200430213101.135134-1-arnd@arndb.de>
- <20200430213101.135134-10-arnd@arndb.de>
- <20200430215450.anfwm4zikvhy2bt5@pali>
- <CAK8P3a0_BuKDK7X8dTHyx7t++CGjy3jhDVvL=Jo5=kcUxmtobg@mail.gmail.com>
+        Fri, 1 May 2020 16:57:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgEAU56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:57:58 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DD1C061A0C;
+        Fri,  1 May 2020 13:57:58 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so12966522wrb.8;
+        Fri, 01 May 2020 13:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s46Pums7160hDMRHz4lcI0wKlc3rbqTgaKkrnlbOBuA=;
+        b=RcG701duKjGztCPmMJi6pENCMoCBn+L6THrkNZymKbb5c/AZsV86c1g9Cgql0yn5DR
+         Vmrx7hNpD9vsmBjFQ1yEzNX2u3HquDJOyseNp73KAw2dU9O+g8f7LXp+JZypSOhTpq2b
+         I9wvltZuQqln8NgGKbMNoD7iIGG8px/0uKXHDuSmJXYohTjPFvKHCaSYJq0DKcYkD40R
+         iqeSLn5UkHMwdpR+Tm0ghr04es9sGH6XsPkUzoPJoK/u1V5YobpuazvL/s1i/mKzBBrv
+         VEOCxJQ8I/KDRawTuf9dK/dQeC9DccG+2z5wdQf5krrySQludEdQ4U+lN1bTucamsXRU
+         dzJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s46Pums7160hDMRHz4lcI0wKlc3rbqTgaKkrnlbOBuA=;
+        b=cCffW32u6obbWiKa3vdH0ycNmZRXWsT0QRzvrV6lYycefAhEavmSkpF0z9v5OFmosE
+         h1JBbbCiZI6XuVw/ljV52tSDrRR5ZN4+QmIzc5DV3blGofzYCwsJun/Blzl8hgATiSQF
+         Jaq5gPuRn6jQir4bmYnVyVJmmYDk2+IOVVfuca449Xv+TqRzmyIVE/YuuTP7fktxGoHJ
+         nkhMEnDSrkdIw1HXWz1I2hkHirXz0xr3ynK/tDfm3QZCzhBqeysfhg1p1SGXPFGJEqmb
+         Fu/KIvsYu3XzOZnrtpYoxdQYz3aZwEDixS0onpl5etYM6WxJAtBXjRKDWYQj5n8Bl5y0
+         NSzg==
+X-Gm-Message-State: AGi0Pua1ZkZOqY58d2q/jASZeVytMR0E0ooZ1Zdwf/TTGQICrHT2Go+C
+        nN5lW8GHznFvRGLTgCm/am3FLwqKpZdFqg==
+X-Google-Smtp-Source: APiQypL6Hwl66LoJR1CXVn0JrzHRhsrU2/hv46W1qXtjdKAn0COb1rqSPWBv+qbJLFAahBi7PD8ucA==
+X-Received: by 2002:a5d:5646:: with SMTP id j6mr6361494wrw.207.1588366676984;
+        Fri, 01 May 2020 13:57:56 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id k14sm5970446wrp.53.2020.05.01.13.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 13:57:56 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Vincent Knecht <vincent.knecht@mailoo.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] clk: qcom: smd: Add support for MSM8936 rpm clocks
+Date:   Fri,  1 May 2020 22:57:26 +0200
+Message-Id: <20200501205728.152048-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a0_BuKDK7X8dTHyx7t++CGjy3jhDVvL=Jo5=kcUxmtobg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 01 May 2020 22:30:27 Arnd Bergmann wrote:
-> On Thu, Apr 30, 2020 at 11:54 PM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > On Thursday 30 April 2020 23:30:51 Arnd Bergmann wrote:
-> > > gcc-10 warns about writes to the empty freeSpaceTable[] array, with
-> > > many instances like:
-> > >
-> > > fs/udf/balloc.c: In function 'udf_bitmap_new_block':
-> > > fs/udf/balloc.c:101:36: error: array subscript 65535 is outside the bounds of an interior zero-length array '__le32[0]' {aka 'unsigned int[0]'} [-Werror=zero-length-bounds]
-> > >   101 |  le32_add_cpu(&lvid->freeSpaceTable[partition], cnt);
-> > >       |                ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-> > > In file included from fs/udf/udfdecl.h:7,
-> > >                  from fs/udf/balloc.c:22:
-> > > fs/udf/ecma_167.h:363:11: note: while referencing 'freeSpaceTable'
-> > >   363 |  __le32   freeSpaceTable[0];
-> > >       |           ^~~~~~~~~~~~~~
-> >
-> > Hi Arnd! This looks like a false-positive warning.
-> 
-> Right, sorry for not making that clearer in the changelog.
-> 
-> > > These can all be avoided by using a flexible array member instead.
-> > >
-> > > Another warning is a bit more obscure:
-> > >
-> > > fs/udf/super.c: In function 'udf_count_free':
-> > > fs/udf/super.c:2521:26: warning: array subscript '(<unknown>) + 4294967295' is outside the bounds of an interior zero-length array '__le32[0]' {aka 'unsigned int[0]'} [-Wzero-length-bounds]
-> > >  2521 |      lvid->freeSpaceTable[part]);
-> > >
-> > > Work around this one by changing the array access to equivalent
-> > > pointer arithmetic, as there cannot be multiple flexible-array
-> > > members in a single struct.
-> >
-> 
-> > > @@ -360,9 +360,9 @@ struct logicalVolIntegrityDesc {
-> > >       uint8_t                 logicalVolContentsUse[32];
-> > >       __le32                  numOfPartitions;
-> > >       __le32                  lengthOfImpUse;
-> > > -     __le32                  freeSpaceTable[0];
-> > >       __le32                  sizeTable[0];
-> > >       uint8_t                 impUse[0];
-> > > +     __le32                  freeSpaceTable[];
-> >
-> > Please do not change order of members in these structures. Order is
-> > strictly defined by ECMA 167 standard and changing them you would just
-> > confuse reader. In LVID is free space table before size table.
-> 
-> Ok
-> 
-> > If you do not like GNU C extension for zero-length arrays then just
-> > replace it by standard C99 flexible arrays. I think that there is no
-> > reason to not use standard C99 language constructions, just nobody had
-> > motivation or time to change (working) code.
-> 
-> No, the problem is that only the last member can be a flexible array,
+From: Vincent Knecht <vincent.knecht@mailoo.org>
 
-I know, that is why I replaced those 3 zero-length arrays by just one
-flexible array in udftools project.
+Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+---
+ drivers/clk/qcom/clk-smd-rpm.c | 50 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-> so when impUse[] is the last member, freeSpaceTable has to be a zero
-> length array.
-> 
-> > Also this file is semi-synchronized with udftools project in which I
-> > already replaced all GNU C zero-length arrays by C99 flexible arrays.
-> >
-> > You can take inspiration what I did with logicalVolIntegrityDesc:
-> > https://github.com/pali/udftools/commit/f851d84478ce881d516a76018745fa163f803880#diff-1e1a5b89f620d380f22b973f9449aeaeL381-R384
-> 
-> Right, this is likely the best workaround.
-> 
-> > Anyway, if you have a better idea what to do with such on-disk structure
-> > and how to represent it in C struct syntax, let me know as it could be
-> > updated also in udftools project.
-> 
-> The trick I used for impUse[] would also work for freeSpaceTable[] to avoid
-> the gcc warning, it's still not great, but maybe you like this better:
-> 
-> arnd@threadripper:~/arm-soc$ git diff
-> diff --git a/fs/udf/balloc.c b/fs/udf/balloc.c
-> index 02f03fadb75b..666d022eb00b 100644
-> --- a/fs/udf/balloc.c
-> +++ b/fs/udf/balloc.c
-> @@ -98,7 +98,7 @@ static void udf_add_free_space(struct super_block
-> *sb, u16 partition, u32 cnt)
->                 return;
-> 
->         lvid = (struct logicalVolIntegrityDesc *)sbi->s_lvid_bh->b_data;
-> -       le32_add_cpu(&lvid->freeSpaceTable[partition], cnt);
-> +       le32_add_cpu(lvid->freeSpaceTable + partition, cnt);
->         udf_updated_lvid(sb);
->  }
-> 
-> diff --git a/fs/udf/ecma_167.h b/fs/udf/ecma_167.h
-> index 14ffe27342bc..215d97d7edc4 100644
-> --- a/fs/udf/ecma_167.h
-> +++ b/fs/udf/ecma_167.h
-> @@ -360,9 +360,9 @@ struct logicalVolIntegrityDesc {
->         uint8_t                 logicalVolContentsUse[32];
->         __le32                  numOfPartitions;
->         __le32                  lengthOfImpUse;
->         __le32                  freeSpaceTable[0];
->         __le32                  sizeTable[0];
-> -       uint8_t                 impUse[0];
-> +       uint8_t                 impUse[];
->  } __packed;
-> 
->  /* Integrity Type (ECMA 167r3 3/10.10.3) */
-> diff --git a/fs/udf/super.c b/fs/udf/super.c
-> index 379867888c36..a1fc51c2261e 100644
-> --- a/fs/udf/super.c
-> +++ b/fs/udf/super.c
-> @@ -2517,8 +2517,8 @@ static unsigned int udf_count_free(struct super_block *sb)
->                         (struct logicalVolIntegrityDesc *)
->                         sbi->s_lvid_bh->b_data;
->                 if (le32_to_cpu(lvid->numOfPartitions) > part) {
-> -                       accum = le32_to_cpu(
-> -                                       lvid->freeSpaceTable[part]);
-> +                       accum = le32_to_cpup(
-> +                                       (lvid->freeSpaceTable + part));
->                         if (accum == 0xFFFFFFFF)
->                                 accum = 0;
->                 }
-> 
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index 52f63ad787ba9..4ac80d8ac6c25 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -452,6 +452,55 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8916 = {
+ 	.num_clks = ARRAY_SIZE(msm8916_clks),
+ };
+ 
++/* msm8936 */
++DEFINE_CLK_SMD_RPM(msm8936, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
++DEFINE_CLK_SMD_RPM(msm8936, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
++DEFINE_CLK_SMD_RPM(msm8936, bimc_clk, bimc_a_clk, QCOM_SMD_RPM_MEM_CLK, 0);
++DEFINE_CLK_SMD_RPM(msm8936, sysmmnoc_clk, sysmmnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
++DEFINE_CLK_SMD_RPM_QDSS(msm8936, qdss_clk, qdss_a_clk, QCOM_SMD_RPM_MISC_CLK, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk1, bb_clk1_a, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, bb_clk2, bb_clk2_a, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk1, rf_clk1_a, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8936, rf_clk2, rf_clk2_a, 5);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk1_pin, bb_clk1_a_pin, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, bb_clk2_pin, bb_clk2_a_pin, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk1_pin, rf_clk1_a_pin, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8936, rf_clk2_pin, rf_clk2_a_pin, 5);
++
++static struct clk_smd_rpm *msm8936_clks[] = {
++		[RPM_SMD_PCNOC_CLK]		     = &msm8936_pcnoc_clk,
++		[RPM_SMD_PCNOC_A_CLK]		   = &msm8936_pcnoc_a_clk,
++		[RPM_SMD_SNOC_CLK]		      = &msm8936_snoc_clk,
++		[RPM_SMD_SNOC_A_CLK]		    = &msm8936_snoc_a_clk,
++		[RPM_SMD_BIMC_CLK]		      = &msm8936_bimc_clk,
++		[RPM_SMD_BIMC_A_CLK]		    = &msm8936_bimc_a_clk,
++		[RPM_SMD_SYSMMNOC_CLK]		  = &msm8936_sysmmnoc_clk,
++		[RPM_SMD_SYSMMNOC_A_CLK]		= &msm8936_sysmmnoc_a_clk,
++		[RPM_SMD_QDSS_CLK]		      = &msm8936_qdss_clk,
++		[RPM_SMD_QDSS_A_CLK]		    = &msm8936_qdss_a_clk,
++		[RPM_SMD_BB_CLK1]		       = &msm8936_bb_clk1,
++		[RPM_SMD_BB_CLK1_A]		     = &msm8936_bb_clk1_a,
++		[RPM_SMD_BB_CLK2]		       = &msm8936_bb_clk2,
++		[RPM_SMD_BB_CLK2_A]		     = &msm8936_bb_clk2_a,
++		[RPM_SMD_RF_CLK1]		       = &msm8936_rf_clk1,
++		[RPM_SMD_RF_CLK1_A]		     = &msm8936_rf_clk1_a,
++		[RPM_SMD_RF_CLK2]		       = &msm8936_rf_clk2,
++		[RPM_SMD_RF_CLK2_A]		     = &msm8936_rf_clk2_a,
++		[RPM_SMD_BB_CLK1_PIN]		   = &msm8936_bb_clk1_pin,
++		[RPM_SMD_BB_CLK1_A_PIN]		 = &msm8936_bb_clk1_a_pin,
++		[RPM_SMD_BB_CLK2_PIN]		   = &msm8936_bb_clk2_pin,
++		[RPM_SMD_BB_CLK2_A_PIN]		 = &msm8936_bb_clk2_a_pin,
++		[RPM_SMD_RF_CLK1_PIN]		   = &msm8936_rf_clk1_pin,
++		[RPM_SMD_RF_CLK1_A_PIN]		 = &msm8936_rf_clk1_a_pin,
++		[RPM_SMD_RF_CLK2_PIN]		   = &msm8936_rf_clk2_pin,
++		[RPM_SMD_RF_CLK2_A_PIN]		 = &msm8936_rf_clk2_a_pin,
++};
++
++static const struct rpm_smd_clk_desc rpm_clk_msm8936 = {
++		.clks = msm8936_clks,
++		.num_clks = ARRAY_SIZE(msm8936_clks),
++};
++
+ /* msm8974 */
+ DEFINE_CLK_SMD_RPM(msm8974, pnoc_clk, pnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
+ DEFINE_CLK_SMD_RPM(msm8974, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
+@@ -768,6 +817,7 @@ static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
+ 
+ static const struct of_device_id rpm_smd_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
++	{ .compatible = "qcom,rpmcc-msm8936", .data = &rpm_clk_msm8936 },
+ 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
+ 	{ .compatible = "qcom,rpmcc-msm8976", .data = &rpm_clk_msm8976 },
+ 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
+-- 
+2.26.1
 
-This is much better as it does not change order of members in LVID
-structure. I'm fine with it.
-
-> This version could easily be backported to stable kernels to let them be
-> compiled with gcc-10
-
-I do not know what triggers that false-positive warning. But if you
-think that this change is enough to "hide" that warning, you can add my
-Acked-by: Pali Rohár <pali@kernel.org>
-
-For sure it is better to have just small changes needed for backporting.
-
-> and then synchronizing with the udftools version of
-> the header needs additional changes on top, which do not need to be
-> backported.
-
-Both header files (ECMA and OSTA) should be in-sync with udftools since
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=614644676394951e73194ea96b3f026c1adf5443
-Differences in kernel code are: usage of zero-length array members,
-usage of integer types and usage of structure attributes.
-
-If you are planning in future to do some changes in those ECMA or OSTA
-header files, please send updates also for udftools. So we will have
-header files synchronized as much as possible.
