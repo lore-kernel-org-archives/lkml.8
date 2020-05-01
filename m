@@ -2,148 +2,129 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F13C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122D92166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:20:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ki2JsUw7"
+	by mail.kernel.org (Postfix) with ESMTP id 3D14B2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbgEAQUf (ORCPT
+        id S1730204AbgEAQUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEAQUe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:20:34 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3281C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 09:20:33 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id p25so1758031pfn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 09:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Yd93wm19Lo7i72T5RuGc1UE9Qy6a9u12qh3EanZNDio=;
-        b=Ki2JsUw7u3B87uVo1Hhv9ITRcDD/BW6tF24CucfiCHI4w43HbDOPGZItaBOCcMOG5p
-         hD91jN7Br2Vo0C8jJEMFTU85Jtx6reaOyYWVS6u5P5VcGtVZ+aAcJO9SV1G4qs91st4V
-         iOo72LFGU86TOkilYb5BkxSCxwrD//JDoBJbdJ+p1DIOz2eFUyuxY9p9zSaro9ajwBPe
-         Iwr4E1RTTn3ubKSnrVRe9myG3bwgrxHlAZZgi9zMawbw7Rj6QJ6QY+I4Ux/ZX5gEoHnO
-         fI0bYGD67w6FBM2FyvO1LeHvWSX8cWIxQL/YOrrrPBLc3NnumdcZPh+hXm0MTttibWPb
-         SXWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Yd93wm19Lo7i72T5RuGc1UE9Qy6a9u12qh3EanZNDio=;
-        b=fVho2/fXKLY5R/uwlx6MA8tg1H5rbbEMuHjFaWBgyFs+hJwYG5I9G0JPDvv9SArWAi
-         VRI8s+ye7zp6e71C65Ayz3F8pdbJJyMu9yg0HvLO4xzvEKgjgUAt6PwTmbz3ag7gsk24
-         eUp6P72Iz/LjuPThlTBO4l/B+sbfCUpVxwDQ3ped+4mWduzsQRJu13Z4+W10Mab27N4E
-         j7eeUolL8b63Kk5t8cGl1jZwpGustD93vNm4XNAHFQQD0/4LyMU9FDCp9HVdMCQSFH6w
-         8aM/pY2G2RBQopkXeVRUsgXv7XXYKFjmC9HGgYwKJjrjmr2H02vK7QjgylxocGP3eljW
-         1JGg==
-X-Gm-Message-State: AGi0PuYpYt8MO+hZZDXw1mBdp/wVzx9Qwr8V/wgweBUT26yaf6OXQ+Sk
-        roniR/9a4H4/e1FjoPnjOa8fDQ==
-X-Google-Smtp-Source: APiQypK4DcqgSSTbtbUe+inFMNtdfWW4US705V2FgiSt5qIWCGPdinVayuyL5IRxeFaQo4Q9yQM9YQ==
-X-Received: by 2002:a65:4c41:: with SMTP id l1mr4779951pgr.43.1588350033444;
-        Fri, 01 May 2020 09:20:33 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id a200sm2547834pfa.201.2020.05.01.09.20.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 09:20:32 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        ulf.hansson@linaro.org, sebott@linux.ibm.com, efremov@linux.com,
-        vidyas@nvidia.com, paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH] PCI: endpoint: functions/pci-epf-test: Enable picking DMA channel by name
-Date:   Fri,  1 May 2020 09:20:08 -0700
-Message-Id: <1588350008-8143-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 1 May 2020 12:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729581AbgEAQUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:20:52 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C6222166E;
+        Fri,  1 May 2020 16:20:51 +0000 (UTC)
+Date:   Fri, 1 May 2020 12:20:49 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>, skhan@linuxfoundation.org
+Subject: Re: [PATCH 2/3] selftests/ftrace: Pick only the first kprobe event
+ to test
+Message-ID: <20200501122049.46a93bb5@gandalf.local.home>
+In-Reply-To: <7751734b-83f1-bf14-9d8e-9092b0b7be3e@kernel.org>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834027133.28357.11196486193798517250.stgit@devnote2>
+        <20200501101718.5a15e557@gandalf.local.home>
+        <7751734b-83f1-bf14-9d8e-9092b0b7be3e@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On Fri, 1 May 2020 09:38:59 -0600
+shuah <shuah@kernel.org> wrote:
 
-Modify pci_epf_test_init_dma_chan() to call dma_request_channel() with a
-filter function to pick DMA channel by name, if desired.
+> On 5/1/20 8:17 AM, Steven Rostedt wrote:
+> > On Fri,  1 May 2020 22:37:51 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >   
+> >> Since the kprobe/kprobe_args_type.tc reads out all event logs
+> >> from the trace buffer, the test can fail if there is another
+> >> fork event happens.
+> >> Use head command to pick only the first kprobe event from
+> >> the trace buffer to test the argument types.
+> >>
+> >> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> >> ---
+> >>   .../ftrace/test.d/kprobe/kprobe_args_type.tc       |    2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> >> index 1bcb67dcae26..81490ecaaa92 100644
+> >> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> >> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> >> @@ -38,7 +38,7 @@ for width in 64 32 16 8; do
+> >>     echo 0 > events/kprobes/testprobe/enable
+> >>   
+> >>     : "Confirm the arguments is recorded in given types correctly"
+> >> -  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+> >> +  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+> >>     check_types $ARGS $width
+> >>   
+> >>     : "Clear event for next loop"  
+> > 
+> > I think I've manually added this exact change to my tests to keep it from
+> > failing.
+> > 
+> > Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> >   
+> 
+> Does this conflict with:
+> 
+> Author: Xiao Yang <yangx.jy@cn.fujitsu.com>
+> Date:   Tue Apr 7 14:34:19 2020 +0800
+> 
+>      selftests/ftrace: Check the first record for kprobe_args_type.tc
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=next&id=f0c0d0cf590f71b2213b29a7ded2cde3d0a1a0ba
+> 
+> I went into mainline yesterday in my rc4 pull request.
+> 
+> Exact change it appears.
 
-Add a new filter function pci_epf_test_pick_dma_chan() which takes a name
-string as an optional parameter. If desired name is specified, the filter
-function checks the name of each DMA channel candidate against the desired
-name. If no match, the filter function rejects the candidate channel.
-Otherwise, the candidate channel is accepted. If optional name parameter
-is null or an empty string, filter function picks the first DMA channel
-candidate, thereby preserving the existing behavior of pci-epf-test.
+Ah, then I guess we don't need this patch ;-)
 
-Currently, pci-epf-test picks the first suitable DMA channel. Adding a
-filter function enables a developer to modify the optional parameter
-during debugging by providing the name of a desired DMA channel. This is
-useful during debugging because it allows different DMA channels to be
-exercised.
+-- Steve
 
-Adding a filter function also takes one step toward modifying pcitest to
-allow the user to choose a DMA channel by providing a name string at the
-command line when issuing the -d parameter for DMA transfers.
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 60330f3e3751..043916d3ab5f 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -149,10 +149,26 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- }
- 
- /**
-- * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-- * @epf_test: the EPF test device that performs data transfer operation
-+ * pci_epf_test_pick_dma_chan() - Filter DMA channel based on desired criteria
-+ * @chan: the DMA channel to examine
-  *
-- * Function to initialize EPF test DMA channel.
-+ * Filter DMA channel candidates by matching against an optional desired name.
-+ * Pick first candidate channel if desired name is not specified.
-+ * Reject candidate channel if its name does not match the desired name.
-+ */
-+static bool pci_epf_test_pick_dma_chan(struct dma_chan *chan, void *name)
-+{
-+	if (name && strlen(name) && strcmp(dma_chan_name(chan), name))
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * pci_epf_test_init_dma_chan() - Helper to initialize EPF DMA channel
-+ * @epf: the EPF device that has to perform the data transfer operation
-+ *
-+ * Helper to initialize EPF DMA channel.
-  */
- static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- {
-@@ -165,7 +181,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_MEMCPY, mask);
- 
--	dma_chan = dma_request_chan_by_mask(&mask);
-+	dma_chan = dma_request_channel(mask, pci_epf_test_pick_dma_chan, NULL);
- 	if (IS_ERR(dma_chan)) {
- 		ret = PTR_ERR(dma_chan);
- 		if (ret != -EPROBE_DEFER)
--- 
-2.7.4
+> 
+> diff --git 
+> a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc 
+> b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> index 1bcb67dcae26..81490ecaaa92 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_type.tc
+> @@ -38,7 +38,7 @@ for width in 64 32 16 8; do
+>     echo 0 > events/kprobes/testprobe/enable
+> 
+>     : "Confirm the arguments is recorded in given types correctly"
+> -  ARGS=`grep "testprobe" trace | sed -e 's/.* arg1=\(.*\) arg2=\(.*\) 
+> arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+> +  ARGS=`grep "testprobe" trace | head -n 1 | sed -e 's/.* arg1=\(.*\) 
+> arg2=\(.*\) arg3=\(.*\) arg4=\(.*\)/\1 \2 \3 \4/'`
+>     check_types $ARGS $width
+> 
+>     : "Clear event for next loop"
+> 
+> thanks,
+> -- Shuah
 
