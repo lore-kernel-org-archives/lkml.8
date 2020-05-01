@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57537C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3BDC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0D52051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B29B2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341001;
-	bh=1sRtclu5YtF/BdA/p0xwCVoFQqyA2qzRIAsl+w9VUSc=;
+	s=default; t=1588341007;
+	bh=Ze3UjFGAi6ozjZV+S3NBPO6NJ/zGOZh2wAwP6wjQayw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqAZ6aY0Ezk9DOyMR3bz0dnbXMpDaK63/iXsf29QH6+bLXdi/WgXGqLDbvMa2LZVk
-	 YsMdToK1kMG2YGXVp2hyojDai7BA36tLApS9N47nZMTrHnZ/baNy15i4x6Gqq/lOqi
-	 TZH3HvkKLZ4wsVJMQSdzavMgL1hV762Ac9zFLOow=
+	b=lCeOico+RGnykYVj/2c13ik3wdsce81RUL1d9Yptvg356RMlzTPy5aaOe0dE0lEQW
+	 BL0bMBJqNxqSdFQbCsjgqmVdNfvntmTCqCgynTvwv2ttaNhn2Z6f16iEXpJ0JSG13a
+	 h3s3iF7e0LB3HaF3SMpH0wFjEIBFOYKpkr3Mx/qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbgEANuA (ORCPT
+        id S1731924AbgEANuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729633AbgEANkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:47 -0400
+        id S1731277AbgEANkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCAF216FD;
-        Fri,  1 May 2020 13:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8794205C9;
+        Fri,  1 May 2020 13:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340447;
-        bh=1sRtclu5YtF/BdA/p0xwCVoFQqyA2qzRIAsl+w9VUSc=;
+        s=default; t=1588340425;
+        bh=Ze3UjFGAi6ozjZV+S3NBPO6NJ/zGOZh2wAwP6wjQayw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Io3RjrTEIkRdRzG2T8iuP7IjvqeqbRLAIhbCzuPWIhsrvi957OJ9E3WkLSltrsihg
-         6FI9iJQCfi7/5CZk5TiLj1eDqk2tQ1H1Gzs8vgg/RhtRGY8sE76I53bjpr+zbFcs2Q
-         fjd/QUDo1IDlfeR/1Uu9GsOGSOfCb71HaCicHpLU=
+        b=K5C78gcA4iZ+4KJOXoX2PxLAJMv3/Zfw/JGAUPX5ozO06X/woKhcWt/kPEHAgESa8
+         PD7F5cnZwyHZwAb+4wcZI8tBN4mieBA5oIKoSsEQ3HyURZTEYw4WoF2uxW8SXeOHau
+         ufPXoZqLR9FOeH2VYTWzkShABGA2dn7nnQpm803Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Theodore Tso <tytso@mit.edu>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 71/83] ext4: use matching invalidatepage in ext4_writepage
-Date:   Fri,  1 May 2020 15:23:50 +0200
-Message-Id: <20200501131541.543288760@linuxfoundation.org>
+        stable@vger.kernel.org, Roy Spliet <nouveau@spliet.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 60/83] ALSA: hda: Keep the controller initialization even if no codecs found
+Date:   Fri,  1 May 2020 15:23:39 +0200
+Message-Id: <20200501131540.240757439@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -61,38 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit c2a559bc0e7ed5a715ad6b947025b33cb7c05ea7 ]
+[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
 
-Run generic/388 with journal data mode sometimes may trigger the warning
-in ext4_invalidatepage. Actually, we should use the matching invalidatepage
-in ext4_writepage.
+Currently, when the HD-audio controller driver doesn't detect any
+codecs, it tries to abort the probe.  But this abort happens at the
+delayed probe, i.e. the primary probe call already returned success,
+hence the driver is never unbound until user does so explicitly.
+As a result, it may leave the HD-audio device in the running state
+without the runtime PM.  More badly, if the device is a HD-audio bus
+that is tied with a GPU, GPU cannot reach to the full power down and
+consumes unnecessarily much power.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200226041002.13914-1-yangerkun@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This patch changes the logic after no-codec situation; it continues
+probing without the further codec initialization but keep the
+controller driver running normally.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Tested-by: Roy Spliet <nouveau@spliet.org>
+Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index b9473fcc110fd..7e0c77de551bb 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2131,7 +2131,7 @@ static int ext4_writepage(struct page *page,
- 	bool keep_towrite = false;
- 
- 	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb)))) {
--		ext4_invalidatepage(page, 0, PAGE_SIZE);
-+		inode->i_mapping->a_ops->invalidatepage(page, 0, PAGE_SIZE);
- 		unlock_page(page);
- 		return -EIO;
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index f82f95df757cf..fbffec2ab2372 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -1958,7 +1958,7 @@ static int azx_first_init(struct azx *chip)
+ 	/* codec detection */
+ 	if (!azx_bus(chip)->codec_mask) {
+ 		dev_err(card->dev, "no codecs found!\n");
+-		return -ENODEV;
++		/* keep running the rest for the runtime PM */
  	}
+ 
+ 	if (azx_acquire_irq(chip, 0) < 0)
+@@ -2268,9 +2268,11 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 
+ 	/* create codec instances */
+-	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
+-	if (err < 0)
+-		goto out_free;
++	if (bus->codec_mask) {
++		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
++		if (err < 0)
++			goto out_free;
++	}
+ 
+ #ifdef CONFIG_SND_HDA_PATCH_LOADER
+ 	if (chip->fw) {
+@@ -2284,7 +2286,7 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 	}
+ #endif
+-	if ((probe_only[dev] & 1) == 0) {
++	if (bus->codec_mask && !(probe_only[dev] & 1)) {
+ 		err = azx_codec_configure(chip);
+ 		if (err < 0)
+ 			goto out_free;
 -- 
 2.20.1
 
