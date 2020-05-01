@@ -2,105 +2,112 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579F6C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20FCC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21575216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B212A216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J3geM7oz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K3AlNroQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgEAPNW (ORCPT
+        id S1729360AbgEAPN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:13:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31005 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728896AbgEAPNW (ORCPT
+        Fri, 1 May 2020 11:13:27 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6044 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbgEAPN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:13:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588346000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F4yL4oTUsOpbnfJKXRJ3LDveHMm1KM/d4GtJdspShdk=;
-        b=J3geM7ozXb4qY+RP49bGdsP5j+GeJqJZIUkX9xPbQrqYF785LtBVSjgNv2WOCNwPfZAJeH
-        3Kk83PORUWrObJrUKXFMYsWFGSZGWyltXyz6gmRLOFKSSP1u4xkDHYxaQ+9nkQm5tugtvp
-        XJL2ATLWWFJQSG12nsUTETVF8ySBBGQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-BCs19SbTMpe_3nCJyFV0SA-1; Fri, 01 May 2020 11:13:16 -0400
-X-MC-Unique: BCs19SbTMpe_3nCJyFV0SA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F28568005B7;
-        Fri,  1 May 2020 15:13:14 +0000 (UTC)
-Received: from treble (ovpn-114-104.rdu2.redhat.com [10.10.114.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBA6A5C1BB;
-        Fri,  1 May 2020 15:13:12 +0000 (UTC)
-Date:   Fri, 1 May 2020 10:13:10 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC][PATCH] x86/ftrace: Have ftrace trampolines turn read-only
- at the end of system boot up
-Message-ID: <20200501151310.zo5bhnxpu5gubofj@treble>
-References: <20200430202147.4dc6e2de@oasis.local.home>
- <20200501044733.eqf6hc6erucsd43x@treble>
- <20200501051706.4wkrqwovybt2p6hr@treble>
- <20200501092404.06d1adcb@gandalf.local.home>
+        Fri, 1 May 2020 11:13:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eac3c190000>; Fri, 01 May 2020 08:11:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 01 May 2020 08:13:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 01 May 2020 08:13:26 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May
+ 2020 15:13:25 +0000
+Received: from [10.26.73.180] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May 2020
+ 15:13:22 +0000
+Subject: Re: [PATCH 4.4 00/70] 4.4.221-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200501131513.302599262@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <5bd427c7-9a92-cae9-27c7-1998dbff2d83@nvidia.com>
+Date:   Fri, 1 May 2020 16:13:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200501092404.06d1adcb@gandalf.local.home>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588345881; bh=D1qWdXKYvcHZVzuSDVINfTGagAk3jxTBROcztaJ1+js=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=K3AlNroQGrZKvTDRf1+FgXJePPNdNVOFIUXM3f9g0tJnD24wIgvyBUfRofFS6QzBH
+         CTnw4yqpj6VAetUD4+4OGygAL0ZjCtWfeSbrNt2nrmHDNMqq6AvQucou+ZD+7+AS/L
+         sL32cXbbO9OxmuRqgNxWK3apfLz+6P2O56OqrbHQC3rq69tr1K4HmBx/IxXjqgGGju
+         Kt2RMyyBl9YeermR0niB7QMxIBlozp+J9Kx6J9EHDlYve05Oghp/Ra3uDKmNxhuesz
+         nSM3wIBldNskej61X/8E+f5TAD5qdq7/l5aCJB+0PWteJY1XlBy3sfMy2ThsYDt3Bp
+         Wz/Zy/LY5LLfQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 09:24:04AM -0400, Steven Rostedt wrote:
-> On Fri, 1 May 2020 00:17:06 -0500
-> Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+
+On 01/05/2020 14:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.221 release.
+> There are 70 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> > > Would it be easier to just call a new __text_poke_bp() which skips the
-> > > SYSTEM_BOOTING check, since you know the trampoline will always be
-> > > read-only?
-> > > 
-> > > Like:  
-> > 
-> > early_trace_init() is called after mm_init(), so I thought it might
-> > work, but I guess not:
+> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
+> Anything received after that time might be too late.
 > 
-> Yeah, I was about to say that this happens before mm_init() ;-)
-
-It happens *after* mm_init().  But now text_poke() has a dependency on
-poking_init(), has a dependency on proc_caches_init(), which has a
-dependency on kmem_cache_init_late(), etc.
-
-So how early do you need early_trace_init()?  I'm assuming moving it to
-after kmem_cache_init_late() would be too late.
-
-> It's why we already have magic for enabling function tracing the first time.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.221-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
 > 
-> Do you see anything wrong with this current solution? It probably needs
-> more comments, but I wanted to get acceptance on the logic before I go and
-> pretty it up and send a non RFC patch.
+> thanks,
+> 
+> greg k-h
 
-Assuming we can't get text_poke() working earlier, it seems reasonable
-to me.
+
+All tests are passing for Tegra ...
+
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
+
+Linux version:	4.4.221-rc1-gbe0a2ec77b53
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
 
 -- 
-Josh
-
+nvpublic
