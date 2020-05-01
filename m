@@ -2,99 +2,155 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E7DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C2CC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737A220757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HVR74c+T"
+	by mail.kernel.org (Postfix) with ESMTP id 2798D24957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588339819;
+	bh=PfmHYvVYYPHRR8l7nqz1iLpSdLhmCb4oaAshHsMMEv0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=enjSHI/QqfOc4/cIQwgziwvajg4zv9alMSum2PP6wZFhoP5QOr2fN/IVxhvheuoB6
+	 8JZPEkN7xTUAwDpMS4bYDxKJn6ewm+KbEb7iYN9u2efsBLUM7ZYLokjD5l8p9vBPFj
+	 a5+Pw3FhKzoRsdPy0tUD+s2j4kSZW0sDBEoznVk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgEANaQ (ORCPT
+        id S1729913AbgEANaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:16 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:9192 "EHLO rere.qmqm.pl"
+        Fri, 1 May 2020 09:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729897AbgEANaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729898AbgEANaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 09:30:13 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49DCmL4hYwz7N;
-        Fri,  1 May 2020 15:30:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588339811; bh=df1zMSo857OmD6bMwuGX0U3QsXa2EYWws/vLhmRKD5I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HVR74c+TgNmjXzHbHgAf8zUizG6qUVh2yQtlEpfUuorGlirN04XEI/Xkt+C3HFnUU
-         08uYs/Ld7bZdjV5O84mbKhVCZp4zzKNBCo0qhqVplbXhl5IetrUc5uY8oasWazxWTE
-         usDHiLz3W49Xmu0+oHXX2eNCy6xAJih94CiSy5sUg7jZQuMPrqRGW6MgEvM1UeWLts
-         zue5D0xdSWakcXYlGEgkaDuT4CDWZ/UEC+QDDAjY1lxeVtLGkuELiOLYGwUS0PWBzR
-         WKXVx+1IAVix88Mck3SlhyMeSYlmxnZ/NaFHIcMczrZ4Lt/jjOpuS6MEWwfuN58m9c
-         YBFkWWhuSrT5Q==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 1 May 2020 15:30:08 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 02/11] power: charger-manager: don't write through
- desc->properties
-Message-ID: <20200501133008.GA8927@qmqm.qmqm.pl>
-References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
- <a529e64edb81a4795fe0b6480f1e4051bed1b099.1585944770.git.mirq-linux@rere.qmqm.pl>
- <20200501123849.ws2a5ybeeej6phyr@earth.universe>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B6ED208C3;
+        Fri,  1 May 2020 13:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588339812;
+        bh=PfmHYvVYYPHRR8l7nqz1iLpSdLhmCb4oaAshHsMMEv0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=L+1lbP5DUt4pzWSY7nIrGpsLmCjCUcPfKkuLj6iFlZA8MGAMZMY6uEQfdeSw25XGv
+         SXXNuyU21BrbxzsNbfQ/4bV/moO3Q2MBRpd/wRAZg4ns2ijv4ntKiaN5ihLsEVAkQD
+         sVqsjSjPUObl0FH7/1k67bAKV09X0IbkjmTqRuIo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.9 57/80] UAS: fix deadlock in error handling and PM flushing work
+Date:   Fri,  1 May 2020 15:21:51 +0200
+Message-Id: <20200501131530.792275212@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
+References: <20200501131513.810761598@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200501123849.ws2a5ybeeej6phyr@earth.universe>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:38:49PM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Fri, Apr 03, 2020 at 10:20:31PM +0200, Micha³ Miros³aw wrote:
-> > psy_desc->properties will become pointer to const.  Avoid writing
-> > through the pointer to enable constification of the tables elsewhere.
-> > 
-> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> For patches 1-3 I used my version, that I wrote in parallel while
-> reviewing a different patch series. It is slightly different, but
-> achieves the same goal.
+From: Oliver Neukum <oneukum@suse.com>
 
-There is a bug in the tree now regarding use of num_properties
-in charger-manager.  Following patch should fix it.
+commit f6cc6093a729ede1ff5658b493237c42b82ba107 upstream.
 
-Best Regards,
-Micha³ Miros³aw
+A SCSI error handler and block runtime PM must not allocate
+memory with GFP_KERNEL. Furthermore they must not wait for
+tasks allocating memory with GFP_KERNEL.
+That means that they cannot share a workqueue with arbitrary tasks.
 
-diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/supply/charger-manager.c
-index a71e2ee81423..2ef53dc1f2fb 100644
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -1740,14 +1740,14 @@ static int charger_manager_probe(struct platform_device *pdev)
+Fix this for UAS using a private workqueue.
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: f9dc024a2da1f ("uas: pre_reset and suspend: Fix a few races")
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200415141750.811-2-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/storage/uas.c |   43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
+
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -82,6 +82,19 @@ static void uas_free_streams(struct uas_
+ static void uas_log_cmd_state(struct scsi_cmnd *cmnd, const char *prefix,
+ 				int status);
+ 
++/*
++ * This driver needs its own workqueue, as we need to control memory allocation.
++ *
++ * In the course of error handling and power management uas_wait_for_pending_cmnds()
++ * needs to flush pending work items. In these contexts we cannot allocate memory
++ * by doing block IO as we would deadlock. For the same reason we cannot wait
++ * for anything allocating memory not heeding these constraints.
++ *
++ * So we have to control all work items that can be on the workqueue we flush.
++ * Hence we cannot share a queue and need our own.
++ */
++static struct workqueue_struct *workqueue;
++
+ static void uas_do_work(struct work_struct *work)
+ {
+ 	struct uas_dev_info *devinfo =
+@@ -110,7 +123,7 @@ static void uas_do_work(struct work_stru
+ 		if (!err)
+ 			cmdinfo->state &= ~IS_IN_WORK_LIST;
+ 		else
+-			schedule_work(&devinfo->work);
++			queue_work(workqueue, &devinfo->work);
  	}
- 	if (!power_supply_get_property(fuel_gauge,
- 					  POWER_SUPPLY_PROP_CHARGE_NOW, &val)) {
--		properties[cm->charger_psy_desc.num_properties] =
-+		properties[num_properties] =
- 				POWER_SUPPLY_PROP_CHARGE_NOW;
- 		num_properties++;
- 	}
- 	if (!power_supply_get_property(fuel_gauge,
- 					  POWER_SUPPLY_PROP_CURRENT_NOW,
- 					  &val)) {
--		properties[cm->charger_psy_desc.num_properties] =
-+		properties[num_properties] =
- 				POWER_SUPPLY_PROP_CURRENT_NOW;
- 		num_properties++;
- 	}
+ out:
+ 	spin_unlock_irqrestore(&devinfo->lock, flags);
+@@ -135,7 +148,7 @@ static void uas_add_work(struct uas_cmd_
+ 
+ 	lockdep_assert_held(&devinfo->lock);
+ 	cmdinfo->state |= IS_IN_WORK_LIST;
+-	schedule_work(&devinfo->work);
++	queue_work(workqueue, &devinfo->work);
+ }
+ 
+ static void uas_zap_pending(struct uas_dev_info *devinfo, int result)
+@@ -1236,7 +1249,31 @@ static struct usb_driver uas_driver = {
+ 	.id_table = uas_usb_ids,
+ };
+ 
+-module_usb_driver(uas_driver);
++static int __init uas_init(void)
++{
++	int rv;
++
++	workqueue = alloc_workqueue("uas", WQ_MEM_RECLAIM, 0);
++	if (!workqueue)
++		return -ENOMEM;
++
++	rv = usb_register(&uas_driver);
++	if (rv) {
++		destroy_workqueue(workqueue);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void __exit uas_exit(void)
++{
++	usb_deregister(&uas_driver);
++	destroy_workqueue(workqueue);
++}
++
++module_init(uas_init);
++module_exit(uas_exit);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR(
+
+
