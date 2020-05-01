@@ -2,134 +2,100 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAE8C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F2DC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B444D208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="eYmQvXSg"
+	by mail.kernel.org (Postfix) with ESMTP id 21E3421775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588357319;
+	bh=Um7RoGUIHgQ8GZBTGxBQtb71GMGyRZ5tADvfvjI5JZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1oKNAv5lJYWfMIg+sYpWGvQBgVOY61Yy1GLAM/MA9sgpLBU+7kdGsDkZ8hovyQsiH
+	 Ee0aaQAFtnKNcutI/WvjlGDOVpW0ShwwX2+T60C18mhk1NctHbAYExx5dKVZApsqK8
+	 w5Hc2ASNnrTzTwn1AB0o6GAheqR4gk0olpyqC0oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgEASVJ (ORCPT
+        id S1730432AbgEASV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
+        Fri, 1 May 2020 14:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729599AbgEASUv (ORCPT
+        by vger.kernel.org with ESMTP id S1729599AbgEASV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:20:51 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5385FC08E859
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 11:20:51 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id s9so7371828qkm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 11:20:51 -0700 (PDT)
+        Fri, 1 May 2020 14:21:57 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E08C061A0C;
+        Fri,  1 May 2020 11:21:57 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l78so10075217qke.7;
+        Fri, 01 May 2020 11:21:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z9L5E7jU6qZTDlvCOWkCRO/8Kuf781Iwupk1hf9V6HE=;
-        b=eYmQvXSg2qYixEnFQmQuL+BJ+s8QgjZuAUWgykXDJtrLFr4P7m0W0/kP4+Y9MPtVGF
-         GEtSJxpgWBu1fFkH22lWF08AwssVopEXTWDUEIaIhY1gusdYSK7RSGLQWVyHUcUiscS/
-         zC+WOzhPtGtzljjGaHzCeO82gTrSkS/cgxlzAFQnW+Z+1V4rjPNc1V5KavEj8FQOPQJO
-         Kn+VMBhPoimubTHqFkT18vbtXQHq2UzpqbTCQon6hutFydkMZzQ4VfcDXSbLuUnRsErB
-         sDHwnuX4OpC9+SKhVmRSRGYXmrvVZ7i2dvPleR4e1IM2Qp1itlViF6ePitJ9Y1gWAgkQ
-         aagA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KiYd6hVsmrnt0vWm34SLnLpgGlMhVF862REnMZFBaRo=;
+        b=gn94t0znEkJj8IzRShTGjgN6+qdPrjiLurgsaTfax0JU9ifHIxoDcu0vsJhsZSyoKA
+         4zKbH0y7TJn3Defs77/2hgzXXqx0rUP3IYBZPYzXGN9jB6bBpEQ55fbEWogJuGTENxpP
+         LrEqERrEPea7wnM0W6mtsXbsulbNJq5kPqqheRLOOhZ2PUyPm7UBHGNttFHYLWIbPluF
+         G5bVeX5o/IeZVGDfc8iaSVMzFFfZwbLZjgT/Jk64vsO5NG0QOY0gbc1lVrmg2KDARZqG
+         /6wIGR5Qga7AzLsjKap9/K9tHa0ud06hNYmMXXHEmxDwtVIevikLnnDexnfn32VzIIv0
+         Ul9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z9L5E7jU6qZTDlvCOWkCRO/8Kuf781Iwupk1hf9V6HE=;
-        b=DGebHsSslK7uc5o12u48ZQ59N8LvUFct1ArbNa5iotODxj04oPk0aOa/tN01TZbAZl
-         f+9hIgnTw60AmCjcmYEDVFhDYNL8TENRwTI6qjdKAeF3Yfi2fh4OrBoyZf08qcNX24St
-         f71Yjb50wAa4UZH+ENqugrYl6hlfRDR7t8O/KHmoZ/Drvg1wnOWaXqVKv3W+4ngrxzm7
-         A/vt1M6KFH03nJAApFWBzNY+ZFYgOdFcq5rYWTIzGg0UrAx85MLY/Ndgalfz732lCVZo
-         08uBFTNPy6VkQ8wk2AMBlF5/BVuYpzw3USmxCJj9jRRHIe2XZsFTnmXSGf97I5/4bl/8
-         tIfg==
-X-Gm-Message-State: AGi0PuYJ9M6ifxDItE/try9/1qvhi2+0/6KSP2i5HTVfg6tLA+a/pSoM
-        6rP0hl2r5EBxmkCWyEPFwfe1wA==
-X-Google-Smtp-Source: APiQypIa020BYepbg1xvIoG68mrjNEDBs6npTd0MXTuT5809Lcttkf/1iLQ1dmFR5/ot2aOBBNAYqg==
-X-Received: by 2002:a05:620a:16aa:: with SMTP id s10mr4887237qkj.225.1588357250518;
-        Fri, 01 May 2020 11:20:50 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x24sm3205396qth.80.2020.05.01.11.20.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 May 2020 11:20:49 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jUaHI-0006oc-Ly; Fri, 01 May 2020 15:20:48 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        dri-devel@lists.freedesktop.org,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Christoph Hellwig <hch@lst.de>,
-        intel-gfx@lists.freedesktop.org,
-        =?utf-8?b?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-kernel@vger.kernel.org,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
-Subject: [PATCH hmm v2 3/5] drm/amdgpu: remove dead code after hmm_range_fault()
-Date:   Fri,  1 May 2020 15:20:46 -0300
-Message-Id: <3-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
-In-Reply-To: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
-References: 
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=KiYd6hVsmrnt0vWm34SLnLpgGlMhVF862REnMZFBaRo=;
+        b=LdUUajCXLsLWUtj3offLbyIzVK5rOgN8OR0A10oNMijg7Wncq0T7BQIf1lRp8DfHGH
+         HT4N5HRkIeVOu7iM/e3VC6fgSxn6pslbG71oa/xINBearEMstWzG8FKqwXVZ5/FDcasZ
+         bLbmu1SystX3KQB3nrd7REdZ6lbBCd/JPJ/417YywCuewcbAeWLfCrv0gWZNw37PXcUf
+         iWPUxSOEvotgLU5YiV2+Bib59nGYDZBz3s2VzA5QGZUeqBAFmROiUHtI1PSMi4XyIkEM
+         mDKN2j392wSlZxpu2TKOQO7PZcxkpuYvghSsqUH2RVMxYhHtsE6rc3kohKvPF+31t8UB
+         T5xw==
+X-Gm-Message-State: AGi0PuY97TXqACcP7OaTcvqCI04wBSO3IiIw2Sk8DdIhPb6rn+v5J46B
+        5UjxoBvrXZN8JSSJirq7iPY=
+X-Google-Smtp-Source: APiQypK3gqYshcrDQKI0pZ8y57MCQ65ILdE0a3EDJg6ikVyB2Cdtx/qrnZep5+DsFZXjxC29bJ0T2Q==
+X-Received: by 2002:a37:a049:: with SMTP id j70mr4711692qke.193.1588357316620;
+        Fri, 01 May 2020 11:21:56 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:e6fd])
+        by smtp.gmail.com with ESMTPSA id c23sm3130133qka.12.2020.05.01.11.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 11:21:55 -0700 (PDT)
+Date:   Fri, 1 May 2020 14:21:54 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] allow multiple kthreadd's
+Message-ID: <20200501182154.GG5462@mtj.thefacebook.com>
+References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+ <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+Hello,
 
-Since amdgpu does not use the snapshot mode of hmm_range_fault() a
-successful return already proves that all entries in the pfns are
-HMM_PFN_VALID, there is no need to check the return result of
-hmm_device_entry_to_page().
+On Fri, May 01, 2020 at 10:59:24AM -0700, Linus Torvalds wrote:
+> Which kind of makes me want to point a finger at Tejun. But it's been
+> mostly PeterZ touching this file lately..
 
-Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Looks fine to me too. I don't quite understand the usecase tho. It looks
+like all it's being used for is to tag some kthreads as belonging to the
+same group. Can't that be done with kthread_data()?
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-index 7eb745b8acce0f..41ae7f96f48194 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
-@@ -862,17 +862,13 @@ int amdgpu_ttm_tt_get_user_pages(struct amdgpu_bo *bo, struct page **pages)
- 		goto out_free_pfns;
- 	}
- 
--	for (i = 0; i < ttm->num_pages; i++) {
--		/* FIXME: The pages cannot be touched outside the notifier_lock */
-+	/*
-+	 * Due to default_flags, all pages are HMM_PFN_VALID or
-+	 * hmm_range_fault() fails. FIXME: The pages cannot be touched outside
-+	 * the notifier_lock, and mmu_interval_read_retry() must be done first.
-+	 */
-+	for (i = 0; i < ttm->num_pages; i++)
- 		pages[i] = hmm_device_entry_to_page(range, range->pfns[i]);
--		if (unlikely(!pages[i])) {
--			pr_err("Page fault failed for pfn[%lu] = 0x%llx\n",
--			       i, range->pfns[i]);
--			r = -ENOMEM;
--
--			goto out_free_pfns;
--		}
--	}
- 
- 	gtt->range = range;
- 	mmput(mm);
+Thanks.
+
 -- 
-2.26.2
-
+tejun
