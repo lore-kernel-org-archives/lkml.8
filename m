@@ -2,136 +2,121 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB6AC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369702051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268BF2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588341082;
+	bh=kWRqHbfq8qMhGX8i/RgDx7P4m3rhy5cTC7RFr0ex7YI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Pldrqv8AIi8P+gfvw66IFZ3772wKh7Sc+6pJhbDG2xdiv/v1u0ZZgpYPV8x1taaZA
+	 kqtmgzISKyS2EYAYGDb65S3xlCRy5+nfCgrOr+jFApoKmH5rkdPQx5b+7UBm3vuz7D
+	 /QTH9M6SIfZQG6U727ShVv/atlqh57W1cIz5iobU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbgEANvQ (ORCPT
+        id S1731445AbgEANvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:51:16 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60814 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgEANvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:51:14 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 05E862A27A1
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8FED63C08C7; Fri,  1 May 2020 15:51:09 +0200 (CEST)
-Date:   Fri, 1 May 2020 15:51:09 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: charger-manager: fix adding of optional properties
-Message-ID: <20200501135109.45gwxpczcqdt3fbb@earth.universe>
-References: <20200501133008.GA8927@qmqm.qmqm.pl>
- <995cf2c7d41d4895c319b60ea4ea83e858c34cef.1588340276.git.mirq-linux@rere.qmqm.pl>
+        Fri, 1 May 2020 09:51:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731093AbgEANiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A12B205C9;
+        Fri,  1 May 2020 13:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340331;
+        bh=kWRqHbfq8qMhGX8i/RgDx7P4m3rhy5cTC7RFr0ex7YI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XxO7lXupu+dRjSd9vDt8g0FY024fQLDxsyVs0ujKYP+lqD3v0EHURQyGjFtRKXfDw
+         Kvym/VswB69N8y+IG9h0pG5y4NEGr1UlO+JRxIONSWvzYhpx5d/gpudIGW5+zOmb9/
+         dz02ac1N0utOq/2VeLy6Byo7pEuah5KWk7e+cp58=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Raymond Pang <RaymondPang-oc@zhaoxin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.4 35/83] PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports
+Date:   Fri,  1 May 2020 15:23:14 +0200
+Message-Id: <20200501131533.238306482@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
+References: <20200501131524.004332640@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nnhgdofmvnbyk45e"
-Content-Disposition: inline
-In-Reply-To: <995cf2c7d41d4895c319b60ea4ea83e858c34cef.1588340276.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Raymond Pang <RaymondPang-oc@zhaoxin.com>
 
---nnhgdofmvnbyk45e
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 299bd044a6f332b4a6c8f708575c27cad70a35c1 upstream.
 
-Hi,
+Many Zhaoxin Root Ports and Switch Downstream Ports do provide ACS-like
+capability but have no ACS Capability Structure.  Peer-to-Peer transactions
+could be blocked between these ports, so add quirk so devices behind them
+could be assigned to different IOMMU group.
 
-On Fri, May 01, 2020 at 03:39:53PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> Use num_properties to index added property.
-> This will prevent overwriting POWER_SUPPLY_PROP_CHARGE_NOW with
-> POWER_SUPPLY_PROP_CURRENT_NOW and leaving the latter entry
-> uninitialized.
->=20
-> For clarity, num_properties is initialized with length of the copied
-> array instead of relying on previously memcpy'd value.
->=20
-> Fixes: 0a46510addc7 ("power: supply: charger-manager: Prepare for const p=
-roperties")
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> ---
+Link: https://lore.kernel.org/r/20200327091148.5190-4-RaymondPang-oc@zhaoxin.com
+Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-I folded your fix directly into the charger-manager patch, which did
-not yet reach linux-next. If you send the num_properties part as a
-separate one, I will merge it.
+---
+ drivers/pci/quirks.c |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
--- Sebastian
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4371,6 +4371,29 @@ static int pci_acs_ctrl_enabled(u16 acs_
+ }
+ 
+ /*
++ * Many Zhaoxin Root Ports and Switch Downstream Ports have no ACS capability.
++ * But the implementation could block peer-to-peer transactions between them
++ * and provide ACS-like functionality.
++ */
++static int  pci_quirk_zhaoxin_pcie_ports_acs(struct pci_dev *dev, u16 acs_flags)
++{
++	if (!pci_is_pcie(dev) ||
++	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
++		return -ENOTTY;
++
++	switch (dev->device) {
++	case 0x0710 ... 0x071e:
++	case 0x0721:
++	case 0x0723 ... 0x0732:
++		return pci_acs_ctrl_enabled(acs_flags,
++			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++	}
++
++	return false;
++}
++
++/*
+  * AMD has indicated that the devices below do not support peer-to-peer
+  * in any system where they are found in the southbridge with an AMD
+  * IOMMU in the system.  Multifunction devices that do not support
+@@ -4772,6 +4795,8 @@ static const struct pci_dev_acs_enabled
+ 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3038, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3104, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_ZHAOXIN, 0x9083, pci_quirk_mf_endpoint_acs },
++	/* Zhaoxin Root/Downstream Ports */
++	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
+ 	{ 0 }
+ };
+ 
 
->  drivers/power/supply/charger-manager.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/power/supply/charger-manager.c b/drivers/power/suppl=
-y/charger-manager.c
-> index a71e2ee81423..2ef53dc1f2fb 100644
-> --- a/drivers/power/supply/charger-manager.c
-> +++ b/drivers/power/supply/charger-manager.c
-> @@ -1729,7 +1729,7 @@ static int charger_manager_probe(struct platform_de=
-vice *pdev)
->  	memcpy(properties, default_charger_props,
->  		sizeof(enum power_supply_property) *
->  		ARRAY_SIZE(default_charger_props));
-> -	num_properties =3D psy_default.num_properties;
-> +	num_properties =3D ARRAY_SIZE(default_charger_props);
-> =20
->  	/* Find which optional psy-properties are available */
->  	fuel_gauge =3D power_supply_get_by_name(desc->psy_fuel_gauge);
-> @@ -1740,14 +1740,14 @@ static int charger_manager_probe(struct platform_=
-device *pdev)
->  	}
->  	if (!power_supply_get_property(fuel_gauge,
->  					  POWER_SUPPLY_PROP_CHARGE_NOW, &val)) {
-> -		properties[cm->charger_psy_desc.num_properties] =3D
-> +		properties[num_properties] =3D
->  				POWER_SUPPLY_PROP_CHARGE_NOW;
->  		num_properties++;
->  	}
->  	if (!power_supply_get_property(fuel_gauge,
->  					  POWER_SUPPLY_PROP_CURRENT_NOW,
->  					  &val)) {
-> -		properties[cm->charger_psy_desc.num_properties] =3D
-> +		properties[num_properties] =3D
->  				POWER_SUPPLY_PROP_CURRENT_NOW;
->  		num_properties++;
->  	}
-> --=20
-> 2.20.1
->=20
 
---nnhgdofmvnbyk45e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6sKU0ACgkQ2O7X88g7
-+prZSw//S5LEfAIdeKAPy6jnJ9RFL7hieePdJ0YZBueIL+JPtexJh4Sjj/6EnfMy
-77/oGQaqSZQixx2KLbnlgR56FuA4gnPUi9ynxkOasozzar0VKYroySPmGJxtP2ID
-7P2ErJg0kU2cYvyaIP4EUOFqTxHCrAiEaWHGjaaCK5pKZ7b2WER62zsL2Lj3oO7x
-7ncSoVCTIxu0O0AEXVafs8v0o63zQGkk2zPTcmjKMtbPW8QCZBXpBAsGuy9v945J
-xg8LVGRfyuR8vP71ZgPLaA+NCJIew6iLH/l4RVgs5iDAuN2VnJn5OARA/7ZNfOxx
-Gxr/0y7L2RGlrj69XsFFbgSR/5xiFDMZCQ6aK3YK182L413+FGswH/v+8ypcW2cP
-r2OzHj3FwWTUdyHzcZyXMzVYXaFkLZBiAcDTqAN3OQApSlwRDAX4bB98cckEXsko
-C7hc6C6vIvvQO/roKN5V3IlLJ5k2cCE/Tf4pK3ABiGdwvQkkSMVsSTx3RK3TYaQ/
-otBKDuHt5sgpLlvVxdwiljOLiyTYmkeheB/qYR+wWGwJySwRbKnbaa1sL/iy4N7F
-yiQ8evjn4e0FBl8qSK1+GnXVU02dalVM+cEFrxu1DezlBHZxzh0x1Pj/Da0ezL0/
-3CMQNR2F2Lwu0Gom/AI0JieGBmtoz49P8X24xy1aPg+fQGt0hyE=
-=gvbx
------END PGP SIGNATURE-----
-
---nnhgdofmvnbyk45e--
