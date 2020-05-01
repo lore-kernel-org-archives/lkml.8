@@ -6,81 +6,69 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41210C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958DAC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBDA21582
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E63216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588334375;
-	bh=0VQ7YPYlx9hfs/EB0jGjLy7lp7UfqP2NSb+PtmCf+ig=;
+	s=default; t=1588335026;
+	bh=f4S0IQ7bZ5MS08fosU8ISHJYsrPRMpM6z88jS+5LdwE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ergPaD6D5eC+h+wODYpkMGAGLBPtNAXlh49nq0GpyFO4daCwwDFYNhMnioLx4diRA
-	 KR9a19Ro/ks0yw/rcqKESsEiB4yDBUovc1lnESoF2FS/rbcUhfxLWdH59mNPmorT7a
-	 GGA7Ase/XpXiwbiTmzBipLG3bouIIYesVCAUzeTU=
+	b=Pp79qU75Z1sihagrZSmjrti/UrfAWnbt7JdLoytpmXa/tSEgj/i8O9PMwXTCY4v0B
+	 XuUtpAiYChAww4ByZZS0VHfvJ8U2au+PaQHWrkQISRN2VtG90pA/dldklPQSBtPZ0G
+	 h8Ih8ZZuhUg83vg370YjH/tTh/yJOmaYbRuRgaRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgEAL7e (ORCPT
+        id S1728735AbgEAMKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 08:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728570AbgEAL7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:59:33 -0400
+        id S1728682AbgEAMKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 08:10:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F282A20836;
-        Fri,  1 May 2020 11:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C15521582;
+        Fri,  1 May 2020 12:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588334373;
-        bh=0VQ7YPYlx9hfs/EB0jGjLy7lp7UfqP2NSb+PtmCf+ig=;
+        s=default; t=1588335024;
+        bh=f4S0IQ7bZ5MS08fosU8ISHJYsrPRMpM6z88jS+5LdwE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dSpJVP7SAFq5uosWAWOJDU+nAgJMw7/QPb15FniUXreIe+Fj7WvLAuRjzPqJRAhrt
-         0z955JM3M6fp1UxEnchSZwRiJUfqxTi1PGa8NxGlirqm4GgCXCrzMF+ifLyMwDp6Bt
-         EGvv7YnQUU4WpGSNR7ziQJwDJPgN0JVbOcMZfCtE=
-Date:   Fri, 1 May 2020 13:59:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paul J Murphy <paul.j.murphy@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-Message-ID: <20200501115929.GA1609634@kroah.com>
-References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
- <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
- <20200501081002.GA1055721@kroah.com>
- <f60aece195cd0700728fc38b0398949a82b72fc3.camel@linux.intel.com>
+        b=H5h9+cfbPftSagI3TrtRp4/M0sGhavZGn3jOw1jJoXr88Wh+sKTKAffkpni8Z+mhl
+         qVpgiX130VCH/GFUp6/lvb7lBlCPYarb8HBTEv18qnx0/En6xL2F52P/6FFN4i5JRJ
+         5RICwlxVYRB/AOH9RRlQ0lwT/XRhVRqSzq7dsGUs=
+Date:   Fri, 1 May 2020 14:10:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ashwin H <ashwinh@vmware.com>
+Cc:     "tytso@mit.edu" <tytso@mit.edu>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@kernel.org" <stable@kernel.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Steven Rostedt <srostedt@vmware.com>,
+        "ashwin.hiranniah@gmail.com" <ashwin.hiranniah@gmail.com>
+Subject: Re: [PATCH 0/5] Backport to 4.9- ext4: protect journal inode's
+ blocks using block_validity
+Message-ID: <20200501121008.GA1613024@kroah.com>
+References: <cover.1587713792.git.ashwinh@vmware.com>
+ <20200429125909.GA2124190@kroah.com>
+ <A37B50A5-C978-47A6-9861-048AEA9788EE@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f60aece195cd0700728fc38b0398949a82b72fc3.camel@linux.intel.com>
+In-Reply-To: <A37B50A5-C978-47A6-9861-048AEA9788EE@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:50:36PM +0100, Daniele Alessandrelli wrote:
-> Thanks for your feedback.
-> 
-> > 
-> > First off, there is a "proper" way to send patches to the kernel
-> > community that Intel has that I do not think you are
-> > following.  Please
-> > work with the Intel "Linux group" to do that first, as odds are they
-> > would have caught all of these issues beforehand (hint, which is why
-> > that process is in place...)
-> > 
-> 
-> I actually followed that process and got the OK to try to upstream.
+On Wed, Apr 29, 2020 at 08:39:45PM +0000, Ashwin H wrote:
+> I have sent patches for 4.14 tree
 
-Then someone seriously steered you wrong as I know of one specific thing
-you did incorrectly (hint, you needed to get them to sign off on the
-patch...)
-
-> I think the issues you identified went uncaught mainly due to the
-> limited Linux ARM expertise within that group (and Intel in general).
-
-No, they should know better, if not, there are bigger problems there :(
+Thank you, all of these are now queued up.
 
 greg k-h
