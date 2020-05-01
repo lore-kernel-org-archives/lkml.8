@@ -2,118 +2,136 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE47FC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2ABC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 994C42495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jy9nd5+8"
+	by mail.kernel.org (Postfix) with ESMTP id 83E74208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588339979;
+	bh=LmpQIxXgd4sQZVcscMsOXJbFpiz8wPrmMdzRd9rSilo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ONeskvuVbyiMTOnZNB+0PWXylztFgxtfznrVXoL2IYGDybvTdIrN9kRxOYINBXrUN
+	 A4UTfAty6YN29OtykGWGjxPyzIhb00Gu2YSXKbqmZ9EgpeXBZ1SGghtE6v6HZr3zjN
+	 h9tXkPkKGY73SIjlYeMf+UeRL/XNGA5qn9ADrkos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgEANcw (ORCPT
+        id S1729644AbgEANc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729504AbgEANco (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:44 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7F7C061A0E;
-        Fri,  1 May 2020 06:32:44 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id y6so2296262pjc.4;
-        Fri, 01 May 2020 06:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eXZUCfdK7gY+Kv1hYGPVu4uc+SR+yxwik4zzcFw4aa4=;
-        b=jy9nd5+8sIX4f67XLtJU1Ddc2S7xNmy0kmwE4u2l/biJGftOorp9LiZnPJqgqOqxpD
-         MVOF+gGbJ8ESScoLQJqUwnl1QmhCxlN3A0NTpar+HqR1kb6Z6/B1Hdw2tgn3HsxiNTHd
-         llkmOe547clbhmtHU5qt7cWhkNthcT99c8qyYROUE0bqjI+wJv/Y3dIxGa8tHKZzzPax
-         hN/p1T6pH/YyQjNRJzkrYUFkwaXvABudC6P2hZ5Bbc6j1W0I2lpRALAzt1PC0bvr84EA
-         STiy+EAQCVDzmwnW9RCuCgFgxOC3WWWjnhAVnTxEkzwA9+DTRCD99FtWPz+nYhwEv3A8
-         0PZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eXZUCfdK7gY+Kv1hYGPVu4uc+SR+yxwik4zzcFw4aa4=;
-        b=deWI9zVaPvEKOKl4mpq7PbByQ75dAzi7+lJ0zmcXkhLyZXGm8iJjAa8ThPNdeZa2eq
-         r6mczsG/KOXB8iC8xmZwku5T2xLKUJhmlEc3esCzX47YSdPz8C47DAtzfeY60P1SXxI7
-         J3mI2pubF6bVqPhhpG+R0LqlYYdG7yKjapYzdKXAZwNj/yXwRF09ez/0pJkHx4SOOB8W
-         uNHNnnDSjtWnx0pzlvctntlbuH/otmGVvBklpmYveHqqmQtFv9oMwBMfmOp8XbkcIxAI
-         MvM0KysyeRMHV1d1MsUMLDfYSWceI8CV2DVv9uQie/W4h6Bl50APisKYJOcVQu7BahXR
-         kLOA==
-X-Gm-Message-State: AGi0PubO2KzKQKUCeQJSun0u6Q5UYqEaSe8SOYTJlMHc3iPFQ4qnSFGL
-        1DP8X/WvQE0QxFu6WQ4V4r/XP94z3qCgeHFAQ6E=
-X-Google-Smtp-Source: APiQypI8YEF8TTFE0Xwx5h22aMqoXNhDREmgnyQi2I4fBaKHdsodV0zVauc4cwXsBohGC996GmyF9VbvXUF28vo6jqw=
-X-Received: by 2002:a17:902:9306:: with SMTP id bc6mr4487958plb.255.1588339963862;
- Fri, 01 May 2020 06:32:43 -0700 (PDT)
+        Fri, 1 May 2020 09:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729798AbgEANcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7068D208C3;
+        Fri,  1 May 2020 13:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588339974;
+        bh=LmpQIxXgd4sQZVcscMsOXJbFpiz8wPrmMdzRd9rSilo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YoOLAE8vF861FbZYqKgDE2ksN+vbIqT0Go5hX2PPx63FVAEpNJTUZYjjzXS9bww7Q
+         u0wDPDCjLEDLKMyTZ6eSx4tnbjHOho4FPKrXEELxnzYyMfG07PA79lImYkGZ+1i9qm
+         ji0Kj9+4J9q9twwihx5HBfatMY4gRiBu6VJxOsvQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Paul Zimmerman <pauldzim@gmail.com>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.14 047/117] USB: hub: Fix handling of connect changes during sleep
+Date:   Fri,  1 May 2020 15:21:23 +0200
+Message-Id: <20200501131550.361609021@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
+References: <20200501131544.291247695@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <cover.1588112714.git.syednwaris@gmail.com> <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
- <20200429102114.GF185537@smile.fi.intel.com> <20200430161514.GA7107@syed>
- <20200430163855.GU185537@smile.fi.intel.com> <20200430233227.GA15963@icarus>
-In-Reply-To: <20200430233227.GA15963@icarus>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 1 May 2020 16:32:32 +0300
-Message-ID: <CAHp75VfCC_E9uB1eq2EVK_nLe=Oo1zqO=Dmm8kX6y-9YoosDqA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Syed Nayyar Waris <syednwaris@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 2:38 AM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
-> On Thu, Apr 30, 2020 at 07:38:55PM +0300, Andy Shevchenko wrote:
-> > On Thu, Apr 30, 2020 at 09:45:14PM +0530, Syed Nayyar Waris wrote:
-> > > On Wed, Apr 29, 2020 at 01:21:14PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, Apr 29, 2020 at 04:39:47AM +0530, Syed Nayyar Waris wrote:
-> >
-> > ...
-> >
-> > > > > +       const unsigned long state_size = BITS_PER_TYPE(*state);
-> > > >
-> > > > This '*state' is unneeded complication, use BITS_PER_U32.
-> > > >
-> > > > > +#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
-> > > >
-> > > > This macro makes code uglier, besides the fact of absence of #undef.
-> > > > And also see above.
-> > >
-> > > Thank you for your review comments. Just want to clarify, you want
-> > >  a new macro to be created - 'BITS_PER_U32' ?
-> >
-> > It's already there (read bits.h).
->
-> I'm having trouble finding the BITS_PER_U32 macro; are you thinking of
-> BITS_PER_LONG?
+From: Alan Stern <stern@rowland.harvard.edu>
 
-Oh, my bad. I messed above with BITS_TO_U32() which is not what we want here.
+commit 9f952e26295d977dbfc6fedeaf8c4f112c818d37 upstream.
 
-> I don't think there are any cases where u32 is not 32
-> bits wide, so perhaps it'll be better to just hardcode 32 directly in
-> the code here to make it easier to read.
+Commit 8099f58f1ecd ("USB: hub: Don't record a connect-change event
+during reset-resume") wasn't very well conceived.  The problem it
+tried to fix was that if a connect-change event occurred while the
+system was asleep (such as a device disconnecting itself from the bus
+when it is suspended and then reconnecting when it resumes)
+requiring a reset-resume during the system wakeup transition, the hub
+port's change_bit entry would remain set afterward.  This would cause
+the hub driver to believe another connect-change event had occurred
+after the reset-resume, which was wrong and would lead the driver to
+send unnecessary requests to the device (which could interfere with a
+firmware update).
 
-Yes, would work!
+The commit tried to fix this by not setting the change_bit during the
+wakeup.  But this was the wrong thing to do; it means that when a
+device is unplugged while the system is asleep, the hub driver doesn't
+realize anything has happened: The change_bit flag which would tell it
+to handle the disconnect event is clear.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The commit needs to be reverted and the problem fixed in a different
+way.  Fortunately an alternative solution was noted in the commit's
+Changelog: We can continue to set the change_bit entry in
+hub_activate() but then clear it when a reset-resume occurs.  That way
+the the hub driver will see the change_bit when a device is
+disconnected but won't see it when the device is still present.
+
+That's what this patch does.
+
+Reported-and-tested-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Fixes: 8099f58f1ecd ("USB: hub: Don't record a connect-change event during reset-resume")
+Tested-by: Paul Zimmerman <pauldzim@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221602480.11262-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/hub.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -1195,6 +1195,11 @@ static void hub_activate(struct usb_hub
+ #ifdef CONFIG_PM
+ 			udev->reset_resume = 1;
+ #endif
++			/* Don't set the change_bits when the device
++			 * was powered off.
++			 */
++			if (test_bit(port1, hub->power_bits))
++				set_bit(port1, hub->change_bits);
+ 
+ 		} else {
+ 			/* The power session is gone; tell hub_wq */
+@@ -3008,6 +3013,15 @@ static int check_port_resume_type(struct
+ 		if (portchange & USB_PORT_STAT_C_ENABLE)
+ 			usb_clear_port_feature(hub->hdev, port1,
+ 					USB_PORT_FEAT_C_ENABLE);
++
++		/*
++		 * Whatever made this reset-resume necessary may have
++		 * turned on the port1 bit in hub->change_bits.  But after
++		 * a successful reset-resume we want the bit to be clear;
++		 * if it was on it would indicate that something happened
++		 * following the reset-resume.
++		 */
++		clear_bit(port1, hub->change_bits);
+ 	}
+ 
+ 	return status;
+
+
