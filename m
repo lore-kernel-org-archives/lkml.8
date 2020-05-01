@@ -6,132 +6,148 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82122C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A23C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 633C72137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3777521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgEAUQi (ORCPT
+        id S1726449AbgEAURe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:16:38 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39412 "EHLO mga17.intel.com"
+        Fri, 1 May 2020 16:17:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46214 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAUQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:16:38 -0400
-IronPort-SDR: JCnf0JR6QjquQtyWCvLzQybgHnCl2d0RNKxW2ix3/l1F5v9oDrFlOYPf28b4cRw559gxgBz4N3
- fscpww/woeAg==
+        id S1726045AbgEAURe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:17:34 -0400
+IronPort-SDR: zj4UYa71sB69TVDdev2QeOYNbot2ZjyphjcsRxzUEMHI6wQDku9VD4qOvqe7jtg0xh2/YbLpk+
+ J5w/6QmkcFzA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 13:16:37 -0700
-IronPort-SDR: 1GzbZ0PLz8ewGXbhrI0UK885C79CRjvVf7gZORcwqO/LIVMBQf1s9CM8kxn22edyQqKkH8TQnh
- F4Um4u0bLAMg==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 13:17:33 -0700
+IronPort-SDR: DHfa1QdNWLU+u0G42xvHw1BL1q9UWEF8qre8VppMRty+zj5ckfa4EhGL+gmSwzf3XnQYhSYV+h
+ YJOTEP9XzgHQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
-   d="scan'208";a="276914737"
-Received: from srodrig5-mobl2.amr.corp.intel.com (HELO [10.254.111.158]) ([10.254.111.158])
-  by orsmga002.jf.intel.com with ESMTP; 01 May 2020 13:16:35 -0700
-Subject: Re: [PATCH V2] ASoC: Intel: boards: Use FS as nau8825 sysclk in
- nau88125_* machine
-To:     Radoslaw Biernacki <rad@semihalf.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     Lech Betlej <Lech.Betlej@intel.com>, alsa-devel@alsa-project.org,
-        Todd Broch <tbroch@google.com>,
-        Harshapriya <harshapriya.n@intel.com>,
-        John Hsu <KCHSU0@nuvoton.com>, linux-kernel@vger.kernel.org,
-        michal.sienkiewicz@intel.com, Ben Zhang <benzh@chromium.org>,
-        Mac Chiang <mac.chiang@intel.com>,
-        Yong Zhi <yong.zhi@intel.com>, Marcin Wojtas <mw@semihalf.com>,
-        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
-        Alex Levin <levinale@google.com>
-References: <20200501193141.30293-1-rad@semihalf.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
-Date:   Fri, 1 May 2020 15:16:35 -0500
+   d="scan'208";a="262181738"
+Received: from vjaiswa1-mobl.amr.corp.intel.com (HELO [10.252.137.219]) ([10.252.137.219])
+  by orsmga006.jf.intel.com with ESMTP; 01 May 2020 13:17:33 -0700
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+ <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
+ <CAPcyv4g0a406X9-=NATJZ9QqObim9Phdkb_WmmhsT9zvXsGSpw@mail.gmail.com>
+ <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+ <CAPcyv4jvgCGU700x_U6EKyGsHwQBoPkJUF+6gP4YDPupjdViyQ@mail.gmail.com>
+ <CAHk-=wiPkwF2+y6wZd=VD9BooKxHRWhSVW8dr+WSeeSPkJk7kQ@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <b1dbb13d-f812-684f-2892-5004674db0f7@intel.com>
+Date:   Fri, 1 May 2020 13:17:32 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200501193141.30293-1-rad@semihalf.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAHk-=wiPkwF2+y6wZd=VD9BooKxHRWhSVW8dr+WSeeSPkJk7kQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/1/20 2:31 PM, Radoslaw Biernacki wrote:
-> This single fix address two issues on machines with nau88125:
-> 1) Audio distortion, due to lack of required clock rate on MCLK line
-> 2) Loud audible "pops" on headphones if there is no sysclk during nau8825
->     playback power up sequence
+On 5/1/20 11:28 AM, Linus Torvalds wrote:
+> Plus on x86 you can't reasonably even have different code sequences
+> for that case, because CLAC/STAC don't have a "enable users read
+> accesses" vs "write accesses" case. It's an all-or-nothing "enable
+> user faults".
 > 
-> Explanation for:
-> 1) Due to Skylake HW limitation, MCLK pin can only output 24MHz clk
->     rate (it can be only connected to XTAL parent clk). The BCLK pin
->     can be driven by dividers and therefore FW is able to set it to rate
->     required by chosen audio format. According to nau8825 datasheet, 256*FS
->     sysclk gives the best audio quality and the only way to achieve this
->     (taking into account the above limitations) its to regenerate the MCLK
->     from BCLK on nau8825 side by FFL. Without required clk rate, audio is
->     distorted by added harmonics.
+> We _used_ to have a difference on x86, back when we did the whole "fs
+> segment points to user space".
 
-The BCLK is going to be a multiple of 50 * Fs due to clocking 
-restrictions. Can the codec regenerate a good-enough sysclk from this?
-> 
-> 2) Currently Skylake does not output MCLK/FS when the back-end DAI op
->     hw_param is called, so we cannot switch to MCLK/FS in hw_param.  This
->     patch reduces pop by letting nau8825 keep using its internal VCO clock
->     during widget power up sequence, until SNDRV_PCM_TRIGGER_START when
->     MCLK/FS is available. Once device resumes, the system will only enable
->     power sequence for playback without doing hardware parameter, audio
->     format, and PLL configure. In the mean time, the jack detecion sequence
->     has changed PLL parameters and switched to internal clock. Thus, the
->     playback signal distorted without correct PLL parameters.  That is why
->     we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUME case.
+Protection keys might give us _some_ of this back.  If we're doing a
+copy_from_user(), we could (logically) do:
 
-IIRC the FS can be controlled with the clk_ api with the Skylake driver, 
-as done for some KBL platforms. Or is this not supported by the firmware 
-used by this machine?
+	stac()
+	save_pkru()
+	pkru |= ~0x55555555
+	... do userspace read
+	restore_pkru()
+	clac()
 
-> -static int skylake_nau8825_hw_params(struct snd_pcm_substream *substream,
-> -	struct snd_pcm_hw_params *params)
-> +static int skylake_nau8825_trigger(struct snd_pcm_substream *substream, int cmd)
->   {
->   	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	struct snd_pcm_runtime *runtime = substream->runtime;
->   	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-> -	int ret;
-> -
-> -	ret = snd_soc_dai_set_sysclk(codec_dai,
-> -			NAU8825_CLK_MCLK, 24000000, SND_SOC_CLOCK_IN);
-> +	int ret = 0;
->   
-> -	if (ret < 0)
-> -		dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n", ret);
-> +	switch (cmd) {
-> +	case SNDRV_PCM_TRIGGER_START:
-> +		ret = snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_FS, 0,
-> +					     SND_SOC_CLOCK_IN);
-> +		if (ret < 0) {
-> +			dev_err(codec_dai->dev, "can't set FS clock %d\n", ret);
-> +			break;
-> +		}
-> +		ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
-> +					  runtime->rate * 256);
-> +		if (ret < 0)
-> +			dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
-> +		break;
-> +	case SNDRV_PCM_TRIGGER_RESUME:
-> +		ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
-> +					  runtime->rate * 256);
-> +		if (ret < 0)
-> +			dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
-> +		msleep(20);
+That *should* generate a fault if we try to write to userspace in there
+because PKRU affects all user *addresses* (PTEs with _PAGE_USER set) not
+user-mode *accesses*.
 
-is there a reason why you'd need a msleep for resume and not for start?
+Properly stashing the value off and context switching it correctly would
+be fun, but probably not impossible to pull off.  You actually wouldn't
+even technically need to restore PKRU in this path.  It would just need
+to be restored before the thread runs userspace or hits a copy_to_user()
+equivalent.
+
+I can't imagine this would all be worth the trouble, but there are
+crazier people out there than me.
