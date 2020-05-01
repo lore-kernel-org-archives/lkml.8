@@ -2,53 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5410CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5997AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319132051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280DA2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341181;
-	bh=j2t6aAKl8zLrt0Hxrw86AzQhKEI6iRPEJt+Q45nQCAU=;
+	s=default; t=1588341185;
+	bh=jXoDdEtNfeB8BTXIbqb3vTPcJhrKt3El9jj+j/6wG8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VEHlGC9a/CUzXu2ecdfc8br7EqO5J6ObTXUdaY4Whob/o9loVmgpqpoKx2qGf7/LP
-	 b6MuN4ZfRq+foFsbN5jVZKrhCkHu6DW0a6hUXWu0wQPzB1tBFvSZIe98cHhHfMn8/T
-	 DNVOASysvEufirBc5H9uHEDaACsJJ/+EgkousBZE=
+	b=OpUbiTixtqCA3v2DrP7c1/Ny2VUdwcfRzWTzflDX6SQKtPqm+srwYEVWdUXA5NZ/P
+	 3KcAWXoogxmuLKtvgN/RPzqNS0PDouJCEPtH3q+aJWeXtWDJ5XgXTazrZFyQqfFzYi
+	 GDI1gaePYBr9k38glZH6sXJYS+xmQnXJeDGB28jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbgEANxA (ORCPT
+        id S1730481AbgEANgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:53:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgEANhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:04 -0400
+        id S1730176AbgEANgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B42E2173E;
-        Fri,  1 May 2020 13:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBDE224959;
+        Fri,  1 May 2020 13:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340222;
-        bh=j2t6aAKl8zLrt0Hxrw86AzQhKEI6iRPEJt+Q45nQCAU=;
+        s=default; t=1588340205;
+        bh=jXoDdEtNfeB8BTXIbqb3vTPcJhrKt3El9jj+j/6wG8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cqCT3LYPHJDGx3xA9//0oNCSgax8yV2SZyyKTN/gCR+of8EUTe0XVJZ5pMJmICG0g
-         75y3pIASoFIbdH5Wfzp84ND7TYy6xQaXED7gzwPz+D98wp3lxLIU5pddq0lXLoI62x
-         51zdV42Yv0XfotmCCdIzjnahQ8bPLfxNtIgDhnfY=
+        b=ROJ1Oupgj+M5ZU+QFgJ0+TCs/LcJnljPRBgeZMEv5sLWDAg2YBx3B65r1lcDcM2ob
+         H69EyqpG9uVBOiHisNYfk7YqlcbLj3jNojKrPYTLwO+Ed9EqpOREsJd2NT5SR1iwdZ
+         Lnqy87TTAZy1Xh7pNf0/I3smDppNr5WFlRG5UDk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/46] bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
-Date:   Fri,  1 May 2020 15:22:52 +0200
-Message-Id: <20200501131508.182238651@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.19 18/46] PCI: Avoid ASMedia XHCI USB PME# from D0 defect
+Date:   Fri,  1 May 2020 15:22:43 +0200
+Message-Id: <20200501131505.355408092@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -61,79 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit aee194b14dd2b2bde6252b3acf57d36dccfc743a ]
+commit 2880325bda8d53566dcb9725abc929eec871608e upstream.
 
-This patch fixes an encoding bug in emit_stx for BPF_B when the source
-register is BPF_REG_FP.
+The ASMedia USB XHCI Controller claims to support generating PME# while
+in D0:
 
-The current implementation for BPF_STX BPF_B in emit_stx saves one REX
-byte when the operands can be encoded using Mod-R/M alone. The lower 8
-bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
-a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
-(e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
-equivalents (%sil, %dil, %bpl, %spl).
+  01:00.0 USB controller: ASMedia Technology Inc. Device 2142 (prog-if 30 [XHCI])
+    Subsystem: SUNIX Co., Ltd. Device 312b
+    Capabilities: [78] Power Management version 3
+      Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot-,D3cold-)
+      Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
 
-The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
-or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
-required REX prefix. However, it misses the case when the source is
-BPF_REG_FP (mapped to %rbp).
+However PME# only gets asserted when plugging USB 2.0 or USB 1.1 devices,
+but not for USB 3.0 devices.
 
-The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
-will read from register %ch instead of the correct %bpl. This patch fixes
-the problem by fixing and refactoring the check on which registers need
-the extra REX byte. Since no BPF registers map to %rsp, there is no need
-to handle %spl.
+Remove PCI_PM_CAP_PME_D0 to avoid using PME under D0.
 
-Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200418232655.23870-1-luke.r.nels@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205919
+Link: https://lore.kernel.org/r/20191219192006.16270-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/net/bpf_jit_comp.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index a32fc3d994076..46ab928312517 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -142,6 +142,19 @@ static bool is_ereg(u32 reg)
- 			     BIT(BPF_REG_AX));
- }
- 
-+/*
-+ * is_ereg_8l() == true if BPF register 'reg' is mapped to access x86-64
-+ * lower 8-bit registers dil,sil,bpl,spl,r8b..r15b, which need extra byte
-+ * of encoding. al,cl,dl,bl have simpler encoding.
-+ */
-+static bool is_ereg_8l(u32 reg)
-+{
-+	return is_ereg(reg) ||
-+	    (1 << reg) & (BIT(BPF_REG_1) |
-+			  BIT(BPF_REG_2) |
-+			  BIT(BPF_REG_FP));
-+}
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5282,3 +5282,14 @@ out_disable:
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+ 			      PCI_CLASS_DISPLAY_VGA, 8,
+ 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
 +
- static bool is_axreg(u32 reg)
- {
- 	return reg == BPF_REG_0;
-@@ -751,9 +764,8 @@ st:			if (is_imm8(insn->off))
- 			/* STX: *(u8*)(dst_reg + off) = src_reg */
- 		case BPF_STX | BPF_MEM | BPF_B:
- 			/* Emit 'mov byte ptr [rax + off], al' */
--			if (is_ereg(dst_reg) || is_ereg(src_reg) ||
--			    /* We have to add extra byte for x86 SIL, DIL regs */
--			    src_reg == BPF_REG_1 || src_reg == BPF_REG_2)
-+			if (is_ereg(dst_reg) || is_ereg_8l(src_reg))
-+				/* Add extra byte for eregs or SIL,DIL,BPL in src_reg */
- 				EMIT2(add_2mod(0x40, dst_reg, src_reg), 0x88);
- 			else
- 				EMIT1(0x88);
--- 
-2.20.1
-
++/*
++ * Device [1b21:2142]
++ * When in D0, PME# doesn't get asserted when plugging USB 3.0 device.
++ */
++static void pci_fixup_no_d0_pme(struct pci_dev *dev)
++{
++	pci_info(dev, "PME# does not work under D0, disabling it\n");
++	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
 
 
