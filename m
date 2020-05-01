@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4338C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0888C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C506F208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89DD9216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340642;
-	bh=vTyuW465oi1ldPe5fL/nkyV1YZRgw8uEFV8K5VJecbw=;
+	s=default; t=1588340648;
+	bh=5o0zRSAvwZRdOYeiofGfqH+LgAyYpwIqYsvA446TR9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ham5DRIkCwI5ZxdgBrKHISw+0/yWcf3KKZexfTfr2fusMw9kD11WcTNexNCQ3t8hH
-	 9VicYFfH3F2LkOms5DkMgfnYgBcVB80hPNMzXBWB3Pzp24YENyZv+nQdVOoiVBHXaE
-	 1Gf4DDEqWcpaVYO8Y0xf/1aWuQCgpvAVKhsOyXF4=
+	b=P2D5yrndGgjtb8nzQX31ZLRN8H8dpPSAslSWSLj3esgJTWkowXu5lJBqgb00Wa7A3
+	 j4RQsLLTVExfP7UCaEvXPKqEqqAyPcT7mZMABxGYD1JrZuBJYdC8o84OsD86l4hby7
+	 po3PxgA6ErWtArVliW/8rjyXXk6I/MavAq5IG08E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgEANoB (ORCPT
+        id S1731718AbgEANoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731439AbgEANn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:57 -0400
+        id S1731439AbgEANoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6ACB208DB;
-        Fri,  1 May 2020 13:43:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7D4C208C3;
+        Fri,  1 May 2020 13:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340637;
-        bh=vTyuW465oi1ldPe5fL/nkyV1YZRgw8uEFV8K5VJecbw=;
+        s=default; t=1588340642;
+        bh=5o0zRSAvwZRdOYeiofGfqH+LgAyYpwIqYsvA446TR9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKUa1wzY2RXpoeKfJixlbBDsdDnPWgzjre+/AfTAXKLsgSUxZwQkiCAUVBAflSD5p
-         d+hFrttjZ8IOdnsO5i+iqPcgDRSq5PFkoWMD69Wc/Iw6FtKUV62xeBmhab+riL0TSr
-         Hj+bhRSfwi6LuBX0CYILh0UsWRhbgH+mMgwy7LVo=
+        b=dDxY/97HSmi9aMN6nRW28BPG+RaZK26pOwQ6enZBMp42pYuSOOJdcs/O1ilrdb/MA
+         4BBtyJk0VvpsQWQ4Xo1Ipv7Osgng3fvODo5BUJ1LJbYbzyfdm/Bi/KhQ/qWBCxqWYV
+         KqkLY65LUZJfqflIE+QQ9bVL72d86q9xR5HnOMQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang YanQing <udknight@gmail.com>,
+        stable@vger.kernel.org, Stanislav Fomichev <sdf@google.com>,
         Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.6 063/106] bpf, x86_32: Fix logic error in BPF_LDX zero-extension
-Date:   Fri,  1 May 2020 15:23:36 +0200
-Message-Id: <20200501131551.363096069@linuxfoundation.org>
+Subject: [PATCH 5.6 065/106] selftests/bpf: Fix a couple of broken test_btf cases
+Date:   Fri,  1 May 2020 15:23:38 +0200
+Message-Id: <20200501131552.174620192@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,33 +59,231 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang YanQing <udknight@gmail.com>
+From: Stanislav Fomichev <sdf@google.com>
 
-commit 5ca1ca01fae1e90f8d010eb1d83374f28dc11ee6 upstream.
+commit e1cebd841b0aa1ceda771706d54a0501986a3c88 upstream.
 
-When verifier_zext is true, we don't need to emit code
-for zero-extension.
+Commit 51c39bb1d5d1 ("bpf: Introduce function-by-function verification")
+introduced function linkage flag and changed the error message from
+"vlen != 0" to "Invalid func linkage" and broke some fake BPF programs.
 
-Fixes: 836256bf5f37 ("x32: bpf: eliminate zero extension code-gen")
-Signed-off-by: Wang YanQing <udknight@gmail.com>
+Adjust the test accordingly.
+
+AFACT, the programs don't really need any arguments and only look
+at BTF for maps, so let's drop the args altogether.
+
+Before:
+BTF raw test[103] (func (Non zero vlen)): do_test_raw:3703:FAIL expected
+err_str:vlen != 0
+magic: 0xeb9f
+version: 1
+flags: 0x0
+hdr_len: 24
+type_off: 0
+type_len: 72
+str_off: 72
+str_len: 10
+btf_total_size: 106
+[1] INT (anon) size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+[2] INT (anon) size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[3] FUNC_PROTO (anon) return=0 args=(1 a, 2 b)
+[4] FUNC func type_id=3 Invalid func linkage
+
+BTF libbpf test[1] (test_btf_haskv.o): libbpf: load bpf program failed:
+Invalid argument
+libbpf: -- BEGIN DUMP LOG ---
+libbpf:
+Validating test_long_fname_2() func#1...
+Arg#0 type PTR in test_long_fname_2() is not supported yet.
+processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0
+peak_states 0 mark_read 0
+
+libbpf: -- END LOG --
+libbpf: failed to load program 'dummy_tracepoint'
+libbpf: failed to load object 'test_btf_haskv.o'
+do_test_file:4201:FAIL bpf_object__load: -4007
+BTF libbpf test[2] (test_btf_newkv.o): libbpf: load bpf program failed:
+Invalid argument
+libbpf: -- BEGIN DUMP LOG ---
+libbpf:
+Validating test_long_fname_2() func#1...
+Arg#0 type PTR in test_long_fname_2() is not supported yet.
+processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0
+peak_states 0 mark_read 0
+
+libbpf: -- END LOG --
+libbpf: failed to load program 'dummy_tracepoint'
+libbpf: failed to load object 'test_btf_newkv.o'
+do_test_file:4201:FAIL bpf_object__load: -4007
+BTF libbpf test[3] (test_btf_nokv.o): libbpf: load bpf program failed:
+Invalid argument
+libbpf: -- BEGIN DUMP LOG ---
+libbpf:
+Validating test_long_fname_2() func#1...
+Arg#0 type PTR in test_long_fname_2() is not supported yet.
+processed 0 insns (limit 1000000) max_states_per_insn 0 total_states 0
+peak_states 0 mark_read 0
+
+libbpf: -- END LOG --
+libbpf: failed to load program 'dummy_tracepoint'
+libbpf: failed to load object 'test_btf_nokv.o'
+do_test_file:4201:FAIL bpf_object__load: -4007
+
+Fixes: 51c39bb1d5d1 ("bpf: Introduce function-by-function verification")
+Signed-off-by: Stanislav Fomichev <sdf@google.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200423050637.GA4029@udknight
+Link: https://lore.kernel.org/bpf/20200422003753.124921-1-sdf@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/net/bpf_jit_comp32.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/progs/test_btf_haskv.c |   18 +++++-------------
+ tools/testing/selftests/bpf/progs/test_btf_newkv.c |   18 +++++-------------
+ tools/testing/selftests/bpf/progs/test_btf_nokv.c  |   18 +++++-------------
+ tools/testing/selftests/bpf/test_btf.c             |    2 +-
+ 4 files changed, 16 insertions(+), 40 deletions(-)
 
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -1847,7 +1847,7 @@ static int do_jit(struct bpf_prog *bpf_p
- 			case BPF_B:
- 			case BPF_H:
- 			case BPF_W:
--				if (!bpf_prog->aux->verifier_zext)
-+				if (bpf_prog->aux->verifier_zext)
- 					break;
- 				if (dstk) {
- 					EMIT3(0xC7, add_1reg(0x40, IA32_EBP),
+--- a/tools/testing/selftests/bpf/progs/test_btf_haskv.c
++++ b/tools/testing/selftests/bpf/progs/test_btf_haskv.c
+@@ -20,20 +20,12 @@ struct bpf_map_def SEC("maps") btf_map =
+ 
+ BPF_ANNOTATE_KV_PAIR(btf_map, int, struct ipv_counts);
+ 
+-struct dummy_tracepoint_args {
+-	unsigned long long pad;
+-	struct sock *sock;
+-};
+-
+ __attribute__((noinline))
+-int test_long_fname_2(struct dummy_tracepoint_args *arg)
++int test_long_fname_2(void)
+ {
+ 	struct ipv_counts *counts;
+ 	int key = 0;
+ 
+-	if (!arg->sock)
+-		return 0;
+-
+ 	counts = bpf_map_lookup_elem(&btf_map, &key);
+ 	if (!counts)
+ 		return 0;
+@@ -44,15 +36,15 @@ int test_long_fname_2(struct dummy_trace
+ }
+ 
+ __attribute__((noinline))
+-int test_long_fname_1(struct dummy_tracepoint_args *arg)
++int test_long_fname_1(void)
+ {
+-	return test_long_fname_2(arg);
++	return test_long_fname_2();
+ }
+ 
+ SEC("dummy_tracepoint")
+-int _dummy_tracepoint(struct dummy_tracepoint_args *arg)
++int _dummy_tracepoint(void *arg)
+ {
+-	return test_long_fname_1(arg);
++	return test_long_fname_1();
+ }
+ 
+ char _license[] SEC("license") = "GPL";
+--- a/tools/testing/selftests/bpf/progs/test_btf_newkv.c
++++ b/tools/testing/selftests/bpf/progs/test_btf_newkv.c
+@@ -28,20 +28,12 @@ struct {
+ 	__type(value, struct ipv_counts);
+ } btf_map SEC(".maps");
+ 
+-struct dummy_tracepoint_args {
+-	unsigned long long pad;
+-	struct sock *sock;
+-};
+-
+ __attribute__((noinline))
+-int test_long_fname_2(struct dummy_tracepoint_args *arg)
++int test_long_fname_2(void)
+ {
+ 	struct ipv_counts *counts;
+ 	int key = 0;
+ 
+-	if (!arg->sock)
+-		return 0;
+-
+ 	counts = bpf_map_lookup_elem(&btf_map, &key);
+ 	if (!counts)
+ 		return 0;
+@@ -57,15 +49,15 @@ int test_long_fname_2(struct dummy_trace
+ }
+ 
+ __attribute__((noinline))
+-int test_long_fname_1(struct dummy_tracepoint_args *arg)
++int test_long_fname_1(void)
+ {
+-	return test_long_fname_2(arg);
++	return test_long_fname_2();
+ }
+ 
+ SEC("dummy_tracepoint")
+-int _dummy_tracepoint(struct dummy_tracepoint_args *arg)
++int _dummy_tracepoint(void *arg)
+ {
+-	return test_long_fname_1(arg);
++	return test_long_fname_1();
+ }
+ 
+ char _license[] SEC("license") = "GPL";
+--- a/tools/testing/selftests/bpf/progs/test_btf_nokv.c
++++ b/tools/testing/selftests/bpf/progs/test_btf_nokv.c
+@@ -17,20 +17,12 @@ struct bpf_map_def SEC("maps") btf_map =
+ 	.max_entries = 4,
+ };
+ 
+-struct dummy_tracepoint_args {
+-	unsigned long long pad;
+-	struct sock *sock;
+-};
+-
+ __attribute__((noinline))
+-int test_long_fname_2(struct dummy_tracepoint_args *arg)
++int test_long_fname_2(void)
+ {
+ 	struct ipv_counts *counts;
+ 	int key = 0;
+ 
+-	if (!arg->sock)
+-		return 0;
+-
+ 	counts = bpf_map_lookup_elem(&btf_map, &key);
+ 	if (!counts)
+ 		return 0;
+@@ -41,15 +33,15 @@ int test_long_fname_2(struct dummy_trace
+ }
+ 
+ __attribute__((noinline))
+-int test_long_fname_1(struct dummy_tracepoint_args *arg)
++int test_long_fname_1(void)
+ {
+-	return test_long_fname_2(arg);
++	return test_long_fname_2();
+ }
+ 
+ SEC("dummy_tracepoint")
+-int _dummy_tracepoint(struct dummy_tracepoint_args *arg)
++int _dummy_tracepoint(void *arg)
+ {
+-	return test_long_fname_1(arg);
++	return test_long_fname_1();
+ }
+ 
+ char _license[] SEC("license") = "GPL";
+--- a/tools/testing/selftests/bpf/test_btf.c
++++ b/tools/testing/selftests/bpf/test_btf.c
+@@ -2854,7 +2854,7 @@ static struct btf_raw_test raw_tests[] =
+ 	.value_type_id = 1,
+ 	.max_entries = 4,
+ 	.btf_load_err = true,
+-	.err_str = "vlen != 0",
++	.err_str = "Invalid func linkage",
+ },
+ 
+ {
 
 
