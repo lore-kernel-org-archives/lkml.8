@@ -2,80 +2,167 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FDC47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969B7C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E167216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588373338;
-	bh=+8ojglKGEmkO9iB05BMBJhMJkf9Z5gTGUig9zB2BCYk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tK9/r7XHMbo+XK8Msl7mG2iorjK4QF25544Osx5epg2fXEBGasg391olyDyDdhT9x
-	 WAUnJv42syDcLA23BAmzfwlCSgpIJJweYcHS05hg54+yucpw+bY+SmsiAuh07nwsqI
-	 teZFO3NNKUM6tjsS55UmW9HPi/ncYgQmtDy9cdh8=
+	by mail.kernel.org (Postfix) with ESMTP id 6C2AB216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:52:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5tWuAYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgEAWsz (ORCPT
+        id S1726818AbgEAWwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAWsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:48:54 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA7C208D6;
-        Fri,  1 May 2020 22:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588373334;
-        bh=+8ojglKGEmkO9iB05BMBJhMJkf9Z5gTGUig9zB2BCYk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qXb1AUxFwf8SfiVD1hp1KVtxCVgLHhwERL3lbJCOXqQdCh2GuFvS/26htkilGQR4D
-         ++9T85SXIC7GxJxaRwnLa1L0MH/Y+nuC+D6+lklVCuVQnC3GRBL+d9Te+eu784JxhI
-         WoRVqqX4yFb7Rm5cXWyKbQzt3ZUpRasuhXHC/DBY=
-Date:   Fri, 1 May 2020 15:48:53 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     ying.huang@intel.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 3/3] mm/swapfile.c: count won't be bigger than
- SWAP_MAP_MAX
-Message-Id: <20200501154853.bca4cfb7b2558bd43a4942f3@linux-foundation.org>
-In-Reply-To: <20200501015259.32237-3-richard.weiyang@gmail.com>
-References: <20200501015259.32237-1-richard.weiyang@gmail.com>
-        <20200501015259.32237-3-richard.weiyang@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 1 May 2020 18:52:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726045AbgEAWwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 18:52:35 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F052C061A0C;
+        Fri,  1 May 2020 15:52:35 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id o24so1132547oic.0;
+        Fri, 01 May 2020 15:52:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5NE2ugARjA4M7w+U0ZI4lUiKzfDBfGonNFho9vSGY6c=;
+        b=d5tWuAYYRY+B32Ms7iZ1bEDObBbIb6LyabvATNyFEdeCEK0Ye0hOva1MP4ffrSL6jl
+         +yEIORxrZrxBIct14Ko5go7cir8ja61kcisYd9Ry5qstWEyJXNpPNfvP1HAx6HXcYuYB
+         dKxR53sKEG+m2/CqFQB4ofJuGafJJCHrJv1xLnWHbxGT5GXKTaiIeKx57v607Uii8BtJ
+         b9NrmjOj86fQSjQGGSM6Dvs64xA0wwAyUZozg2Soga3gSgrikmIh3B07Wpu2F68muq6U
+         JYLO2zpdlD9qanx4ATXY6EpB1Pd5I3whEK/L4JkARu637VaiUrHOKU21qOEjk2lBdPvc
+         Yoyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5NE2ugARjA4M7w+U0ZI4lUiKzfDBfGonNFho9vSGY6c=;
+        b=ew0AzJIb5alQRbzvpF6mxLUNiD8tzl1IheDwko1vH57UOQtgqq12nBLpoH1gQlBBcg
+         gWNy/EL9Rk3XvWC5lHHY8FcrLN1HcxPm5JKba7Xa9jNDclHGYiWtpskiqa3ik6JuY/3Y
+         oDX2GHK3dZ3xNmBQJV8YasM1Lyd90xiEyw3rnWHteCy+W0T4gQwB1AUKAnV/BboncWA9
+         asWHzoZCW1tC8DMxKK/ccAbpWH+8WGxN/psZM/Rky4Oq1yT7C6Td/kNXvydKWxwu39kp
+         S5td12GY/oN7BcQvwUW9DLFYQ/3iAc0ieByOyvBB8XGVhj2L/Bb0uDtKgvcAEjgM0bV7
+         UhKQ==
+X-Gm-Message-State: AGi0PubEOJigxeaOdpLsuR4Ho6sWAetphodo8Zvq6TamJpXkXx0ozApR
+        l/dKNeuKbWDgBPom1Rxe7f2r0m0PFuTD48H64HM=
+X-Google-Smtp-Source: APiQypKryX6rVpcnoQm7RQhW5rfJ7a114pIVCUDVctwuZzdk7plx/cYiVJnmQiMAJ9ChFg29AMfARiq0VKK2fv5AhjQ=
+X-Received: by 2002:aca:fc45:: with SMTP id a66mr1458670oii.5.1588373554626;
+ Fri, 01 May 2020 15:52:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
+ <1588055009-12677-2-git-send-email-wanpengli@tencent.com> <87ees5f6gh.fsf@vitty.brq.redhat.com>
+ <20200501141159.GC3798@linux.intel.com>
+In-Reply-To: <20200501141159.GC3798@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Sat, 2 May 2020 06:52:22 +0800
+Message-ID: <CANRm+Cz9-3xN2m+z2Rr75xgV_k722mVfSuCyPetLr6mBN4rE2Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] KVM: VMX: Introduce generic fastpath handler
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 01:52:59 +0000 Wei Yang <richard.weiyang@gmail.com> wrote:
+On Fri, 1 May 2020 at 22:12, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Thu, Apr 30, 2020 at 03:28:46PM +0200, Vitaly Kuznetsov wrote:
+> > Wanpeng Li <kernellwp@gmail.com> writes:
+> >
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > >
+> > > Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
+> > > timer fastpath etc, move it after vmx_complete_interrupts() in order that
+> > > later patch can catch the case vmexit occurred while another event was
+> > > being delivered to guest. There is no obversed performance difference for
+> > > IPI fastpath testing after this move.
+> > >
+> > > Tested-by: Haiwei Li <lihaiwei@tencent.com>
+> > > Cc: Haiwei Li <lihaiwei@tencent.com>
+> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/vmx.c | 21 ++++++++++++++++-----
+> > >  1 file changed, 16 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > > index 3ab6ca6..9b5adb4 100644
+> > > --- a/arch/x86/kvm/vmx/vmx.c
+> > > +++ b/arch/x86/kvm/vmx/vmx.c
+> > > @@ -6583,6 +6583,20 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+> > >     }
+> > >  }
+> > >
+> > > +static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
+> > > +{
+> > > +   if (!is_guest_mode(vcpu)) {
+> >
+> > Nitpick: do we actually expect to have any fastpath handlers anytime
+> > soon? If not, we could've written this as
+> >
+> >       if (is_guest_mode(vcpu))
+> >               return EXIT_FASTPATH_NONE;
+> >
+> > and save on identation)
+>
+> Agreed.  An alternative approach would be to do the check in the caller, e.g.
+>
+>         if (is_guest_mode(vcpu))
+>                 return EXIT_FASTPATH_NONE;
+>
+>         return vmx_exit_handlers_fastpath(vcpu);
+>
+> I don't have a strong preference either way.
+>
+> > > +           switch (to_vmx(vcpu)->exit_reason) {
+> > > +           case EXIT_REASON_MSR_WRITE:
+> > > +                   return handle_fastpath_set_msr_irqoff(vcpu);
+> > > +           default:
+> > > +                   return EXIT_FASTPATH_NONE;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   return EXIT_FASTPATH_NONE;
+> > > +}
+> > > +
+> > >  bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+> > >
+> > >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > > @@ -6757,17 +6771,14 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> > >     if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
+> > >             return EXIT_FASTPATH_NONE;
+> > >
+> > > -   if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+> > > -           exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+> > > -   else
+> > > -           exit_fastpath = EXIT_FASTPATH_NONE;
+> > > -
+> > >     vmx->loaded_vmcs->launched = 1;
+> > >     vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
+> > >
+> > >     vmx_recover_nmi_blocking(vmx);
+> > >     vmx_complete_interrupts(vmx);
+> > >
+> > > +   exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+>
+> No need for capturing the result in a local variable, just return the function
+> call.
 
-> When the condition is true, there are two possibilities:
+As you know later patches need to handle an local variable even
+through we can make 1/7 nicer, it is just overridden.
 
-I'm struggling with this one.
-
->    1. count == SWAP_MAP_BAD
->    2. count == (SWAP_MAP_MAX & COUNT_CONTINUED) == SWAP_MAP_SHMEM
-
-I'm not sure what 2. is trying to say.  For a start, (SWAP_MAP_MAX &
-COUNT_CONTINUED) is zero.  I guess it meant "|"?
-
-Also, the return value documentation says we return EINVAL for migration
-entries.  Where's that happening, or is the comment out of date?
-
-> The first case would be filtered by the first if in __swap_duplicate().
-> 
-> And the second case means this swap entry is for shmem. Since we never
-> do another duplication for shmem swap entry. This won't happen neither.
-
-
+    Wanpeng
