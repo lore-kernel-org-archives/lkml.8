@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C82C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B7C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A61A208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E6B20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339695;
-	bh=mCavN1At21tKbAF2JyVh9FEsLWtaFw/NGJH8wNFnySs=;
+	s=default; t=1588339699;
+	bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HPGMQE2eUKCUyCum37UDWfAaPhnf3kFBS+T9L2fH/HFtwuGS8SIG13tBX0IWIfr+7
-	 BQ4cuBrx8ukQFHoBZMSiJaMi7zTJTodUc40WwEN8jgX9EUB+rrzWuEX2vQ9nz2xI9f
-	 SGvgTaIXSufQSlmvb/l/sqbl83buts4gRxDTMG+Y=
+	b=yyRCLL37Fss7dSTg0p3hM13XBT5JDosXxU628ImpkJIkr/E2KtDaTIhoKUS2aqw8W
+	 LPJc58AchHR4dM4hSmEgejew0Kj9LapRu7gQZPWTXGbrD8z8cvZpyM4tyHUFProHd5
+	 LM/F3W6Wuy6i9K4NFFpezpXd9EHQyDhaLQyGfkv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbgEAN2O (ORCPT
+        id S1729081AbgEAN2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729560AbgEAN2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:28:12 -0400
+        id S1729073AbgEAN2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DB3F20757;
-        Fri,  1 May 2020 13:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CE9820757;
+        Fri,  1 May 2020 13:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339692;
-        bh=mCavN1At21tKbAF2JyVh9FEsLWtaFw/NGJH8wNFnySs=;
+        s=default; t=1588339694;
+        bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USBcwfTkfttY2J4N4jDdrAs4RDU54R/2Wk03Em3cSLTKGMxwxmyA3k554f+eJa96L
-         s0rBwQHc5R5DPknnRAuWwefn//E64geHwxNjVntoM1j6ZNP+qdKt88g8oxtp8YRefp
-         G8/plD2EmNxJxrMH0VLC6RrsmFtQf4xNT4yGdfrA=
+        b=UCEOEhjYQfYkClpoH/aUxqMfXXN+YucKHhhMYdmPYt21Fq6MJqOBIeYizEQsRMrVG
+         A111RAyY1cQvkTuVc9O2SE38n05P48ha+V10kxy1sOQOJMkuBqWIM9+9z/qElysZrI
+         S4zKcE12EhDv+1g60pRXOAGo53EFJdClD9AEc1nA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 10/80] ceph: dont skip updating wanted caps when cap is stale
-Date:   Fri,  1 May 2020 15:21:04 +0200
-Message-Id: <20200501131516.596113175@linuxfoundation.org>
+Subject: [PATCH 4.9 11/80] pwm: rcar: Fix late Runtime PM enablement
+Date:   Fri,  1 May 2020 15:21:05 +0200
+Message-Id: <20200501131517.428351831@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,47 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan, Zheng <zyan@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
+[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
 
-1. try_get_cap_refs() fails to get caps and finds that mds_wanted
-   does not include what it wants. It returns -ESTALE.
-2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
-   that inode has cap, so it calls ceph_check_caps().
-3. ceph_check_caps() finds that issued caps (without checking if it's
-   stale) already includes caps wanted by open file, so it skips
-   updating wanted caps.
+Runtime PM should be enabled before calling pwmchip_add(), as PWM users
+can appear immediately after the PWM chip has been added.
+Likewise, Runtime PM should be disabled after the removal of the PWM
+chip.
 
-Above events can cause an infinite loop inside ceph_get_caps().
-
-Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-rcar.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index f5d9835264aa1..617e9ae67f506 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -1764,8 +1764,12 @@ retry_locked:
- 		}
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 0fcf94ffad321..c298bec25a90a 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -236,24 +236,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
+ 	rcar_pwm->chip.base = -1;
+ 	rcar_pwm->chip.npwm = 1;
  
- 		/* want more caps from mds? */
--		if (want & ~(cap->mds_wanted | cap->issued))
--			goto ack;
-+		if (want & ~cap->mds_wanted) {
-+			if (want & ~(cap->mds_wanted | cap->issued))
-+				goto ack;
-+			if (!__cap_is_valid(cap))
-+				goto ack;
-+		}
++	pm_runtime_enable(&pdev->dev);
++
+ 	ret = pwmchip_add(&rcar_pwm->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
++		pm_runtime_disable(&pdev->dev);
+ 		return ret;
+ 	}
  
- 		/* things we might delay */
- 		if ((cap->issued & ~retain) == 0 &&
+-	pm_runtime_enable(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+ static int rcar_pwm_remove(struct platform_device *pdev)
+ {
+ 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = pwmchip_remove(&rcar_pwm->chip);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	return pwmchip_remove(&rcar_pwm->chip);
++	return ret;
+ }
+ 
+ static const struct of_device_id rcar_pwm_of_table[] = {
 -- 
 2.20.1
 
