@@ -2,142 +2,161 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEA3C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87789C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4A9C24956
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588353413;
-	bh=O3zHkG0xK7vnhchvk9LwPWiRO6iM2S6Twy28fLvh81w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=EHX6TwcCunjVSeZq9qK+/8FxZPZ687AEvrLqrPpQYTq8BUK3RDCmlLpgYyedVHDf4
-	 wXK7swj1n96suxNS/mKb+29xzUVKXEjbxSmZ05TINQQMZCqA7Wt5WkTGcVH/Lk4eWs
-	 fPfxDaJtYOPPg05HDfAmq6kTF9OOtp2IAFabyUno=
+	by mail.kernel.org (Postfix) with ESMTP id 5AE802137B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:18:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="FpzpiJAj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgEARQx (ORCPT
+        id S1730188AbgEARSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729246AbgEARQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:16:52 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 852552137B;
-        Fri,  1 May 2020 17:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588353411;
-        bh=O3zHkG0xK7vnhchvk9LwPWiRO6iM2S6Twy28fLvh81w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ooJMbUXwRSn08VpK+bFeKUUTOGpcnXCZn935/9HH/jPOYsPDZDUTgaUvNJE1drWjJ
-         McE+bPtrWP0t4EvfnpiZrRMffZ8mkvajeaAy/pIJW63HH95tAegyTRVMywFD/KrtvQ
-         RCHGyxvdCSukM66+sSGnbMRT0eRR8glacInJnRAI=
-Date:   Fri, 1 May 2020 12:16:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Rajat Jain <rajatja@google.com>,
-        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
-Message-ID: <20200501171649.GA116404@bjorn-Precision-5520>
+        Fri, 1 May 2020 13:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729246AbgEARSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:18:09 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C11BC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:18:08 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l20so4805808pgb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=QDlWf9LzZNbk9dgJ+RBVnfsnQ3+A0mxSDEKIw0bzaco=;
+        b=FpzpiJAjtrsI5WVV4SKUJKHzij1rnmdtadoDsR0qqk+CXqE/hUHWXsPL2oRuS5hZOA
+         aONes5w4zEx6gmkZDZ6e+DDNyY6oF1sBt8OTtkCNHUF7lIpD793t1sJeXqTogQzRv1FF
+         rQVS4UbK3usuavte361SjI3SyujPmUqmJQaBjPO2z569bDBeC1Au4je5MaiW2UZo7e0A
+         c0t+3N2zecfZcjev5eK3OlU9k0rqur4pKZOp57pJMLMFZVQ2Gcq8V9DtbUU15VXWgiWb
+         aAODoOXCfGrarLxotuNODA72LF/1aktUrRpZ0A499uAy6tKJ+aez5X8Cu3PlM0p5KlhW
+         15gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=QDlWf9LzZNbk9dgJ+RBVnfsnQ3+A0mxSDEKIw0bzaco=;
+        b=Cq9J+EWng1zagK1sf6Acb3rNm5zjDLq2cl3eiB020oCu3umErDumnfBuKhb4oW1sYM
+         y2eW58KZVqhEs7GBgBkivr+btl26MSouMLgmkx/MB5atpSO2xUdQEHYpk0awXgHFgMf9
+         fxPvspt8bDp6UZN15GJAePsmPK0mC8XGAHFpk22rWLwOtroig2i7NNoMuo8DGA9VdD/8
+         S7nmX37SurtN67UQyrVDpda8QG5TixUrpLTmki7tHhBtp/sUrtIyPsICCZKwzV5n6A60
+         3UN0bUWe4jT+SyVnKeHRjV6lge8PESrOGkRTszzTEgTeHRkPFpVl4rXaxfw1OmaojqL7
+         b4Jg==
+X-Gm-Message-State: AGi0Puah44S18KFEnOSMCzOzfOZdEXaOXwPgFDdHJtO/cIuYKhSEhjK1
+        FLYKnoQavEP6H9hNkFlr026Nul7skl9QXg==
+X-Google-Smtp-Source: APiQypIbVNlKonsbj1FeJLncadYmaCauJ4vAfbpeDxwqDEqE4vTJNbAUdn7MtIgDmvTSQ6gmVXXCGQ==
+X-Received: by 2002:aa7:9a87:: with SMTP id w7mr5070915pfi.47.1588353487288;
+        Fri, 01 May 2020 10:18:07 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c085:21c1::158c? ([2620:10d:c090:400::5:bb5c])
+        by smtp.gmail.com with ESMTPSA id i72sm2915863pfe.104.2020.05.01.10.18.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 10:18:06 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v2] eventfd: convert to f_op->read_iter()
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-ID: <c71b2091-a86e-cc81-056d-de2f1e839f50@kernel.dk>
+Date:   Fri, 1 May 2020 11:18:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588272369-2145-1-git-send-email-jonathan.derrick@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:46:07PM -0600, Jon Derrick wrote:
-> Hi Bjorn & Kuppuswamy,
-> 
-> I see a problem in the DPC ECN [1] to _OSC in that it doesn't give us a way to
-> determine if firmware supports _OSC DPC negotation, and therefore how to handle
-> DPC.
-> 
-> Here is the wording of the ECN that implies that Firmware without _OSC DPC
-> negotiation support should have the OSPM rely on _OSC AER negotiation when
-> determining DPC control:
-> 
->   PCIe Base Specification suggests that Downstream Port Containment may be
->   controlled either by the Firmware or the Operating System. It also suggests
->   that the Firmware retain ownership of Downstream Port Containment if it also
->   owns AER. When the Firmware owns Downstream Port Containment, it is expected
->   to use the new "Error Disconnect Recover" notification to alert OSPM of a
->   Downstream Port Containment event.
-> 
-> In legacy platforms, as bits in _OSC are reserved prior to implementation, ACPI
-> Root Bus enumeration will mark these Host Bridges as without Native DPC
-> support, even though the specification implies it's expected that AER _OSC
-> negotiation determines DPC control for these platforms. There seems to be a
-> need for a way to determine if the DPC control bit in _OSC is supported and
-> fallback on AER otherwise.
-> 
-> 
-> Currently portdrv assumes DPC control if the port has Native AER services:
-> 
-> static int get_port_device_capability(struct pci_dev *dev)
-> ...
-> 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> 	    pci_aer_available() &&
-> 	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> 		services |= PCIE_PORT_SERVICE_DPC;
-> 
-> Newer firmware may not grant OSPM DPC control, if for instance, it expects to
-> use Error Disconnect Recovery. However it looks like ACPI will use DPC services
-> via the EDR driver, without binding the full DPC port service driver.
-> 
-> 
-> If we change portdrv to probe based on host->native_dpc and not AER, then we
-> break instances with legacy firmware where OSPM will clear host->native_dpc
-> solely due to _OSC bits being reserved:
-> 
-> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
-> ...
-> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
-> 		host_bridge->native_dpc = 0;
-> 
-> 
-> 
-> So my assumption instead is that host->native_dpc can be 0 and expect Native
-> DPC services if AER is used. In other words, if and only if DPC probe is
-> invoked from portdrv, then it needs to rely on the AER dependency. Otherwise it
-> should be assumed that ACPI set up DPC via EDR. This covers legacy firmware.
-> 
-> However it seems like that could be trouble with newer firmware that might give
-> OSPM control of AER but not DPC, and would result in both Native DPC and EDR
-> being in effect.
-> 
-> 
-> Anyways here are two patches that give control of AER and DPC on the results of
-> _OSC. They don't mess with the HEST parser as I expect those to be removed at
-> some point. I need these for VMD support which doesn't even rely on _OSC, but I
-> suspect this won't be the last effort as we detangle Firmware First.
-> 
-> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+eventfd is using ->read() as it's file_operations read handler, but
+this prevents passing in information about whether a given IO operation
+is blocking or not. We can only use the file flags for that. To support
+async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
+support. Convert eventfd to using ->read_iter().
 
-Hi Jon, I think we need to sort out the _OSC/FIRMWARE_FIRST patches
-from Alex and Sathy first, then see what needs to be done on top of
-those, so I'm going to push these off for a few days and they'll
-probably need a refresh.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Bjorn
+---
+
+Since v1:
+
+- Add FMODE_NOWAIT to the eventfd file
+
+diff --git a/fs/eventfd.c b/fs/eventfd.c
+index 78e41c7c3d05..d590c2141d39 100644
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -216,10 +216,11 @@ int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *w
+ }
+ EXPORT_SYMBOL_GPL(eventfd_ctx_remove_wait_queue);
+ 
+-static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
+-			    loff_t *ppos)
++static ssize_t eventfd_read(struct kiocb *iocb, struct iov_iter *iov)
+ {
++	struct file *file = iocb->ki_filp;
+ 	struct eventfd_ctx *ctx = file->private_data;
++	size_t count = iov_iter_count(iov);
+ 	ssize_t res;
+ 	__u64 ucnt = 0;
+ 	DECLARE_WAITQUEUE(wait, current);
+@@ -231,7 +232,8 @@ static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
+ 	res = -EAGAIN;
+ 	if (ctx->count > 0)
+ 		res = sizeof(ucnt);
+-	else if (!(file->f_flags & O_NONBLOCK)) {
++	else if (!(file->f_flags & O_NONBLOCK) &&
++		 !(iocb->ki_flags & IOCB_NOWAIT)) {
+ 		__add_wait_queue(&ctx->wqh, &wait);
+ 		for (;;) {
+ 			set_current_state(TASK_INTERRUPTIBLE);
+@@ -257,7 +259,7 @@ static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
+ 	}
+ 	spin_unlock_irq(&ctx->wqh.lock);
+ 
+-	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
++	if (res > 0 && copy_to_iter(&ucnt, res, iov) < res)
+ 		return -EFAULT;
+ 
+ 	return res;
+@@ -329,7 +331,7 @@ static const struct file_operations eventfd_fops = {
+ #endif
+ 	.release	= eventfd_release,
+ 	.poll		= eventfd_poll,
+-	.read		= eventfd_read,
++	.read_iter	= eventfd_read,
+ 	.write		= eventfd_write,
+ 	.llseek		= noop_llseek,
+ };
+@@ -427,8 +429,17 @@ static int do_eventfd(unsigned int count, int flags)
+ 
+ 	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
+ 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
+-	if (fd < 0)
++	if (fd < 0) {
+ 		eventfd_free_ctx(ctx);
++	} else {
++		struct file *file;
++
++		file = fget(fd);
++		if (file) {
++			file->f_mode |= FMODE_NOWAIT;
++			fput(file);
++		}
++	}
+ 
+ 	return fd;
+ }
+
+-- 
+Jens Axboe
+
