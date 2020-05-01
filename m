@@ -2,103 +2,123 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99166C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E705AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79BCE20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1056208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oNTY4uf7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d7vMcHMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgEAG2V (ORCPT
+        id S1728376AbgEAGbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 02:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgEAG2U (ORCPT
+        Fri, 1 May 2020 02:31:21 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32358 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728229AbgEAGbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 02:28:20 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C4DC035494;
-        Thu, 30 Apr 2020 23:28:19 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 1 May 2020 02:31:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588314680; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=+ZeZENPKHRVIAyX18Mb1d2RgeUC/KuHefKXYMNBHvno=; b=d7vMcHMMQcvrd+mq061Ut5qGYCcmuUMR4bS5qumwHwOTF/F9+KKZy73xLx6stLE+ANHMMrvE
+ blR0vOf8rOKudXHUPuhxZs9V0XQnj0QJ60sgQw6DfN4tYmueQfM99WrNCQOficVMcaAT1wmb
+ mk/+cO70P6Buy3lx2kOKUiG7sHE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eabc22c.7f0f9389e3e8-smtp-out-n01;
+ Fri, 01 May 2020 06:31:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 885D1C433CB; Fri,  1 May 2020 06:31:07 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49D2PV2wdvz9sRY;
-        Fri,  1 May 2020 16:28:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588314495;
-        bh=+6zGHVLBDm8OMq9izXUH0HEXdRVFmb+OdCmJ924v04I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oNTY4uf7TEa7GSv31yzyjr5i6Q2Ubjzyh208XR2cZQDjWmXMqihLr/Q8Vr265e3h8
-         /AYPp1PKztiNH4R177WPSTAG6dw0Kg2/3Nfoed8OvlIRMnn6EFfA5OMD7m2jCCBYvI
-         wgB2Pw70p2ATOxL8dPnSqECdxU07pFiRkkw11zH1pfk/s7fA24RHWibraiL4nQWAzn
-         Mf2QLk+bYj2BSmu3wBaWt92H/kn88tEcH1gBeZ4MFFfdrTq0Af78pk/S8nBArSBwGv
-         rAD+O6nunbZ9ReBFeVkFnIK3w74Q3Yx5X3EAh2UeSyDdhk0lqw8/ZyIO/z/8z9vQTj
-         bKKVy4PXX6MKg==
-Date:   Fri, 1 May 2020 16:28:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>
-Subject: linux-next: build warning after merge of the char-misc tree
-Message-ID: <20200501162806.155c44ed@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DQNGNWiRCxR3bIOK=SwcCK3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2741C433D2;
+        Fri,  1 May 2020 06:31:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2741C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, dianders@chromium.org,
+        swboyd@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH] pinctrl: qcom: Add affinity callbacks to msmgpio IRQ chip
+Date:   Fri,  1 May 2020 12:00:17 +0530
+Message-Id: <1588314617-4556-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DQNGNWiRCxR3bIOK=SwcCK3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-Hi all,
+Wakeup capable GPIO IRQs routed via PDC are not being migrated when a CPU
+is hotplugged. Add affinity callbacks to msmgpio IRQ chip to update the
+affinity of wakeup capable IRQs.
 
-After merging the char-misc tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+[mkshah: updated commit text and minor code fixes]
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-drivers/crypto/xilinx/zynqmp-aes-gcm.c: In function 'zynqmp_handle_aes_req':
-drivers/crypto/xilinx/zynqmp-aes-gcm.c:137:5: warning: 'status' may be used=
- uninitialized in this function [-Wmaybe-uninitialized]
-  137 |  if (status) {
-      |     ^
-drivers/crypto/xilinx/zynqmp-aes-gcm.c:87:15: note: 'status' was declared h=
-ere
-   87 |  unsigned int status;
-      |               ^~~~~~
-
-Introduced by commit
-
-  bc86f9c54616 ("firmware: xilinx: Remove eemi ops for aes engine")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DQNGNWiRCxR3bIOK=SwcCK3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6rwXYACgkQAVBC80lX
-0GwLpAgAmDVxisEwJNpj5crC7mj9fw/t3NGKhacau4tdRoUVeFfBVPtLeIyWE/TI
-DZGlcU19lEi8qY777QxkjIBEvaRzpB1CDXTWxn6XB2xqyvFjGdYaJQRpIMpsOf/z
-rGXd30meVdo8jDyj4SqfIZo5tnOYYZs0EBhys7hY09pPKNweT6bBoXpElW6FyRhh
-Iaw67ykg6TQcDH+B3OvrxAEVf8ClGrIKgXn1UW2XynOZrFncnjVWv6DxGIBQi2Dm
-5gNx/Fs+88yiDN2nWJiOkuiFx9IAmhQ+z2lAXgSBZEMcT1z+7A6m8xUKdrEXg3sG
-4imutAhgxjjKO8riXZbIBbiS65toJQ==
-=rYjJ
------END PGP SIGNATURE-----
-
---Sig_/DQNGNWiRCxR3bIOK=SwcCK3--
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 29259fe..83b7d64 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1033,6 +1033,29 @@ static void msm_gpio_irq_relres(struct irq_data *d)
+ 	module_put(gc->owner);
+ }
+ 
++static int msm_gpio_irq_set_affinity(struct irq_data *d,
++				const struct cpumask *dest, bool force)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return irq_chip_set_affinity_parent(d, dest, force);
++
++	return 0;
++}
++
++static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return irq_chip_set_vcpu_affinity_parent(d, vcpu_info);
++
++	return 0;
++}
++
+ static void msm_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+@@ -1131,6 +1154,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
++	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
++	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
+ 
+ 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+ 	if (np) {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
