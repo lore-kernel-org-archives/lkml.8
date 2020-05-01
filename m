@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D80FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAF3C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19691205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320D3205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340848;
-	bh=ldTvqhRkqM+nR/J0XJ6ZzNqIValUnJ/esBZKHmivZsA=;
+	s=default; t=1588340851;
+	bh=hk0WlGJZ3FM21rY1vHjVkvu11UIxCb9M8FMJ1iwQL5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9DHVEYfomrdWb61/R98lrM1DCo7dlJX1jZO0ShspvFfk7F5/ZfUEtpHsl89b70/w
-	 YTopt8vL7s4LMXGdBQpYlpEcPjM2d7FzAj30qNI3d+Uf0mrU000MisYrzCxbRjlly6
-	 wyEVKd9SxZ/z17sPIMIiz8EsMj+zvLaBxNTKCh40=
+	b=cLAB/L5+aRoaEbWWUaOBZhEmZ4O+I+GgQdquCeQaM3WFQyDoo+sCOLzdiJ5Wm58h6
+	 TRnUlLsarwHaGV1goJmY3vliNtfJhuQ4Vvp4dD0ZwaSmCkWR5lKu0V4kwuSBCO8wGG
+	 UNeYWinzmIoajC0M2SAc44t80P80YL3He438Fpzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731653AbgEANni (ORCPT
+        id S1731159AbgEANne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44466 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731642AbgEANnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:33 -0400
+        id S1731622AbgEANna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C28205C9;
-        Fri,  1 May 2020 13:43:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAE5120757;
+        Fri,  1 May 2020 13:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340612;
-        bh=ldTvqhRkqM+nR/J0XJ6ZzNqIValUnJ/esBZKHmivZsA=;
+        s=default; t=1588340610;
+        bh=hk0WlGJZ3FM21rY1vHjVkvu11UIxCb9M8FMJ1iwQL5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KElBVFIsr/Bpt82AIKrS7nGvckoaXOZ+f4seCCi0AFsYdtjvSCQKWSocQ1yBs7hiS
-         1PnhtGnmM9O525NDKOIf4egoYsB66hlYwHmXif3LhomsWcYHBs/AzAeDt6sOLedvgn
-         KAgOQHsLnmGJFWi4yEZnzYwraA2QWXFMqntwqexc=
+        b=WWaVnc782immaCoARWmDb7T+3GvPSXNmRMnexaTMT0atgHk5iv0jP9CQMNZ/xY0DC
+         ynzlc7yZSEcOO0qvyxAV/8dld45x5GEyDAJM1fsq8rsU+1KYH5zfmiWl/V0DrIOK72
+         q2pVQimbLd2maMqPXDU4GWYxmBUOsKNfZHirjsN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>, Waiman Long <longman@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 057/106] blk-iocost: Fix error on iocost_ioc_vrate_adj
-Date:   Fri,  1 May 2020 15:23:30 +0200
-Message-Id: <20200501131550.471056449@linuxfoundation.org>
+        stable@vger.kernel.org, Zhu Yanjun <yanjunz@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 042/106] net/mlx5e: Get the latest values from counters in switchdev mode
+Date:   Fri,  1 May 2020 15:23:15 +0200
+Message-Id: <20200501131548.781414143@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -61,76 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Zhu Yanjun <yanjunz@mellanox.com>
 
-commit d6c8e949a35d6906d6c03a50e9a9cdf4e494528a upstream.
+commit dcdf4ce0ff4ba206fc362e149c8ae81d6a2f849c upstream.
 
-Systemtap 4.2 is unable to correctly interpret the "u32 (*missed_ppm)[2]"
-argument of the iocost_ioc_vrate_adj trace entry defined in
-include/trace/events/iocost.h leading to the following error:
+In the switchdev mode, when running "cat
+/sys/class/net/NIC/statistics/tx_packets", the ppcnt register is
+accessed to get the latest values. But currently this command can
+not get the correct values from ppcnt.
 
-  /tmp/stapAcz0G0/stap_c89c58b83cea1724e26395efa9ed4939_6321_aux_6.c:78:8:
-  error: expected ‘;’, ‘,’ or ‘)’ before ‘*’ token
-   , u32[]* __tracepoint_arg_missed_ppm
+>From firmware manual, before getting the 802_3 counters, the 802_3
+data layout should be set to the ppcnt register.
 
-That argument type is indeed rather complex and hard to read. Looking
-at block/blk-iocost.c. It is just a 2-entry u32 array. By simplifying
-the argument to a simple "u32 *missed_ppm" and adjusting the trace
-entry accordingly, the compilation error was gone.
+When the command "cat /sys/class/net/NIC/statistics/tx_packets" is
+run, before updating 802_3 data layout with ppcnt register, the
+monitor counters are tested. The test result will decide the
+802_3 data layout is updated or not.
 
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Actually the monitor counters do not support to monitor rx/tx
+stats of 802_3 in switchdev mode. So the rx/tx counters change
+will not trigger monitor counters. So the 802_3 data layout will
+not be updated in ppcnt register. Finally this command can not get
+the latest values from ppcnt register with 802_3 data layout.
+
+Fixes: 5c7e8bbb0257 ("net/mlx5e: Use monitor counters for update stats")
+Signed-off-by: Zhu Yanjun <yanjunz@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-iocost.c            |    4 ++--
- include/trace/events/iocost.h |    6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -1594,7 +1594,7 @@ skip_surplus_transfers:
- 				      vrate_min, vrate_max);
- 		}
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3568,7 +3568,12 @@ mlx5e_get_stats(struct net_device *dev,
+ 	struct mlx5e_vport_stats *vstats = &priv->stats.vport;
+ 	struct mlx5e_pport_stats *pstats = &priv->stats.pport;
  
--		trace_iocost_ioc_vrate_adj(ioc, vrate, &missed_ppm, rq_wait_pct,
-+		trace_iocost_ioc_vrate_adj(ioc, vrate, missed_ppm, rq_wait_pct,
- 					   nr_lagging, nr_shortages,
- 					   nr_surpluses);
- 
-@@ -1603,7 +1603,7 @@ skip_surplus_transfers:
- 			ioc->period_us * vrate * INUSE_MARGIN_PCT, 100);
- 	} else if (ioc->busy_level != prev_busy_level || nr_lagging) {
- 		trace_iocost_ioc_vrate_adj(ioc, atomic64_read(&ioc->vtime_rate),
--					   &missed_ppm, rq_wait_pct, nr_lagging,
-+					   missed_ppm, rq_wait_pct, nr_lagging,
- 					   nr_shortages, nr_surpluses);
+-	if (!mlx5e_monitor_counter_supported(priv)) {
++	/* In switchdev mode, monitor counters doesn't monitor
++	 * rx/tx stats of 802_3. The update stats mechanism
++	 * should keep the 802_3 layout counters updated
++	 */
++	if (!mlx5e_monitor_counter_supported(priv) ||
++	    mlx5e_is_uplink_rep(priv)) {
+ 		/* update HW stats in background for next time */
+ 		mlx5e_queue_update_stats(priv);
  	}
- 
---- a/include/trace/events/iocost.h
-+++ b/include/trace/events/iocost.h
-@@ -130,7 +130,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_i
- 
- TRACE_EVENT(iocost_ioc_vrate_adj,
- 
--	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 (*missed_ppm)[2],
-+	TP_PROTO(struct ioc *ioc, u64 new_vrate, u32 *missed_ppm,
- 		u32 rq_wait_pct, int nr_lagging, int nr_shortages,
- 		int nr_surpluses),
- 
-@@ -155,8 +155,8 @@ TRACE_EVENT(iocost_ioc_vrate_adj,
- 		__entry->old_vrate = atomic64_read(&ioc->vtime_rate);;
- 		__entry->new_vrate = new_vrate;
- 		__entry->busy_level = ioc->busy_level;
--		__entry->read_missed_ppm = (*missed_ppm)[READ];
--		__entry->write_missed_ppm = (*missed_ppm)[WRITE];
-+		__entry->read_missed_ppm = missed_ppm[READ];
-+		__entry->write_missed_ppm = missed_ppm[WRITE];
- 		__entry->rq_wait_pct = rq_wait_pct;
- 		__entry->nr_lagging = nr_lagging;
- 		__entry->nr_shortages = nr_shortages;
 
 
