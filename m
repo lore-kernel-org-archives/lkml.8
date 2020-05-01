@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5316C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FEAC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47ED2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4FB205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341038;
-	bh=KIPoBk7K8wgI48MMKiOmelRUYbArjb3GQ1nhKoUkKeg=;
+	s=default; t=1588341040;
+	bh=5SvYodR3cdhJYE5o749RtLFXryDUlwu/cXQ3NXA/kzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iwDxI5W0BYO7QzjmyLM07e2ezUAyZOeKixWIHHdE1f7pfLzZW8Lwjy8Lvit5Nc/20
-	 2rmRsHFIT1XfCezjp9IVHhSkO9i5+F1vMEwR6y2WV4g2+K/jT+ibCQNeIq8VyrOi+r
-	 8CjzvtCEjAycZcS5joR5CjLMCvaR/qgu/ntmidWI=
+	b=mlW2tggjsEJ+2sB2LCxl0HrVxq/QwJWiwGyoXzpQRpqCkhTxmz6eMAf3VmmQ4A0QZ
+	 J4iEt8MjvQJagwJqcvWHGj44IhH4igjkfjgckwsWp6rWJaXbmkPi/tn9E3cYxc1+kf
+	 1v86sQE3XduTQnams5Zdg+yLvORql0sqFKTTIe4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbgEANuh (ORCPT
+        id S1731221AbgEANjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731225AbgEANjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:49 -0400
+        id S1730926AbgEANjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D12520757;
-        Fri,  1 May 2020 13:39:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE6A6216FD;
+        Fri,  1 May 2020 13:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340388;
-        bh=KIPoBk7K8wgI48MMKiOmelRUYbArjb3GQ1nhKoUkKeg=;
+        s=default; t=1588340381;
+        bh=5SvYodR3cdhJYE5o749RtLFXryDUlwu/cXQ3NXA/kzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNy9D9LHlLchnRFWhxkqA4FOSQpnA+fSWmyTSSxEdVmn9i3cv9nOvMJqxJLDaGmU7
-         /k0TnbKoQc1KefFndx75WZsub9UNKvHm5NDsJoU5/uHAdYxyVmhaGFVBXPH/beosET
-         ZHN7D4kBuwjfDuVeBlWG3Mc14U3MJQSMZhGPXwX0=
+        b=BOWyk+TTuUOvAFhfK0jWASwV9MOPfenzzgphmNLySGrFjlJDEov7EU83tuJSzbnYY
+         WE8Jhv/ZvUcjT0fNNhBFCEm7sVaj+3YoLYoQdCNA35lN+I5rfWc2533aLdH0WghshQ
+         NZGm6du8KDxGyNiT+knBAPdC4z1YKGsEZlFOQIsI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH 5.4 46/83] um: ensure `make ARCH=um mrproper` removes arch/$(SUBARCH)/include/generated/
-Date:   Fri,  1 May 2020 15:23:25 +0200
-Message-Id: <20200501131536.899363242@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 43/83] netfilter: nat: fix error handling upon registering inet hook
+Date:   Fri,  1 May 2020 15:23:22 +0200
+Message-Id: <20200501131536.292062051@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -61,58 +63,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitor Massaru Iha <vitor@massaru.org>
+From: Hillf Danton <hdanton@sina.com>
 
-commit 63ec90f18204f2fe072df108de8a021b28b1b173 upstream.
+commit b4faef1739dd1f3b3981b8bf173a2266ea86b1eb upstream.
 
-In this workflow:
+A case of warning was reported by syzbot.
 
-$ make ARCH=um defconfig && make ARCH=um -j8
-  [snip]
-$ make ARCH=um mrproper
-  [snip]
-$ make ARCH=um defconfig O=./build_um && make ARCH=um -j8 O=./build_um
-  [snip]
-  CC      scripts/mod/empty.o
-In file included from ../include/linux/types.h:6,
-                 from ../include/linux/mod_devicetable.h:12,
-                 from ../scripts/mod/devicetable-offsets.c:3:
-../include/uapi/linux/types.h:5:10: fatal error: asm/types.h: No such file or directory
-    5 | #include <asm/types.h>
-      |          ^~~~~~~~~~~~~
-compilation terminated.
-make[2]: *** [../scripts/Makefile.build:100: scripts/mod/devicetable-offsets.s] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/home/iha/sdb/opensource/lkmp/linux-kselftest.git/Makefile:1140: prepare0] Error 2
-make[1]: Leaving directory '/home/iha/sdb/opensource/lkmp/linux-kselftest.git/build_um'
-make: *** [Makefile:180: sub-make] Error 2
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 19934 at net/netfilter/nf_nat_core.c:1106
+nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 19934 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
+Code: ff df 48 c1 ea 03 80 3c 02 00 75 75 48 8b 44 24 10 4c 89 ef 48 c7 00 00 00 00 00 e8 e8 f8 53 fb e9 4d fe ff ff e8 ee 9c 16 fb <0f> 0b e9 41 fe ff ff e8 e2 45 54 fb e9 b5 fd ff ff 48 8b 7c 24 20
+RSP: 0018:ffffc90005487208 EFLAGS: 00010246
+RAX: 0000000000040000 RBX: 0000000000000004 RCX: ffffc9001444a000
+RDX: 0000000000040000 RSI: ffffffff865c94a2 RDI: 0000000000000005
+RBP: ffff88808b5cf000 R08: ffff8880a2620140 R09: fffffbfff14bcd79
+R10: ffffc90005487208 R11: fffffbfff14bcd78 R12: 0000000000000000
+R13: 0000000000000001 R14: 0000000000000001 R15: 0000000000000000
+ nf_nat_ipv6_unregister_fn net/netfilter/nf_nat_proto.c:1017 [inline]
+ nf_nat_inet_register_fn net/netfilter/nf_nat_proto.c:1038 [inline]
+ nf_nat_inet_register_fn+0xfc/0x140 net/netfilter/nf_nat_proto.c:1023
+ nf_tables_register_hook net/netfilter/nf_tables_api.c:224 [inline]
+ nf_tables_addchain.constprop.0+0x82e/0x13c0 net/netfilter/nf_tables_api.c:1981
+ nf_tables_newchain+0xf68/0x16a0 net/netfilter/nf_tables_api.c:2235
+ nfnetlink_rcv_batch+0x83a/0x1610 net/netfilter/nfnetlink.c:433
+ nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
+ nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:561
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-The cause of the error was because arch/$(SUBARCH)/include/generated files
-weren't properly cleaned by `make ARCH=um mrproper`.
+and to quiesce it, unregister NFPROTO_IPV6 hook instead of NFPROTO_INET
+in case of failing to register NFPROTO_IPV4 hook.
 
-Fixes: a788b2ed81ab ("kbuild: check arch/$(SRCARCH)/include/generated before out-of-tree build")
-Reported-by: Theodore Ts'o <tytso@mit.edu>
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
-Link: https://groups.google.com/forum/#!msg/kunit-dev/QmA27YEgEgI/hvS1kiz2CwAJ
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reported-by: syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>
+Fixes: d164385ec572 ("netfilter: nat: add inet family nat support")
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/um/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nf_nat_proto.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/um/Makefile
-+++ b/arch/um/Makefile
-@@ -140,6 +140,7 @@ export CFLAGS_vmlinux := $(LINK-y) $(LIN
- # When cleaning we don't include .config, so we don't include
- # TT or skas makefiles and don't clean skas_ptregs.h.
- CLEAN_FILES += linux x.i gmon.out
-+MRPROPER_DIRS += arch/$(SUBARCH)/include/generated
- 
- archclean:
- 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
+--- a/net/netfilter/nf_nat_proto.c
++++ b/net/netfilter/nf_nat_proto.c
+@@ -1035,8 +1035,8 @@ int nf_nat_inet_register_fn(struct net *
+ 	ret = nf_nat_register_fn(net, NFPROTO_IPV4, ops, nf_nat_ipv4_ops,
+ 				 ARRAY_SIZE(nf_nat_ipv4_ops));
+ 	if (ret)
+-		nf_nat_ipv6_unregister_fn(net, ops);
+-
++		nf_nat_unregister_fn(net, NFPROTO_IPV6, ops,
++					ARRAY_SIZE(nf_nat_ipv6_ops));
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(nf_nat_inet_register_fn);
 
 
