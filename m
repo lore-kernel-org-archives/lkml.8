@@ -2,181 +2,111 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4F8C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DD2C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F79D20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C20D20708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuRWt3lt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SMxlHq5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbgEAOjX (ORCPT
+        id S1729424AbgEAOj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        Fri, 1 May 2020 10:39:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729319AbgEAOjW (ORCPT
+        with ESMTP id S1728929AbgEAOj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:39:22 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327DDC061A0C;
-        Fri,  1 May 2020 07:39:22 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x18so11766696wrq.2;
-        Fri, 01 May 2020 07:39:22 -0700 (PDT)
+        Fri, 1 May 2020 10:39:26 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E38EC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 07:39:25 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id b6so3783869uak.6
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W39olwyD1ZhzcIxfsnVceKE9Xw0rG7gkUI5YYAf7G2U=;
-        b=TuRWt3ltfoi+VgnoGf26Fj0cEAwnYiLpqvU2VDrM3zaI0Nwx5a/o7dqdcF9jBxKvnX
-         N2DqG7tMBh1cqp5PYA0lsDmZG9aCRdXmq9GUtb7Ezrv7FeKUzUUKgohTF1atEO2pqCvR
-         4oj05zpw+4cQncyMdrgbeD0OrqtbxD9oE7CjcbX/iDJaoxy3wEflO0Fpgi8IY1rznpjz
-         roX0y12SSNR+KzYolIZrFcYcBqFbxmzrl8njZy8MCtyknaGOMvIFuaaY63Akw2w1DaPd
-         NuaymtYAIxFyFVp21sNpPKKrwbjM41fr8Gu0PUaWwadkOcbLicg59xxgFRhaVwMPlgXi
-         +BNA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=URjoa0IPAuVJrJzf1GzsjjCJgtImSI4fVU++g+IJyuo=;
+        b=SMxlHq5r/xlgb1aFLRF6VaIP1+SWFfbYQhAXjYZD4COiPW8KJ+YqJlOeUxHxCY5DlG
+         Idx1WYR1HxdMRSDeEA2FIMDrtrlxs+zIzz57nuJsVPdb23kkRR6vDORPdekV6cr8T2ey
+         XFPCDrZn+jfp9p8SrvmZa/jauPbMy65QXIIZs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=W39olwyD1ZhzcIxfsnVceKE9Xw0rG7gkUI5YYAf7G2U=;
-        b=b405vDWt+b/LEVoq1OtbvXwqCLfC8421YtHbjVFvAphrtNRf71EjhFvlxxSCaOiSbh
-         kYgEEPnXnwOvmAjLyzH3SeJFP2yCLDJrf4At50qkurJ3JsxxTExBm4luTocZSNyQnvTR
-         23W5cfDQ0t5GExtQDrOj2evs9uicMoNNDIEZllYSDOHIo1K+aot1+dlaTqpop6S6dRTt
-         PBjSu1UESCYOQD82g09gn9qUt6f50IBqIcDd7AzYF97qpiYwLUpqw6bx+2udrNIbE8TB
-         FvDwEyzH6xQ+6+F46NGSYQOwkaGvHp2JqMs8HAvmmBhrIwEwPLnleIV8miHjBtI2EtcI
-         twOw==
-X-Gm-Message-State: AGi0PubmQoKb/rQruNvxd5wfsdr9EtzvM4JsNG1Tz35TyR3lKe+hIYNv
-        /TRQuxB5u7JCe6qdP2gWXSU=
-X-Google-Smtp-Source: APiQypK9mdZCXdIzpDfEjHs4j3UvzcmIDXn55ON1zdREUbbhw1jhML6XTzyH72SjApGOVBUCdNH5mQ==
-X-Received: by 2002:a5d:420a:: with SMTP id n10mr4284992wrq.235.1588343960936;
-        Fri, 01 May 2020 07:39:20 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id k184sm4087673wmf.9.2020.05.01.07.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 07:39:20 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH liburing] test/sfr: basic test for sync_file_range
-Date:   Fri,  1 May 2020 17:38:11 +0300
-Message-Id: <9a85a351b8a06108260fee1dfcbd901b8055b9a8.1588343872.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=URjoa0IPAuVJrJzf1GzsjjCJgtImSI4fVU++g+IJyuo=;
+        b=DGYexVEod1VTNv72mqVlRHYKi8y7Tiu3q/inJyMKCvmlv0TmIkwcXyJj1C+d4LYPIr
+         0sKNenz4TkXXNARjHM+dQW8QoKS4yFHDm0mSQEfoo7xxdxGLEGDZ/sN4u78mZna/oPfI
+         zWehYeGb0J2M9H2UxR/QkVPxV7fsffC0Mqa4Hm/QrLJAOmJebmyWuIFQ/GVX8jdMZEd8
+         /BZHLVeF/hbh8rlh0+Ka1SIAy+FuPqsg3nbOn4tKMT2Ef1MnPq5wz9wRSMuuHsO1UvsF
+         DWu5fCii7j8UyjLL3pgg2dhRyiGsibgmiJfVkvJqXOv11mamKQpmw1uXhVQBUE8xtJju
+         ceZg==
+X-Gm-Message-State: AGi0Pub0DqxbcfnBx8AvvQHIlOHSGeadnUN/P8bxp4zMPnGOEsd/AE3S
+        kZKjyvuqVf8pIDPDhUcGgHJURlOeHtg=
+X-Google-Smtp-Source: APiQypIm0+UoKR8vddQO0kfES5sqXt4yXi+ruIbRTeazNuttRvvQxILDoKp28MrvrxIT9Bfd8RnBnA==
+X-Received: by 2002:ab0:544a:: with SMTP id o10mr3138701uaa.15.1588343964484;
+        Fri, 01 May 2020 07:39:24 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id u25sm854243vkn.22.2020.05.01.07.39.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 07:39:23 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id y185so6392492vsy.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:39:23 -0700 (PDT)
+X-Received: by 2002:a67:bd07:: with SMTP id y7mr3484487vsq.109.1588343962687;
+ Fri, 01 May 2020 07:39:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1588329036-18732-1-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <1588329036-18732-1-git-send-email-smasetty@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 1 May 2020 07:39:11 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W+uaPTZHKXq6WYgx-ZDL1QTedEpNw9T747UBD_g1O8CQ@mail.gmail.com>
+Message-ID: <CAD=FV=W+uaPTZHKXq6WYgx-ZDL1QTedEpNw9T747UBD_g1O8CQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just call it and check that it doesn't hang and returns success.
+Hi,
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- test/fsync.c | 79 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+On Fri, May 1, 2020 at 3:30 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>
+> This patch adds the required dt nodes and properties
+> to enabled A618 GPU.
+>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> ---
+> * Remove GCC_DDRSS_GPU_AXI_CLK clock reference from gpu smmu node.
+>
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
 
-diff --git a/test/fsync.c b/test/fsync.c
-index 839716a..ee60e0f 100644
---- a/test/fsync.c
-+++ b/test/fsync.c
-@@ -135,6 +135,79 @@ err:
- 	return 1;
- }
- 
-+#define FILE_SIZE 1024
-+
-+static int create_file(const char *file)
-+{
-+	ssize_t ret;
-+	char *buf;
-+	int fd;
-+
-+	buf = malloc(FILE_SIZE);
-+	memset(buf, 0xaa, FILE_SIZE);
-+
-+	fd = open(file, O_WRONLY | O_CREAT, 0644);
-+	if (fd < 0) {
-+		perror("open file");
-+		return 1;
-+	}
-+	ret = write(fd, buf, FILE_SIZE);
-+	close(fd);
-+	return ret != FILE_SIZE;
-+}
-+
-+static int test_sync_file_range(struct io_uring *ring)
-+{
-+	int ret, fd, save_errno;
-+	struct io_uring_sqe *sqe;
-+	struct io_uring_cqe *cqe;
-+
-+	if (create_file(".sync_file_range")) {
-+		fprintf(stderr, "file creation failed\n");
-+		return 1;
-+	}
-+
-+	fd = open(".sync_file_range", O_RDWR);
-+	save_errno = errno;
-+	unlink(".sync_file_range");
-+	errno = save_errno;
-+	if (fd < 0) {
-+		perror("file open");
-+		return 1;
-+	}
-+
-+	sqe = io_uring_get_sqe(ring);
-+	if (!sqe) {
-+		fprintf(stderr, "sqe get failed\n");
-+		return 1;
-+	}
-+	memset(sqe, 0, sizeof(*sqe));
-+	sqe->opcode = IORING_OP_SYNC_FILE_RANGE;
-+	sqe->off = 0;
-+	sqe->len = 0;
-+	sqe->sync_range_flags = 0;
-+	sqe->user_data = 1;
-+	sqe->fd = fd;
-+
-+	ret = io_uring_submit(ring);
-+	if (ret != 1) {
-+		fprintf(stderr, "submit failed: %d\n", ret);
-+		return 1;
-+	}
-+	ret = io_uring_wait_cqe(ring, &cqe);
-+	if (ret) {
-+		fprintf(stderr, "wait_cqe failed: %d\n", ret);
-+		return 1;
-+	}
-+	if (cqe->res) {
-+		fprintf(stderr, "sfr failed: %d\n", cqe->res);
-+		return 1;
-+	}
-+
-+	io_uring_cqe_seen(ring, cqe);
-+	return 0;
-+}
-+
- int main(int argc, char *argv[])
- {
- 	struct io_uring ring;
-@@ -159,5 +232,11 @@ int main(int argc, char *argv[])
- 		return ret;
- 	}
- 
-+	ret = test_sync_file_range(&ring);
-+	if (ret) {
-+		fprintf(stderr, "test_sync_file_range failed\n");
-+		return ret;
-+	}
-+
- 	return 0;
- }
--- 
-2.24.0
+This is the newer version of the patch:
 
+https://lore.kernel.org/r/1581320465-15854-2-git-send-email-smasetty@codeaurora.org
+
+The change to remove the extra IOMMU clock matches our discussions and
+there's no longer anything blocking this from landing.
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
