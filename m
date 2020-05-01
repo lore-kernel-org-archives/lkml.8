@@ -4,58 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2575C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EABC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D6B20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D276206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341693;
-	bh=0XSd+zX45sJ8FoxhyxF46ZGpGhtossW6oMCG/N5mrks=;
+	s=default; t=1588341701;
+	bh=sD6kM9YtnGhI/BuVDPhEHnyPkH8B8ivMCVvFiSdy2nM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NB9eU4loWFQA1Dlh7k1acVWP/jkvuhSihW5KVfN71yPVDh1sVhMFKpTlC8iYrPPCG
-	 pLyoIN10a45v8+H4fUH/2KbkS0HAHZDlQ2Z6iMp9K1RK/Q+kQgzUH2fJrAQkDreGxv
-	 uNyT9Qhpb65RTm2hy9GvZf4qwLf7BRVniA0hxmgQ=
+	b=loidFaKT+4eiSw9KeA1OpbyrfL96Q3BQptk73rNce+Tq4OXWEhTOciY5odnJ9C09N
+	 6n5A/e/UyurepJOFFysJrXaUiVgKULGWNQAi+auoTgT/H1fnzWYiZc2v3i3L3pL1ov
+	 RtSJeul3PK6sClmo5MGaZi1C2xlIEGM7M8Z7S+b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgEANZd (ORCPT
+        id S1729978AbgEAOBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbgEANZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:29 -0400
+        id S1728979AbgEANZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D85B12173E;
-        Fri,  1 May 2020 13:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56367208D6;
+        Fri,  1 May 2020 13:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339529;
-        bh=0XSd+zX45sJ8FoxhyxF46ZGpGhtossW6oMCG/N5mrks=;
+        s=default; t=1588339531;
+        bh=sD6kM9YtnGhI/BuVDPhEHnyPkH8B8ivMCVvFiSdy2nM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdeIn4CcFWc3+h5jwg2FsJriomh2TTfD2ZAKCWxJWZYmQzFoZPhVRkmC/AzjpZce/
-         +5U11rpsvekz2cN2Rw23TfzUGpFWGBQORrNq+1fWo9XWAN9fBdq4/AFD2QynElHXuj
-         Png04GoEXHRLdHDPDP380qdVE+Cg/mdCsnhHsYwg=
+        b=kzavyevKkDIurxbSkwkERpZ0C2RvC7S4VgKvdHOXiXV6L20J3qUdmX4yXdN6dgaNm
+         opYzYfkq3n+zZR31ikcSZnOw50cKnbp96wx7KP/s4qtjG0WRdluqcIY2ntXL64UF3k
+         uDn7Yqe6/ONAewgtrpWllTMWPdemIa7sefdSe6M4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
+        stable@vger.kernel.org, Boris Fiuczynski <fiuczy@linux.ibm.com>,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/70] ipc/util.c: sysvipc_find_ipc() should increase position index
-Date:   Fri,  1 May 2020 15:21:02 +0200
-Message-Id: <20200501131517.910739446@linuxfoundation.org>
+Subject: [PATCH 4.4 15/70] s390/cio: avoid duplicated ADD uevents
+Date:   Fri,  1 May 2020 15:21:03 +0200
+Message-Id: <20200501131518.278040171@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -68,50 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
+[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
 
-If seq_file .next function does not change position index, read after
-some lseek can generate unexpected output.
+The common I/O layer delays the ADD uevent for subchannels and
+delegates generating this uevent to the individual subchannel
+drivers. The io_subchannel driver will do so when the associated
+ccw_device has been registered -- but unconditionally, so more
+ADD uevents will be generated if a subchannel has been unbound
+from the io_subchannel driver and later rebound.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+To fix this, only generate the ADD event if uevents were still
+suppressed for the device.
+
+Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
+Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
+Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/cio/device.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/ipc/util.c b/ipc/util.c
-index 0f401d94b7c65..2724f9071ab39 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -756,13 +756,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
- 			total++;
- 	}
- 
-+	*new_pos = pos + 1;
- 	if (total >= ids->in_use)
- 		return NULL;
- 
- 	for (; pos < IPCMNI; pos++) {
- 		ipc = idr_find(&ids->ipcs_idr, pos);
- 		if (ipc != NULL) {
--			*new_pos = pos + 1;
- 			rcu_read_lock();
- 			ipc_lock_object(ipc);
- 			return ipc;
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index 6aae684128021..2389a1dc6d300 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -872,8 +872,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
+ 	 * Now we know this subchannel will stay, we can throw
+ 	 * our delayed uevent.
+ 	 */
+-	dev_set_uevent_suppress(&sch->dev, 0);
+-	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	if (dev_get_uevent_suppress(&sch->dev)) {
++		dev_set_uevent_suppress(&sch->dev, 0);
++		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++	}
+ 	/* make it known to the system */
+ 	ret = ccw_device_add(cdev);
+ 	if (ret) {
+@@ -1082,8 +1084,11 @@ static int io_subchannel_probe(struct subchannel *sch)
+ 		 * Throw the delayed uevent for the subchannel, register
+ 		 * the ccw_device and exit.
+ 		 */
+-		dev_set_uevent_suppress(&sch->dev, 0);
+-		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		if (dev_get_uevent_suppress(&sch->dev)) {
++			/* should always be the case for the console */
++			dev_set_uevent_suppress(&sch->dev, 0);
++			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
++		}
+ 		cdev = sch_get_cdev(sch);
+ 		rc = ccw_device_add(cdev);
+ 		if (rc) {
 -- 
 2.20.1
 
