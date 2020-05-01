@@ -2,196 +2,224 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F418C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B9DC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F64208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=python.org header.i=@python.org header.b="lXIut7Jn"
+	by mail.kernel.org (Postfix) with ESMTP id 5B746208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgEAL5J (ORCPT
+        id S1728742AbgEAL5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:57:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728570AbgEAL5H (ORCPT
+        Fri, 1 May 2020 07:57:34 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59674 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728570AbgEAL5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:57:07 -0400
-X-Greylist: delayed 580 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 01 May 2020 04:57:07 PDT
-Received: from mail.python.org (mail.python.org [IPv6:2a03:b0c0:2:d0::71:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA5CC061A0C;
-        Fri,  1 May 2020 04:57:07 -0700 (PDT)
-Received: from seneca.home.cheimes.de (unknown [IPv6:2a04:4540:6518:8b00:aeec:f92b:b752:e7b])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.python.org (Postfix) with ESMTPSA id 49D9Tn1CB7zpF9Y;
-        Fri,  1 May 2020 07:47:25 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=python.org; s=200901;
-        t=1588333645; bh=pdFhsqmsyyF982XVgDC/+dtkNy2N/bbOczqXOrMoUoc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lXIut7Jn4M4RU8tl6bpmrZKQ/kENOTJHinPDmX2e7ubiJNwM0q2RyVhrFtPudEZM5
-         yst2cFm1JLYN1V8aYq6YNB0/KfHLKNMp0/GLnmO4DHs47Ro/wdNM1c3ZuLTVMG8xoc
-         fuG6fIDNLRkMRaDrECtOjX8iPca9JQtw9zfA7fbg=
-Subject: Re: [PATCH v3 0/5] Add support for RESOLVE_MAYEXEC
-To:     Jann Horn <jannh@google.com>, Florian Weimer <fw@deneb.enyo.de>
-Cc:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <20200428175129.634352-1-mic@digikod.net>
- <CAG48ez1bKzh1YvbD_Lcg0AbMCH_cdZmrRRumU7UCJL=qPwNFpQ@mail.gmail.com>
- <87blnb48a3.fsf@mid.deneb.enyo.de>
- <CAG48ez2TphTj-VdDaSjvnr0Q8BhNmT3n86xYz4bF3wRJmAMsMw@mail.gmail.com>
-From:   Christian Heimes <christian@python.org>
-Autocrypt: addr=christian@python.org; prefer-encrypt=mutual; keydata=
- mQINBE7+DrcBEADUwaeHYCbhr4YUqLH6n2ufkbUfEBrqh6xMiw7E/CKKq/9bZ6rIyntwcU2k
- q3Jkuq6UXEy5y97ixXOnFZtZcFcW39TiTuDX7prFOOwhfwRyARf+DN6ihLDf2XTU60n8EFqH
- 2E35stUt4m1HmhxFczGQE3oFsrDFyeck9717o5NJu+lfEsBHYzlwdd28Mq2/+wKrIBF2kJqM
- k6Ok1uocJVDnLPTlXrKoEm5FIGi3cMWWiF57WWZ/vr0tzT3kBmTTlMTh2MWn/dhCgw7tYgGv
- 6zJXPNl2u9oFT1haP/5F0VRGaWq3Iuyx6b+gG1cq1ZZm3l2bXSyNA9XmVpSQTf+CPVD6dFpS
- oHsXefFpOy9Gwxp6GL5crfn2qs6K5JPs+7ZEWHIBDES3ESp2esGfGt0uRHlDtVjTm/8c2omB
- w1O7e19XiwQhNxCx3DMcppce/Dq94bplrQ6ZXJ5U0w3llpPtlxE11AHErlEc5ceBaZfbTNbg
- KBB9WRgtv7lqrv54m5s6GsxHGrstYWp/sCxWREWswCeF/h/ggcnBsJQbhxnmYB1dq9Fn5kRq
- OLQyUthEjhPLM5LCrxXuU2GGUR5KCYHShzB6muB2v0KHqJXanPs+zCsv4uTMXRVQR3zYKhV4
- 1COu0kYcHKNDM/sPL58mFWMhlUlzlOt+3ki4SGrMexrzCap6NQARAQABtCdDaHJpc3RpYW4g
- SGVpbWVzIDxjaHJpc3RpYW5AcHl0aG9uLm9yZz6JAlcEEwEIAEECGwMCHgECF4AFCwkIBwMF
- FQoJCAsFFgIDAQACGQEWIQS7l6+LxOelwNliI9PHiMTB1FUNRQUCXRtlHAUJD/6J5QAKCRDH
- iMTB1FUNRWv+EADOYJ/4lFC1IyKWHeCXJ1+9shN5ieI4mTly7GLd0VVb90OBE8ozNDn/q3oJ
- wzkNEGkJRvU8Dh7KmYSmFknQ97yxm086ueT4dwInHycSN0n5QmEe2WoKyVdLeBqVkHd8Akto
- XhFPYnBBB5iXAN3BkXjNaBPy19YtOaUQCc3c/167IdlEyzDpDRUSNoomM12/KEFaHdb/+CS8
- Fy1r4AwaCe0Uu9y31tTcFQru23oajAQAreoyAoEI6x3SkYygSIimlqvqk+bwnl0yQkxTUjl+
- gtr+A5fdGnL08vJbuXMqf2MnfGr75ydf5uc6ixQfYLNc1CkjbcRxXW1C9Gsh4NO1Hf2E9Zey
- s0jHUovZneQToLB1FBO8E3a3dM3wnSd6v33Vq2Z8D+Ymz4d+nEjEMP2njqGKLdZAupRY8L/e
- ydxcZRWF8iEaz0+p74keAom6jpI0wf51PLqyrUo4v1dAHM7GUplteUAKaxnGL7slEBXU1LxI
- cWx4m24401dVvNYloPo1rsK1VDIdmotVLV8XM25x+6hihuBsNghNFmXj8jqRqzQ4IDjOzb8U
- bnTQqgyES+kc8rkfegaCQmJJ6N8P5g2F6aG77aTmGgbDSIdVChFQ9n5LEG52ipPEdoue3R2m
- DHHk6aO/3bNdSH0gE5TB4RZrHwbCeHCm6MQZQGIw9uM6McKuGLkBDQRVFDs3AQgA1hX+RBUm
- t9RjKdvcyv51qizbIz+a+OYzR22OI4rjtiFYl+6nfxUJTxvhr6vpXNJ0LNWkLgfj+nST0AS6
- lWGiVWPUSU1KWi8D0Pl4pj7xOCV1f3rLvQVfKOURBDulDkq2lthrjjzRWqihdTz2dPpTPLCZ
- RGq6T+KX1WxKxojro8xbFeyLphiN7nSyS0Y98li5FbJ8K0/oik8MveUyiaDA3GzbMhBhxrZU
- 5CRmBddofaksiEle+brml4kcUazAsdBU3uKOADVdYePv+5CL4uMH5aWNJA77mbXL6P37BfDw
- XEPIMNcUJCbql0rI8vTSe8AA/WJr2ku+JMcediY5FjvmswARAQABiQNbBBgBCAAmAhsCFiEE
- u5evi8TnpcDZYiPTx4jEwdRVDUUFAl0bZe8FCQnoXjgBKcBdIAQZAQgABgUCVRQ7NwAKCRCG
- aFJJIS22idVxCACrSfSprZr+LJjI/08VSNq1Tf8uD8yFSPzNsox3tzG7fKVVBI7FlZhhX7S5
- 4SF/8Lvi43oneAIWBfGTMeSgpz7nnIUdeJE0gAbSAt8pOUyrHwXvTpFEw5J+cKfhECa5zIgX
- LOVmY1aOKlgoRQOjWYTGxvyDfDW1qV1EoKDoIp2oTmZmmiOg54+XOpTAceg9gmA9/IpquzED
- mya04UlUKzCkBJA5MD+Z51HchD5A/+r+edNCOclrCdHHwvbwOWNGDaB4xhX2Tn70gUqN3DLM
- EdQyInSW4zhbyiJC585gk80pLxM21OvaL+gSzCNxVRr3Fh+s2YzShoLEpwY6KuD3UcFZCRDH
- iMTB1FUNRQi/D/sEfM8G5Gg192U+/8cFKE6rCYRy+qjerzO0q3jgxxOs0mPp74eobRVxIxUp
- pBLYQkkAa/LEKp+Qt6huFo0TfYbdW38pIeJAUYQGW/8vcB8pwpZeWY8nBfiOKTlkGoclRWeA
- 6bYCe2+pA3P21Pzsk4eB701OhNylkYeCaMUSRZngnjNV7AWRLPstRqztimgH8TveFiUf4VD5
- QE0W12SiZlZyNZMcMwCHyZIUNXFSX9JApUu1vtVTxzm7cvW6KqkuI9MFzXyRmumrOgdJDVnu
- asVALsJiClh20YQ2MQweQvvHUZf/I7QyfTDv8+hSGbTcmwRPSns5CXFTcajI8xuHhA0aE9rw
- lyeeeN/8OtwK+5vr0WeIJLUz9FO9i16IQnF8Ra8FqQUo6MQYPpEh05gnR2bEwplpFiMfAGtE
- VUk1etedgSK2B3EyUpq+3eiQddvw/sooUCnSWUqQBRmFZ5ifFXkhiZg2jW2CmbgxxJqhE2oP
- EKRm3fdRvXfg88yjQzbg4FqwnMHWjCwfmgOP2aT4w7vDGggRF3RINZDs1weELp2nGbhOTZ04
- /H5x4nlTEDKeJ664EVCnvNTGnYb0XzYSZc0g+SkI4X9Y2OLLC41yP0zydCryDt2FObH0zV2B
- jyN6MPX+y6x+ZtUN43zn5Zo+K/JCHhq8CJZVnE+ifOVmIXJR2rkBDQRVFDuDAQgAq5pj1zNe
- XpJLpuGdvPz14REAPkh8zA4JgACEYhVpyaNAhxjrFoupd1+bN7GO7eYUTFBxOmK7YZM+sOiS
- qSTLYGWh1zqawu9q1j6/nVzJohgBPUmJ1NNMOr9xKKLaOGj8eSevAtm1oVhhoe5o0cSK/5HQ
- kxntX3Fp3P3jsSjv10zoUlDOSBEa1Yb3Yu05E1TL4VJxg5FK95gVsOUGFd6d9KNbTByXXI5P
- zHUEKJJudOZQM1LJokJiTIW5SWMeI/2zezZTQNnaLYgDfFI3ppia0qkr6zzQhYUdyS6GwHq7
- XuuUrohXBq65yG3d0rtGLqlQKbi0RY9e9cQreFm7gVd+CQARAQABiQI8BBgBCAAmAhsMFiEE
- u5evi8TnpcDZYiPTx4jEwdRVDUUFAl0bZfQFCQnoXewACgkQx4jEwdRVDUU9ZQ/+LLMW+TCU
- 3+sdNN5yZIN8CqIuVl3/vw6on3K7S2DsZu8LQIH73muT3/9Yiwu1IEgFvgwVI6u3DY/y+pT6
- aCwzorXQx923wpHA2bR/+pfvQT9m9oXk7DOU3oWZldqXc6s+vvRmfCox9Ge8o8qRBMqdSnTT
- CIXnWCjZvTt+cHBz79lWd/s2fxEr60G2q5Eax3ZywZOU0vZk7RUQdY1e9FzfEjpX/4ZKUNLd
- JGulUpSHFRnz+Fog/D123nOiegdP76XeLbVa5HpJO7ncsIn4oRyoit8TAORxq/myHCaCXRBa
- y5ilMLWvbGll8BVn5JKs5rlHu+xS7orP+HtEfdJN79+/utQXv3o/deOtF5R59stzcSZtBwXF
- kwX14TsD1t2DGQUDZdsvXbv4td/FZD86xqLoh3qiT5KXOi6bhytLpNKseXbC9RruPRs+2O4S
- LoZMPB9HTsw9lRn1sXxXLhWTWtNcVMRXaQGJGm5ifa7+Ub/RFEZVeLPY6hqEogP2D+p3duj0
- 7fb4dD9eD79TND0L9DL2kCmPbZ1hArh015Otj/IEe+P4S1BTjopJ+lKhgRo1RmAaiU+LmRZW
- YQW5GUWP/LBkR7VmFpTI9Nj91ql+YaGZMWTuO5QLvtbL4x0kSgczJmIK7fECI7nqsL4rtHmv
- 53+DNOMi/34rdBwm0I62QkVYJYU=
-Message-ID: <b78d2d0d-04cf-c0a9-bd88-20c6ec6705fd@python.org>
-Date:   Fri, 1 May 2020 13:47:24 +0200
+        Fri, 1 May 2020 07:57:34 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id DD19F2A2F63
+Subject: Re: stable-rc/linux-5.4.y bisection: baseline.dmesg.alert on
+ meson-g12a-x96-max
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>
+References: <5eabecbf.1c69fb81.2c617.628f@mx.google.com>
+Cc:     kernelci@groups.io, Kevin Hilman <khilman@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, stable@vger.kernel.org
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <cc10812b-19bd-6bd1-75da-32082241640a@collabora.com>
+Date:   Fri, 1 May 2020 12:57:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez2TphTj-VdDaSjvnr0Q8BhNmT3n86xYz4bF3wRJmAMsMw@mail.gmail.com>
+In-Reply-To: <5eabecbf.1c69fb81.2c617.628f@mx.google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/2020 00.01, Jann Horn wrote:
-> On Tue, Apr 28, 2020 at 11:21 PM Florian Weimer <fw@deneb.enyo.de> wrote:
->> * Jann Horn:
->>
->>> Just as a comment: You'd probably also have to use RESOLVE_MAYEXEC in
->>> the dynamic linker.
->>
->> Absolutely.  In typical configurations, the kernel does not enforce
->> that executable mappings must be backed by files which are executable.
->> It's most obvious with using an explicit loader invocation to run
->> executables on noexec mounts.  RESOLVE_MAYEXEC is much more useful
->> than trying to reimplement the kernel permission checks (or what some
->> believe they should be) in userspace.
+Please see the bisection report below about a kernel Oops.
+
+Reports aren't automatically sent to the public while we're
+trialing new bisection features on kernelci.org but this one
+looks valid.
+
+The log shows a kernel NULL pointer dereference:
+
+  https://storage.kernelci.org/stable-rc/linux-5.4.y/v5.4.36-52-g35bbc55d9e29/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-g12a-x96-max.html#L1113
+
+The call stack is not the same as in the commit message found by
+the bisection, so maybe it only fixed part of the problem:
+
+<1>[   16.007376] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+<1>[   16.016300] Mem abort info:
+<1>[   16.019269]   ESR = 0x96000006
+<1>[   16.022571]   EC = 0x25: DABT (current EL), IL = 32 bits
+<1>[   16.028075]   SET = 0, FnV = 0
+<1>[   16.031356]   EA = 0, S1PTW = 0
+<1>[   16.034705] Data abort info:
+<1>[   16.037837]   ISV = 0, ISS = 0x00000006
+<1>[   16.041876]   CM = 0, WnR = 0
+<1>[   16.045128] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000be0f0000
+<1>[   16.051702] [0000000000000010] pgd=00000000be117003, pud=00000000be118003, pmd=0000000000000000
+<0>[   16.051709] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+<4>[   16.133466] CPU: 2 PID: 33 Comm: kworker/2:1 Tainted: G        W         5.4.37-rc1 #1
+<4>[   16.141566] Hardware name: Shenzhen Amediatech Technology Co., Ltd X96 Max (DT)
+<4>[   16.149087] Workqueue: events deferred_probe_work_func
+<4>[   16.154419] pstate: 20000005 (nzCv daif -PAN -UAO)
+<4>[   16.159428] pc : snd_soc_dapm_new_dai+0x3c/0x1b0
+<4>[   16.164252] lr : snd_soc_dapm_connect_dai_link_widgets+0x114/0x268
+<4>[   16.256970] Call trace:
+<4>[   16.259647]  snd_soc_dapm_new_dai+0x3c/0x1b0
+<4>[   16.264129]  snd_soc_dapm_connect_dai_link_widgets+0x114/0x268
+<4>[   16.270167]  snd_soc_instantiate_card+0x858/0xb88
+<4>[   16.275083]  snd_soc_register_card+0xf8/0x120
+<4>[   16.279656]  devm_snd_soc_register_card+0x40/0x90
+<4>[   16.284575]  axg_card_probe+0x9dc/0xaf0 [snd_soc_meson_axg_sound_card]
+<4>[   16.291299]  platform_drv_probe+0x50/0xa0
+<4>[   16.295524]  really_probe+0xd4/0x328
+<4>[   16.299319]  driver_probe_device+0x54/0xe8
+...
+
+
+Guillaume
+
+
+On 01/05/2020 10:32, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 > 
-> Oh, good point.
+> stable-rc/linux-5.4.y bisection: baseline.dmesg.alert on meson-g12a-x96-max
 > 
-> That actually seems like something Mickaël could add to his series? If
-> someone turns on that knob for "When an interpreter wants to execute
-> something, enforce that we have execute access to it", they probably
-> also don't want it to be possible to just map files as executable? So
-> perhaps when that flag is on, the kernel should either refuse to map
-> anything as executable if it wasn't opened with RESOLVE_MAYEXEC or
-> (less strict) if RESOLVE_MAYEXEC wasn't used, print a warning, then
-> check whether the file is executable and bail out if not?
+> Summary:
+>   Start:      35bbc55d9e296 Linux 5.4.37-rc1
+>   Plain log:  https://storage.kernelci.org/stable-rc/linux-5.4.y/v5.4.36-52-g35bbc55d9e29/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-g12a-x96-max.txt
+>   HTML log:   https://storage.kernelci.org/stable-rc/linux-5.4.y/v5.4.36-52-g35bbc55d9e29/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-g12a-x96-max.html
+>   Result:     09f4294793bd3 ASoC: meson: axg-card: fix codec-to-codec link setup
 > 
-> A configuration where interpreters verify that scripts are executable,
-> but other things can just mmap executable pages, seems kinda
-> inconsistent...
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       stable-rc
+>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>   Branch:     linux-5.4.y
+>   Target:     meson-g12a-x96-max
+>   CPU arch:   arm64
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-8
+>   Config:     defconfig
+>   Test case:  baseline.dmesg.alert
+> 
+> Breaking commit found:
+> 
+> -------------------------------------------------------------------------------
+> commit 09f4294793bd3e70d68fdab5b392dff18bff62ca
+> Author: Jerome Brunet <jbrunet@baylibre.com>
+> Date:   Mon Apr 20 13:45:10 2020 +0200
+> 
+>     ASoC: meson: axg-card: fix codec-to-codec link setup
+>     
+>     commit 1164284270779e1865cc2046a2a01b58a1e858a9 upstream.
+>     
+>     Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
+>     playback/capture if supported"), meson-axg cards which have codec-to-codec
+>     links fail to init and Oops:
+>     
+>       Unable to handle kernel NULL pointer dereference at virtual address 0000000000000128
+>       Internal error: Oops: 96000044 [#1] PREEMPT SMP
+>       CPU: 3 PID: 1582 Comm: arecord Not tainted 5.7.0-rc1
+>       pc : invalidate_paths_ep+0x30/0xe0
+>       lr : snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
+>       Call trace:
+>        invalidate_paths_ep+0x30/0xe0
+>        snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
+>        dpcm_path_get+0x38/0xd0
+>        dpcm_fe_dai_open+0x70/0x920
+>        snd_pcm_open_substream+0x564/0x840
+>        snd_pcm_open+0xfc/0x228
+>        snd_pcm_capture_open+0x4c/0x78
+>        snd_open+0xac/0x1a8
+>        ...
+>     
+>     While initiliazing the links, ASoC treats the codec-to-codec links of this
+>     card type as a DPCM backend. This error eventually leads to the Oops.
+>     
+>     Most of the card driver code is shared between DPCM backends and
+>     codec-to-codec links. The property "no_pcm" marking DCPM BE was left set on
+>     codec-to-codec links, leading to this problem. This commit fixes that.
+>     
+>     Fixes: 0a8f1117a680 ("ASoC: meson: axg-card: add basic codec-to-codec link support")
+>     Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>     Link: https://lore.kernel.org/r/20200420114511.450560-2-jbrunet@baylibre.com
+>     Signed-off-by: Mark Brown <broonie@kernel.org>
+>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
+> index 1f698adde506c..2b04ac3d8fd3b 100644
+> --- a/sound/soc/meson/axg-card.c
+> +++ b/sound/soc/meson/axg-card.c
+> @@ -586,8 +586,10 @@ static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
+>  
+>  	if (axg_card_cpu_is_tdm_iface(dai_link->cpus->of_node))
+>  		ret = axg_card_parse_tdm(card, np, index);
+> -	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node))
+> +	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node)) {
+>  		dai_link->params = &codec_params;
+> +		dai_link->no_pcm = 0; /* link is not a DPCM BE */
+> +	}
+>  
+>  	return ret;
+>  }
+> -------------------------------------------------------------------------------
+> 
+> 
+> Git bisection log:
+> 
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [aa73bcc376865c23e61dcebd467697b527901be8] Linux 5.4.36
+> git bisect good aa73bcc376865c23e61dcebd467697b527901be8
+> # bad: [35bbc55d9e296d37cf01555d415338b84a70d4c5] Linux 5.4.37-rc1
+> git bisect bad 35bbc55d9e296d37cf01555d415338b84a70d4c5
+> # bad: [924f1d37852ff357658c205dd114c70862865fc9] svcrdma: Fix trace point use-after-free race
+> git bisect bad 924f1d37852ff357658c205dd114c70862865fc9
+> # good: [b848f65436665b5fe675fd3f645c1a458e49f60a] counter: 104-quad-8: Add lock guards - generic interface
+> git bisect good b848f65436665b5fe675fd3f645c1a458e49f60a
+> # bad: [04b53ed855129c1703d00d8494e4c61309714a99] drivers: soc: xilinx: fix firmware driver Kconfig dependency
+> git bisect bad 04b53ed855129c1703d00d8494e4c61309714a99
+> # good: [ae886eae0318c71a6125347d6810a1578a83d262] ASoC: tas571x: disable regulators on failed probe
+> git bisect good ae886eae0318c71a6125347d6810a1578a83d262
+> # bad: [2c0990070379284dda0b51304ce19c2b96e083a2] ASoC: wm8960: Fix wrong clock after suspend & resume
+> git bisect bad 2c0990070379284dda0b51304ce19c2b96e083a2
+> # bad: [09f4294793bd3e70d68fdab5b392dff18bff62ca] ASoC: meson: axg-card: fix codec-to-codec link setup
+> git bisect bad 09f4294793bd3e70d68fdab5b392dff18bff62ca
+> # first bad commit: [09f4294793bd3e70d68fdab5b392dff18bff62ca] ASoC: meson: axg-card: fix codec-to-codec link setup
+> -------------------------------------------------------------------------------
+> 
 
-+1
-
-I worked with Steve Downer on Python PEP 578 [1] that added audit hooks
-and PyFile_OpenCode() to CPython. A PyFile_OpenCode() implementation
-with RESOLVE_MAYEXEC will hep to secure loading of Python code. But
-Python also includes a wrapper of libffi. ctypes or cffi can load native
-code from either shared libraries with dlopen() or execute native code
-from mmap() regions. For example SnakeEater [2] is a clever attack that
-abused memfd_create syscall and proc filesystem to execute code.
-
-A consistent security policy must also ensure that mmap() PROT_EXEC
-enforces the same restrictions as RESOLVE_MAYEXEC. The restriction
-doesn't have be part of this patch, though.
-
-Christian
-
-[1] https://www.python.org/dev/peps/pep-0578/
-[2] https://github.com/nullbites/SnakeEater/blob/master/SnakeEater2.py
