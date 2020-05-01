@@ -2,446 +2,199 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C025C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DEAC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F15A208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B03216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:29:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Knjdf0Q1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R6CJtK8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgEAV3b (ORCPT
+        id S1726793AbgEAV3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgEAV30 (ORCPT
+        Fri, 1 May 2020 17:29:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60527 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726333AbgEAV3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:29:26 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C86C061A0E;
-        Fri,  1 May 2020 14:29:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e26so1156579wmk.5;
-        Fri, 01 May 2020 14:29:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Vg2cI5L0CSv1niRJJZ7QFparC38Hkc3gZK9I9i6oR+I=;
-        b=Knjdf0Q1vB7HIcpE9pJYwI4KcEnhgE5D8GwTplS148evOJYeLONgaJJUC7gajTXQck
-         g+y+IcyzjH8ONYiUq5sAqXFhSYtVQCoYrzbvPuZLfnE/XjlO8hEucqN5pR9HRj0dKBM0
-         C0AwLGNR3pyewuFsZ2+oXMS6TCsK2SoMoUlMrc55j9aoSkAamxSdcnVKkapwUEUsrE1/
-         EB2Jm2MQFFFj4ADkZFAqzgJYyUneRvOY1BpUNSUsqWomha5nrSg3nMYU6a+ltsRbN7iN
-         gNm0w4+HQ+CizgojMHATRTtAbawcC7Ym9W11BRayMDHh5ZfNxcQ6vWeV1LFJ+1DmpMSD
-         o56w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vg2cI5L0CSv1niRJJZ7QFparC38Hkc3gZK9I9i6oR+I=;
-        b=mXi5BCOPoAwFY8BCRYW5+ynmqYVkAxk7iB/q816NPO3K+WzpZtOv3ZyJPQDTM3NRv/
-         BvSWfEq4/GqVQu5sutdLYChlWWYT/Nj85UkHjvW9GgdEeVFX9DmiT+1CAD6x4Idkwn75
-         1qL1JCdPff5b2UA2IXcLD6Q3Zq/omvZ9yRUGyzNk308QWkQVNNSxCFmi3iQXXaNbN+nH
-         e2tgjCqK0oP5qcwuFha6NCK3cxq8VFl3vtCdWfj2MF0ZV710MKaWiMCkF33M1n/Kbvdf
-         0QDyqrrIRypiVu56kgbtx1yfocCZKHLX2KM/hbeX9RJVx1aEg+uuQafKhPMGrYizSrS+
-         Whuw==
-X-Gm-Message-State: AGi0PuYEw3fde1+zHi5XnQGPUwfC7AdlHbhAgF83KjRlKs7Cruq7stT9
-        HIv2yQBi5fqK9jEgXESop/pY9mr5
-X-Google-Smtp-Source: APiQypIJQmxGpcpzEpKfEHPuqPYIGoY54hCZdQuVFNxn/iwfvWDYIH69VMpqRnhbOIAWSqBCzuuTHg==
-X-Received: by 2002:a1c:5448:: with SMTP id p8mr1349675wmi.173.1588368564336;
-        Fri, 01 May 2020 14:29:24 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f06:ee00:bcdf:534e:d44f:409? (p200300EA8F06EE00BCDF534ED44F0409.dip0.t-ipconnect.de. [2003:ea:8f06:ee00:bcdf:534e:d44f:409])
-        by smtp.googlemail.com with ESMTPSA id h2sm6751625wro.9.2020.05.01.14.29.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 14:29:23 -0700 (PDT)
-Subject: [PATCH net-next 2/2] r8169: use fsleep in polling functions
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-References: <8e3c56ca-b43f-3877-0104-a1a279d5a6c5@gmail.com>
-Message-ID: <1a0ff46e-e650-7a1f-5b9b-a51487597167@gmail.com>
-Date:   Fri, 1 May 2020 23:29:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 17:29:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588368568;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ypI/E3zn8fmAPe3GyyyHKXmBOUI7feD3BZfJdMnsdoE=;
+        b=R6CJtK8Q7ZpSP9d/23s+MUm2av2bwiPWdkRaIJkvjEQyH7/c9xOZLA1MGOUlC9x9LiURm+
+        3D+lIOPhNG0OGKzoyvuNh+mv+ZiAiFVnYX+QCbcpNBzabHrgiIrqa2O2IU+NYHWtgjmR72
+        k7NtSmC02hzdVwv/ukgghtJqAs1jZME=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-KhZuis_bO_K715ZYxP1zbw-1; Fri, 01 May 2020 17:29:23 -0400
+X-MC-Unique: KhZuis_bO_K715ZYxP1zbw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B025C100CCCE;
+        Fri,  1 May 2020 21:29:21 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6741A5C1BE;
+        Fri,  1 May 2020 21:29:15 +0000 (UTC)
+Date:   Fri, 1 May 2020 17:29:12 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH v3] mm/slub: Fix incorrect interpretation of s->offset
+Message-ID: <20200501212912.GC27720@optiplex-lnx>
+References: <20200429135328.26976-1-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <8e3c56ca-b43f-3877-0104-a1a279d5a6c5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429135328.26976-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new flexible sleep function fsleep() to merge the udelay and msleep
-polling functions. We can safely do this because no polling function
-is used in atomic context in this driver.
-
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 108 +++++++++-------------
- 1 file changed, 44 insertions(+), 64 deletions(-)
-
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 8b665f2ec..64cce92f5 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -725,55 +725,35 @@ struct rtl_cond {
- 	const char *msg;
- };
- 
--static void rtl_udelay(unsigned int d)
--{
--	udelay(d);
--}
--
- static bool rtl_loop_wait(struct rtl8169_private *tp, const struct rtl_cond *c,
--			  void (*delay)(unsigned int), unsigned int d, int n,
--			  bool high)
-+			  unsigned long usecs, int n, bool high)
- {
- 	int i;
- 
- 	for (i = 0; i < n; i++) {
- 		if (c->check(tp) == high)
- 			return true;
--		delay(d);
-+		fsleep(usecs);
- 	}
- 
- 	if (net_ratelimit())
--		netdev_err(tp->dev, "%s == %d (loop: %d, delay: %d).\n",
--			   c->msg, !high, n, d);
-+		netdev_err(tp->dev, "%s == %d (loop: %d, delay: %lu).\n",
-+			   c->msg, !high, n, usecs);
- 	return false;
- }
- 
--static bool rtl_udelay_loop_wait_high(struct rtl8169_private *tp,
--				      const struct rtl_cond *c,
--				      unsigned int d, int n)
--{
--	return rtl_loop_wait(tp, c, rtl_udelay, d, n, true);
--}
--
--static bool rtl_udelay_loop_wait_low(struct rtl8169_private *tp,
--				     const struct rtl_cond *c,
--				     unsigned int d, int n)
--{
--	return rtl_loop_wait(tp, c, rtl_udelay, d, n, false);
--}
--
--static bool rtl_msleep_loop_wait_high(struct rtl8169_private *tp,
--				      const struct rtl_cond *c,
--				      unsigned int d, int n)
-+static bool rtl_loop_wait_high(struct rtl8169_private *tp,
-+			       const struct rtl_cond *c,
-+			       unsigned long d, int n)
- {
--	return rtl_loop_wait(tp, c, msleep, d, n, true);
-+	return rtl_loop_wait(tp, c, d, n, true);
- }
- 
--static bool rtl_msleep_loop_wait_low(struct rtl8169_private *tp,
--				     const struct rtl_cond *c,
--				     unsigned int d, int n)
-+static bool rtl_loop_wait_low(struct rtl8169_private *tp,
-+			      const struct rtl_cond *c,
-+			      unsigned long d, int n)
- {
--	return rtl_loop_wait(tp, c, msleep, d, n, false);
-+	return rtl_loop_wait(tp, c, d, n, false);
- }
- 
- #define DECLARE_RTL_COND(name)				\
-@@ -808,7 +788,7 @@ static void r8168_phy_ocp_write(struct rtl8169_private *tp, u32 reg, u32 data)
- 
- 	RTL_W32(tp, GPHY_OCP, OCPAR_FLAG | (reg << 15) | data);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_ocp_gphy_cond, 25, 10);
-+	rtl_loop_wait_low(tp, &rtl_ocp_gphy_cond, 25, 10);
- }
- 
- static int r8168_phy_ocp_read(struct rtl8169_private *tp, u32 reg)
-@@ -818,7 +798,7 @@ static int r8168_phy_ocp_read(struct rtl8169_private *tp, u32 reg)
- 
- 	RTL_W32(tp, GPHY_OCP, reg << 15);
- 
--	return rtl_udelay_loop_wait_high(tp, &rtl_ocp_gphy_cond, 25, 10) ?
-+	return rtl_loop_wait_high(tp, &rtl_ocp_gphy_cond, 25, 10) ?
- 		(RTL_R32(tp, GPHY_OCP) & 0xffff) : -ETIMEDOUT;
- }
- 
-@@ -896,7 +876,7 @@ static void r8169_mdio_write(struct rtl8169_private *tp, int reg, int value)
- {
- 	RTL_W32(tp, PHYAR, 0x80000000 | (reg & 0x1f) << 16 | (value & 0xffff));
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_phyar_cond, 25, 20);
-+	rtl_loop_wait_low(tp, &rtl_phyar_cond, 25, 20);
- 	/*
- 	 * According to hardware specs a 20us delay is required after write
- 	 * complete indication, but before sending next command.
-@@ -910,7 +890,7 @@ static int r8169_mdio_read(struct rtl8169_private *tp, int reg)
- 
- 	RTL_W32(tp, PHYAR, 0x0 | (reg & 0x1f) << 16);
- 
--	value = rtl_udelay_loop_wait_high(tp, &rtl_phyar_cond, 25, 20) ?
-+	value = rtl_loop_wait_high(tp, &rtl_phyar_cond, 25, 20) ?
- 		RTL_R32(tp, PHYAR) & 0xffff : -ETIMEDOUT;
- 
- 	/*
-@@ -933,7 +913,7 @@ static void r8168dp_1_mdio_access(struct rtl8169_private *tp, int reg, u32 data)
- 	RTL_W32(tp, OCPAR, OCPAR_GPHY_WRITE_CMD);
- 	RTL_W32(tp, EPHY_RXER_NUM, 0);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_ocpar_cond, 1000, 100);
-+	rtl_loop_wait_low(tp, &rtl_ocpar_cond, 1000, 100);
- }
- 
- static void r8168dp_1_mdio_write(struct rtl8169_private *tp, int reg, int value)
-@@ -950,7 +930,7 @@ static int r8168dp_1_mdio_read(struct rtl8169_private *tp, int reg)
- 	RTL_W32(tp, OCPAR, OCPAR_GPHY_READ_CMD);
- 	RTL_W32(tp, EPHY_RXER_NUM, 0);
- 
--	return rtl_udelay_loop_wait_high(tp, &rtl_ocpar_cond, 1000, 100) ?
-+	return rtl_loop_wait_high(tp, &rtl_ocpar_cond, 1000, 100) ?
- 		RTL_R32(tp, OCPDR) & OCPDR_DATA_MASK : -ETIMEDOUT;
- }
- 
-@@ -1036,7 +1016,7 @@ static void rtl_ephy_write(struct rtl8169_private *tp, int reg_addr, int value)
- 	RTL_W32(tp, EPHYAR, EPHYAR_WRITE_CMD | (value & EPHYAR_DATA_MASK) |
- 		(reg_addr & EPHYAR_REG_MASK) << EPHYAR_REG_SHIFT);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_ephyar_cond, 10, 100);
-+	rtl_loop_wait_low(tp, &rtl_ephyar_cond, 10, 100);
- 
- 	udelay(10);
- }
-@@ -1045,7 +1025,7 @@ static u16 rtl_ephy_read(struct rtl8169_private *tp, int reg_addr)
- {
- 	RTL_W32(tp, EPHYAR, (reg_addr & EPHYAR_REG_MASK) << EPHYAR_REG_SHIFT);
- 
--	return rtl_udelay_loop_wait_high(tp, &rtl_ephyar_cond, 10, 100) ?
-+	return rtl_loop_wait_high(tp, &rtl_ephyar_cond, 10, 100) ?
- 		RTL_R32(tp, EPHYAR) & EPHYAR_DATA_MASK : ~0;
- }
- 
-@@ -1061,7 +1041,7 @@ static void _rtl_eri_write(struct rtl8169_private *tp, int addr, u32 mask,
- 	RTL_W32(tp, ERIDR, val);
- 	RTL_W32(tp, ERIAR, ERIAR_WRITE_CMD | type | mask | addr);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_eriar_cond, 100, 100);
-+	rtl_loop_wait_low(tp, &rtl_eriar_cond, 100, 100);
- }
- 
- static void rtl_eri_write(struct rtl8169_private *tp, int addr, u32 mask,
-@@ -1074,7 +1054,7 @@ static u32 _rtl_eri_read(struct rtl8169_private *tp, int addr, int type)
- {
- 	RTL_W32(tp, ERIAR, ERIAR_READ_CMD | type | ERIAR_MASK_1111 | addr);
- 
--	return rtl_udelay_loop_wait_high(tp, &rtl_eriar_cond, 100, 100) ?
-+	return rtl_loop_wait_high(tp, &rtl_eriar_cond, 100, 100) ?
- 		RTL_R32(tp, ERIDR) : ~0;
- }
- 
-@@ -1107,7 +1087,7 @@ static void rtl_eri_clear_bits(struct rtl8169_private *tp, int addr, u32 mask,
- static u32 r8168dp_ocp_read(struct rtl8169_private *tp, u8 mask, u16 reg)
- {
- 	RTL_W32(tp, OCPAR, ((u32)mask & 0x0f) << 12 | (reg & 0x0fff));
--	return rtl_udelay_loop_wait_high(tp, &rtl_ocpar_cond, 100, 20) ?
-+	return rtl_loop_wait_high(tp, &rtl_ocpar_cond, 100, 20) ?
- 		RTL_R32(tp, OCPDR) : ~0;
- }
- 
-@@ -1121,7 +1101,7 @@ static void r8168dp_ocp_write(struct rtl8169_private *tp, u8 mask, u16 reg,
- {
- 	RTL_W32(tp, OCPDR, data);
- 	RTL_W32(tp, OCPAR, OCPAR_FLAG | ((u32)mask & 0x0f) << 12 | (reg & 0x0fff));
--	rtl_udelay_loop_wait_low(tp, &rtl_ocpar_cond, 100, 20);
-+	rtl_loop_wait_low(tp, &rtl_ocpar_cond, 100, 20);
- }
- 
- static void r8168ep_ocp_write(struct rtl8169_private *tp, u8 mask, u16 reg,
-@@ -1169,7 +1149,7 @@ DECLARE_RTL_COND(rtl_ocp_tx_cond)
- static void rtl8168ep_stop_cmac(struct rtl8169_private *tp)
- {
- 	RTL_W8(tp, IBCR2, RTL_R8(tp, IBCR2) & ~0x01);
--	rtl_msleep_loop_wait_high(tp, &rtl_ocp_tx_cond, 50, 2000);
-+	rtl_loop_wait_high(tp, &rtl_ocp_tx_cond, 50000, 2000);
- 	RTL_W8(tp, IBISR0, RTL_R8(tp, IBISR0) | 0x20);
- 	RTL_W8(tp, IBCR0, RTL_R8(tp, IBCR0) & ~0x01);
- }
-@@ -1177,7 +1157,7 @@ static void rtl8168ep_stop_cmac(struct rtl8169_private *tp)
- static void rtl8168dp_driver_start(struct rtl8169_private *tp)
- {
- 	r8168dp_oob_notify(tp, OOB_CMD_DRIVER_START);
--	rtl_msleep_loop_wait_high(tp, &rtl_dp_ocp_read_cond, 10, 10);
-+	rtl_loop_wait_high(tp, &rtl_dp_ocp_read_cond, 10000, 10);
- }
- 
- static void rtl8168ep_driver_start(struct rtl8169_private *tp)
-@@ -1185,7 +1165,7 @@ static void rtl8168ep_driver_start(struct rtl8169_private *tp)
- 	r8168ep_ocp_write(tp, 0x01, 0x180, OOB_CMD_DRIVER_START);
- 	r8168ep_ocp_write(tp, 0x01, 0x30,
- 			  r8168ep_ocp_read(tp, 0x01, 0x30) | 0x01);
--	rtl_msleep_loop_wait_high(tp, &rtl_ep_ocp_read_cond, 10, 10);
-+	rtl_loop_wait_high(tp, &rtl_ep_ocp_read_cond, 10000, 10);
- }
- 
- static void rtl8168_driver_start(struct rtl8169_private *tp)
-@@ -1208,7 +1188,7 @@ static void rtl8168_driver_start(struct rtl8169_private *tp)
- static void rtl8168dp_driver_stop(struct rtl8169_private *tp)
- {
- 	r8168dp_oob_notify(tp, OOB_CMD_DRIVER_STOP);
--	rtl_msleep_loop_wait_low(tp, &rtl_dp_ocp_read_cond, 10, 10);
-+	rtl_loop_wait_low(tp, &rtl_dp_ocp_read_cond, 10000, 10);
- }
- 
- static void rtl8168ep_driver_stop(struct rtl8169_private *tp)
-@@ -1217,7 +1197,7 @@ static void rtl8168ep_driver_stop(struct rtl8169_private *tp)
- 	r8168ep_ocp_write(tp, 0x01, 0x180, OOB_CMD_DRIVER_STOP);
- 	r8168ep_ocp_write(tp, 0x01, 0x30,
- 			  r8168ep_ocp_read(tp, 0x01, 0x30) | 0x01);
--	rtl_msleep_loop_wait_low(tp, &rtl_ep_ocp_read_cond, 10, 10);
-+	rtl_loop_wait_low(tp, &rtl_ep_ocp_read_cond, 10000, 10);
- }
- 
- static void rtl8168_driver_stop(struct rtl8169_private *tp)
-@@ -1278,7 +1258,7 @@ u8 rtl8168d_efuse_read(struct rtl8169_private *tp, int reg_addr)
- {
- 	RTL_W32(tp, EFUSEAR, (reg_addr & EFUSEAR_REG_MASK) << EFUSEAR_REG_SHIFT);
- 
--	return rtl_udelay_loop_wait_high(tp, &rtl_efusear_cond, 100, 300) ?
-+	return rtl_loop_wait_high(tp, &rtl_efusear_cond, 100, 300) ?
- 		RTL_R32(tp, EFUSEAR) & EFUSEAR_DATA_MASK : ~0;
- }
- 
-@@ -1615,7 +1595,7 @@ static void rtl8169_do_counters(struct rtl8169_private *tp, u32 counter_cmd)
- 	RTL_W32(tp, CounterAddrLow, cmd);
- 	RTL_W32(tp, CounterAddrLow, cmd | counter_cmd);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_counters_cond, 10, 1000);
-+	rtl_loop_wait_low(tp, &rtl_counters_cond, 10, 1000);
- }
- 
- static void rtl8169_reset_counters(struct rtl8169_private *tp)
-@@ -2472,7 +2452,7 @@ static void rtl_hw_reset(struct rtl8169_private *tp)
- {
- 	RTL_W8(tp, ChipCmd, CmdReset);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_chipcmd_cond, 100, 100);
-+	rtl_loop_wait_low(tp, &rtl_chipcmd_cond, 100, 100);
- }
- 
- static void rtl_request_firmware(struct rtl8169_private *tp)
-@@ -2526,12 +2506,12 @@ static void rtl8169_hw_reset(struct rtl8169_private *tp)
- 	case RTL_GIGA_MAC_VER_27:
- 	case RTL_GIGA_MAC_VER_28:
- 	case RTL_GIGA_MAC_VER_31:
--		rtl_udelay_loop_wait_low(tp, &rtl_npq_cond, 20, 42*42);
-+		rtl_loop_wait_low(tp, &rtl_npq_cond, 20, 2000);
- 		break;
- 	case RTL_GIGA_MAC_VER_34 ... RTL_GIGA_MAC_VER_38:
- 	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_52:
- 		RTL_W8(tp, ChipCmd, RTL_R8(tp, ChipCmd) | StopReq);
--		rtl_udelay_loop_wait_high(tp, &rtl_txcfg_empty_cond, 100, 666);
-+		rtl_loop_wait_high(tp, &rtl_txcfg_empty_cond, 100, 666);
- 		break;
- 	default:
- 		RTL_W8(tp, ChipCmd, RTL_R8(tp, ChipCmd) | StopReq);
-@@ -2641,7 +2621,7 @@ static void rtl_csi_write(struct rtl8169_private *tp, int addr, int value)
- 	RTL_W32(tp, CSIAR, CSIAR_WRITE_CMD | (addr & CSIAR_ADDR_MASK) |
- 		CSIAR_BYTE_ENABLE | func << 16);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_csiar_cond, 10, 100);
-+	rtl_loop_wait_low(tp, &rtl_csiar_cond, 10, 100);
- }
- 
- static u32 rtl_csi_read(struct rtl8169_private *tp, int addr)
-@@ -2651,7 +2631,7 @@ static u32 rtl_csi_read(struct rtl8169_private *tp, int addr)
- 	RTL_W32(tp, CSIAR, (addr & CSIAR_ADDR_MASK) | func << 16 |
- 		CSIAR_BYTE_ENABLE);
- 
--	return rtl_udelay_loop_wait_high(tp, &rtl_csiar_cond, 10, 100) ?
-+	return rtl_loop_wait_high(tp, &rtl_csiar_cond, 10, 100) ?
- 		RTL_R32(tp, CSIDR) : ~0;
- }
- 
-@@ -3606,7 +3586,7 @@ static void rtl_hw_start_8125_common(struct rtl8169_private *tp)
- 
- 	r8168_mac_ocp_write(tp, 0xe098, 0xc302);
- 
--	rtl_udelay_loop_wait_low(tp, &rtl_mac_ocp_e00e_cond, 1000, 10);
-+	rtl_loop_wait_low(tp, &rtl_mac_ocp_e00e_cond, 1000, 10);
- 
- 	rtl8125_config_eee_mac(tp);
- 
-@@ -5149,10 +5129,10 @@ static void rtl_hw_init_8168g(struct rtl8169_private *tp)
- {
- 	RTL_W32(tp, MISC, RTL_R32(tp, MISC) | RXDV_GATED_EN);
- 
--	if (!rtl_udelay_loop_wait_high(tp, &rtl_txcfg_empty_cond, 100, 42))
-+	if (!rtl_loop_wait_high(tp, &rtl_txcfg_empty_cond, 100, 42))
- 		return;
- 
--	if (!rtl_udelay_loop_wait_high(tp, &rtl_rxtx_empty_cond, 100, 42))
-+	if (!rtl_loop_wait_high(tp, &rtl_rxtx_empty_cond, 100, 42))
- 		return;
- 
- 	RTL_W8(tp, ChipCmd, RTL_R8(tp, ChipCmd) & ~(CmdTxEnb | CmdRxEnb));
-@@ -5161,19 +5141,19 @@ static void rtl_hw_init_8168g(struct rtl8169_private *tp)
- 
- 	r8168_mac_ocp_modify(tp, 0xe8de, BIT(14), 0);
- 
--	if (!rtl_udelay_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42))
-+	if (!rtl_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42))
- 		return;
- 
- 	r8168_mac_ocp_modify(tp, 0xe8de, 0, BIT(15));
- 
--	rtl_udelay_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42);
-+	rtl_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42);
- }
- 
- static void rtl_hw_init_8125(struct rtl8169_private *tp)
- {
- 	RTL_W32(tp, MISC, RTL_R32(tp, MISC) | RXDV_GATED_EN);
- 
--	if (!rtl_udelay_loop_wait_high(tp, &rtl_rxtx_empty_cond, 100, 42))
-+	if (!rtl_loop_wait_high(tp, &rtl_rxtx_empty_cond, 100, 42))
- 		return;
- 
- 	RTL_W8(tp, ChipCmd, RTL_R8(tp, ChipCmd) & ~(CmdTxEnb | CmdRxEnb));
-@@ -5182,14 +5162,14 @@ static void rtl_hw_init_8125(struct rtl8169_private *tp)
- 
- 	r8168_mac_ocp_modify(tp, 0xe8de, BIT(14), 0);
- 
--	if (!rtl_udelay_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42))
-+	if (!rtl_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42))
- 		return;
- 
- 	r8168_mac_ocp_write(tp, 0xc0aa, 0x07d0);
- 	r8168_mac_ocp_write(tp, 0xc0a6, 0x0150);
- 	r8168_mac_ocp_write(tp, 0xc01e, 0x5555);
- 
--	rtl_udelay_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42);
-+	rtl_loop_wait_high(tp, &rtl_link_list_ready_cond, 100, 42);
- }
- 
- static void rtl_hw_initialize(struct rtl8169_private *tp)
--- 
-2.26.2
-
+On Wed, Apr 29, 2020 at 09:53:28AM -0400, Waiman Long wrote:
+> In a couple of places in the slub memory allocator, the code uses
+> "s->offset" as a check to see if the free pointer is put right after the
+> object. That check is no longer true with commit 3202fa62fb43 ("slub:
+> relocate freelist pointer to middle of object").
+> 
+> As a result, echoing "1" into the validate sysfs file, e.g. of dentry,
+> may cause a bunch of "Freepointer corrupt" error reports like the
+> following to appear with the system in panic afterwards.
+> 
+> [   38.579769] =============================================================================
+> [   38.580845] BUG dentry(666:pmcd.service) (Tainted: G    B): Freepointer corrupt
+> [   38.581948] -----------------------------------------------------------------------------
+> 
+> To fix it, use the check "s->offset == s->inuse" in the new helper
+> function freeptr_outside_object() instead. Also add another helper function
+> get_info_end() to return the end of info block (inuse + free pointer
+> if not overlapping with object).
+> 
+> Fixes: 3202fa62fb43 ("slub: relocate freelist pointer to middle of object")
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  mm/slub.c | 45 ++++++++++++++++++++++++++++++---------------
+>  1 file changed, 30 insertions(+), 15 deletions(-)
+> 
+>  [v3: Change function name to freeptr_outside_object(), update check & add comment]
+> 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 9bf44955c4f1..b762450fc9f0 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -551,15 +551,32 @@ static void print_section(char *level, char *text, u8 *addr,
+>  	metadata_access_disable();
+>  }
+>  
+> +/*
+> + * See comment in calculate_sizes().
+> + */
+> +static inline bool freeptr_outside_object(struct kmem_cache *s)
+> +{
+> +	return s->offset >= s->inuse;
+> +}
+> +
+> +/*
+> + * Return offset of the end of info block which is inuse + free pointer if
+> + * not overlapping with object.
+> + */
+> +static inline unsigned int get_info_end(struct kmem_cache *s)
+> +{
+> +	if (freeptr_outside_object(s))
+> +		return s->inuse + sizeof(void *);
+> +	else
+> +		return s->inuse;
+> +}
+> +
+>  static struct track *get_track(struct kmem_cache *s, void *object,
+>  	enum track_item alloc)
+>  {
+>  	struct track *p;
+>  
+> -	if (s->offset)
+> -		p = object + s->offset + sizeof(void *);
+> -	else
+> -		p = object + s->inuse;
+> +	p = object + get_info_end(s);
+>  
+>  	return p + alloc;
+>  }
+> @@ -686,10 +703,7 @@ static void print_trailer(struct kmem_cache *s, struct page *page, u8 *p)
+>  		print_section(KERN_ERR, "Redzone ", p + s->object_size,
+>  			s->inuse - s->object_size);
+>  
+> -	if (s->offset)
+> -		off = s->offset + sizeof(void *);
+> -	else
+> -		off = s->inuse;
+> +	off = get_info_end(s);
+>  
+>  	if (s->flags & SLAB_STORE_USER)
+>  		off += 2 * sizeof(struct track);
+> @@ -782,7 +796,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
+>   * object address
+>   * 	Bytes of the object to be managed.
+>   * 	If the freepointer may overlay the object then the free
+> - * 	pointer is the first word of the object.
+> + *	pointer is at the middle of the object.
+>   *
+>   * 	Poisoning uses 0x6b (POISON_FREE) and the last byte is
+>   * 	0xa5 (POISON_END)
+> @@ -816,11 +830,7 @@ static int check_bytes_and_report(struct kmem_cache *s, struct page *page,
+>  
+>  static int check_pad_bytes(struct kmem_cache *s, struct page *page, u8 *p)
+>  {
+> -	unsigned long off = s->inuse;	/* The end of info */
+> -
+> -	if (s->offset)
+> -		/* Freepointer is placed after the object. */
+> -		off += sizeof(void *);
+> +	unsigned long off = get_info_end(s);	/* The end of info */
+>  
+>  	if (s->flags & SLAB_STORE_USER)
+>  		/* We also have user information there */
+> @@ -907,7 +917,7 @@ static int check_object(struct kmem_cache *s, struct page *page,
+>  		check_pad_bytes(s, page, p);
+>  	}
+>  
+> -	if (!s->offset && val == SLUB_RED_ACTIVE)
+> +	if (!freeptr_outside_object(s) && val == SLUB_RED_ACTIVE)
+>  		/*
+>  		 * Object and freepointer overlap. Cannot check
+>  		 * freepointer while object is allocated.
+> @@ -3587,6 +3597,11 @@ static int calculate_sizes(struct kmem_cache *s, int forced_order)
+>  		 *
+>  		 * This is the case if we do RCU, have a constructor or
+>  		 * destructor or are poisoning the objects.
+> +		 *
+> +		 * The assumption that s->offset >= s->inuse means free
+> +		 * pointer is outside of the object is used in the
+> +		 * freeptr_outside_object() function. If that is no
+> +		 * longer true, the function needs to be modified.
+>  		 */
+>  		s->offset = size;
+>  		size += sizeof(void *);
+> -- 
+> 2.18.1
+> 
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
 
