@@ -2,222 +2,173 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11203C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218C9C47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71902173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF753208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xog+ZZ3l"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="uiYrwNaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgEACNj (ORCPT
+        id S1728088AbgEACOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727889AbgEACNi (ORCPT
+        Thu, 30 Apr 2020 22:14:53 -0400
+Received: from mail.efficios.com ([167.114.26.124]:37534 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728029AbgEACOx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:13:38 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DD7C035494;
-        Thu, 30 Apr 2020 19:13:36 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id c2so3687042iow.7;
-        Thu, 30 Apr 2020 19:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EYDJWeCLlhw8lr2MHLhmVsV4j9mOvkGGvmRilWGWRrg=;
-        b=Xog+ZZ3lCM/XaSVs+gBhESPLwp4WAlt3K7H146kG7Z6OxZj41VMjwJnXT9s0237dpB
-         76vjiueRHg/SNAru0/gtuf3l91l4oxhxmb5/7eL/SDC4k/AFQg+5u8uUXvtlQe0pYsp1
-         kmV2qpDLJxmzAS57vYTIDZPyMZ/L/Vh538ALb35lYy2T9/Jf4IzLli2P/PV9VC5czGcG
-         QXImWSoImGoev+0CYE7RKP6UKUoKP12x6/KC0ActMx6SzeN/o8EEAntBDBAYQ4aKFAKG
-         b4MT7QU1JXNPMA6mQFNCPs+5bsFUcN3KbIioAHnyazIpPH91oFDb3sLkoT+/I56sw3nM
-         dm/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EYDJWeCLlhw8lr2MHLhmVsV4j9mOvkGGvmRilWGWRrg=;
-        b=Q6/L0fGpStxD7CR1Yn9LEg+bQfQX/5Gj95gSgTC9cQMIeayjAz88gYn2G7LfgHix1R
-         Fe51om95+FeeMDmnd5HmduSQ7JtE0jF/XGQ7b4acj4M2mLGOcwILFhLsx+lkywzT0RiG
-         OfxzoGULnbSiU34QukIBcJqhEXS4GgUsXOmqs+1+a2GffYwjz2DdpY8GR+A50VAfJv39
-         YkwN1EsFXUWFFyFZ6LAeBpdxgxiwJqZ/O97HrPyNsHgOOqpbW+OUiqrlmVznppwG1J+J
-         OsY3N9Kk/T3auqo7JHe2MVHERezm/v74oqOAi2S/+zitrgcRMsWoLdcsoNJ7CIWG31AH
-         RDvw==
-X-Gm-Message-State: AGi0PuarO+2qHnUIUIAnwrZ84FGmshEVF2y02QLQtCI1lV0IYg1N4slT
-        FkshT6W3D8vm0xuLy+7ok2y5F8y8UsfiwcCfZmE=
-X-Google-Smtp-Source: APiQypKGz0Gne2nX+o+Qe1qKhOhnsWZuQcjrp1Y5mU4C2lDwzd9brFql0s85v6OJ6EpdeCnNPCbyDLk7pi82FXc9Vvc=
-X-Received: by 2002:a02:ccad:: with SMTP id t13mr1381837jap.64.1588299215975;
- Thu, 30 Apr 2020 19:13:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200430182712.237526-1-shakeelb@google.com> <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
- <CALvZod4gZ_Q=Kuh-Fx-EsKzxmtPKy5xu+gpPpjV6MYW4Ku=JbA@mail.gmail.com>
-In-Reply-To: <CALvZod4gZ_Q=Kuh-Fx-EsKzxmtPKy5xu+gpPpjV6MYW4Ku=JbA@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 1 May 2020 10:12:59 +0800
-Message-ID: <CALOAHbC03gBh6d61yy0T6Vcy5jwNUS3EN7wE_Udx-zLyxT0COw@mail.gmail.com>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 30 Apr 2020 22:14:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id A11D0294168;
+        Thu, 30 Apr 2020 22:14:51 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id pfpxW8W8kRsn; Thu, 30 Apr 2020 22:14:51 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 3D69A294595;
+        Thu, 30 Apr 2020 22:14:51 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3D69A294595
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1588299291;
+        bh=0smAkb6cp0p+RuLi71ihxVXx+NcGlOLwapAddILSwQ4=;
+        h=From:To:Date:Message-Id;
+        b=uiYrwNaLaQSi0yvBcpghTE8u0RKlmi9zj2hl+AbLfNKVr3ROEErLC4GvCmY6yd/YP
+         0RHkDQKgl5PKy3TFakb0sn0FTUhTQ5lzwVeE19PW2Zc3Hyhe0SzvFiyJwkkIiNPxME
+         GT1NSygDlfIEASsCZi0bvXmFh2A2ZIFi74onh/XN+JGc4pZgroKE47mIpGsiVO+cca
+         K46lOKJ2r5JyHK00794VOEJ8RJ1eSwim5ixHZ4sqslzSHD5RPkr7cY42jxJCsjLadq
+         AVXMdh0uCMTxyaxlwydthovF8KDGrAX0zC9Zf2TgJdtxXr/wf0FGa7K6rJd15Sxpor
+         N9iXBolxuPRpQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id DGHr5DzkxDIs; Thu, 30 Apr 2020 22:14:51 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id F0D44294518;
+        Thu, 30 Apr 2020 22:14:50 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Carlos O'Donell <carlos@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Paul Turner <pjt@google.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH glibc 2/3] glibc: sched_getcpu(): use rseq cpu_id TLS on Linux (v7)
+Date:   Thu, 30 Apr 2020 22:14:38 -0400
+Message-Id: <20200501021439.2456-3-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200501021439.2456-1-mathieu.desnoyers@efficios.com>
+References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 10:04 AM Shakeel Butt <shakeelb@google.com> wrote:
->
-> On Thu, Apr 30, 2020 at 6:39 PM Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > On Fri, May 1, 2020 at 2:27 AM Shakeel Butt <shakeelb@google.com> wrote:
-> > >
-> > > Lowering memory.max can trigger an oom-kill if the reclaim does not
-> > > succeed. However if oom-killer does not find a process for killing, it
-> > > dumps a lot of warnings.
-> > >
-> >
-> > I have been confused by this behavior for several months and I think
-> > it will confuse more memcg users.
-> > We should keep the memcg oom behavior consistent with system oom - no
-> > oom kill if no process.
-> >
-> > What about bellow change ?
-> >
->
-> Seems fine to me. If others are ok with this, please do send a signed-off patch.
->
+When available, use the cpu_id field from __rseq_abi on Linux to
+implement sched_getcpu().  Fall-back on the vgetcpu vDSO if unavailable.
 
-Sure, I will.
+Benchmarks:
 
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index e28098e13f1c..25fbc37a747f 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -6086,6 +6086,9 @@ static ssize_t memory_max_write(struct
-> > kernfs_open_file *of,
-> >                         continue;
-> >                 }
-> >
-> > +               if (!cgroup_is_populated(memcg->css.cgroup))
-> > +                       break;
-> > +
-> >                 memcg_memory_event(memcg, MEMCG_OOM);
-> >                 if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
-> >                         break;
-> >
-> > > Deleting a memcg does not reclaim memory from it and the memory can
-> > > linger till there is a memory pressure. One normal way to proactively
-> > > reclaim such memory is to set memory.max to 0 just before deleting the
-> > > memcg. However if some of the memcg's memory is pinned by others, this
-> > > operation can trigger an oom-kill without any process and thus can log a
-> > > lot un-needed warnings. So, ignore all such warnings from memory.max.
-> > >
-> > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > > ---
-> > >  include/linux/oom.h | 3 +++
-> > >  mm/memcontrol.c     | 9 +++++----
-> > >  mm/oom_kill.c       | 2 +-
-> > >  3 files changed, 9 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/include/linux/oom.h b/include/linux/oom.h
-> > > index c696c265f019..6345dc55df64 100644
-> > > --- a/include/linux/oom.h
-> > > +++ b/include/linux/oom.h
-> > > @@ -52,6 +52,9 @@ struct oom_control {
-> > >
-> > >         /* Used to print the constraint info. */
-> > >         enum oom_constraint constraint;
-> > > +
-> > > +       /* Do not warn even if there is no process to be killed. */
-> > > +       bool no_warn;
-> > >  };
-> > >
-> > >  extern struct mutex oom_lock;
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index 317dbbaac603..a1f00d9b9bb0 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -1571,7 +1571,7 @@ unsigned long mem_cgroup_size(struct mem_cgroup *memcg)
-> > >  }
-> > >
-> > >  static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> > > -                                    int order)
-> > > +                                    int order, bool no_warn)
-> > >  {
-> > >         struct oom_control oc = {
-> > >                 .zonelist = NULL,
-> > > @@ -1579,6 +1579,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> > >                 .memcg = memcg,
-> > >                 .gfp_mask = gfp_mask,
-> > >                 .order = order,
-> > > +               .no_warn = no_warn,
-> > >         };
-> > >         bool ret;
-> > >
-> > > @@ -1821,7 +1822,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
-> > >                 mem_cgroup_oom_notify(memcg);
-> > >
-> > >         mem_cgroup_unmark_under_oom(memcg);
-> > > -       if (mem_cgroup_out_of_memory(memcg, mask, order))
-> > > +       if (mem_cgroup_out_of_memory(memcg, mask, order, false))
-> > >                 ret = OOM_SUCCESS;
-> > >         else
-> > >                 ret = OOM_FAILED;
-> > > @@ -1880,7 +1881,7 @@ bool mem_cgroup_oom_synchronize(bool handle)
-> > >                 mem_cgroup_unmark_under_oom(memcg);
-> > >                 finish_wait(&memcg_oom_waitq, &owait.wait);
-> > >                 mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
-> > > -                                        current->memcg_oom_order);
-> > > +                                        current->memcg_oom_order, false);
-> > >         } else {
-> > >                 schedule();
-> > >                 mem_cgroup_unmark_under_oom(memcg);
-> > > @@ -6106,7 +6107,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
-> > >                 }
-> > >
-> > >                 memcg_memory_event(memcg, MEMCG_OOM);
-> > > -               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
-> > > +               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0, true))
-> > >                         break;
-> > >         }
-> > >
-> > > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> > > index 463b3d74a64a..5ace39f6fe1e 100644
-> > > --- a/mm/oom_kill.c
-> > > +++ b/mm/oom_kill.c
-> > > @@ -1098,7 +1098,7 @@ bool out_of_memory(struct oom_control *oc)
-> > >
-> > >         select_bad_process(oc);
-> > >         /* Found nothing?!?! */
-> > > -       if (!oc->chosen) {
-> > > +       if (!oc->chosen && !oc->no_warn) {
-> > >                 dump_header(oc, NULL);
-> > >                 pr_warn("Out of memory and no killable processes...\n");
-> > >                 /*
-> > > --
-> > > 2.26.2.526.g744177e7f7-goog
-> > >
-> > >
-> >
-> >
-> > --
-> > Thanks
-> > Yafang
+x86-64: Intel E5-2630 v3@2.40GHz, 16-core, hyperthreading
 
+glibc sched_getcpu():                     13.7 ns (baseline)
+glibc sched_getcpu() using rseq:           2.5 ns (speedup:  5.5x)
+inline load cpuid from __rseq_abi TLS:     0.8 ns (speedup: 17.1x)
 
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Joseph Myers <joseph@codesourcery.com>
+CC: Szabolcs Nagy <szabolcs.nagy@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Paul Turner <pjt@google.com>
+CC: libc-alpha@sourceware.org
+CC: linux-kernel@vger.kernel.org
+CC: linux-api@vger.kernel.org
+---
+Changes since v1:
+- rseq is only used if both __NR_rseq and RSEQ_SIG are defined.
 
+Changes since v2:
+- remove duplicated __rseq_abi extern declaration.
+
+Changes since v3:
+- update ChangeLog.
+
+Changes since v4:
+- Use atomic_load_relaxed to load the __rseq_abi.cpu_id field, a
+  consequence of the fact that __rseq_abi is not volatile anymore.
+- Include atomic.h which provides atomic_load_relaxed.
+
+Changes since v5:
+- Use __ASSUME_RSEQ to detect rseq availability.
+
+Changes since v6:
+- Remove use of __ASSUME_RSEQ.
+---
+ sysdeps/unix/sysv/linux/sched_getcpu.c | 27 ++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/sched_getcpu.c b/sysdeps/unix/sysv/linux/sched_getcpu.c
+index c019cfb3cf..2269c4f2bd 100644
+--- a/sysdeps/unix/sysv/linux/sched_getcpu.c
++++ b/sysdeps/unix/sysv/linux/sched_getcpu.c
+@@ -18,10 +18,15 @@
+ #include <errno.h>
+ #include <sched.h>
+ #include <sysdep.h>
++#include <atomic.h>
+ #include <sysdep-vdso.h>
+ 
+-int
+-sched_getcpu (void)
++#ifdef HAVE_GETCPU_VSYSCALL
++# define HAVE_VSYSCALL
++#endif
++
++static int
++vsyscall_sched_getcpu (void)
+ {
+   unsigned int cpu;
+   int r = -1;
+@@ -32,3 +37,21 @@ sched_getcpu (void)
+ #endif
+   return r == -1 ? r : cpu;
+ }
++
++#include <sys/rseq.h>
++
++#ifdef RSEQ_SIG
++int
++sched_getcpu (void)
++{
++  int cpu_id = atomic_load_relaxed (&__rseq_abi.cpu_id);
++
++  return cpu_id >= 0 ? cpu_id : vsyscall_sched_getcpu ();
++}
++#else
++int
++sched_getcpu (void)
++{
++  return vsyscall_sched_getcpu ();
++}
++#endif
 -- 
-Thanks
-Yafang
+2.17.1
+
