@@ -2,218 +2,94 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B57C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5BDC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F19E42166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F38D2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:36:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tlrjk1dH"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FX9Weop6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgEAUfj (ORCPT
+        id S1726405AbgEAUgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgEAUfi (ORCPT
+        Fri, 1 May 2020 16:36:10 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38658 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgEAUgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:35:38 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36867C061A0C;
-        Fri,  1 May 2020 13:35:38 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so12903528wrx.4;
-        Fri, 01 May 2020 13:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4CV2/aVsWZ0J7YHV9S4W9vWVSAHIz1DaEhX17Sy8Wz4=;
-        b=Tlrjk1dH8to4PfLXys+3mHm6CjCbaZV/J43dAGlgcHkGXSi1KQpbWvo1YvteX9WKrn
-         Xf4daL6/ODr0zMKAzvwDmT24kpaD6rP4lHHuVZ97MrHjSKkvq2cZJTGkBIt2KGZBJMkg
-         SZELEIm75FMbnpwhZCgPeRRH8bg8pI3oSbgax5bjUiLJ6500qgkKdfIQZNpEvNsocwRT
-         TavhlFdn3namQI7yJLI2zvdYbHBYoU+m80ZSYZOaBXd5Zj3smpwI+TS9qosuSDUmztG0
-         HM9TqSK4ipAOtfxDzTmHhPnhtpnOPKZsamcKqKlEMI3Mj6pPlNEWBW4wxNjqJ+GBgNPi
-         fkbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4CV2/aVsWZ0J7YHV9S4W9vWVSAHIz1DaEhX17Sy8Wz4=;
-        b=KBOof0Y9v/Ud6s/jqQTMyoD4yFkMBXQ/qCgfJqXBBaUBF4vkhEq/1b+ShgNZk2lYoy
-         8xCZte+u4gI3FlnM50vEGsOHU/H1c2bI+BMJrZTYRgrhY1cUrlBfsodbp+FN6VxkO/aV
-         XHDPIFZyIwLcJpQQuLyllv46WE36pUfkQg7vsRJcAeskh2l4WTTSr0zywld7GWjuEnDq
-         FfhJErcC5Not1nwA23tom9FSqXfT8CYhOQBGNzP/N8u2K0/QC3wxyzoxilEY3B7q0d61
-         RSZogZfwc3qAx3vROspBd1octrl1nidoPP87YvXPmOnpcacBhfFQNu6rCnfDBb9DeiSd
-         Pm4g==
-X-Gm-Message-State: AGi0PuZTEB/ZG3KL9ihaHqfcFWkUD0luChwFxZptco24wfWzV47xzWBj
-        fyESPAkt843tWhEpjUMod+g=
-X-Google-Smtp-Source: APiQypKs56QSSRikbo8kH00yOgGcPJYKeqjXs3piSV6FSIJYIeDDQcn6iPsk7GoyRUrMCNPKoX69gw==
-X-Received: by 2002:adf:9d8d:: with SMTP id p13mr5689847wre.17.1588365336726;
-        Fri, 01 May 2020 13:35:36 -0700 (PDT)
-Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id s12sm1021981wmc.7.2020.05.01.13.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:35:36 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: media: Document MSM8939 Venus
-Date:   Fri,  1 May 2020 22:35:03 +0200
-Message-Id: <20200501203505.144362-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200501203505.144362-1-konradybcio@gmail.com>
-References: <20200501203505.144362-1-konradybcio@gmail.com>
+        Fri, 1 May 2020 16:36:10 -0400
+Received: from [10.137.106.115] (unknown [131.107.174.243])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2E03E20B717B;
+        Fri,  1 May 2020 13:36:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2E03E20B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1588365369;
+        bh=cyxau+BJRB8pNdZIKeMiXqeTQ9iFyycCE0oPRNjr7fo=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
+        b=FX9Weop6wlrng0/8hGiSCdvgxdFkS+Z1/o9Fe4MU2xRO9DBB4XKEBWREI7DJ2vIxB
+         mVkhUIl3E7l3C9Q95xLWCgPgC+JrcQHOEv14018rn+OSDBX0RpMUzq2jsbqtw2LFQW
+         qxY32+/8JumhhaegNkX6DhGnshtSVVHR7REqYTnw=
+From:   Deven Bowers <deven.desai@linux.microsoft.com>
+Subject: Re: [PATCH v4 1/5] fs: Add support for an O_MAYEXEC flag on
+ openat2(2)
+To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200430132320.699508-1-mic@digikod.net>
+ <20200430132320.699508-2-mic@digikod.net>
+Message-ID: <12e3c9f0-a419-53a9-f404-7ce206709fe4@linux.microsoft.com>
+Date:   Fri, 1 May 2020 13:36:08 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200430132320.699508-2-mic@digikod.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
- 1 file changed, 119 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
-new file mode 100644
-index 0000000000000..8cc0002d10163
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
-@@ -0,0 +1,119 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/qcom,msm8939-venus.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Venus video encode and decode accelerators
-+
-+maintainers:
-+  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
-+
-+description: |
-+  The Venus IP is a video encode and decode accelerator present
-+  on Qualcomm platforms
-+
-+properties:
-+  compatible:
-+    const: qcom,msm8939-venus
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: iface
-+      - const: bus
-+
-+  iommus:
-+    maxItems: 1
-+
-+  memory-region:
-+    maxItems: 1
-+
-+  video-decoder:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: "venus-decoder"
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-encoder:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: "venus-encoder"
-+
-+    required:
-+      - compatible
-+
-+    additionalProperties: false
-+
-+  video-firmware:
-+    type: object
-+
-+    description: |
-+      Firmware subnode is needed when the platform does not
-+      have TrustZone.
-+
-+    properties:
-+      iommus:
-+        maxItems: 1
-+
-+    required:
-+      - iommus
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - power-domains
-+  - clocks
-+  - clock-names
-+  - iommus
-+  - memory-region
-+  - video-decoder
-+  - video-encoder
-+
-+examples:
-+  - |
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+        #include <dt-bindings/clock/qcom,gcc-msm8939.h>
-+
-+        video-codec@1d00000 {
-+                compatible = "qcom,msm8939-venus";
-+                reg = <0x01d00000 0xff000>;
-+                interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+                clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+                        <&gcc GCC_VENUS0_AHB_CLK>,
-+                        <&gcc GCC_VENUS0_AXI_CLK>;
-+                clock-names = "core", "iface", "bus";
-+                power-domains = <&gcc VENUS_GDSC>;
-+                iommus = <&apps_iommu 5>;
-+                memory-region = <&venus_mem>;
-+
-+                video-decoder {
-+                        compatible = "venus-decoder";
-+                };
-+
-+                video-encoder {
-+                        compatible = "venus-encoder";
-+                };
-+        };
--- 
-2.26.1
 
+On 4/30/2020 6:23 AM, Mickaël Salaün wrote:
+> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
+> additional restrictions depending on a security policy managed by the
+> kernel through a sysctl or implemented by an LSM thanks to the
+> inode_permission hook. 
+> This new flag is ignored by open(2) and openat(2).
+
+Reviewed-by: Deven Bowers <deven.desai@linux.microsoft.com>
