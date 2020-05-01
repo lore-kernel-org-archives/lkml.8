@@ -2,52 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9344FC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D741C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7269E20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FF12051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340725;
-	bh=t6QrlUuqm7H12f/LEkP2lMqOz6UI8P+PkX2WkGbdVLQ=;
+	s=default; t=1588340728;
+	bh=ZGFQnPj+OU8LVyvSqdIHmCAuOxQ6QFw+O6SrVP/NNeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k0vpyPDwIomhvPblgH0ziOBYNM4UDB7Yx9CdELM/lbiLV+HrbKeXxVdjALHGkc4Lc
-	 RXXQMHAPchkoSL8MRVwUW1CwuJM+tBXrwYMFgtvJT8SX3YDZ8ASCYVWRha1+KQeHAa
-	 ijSaVE3pq5ianOqv9hAzEGEcbfYdZH1vhJmw/zg0=
+	b=bCL9jX/4zQXVJbOxSSHwsx8npCYRJ/rIEtZ43bg0QGmDl5GFekbCIcGurXMsTHHnw
+	 KHGgWPTkjjCo88rX7abgDKEt5snA+QBuJxgiee3UGjHjSensvQAyKMIQBrDkWrn1aJ
+	 CPW451UEEgMDv71ZBiddt/e6M2j9RZ2ct6SnbrhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbgEANpY (ORCPT
+        id S1731883AbgEANp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46826 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:45:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731904AbgEANpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:16 -0400
+        id S1731910AbgEANpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:45:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9C920757;
-        Fri,  1 May 2020 13:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12A972051A;
+        Fri,  1 May 2020 13:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340716;
-        bh=t6QrlUuqm7H12f/LEkP2lMqOz6UI8P+PkX2WkGbdVLQ=;
+        s=default; t=1588340718;
+        bh=ZGFQnPj+OU8LVyvSqdIHmCAuOxQ6QFw+O6SrVP/NNeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BG/obyQfqY0I6wy2glMBa9lP5/Br6rXRIy4IKQGb417h4OUFgRCmALOq5tdfIrNAz
-         23+Kmbq8aR0PxQ939q+WwU86IH2TpkojBQ0kqM2hHPNk8i4ndzRCYyeChM/ssU0BRr
-         /28W3yrHXt22y8OKcQfA/lNJPw2tf/khKagp9WXI=
+        b=CQJAOz6TVSeVFhGa9mv8G0G/dnEjpstk1KrJklbGNgWKsCd5AXzHmFhi7jA4ASHqX
+         ncL3RNxQeBhS7ODKsXJhEsBH7vMN0RhO7TaDPEnJOcerReMpUjPgZGLU1YHVV9xiqA
+         tgFLEkg438PUwH2xsFfQZkaCx2qXabAobAKJKeU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 085/106] mac80211: fix channel switch trigger from unknown mesh peer
-Date:   Fri,  1 May 2020 15:23:58 +0200
-Message-Id: <20200501131553.836958250@linuxfoundation.org>
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 100/106] Crypto: chelsio - Fixes a hang issue during driver registration
+Date:   Fri,  1 May 2020 15:24:13 +0200
+Message-Id: <20200501131555.236481009@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,61 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tamizh chelvam <tamizhr@codeaurora.org>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-[ Upstream commit 93e2d04a1888668183f3fb48666e90b9b31d29e6 ]
+commit ad59ddd02de26271b89564962e74d689f1a30b49 upstream.
 
-Previously mesh channel switch happens if beacon contains
-CSA IE without checking the mesh peer info. Due to that
-channel switch happens even if the beacon is not from
-its own mesh peer. Fixing that by checking if the CSA
-originated from the same mesh network before proceeding
-for channel switch.
+This issue occurs only when multiadapters are present. Hang
+happens because assign_chcr_device returns u_ctx pointer of
+adapter which is not yet initialized as for this adapter cxgb_up
+is not been called yet.
 
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Link: https://lore.kernel.org/r/1585403604-29274-1-git-send-email-tamizhr@codeaurora.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The last_dev pointer is used to determine u_ctx pointer and it
+is initialized two times in chcr_uld_add in chcr_dev_add respectively.
+
+The fix here is don't initialize the last_dev pointer during
+chcr_uld_add. Only assign to value to it when the adapter's
+initialization is completed i.e in chcr_dev_add.
+
+Fixes: fef4912b66d62 ("crypto: chelsio - Handle PCI shutdown event").
+
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/mesh.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/crypto/chelsio/chcr_core.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index d09b3c789314d..36978a0e50001 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -1257,15 +1257,15 @@ static void ieee80211_mesh_rx_bcn_presp(struct ieee80211_sub_if_data *sdata,
- 		    sdata->u.mesh.mshcfg.rssi_threshold < rx_status->signal)
- 			mesh_neighbour_update(sdata, mgmt->sa, &elems,
- 					      rx_status);
-+
-+		if (ifmsh->csa_role != IEEE80211_MESH_CSA_ROLE_INIT &&
-+		    !sdata->vif.csa_active)
-+			ieee80211_mesh_process_chnswitch(sdata, &elems, true);
- 	}
- 
- 	if (ifmsh->sync_ops)
- 		ifmsh->sync_ops->rx_bcn_presp(sdata,
- 			stype, mgmt, &elems, rx_status);
--
--	if (ifmsh->csa_role != IEEE80211_MESH_CSA_ROLE_INIT &&
--	    !sdata->vif.csa_active)
--		ieee80211_mesh_process_chnswitch(sdata, &elems, true);
+--- a/drivers/crypto/chelsio/chcr_core.c
++++ b/drivers/crypto/chelsio/chcr_core.c
+@@ -125,8 +125,6 @@ static void chcr_dev_init(struct uld_ctx
+ 	atomic_set(&dev->inflight, 0);
+ 	mutex_lock(&drv_data.drv_mutex);
+ 	list_add_tail(&u_ctx->entry, &drv_data.inact_dev);
+-	if (!drv_data.last_dev)
+-		drv_data.last_dev = u_ctx;
+ 	mutex_unlock(&drv_data.drv_mutex);
  }
  
- int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
-@@ -1373,6 +1373,9 @@ static void mesh_rx_csa_frame(struct ieee80211_sub_if_data *sdata,
- 	ieee802_11_parse_elems(pos, len - baselen, true, &elems,
- 			       mgmt->bssid, NULL);
- 
-+	if (!mesh_matches_local(sdata, &elems))
-+		return;
-+
- 	ifmsh->chsw_ttl = elems.mesh_chansw_params_ie->mesh_ttl;
- 	if (!--ifmsh->chsw_ttl)
- 		fwd_csa = false;
--- 
-2.20.1
-
 
 
