@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA0CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B50C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCFC12051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE010216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340026;
-	bh=HcmqSNkXgW3zocf0FWKNqKFx+CgtTYFZigCx0CrBIck=;
+	s=default; t=1588340030;
+	bh=6ZZjgCH98qpYC/CbtgxU6mXtYtB82jt3T4S206u6knA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jFp/k/kOUqfnvARediXguwfKb5ACqx6N4aw2eMQl8XHpFZbmy+5wYt8bb+unPT3UP
-	 MLCIQbLyG0zEoStPbm/eONJ5TlovBcD9ZZ4dzQVSGGG/qsm+jrvxwWBBNV478VVQek
-	 Nd471ojCYdhkfexw0rooAxnaJuD4D608Byy5v/Cc=
+	b=OWY8dG7hYEk+J+Rel54irJWLwRXSXtIFcSCJISxxeQBYDEEv/kub6uSLdy6QcCbCe
+	 eEq/DEg9++6owtr9jLOWkePWNECOtYMC93Joq73x6LqrBc6/+ZNCe8n6/3m65ESXTD
+	 0Qtkmr4fdkrgi6NJw7w5haK5Z7Ap/dr1BAOHh75M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgEANdp (ORCPT
+        id S1729966AbgEANdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59428 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:33:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729959AbgEANdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:42 -0400
+        id S1730470AbgEANdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E07E92051A;
-        Fri,  1 May 2020 13:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56C59216FD;
+        Fri,  1 May 2020 13:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340021;
-        bh=HcmqSNkXgW3zocf0FWKNqKFx+CgtTYFZigCx0CrBIck=;
+        s=default; t=1588340023;
+        bh=6ZZjgCH98qpYC/CbtgxU6mXtYtB82jt3T4S206u6knA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UQCF6fmInA4WqUkiyOVeAK3ruS8+zn63KQpSJ1PTKKW3F3ye6yiSX2EchQXdp2HH
-         duthqZk7y73l9gcaGZMMTt6C69HXsTHE+Mp0rkHDKMc5IpOyDRtYShvZYANSOp9MC8
-         h5qsJ8/ERDw43c07VC79pTsazcjrYE0BzjofaY64=
+        b=XQ+FLVV8r6CuOvpLeK0g0EtnG+xwug8wgGYx94Cx1Q7gY2rJJbeRVolN36t7tdw3Y
+         96wYHd9GpeoIuCaSUrHIGkmUOo4gZ32z3QeU1udqTTDnehzDKSa/oHHUlfkfD61a0n
+         8ElpsQ733AJFsLORLM3GBNixpxgCEA+VralChhWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 4.14 062/117] tty: rocket, avoid OOB access
-Date:   Fri,  1 May 2020 15:21:38 +0200
-Message-Id: <20200501131552.701020872@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Cyril Roelandt <tipecaml@gmail.com>
+Subject: [PATCH 4.14 063/117] usb-storage: Add unusual_devs entry for JMicron JMS566
+Date:   Fri,  1 May 2020 15:21:39 +0200
+Message-Id: <20200501131552.776279991@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -58,72 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 7127d24372bf23675a36edc64d092dc7fd92ebe8 upstream.
+commit 94f9c8c3c404ee1f7aaff81ad4f24aec4e34a78b upstream.
 
-init_r_port can access pc104 array out of bounds. pc104 is a 2D array
-defined to have 4 members. Each member has 8 submembers.
-* we can have more than 4 (PCI) boards, i.e. [board] can be OOB
-* line is not modulo-ed by anything, so the first line on the second
-  board can be 4, on the 3rd 12 or alike (depending on previously
-  registered boards). It's zero only on the first line of the first
-  board. So even [line] can be OOB, quite soon (with the 2nd registered
-  board already).
+Cyril Roelandt reports that his JMicron JMS566 USB-SATA bridge fails
+to handle WRITE commands with the FUA bit set, even though it claims
+to support FUA.  (Oddly enough, a later version of the same bridge,
+version 2.03 as opposed to 1.14, doesn't claim to support FUA.  Also
+oddly, the bridge _does_ support FUA when using the UAS transport
+instead of the Bulk-Only transport -- but this device was blacklisted
+for uas in commit bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron
+SATA enclosure") for apparently unrelated reasons.)
 
-This code is broken for ages, so just avoid the OOB accesses and don't
-try to fix it as we would need to find out the correct line number. Use
-the default: RS232, if we are out.
+This patch adds a usb-storage unusual_devs entry with the BROKEN_FUA
+flag.  This allows the bridge to work properly with usb-storage.
 
-Generally, if anyone needs to set the interface types, a module parameter
-is past the last thing that should be used for this purpose. The
-parameters' description says it's for ISA cards anyway.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Link: https://lore.kernel.org/r/20200417105959.15201-2-jslaby@suse.cz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-and-tested-by: Cyril Roelandt <tipecaml@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221613110.11262-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/rocket.c |   25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/usb/storage/unusual_devs.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/tty/rocket.c
-+++ b/drivers/tty/rocket.c
-@@ -645,18 +645,21 @@ init_r_port(int board, int aiop, int cha
- 	tty_port_init(&info->port);
- 	info->port.ops = &rocket_port_ops;
- 	info->flags &= ~ROCKET_MODE_MASK;
--	switch (pc104[board][line]) {
--	case 422:
--		info->flags |= ROCKET_MODE_RS422;
--		break;
--	case 485:
--		info->flags |= ROCKET_MODE_RS485;
--		break;
--	case 232:
--	default:
-+	if (board < ARRAY_SIZE(pc104) && line < ARRAY_SIZE(pc104_1))
-+		switch (pc104[board][line]) {
-+		case 422:
-+			info->flags |= ROCKET_MODE_RS422;
-+			break;
-+		case 485:
-+			info->flags |= ROCKET_MODE_RS485;
-+			break;
-+		case 232:
-+		default:
-+			info->flags |= ROCKET_MODE_RS232;
-+			break;
-+		}
-+	else
- 		info->flags |= ROCKET_MODE_RS232;
--		break;
--	}
+--- a/drivers/usb/storage/unusual_devs.h
++++ b/drivers/usb/storage/unusual_devs.h
+@@ -2342,6 +2342,13 @@ UNUSUAL_DEV(  0x3340, 0xffff, 0x0000, 0x
+ 		USB_SC_DEVICE,USB_PR_DEVICE,NULL,
+ 		US_FL_MAX_SECTORS_64 ),
  
- 	info->intmask = RXF_TRIG | TXFIFO_MT | SRC_INT | DELTA_CD | DELTA_CTS | DELTA_DSR;
- 	if (sInitChan(ctlp, &info->channel, aiop, chan) == 0) {
++/* Reported by Cyril Roelandt <tipecaml@gmail.com> */
++UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x0114,
++		"JMicron",
++		"USB to ATA/ATAPI Bridge",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_BROKEN_FUA ),
++
+ /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
+ UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
+ 		"iRiver",
 
 
