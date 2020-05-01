@@ -2,116 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46267C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAF0C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2520A208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588366046;
-	bh=K1UJbScijRFcCXajmpVTvXO859c90gVQ1HbYYQy7p0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cw4llS+BRFm0PbkXj6zriSsBJLfz+6GRz1IGJ4NnjRdt3+EtVToWn38XuaEq2Skmq
-	 tV28G1MN8olDSD7ELGJwQv8m5MoK/nQ2ls5UXeKNzjP3nK4gtKrJw1k/AWP7utfi7J
-	 BKLYHxU2E31+0wZTVU5RNZfAzNZE1bXJy3E2+tUM=
+	by mail.kernel.org (Postfix) with ESMTP id 979CF216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:48:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/vvZRYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgEAUrZ (ORCPT
+        id S1726396AbgEAUsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:47:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33983 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgEAUrZ (ORCPT
+        Fri, 1 May 2020 16:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAUsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:47:25 -0400
-Received: by mail-oi1-f196.google.com with SMTP id x10so859270oie.1;
-        Fri, 01 May 2020 13:47:24 -0700 (PDT)
+        Fri, 1 May 2020 16:48:41 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD3EC061A0C;
+        Fri,  1 May 2020 13:48:40 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id d15so12970838wrx.3;
+        Fri, 01 May 2020 13:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MpHLQcuIlLeV8LyFszC01tPlOciL9hnzGZlXYQVZDTg=;
+        b=e/vvZRYjwEbzJsXb6aoRr6yO09dJxZk42gY+zJtDCzV/G4k1pZPoCTpwPXPei3k0pX
+         3/9rqkRp5I8HqSMF8AlJjwdWS8KzFiMddY2UX8sU23FNVkk1EZ2Ge1ePR5X5DqDEdgfu
+         TDiOtQ3l+bBFUYpdmS1ryD+nOHcnYPkglDVoyQYTM3/djpY3W2F46zt6KsjlQkXGN7x5
+         FDFXUxNQ8K/yWBAbIvIi/rnL4CuxIApSZCNCRZW/Avn8EuCJQILD4J97/CL1pYGasInF
+         WFMT4L7P1MTRPO6H/+UO2nFufQlIPbMG6ToKpQW5OzgpnVmMEG8k95F5PIY44v8pEfZE
+         KapQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+fY2wcMRDvaDdEsMuW+EbzLJIuWO2/jSW7iWLuYHZGY=;
-        b=GhbLjvR1ppXSKpolyiRflb6/slQ3SrKabvI4Y8TVRQyVSk8VYpMv7XoZIKTeg0sOFR
-         qtuMKiiNO1Vj4wDDz+Gr0YWFrzOrCt6o4kjSM/v6y9E4WVzTdjqwu+wW1ihL89uWCu53
-         6lK7fxbrurQ00blqkzAlfc59061BivZVxHPOz64o4Pw1PJE4uiOeM74S01kXIbm9IAjt
-         sIxqYvYzBFdrX/U/6Uog+b16sxME5zupIwu1A48q+FB5ob1uBBRY8eG8LpsIUtilGt1w
-         lcHNx9Hd41gufRJQS6gM3LcXllJYCgaHTBr8MmoqA5C4eYyuM8paspfTGHd8hUna0m/E
-         aWQw==
-X-Gm-Message-State: AGi0Pubv9UOaGr+Y22p86MrVgmeHK3eFolbEaGrpTlGv6wQYM/OYYWLY
-        gcHhsqvUZIRSeQQVx3gY3g==
-X-Google-Smtp-Source: APiQypJGlQX0wY8vCyWjfX9DVN3x/OlvBqDwk3ytJGursRufoKviEcoZGmJlbzOHYMKi/ZDA8mGgHg==
-X-Received: by 2002:aca:1007:: with SMTP id 7mr1115114oiq.139.1588366044000;
-        Fri, 01 May 2020 13:47:24 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f16sm229631oib.25.2020.05.01.13.47.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MpHLQcuIlLeV8LyFszC01tPlOciL9hnzGZlXYQVZDTg=;
+        b=UWNtDWbdbQKpfh4c0nZtsJHRdG3qkcI2SPlrtGrQ+0/lRExycp5pRjCI87GEzVzfC3
+         v1sDLCPPCtyMioljmDyaqJJPfErDi0vXKGozcfJ9IKLHPxkReFwKh6WAIpPb2zXqywd9
+         wil1Vh8+3DgLsm3sAJWfn1sqLOIuuVmSy0LhbeDrHF46844bceBb7PPw1zzlr1v1kLgL
+         mACVOw8petuwfQAHybg2P1c5/O/2fWxK62V+hjDQ1tOqOvhh+MUwh6agtgxQnZ/tJVuk
+         Lkv0/n0b/5yEWOPFU7NFSGu3cuO6Icmjf6/hjhZBjqlE2aGabZAMFP0StX/UjaBnxCB/
+         oXdw==
+X-Gm-Message-State: AGi0PuaICZ2Fbic9BZUkwym9P/ftVcyS4RizHezh+bjkPvCtB7kEqJ4w
+        8kXplfNFIn4k7mNOR2jlPRM=
+X-Google-Smtp-Source: APiQypLHZtEj6BaFIkoc4SmhqGuUMEnC4f1iMxoFKBtwNQYsPOBHwMGzDscmfp47F7SHJmJbZMHQPw==
+X-Received: by 2002:adf:8563:: with SMTP id 90mr5741738wrh.74.1588366119618;
+        Fri, 01 May 2020 13:48:39 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id w12sm5938623wrk.56.2020.05.01.13.48.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:47:22 -0700 (PDT)
-Received: (nullmailer pid 26260 invoked by uid 1000);
-        Fri, 01 May 2020 20:47:21 -0000
-Date:   Fri, 1 May 2020 15:47:21 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     lee.jones@linaro.org, broonie@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, jdelvare@suse.com, linux@roeck-us.net,
-        linus.walleij@linaro.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH 6/6] mfd: lochnagar: Move binding over to dtschema
-Message-ID: <20200501204721.GA24163@bogus>
-References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com>
- <20200427102812.23251-6-ckeepax@opensource.cirrus.com>
- <20200427103614.GM44490@ediswmail.ad.cirrus.com>
+        Fri, 01 May 2020 13:48:39 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add support for TM5P5 NT35596 video mode panel
+Date:   Fri,  1 May 2020 22:48:21 +0200
+Message-Id: <20200501204825.146424-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427103614.GM44490@ediswmail.ad.cirrus.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 10:36:14AM +0000, Charles Keepax wrote:
-> On Mon, Apr 27, 2020 at 11:28:12AM +0100, Charles Keepax wrote:
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > ---
-> > +            lochnagar-pinctrl {
-> > +                compatible = "cirrus,lochnagar-pinctrl";
-> > +
-> > +                gpio-controller;
-> > +                #gpio-cells = <2>;
-> > +                gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
-> > +
-> > +                pinctrl-names = "default";
-> > +                pinctrl-0 = <&pinsettings>;
-> 
-> This seems to cause the following error:
-> 
-> Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml:
-> lochnagar@22: lochnagar-pinctrl:pin-settings:phandle: [[4]] is not of type 'object'
-> 
-> I think the schema is correct and the problem is one of tooling,
-> I have been poking at it for a while but can't seem to find a way
-> to silence this one. Any advice would be greatly appreciated.
+I am aware of the fact that this is probably not the correct
+naming of this panel, yet I am unable to retrieve any additional
+information about it, as it is used in a smartphone to which no
+schematics are released.
 
-The problem is the "^.*$" patterns to match child node names also match 
-properties like 'phandle'. Ideally, you'd have some pattern to match on 
-for the node names.
+The driver has been generated with the help of 
+linux-mdss-dsi-panel-driver-generator [1] and works perfectly
+on a Asus Zenfone 2 Laser Z00T smartphone, including brighness
+control and switching on/off.
 
-There is work-around doing:
+[1] https://github.com/msm8916-mainline/linux-mdss-dsi-panel-driver-generator
 
-"^.*$":
-  if:
-    type: object
-  then:
-    properties:
-      ...
+Konrad Dybcio (2):
+  drivers: drm: panel: Add TM5P5 NT35596 panel driver
+  dt-bindings: display: Document TM5P5 NT35596 panel compatible
 
-But I much prefer to see node names updated. '-pins$' is a common 
-pattern.
+ .../bindings/display/panel/tm5p5,nt35596.txt  |   7 +
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-tm5p5-nt35596.c   | 366 ++++++++++++++++++
+ 4 files changed, 383 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tm5p5,nt35596.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-tm5p5-nt35596.c
 
-Rob
+-- 
+2.26.1
+
