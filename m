@@ -2,137 +2,59 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F8AC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFEAC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1D520731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5Bdg7qQ"
+	by mail.kernel.org (Postfix) with ESMTP id 91A7C21973
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgEAIUX (ORCPT
+        id S1728433AbgEAIVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgEAIUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:20:21 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BFBC035494;
-        Fri,  1 May 2020 01:20:21 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id x16so560686oop.13;
-        Fri, 01 May 2020 01:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4xmDrknoIK7bXjgHNUmPbIHsbFNrCtpw+rgXposQwms=;
-        b=O5Bdg7qQzAnlPhD7xVJhnqshnj7xNmXBKRGbWbhp2T9vzzM1MpFW+E+RYCzOknKpj8
-         ky8+dFqN4sKrq5u57LLjx7VY+/3/WsZskllAALIAtybnzNJR5vjiggO1UpC+6aDbbu9t
-         kydHSvKLXU7sGWkz9y9RVKviHgYZWyYOdg2x61aI7Ws5OUMZX6mszoJOTXjCYgE1kCG3
-         YxX1fPKMUR1N/tfPH7XlGmuqZdaT3kJbh6CaQQU6+twLEmxTOFlPMFYj1ocjQyMHVXpF
-         B5EvjhnHPr8btv+Tyz5UgmMlUf682frU/Xa8+Ff2S6K0/HOvwKzJmdLj2aYf5auUrllc
-         1zXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4xmDrknoIK7bXjgHNUmPbIHsbFNrCtpw+rgXposQwms=;
-        b=hYWFBVCawSjWwMhj3q/lDfMxofxhjOEbIkJWVjFwEUC3insRhZQlVlRhYkGkLwlyku
-         TYFA93a1l4kwHrkLn1mZj5Y8v77RiURD6hILCtu/PXILTTzLzP6xYcuoC3N8xX0LqOv9
-         LKGC7lAwIPw/rlWIFWLPYNWHspWuLfqL/hgjDY+X3n+EECC7LoNjFoctbhNLhlPZ929u
-         bXQefpc3OyzoMNazJ0b/lr7QIlG30yOMVC0IASBdofqtVnduRrTxGjWHLb3+40hErQIe
-         BS0KkLFJZL88gjEPQ1RCGDcgjBW8ugTV2RkDoaBncQA4ixsGcbsdgivaZ7ampn5v1PJ4
-         AhOQ==
-X-Gm-Message-State: AGi0PuYl1v3NaMJ6XKl2nDoyJu7I3FGlF55ANp+dcz+b0xI8dQapIZY3
-        Uo8wyOeYhi1NST9m3fq106ZzpgIcwlknfJI/xhfLJMpQoZw=
-X-Google-Smtp-Source: APiQypKWRZyPptVG5tDacv48mYRSDp6n8y852TNesK+NocS5PxHwyt2eSwaWJhO2Yzy3GzH7tq6UeX5cCu+1f17mElg=
-X-Received: by 2002:a4a:a209:: with SMTP id m9mr2850194ool.62.1588321221043;
- Fri, 01 May 2020 01:20:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXEu0i8APM+g3TWbkfkLbYtCzi7uJABvMscS0a_j030tg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXEu0i8APM+g3TWbkfkLbYtCzi7uJABvMscS0a_j030tg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 1 May 2020 09:19:54 +0100
-Message-ID: <CA+V-a8u8r+zT-HSHqPQdRfCKOmx=-a_GrTTM1ZQueOwnvT8xeg@mail.gmail.com>
-Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 1 May 2020 04:21:05 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33640 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728277AbgEAIVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 04:21:05 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CF01F1A0B67;
+        Fri,  1 May 2020 10:21:03 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E93C1A0B36;
+        Fri,  1 May 2020 10:20:58 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3EF32402BB;
+        Fri,  1 May 2020 16:20:52 +0800 (SGT)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] ASoC: fsl_esai: Add support for imx8qm
+Date:   Fri,  1 May 2020 16:12:03 +0800
+Message-Id: <cover.1588320655.git.shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Add support for imx8qm.
 
-On Thu, Apr 30, 2020 at 2:03 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Enable low-level debugging support for RZ/G1H (R8A7742). RZ/G1H uses
-> > SCIFA2 for the debug console.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm/Kconfig.debug
-> > +++ b/arch/arm/Kconfig.debug
-> > @@ -976,6 +976,13 @@ choice
-> >                   Say Y here if you want kernel low-level debugging support
-> >                   via SCIF4 on Renesas RZ/G1E (R8A7745).
-> >
-> > +       config DEBUG_RCAR_GEN2_SCIFA2
-> > +               bool "Kernel low-level debugging messages via SCIFA2 on ARCH_R8A7742"
->
-> R8A7742 (without "ARCH_"-prefix)
->
-> I can fix that (and the sorting issue) while applying, so
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v5.8.
->
-Thank you for taking care of that.
+Shengjiu Wang (3):
+  ASoC: fsl_esai: introduce SoC specific data
+  ASoC: fsl_esai: Add support for imx8qm
+  ASoC: fsl_esai: Add new compatible string for imx8qm
 
-Cheers,
---Prabhakar
+ .../devicetree/bindings/sound/fsl,esai.txt    |  1 +
+ sound/soc/fsl/fsl_esai.c                      | 65 ++++++++++++++++---
+ 2 files changed, 57 insertions(+), 9 deletions(-)
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+-- 
+2.21.0
+
