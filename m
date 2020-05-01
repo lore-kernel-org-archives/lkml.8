@@ -2,90 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DC5C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C36C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B06E02073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE082073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588306009;
+	bh=IccByTwKdJww/kLpArizsMLQUqfEc5eA6Ug4uanX1p4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OVg115Rr2Q+tL9p/d6FS7rKHMCewrPuT0r3U35ZBkcBGnYiwvsEUr8oy+heH3CBro
+	 whKp8IXEieT6YMcYQ36Us4yHjLIXsbSMWffAaUDmXBwOTMctUjCNJKVLSehFRJdJ6r
+	 DBR9owuthNXidU35oi0GzsepV4N+I3T7svhRJDqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgEAEFx (ORCPT
+        id S1728200AbgEAEGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 00:05:53 -0400
-Received: from namei.org ([65.99.196.166]:56492 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbgEAEFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 00:05:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 04144xrG030780;
-        Fri, 1 May 2020 04:04:59 GMT
-Date:   Fri, 1 May 2020 14:04:59 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] fs: Add support for a RESOLVE_MAYEXEC flag on
- openat2(2)
-In-Reply-To: <20200428175129.634352-2-mic@digikod.net>
-Message-ID: <alpine.LRH.2.21.2005011404420.29679@namei.org>
-References: <20200428175129.634352-1-mic@digikod.net> <20200428175129.634352-2-mic@digikod.net>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Fri, 1 May 2020 00:06:48 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:36933 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgEAEGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 00:06:47 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 04146REx029656;
+        Fri, 1 May 2020 13:06:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 04146REx029656
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588305988;
+        bh=IccByTwKdJww/kLpArizsMLQUqfEc5eA6Ug4uanX1p4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PYBney15bLb0PupuKbtCOdg9mClStoeNgsETlQgDlJi4ATQmQGH/hq56jXvSIMP7k
+         Bx2WzY+0ZIBP1hcR87j2d+ZSCugN7b4NhX1MMrKSHNkw7nojeOIuuTFsLwBa4UsAwZ
+         M2ukexE3qk6tCQaBrdojgtoPYj2hhdzrKoIQvnH9nOJ9twzJmqu6/eFlzzvOIiG00/
+         /unRE4xcwqKrwHtdJhJbp/XRe1qol88q57YfQOJ1hvMptFH0mgKfdsDhCFxk67mtC+
+         jwk3GYV/GubgFbYt+IAy287AyY7XxP0/HWmF7INI54VtFl6mdT5xGTbl7qBqKjvy1i
+         IdvYc6Ca4QrSQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id b6so3368991uak.6;
+        Thu, 30 Apr 2020 21:06:28 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZAAkfz3Z8RxNOaHiakrvh/CkViIS1/wBibR7uTwg09lxQ+2mn9
+        oHfCxzOE7aaa0cMjACOQczq6wpZAhqU+p7BZZlw=
+X-Google-Smtp-Source: APiQypKl4RDQfWlnYWP5RnkV1+lrG/0wVs4O0D0X216HZbDMhY1221cdwbTBs4K4HqLl/rX7e1IF5sC2C7nIVEVOGHU=
+X-Received: by 2002:a9f:28c5:: with SMTP id d63mr1601849uad.25.1588305986970;
+ Thu, 30 Apr 2020 21:06:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="1665246916-652208896-1588305899=:29679"
+References: <CAK7LNARHd0DXRLONf6vH_ghsYZjzoduzkixqNDpVqqPx0yHbHg@mail.gmail.com>
+ <CAADnVQ+RvDq9qvNgSkwaMO8QcDG1gCm-SkGgNHyy1gVC3_0w=A@mail.gmail.com>
+In-Reply-To: <CAADnVQ+RvDq9qvNgSkwaMO8QcDG1gCm-SkGgNHyy1gVC3_0w=A@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 1 May 2020 13:05:51 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ5NMZWrQ_1yk+_-06zrmYMOcKvNnuX=u1sReuy6wg9Gw@mail.gmail.com>
+Message-ID: <CAK7LNAQ5NMZWrQ_1yk+_-06zrmYMOcKvNnuX=u1sReuy6wg9Gw@mail.gmail.com>
+Subject: Re: BPFilter: bit size mismatch between bpfiter_umh and vmliux
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Alexei,
 
---1665246916-652208896-1588305899=:29679
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+On Wed, Apr 29, 2020 at 1:14 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> >
+> > At least, the build was successful,
+> > but does this work at runtime?
+> >
+> > If this is a bug, I can fix it cleanly.
+> >
+> > I think the bit size of the user mode helper
+> > should match to the kernel bit size. Is this correct?
+>
+> yes. they should match.
+> In theory we can have -m32 umh running on 64-bit kernel,
+> but I wouldn't bother adding support for such thing
+> until there is a use case.
+> Running 64-bit umh on 32-bit kernel is no go.
 
-On Tue, 28 Apr 2020, Mickaël Salaün wrote:
 
-> When the RESOLVE_MAYEXEC flag is passed, openat2(2) may be subject to
-> additional restrictions depending on a security policy managed by the
-> kernel through a sysctl or implemented by an LSM thanks to the
-> inode_permission hook.
+Thanks for the comments.
 
 
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+This issue will be fixed by this:
+https://patchwork.kernel.org/patch/11515997/
+
+and the Makefile will be cleaned up by this:
+https://patchwork.kernel.org/patch/11515995/
 
 
--- 
-James Morris
-<jmorris@namei.org>
+They are parts of the big series of Makefile cleanups.
+So, I will apply the whole to kbuild tree.
 
---1665246916-652208896-1588305899=:29679--
+Thanks.
+
+--
+Best Regards
+Masahiro Yamada
