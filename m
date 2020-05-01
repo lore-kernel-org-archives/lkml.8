@@ -2,106 +2,183 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA41FC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D29EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B91DD2074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:53:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHcfllwj"
+	by mail.kernel.org (Postfix) with ESMTP id DAFD420873
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 01:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588298378;
+	bh=g2hwclVCUBczJZ9RWLHqpl8JeVGCkUqHYN4ogYSqJwM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2lz1APHzyM6UKw1rBDAMv6N/t2cbs6BzPU6mpy6YlijXuFPj9izUtcT/4OMZhsQjI
+	 /m4UuXBn59TlFbpLxeEi6LpWM0QqJxPvuWvnwry6hSZUzC6a0ESn8z5FWPFDEdDE5h
+	 dLkaIYL8UsPpKsjpnKBZ0/KqpvNPPXrFteKd5d2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgEABxV (ORCPT
+        id S1728029AbgEAB7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 21:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728025AbgEABxS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 21:53:18 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F85C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:53:18 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id f12so6184970edn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 18:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=L/eixiBO7KCR17cAG5IpTeBZCnCmuzeLdJS3OmBcd98=;
-        b=OHcfllwjxxUFVat65zUUPNoQ+blqGZIuFQY+SiYeTzQySOJAGsJaSBgC/RoNSdkGxV
-         D01pDAx4vQZvw2wc/bBohb/fhhJNztvgMx0d88aD6/mO+CJBwze+BPlV1Nh2tyvDyz+2
-         ClU7/DYC7B667QLAnGkXcLM+lVi19nDprnUybTb+YKrZREQ7nC6+Ni1PG7I6/z/uNQRr
-         iFzzvs4QNHpUyT2P0LQ8MGq+N9ZrCAiOl289EmSCSOeK0vdHhmU5tLv9rGD76hJLNKXc
-         oRLYklmIIz8z4sy3vGPSGQV+AR92ZX04nkEjVYq9WvQlmWMQyd8YfTJzWGMOLQVi3jk8
-         KwtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=L/eixiBO7KCR17cAG5IpTeBZCnCmuzeLdJS3OmBcd98=;
-        b=icVQ0QqcFg0S8fqXZEkj1BeQBLd4zj5K7CuPT21OcEw7QNeEz4cZU8c+PNRmG6jRgD
-         uCkMZlO/GdBZRq86EkuVhNrMJz0EuHl3Gt0lhaddSrijHpFRNP8L2JJQA66vpWNmmR4d
-         ie6Tdt/fXNL6EMcclFKYh+rgfV/DoTmHe+GedeCRzV/fdFDls5gecJbgbSbOjXyCM9ox
-         5XzhqDHRJ42qNkzUihXmNYLwTMwhOoc5erXHeZEjtX6NfxJ8p/112Ev8QSomrod/ySGa
-         qMxYJdeFrQvOdbCPPg6Xd8UWIMVp9OpmieExvIOfeo9waK/CimWzvXcKeb/S1Qj1NwC4
-         t/YQ==
-X-Gm-Message-State: AGi0PuYb7OP+3RsGcblwgyX6qM1hRELYm0g/bmyO0qiv+0fHxsvxLzJg
-        +pdcQtmmgNMoRVsyIS3t25k=
-X-Google-Smtp-Source: APiQypI6ocw5DBnFfrafoO2PU1kyqVt3eWL/xIIEWqyvGX1ib44xvQchsw21+chYGqWBRVj8xXX68g==
-X-Received: by 2002:a05:6402:887:: with SMTP id e7mr1745347edy.178.1588297996991;
-        Thu, 30 Apr 2020 18:53:16 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id g1sm170066ejs.51.2020.04.30.18.53.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 Apr 2020 18:53:16 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     akpm@linux-foundation.org, ying.huang@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH 3/3] mm/swapfile.c: count won't be bigger than SWAP_MAP_MAX
-Date:   Fri,  1 May 2020 01:52:59 +0000
-Message-Id: <20200501015259.32237-3-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200501015259.32237-1-richard.weiyang@gmail.com>
-References: <20200501015259.32237-1-richard.weiyang@gmail.com>
+        Thu, 30 Apr 2020 21:59:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727889AbgEAB7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 21:59:37 -0400
+Received: from devnote (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92CEB2073E;
+        Fri,  1 May 2020 01:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588298376;
+        bh=g2hwclVCUBczJZ9RWLHqpl8JeVGCkUqHYN4ogYSqJwM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2EAjPKXw72MRxeIxrZAx/aV/4038w8R8FYfvEQ5h0y19vYAZT8IJ8/LnINGGB0aPH
+         S0+OrCZgAV3TCtx9xnnrAdaiZLdQPBaC+ysdk5qrbiuj2tVij5JF0Sk/xOop/pEXmM
+         JmiJccWFCRuT5MVa4lfHRZu1/xuWqo1L+vMfpMRc=
+Date:   Fri, 1 May 2020 10:59:33 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Po-Hsu Lin <po-hsu.lin@canonical.com>
+Cc:     linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        mingo@redhat.com, shuah@kernel.org, colin.king@canonical.com,
+        mhiramat@kernel.org, yangx.jy@cn.fujitsu.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: treat module requirement unmet
+ situation as unsupported
+Message-Id: <20200501105933.8ebf317da9be19884c7cd33e@kernel.org>
+In-Reply-To: <20200429095044.24625-1-po-hsu.lin@canonical.com>
+References: <20200429095044.24625-1-po-hsu.lin@canonical.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the condition is true, there are two possibilities:
+Hi,
 
-   1. count == SWAP_MAP_BAD
-   2. count == (SWAP_MAP_MAX & COUNT_CONTINUED) == SWAP_MAP_SHMEM
+On Wed, 29 Apr 2020 17:50:44 +0800
+Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
 
-The first case would be filtered by the first if in __swap_duplicate().
+> When the required module for the test does not exist, use
+> exit_unsupported instead of exit_unresolved to indicate this test is
+> not supported.
 
-And the second case means this swap entry is for shmem. Since we never
-do another duplication for shmem swap entry. This won't happen neither.
+Hmm, this doesn't mean "the function is not supported" but
+"we can not resolve this because of the environmental issue".
+For example, if you forgot to install the modules, but the
+function itself is enabled, that can not be tested, but the
+system supports that feature.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- mm/swapfile.c | 2 --
- 1 file changed, 2 deletions(-)
+> 
+> By doing this we can make test behaviour in sync with the
+> irqsoff_tracer.tc test in preemptirq, which is also treating module
+> existence in this way. Moreover, the test won't exit with a non-zero
+> return value if the module does not exist.
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 1a877d1d40e3..88dd2ad34aad 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3404,8 +3404,6 @@ static int __swap_duplicate(swp_entry_t entry, unsigned char usage)
- 
- 		if ((count & ~COUNT_CONTINUED) < SWAP_MAP_MAX)
- 			count += usage;
--		else if ((count & ~COUNT_CONTINUED) > SWAP_MAP_MAX)
--			err = -EINVAL;
- 		else if (swap_count_continued(p, offset, count))
- 			count = COUNT_CONTINUED;
- 		else
+It is OK to return zero even if the result is "unresolved", but
+I don't want to change the result of each test cases, because
+it clarify that you must install modules correctly, instead of
+enabling the feature.
+
+And OK, I found irqsoff_tracer.tc IS incorrect. It should be fixed to
+return UNRESOLVED if there is no test module.
+
+If you still think UNRESOLVED is unneeded, please propose the patch
+which removes all UNRESOLVED related code. That can start another
+discussion.
+
+Thank you,
+
+
+> 
+> Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
+> Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
+> Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
+> Fixes: af2a0750f374 ("selftests/ftrace: Improve kprobe on module testcase to load/unload module")
+> Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> ---
+>  tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
+>  tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
+>  tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
+>  tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
+>  tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> index d75a869..3d6189e 100644
+> --- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> @@ -5,7 +5,7 @@
+>  rmmod ftrace-direct ||:
+>  if ! modprobe ftrace-direct ; then
+>    echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>  fi
+>  
+>  echo "Let the module run a little"
+> diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> index 801ecb6..3d0e3ca 100644
+> --- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> @@ -5,7 +5,7 @@
+>  rmmod ftrace-direct ||:
+>  if ! modprobe ftrace-direct ; then
+>    echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>  fi
+>  
+>  if [ ! -f kprobe_events ]; then
+> diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> index b02550b..dd8b10d 100644
+> --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> @@ -5,7 +5,7 @@
+>  rmmod trace-printk ||:
+>  if ! modprobe trace-printk ; then
+>    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>  fi
+>  
+>  echo "Waiting for irq work"
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> index 1a4b4a4..26dc06a 100644
+> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> @@ -13,7 +13,7 @@ echo '*:mod:trace_printk' > set_ftrace_filter
+>  if ! modprobe trace-printk ; then
+>    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+>  m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>  fi
+>  
+>  : "Wildcard should be resolved after loading module"
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> index d861bd7..4e07c69 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> @@ -8,7 +8,7 @@ rmmod trace-printk ||:
+>  if ! modprobe trace-printk ; then
+>    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+>  m"
+> -  exit_unresolved;
+> +  exit_unsupported;
+>  fi
+>  
+>  MOD=trace_printk
+> -- 
+> 2.7.4
+> 
+
+
 -- 
-2.23.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
