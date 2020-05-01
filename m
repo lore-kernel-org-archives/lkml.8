@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B595C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECCBC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03CFE208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9707D216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340076;
-	bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
+	s=default; t=1588340078;
+	bh=PfmHYvVYYPHRR8l7nqz1iLpSdLhmCb4oaAshHsMMEv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IA2pvWRLZqZ8CVF6AQF7v9mp1eMcc3n53KX/ZGHpf0A9SGjUtO2tatscB9ovdeYe7
-	 BS5np8u8xEhRjh7Un70kclfMxQdON3/cMYzJGQNss42kGK8F7EHYBVgU8ycfNfZGAh
-	 L/6fNvv5mVNTwjJc5l7DnTZGpp7KulgBU1g6Dhuo=
+	b=JWsp3XLlmIbVK/eC7F0Y0MiD9ao5coBAFn6fW/TNPhVxRFBqyqgPn06uPkY5c2Gci
+	 iisJwf/Efef0sP+LsUGv4ayOBnpG3964scb8DGqAVig2YBTx9cgnXK8cwz/WxlqTJP
+	 oX0tOjPFEpEvPdPZXu4wZY45HAEcWSgXrpKXOsg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgEANef (ORCPT
+        id S1730594AbgEANeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbgEANeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:23 -0400
+        id S1730559AbgEANe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 843932173E;
-        Fri,  1 May 2020 13:34:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE21824954;
+        Fri,  1 May 2020 13:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340063;
-        bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
+        s=default; t=1588340065;
+        bh=PfmHYvVYYPHRR8l7nqz1iLpSdLhmCb4oaAshHsMMEv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yKUfI3+UUNsBik10wJ+HYHIcFlWkskI9X2OP5Huc1bLBR2rV0+YQ8oZVTThypF9/C
-         EzPYNhyMtfzkH2gIv5wUkVGqXyheAx18wHmqVE4wNBOnC5NyG7u2IKHwtMah7lIc8P
-         d5gcrK7mxvE2bXoBqjmC3mSrQeZcW37mtdTWPwBM=
+        b=ltiVQM3cj0846heQDqQt8ZJ36E1KwEOyaAbD/u2/EICqxt5XedL8vNJuzdUVymNS+
+         AQe9JZmfr6JqfGPUWf3RaY9kMFIDzg/NiHu7BJ9oWab1+t07oMqo3E6GDFDS1RXGaf
+         34BUHbPNEDxGRj6ySPdROgij7AyEBtaGZ0ZG0/3E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.14 079/117] UAS: no use logging any details in case of ENODEV
-Date:   Fri,  1 May 2020 15:21:55 +0200
-Message-Id: <20200501131554.270401032@linuxfoundation.org>
+Subject: [PATCH 4.14 080/117] UAS: fix deadlock in error handling and PM flushing work
+Date:   Fri,  1 May 2020 15:21:56 +0200
+Message-Id: <20200501131554.357982006@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,31 +60,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 5963dec98dc52d52476390485f07a29c30c6a582 upstream.
+commit f6cc6093a729ede1ff5658b493237c42b82ba107 upstream.
 
-Once a device is gone, the internal state does not matter anymore.
-There is no need to spam the logs.
+A SCSI error handler and block runtime PM must not allocate
+memory with GFP_KERNEL. Furthermore they must not wait for
+tasks allocating memory with GFP_KERNEL.
+That means that they cannot share a workqueue with arbitrary tasks.
+
+Fix this for UAS using a private workqueue.
 
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: f9dc024a2da1f ("uas: pre_reset and suspend: Fix a few races")
 Cc: stable <stable@vger.kernel.org>
-Fixes: 326349f824619 ("uas: add dead request list")
-Link: https://lore.kernel.org/r/20200415141750.811-1-oneukum@suse.com
+Link: https://lore.kernel.org/r/20200415141750.811-2-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/storage/uas.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/storage/uas.c |   43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
 --- a/drivers/usb/storage/uas.c
 +++ b/drivers/usb/storage/uas.c
-@@ -191,6 +191,9 @@ static void uas_log_cmd_state(struct scs
- 	struct uas_cmd_info *ci = (void *)&cmnd->SCp;
- 	struct uas_cmd_info *cmdinfo = (void *)&cmnd->SCp;
+@@ -82,6 +82,19 @@ static void uas_free_streams(struct uas_
+ static void uas_log_cmd_state(struct scsi_cmnd *cmnd, const char *prefix,
+ 				int status);
  
-+	if (status == -ENODEV) /* too late */
-+		return;
++/*
++ * This driver needs its own workqueue, as we need to control memory allocation.
++ *
++ * In the course of error handling and power management uas_wait_for_pending_cmnds()
++ * needs to flush pending work items. In these contexts we cannot allocate memory
++ * by doing block IO as we would deadlock. For the same reason we cannot wait
++ * for anything allocating memory not heeding these constraints.
++ *
++ * So we have to control all work items that can be on the workqueue we flush.
++ * Hence we cannot share a queue and need our own.
++ */
++static struct workqueue_struct *workqueue;
 +
- 	scmd_printk(KERN_INFO, cmnd,
- 		    "%s %d uas-tag %d inflight:%s%s%s%s%s%s%s%s%s%s%s%s ",
- 		    prefix, status, cmdinfo->uas_tag,
+ static void uas_do_work(struct work_struct *work)
+ {
+ 	struct uas_dev_info *devinfo =
+@@ -110,7 +123,7 @@ static void uas_do_work(struct work_stru
+ 		if (!err)
+ 			cmdinfo->state &= ~IS_IN_WORK_LIST;
+ 		else
+-			schedule_work(&devinfo->work);
++			queue_work(workqueue, &devinfo->work);
+ 	}
+ out:
+ 	spin_unlock_irqrestore(&devinfo->lock, flags);
+@@ -135,7 +148,7 @@ static void uas_add_work(struct uas_cmd_
+ 
+ 	lockdep_assert_held(&devinfo->lock);
+ 	cmdinfo->state |= IS_IN_WORK_LIST;
+-	schedule_work(&devinfo->work);
++	queue_work(workqueue, &devinfo->work);
+ }
+ 
+ static void uas_zap_pending(struct uas_dev_info *devinfo, int result)
+@@ -1236,7 +1249,31 @@ static struct usb_driver uas_driver = {
+ 	.id_table = uas_usb_ids,
+ };
+ 
+-module_usb_driver(uas_driver);
++static int __init uas_init(void)
++{
++	int rv;
++
++	workqueue = alloc_workqueue("uas", WQ_MEM_RECLAIM, 0);
++	if (!workqueue)
++		return -ENOMEM;
++
++	rv = usb_register(&uas_driver);
++	if (rv) {
++		destroy_workqueue(workqueue);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static void __exit uas_exit(void)
++{
++	usb_deregister(&uas_driver);
++	destroy_workqueue(workqueue);
++}
++
++module_init(uas_init);
++module_exit(uas_exit);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR(
 
 
