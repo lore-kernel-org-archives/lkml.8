@@ -2,89 +2,231 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C535C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B981C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC7D2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588370990;
-	bh=hyTUi8k9QleCFVpcgAZ6YYDaMkXEa5xJb5HTy4SEi9Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BODXs7RSFdbH4y5XKvRCVpUNMSJYl8H68Aw4k4Ft+RwbPfSCEsiNog2kj4CCaVaP+
-	 Cot1Crs3fJacbGjkAmPXENEqGTQkqXee9tOwDa64a9eGHHKOs35FdK/UyRjBN5IYFl
-	 aH1vbDbz/e49s2TExl56HuHXI/OjAy3GeEoip/FA=
+	by mail.kernel.org (Postfix) with ESMTP id D51882166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:10:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="fkUYzdqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgEAWJt (ORCPT
+        id S1726579AbgEAWK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbgEAWJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:09:49 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B927520857;
-        Fri,  1 May 2020 22:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588370988;
-        bh=hyTUi8k9QleCFVpcgAZ6YYDaMkXEa5xJb5HTy4SEi9Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GPQWCRRHLJg2Zl8cgmkGWbp7Tgn+ivU4M8hBbWb4IQI1sGAnX/mV/i1Lyh/amTZdC
-         vgn21bnvxHvu7jVeG6N3ie5ON7pYY//OPHYOAyysUdpLdyFLZhzTvii7N+TQnFlEUw
-         l0PKqTkdq3Hg476WHDApPzwvFSmjMv60SV2VPHc0=
-Date:   Fri, 1 May 2020 15:09:47 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     John Dorminy <jdorminy@redhat.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Gao Xiang <xiang@kernel.org>
-Subject: Re: [PATCH 21/29] mm: remove the pgprot argument to __vmalloc
-Message-Id: <20200501150947.367ca6b38a394f1ff678ed4b@linux-foundation.org>
-In-Reply-To: <CAMeeMh_9N0ORhPM8EmkGeeuiDoQY3+QoAPX5QBuK7=gsC5ONng@mail.gmail.com>
-References: <20200414131348.444715-1-hch@lst.de>
-        <20200414131348.444715-22-hch@lst.de>
-        <20200414151344.zgt2pnq7cjq2bgv6@debian>
-        <CAMeeMh8Q3Od76WaTasw+BpYVF58P-HQMaiFKHxXbZ_Q3tQPZ=A@mail.gmail.com>
-        <CAMeeMh_9N0ORhPM8EmkGeeuiDoQY3+QoAPX5QBuK7=gsC5ONng@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 1 May 2020 18:10:59 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:12616 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726272AbgEAWK6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 18:10:58 -0400
+Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
+        by m0050095.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 041Lvsjh029204;
+        Fri, 1 May 2020 23:09:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=AmbDaqkJACrgjFztMfPQrRG1srRjV7OVgQHq59mCXjM=;
+ b=fkUYzdqcL1Fl0jlN8nwOTpS6yhyNOs1mb8Hmzlag/Y0v3IrBXqGOizOlcmSGR+lAMfMW
+ wFO9ffG63hoyBQN7KSQfJx+GErUq/R7vopcrItx6RLSrTbBU6r/XBQV7iQuNSao1Qlej
+ AAJ26G5IfX0Ypz2BxkgHxlAZHHoXcQxBHsl5X1XHSHu3NdhxFyPC+zuyXQWfTgpgHfPc
+ 4rK6+TFmVxQ8gHN4u4rJxjgDLMuQsNJzox4+h5q1+bnTdhpk1rsZ5mDPVX/42BuE8kRK
+ G22CbNddz0GxW6j+jY9AluQFKXBNeWHXo8eVL80FXNGydyBd8mEqn7i2bfTHXh+ZTa3d Ig== 
+Received: from prod-mail-ppoint8 (a72-247-45-34.deploy.static.akamaitechnologies.com [72.247.45.34] (may be forged))
+        by m0050095.ppops.net-00190b01. with ESMTP id 30r7j1nbpe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 23:09:53 +0100
+Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
+        by prod-mail-ppoint8.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 041M2xXG006599;
+        Fri, 1 May 2020 18:09:53 -0400
+Received: from prod-mail-relay14.akamai.com ([172.27.17.39])
+        by prod-mail-ppoint8.akamai.com with ESMTP id 30rupc8885-1;
+        Fri, 01 May 2020 18:09:52 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay14.akamai.com (Postfix) with ESMTP id 1CD9385C86;
+        Fri,  1 May 2020 22:09:52 +0000 (GMT)
+Subject: Re: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>, stable@vger.kernel.org
+References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+ <930c565705249d2b6264a31f1be6529e@suse.de>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
+Date:   Fri, 1 May 2020 18:09:51 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <930c565705249d2b6264a31f1be6529e@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_16:2020-05-01,2020-05-01 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2005010154
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_16:2020-05-01,2020-05-01 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ suspectscore=0 bulkscore=0 clxscore=1015 phishscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005010154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 22:38:10 -0400 John Dorminy <jdorminy@redhat.com> wrote:
 
-> the change
-> description refers to PROT_KERNEL, which is a symbol which does not
-> appear to exist; perhaps PAGE_KERNEL was meant?
 
-Yes, thanks, fixed.
+On 5/1/20 5:02 PM, Roman Penyaev wrote:
+> Hi Jason,
+> 
+> That is indeed a nice catch.
+> Seems we need smp_rmb() pair between list_empty_careful(&rp->rdllist) and
+> READ_ONCE(ep->ovflist) for ep_events_available(), do we?
+> 
+
+Hi Roman,
+
+Good point, even if we order those reads its still racy, since the
+read of the ready list could come after its been cleared and the
+read of the overflow could again come after its been cleared.
+
+So I'm afraid we might need instead something like this to make
+sure they are read together:
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d6ba0e5..31c5f14 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1899,7 +1899,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+                        break;
+                }
+
++               write_lock_irq(&ep->lock);
+                eavail = ep_events_available(ep);
++               write_unlock_irq(&ep->lock);
+                if (eavail)
+                        break;
+                if (signal_pending(current)) {
+
+
+Thanks,
+
+-Jason
+
+
+
+> Other than that:
+> 
+> Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+> 
+> -- 
+> Roman
+> 
+> On 2020-05-01 21:15, Jason Baron wrote:
+>> Now that the ep_events_available() check is done in a lockless way, and
+>> we no longer perform wakeups from ep_scan_ready_list(), we need to ensure
+>> that either ep->rdllist has items or the overflow list is active. Prior to:
+>> commit 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested
+>> epoll"), we did wake_up(&ep->wq) after manipulating the ep->rdllist and the
+>> overflow list. Thus, any waiters would observe the correct state. However,
+>> with that wake_up() now removed we need to be more careful to ensure that
+>> condition.
+>>
+>> Here's an example of what could go wrong:
+>>
+>> We have epoll fds: epfd1, epfd2. And epfd1 is added to epfd2 and epfd2 is
+>> added to a socket: epfd1->epfd2->socket. Thread a is doing epoll_wait() on
+>> epfd1, and thread b is doing epoll_wait on epfd2. Then:
+>>
+>> 1) data comes in on socket
+>>
+>> ep_poll_callback() wakes up threads a and b
+>>
+>> 2) thread a runs
+>>
+>> ep_poll()
+>>  ep_scan_ready_list()
+>>   ep_send_events_proc()
+>>    ep_item_poll()
+>>      ep_scan_ready_list()
+>>        list_splice_init(&ep->rdllist, &txlist);
+>>
+>> 3) now thread b is running
+>>
+>> ep_poll()
+>>  ep_events_available()
+>>    returns false
+>>  schedule_hrtimeout_range()
+>>
+>> Thus, thread b has now scheduled and missed the wakeup.
+>>
+>> Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
+>> Signed-off-by: Jason Baron <jbaron@akamai.com>
+>> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+>> Cc: Heiher <r@hev.cc>
+>> Cc: Roman Penyaev <rpenyaev@suse.de>
+>> Cc: Khazhismel Kumykov <khazhy@google.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Davidlohr Bueso <dbueso@suse.de>
+>> Cc: <stable@vger.kernel.org>
+>> ---
+>>  fs/eventpoll.c | 23 +++++++++++++++++------
+>>  1 file changed, 17 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>> index aba03ee749f8..4af2d020f548 100644
+>> --- a/fs/eventpoll.c
+>> +++ b/fs/eventpoll.c
+>> @@ -704,8 +704,14 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>>       * in a lockless way.
+>>       */
+>>      write_lock_irq(&ep->lock);
+>> -    list_splice_init(&ep->rdllist, &txlist);
+>>      WRITE_ONCE(ep->ovflist, NULL);
+>> +    /*
+>> +     * In ep_poll() we use ep_events_available() in a lockless way to decide
+>> +     * if events are available. So we need to preserve that either
+>> +     * ep->oflist != EP_UNACTIVE_PTR or there are events on the ep->rdllist.
+>> +     */
+>> +    smp_wmb();
+>> +    list_splice_init(&ep->rdllist, &txlist);
+>>      write_unlock_irq(&ep->lock);
+>>
+>>      /*
+>> @@ -737,16 +743,21 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>>          }
+>>      }
+>>      /*
+>> +     * Quickly re-inject items left on "txlist".
+>> +     */
+>> +    list_splice(&txlist, &ep->rdllist);
+>> +    /*
+>> +     * In ep_poll() we use ep_events_available() in a lockless way to decide
+>> +     * if events are available. So we need to preserve that either
+>> +     * ep->oflist != EP_UNACTIVE_PTR or there are events on the ep->rdllist.
+>> +     */
+>> +    smp_wmb();
+>> +    /*
+>>       * We need to set back ep->ovflist to EP_UNACTIVE_PTR, so that after
+>>       * releasing the lock, events will be queued in the normal way inside
+>>       * ep->rdllist.
+>>       */
+>>      WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+>> -
+>> -    /*
+>> -     * Quickly re-inject items left on "txlist".
+>> -     */
+>> -    list_splice(&txlist, &ep->rdllist);
+>>      __pm_relax(ep->ws);
+>>      write_unlock_irq(&ep->lock);
+> 
