@@ -2,98 +2,153 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0712DC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D35A2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449AD20836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588343172;
-	bh=/XImzuFB8xXVEiWaVlEDRJ9CEFVrRvmrBFB6YUmsG0E=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=X9bbuLvYwqAZWUynwblrqoflEC1aU9q2T5GfmLhWTegQGRwXppaf1JOpFputde/hm
-	 r7gNoYhAA7uw9UUglmBHaRt/0NQSFqvIeDOzomVTv+wO9AfDVCnqe4nnXCwrEfhmW9
-	 vBx6xMIKDy6IbaQ6XR/gso7TUCfkxEOSCf3k6PtA=
+	s=default; t=1588343215;
+	bh=GWJwkvt0+8TQNxyG05ofo9WUCas5EChknR0I2IxYgog=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JD4O3PJbL0TVEQqy5Hsn0dnhwbczIEQQF5nrETSlNRj4ghoyzS2h9pGToIdRVrNnQ
+	 U/iGz2YGb3W2SJ7zNH0zA4q/n5D0TVQv6wb2mNKEWxoYnqG2hUturEKGekk+iZYDbg
+	 uBvWY6Hk5Zwh5d1wNSLgmdzjeRVW7JGy4yssn6HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgEAO0M (ORCPT
+        id S1729447AbgEAO0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44496 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbgEAO0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:26:11 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        id S1728737AbgEAO0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:26:53 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E55720836;
-        Fri,  1 May 2020 14:26:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0DE2137B
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588343170;
-        bh=/XImzuFB8xXVEiWaVlEDRJ9CEFVrRvmrBFB6YUmsG0E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e9YbOMUEUPT/yeea91IBch131SXRmSieVBodlXyVWsr9ckrqVOiB4o3c07v9VaPBI
-         vs8CiE/vZv09NVHcn+Ra/EFRn/3SdTu+X3kquAnNLZR2WR2Ri59utSWA7/vYbPFtQP
-         /lrXwq+5wN9eXbZG5eMyWrVGTXILbv1aZ7X8zD9w=
-Subject: Re: [PATCH v2 2/2] ftrace/selftest: make unresolved cases cause
- failure if --fail-unresolved set
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Alan Maguire <alan.maguire@oracle.com>, rostedt@goodmis.org,
-        mingo@redhat.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
- <1582104810-12983-3-git-send-email-alan.maguire@oracle.com>
- <20200219203941.eb0fb66aee13f6d7a47513ac@kernel.org>
- <20200501184208.2529cac8081a34de0b48617f@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <75fc65c3-a639-41cf-0a10-554e632e9612@kernel.org>
-Date:   Fri, 1 May 2020 08:25:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        s=default; t=1588343213;
+        bh=GWJwkvt0+8TQNxyG05ofo9WUCas5EChknR0I2IxYgog=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J6GWbaettKOvk+oK9TnS51EkolS6QgEhWLhlRy8UMkMDxWBHVuBv0+IIaYp3/dbh3
+         HltRsMIZPGLN1o4ykQmmop96R4hv/4qpB/f5wZtLIdF6am4OujLdcpaQk45OAm3HnP
+         29dXCjiaGEX2RTL6bdKguIrkBNsgDAXISfnoZx/o=
+Received: by mail-ed1-f47.google.com with SMTP id t12so7377047edw.3
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:26:52 -0700 (PDT)
+X-Gm-Message-State: AGi0PuarYxnJjkDnS/SUIMktf+u1WclrG3xLmT33NtisZ07fxj60Iiu/
+        FYUTIQdvSXgo7zd9l3rBz2xlVts/MuS1qNtYfA==
+X-Google-Smtp-Source: APiQypJN7wZ4G/nD2HBUrq+csPQL5onomudMxtaCzeqVlUIAwpqC80OOjadus0NF19FGaH+HaaWVunxmRN799sICD4s=
+X-Received: by 2002:aa7:dcd7:: with SMTP id w23mr3810850edu.300.1588343211141;
+ Fri, 01 May 2020 07:26:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200501184208.2529cac8081a34de0b48617f@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200417150614.2631786-1-enric.balletbo@collabora.com> <20200417150614.2631786-8-enric.balletbo@collabora.com>
+In-Reply-To: <20200417150614.2631786-8-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 1 May 2020 22:26:37 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
+Message-ID: <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
+Subject: Re: [PATCH v3 7/7] drm/mediatek: mtk_dsi: Create connector for bridges
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20 3:42 AM, Masami Hiramatsu wrote:
-> On Wed, 19 Feb 2020 20:39:41 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
->> On Wed, 19 Feb 2020 09:33:30 +0000
->> Alan Maguire <alan.maguire@oracle.com> wrote:
->>
->>> Currently, ftracetest will return 1 (failure) if any unresolved cases
->>> are encountered.  The unresolved status results from modules and
->>> programs not being available, and as such does not indicate any
->>> issues with ftrace itself.  As such, change the behaviour of
->>> ftracetest in line with unsupported cases; if unsupported cases
->>> happen, ftracetest still returns 0 unless --fail-unsupported.  Here
->>> --fail-unresolved is added and the default is to return 0 if
->>> unresolved results occur.
->>>
->>
->> OK, this looks good to me. One note, with this change, ftracetest doesn't
->> fail even if your test environment is not well prepared anymore.
->>
->> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> Hi Shuah,
-> Could you pick this up?
-> 
-> Po-Hsu Lin seemed to face same problem recently. If this applied, it will be solved.
-> 
+Hi, Enric:
 
-Sorry about this. I will get these in
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B44=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:06=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+>
+> Use the drm_bridge_connector helper to create a connector for pipelines
+> that use drm_bridge. This allows splitting connector operations across
+> multiple bridges when necessary, instead of having the last bridge in
+> the chain creating the connector and handling all connector operations
+> internally.
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>
+> Changes in v3:
+> - Move the bridge.type line to the patch that adds drm_bridge support. (L=
+aurent Pinchart)
+>
+> Changes in v2: None
+>
+>  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
+k/mtk_dsi.c
+> index 157097c63b23..85f76b01ae4d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -17,6 +17,7 @@
+>
+>  #include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_bridge.h>
+> +#include <drm/drm_bridge_connector.h>
+>  #include <drm/drm_mipi_dsi.h>
+>  #include <drm/drm_of.h>
+>  #include <drm/drm_panel.h>
+> @@ -183,6 +184,7 @@ struct mtk_dsi {
+>         struct drm_encoder encoder;
+>         struct drm_bridge bridge;
+>         struct drm_bridge *next_bridge;
+> +       struct drm_connector *connector;
+>         struct phy *phy;
+>
+>         void __iomem *regs;
+> @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *=
+drm, struct mtk_dsi *dsi)
+>          */
+>         dsi->encoder.possible_crtcs =3D 1;
+>
+> -       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
+> +       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
+> +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+>         if (ret)
+>                 goto err_cleanup_encoder;
+>
+> +       dsi->connector =3D drm_bridge_connector_init(drm, &dsi->encoder);
+> +       if (IS_ERR(dsi->connector)) {
+> +               DRM_ERROR("Unable to create bridge connector\n");
+> +               ret =3D PTR_ERR(dsi->connector);
+> +               goto err_cleanup_encoder;
+> +       }
+> +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
+> +
 
-thanks,
--- Shuah
+I'm not very clear about how brige-connector works, but why connector
+does not attach to panel?
+
+Regards,
+Chun-Kuang.
+
+>         return 0;
+>
+>  err_cleanup_encoder:
+> --
+> 2.25.1
+>
