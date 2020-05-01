@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A618C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77473C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08C0A2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5429D216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340569;
-	bh=Tgvy8L/qcTQAd0WfpP+tRSfrskJUjHDc5vwMG2Vn+uA=;
+	s=default; t=1588340571;
+	bh=lcWydKBWqQV/ZXC2wD/mYqXm6d863aZJxCKMdQZ+MX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HxowgD6aQXIGKZFtNHWvpOBVkUYjE/Y9MqVfSGhtgwa+XCI65xdW5Kt3frBMwP1kP
-	 P9tkvgCLE7J9YQRnpRmFI+a5Z85go9+uxWTlPmorNw8rVhyTD66CENotGP5I5NIVV8
-	 HjEzH6iW8eLeb0oK4LSHkpQVLk1NGXDMD2R/4qSQ=
+	b=ifOw7yxYgM9KFkJtvguf4C2b7HGHnw50F1buyeghaDoDpwymiG/ZXANiJX5N65lan
+	 dBfox+LDV/KBiCdN6rYPyTET9MjGti9FA8CMmGipSxO/p9UCy5GrpHgigJdj0e6rMt
+	 hiB4jzNSqFH0VIOZSHlsvKZu1NfPhjMboS+p63Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbgEANmr (ORCPT
+        id S1730751AbgEANmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:42:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43476 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:42:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731548AbgEANmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:42:44 -0400
+        id S1731193AbgEANmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36EFC205C9;
-        Fri,  1 May 2020 13:42:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4968216FD;
+        Fri,  1 May 2020 13:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340563;
-        bh=Tgvy8L/qcTQAd0WfpP+tRSfrskJUjHDc5vwMG2Vn+uA=;
+        s=default; t=1588340566;
+        bh=lcWydKBWqQV/ZXC2wD/mYqXm6d863aZJxCKMdQZ+MX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rPK7shIoIQTI5i22g1QXWjiWimpbDNvNizyDGPcNoTsrPpQJnKDTZBXP+RjAFULiB
-         /msuLjusjpUGHe671avQuSsHkYrcyLi77zlRsgodBBB/B15veVUzsjEO8pAGFC5uNF
-         vKvx7+bSoX5v4KE1xmCsKXuCxbk/tssezbzSCsTg=
+        b=tOV9hPcRxHBERVb0ROKFDR7F9YB+ZxB48m7MhG6jp4xaXsmXkOIcGSiM6oRlKzHj1
+         yoza/yU/cY1CjMI+tVYNDUSX7zI9XYb5Jy+LqmcU+bxHT4Tvy3Spk1STg/yLcgMpv+
+         KAdU1zG/paz/ZnfAKgl0974ikeZLhsNengxrkMik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 033/106] rxrpc: Fix DATA Tx to disable nofrag for UDP on AF_INET6 socket
-Date:   Fri,  1 May 2020 15:23:06 +0200
-Message-Id: <20200501131547.931293506@linuxfoundation.org>
+        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.6 034/106] netfilter: nf_tables: reintroduce the NFT_SET_CONCAT flag
+Date:   Fri,  1 May 2020 15:23:07 +0200
+Message-Id: <20200501131548.040560317@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,111 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 0e631eee17dcea576ab922fa70e4fdbd596ee452 upstream.
+commit ef516e8625ddea90b3a0313f3a0b0baa83db7ac2 upstream.
 
-Fix the DATA packet transmission to disable nofrag for UDPv4 on an AF_INET6
-socket as well as UDPv6 when trying to transmit fragmentably.
+Stefano originally proposed to introduce this flag, users hit EOPNOTSUPP
+in new binaries with old kernels when defining a set with ranges in
+a concatenation.
 
-Without this, packets filled to the normal size used by the kernel AFS
-client of 1412 bytes be rejected by udp_sendmsg() with EMSGSIZE
-immediately.  The ->sk_error_report() notification hook is called, but
-rxrpc doesn't generate a trace for it.
-
-This is a temporary fix; a more permanent solution needs to involve
-changing the size of the packets being filled in accordance with the MTU,
-which isn't currently done in AF_RXRPC.  The reason for not doing so was
-that, barring the last packet in an rx jumbo packet, jumbos can only be
-assembled out of 1412-byte packets - and the plan was to construct jumbos
-on the fly at transmission time.
-
-Also, there's no point turning on IPV6_MTU_DISCOVER, since IPv6 has to
-engage in this anyway since fragmentation is only done by the sender.  We
-can then condense the switch-statement in rxrpc_send_data_packet().
-
-Fixes: 75b54cb57ca3 ("rxrpc: Add IPv6 support")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f3a2181e16f1 ("netfilter: nf_tables: Support for sets with multiple ranged fields")
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/rxrpc/local_object.c |    9 ---------
- net/rxrpc/output.c       |   42 +++++++++++-------------------------------
- 2 files changed, 11 insertions(+), 40 deletions(-)
+ include/uapi/linux/netfilter/nf_tables.h |    2 ++
+ net/netfilter/nf_tables_api.c            |    2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -165,15 +165,6 @@ static int rxrpc_open_socket(struct rxrp
- 			goto error;
- 		}
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -276,6 +276,7 @@ enum nft_rule_compat_attributes {
+  * @NFT_SET_TIMEOUT: set uses timeouts
+  * @NFT_SET_EVAL: set can be updated from the evaluation path
+  * @NFT_SET_OBJECT: set contains stateful objects
++ * @NFT_SET_CONCAT: set contains a concatenation
+  */
+ enum nft_set_flags {
+ 	NFT_SET_ANONYMOUS		= 0x1,
+@@ -285,6 +286,7 @@ enum nft_set_flags {
+ 	NFT_SET_TIMEOUT			= 0x10,
+ 	NFT_SET_EVAL			= 0x20,
+ 	NFT_SET_OBJECT			= 0x40,
++	NFT_SET_CONCAT			= 0x80,
+ };
  
--		/* we want to set the don't fragment bit */
--		opt = IPV6_PMTUDISC_DO;
--		ret = kernel_setsockopt(local->socket, SOL_IPV6, IPV6_MTU_DISCOVER,
--					(char *) &opt, sizeof(opt));
--		if (ret < 0) {
--			_debug("setsockopt failed");
--			goto error;
--		}
--
- 		/* Fall through and set IPv4 options too otherwise we don't get
- 		 * errors from IPv4 packets sent through the IPv6 socket.
- 		 */
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -474,41 +474,21 @@ send_fragmentable:
- 	skb->tstamp = ktime_get_real();
- 
- 	switch (conn->params.local->srx.transport.family) {
-+	case AF_INET6:
- 	case AF_INET:
- 		opt = IP_PMTUDISC_DONT;
--		ret = kernel_setsockopt(conn->params.local->socket,
--					SOL_IP, IP_MTU_DISCOVER,
--					(char *)&opt, sizeof(opt));
--		if (ret == 0) {
--			ret = kernel_sendmsg(conn->params.local->socket, &msg,
--					     iov, 2, len);
--			conn->params.peer->last_tx_at = ktime_get_seconds();
--
--			opt = IP_PMTUDISC_DO;
--			kernel_setsockopt(conn->params.local->socket, SOL_IP,
--					  IP_MTU_DISCOVER,
--					  (char *)&opt, sizeof(opt));
--		}
--		break;
--
--#ifdef CONFIG_AF_RXRPC_IPV6
--	case AF_INET6:
--		opt = IPV6_PMTUDISC_DONT;
--		ret = kernel_setsockopt(conn->params.local->socket,
--					SOL_IPV6, IPV6_MTU_DISCOVER,
--					(char *)&opt, sizeof(opt));
--		if (ret == 0) {
--			ret = kernel_sendmsg(conn->params.local->socket, &msg,
--					     iov, 2, len);
--			conn->params.peer->last_tx_at = ktime_get_seconds();
-+		kernel_setsockopt(conn->params.local->socket,
-+				  SOL_IP, IP_MTU_DISCOVER,
-+				  (char *)&opt, sizeof(opt));
-+		ret = kernel_sendmsg(conn->params.local->socket, &msg,
-+				     iov, 2, len);
-+		conn->params.peer->last_tx_at = ktime_get_seconds();
- 
--			opt = IPV6_PMTUDISC_DO;
--			kernel_setsockopt(conn->params.local->socket,
--					  SOL_IPV6, IPV6_MTU_DISCOVER,
--					  (char *)&opt, sizeof(opt));
--		}
-+		opt = IP_PMTUDISC_DO;
-+		kernel_setsockopt(conn->params.local->socket,
-+				  SOL_IP, IP_MTU_DISCOVER,
-+				  (char *)&opt, sizeof(opt));
- 		break;
--#endif
- 
- 	default:
- 		BUG();
+ /**
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3949,7 +3949,7 @@ static int nf_tables_newset(struct net *
+ 		if (flags & ~(NFT_SET_ANONYMOUS | NFT_SET_CONSTANT |
+ 			      NFT_SET_INTERVAL | NFT_SET_TIMEOUT |
+ 			      NFT_SET_MAP | NFT_SET_EVAL |
+-			      NFT_SET_OBJECT))
++			      NFT_SET_OBJECT | NFT_SET_CONCAT))
+ 			return -EOPNOTSUPP;
+ 		/* Only one of these operations is supported */
+ 		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
 
 
