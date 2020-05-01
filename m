@@ -2,149 +2,106 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB23C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56FC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EB1206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BF5206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:03:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PJsQ/R8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgEARBS (ORCPT
+        id S1729825AbgEARDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:01:18 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:56268 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729218AbgEARBQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:01:16 -0400
-Received: by mail-io1-f69.google.com with SMTP id f4so5373376iov.22
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:01:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=RXQpc62kSGkieGeA+LlsoP9mjY9J70bhJpsTt05TsFw=;
-        b=lNi3LLOb6vxvV0mdiyw44gcRFMiOgECbxpwe7UNR1fx29f2CN6j8bCkfPEpWuT08ej
-         ivSaHwr4TkOLBCqfLHPmx4xGGjS+0KHcUiJI9TZgh6ByNYRwruv4tXx47rLjEXv70hAL
-         7QMZGfV2/aZUS/UKtYj8fiYuoupKD8LRDdmE5UYQFqVocI4ONJDsRY3EqLl6+IwI36Xp
-         xJ44RCZqrXpmrrZOycqOOxcTzDFDw6oZanAjXXmpItYdZvl8T4LiqISYjCcg1LypoD7j
-         bh08GOsZ1VuQ7dWuuXIwbX2Do0zMRkd/43492B3Hto3Q//q4LPdSssL5FfiftB6MelfD
-         l4Vg==
-X-Gm-Message-State: AGi0PuZiX8snwfxTyIitPd4dJrVjMQ8TxbmlCfp4pe0GhEYF3tAU+RT9
-        fAxxACjCyA1Dk9ZWbNEmXYNm4zAbhbNCmxgRdly/nred21YZ
-X-Google-Smtp-Source: APiQypIzNJ+x5Y3uKtb3IfQ5XLDifFgOYtn+MHEdrYUkg6wI9sVWvi8qk8nt/Rn8e/zCPbjhAlkKxNeJQfSsm2DWMef9rc/17379
+        Fri, 1 May 2020 13:03:17 -0400
+Received: from mout.gmx.net ([212.227.15.18]:54439 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728975AbgEARDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:03:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1588352587;
+        bh=im7UoRGRqKTmxhp4QzZMb5sui+SkwX0MbHQyE4WNRh4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=PJsQ/R8E9aJ5gReDGn0eGTtHAjbO+cS6bIVE2l3zp7DA1cVrp/9ghI72RBVQ/ob7t
+         GY+cqwA/6sNwGto1LLPJdv5yPGuFXYsdYhftSPfxWMjK5351S3Uw0OzSW++VdNvgGI
+         4aex6ufg3J4qfh7K7+FtS0Z0m3acSKGry5gxXTgw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MKbgE-1jinaw3mAu-00KyZz; Fri, 01 May 2020 19:03:07 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rachel Kim <rachel.kim@atmel.com>,
+        Johnny Kim <johnny.kim@atmel.com>,
+        Chris Park <chris.park@atmel.com>,
+        Dean Lee <dean.lee@atmel.com>, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH] staging: wilc1000: Increase the size of wid_list array
+Date:   Fri,  1 May 2020 19:02:39 +0200
+Message-Id: <20200501170239.16917-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9c88:: with SMTP id p8mr4639755iop.200.1588352474474;
- Fri, 01 May 2020 10:01:14 -0700 (PDT)
-Date:   Fri, 01 May 2020 10:01:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000004f67705a4992160@google.com>
-Subject: WARNING: refcount bug in crypto_mod_get
-From:   syzbot <syzbot+afb77bdbaca0cda9e991@syzkaller.appspotmail.com>
-To:     ardb@kernel.org, davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, t-kristo@ti.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:l8IGiAo/+ZjQsmQfamzYuV5ZICWBc4esNNlTP6qfdg60KXL+SFI
+ TAoOphehrGDD5qftiHjSRkuwN9mrFcL6aMazBYOeG6MmGT/rZNvgt4NsRzg7L+zZEtGSA4Y
+ b+9Dh9y1tV7hmF+QSTcejPH8ct6NGKp0ElRn/PKnkSJHnkOCLfA8JiCv2+rLiMGMgxh+U8m
+ A8m18mv9ZgRTrcn+wWwBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qG98HsMxVf0=:Nk6O7bJeZMQsMWt585Nx8H
+ IS8Ll6KBFedpl1WmvXyemO1oswyIgz89xyMl6SlfEyQJvvk9HQHy4RbVl4GZfoWqi8v/2kXVR
+ k5keEG9q1Em8V5vzHi6YecJaq1hw5WYn31ZPxZud7Tfq2dMEemUzwRI3rI3B6uM/qxX7nEyOR
+ Xk56xGX7PpZQR8CgMYfCOTDSdieB7L1WCxAbx8FR9ji2NZzEJJw/0TY3xUQ8YBhPkxzcGfCEx
+ Sp2mf0EPZG0kya4CCjk07pgWrzQpLppgZITx3ijKoUUGz5u9wEVG1ZrR53v9ua20yWi9G64cm
+ h4JbS300kf/hAyR59HG3Bi2I43bAuTJncP11JAkETIKW6dCMNaOeVi+7GSajj+ic3ZhxesckE
+ +ejs82H6C289QhMl1l5S0EHytBJ4ZaaOmK+VrY8vDUs3oVg/dcJYZEhdbm/twyswNfc+1129l
+ NVVnpQdytgP/Vj8tJ0VwxAnjhz1uxrwXy5yIIaTGS+gSq3HnsoVC61J22Z0PchCzdVJu7MThP
+ UUIkqulWaE5HzU0GnPhfB7rvIIJIFDleEdmek4vJ9siKwRhM0r876wRSnosQZtDuqqFMYAZa0
+ /rg18PRghnnu+RPWnkzXtHsTwLzeAKYn8+4wYb8AYnATG82NFCnXA3Fd0ndmeq7kMZEnbyJtp
+ OQhed3oRsAFfgn0kDVTOY3hTPZ6XYI7yo4aDzropnSAToAo4TfO9A3k6K5S0AKdq65L3o8Z86
+ SkPVTLsr4o2UsSwbgmRDOKSHM3o3jpbFMwmPIxMMWzhcUgYDh5NmtHVgkXv8RjdmYvTBmcF9S
+ GZDT60Qt7WppFLZsHigna/ZzDOR2Ax5c1Nm4JLriE/syQpkJ8xz+57N0mdxQv+YWtIDQPpuyw
+ E/+/t1yFTIBTA0jbBwpdCtCrDml6ESfju6ofRnDhh+CurpL8Q2R3W71ffD8ujK50uOMuAQL5/
+ MnO0nznr7XvgkTB5kCQzVeZ7JDJhrSo1R0C+tUBLdBax7ZJmcdPbsb3oPbmFgorCjaSl47Jdj
+ QVmak2uddP+7WoLj3uBYqnOuWA8O2B0sGV2D1zVe+EBUwTC3PUGud2cfLWw34VckTkA+eT4VJ
+ 6BuYl4FxbvBuW+w4+gJS+bq32gDCuab1XU01MWcB3sZUl7/gbizNG4YzgC9ac1kGU9KtWCCkR
+ wcCVwbmFuojubMUrylM9cTlf3YbbmXTinkYbDFaZwWvKk+pyyD6T9eX4SvURGbbCu1Z/cHcrE
+ NWzra6Ae54LKajJUS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Increase by one the size of wid_list array as index variable can reach a
+value of 5. If this happens, an out-of-bounds access is performed.
 
-syzbot found the following crash on:
+Addresses-Coverity-ID: 1451981 ("Out-of-bounds access")
+Fixes: c5c77ba18ea66 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ drivers/staging/wilc1000/hif.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-HEAD commit:    6a8b55ed Linux 5.7-rc3
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b91564100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5b075813ec8b93cd
-dashboard link: https://syzkaller.appspot.com/bug?extid=afb77bdbaca0cda9e991
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f8067fe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fd8028100000
+diff --git a/drivers/staging/wilc1000/hif.c b/drivers/staging/wilc1000/hif=
+.c
+index 6c7de2f8d3f2..128943c3be4f 100644
+=2D-- a/drivers/staging/wilc1000/hif.c
++++ b/drivers/staging/wilc1000/hif.c
+@@ -151,7 +151,7 @@ int wilc_scan(struct wilc_vif *vif, u8 scan_source, u8=
+ scan_type,
+ 	      void *user_arg, struct cfg80211_scan_request *request)
+ {
+ 	int result =3D 0;
+-	struct wid wid_list[5];
++	struct wid wid_list[6];
+ 	u32 index =3D 0;
+ 	u32 i, scan_timeout;
+ 	u8 *buffer;
+=2D-
+2.20.1
 
-The bug was bisected to:
-
-commit b877ad1a135c802d4529a72aa82faf46ef5db097
-Author: Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue Nov 5 14:01:04 2019 +0000
-
-    crypto: omap-aes-gcm - check length of assocdata in RFC4106 mode
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=147c2208100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=167c2208100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=127c2208100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+afb77bdbaca0cda9e991@syzkaller.appspotmail.com
-Fixes: b877ad1a135c ("crypto: omap-aes-gcm - check length of assocdata in RFC4106 mode")
-
-------------[ cut here ]------------
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 0 PID: 7775 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7775 Comm: syz-executor692 Not tainted 5.7.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
-Code: 06 31 ff 89 de e8 87 b9 dc fd 84 db 0f 85 36 ff ff ff e8 4a b8 dc fd 48 c7 c7 a0 5b 72 88 c6 05 b2 1c ee 06 01 e8 4f f3 ad fd <0f> 0b e9 17 ff ff ff e8 2b b8 dc fd 0f b6 1d 97 1c ee 06 31 ff 89
-RSP: 0018:ffffc90002797bf8 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815ce171 RDI: fffff520004f2f71
-RBP: 0000000000000002 R08: ffff88809d9e6400 R09: ffffed1015cc66a9
-R10: ffff8880ae633547 R11: ffffed1015cc66a8 R12: ffff8880a403a048
-R13: ffff88809df99d00 R14: ffffed1013bf33a5 R15: ffff888099925048
- refcount_add include/linux/refcount.h:204 [inline]
- refcount_inc include/linux/refcount.h:241 [inline]
- crypto_alg_get crypto/internal.h:87 [inline]
- crypto_mod_get+0xc6/0xf0 crypto/api.c:37
- crypto_spawn_alg.isra.0+0xa8/0x110 crypto/algapi.c:723
- crypto_spawn_tfm2+0x19/0xb0 crypto/algapi.c:763
- crypto_spawn_aead include/crypto/internal/aead.h:102 [inline]
- pcrypt_aead_init_tfm+0x144/0x273 crypto/pcrypt.c:182
- crypto_aead_init_tfm+0x138/0x1a0 crypto/aead.c:140
- crypto_create_tfm+0xd5/0x2f0 crypto/api.c:454
- crypto_alloc_tfm+0x100/0x340 crypto/api.c:526
- aead_bind+0x69/0x170 crypto/algif_aead.c:483
- alg_bind+0x260/0x530 crypto/af_alg.c:182
- __sys_bind+0x20e/0x250 net/socket.c:1662
- __do_sys_bind net/socket.c:1673 [inline]
- __se_sys_bind net/socket.c:1671 [inline]
- __x64_sys_bind+0x6f/0xb0 net/socket.c:1671
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x441359
-Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd04b593e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00000000004a2378 RCX: 0000000000441359
-RDX: 0000000000000058 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 000000000000e5c5 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000004 R11: 0000000000000246 R12: 00000000004020d0
-R13: 0000000000402160 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
