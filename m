@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE60C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB2FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC082166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6AE208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339549;
-	bh=tTsw+yYwD3xrXKCecdUfo4izDlAh6sniyrh8KljU0Nc=;
+	s=default; t=1588339552;
+	bh=1bJXgS9EGSsKXLluKrL63N6r/YnFN67KmUdN1uqhg/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPUWj/RSzuRB8RlfJkbPxDhdPGY9JkhnXV93bYo9gheBa4NqEhDdqwtcnCnyuytl/
-	 46zRLG/wTO8s249u8ZISWuUNVtdHQZ21gd5sCM0UUddwwo5ug9n7edz/buqtlR9Q4d
-	 NM5cBXB349q1qkvgMh5NzD4aJQtAq5btzwHKCZuk=
+	b=CHvmnfgCZCUAIcGqKcOPEojYX/jx3jD8v14a11nhRkjW1XYLyHL9W4z5PG65GDNj8
+	 VYu3mQZPJHgYPlUiqjq43aar9N5GHxCZmizGQQmQw/1aEYG9hDP2fvcbI0RWbPo8zn
+	 dDdFYpT1jVbh0HQK/JRFJx10o3o4QBZiS+4yZ0Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgEANZs (ORCPT
+        id S1729121AbgEANZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbgEANZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:44 -0400
+        id S1729103AbgEANZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B156B20757;
-        Fri,  1 May 2020 13:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3102D208D6;
+        Fri,  1 May 2020 13:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339544;
-        bh=tTsw+yYwD3xrXKCecdUfo4izDlAh6sniyrh8KljU0Nc=;
+        s=default; t=1588339546;
+        bh=1bJXgS9EGSsKXLluKrL63N6r/YnFN67KmUdN1uqhg/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LFAgZIpN/3pL+uQfPWc8EK+PKa/YjhjaMqXbhzpHADfoUjvxFhWUFj+8Low4n0CRi
-         O0w2s5bOXjnV62bi/rEuvnGZJqTnm4hAshaB/DsqoO42ku5DoeGPlYTwcWCp2Vv+4Q
-         WitUIBNkjNP+mTbH9HENoxnNzqCUH7Lt9gX9RlZ0=
+        b=Qy5r1JfOsJMqU3m1VPMcqENC3r9++OFfGUnbbTBKwb5a6q8eETPENq4i0D4Lj9NlS
+         aJVDEsasO+SnWvkU5A6jPyN/ME69Q3bgdf01xovEtIU1MrEFi4yXvG+QgrgDS7txcE
+         BtG+RfQV6RceJhf0rtNfIi/9bJSXwFyk6uv/6O5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Xin Tan <tanxin.ctf@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 20/70] net: netrom: Fix potential nr_neigh refcnt leak in nr_add_node
-Date:   Fri,  1 May 2020 15:21:08 +0200
-Message-Id: <20200501131520.421197793@linuxfoundation.org>
+Subject: [PATCH 4.4 21/70] net/x25: Fix x25_neigh refcnt leak when receiving frame
+Date:   Fri,  1 May 2020 15:21:09 +0200
+Message-Id: <20200501131520.809525053@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -62,39 +62,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit d03f228470a8c0a22b774d1f8d47071e0de4f6dd ]
+[ Upstream commit f35d12971b4d814cdb2f659d76b42f0c545270b6 ]
 
-nr_add_node() invokes nr_neigh_get_dev(), which returns a local
-reference of the nr_neigh object to "nr_neigh" with increased refcnt.
+x25_lapb_receive_frame() invokes x25_get_neigh(), which returns a
+reference of the specified x25_neigh object to "nb" with increased
+refcnt.
 
-When nr_add_node() returns, "nr_neigh" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
+When x25_lapb_receive_frame() returns, local variable "nb" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-The issue happens in one normal path of nr_add_node(), which forgets to
-decrease the refcnt increased by nr_neigh_get_dev() and causes a refcnt
-leak. It should decrease the refcnt before the function returns like
-other normal paths do.
+The reference counting issue happens in one path of
+x25_lapb_receive_frame(). When pskb_may_pull() returns false, the
+function forgets to decrease the refcnt increased by x25_get_neigh(),
+causing a refcnt leak.
 
-Fix this issue by calling nr_neigh_put() before the nr_add_node()
-returns.
+Fix this issue by calling x25_neigh_put() when pskb_may_pull() returns
+false.
 
+Fixes: cb101ed2c3c7 ("x25: Handle undersized/fragmented skbs")
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netrom/nr_route.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/x25/x25_dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/netrom/nr_route.c
-+++ b/net/netrom/nr_route.c
-@@ -199,6 +199,7 @@ static int __must_check nr_add_node(ax25
- 		/* refcount initialized at 1 */
- 		spin_unlock_bh(&nr_node_list_lock);
- 
-+		nr_neigh_put(nr_neigh);
- 		return 0;
+--- a/net/x25/x25_dev.c
++++ b/net/x25/x25_dev.c
+@@ -120,8 +120,10 @@ int x25_lapb_receive_frame(struct sk_buf
+ 		goto drop;
  	}
- 	nr_node_lock(nr_node);
+ 
+-	if (!pskb_may_pull(skb, 1))
++	if (!pskb_may_pull(skb, 1)) {
++		x25_neigh_put(nb);
+ 		return 0;
++	}
+ 
+ 	switch (skb->data[0]) {
+ 
 
 
