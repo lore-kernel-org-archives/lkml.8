@@ -2,204 +2,139 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACBDC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C215C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9FBE20643
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD620208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:20:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LKDifLjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgEAHTB (ORCPT
+        id S1728339AbgEAHU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 03:19:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42268 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgEAHTA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 03:19:00 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04172os0030587;
-        Fri, 1 May 2020 03:18:42 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30r7mcagsy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 03:18:42 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04172qoI030818;
-        Fri, 1 May 2020 03:18:41 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30r7mcags7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 03:18:41 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0417Gbi8024788;
-        Fri, 1 May 2020 07:18:38 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 30mcu5bba4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 07:18:38 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0417IZjV63308074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 May 2020 07:18:35 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8F774C046;
-        Fri,  1 May 2020 07:18:35 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A5AC4C04A;
-        Fri,  1 May 2020 07:18:35 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.25.110])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 May 2020 07:18:34 +0000 (GMT)
-Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
- pages
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        viro@zeniv.linux.org.uk
-Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
-References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
- <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
- <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
-Date:   Fri, 1 May 2020 09:18:34 +0200
+        Fri, 1 May 2020 03:20:29 -0400
+Received: from mout.web.de ([212.227.15.3]:56609 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgEAHU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 03:20:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588317624;
+        bh=EogFK9mFXseM1EoaAWr9HYeF9I61NVg6mcQkG25CP1g=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=LKDifLjDpw9h5M5lPNlm/gD7rDyqjPS5+7cN2AVR9AnmywQL1ZYlOdF5lVmCd6yLj
+         PMPW8KidtwGPsnSkBWNOvUocE7gAOoLIps9JLaTkxHiCpu68ZxcI6LPhOvN5HYXSHA
+         TfWVGLL4Hnt98AjwuMgvxIuj60Q21FrX515/o4Dw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.136.146]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MQc7J-1jbnIj0K4b-00U5Bl; Fri, 01
+ May 2020 09:20:24 +0200
+Subject: Re: Improving documentation for programming interfaces
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-doc@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <350cd156-9080-24fe-c49e-96e758d3ca45@web.de>
+ <20191220151945.GD59959@mit.edu>
+ <17931ddd-76ec-d342-912c-faed6084e863@metux.net>
+ <748b8572-a3b3-c084-e8e3-de420f53e468@web.de>
+ <20200108161428.GA263696@mit.edu>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <5185a8a7-1fdd-a9b9-eeef-f5952485e1c0@web.de>
+Date:   Fri, 1 May 2020 09:20:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+In-Reply-To: <20200108161428.GA263696@mit.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_02:2020-04-30,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=992
- impostorscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005010047
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:98nnpJot3ONhAS0PiXP7RR9WvWuB2e6rhfRQQ2fXopta8obkrWA
+ tL4ovlnMzJA66ouyhqv0tl9S70UhZWWcxp1L3YxvxevRYuarwVk5UIqLSgMl4pZyG7bYukr
+ lyFex4nlygfvhJ35s0q+SIKy6tmQvD9iUyce4D1XRRxAVxG0q2wRJSRjNi6OEjOkUTHooI6
+ j00XnWTuooCL43LqU/BWA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+UJ4aKKsfa4=:GIoLbEqqfRxN0rdKCQUv4X
+ tIixMC5ttPC11fXXuI5RwdWlF6W98hRUWcD05DRd9N1oXDgM+OJFFh0H5sqpyRV5K6a0WqSx9
+ +WwDLbiUfBVbAODTszCYNqRgkc088knYeI1JQroZx4xMLoIrhfQPcp6rMmQV0MpUp9VKKRIVI
+ IwoWF7acZXNMG27iBhPM8CGp9QHjwRUNEu7kVAkBdLlspV/LY0uedRc+8sUMbm6hVQWiga7a6
+ ba+ihUaOlUkR4VpEqCVGQrRb6WiEIoyvbogbiShL1bDNZ+YBS8FaRdO5AasiIFVuk2dwx/OXC
+ PqeETQjH9rH8nxIjwC3AEp4ehDejYL9XfQrIHNa6B1qDS/s3RaPbcujJOgLPb52O804LCdy3d
+ ZJ7Qha3lXvW9hCE78/a9s+kP31zkkufd+Xb5FQnlCkK2cFVu6p9UcW9YHu04cR9qDytMbwf56
+ wsIA3yVGS+jPUwcWlbrKIbbIJ5K4v/A64qYSsLLwtvkVdeeFOOEV44IU26n9U/klLM4DbZuVz
+ EbxBTtWLdqw5i+JwTFecpUHRQe2ycJp0Q7TrYRak+zqbcf3Nq09/8/uOpn71E3y3FDe3aLKQQ
+ vf5U0E5P1qE8GwIkVbUfxIXNPYi6LD9Uakx+P4P/tOtiZcmVcFO9ftiSVv30yKC22jhIC59P/
+ kG2hMpAjwK676shL6nLKBIi0nQUkKC5dcH125LGOUqAKI6lhBmZH1OdHLb1pCZYn1dUnjmCTa
+ tgl8+EXN78WwDzZk/g2GVdog6lCktBrbl4rsgJic6Hs9OXOogrpkShBSfjZe/s8SOHnaSP5mv
+ P/kIRlk8fHGMOeGEbCsbwS+ZBgee4ociX53wFwSuKCRpQx2Zw1dPc8dZB2ME4zUijdZsR7XFg
+ bRmKv78KXeVVwfMMXQgEZxdz2SmP7kDDGj5Jj8sqnBrjiYipobVvLgT6EQTlqEy+OluRbeSV9
+ FZSmrH1YCdQRI/PHsXKsxDgzCSrdqUiTsbupXzdSGbByqBn80+k5OrxG1CDLnML4lnavST3XM
+ 7mWuGthR0vP4DVPCnO09fPOaDHXnhYOJjMf3TKjNe3Ue3odhAjpN/wXD+tsLK4Nq2gUBx3m76
+ I7WfKjWKC+zJgMs2YcKiTLv7PboJ2nnO34KT3kom3rlOA50Q6McSCaEPMNVguIjAcOu/+TkGn
+ C6JXEXClhbyDKfu110ijK9tpZs4SZhVU0V3qtdsKFmpz5lRklCKO4QqHnLQRjz7jfFWRhXQ7T
+ sS/oWkmQqbpaDecqq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>> I propose to encode helpful information into macro calls as needed
+>> for the C programming language.
+=E2=80=A6
+> On the "benefits" side of the equation, is there are ways in which it
+> will directly benefit the kernel developers who will need to review
+> the patches and review the annotations, that can be demonstrated
+> immediately?  Not in some abstract way, or "when I my research work is
+> completed", but a very concrete way that will be obvious to those of
+> us who are still not completely convinced?
 
+Would any contributors like to clarify further possibilities around
+the application of source code annotation languages?
 
-On 01.05.20 00:06, Dave Hansen wrote:
-> I was also wondering if Claudio was right about the debug patch having
-> races.  I went to go look how the s390 code avoids races when pages go
-> from accessible->inaccessible.
-> 
-> Because, if if all of the traps are in place to transform pages from
-> inaccessible->accessible, the code *after* those traps is still
-> vulnerable.  What *keeps* pages accessible?
-> 
-> The race avoidance is this, basically:
-> 
-> 	down_read(&gmap->mm->mmap_sem);
-> 	lock_page(page);
->         ptep = get_locked_pte(gmap->mm, uaddr, &ptelock);
-> ...
->>         expected = expected_page_refs(page);
->>         if (!page_ref_freeze(page, expected))
->>                 return -EBUSY;
->>         set_bit(PG_arch_1, &page->flags);
->>         rc = uv_call(0, (u64)uvcb);
->>         page_ref_unfreeze(page, expected);
-> 
-> ... up_read(mmap_sem) / unlock_page() / unlock pte
-> 
-> I'm assuming that after the uv_call(), the page is inaccessible and I/O
-> devices will go boom if they touch the page.
-> 
-> The page_ref_freeze() ensures that references come between the
-> freeze/unfreeze are noticed, but it doesn't actually *stop* new ones for
-> users that hold references already.  For the page cache, especially,
-> someone could do:
-> 
-> 	page = find_get_page();
-> 	arch_make_page_accessible();
-> 					lock_page();
-> 	...				make_secure_pte();
-
-Not sure if I got your point here, but this make_secure_pte should bail
-out because we actually do check for a calculated refcount value and return
--EBUSY. The find_get_page should have raised this refcount to a value that
-would go beyond the expected value, No? 
-
-
-> 					unlock_page();
-> 	get_page();
-> 	// ^ OK because I have a ref
-> 	// do DMA on inaccessible page
-> 
-> Because the make_secure_pte() code isn't looking for a *specific*
-> 'expected' value, it has no way of noticing that the extra ref snuck in
-> there.
-
-I think the expected calcution is actually doing that,giving back the minimum
-value when no one else has any references that are valid for I/O.
-
-But I might not have understood what you are trying to tell me?
-
-> 
-> I _think_ expected actually needs to be checked for having a specific
-> (low) value so that if there's a *possibility* of a reference holder
-> acquiring additional references, the page is known to be off-limits.
-> mm/migrate.c has a few examples of this, but I'm not quite sure how
-> bulletproof they are.  Some of it appears to just be optimizations.
-> 
-> 
-> 
-b
+Regards,
+Markus
