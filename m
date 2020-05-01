@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA17C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA574C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADCF4208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB02208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340332;
-	bh=B1uZsd6re70zLVq6PjRevFnz2XLlg1hnPKISIIgjAf4=;
+	s=default; t=1588340335;
+	bh=EzBuUbP+MAp5jtdhazYUJEvVoX5tSl+lvg7WtwU5M/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AjLFj/KAqaegyYnPfa2Lns4ztbnx1WdYB+wQNPC2z7cQfZk/QyzqEM1WWPswRa8Rw
-	 vy81QwXbUk3Fn7Y69CrqTWdOW7nXj0rE8XwvFla1RIw9eITFFx+E89SM1JphJCX8Qi
-	 rb5Z0n2584F/Npa7tNsN2QJnl8xdTjPUVprNI1Pc=
+	b=DSVs7yX57+Ucri6plWuoo6qyAinQwhplCA9tu5afRkZZkgDRy28JhK31bUge/Erun
+	 +Ppi4ZreHGQukIsIX2ePW/r1nT23C9ixPDEpDngLfpx0N65V/fHIG5LJ30sHW0VN7m
+	 hF00i3iG1wWit4uT2A/NRoGrgDkqZhLG6R5cdpX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbgEANiv (ORCPT
+        id S1731104AbgEANiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:38:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbgEANir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:47 -0400
+        id S1730124AbgEANip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81B14205C9;
-        Fri,  1 May 2020 13:38:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1638220757;
+        Fri,  1 May 2020 13:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340327;
-        bh=B1uZsd6re70zLVq6PjRevFnz2XLlg1hnPKISIIgjAf4=;
+        s=default; t=1588340324;
+        bh=EzBuUbP+MAp5jtdhazYUJEvVoX5tSl+lvg7WtwU5M/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVWCa9kborbPU5w3HTqBix+g4vdJRI2B/41K+r5oW3zQ3xf8gFUaJwcbfyhtY7L+l
-         5THK4+rHZnhyjFwz9igAmWRH5WJcv0sZ5tNjanopWv7UBEG4aFQ/zxejDlb6KPN4P3
-         37C13VgDqf0/Tml5RrtuGdvVEJ69/f2i2VRorD4Q=
+        b=ziWPgqnUz8VYhb1Od3tUnxA3fYhJBZPGEXkJx/Y5aSNauv5Q0xKmEBSjAyIWzkZZo
+         8tu3/mZR+7r1SDBuuSncW+gb5+NUbLbjuIbHcc+avX9znnBgB7DPngadrN0AXOF1A2
+         e8vO8CVEPiVfqI1ZBUU2F+OnIb8CDLuzbwzAEFzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.4 10/83] afs: Fix to actually set AFS_SERVER_FL_HAVE_EPOCH
-Date:   Fri,  1 May 2020 15:22:49 +0200
-Message-Id: <20200501131526.444132472@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 5.4 19/83] drivers: soc: xilinx: fix firmware driver Kconfig dependency
+Date:   Fri,  1 May 2020 15:22:58 +0200
+Message-Id: <20200501131528.930744749@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -58,40 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 69cf3978f3ada4e54beae4ad44868b5627864884 upstream.
+commit d0384eedcde21276ac51f57c641f875605024b32 upstream.
 
-AFS keeps track of the epoch value from the rxrpc protocol to note (a) when
-a fileserver appears to have restarted and (b) when different endpoints of
-a fileserver do not appear to be associated with the same fileserver
-(ie. all probes back from a fileserver from all of its interfaces should
-carry the same epoch).
+The firmware driver is optional, but the power driver depends on it,
+which needs to be reflected in Kconfig to avoid link errors:
 
-However, the AFS_SERVER_FL_HAVE_EPOCH flag that indicates that we've
-received the server's epoch is never set, though it is used.
+aarch64-linux-ld: drivers/soc/xilinx/zynqmp_power.o: in function `zynqmp_pm_isr':
+zynqmp_power.c:(.text+0x284): undefined reference to `zynqmp_pm_invoke_fn'
 
-Fix this to set the flag when we first receive an epoch value from a probe
-sent to the filesystem client from the fileserver.
+The firmware driver can probably be allowed for compile-testing as
+well, so it's best to drop the dependency on the ZYNQ platform
+here and allow building as long as the firmware code is built-in.
 
-Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: ab272643d723 ("drivers: soc: xilinx: Add ZynqMP PM driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20200408155224.2070880-1-arnd@arndb.de
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/cmservice.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/xilinx/Kconfig |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -169,7 +169,7 @@ static int afs_record_cm_probe(struct af
+--- a/drivers/soc/xilinx/Kconfig
++++ b/drivers/soc/xilinx/Kconfig
+@@ -19,7 +19,7 @@ config XILINX_VCU
  
- 	spin_lock(&server->probe_lock);
- 
--	if (!test_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
-+	if (!test_and_set_bit(AFS_SERVER_FL_HAVE_EPOCH, &server->flags)) {
- 		server->cm_epoch = call->epoch;
- 		server->probe.cm_epoch = call->epoch;
- 		goto out;
+ config ZYNQMP_POWER
+ 	bool "Enable Xilinx Zynq MPSoC Power Management driver"
+-	depends on PM && ARCH_ZYNQMP
++	depends on PM && ZYNQMP_FIRMWARE
+ 	default y
+ 	help
+ 	  Say yes to enable power management support for ZyqnMP SoC.
+@@ -31,7 +31,7 @@ config ZYNQMP_POWER
+ config ZYNQMP_PM_DOMAINS
+ 	bool "Enable Zynq MPSoC generic PM domains"
+ 	default y
+-	depends on PM && ARCH_ZYNQMP && ZYNQMP_FIRMWARE
++	depends on PM && ZYNQMP_FIRMWARE
+ 	select PM_GENERIC_DOMAINS
+ 	help
+ 	  Say yes to enable device power management through PM domains
 
 
