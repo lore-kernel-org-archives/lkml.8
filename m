@@ -2,85 +2,101 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7836DC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E94C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 599AE2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771E02073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 04:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbgEAEAn (ORCPT
+        id S1728220AbgEAEDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 00:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgEAEAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 00:00:43 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF97C035494;
-        Thu, 30 Apr 2020 21:00:43 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUMqj-00FaZY-JM; Fri, 01 May 2020 04:00:29 +0000
-Date:   Fri, 1 May 2020 05:00:29 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Fri, 1 May 2020 00:03:15 -0400
+Received: from namei.org ([65.99.196.166]:56446 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbgEAEDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 00:03:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 04142GZx030634;
+        Fri, 1 May 2020 04:02:16 GMT
+Date:   Fri, 1 May 2020 14:02:16 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
         Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- bpf-next tree
-Message-ID: <20200501040029.GI23230@ZenIV.linux.org.uk>
-References: <20200429164507.35ac444b@canb.auug.org.au>
- <20200429064702.GA31928@lst.de>
- <CAADnVQJWLPpt6tEGo=KkLBaHLpwZFLBfZX7UB4Z6+hMf6g220w@mail.gmail.com>
- <20200429065404.GA32139@lst.de>
- <20200429182406.67582a6a@canb.auug.org.au>
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] fs: Add a MAY_EXECMOUNT flag to infer the noexec
+ mount property
+In-Reply-To: <20200428175129.634352-3-mic@digikod.net>
+Message-ID: <alpine.LRH.2.21.2005011357290.29679@namei.org>
+References: <20200428175129.634352-1-mic@digikod.net> <20200428175129.634352-3-mic@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429182406.67582a6a@canb.auug.org.au>
+Content-Type: multipart/mixed; BOUNDARY="1665246916-2066436414-1588305635=:29679"
+Content-ID: <alpine.LRH.2.21.2005011402110.29679@namei.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 06:24:06PM +1000, Stephen Rothwell wrote:
-> Hi Christoph,
-> 
-> On Wed, 29 Apr 2020 08:54:04 +0200 Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 11:49:34PM -0700, Alexei Starovoitov wrote:
-> > > On Tue, Apr 28, 2020 at 11:47 PM Christoph Hellwig <hch@lst.de> wrote:  
-> > > >
-> > > > On Wed, Apr 29, 2020 at 04:45:07PM +1000, Stephen Rothwell wrote:  
-> > > > >
-> > > > > Today's linux-next merge of the akpm-current tree got a conflict in:
-> > > > >
-> > > > >   kernel/sysctl.c
-> > > > >
-> > > > > between commit:
-> > > > >
-> > > > >   f461d2dcd511 ("sysctl: avoid forward declarations")
-> > > > >
-> > > > > from the bpf-next tree and commits:  
-> > > >
-> > > > Hmm, the above should have gone in through Al..  
-> > > 
-> > > Al pushed them into vfs tree and we pulled that tag into bpf-next.  
-> > 
-> > Ok.  And Stephen pulled your tree first.
-> 
-> No, it is not in the branch I fetch from Al yet.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Now it is...
+--1665246916-2066436414-1588305635=:29679
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <alpine.LRH.2.21.2005011402111.29679@namei.org>
+
+On Tue, 28 Apr 2020, Mickaël Salaün wrote:
+
+> An LSM doesn't get path information related to an access request to open
+> an inode.  This new (internal) MAY_EXECMOUNT flag enables an LSM to
+> check if the underlying mount point of an inode is marked as executable.
+> This is useful to implement a security policy taking advantage of the
+> noexec mount option.
+> 
+> This flag is set according to path_noexec(), which checks if a mount
+> point is mounted with MNT_NOEXEC or if the underlying superblock is
+> SB_I_NOEXEC.
+> 
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> Reviewed-by: Philippe Trébuchet <philippe.trebuchet@ssi.gouv.fr>
+> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+> Cc: Aleksa Sarai <cyphar@cyphar.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+
+Are there any existing LSMs which plan to use this aspect?
+
+-- 
+James Morris
+<jmorris@namei.org>
+--1665246916-2066436414-1588305635=:29679--
