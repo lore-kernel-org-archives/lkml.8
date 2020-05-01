@@ -2,210 +2,243 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56174C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F4FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE70208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hqWgrff+"
+	by mail.kernel.org (Postfix) with ESMTP id 1844C2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgEACE5 (ORCPT
+        id S1728103AbgEACG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:04:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727889AbgEACE4 (ORCPT
+        Thu, 30 Apr 2020 22:06:59 -0400
+Received: from m9a0014g.houston.softwaregrp.com ([15.124.64.90]:33378 "EHLO
+        m9a0014g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727889AbgEACG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:04:56 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83968C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:04:56 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id l11so2915151lfc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 19:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xvEtBQcAc7F3ek4wdEUS9jWPcHLM+s7YTeCebZ+jMU8=;
-        b=hqWgrff+6hxpFj99vsFqB4lkEPncpj2Ttqv8BXb+fUeVxQ3gBbOG6bcAjKYYmB/h4N
-         sQCd5ocRjBiVjLylBSp1G1t+bp2HKoUZEgf/Z1LshZN1+h4aLpjHbVU/NXBvDGmzYLh+
-         zI6x3m06VsXz8EB9QgN5JouGa6FNiXSR/v1BEho06X3XcKP0/NZaYOmDSLhXCjVD9Ex5
-         menkv9Xc7jFF7J1OCUiYcvXSp1F0fA8+qT12pM0tHbbH20I8saoL0+rtCdF09hqXFtX2
-         SuxK7k6cSwaRUgA/2OJc1t78RwXvebb5Gvlc6ddNvNR8Ut1EZj8KrnYX5xu8ysNJEMRd
-         p6WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xvEtBQcAc7F3ek4wdEUS9jWPcHLM+s7YTeCebZ+jMU8=;
-        b=nvZtJxW61VghPoixi9siYBx5Vx3O2y2kiYG5Wvgh5WmPD/u6guysjwGYwRScgJ1B/B
-         Q/RSTzbUc6mrGBtqkq2HHTi/v7n5DapGn1azZwjvL34SwrhDkMv0EB04adOSLCOQeYcu
-         jaxae8mL4xgjEobqGCrV2G9GF5LGCOyorUEzjZ1MapQPlZxF2VqKVx5NjgmLT4yB7M0i
-         57CAgZuNmhJy1abTcD/KC6leb57bmcgbw5fJ3xFDeIaFVheH3gRpQYYgXEuV947hTf+m
-         36eruhQGJnefd9WPG/L908Bmckhy0vndhbW4yfyuuC2fKqKUbCgKiPfqgr5DtIx+mTtG
-         Df7w==
-X-Gm-Message-State: AGi0PubxpeYHk8KMZf2a9fJBiS6C7YYtzzK0GImJ4uZlIIlSJkfm32S9
-        DcSd0XqG6oKdCFwDQnTL1PhJtVSaFiLHBaEH4KwSZw==
-X-Google-Smtp-Source: APiQypLK/VwayTTDJRp1VfQ6VPluP/T1Uaz/SpEaZLtNJKDUCtWjo1kyo6nBqt5Ia7fxH/1/U7UXDYGxTCDIA4rYXu8=
-X-Received: by 2002:a05:6512:318a:: with SMTP id i10mr1027885lfe.96.1588298694609;
- Thu, 30 Apr 2020 19:04:54 -0700 (PDT)
+        Thu, 30 Apr 2020 22:06:58 -0400
+Received: FROM m9a0014g.houston.softwaregrp.com (15.121.0.190) BY m9a0014g.houston.softwaregrp.com WITH ESMTP;
+ Fri,  1 May 2020 02:06:16 +0000
+Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
+ M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Fri, 1 May 2020 02:06:11 +0000
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (15.124.72.13) by
+ M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Fri, 1 May 2020 02:06:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OlD0WJdcfoIqcmvTRMkKCrcvXa7vDB2dJJ56dY7Erfn4bWq/aLGoKgJ+xTIA8xjokA7lVdWIjoC9+ShgHCHWcQapVZrfQsTlg8jaXoueIZGCX4zRPed1RlObodIT9fQMhZxuTLtrzwAtsJA0QT0PxZ+bJP2c40m7OE7aiuGnmcihiRju+eMXkMFjsGwr2W5w0GWMegMMS2QcerDVWZNFPYXPr+vO6LTHQP3hW2vAQC3tMY38A6499uxEP0pd/T2g3ooomOf8x9dkKlb2hVdCuX/7JD09KeGMGFf0vnPQezNCvYk+kb4lb7sbydw4PG0OVArbbERcPjD1ACrxeyyNLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dPuAif0I1qnYRWSt3rpDW0xRDYROJC7sg3ILjhLzCpw=;
+ b=NW+pk4QDDp3KYy3gi/GzoDUZEZybkojhjtNpHUesj10fasgeAlrbxo+BbkT8EDgZYgrPEjv9t/O95EVdtFsaeYpqxOFoKwUX4R8vPdqPJqwiCoCAdQE7WELomgmP8vxOuAZoZOjEmynCV9l1rYSZCNkrm4ZtsYkG01A0GiCSkaVDf8WGnkKZctkhvW8ZLXrXPorDUYMx0POaXxHd+LHpfGnSUg4cglbyn9yrd82kYsfZi+p1uADHKpgzf25vx3Jdkq5swIKBgwe/vz4gEKSJyJ7XP4MS90qE7dgGJID6+R7ympvFVtNcSEdc9FqLjt8PpwWsvMugn0DCVMNuKEvnUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: toxicpanda.com; dkim=none (message not signed)
+ header.d=none;toxicpanda.com; dmarc=none action=none header.from=suse.com;
+Received: from MN2PR18MB2416.namprd18.prod.outlook.com (2603:10b6:208:a9::25)
+ by MN2PR18MB3447.namprd18.prod.outlook.com (2603:10b6:208:26d::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Fri, 1 May
+ 2020 02:06:09 +0000
+Received: from MN2PR18MB2416.namprd18.prod.outlook.com
+ ([fe80::8cf0:641e:631d:7a6]) by MN2PR18MB2416.namprd18.prod.outlook.com
+ ([fe80::8cf0:641e:631d:7a6%4]) with mapi id 15.20.2937.028; Fri, 1 May 2020
+ 02:06:08 +0000
+Subject: Re: linux-next: manual merge of the btrfs tree with the btrfs-fixes
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Sterba <dsterba@suse.cz>
+CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>
+References: <20200501102453.4b80d290@canb.auug.org.au>
+ <20200501110558.586c1d07@canb.auug.org.au>
+From:   Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0GFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPokBTQQTAQgAOAIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJdnDWhAAoJEMI9kfOhJf6oZgoH
+ 90uqoGyUh5UWtiT9zjUcvlMTCpd/QSgwagDuY+tEdVPaKlcnTNAvZKWSit8VuocjrOFbTLwb
+ vZ43n5f/l/1QtwMgQei/RMY2XhW+totimzlHVuxVaIDwkF+zc+pUI6lDPnULZHS3mWhbVr9N
+ vZAAYVV7GesyyFpZiNm7GLvLmtEdYbc9OnIAOZb3eKfY3mWEs0eU0MxikcZSOYy3EWY3JES7
+ J9pFgBrCn4hF83tPH2sphh1GUFii+AUGBMY/dC6VgMKbCugg+u/dTZEcBXxD17m+UcbucB/k
+ F2oxqZBEQrb5SogdIq7Y9dZdlf1m3GRRJTX7eWefZw10HhFhs1mwx7kBDQRZ1YGvAQgAqlPr
+ YeBLMv3PAZ75YhQIwH6c4SNcB++hQ9TCT5gIQNw51+SQzkXIGgmzxMIS49cZcE4KXk/kHw5h
+ ieQeQZa60BWVRNXwoRI4ib8okgDuMkD5Kz1WEyO149+BZ7HD4/yK0VFJGuvDJR8T7RZwB69u
+ VSLjkuNZZmCmDcDzS0c/SJOg5nkxt1iTtgUETb1wNKV6yR9XzRkrEW/qShChyrS9fNN8e9c0
+ MQsC4fsyz9Ylx1TOY/IF/c6rqYoEEfwnpdlz0uOM1nA1vK+wdKtXluCa79MdfaeD/dt76Kp/
+ o6CAKLLcjU1Iwnkq1HSrYfY3HZWpvV9g84gPwxwxX0uXquHxLwARAQABiQE8BBgBCAAmAhsM
+ FiEELd9y5aWlW6idqkLhwj2R86El/qgFAl2cNa4FCQlqTn8ACgkQwj2R86El/qhXBAf/eXLP
+ HDNTkHRPxoDnwhscIHJDHlsszke25AFltJQ1adoaYCbsQVv4Mn5rQZ1Gon54IMdxBN3r/B08
+ rGVPatIfkycMCShr+rFHPKnExhQ7Wr555fq+sQ1GOwOhr1xLEqAhBMp28u9m8hnkqL36v+AF
+ hjTwRtS+tRMZfoG6n72xAj984l56G9NPfs/SOKl6HR0mCDXwJGZAOdtyRmqddi53SXi5N4H1
+ jWX1xFshp7nIkRm6hEpISEWr/KKLbAiKKbP0ql5tP5PinJeIBlDv4g/0+aGoGg4dELTnfEVk
+ jMC8cJ/LiIaR/OEOF9S2nSeTQoBmusTz+aqkbogvvYGam6uDYw==
+Message-ID: <48fbead1-bd3b-e182-6916-1c3652d4de08@suse.com>
+Date:   Fri, 1 May 2020 10:06:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200501110558.586c1d07@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="mlBc0qm6MnsL2qfir5K0ixhmA1g1kT8qE"
+X-ClientProxiedBy: BYAPR02CA0001.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::14) To MN2PR18MB2416.namprd18.prod.outlook.com
+ (2603:10b6:208:a9::25)
 MIME-Version: 1.0
-References: <20200430182712.237526-1-shakeelb@google.com> <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
-In-Reply-To: <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 30 Apr 2020 19:04:43 -0700
-Message-ID: <CALvZod4gZ_Q=Kuh-Fx-EsKzxmtPKy5xu+gpPpjV6MYW4Ku=JbA@mail.gmail.com>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [0.0.0.0] (149.28.201.231) by BYAPR02CA0001.namprd02.prod.outlook.com (2603:10b6:a02:ee::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 02:06:06 +0000
+X-Originating-IP: [149.28.201.231]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 63981052-7ec6-42eb-14b1-08d7ed743663
+X-MS-TrafficTypeDiagnostic: MN2PR18MB3447:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB3447CCCC108E85826F3A913AD6AB0@MN2PR18MB3447.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jjP4Z0xCnbJuNBYdBlCZhEL6gEvoDH8XyJdKnym6ZOP5l0InnGP7A37EB/nCDCF5HrebQ8bzwDE0oKP96VuVZ2vmHSGmxwgsKZieV6uZZHsCmp6yRHkVAYL6Gjq8F+2dc/mt7OckNrTAKAS2OGFhAyF0xVPbMX5/EVO688HCfyi325oxqoPFExLKLe/QvR82DX5ZoQXWYOqMT7ky6YdAep5WvmAjTcFlBsZmpPpAHahAVq2RMefuoKOMgvULNSMopXEvwTUTZ7Vr582655DSTTLhzedrQeczV60WqGfJx5PANIArgBGI6LLG3ieATxTp+u16J4uUyNSidrJ7/kmzsOt9qtDpksMcE9hTmrzcJ1ZmAMgnORZp7v0C/DtKy/InW8PGfs7hIwInWEkXHeGcFCof422x0za2b0gym4jom/7AN0b7t1cfSJAnrKt5nctrWysSAcJgd19ZjuUmsIsfv8QRLM+cL091QM2m06CA9O+2T0Lo50qkowi6Zw8Fml7E+pQbB8ks8KldzYsCzkDQun2lreasOke2cSzJTi0/DuM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR18MB2416.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(376002)(346002)(39860400002)(36756003)(54906003)(478600001)(8936002)(110136005)(16576012)(26005)(235185007)(31696002)(6486002)(5660300002)(2906002)(86362001)(6706004)(8676002)(316002)(6666004)(16526019)(66476007)(186003)(66946007)(66556008)(2616005)(956004)(31686004)(4326008)(33964004)(21480400003)(52116002)(78286006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: in1D2m2xcnXL6T+N49x3d/dOz5S/h7J2GqPIWQHvfQ96aAwLogtHs8Wzti3K6Uoo36bZLOaQe9m+R0tqqbO/GUFH5uo15sl8VvRdcqjPh4IQNadDX+9Yvi20E5UUJWH5mhLNAR8lq7WGphoaPJ9WCWtONlaT7XfupckbZxpdmizKZxgV/DA9LV9xhXPyYQJwMTZPyRH4zP969eRWVa3Ri6MNCGy81hd6qLBiFmWEFf0Q5Q0dtXizGzpWRm40aPle/Nb0vZrcsG2Oj+OYxFMVlVgql6sjsdNspAP1yQA8CXkToMIWfWyHlhukegdzhPcx0v2sBnPmENHE29g5MDTKEaLNR38lIDwcPXS4zdzyRLVuWfubt1K1cQFPxMw4O6xcPwl15TfHlgWx6LZNhnXxwIIcKgLhaK0GOUt5aSOJDQAypR8/UodtRQw2Zrj6kamGafDPfg/fQbgoZ8ADvekVZk1/J3KsmEcn7i9HocKpCI5dOrt9AoZTePqzvgdYY2gIho0MeUDiVKK2DB/v87tw3TfiawEGL0bXwDax2cVQaogXEQwjsbb23+4fieFD2AP5ulOKQ741HMGkDowwWRzO1Yd2aCFGN1b+YD0EjN0weBwfGC6KVvBpjzvKPJsshXHkvR+0N608hkBdA3WfEpE4HKzzBIiutIa5/LI3nKQw63KwFp+3M+Ow+RHqURzJDRGrYIPrmD+pOo0nex6gBYhloYOmowdnDt3uYAMcv6HJi2S3uA33LkXLKPEpUlnd/KhlQ1yyHi8pS8hRsAXg62Q4nFrbwz6OjuhhFjOZRjW5W8Q=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63981052-7ec6-42eb-14b1-08d7ed743663
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 02:06:08.4264
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZYj4nXJmLZ0qaK3Scv0yoEBkOwkFJV56uX8G/q2IvhcjSAXeDK5z9Cf23hRny6t+
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3447
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 6:39 PM Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> On Fri, May 1, 2020 at 2:27 AM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > Lowering memory.max can trigger an oom-kill if the reclaim does not
-> > succeed. However if oom-killer does not find a process for killing, it
-> > dumps a lot of warnings.
-> >
->
-> I have been confused by this behavior for several months and I think
-> it will confuse more memcg users.
-> We should keep the memcg oom behavior consistent with system oom - no
-> oom kill if no process.
->
-> What about bellow change ?
->
+--mlBc0qm6MnsL2qfir5K0ixhmA1g1kT8qE
+Content-Type: multipart/mixed; boundary="6NkkB1vXyRZnfsTtr9T4f6yqEzenPVviz"
 
-Seems fine to me. If others are ok with this, please do send a signed-off patch.
+--6NkkB1vXyRZnfsTtr9T4f6yqEzenPVviz
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index e28098e13f1c..25fbc37a747f 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6086,6 +6086,9 @@ static ssize_t memory_max_write(struct
-> kernfs_open_file *of,
->                         continue;
->                 }
->
-> +               if (!cgroup_is_populated(memcg->css.cgroup))
-> +                       break;
-> +
->                 memcg_memory_event(memcg, MEMCG_OOM);
->                 if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
->                         break;
->
-> > Deleting a memcg does not reclaim memory from it and the memory can
-> > linger till there is a memory pressure. One normal way to proactively
-> > reclaim such memory is to set memory.max to 0 just before deleting the
-> > memcg. However if some of the memcg's memory is pinned by others, this
-> > operation can trigger an oom-kill without any process and thus can log a
-> > lot un-needed warnings. So, ignore all such warnings from memory.max.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > ---
-> >  include/linux/oom.h | 3 +++
-> >  mm/memcontrol.c     | 9 +++++----
-> >  mm/oom_kill.c       | 2 +-
-> >  3 files changed, 9 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/include/linux/oom.h b/include/linux/oom.h
-> > index c696c265f019..6345dc55df64 100644
-> > --- a/include/linux/oom.h
-> > +++ b/include/linux/oom.h
-> > @@ -52,6 +52,9 @@ struct oom_control {
-> >
-> >         /* Used to print the constraint info. */
-> >         enum oom_constraint constraint;
-> > +
-> > +       /* Do not warn even if there is no process to be killed. */
-> > +       bool no_warn;
-> >  };
-> >
-> >  extern struct mutex oom_lock;
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 317dbbaac603..a1f00d9b9bb0 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -1571,7 +1571,7 @@ unsigned long mem_cgroup_size(struct mem_cgroup *memcg)
-> >  }
-> >
-> >  static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> > -                                    int order)
-> > +                                    int order, bool no_warn)
-> >  {
-> >         struct oom_control oc = {
-> >                 .zonelist = NULL,
-> > @@ -1579,6 +1579,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> >                 .memcg = memcg,
-> >                 .gfp_mask = gfp_mask,
-> >                 .order = order,
-> > +               .no_warn = no_warn,
-> >         };
-> >         bool ret;
-> >
-> > @@ -1821,7 +1822,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
-> >                 mem_cgroup_oom_notify(memcg);
-> >
-> >         mem_cgroup_unmark_under_oom(memcg);
-> > -       if (mem_cgroup_out_of_memory(memcg, mask, order))
-> > +       if (mem_cgroup_out_of_memory(memcg, mask, order, false))
-> >                 ret = OOM_SUCCESS;
-> >         else
-> >                 ret = OOM_FAILED;
-> > @@ -1880,7 +1881,7 @@ bool mem_cgroup_oom_synchronize(bool handle)
-> >                 mem_cgroup_unmark_under_oom(memcg);
-> >                 finish_wait(&memcg_oom_waitq, &owait.wait);
-> >                 mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
-> > -                                        current->memcg_oom_order);
-> > +                                        current->memcg_oom_order, false);
-> >         } else {
-> >                 schedule();
-> >                 mem_cgroup_unmark_under_oom(memcg);
-> > @@ -6106,7 +6107,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
-> >                 }
-> >
-> >                 memcg_memory_event(memcg, MEMCG_OOM);
-> > -               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
-> > +               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0, true))
-> >                         break;
-> >         }
-> >
-> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> > index 463b3d74a64a..5ace39f6fe1e 100644
-> > --- a/mm/oom_kill.c
-> > +++ b/mm/oom_kill.c
-> > @@ -1098,7 +1098,7 @@ bool out_of_memory(struct oom_control *oc)
-> >
-> >         select_bad_process(oc);
-> >         /* Found nothing?!?! */
-> > -       if (!oc->chosen) {
-> > +       if (!oc->chosen && !oc->no_warn) {
-> >                 dump_header(oc, NULL);
-> >                 pr_warn("Out of memory and no killable processes...\n");
-> >                 /*
-> > --
-> > 2.26.2.526.g744177e7f7-goog
-> >
-> >
->
->
-> --
-> Thanks
-> Yafang
+
+
+On 2020/5/1 =E4=B8=8A=E5=8D=889:05, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> On Fri, 1 May 2020 10:24:53 +1000 Stephen Rothwell <sfr@canb.auug.org.a=
+u> wrote:
+>>
+>> Today's linux-next merge of the btrfs tree got a conflict in:
+>>
+>>   fs/btrfs/transaction.c
+>>
+>> between commit:
+>>
+>>   fcc99734d1d4 ("btrfs: transaction: Avoid deadlock due to bad initial=
+ization timing of fs_info::journal_info")
+>>
+>> from the btrfs-fixes tree and commit:
+>>
+>>   f12ca53a6fd6 ("btrfs: force chunk allocation if our global rsv is la=
+rger than metadata")
+>>
+>> from the btrfs tree.
+>>
+>> I fixed it up (see below) and can carry the fix as necessary. This
+>> is now fixed as far as linux-next is concerned, but any non trivial
+>> conflicts should be mentioned to your upstream maintainer when your tr=
+ee
+>> is submitted for merging.  You may also want to consider cooperating
+>> with the maintainer of the conflicting tree to minimise any particular=
+ly
+>> complex conflicts.
+>>
+>> --=20
+>> Cheers,
+>> Stephen Rothwell
+>>
+>> diff --cc fs/btrfs/transaction.c
+>> index 2d5498136e5e,e4dbd8e3c641..000000000000
+>> --- a/fs/btrfs/transaction.c
+>> +++ b/fs/btrfs/transaction.c
+>> @@@ -666,15 -674,17 +672,26 @@@ got_it
+>>   		current->journal_info =3D h;
+>>  =20
+>>   	/*
+>>  +	 * btrfs_record_root_in_trans() needs to alloc new extents, and may=
+
+>>  +	 * call btrfs_join_transaction() while we're also starting a
+>>  +	 * transaction.
+>>  +	 *
+>>  +	 * Thus it need to be called after current->journal_info initialize=
+d,
+>>  +	 * or we can deadlock.
+>>  +	 */
+>>  +	btrfs_record_root_in_trans(h, root);
+>>  +
+>> + 	 * If the space_info is marked ALLOC_FORCE then we'll get upgraded =
+to
+>> + 	 * ALLOC_FORCE the first run through, and then we won't allocate fo=
+r
+>> + 	 * anybody else who races in later.  We don't care about the return=
+
+>> + 	 * value here.
+>> + 	 */
+>> + 	if (do_chunk_alloc && num_bytes) {
+>> + 		u64 flags =3D h->block_rsv->space_info->flags;
+>> + 		btrfs_chunk_alloc(h, btrfs_get_alloc_profile(fs_info, flags),
+>> + 				  CHUNK_ALLOC_NO_FORCE);
+>> + 	}
+>> +=20
+>>   	return h;
+
+The proper fix has landed in David's misc-next branch, which puts
+btrfs_record_root_in_trans(); after the if () {} code block.
+
+By that, btrfs_record_root_in_trans() has lesser chance to hit ENOSPC.
+
+Thanks,
+Qu
+
+>>  =20
+>>   join_fail:
+>=20
+>=20
+> I fixed the missing comment start in my resolution ...
+>=20
+
+
+--6NkkB1vXyRZnfsTtr9T4f6yqEzenPVviz--
+
+--mlBc0qm6MnsL2qfir5K0ixhmA1g1kT8qE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl6rhAsACgkQwj2R86El
+/qibUQf/dY62XZ6Ehd+ia1Md/nv4LDGJkz8X6n55vwxzwFhw2mdNH8w1zhr+N7Mw
+XAlqf7R8yTBQPZPgBi/dyJkvmuQ6Pbkc0Ww0ndL+Dq82UjT7hmqgPvwkz1yWWcqc
+VB0gDBI3Kkobw3eRixTHJj0oZnD+5AGL/9HErP3EqW6zE/f6x4pdenbiQzQBhmXl
+0fv21kmRIfweLOLrHoxT/3gWYLELC7YRhxtQEQOD56emyvjPoIS8T07Zdc5LPjYu
+i/KwyAkQSKl4hq2wch5/9O5LNqwMZUQDJ7Xe8761XUFpqHQtH7kXs3F2EcEiop32
+CcdpmAoOw5/e7Hkn/LBZC880Qev+Fw==
+=I2LR
+-----END PGP SIGNATURE-----
+
+--mlBc0qm6MnsL2qfir5K0ixhmA1g1kT8qE--
