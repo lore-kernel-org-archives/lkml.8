@@ -2,52 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D913C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA443C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA20208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB39724954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339928;
-	bh=8TbDRuEl7SW/hnCTYxbSPFoal6+jcufVGTTSkOU1tjg=;
+	s=default; t=1588339930;
+	bh=3Vt7GQd7wb3UKQ+yz3AyRQhXSNorH7+J3rSuYAXq8xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dd8qwNpckVG39DEDknEhcA8EtzqoFYHKaueutxbOtyQ1Exc13StHfwm7vDfSvwe3Q
-	 a7uTa9sfMQwXtxnbjS/JTgxmPwUo51Mujoa4IAJtZhkcGU9EL1Y8V8KFvwx/wFSltZ
-	 WCiRlCoM/+sza9EMrtxqOSsYuVzLiw3xEijuDRQw=
+	b=hrHH1z3j3sfUUulv7Z+6qfc9M307e3bYUVrBo7fciKsl22XXMdJttErXkPX11jIuH
+	 BrLbqkULXXh2p8Pe/tG6CMzI0L5VSHSvJegWSKUWuYR2iAK8rkUCOBYCx9bOCyubZR
+	 vY6Cr8/4sZWTgV1pl2yKJtTkcGAyxBhZhuGMINeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgEANcG (ORCPT
+        id S1730255AbgEANcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbgEANcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:03 -0400
+        id S1730243AbgEANcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D3E208C3;
-        Fri,  1 May 2020 13:32:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CDBA2166E;
+        Fri,  1 May 2020 13:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339923;
-        bh=8TbDRuEl7SW/hnCTYxbSPFoal6+jcufVGTTSkOU1tjg=;
+        s=default; t=1588339925;
+        bh=3Vt7GQd7wb3UKQ+yz3AyRQhXSNorH7+J3rSuYAXq8xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xzxi6t11NgSMGFU0p++M3v/gre/XdDiHpKmhUqPSIrTANwGJUJc7AURnDeFJyoCEf
-         QKcH32Q3fFWdpuLPYFBUVBu5KCmeDoHU+4SOxjtQ6qGM/25wow9ppbgIfomy3vjrtJ
-         nM9zT38rQcwV7P07nOlJGKAtblygqqklNR8LtgHE=
+        b=dsdw3CHD6dV7yA14iRA9JzfMwYs5gEGJNVvLioc1se4Z3ZygPBo7yK/1DwlAahw1Q
+         Llw0czcFmaWedFZvsKLzCVqKuX0eJuAkJAGrPCiI/qcOG7kFRqv+ovT5rckqFtjwCF
+         EFBLuYh5dQHwdIHg6YgQOmhxdirtosvwnoVeYZWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 021/117] perf/core: Disable page faults when getting phys address
-Date:   Fri,  1 May 2020 15:20:57 +0200
-Message-Id: <20200501131547.532803973@linuxfoundation.org>
+Subject: [PATCH 4.14 022/117] PCI/ASPM: Allow re-enabling Clock PM
+Date:   Fri,  1 May 2020 15:20:58 +0200
+Message-Id: <20200501131547.645799327@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,69 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
+[ Upstream commit 35efea32b26f9aacc99bf07e0d2cdfba2028b099 ]
 
-We hit following warning when running tests on kernel
-compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
+Previously Clock PM could not be re-enabled after being disabled by
+pci_disable_link_state() because clkpm_capable was reset.  Change this by
+adding a clkpm_disable field similar to aspm_disable.
 
- WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
- CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
- RIP: 0010:__get_user_pages_fast+0x1a4/0x200
- ...
- Call Trace:
-  perf_prepare_sample+0xff1/0x1d90
-  perf_event_output_forward+0xe8/0x210
-  __perf_event_overflow+0x11a/0x310
-  __intel_pmu_pebs_event+0x657/0x850
-  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
-  handle_pmi_common+0x1b2/0x650
-  intel_pmu_handle_irq+0x17b/0x370
-  perf_event_nmi_handler+0x40/0x60
-  nmi_handle+0x192/0x590
-  default_do_nmi+0x6d/0x150
-  do_nmi+0x2f9/0x3c0
-  nmi+0x8e/0xd7
-
-While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
-which warns on:
-
-  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
-
-Peter suggested disabling page faults around __get_user_pages_fast(),
-which gets rid of the warning in access_ok() call.
-
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
+Link: https://lore.kernel.org/r/4e8a66db-7d53-4a66-c26c-f0037ffaa705@gmail.com
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/pci/pcie/aspm.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 845c8a1a9d30a..c16ce11049de3 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6119,9 +6119,12 @@ static u64 perf_virt_to_phys(u64 virt)
- 		 * Try IRQ-safe __get_user_pages_fast first.
- 		 * If failed, leave phys_addr as 0.
- 		 */
--		if ((current->mm != NULL) &&
--		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
--			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+		if (current->mm != NULL) {
-+			pagefault_disable();
-+			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
-+				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
-+			pagefault_enable();
-+		}
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 6f58767b5190f..400031622b761 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -80,6 +80,7 @@ struct pcie_link_state {
+ 	u32 clkpm_capable:1;		/* Clock PM capable? */
+ 	u32 clkpm_enabled:1;		/* Current Clock PM state */
+ 	u32 clkpm_default:1;		/* Default Clock PM state by BIOS */
++	u32 clkpm_disable:1;		/* Clock PM disabled */
  
- 		if (p)
- 			put_page(p);
+ 	/* Exit latencies */
+ 	struct aspm_latency latency_up;	/* Upstream direction exit latency */
+@@ -177,8 +178,11 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
+ 
+ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+ {
+-	/* Don't enable Clock PM if the link is not Clock PM capable */
+-	if (!link->clkpm_capable)
++	/*
++	 * Don't enable Clock PM if the link is not Clock PM capable
++	 * or Clock PM is disabled
++	 */
++	if (!link->clkpm_capable || link->clkpm_disable)
+ 		enable = 0;
+ 	/* Need nothing if the specified equals to current state */
+ 	if (link->clkpm_enabled == enable)
+@@ -208,7 +212,8 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	}
+ 	link->clkpm_enabled = enabled;
+ 	link->clkpm_default = enabled;
+-	link->clkpm_capable = (blacklist) ? 0 : capable;
++	link->clkpm_capable = capable;
++	link->clkpm_disable = blacklist ? 1 : 0;
+ }
+ 
+ static bool pcie_retrain_link(struct pcie_link_state *link)
+@@ -1052,10 +1057,9 @@ static void __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+ 		link->aspm_disable |= ASPM_STATE_L1;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+-	if (state & PCIE_LINK_STATE_CLKPM) {
+-		link->clkpm_capable = 0;
+-		pcie_set_clkpm(link, 0);
+-	}
++	if (state & PCIE_LINK_STATE_CLKPM)
++		link->clkpm_disable = 1;
++	pcie_set_clkpm(link, policy_to_clkpm_state(link));
+ 	mutex_unlock(&aspm_lock);
+ 	if (sem)
+ 		up_read(&pci_bus_sem);
 -- 
 2.20.1
 
