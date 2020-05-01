@@ -2,57 +2,57 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE6BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B67C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB31206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED55206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341620;
-	bh=L3u2ft0lFO9yh3Lx3P3RINgTgN9612FxJRMV34cM3S4=;
+	s=default; t=1588341625;
+	bh=oN4xXc//JXVyLYe37q429CpdJ1zd5XafytMl0uRgsEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqeGMCdoHlEyOrjGcjZdItVdY5pYE83/J5vWLq4r4/pbg3p4IlGaCfddROod1/GEb
-	 4Mf2blrmcyjEbhMn0DDGJbt82X5GEfyL+WWA6ChqbLCOConNS87IN4AXJdXhiu/jlZ
-	 aLSfXXAFvDOaVc6WrqHSoam78NJXSbU7DNISVork=
+	b=qr5WwhbiKUd27SsvH1F7KWpLq4lKrECMEYYO+w/wYfq3/dsw+T5BTjZNHJf9ecYLn
+	 tQKT1vGctsLWBOa6MF5S98t3hsc622XXaNl4x/1jXiwJk8roqQMTsMzz4FJOTxHr+8
+	 Ha+73Sdd33nN6q3XWGTpB5wG22uWZvMd7OloC8lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731966AbgEAOAT (ORCPT
+        id S1729476AbgEAN1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50180 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729486AbgEAN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:43 -0400
+        id S1729462AbgEAN12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C86920757;
-        Fri,  1 May 2020 13:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 274D12166E;
+        Fri,  1 May 2020 13:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339662;
-        bh=L3u2ft0lFO9yh3Lx3P3RINgTgN9612FxJRMV34cM3S4=;
+        s=default; t=1588339647;
+        bh=oN4xXc//JXVyLYe37q429CpdJ1zd5XafytMl0uRgsEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eiL8llS8Zl3pOEN3IfqHr38RQlHd/TKHftQfFwFXhQ+3oFnPmOwItLdiCGKPq0H3e
-         zsTyK6Mrf4CqIIMYqntJVMGLVzbfnxBv8Yb9quS370UdF/7a/wU43rmMB0NV2Qi8bc
-         dN+pdrppIyRV7l9cya3+6TlZkDRcWDmZDlVnBmnk=
+        b=XvDDWkxd04b0EJiZF+jj6OEI0VW0o1ca6ppnrBtKmHsPIjfQ8jAu4KiogmjlGClIU
+         ytPo1r2mtYYc1FQ1v9FiSFaET9nbNfhu3s8hOuUKkF9yVWkNKyCMFNgDULXKRxWYV/
+         vpBmHPGiuIg4oVnaqZhuTbwScy5KLZcbFr/4h714=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Monakhov <dmonakhov@gmail.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.9 01/80] ext4: fix extent_status fragmentation for plain files
-Date:   Fri,  1 May 2020 15:20:55 +0200
-Message-Id: <20200501131514.101804599@linuxfoundation.org>
+        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 62/70] scsi: target: fix PR IN / READ FULL STATUS for FC
+Date:   Fri,  1 May 2020 15:21:50 +0200
+Message-Id: <20200501131531.563955312@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
-References: <20200501131513.810761598@linuxfoundation.org>
+In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
+References: <20200501131513.302599262@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,118 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Monakhov <dmonakhov@gmail.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-commit 4068664e3cd2312610ceac05b74c4cf1853b8325 upstream.
+[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
 
-Extents are cached in read_extent_tree_block(); as a result, extents
-are not cached for inodes with depth == 0 when we try to find the
-extent using ext4_find_extent().  The result of the lookup is cached
-in ext4_map_blocks() but is only a subset of the extent on disk.  As a
-result, the contents of extents status cache can get very badly
-fragmented for certain workloads, such as a random 4k read workload.
+Creation of the response to READ FULL STATUS fails for FC based
+reservations. Reason is the too high loop limit (< 24) in
+fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
+long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
+executed a last time for the ending '\0' of the string and thus hex2bin()
+reports an error.
 
-File size of /mnt/test is 33554432 (8192 blocks of 4096 bytes)
- ext:     logical_offset:        physical_offset: length:   expected: flags:
-   0:        0..    8191:      40960..     49151:   8192:             last,eof
-
-$ perf record -e 'ext4:ext4_es_*' /root/bin/fio --name=t --direct=0 --rw=randread --bs=4k --filesize=32M --size=32M --filename=/mnt/test
-$ perf script | grep ext4_es_insert_extent | head -n 10
-             fio   131 [000]    13.975421:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [494/1) mapped 41454 status W
-             fio   131 [000]    13.975939:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6064/1) mapped 47024 status W
-             fio   131 [000]    13.976467:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6907/1) mapped 47867 status W
-             fio   131 [000]    13.976937:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3850/1) mapped 44810 status W
-             fio   131 [000]    13.977440:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3292/1) mapped 44252 status W
-             fio   131 [000]    13.977931:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [6882/1) mapped 47842 status W
-             fio   131 [000]    13.978376:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [3117/1) mapped 44077 status W
-             fio   131 [000]    13.978957:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [2896/1) mapped 43856 status W
-             fio   131 [000]    13.979474:           ext4:ext4_es_insert_extent: dev 253,0 ino 12 es [7479/1) mapped 48439 status W
-
-Fix this by caching the extents for inodes with depth == 0 in
-ext4_find_extent().
-
-[ Renamed ext4_es_cache_extents() to ext4_cache_extents() since this
-  newly added function is not in extents_cache.c, and to avoid
-  potential visual confusion with ext4_es_cache_extent().  -TYT ]
-
-Signed-off-by: Dmitry Monakhov <dmonakhov@gmail.com>
-Link: https://lore.kernel.org/r/20191106122502.19986-1-dmonakhov@gmail.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c |   47 +++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+ drivers/target/target_core_fabric_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -510,6 +510,30 @@ int ext4_ext_check_inode(struct inode *i
- 	return ext4_ext_check(inode, ext_inode_hdr(inode), ext_depth(inode), 0);
- }
- 
-+static void ext4_cache_extents(struct inode *inode,
-+			       struct ext4_extent_header *eh)
-+{
-+	struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
-+	ext4_lblk_t prev = 0;
-+	int i;
-+
-+	for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
-+		unsigned int status = EXTENT_STATUS_WRITTEN;
-+		ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
-+		int len = ext4_ext_get_actual_len(ex);
-+
-+		if (prev && (prev != lblk))
-+			ext4_es_cache_extent(inode, prev, lblk - prev, ~0,
-+					     EXTENT_STATUS_HOLE);
-+
-+		if (ext4_ext_is_unwritten(ex))
-+			status = EXTENT_STATUS_UNWRITTEN;
-+		ext4_es_cache_extent(inode, lblk, len,
-+				     ext4_ext_pblock(ex), status);
-+		prev = lblk + len;
-+	}
-+}
-+
- static struct buffer_head *
- __read_extent_tree_block(const char *function, unsigned int line,
- 			 struct inode *inode, ext4_fsblk_t pblk, int depth,
-@@ -540,26 +564,7 @@ __read_extent_tree_block(const char *fun
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 6e75095af6818..2ecb2f7042a13 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -75,7 +75,7 @@ static int fc_get_pr_transport_id(
+ 	 * encoded TransportID.
  	 */
- 	if (!(flags & EXT4_EX_NOCACHE) && depth == 0) {
- 		struct ext4_extent_header *eh = ext_block_hdr(bh);
--		struct ext4_extent *ex = EXT_FIRST_EXTENT(eh);
--		ext4_lblk_t prev = 0;
--		int i;
--
--		for (i = le16_to_cpu(eh->eh_entries); i > 0; i--, ex++) {
--			unsigned int status = EXTENT_STATUS_WRITTEN;
--			ext4_lblk_t lblk = le32_to_cpu(ex->ee_block);
--			int len = ext4_ext_get_actual_len(ex);
--
--			if (prev && (prev != lblk))
--				ext4_es_cache_extent(inode, prev,
--						     lblk - prev, ~0,
--						     EXTENT_STATUS_HOLE);
--
--			if (ext4_ext_is_unwritten(ex))
--				status = EXTENT_STATUS_UNWRITTEN;
--			ext4_es_cache_extent(inode, lblk, len,
--					     ext4_ext_pblock(ex), status);
--			prev = lblk + len;
--		}
-+		ext4_cache_extents(inode, eh);
- 	}
- 	return bh;
- errout:
-@@ -907,6 +912,8 @@ ext4_find_extent(struct inode *inode, ex
- 	path[0].p_bh = NULL;
- 
- 	i = depth;
-+	if (!(flags & EXT4_EX_NOCACHE) && depth == 0)
-+		ext4_cache_extents(inode, eh);
- 	/* walk through the tree */
- 	while (i) {
- 		ext_debug("depth %d: num %d, max %d\n",
+ 	ptr = &se_nacl->initiatorname[0];
+-	for (i = 0; i < 24; ) {
++	for (i = 0; i < 23; ) {
+ 		if (!strncmp(&ptr[i], ":", 1)) {
+ 			i++;
+ 			continue;
+-- 
+2.20.1
+
 
 
