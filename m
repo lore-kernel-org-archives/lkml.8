@@ -2,102 +2,286 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A1DC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E411FC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFBF206D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:17:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="e8ZFRf5X"
+	by mail.kernel.org (Postfix) with ESMTP id C8F8C216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgEAAR3 (ORCPT
+        id S1727864AbgEAAVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 20:17:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726545AbgEAAR2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 20:17:28 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A50C035494
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 17:17:28 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id f12so6039533edn.12
-        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 17:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bcm1TlQpt5t3TCd2yjy0sIUGeLU6kZAnyAeVOLXYjtY=;
-        b=e8ZFRf5XzgHqzQWCgg7LdYn6cqPsuHkBcV8hQiRM9fy1nCAleGrU1LduCT7QgDPpR9
-         /+vMGUZfMe+wQgkt/2uzF9CUT7tWhv/IOO6sqmbVVVt5vpnmaa6ItB04P0cZvZIUXd+Q
-         dEZAfUAaDbvu2vxKb9okHrKC5aYb1F+b0IS3o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bcm1TlQpt5t3TCd2yjy0sIUGeLU6kZAnyAeVOLXYjtY=;
-        b=al1ZBhszutAn/qc0WaSEHKSUwEswQnUuuYOWsMJVK/cwVpvwAhXKGSxCnhMQbo2Q3e
-         gpg76y03Q1/ewi6PF6y9fmyr5r5MH3W87DBGhVX3kPUevRWZPzxxVQDEysQt5hYQRPAm
-         kK7AXfUVqeNU8/uwbS2I00blMwufUrHtX0AWlfbgKVuaKn9zlMia11PVHSfuhPNwnDt+
-         vnr76MgmDJnRGTrGnSQnN60i34F5RHNS3+nvNGBqDQmyehbvZKinUSOgRvdwzUOsD7K3
-         NkQ6tsJSXlQK0NhkrS+9YORJiJeKeFuWdt7TEqI8ipPetMshyf0Neta23jeFfDGqBXnP
-         /3Yw==
-X-Gm-Message-State: AGi0PuYBPYf4w9U7L1AsKYMGDN9AWx4MpPqX367xKwLhtxnEvZVyKF1y
-        +qzf6CUyOTOD6YToZNZohJz9Nu/Fvl1UicdBnnk=
-X-Google-Smtp-Source: APiQypIA9MuHoa2Mze1RAYr3ZqVBHUJldDWTpcoxtqY/6uKU0RnRUcg9uWGDTOBqJNFZ49Ut+Tajp+cD+G8kMBXsAbw=
-X-Received: by 2002:a05:6402:688:: with SMTP id f8mr1439779edy.233.1588292246971;
- Thu, 30 Apr 2020 17:17:26 -0700 (PDT)
+        Thu, 30 Apr 2020 20:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726545AbgEAAVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 20:21:51 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74AB3208DB;
+        Fri,  1 May 2020 00:21:49 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 20:21:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [RFC][PATCH] x86/ftrace: Have ftrace trampolines turn read-only at
+ the end of system boot up
+Message-ID: <20200430202147.4dc6e2de@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200128152938.31413-1-changbin.du@gmail.com> <20200129075829.GB1256499@krava>
- <20200130105548.GC3841@kernel.org> <20200217102513.2fb2c691@canb.auug.org.au>
-In-Reply-To: <20200217102513.2fb2c691@canb.auug.org.au>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 1 May 2020 00:17:14 +0000
-Message-ID: <CACPK8Xfk_3Vy4FMzNC5Jb6-exkLVgEm_v-1jqtuH4-v3rXhVzQ@mail.gmail.com>
-Subject: Re: [PATCH] perf: Make perf able to build with latest libbfd
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Changbin Du <changbin.du@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Feb 2020 at 23:25, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Arnaldo,
->
-> On Thu, 30 Jan 2020 11:55:48 +0100 Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> >
-> > Em Wed, Jan 29, 2020 at 08:58:29AM +0100, Jiri Olsa escreveu:
-> > > On Tue, Jan 28, 2020 at 11:29:38PM +0800, Changbin Du wrote:
-> > > > libbfd has changed the bfd_section_* macros to inline functions
-> > > > bfd_section_<field> since 2019-09-18. See below two commits:
-> > > >   o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
-> > > >   o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
-> > > >
-> > > > This fix make perf able to build with both old and new libbfd.
-> > > >
-> > > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > >
-> > > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> >
-> > Thanks, applied.
->
-> Just wondering if this should have been cc'd to stable?
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Yes please. We hit this today.
+Booting one of my machines, it triggered the following crash:
 
-Cheers,
+ Kernel/User page tables isolation: enabled
+ ftrace: allocating 36577 entries in 143 pages
+ Starting tracer 'function'
+ BUG: unable to handle page fault for address: ffffffffa000005c
+ #PF: supervisor write access in kernel mode
+ #PF: error_code(0x0003) - permissions violation
+ PGD 2014067 P4D 2014067 PUD 2015063 PMD 7b253067 PTE 7b252061
+ Oops: 0003 [#1] PREEMPT SMP PTI
+ CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-test+ #24
+ Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./To be filled by O.E.M., BIOS SDBLI944.86P 05/08/2007
+ RIP: 0010:text_poke_early+0x4a/0x58
+ Code: 34 24 48 89 54 24 08 e8 bf 72 0b 00 48 8b 34 24 48 8b 4c 24 08 84 c0 74 0b 48 89 df f3 a4 48 83 c4 10 5b c3 9c 58 fa 48 89 df <f3> a4 50 9d 48 83 c4 10 5b e9 d6 f9 ff ff
+0 41 57 49
+ RSP: 0000:ffffffff82003d38 EFLAGS: 00010046
+ RAX: 0000000000000046 RBX: ffffffffa000005c RCX: 0000000000000005
+ RDX: 0000000000000005 RSI: ffffffff825b9a90 RDI: ffffffffa000005c
+ RBP: ffffffffa000005c R08: 0000000000000000 R09: ffffffff8206e6e0
+ R10: ffff88807b01f4c0 R11: ffffffff8176c106 R12: ffffffff8206e6e0
+ R13: ffffffff824f2440 R14: 0000000000000000 R15: ffffffff8206eac0
+ FS:  0000000000000000(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: ffffffffa000005c CR3: 0000000002012000 CR4: 00000000000006b0
+ Call Trace:
+  text_poke_bp+0x27/0x64
+  ? mutex_lock+0x36/0x5d
+  arch_ftrace_update_trampoline+0x287/0x2d5
+  ? ftrace_replace_code+0x14b/0x160
+  ? ftrace_update_ftrace_func+0x65/0x6c
+  __register_ftrace_function+0x6d/0x81
+  ftrace_startup+0x23/0xc1
+  register_ftrace_function+0x20/0x37
+  func_set_flag+0x59/0x77
+  __set_tracer_option.isra.19+0x20/0x3e
+  trace_set_options+0xd6/0x13e
+  apply_trace_boot_options+0x44/0x6d
+  register_tracer+0x19e/0x1ac
+  early_trace_init+0x21b/0x2c9
+  start_kernel+0x241/0x518
+  ? load_ucode_intel_bsp+0x21/0x52
+  secondary_startup_64+0xa4/0xb0
 
-Joel
+I was able to trigger it on other machines, when I added to the kernel
+command line of both "ftrace=function" and "trace_options=func_stack_trace".
+
+The cause is the "ftrace=function" would register the function tracer
+and create a trampoline, and it will set it as executable and
+read-only. Then the "trace_options=func_stack_trace" would then update
+the same trampoline to include the stack tracer version of the function
+tracer. But since the trampoline already exists, it updates it with
+text_poke_bp(). The problem is that text_poke_bp() called while
+system_state == SYSTEM_BOOTING, it will simply do a memcpy() and not
+the page mapping, as it would think that the text is still read-write.
+But in this case it is not, and we take a fault and crash.
+
+Instead, lets keep the ftrace trampolines read-write during boot up,
+and then when the kernel executable text is set to read-only, the
+ftrace trampolines get set to read-only as well.
+
+Cc: stable@vger.kernel.org
+Fixes: 768ae4406a5c ("x86/ftrace: Use text_poke()")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index dbd9b08bf173..e14f792b106c 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -43,6 +43,12 @@ struct dyn_arch_ftrace {
+ 
+ #ifndef __ASSEMBLY__
+ 
++#ifdef CONFIG_FUNCTION_TRACER
++extern void set_ftrace_ops_ro(void);
++#else
++static inline void set_ftrace_ops_ro(void) { }
++#endif
++
+ #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
+ static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
+ {
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 3d8adeba2651..dd30ba1e0244 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -419,7 +419,8 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 
+ 	set_vm_flush_reset_perms(trampoline);
+ 
+-	set_memory_ro((unsigned long)trampoline, npages);
++	if (likely(system_state != SYSTEM_BOOTING))
++		set_memory_ro((unsigned long)trampoline, npages);
+ 	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+@@ -427,6 +428,32 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	return 0;
+ }
+ 
++void set_ftrace_ops_ro(void)
++{
++	struct ftrace_ops *ops;
++	unsigned long start_offset;
++	unsigned long end_offset;
++	unsigned long npages;
++	unsigned long size;
++
++	do_for_each_ftrace_op(ops, ftrace_ops_list) {
++		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
++			continue;
++
++		if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
++			start_offset = (unsigned long)ftrace_regs_caller;
++			end_offset = (unsigned long)ftrace_regs_caller_end;
++		} else {
++			start_offset = (unsigned long)ftrace_caller;
++			end_offset = (unsigned long)ftrace_epilogue;
++		}
++		size = end_offset - start_offset;
++		size = size + RET_SIZE + sizeof(void *);
++		npages = DIV_ROUND_UP(size, PAGE_SIZE);
++		set_memory_ro((unsigned long)ops->trampoline, npages);
++	} while_for_each_ftrace_op(ops);
++}
++
+ static unsigned long calc_trampoline_call_offset(bool save_regs)
+ {
+ 	unsigned long start_offset;
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 930edeb41ec3..75d5d2e591ea 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -52,6 +52,7 @@
+ #include <asm/page_types.h>
+ #include <asm/cpu_entry_area.h>
+ #include <asm/init.h>
++#include <asm/ftrace.h>
+ 
+ #include "mm_internal.h"
+ 
+@@ -930,6 +931,8 @@ void mark_rodata_ro(void)
+ 
+ 	kernel_set_to_readonly = 1;
+ 
++	set_ftrace_ops_ro();
++
+ #ifdef CONFIG_CPA_DEBUG
+ 	pr_info("Testing CPA: Reverting %lx-%lx\n", start, start + size);
+ 	set_pages_rw(virt_to_page(start), size >> PAGE_SHIFT);
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index dcb9bc961b39..d36da393a947 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -54,6 +54,7 @@
+ #include <asm/init.h>
+ #include <asm/uv/uv.h>
+ #include <asm/setup.h>
++#include <asm/ftrace.h>
+ 
+ #include "mm_internal.h"
+ 
+@@ -1326,6 +1327,8 @@ void mark_rodata_ro(void)
+ 	all_end = roundup((unsigned long)_brk_end, PMD_SIZE);
+ 	set_memory_nx(text_end, (all_end - text_end) >> PAGE_SHIFT);
+ 
++	set_ftrace_ops_ro();
++
+ #ifdef CONFIG_CPA_DEBUG
+ 	printk(KERN_INFO "Testing CPA: undo %lx-%lx\n", start, end);
+ 	set_memory_rw(start, (end-start) >> PAGE_SHIFT);
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 9141f2263286..f97626cbfbdf 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -203,6 +203,29 @@ struct ftrace_ops {
+ #endif
+ };
+ 
++extern struct ftrace_ops __rcu *ftrace_ops_list;
++extern struct ftrace_ops ftrace_list_end;
++
++/*
++ * Traverse the ftrace_global_list, invoking all entries.  The reason that we
++ * can use rcu_dereference_raw_check() is that elements removed from this list
++ * are simply leaked, so there is no need to interact with a grace-period
++ * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
++ * concurrent insertions into the ftrace_global_list.
++ *
++ * Silly Alpha and silly pointer-speculation compiler optimizations!
++ */
++#define do_for_each_ftrace_op(op, list)			\
++	op = rcu_dereference_raw_check(list);			\
++	do
++
++/*
++ * Optimized for just a single item in the list (as that is the normal case).
++ */
++#define while_for_each_ftrace_op(op)				\
++	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
++	       unlikely((op) != &ftrace_list_end))
++
+ /*
+  * Type of the current tracing.
+  */
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 0456e0a3dab1..382775edf690 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -4,28 +4,6 @@
+ 
+ #ifdef CONFIG_FUNCTION_TRACER
+ 
+-/*
+- * Traverse the ftrace_global_list, invoking all entries.  The reason that we
+- * can use rcu_dereference_raw_check() is that elements removed from this list
+- * are simply leaked, so there is no need to interact with a grace-period
+- * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
+- * concurrent insertions into the ftrace_global_list.
+- *
+- * Silly Alpha and silly pointer-speculation compiler optimizations!
+- */
+-#define do_for_each_ftrace_op(op, list)			\
+-	op = rcu_dereference_raw_check(list);			\
+-	do
+-
+-/*
+- * Optimized for just a single item in the list (as that is the normal case).
+- */
+-#define while_for_each_ftrace_op(op)				\
+-	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
+-	       unlikely((op) != &ftrace_list_end))
+-
+-extern struct ftrace_ops __rcu *ftrace_ops_list;
+-extern struct ftrace_ops ftrace_list_end;
+ extern struct mutex ftrace_lock;
+ extern struct ftrace_ops global_ops;
+ 
