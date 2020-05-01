@@ -2,129 +2,140 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB080C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF9C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2EA2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341258;
-	bh=BXcwvlX4xYmDb9kkPjtAmi+mkbP52raSx2DGCqbG/mo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIzEzcDYoR3cwUgjF2mpPJrTPHODBBhFbMMk+61p95hXoRdpplW+KFKJV9I7djENA
-	 ohzx8ERwRgRpLyb4ULH0ZLpFuLkcXzDubo4oUtUqO0yFaoSfoQX445WyMgTJPmjPsb
-	 Z6+hEcAmwwGt8u/nMGZ4RJ8EtX9mnae0g+QIW65M=
+	by mail.kernel.org (Postfix) with ESMTP id BECB72051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jwW+pW2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbgEANyR (ORCPT
+        id S1731431AbgEANyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbgEANf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 1 May 2020 09:54:19 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:30937 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731944AbgEANyO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:54:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588341254; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=UyUTdX3ycZLsp/fRiUOxWmX80RtczvRBethpLLRPbxE=; b=jwW+pW2cTROSWF6ArTws05s44pDQ4exZRMlzcbMPP4U453vXXeg9tMRv9RSMpkwd/nt0qELS
+ aCu2T7iUDVCXq/6D673fOwahF9mBHv61DYB3BjzN779xSRKV5ykhafMZZaCUnVYO7dCNetbi
+ JGf7zWu9DZD/oPKwhX//Vnuhl+0=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eac29f2.7f0f27c2d3e8-smtp-out-n01;
+ Fri, 01 May 2020 13:53:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DC578C44795; Fri,  1 May 2020 13:53:52 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2CA5208DB;
-        Fri,  1 May 2020 13:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340129;
-        bh=BXcwvlX4xYmDb9kkPjtAmi+mkbP52raSx2DGCqbG/mo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J6MyErFdUjEKxYRdjj2MLJ4XYsGtJsgPVDBctPYEQ2u2mI3pVBKlpWn+hDj/DiTT1
-         ZNn0QfvTCt0xbwufwPNUtO5PVqTqaGmvankOAV9S0ID4HIZiF0S9eGVbFmQBeWdJMy
-         NwrByVRfXu3A/Q84ZYyITHriT4mlTI0lxbqK3AGY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 105/117] arm64: Delete the space separator in __emit_inst
-Date:   Fri,  1 May 2020 15:22:21 +0200
-Message-Id: <20200501131557.872901473@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
-References: <20200501131544.291247695@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD883C432C2;
+        Fri,  1 May 2020 13:53:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AD883C432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Krishna Konda <kkonda@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Bradley Bolen <bradleybolen@gmail.com>
+Subject: [PATCH V1] mmc: core: expose info about enhanced rpmb support
+Date:   Fri,  1 May 2020 19:23:01 +0530
+Message-Id: <1588341189-4371-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Krishna Konda <kkonda@codeaurora.org>
 
-[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
+Following eMMC JEDEC JESD84-B51 standard, an enhanced form of
+rpmb is supported. What this enhanced mode supports is in addition
+to be able to write one rpmb or two rpmb frames at a time,
+32 frames can be written at a time.
 
-In assembly, many instances of __emit_inst(x) expand to a directive. In
-a few places __emit_inst(x) is used as an assembler macro argument. For
-example, in arch/arm64/kvm/hyp/entry.S
+Expose this information present in ext csd field so that the
+user space application that wants to make use of this can do so.
 
-  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
-
-expands to the following by the C preprocessor:
-
-  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so the clang
-integrated assembler splits the arguments to:
-
-   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
-(along with many other non-x86 backends) sees:
-
-  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # .inst(...) is parsed as one argument
-
-while its x86 backend sees:
-
-  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
-
-The non-x86 backend's behavior is considered unintentional
-(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
-So drop the space separator inside `.inst (...)` to make the clang
-integrated assembler work.
-
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/939
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Krishna Konda <kkonda@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 ---
- arch/arm64/include/asm/sysreg.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mmc/core/mmc.c   | 6 ++++++
+ include/linux/mmc/card.h | 1 +
+ include/linux/mmc/mmc.h  | 1 +
+ 3 files changed, 8 insertions(+)
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 50a89bcf9072e..2564dd429ab68 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -60,7 +60,9 @@
- #ifndef CONFIG_BROKEN_GAS_INST
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index de94fbe..4203303 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -647,6 +647,9 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
+ 				 mmc_hostname(card->host),
+ 				 card->ext_csd.cmdq_depth);
+ 		}
++		card->ext_csd.enhanced_rpmb_supported =
++					(card->ext_csd.rel_param &
++					 EXT_CSD_WR_REL_PARAM_EN_RPMB_REL_WR);
+ 	}
+ out:
+ 	return err;
+@@ -786,6 +789,8 @@ static int mmc_compare_ext_csds(struct mmc_card *card, unsigned bus_width)
+ 		card->ext_csd.enhanced_area_offset);
+ MMC_DEV_ATTR(enhanced_area_size, "%u\n", card->ext_csd.enhanced_area_size);
+ MMC_DEV_ATTR(raw_rpmb_size_mult, "%#x\n", card->ext_csd.raw_rpmb_size_mult);
++MMC_DEV_ATTR(enhanced_rpmb_supported, "%#x\n",
++	card->ext_csd.enhanced_rpmb_supported);
+ MMC_DEV_ATTR(rel_sectors, "%#x\n", card->ext_csd.rel_sectors);
+ MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
+ MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
+@@ -843,6 +848,7 @@ static ssize_t mmc_dsr_show(struct device *dev,
+ 	&dev_attr_enhanced_area_offset.attr,
+ 	&dev_attr_enhanced_area_size.attr,
+ 	&dev_attr_raw_rpmb_size_mult.attr,
++	&dev_attr_enhanced_rpmb_supported.attr,
+ 	&dev_attr_rel_sectors.attr,
+ 	&dev_attr_ocr.attr,
+ 	&dev_attr_rca.attr,
+diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+index cf3780a..7d46411 100644
+--- a/include/linux/mmc/card.h
++++ b/include/linux/mmc/card.h
+@@ -48,6 +48,7 @@ struct mmc_ext_csd {
+ 	u8			sec_feature_support;
+ 	u8			rel_sectors;
+ 	u8			rel_param;
++	bool			enhanced_rpmb_supported;
+ 	u8			part_config;
+ 	u8			cache_ctrl;
+ 	u8			rst_n_function;
+diff --git a/include/linux/mmc/mmc.h b/include/linux/mmc/mmc.h
+index 4b85ef0..d9a65c6 100644
+--- a/include/linux/mmc/mmc.h
++++ b/include/linux/mmc/mmc.h
+@@ -325,6 +325,7 @@ static inline bool mmc_ready_for_data(u32 status)
+  */
  
- #ifdef __ASSEMBLY__
--#define __emit_inst(x)			.inst (x)
-+// The space separator is omitted so that __emit_inst(x) can be parsed as
-+// either an assembler directive or an assembler macro argument.
-+#define __emit_inst(x)			.inst(x)
- #else
- #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
- #endif
+ #define EXT_CSD_WR_REL_PARAM_EN		(1<<2)
++#define EXT_CSD_WR_REL_PARAM_EN_RPMB_REL_WR	(1<<4)
+ 
+ #define EXT_CSD_BOOT_WP_B_PWR_WP_DIS	(0x40)
+ #define EXT_CSD_BOOT_WP_B_PERM_WP_DIS	(0x10)
 -- 
-2.20.1
-
-
-
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
