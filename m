@@ -2,53 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447D7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618D9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F1D208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E76924954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339886;
-	bh=KvoUL5xcNE7fQQSeTKHhSEZ9Y7/6EBtFNGEhTkUrHfM=;
+	s=default; t=1588339893;
+	bh=8W+mS+4KNAyt89VJ47VSSUkuTmeWZ88gzkFrVaY//7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pp9EYVxVrFLUJSashqt9GTHwOGKSpBbYAj+SPsyZZxXmiHEjQq/RbWTUszuFz3fHt
-	 3cLzfTpoVxdUCcuHRfqAI3l3a1YzI4d3qprW6AbBBs4IIRHRDQfgw0cqCiEhyS8X5K
-	 KXzFmLGhsngRPY4O65dErHiSDeyZXNtptd/9QgNY=
+	b=jnwP6MbNVA+wXaEL+ckFGzg5SEp4rkeSKp8zZTzGBR4h7flk2GU7vw4fhR7brMjsr
+	 Y6veXryDXGiIpJaw9jHGbrsX993vy7Xd7hLhVDP9Ser5jaTkiYiJzEm+sA5Xh5gTuf
+	 C/q3VTGwrJ+etOg32/9E4QFallE+9w+qlXlOa1Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgEANbZ (ORCPT
+        id S1730155AbgEANbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55746 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgEANbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:14 -0400
+        id S1730141AbgEANb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB48C20757;
-        Fri,  1 May 2020 13:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406B5208D6;
+        Fri,  1 May 2020 13:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339874;
-        bh=KvoUL5xcNE7fQQSeTKHhSEZ9Y7/6EBtFNGEhTkUrHfM=;
+        s=default; t=1588339888;
+        bh=8W+mS+4KNAyt89VJ47VSSUkuTmeWZ88gzkFrVaY//7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RWQulS3Qiqlvn0S4+0IZ3/3k79NpNyEX6aoGRBomogd2FFD9Vs7AtZr2eNr2PcjZ/
-         OIg1U2yjFWw6P4VBacFwGigzHf0FKCjYwReHKNkoN9bULEIOfeADLLMSkvjay+9o5m
-         RY0vhuZZBs2RYfeO+U0nDhIZCQl7d4P08IaHIhK8=
+        b=WLtSpdXuP7RN3MQMb0UJaSiQu3jdi3Z8tdNExaysw4MfhqzIGkxU9czrIz9/lZER2
+         LvA1IoKSQ8YYHYQ68AMb3FwBKCaBuM2gyxOH8CIk9Wcixuw2gJSaQ5aU2ivZbLZNit
+         NPr2DGJqo3dJHtn49j9wlgmiftf37fFIToUFBLCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 014/117] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Fri,  1 May 2020 15:20:50 +0200
-Message-Id: <20200501131546.751570895@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 007/117] vti4: removed duplicate log message.
+Date:   Fri,  1 May 2020 15:20:43 +0200
+Message-Id: <20200501131546.093875367@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,42 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+commit 01ce31c57b3f07c91c9d45bbaf126124cce83a5d upstream.
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+Removed info log-message if ipip tunnel registration fails during
+module-initialization: it adds nothing to the error message that is
+written on all failures.
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
+Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/ip_vti.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index 6044b3bbb1211..999eb3ba78672 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -974,7 +974,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -681,10 +681,8 @@ static int __init vti_init(void)
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
--- 
-2.20.1
-
+ 	msg = "ipip tunnel";
+ 	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
+-	if (err < 0) {
+-		pr_info("%s: cant't register tunnel\n",__func__);
++	if (err < 0)
+ 		goto xfrm_tunnel_failed;
+-	}
+ 
+ 	msg = "netlink interface";
+ 	err = rtnl_link_register(&vti_link_ops);
 
 
