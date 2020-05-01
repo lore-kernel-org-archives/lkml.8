@@ -2,283 +2,126 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B75C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7628C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3DEF20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2AD20708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/vELu92"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IZU8/YvO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgEAOha (ORCPT
+        id S1729161AbgEAOio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:37:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23730 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728894AbgEAOh2 (ORCPT
+        Fri, 1 May 2020 10:38:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:2235 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728898AbgEAOin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:37:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588343847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I+pSfuYwc07hQQ9dsDKJcYfTJmTKhIXhBIr9mDnsaJ8=;
-        b=V/vELu92n/llXKABrwdcbvZVQa2U0QuCDqaM+T2xpi/p4xI32Ui1Gv6D8skYLnAz47Akt1
-        9gs0TId5z2f/MbuWuNARbKwlmdBJ8CnfH2i9WpziCD1dBPQjhv8Hfmvau7Tuhrsbx5/9Lv
-        8xOVtxpND+jTrDLBsk6AzR+Mkw3WdMo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-nN46WyfNNZ-zHl2ISgAVZw-1; Fri, 01 May 2020 10:37:22 -0400
-X-MC-Unique: nN46WyfNNZ-zHl2ISgAVZw-1
-Received: by mail-wm1-f69.google.com with SMTP id v185so2124020wmg.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:37:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=I+pSfuYwc07hQQ9dsDKJcYfTJmTKhIXhBIr9mDnsaJ8=;
-        b=XBFENZyOCZCkvgpoIZb7ekzQD3eMmq33LsO/QuvTq/0KBWV07Xnru9chWfyL6wbQbl
-         O9yDBEEw5/r1Obl2ktvcA/oanX0FsTcxtUBmAgF69n588orJ2bTItBVAEFl9b3Mg7BLZ
-         XBcAAiWeNqZHLG7HoPnxhZh/sLYLfapdC2GlerIYcqKvMvCKCTSfFFSoTjIQhvs0kyR+
-         kKKoQ+NTSVkiNtD+TWEQ/bzErGAIYhQgYjDzzrWvVE1zOeM2d1i1V1xyqzLKo5rrC7Y3
-         iQwZAthS7zfmhzvEWLH7YPOe+l96Gj3OG4KMqgAVD2peCe3dDwE22k1SNfbjEJnpqSrw
-         o5Og==
-X-Gm-Message-State: AGi0PubfcAhhFxqaUJ7Q6YKHyvh7r0aN+tJP0ajtz1xo83ftGFUxP0+C
-        f7nFZaavlMaNyoswI37e0g1MmKVNVG6qHIVLm1I9OdZivA7fZC14Xgx5BAq05LFixLGquaEioev
-        mdFLDWH5BZK9u4jxzEBRM2uTj
-X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr4150357wmd.19.1588343840465;
-        Fri, 01 May 2020 07:37:20 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKHqBQQRlsc1K8bjThQcoW9mKD/VyXIIHA6zpDxxO2WCF7VUxpGnsPXDB+8huVAz76rKrLJPQ==
-X-Received: by 2002:a1c:1d4b:: with SMTP id d72mr4150333wmd.19.1588343840150;
-        Fri, 01 May 2020 07:37:20 -0700 (PDT)
-Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id r20sm4024126wmh.26.2020.05.01.07.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 07:37:19 -0700 (PDT)
-Date:   Fri, 1 May 2020 16:37:16 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Justin He <Justin.He@arm.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH] vhost: vsock: don't send pkt when vq is not started
-Message-ID: <20200501143716.ln7hjh3vn77ng43i@steredhat>
-References: <20200430021314.6425-1-justin.he@arm.com>
- <20200430082608.wbtqgglmtnd7e5ci@steredhat>
- <AM6PR08MB4069D4AB611B8C8180DC4B9CF7AA0@AM6PR08MB4069.eurprd08.prod.outlook.com>
- <20200430162521.k4b4t3vttfabgqal@steredhat>
- <20200430153929-mutt-send-email-mst@kernel.org>
+        Fri, 1 May 2020 10:38:43 -0400
+X-UUID: d1914d0961214355a183b758f3134b1d-20200501
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=8VIPLSkqrglgjQeSr66OR8BmnSuUsZPHpl18x7zMDIc=;
+        b=IZU8/YvOIE9a4e01gZpZ8v+vYpYTDojkZ9miupSb6dyc+8Ax0NLRdOw6khuHppd98ALoToetflJkAEaB5Udib70P5K5bpcRfw4ETIPYEb9L5HqD1xsQIumRgA/LO664kg+PYFlB0A2eJ08UVTN2ALYBBJLDRx8T0I8ebm6uJHnE=;
+X-UUID: d1914d0961214355a183b758f3134b1d-20200501
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 918446; Fri, 01 May 2020 22:38:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 1 May 2020 22:38:34 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 1 May 2020 22:38:34 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
+CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v3 5/5] scsi: ufs: cleanup WriteBooster feature
+Date:   Fri, 1 May 2020 22:38:35 +0800
+Message-ID: <20200501143835.26032-6-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200501143835.26032-1-stanley.chu@mediatek.com>
+References: <20200501143835.26032-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430153929-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 03:43:00PM -0400, Michael S. Tsirkin wrote:
-> On Thu, Apr 30, 2020 at 06:25:21PM +0200, Stefano Garzarella wrote:
-> > On Thu, Apr 30, 2020 at 10:06:26AM +0000, Justin He wrote:
-> > > Hi Stefano
-> > > 
-> > > > -----Original Message-----
-> > > > From: Stefano Garzarella <sgarzare@redhat.com>
-> > > > Sent: Thursday, April 30, 2020 4:26 PM
-> > > > To: Justin He <Justin.He@arm.com>
-> > > > Cc: Stefan Hajnoczi <stefanha@redhat.com>; Michael S. Tsirkin
-> > > > <mst@redhat.com>; Jason Wang <jasowang@redhat.com>;
-> > > > kvm@vger.kernel.org; virtualization@lists.linux-foundation.org;
-> > > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Kaly Xin
-> > > > <Kaly.Xin@arm.com>
-> > > > Subject: Re: [PATCH] vhost: vsock: don't send pkt when vq is not started
-> > > >
-> > > > Hi Jia,
-> > > > thanks for the patch, some comments below:
-> > > >
-> > > > On Thu, Apr 30, 2020 at 10:13:14AM +0800, Jia He wrote:
-> > > > > Ning Bo reported an abnormal 2-second gap when booting Kata container
-> > > > [1].
-> > > > > The unconditional timeout is caused by
-> > > > VSOCK_DEFAULT_CONNECT_TIMEOUT of
-> > > > > connect at client side. The vhost vsock client tries to connect an
-> > > > > initlizing virtio vsock server.
-> > > > >
-> > > > > The abnormal flow looks like:
-> > > > > host-userspace           vhost vsock                       guest vsock
-> > > > > ==============           ===========                       ============
-> > > > > connect()     -------->  vhost_transport_send_pkt_work()   initializing
-> > > > >    |                     vq->private_data==NULL
-> > > > >    |                     will not be queued
-> > > > >    V
-> > > > > schedule_timeout(2s)
-> > > > >                          vhost_vsock_start()  <---------   device ready
-> > > > >                          set vq->private_data
-> > > > >
-> > > > > wait for 2s and failed
-> > > > >
-> > > > > connect() again          vq->private_data!=NULL          recv connecting pkt
-> > > > >
-> > > > > 1. host userspace sends a connect pkt, at that time, guest vsock is under
-> > > > > initializing, hence the vhost_vsock_start has not been called. So
-> > > > > vq->private_data==NULL, and the pkt is not been queued to send to guest.
-> > > > > 2. then it sleeps for 2s
-> > > > > 3. after guest vsock finishes initializing, vq->private_data is set.
-> > > > > 4. When host userspace wakes up after 2s, send connecting pkt again,
-> > > > > everything is fine.
-> > > > >
-> > > > > This fixes it by checking vq->private_data in vhost_transport_send_pkt,
-> > > > > and return at once if !vq->private_data. This makes user connect()
-> > > > > be returned with ECONNREFUSED.
-> > > > >
-> > > > > After this patch, kata-runtime (with vsock enabled) boottime reduces from
-> > > > > 3s to 1s on ThunderX2 arm64 server.
-> > > > >
-> > > > > [1] https://github.com/kata-containers/runtime/issues/1917
-> > > > >
-> > > > > Reported-by: Ning Bo <n.b@live.com>
-> > > > > Signed-off-by: Jia He <justin.he@arm.com>
-> > > > > ---
-> > > > >  drivers/vhost/vsock.c | 8 ++++++++
-> > > > >  1 file changed, 8 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > > > > index e36aaf9ba7bd..67474334dd88 100644
-> > > > > --- a/drivers/vhost/vsock.c
-> > > > > +++ b/drivers/vhost/vsock.c
-> > > > > @@ -241,6 +241,7 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt
-> > > > *pkt)
-> > > > >  {
-> > > > >  struct vhost_vsock *vsock;
-> > > > >  int len = pkt->len;
-> > > > > +struct vhost_virtqueue *vq;
-> > > > >
-> > > > >  rcu_read_lock();
-> > > > >
-> > > > > @@ -252,6 +253,13 @@ vhost_transport_send_pkt(struct virtio_vsock_pkt
-> > > > *pkt)
-> > > > >  return -ENODEV;
-> > > > >  }
-> > > > >
-> > > > > +vq = &vsock->vqs[VSOCK_VQ_RX];
-> > > > > +if (!vq->private_data) {
-> > > >
-> > > > I think is better to use vhost_vq_get_backend():
-> > > >
-> > > > if (!vhost_vq_get_backend(&vsock->vqs[VSOCK_VQ_RX])) {
-> > > > ...
-> > > >
-> > > > This function should be called with 'vq->mutex' acquired as explained in
-> > > > the comment, but here we can avoid that, because we are not using the vq,
-> > > > so it is safe, because in vhost_transport_do_send_pkt() we check it again.
-> > > >
-> > > > Please add a comment explaining that.
-> > > >
-> > > 
-> > > Thanks, vhost_vq_get_backend is better. I chose a 5.3 kernel to develop
-> > > and missed this helper.
-> > 
-> > :-)
-> > 
-> > > >
-> > > > As an alternative to this patch, should we kick the send worker when the
-> > > > device is ready?
-> > > >
-> > > > IIUC we reach the timeout because the send worker (that runs
-> > > > vhost_transport_do_send_pkt()) exits immediately since 'vq->private_data'
-> > > > is NULL, and no one will requeue it.
-> > > >
-> > > > Let's do it when we know the device is ready:
-> > > >
-> > > > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > > > index e36aaf9ba7bd..295b5867944f 100644
-> > > > --- a/drivers/vhost/vsock.c
-> > > > +++ b/drivers/vhost/vsock.c
-> > > > @@ -543,6 +543,11 @@ static int vhost_vsock_start(struct vhost_vsock
-> > > > *vsock)
-> > > >                 mutex_unlock(&vq->mutex);
-> > > >         }
-> > > >
-> > > > +       /* Some packets may have been queued before the device was started,
-> > > > +        * let's kick the send worker to send them.
-> > > > +        */
-> > > > +       vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
-> > > > +
-> > > Yes, it works.
-> > > But do you think a threshold should be set here to prevent the queue
-> > > from being too long? E.g. the client user sends too many connect pkts
-> > > in a short time before the server is completely ready.
-> > 
-> > When the user call the connect() the socket status is moved to
-> > SS_CONNECTING (see net/vmw_vsock/af_vsock.c), so another connect() on
-> > the same socket will receive EALREADY error.
-> > 
-> > If the user uses multiple sockets, the socket layer already check for
-> > any limits, so I don't think we should put a threshold here.
-> > 
-> > > 
-> > > >         mutex_unlock(&vsock->dev.mutex);
-> > > >         return 0;
-> > > >
-> > > > I didn't test it, can you try if it fixes the issue?
-> > > >
-> > > > I'm not sure which is better...
-> > > I don't know, either. Wait for more comments 😊
-> > 
-> > I prefer the second option, because the device is in a transitional
-> > state and a connect can block (for at most two seconds) until the device is
-> > started.
-> > 
-> > For the first option, I'm also not sure if ECONNREFUSED is the right error
-> > to return, maybe is better ENETUNREACH.
-> > 
-> > Cheers,
-> > Stefano
-> 
-> IIRC:
-> 
-> ECONNREFUSED is what one gets when connecting to remote a port which does not
-> yet have a listening socket, so remote sends back RST.
-> ENETUNREACH is when local network's down, so you can't even send a
-> connection request.
-> EHOSTUNREACH is remote network is down.
-
-Thanks for the clarification!
-
-I was looking at connect(2) man page and there isn't EHOSTUNREACH in the
-ERRORS section :-(
-
-But connect(3p) contains the following that match what you said:
-       ECONNRESET
-              Remote host reset the connection request.
-       ENETUNREACH
-              No route to the network is present.
-       EHOSTUNREACH
-              The  destination host cannot be reached (probably because
-              the host is down or a remote router cannot reach it).
-
-So in this case, I think ENETUNREACH should be the best one, since the
-device is down and we can't send the connection request, but also
-EHOSTUNREACH should fit...
-
-In af_vsock.c we already return ENETUNREACH when the stream is not allowed
-or we don't have a transport to use.
-
-Thanks,
-Stefano
+U21hbGwgY2xlYW51cCBhcyBiZWxvdyBpdGVtcywNCg0KMS4gVXNlIHVmc2hjZF9pc193Yl9hbGxv
+d2VkKCkgZGlyZWN0bHkgaW5zdGVhZCBvZiB1ZnNoY2Rfd2Jfc3VwKCkNCiAgIHNpbmNlIHVmc2hj
+ZF93Yl9zdXAoKSBqdXN0IHJldHVybnMgdGhlIHJlc3VsdCBvZg0KICAgdWZzaGNkX2lzX3diX2Fs
+bG93ZWQoKS4NCg0KMi4gSW4gdWZzaGNkX3N1c3BlbmQoKSwgImVsc2UgaWYgKCF1ZnNoY2RfaXNf
+cnVudGltZV9wbShwbV9vcCkpDQogICBjYW4gYmUgc2ltcGxpZmllZCB0byAiZWxzZSIgc2luY2Ug
+Ym90aCBoYXZlIHRoZSBzYW1lIG1lYW5pbmcuDQoNClRoaXMgcGF0Y2ggZG9lcyBub3QgY2hhbmdl
+IGFueSBmdW5jdGlvbmFsaXR5Lg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3Rhbmxl
+eS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyB8IDIw
+ICsrKysrKystLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwg
+MTMgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5j
+IGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KaW5kZXggOGMyNTZmNmY0YTY1Li40MjBkMTQ3
+NmIzZTEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQorKysgYi9kcml2
+ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQpAQCAtMjU1LDcgKzI1NSw2IEBAIHN0YXRpYyBpbnQgdWZz
+aGNkX3NjYWxlX2Nsa3Moc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBzY2FsZV91cCk7DQogc3Rh
+dGljIGlycXJldHVybl90IHVmc2hjZF9pbnRyKGludCBpcnEsIHZvaWQgKl9faGJhKTsNCiBzdGF0
+aWMgaW50IHVmc2hjZF9jaGFuZ2VfcG93ZXJfbW9kZShzdHJ1Y3QgdWZzX2hiYSAqaGJhLA0KIAkJ
+CSAgICAgc3RydWN0IHVmc19wYV9sYXllcl9hdHRyICpwd3JfbW9kZSk7DQotc3RhdGljIGJvb2wg
+dWZzaGNkX3diX3N1cChzdHJ1Y3QgdWZzX2hiYSAqaGJhKTsNCiBzdGF0aWMgaW50IHVmc2hjZF93
+Yl9idWZfZmx1c2hfZW5hYmxlKHN0cnVjdCB1ZnNfaGJhICpoYmEpOw0KIHN0YXRpYyBpbnQgdWZz
+aGNkX3diX2J1Zl9mbHVzaF9kaXNhYmxlKHN0cnVjdCB1ZnNfaGJhICpoYmEpOw0KIHN0YXRpYyBp
+bnQgdWZzaGNkX3diX2N0cmwoc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBlbmFibGUpOw0KQEAg
+LTI4Nyw3ICsyODYsNyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgdWZzaGNkX3diX2NvbmZpZyhzdHJ1
+Y3QgdWZzX2hiYSAqaGJhKQ0KIHsNCiAJaW50IHJldDsNCiANCi0JaWYgKCF1ZnNoY2Rfd2Jfc3Vw
+KGhiYSkpDQorCWlmICghdWZzaGNkX2lzX3diX2FsbG93ZWQoaGJhKSkNCiAJCXJldHVybjsNCiAN
+CiAJcmV0ID0gdWZzaGNkX3diX2N0cmwoaGJhLCB0cnVlKTsNCkBAIC01MTk5LDExICs1MTk4LDYg
+QEAgc3RhdGljIHZvaWQgdWZzaGNkX2Jrb3BzX2V4Y2VwdGlvbl9ldmVudF9oYW5kbGVyKHN0cnVj
+dCB1ZnNfaGJhICpoYmEpDQogCQkJCV9fZnVuY19fLCBlcnIpOw0KIH0NCiANCi1zdGF0aWMgYm9v
+bCB1ZnNoY2Rfd2Jfc3VwKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQotew0KLQlyZXR1cm4gdWZzaGNk
+X2lzX3diX2FsbG93ZWQoaGJhKTsNCi19DQotDQogaW50IHVmc2hjZF93Yl9nZXRfZmxhZ19pbmRl
+eChzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIHsNCiAJaWYgKGhiYS0+ZGV2X2luZm8uYl93Yl9idWZm
+ZXJfdHlwZSA9PSBXQl9CVUZfTU9ERV9MVV9ERURJQ0FURUQpDQpAQCAtNTIxOCw3ICs1MjEyLDcg
+QEAgc3RhdGljIGludCB1ZnNoY2Rfd2JfY3RybChzdHJ1Y3QgdWZzX2hiYSAqaGJhLCBib29sIGVu
+YWJsZSkNCiAJdTggaW5kZXg7DQogCWVudW0gcXVlcnlfb3Bjb2RlIG9wY29kZTsNCiANCi0JaWYg
+KCF1ZnNoY2Rfd2Jfc3VwKGhiYSkpDQorCWlmICghdWZzaGNkX2lzX3diX2FsbG93ZWQoaGJhKSkN
+CiAJCXJldHVybiAwOw0KIA0KIAlpZiAoIShlbmFibGUgXiBoYmEtPndiX2VuYWJsZWQpKQ0KQEAg
+LTUyNzQsNyArNTI2OCw3IEBAIHN0YXRpYyBpbnQgdWZzaGNkX3diX2J1Zl9mbHVzaF9lbmFibGUo
+c3RydWN0IHVmc19oYmEgKmhiYSkNCiAJaW50IHJldDsNCiAJdTggaW5kZXg7DQogDQotCWlmICgh
+dWZzaGNkX3diX3N1cChoYmEpIHx8IGhiYS0+d2JfYnVmX2ZsdXNoX2VuYWJsZWQpDQorCWlmICgh
+dWZzaGNkX2lzX3diX2FsbG93ZWQoaGJhKSB8fCBoYmEtPndiX2J1Zl9mbHVzaF9lbmFibGVkKQ0K
+IAkJcmV0dXJuIDA7DQogDQogCWluZGV4ID0gdWZzaGNkX3diX2dldF9mbGFnX2luZGV4KGhiYSk7
+DQpAQCAtNTI5Niw3ICs1MjkwLDcgQEAgc3RhdGljIGludCB1ZnNoY2Rfd2JfYnVmX2ZsdXNoX2Rp
+c2FibGUoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJaW50IHJldDsNCiAJdTggaW5kZXg7DQogDQot
+CWlmICghdWZzaGNkX3diX3N1cChoYmEpIHx8ICFoYmEtPndiX2J1Zl9mbHVzaF9lbmFibGVkKQ0K
+KwlpZiAoIXVmc2hjZF9pc193Yl9hbGxvd2VkKGhiYSkgfHwgIWhiYS0+d2JfYnVmX2ZsdXNoX2Vu
+YWJsZWQpDQogCQlyZXR1cm4gMDsNCiANCiAJaW5kZXggPSB1ZnNoY2Rfd2JfZ2V0X2ZsYWdfaW5k
+ZXgoaGJhKTsNCkBAIC01MzQ2LDcgKzUzNDAsNyBAQCBzdGF0aWMgYm9vbCB1ZnNoY2Rfd2Jfa2Vl
+cF92Y2Nfb24oc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJaW50IHJldDsNCiAJdTMyIGF2YWlsX2J1
+ZjsNCiANCi0JaWYgKCF1ZnNoY2Rfd2Jfc3VwKGhiYSkpDQorCWlmICghdWZzaGNkX2lzX3diX2Fs
+bG93ZWQoaGJhKSkNCiAJCXJldHVybiBmYWxzZTsNCiAJLyoNCiAJICogVGhlIHVmcyBkZXZpY2Ug
+bmVlZHMgdGhlIHZjYyB0byBiZSBPTiB0byBmbHVzaC4NCkBAIC04MjMxLDEyICs4MjI1LDEyIEBA
+IHN0YXRpYyBpbnQgdWZzaGNkX3N1c3BlbmQoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bSB1ZnNf
+cG1fb3AgcG1fb3ApDQogCQkgKiBjb25maWd1cmVkIFdCIHR5cGUgaXMgNzAlIGZ1bGwsIGtlZXAg
+dmNjIE9ODQogCQkgKiBmb3IgdGhlIGRldmljZSB0byBmbHVzaCB0aGUgd2IgYnVmZmVyDQogCQkg
+Ki8NCi0JCWlmICgoaGJhLT5hdXRvX2Jrb3BzX2VuYWJsZWQgJiYgdWZzaGNkX3diX3N1cChoYmEp
+KSB8fA0KKwkJaWYgKChoYmEtPmF1dG9fYmtvcHNfZW5hYmxlZCAmJiB1ZnNoY2RfaXNfd2JfYWxs
+b3dlZChoYmEpKSB8fA0KIAkJICAgIHVmc2hjZF93Yl9rZWVwX3ZjY19vbihoYmEpKQ0KIAkJCWhi
+YS0+ZGV2X2luZm8ua2VlcF92Y2Nfb24gPSB0cnVlOw0KIAkJZWxzZQ0KIAkJCWhiYS0+ZGV2X2lu
+Zm8ua2VlcF92Y2Nfb24gPSBmYWxzZTsNCi0JfSBlbHNlIGlmICghdWZzaGNkX2lzX3J1bnRpbWVf
+cG0ocG1fb3ApKSB7DQorCX0gZWxzZSB7DQogCQloYmEtPmRldl9pbmZvLmtlZXBfdmNjX29uID0g
+ZmFsc2U7DQogCX0NCiANCi0tIA0KMi4xOC4wDQo=
 
