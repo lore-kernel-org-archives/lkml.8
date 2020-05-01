@@ -2,307 +2,146 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E536CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AE5C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21EB208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E5D2184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:20:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dXYWCe/p"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nEPB/kPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgEASQN (ORCPT
+        id S1729927AbgEASUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:16:13 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44940 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730353AbgEASQH (ORCPT
+        Fri, 1 May 2020 14:20:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729138AbgEASUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:16:07 -0400
-Received: from prsriva-linux.hsd1.wa.comcast.net (c-24-19-135-168.hsd1.wa.comcast.net [24.19.135.168])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0F06220B71CC;
-        Fri,  1 May 2020 11:16:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0F06220B71CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1588356965;
-        bh=9BrQRipJ8L0+PR7w+BHorvxfJzUA9j4XBGTJLVfj2wo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXYWCe/pEjs7Fi+XnQMu+RMkIpt/9h3MnBgm7Q2+VEwBZbdx6sDVTTyAjkCdiPNUA
-         YuT/NVpsY75qZMUOKFCTlbiON1R7yy/eMQl1CVsrBmjDY6z8QT95kPpOKND+zuw90X
-         6PhjVOiroY80SgIAOZcHNthBRtuqmz04guUW5w3g=
-From:   Prakhar Srivastava <prsriva@linux.microsoft.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     nramas@linux.microsoft.com, prsriva@linux.microsoft.com,
-        tusharsu@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: [RFC][PATCH 2/2] Add support for ima buffer pass using reserved memory arm64
-Date:   Fri,  1 May 2020 11:15:52 -0700
-Message-Id: <20200501181552.1184827-3-prsriva@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200501181552.1184827-1-prsriva@linux.microsoft.com>
-References: <20200501181552.1184827-1-prsriva@linux.microsoft.com>
+        Fri, 1 May 2020 14:20:50 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59ACC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 11:20:50 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id z90so8553813qtd.10
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 11:20:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sDjIEM+eSzMwryve6HfF6tWEHpQ1YVsnKklV3y9mbGo=;
+        b=nEPB/kPUVu64ALDJjlHG9rMKTiO65lpugPdBC30Nczov+tgzGXPn6wpmV85NOyxRh5
+         3llmUpX+zBdGg9ao+A8Dyp3OnqDyGBYB6vqDjCxOxw5mjJPKQo6DB/cC07qH7cSXDWlk
+         xT4JrOhmLTygWIPY4TatqdbFhJhSZImrg17m9LM8AKb8xkfmkMFcSYAOisggYpw2tOSK
+         s3vV/30613M9nsClks7/z1Whk4BcpdM8wHMSt0GTIsR5+hRulh2NImOiBoJFW/rg1wOH
+         inAEReWsuS05YfwJRAyPScaLj42vxYgfD6RLvZrbk1XcHFRCd2h2j5a1KLt7/kD3PyeZ
+         vl9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sDjIEM+eSzMwryve6HfF6tWEHpQ1YVsnKklV3y9mbGo=;
+        b=Uurp2fjQOQTjjarCTvwolMocv1amIUFGTDy6byrzqwlJeLGOXngtAMdlIefMad+O2v
+         E71rLfVPRyqDxIE3jF9nZVzyzdlRPkUJr3l6UnoOQJwUFyV9e07Lmvdjq2Y5qAQvn/iJ
+         nthAsVPJgQKjfE7VkY3rht5BFeDQKbdCdb+uRGISsURjdaqma1LRO2yhXZaPK7u47I0a
+         5VPFMzoMvgn+ooYWnhh0BUtIW6K0VDWzne10NzplWe9XOFoaDl7E1NAqGMKErkJcBywc
+         4LC8sR64nnYLVzkA7ovEgu6qS214sQrWKgHzAYWnsKTlTJZXfeGsOfm0P56qAf/+5bWr
+         oUWg==
+X-Gm-Message-State: AGi0PuYT8FESQs7YjvmH3KVLitmi4mpgvz177j75hNv+xxRXT6uv43ID
+        ald0qzOxsJCAdHBBF1AUWNbAVg==
+X-Google-Smtp-Source: APiQypLnto+0lS8NZSLIiaARckcdYZmXp5cRSri5MnUXK85RufiSt8ijYevAzNOi5g9Dq58iHtdy2g==
+X-Received: by 2002:ac8:3254:: with SMTP id y20mr5176017qta.67.1588357249676;
+        Fri, 01 May 2020 11:20:49 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id n92sm3048968qtd.68.2020.05.01.11.20.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 May 2020 11:20:49 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jUaHI-0006oH-Ci; Fri, 01 May 2020 15:20:48 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     linux-mm@kvack.org, Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
+        =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        dri-devel@lists.freedesktop.org,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org,
+        =?utf-8?b?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        nouveau@lists.freedesktop.org, "Yang, Philip" <Philip.Yang@amd.com>
+Subject: [PATCH hmm v2 0/5] Adjust hmm_range_fault() API
+Date:   Fri,  1 May 2020 15:20:43 -0300
+Message-Id: <0-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- Add support for ima buffer pass using reserved memory for
- arm64 kexec. Update the arch sepcific code path in kexec file load to store
- the ima buffer in the reserved memory. The same reserved memory is read on
- kexec or cold boot.
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
----
- arch/arm64/Kconfig                     |  1 +
- arch/arm64/include/asm/ima.h           | 22 +++++++++
- arch/arm64/include/asm/kexec.h         |  5 ++
- arch/arm64/kernel/Makefile             |  1 +
- arch/arm64/kernel/ima_kexec.c          | 64 ++++++++++++++++++++++++++
- arch/arm64/kernel/machine_kexec_file.c |  1 +
- arch/powerpc/include/asm/ima.h         |  3 +-
- arch/powerpc/kexec/ima.c               | 14 +++++-
- security/integrity/ima/ima_kexec.c     | 15 ++++--
- 9 files changed, 119 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm64/include/asm/ima.h
- create mode 100644 arch/arm64/kernel/ima_kexec.c
+The API is a bit complicated for the uses we actually have, and
+disucssions for simplifying have come up a number of times.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 40fb05d96c60..bc9e1a91686b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1069,6 +1069,7 @@ config KEXEC
- config KEXEC_FILE
- 	bool "kexec file based system call"
- 	select KEXEC_CORE
-+	select HAVE_IMA_KEXEC
- 	help
- 	  This is new version of kexec system call. This system call is
- 	  file based and takes file descriptors as system call argument
-diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
-new file mode 100644
-index 000000000000..58033b427e59
---- /dev/null
-+++ b/arch/arm64/include/asm/ima.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARM64_IMA_H
-+#define _ASM_ARM64_IMA_H
-+
-+struct kimage;
-+
-+int is_ima_memory_reserved(void);
-+int ima_get_kexec_buffer(void **addr, size_t *size);
-+int ima_free_kexec_buffer(void);
-+
-+#ifdef CONFIG_IMA_KEXEC
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      void *buffer, size_t size);
-+
-+#else
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      void *buffer, size_t size)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-+#endif /* _ASM_ARM64_IMA_H */
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d24b527e8c00..2bd19ccb6c43 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -100,6 +100,11 @@ struct kimage_arch {
- 	void *elf_headers;
- 	unsigned long elf_headers_mem;
- 	unsigned long elf_headers_sz;
-+
-+#ifdef CONFIG_IMA_KEXEC
-+	phys_addr_t ima_buffer_addr;
-+	size_t ima_buffer_size;
-+#endif
- };
- 
- extern const struct kexec_file_ops kexec_image_ops;
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 4e5b8ee31442..cd3cb7690d51 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
- obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
-+obj-$(CONFIG_HAVE_IMA_KEXEC)		+= ima_kexec.o
- obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
- obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
-diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
-new file mode 100644
-index 000000000000..ff5649333c7c
---- /dev/null
-+++ b/arch/arm64/kernel/ima_kexec.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Microsoft Corporation.
-+ *
-+ * Authors:
-+ * Prakhar Srivastava <prsriva@linux.microsoft.com>
-+ */
-+
-+#include <linux/kexec.h>
-+#include <linux/of.h>
-+
-+
-+/**
-+ * is_ima_memory_reserved - check if memory is reserved via device
-+ *			    tree.
-+ *	Return: negative or zero when memory is not reserved.
-+ *	positive number on success.
-+ *
-+ */
-+int is_ima_memory_reserved(void)
-+{
-+	return of_is_ima_memory_reserved();
-+}
-+
-+/**
-+ * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_get_kexec_buffer(void **addr, size_t *size)
-+{
-+	return of_get_ima_buffer(addr, size);
-+}
-+
-+/**
-+ * ima_free_kexec_buffer - free memory used by the IMA buffer
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int ima_free_kexec_buffer(void)
-+{
-+	return of_remove_ima_buffer();
-+}
-+
-+#ifdef CONFIG_IMA_KEXEC
-+/**
-+ * arch_ima_add_kexec_buffer - do arch-specific steps to add the IMA
-+ *	measurement log.
-+ * @image: - pointer to the kimage, to store the address and size of the
-+ *	IMA measurement log.
-+ * @load_addr: - the address where the IMA measurement log is stored.
-+ * @size - size of the IMA measurement log.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-+			      void *buffer, size_t size)
-+{
-+	of_ima_write_buffer(buffer, size);
-+	return 0;
-+}
-+#endif /* CONFIG_IMA_KEXEC */
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index b40c3b0def92..8dc25511142d 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -22,6 +22,7 @@
- #include <linux/types.h>
- #include <linux/vmalloc.h>
- #include <asm/byteorder.h>
-+#include <asm/ima.h>
- 
- /* relevant device tree properties */
- #define FDT_PROP_KEXEC_ELFHDR	"linux,elfcorehdr"
-diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
-index ead488cf3981..a8febc620b42 100644
---- a/arch/powerpc/include/asm/ima.h
-+++ b/arch/powerpc/include/asm/ima.h
-@@ -4,6 +4,7 @@
- 
- struct kimage;
- 
-+int is_ima_memory_reserved(void);
- int ima_get_kexec_buffer(void **addr, size_t *size);
- int ima_free_kexec_buffer(void);
- 
-@@ -15,7 +16,7 @@ static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
- 
- #ifdef CONFIG_IMA_KEXEC
- int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
--			      size_t size);
-+			      void *buffer, size_t size);
- 
- int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
- #else
-diff --git a/arch/powerpc/kexec/ima.c b/arch/powerpc/kexec/ima.c
-index 720e50e490b6..3823539d4e07 100644
---- a/arch/powerpc/kexec/ima.c
-+++ b/arch/powerpc/kexec/ima.c
-@@ -46,6 +46,18 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
- 	return 0;
- }
- 
-+/**
-+ * is_ima_memory_reserved - check if memory is reserved via device
-+ *			    tree.
-+ *	Return: negative or zero when memory is not reserved.
-+ *	positive number on success.
-+ *
-+ */
-+int is_ima_memory_reserved(void)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- /**
-  * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-  * @addr:	On successful return, set to point to the buffer contents.
-@@ -137,7 +149,7 @@ void remove_ima_buffer(void *fdt, int chosen_node)
-  * Return: 0 on success, negative errno on error.
-  */
- int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
--			      size_t size)
-+			      void *buffer, size_t size)
- {
- 	image->arch.ima_buffer_addr = load_addr;
- 	image->arch.ima_buffer_size = size;
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 121de3e04af2..3749472c7e18 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -116,13 +116,18 @@ void ima_add_kexec_buffer(struct kimage *image)
- 	kbuf.buffer = kexec_buffer;
- 	kbuf.bufsz = kexec_buffer_size;
- 	kbuf.memsz = kexec_segment_size;
--	ret = kexec_add_buffer(&kbuf);
--	if (ret) {
--		pr_err("Error passing over kexec measurement buffer.\n");
--		return;
-+
-+	if (!is_ima_memory_reserved()) {
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			pr_err("Error passing over kexec measurement buffer.\n");
-+			return;
-+		}
- 	}
- 
--	ret = arch_ima_add_kexec_buffer(image, kbuf.mem, kexec_segment_size);
-+	ret = arch_ima_add_kexec_buffer(image, kbuf.mem, kexec_buffer,
-+					kexec_segment_size);
- 	if (ret) {
- 		pr_err("Error passing over kexec measurement buffer.\n");
- 		return;
+This small series removes the customizable pfn format and simplifies the
+return code of hmm_range_fault()
+
+All the drivers are adjusted to process in the simplified format.
+I would appreciated tested-by's for the two drivers, thanks!
+
+v2:
+ - Move call chain to commit message
+ - Fix typo of HMM_PFN_REQ_FAULT
+ - Move nouveau_hmm_convert_pfn() to nouveau_svm.c
+ - Add acks and tested-bys
+v1: https://lore.kernel.org/r/0-v1-4eb72686de3c+5062-hmm_no_flags_jgg@mellanox.com
+
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+To: Ralph Campbell <rcampbell@nvidia.com>
+Cc: nouveau@lists.freedesktop.org
+Cc: Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: "Kuehling, Felix" <Felix.Kuehling@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: "Yang, Philip" <Philip.Yang@amd.com>
+To: linux-mm@kvack.org
+
+Jason Gunthorpe (5):
+  mm/hmm: make CONFIG_DEVICE_PRIVATE into a select
+  mm/hmm: make hmm_range_fault return 0 or -1
+  drm/amdgpu: remove dead code after hmm_range_fault()
+  mm/hmm: remove HMM_PFN_SPECIAL
+  mm/hmm: remove the customizable pfn format from hmm_range_fault
+
+ Documentation/vm/hmm.rst                |  28 ++--
+ arch/powerpc/Kconfig                    |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c |  56 +++----
+ drivers/gpu/drm/nouveau/Kconfig         |   2 +-
+ drivers/gpu/drm/nouveau/nouveau_dmem.c  |  27 +---
+ drivers/gpu/drm/nouveau/nouveau_dmem.h  |   3 +-
+ drivers/gpu/drm/nouveau/nouveau_svm.c   |  94 ++++++++----
+ include/linux/hmm.h                     | 109 +++++---------
+ mm/Kconfig                              |   7 +-
+ mm/hmm.c                                | 185 +++++++++++-------------
+ 10 files changed, 217 insertions(+), 296 deletions(-)
+
 -- 
-2.25.1
+2.26.2
 
