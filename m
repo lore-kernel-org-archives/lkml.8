@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB46C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B2FC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A047D20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806A520757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341373;
-	bh=Do1MKtQwU5B4HtI4gZ3Q52PmZmllkDlWjxz/JdLtaB8=;
+	s=default; t=1588341377;
+	bh=Z/zPxkWe2fRUFC3yfV2DUN3dnKzbzDiP4hZZYzjw2t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m9re8aSIDRLVXXXo4eA+oR1wD2FVWJ1xk5wkWoi1CfN0d7YDFrgJmWsGquvNU5mqb
-	 +2UXW7ZiPKhz1GfL6CccNXWkrTqLCifSGU2Kk61ZCuj2jf9aDhoK/XtEYvsGpP1l9Y
-	 oiPu6JeYaI9T9BUZEurOjoyJHaEvuBIcGhYVEWe8=
+	b=E8psdaVGkc1SDngW4F/u/19qSBXy6Y5pZR/MhG/o33A69WJufgpoq/xUkdmpbM8Pc
+	 ulOYBQWSKgjFxJCmS2jS39b62xmSZc+y4xM8vee7L6xMZXu2dUZtVIiEBZMk0az5B8
+	 zqfH57/x5nkoqJcf8yGnWJzPBFTnQkA6V1WuBvPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgEAN4M (ORCPT
+        id S1731277AbgEAN4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58036 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:56:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729730AbgEANcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:52 -0400
+        id S1730351AbgEANcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0549B24957;
-        Fri,  1 May 2020 13:32:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 616702173E;
+        Fri,  1 May 2020 13:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339972;
-        bh=Do1MKtQwU5B4HtI4gZ3Q52PmZmllkDlWjxz/JdLtaB8=;
+        s=default; t=1588339969;
+        bh=Z/zPxkWe2fRUFC3yfV2DUN3dnKzbzDiP4hZZYzjw2t0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DAuUEU3pJtALyFbN7X8CZ7EFiDmrlUnjYc3fOSa0uLu4Map2DsYHYhw1+WKQmdnCn
-         eDP8JFFyX1DY3uxioB/lo/zsp+ABcNQcgvKru+kZdIJQHGipIb4MBBq5FiKXUViJij
-         LB2qroOW2JlKdnDoDlplYfByfDR8L9ksSrOBbZ7Y=
+        b=T99wMS/qk5mimyAgPa9SAgWP3Fh5nC8HyiDfIc9gsF0T2GZNGrWzrd8j0y2ggkhPG
+         qMTo8h0gB5qc6joGC0VBwfDtpBut/rhgifhRDBja5FoghyMtxPz003gI6yhjG2uqyI
+         aZi92aaebovTxA4RvIXT90O8jZAiPYEqqhugnzh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 031/117] tcp: cache line align MAX_TCP_HEADER
-Date:   Fri,  1 May 2020 15:21:07 +0200
-Message-Id: <20200501131548.538900548@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 040/117] iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
+Date:   Fri,  1 May 2020 15:21:16 +0200
+Message-Id: <20200501131549.533545909@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 9bacd256f1354883d3c1402655153367982bba49 ]
+commit f954b098fbac4d183219ce5b42d76d6df2aed50a upstream.
 
-TCP stack is dumb in how it cooks its output packets.
+When enabling the trigger and unmasking the end-of-sequence (EOS) interrupt
+the EOS interrupt should be cleared from the status register. Otherwise it
+is possible that it was still set from a previous capture. If that is the
+case the interrupt would fire immediately even though no conversion has
+been done yet and stale data is being read from the device.
 
-Depending on MAX_HEADER value, we might chose a bad ending point
-for the headers.
+The old code only clears the interrupt if the interrupt was previously
+unmasked. Which does not make much sense since the interrupt is always
+masked at this point and in addition masking the interrupt does not clear
+the interrupt from the status register. So the clearing needs to be done
+unconditionally.
 
-If we align the end of TCP headers to cache line boundary, we
-make sure to always use the smallest number of cache lines,
-which always help.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/net/tcp.h |    2 +-
+ drivers/iio/adc/xilinx-xadc-core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -55,7 +55,7 @@ extern struct inet_hashinfo tcp_hashinfo
- extern struct percpu_counter tcp_orphan_count;
- void tcp_time_wait(struct sock *sk, int state, int timeo);
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -660,7 +660,7 @@ static int xadc_trigger_set_state(struct
  
--#define MAX_TCP_HEADER	(128 + MAX_HEADER)
-+#define MAX_TCP_HEADER	L1_CACHE_ALIGN(128 + MAX_HEADER)
- #define MAX_TCP_OPTION_SPACE 40
- #define TCP_MIN_SND_MSS		48
- #define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
+ 	spin_lock_irqsave(&xadc->lock, flags);
+ 	xadc_read_reg(xadc, XADC_AXI_REG_IPIER, &val);
+-	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, val & XADC_AXI_INT_EOS);
++	xadc_write_reg(xadc, XADC_AXI_REG_IPISR, XADC_AXI_INT_EOS);
+ 	if (state)
+ 		val |= XADC_AXI_INT_EOS;
+ 	else
 
 
