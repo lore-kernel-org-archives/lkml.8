@@ -4,61 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750A6C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E20C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27D222073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C698A2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588311259;
-	bh=SZo3DVsZ0TuxJuX2Z5shMnylT7+yzknrxW3MToG5NxQ=;
+	s=default; t=1588311304;
+	bh=L+aYmWipJYsP/Mjay3nZEu6524fFdHe9QbZoCsdWlpU=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=usTcSabiCF9sC3+CFsgjOO/a71uY3udgNeo7Em3Z7kbc6v1OOCAVpvbpVgP9Xajh6
-	 IqL+swPz8eb6AHtXBMM2Omrn+BIsdkuhFf+BG8nOa4MKOglWpwV2FpVstu7IX6qVHJ
-	 tV6VRJIyDm82phdJQGs7PeL8lQM19lxTUxhKLQyE=
+	b=VmNmOVZ9H4eAOIvEVn5TKEBtvpG1l+SJnhTnOeRD7fhBzIW75sR6bS453rYN5cYXd
+	 /tyVXonbmafnhMjxToKpzdw0U+mbyc0kL0Dc8rWb733/zBMe5PYC0uZtfWq4DaG5E7
+	 xK0nX4pIWufIVExUM4UI6ZimV3SJudWsVZiotpoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgEAFeS (ORCPT
+        id S1728232AbgEAFfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:34:18 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:58019 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAFeR (ORCPT
+        Fri, 1 May 2020 01:35:04 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:37858 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgEAFfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:34:17 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 0415Xv7h011238;
-        Fri, 1 May 2020 14:33:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 0415Xv7h011238
+        Fri, 1 May 2020 01:35:03 -0400
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 0415YlWG006461;
+        Fri, 1 May 2020 14:34:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0415YlWG006461
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588311238;
-        bh=oOUTjHbglUckIEy8WVvMgD3ZhjrrhESz7wu9wTM0qt8=;
+        s=dec2015msa; t=1588311288;
+        bh=UZWM7i0RZnnhTnaPc+bA3fPcd9baVcIj+Fep60CTyUs=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jPIC9BRAIB9gWJZqCfy5olbgMzB5gtYjxvxZV8vB3/20I/w8YksC++qd7vBvzEYh2
-         GsSeFMclrVoYAkD8WZp0qlc+Vt5QAOYHhfjsRAThxSshwDkpgEw+12TwbY0TULiStT
-         qh6hnfD+fsDsOgsC8Uj3GgXmkwAVvbDrYWYn8RejYsv1eagVwJaMC0DQ+ThW+57Nqm
-         m94prNdcVoeJDpAa9zEcWxJwytj26VVPuBzvJ00iY/v6x2bmW518NNA3g1So15R8yz
-         TDZne2D0mkUFepXrZulc9eYmuzAQZuDhoeNNSHAhVaMAjwXsUzDZV8qZbnbgogh62e
-         TJxfU16w4E4yQ==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id b6so3411581uak.6;
-        Thu, 30 Apr 2020 22:33:58 -0700 (PDT)
-X-Gm-Message-State: AGi0PubUFw4YbTpGHwci+bFRfhI7fZ27+FzGl2BWlCe2Y7X6I235wfmG
-        v+U+8FEpf+U07m1s2n1S2Z/XTmXhRZXqI3BkY+c=
-X-Google-Smtp-Source: APiQypIt+xGZssmIimHEiLPklzB0CvviZARI0GxQsMAFDkLql6zAbzBItxLWUDKzY8bQva8cbq5ggd2pjqqU32QwpLM=
-X-Received: by 2002:ab0:7298:: with SMTP id w24mr1787087uao.95.1588311237065;
- Thu, 30 Apr 2020 22:33:57 -0700 (PDT)
+        b=xb1tWHX+qf/bEwuP5QwZN3txKaLAhrMlkqnWAq/VdLZk3v9AaHY25ESw83N3pY+gW
+         16vjsuMzXn4l1aG1zjpGPugovTV9Cw7bH2pVfPg7YreyluxMei+Pw1Tm52uZ0Xdb7j
+         Nh806VgdZWuFpFS/nOiHkTnzoRln9+/QIraTEUUjjeLcQKJTh5RhCIPWvjfrZf8zLW
+         GyGGw+0tQYZW2/Kua6aLQjfLFvBjppDN9nPbCbCfZWG+7McRVuIFz6jgl6lYZqri29
+         pJZa1qZ+up0ZIUAztW/edIXgtMWOvuV/+hlO3pRR1IHhKVtWQV2vov44+nKraio4dx
+         fK5+CMDs8geMQ==
+X-Nifty-SrcIP: [209.85.221.181]
+Received: by mail-vk1-f181.google.com with SMTP id j127so539900vke.4;
+        Thu, 30 Apr 2020 22:34:48 -0700 (PDT)
+X-Gm-Message-State: AGi0Puadh3i0+MzohG43G81E4Uo3gTuAK4v23oxlwscVEJFQhWy6p7WZ
+        JuIDY4mviK+IcYR2+0hrhLyr/N/QJeNLfid5eII=
+X-Google-Smtp-Source: APiQypK4SZZYkVLuWaMc9Uw+UZeiEdzKkKJRzZ9ZgTZ2v9epE8PC2KDbGf6W9JA1PKc3iWvYSQ0vKisDIVhrEpPLdDs=
+X-Received: by 2002:a1f:d182:: with SMTP id i124mr1573782vkg.26.1588311287171;
+ Thu, 30 Apr 2020 22:34:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424161502.656103-1-masahiroy@kernel.org> <009101d61a6b$71f93a70$55ebaf50$@codeaurora.org>
-In-Reply-To: <009101d61a6b$71f93a70$55ebaf50$@codeaurora.org>
+References: <20200423142354.312088-1-masahiroy@kernel.org>
+In-Reply-To: <20200423142354.312088-1-masahiroy@kernel.org>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 1 May 2020 14:33:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR+PjvE3yQS7xdKo5Cf_K1xDg+NijistAqWX7Ob=_irWg@mail.gmail.com>
-Message-ID: <CAK7LNAR+PjvE3yQS7xdKo5Cf_K1xDg+NijistAqWX7Ob=_irWg@mail.gmail.com>
-Subject: Re: [PATCH] hexagon: suppress error message for 'make clean'
-To:     bcain@codeaurora.org
-Cc:     linux-hexagon@vger.kernel.org,
+Date:   Fri, 1 May 2020 14:34:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQH07KvoCgv5B8jUs+EUsJ167omM1U2AWHKdaAB+nAMCQ@mail.gmail.com>
+Message-ID: <CAK7LNAQH07KvoCgv5B8jUs+EUsJ167omM1U2AWHKdaAB+nAMCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] kbuild: use $(CC_VERSION_TEXT) to evaluate
+ CC_IS_GCC and CC_IS_CLANG
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,53 +68,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 4:06 AM Brian Cain <bcain@codeaurora.org> wrote:
+On Thu, Apr 23, 2020 at 11:24 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> > -----Original Message-----
-> > From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
-> > owner@vger.kernel.org> On Behalf Of Masahiro Yamada
-> ...
-> > 'make ARCH=hexagon clean' emits an error message as follows:
-> >
-> >   $ make ARCH=hexagon clean
-> >   gcc: error: unrecognized command line option '-G0'
-> >
-> > You can suppress it by setting the correct CROSS_COMPILE=, but we should
-> > not require any compiler for cleaning.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> The result of '$(CC) --version | head -n 1' is already computed by the
+> top Makefile, and stored in the environment variable, CC_VERSION_TEXT.
 >
+> 'echo' is probably less expensive than the two commands $(CC) and
+> 'head' although this optimization is not noticeable level.
 >
-> Acked-by: Brian Cain <bcain@codeaurora.org>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Applied to linux-kbuild. Thanks.
+Applied to linux-kbuild.
 
 
+
+> ---
 >
-> > ---
-> >
-> >  arch/hexagon/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/hexagon/Makefile b/arch/hexagon/Makefile index
-> > 4c5858b80f0e..c168c6980d05 100644
-> > --- a/arch/hexagon/Makefile
-> > +++ b/arch/hexagon/Makefile
-> > @@ -30,7 +30,7 @@ TIR_NAME := r19
-> >  KBUILD_CFLAGS += -ffixed-$(TIR_NAME) -
-> > DTHREADINFO_REG=$(TIR_NAME) -D__linux__  KBUILD_AFLAGS += -
-> > DTHREADINFO_REG=$(TIR_NAME)
-> >
-> > -LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
-> > +LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name
-> > +2>/dev/null)
-> >  libs-y += $(LIBGCC)
-> >
-> >  head-y := arch/hexagon/kernel/head.o
-> > --
-> > 2.25.1
+> Changes in v2:
+>   - new patch
 >
+>  init/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 9e22ee8fbd75..5f797df3f043 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -9,7 +9,7 @@ config DEFCONFIG_LIST
+>         default "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)"
+>
+>  config CC_IS_GCC
+> -       def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
+> +       def_bool $(success,echo "$(CC_VERSION_TEXT)" | grep -q gcc)
+>
+>  config GCC_VERSION
+>         int
+> @@ -21,7 +21,7 @@ config LD_VERSION
+>         default $(shell,$(LD) --version | $(srctree)/scripts/ld-version.sh)
+>
+>  config CC_IS_CLANG
+> -       def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
+> +       def_bool $(success,echo "$(CC_VERSION_TEXT)" | grep -q clang)
+>
+>  config CLANG_VERSION
+>         int
+> --
+> 2.25.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200423142354.312088-1-masahiroy%40kernel.org.
+
 
 
 -- 
