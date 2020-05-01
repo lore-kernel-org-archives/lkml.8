@@ -2,52 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2057FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF723C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D502495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B4724956
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340170;
-	bh=EJ6dlQJyvFOAXUfsGqol6Wmqc66jE3hiFMMygdlxfTk=;
+	s=default; t=1588340174;
+	bh=nB7gP91EFe3d08JibxkrjH5bmM8vd9VvuEXyswdD+/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YKjGS8bxLBYN1itysnidNwHvJhzFjWoO1uUqGN1gKzmJ7xWu53aW0lXlpYukBJxPZ
-	 b2Ifu/SrHseNLI/G+DAuTWSwO2dWs/HYDa/5joosOrTy8KZJ+TPWecHmpfRdQfe6iA
-	 zTiQX4x+upPwkcNpgd63g8Rxd5cBO/dJxMFUjoPQ=
+	b=efNOeSyjiJOZXTaOKFrSpI8egNVAvnRBv2NiuKuuZEV1gTlm+n+5HC6G92Op6SnyL
+	 nOoOTlXIKC7ntmwQ4h3VpOU9Sn9w9xEnRkHJQPJUdXy0K9ooMTEugYU22CNJFwoAix
+	 axUcNmy2NtYmcQuMTkLR+jvMPFRNu3QPlvulGJJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgEANgI (ORCPT
+        id S1730828AbgEANgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34454 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbgEANgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:04 -0400
+        id S1730341AbgEANgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12DAC216FD;
-        Fri,  1 May 2020 13:36:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86194216FD;
+        Fri,  1 May 2020 13:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340163;
-        bh=EJ6dlQJyvFOAXUfsGqol6Wmqc66jE3hiFMMygdlxfTk=;
+        s=default; t=1588340166;
+        bh=nB7gP91EFe3d08JibxkrjH5bmM8vd9VvuEXyswdD+/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGTYwS5U7kfzDYmw7hHMUKdifE4YEeRXECFOLuxjVwG7ww9gYTO78/uqtbGFV8ml4
-         Gn8CpWOLZJ38wkjhYY5bzz8ldMnodih1WWMhx8wZ+bFfJJG4fooLn0M81e0bQZJ0YW
-         2XCV9AIAwxW0KCJaeKmgaiDoviv8Baok/Xp7FHuM=
+        b=jw7VxrtAMgBZCNGWJoA5FrIPWZa5S5Myf7nqtwNIc1kb0w8RYyhmg4LhE9POfeNPO
+         DGoq7Tm7fTmRlbY+fBoJkvnI5F4S2EUxvEsFzymysX0nq0tsscoSGeQa0fHJYlSLc0
+         PF+3vpGMg98H7WQXcWes75tTeIVI7PWCRxytr6/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.19 06/46] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
-Date:   Fri,  1 May 2020 15:22:31 +0200
-Message-Id: <20200501131501.364921548@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 07/46] iio:ad7797: Use correct attribute_group
+Date:   Fri,  1 May 2020 15:22:32 +0200
+Message-Id: <20200501131501.554087477@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -60,47 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 09b04abb70f096333bef6bc95fa600b662e7ee13 upstream.
+commit 28535877ac5b2b84f0d394fd67a5ec71c0c48b10 upstream.
 
-When building with Clang + -Wtautological-pointer-compare:
+It should use ad7797_attribute_group in ad7797_info,
+according to commit ("iio:ad7793: Add support for the ad7796 and ad7797").
 
-drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
-address of 'req->queue' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-                             ~~~~~^~~~~    ~~~~
-drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
-address of 'req->usb_req' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-                                                    ~~~~~^~~~~~~    ~~~~
-2 warnings generated.
+Scale is fixed for the ad7796 and not programmable, hence
+should not have the scale_available attribute.
 
-As it notes, these statements will always evaluate to false so remove
-them.
-
-Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
-Link: https://github.com/ClangBuiltLinux/linux/issues/749
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: fd1a8b912841 ("iio:ad7793: Add support for the ad7796 and ad7797")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/bdc/bdc_ep.c |    2 +-
+ drivers/iio/adc/ad7793.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -540,7 +540,7 @@ static void bdc_req_complete(struct bdc_
- {
- 	struct bdc *bdc = ep->bdc;
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -542,7 +542,7 @@ static const struct iio_info ad7797_info
+ 	.read_raw = &ad7793_read_raw,
+ 	.write_raw = &ad7793_write_raw,
+ 	.write_raw_get_fmt = &ad7793_write_raw_get_fmt,
+-	.attrs = &ad7793_attribute_group,
++	.attrs = &ad7797_attribute_group,
+ 	.validate_trigger = ad_sd_validate_trigger,
+ };
  
--	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-+	if (req == NULL)
- 		return;
- 
- 	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
 
 
