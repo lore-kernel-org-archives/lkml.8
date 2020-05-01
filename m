@@ -2,129 +2,198 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575B5C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC24CC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 388C72073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588311486;
-	bh=L/eFwF+Vi6NOnoXGyVyImgK/ug//vfMHXUZj1AeKl0k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rsTVRzdIJZ47dYnDsfBJJwrZQDb71dU1MjnP7peiStaLmGAvDwxp6h+CVQF4UfClI
-	 rC7RoT+Gb1/5s15ZfdhRqb9UNxuaKBZMYXzz09LpZr/m6bSwsdPiV0VyHO/2j1D+qR
-	 6ZbMW2DB47zE0Py1Le1OzFfVaYX6t9u8dzkesZ7g=
+	by mail.kernel.org (Postfix) with ESMTP id B3C7E2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:38:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SOlYIYKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgEAFiF (ORCPT
+        id S1728333AbgEAFiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:38:05 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:59735 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAFiF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:38:05 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0415bh42007654;
-        Fri, 1 May 2020 14:37:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0415bh42007654
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588311464;
-        bh=qhr8O6PNoNTMDkn08RG5IuDq9QyyKdwASkM9IiK29Mc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PdCcHp2Yo1NVWUnq26ARCkLFPxUY2eNdoYuXaSyAv4Wdnbv03sd3DCPsfJH5GF6V1
-         jE4nB/ku9cgRJrBg9MKukdWexf3kAdIpesS2dOxpmptUitWoZ2eWRd1GXMvaNq2gIk
-         F14ZdaNHi7AFNx6abvoD8UYYiCKLwDtcLLmQvVITnLjrvNr1oH4ryHCS50SKj6bIJ2
-         ZPLgIO7ZcCatdlqocr1Jr82ph9vAL/v3Pkb/15DZ7M5MghPr4ZEiGQLmhPZMONiDLV
-         7RS5dnVjsf8JGFipG6xJrtPHhaViKsgcu8MvcVL+EsAReGDdAzJNK7qw+RrmchrqoU
-         ZTkTwPEoKCt4A==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id a5so5747865vsm.7;
-        Thu, 30 Apr 2020 22:37:44 -0700 (PDT)
-X-Gm-Message-State: AGi0PubTVgjFeEMY2aVIoSxMi9LMDUznu0W3A3f6eT71SRXqTo+pzI8Y
-        JZvgjIt9o/unfGsyi2W7VpOTeWoq4J7+xxGFXTQ=
-X-Google-Smtp-Source: APiQypKXK70jwAGWQSCtSzA9rTjzc0A/nYOZPkXPg6+35qSxP5FaNSPhDTVqn0obnAejsYXllF7zxfARGRYkmL4TSJk=
-X-Received: by 2002:a67:6e07:: with SMTP id j7mr2055106vsc.181.1588311463175;
- Thu, 30 Apr 2020 22:37:43 -0700 (PDT)
+        Fri, 1 May 2020 01:38:08 -0400
+Received: from mail-eopbgr690131.outbound.protection.outlook.com ([40.107.69.131]:64043
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728174AbgEAFiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 01:38:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dj6v7ui2SuDIwgibgTbI2Kd71WPqKwFrSNodFmbrsRtrvkA8FdXXvFiuVFtBrQIKvBY7Wg1OvGRRlRN5lhPjKXybOxzJilARcoG5yq8KGIUmBtEbioEByMKJFRSFPfpExjeQAZGdg2LDC56LK+2sUZhYIGqNpwc6KteGgdAGhBL2OiYZYRVQloxJzapVlq2Hc528MrjyNXlHapfG/kc6L7GFB0UYhI3DHv7cnJOEiA1j0hfd5eqnqklZCk6dc+u0zd/MD8knYE7B6hLVZYXGBJJruZmj2mkVIlEWz1grQRMaXAsPw4TVXUXnVplTO3KUXDCs1SWkqB5i4T5TkO95Gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kKFVlzUIW4xVhlfs4E5qk5bCEg1g3RRToHvxtByxeKU=;
+ b=dFQxTpBuMSXL5O3SmGgDByrXtbQ9sCPYDHXxM/5dgEhQJnshbrLY0uifclyEeblNkB9aBsLJwzp/3jVnWvZJTUjpevTtW8ETL0OzD7EXx1pJKmxsTwtBXJnvQBiERPN3dYw67ZSymOOGkWkEoIu7QQN5jLNW1Rr9poyC5e++oOxQm6hNJgzgZzkMJyJZmzbvSOAsGOz8CNOvjzb+E8aROdSGf9yoaAN+0uBozMnam53qoEhj+bi1Q94nj63wupa5idqg+38L3wk7M2FNyxb4FQUQXLhYi0jFOMI5VBhb8pX2CEZFYCwYQHCfnSjpNq3o1BJbcngS4pFIWyuhlqQ7pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kKFVlzUIW4xVhlfs4E5qk5bCEg1g3RRToHvxtByxeKU=;
+ b=SOlYIYKmnEp9TGV9go/sTyFrq2d/SORW5FMoKpMwPhisvuesJPP4BoBNPm0/uPS8hww47n6Oswt4dWHdmsYuUEyW4MXk/nCujJwxjVvNH4yYos7mTamxrcADA264zTnqGECaz9mxMQEmFAxY6ZaFqzqLWDPRIB8JEGnxrPh7gD4=
+Authentication-Results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
+ by SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.9; Fri, 1 May
+ 2020 05:38:02 +0000
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55%5]) with mapi id 15.20.2979.009; Fri, 1 May 2020
+ 05:38:02 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Cc:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first attempt failed with invalid device state
+Date:   Fri,  1 May 2020 13:37:28 +0800
+Message-Id: <20200501053728.24740-1-weh@microsoft.com>
+X-Mailer: git-send-email 2.20.1
+Reply-To: weh@microsoft.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR0601CA0004.apcprd06.prod.outlook.com (2603:1096:3::14)
+ To SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
 MIME-Version: 1.0
-References: <20200427141251.154129-1-masahiroy@kernel.org>
-In-Reply-To: <20200427141251.154129-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 1 May 2020 14:37:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQq6Z4Czf56EF02oA1JnFvrv=hwnPraxkfP+80hLQuqCw@mail.gmail.com>
-Message-ID: <CAK7LNAQq6Z4Czf56EF02oA1JnFvrv=hwnPraxkfP+80hLQuqCw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: determine the output format of DTC by the target suffix
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.113) by SG2PR0601CA0004.apcprd06.prod.outlook.com (2603:1096:3::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 05:37:58 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [167.220.255.113]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e5314ff8-2513-422f-fd22-08d7ed91d0ab
+X-MS-TrafficTypeDiagnostic: SN6PR2101MB1021:|SN6PR2101MB1021:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB1021AB97DC3E6F52AC9801CBBBAB0@SN6PR2101MB1021.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IryDP4zP+ifU163KqAlPa4YQU6TpqHsF0TJPKEPnMYCdhpkBcX9uvC3drhiva7Uy4Q634Ff4nHT9zQkMqonfxyvQTBCSN1btk1DQhuBzD9mK/eGhd8iyNqQUORlf1PBCke3bU4LByzil2ywuYSvQfYjHekyrQ5wpCOK287TidgtkUqR8Prpn5kh84FC0YCp91SgAn7JEd9DAIkIVjL1NQ1xCO01bIW7cHzkejSBm+M4K7F9hn5w21G7QcUhsXaHNcbuCrp4sSyEclsrsa+CNzt4zfoV/LVbx5WRwxmA+mQyCfokNGH+D3ZVJP+bEA4S6e4LiEqmm0W4TL9VUav8cEnUscYrMBJb2XE2pns2NomNt2Z3hoES/X2jqWU/R+NCnlAcN4s/VZaJfLGIoZO8oaMfvQL8xtCdMPEz9bUJb8vsEm+AjUalmG0I5Cd8vIfvl/lj2MXLP2RgGs+IbmwikI8yhDGv4hwvkn5XqDVsQidE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(136003)(346002)(376002)(66946007)(66476007)(66556008)(7696005)(82960400001)(52116002)(316002)(4326008)(3450700001)(107886003)(1076003)(2906002)(6636002)(186003)(16526019)(10290500003)(6666004)(8936002)(5660300002)(82950400001)(478600001)(8676002)(6486002)(36756003)(2616005)(26005)(956004)(86362001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: FTF4kdtREN+Nxdcmcjzy2ihJLI2R6n6RBQ4VTvS25K/1UjlzjuDO7gKpkL+TMuoJKMETfaZgO5mcpNKx9hrJnCvCy51j2CsAKPeNngfuTrfLA33HSaxKfNgNuY3aqa/bBJWsqX7qwhw6+eTGq8v72lKNRvsCe4U6r4YF2vxb6FmkCGXT+I4RV/lHrQLu8/n8jvRmp1kKXK9d2Z+KNsbYuAXAIZwl2AqEIzA6nfkLelYry9B01XdSQNrJk8RS2p0JxoztvS4gKlTjawKzxzPANW3S6dJ/fQpmpKAzb6uZliQvUBdP/Uy42U/H4B0JJ2vnXC6rM+L4zl3v9eIpJShqQt+po5f3DZJ2KHNWcbSjYl/ah3KyMXwhWDo4uGhJZYSrtPVtucNdxot9SXZCspM+Tvu+eiP+6kXQh1NEe18r77QECi2a0RaVBg76e4gZdm+FY0JC/PbfgZyLOSaFzqPEKVRxaASMC3t7VZsK/68qpc0fHIZgAhQ9bnASbS+k/oe4ZOHGOVLJll7Afn3Nl7qAA2ejF6KcavJiSTn9FFXA+DEZZZ+Fc8q55m52H874NYeWmWBrr6Bw02mvjTJhBKzftb72xTjpcvs742eJEsC8k1r8kMnpllGVVle7N4Y4rLpmy311ZFithsqKwcIfVo5sl+qy3RE/a6C89RhHXpLktqHMVy1jK3GEEfIlOrBVQK8iQCAvGiPpbckPzWP5WDlVQ2FYDJZ8qxCrsgHSdKZjbx1bTWNm5dGXdNKr7E0KoA4fXAM7Y/SFSqi3SOf3zBv+RKwy6pROv4IbUrpB1g5lBXDtXdci0HvF0DF4lxJk/Nov
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5314ff8-2513-422f-fd22-08d7ed91d0ab
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 05:38:02.5486
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PzpvR8NFkK5Hlaqbl5S9yhuALfrxnoevU01lmBKJfNiDXUmPeO3TMvydLsmROVCZzsJIgTg+yAsLq2vwQQiyFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 11:13 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> cmd_dtc takes the additional parameter $(2) to select the target
-> format, dtb or yaml. This makes things complicated when it is used
-> with cmd_and_fixdep and if_changed_rule. I actually stumbled on this.
-> See commit 3d4b2238684a ("kbuild: fix DT binding schema rule again to
-> avoid needless rebuilds").
->
-> Extract the suffix part of the target instead of passing the parameter.
-> Fortunately, this works for both $(obj)/%.dtb and $(obj)/%.dt.yaml .
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+In the case of kdump, the PCI device was not cleanly shut down
+before the kdump kernel starts. This causes the initial
+attempt of entering D0 state in the kdump kernel to fail with
+invalid device state returned from Hyper-V host.
+When this happens, explicitly call PCI bus exit and retry to
+enter the D0 state.
 
+Signed-off-by: Wei Hu <weh@microsoft.com>
+---
+   v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
+   Bjorn Helgaas
 
+ drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-Applied to linux-kbuild.
-
-
-> ---
->
->  scripts/Makefile.lib | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 12f6a331a8f3..cd52a8c6428f 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -287,13 +287,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->  quiet_cmd_dtc = DTC     $@
->  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
->         $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> -       $(DTC) -O $(2) -o $@ -b 0 \
-> +       $(DTC) -O $(patsubst .%,%,$(suffix $@)) -o $@ -b 0 \
->                 $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
->         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
->
->  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
-> -       $(call if_changed_dep,dtc,dtb)
-> +       $(call if_changed_dep,dtc)
->
->  DT_CHECKER ?= dt-validate
->  DT_BINDING_DIR := Documentation/devicetree/bindings
-> @@ -304,7 +304,7 @@ quiet_cmd_dtb_check =       CHECK   $@
->        cmd_dtb_check =  $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -p $(DT_TMP_SCHEMA) $@
->
->  define rule_dtc
-> -       $(call cmd_and_fixdep,dtc,yaml)
-> +       $(call cmd_and_fixdep,dtc)
->         $(call cmd,dtb_check)
->  endef
->
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index e6fac0187722..92092a47d3af 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_device *hbus)
+ 	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
+ }
+ 
++static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
++
+ /**
+  * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
+  * @hdev:	VMBus's tracking struct for this root PCI bus
+@@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	struct pci_bus_d0_entry *d0_entry;
+ 	struct hv_pci_compl comp_pkt;
+ 	struct pci_packet *pkt;
++	bool retry = true;
+ 	int ret;
+ 
++enter_d0_retry:
+ 	/*
+ 	 * Tell the host that the bus is ready to use, and moved into the
+ 	 * powered-on state.  This includes telling the host which region
+@@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	if (ret)
+ 		goto exit;
+ 
++	/*
++	 * In certain case (Kdump) the pci device of interest was
++	 * not cleanly shut down and resource is still held on host
++	 * side, the host could return invalid device status.
++	 * We need to explicitly request host to release the resource
++	 * and try to enter D0 again.
++	 */
++	if (comp_pkt.completion_status < 0 && retry) {
++		retry = false;
++
++		dev_err(&hdev->device, "Retrying D0 Entry\n");
++
++		/*
++		 * Hv_pci_bus_exit() calls hv_send_resource_released()
++		 * to free up resources of its child devices.
++		 * In the kdump kernel we need to set the
++		 * wslot_res_allocated to 255 so it scans all child
++		 * devices to release resources allocated in the
++		 * normal kernel before panic happened.
++		 */
++		hbus->wslot_res_allocated = 255;
++
++		ret = hv_pci_bus_exit(hdev, true);
++
++		if (ret == 0) {
++			kfree(pkt);
++			goto enter_d0_retry;
++		}
++		dev_err(&hdev->device,
++			"Retrying D0 failed with ret %d\n", ret);
++	}
++
+ 	if (comp_pkt.completion_status < 0) {
+ 		dev_err(&hdev->device,
+ 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+@@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	return ret;
+ }
+ 
+-static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
++static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
+ {
+ 	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
+ 	struct {
+@@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
+ 	if (hdev->channel->rescind)
+ 		return 0;
+ 
+-	if (!hibernating) {
++	if (!keep_devs) {
+ 		/* Delete any children which might still exist. */
+ 		dr = kzalloc(sizeof(*dr), GFP_KERNEL);
+ 		if (dr && hv_pci_start_relations_work(hbus, dr))
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
