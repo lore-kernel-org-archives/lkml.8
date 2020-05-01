@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA23EC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4511CC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C704724953
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AB5208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340543;
-	bh=QsBMPlkjZfN4HIDsaQOupvvDezSP1V9ddU85POYwCXA=;
+	s=default; t=1588340548;
+	bh=bj5FfiH9/bwBg7/KDQ9MB5vzY3FhvOzZI71BOOxtLGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+rFiIeapeAE8IvJkRCgMJbBAsh+fg+rGuAvXdLgFD3XutP4y4PS4/Nk4pfjk5PKE
-	 XGeE9HpawySkj7IaudQqIXheUAJMqrAzS2NJE94xo+TQ/borTFKQe59G0cMND204V5
-	 xa8S+5yOdQgmsX93KqQTfzN9w+KRj/+b5S2qrbUM=
+	b=ACdBal/GAQ3V2O7FbkqMjX9Ld7ngavQuThROZV5PoPId91ockJXZbyhEa3rgp3PH3
+	 yXPhftGnG12y6AMX/DmVkiHZ/CzjjBrRQcLpKjy+qJkwYBlj3pHMvKvAHamoibh1tC
+	 0KyY+FidAm3Za8gn+LkGkiDvNhQi0nrK5Yq8Vn+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgEANmX (ORCPT
+        id S1731509AbgEANm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731285AbgEANmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:42:19 -0400
+        id S1729445AbgEANmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72984205C9;
-        Fri,  1 May 2020 13:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1583208DB;
+        Fri,  1 May 2020 13:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340538;
-        bh=QsBMPlkjZfN4HIDsaQOupvvDezSP1V9ddU85POYwCXA=;
+        s=default; t=1588340541;
+        bh=bj5FfiH9/bwBg7/KDQ9MB5vzY3FhvOzZI71BOOxtLGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JevCKPc6Sf2olaYFc9N213gy5Ew7IvV3pJEimclo7NU7SXTVtRDegMKS2ZtEBoCxb
-         RmhPg/YYVtqwFmFZB28/QXQOexjZalVdmd95RGnX50AVQbRNhD7k8dRW7tfC1yP9Mg
-         WmoW5vdtmw913G7dN1ha0H05ksrAoE7sHtL+8360=
+        b=ZnasfQ6A2DKSEPvE7FKzp19xi/dIY+YVK4dk93ZIeA+9PUUo5gSMFQOYf3pV6/lFX
+         Eeyc2OYq8nlV2EtsXaSrNpcOsifslzcAkNUbm898P2p2kPZSIuGQChVmDp06iPVNZw
+         7/uFogF323NEnOyyUZRlPR6r4bEzoJpNVUKHk4j0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.6 023/106] drivers: soc: xilinx: fix firmware driver Kconfig dependency
-Date:   Fri,  1 May 2020 15:22:56 +0200
-Message-Id: <20200501131546.856962666@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.6 014/106] propagate_one(): mnt_set_mountpoint() needs mount_lock
+Date:   Fri,  1 May 2020 15:22:47 +0200
+Message-Id: <20200501131546.025197036@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,49 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit d0384eedcde21276ac51f57c641f875605024b32 upstream.
+commit b0d3869ce9eeacbb1bbd541909beeef4126426d5 upstream.
 
-The firmware driver is optional, but the power driver depends on it,
-which needs to be reflected in Kconfig to avoid link errors:
+... to protect the modification of mp->m_count done by it.  Most of
+the places that modify that thing also have namespace_lock held,
+but not all of them can do so, so we really need mount_lock here.
+Kudos to Piotr Krysiuk <piotras@gmail.com>, who'd spotted a related
+bug in pivot_root(2) (fixed unnoticed in 5.3); search for other
+similar turds has caught out this one.
 
-aarch64-linux-ld: drivers/soc/xilinx/zynqmp_power.o: in function `zynqmp_pm_isr':
-zynqmp_power.c:(.text+0x284): undefined reference to `zynqmp_pm_invoke_fn'
-
-The firmware driver can probably be allowed for compile-testing as
-well, so it's best to drop the dependency on the ZYNQ platform
-here and allow building as long as the firmware code is built-in.
-
-Fixes: ab272643d723 ("drivers: soc: xilinx: Add ZynqMP PM driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200408155224.2070880-1-arnd@arndb.de
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/xilinx/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/pnode.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/soc/xilinx/Kconfig
-+++ b/drivers/soc/xilinx/Kconfig
-@@ -19,7 +19,7 @@ config XILINX_VCU
- 
- config ZYNQMP_POWER
- 	bool "Enable Xilinx Zynq MPSoC Power Management driver"
--	depends on PM && ARCH_ZYNQMP
-+	depends on PM && ZYNQMP_FIRMWARE
- 	default y
- 	select MAILBOX
- 	select ZYNQMP_IPI_MBOX
-@@ -35,7 +35,7 @@ config ZYNQMP_POWER
- config ZYNQMP_PM_DOMAINS
- 	bool "Enable Zynq MPSoC generic PM domains"
- 	default y
--	depends on PM && ARCH_ZYNQMP && ZYNQMP_FIRMWARE
-+	depends on PM && ZYNQMP_FIRMWARE
- 	select PM_GENERIC_DOMAINS
- 	help
- 	  Say yes to enable device power management through PM domains
+--- a/fs/pnode.c
++++ b/fs/pnode.c
+@@ -261,14 +261,13 @@ static int propagate_one(struct mount *m
+ 	child = copy_tree(last_source, last_source->mnt.mnt_root, type);
+ 	if (IS_ERR(child))
+ 		return PTR_ERR(child);
++	read_seqlock_excl(&mount_lock);
+ 	mnt_set_mountpoint(m, mp, child);
++	if (m->mnt_master != dest_master)
++		SET_MNT_MARK(m->mnt_master);
++	read_sequnlock_excl(&mount_lock);
+ 	last_dest = m;
+ 	last_source = child;
+-	if (m->mnt_master != dest_master) {
+-		read_seqlock_excl(&mount_lock);
+-		SET_MNT_MARK(m->mnt_master);
+-		read_sequnlock_excl(&mount_lock);
+-	}
+ 	hlist_add_head(&child->mnt_hash, list);
+ 	return count_mounts(m->mnt_ns, child);
+ }
 
 
