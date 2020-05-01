@@ -2,91 +2,80 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049BCC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C462CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1ADE20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9771A2076D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgEAOPF (ORCPT
+        id S1729289AbgEAOPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:15:05 -0400
-Received: from smtp-42a9.mail.infomaniak.ch ([84.16.66.169]:33343 "EHLO
-        smtp-42a9.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728885AbgEAOPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:15:04 -0400
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49DDm55ksLzlhP4P;
-        Fri,  1 May 2020 16:15:01 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49DDm327wYzlrK12;
-        Fri,  1 May 2020 16:14:59 +0200 (CEST)
-Subject: Re: [PATCH v3 1/5] fs: Add support for a RESOLVE_MAYEXEC flag on
- openat2(2)
-To:     James Morris <jmorris@namei.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200428175129.634352-1-mic@digikod.net>
- <20200428175129.634352-2-mic@digikod.net>
- <alpine.LRH.2.21.2005011404420.29679@namei.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <d3555693-d09c-d434-e5a7-33d0c876c783@digikod.net>
-Date:   Fri, 1 May 2020 16:14:58 +0200
-User-Agent: 
+        Fri, 1 May 2020 10:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728885AbgEAOPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:15:21 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BFF320757;
+        Fri,  1 May 2020 14:15:20 +0000 (UTC)
+Date:   Fri, 1 May 2020 10:15:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Subject: Re: [PATCH 1/3] selftests/ftrace: Make XFAIL green color
+Message-ID: <20200501101518.1039e908@gandalf.local.home>
+In-Reply-To: <158834026136.28357.14691721094452323293.stgit@devnote2>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834026136.28357.14691721094452323293.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2005011404420.29679@namei.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri,  1 May 2020 22:37:41 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-On 01/05/2020 06:04, James Morris wrote:
-> On Tue, 28 Apr 2020, Mickaël Salaün wrote:
-> 
->> When the RESOLVE_MAYEXEC flag is passed, openat2(2) may be subject to
->> additional restrictions depending on a security policy managed by the
->> kernel through a sysctl or implemented by an LSM thanks to the
->> inode_permission hook.
-> 
-> 
-> Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+> Since XFAIL (Expected Failure) is expected to fail the test, which
+> means that test case works as we expected. IOW, XFAIL is same as
+> PASS. So make it green.
 
-As requested, I switched back to O_MAYEXEC yesterday with the v4:
-https://lore.kernel.org/lkml/20200430132320.699508-2-mic@digikod.net/
+THANK YOU!!!! That's been annoying me for some time ;-)
+
+BIG Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/testing/selftests/ftrace/ftracetest |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> index 063ecb290a5a..72e837d0dfc1 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -273,7 +273,7 @@ eval_result() { # sigval
+>        return $UNSUPPORTED_RESULT # depends on use case
+>      ;;
+>      $XFAIL)
+> -      prlog "	[${color_red}XFAIL${color_reset}]"
+> +      prlog "	[${color_green}XFAIL${color_reset}]"
+>        XFAILED_CASES="$XFAILED_CASES $CASENO"
+>        return 0
+>      ;;
+
