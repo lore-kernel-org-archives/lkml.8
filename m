@@ -2,124 +2,60 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E33BC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E00BC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57906208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q2RfUtcN"
+	by mail.kernel.org (Postfix) with ESMTP id 6DD6B206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgEAWwm (ORCPT
+        id S1727042AbgEAWx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
+        Fri, 1 May 2020 18:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726045AbgEAWwl (ORCPT
+        by vger.kernel.org with ESMTP id S1726336AbgEAWx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:52:41 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88290C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 15:52:41 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f8so4143320plt.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 15:52:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=Oo7oEIWf5cHJGiBhP9YTwfodKyiEwR4VKWpfXgwUrfg=;
-        b=q2RfUtcNyhnp0bhQcbep8DDU/VIxp+z1RpB0ypZK2ytXGwqogalcYe2khi0yRJSbTW
-         4ru7cB/Drjufc4s9cqYxr7dtUE7dryQ6mwGBbIRE/xE48t1xWNjMZ5ZIjkWImLotctOO
-         xa8WmimoVGAHwNFgcjXP1Rms5GQBoLarwE3+WOxJsGl7upZJvWI5Lwm22y0WW4yadcwo
-         MUJOI/c861eRmkvQR7spmx+bvllpntM00oZCjCDEWYCKMf8rhSz0BtvE0gaMa1hW4jol
-         StZq4IElQi2GFR0/ed+Xjaj4v0V0iIteGRxnAa+Vw7cdDIIenswrGi9k+IadnVZssoiE
-         MuoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=Oo7oEIWf5cHJGiBhP9YTwfodKyiEwR4VKWpfXgwUrfg=;
-        b=PXxcg02eh31N2mMKRZ5ljVw5gTXDk23xQi9/FBVExCFA5KewxBGyMVC6sD4quNOyuj
-         4ZLiZk6HjToUcgRcRO0YD6uiomnJNg3MFLZ9tJuTxiVpzGKuWdF0dag742BR/ygyLjyQ
-         WbYn49uJZaa2JwWcx8f+enJG8F3yc2asM8edziPFGOlqmA37j4rXV5xD+WKhv3/lj1G7
-         Yw9XCFQuOIZm7ga2yB54ZtyVYYMFAsvHzPcMjGIvZVy+utyVpe0EvZXIeOQPXtiP1/x8
-         kuHuCtMWl9IiAcEz7kiQ0Fbwd+4cJHbDLNgKB5N8kv7vIeITAS9uRvF9NJUtKdzxEVeN
-         3DVA==
-X-Gm-Message-State: AGi0Publyjb9ZKmK+ZvR9zdjSc5uZ4otPK1SGPsq4fPa1bS3N/70T6WB
-        BUePzpzdAWLU987+UMPq/UdK15tYLXoP6w==
-X-Google-Smtp-Source: APiQypJTM83VrO1CkIeKN1Oi0MuOOSDbESYTO1RFRcvPs46iPUp33BuCer2qzmD5aHP+mOOLPx3+5A==
-X-Received: by 2002:a17:90a:1983:: with SMTP id 3mr2238833pji.48.1588373560506;
-        Fri, 01 May 2020 15:52:40 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id o68sm3065890pfb.206.2020.05.01.15.52.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 15:52:39 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] io_uring fixes for 5.7-rc4
-Message-ID: <8bd7dea4-76f7-cb50-7658-3a3d50539edf@kernel.dk>
-Date:   Fri, 1 May 2020 16:52:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Fri, 1 May 2020 18:53:58 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EB6C061A0C;
+        Fri,  1 May 2020 15:53:58 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C696715007850;
+        Fri,  1 May 2020 15:53:56 -0700 (PDT)
+Date:   Fri, 01 May 2020 15:53:55 -0700 (PDT)
+Message-Id: <20200501.155355.1482969929360119370.davem@davemloft.net>
+To:     elder@linaro.org
+Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/2] net: ipa: don't cache channel state
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200430221323.5449-1-elder@linaro.org>
+References: <20200430221323.5449-1-elder@linaro.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 01 May 2020 15:53:57 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Alex Elder <elder@linaro.org>
+Date: Thu, 30 Apr 2020 17:13:21 -0500
 
-- Fix for statx not grabbing the file table, making AT_EMPTY_PATH fail
+> This series removes a field that holds a copy of a channel's state
+> at the time it was last fetched.  In principle the state can change
+> at any time, so it's better to just fetch it whenever needed.  The
+> first patch is just preparatory, simplifying the arguments to 
+> gsi_channel_state().
 
-- Cover a few cases where async poll can handle retry, eliminating the
-  need for an async thread
-
-- fallback request busy/free fix (Bijan)
-
-- syzbot reported SQPOLL thread exit fix for non-preempt (Xiaoguang)
-
-- Fix extra put of req for sync_file_range (Pavel)
-
-- Always punt splice async. We'll improve this for 5.8, but wanted to
-  eliminate the inode mutex lock from the non-blocking path for 5.7
-  (Pavel)
-
-Please pull!
-
-
-  git://git.kernel.dk/linux-block.git tags/io_uring-5.7-2020-05-01
-
-
-----------------------------------------------------------------
-Bijan Mottahedeh (1):
-      io_uring: use proper references for fallback_req locking
-
-Jens Axboe (3):
-      io_uring: statx must grab the file table for valid fd
-      io_uring: enable poll retry for any file with ->read_iter / ->write_iter
-      io_uring: only force async punt if poll based retry can't handle it
-
-Pavel Begunkov (3):
-      io_uring: fix extra put in sync_file_range()
-      io_uring: check non-sync defer_list carefully
-      io_uring: punt splice async because of inode mutex
-
-Xiaoguang Wang (1):
-      io_uring: use cond_resched() in io_ring_ctx_wait_and_kill()
-
- fs/io_uring.c | 58 +++++++++++++++++++++++++++++++---------------------------
- 1 file changed, 31 insertions(+), 27 deletions(-)
-
--- 
-Jens Axboe
-
+Series applied, thanks Alex.
