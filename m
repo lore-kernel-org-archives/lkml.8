@@ -2,53 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B6CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C26C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3462051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE59A2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340819;
-	bh=YphpFFixkiyfnywxVYFRTXsrp7Q0WASly/v6cgjf3Eo=;
+	s=default; t=1588340822;
+	bh=xR5sllBxTIDYao6jzEiJfu6TyrAgFun+Eq479l2zj0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FLxEXnMZrvYoD4GJLGg4lRc0tDwmRSZKH+xyb3lD+Ar3LwqElnnuOLpq3nQmZf3qS
-	 sFp4PD7n4rNMWFpcuBqy/oenrfh96tzDGeKIXs7FFiZIA168OEx31CNdhuHQYVkBQw
-	 5WUtDFytcULc8GpqkKxth5Iwd2J6EYLZNDRLavgA=
+	b=FxJw5yfP7993J2aoikvsPO81UYA/LwDU9KIFQ+KqSn4LCfeAHpatoNs5WHRDVmoFB
+	 pcIPlFvSVkijCaRJGZsMgLcM/Hmk0caegJHyGY5u8G9zNrQMyDUKyWFTf0Hu9WWyab
+	 pkfYIy0b8XR7ZUu1hDUmYfUm12/BfWT5pVkXaMjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbgEANq7 (ORCPT
+        id S1731710AbgEANoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731423AbgEANoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:13 -0400
+        id S1731697AbgEANoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E60524959;
-        Fri,  1 May 2020 13:44:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E42F205C9;
+        Fri,  1 May 2020 13:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340652;
-        bh=YphpFFixkiyfnywxVYFRTXsrp7Q0WASly/v6cgjf3Eo=;
+        s=default; t=1588340639;
+        bh=xR5sllBxTIDYao6jzEiJfu6TyrAgFun+Eq479l2zj0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QQIQLUgBbuqnz/ch0sHHcJi72Rsb9iLItbpI0fOLbPGWUo8cYjuvvYyneazEThxYT
-         TdkuDr+i0mawkKwK3rEhRFOtVntd/4b+RIYk2U/Vcnw4+RCqClpuG68Gknicf96Ce4
-         BEoxV0DLS/Om6kdIfw11x6e1U/+Zf+mqM4e0rMMk=
+        b=cJ7+WDjs13zycDCWzRNh+CFdormdQj1HHn0T/L7XNr7XHWQ2tmykMidG09yey/YIc
+         jbiMFQVdSCjX8UlWTj0scHK7TEwWiPLhfZcvLEuEuHMAUrD3N2ouns9ukhouprnM7l
+         V3W7RPq3mEJ69vp3N2RcauxFX6Q6tc36G18NlKdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 081/106] objtool: Support Clang non-section symbols in ORC dump
-Date:   Fri,  1 May 2020 15:23:54 +0200
-Message-Id: <20200501131553.487022224@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.6 064/106] bpf: Propagate expected_attach_type when verifying freplace programs
+Date:   Fri,  1 May 2020 15:23:37 +0200
+Message-Id: <20200501131551.736327335@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -61,111 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
+commit 03f87c0b45b177ba5f6b4a9bbe9f95e4aba31026 upstream.
 
-Historically, the relocation symbols for ORC entries have only been
-section symbols:
+For some program types, the verifier relies on the expected_attach_type of
+the program being verified in the verification process. However, for
+freplace programs, the attach type was not propagated along with the
+verifier ops, so the expected_attach_type would always be zero for freplace
+programs.
 
-  .text+0: sp:sp+8 bp:(und) type:call end:0
+This in turn caused the verifier to sometimes make the wrong call for
+freplace programs. For all existing uses of expected_attach_type for this
+purpose, the result of this was only false negatives (i.e., freplace
+functions would be rejected by the verifier even though they were valid
+programs for the target they were replacing). However, should a false
+positive be introduced, this can lead to out-of-bounds accesses and/or
+crashes.
 
-However, the Clang assembler is aggressive about stripping section
-symbols.  In that case we will need to use function symbols:
+The fix introduced in this patch is to propagate the expected_attach_type
+to the freplace program during verification, and reset it after that is
+done.
 
-  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
+Fixes: be8704ff07d2 ("bpf: Introduce dynamic program extensions")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/158773526726.293902.13257293296560360508.stgit@toke.dk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-In preparation for the generation of such entries in "objtool orc
-generate", add support for reading them in "objtool orc dump".
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ kernel/bpf/verifier.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
-index 13ccf775a83a4..ba4cbb1cdd632 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/orc_dump.c
-@@ -66,7 +66,7 @@ int orc_dump(const char *_objname)
- 	char *name;
- 	size_t nr_sections;
- 	Elf64_Addr orc_ip_addr = 0;
--	size_t shstrtab_idx;
-+	size_t shstrtab_idx, strtab_idx = 0;
- 	Elf *elf;
- 	Elf_Scn *scn;
- 	GElf_Shdr sh;
-@@ -127,6 +127,8 @@ int orc_dump(const char *_objname)
- 
- 		if (!strcmp(name, ".symtab")) {
- 			symtab = data;
-+		} else if (!strcmp(name, ".strtab")) {
-+			strtab_idx = i;
- 		} else if (!strcmp(name, ".orc_unwind")) {
- 			orc = data->d_buf;
- 			orc_size = sh.sh_size;
-@@ -138,7 +140,7 @@ int orc_dump(const char *_objname)
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -9892,6 +9892,7 @@ static int check_attach_btf_id(struct bp
+ 				return -EINVAL;
+ 			}
+ 			env->ops = bpf_verifier_ops[tgt_prog->type];
++			prog->expected_attach_type = tgt_prog->expected_attach_type;
  		}
- 	}
- 
--	if (!symtab || !orc || !orc_ip)
-+	if (!symtab || !strtab_idx || !orc || !orc_ip)
- 		return 0;
- 
- 	if (orc_size % sizeof(*orc) != 0) {
-@@ -159,21 +161,29 @@ int orc_dump(const char *_objname)
- 				return -1;
- 			}
- 
--			scn = elf_getscn(elf, sym.st_shndx);
--			if (!scn) {
--				WARN_ELF("elf_getscn");
--				return -1;
--			}
--
--			if (!gelf_getshdr(scn, &sh)) {
--				WARN_ELF("gelf_getshdr");
--				return -1;
--			}
--
--			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
--			if (!name || !*name) {
--				WARN_ELF("elf_strptr");
--				return -1;
-+			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
-+				scn = elf_getscn(elf, sym.st_shndx);
-+				if (!scn) {
-+					WARN_ELF("elf_getscn");
-+					return -1;
-+				}
+ 		if (!tgt_prog->jited) {
+ 			verbose(env, "Can attach to only JITed progs\n");
+@@ -10225,6 +10226,13 @@ err_release_maps:
+ 		 * them now. Otherwise free_used_maps() will release them.
+ 		 */
+ 		release_maps(env);
 +
-+				if (!gelf_getshdr(scn, &sh)) {
-+					WARN_ELF("gelf_getshdr");
-+					return -1;
-+				}
++	/* extension progs temporarily inherit the attach_type of their targets
++	   for verification purposes, so set it back to zero before returning
++	 */
++	if (env->prog->type == BPF_PROG_TYPE_EXT)
++		env->prog->expected_attach_type = 0;
 +
-+				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
-+			} else {
-+				name = elf_strptr(elf, strtab_idx, sym.st_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
- 			}
- 
- 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
--- 
-2.20.1
-
+ 	*prog = env->prog;
+ err_unlock:
+ 	if (!is_priv)
 
 
