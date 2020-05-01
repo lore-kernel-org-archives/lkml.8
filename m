@@ -2,280 +2,113 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F0AC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDA2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E66B216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:11:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="FtbU93sy"
+	by mail.kernel.org (Postfix) with ESMTP id 8B11F216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgEAPLZ (ORCPT
+        id S1729676AbgEAPLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:11:25 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:40556 "EHLO rere.qmqm.pl"
+        Fri, 1 May 2020 11:11:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:42356 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbgEAPLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:11:21 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49DG131GJdzMP;
-        Fri,  1 May 2020 17:11:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588345879; bh=Rr1sgFgpBY5Dzp/xQT/OHr8QvEUKh1pOriOrWBGo57w=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=FtbU93syoutg/e0584JkTGy6LI/ajWp3W78WjO3uVQlJpQLXbEaIoazXDppihK7BA
-         lRp3y6olO5HLQqRoURxo2XEnufunYNW3ZlVJKzL/lHqSgoG/qTNJwa4qnWoiIldUKE
-         mFjUwBUViZoNQVySp64+e4z8pO9bRDw+cpY6+BwmYiQ530TTwbdd52jKxY4pN5SWTn
-         FxUPhSmCvtXrAE6EcS6GYtUTpfde14qHeYPzJv6GgLAldOStOpmXj06CBPgE2ux3m2
-         J1afhmjYg6V18+5PlyLU3BcmiLB1LHRWgYYVNn31MV6dePp09nHARCEyMEvmnIARKL
-         6GHozG3BCryTA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Fri, 01 May 2020 17:11:18 +0200
-Message-Id: <249d7ad42b02bfeb8c31c49a64ee92b3e745086d.1588345420.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588345420.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588345420.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v4 2/4] power: supply: core: add input voltage/current
- measurements
+        id S1728896AbgEAPLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:11:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC72130E;
+        Fri,  1 May 2020 08:11:34 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 917573F68F;
+        Fri,  1 May 2020 08:11:33 -0700 (PDT)
+Date:   Fri, 1 May 2020 16:11:31 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
+ ID property from DT
+Message-ID: <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-5-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417114322.31111-5-kishon@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce input voltage and current limits and measurements.
-This makes room for e.g. VBUS measurements in USB chargers.
+On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
+> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
+> defines both Vendor ID and Device ID to be 32-bits. Fix
+> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
+> properties from device tree.
+> 
+> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
-v2: add parameter checking in power_supply_hwmon_read_string()
-v3: remove power_supply_hwmon_read_string() parameter checks
-    as it is internal API (suggested by Guenter Roeck)
----
- drivers/power/supply/power_supply_hwmon.c | 97 +++++++++++++++++++++--
- drivers/power/supply/power_supply_sysfs.c |  2 +
- include/linux/power_supply.h              |  2 +
- 3 files changed, 96 insertions(+), 5 deletions(-)
+I don't see how you would use a 32-bit value for a 16-bit register so
+certainly the struct cdns_pcie_rc fields size is questionable anyway.
 
-diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-index f5d538485aaa..3863b2a73ecf 100644
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -13,12 +13,17 @@ struct power_supply_hwmon {
- 	unsigned long *props;
- };
- 
-+static const char *const ps_input_label[] = {
-+	"battery",
-+	"external source",
-+};
-+
- static const char *const ps_temp_label[] = {
- 	"temp",
- 	"ambient temp",
- };
- 
--static int power_supply_hwmon_in_to_property(u32 attr)
-+static int power_supply_hwmon_in0_to_property(u32 attr)
- {
- 	switch (attr) {
- 	case hwmon_in_average:
-@@ -34,7 +39,31 @@ static int power_supply_hwmon_in_to_property(u32 attr)
- 	}
- }
- 
--static int power_supply_hwmon_curr_to_property(u32 attr)
-+static int power_supply_hwmon_in1_to_property(u32 attr)
-+{
-+	switch (attr) {
-+	case hwmon_in_max:
-+		return POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT;
-+	case hwmon_in_input:
-+		return POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int power_supply_hwmon_in_to_property(u32 attr, int channel)
-+{
-+	switch (channel) {
-+	case 0:
-+		return power_supply_hwmon_in0_to_property(attr);
-+	case 1:
-+		return power_supply_hwmon_in1_to_property(attr);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int power_supply_hwmon_curr0_to_property(u32 attr)
- {
- 	switch (attr) {
- 	case hwmon_curr_average:
-@@ -48,6 +77,30 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
- 	}
- }
- 
-+static int power_supply_hwmon_curr1_to_property(u32 attr)
-+{
-+	switch (attr) {
-+	case hwmon_curr_max:
-+		return POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT;
-+	case hwmon_curr_input:
-+		return POWER_SUPPLY_PROP_INPUT_CURRENT_NOW;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int power_supply_hwmon_curr_to_property(u32 attr, int channel)
-+{
-+	switch (channel) {
-+	case 0:
-+		return power_supply_hwmon_curr0_to_property(attr);
-+	case 1:
-+		return power_supply_hwmon_curr1_to_property(attr);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
- {
- 	if (channel) {
-@@ -87,9 +140,9 @@ power_supply_hwmon_to_property(enum hwmon_sensor_types type,
- {
- 	switch (type) {
- 	case hwmon_in:
--		return power_supply_hwmon_in_to_property(attr);
-+		return power_supply_hwmon_in_to_property(attr, channel);
- 	case hwmon_curr:
--		return power_supply_hwmon_curr_to_property(attr);
-+		return power_supply_hwmon_curr_to_property(attr, channel);
- 	case hwmon_temp:
- 		return power_supply_hwmon_temp_to_property(attr, channel);
- 	default:
-@@ -100,7 +153,9 @@ power_supply_hwmon_to_property(enum hwmon_sensor_types type,
- static bool power_supply_hwmon_is_a_label(enum hwmon_sensor_types type,
- 					   u32 attr)
- {
--	return type == hwmon_temp && attr == hwmon_temp_label;
-+	return (type == hwmon_temp && attr == hwmon_temp_label) ||
-+	       (type == hwmon_in && attr == hwmon_in_label) ||
-+	       (type == hwmon_curr && attr == hwmon_curr_label);
- }
- 
- struct hwmon_type_attr_list {
-@@ -114,7 +169,19 @@ static const u32 ps_temp_attrs[] = {
- 	hwmon_temp_min_alarm, hwmon_temp_max_alarm,
- };
- 
-+static const u32 ps_in_attrs[] = {
-+	hwmon_in_input, hwmon_in_average,
-+	hwmon_in_min, hwmon_in_max,
-+};
-+
-+static const u32 ps_curr_attrs[] = {
-+	hwmon_curr_input, hwmon_curr_average,
-+	hwmon_curr_max,
-+};
-+
- static const struct hwmon_type_attr_list ps_type_attrs[hwmon_max] = {
-+	[hwmon_in] = { ps_in_attrs, ARRAY_SIZE(ps_in_attrs) },
-+	[hwmon_curr] = { ps_curr_attrs, ARRAY_SIZE(ps_curr_attrs) },
- 	[hwmon_temp] = { ps_temp_attrs, ARRAY_SIZE(ps_temp_attrs) },
- };
- 
-@@ -186,6 +253,11 @@ static int power_supply_hwmon_read_string(struct device *dev,
- 					  const char **str)
- {
- 	switch (type) {
-+	case hwmon_in:
-+	case hwmon_curr:
-+		*str = ps_input_label[channel];
-+		break;
-+
- 	case hwmon_temp:
- 		*str = ps_temp_label[channel];
- 		break;
-@@ -309,15 +381,26 @@ static const struct hwmon_channel_info *power_supply_hwmon_info[] = {
- 			   HWMON_T_MAX_ALARM),
- 
- 	HWMON_CHANNEL_INFO(curr,
-+			   HWMON_C_LABEL   |
- 			   HWMON_C_AVERAGE |
- 			   HWMON_C_MAX     |
-+			   HWMON_C_INPUT,
-+
-+			   HWMON_C_LABEL   |
-+			   HWMON_C_MAX     |
- 			   HWMON_C_INPUT),
- 
- 	HWMON_CHANNEL_INFO(in,
-+			   HWMON_I_LABEL   |
- 			   HWMON_I_AVERAGE |
- 			   HWMON_I_MIN     |
- 			   HWMON_I_MAX     |
-+			   HWMON_I_INPUT,
-+
-+			   HWMON_I_LABEL   |
-+			   HWMON_I_MAX     |
- 			   HWMON_I_INPUT),
-+
- 	NULL
- };
- 
-@@ -382,6 +465,10 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
- 		case POWER_SUPPLY_PROP_VOLTAGE_MIN:
- 		case POWER_SUPPLY_PROP_VOLTAGE_MAX:
- 		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		case POWER_SUPPLY_PROP_INPUT_CURRENT_NOW:
-+		case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW:
-+		case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
- 			set_bit(prop, psyhw->props);
- 			break;
- 		default:
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index 51de3f47b25d..1d1fb69516a8 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -273,7 +273,9 @@ static struct device_attribute power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(charge_control_limit_max),
- 	POWER_SUPPLY_ATTR(charge_control_start_threshold),
- 	POWER_SUPPLY_ATTR(charge_control_end_threshold),
-+	POWER_SUPPLY_ATTR(input_current_now),
- 	POWER_SUPPLY_ATTR(input_current_limit),
-+	POWER_SUPPLY_ATTR(input_voltage_now),
- 	POWER_SUPPLY_ATTR(input_voltage_limit),
- 	POWER_SUPPLY_ATTR(input_power_limit),
- 	POWER_SUPPLY_ATTR(energy_full_design),
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 6a34df65d4d1..5313d1284aad 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -127,7 +127,9 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
- 	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
- 	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_NOW,
- 	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+	POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW,
- 	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
- 	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
- 	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
--- 
-2.20.1
+I *assume* you are referring to 4.1.2.1 and the property list
+encoded as "encode-int".
 
+I would like to get RobH's opinion on this - I don't know myself
+whether the PCI OF bindings you added are still relevant and how
+they should be interpreted.
+
+Thanks
+Lorenzo
+
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 8f72967f298f..31e67c9c88cf 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	}
+>  
+>  	rc->vendor_id = 0xffff;
+> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+>  
+>  	rc->device_id = 0xffff;
+> -	of_property_read_u16(np, "device-id", &rc->device_id);
+> +	of_property_read_u32(np, "device-id", &rc->device_id);
+>  
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+>  	pcie->reg_base = devm_ioremap_resource(dev, res);
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 6bd89a21bb1c..df14ad002fe9 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
+>  	struct resource		*bus_range;
+>  	void __iomem		*cfg_base;
+>  	u32			no_bar_nbits;
+> -	u16			vendor_id;
+> -	u16			device_id;
+> +	u32			vendor_id;
+> +	u32			device_id;
+>  };
+>  
+>  /**
+> -- 
+> 2.17.1
+> 
