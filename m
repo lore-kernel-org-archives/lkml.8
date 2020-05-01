@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D303CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1A1C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9A720757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A15E2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341380;
-	bh=GXiqRedOBHxpmlkLw0nqAbt/OE8Yy6wn5TtwrWJNxrM=;
+	s=default; t=1588341385;
+	bh=zP6VMlI64hQJZ2DTc28nD5ZTBc7aTru+OwhbaEP1Fzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwTTJcPrO2zJ+nSrQ/J/i0bMrZeSbOy46KcFcOB0MsMOjthf1ykl3kdMcE4u+njFg
-	 WOlLhKDpMW6wh0YsBRBWkpS60ltGcw3j5ccDtrztNu5fLHrPFhOLiLuCryL0JmvlvE
-	 hOnu8AbXMeUuvTxswnY7jtAgQbHdnVF1E6N8yyHQ=
+	b=WTnTLohlMqcmrwPo7x2q9dZwPP6axeQ+LrYJ96rWyyUXbbQMbhLuWzYDZdlLgFVJj
+	 JkNwbTXYE3Pl5TubDTjbOcEnvdclYV24jXzSM3LBocKb7KQSfJ7be87OisF65u3ybs
+	 fx2WDVF09JqEm+3k6hzPb8f8Egtip93vTbU5UbwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgEANcr (ORCPT
+        id S1730389AbgEAN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:56:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbgEANcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:35 -0400
+        id S1729617AbgEANcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC0AE208C3;
-        Fri,  1 May 2020 13:32:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84C95208C3;
+        Fri,  1 May 2020 13:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339955;
-        bh=GXiqRedOBHxpmlkLw0nqAbt/OE8Yy6wn5TtwrWJNxrM=;
+        s=default; t=1588339965;
+        bh=zP6VMlI64hQJZ2DTc28nD5ZTBc7aTru+OwhbaEP1Fzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MS4xcZXjIcBj2hh8Ts/Pny05GbvCYcueiJgu90p57u81iOd2nQaSrY2JV/WZvDDjI
-         e9UsDvEUqmO/2bGUqu+AWbeTSMJVLslMF1I1Dtl9xhlt6tm8whhnSrk0gYOsjSAl5E
-         00fB8w1fUZhBX8FdAbrGR6mPF0cva2DPyTxVYQww=
+        b=yxSPRgx/3qh2ZyDMItRul/3XdPrfrHyR8mhOpIyKpWYXXc9UDeachBej5Y50ji0Be
+         qhB5lJiL3aAiN+ZdHKfEgyx5quXV/GK2xopEa6WjCXjUWZvgSyBpOzG4mw+O5/wuoS
+         KwoOxf0t6v8mJhI55Hbq8e1AGTRBJoO2vLY3NPPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 034/117] xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
-Date:   Fri,  1 May 2020 15:21:10 +0200
-Message-Id: <20200501131548.860588121@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 038/117] iio: adc: stm32-adc: fix sleep in atomic context
+Date:   Fri,  1 May 2020 15:21:14 +0200
+Message-Id: <20200501131549.294100823@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,47 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit 0c922a4850eba2e668f73a3f1153196e09abb251 ]
+commit e2042d2936dfc84e9c600fe9b9d0039ca0e54b7d upstream.
 
-IPSKB_XFRM_TRANSFORMED and IP6SKB_XFRM_TRANSFORMED are skb flags set by
-xfrm code to tell other skb handlers that the packet has been passed
-through the xfrm output functions. Simplify the code and just always
-set them rather than conditionally based on netfilter enabled thus
-making the flag available for other users.
+This commit fixes the following error:
+"BUG: sleeping function called from invalid context at kernel/irq/chip.c"
 
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In DMA mode suppress the trigger irq handler, and make the buffer
+transfers directly in DMA callback, instead.
+
+Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/xfrm4_output.c |    2 --
- net/ipv6/xfrm6_output.c |    2 --
- 2 files changed, 4 deletions(-)
 
---- a/net/ipv4/xfrm4_output.c
-+++ b/net/ipv4/xfrm4_output.c
-@@ -76,9 +76,7 @@ int xfrm4_output_finish(struct sock *sk,
+---
+ drivers/iio/adc/stm32-adc.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -1311,8 +1311,30 @@ static unsigned int stm32_adc_dma_residu
+ static void stm32_adc_dma_buffer_done(void *data)
  {
- 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+ 	struct iio_dev *indio_dev = data;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	int residue = stm32_adc_dma_residue(adc);
++
++	/*
++	 * In DMA mode the trigger services of IIO are not used
++	 * (e.g. no call to iio_trigger_poll).
++	 * Calling irq handler associated to the hardware trigger is not
++	 * relevant as the conversions have already been done. Data
++	 * transfers are performed directly in DMA callback instead.
++	 * This implementation avoids to call trigger irq handler that
++	 * may sleep, in an atomic context (DMA irq handler context).
++	 */
++	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
++
++	while (residue >= indio_dev->scan_bytes) {
++		u16 *buffer = (u16 *)&adc->rx_buf[adc->bufi];
  
--#ifdef CONFIG_NETFILTER
- 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
--#endif
- 
- 	return xfrm_output(sk, skb);
+-	iio_trigger_poll_chained(indio_dev->trig);
++		iio_push_to_buffers(indio_dev, buffer);
++
++		residue -= indio_dev->scan_bytes;
++		adc->bufi += indio_dev->scan_bytes;
++		if (adc->bufi >= adc->rx_buf_sz)
++			adc->bufi = 0;
++	}
  }
---- a/net/ipv6/xfrm6_output.c
-+++ b/net/ipv6/xfrm6_output.c
-@@ -130,9 +130,7 @@ int xfrm6_output_finish(struct sock *sk,
+ 
+ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
+@@ -1648,6 +1670,7 @@ static int stm32_adc_probe(struct platfo
  {
- 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	struct iio_dev *indio_dev;
+ 	struct device *dev = &pdev->dev;
++	irqreturn_t (*handler)(int irq, void *p) = NULL;
+ 	struct stm32_adc *adc;
+ 	int ret;
  
--#ifdef CONFIG_NETFILTER
- 	IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
--#endif
+@@ -1730,9 +1753,11 @@ static int stm32_adc_probe(struct platfo
+ 	if (ret < 0)
+ 		goto err_clk_disable;
  
- 	return xfrm_output(sk, skb);
- }
++	if (!adc->dma_chan)
++		handler = &stm32_adc_trigger_handler;
++
+ 	ret = iio_triggered_buffer_setup(indio_dev,
+-					 &iio_pollfunc_store_time,
+-					 &stm32_adc_trigger_handler,
++					 &iio_pollfunc_store_time, handler,
+ 					 &stm32_adc_buffer_setup_ops);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "buffer setup failed\n");
 
 
