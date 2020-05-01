@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D96C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865E8C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D3D208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 626352173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340466;
-	bh=vvE3TtarqiqFcQ9034O6c6gzuzlgyDUK67pLiVR1O8U=;
+	s=default; t=1588340469;
+	bh=ZGFQnPj+OU8LVyvSqdIHmCAuOxQ6QFw+O6SrVP/NNeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOKACwntSBuoyAJbf3VBoJFJS7S3+zrS+u9hKRwxfxczcvc1cOPd6jHnUR5V42Erf
-	 4P4Uvfva1v5jYDtAyTfBIC+sLAEk1nsSBMCwgcQ2+ImLmOFm/+MosB8/14+PskA1rb
-	 gnpgxgETWYKRcFvEk5/rRCrH0hg/q29y5eHxACQk=
+	b=rjUytSbZIVi4WJdbd/GvqJC5ymh5fdUFtORxSgNDmimWJ3I9R4AQh0fQz8pK3SvY8
+	 5tjOUFIXUu6Esk5F0XZeXj2BjPryxtxbxAXINNsPdaQnCr+ScgGlvnSAO3f2bJJoXT
+	 agNVvpqAI2T3tRgKxumfEFvFPaIGrURumIJIAmow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgEANlF (ORCPT
+        id S1731395AbgEANlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:41:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731378AbgEANlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:41:00 -0400
+        id S1731387AbgEANlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:41:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79410208DB;
-        Fri,  1 May 2020 13:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F09205C9;
+        Fri,  1 May 2020 13:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340459;
-        bh=vvE3TtarqiqFcQ9034O6c6gzuzlgyDUK67pLiVR1O8U=;
+        s=default; t=1588340464;
+        bh=ZGFQnPj+OU8LVyvSqdIHmCAuOxQ6QFw+O6SrVP/NNeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FuG2KULItIJE4NP05L+Uz/53dk5bRbGb0oKh3aIFFNpRuef+Qz74HiODfcYI/G3L3
-         szPWvV1sWY8bZL0EilLiybLvrTsM4gn/z8xgolQiItErSs6IRE4xZILABdzKjrFZPV
-         B18zutP+10PX21GnqwcKGKV8bW6YSFIiLr3cdrtc=
+        b=Sogv4oTf4Wt4enideRNpO+XNmXiS5CgwoRvrTez379gGN3LWtOmasRGCRXMMfuvfS
+         93DqRwWK3gyRigTPLgHjeI2ArgrJetZWe0SzHe2VhwAQKDH3gMNBi+GJkxeh8l2px3
+         XYEnhSpvBVwtsiOa/EAlhVy4XSUVj/AFbNZDA6Sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 76/83] taprio: do not use BIT() in TCA_TAPRIO_ATTR_FLAG_* definitions
-Date:   Fri,  1 May 2020 15:23:55 +0200
-Message-Id: <20200501131542.110508340@linuxfoundation.org>
+Subject: [PATCH 5.4 78/83] Crypto: chelsio - Fixes a hang issue during driver registration
+Date:   Fri,  1 May 2020 15:23:57 +0200
+Message-Id: <20200501131542.673357618@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,36 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugene Syromiatnikov <esyr@redhat.com>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-commit 673040c3a82a7564423e09c791e242a846591e30 upstream.
+commit ad59ddd02de26271b89564962e74d689f1a30b49 upstream.
 
-BIT() macro definition is internal to the Linux kernel and is not
-to be used in UAPI headers; replace its usage with the _BITUL() macro
-that is already used elsewhere in the header.
+This issue occurs only when multiadapters are present. Hang
+happens because assign_chcr_device returns u_ctx pointer of
+adapter which is not yet initialized as for this adapter cxgb_up
+is not been called yet.
 
-Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+The last_dev pointer is used to determine u_ctx pointer and it
+is initialized two times in chcr_uld_add in chcr_dev_add respectively.
+
+The fix here is don't initialize the last_dev pointer during
+chcr_uld_add. Only assign to value to it when the adapter's
+initialization is completed i.e in chcr_dev_add.
+
+Fixes: fef4912b66d62 ("crypto: chelsio - Handle PCI shutdown event").
+
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/pkt_sched.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/chelsio/chcr_core.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/include/uapi/linux/pkt_sched.h
-+++ b/include/uapi/linux/pkt_sched.h
-@@ -1160,8 +1160,8 @@ enum {
-  *       [TCA_TAPRIO_ATTR_SCHED_ENTRY_INTERVAL]
-  */
+--- a/drivers/crypto/chelsio/chcr_core.c
++++ b/drivers/crypto/chelsio/chcr_core.c
+@@ -125,8 +125,6 @@ static void chcr_dev_init(struct uld_ctx
+ 	atomic_set(&dev->inflight, 0);
+ 	mutex_lock(&drv_data.drv_mutex);
+ 	list_add_tail(&u_ctx->entry, &drv_data.inact_dev);
+-	if (!drv_data.last_dev)
+-		drv_data.last_dev = u_ctx;
+ 	mutex_unlock(&drv_data.drv_mutex);
+ }
  
--#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST	BIT(0)
--#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	BIT(1)
-+#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST	_BITUL(0)
-+#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	_BITUL(1)
- 
- enum {
- 	TCA_TAPRIO_ATTR_UNSPEC,
 
 
