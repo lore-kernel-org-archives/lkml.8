@@ -2,53 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49C8C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2533C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80EBA20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B732C20708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341302;
-	bh=ifextXkKmhhV5w83hSp4HJWt+WV0uhKMrMNPmStDfTc=;
+	s=default; t=1588341309;
+	bh=olCRPt9Dh2xRa/1n1FT+MDS57VFZyyvyVxvWk8826K4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jkvsGm+ZOWw9LAaYchL+AFtSjmu0eoAMRAU3mBfBCx7pidBttc3zTUReV1GK3H5L3
-	 BKHRkaEK6R1QSuAb8tb4b4RrFBEjidjLjYR02FW/JMTv/GTFWmtLgz8bga2oDHreb5
-	 F6MSVqvR2LVFIVAhGl4dcFP9vKVzfR88Sd7goErE=
+	b=B2zwE+ebWCpz8iFb2r+CYy+lkBbrcybvap5WI47n33DPslmXSVZNunjbDaSbTejv8
+	 WyTrG7j/wK84lUtRjNXJdrW0V4gwRPNYzdS5RnBcSjmfwHabi7rfJUvswzgVm6fKmp
+	 zrRpP2aSSpx56YwHeGC2+JGZnhwLn4D3Ph+ge6aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgEANzB (ORCPT
+        id S1730972AbgEANzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60976 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbgEANek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:40 -0400
+        id S1729914AbgEANe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBBF208DB;
-        Fri,  1 May 2020 13:34:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66B202173E;
+        Fri,  1 May 2020 13:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340080;
-        bh=ifextXkKmhhV5w83hSp4HJWt+WV0uhKMrMNPmStDfTc=;
+        s=default; t=1588340067;
+        bh=olCRPt9Dh2xRa/1n1FT+MDS57VFZyyvyVxvWk8826K4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ck/GAfte6devqJ99Ok+pATwDHOq5CZAyuF7jk4mUfwM3F0Vt8qvGkzLi5kGZ6rEj1
-         1hwJGr4hGsFzDNHPijXtHd0zZ/TjfCtYjf1A31Xtln0oLCpvW2m+5XZvbjflYiX15F
-         Zx/g84rQsA0oszK3rVEzjZGAb5rlrwzzKyFtcDGs=
+        b=oiitS3/UqJKTeQsteox88ITJfAh89W3Hn7dKyRfBcck9czxFYZDvww3UzdDkbb320
+         3KMJkzOc1J28kbTaznETi8WvL5itRiLyYeBQzfoPKugObaEHh/ooDVUHFaL+0aondr
+         UvqVDv3SnFLxnVihExVPNa37q9lOrYx1dMnqgTuU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 098/117] bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
-Date:   Fri,  1 May 2020 15:22:14 +0200
-Message-Id: <20200501131557.424010265@linuxfoundation.org>
+        stable@vger.kernel.org, Udipto Goswami <ugoswami@codeaurora.org>,
+        Sriharsha Allenki <sallenki@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>
+Subject: [PATCH 4.14 081/117] usb: f_fs: Clear OS Extended descriptor counts to zero in ffs_data_reset()
+Date:   Fri,  1 May 2020 15:21:57 +0200
+Message-Id: <20200501131554.456023496@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,79 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Udipto Goswami <ugoswami@codeaurora.org>
 
-[ Upstream commit aee194b14dd2b2bde6252b3acf57d36dccfc743a ]
+commit 1c2e54fbf1da5e5445a0ab132c862b02ccd8d230 upstream.
 
-This patch fixes an encoding bug in emit_stx for BPF_B when the source
-register is BPF_REG_FP.
+For userspace functions using OS Descriptors, if a function also supplies
+Extended Property descriptors currently the counts and lengths stored in
+the ms_os_descs_ext_prop_{count,name_len,data_len} variables are not
+getting reset to 0 during an unbind or when the epfiles are closed. If
+the same function is re-bound and the descriptors are re-written, this
+results in those count/length variables to monotonically increase
+causing the VLA allocation in _ffs_func_bind() to grow larger and larger
+at each bind/unbind cycle and eventually fail to allocate.
 
-The current implementation for BPF_STX BPF_B in emit_stx saves one REX
-byte when the operands can be encoded using Mod-R/M alone. The lower 8
-bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
-a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
-(e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
-equivalents (%sil, %dil, %bpl, %spl).
+Fix this by clearing the ms_os_descs_ext_prop count & lengths to 0 in
+ffs_data_reset().
 
-The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
-or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
-required REX prefix. However, it misses the case when the source is
-BPF_REG_FP (mapped to %rbp).
+Fixes: f0175ab51993 ("usb: gadget: f_fs: OS descriptors support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Udipto Goswami <ugoswami@codeaurora.org>
+Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
+Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
+Link: https://lore.kernel.org/r/20200402044521.9312-1-sallenki@codeaurora.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
-will read from register %ch instead of the correct %bpl. This patch fixes
-the problem by fixing and refactoring the check on which registers need
-the extra REX byte. Since no BPF registers map to %rsp, there is no need
-to handle %spl.
-
-Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200418232655.23870-1-luke.r.nels@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/net/bpf_jit_comp.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/function/f_fs.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index cdb386fa71013..0415c0cd4a191 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -153,6 +153,19 @@ static bool is_ereg(u32 reg)
- 			     BIT(BPF_REG_AX));
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1727,6 +1727,10 @@ static void ffs_data_reset(struct ffs_da
+ 	ffs->state = FFS_READ_DESCRIPTORS;
+ 	ffs->setup_state = FFS_NO_SETUP;
+ 	ffs->flags = 0;
++
++	ffs->ms_os_descs_ext_prop_count = 0;
++	ffs->ms_os_descs_ext_prop_name_len = 0;
++	ffs->ms_os_descs_ext_prop_data_len = 0;
  }
  
-+/*
-+ * is_ereg_8l() == true if BPF register 'reg' is mapped to access x86-64
-+ * lower 8-bit registers dil,sil,bpl,spl,r8b..r15b, which need extra byte
-+ * of encoding. al,cl,dl,bl have simpler encoding.
-+ */
-+static bool is_ereg_8l(u32 reg)
-+{
-+	return is_ereg(reg) ||
-+	    (1 << reg) & (BIT(BPF_REG_1) |
-+			  BIT(BPF_REG_2) |
-+			  BIT(BPF_REG_FP));
-+}
-+
- /* add modifiers if 'reg' maps to x64 registers r8..r15 */
- static u8 add_1mod(u8 byte, u32 reg)
- {
-@@ -770,9 +783,8 @@ st:			if (is_imm8(insn->off))
- 			/* STX: *(u8*)(dst_reg + off) = src_reg */
- 		case BPF_STX | BPF_MEM | BPF_B:
- 			/* emit 'mov byte ptr [rax + off], al' */
--			if (is_ereg(dst_reg) || is_ereg(src_reg) ||
--			    /* have to add extra byte for x86 SIL, DIL regs */
--			    src_reg == BPF_REG_1 || src_reg == BPF_REG_2)
-+			if (is_ereg(dst_reg) || is_ereg_8l(src_reg))
-+				/* Add extra byte for eregs or SIL,DIL,BPL in src_reg */
- 				EMIT2(add_2mod(0x40, dst_reg, src_reg), 0x88);
- 			else
- 				EMIT1(0x88);
--- 
-2.20.1
-
+ 
 
 
