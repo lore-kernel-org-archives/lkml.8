@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32AAC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5F2C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A31172495A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207582495A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340279;
-	bh=YS9ESeA+pJmQjIul3ynKLAWj0jB7BYRmzHbZskDLx3c=;
+	s=default; t=1588340285;
+	bh=utsCfuWAYLZpKVlPrFWY0Hxq69c7Gb7mBIKGNiK+O94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ims1KdpM7e8LMEmBSy5soZIeJ7O1cIj+mx+8MTJrUo1N6xULbsTjE7xShyJhGD1lx
-	 aUSiXEa3WZktZmDo3boWg020uR0KFUhS7T5yhE18qu58jjwXnBqfHa5TmRWj/AyL+1
-	 vsq/kPV5gbwcIi5w/oNP57j7Gu3H5/FrwW0YncpA=
+	b=S6Zq9krwToYFSTN99DflWT392IjmDJDHjlnx7mbEZ98FPNu/YA06XzRo4SzDwjv17
+	 Wn8Ev2SMsV53oqQ3gLoXMMG3JKcy7QSZ/IxQpk0jDKURcDDatIvhuvWZEYJXuSAE3w
+	 7OSAaT1rdt99b7sMZBCUcWtM5VLGgkTuhAy4ecMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgEANh6 (ORCPT
+        id S1731022AbgEANiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:38:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730991AbgEANhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:55 -0400
+        id S1731000AbgEANh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F5A24957;
-        Fri,  1 May 2020 13:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B96C2495E;
+        Fri,  1 May 2020 13:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340275;
-        bh=YS9ESeA+pJmQjIul3ynKLAWj0jB7BYRmzHbZskDLx3c=;
+        s=default; t=1588340277;
+        bh=utsCfuWAYLZpKVlPrFWY0Hxq69c7Gb7mBIKGNiK+O94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SzQ50RatfIAFTxDQAwL92M43eYZCL/YR9AftYNbbJkD1T5SSAUu1KvYI5MAlGWkXU
-         4zRuYJNgfuNXHDSjeyrQmm2aPNjethH6LS1jHYEV6zybsushOc1SmUaJmlGK/8OHI8
-         t8eWTBcA/GYjST1WM+2SYodE53YORXGTwqdPJEQs=
+        b=SG0XHYdwFuRZ27L1TgovFIqDWYkZqPs7Wjpif1nXYtDc9TKllBqc1zGaGAY4IKAud
+         RXFe8JBTqLRO5UOGj+ub3K/U2QpJqbtunUvF2xpo3+ASn9hNV2YgjivAeuWVEyq+IY
+         zlc69TuE2tSfIpEApl5TmLkeJnCc3vvcX9ydA/xY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 04/83] ASoC: stm32: sai: fix sai probe
-Date:   Fri,  1 May 2020 15:22:43 +0200
-Message-Id: <20200501131525.277977425@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 05/83] usb: dwc3: gadget: Do link recovery for SS and SSP
+Date:   Fri,  1 May 2020 15:22:44 +0200
+Message-Id: <20200501131525.450506908@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,53 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit e2bcb65782f91390952e849e21b82ed7cb05697f upstream.
+commit d0550cd20e52558ecf6847a0f96ebd5d944c17e4 upstream.
 
-pcm config must be set before snd_dmaengine_pcm_register() call.
+The controller always supports link recovery for device in SS and SSP.
+Remove the speed limit check. Also, when the device is in RESUME or
+RESET state, it means the controller received the resume/reset request.
+The driver must send the link recovery to acknowledge the request. They
+are valid states for the driver to send link recovery.
 
-Fixes: 0d6defc7e0e4 ("ASoC: stm32: sai: manage rebind issue")
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20200417142122.10212-1-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 72246da40f37 ("usb: Introduce DesignWare USB3 DRD Driver")
+Fixes: ee5cd41c9117 ("usb: dwc3: Update speed checks for SuperSpeedPlus")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/stm/stm32_sai_sub.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/usb/dwc3/gadget.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -1543,6 +1543,9 @@ static int stm32_sai_sub_probe(struct pl
- 		return ret;
- 	}
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1725,7 +1725,6 @@ static int __dwc3_gadget_wakeup(struct d
+ 	u32			reg;
  
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		conf = &stm32_sai_pcm_config_spdif;
-+
- 	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register pcm dma\n");
-@@ -1551,15 +1554,10 @@ static int stm32_sai_sub_probe(struct pl
+ 	u8			link_state;
+-	u8			speed;
  
- 	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
- 					 &sai->cpu_dai_drv, 1);
--	if (ret) {
-+	if (ret)
- 		snd_dmaengine_pcm_unregister(&pdev->dev);
--		return ret;
--	}
+ 	/*
+ 	 * According to the Databook Remote wakeup request should
+@@ -1735,16 +1734,13 @@ static int __dwc3_gadget_wakeup(struct d
+ 	 */
+ 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
+ 
+-	speed = reg & DWC3_DSTS_CONNECTSPD;
+-	if ((speed == DWC3_DSTS_SUPERSPEED) ||
+-	    (speed == DWC3_DSTS_SUPERSPEED_PLUS))
+-		return 0;
 -
--	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
--		conf = &stm32_sai_pcm_config_spdif;
+ 	link_state = DWC3_DSTS_USBLNKST(reg);
  
--	return 0;
-+	return ret;
- }
- 
- static int stm32_sai_sub_remove(struct platform_device *pdev)
+ 	switch (link_state) {
++	case DWC3_LINK_STATE_RESET:
+ 	case DWC3_LINK_STATE_RX_DET:	/* in HS, means Early Suspend */
+ 	case DWC3_LINK_STATE_U3:	/* in HS, means SUSPEND */
++	case DWC3_LINK_STATE_RESUME:
+ 		break;
+ 	default:
+ 		return -EINVAL;
 
 
