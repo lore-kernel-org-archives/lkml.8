@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471CEC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A253EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248A2206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A22206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341680;
-	bh=U+U2iYpx0DbAp2Qok+ROLY7JqeDXOVnqZQgUxYD8ArQ=;
+	s=default; t=1588341684;
+	bh=yLAGhYGGTaE/aZWvbpapAKvvx1vDiFdDP466LI3iGdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qapryR0ppVRJGU/E+3tZmJfMyGVcasbABg3meZIZ0hvZf+g1x9Qq1GVetP9/114Jo
-	 gJzEWYuKPPUxouCOP2S+eUDTvl/aYwl8FdgVjS9GEf9lqhCd0UyfSIqafcCcmRjro+
-	 CE+Ik9uVquyHNoJUIEpA2tOeqUJ1ssiG1A2AwALo=
+	b=Vjm/2YZi0qkX9EVzpk36o0nDWuKJXQwn3N7EkU+XJ2OyjzVYLHHRw5o6ixJHCkWCL
+	 ItcPICc7JcHCkE3nITrGw8AuCUmqKa1ou1TbA8bq7FI1z8IT3sa2mU54yjdP4qjNnt
+	 C267S+Kr+CZvWAbzxU/HSe7xXu5ZnpfkzGHqk9cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgEAOBT (ORCPT
+        id S1729089AbgEANZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47372 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbgEAN0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:02 -0400
+        id S1729074AbgEANZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8362208D6;
-        Fri,  1 May 2020 13:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA78220757;
+        Fri,  1 May 2020 13:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339561;
-        bh=U+U2iYpx0DbAp2Qok+ROLY7JqeDXOVnqZQgUxYD8ArQ=;
+        s=default; t=1588339539;
+        bh=yLAGhYGGTaE/aZWvbpapAKvvx1vDiFdDP466LI3iGdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1IkHQ4plDP+GTX49uu/HvY0JgA0z4l9BZ5+rPYv1GgAKIhoMqEzBUyqzCkXK4iPtc
-         wqRjyxWqSNRVpZE8l8E9wW6IQxgUW8MQX3dM5WgmRTNinYmO7llh6wlsopegsmY4x+
-         Qno4j55guaHRT0iOYgRSj9KqR8V9qmu6HCwYNedY=
+        b=098O2YQ8LWFGGHM9QKPl4C1ZJ3Kq1xFhTii4By9X4NIACHKSiAsA6YkvMwwXkAwlf
+         jPp+DhdR9hJpTKMyn+NbRYiZoJSeI79Le903ZqshseRgpAJOHTXKNke52w6WtCM4h3
+         s5RJdiws/7JDGcFSKNuDGQBuHahZm4i2oFMl6XHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.4 28/70] iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
-Date:   Fri,  1 May 2020 15:21:16 +0200
-Message-Id: <20200501131523.072180588@linuxfoundation.org>
+        stable@vger.kernel.org, John Haxby <john.haxby@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 18/70] ipv6: fix restrict IPV6_ADDRFORM operation
+Date:   Fri,  1 May 2020 15:21:06 +0200
+Message-Id: <20200501131519.694921449@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,58 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: John Haxby <john.haxby@oracle.com>
 
-commit 8bef455c8b1694547ee59e8b1939205ed9d901a6 upstream.
+[ Upstream commit 82c9ae440857840c56e05d4fb1427ee032531346 ]
 
-The XADC has two internal ADCs. Depending on the mode it is operating in
-either one or both of them are used. The device manual calls this
-continuous (one ADC) and simultaneous (both ADCs) mode.
+Commit b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation") fixed a
+problem found by syzbot an unfortunate logic error meant that it
+also broke IPV6_ADDRFORM.
 
-The meaning of the sequencing register for the aux channels changes
-depending on the mode.
+Rearrange the checks so that the earlier test is just one of the series
+of checks made before moving the socket from IPv6 to IPv4.
 
-In continuous mode each bit corresponds to one of the 16 aux channels. And
-the single ADC will convert them one by one in order.
-
-In simultaneous mode the aux channels are split into two groups the first 8
-channels are assigned to the first ADC and the other 8 channels to the
-second ADC. The upper 8 bits of the sequencing register are unused and the
-lower 8 bits control both ADCs. This means a bit needs to be set if either
-the corresponding channel from the first group or the second group (or
-both) are set.
-
-Currently the driver does not have the special handling required for
-simultaneous mode. Add it.
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Fixes: bdc8cda1d010 ("iio:adc: Add Xilinx XADC driver")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: b6f6118901d1 ("ipv6: restrict IPV6_ADDRFORM operation")
+Signed-off-by: John Haxby <john.haxby@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iio/adc/xilinx-xadc-core.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ net/ipv6/ipv6_sockglue.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -785,6 +785,16 @@ static int xadc_preenable(struct iio_dev
- 	if (ret)
- 		goto err;
- 
-+	/*
-+	 * In simultaneous mode the upper and lower aux channels are samples at
-+	 * the same time. In this mode the upper 8 bits in the sequencer
-+	 * register are don't care and the lower 8 bits control two channels
-+	 * each. As such we must set the bit if either the channel in the lower
-+	 * group or the upper group is enabled.
-+	 */
-+	if (seq_mode == XADC_CONF1_SEQ_SIMULTANEOUS)
-+		scan_mask = ((scan_mask >> 8) | scan_mask) & 0xff0000;
-+
- 	ret = xadc_write_adc_reg(xadc, XADC_REG_SEQ(1), scan_mask >> 16);
- 	if (ret)
- 		goto err;
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -185,15 +185,14 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
+-			} else if (sk->sk_protocol == IPPROTO_TCP) {
+-				if (sk->sk_prot != &tcpv6_prot) {
+-					retv = -EBUSY;
+-					break;
+-				}
+-				break;
+-			} else {
++			}
++			if (sk->sk_protocol == IPPROTO_TCP &&
++			    sk->sk_prot != &tcpv6_prot) {
++				retv = -EBUSY;
+ 				break;
+ 			}
++			if (sk->sk_protocol != IPPROTO_TCP)
++				break;
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
