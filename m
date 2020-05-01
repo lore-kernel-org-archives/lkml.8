@@ -2,138 +2,97 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71050C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7032EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D29520787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:26:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YeT1YTWc"
+	by mail.kernel.org (Postfix) with ESMTP id 496B82184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588332449;
+	bh=UH6cTiMh0sv5Uy7J2+m2eO6ibhJIWZOkBT9Uo7gNtjE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=VVVue6fgfPafZWcanJFm6NmAQRHFHdLMPVa610SldzSkBkI5PC4JkhbUi6dWGXRlK
+	 JUFJ9bZINNJO9owdcUtGBIJMsI8HjdIvdWsfLL+3xO7eW1QwLQRSsJji/rqOjKzjMA
+	 jCZJBiQiNvLLkzbDZ9p3mO8VbyVMToOwwRI+K0ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbgEAL0H (ORCPT
+        id S1728715AbgEAL12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:26:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34705 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728588AbgEAL0H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:26:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588332365;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l3RHNYGjb1a5HNCgNnXjPkumXM1n3FPkYqlluDFBk0o=;
-        b=YeT1YTWcp08YIDfx1y5AowVGOyyAbEW+iaQQrD7cs8/tw7AMIsO+aTrLcOd/jyY8wzyqVs
-        Sk69q6s6yNqnJ7fXKk8wEUWzOTTCvEdP07/Gcfn+qrGrKDAzEc3RqJ23aVEXuZ4eTJw9cj
-        zUa3uEpzCPYTbrrjGB4DZsrUoxKKZZQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-143-WZ8oG6IAPiO3enbg9DlwwA-1; Fri, 01 May 2020 07:25:59 -0400
-X-MC-Unique: WZ8oG6IAPiO3enbg9DlwwA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 1 May 2020 07:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728585AbgEAL11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 07:27:27 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AFA6107B7C3;
-        Fri,  1 May 2020 11:25:57 +0000 (UTC)
-Received: from krava (unknown [10.40.192.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CF3DC5C1B0;
-        Fri,  1 May 2020 11:25:54 +0000 (UTC)
-Date:   Fri, 1 May 2020 13:25:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: Re: [PATCH 5/8] perf evlist: Allow reusing the side band thread for
- more purposes
-Message-ID: <20200501112552.GC1789042@krava>
-References: <20200429131106.27974-1-acme@kernel.org>
- <20200429131106.27974-6-acme@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429131106.27974-6-acme@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        by mail.kernel.org (Postfix) with ESMTPSA id A167120787;
+        Fri,  1 May 2020 11:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588332447;
+        bh=UH6cTiMh0sv5Uy7J2+m2eO6ibhJIWZOkBT9Uo7gNtjE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=elpgVYOXj6j3U2dToXz5PGIE7ixbJugnDAw13DbcaZMBI/kD8DsbeurAAFxgyu9eU
+         YKyW7NlKD+rX/Mw9nMAt5n8nIsgXxfh3Sv/v9yU26hx80y+JsXJ/Rk+YGG4VyzuUVY
+         mv5ej7bWO0eJUo/RUJ/bjJSNYOzloYCBrGUrFhY4=
+Date:   Fri, 01 May 2020 12:27:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com,
+        daniel.baluta@nxp.com, kai.vehmanen@linux.intel.com,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        ranjani.sridharan@linux.intel.com
+Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaska Uimonen <jaska.uimonen@linux.intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:SOUND - SOUND OPEN FIRMWARE SOF DRIVERS" 
+        <sound-open-firmware@alsa-project.org>
+In-Reply-To: <20200430091139.7003-1-kai.heng.feng@canonical.com>
+References: <20200430091139.7003-1-kai.heng.feng@canonical.com>
+Subject: Re: [PATCH] ASoC: SOF: Update correct LED status at the first time usage of update_mute_led()
+Message-Id: <158833244366.11565.11159142364410757346.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:11:03AM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Thu, 30 Apr 2020 17:11:39 +0800, Kai-Heng Feng wrote:
+> At the first time update_mute_led() gets called, if channels are already
+> muted, the temp value equals to led_value as 0, skipping the following
+> LED setting.
 > 
-> I.e. so far we had just one event in that side band thread, a dummy one
-> with attr.bpf_event set, so that 'perf record' can go ahead and ask the
-> kernel for further information about BPF programs being loaded.
+> So set led_value to -1 as an uninitialized state, to update the correct
+> LED status at first time usage.
 > 
-> Allow for more than one event to be there, so that we can use it as
-> well for the upcoming --switch-output-event feature.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Song Liu <songliubraving@fb.com>
-> Link: http://lore.kernel.org/lkml/20200427211935.25789-7-acme@kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/evlist.c | 22 ++++++++++++++++++++++
->  tools/perf/util/evlist.h |  1 +
->  2 files changed, 23 insertions(+)
-> 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 1d0d36da223b..849058766757 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -1777,6 +1777,19 @@ static void *perf_evlist__poll_thread(void *arg)
->  	return NULL;
->  }
->  
-> +void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		evsel->core.attr.sample_id_all	  = 1;
-> +		evsel->core.attr.watermark	  = 1;
-> +		evsel->core.attr.wakeup_watermark = 1;
-> +		evsel->side_band.cb   = cb;
-> +		evsel->side_band.data = data;
-> +	}
-> +}
-> +
->  int perf_evlist__start_sb_thread(struct evlist *evlist,
->  				 struct target *target)
->  {
-> @@ -1788,6 +1801,15 @@ int perf_evlist__start_sb_thread(struct evlist *evlist,
->  	if (perf_evlist__create_maps(evlist, target))
->  		goto out_delete_evlist;
->  
-> +	if (evlist->core.nr_entries > 1) {
-> +		bool can_sample_identifier = perf_can_sample_identifier();
+> [...]
 
-I just found this breaks python, because perf_can_sample_identifier
-is defined in util/record.c
+Applied to
 
-	19: 'import perf' in python                               :
-	--- start ---
-	test child forked, pid 1808205
-	Traceback (most recent call last):
-	  File "<stdin>", line 1, in <module>
-	ImportError: python/perf.so: undefined symbol: perf_can_sample_identifier
-	test child finished with -1
-	---- end ----
-	'import perf' in python: FAILED!
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
 
-jirka
+Thanks!
 
+[1/1] ASoC: SOF: Update correct LED status at the first time usage of update_mute_led()
+      commit: 49c22696348d6e7c8a2ecfd7e60fddfe188ded82
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
