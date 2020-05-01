@@ -2,252 +2,239 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943D5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BCCC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCE1208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588320607;
-	bh=uLiq5a6dLXMXcUMycTUCiQ72GItaDCJTBvLnDyCMgaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QUhQS08uu/gfDSRDZAlf5pgfTUeuCSmW9NkFQG8oSZ3/mQUtohSe2uVUE8ORPSrXV
-	 A5cYVSsarqXolCKEi1qyva+fmkgSY4qSoG6NU6/D1uDLX3MjNhEdKNhTmXOEENa4O9
-	 /94W5srcle91tIWtrc5dLrqRvMiN7c+RKHcStBZI=
+	by mail.kernel.org (Postfix) with ESMTP id 7457D2071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:15:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLDxDqPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgEAIKG (ORCPT
+        id S1728415AbgEAIPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbgEAIKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:10:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95066208C3;
-        Fri,  1 May 2020 08:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588320605;
-        bh=uLiq5a6dLXMXcUMycTUCiQ72GItaDCJTBvLnDyCMgaU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q09Nip3gCCH28XrCXedTsqKkbmfolu2ECXp0fSwUUkdl0Jn0SeTsnGufVmeQo+rMD
-         FQugMCAdc082I/GKgzN9JC2JEcqznsoRybTBsIRgfCg5BmBPhAixZffS8kJ7E34DGT
-         4zRWoPgrzBUR9RZJjja9gnPBo5ZrKO6brkRP1Jb4=
-Date:   Fri, 1 May 2020 10:10:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
-        Paul J Murphy <paul.j.murphy@intel.com>
-Subject: Re: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-Message-ID: <20200501081002.GA1055721@kroah.com>
-References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
- <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
+        Fri, 1 May 2020 04:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728343AbgEAIPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 04:15:31 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58D2C035494;
+        Fri,  1 May 2020 01:15:31 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id r66so2137485oie.5;
+        Fri, 01 May 2020 01:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=67PD+4N6OTeLQfdVEtLP8JgZsz239nlSbqS4Vkr8Dyw=;
+        b=kLDxDqPs9e69GaVMoTLIbt5TvwRXfennTnwhak3ZePa6Iw3AisJOdncZZtD5a3g+Iz
+         YF/82TokyreEFFn60NinKIGrC0hy0MwKvtZHCwyFrC85V4U2jf51couuP4yBrXn/TQAF
+         BLDeJG+s/qPBOdTUrh7x2jcV6xVGy1+FRUZAegp4jwA+7qmCYzGGJ8QUhZmEy9zXIWNo
+         4ih3ouFd+mP1Pnx96vHgtEw/r/WzELYEDu6LsgVwa5zBqJ8pQ7R2iM4deN5x8o+RZIB7
+         SHmgCDIJ9rKhPh32VzsySTwtLpGAnFTGMg9KICJnlJ2oJyqVxCkOIRyzEPpya8Ja6m5g
+         TOMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=67PD+4N6OTeLQfdVEtLP8JgZsz239nlSbqS4Vkr8Dyw=;
+        b=WIcdiBzxE2XIWJHgLQiPkHuf8HZ2i+gNO65heAlRZJ0ehtVSDnJc1EIRnniRNE9Qu8
+         kSmYz+7YCEnAzs6NNWrFQ3K+G/I+uyIsZMjhdtKIyBRlSyc6/GIXpg/fLTevNnGTLTjO
+         Z+6K70L7iLSyFpRqCtFjvxVBXvfyKgPhTnlSa6FjeXoZi7ST6HQty+6BcJx5NhfFRICE
+         cB2HKTZ7p2/QdKPIUht9CJUmlSAILqa+zfw3RUjc/9hc5LU0AaZkUsDjlqge9txCqTn8
+         7VgsHabVmM5O77570LF0yHQduswaDz44VpMks1DByPAOskY/uyTLb/iZqDwQMceGaZYq
+         p6kA==
+X-Gm-Message-State: AGi0PubnK+2j/xYC4PYs+LdIx9FBVkyr7fj/Yzb1znqm+hg1uoUTM2Sd
+        6a9xKLByN5Z+N4y0eVG3iPwSVH97FbJZMuaXJzI=
+X-Google-Smtp-Source: APiQypIgr6pyF8u5FiRXk8vY7iTPFETvjGXZfjd03HJ7Sse1ymzPq5v9ms+GEMVAq9d2o2xjZGdRdTbFSnFcUHZk+Yk=
+X-Received: by 2002:aca:b783:: with SMTP id h125mr2296549oif.62.1588320931075;
+ Fri, 01 May 2020 01:15:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
+In-Reply-To: <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 1 May 2020 09:15:04 +0100
+Message-ID: <CA+V-a8sMKWD_FMcEhm-gAOPx2Xdr-4wRdgaiumWLA4vRBUkMMg@mail.gmail.com>
+Subject: Re: [PATCH 07/18] ARM: dts: r8a7742: Initial SoC device tree
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 05:36:18PM +0100, Daniele Alessandrelli wrote:
-> From: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> 
-> Keem Bay bootloader sets up a temporary Isolated Memory Region (IMR) to
-> protect itself during pre-Linux boot.
-> 
-> This temporary IMR remains active even when control is passed to the
-> Linux Kernel. It is Kernel responsibility to remove such an IMR during
-> initialization.
-> 
-> This driver adds such functionality.
-> 
-> The driver is loaded during `early_init`, which should ensure that the
-> IMR is removed before devices that may try to access the IMR are
-> initialized.
-> 
-> Signed-off-by: Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Hi Geert,
 
-First off, there is a "proper" way to send patches to the kernel
-community that Intel has that I do not think you are following.  Please
-work with the Intel "Linux group" to do that first, as odds are they
-would have caught all of these issues beforehand (hint, which is why
-that process is in place...)
+Thank you for the review.
 
-> ---
->  MAINTAINERS                       |  5 ++++
->  drivers/soc/Kconfig               |  1 +
->  drivers/soc/Makefile              |  1 +
->  drivers/soc/keembay/Kconfig       | 22 +++++++++++++++++
->  drivers/soc/keembay/Makefile      |  5 ++++
->  drivers/soc/keembay/keembay-imr.c | 40 +++++++++++++++++++++++++++++++
->  6 files changed, 74 insertions(+)
->  create mode 100644 drivers/soc/keembay/Kconfig
->  create mode 100644 drivers/soc/keembay/Makefile
->  create mode 100644 drivers/soc/keembay/keembay-imr.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b816a453b10e..59f1923a0f25 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9194,6 +9194,11 @@ S:	Maintained
->  W:	http://lse.sourceforge.net/kdump/
->  F:	Documentation/admin-guide/kdump/
->  
-> +KEEMBAY IMR
-> +M:	Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-> +S:	Maintained
-> +F:	drivers/soc/keembay/keembay-imr.c
-> +
->  KEENE FM RADIO TRANSMITTER DRIVER
->  M:	Hans Verkuil <hverkuil@xs4all.nl>
->  L:	linux-media@vger.kernel.org
-> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> index 425ab6f7e375..eeeba3ef7338 100644
-> --- a/drivers/soc/Kconfig
-> +++ b/drivers/soc/Kconfig
-> @@ -9,6 +9,7 @@ source "drivers/soc/bcm/Kconfig"
->  source "drivers/soc/fsl/Kconfig"
->  source "drivers/soc/imx/Kconfig"
->  source "drivers/soc/ixp4xx/Kconfig"
-> +source "drivers/soc/keembay/Kconfig"
+On Thu, Apr 30, 2020 at 2:49 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for your patch!
+>
+> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Basic support for the RZ/G1H (R8A7742) SoC. Added placeholders
+> > for the peripherals supported by the SoC which will be filled up
+> > by incremental patches.
+>
+> Please remove the placeholders, as there is nothing that depends on their
+> presence.
+>
+Sure will drop that.
 
-For a single 40 line driver, do not make a new directory.  If you end up
-with lots in the future, then just move the files.  Don't over-engineer
-we have no idea what will actually happen in the future.
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> > @@ -0,0 +1,715 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the r8a7742 SoC
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/clock/r8a7742-cpg-mssr.h>
+> > +#include <dt-bindings/power/r8a7742-sysc.h>
+> > +
+> > +/ {
+> > +       compatible = "renesas,r8a7742";
+> > +       #address-cells = <2>;
+> > +       #size-cells = <2>;
+> > +
+> > +       /*
+> > +        * The external audio clocks are configured as 0 Hz fixed frequency
+> > +        * clocks by default.
+> > +        * Boards that provide audio clocks should override them.
+> > +        */
+> > +       audio_clk_a: audio_clk_a {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       audio_clk_b: audio_clk_b {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       audio_clk_c: audio_clk_c {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       /* External CAN clock */
+> > +       can_clk: can {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               /* This value must be overridden by the board. */
+> > +               clock-frequency = <0>;
+> > +       };
+>
+> Please drop the audio and CAN clocks for now, as they are not used.
+>
+OK.
 
->  source "drivers/soc/mediatek/Kconfig"
->  source "drivers/soc/qcom/Kconfig"
->  source "drivers/soc/renesas/Kconfig"
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 36452bed86ef..65c981207283 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -13,6 +13,7 @@ obj-y				+= fsl/
->  obj-$(CONFIG_ARCH_GEMINI)	+= gemini/
->  obj-y				+= imx/
->  obj-$(CONFIG_ARCH_IXP4XX)	+= ixp4xx/
-> +obj-y				+= keembay/
->  obj-$(CONFIG_SOC_XWAY)		+= lantiq/
->  obj-y				+= mediatek/
->  obj-y				+= amlogic/
-> diff --git a/drivers/soc/keembay/Kconfig b/drivers/soc/keembay/Kconfig
-> new file mode 100644
-> index 000000000000..2161bce131b3
-> --- /dev/null
-> +++ b/drivers/soc/keembay/Kconfig
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Keem Bay SoC drivers.
-> +#
-> +
-> +menu "Keem Bay SoC drivers"
-> +
-> +config KEEMBAY_IMR
-> +	bool "Clean-up Keem Bay bootloader IMR at boot"
-> +	depends on ARM64
-> +	help
-> +	  This option makes the Kernel clean up the Isolated Memory Region
-> +	  (IMR) set up by Keem Bay bootloader (U-boot) to protect itself during
-> +	  early boot.
-> +
-> +	  The IMR number to be cleaned up is taken from the device tree
-> +	  (property 'u-boot-imr' of the 'chosen' node).
-> +
-> +	  If you are compiling the Kernel for a Keem Bay SoC select Y,
-> +	  otherwise select N.
+> > +       /* External root clock */
+> > +       extal_clk: extal {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               /* This value must be overridden by the board. */
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       /* External PCIe clock - can be overridden by the board */
+> > +       pcie_bus_clk: pcie_bus {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+>
+> Please drop the PCI clock for now, as it is not used.
+>
+OK
 
-No module support?
+> > +
+> > +       /* External SCIF clock */
+> > +       scif_clk: scif {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               /* This value must be overridden by the board. */
+> > +               clock-frequency = <0>;
+> > +       };
+>
+> This should be used (see below).
+>
+> > +
+> > +       /* External USB clock - can be overridden by the board */
+> > +       usb_extal_clk: usb_extal {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <48000000>;
+> > +       };
+> > +
+> > +       cpus {
+>
+> Please sort nodes by unit-address (if present) per type, or alphabetically.
+>
+Sure will take care of it.
 
-What about kernels that support more than one ARM device in the same
-kernel, you just broke that :(
+> > +       soc {
+>
+> > +               scifa2: serial@e6c60000 {
+> > +                       reg = <0 0xe6c60000 0 0x40>;
+> > +                       /* placeholder */
+> > +               };
+>
+> I prefer to see a real node for the serial console, so the system can at
+> least be boot tested to a console prompt.
+> Note that this requires adding a minimal board DTS, too.
+>
+OK so in that case Ill enable scifa2 and SDHI interface so it can be bootable.
 
-> +
-> +endmenu
-> diff --git a/drivers/soc/keembay/Makefile b/drivers/soc/keembay/Makefile
-> new file mode 100644
-> index 000000000000..dacfdb9f5fc1
-> --- /dev/null
-> +++ b/drivers/soc/keembay/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Makefile for Keem Bay SoC drivers.
-> +#
-> +obj-$(CONFIG_KEEMBAY_IMR) += keembay-imr.o
-> diff --git a/drivers/soc/keembay/keembay-imr.c b/drivers/soc/keembay/keembay-imr.c
-> new file mode 100644
-> index 000000000000..eabbdd6e69a7
-> --- /dev/null
-> +++ b/drivers/soc/keembay/keembay-imr.c
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2019-2020 Intel Corporation
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/init.h>
-> +#include <linux/of.h>
-> +#include <linux/printk.h>
-> +#include <linux/types.h>
-> +
-> +/* Keem Bay SiP SVC for clearing an IMR. */
-> +#define KMB_SIP_SVC_IMR_CLEAR	0x8200ff13
-> +
-> +static int __init clear_imr(u64 imr)
-> +{
-> +	struct arm_smccc_res res = { 0 };
-> +
-> +	arm_smccc_smc(KMB_SIP_SVC_IMR_CLEAR, imr, 0, 0, 0, 0, 0, 0, &res);
-> +
-> +	return res.a0;
-> +}
-> +
-> +static int __init kmb_imr_init(void)
-> +{
-> +	u32 imr;
-> +	int rc;
-> +
-> +	rc = of_property_read_u32(of_chosen, "u-boot-imr", &imr);
+Cheers,
+--Prabhakar
 
-Is there a device tree documetnation for this attribute?  You have to
-have that approved before you can get your code merged.
-
-> +	if (rc) {
-> +		pr_warn("Skipping IMR clean-up: No U-Boot IMR defined in device tree\n");
-> +		return 0;
-> +	}
-> +	pr_info("Disabling Keem Bay U-boot IMR: %u\n", imr);
-
-Drivers are quiet if all is good, don't be noisy for no reason.
-
-> +
-> +	return clear_imr(imr);
-
-Did that really need to be a separate function?
-
-> +}
-> +early_initcall(kmb_imr_init);
-
-Like I said above, you just broke multi-system kernels by always trying
-to do this.  Trigger off of a hardware device that only your platform
-has in order to properly load and run.  As-is, you don't want to do
-this.
-
-Anyway, Intel owes me more liquor for this review as the resources you
-had to get review of this were obviously not taken advantage of.
-
-greg k-h
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
