@@ -2,190 +2,142 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F932C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE43208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:00:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOA/ANfb"
+	by mail.kernel.org (Postfix) with ESMTP id CAFDA208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588291400;
+	bh=uhzJMz9qqpkgI7djws5kwaWDUNqZs4SgIBMkZrW4ZKI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MHwyWxS07f3roMh8MyBYQK9HQ7W2+5U4pBhgp2dpgNKiKiye/c3tDbCeMwVCxsPup
+	 OKbLjp71T8GhAlctWhsY6nVZ2Ao/28C0t65jAyqT0jBDQJ5E4fb2woFMUdlNr6yP9W
+	 c4I66Ra/C74oeutxqxdxN/Fl3kbNSzhOEwVb/05M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgEAAAg (ORCPT
+        id S1727923AbgEAADU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 20:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726384AbgEAAAf (ORCPT
+        Thu, 30 Apr 2020 20:03:20 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:32952 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgEAADT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 20:00:35 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89721C035494;
-        Thu, 30 Apr 2020 17:00:35 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id 19so3417733ioz.10;
-        Thu, 30 Apr 2020 17:00:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mOWNIHM3btZ9j8NGTIPkfbXQJm50r4PKpoMQv4LKbCU=;
-        b=TOA/ANfb70xaeNIZuwPe7XM6HwdhADVz6L1VFwi33HMb/y5M5WgGTtZpDZ8WlZjY+s
-         xFY3SD+a5uwlNQCX0ZZ30liXUSeyUwQ4/PePP7Ta2QfGSPDRtU8sygsaBZbpQ/XD4US4
-         gj99XYNqk93FaBc/yFpxyenl4NfN4hIhvPjMIgNN2tLL7WhxcWoYaOG6iC1w+kVfJ4Sh
-         TWt9bMNxfD7/wzCIh5RzTmAHqnQua/zu9GmPI66+VnLZ56vD6wgxB92fHKLOlw3zA6NB
-         XxrU2jcjVQS2AVlubjNuSb0wg9qgF/ANq+MixLoLAbQaEvrX0pCBj0f8Dvyi4Y4GWoEh
-         S0xA==
+        Thu, 30 Apr 2020 20:03:19 -0400
+Received: by mail-ua1-f65.google.com with SMTP id g35so3254216uad.0;
+        Thu, 30 Apr 2020 17:03:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mOWNIHM3btZ9j8NGTIPkfbXQJm50r4PKpoMQv4LKbCU=;
-        b=LwN5+gy6VXZKS6S98rgz8tPf/MsKaQn7mxrcczH2kqkTNVdBH2Cynq0EMCi+Abc/Nn
-         sPCz9YvADOXKZWgC/m6M6ue2SxPr7aYViSF7z5OwJIAsrfU+AcyRQnxaHHj90r/xaDaI
-         VvxHQ5e6trW/KL9tWuv+REmwVMaW74g9+KZD4UJfWEHh6DLG7MNcT9fcMvql08ZDrIS7
-         uQLl33mni1B2Y6r9dWnXxUxU5i/feuEeMoNKH3R+NUQs4I5gJLeoAQz2+9YB14twCZCZ
-         WNLTNWHFZ2Us+GzgnJ4QMrUhPunkTAd8hoGbILX65jymCZOgx7233EYPFyr9y/n2Yr5q
-         qMfw==
-X-Gm-Message-State: AGi0PuZm1Lc1ddHjDaeRtSJScHAMWWwgdR1hfkqIagwALxkHvYdDM1z7
-        wUvFXS1p3kkgmKwU2Z0mJ2j4XukgyYQmgPbETTs=
-X-Google-Smtp-Source: APiQypI0Rcquo6Afuwt/R1LcEJK7cymRT8m2/uzj444J31+eCm4fl/hATjqRADUVj9umz79W6KdO/dbd40bqCdfKrYA=
-X-Received: by 2002:a6b:7903:: with SMTP id i3mr1497420iop.66.1588291234028;
- Thu, 30 Apr 2020 17:00:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=89Z7r8iD/0NKOVoXCJcX8FvWsMx9t7cw7PfWtZ+Xwlg=;
+        b=elsTxTUcbmnckuI9DwHhcFGcxxESdvwHqtL3EjbXImzmWNN1EmIsxuVOw1HetUrY/l
+         4J7m6mgCvRrBtdu+K304ZTvUInuBviffHlzFDBgqUAnQUXUZCf+PqqFNZQ9wMblOZSgl
+         1YJRfHYyVmUyBRK0qvgKFdKQx51cvRZzIImYGToBuykYd+vKsR89xh8xNxqfq6+rBLjB
+         3iFQWCs/7+/tQRYU8sV4hCyv9Gzu3uw/fygJ9eoQ2IKxX8GPfqDmAoULD5SosUr9vDiS
+         lBgZcj8YXZ+c2dFJPX1bF66rSuXF+fbkG12PVe1JbjvB8dG0Zuvj0/60Afmk8xTHTSdp
+         5PGg==
+X-Gm-Message-State: AGi0Puagl/xUhijBN98xnmQe4Vbw2c4VfU8OA+e0L4EGaymYtmE2+baG
+        S9aoSsu7p8nxBP2l59IXuMo=
+X-Google-Smtp-Source: APiQypJh1P49t8x/agbwYJf0OrNUf+alwRMWkCbXlYwf0+PXDf/yyr5brZNxy/qfVUaufSFxg2MRwg==
+X-Received: by 2002:ab0:7025:: with SMTP id u5mr1045186ual.130.1588291398085;
+        Thu, 30 Apr 2020 17:03:18 -0700 (PDT)
+Received: from google.com (69.104.231.35.bc.googleusercontent.com. [35.231.104.69])
+        by smtp.gmail.com with ESMTPSA id k184sm379805vke.42.2020.04.30.17.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Apr 2020 17:03:13 -0700 (PDT)
+Date:   Fri, 1 May 2020 00:03:12 +0000
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Filipe Manana <fdmanana@kernel.org>
+Cc:     Dennis Zhou <dennis@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        cl@linux.com, linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Filipe Manana <fdmanana@suse.com>
+Subject: Re: [PATCH] percpu: make pcpu_alloc() aware of current gfp context
+Message-ID: <20200501000312.GA188766@google.com>
+References: <20200430164356.15543-1-fdmanana@kernel.org>
+ <20200430144018.c855f031b321d68e5c89b30c@linux-foundation.org>
+ <20200430222347.GA164259@google.com>
+ <CAL3q7H4MU+_Niwg63RzHu6+orXZsQt26eEXLOODfmpgTwUuacw@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1588092152.git.chris@chrisdown.name> <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <20200429101510.GA28637@dhcp22.suse.cz> <20200429140330.GA5054@cmpxchg.org>
- <20200429150414.GI28637@dhcp22.suse.cz> <20200429165627.GA24768@cmpxchg.org> <20200430145721.GF12655@dhcp22.suse.cz>
-In-Reply-To: <20200430145721.GF12655@dhcp22.suse.cz>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 1 May 2020 07:59:57 +0800
-Message-ID: <CALOAHbBub_oojkb5DpXUoHV=-e9PDAeVzJvKvDtyk-9Jg6_Pkw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL3q7H4MU+_Niwg63RzHu6+orXZsQt26eEXLOODfmpgTwUuacw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:57 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Wed 29-04-20 12:56:27, Johannes Weiner wrote:
-> [...]
-> > I think to address this, we need a more comprehensive solution and
-> > introduce some form of serialization. I'm not sure yet how that would
-> > look like yet.
->
-> Yeah, that is what I've tried to express earlier and that is why I would
-> rather go with an uglier workaround for now and think about a more
-> robust effective values calculation on top.
->
+On Thu, Apr 30, 2020 at 11:43:20PM +0100, Filipe Manana wrote:
+> On Thu, Apr 30, 2020 at 11:23 PM Dennis Zhou <dennis@kernel.org> wrote:
+> >
+> > On Thu, Apr 30, 2020 at 02:40:18PM -0700, Andrew Morton wrote:
+> > > On Thu, 30 Apr 2020 17:43:56 +0100 fdmanana@kernel.org wrote:
+> > >
+> > > > From: Filipe Manana <fdmanana@suse.com>
+> > > >
+> > > > Since 5.7-rc1, on btrfs we have a percpu counter initialization for which
+> > > > we always pass a GFP_KERNEL gfp_t argument (this happens since commit
+> > > > 2992df73268f78 ("btrfs: Implement DREW lock")).  That is safe in some
+> > > > contextes but not on others where allowing fs reclaim could lead to a
+> > > > deadlock because we are either holding some btrfs lock needed for a
+> > > > transaction commit or holding a btrfs transaction handle open.  Because
+> > > > of that we surround the call to the function that initializes the percpu
+> > > > counter with a NOFS context using memalloc_nofs_save() (this is done at
+> > > > btrfs_init_fs_root()).
+> > > >
+> > > > However it turns out that this is not enough to prevent a possible
+> > > > deadlock because percpu_alloc() determines if it is in an atomic context
+> > > > by looking exclusively at the gfp flags passed to it (GFP_KERNEL in this
+> > > > case) and it is not aware that a NOFS context is set.  Because it thinks
+> > > > it is in a non atomic context it locks the pcpu_alloc_mutex, which can
+> > > > result in a btrfs deadlock when pcpu_balance_workfn() is running, has
+> > > > acquired that mutex and is waiting for reclaim, while the btrfs task that
+> > > > called percpu_counter_init() (and therefore percpu_alloc()) is holding
+> > > > either the btrfs commit_root semaphore or a transaction handle (done at
+> > > > fs/btrfs/backref.c:iterate_extent_inodes()), which prevents reclaim from
+> > > > finishing as an attempt to commit the current btrfs transaction will
+> > > > deadlock.
+> > > >
+> > >
+> > > Patch looks good and seems sensible, thanks.
+> > >
+> >
+> > Acked-by: Dennis Zhou <dennis@kernel.org>
+> >
+> > > But why did btrfs use memalloc_nofs_save()/restore() rather than
+> > > s/GFP_KERNEL/GFP_NOFS/?
+> >
+> > I would also like to know.
+> 
+> For 2 reasons:
+> 
+> 1) It's the preferred way to do it since
+> memalloc_nofs_save()/restore() was added (according to
+> Documentation/core-api/gfp_mask-from-fs-io.rst);
+> 
 
-Agreed.
-If there's a more robust effective values calculation on top, then we
-don't need to hack it here and there.
+Thanks. I didn't realize it completely superceded GFP_NOFS.
 
-> > I'm still not sure it's worth having a somewhat ugly workaround in
-> > mem_cgroup_protection() to protect against half of the bug. If you
-> > think so, the full problem should at least be documented and marked
-> > XXX or something.
->
-> Yes, this makes sense to me. What about the following?
+> 2) According to Documentation/core-api/gfp_mask-from-fs-io.rst,
+> passing GFP_NOFS to __vmalloc() doesn't work, so one has to use the
+> memalloc_nofs_save()/restore() API for that. And pcpu_alloc() calls
+> helpers that end up calling __vmalloc() (through pcpu_mem_zalloc()).
+> 
+> And that's it.
+> 
 
-Many thanks for the explaination on this workaround.
-With this explanation, I think the others will have a clear idea why
-we must add this ugly workaround here.
+I'm starting to remember a bit more. I guess it's not great how
+percpu manages GFP_ATOMIC as !GFP_KERNEL for the possible vmalloc()
+calls. At the time I believe the whitelist was the only way to deal with
+the recursive case. If I get a chance I'll look at the flags again and
+see if we can't do something better/ more aligned today.
 
-
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 1b4150ff64be..50ffbc17cdd8 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -350,6 +350,42 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
->         if (mem_cgroup_disabled())
->                 return 0;
->
-> +       /*
-> +        * There is no reclaim protection applied to a targeted reclaim.
-> +        * We are special casing this specific case here because
-> +        * mem_cgroup_protected calculation is not robust enough to keep
-> +        * the protection invariant for calculated effective values for
-> +        * parallel reclaimers with different reclaim target. This is
-> +        * especially a problem for tail memcgs (as they have pages on LRU)
-> +        * which would want to have effective values 0 for targeted reclaim
-> +        * but a different value for external reclaim.
-> +        *
-> +        * Example
-> +        * Let's have global and A's reclaim in parallel:
-> +        *  |
-> +        *  A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
-> +        *  |\
-> +        *  | C (low = 1G, usage = 2.5G)
-> +        *  B (low = 1G, usage = 0.5G)
-> +        *
-> +        * For the global reclaim
-> +        * A.elow = A.low
-> +        * B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
-> +        * C.elow = min(C.usage, C.low)
-> +        *
-> +        * With the effective values resetting we have A reclaim
-> +        * A.elow = 0
-> +        * B.elow = B.low
-> +        * C.elow = C.low
-> +        *
-> +        * If the global reclaim races with A's reclaim then
-> +        * B.elow = C.elow = 0 because children_low_usage > A.elow)
-> +        * is possible and reclaiming B would be violating the protection.
-> +        *
-> +        */
-> +       if (memcg == root)
-> +               return 0;
-> +
->         if (in_low_reclaim)
->                 return READ_ONCE(memcg->memory.emin);
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 05b4ec2c6499..df88a22f09bc 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6385,6 +6385,14 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->
->         if (!root)
->                 root = root_mem_cgroup;
-> +
-> +       /*
-> +        * Effective values of the reclaim targets are ignored so they
-> +        * can be stale. Have a look at mem_cgroup_protection for more
-> +        * details.
-> +        * TODO: calculation should be more robust so that we do not need
-> +        * that special casing.
-> +        */
->         if (memcg == root)
->                 return MEMCG_PROT_NONE;
->
->
-> > In practice, I doubt this matters all that much because limit reclaim
-> > and global reclaim tend to occur in complementary
-> > containerization/isolation strategies, not heavily simultaneously.
->
-> I would expect that as well but this is always hard to tell.
->
-> --
-> Michal Hocko
-> SUSE Labs
-
-
-
--- 
-Thanks
-Yafang
+> 
+> >
+> > Thanks,
+> > Dennis
