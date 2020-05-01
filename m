@@ -2,96 +2,101 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0A3C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BE8C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B0424953
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED3A208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuOK1jGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgEAP5s (ORCPT
+        id S1729694AbgEAQAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:57:48 -0400
-Received: from smtprelay0007.hostedemail.com ([216.40.44.7]:43472 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729008AbgEAP5r (ORCPT
+        Fri, 1 May 2020 12:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbgEAQAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:57:47 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id B28FB182CF666;
-        Fri,  1 May 2020 15:57:46 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: word42_60d7cded7bb3e
-X-Filterd-Recvd-Size: 3042
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  1 May 2020 15:57:45 +0000 (UTC)
-Message-ID: <3aeb6ab5059ec753d922051d7732e13322188e7c.camel@perches.com>
-Subject: Re: [PATCH v3] checkpatch: add support to check 'Fixes:' tag format
-From:   Joe Perches <joe@perches.com>
-To:     Wang YanQing <udknight@gmail.com>
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
-Date:   Fri, 01 May 2020 08:57:42 -0700
-In-Reply-To: <20200501154033.GA25730@udknight>
-References: <20200501154033.GA25730@udknight>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 May 2020 12:00:37 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E78FC061A0C;
+        Fri,  1 May 2020 09:00:36 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id b18so4856285ilf.2;
+        Fri, 01 May 2020 09:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2rqwM/jaHLwWYBPHidJQKqx4ERtMrKkzfEBH0ILAPwE=;
+        b=fuOK1jGF0lRA3iT4ovkVfORwHC2PAR0HIe5lF90ULNX8AAvof2micXgDnKMHc8NzuO
+         SpcPOF+fzPereacA+ei27icKneZH05k2Do/37NmY6Zk5E+s4JjyYy4xUW+3rrwxWfs3F
+         BN31nf2lbDMmxvmONm+tRMRPgn5OCT+3eOc7whAYh1QdXySyeNGwKZ5HmcGsfAcsp8bT
+         1MP3kdvliY2umH/Kgspsnu6VPZx3ES4gz8DFOiU3G/6pgGHWEJah91nMsKm3UCakFF1V
+         vPNatAG1cwz9hkaU2gY5jVoQxBsq7UHxWZsjv5tNTbBxtPPEVD2O8goW6BkpKyyuzaQW
+         iKRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2rqwM/jaHLwWYBPHidJQKqx4ERtMrKkzfEBH0ILAPwE=;
+        b=Ip9dV+CU7xv23A0UqZ8YDNNUUF5D7DhSb/s1/DT5FNphWSjelNKLJrAfSl09/if2+M
+         a/tSt/AUskprTAWGObg38zH+mrBDseFWa+yXCZNLayJH6p1E494WkGysfJ/bqC4308fZ
+         pjnCI5bCW/6KUgy7B9GCbmB42gq5oWutlvIaNhw+5IgwWQyVFP19Noi/WZMOjjRe8eER
+         zuCGmE3nFj4W8gW1LneQec94Be2GuGzMefDq2VEFgkxqkedh2del8XoCMu4m38ATHK3j
+         tOhXtPSCU2rqEL2CcgGSIiV6szfVo1YT9IoNq4EVcmSJoIHRFd4gyZ4/Ykf6rUEyDIIk
+         L35A==
+X-Gm-Message-State: AGi0PuYSx8Uhk3ML6I39eWxmLGHPFdb6tPkA6ZSyCJVa734zudsm8x6X
+        7iHgTSvj4AzBKqkUC0aHWyY=
+X-Google-Smtp-Source: APiQypJd608dA49hiBrjuMzpYfVrLQ7WelwHpb/Osh1TbYWQXAuu0kDv5e4KyLJN7gK1B1+GsSsEqw==
+X-Received: by 2002:a92:49c7:: with SMTP id k68mr4031412ilg.252.1588348835504;
+        Fri, 01 May 2020 09:00:35 -0700 (PDT)
+Received: from localhost.localdomain ([183.157.11.115])
+        by smtp.gmail.com with ESMTPSA id e89sm1416020ill.26.2020.05.01.09.00.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 09:00:34 -0700 (PDT)
+From:   yanxiaoyong5 <yanxiaoyong5@gmail.com>
+To:     ulf.hansson@linaro.org, rrangel@chromium.org, avri.altman@wdc.com,
+        kstewart@linuxfoundation.org, tglx@linutronix.de
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yanxiaoyong5 <yanxiaoyong5@gmail.com>
+Subject: [PATCH] mmc/core:fix mmc_sd_hw_reset oops mmc_sd_hw_reset function may be oops if the ejection of sd and the reset of sd simultaneously occur
+Date:   Fri,  1 May 2020 08:59:54 -0700
+Message-Id: <1588348794-4511-1-git-send-email-yanxiaoyong5@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-01 at 23:40 +0800, Wang YanQing wrote:
-> According to submitting-patches.rst, 'Fixes:' tag has a little
-> stricter condition about the one line summary than normal git
-> commit description:
-> “...
-> Do not split the tag across multiple lines, tags are exempt from
-> the "wrap at 75 columns" rule in order to simplify parsing scripts
-> ...”
-> 
-> And there is no sanity check for 'Fixes:' tag format in checkpatch
-> the same as GIT_COMMIT_ID for git commit description, so let's expand
-> the GIT_COMMIT_ID to add 'Fixes:' tag format check support.
-> 
-> The check supports below formats:
-> Fixes: 54a4f0239f2e ("KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed")
-> Fixes: 85f7cd3a2aad ("Revert "media: Kconfig: better support hybrid TV devices"")
-> Fixes: 878520ac45f9 ("ext4: save the error code which triggered...")
-> Fixes: 878520ac45f9 ("ext4: save the error code which triggered")
-> Fixes: 277f27e2f277 ("SUNRPC/cache: Allow garbage collection ... ")
+Signed-off-by: yanxiaoyong5 <yanxiaoyong5@gmail.com>
+---
+ drivers/mmc/core/sd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Hi again YanQing.
-
-I think all the non-standard and incomplete forms
-should have a warning emitted.
-
-> The check doesn't support below formats:
-> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
-> Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
-> Fixes: 3fd6e7d9a146 (ASoC: tas571x: New driver for TI TAS571x power amplifiers)
-> Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
-> Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
-> Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
-> Fixes:      9b1640686470 ("scsi: lpfc: Fix use-after-free mailbox cmd completion")
-> Fixes: 03f6fc6de919 ('ASoC: rt5682: Add the soundwire support')
-
-
-> Note: this patch also fixes double quotation mark issue for normal git
->       commit description, and now it supports double quotation mark in
->       title line, for example:
->       Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by default
->       when checking usable channels"")
-
-Nice.
-
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index fe914ff..73a1e68 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -1247,8 +1247,13 @@ static int mmc_sd_runtime_resume(struct mmc_host *host)
+ 
+ static int mmc_sd_hw_reset(struct mmc_host *host)
+ {
+-	mmc_power_cycle(host, host->card->ocr);
+-	return mmc_sd_init_card(host, host->card->ocr, host->card);
++	struct mmc_card *card;
++
++	card = host->card;
++	if (!card)
++		return -EINVAL;
++	mmc_power_cycle(host, card->ocr);
++	return mmc_sd_init_card(host, card->ocr, host->card);
+ }
+ 
+ static const struct mmc_bus_ops mmc_sd_ops = {
+-- 
+2.7.4
 
