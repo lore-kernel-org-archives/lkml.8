@@ -2,52 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D988DC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD0BC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE14B24957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120BC208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340472;
-	bh=t6QrlUuqm7H12f/LEkP2lMqOz6UI8P+PkX2WkGbdVLQ=;
+	s=default; t=1588340480;
+	bh=h+yf3XfLMMIBkEtIRS1gwvCxk7zvY/MZ7YG4iM+WI90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MXyXojos03t6lbPx71UgeRCidVlQ4Kn8bU6LBpCclYQTG/v6aGMTeehJy92L+gZ8
-	 W53PqyZfo8JQWNCB8YOc1BF+RgnMVBGBHG4V0Sq8aNBBe8Pqzdtc7ZJGVVgXFUWW/a
-	 tovcCHkbFY9x30LPoW0YntIYJ+z9OZPDrj4sOwo0=
+	b=HgMjJTKDC2rdfU1e/buFKyD/ChGibtGOZlcaMETPG/sa+TLyrmcaArZvnwLt8Gyno
+	 n/4wJ5TdkvWo4oZo++ZsosesOQDrcsdUNOgpaQ6NAys80ISpJ6i6aEUDCnU3NWCtlc
+	 GEqiJjPvmImoH/GCdH+v52QzaLyhjdx/DfoAsbL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgEANlL (ORCPT
+        id S1731107AbgEANlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgEANlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:41:08 -0400
+        id S1731397AbgEANlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:41:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6188205C9;
-        Fri,  1 May 2020 13:41:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488D9205C9;
+        Fri,  1 May 2020 13:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340467;
-        bh=t6QrlUuqm7H12f/LEkP2lMqOz6UI8P+PkX2WkGbdVLQ=;
+        s=default; t=1588340469;
+        bh=h+yf3XfLMMIBkEtIRS1gwvCxk7zvY/MZ7YG4iM+WI90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQdOIf4VZlb7WvGfbBs5jERtCUN30D4GiwqGVoz9JanaG5CW7Up2FqWxAUV1bWR0+
-         wHGqA+vdHY/8VqMWBd3ae/WKzcbvjAa91zrPf5FNA2CxJoUkOmNcFabEEUCCfQC181
-         +0qaO2LdK8JbotydiUD+Ey5OWU9BwalDmcxyKR2M=
+        b=oUv08YIFvjhZrCtPjdgPK1DpgJdd3xm1jBSd0ympVSu7wh6MiXbcNN6S4h4HyRim+
+         m1JpFjyjTLGdpWD7CnD36mC66vAI29ahsENQivtBEYioae8jESsDYdy9PFz65+vmJR
+         Lk/xAseaNfmI7rnG2PoPrYZ5/KFdDUyss/Z9JHvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 69/83] mac80211: fix channel switch trigger from unknown mesh peer
-Date:   Fri,  1 May 2020 15:23:48 +0200
-Message-Id: <20200501131541.304152226@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 83/83] ASoC: stm32: spdifrx: fix regmap status check
+Date:   Fri,  1 May 2020 15:24:02 +0200
+Message-Id: <20200501131543.348279295@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,61 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tamizh chelvam <tamizhr@codeaurora.org>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit 93e2d04a1888668183f3fb48666e90b9b31d29e6 ]
+commit a168dae5ea14283e8992d5282237bb0d6a3e1c06 upstream.
 
-Previously mesh channel switch happens if beacon contains
-CSA IE without checking the mesh peer info. Due to that
-channel switch happens even if the beacon is not from
-its own mesh peer. Fixing that by checking if the CSA
-originated from the same mesh network before proceeding
-for channel switch.
+Release resources when exiting on error.
 
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Link: https://lore.kernel.org/r/1585403604-29274-1-git-send-email-tamizhr@codeaurora.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1a5c0b28fc56 ("ASoC: stm32: spdifrx: manage identification registers")
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/20200318144125.9163-2-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/mesh.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ sound/soc/stm/stm32_spdifrx.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mac80211/mesh.c b/net/mac80211/mesh.c
-index d09b3c789314d..36978a0e50001 100644
---- a/net/mac80211/mesh.c
-+++ b/net/mac80211/mesh.c
-@@ -1257,15 +1257,15 @@ static void ieee80211_mesh_rx_bcn_presp(struct ieee80211_sub_if_data *sdata,
- 		    sdata->u.mesh.mshcfg.rssi_threshold < rx_status->signal)
- 			mesh_neighbour_update(sdata, mgmt->sa, &elems,
- 					      rx_status);
-+
-+		if (ifmsh->csa_role != IEEE80211_MESH_CSA_ROLE_INIT &&
-+		    !sdata->vif.csa_active)
-+			ieee80211_mesh_process_chnswitch(sdata, &elems, true);
- 	}
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -995,6 +995,8 @@ static int stm32_spdifrx_probe(struct pl
  
- 	if (ifmsh->sync_ops)
- 		ifmsh->sync_ops->rx_bcn_presp(sdata,
- 			stype, mgmt, &elems, rx_status);
--
--	if (ifmsh->csa_role != IEEE80211_MESH_CSA_ROLE_INIT &&
--	    !sdata->vif.csa_active)
--		ieee80211_mesh_process_chnswitch(sdata, &elems, true);
- }
+ 	if (idr == SPDIFRX_IPIDR_NUMBER) {
+ 		ret = regmap_read(spdifrx->regmap, STM32_SPDIFRX_VERR, &ver);
++		if (ret)
++			goto error;
  
- int ieee80211_mesh_finish_csa(struct ieee80211_sub_if_data *sdata)
-@@ -1373,6 +1373,9 @@ static void mesh_rx_csa_frame(struct ieee80211_sub_if_data *sdata,
- 	ieee802_11_parse_elems(pos, len - baselen, true, &elems,
- 			       mgmt->bssid, NULL);
- 
-+	if (!mesh_matches_local(sdata, &elems))
-+		return;
-+
- 	ifmsh->chsw_ttl = elems.mesh_chansw_params_ie->mesh_ttl;
- 	if (!--ifmsh->chsw_ttl)
- 		fwd_csa = false;
--- 
-2.20.1
-
+ 		dev_dbg(&pdev->dev, "SPDIFRX version: %lu.%lu registered\n",
+ 			FIELD_GET(SPDIFRX_VERR_MAJ_MASK, ver),
 
 
