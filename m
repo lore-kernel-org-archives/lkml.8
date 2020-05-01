@@ -5,53 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF68C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6366CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451DE20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A446208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339877;
-	bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
+	s=default; t=1588339883;
+	bh=qh+rRQ26snjET7PSeU8hJK8HLdSc6NZMY9RE8q3qkKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFVKwD1lI5wBffNzXqRK+JxkDa/ZepFR3DqpQ3zIngOiLs4h8mqiloPLqlCKCUoyW
-	 uzdoopfmrlFkxBikJsKCsBvvlOa9dnlexkeQEzORwpeYcT6rbg/KYbfjSf3nAb1Gns
-	 WU1RrKc/FCTl0HTc1VF7hM25++AHgoRRBH8UQynM=
+	b=pcmB2130Dn4KjeAg6DGIIzzSq6c3Cmti3aEn/hE+YTiW38JnIBzci5nxhNSuvd9um
+	 PuyBQJ5ShstD0yiohxwb7PuiCD1FzU0j162kJf6+wwQmZnmX7h3XCDMSSJD4lyWq8m
+	 TeMNimcPaUzjAicfhuI5bSVie2upepce8yC8mQkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbgEANbQ (ORCPT
+        id S1730115AbgEANbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729222AbgEANbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:10 -0400
+        id S1729222AbgEANbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A2FA2173E;
-        Fri,  1 May 2020 13:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C313216FD;
+        Fri,  1 May 2020 13:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339869;
-        bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
+        s=default; t=1588339876;
+        bh=qh+rRQ26snjET7PSeU8hJK8HLdSc6NZMY9RE8q3qkKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DKap5a/dEHqRzqnx68EUm/zu8pQmtiWjH1XZtEkKsY4VW3OTDWWIF1VJTd3LC1DiO
-         2ge5qp4QO7j/jkTfyGf///L5ww5Lj1B/xqN7fwIDe2Y1Sgr6cbF5NpzV4FiTbPe3Pe
-         FI+7fe6YzoQXfd02CjZiFauLZ+5lqatMVR/xJYCE=
+        b=QnByEkeztLn0WXFtV6S8IHGgiPr3TjWfqrn+nAUOTcnBMHH4boJZjIofhUn193i98
+         +clWAMXOU0eaEgiLh9eEzgGYbfkbnN5ey4lwjwoFLdnNGJh8kQ+5y23U8O9QuMPZrv
+         mywsorcrN/LTP9L6nGyasHnnyfej20XlviFKk0HM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 012/117] pwm: rcar: Fix late Runtime PM enablement
-Date:   Fri,  1 May 2020 15:20:48 +0200
-Message-Id: <20200501131546.551334959@linuxfoundation.org>
+Subject: [PATCH 4.14 015/117] kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Date:   Fri,  1 May 2020 15:20:51 +0200
+Message-Id: <20200501131546.870692997@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -64,61 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit f4d74ef6220c1eda0875da30457bef5c7111ab06 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Waiman Long <longman@redhat.com>
+Link: http://lkml.kernel.org/r/f65c6ee7-bd00-f910-2f8a-37cc67e4ff88@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ kernel/gcov/fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 0fcf94ffad321..c298bec25a90a 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -236,24 +236,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
- 
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
- 	}
- 
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
- 
- static int rcar_pwm_remove(struct platform_device *pdev)
+diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
+index 6e40ff6be083d..291e0797125b6 100644
+--- a/kernel/gcov/fs.c
++++ b/kernel/gcov/fs.c
+@@ -109,9 +109,9 @@ static void *gcov_seq_next(struct seq_file *seq, void *data, loff_t *pos)
  {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&rcar_pwm->chip);
+ 	struct gcov_iterator *iter = data;
  
- 	pm_runtime_disable(&pdev->dev);
++	(*pos)++;
+ 	if (gcov_iter_next(iter))
+ 		return NULL;
+-	(*pos)++;
  
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
+ 	return iter;
  }
- 
- static const struct of_device_id rcar_pwm_of_table[] = {
 -- 
 2.20.1
 
