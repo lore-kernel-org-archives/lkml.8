@@ -2,134 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC94C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E6C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F6621924
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E61821775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGlzSNtx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lz1Aeq9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgEAVit (ORCPT
+        id S1727041AbgEAVjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:38:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVis (ORCPT
+        Fri, 1 May 2020 17:39:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42115 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726599AbgEAVjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:38:48 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72367C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:38:48 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f18so3811617lja.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:38:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lmcdipzgY1Nm1KXrImEVFcXHk9g8rdDKWZCNtxFitno=;
-        b=FGlzSNtxTM+Pacz+O/M9t0vRdXoDnTsFtPa7jbcIqF34jEjXmAxn+k/Sd0TI8nkvas
-         0eTH8/sQlFcmK9KtbHE6QbEslIvvYRvcP417Js4Gt9zc1QBLalx6s1nU57/nai9FIxZZ
-         Fd2tGphBTKPMiRmuErFAlderCbJaRiqEuXzLVoX7K00NXnznk4eSMnISP3agPakhuA8R
-         VuprJMSY31APUe1S+hOlQZQGW1SOlv7apQ6SB93/JtZGr7S8HPRcoQy/p6dcZ8k34EZK
-         9YMjTe8f9VPCJF7wQ0a1KTnpbgBRRBI1pxTSRIUzfEKU9XTkI1j//j3L/uIBeUb+x6h0
-         DY2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lmcdipzgY1Nm1KXrImEVFcXHk9g8rdDKWZCNtxFitno=;
-        b=J0/SVrO4O4K8tLYRAxjbZDjGkv+TsWC2ZcI79OB+Pg4XbraxbMrONt/vCkVnVAtKe9
-         UpnnPSeBcr+e5/1bN7rObFLwBf65U6Xfkcg7y2tuI+bl69qmLVDE2WNTgVqbexPXI3fB
-         nw3q0fHLLD+sPmggW30syCfu+GLYFBNQBcoStl5oVOKXErmpFkfMSe8xZgSOKkBpGnsl
-         oVMD4DKiIehXuuNoieYQ5hau2EdH0OUieT3Fk6hk63nlexHSkXAM8Rlm2QRPy7yh0yLm
-         MGzstD6AjmxZd+kKD6J00E3d/TUBeX2Vk9tl5WE/PyEL9cfRZwajy0LT9aTxnfpgxOM5
-         /YJw==
-X-Gm-Message-State: AGi0Pub5ucgnS0FMH4/7P10YMLmOttmR+3+torFnr+yNCrhDk8+VFLIc
-        QpmZZH4f9of/8dIqe99iyoQZlN58u0R8+EukoFE=
-X-Google-Smtp-Source: APiQypJT8Fb0if/6Vo7PhY7i0k2oxLsCFkb/XsjaemmIsbxtxAN552H3CqOFxI+Y8FQ3twLOF7lrwV5j2DuHUbGSr3k=
-X-Received: by 2002:a2e:7815:: with SMTP id t21mr3504664ljc.146.1588369126880;
- Fri, 01 May 2020 14:38:46 -0700 (PDT)
+        Fri, 1 May 2020 17:39:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588369145;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GIT31CsSTgsaQoUzYR0DvSWUFhNop6BqpZn0iiLF29Q=;
+        b=Lz1Aeq9uDyiYuDCRX4GkhSvOyw4ZtKv5Y0yNZ08fEVKPsAPOFx1pHu9JwH5ZnnHrP0GB/0
+        jwXmUaQUhvu7xkKvsCyV5X55JmQMgwKOKyB4nwyt76+55r2fJg2qH6X6vhDeSY18jkdDIA
+        Lb9M8VUtURDUpBJPWhmrhRw6p/6BXes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-74-SLwr3-LZONqihU56HCeGHA-1; Fri, 01 May 2020 17:39:03 -0400
+X-MC-Unique: SLwr3-LZONqihU56HCeGHA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9A8B8005B7;
+        Fri,  1 May 2020 21:39:02 +0000 (UTC)
+Received: from gimli.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 265A45B829;
+        Fri,  1 May 2020 21:38:57 +0000 (UTC)
+Subject: [PATCH 0/3] vfio-pci: Block user access to disabled device MMIO
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com, jgg@ziepe.ca,
+        peterx@redhat.com
+Date:   Fri, 01 May 2020 15:38:56 -0600
+Message-ID: <158836742096.8433.685478071796941103.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-References: <1588277518-21425-1-git-send-email-jrdr.linux@gmail.com> <c25cf212-8684-a107-bc9c-c7067dea7447@nvidia.com>
-In-Reply-To: <c25cf212-8684-a107-bc9c-c7067dea7447@nvidia.com>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Sat, 2 May 2020 03:16:40 +0530
-Message-ID: <CAFqt6zaZcTeh+-ZQCanpu-tQL7zD7-iQ0DFvHLJ6Bdwkr9ZXrg@mail.gmail.com>
-Subject: Re: [PATCH] mm/gup.c: Handle error at earliest for incorrect nr_pages value
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 2, 2020 at 3:03 AM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> On 2020-04-30 13:11, Souptick Joarder wrote:
-> > As per documentation, pin_user_pages_fast() & get_user_pages_fast()
-> > will return 0, if nr_pages <= 0. But this can be figure out only after
-> > going inside the internal_get_user_pages_fast().
-> >
-> > This can be handled early. Adding a check for the same.
->
->
-> Please, no. For precisely the reasons that Andrew gave: you are
-> attempting to optimize for a case that doesn't matter other than
-> for error handling, and which is already handled adequately. And
-> as he also pointed out, it very slightly UN-optimizes the path that
-> we *do* care about. So why are you still advocating for this?
->
-> If you want to change the gup/pup API so that asking for zero pages
-> means -EINVAL, then fine, go for it. That's a large thing, and a
-> tree-wide audit, but if you feel it's worth pursuing then it's at
-> least consistent.
->
-> But this patch here needs to be abandoned.
+Add tracking of the device memory enable bit and block/fault accesses
+to device MMIO space while disabled.  This provides synchronous fault
+handling for CPU accesses to the device and prevents the user from
+triggering platform level error handling present on some systems.
+Device reset and MSI-X vector table accesses are also included such
+that access is blocked across reset and vector table accesses do not
+depend on the user configuration of the device.
 
-Sure, will drop this patch.
->
->
-> thanks,
-> --
-> John Hubbard
-> NVIDIA
->
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > ---
-> >   mm/gup.c | 4 ++++
-> >   1 file changed, 4 insertions(+)
-> >
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 50681f0..a13aaa6 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2817,6 +2817,8 @@ int get_user_pages_fast(unsigned long start, int nr_pages,
-> >        */
-> >       if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> >               return -EINVAL;
-> > +     if (nr_pages <= 0)
-> > +             return 0;
-> >
-> >       /*
-> >        * The caller may or may not have explicitly set FOLL_GET; either way is
-> > @@ -2854,6 +2856,8 @@ int pin_user_pages_fast(unsigned long start, int nr_pages,
-> >       /* FOLL_GET and FOLL_PIN are mutually exclusive. */
-> >       if (WARN_ON_ONCE(gup_flags & FOLL_GET))
-> >               return -EINVAL;
-> > +     if (nr_pages <= 0)
-> > +             return 0;
-> >
-> >       gup_flags |= FOLL_PIN;
-> >       return internal_get_user_pages_fast(start, nr_pages, gup_flags, pages);
-> >
->
+This is based on the vfio for-linus branch currently in next, making
+use of follow_pfn() in vaddr_get_pfn() and therefore requiring patch
+1/ to force the user fault in the case that a PFNMAP vma might be
+DMA mapped before user access.  Further PFNMAP iommu invalidation
+tracking is not yet included here.
+
+As noted in the comments, I'm copying quite a bit of the logic from
+rdma code for performing the zap_vma_ptes() calls and I'm also
+attempting to resolve lock ordering issues in the fault handler to
+lockdep's satisfaction.  I appreciate extra eyes on these sections in
+particular.
+
+I expect this to be functionally equivalent for any well behaved
+userspace driver, but obviously there is a potential for the user to
+get -EIO or SIGBUS on device access.  The device is provided to the
+user enabled and device resets will restore the command register, so
+by my evaluation a user would need to explicitly disable the memory
+enable bit to trigger these faults.  We could potentially remap vmas
+to a zero page rather than SIGBUS if we experience regressions, but
+without known code requiring that, SIGBUS seems the appropriate
+response to this condition.  Thanks,
+
+Alex
+
+---
+
+Alex Williamson (3):
+      vfio/type1: Support faulting PFNMAP vmas
+      vfio-pci: Fault mmaps to enable vma tracking
+      vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+
+
+ drivers/vfio/pci/vfio_pci.c         |  268 +++++++++++++++++++++++++++++++++--
+ drivers/vfio/pci/vfio_pci_config.c  |   31 ++++
+ drivers/vfio/pci/vfio_pci_intrs.c   |   18 ++
+ drivers/vfio/pci/vfio_pci_private.h |   11 +
+ drivers/vfio/pci/vfio_pci_rdwr.c    |   12 ++
+ drivers/vfio/vfio_iommu_type1.c     |   36 ++++-
+ 6 files changed, 356 insertions(+), 20 deletions(-)
+
