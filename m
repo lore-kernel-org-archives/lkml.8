@@ -2,55 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FEAC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21FDC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD4FB205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04B320757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341040;
-	bh=5SvYodR3cdhJYE5o749RtLFXryDUlwu/cXQ3NXA/kzQ=;
+	s=default; t=1588341046;
+	bh=JEfPVeCIXS2ihp4wiKoaxqcfVeN9Aopia2uXZyuMbzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mlW2tggjsEJ+2sB2LCxl0HrVxq/QwJWiwGyoXzpQRpqCkhTxmz6eMAf3VmmQ4A0QZ
-	 J4iEt8MjvQJagwJqcvWHGj44IhH4igjkfjgckwsWp6rWJaXbmkPi/tn9E3cYxc1+kf
-	 1v86sQE3XduTQnams5Zdg+yLvORql0sqFKTTIe4I=
+	b=d749BvnQG0uM1ngudy7DMo1maWl2Ak2mInttPemctxSrhiIxq1+lJy7CZetSDRZU7
+	 hP/F9p/HkcVIOWoCTRc0T0KVBB9OHT5QKlSvEeRP00vGkAIDsICdMYVQ0eRPdbKYtW
+	 D5w8ZV+69Bvw1C1qTkg3UHsJ+Av2t/RBgT83NVhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbgEANjr (ORCPT
+        id S1731698AbgEANuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39490 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730926AbgEANjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:42 -0400
+        id S1729339AbgEANjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE6A6216FD;
-        Fri,  1 May 2020 13:39:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34DB20757;
+        Fri,  1 May 2020 13:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340381;
-        bh=5SvYodR3cdhJYE5o749RtLFXryDUlwu/cXQ3NXA/kzQ=;
+        s=default; t=1588340376;
+        bh=JEfPVeCIXS2ihp4wiKoaxqcfVeN9Aopia2uXZyuMbzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BOWyk+TTuUOvAFhfK0jWASwV9MOPfenzzgphmNLySGrFjlJDEov7EU83tuJSzbnYY
-         WE8Jhv/ZvUcjT0fNNhBFCEm7sVaj+3YoLYoQdCNA35lN+I5rfWc2533aLdH0WghshQ
-         NZGm6du8KDxGyNiT+knBAPdC4z1YKGsEZlFOQIsI=
+        b=S2sGXyFNmNM4fTIMGSsCDevmR2WfFS6hjWgxmnaBXqypLef57yjTY5Tcwoov0QTZx
+         qV2RZXZ+L4y617cPoImMtvrOMJXCCE71+lWGKSryKkcimmmW/bsiihG5cpKsO4f9Ra
+         2dpEe51tAD3b+VWOX/OcvuLhkLN/0vUwEZfOkQho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 43/83] netfilter: nat: fix error handling upon registering inet hook
-Date:   Fri,  1 May 2020 15:23:22 +0200
-Message-Id: <20200501131536.292062051@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Cline <jcline@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 53/83] libbpf: Initialize *nl_pid so gcc 10 is happy
+Date:   Fri,  1 May 2020 15:23:32 +0200
+Message-Id: <20200501131538.906016002@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -63,84 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Jeremy Cline <jcline@redhat.com>
 
-commit b4faef1739dd1f3b3981b8bf173a2266ea86b1eb upstream.
+[ Upstream commit 4734b0fefbbf98f8c119eb8344efa19dac82cd2c ]
 
-A case of warning was reported by syzbot.
+Builds of Fedora's kernel-tools package started to fail with "may be
+used uninitialized" warnings for nl_pid in bpf_set_link_xdp_fd() and
+bpf_get_link_xdp_info() on the s390 architecture.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 19934 at net/netfilter/nf_nat_core.c:1106
-nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 19934 Comm: syz-executor.5 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:nf_nat_unregister_fn+0x532/0x5c0 net/netfilter/nf_nat_core.c:1106
-Code: ff df 48 c1 ea 03 80 3c 02 00 75 75 48 8b 44 24 10 4c 89 ef 48 c7 00 00 00 00 00 e8 e8 f8 53 fb e9 4d fe ff ff e8 ee 9c 16 fb <0f> 0b e9 41 fe ff ff e8 e2 45 54 fb e9 b5 fd ff ff 48 8b 7c 24 20
-RSP: 0018:ffffc90005487208 EFLAGS: 00010246
-RAX: 0000000000040000 RBX: 0000000000000004 RCX: ffffc9001444a000
-RDX: 0000000000040000 RSI: ffffffff865c94a2 RDI: 0000000000000005
-RBP: ffff88808b5cf000 R08: ffff8880a2620140 R09: fffffbfff14bcd79
-R10: ffffc90005487208 R11: fffffbfff14bcd78 R12: 0000000000000000
-R13: 0000000000000001 R14: 0000000000000001 R15: 0000000000000000
- nf_nat_ipv6_unregister_fn net/netfilter/nf_nat_proto.c:1017 [inline]
- nf_nat_inet_register_fn net/netfilter/nf_nat_proto.c:1038 [inline]
- nf_nat_inet_register_fn+0xfc/0x140 net/netfilter/nf_nat_proto.c:1023
- nf_tables_register_hook net/netfilter/nf_tables_api.c:224 [inline]
- nf_tables_addchain.constprop.0+0x82e/0x13c0 net/netfilter/nf_tables_api.c:1981
- nf_tables_newchain+0xf68/0x16a0 net/netfilter/nf_tables_api.c:2235
- nfnetlink_rcv_batch+0x83a/0x1610 net/netfilter/nfnetlink.c:433
- nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:543 [inline]
- nfnetlink_rcv+0x3af/0x420 net/netfilter/nfnetlink.c:561
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
+Although libbpf_netlink_open() always returns a negative number when it
+does not set *nl_pid, the compiler does not determine this and thus
+believes the variable might be used uninitialized. Assuage gcc's fears
+by explicitly initializing nl_pid.
 
-and to quiesce it, unregister NFPROTO_IPV6 hook instead of NFPROTO_INET
-in case of failing to register NFPROTO_IPV4 hook.
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1807781
 
-Reported-by: syzbot <syzbot+33e06702fd6cffc24c40@syzkaller.appspotmail.com>
-Fixes: d164385ec572 ("netfilter: nat: add inet family nat support")
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200404051430.698058-1-jcline@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_nat_proto.c |    4 ++--
+ tools/lib/bpf/netlink.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/netfilter/nf_nat_proto.c
-+++ b/net/netfilter/nf_nat_proto.c
-@@ -1035,8 +1035,8 @@ int nf_nat_inet_register_fn(struct net *
- 	ret = nf_nat_register_fn(net, NFPROTO_IPV4, ops, nf_nat_ipv4_ops,
- 				 ARRAY_SIZE(nf_nat_ipv4_ops));
- 	if (ret)
--		nf_nat_ipv6_unregister_fn(net, ops);
--
-+		nf_nat_unregister_fn(net, NFPROTO_IPV6, ops,
-+					ARRAY_SIZE(nf_nat_ipv6_ops));
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(nf_nat_inet_register_fn);
+diff --git a/tools/lib/bpf/netlink.c b/tools/lib/bpf/netlink.c
+index ce3ec81b71c01..88416be2bf994 100644
+--- a/tools/lib/bpf/netlink.c
++++ b/tools/lib/bpf/netlink.c
+@@ -137,7 +137,7 @@ int bpf_set_link_xdp_fd(int ifindex, int fd, __u32 flags)
+ 		struct ifinfomsg ifinfo;
+ 		char             attrbuf[64];
+ 	} req;
+-	__u32 nl_pid;
++	__u32 nl_pid = 0;
+ 
+ 	sock = libbpf_netlink_open(&nl_pid);
+ 	if (sock < 0)
+@@ -254,7 +254,7 @@ int bpf_get_link_xdp_id(int ifindex, __u32 *prog_id, __u32 flags)
+ {
+ 	struct xdp_id_md xdp_id = {};
+ 	int sock, ret;
+-	__u32 nl_pid;
++	__u32 nl_pid = 0;
+ 	__u32 mask;
+ 
+ 	if (flags & ~XDP_FLAGS_MASK)
+-- 
+2.20.1
+
 
 
