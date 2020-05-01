@@ -2,95 +2,104 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0337C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF7C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABCA720775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FD020857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0qQffUy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bokqg+Ds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgEAWLz (ORCPT
+        id S1726672AbgEAWNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
+        Fri, 1 May 2020 18:13:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgEAWLy (ORCPT
+        with ESMTP id S1726045AbgEAWNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:11:54 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B89C061A0C;
-        Fri,  1 May 2020 15:11:53 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l25so2804513pgc.5;
-        Fri, 01 May 2020 15:11:53 -0700 (PDT)
+        Fri, 1 May 2020 18:13:24 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49047C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 15:13:23 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id z8so12760568qtu.17
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 15:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G9cPNDRl11Z1ZRygMEdXWM8M1qjkV/0N8rVCPsP3QuE=;
-        b=B0qQffUy1NpowQUWvDV1Ny+FZZunxuKytsmlPoFOhFKTaYY70Yd6AK0yjBY1qFZBld
-         J6Cu0JqHTpRgmFAB0/m+haYu7dBvFjrxJVVdHMMfYvOR2VC8cHJ2sfwLQ4L3xBkrfA5J
-         C0GLXVEdEVHDA9EiRSaful/L/YCAGMCSQfAAkYo5wqKEX2JIfN0xpIXJOoBF00y1fyQU
-         D61edZvrtGAT4BPJMnaNOtnwMJR6pccpg7SYy7dblYpkWjZUlLCleFd0FHfP4DjnG2Vy
-         mJaw1kKEa8KorXaOsvOxxj2YBbmLfiykCdDSL0G4/avUsH2gEs++9rOEVufqWwbPcX+h
-         Fw/Q==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RIdqLo4hWktII2qSFS69re2nqOxlcy+LfC6phzkurHk=;
+        b=bokqg+DsarAeVPBsSKl17lQurhmELauRlNI4mCvsFHssdHcA5IeqmZHW2PwSy9K908
+         3cAeNUTy50uwaMgkELxPkc4JIwzGi4yY9s2MhziY70uMjyKJ8Ylj1NvCrSOiFaRKG0xZ
+         Vtg3QuXa29jJJ+W7JE1LAdSjtE8H5VvvQmAKQramx/gggdX1xrp89nxKYapu9t6boTcZ
+         RJjYFWctuJ2uH7ancq6EfnJO/v6uBTkg89+fBk6PuwImjRDWL86MWQ9bd77/pJzw6Qwg
+         cIdtfc3gxYk6pA2aXc/T2Rm7SIJO7F1sjn0+uCbxMGG/Wi+guwZR/wtV3eILSi5xof4o
+         G6cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G9cPNDRl11Z1ZRygMEdXWM8M1qjkV/0N8rVCPsP3QuE=;
-        b=ocDT3azffWJTqEu3RSkakBIiYlsrVQVAUhknqUXZm3776rwrCm2bH6O0NPp4MwxOR5
-         uQAusEi27knmUCe3uOoehFgXmImnfNlhc6E0sJMJ3YiW47iwZVs6Gub2ygfGRY8d9PSX
-         udnhTeIMU5EN3rDnvYp4Rnv2eWYbLc5exL338jgiF8UEey2EoM73hui+Odi7oGaPdcP8
-         Glgda3zr0KqkLF7OBgm4U0JX1lvyMbi1Bvo+Wie4IXNhXcUpIvM9JO+8OVIlWfNgLPax
-         Cvu7M9KFoLfIh3N7uED2pFZ0zjR7cAIA6bPJkueLkkx1RFKHkXhPyxKqvc9XXztH/nLD
-         J3dA==
-X-Gm-Message-State: AGi0PuZ9Q0FRi0ztkR8uHKLWVnRyCZ6K7gbOB1KwC3w9tEVNXPErzURM
-        IScT8XZTwKO14Abh5wR6jc8=
-X-Google-Smtp-Source: APiQypIjvJxz3rKYAcaWKyu5GOgStjMSsxYWjQ8LslxdLt8Tk7l16ARagz1BYuV7MNr7ja9KgluHhg==
-X-Received: by 2002:aa7:81cf:: with SMTP id c15mr6212380pfn.211.1588371112817;
-        Fri, 01 May 2020 15:11:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o21sm510174pjr.37.2020.05.01.15.11.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 May 2020 15:11:52 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:11:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/83] 5.4.37-rc1 review
-Message-ID: <20200501221151.GE44185@roeck-us.net>
-References: <20200501131524.004332640@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RIdqLo4hWktII2qSFS69re2nqOxlcy+LfC6phzkurHk=;
+        b=FbWWuOs429QFkbY6GiQd2KaYRsTMRgU4ze86Y4OirhT/SrCpoqAmCWeI5eh68/Gf5m
+         Sii/rAzH1XvbEIJwWOmFsICfkbgSccxomMqKUy/Z7l3aK+aQ5svR9FDXfY27+AMvmxRj
+         /QFAQ2lNvTzvUGPz+QFyRkyTfJRaE1M6pvvJRlWPdByJYZ7E4kq0L/xVyOK1X65mFdxR
+         E/0/doPiLNLA4uR/ScArb1QPNy18nuO3F//fAefZy6l8E/i2lnigqvlD/+ZoPcZDaiJA
+         +FOTlOKOnSPsPjq1XHxcDXQQZh5386S473VUmXMAZvpvGEn7TSWQYRcY0fHTjuQJcRAx
+         n25Q==
+X-Gm-Message-State: AGi0PuYk8gYGvPABXlA8wZpLGSGSK0aBOi3UEIfhkbQj3kkydrGaqGRl
+        71wCWCX6O8v/1sv8RSXCcDiE9X5kaFU0
+X-Google-Smtp-Source: APiQypJneQQy38v7CDdf0Z5G+T3sLqrun5IvJPxLPJgRv0c988eUeVYa3tmXI7ZI0PohhrpIMuuEbXhigb3J
+X-Received: by 2002:a05:6214:414:: with SMTP id z20mr5989856qvx.242.1588371202432;
+ Fri, 01 May 2020 15:13:22 -0700 (PDT)
+Date:   Fri,  1 May 2020 15:13:12 -0700
+Message-Id: <20200501221315.54715-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [PATCH v2 0/3] Improvements for kallsyms__parse
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:22:39PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.37 release.
-> There are 83 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> Anything received after that time might be too late.
-> 
+kallsyms__parse is called 4 times during perf record startup. Add a
+benchmark to measure its performance. Transition it to using the api
+io.h buffered reading, improving performance by ~8% or saving ~5% from
+perf record start up time.
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 427 pass: 427 fail: 0
+v2. Fix the err return value for success, error reported by
+    jolsa@redhat.com. Add clean-up for hex2u64.
 
-Guenter
+Ian Rogers (3):
+  perf bench: add kallsyms parsing
+  lib kallsyms: parse using io api
+  lib kallsyms: move hex2u64 out of header
+
+ tools/lib/api/io.h                |  3 ++
+ tools/lib/symbol/kallsyms.c       | 86 ++++++++++++++-----------------
+ tools/lib/symbol/kallsyms.h       |  2 -
+ tools/perf/bench/Build            |  1 +
+ tools/perf/bench/bench.h          |  1 +
+ tools/perf/bench/kallsyms-parse.c | 75 +++++++++++++++++++++++++++
+ tools/perf/builtin-bench.c        |  1 +
+ tools/perf/util/symbol.c          | 14 +++++
+ 8 files changed, 133 insertions(+), 50 deletions(-)
+ create mode 100644 tools/perf/bench/kallsyms-parse.c
+
+-- 
+2.26.2.526.g744177e7f7-goog
+
