@@ -2,187 +2,125 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66AAC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C62CC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF2C20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D77216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgEAPwQ (ORCPT
+        id S1729815AbgEAPyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:52:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54644 "EHLO mx2.suse.de"
+        Fri, 1 May 2020 11:54:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:43100 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgEAPwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:52:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3E432ACC3;
-        Fri,  1 May 2020 15:52:13 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id E2FD5602E9; Fri,  1 May 2020 17:52:10 +0200 (CEST)
-Date:   Fri, 1 May 2020 17:52:10 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        mkl@pengutronix.de, Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v4 1/2] ethtool: provide UAPI for PHY
- master/slave configuration.
-Message-ID: <20200501155210.GD8976@lion.mk-sys.cz>
-References: <20200501074633.24421-1-o.rempel@pengutronix.de>
- <20200501074633.24421-2-o.rempel@pengutronix.de>
+        id S1728495AbgEAPyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:54:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECF6630E;
+        Fri,  1 May 2020 08:54:20 -0700 (PDT)
+Received: from [10.57.39.240] (unknown [10.57.39.240])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 778A63F68F;
+        Fri,  1 May 2020 08:54:19 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+Date:   Fri, 1 May 2020 16:54:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501074633.24421-2-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 09:46:32AM +0200, Oleksij Rempel wrote:
-> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
-> auto-negotiation support, we needed to be able to configure the
-> MASTER-SLAVE role of the port manually or from an application in user
-> space.
+On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+> [+Robin - to check on dma-ranges intepretation]
 > 
-> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
-> force MASTER or SLAVE role. See IEEE 802.3-2018:
-> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
-> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
-> 40.5.2 MASTER-SLAVE configuration resolution
-> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
-> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> I would need RobH and Robin to review this.
 > 
-> The MASTER-SLAVE role affects the clock configuration:
+> Also, An ACK from Tom is required - for the whole series.
 > 
-> -------------------------------------------------------------------------------
-> When the  PHY is configured as MASTER, the PMA Transmit function shall
-> source TX_TCLK from a local clock source. When configured as SLAVE, the
-> PMA Transmit function shall source TX_TCLK from the clock recovered from
-> data stream provided by MASTER.
-> 
-> iMX6Q                     KSZ9031                XXX
-> ------\                /-----------\        /------------\
->       |                |           |        |            |
->  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
->       |<--- 125 MHz ---+-<------/  |        | \          |
-> ------/                \-----------/        \------------/
->                                                ^
->                                                 \-TX_TCLK
-> 
-> -------------------------------------------------------------------------------
-> 
-> Since some clock or link related issues are only reproducible in a
-> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
-> to provide generic (not 100BASE-T1 specific) interface to the user space
-> for configuration flexibility and trouble shooting.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-[...]
->  
-> +#define MASTER_SLAVE_CFG_UNKNOWN		0
-> +#define MASTER_SLAVE_CFG_MASTER_PREFERRED	1
-> +#define MASTER_SLAVE_CFG_SLAVE_PREFERRED	2
-> +#define MASTER_SLAVE_CFG_MASTER_FORCE		3
-> +#define MASTER_SLAVE_CFG_SLAVE_FORCE		4
-> +#define MASTER_SLAVE_CFG_UNSUPPORTED		5
-> +#define MASTER_SLAVE_STATE_UNKNOWN		0
-> +#define MASTER_SLAVE_STATE_MASTER		1
-> +#define MASTER_SLAVE_STATE_SLAVE		2
-> +#define MASTER_SLAVE_STATE_ERR			3
-> +#define MASTER_SLAVE_STATE_UNSUPPORTED		4
+> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>> property to configure the number of bits passed through from PCIe
+>> address to internal address in Inbound Address Translation register.
+>>
+>> However standard PCI dt-binding already defines "dma-ranges" to
+>> describe the address range accessible by PCIe controller. Parse
+>> "dma-ranges" property to configure the number of bits passed
+>> through from PCIe address to internal address in Inbound Address
+>> Translation register.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 9b1c3966414b..60f912a657b9 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   	struct device *dev = rc->pcie.dev;
+>>   	struct platform_device *pdev = to_platform_device(dev);
+>>   	struct device_node *np = dev->of_node;
+>> +	struct of_pci_range_parser parser;
+>>   	struct pci_host_bridge *bridge;
+>>   	struct list_head resources;
+>> +	struct of_pci_range range;
+>>   	struct cdns_pcie *pcie;
+>>   	struct resource *res;
+>>   	int ret;
+>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>   	rc->max_regions = 32;
+>>   	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>>   
+>> -	rc->no_bar_nbits = 32;
+>> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>> +	if (!of_pci_dma_range_parser_init(&parser, np))
+>> +		if (of_pci_range_parser_one(&parser, &range))
+>> +			rc->no_bar_nbits = ilog2(range.size);
 
-Drivers not adapted to fill the new fields will leave 0 in them, we also
-get 0 when new userspace is used with older kernel not supporting the
-feature. It would be IMHO more convenient to use 0 for *_UNSUPPORTED
-rather than for *_UNKNOWN.
+You probably want "range.pci_addr + range.size" here just in case the 
+bottom of the window is ever non-zero. Is there definitely only ever a 
+single inbound window to consider?
 
-[...]
-> @@ -122,6 +131,20 @@ static int linkmodes_fill_reply(struct sk_buff *skb,
->  	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_DUPLEX, lsettings->duplex))
->  		return -EMSGSIZE;
->  
-> +	if (lsettings->master_slave_cfg != MASTER_SLAVE_CFG_UNSUPPORTED) {
-> +		ret = nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
-> +				 lsettings->master_slave_cfg);
-> +		if (ret < 0)
-> +			return -EMSGSIZE;
-> +	}
+I believe that pci_parse_request_of_pci_ranges() could do the actual 
+parsing for you, but I suppose plumbing that in plus processing the 
+resulting dma_ranges resource probably ends up a bit messier than the 
+concise open-coding here.
 
-Nitpick: this could be simplified as
+Robin.
 
-	if (lsettings->master_slave_cfg != MASTER_SLAVE_CFG_UNSUPPORTED &&
-	    nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG,
-		       lsettings->master_slave_cfg))
-			return -EMSGSIZE;
-
-and possibly also combined with the previous nla_put_u8(). But it's
-a matter of taste, I guess.
-
-> +
-> +	if (lsettings->master_slave_state != MASTER_SLAVE_STATE_UNSUPPORTED) {
-> +		ret = nla_put_u8(skb, ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE,
-> +				 lsettings->master_slave_state);
-> +		if (ret < 0)
-> +			return -EMSGSIZE;
-> +	}
-> +
->  	return 0;
->  }
->  
-[...]
->  static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
->  				  struct ethtool_link_ksettings *ksettings,
->  				  bool *mod)
->  {
->  	struct ethtool_link_settings *lsettings = &ksettings->base;
->  	bool req_speed, req_duplex;
-> +	const struct nlattr *attr;
->  	int ret;
->  
-> +	attr = tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG];
-> +	if (attr) {
-
-Introducing the variable makes little sense if this is the only place
-where it is used. But if you decide to use it also in the two other
-places working with the attribute, it should probably have more
-descriptive name.
-
-Michal
-
-> +		u8 cfg = nla_get_u8(tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG]);
-> +		if (!ethnl_validate_master_slave_cfg(cfg))
-> +			return -EOPNOTSUPP;
-> +	}
-> +
->  	*mod = false;
->  	req_speed = tb[ETHTOOL_A_LINKMODES_SPEED];
->  	req_duplex = tb[ETHTOOL_A_LINKMODES_DUPLEX];
-> @@ -311,6 +357,8 @@ static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
->  			 mod);
->  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
->  			mod);
-> +	ethnl_update_u8(&lsettings->master_slave_cfg,
-> +			tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG], mod);
->  
->  	if (!tb[ETHTOOL_A_LINKMODES_OURS] && lsettings->autoneg &&
->  	    (req_speed || req_duplex) &&
-> -- 
-> 2.26.2
-> 
+>> +
+>> +	if (!rc->no_bar_nbits) {
+>> +		rc->no_bar_nbits = 32;
+>> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+>> +				     &rc->no_bar_nbits);
+>> +	}
+>>   
+>>   	rc->vendor_id = 0xffff;
+>>   	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+>> -- 
+>> 2.17.1
+>>
