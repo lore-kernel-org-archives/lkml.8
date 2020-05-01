@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7BEC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF7AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE3E20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE5120757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340891;
-	bh=I4wRL5poyl2fmkwPf1N4wKbUFGDbAZST9yu47/9xtN0=;
+	s=default; t=1588340894;
+	bh=XmzUmZp9VZrvlkLwm87tHwtyJ72voaQpZBjIlRck0IA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BuIqPgN/4uzgDzwN2MB7WJJkN/+GKqpmLJ2xA4sclOp/GjpT9MNZ12SXmknCQIWC8
-	 h3INdtb9SrG6BWoErij4N2GYw0k63QXm1vtwl8/M8FFunRZbay+ZuovK8ZlebDMCPG
-	 jeNfPWhPbAK5Tek5ML0NnIvDUeIqtsr7clPpAFiY=
+	b=1kDezp8tssDQAvpqT4MV8zMcb3XqllsTbpzdSsj26qqd0kea0DdamM7KDtbLuJmah
+	 FLjzh5jMiw+Btw6gk/UwXFNNtpC9joQ/GeZ2+IAIdaaxmYrAHKva1R+/ln777rBm14
+	 wLCJHLYFzYPDlwrPkpwmtFaf/BRWdK0rNt2P7HDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731592AbgEANsL (ORCPT
+        id S1731915AbgEANsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43440 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:48:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbgEANml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:42:41 -0400
+        id S1731012AbgEANme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC6B2208DB;
-        Fri,  1 May 2020 13:42:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 443BF2173E;
+        Fri,  1 May 2020 13:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340561;
-        bh=I4wRL5poyl2fmkwPf1N4wKbUFGDbAZST9yu47/9xtN0=;
+        s=default; t=1588340553;
+        bh=XmzUmZp9VZrvlkLwm87tHwtyJ72voaQpZBjIlRck0IA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HiMPLvNSatZzDunN2V39jKaJ9LPX/u1EG9Iq/q9YtVHAbDm83iGsLQzCBBNj3yQCe
-         f7lEci4/dBBBh5s0usxLRlXnf+3hZgPQCAxzjsTR+wqKmMqB4iyZuNaZtB2tL5uWql
-         kpFvteZVwyaHbDyXT4m5RM2n9x/QaQHCYiC5zm0I=
+        b=1eQ8OTMExwVIo8P8qEdyvCSXvIHWSOZ7AOyZufP19TjICnlOwdbMbYqMxUVic87JL
+         699J8rL1z4X2qUm2dy5EMGfUXwDQX5SYfyQc2OybzbPjVRWnf9K3T6LVsdBRoiVgk4
+         wjYqryofxvTk1q/dO9FUHmGXrzpwXr6XlSCmzxFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= 
-        <holger@applied-asynchrony.com>, Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.6 032/106] hwmon: (drivetemp) Return -ENODATA for invalid temperatures
-Date:   Fri,  1 May 2020 15:23:05 +0200
-Message-Id: <20200501131547.822255949@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 041/106] net/mlx5e: Dont trigger IRQ multiple times on XSK wakeup to avoid WQ overruns
+Date:   Fri,  1 May 2020 15:23:14 +0200
+Message-Id: <20200501131548.693025914@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,44 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-commit ed08ebb7124e90a99420bb913d602907d377d03d upstream.
+commit e7e0004abdd6f83ae4be5613b29ed396beff576c upstream.
 
-Holger Hoffstätte observed that Samsung 850 Pro may return invalid
-temperatures for a short period of time after resume. Return -ENODATA
-to userspace if this is observed.
+XSK wakeup function triggers NAPI by posting a NOP WQE to a special XSK
+ICOSQ. When the application floods the driver with wakeup requests by
+calling sendto() in a certain pattern that ends up in mlx5e_trigger_irq,
+the XSK ICOSQ may overflow.
 
-Fixes:  5b46903d8bf3 ("hwmon: Driver for disk and solid state drives with temperature sensors")
-Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-Cc: Holger Hoffstätte <holger@applied-asynchrony.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Multiple NOPs are not required and won't accelerate the process, so
+avoid posting a second NOP if there is one already on the way. This way
+we also avoid increasing the queue size (which might not help anyway).
+
+Fixes: db05815b36cb ("net/mlx5e: Add XSK zero-copy support")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/drivetemp.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h        |    3 ++-
+ drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c |    3 +++
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c     |    8 +++++---
+ drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c   |    6 +++++-
+ 4 files changed, 15 insertions(+), 5 deletions(-)
 
---- a/drivers/hwmon/drivetemp.c
-+++ b/drivers/hwmon/drivetemp.c
-@@ -264,12 +264,18 @@ static int drivetemp_get_scttemp(struct
- 		return err;
- 	switch (attr) {
- 	case hwmon_temp_input:
-+		if (!temp_is_valid(buf[SCT_STATUS_TEMP]))
-+			return -ENODATA;
- 		*val = temp_from_sct(buf[SCT_STATUS_TEMP]);
- 		break;
- 	case hwmon_temp_lowest:
-+		if (!temp_is_valid(buf[SCT_STATUS_TEMP_LOWEST]))
-+			return -ENODATA;
- 		*val = temp_from_sct(buf[SCT_STATUS_TEMP_LOWEST]);
- 		break;
- 	case hwmon_temp_highest:
-+		if (!temp_is_valid(buf[SCT_STATUS_TEMP_HIGHEST]))
-+			return -ENODATA;
- 		*val = temp_from_sct(buf[SCT_STATUS_TEMP_HIGHEST]);
- 		break;
- 	default:
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -367,6 +367,7 @@ enum {
+ 	MLX5E_SQ_STATE_AM,
+ 	MLX5E_SQ_STATE_TLS,
+ 	MLX5E_SQ_STATE_VLAN_NEED_L2_INLINE,
++	MLX5E_SQ_STATE_PENDING_XSK_TX,
+ };
+ 
+ struct mlx5e_sq_wqe_info {
+@@ -950,7 +951,7 @@ void mlx5e_page_release_dynamic(struct m
+ void mlx5e_handle_rx_cqe(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
+ void mlx5e_handle_rx_cqe_mpwrq(struct mlx5e_rq *rq, struct mlx5_cqe64 *cqe);
+ bool mlx5e_post_rx_wqes(struct mlx5e_rq *rq);
+-void mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
++int mlx5e_poll_ico_cq(struct mlx5e_cq *cq);
+ bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq);
+ void mlx5e_dealloc_rx_wqe(struct mlx5e_rq *rq, u16 ix);
+ void mlx5e_dealloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
+@@ -33,6 +33,9 @@ int mlx5e_xsk_wakeup(struct net_device *
+ 		if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &c->xskicosq.state)))
+ 			return 0;
+ 
++		if (test_and_set_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state))
++			return 0;
++
+ 		spin_lock(&c->xskicosq_lock);
+ 		mlx5e_trigger_irq(&c->xskicosq);
+ 		spin_unlock(&c->xskicosq_lock);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -587,7 +587,7 @@ bool mlx5e_post_rx_wqes(struct mlx5e_rq
+ 	return !!err;
+ }
+ 
+-void mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
++int mlx5e_poll_ico_cq(struct mlx5e_cq *cq)
+ {
+ 	struct mlx5e_icosq *sq = container_of(cq, struct mlx5e_icosq, cq);
+ 	struct mlx5_cqe64 *cqe;
+@@ -595,11 +595,11 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 	int i;
+ 
+ 	if (unlikely(!test_bit(MLX5E_SQ_STATE_ENABLED, &sq->state)))
+-		return;
++		return 0;
+ 
+ 	cqe = mlx5_cqwq_get_cqe(&cq->wq);
+ 	if (likely(!cqe))
+-		return;
++		return 0;
+ 
+ 	/* sq->cc must be updated only after mlx5_cqwq_update_db_record(),
+ 	 * otherwise a cq overrun may occur
+@@ -648,6 +648,8 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 	sq->cc = sqcc;
+ 
+ 	mlx5_cqwq_update_db_record(&cq->wq);
++
++	return i;
+ }
+ 
+ bool mlx5e_post_rx_mpwqes(struct mlx5e_rq *rq)
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
+@@ -145,7 +145,11 @@ int mlx5e_napi_poll(struct napi_struct *
+ 
+ 	busy |= rq->post_wqes(rq);
+ 	if (xsk_open) {
+-		mlx5e_poll_ico_cq(&c->xskicosq.cq);
++		if (mlx5e_poll_ico_cq(&c->xskicosq.cq))
++			/* Don't clear the flag if nothing was polled to prevent
++			 * queueing more WQEs and overflowing XSKICOSQ.
++			 */
++			clear_bit(MLX5E_SQ_STATE_PENDING_XSK_TX, &c->xskicosq.state);
+ 		busy |= mlx5e_poll_xdpsq_cq(&xsksq->cq);
+ 		busy_xsk |= mlx5e_napi_xsk_post(xsksq, xskrq);
+ 	}
 
 
