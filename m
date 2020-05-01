@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191CCC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EAFC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4B97216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6D6208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340182;
-	bh=ebTXTMAiuQYreJ+FNcCcQwnLRxKRgHHsao4/s8uB/xE=;
+	s=default; t=1588340189;
+	bh=QCPBsekKWJ4K6wC5MBeuGg8o/U7gwULdIjSVndodX98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pH+f4L5YD9vNBBdcEiGUzDxdI/1d7+n0YVTRkb4+RiAFsdFXJHfPmHGbkrQX4jpZ2
-	 ZunfwncDmOUUiIg+6RpaRprKgo8Z9SfHz7LpjOkr7KSqnUKmVEHa2Lb5LXJdL2JH/J
-	 /IAoP30ytvtKN4oLgraxidjGI4aJNpH5+uc9gwIE=
+	b=2I/zYWd5TOrpO7dObjYFeKfZRwtsmPq2WJz/I1rHc3fRrZbrtP8Re48x/SchD/JCR
+	 ECuCPI0i8v5i7e55q+Uujrw/3pqspAf5HZ4z6lmHmaQvXffpY/yumWGFm87176sUwq
+	 hglqX8dsRjG25S5Juwjs6aOVK0rMP/0COObThK0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgEANgU (ORCPT
+        id S1729482AbgEANg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730843AbgEANgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:16 -0400
+        id S1730843AbgEANgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EBEC24955;
-        Fri,  1 May 2020 13:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4819F208DB;
+        Fri,  1 May 2020 13:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340175;
-        bh=ebTXTMAiuQYreJ+FNcCcQwnLRxKRgHHsao4/s8uB/xE=;
+        s=default; t=1588340180;
+        bh=QCPBsekKWJ4K6wC5MBeuGg8o/U7gwULdIjSVndodX98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RsHuz5VsEfmmovnFQQCZ+9G+vOZEr/YgKLCRq6qYsZJoIwEaZJAxSIVJPk3Pgx/Y/
-         PZ7iAyMtOGUAVDB6t+RuqgbMj7QZn8BfMg8zc6X20hCwegSNItoCKkFpXiE8XzJC21
-         j1O1GltWEjCtA4bEXYHAOn++Ey/fXZhmuVnc+dqE=
+        b=KRtR2N+Y252G09DxowrFWfrOA8POdnBKKOYJbI8oveOJbIaVKoXKiWkUNHcFbgdOF
+         Kmr1MHWoIxJ+1OgLTAIGGjw1SRmo/nWWqDPTR7Xq0UOddrNPKlny/52Wb3IKZHAo0M
+         ruZKbU+A+D2+NzTuX1ubWd5zMgYW3k8XXBK6JbCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Lu=C3=ADs=20Mendes?= <luis.p.mendes@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Todd Poynor <toddpoynor@google.com>
-Subject: [PATCH 4.19 19/46] PCI: Move Apex Edge TPU class quirk to fix BAR assignment
-Date:   Fri,  1 May 2020 15:22:44 +0200
-Message-Id: <20200501131505.458526200@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.19 21/46] cpumap: Avoid warning when CONFIG_DEBUG_PER_CPU_MAPS is enabled
+Date:   Fri,  1 May 2020 15:22:46 +0200
+Message-Id: <20200501131506.189325050@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -61,72 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-commit 0a8f41023e8a3c100b3dc458ed2da651bf961ead upstream.
+commit bc23d0e3f717ced21fbfacab3ab887d55e5ba367 upstream.
 
-Some Google Apex Edge TPU devices have a class code of 0
-(PCI_CLASS_NOT_DEFINED).  This prevents the PCI core from assigning
-resources for the Apex BARs because __dev_sort_resources() ignores
-classless devices, host bridges, and IOAPICs.
+When the kernel is built with CONFIG_DEBUG_PER_CPU_MAPS, the cpumap code
+can trigger a spurious warning if CONFIG_CPUMASK_OFFSTACK is also set. This
+happens because in this configuration, NR_CPUS can be larger than
+nr_cpumask_bits, so the initial check in cpu_map_alloc() is not sufficient
+to guard against hitting the warning in cpumask_check().
 
-On x86, firmware typically assigns those resources, so this was not a
-problem.  But on some architectures, firmware does *not* assign BARs, and
-since the PCI core didn't do it either, the Apex device didn't work
-correctly:
+Fix this by explicitly checking the supplied key against the
+nr_cpumask_bits variable before calling cpu_possible().
 
-  apex 0000:01:00.0: can't enable device: BAR 0 [mem 0x00000000-0x00003fff 64bit pref] not claimed
-  apex 0000:01:00.0: error enabling PCI device
-
-f390d08d8b87 ("staging: gasket: apex: fixup undefined PCI class") added a
-quirk to fix the class code, but it was in the apex driver, and if the
-driver was built as a module, it was too late to help.
-
-Move the quirk to the PCI core, where it will always run early enough that
-the PCI core will assign resources if necessary.
-
-Link: https://lore.kernel.org/r/CAEzXK1r0Er039iERnc2KJ4jn7ySNUOG9H=Ha8TD8XroVqiZjgg@mail.gmail.com
-Fixes: f390d08d8b87 ("staging: gasket: apex: fixup undefined PCI class")
-Reported-by: Luís Mendes <luis.p.mendes@gmail.com>
-Debugged-by: Luís Mendes <luis.p.mendes@gmail.com>
-Tested-by: Luis Mendes <luis.p.mendes@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Todd Poynor <toddpoynor@google.com>
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Xiumei Mu <xmu@redhat.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200416083120.453718-1-toke@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c                 |    7 +++++++
- drivers/staging/gasket/apex_driver.c |    7 -------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ kernel/bpf/cpumap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5293,3 +5293,10 @@ static void pci_fixup_no_d0_pme(struct p
- 	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
-+
-+static void apex_pci_fixup_class(struct pci_dev *pdev)
-+{
-+	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
-+}
-+DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
-+			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
---- a/drivers/staging/gasket/apex_driver.c
-+++ b/drivers/staging/gasket/apex_driver.c
-@@ -578,13 +578,6 @@ static const struct pci_device_id apex_p
- 	{ PCI_DEVICE(APEX_PCI_VENDOR_ID, APEX_PCI_DEVICE_ID) }, { 0 }
- };
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -455,7 +455,7 @@ static int cpu_map_update_elem(struct bp
+ 		return -EOVERFLOW;
  
--static void apex_pci_fixup_class(struct pci_dev *pdev)
--{
--	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
--}
--DECLARE_PCI_FIXUP_CLASS_HEADER(APEX_PCI_VENDOR_ID, APEX_PCI_DEVICE_ID,
--			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
--
- static int apex_pci_probe(struct pci_dev *pci_dev,
- 			  const struct pci_device_id *id)
- {
+ 	/* Make sure CPU is a valid possible cpu */
+-	if (!cpu_possible(key_cpu))
++	if (key_cpu >= nr_cpumask_bits || !cpu_possible(key_cpu))
+ 		return -ENODEV;
+ 
+ 	if (qsize == 0) {
 
 
