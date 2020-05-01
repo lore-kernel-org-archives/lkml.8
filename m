@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B92AC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8445C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76B8420757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC6720757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339851;
-	bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
+	s=default; t=1588339853;
+	bh=GqiAjsB0umloZVqaiehWJl9SaeTz4QMV4YkOimw4U6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XrWBAKUGP4rc/xfv2zJunUqw2EPDGhoQTtoYnvA16FueTLvhVVoio/CHUlk9wGHF3
-	 vRdpsi0PbMvw3URPa0HDMvT0qtGkKuqjEYh+XraVKgcdxSwKrYGEr3jHyFXimTVrU/
-	 vSqdnEwDD/PLYHDjdWdPOBEasoKqIId6iYTSnsfU=
+	b=W0Ikb3huFbVAO2AR1Oxk09CHj1SHMgt+ZE/jaTNBwVZB4p9ahH5pnQH7RrwBRGBGp
+	 Rj+09Ps/AM+dZ2xWpZY6eHdgfGnHlB9K2tX7eXQF7LQ0SCWb+IZbZ8Q4ckfDhw4VJi
+	 90gi3nnxhiFklyhR/joWjQF9kuFDpiBKIIYQKDmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgEANau (ORCPT
+        id S1729067AbgEANaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgEANap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:45 -0400
+        id S1730010AbgEANar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 355EF208C3;
-        Fri,  1 May 2020 13:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A965F20757;
+        Fri,  1 May 2020 13:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339844;
-        bh=qEu0WFBLwwFGr/j4YzQwcJbCKPVRRW4ytCD4XaDu31s=;
+        s=default; t=1588339847;
+        bh=GqiAjsB0umloZVqaiehWJl9SaeTz4QMV4YkOimw4U6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j8E2qBChgL9prlj0SrbgHqxtm2YIWAcv/CwhpCb3iorUHc1JAJNtZPW7xDKewXrD7
-         kWDc9JUlppF7bkaPptlG0BnSPWAr4HsV5Zdc2MHRgTl3rYW3W50AagnjF9Cx6SCMqE
-         JfeHc3HrhAbpCTT94kvIdu9ncNciaoQZRoP+P3gw=
+        b=QiNuU7H+VE5ZtAH//Dsr0m5Z8qIvzm4UhUK/70EU5i/jEUoGcUZdd5mzv9SiX3yXP
+         strAOQBIaLbhohLqJB6jjeSZRG6GwQ7Uf/nXQZ5X7g813AnkoiH5H7Mt2IG8lCEtaf
+         O5Uc0zRxU0JjgEROwLf4DCRQaSLy2NZgHJFMfOVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 70/80] objtool: Support Clang non-section symbols in ORC dump
-Date:   Fri,  1 May 2020 15:22:04 +0200
-Message-Id: <20200501131535.692678080@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 71/80] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
+Date:   Fri,  1 May 2020 15:22:05 +0200
+Message-Id: <20200501131535.782271467@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,109 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
+[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
 
-Historically, the relocation symbols for ORC entries have only been
-section symbols:
+xenbus_map_ring_valloc() maps a ring page and returns the status of the
+used grant (0 meaning success).
 
-  .text+0: sp:sp+8 bp:(und) type:call end:0
+There are Xen hypervisors which might return the value 1 for the status
+of a failed grant mapping due to a bug. Some callers of
+xenbus_map_ring_valloc() test for errors by testing the returned status
+to be less than zero, resulting in no error detected and crashing later
+due to a not available ring page.
 
-However, the Clang assembler is aggressive about stripping section
-symbols.  In that case we will need to use function symbols:
+Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
+in case the grant status reported by Xen is greater than zero.
 
-  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
+This is part of XSA-316.
 
-In preparation for the generation of such entries in "objtool orc
-generate", add support for reading them in "objtool orc dump".
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Wei Liu <wl@xen.org>
+Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 17 deletions(-)
+ drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
-index c3343820916a6..7cbbbdd932f1d 100644
---- a/tools/objtool/orc_dump.c
-+++ b/tools/objtool/orc_dump.c
-@@ -78,7 +78,7 @@ int orc_dump(const char *_objname)
- 	char *name;
- 	size_t nr_sections;
- 	Elf64_Addr orc_ip_addr = 0;
--	size_t shstrtab_idx;
-+	size_t shstrtab_idx, strtab_idx = 0;
- 	Elf *elf;
- 	Elf_Scn *scn;
- 	GElf_Shdr sh;
-@@ -139,6 +139,8 @@ int orc_dump(const char *_objname)
- 
- 		if (!strcmp(name, ".symtab")) {
- 			symtab = data;
-+		} else if (!strcmp(name, ".strtab")) {
-+			strtab_idx = i;
- 		} else if (!strcmp(name, ".orc_unwind")) {
- 			orc = data->d_buf;
- 			orc_size = sh.sh_size;
-@@ -150,7 +152,7 @@ int orc_dump(const char *_objname)
- 		}
- 	}
- 
--	if (!symtab || !orc || !orc_ip)
-+	if (!symtab || !strtab_idx || !orc || !orc_ip)
- 		return 0;
- 
- 	if (orc_size % sizeof(*orc) != 0) {
-@@ -171,21 +173,29 @@ int orc_dump(const char *_objname)
- 				return -1;
- 			}
- 
--			scn = elf_getscn(elf, sym.st_shndx);
--			if (!scn) {
--				WARN_ELF("elf_getscn");
--				return -1;
--			}
--
--			if (!gelf_getshdr(scn, &sh)) {
--				WARN_ELF("gelf_getshdr");
--				return -1;
--			}
--
--			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
--			if (!name || !*name) {
--				WARN_ELF("elf_strptr");
--				return -1;
-+			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
-+				scn = elf_getscn(elf, sym.st_shndx);
-+				if (!scn) {
-+					WARN_ELF("elf_getscn");
-+					return -1;
-+				}
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index 056da6ee1a357..df27cefb2fa35 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -469,7 +469,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
+ int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
+ 			   unsigned int nr_grefs, void **vaddr)
+ {
+-	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	int err;
 +
-+				if (!gelf_getshdr(scn, &sh)) {
-+					WARN_ELF("gelf_getshdr");
-+					return -1;
-+				}
++	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	/* Some hypervisors are buggy and can return 1. */
++	if (err > 0)
++		err = GNTST_general_error;
 +
-+				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
-+			} else {
-+				name = elf_strptr(elf, strtab_idx, sym.st_name);
-+				if (!name) {
-+					WARN_ELF("elf_strptr");
-+					return -1;
-+				}
- 			}
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
  
- 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
 -- 
 2.20.1
 
