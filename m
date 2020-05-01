@@ -2,67 +2,151 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43806C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF126C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E19D2495C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZqncxFdW"
+	by mail.kernel.org (Postfix) with ESMTP id 9EB28208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588347000;
+	bh=/G7XNzajf9Wo8tshCVgx7SQ2cL/bvxT5Q+QNU0HpWEU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Goi70MNY4VlYjYSXzbVvlbwMPL9ldg9r3fw5Xvz3aIYAI66OJx4Li7Kg6PFej5spn
+	 G+3QEOqUkdOc1ykfLCYV58yfNZcDxdsDnVAqSDKx/qr61CFLUyoJaxK+3E1Qm3yZfO
+	 bJJwrQ1oHWjEerWF0Xv7HkWPZzcdFdOCMy6T+6Mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgEAP3z (ORCPT
+        id S1729807AbgEAP37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:29:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:36448 "EHLO vps0.lunn.ch"
+        Fri, 1 May 2020 11:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgEAP3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729004AbgEAP3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 11:29:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=0oFnvmjDPVBMOQrnKCtF1VSBYWpdcWGbY1ugeUjkCs0=; b=ZqncxFdWqbRuDkB4HOmtEjSR6D
-        rRHaLpAOMIlNMmOYMWOBWBYlrQCFBgpdRwiZahZZkQ2XwCg6kizZiDRLGxISbUo/bRKYa2fLsL4+t
-        7K5mZ/UMaLO+hEA08YH+8MnZGOK1cSfcLbm4/bRchTxDV1rHijO2JKDFc8PAiTEherfU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jUXbo-000YEH-9Z; Fri, 01 May 2020 17:29:48 +0200
-Date:   Fri, 1 May 2020 17:29:48 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC v2 04/11] net: stmmac: dwmac-meson8b: Move the
- documentation for the TX delay
-Message-ID: <20200501152948.GD128733@lunn.ch>
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-5-martin.blumenstingl@googlemail.com>
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5FC9208DB;
+        Fri,  1 May 2020 15:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588346994;
+        bh=/G7XNzajf9Wo8tshCVgx7SQ2cL/bvxT5Q+QNU0HpWEU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n6p+Fb4La0rgNC4UHvcZ+6ploTng5cabOHHDfq3l6wa7oXGtV/GxNNuYxhzAjb5cu
+         QiZArscg2YtWFwf95CZYlm6jNH5nxYaY30LFYtE4/TDeXUZjK0pcOEjeWBPhoAsHXc
+         vbyhmBe7G9bownYnkMZxsW6tPv8LnHfotA/zlUPI=
+Date:   Fri, 1 May 2020 10:29:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Austin Bolen <Austin.Bolen@dell.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Keith Busch <kbusch@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Tyler Baicar <tbaicar@codeaurora.org>
+Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
+ ownership
+Message-ID: <20200501152952.GA109568@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200429201644.1144546-5-martin.blumenstingl@googlemail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3dd43d44-3f9c-28c1-56ff-9720e6fb750a@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 10:16:37PM +0200, Martin Blumenstingl wrote:
-> Move the documentation for the TX delay above the PRG_ETH0_TXDLY_MASK
-> definition. Future commits will add more registers also with
-> documentation above their register bit definitions. Move the existing
-> comment so it will be consistent with the upcoming changes.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Thu, Apr 30, 2020 at 05:35:34PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> On 4/30/2020 3:40 PM, Bjorn Helgaas wrote:
+> > On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > 
+> > > Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
+> > > determine the PCIe AER Capability ownership between OS and
+> > > firmware. This support is added based on following spec
+> > > reference.
+> > > 
+> > > Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
+> > > flags field BIT-0 and BIT-1 can be used to expose the
+> > > ownership of error source between firmware and OSPM.
+> > > 
+> > > Bit [0] - FIRMWARE_FIRST: If set, indicates that system
+> > >            firmware will handle errors from this source
+> > >            first.
+> > > Bit [1] – GLOBAL: If set, indicates that the settings
+> > >            contained in this structure apply globally to all
+> > >            PCI Express Bridges.
+> > > 
+> > > Although above spec reference states that setting
+> > > FIRMWARE_FIRST bit means firmware will handle the error source
+> > > first, it does not explicitly state anything about AER
+> > > ownership. So using HEST to determine AER ownership is
+> > > incorrect.
+> > > 
+> > > Also, as per following specification references, _OSC can be
+> > > used to negotiate the AER ownership between firmware and OS.
+> > > Details are,
+> > > 
+> > > Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
+> > > of _OSC Control Field” and as per PCI firmware specification r3.2,
+> > > sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
+> > > to request control over PCI Express AER. If the OS successfully
+> > > receives control of this feature, it must handle error reporting
+> > > through the AER Capability as described in the PCI Express Base
+> > > Specification.
+> > > 
+> > > Since above spec references clearly states _OSC can be used to
+> > > determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
+> > 
+> > I pulled out the _OSC part of this to a separate patch.  What's left
+> > is below, and is essentially equivalent to Alex's patch:
+> > 
+> >    https://lore.kernel.org/r/20190326172343.28946-3-mr.nuke.me@gmail.com/
+> > 
+> > I like what this does, but what I don't like is the fact that we now
+> > have this thing called pcie_aer_get_firmware_first() that is not
+> > connected with the ACPI FIRMWARE_FIRST bit at all.
+>
+> I agree. Since the current function has nothing to do with firmware
+> first check, we can rename it. May be pci_aer_is_native() ?
+>
+> > I think the end result will be more readable if we get rid of the
+> > "firmware_first" completely.  I don't know if we need a wrapper for it
+> > at all, or if we should just open-code:
+>
+> Since pcie_aer_get_firmware_first() is used in following exported functions,
+> I think we still need to check for "pcie_ports_native"
+> and "pci_is_pcie()"
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+We *could* check pci_is_pcie(), but I don't think it's strictly
+necessary because we really just depend on the AER capability, and we
+already check for dev->aer_cap, which will only be set if we find one.
 
-    Andrew
+Good point about "pcie_ports_native".  I think I implemented
+host->native_aer in a sub-optimal way: instead of sprinkling tests for
+pcie_ports_native around, I think I should have done something like
+this in acpi_pci_root_create():
+
+  if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL) &&
+      !pcie_ports_native)
+        host_bridge->native_aer = 0;
+
+That way (1) it's more obvious that the point of pcie_ports_native is
+to override _OSC, and (2) we only need to check native_aer elsewhere.
+
+If we refactored like that, the following should be sufficient:
+
+> >    int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+> >    {
+> >      struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> > 
+> >      if (!host->native_aer)
+> >        return -EIO;
