@@ -2,116 +2,80 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643A9C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75505C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD4E20731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE4320857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g9Y63QfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbgEAPm4 (ORCPT
+        id S1729776AbgEAPoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:42:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35472 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbgEAPm4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:42:56 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jUXoR-00037R-U2; Fri, 01 May 2020 15:42:52 +0000
-Date:   Fri, 1 May 2020 17:42:51 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Jann Horn <jannh@google.com>, linux-api@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-Subject: Re: [PATCH v2 1/4] capability: add ns_capable_cred()
-Message-ID: <20200501154251.j4iuz42tntnjcvaa@wittgenstein>
-References: <20200430165717.1001605-1-christian.brauner@ubuntu.com>
- <87y2qczvz9.fsf@x220.int.ebiederm.org>
+        Fri, 1 May 2020 11:44:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36546 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEAPoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:44:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zq53wD1ebttWy9Fs+bAkUBp+KMkAbk1gvP4L0POpNiA=; b=g9Y63QfCt8YuvaP45/GWgzLNj8
+        no//b6ULwxrn4pBY9MHOk89RSiunJY/l98hVSjVfsLNrIuLgM/KQfMzLn1fYX+lQW0qRLzMOvy1Ta
+        lFnR3/T4p7PWi6B/VbYak39g5tqWm4oIXxzQB5PjCtHV+QNLsdO/I3HQoav+YkAlNQd4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jUXqK-000YMy-7n; Fri, 01 May 2020 17:44:48 +0200
+Date:   Fri, 1 May 2020 17:44:48 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC v2 08/11] net: stmmac: dwmac-meson8b: add support for
+ the RX delay configuration
+Message-ID: <20200501154448.GH128733@lunn.ch>
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-9-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2qczvz9.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200429201644.1144546-9-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 01:09:30PM -0500, Eric W. Biederman wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
-> 
-> > Add a simple capability helper which makes it possible to determine
-> > whether a set of creds is ns capable wrt to the passed in credentials.
-> > This is not something exciting it's just a more pleasant wrapper around
-> > security_capable() by allowing ns_capable_common() to ake a const struct
-> > cred argument. In ptrace_has_cap() for example, we're using
-> > security_capable() directly. ns_capable_cred() will be used in the next
-> > patch to check against the target credentials the caller is going to
-> > switch to.
-> 
-> Given that this is to suppot setns.  I don't understand the
-> justification for this.
-> 
-> Is it your intention to use the reduced permissions that you get
-> when you install a user namespace?
+> +	if (rx_dly_config & PRG_ETH0_ADJ_ENABLE) {
+> +		/* The timing adjustment logic is driven by a separate clock */
+> +		ret = meson8b_devm_clk_prepare_enable(dwmac,
+> +						      dwmac->timing_adj_clk);
+> +		if (ret) {
+> +			dev_err(dwmac->dev,
+> +				"Failed to enable the timing-adjustment clock\n");
+> +			return ret;
+> +		}
+> +	}
 
-Indeed.
+Hi Martin
 
-> 
-> Why do you want to use the reduced permissions when installing multiple
-> namespaces at once?
+It is a while since i used the clk API. I thought the get_optional()
+call returned a NULL pointer if the clock does not exist.
+clk_prepare_enable() passed a NULL pointer is a NOP, but it also does
+not return an error. So if the clock does not exist, you won't get
+this error, the code keeps going, configures the hardware, but it does
+not work.
 
-The intention is to use the target credentials we are going to install
-when setns() hits the point of no return. The target permissions are
-either the permissions of the caller or the reduced permissions if
-CLONE_NEWUSER has been requested. This has multiple reasons.
+I think you need to check dwmac->timing_adj_clk != NULL here, and
+error out if DT has properties which require it.
 
-The most obvious reason imho is that all other namespaces have an owning
-user namespace. Attaching to any other namespace requires the attacher
-to be privileged over the owning user namespace of that namespace.
-Consequently, all our current install handlers for every namespace we
-have check whether we are privileged in the owning user namespace of
-that user namespace. So in order to attach to any of those namespaces -
-especially when attaching as an unprivileged user - requires that we are
-attached to the user namespace first. (That's especially useful given
-that most users especially container runtimes will unshare all
-namespaces. Doing it this way we can not just have attach privileged
-users attach to their containers but also unprivileged users to their
-containers in one shot.)
-
-A few other points about this. If one looks at clone(CLONE_NEW*) or
-unshare(CLONE_NEW*) then the ordering and permissions checking is the
-same way. All permissions checks are performed against the reduced
-permissions, i.e. if CLONE_NEWUSER is specified you check privilege
-against the reduced permissions too otherwise you wouldn't be able to
-spawn into a complete set of new namespaces as an unprivileged user.
-
-This logic is also expressed in how setns() is already used in
-userspace. Any container runtime will attach to the user namespace first,
-so all subsequent calls to attach to other namespaces perform the checks
-against the reduced permissions. It also has to be that way because of
-fully unprivileged containers.
-
-To put it another way, if we were to always perform the permission checks
-against the current permissions (i.e. no matter if CLONE_NEWUSER is
-specified or not) then we'd never be able to attach to a set of
-namespaces at once as an unprivileged user.
-We also really want to be able to express both semantics:
-1. setns(flags & ~CLONE_NEWUSER) --> attach to all namespaces with my
-   current permission level
-2. setns(flags | CLONE_NEWUSER) attach to all namespaces with the target
-   permission level
-It feels weird if both 1 and 2 would mean the exact same thing given
-that the user namespace has an owernship relation with all the other
-namespaces.
-
-Christian
+      Andrew
