@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13737C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A58AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAEAD205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A2520757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340325;
-	bh=ZOWlDXJ+y14rAyA1g+BeULgdahx3vf6rhu7aIbrlV4Y=;
+	s=default; t=1588340328;
+	bh=kccyWggFbCwVoneumpdT1HwbogboBp2y4gZSkk5jbJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p69xxgRUYqoymj0f4xFsq1NYjkZ8C1gZ5kEzGam7PI5Ie7GH660t94msrdO0HcEwY
-	 SfZKn2k584zpMwN6y8L8vtFOdfutOPJAttCDlXDy0NI2By2Y7pwO94AwA2bThiiNq/
-	 1GM8N5NFl5kZ0wr9ME+HC84i2xXVP0Fok/zZPXmA=
+	b=slvKkZnQP5ddaOpM5ajIbUTTvLccjxm8RnIDelOKTdSwEyHx0ZN41oN6blgnDKL4e
+	 jOvUdklaBY9TioGcuo0x+2xgeP6FKPCIgfP9QlD1mR9jqf1uDUHoctYLuVOEZ2Uufq
+	 symALKLRGk9IfR2qh743krQAOks/+gD9LN0dvVpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbgEANio (ORCPT
+        id S1731089AbgEANiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38210 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:38:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731080AbgEANik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:40 -0400
+        id S1731084AbgEANim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F7012173E;
-        Fri,  1 May 2020 13:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A053E205C9;
+        Fri,  1 May 2020 13:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340319;
-        bh=ZOWlDXJ+y14rAyA1g+BeULgdahx3vf6rhu7aIbrlV4Y=;
+        s=default; t=1588340322;
+        bh=kccyWggFbCwVoneumpdT1HwbogboBp2y4gZSkk5jbJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mLn2jZ41YRP75CCsMHNJtXm1/DFcsOHl7n/lX9Bl6CoAXqlaO/KZRlLX9CcnRDLW2
-         jsb23qhmG5gLilt89n9ceWzDSw4Mvvo1PR+6PZLrEhspeZaIg/x99WuityHLmD6rVx
-         B5AtkzkcQF7aZyMNztIbRU9ED5UTS+RwUb2ubI/w=
+        b=ZlKz1+MCjs3kSxnou/pDVGv7nItJ1gvMO7beTntZpf+U9RA7NxFiX4itSIDxzHvV0
+         jPbWEy+XXiBWG/YEZpx0yV5wLa/XVQYE6F5yAHzZfacDVFV+uZPVrqGmluDZLLA0DM
+         Ua+W32cFD0ZWCL0g+lnm8PKbEySTMmtN+z8v2BiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 17/83] ASoC: meson: axg-card: fix codec-to-codec link setup
-Date:   Fri,  1 May 2020 15:22:56 +0200
-Message-Id: <20200501131528.267807251@linuxfoundation.org>
+Subject: [PATCH 5.4 18/83] ASoC: wm8960: Fix wrong clock after suspend & resume
+Date:   Fri,  1 May 2020 15:22:57 +0200
+Message-Id: <20200501131528.700589060@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,60 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit 1164284270779e1865cc2046a2a01b58a1e858a9 upstream.
+commit 1e060a453c8604311fb45ae2f84f67ed673329b4 upstream.
 
-Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
-playback/capture if supported"), meson-axg cards which have codec-to-codec
-links fail to init and Oops:
+After suspend & resume, wm8960_hw_params may be called when
+bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
+is not called. But if sample rate is changed at that time, then
+the output clock rate will be not correct.
 
-  Unable to handle kernel NULL pointer dereference at virtual address 0000000000000128
-  Internal error: Oops: 96000044 [#1] PREEMPT SMP
-  CPU: 3 PID: 1582 Comm: arecord Not tainted 5.7.0-rc1
-  pc : invalidate_paths_ep+0x30/0xe0
-  lr : snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
-  Call trace:
-   invalidate_paths_ep+0x30/0xe0
-   snd_soc_dapm_dai_get_connected_widgets+0x170/0x1a8
-   dpcm_path_get+0x38/0xd0
-   dpcm_fe_dai_open+0x70/0x920
-   snd_pcm_open_substream+0x564/0x840
-   snd_pcm_open+0xfc/0x228
-   snd_pcm_capture_open+0x4c/0x78
-   snd_open+0xac/0x1a8
-   ...
+So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
+is not necessary and it causes above issue.
 
-While initiliazing the links, ASoC treats the codec-to-codec links of this
-card type as a DPCM backend. This error eventually leads to the Oops.
-
-Most of the card driver code is shared between DPCM backends and
-codec-to-codec links. The property "no_pcm" marking DCPM BE was left set on
-codec-to-codec links, leading to this problem. This commit fixes that.
-
-Fixes: 0a8f1117a680 ("ASoC: meson: axg-card: add basic codec-to-codec link support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20200420114511.450560-2-jbrunet@baylibre.com
+Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/meson/axg-card.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wm8960.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/soc/meson/axg-card.c
-+++ b/sound/soc/meson/axg-card.c
-@@ -586,8 +586,10 @@ static int axg_card_add_link(struct snd_
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+@@ -860,8 +860,7 @@ static int wm8960_hw_params(struct snd_p
  
- 	if (axg_card_cpu_is_tdm_iface(dai_link->cpus->of_node))
- 		ret = axg_card_parse_tdm(card, np, index);
--	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node))
-+	else if (axg_card_cpu_is_codec(dai_link->cpus->of_node)) {
- 		dai_link->params = &codec_params;
-+		dai_link->no_pcm = 0; /* link is not a DPCM BE */
-+	}
+ 	wm8960->is_stream_in_use[tx] = true;
  
- 	return ret;
- }
+-	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
+-	    !wm8960->is_stream_in_use[!tx])
++	if (!wm8960->is_stream_in_use[!tx])
+ 		return wm8960_configure_clocking(component);
+ 
+ 	return 0;
 
 
