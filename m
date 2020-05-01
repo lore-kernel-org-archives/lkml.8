@@ -2,52 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F081C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1065C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D552D24957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F2824953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340118;
-	bh=ThW24rHB67QXfn8DBDct3fwUkUI14YNT5QcUKG2PlDo=;
+	s=default; t=1588340122;
+	bh=IN3dBcosvKC2QUoeyRI6B2svCXNsLO997YBPPyyQJAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s8vHLArBsnl8HcnlXmBaZ06RlNlBCMAmeG0KXKddRRzwuXWnP9oySHjONQzk7gGlH
-	 gadU244X86Rohn4oV8/KeuDVYkys3l7Bo2ERVIbLlC5vRZVwVDJUP3yNyrjJzHg+tm
-	 GBIY3af5oxc9vyiqWdrGksmrV3HGQr/3MCTbb0U0=
+	b=y8DDHci4YjPMwEKUO5J7ZA1W+yqwgHAiWgwAoNSd04YqNrwBN0zKtUfxlmifnUfg5
+	 LxswpuuJagxf/oWTCJ4WiyqMiVeHbLt8R7kENDjoqGQVB+c6SID2QbAiMr+GyoVHBA
+	 AgfOQoVkN/TsCdbS47Q9BPIUzn89vUdMktwutdBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgEANfS (ORCPT
+        id S1730755AbgEANfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33444 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730729AbgEANfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:12 -0400
+        id S1730736AbgEANfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66771216FD;
-        Fri,  1 May 2020 13:35:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA4D624957;
+        Fri,  1 May 2020 13:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340111;
-        bh=ThW24rHB67QXfn8DBDct3fwUkUI14YNT5QcUKG2PlDo=;
+        s=default; t=1588340114;
+        bh=IN3dBcosvKC2QUoeyRI6B2svCXNsLO997YBPPyyQJAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/dEVQqVn0kGQIE+FKJC+KN4trbmUbU7wzFGzGJ4LBTLk0WZmdP6f7rnWXwn5CFk0
-         gerdDQ1oiBaZjF3sbL0EDBaCT2+Ks6Grn76l6nb+iWUgK8DrWpSrU6ekPW85aZZvGp
-         DALhfX5eWWPvMrc9b9j/r0B+CXB4pMVmGXAT8rn8=
+        b=OslHfkcKlTBR5hnNN2zkbgDA08uvKqLTnYr7NMiUTEqyKiH/42P8vRyRl9XS7ydwp
+         WwZh2wiCeJnIiZvh1iWfO6+XasT7ZEp3N7QksnUBOF4rXw+VHQsVnZ7loBIAe9XfAY
+         ezk5WHYxwnzmg11KvjSJdcyo3A/D0I4OiqR2Y2XY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@canonical.com>,
-        Todd Kjos <tkjos@android.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 088/117] binder: take read mode of mmap_sem in binder_alloc_free_page()
-Date:   Fri,  1 May 2020 15:22:04 +0200
-Message-Id: <20200501131555.108306626@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 104/117] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
+Date:   Fri,  1 May 2020 15:22:20 +0200
+Message-Id: <20200501131557.809877454@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,64 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@canonical.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit 60d4885710836595192c42d3e04b27551d30ec91 upstream.
+[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
 
-Restore the behavior of locking mmap_sem for reading in
-binder_alloc_free_page(), as was first done in commit 3013bf62b67a
-("binder: reduce mmap_sem write-side lock"). That change was
-inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
-munmap() and direct reclaim").
+xenbus_map_ring_valloc() maps a ring page and returns the status of the
+used grant (0 meaning success).
 
-In addition, change the name of the label for the error path to
-accurately reflect that we're taking the lock for reading.
+There are Xen hypervisors which might return the value 1 for the status
+of a failed grant mapping due to a bug. Some callers of
+xenbus_map_ring_valloc() test for errors by testing the returned status
+to be less than zero, resulting in no error detected and crashing later
+due to a not available ring page.
 
-Backporting note: This fix is only needed when *both* of the commits
-mentioned above are applied. That's an unlikely situation since they
-both landed during the development of v5.1 but only one of them is
-targeted for stable.
+Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
+in case the grant status reported by Xen is greater than zero.
 
-Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
-Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
-Acked-by: Todd Kjos <tkjos@android.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is part of XSA-316.
 
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Wei Liu <wl@xen.org>
+Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/android/binder_alloc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -951,8 +951,8 @@ enum lru_status binder_alloc_free_page(s
- 	mm = alloc->vma_vm_mm;
- 	if (!mmget_not_zero(mm))
- 		goto err_mmget;
--	if (!down_write_trylock(&mm->mmap_sem))
--		goto err_down_write_mmap_sem_failed;
-+	if (!down_read_trylock(&mm->mmap_sem))
-+		goto err_down_read_mmap_sem_failed;
- 	vma = binder_alloc_get_vma(alloc);
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index a1c17000129ba..e94a61eaeceb0 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -450,7 +450,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
+ int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
+ 			   unsigned int nr_grefs, void **vaddr)
+ {
+-	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	int err;
++
++	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	/* Some hypervisors are buggy and can return 1. */
++	if (err > 0)
++		err = GNTST_general_error;
++
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
  
- 	list_lru_isolate(lru, item);
-@@ -967,7 +967,7 @@ enum lru_status binder_alloc_free_page(s
- 
- 		trace_binder_unmap_user_end(alloc, index);
- 	}
--	up_write(&mm->mmap_sem);
-+	up_read(&mm->mmap_sem);
- 	mmput(mm);
- 
- 	trace_binder_unmap_kernel_start(alloc, index);
-@@ -982,7 +982,7 @@ enum lru_status binder_alloc_free_page(s
- 	mutex_unlock(&alloc->mutex);
- 	return LRU_REMOVED_RETRY;
- 
--err_down_write_mmap_sem_failed:
-+err_down_read_mmap_sem_failed:
- 	mmput_async(mm);
- err_mmget:
- err_page_already_freed:
+-- 
+2.20.1
+
 
 
