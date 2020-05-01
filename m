@@ -2,53 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30045C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B677C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04B22051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4538820708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341450;
-	bh=761Bbgf25zGCxuCWZFVc4F5QdNTSleGkwcKFWnr7NLA=;
+	s=default; t=1588341455;
+	bh=FtfC7Z9l+PF/gQBBs9jNp4cGmr4oyYE08j4RqK3c2XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SWo4UNT5dW2b466YdyA+kZEDMW4eRbnGRpXJzHJUxpDbdXdVTT/OSFpd0sqmkGw+S
-	 +ZuSYQnDnAA7TEE3HxsSZBEzKT0at7XCvTi5KvwFUzkFyd0kYhuQ3FTpUtB04d62mm
-	 hmPPNKcN3wRGfqq8HkvyqDDMRTrs7HaKx76GgDrE=
+	b=Oyac/9qOMP5Ao8b6jnFRRGhlxmGtjRp4yZBtholV5sln4/CWXztvQprAsG8J5AeqA
+	 6m56SGklK5ABrJ+rERxJAhchZzc81Q9TmeYynfJ1NZVQM5DQ7rXnMkqs1ZiRSj3Zgv
+	 z9y/YsSTRbfdLfTnomoAGpPC0FFcQOeDDCVdN+no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbgEAN53 (ORCPT
+        id S1731634AbgEAN5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729078AbgEANbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:19 -0400
+        id S1730097AbgEANbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C59420757;
-        Fri,  1 May 2020 13:31:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 757B824953;
+        Fri,  1 May 2020 13:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339879;
-        bh=761Bbgf25zGCxuCWZFVc4F5QdNTSleGkwcKFWnr7NLA=;
+        s=default; t=1588339871;
+        bh=FtfC7Z9l+PF/gQBBs9jNp4cGmr4oyYE08j4RqK3c2XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQRfgAHj/gUhJAx+4TiEhhImKO7zrrIGj6Hf/s7ttBWvxsnXV44Is9BzNxsflkCXT
-         /aooutbBE+dPRz7LSmfBDVed80G+LiW/FrYhEQaNwVg/Ugm83ySmJOEMltICyMHh3s
-         lYV+tQ6JDIRiONTRlRVkQqNfFoLCIFLPzwzbyhGE=
+        b=EW1jG9dwXUCeI4oxJudhwBlVsRW6UTGwo5v3uKWpAsmGFzZnaU8LRXPGrK/5mFRmj
+         0Wo0O0BRXH6Fm1sbGRtl3bdHlEUIYAdvPVQwzR+jx3+PJkjyo6enqR1QIDWHJv0hy5
+         eI1B3cWQo4U/l6nE0ytodKMeZys4x7IPHILZXpx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 003/117] net: ipv4: avoid unused variable warning for sysctl
-Date:   Fri,  1 May 2020 15:20:39 +0200
-Message-Id: <20200501131545.832201653@linuxfoundation.org>
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Wu Bo <wubo40@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 013/117] scsi: iscsi: Report unbind session event when the target has been removed
+Date:   Fri,  1 May 2020 15:20:49 +0200
+Message-Id: <20200501131546.658345368@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,47 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Wu Bo <wubo40@huawei.com>
 
-commit 773daa3caf5d3f87fdb1ab43e9c1b367a38fa394 upstream.
+[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
 
-The newly introudced ip_min_valid_pmtu variable is only used when
-CONFIG_SYSCTL is set:
+If the daemon is restarted or crashes while logging out of a session, the
+unbind session event sent by the kernel is not processed and is lost.  When
+the daemon starts again, the session can't be unbound because the daemon is
+waiting for the event message. However, the kernel has already logged out
+and the event will not be resent.
 
-net/ipv4/route.c:135:12: error: 'ip_min_valid_pmtu' defined but not used [-Werror=unused-variable]
+When iscsid restart is complete, logout session reports error:
 
-This moves it to the other variables like it, to avoid the harmless
-warning.
+Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
+iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
+iscsiadm: initiator reported error (9 - internal error)
+iscsiadm: Could not logout of all requested sessions
 
-Fixes: c7272c2f1229 ("net: ipv4: don't allow setting net.ipv4.route.min_pmtu below 68")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Make sure the unbind event is emitted.
 
+[mkp: commit desc and applied by hand since patch was mangled]
+
+Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/route.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/scsi/scsi_transport_iscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -133,8 +133,6 @@ static int ip_rt_min_advmss __read_mostl
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index aecb563a2b4e3..9589015234693 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2010,7 +2010,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 	if (session->target_id == ISCSI_MAX_TARGET) {
+ 		spin_unlock_irqrestore(&session->lock, flags);
+ 		mutex_unlock(&ihost->mutex);
+-		return;
++		goto unbind_session_exit;
+ 	}
  
- static int ip_rt_gc_timeout __read_mostly	= RT_GC_TIMEOUT;
+ 	target_id = session->target_id;
+@@ -2022,6 +2022,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 		ida_simple_remove(&iscsi_sess_ida, target_id);
  
--static int ip_min_valid_pmtu __read_mostly	= IPV4_MIN_MTU;
--
- /*
-  *	Interface to generic destination cache.
-  */
-@@ -2869,6 +2867,7 @@ void ip_rt_multicast_event(struct in_dev
- static int ip_rt_gc_interval __read_mostly  = 60 * HZ;
- static int ip_rt_gc_min_interval __read_mostly	= HZ / 2;
- static int ip_rt_gc_elasticity __read_mostly	= 8;
-+static int ip_min_valid_pmtu __read_mostly	= IPV4_MIN_MTU;
- 
- static int ipv4_sysctl_rtcache_flush(struct ctl_table *__ctl, int write,
- 					void __user *buffer,
+ 	scsi_remove_target(&session->dev);
++
++unbind_session_exit:
+ 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
+ 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
+ }
+-- 
+2.20.1
+
 
 
