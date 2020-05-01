@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1182FC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179DAC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F248B24967
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0052C2496A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbgEASWO (ORCPT
+        id S1730487AbgEASWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40308 "EHLO
+        Fri, 1 May 2020 14:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730460AbgEASWM (ORCPT
+        by vger.kernel.org with ESMTP id S1730459AbgEASWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 14:22:12 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722A1C08E859;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CA5C061A0C;
         Fri,  1 May 2020 11:22:12 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIa-0003X6-73; Fri, 01 May 2020 20:22:08 +0200
+        id 1jUaIZ-0003Wa-9N; Fri, 01 May 2020 20:22:07 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AD8C21C0085;
-        Fri,  1 May 2020 20:22:07 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:07 -0000
-From:   "tip-bot2 for Muchun Song" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2FD31C0085;
+        Fri,  1 May 2020 20:22:06 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:06 -0000
+From:   "tip-bot2 for Wei Yang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Use __this_cpu_read() in wake_wide()
-Cc:     Muchun Song <songmuchun@bytedance.com>,
+Subject: [tip: sched/core] sched/core: Simplify sched_init()
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200421144123.33580-1-songmuchun@bytedance.com>
-References: <20200421144123.33580-1-songmuchun@bytedance.com>
+In-Reply-To: <20200423214443.29994-1-richard.weiyang@gmail.com>
+References: <20200423214443.29994-1-richard.weiyang@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158835732766.8414.17788678090839078001.tip-bot2@tip-bot2>
+Message-ID: <158835732689.8414.17699467590439220013.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,35 +59,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     17c891ab349138e8d8a59ca2700f42ce8af96f4e
-Gitweb:        https://git.kernel.org/tip/17c891ab349138e8d8a59ca2700f42ce8af96f4e
-Author:        Muchun Song <songmuchun@bytedance.com>
-AuthorDate:    Tue, 21 Apr 2020 22:41:23 +08:00
+Commit-ID:     b1d1779e5ef7a60b192b61fd97201f322e1e9303
+Gitweb:        https://git.kernel.org/tip/b1d1779e5ef7a60b192b61fd97201f322e1e9303
+Author:        Wei Yang <richard.weiyang@gmail.com>
+AuthorDate:    Thu, 23 Apr 2020 21:44:43 
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 30 Apr 2020 20:14:41 +02:00
+CommitterDate: Thu, 30 Apr 2020 20:14:42 +02:00
 
-sched/fair: Use __this_cpu_read() in wake_wide()
+sched/core: Simplify sched_init()
 
-The code is executed with preemption(and interrupts) disabled,
-so it's safe to use __this_cpu_write().
+Currently root_task_group.shares and cfs_bandwidth are initialized for
+each online cpu, which not necessary.
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Let's take it out to do it only once.
+
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200421144123.33580-1-songmuchun@bytedance.com
+Link: https://lkml.kernel.org/r/20200423214443.29994-1-richard.weiyang@gmail.com
 ---
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index cd7fd7e..46b7bd4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5718,7 +5718,7 @@ static int wake_wide(struct task_struct *p)
- {
- 	unsigned int master = current->wakee_flips;
- 	unsigned int slave = p->wakee_flips;
--	int factor = this_cpu_read(sd_llc_size);
-+	int factor = __this_cpu_read(sd_llc_size);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f6ae262..b58efb1 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6597,6 +6597,8 @@ void __init sched_init(void)
+ 		root_task_group.cfs_rq = (struct cfs_rq **)ptr;
+ 		ptr += nr_cpu_ids * sizeof(void **);
  
- 	if (master < slave)
- 		swap(master, slave);
++		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
++		init_cfs_bandwidth(&root_task_group.cfs_bandwidth);
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 		root_task_group.rt_se = (struct sched_rt_entity **)ptr;
+@@ -6649,7 +6651,6 @@ void __init sched_init(void)
+ 		init_rt_rq(&rq->rt);
+ 		init_dl_rq(&rq->dl);
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+-		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
+ 		INIT_LIST_HEAD(&rq->leaf_cfs_rq_list);
+ 		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
+ 		/*
+@@ -6671,7 +6672,6 @@ void __init sched_init(void)
+ 		 * We achieve this by letting root_task_group's tasks sit
+ 		 * directly in rq->cfs (i.e root_task_group->se[] = NULL).
+ 		 */
+-		init_cfs_bandwidth(&root_task_group.cfs_bandwidth);
+ 		init_tg_cfs_entry(&root_task_group, &rq->cfs, NULL, i, NULL);
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
+ 
