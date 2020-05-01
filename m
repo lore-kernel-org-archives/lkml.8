@@ -2,119 +2,154 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED438C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812FFC4725A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE93720731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F93220731
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:28:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kitVDdx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgEAIZp (ORCPT
+        id S1728440AbgEAI2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:25:45 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:60928 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728325AbgEAIZp (ORCPT
+        Fri, 1 May 2020 04:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbgEAI2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:25:45 -0400
-X-IronPort-AV: E=Sophos;i="5.73,339,1583164800"; 
-   d="scan'208";a="90959959"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 01 May 2020 16:25:37 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 3E99C4BCC88C;
-        Fri,  1 May 2020 16:25:37 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 1 May 2020 16:25:38 +0800
-Received: from TSO.g08.fujitsu.local (10.167.226.60) by
- G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Fri, 1 May 2020 16:25:38 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>
-Subject: [PATCH v2] perf: fix compilation failure on i386
-Date:   Fri, 1 May 2020 16:25:37 +0800
-Message-ID: <20200501082537.4740-1-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 1 May 2020 04:28:05 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D38C035494;
+        Fri,  1 May 2020 01:28:05 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id t199so2139724oif.7;
+        Fri, 01 May 2020 01:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iIaRGYpAPupU8ap77mm0+hl9zSz1kLjaWyzfce1Qs3Y=;
+        b=kitVDdx/L3DP0PkMGe4nbAT/OeUb9rxLisr3H1naWl4uvidfeWv+LsXSQEgmmyc0X/
+         iLi76W4bs3UsILqhkHUgncUHqEUqeBZ807rF4XZtjj2UQ67sZ4mxfq8Rz5lTBq2RNN+v
+         9/S7EJEZh7aqpKGRbqGY8MNKVZ1kFzS8Qyhlb5ZJs4YPTpvsgZQEVgDc8FP/aj/kr24B
+         mD/lDEQb5IO+ZfE5flM5Fs50UniK7R/Y60Rs+7W7iMXftdnv38rWWXkWJdLnEIk81P8R
+         YBN1wqcVZHOU0FJbuDxdB/nALwtchR1n48YTjEaft/fGl60RWwSo7g9wzWS58jpzwAKS
+         vXIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iIaRGYpAPupU8ap77mm0+hl9zSz1kLjaWyzfce1Qs3Y=;
+        b=t7QM5ea78ctrTVc+To8N6dmev14LODMKeYrjA8lT9sGR0t/p1KeQdjMiWzsvjq1P7f
+         iqgpZhx8EwXkdoA6ljxWXeKCpBV1mZMKc800laWio8XpNC23FtdOt0R3oMZPZSVxGoqV
+         Ml5wAm5LJIkxtnxMWMLfO2kpuELD1KavEP2zrPMws4K23IUJV/EOeJxtZhOKksEzPqiS
+         3lHTfI5bw0B7wkJ2/il+L+eOsO7gSxLrgj4jAT2FWUZl3vCUdQ+5GdQTpeX7+TFizTfv
+         JobuwdBZbKboUsy5JYU81p1GK7OTle6b4TYbdO27V/IHxv3P+gwFy1NSi4c4su5u7Kmp
+         cKEA==
+X-Gm-Message-State: AGi0PubLcHCx9uT6L7kkjRMOvX/UpQgQ5RQvqObpoCY0t+fkrn6U8CLb
+        H46LWnsSN8N6ugroEQ80TkzRA3QWKyFNSQN8AdA=
+X-Google-Smtp-Source: APiQypK7F/qXasasin7MAQYiif3YYm7Zv+A3AA59LZg9zaayKtl+Wh4ZN+37kvvRqqUEkgvPlkOR6eZ2Unj/057MAYA=
+X-Received: by 2002:a05:6808:5c5:: with SMTP id d5mr2347754oij.8.1588321684000;
+ Fri, 01 May 2020 01:28:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 3E99C4BCC88C.AA9C5
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 1 May 2020 09:27:37 +0100
+Message-ID: <CA+V-a8sudn9kNs0QKQP9L_GL2wo1mifjRLcbA6sYjryD9cfZMw@mail.gmail.com>
+Subject: Re: [PATCH 00/18] Add R8A7742/RZG1H board support
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compilation on i386 complains as following:
+Hi Geert,
 
-util/session.c: In function 'perf_session__process_compressed_event':
-util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
-  pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-           ^
+On Wed, Apr 29, 2020 at 10:57 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Hi All,
+>
+> This patch set adds initial board support for R8A7742 SoC,
+> enabling R8A7742 arch in defconfigs with initial dtsi.
+>
+> Cheers,
+> --Prabhakar
+>
+> Lad Prabhakar (18):
+>   soc: renesas: Add Renesas R8A7742 config option
+>   ARM: shmobile: defconfig: Enable r8a7742 SoC
+>   ARM: multi_v7_defconfig: Enable r8a7742 SoC
+>   ARM: debug-ll: Add support for r8a7742
+>   dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+>   pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+>   ARM: dts: r8a7742: Initial SoC device tree
+>   dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+>   ARM: dts: r8a7742: Add IRQC support
+>   dt-bindings: rcar-dmac: Document r8a7742 support
+>   ARM: dts: r8a7742: Add SYS-DMAC support
+>   dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+>   dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+>   dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+>   dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
+>   ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+>   dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+>   ARM: dts: r8a7742: Add GPIO support
+>
+Thank you for the review.
 
-util/zstd.c: In function 'zstd_decompress_stream':
-util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
-    pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-           ^
+For v2 ill post patches from 6-18 fixing your review comments and
+including the Acks, as patches 1-5 have been queued.
 
-Fix them by pairing "%zd" to size_t.
+Cheers,
+--Prabhakar
 
-Also revert an unnecessary conversion: "(long)src_size" to plain "src_size"
-with conversion specifier "%zd".
-
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
- tools/perf/util/session.c | 2 +-
- tools/perf/util/zstd.c    | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 0b0bfe5bef17..50c2ffa388ad 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 		session->decomp_last = decomp;
- 	}
- 
--	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-+	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
- 
- 	return 0;
- }
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index d2202392ffdb..877bfb79e4af 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -74,8 +74,8 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t
- 		ret = ZSTD_compressStream(data->cstream, &output, &input);
- 		ZSTD_flushStream(data->cstream, &output);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to compress %ld bytes: %s\n",
--				(long)src_size, ZSTD_getErrorName(ret));
-+			pr_err("failed to compress %zd bytes: %s\n",
-+				src_size, ZSTD_getErrorName(ret));
- 			memcpy(dst, src, src_size);
- 			return src_size;
- 		}
-@@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
- 			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
- 		}
--- 
-2.21.0
-
-
-
+>  .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |   1 +
+>  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
+>  .../interrupt-controller/renesas,irqc.yaml         |   1 +
+>  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
+>  .../devicetree/bindings/serial/renesas,hscif.yaml  |   1 +
+>  .../devicetree/bindings/serial/renesas,scif.yaml   |   1 +
+>  .../devicetree/bindings/serial/renesas,scifa.yaml  |   1 +
+>  .../devicetree/bindings/serial/renesas,scifb.yaml  |   1 +
+>  arch/arm/Kconfig.debug                             |  10 +
+>  arch/arm/boot/dts/r8a7742.dtsi                     | 939 +++++++++++++++++++++
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  arch/arm/configs/shmobile_defconfig                |   1 +
+>  drivers/pinctrl/sh-pfc/Kconfig                     |   4 +
+>  drivers/pinctrl/sh-pfc/Makefile                    |   1 +
+>  drivers/pinctrl/sh-pfc/core.c                      |   6 +
+>  drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  24 +
+>  drivers/pinctrl/sh-pfc/sh_pfc.h                    |   1 +
+>  drivers/soc/renesas/Kconfig                        |   7 +
+>  18 files changed, 1002 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
+>
+> --
+> 2.7.4
+>
