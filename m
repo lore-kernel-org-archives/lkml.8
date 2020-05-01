@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC96C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03321C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1CAD20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C816020857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344430;
-	bh=hkiqN/QrjAnxIafOQsAVClXlNjkAlT26dumfuuA/mHE=;
+	s=default; t=1588344432;
+	bh=4gNsSKRwbhAO1xjPEvB+/c/XsK7NJbOKVdIgFDsBe1k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zvpwkbiEUhTvodcPlyEjH+gsQHAe1kGisMF2+kbif+qufx4l9P1KqfKcmr550nBNE
-	 x5I3V2OroilLCcXcevjq4zg2ie30KpMKrs3s0msnlRFyEt+yjAS94uezPv4JOOF8Hb
-	 5G6HhLV5C/xpMpGYXMj+/GuvBLlYYayO2kqX/850=
+	b=A9mjH2yvrzymWslUZoZ5w5AjFmmlTVXRLrl9p64rr10mnlOcFNLEQYlcVxBL8QW9d
+	 HWM8rl4MTo/hLY3B/hbMYM7m/CVRyLAHtnyPVwVj1uuet/4vkuZCr580rb7BCHYG21
+	 03ap9BuqULRmGwTvfWJr6zt8SiZCJBW/lWFC++vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbgEAOrJ (ORCPT
+        id S1730276AbgEAOrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52770 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:47:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgEAOpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729443AbgEAOpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:09 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECC8724968;
+        by mail.kernel.org (Postfix) with ESMTPSA id EB8FF24981;
         Fri,  1 May 2020 14:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344306;
-        bh=hkiqN/QrjAnxIafOQsAVClXlNjkAlT26dumfuuA/mHE=;
+        bh=4gNsSKRwbhAO1xjPEvB+/c/XsK7NJbOKVdIgFDsBe1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UaT/2C2eT5Pl3qhZ26SayGAwbrh7OuOzyfIeGVMiT2dwe7dgDJHdtEE5dFZJXI+2Y
-         yqTdGdWj5YiscMsXqqXUzjSAVP9riTY3UcvDh3yQuv3tjQcfOAeOY94lAVVQO9HjgI
-         mjAxBz59lVJ99WXCzSad5xbuMr96yd3hhBxFtPpk=
+        b=E87qs60j8s72oMgPJm9dYitYFtjgSdGp0No4aBoONQD+OAVJxAtSKXvWV04mG3kiK
+         ToNICDH50EColhQewqhDluytEjbPWFulmRUYHo2QFRHKnICI3w8JgsJ00Mewcl++fM
+         IXND3Bcz3u0dC1vqfE1WCbonscnqDpEbu9bE3Pmk=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCdd-Jr; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCdK-GV; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Igor Russkikh <irusskikh@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 15/37] docs: networking: device drivers: convert aquantia/atlantic.txt to ReST
-Date:   Fri,  1 May 2020 16:44:37 +0200
-Message-Id: <f6d8605f322899e9fa1a71248b165e7ad3840ab7.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Joerg Reuter <jreuter@yaina.de>, netdev@vger.kernel.org,
+        linux-hams@vger.kernel.org
+Subject: [PATCH 11/37] docs: networking: convert z8530drv.txt to ReST
+Date:   Fri,  1 May 2020 16:44:33 +0200
+Message-Id: <5be8d03611c9420ff713323c9aa1b16834e3e8a2.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -64,682 +65,961 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
 - use copyright symbol;
-- adjust title and its markup;
-- comment out text-only TOC from html/pdf output;
+- adjust titles and chapters, adding proper markups;
+- mark tables as such;
 - mark code blocks and literals as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../aquantia/{atlantic.txt => atlantic.rst}   | 373 +++++++++++-------
- .../networking/device_drivers/index.rst       |   1 +
+ Documentation/networking/index.rst            |   1 +
+ .../networking/{z8530drv.txt => z8530drv.rst} | 609 +++++++++---------
  MAINTAINERS                                   |   2 +-
- 3 files changed, 227 insertions(+), 149 deletions(-)
- rename Documentation/networking/device_drivers/aquantia/{atlantic.txt => atlantic.rst} (63%)
+ drivers/net/hamradio/Kconfig                  |   4 +-
+ drivers/net/hamradio/scc.c                    |   2 +-
+ 5 files changed, 324 insertions(+), 294 deletions(-)
+ rename Documentation/networking/{z8530drv.txt => z8530drv.rst} (57%)
 
-diff --git a/Documentation/networking/device_drivers/aquantia/atlantic.txt b/Documentation/networking/device_drivers/aquantia/atlantic.rst
-similarity index 63%
-rename from Documentation/networking/device_drivers/aquantia/atlantic.txt
-rename to Documentation/networking/device_drivers/aquantia/atlantic.rst
-index 2013fcedc2da..595ddef1c8b3 100644
---- a/Documentation/networking/device_drivers/aquantia/atlantic.txt
-+++ b/Documentation/networking/device_drivers/aquantia/atlantic.rst
-@@ -1,83 +1,96 @@
--Marvell(Aquantia) AQtion Driver for the aQuantia Multi-Gigabit PCI Express
--Family of Ethernet Adapters
--=============================================================================
--
--Contents
--========
--
--- Identifying Your Adapter
--- Configuration
--- Supported ethtool options
--- Command Line Parameters
--- Config file parameters
--- Support
--- License
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
-+
-+===============================
-+Marvell(Aquantia) AQtion Driver
-+===============================
-+
-+For the aQuantia Multi-Gigabit PCI Express Family of Ethernet Adapters
-+
-+.. Contents
-+
-+    - Identifying Your Adapter
-+    - Configuration
-+    - Supported ethtool options
-+    - Command Line Parameters
-+    - Config file parameters
-+    - Support
-+    - License
- 
- Identifying Your Adapter
- ========================
- 
--The driver in this release is compatible with AQC-100, AQC-107, AQC-108 based ethernet adapters.
-+The driver in this release is compatible with AQC-100, AQC-107, AQC-108
-+based ethernet adapters.
- 
- 
- SFP+ Devices (for AQC-100 based adapters)
------------------------------------
-+-----------------------------------------
- 
--This release tested with passive Direct Attach Cables (DAC) and SFP+/LC Optical Transceiver.
-+This release tested with passive Direct Attach Cables (DAC) and SFP+/LC
-+Optical Transceiver.
- 
- Configuration
--=========================
--  Viewing Link Messages
--  ---------------------
-+=============
-+
-+Viewing Link Messages
-+---------------------
-   Link messages will not be displayed to the console if the distribution is
-   restricting system messages. In order to see network driver link messages on
--  your console, set dmesg to eight by entering the following:
-+  your console, set dmesg to eight by entering the following::
- 
-        dmesg -n 8
- 
--  NOTE: This setting is not saved across reboots.
-+  .. note::
- 
--  Jumbo Frames
--  ------------
-+     This setting is not saved across reboots.
-+
-+Jumbo Frames
-+------------
-   The driver supports Jumbo Frames for all adapters. Jumbo Frames support is
-   enabled by changing the MTU to a value larger than the default of 1500.
-   The maximum value for the MTU is 16000.  Use the `ip` command to
--  increase the MTU size.  For example:
-+  increase the MTU size.  For example::
- 
--        ip link set mtu 16000 dev enp1s0
-+	ip link set mtu 16000 dev enp1s0
- 
--  ethtool
--  -------
-+ethtool
-+-------
-   The driver utilizes the ethtool interface for driver configuration and
-   diagnostics, as well as displaying statistical information. The latest
-   ethtool version is required for this functionality.
- 
--  NAPI
--  ----
-+NAPI
-+----
-   NAPI (Rx polling mode) is supported in the atlantic driver.
- 
- Supported ethtool options
--============================
-- Viewing adapter settings
-- ---------------------
-- ethtool <ethX>
-+=========================
- 
-- Output example:
-+Viewing adapter settings
-+------------------------
-+
-+ ::
-+
-+    ethtool <ethX>
-+
-+ Output example::
- 
-   Settings for enp1s0:
-     Supported ports: [ TP ]
-     Supported link modes:   100baseT/Full
--                            1000baseT/Full
--                            10000baseT/Full
--                            2500baseT/Full
--                            5000baseT/Full
-+			    1000baseT/Full
-+			    10000baseT/Full
-+			    2500baseT/Full
-+			    5000baseT/Full
-     Supported pause frame use: Symmetric
-     Supports auto-negotiation: Yes
-     Supported FEC modes: Not reported
-     Advertised link modes:  100baseT/Full
--                            1000baseT/Full
--                            10000baseT/Full
--                            2500baseT/Full
--                            5000baseT/Full
-+			    1000baseT/Full
-+			    10000baseT/Full
-+			    2500baseT/Full
-+			    5000baseT/Full
-     Advertised pause frame use: Symmetric
-     Advertised auto-negotiation: Yes
-     Advertised FEC modes: Not reported
-@@ -92,16 +105,22 @@ Supported ethtool options
-     Wake-on: d
-     Link detected: yes
- 
-- ---
-- Note: AQrate speeds (2.5/5 Gb/s) will be displayed only with linux kernels > 4.10.
--    But you can still use these speeds:
-+
-+ .. note::
-+
-+    AQrate speeds (2.5/5 Gb/s) will be displayed only with linux kernels > 4.10.
-+    But you can still use these speeds::
-+
- 	ethtool -s eth0 autoneg off speed 2500
- 
-- Viewing adapter information
-- ---------------------
-- ethtool -i <ethX>
-+Viewing adapter information
-+---------------------------
- 
-- Output example:
-+ ::
-+
-+  ethtool -i <ethX>
-+
-+ Output example::
- 
-   driver: atlantic
-   version: 5.2.0-050200rc5-generic-kern
-@@ -115,12 +134,16 @@ Supported ethtool options
-   supports-priv-flags: no
- 
- 
-- Viewing Ethernet adapter statistics:
-- ---------------------
-- ethtool -S <ethX>
-+Viewing Ethernet adapter statistics
-+-----------------------------------
- 
-- Output example:
-- NIC statistics:
-+ ::
-+
-+    ethtool -S <ethX>
-+
-+ Output example::
-+
-+  NIC statistics:
-      InPackets: 13238607
-      InUCast: 13293852
-      InMCast: 52
-@@ -164,85 +187,95 @@ Supported ethtool options
-      Queue[3] InLroPackets: 0
-      Queue[3] InErrors: 0
- 
-- Interrupt coalescing support
-- ---------------------------------
-- ITR mode, TX/RX coalescing timings could be viewed with:
-+Interrupt coalescing support
-+----------------------------
- 
-- ethtool -c <ethX>
-+ ITR mode, TX/RX coalescing timings could be viewed with::
- 
-- and changed with:
-+    ethtool -c <ethX>
- 
-- ethtool -C <ethX> tx-usecs <usecs> rx-usecs <usecs>
-+ and changed with::
- 
-- To disable coalescing:
-+    ethtool -C <ethX> tx-usecs <usecs> rx-usecs <usecs>
- 
-- ethtool -C <ethX> tx-usecs 0 rx-usecs 0 tx-max-frames 1 tx-max-frames 1
-+ To disable coalescing::
- 
-- Wake on LAN support
-- ---------------------------------
-+    ethtool -C <ethX> tx-usecs 0 rx-usecs 0 tx-max-frames 1 tx-max-frames 1
- 
-- WOL support by magic packet:
-+Wake on LAN support
-+-------------------
- 
-- ethtool -s <ethX> wol g
-+ WOL support by magic packet::
- 
-- To disable WOL:
-+    ethtool -s <ethX> wol g
- 
-- ethtool -s <ethX> wol d
-+ To disable WOL::
- 
-- Set and check the driver message level
-- ---------------------------------
-+    ethtool -s <ethX> wol d
-+
-+Set and check the driver message level
-+--------------------------------------
- 
-  Set message level
- 
-- ethtool -s <ethX> msglvl <level>
-+ ::
-+
-+    ethtool -s <ethX> msglvl <level>
- 
-  Level values:
- 
-- 0x0001 - general driver status.
-- 0x0002 - hardware probing.
-- 0x0004 - link state.
-- 0x0008 - periodic status check.
-- 0x0010 - interface being brought down.
-- 0x0020 - interface being brought up.
-- 0x0040 - receive error.
-- 0x0080 - transmit error.
-- 0x0200 - interrupt handling.
-- 0x0400 - transmit completion.
-- 0x0800 - receive completion.
-- 0x1000 - packet contents.
-- 0x2000 - hardware status.
-- 0x4000 - Wake-on-LAN status.
-+ ======   =============================
-+ 0x0001   general driver status.
-+ 0x0002   hardware probing.
-+ 0x0004   link state.
-+ 0x0008   periodic status check.
-+ 0x0010   interface being brought down.
-+ 0x0020   interface being brought up.
-+ 0x0040   receive error.
-+ 0x0080   transmit error.
-+ 0x0200   interrupt handling.
-+ 0x0400   transmit completion.
-+ 0x0800   receive completion.
-+ 0x1000   packet contents.
-+ 0x2000   hardware status.
-+ 0x4000   Wake-on-LAN status.
-+ ======   =============================
- 
-  By default, the level of debugging messages is set 0x0001(general driver status).
- 
-  Check message level
- 
-- ethtool <ethX> | grep "Current message level"
-+ ::
- 
-- If you want to disable the output of messages
-+    ethtool <ethX> | grep "Current message level"
- 
-- ethtool -s <ethX> msglvl 0
-+ If you want to disable the output of messages::
-+
-+    ethtool -s <ethX> msglvl 0
-+
-+RX flow rules (ntuple filters)
-+------------------------------
- 
-- RX flow rules (ntuple filters)
-- ---------------------------------
-  There are separate rules supported, that applies in that order:
-+
-  1. 16 VLAN ID rules
-  2. 16 L2 EtherType rules
-  3. 8 L3/L4 5-Tuple rules
- 
- 
-  The driver utilizes the ethtool interface for configuring ntuple filters,
-- via "ethtool -N <device> <filter>".
-+ via ``ethtool -N <device> <filter>``.
- 
-- To enable or disable the RX flow rules:
-+ To enable or disable the RX flow rules::
- 
-- ethtool -K ethX ntuple <on|off>
-+    ethtool -K ethX ntuple <on|off>
- 
-  When disabling ntuple filters, all the user programed filters are
-  flushed from the driver cache and hardware. All needed filters must
-  be re-added when ntuple is re-enabled.
- 
-  Because of the fixed order of the rules, the location of filters is also fixed:
-+
-  - Locations 0 - 15 for VLAN ID filters
-  - Locations 16 - 31 for L2 EtherType filters
-  - Locations 32 - 39 for L3/L4 5-tuple filters (locations 32, 36 for IPv6)
-@@ -253,32 +286,34 @@ Supported ethtool options
-  addresses can be supported. Source and destination ports are only compared for
-  TCP/UDP/SCTP packets.
- 
-- To add a filter that directs packet to queue 5, use <-N|-U|--config-nfc|--config-ntuple> switch:
-+ To add a filter that directs packet to queue 5, use
-+ ``<-N|-U|--config-nfc|--config-ntuple>`` switch::
- 
-- ethtool -N <ethX> flow-type udp4 src-ip 10.0.0.1 dst-ip 10.0.0.2 src-port 2000 dst-port 2001 action 5 <loc 32>
-+    ethtool -N <ethX> flow-type udp4 src-ip 10.0.0.1 dst-ip 10.0.0.2 src-port 2000 dst-port 2001 action 5 <loc 32>
- 
-  - action is the queue number.
-  - loc is the rule number.
- 
-- For "flow-type ip4|udp4|tcp4|sctp4|ip6|udp6|tcp6|sctp6" you must set the loc
-+ For ``flow-type ip4|udp4|tcp4|sctp4|ip6|udp6|tcp6|sctp6`` you must set the loc
-  number within 32 - 39.
-- For "flow-type ip4|udp4|tcp4|sctp4|ip6|udp6|tcp6|sctp6" you can set 8 rules
-+ For ``flow-type ip4|udp4|tcp4|sctp4|ip6|udp6|tcp6|sctp6`` you can set 8 rules
-  for traffic IPv4 or you can set 2 rules for traffic IPv6. Loc number traffic
-  IPv6 is 32 and 36.
-  At the moment you can not use IPv4 and IPv6 filters at the same time.
- 
-- Example filter for IPv6 filter traffic:
-+ Example filter for IPv6 filter traffic::
- 
-- sudo ethtool -N <ethX> flow-type tcp6 src-ip 2001:db8:0:f101::1 dst-ip 2001:db8:0:f101::2 action 1 loc 32
-- sudo ethtool -N <ethX> flow-type ip6 src-ip 2001:db8:0:f101::2 dst-ip 2001:db8:0:f101::5 action -1 loc 36
-+    sudo ethtool -N <ethX> flow-type tcp6 src-ip 2001:db8:0:f101::1 dst-ip 2001:db8:0:f101::2 action 1 loc 32
-+    sudo ethtool -N <ethX> flow-type ip6 src-ip 2001:db8:0:f101::2 dst-ip 2001:db8:0:f101::5 action -1 loc 36
- 
-- Example filter for IPv4 filter traffic:
-+ Example filter for IPv4 filter traffic::
- 
-- sudo ethtool -N <ethX> flow-type udp4 src-ip 10.0.0.4 dst-ip 10.0.0.7 src-port 2000 dst-port 2001 loc 32
-- sudo ethtool -N <ethX> flow-type tcp4 src-ip 10.0.0.3 dst-ip 10.0.0.9 src-port 2000 dst-port 2001 loc 33
-- sudo ethtool -N <ethX> flow-type ip4 src-ip 10.0.0.6 dst-ip 10.0.0.4 loc 34
-+    sudo ethtool -N <ethX> flow-type udp4 src-ip 10.0.0.4 dst-ip 10.0.0.7 src-port 2000 dst-port 2001 loc 32
-+    sudo ethtool -N <ethX> flow-type tcp4 src-ip 10.0.0.3 dst-ip 10.0.0.9 src-port 2000 dst-port 2001 loc 33
-+    sudo ethtool -N <ethX> flow-type ip4 src-ip 10.0.0.6 dst-ip 10.0.0.4 loc 34
- 
-  If you set action -1, then all traffic corresponding to the filter will be discarded.
-+
-  The maximum value action is 31.
- 
- 
-@@ -287,8 +322,9 @@ Supported ethtool options
-  from L2 Ethertype filter with UserPriority since both User Priority and VLAN ID
-  are passed in the same 'vlan' parameter.
- 
-- To add a filter that directs packets from VLAN 2001 to queue 5:
-- ethtool -N <ethX> flow-type ip4 vlan 2001 m 0xF000 action 1 loc 0
-+ To add a filter that directs packets from VLAN 2001 to queue 5::
-+
-+    ethtool -N <ethX> flow-type ip4 vlan 2001 m 0xF000 action 1 loc 0
- 
- 
-  L2 EtherType filters allows filter packet by EtherType field or both EtherType
-@@ -297,17 +333,17 @@ Supported ethtool options
-  distinguish VLAN filter from L2 Ethertype filter with UserPriority since both
-  User Priority and VLAN ID are passed in the same 'vlan' parameter.
- 
-- To add a filter that directs IP4 packess of priority 3 to queue 3:
-- ethtool -N <ethX> flow-type ether proto 0x800 vlan 0x600 m 0x1FFF action 3 loc 16
-+ To add a filter that directs IP4 packess of priority 3 to queue 3::
- 
-+    ethtool -N <ethX> flow-type ether proto 0x800 vlan 0x600 m 0x1FFF action 3 loc 16
- 
-- To see the list of filters currently present:
-+ To see the list of filters currently present::
- 
-- ethtool <-u|-n|--show-nfc|--show-ntuple> <ethX>
-+    ethtool <-u|-n|--show-nfc|--show-ntuple> <ethX>
- 
-- Rules may be deleted from the table itself. This is done using:
-+ Rules may be deleted from the table itself. This is done using::
- 
-- sudo ethtool <-N|-U|--config-nfc|--config-ntuple> <ethX> delete <loc>
-+    sudo ethtool <-N|-U|--config-nfc|--config-ntuple> <ethX> delete <loc>
- 
-  - loc is the rule number to be deleted.
- 
-@@ -316,34 +352,37 @@ Supported ethtool options
-  case, any flow that matches the filter criteria will be directed to the
-  appropriate queue. RX filters is supported on all kernels 2.6.30 and later.
- 
-- RSS for UDP
-- ---------------------------------
-+RSS for UDP
-+-----------
-+
-  Currently, NIC does not support RSS for fragmented IP packets, which leads to
-  incorrect working of RSS for fragmented UDP traffic. To disable RSS for UDP the
-  RX Flow L3/L4 rule may be used.
- 
-- Example:
-- ethtool -N eth0 flow-type udp4 action 0 loc 32
-+ Example::
-+
-+    ethtool -N eth0 flow-type udp4 action 0 loc 32
-+
-+UDP GSO hardware offload
-+------------------------
- 
-- UDP GSO hardware offload
-- ---------------------------------
-  UDP GSO allows to boost UDP tx rates by offloading UDP headers allocation
-  into hardware. A special userspace socket option is required for this,
-- could be validated with /kernel/tools/testing/selftests/net/
-+ could be validated with /kernel/tools/testing/selftests/net/::
- 
-     udpgso_bench_tx -u -4 -D 10.0.1.1 -s 6300 -S 100
- 
-  Will cause sending out of 100 byte sized UDP packets formed from single
-  6300 bytes user buffer.
- 
-- UDP GSO is configured by:
-+ UDP GSO is configured by::
- 
-     ethtool -K eth0 tx-udp-segmentation on
- 
-- Private flags (testing)
-- ---------------------------------
-+Private flags (testing)
-+-----------------------
- 
-- Atlantic driver supports private flags for hardware custom features:
-+ Atlantic driver supports private flags for hardware custom features::
- 
- 	$ ethtool --show-priv-flags ethX
- 
-@@ -354,7 +393,7 @@ Supported ethtool options
- 	PHYInternalLoopback: off
- 	PHYExternalLoopback: off
- 
-- Example:
-+ Example::
- 
- 	$ ethtool --set-priv-flags ethX DMASystemLoopback on
- 
-@@ -370,93 +409,130 @@ Command Line Parameters
- The following command line parameters are available on atlantic driver:
- 
- aq_itr -Interrupt throttling mode
------------------------------------------
-+---------------------------------
- Accepted values: 0, 1, 0xFFFF
-+
- Default value: 0xFFFF
--0      - Disable interrupt throttling.
--1      - Enable interrupt throttling and use specified tx and rx rates.
--0xFFFF - Auto throttling mode. Driver will choose the best RX and TX
--         interrupt throtting settings based on link speed.
-+
-+======   ==============================================================
-+0        Disable interrupt throttling.
-+1        Enable interrupt throttling and use specified tx and rx rates.
-+0xFFFF   Auto throttling mode. Driver will choose the best RX and TX
-+	 interrupt throtting settings based on link speed.
-+======   ==============================================================
- 
- aq_itr_tx - TX interrupt throttle rate
------------------------------------------
-+--------------------------------------
-+
- Accepted values: 0 - 0x1FF
-+
- Default value: 0
-+
- TX side throttling in microseconds. Adapter will setup maximum interrupt delay
- to this value. Minimum interrupt delay will be a half of this value
- 
- aq_itr_rx - RX interrupt throttle rate
------------------------------------------
-+--------------------------------------
-+
- Accepted values: 0 - 0x1FF
-+
- Default value: 0
-+
- RX side throttling in microseconds. Adapter will setup maximum interrupt delay
- to this value. Minimum interrupt delay will be a half of this value
- 
--Note: ITR settings could be changed in runtime by ethtool -c means (see below)
-+.. note::
-+
-+   ITR settings could be changed in runtime by ethtool -c means (see below)
- 
- Config file parameters
--=======================
-+======================
-+
- For some fine tuning and performance optimizations,
- some parameters can be changed in the {source_dir}/aq_cfg.h file.
- 
- AQ_CFG_RX_PAGEORDER
------------------------------------------
-+-------------------
-+
- Default value: 0
-+
- RX page order override. Thats a power of 2 number of RX pages allocated for
--each descriptor. Received descriptor size is still limited by AQ_CFG_RX_FRAME_MAX.
-+each descriptor. Received descriptor size is still limited by
-+AQ_CFG_RX_FRAME_MAX.
-+
- Increasing pageorder makes page reuse better (actual on iommu enabled systems).
- 
- AQ_CFG_RX_REFILL_THRES
------------------------------------------
-+----------------------
-+
- Default value: 32
-+
- RX refill threshold. RX path will not refill freed descriptors until the
- specified number of free descriptors is observed. Larger values may help
- better page reuse but may lead to packet drops as well.
- 
- AQ_CFG_VECS_DEF
--------------------------------------------------------------
-+---------------
-+
- Number of queues
-+
- Valid Range: 0 - 8 (up to AQ_CFG_VECS_MAX)
-+
- Default value: 8
-+
- Notice this value will be capped by the number of cores available on the system.
- 
- AQ_CFG_IS_RSS_DEF
--------------------------------------------------------------
-+-----------------
-+
- Enable/disable Receive Side Scaling
- 
- This feature allows the adapter to distribute receive processing
- across multiple CPU-cores and to prevent from overloading a single CPU core.
- 
- Valid values
--0 - disabled
--1 - enabled
-+
-+==  ========
-+0   disabled
-+1   enabled
-+==  ========
- 
- Default value: 1
- 
- AQ_CFG_NUM_RSS_QUEUES_DEF
--------------------------------------------------------------
-+-------------------------
-+
- Number of queues for Receive Side Scaling
-+
- Valid Range: 0 - 8 (up to AQ_CFG_VECS_DEF)
- 
- Default value: AQ_CFG_VECS_DEF
- 
- AQ_CFG_IS_LRO_DEF
--------------------------------------------------------------
-+-----------------
-+
- Enable/disable Large Receive Offload
- 
- This offload enables the adapter to coalesce multiple TCP segments and indicate
- them as a single coalesced unit to the OS networking subsystem.
--The system consumes less energy but it also introduces more latency in packets processing.
-+
-+The system consumes less energy but it also introduces more latency in packets
-+processing.
- 
- Valid values
--0 - disabled
--1 - enabled
-+
-+==  ========
-+0   disabled
-+1   enabled
-+==  ========
- 
- Default value: 1
- 
- AQ_CFG_TX_CLEAN_BUDGET
------------------------------------------
-+----------------------
-+
- Maximum descriptors to cleanup on TX at once.
-+
- Default value: 256
- 
- After the aq_cfg.h file changed the driver must be rebuilt to take effect.
-@@ -472,7 +548,8 @@ License
- =======
- 
- aQuantia Corporation Network Driver
--Copyright(c) 2014 - 2019 aQuantia Corporation.
-+
-+Copyright |copy| 2014 - 2019 aQuantia Corporation.
- 
- This program is free software; you can redistribute it and/or modify it
- under the terms and conditions of the GNU General Public License,
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 019a0d2efe67..7dde314fc957 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -30,6 +30,7 @@ Contents:
-    3com/3c509
-    3com/vortex
-    amazon/ena
-+   aquantia/atlantic
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index 1630801cec19..f5733ca4fbcb 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -121,6 +121,7 @@ Contents:
+    xfrm_proc
+    xfrm_sync
+    xfrm_sysctl
++   z8530drv
  
  .. only::  subproject and html
  
+diff --git a/Documentation/networking/z8530drv.txt b/Documentation/networking/z8530drv.rst
+similarity index 57%
+rename from Documentation/networking/z8530drv.txt
+rename to Documentation/networking/z8530drv.rst
+index 2206abbc3e1b..d2942760f167 100644
+--- a/Documentation/networking/z8530drv.txt
++++ b/Documentation/networking/z8530drv.rst
+@@ -1,33 +1,30 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
++=========================================================
++SCC.C - Linux driver for Z8530 based HDLC cards for AX.25
++=========================================================
++
++
+ This is a subset of the documentation. To use this driver you MUST have the
+ full package from:
+ 
+ Internet:
+-=========
+ 
+-1. ftp://ftp.ccac.rwth-aachen.de/pub/jr/z8530drv-utils_3.0-3.tar.gz
++    1. ftp://ftp.ccac.rwth-aachen.de/pub/jr/z8530drv-utils_3.0-3.tar.gz
+ 
+-2. ftp://ftp.pspt.fi/pub/ham/linux/ax25/z8530drv-utils_3.0-3.tar.gz
++    2. ftp://ftp.pspt.fi/pub/ham/linux/ax25/z8530drv-utils_3.0-3.tar.gz
+ 
+ Please note that the information in this document may be hopelessly outdated.
+ A new version of the documentation, along with links to other important
+ Linux Kernel AX.25 documentation and programs, is available on
+ http://yaina.de/jreuter
+ 
+------------------------------------------------------------------------------
++Copyright |copy| 1993,2000 by Joerg Reuter DL1BKE <jreuter@yaina.de>
+ 
++portions Copyright |copy| 1993 Guido ten Dolle PE1NNZ
+ 
+-	 SCC.C - Linux driver for Z8530 based HDLC cards for AX.25      
+-
+-   ********************************************************************
+-
+-        (c) 1993,2000 by Joerg Reuter DL1BKE <jreuter@yaina.de>
+-
+-        portions (c) 1993 Guido ten Dolle PE1NNZ
+-
+-        for the complete copyright notice see >> Copying.Z8530DRV <<
+-
+-   ******************************************************************** 
+-
++for the complete copyright notice see >> Copying.Z8530DRV <<
+ 
+ 1. Initialization of the driver
+ ===============================
+@@ -50,7 +47,7 @@ AX.25-HOWTO on how to emulate a KISS TNC on network device drivers.
+ (If you're going to compile the driver as a part of the kernel image,
+  skip this chapter and continue with 1.2)
+ 
+-Before you can use a module, you'll have to load it with
++Before you can use a module, you'll have to load it with::
+ 
+ 	insmod scc.o
+ 
+@@ -75,61 +72,73 @@ The file itself consists of two main sections.
+ ==========================================
+ 
+ The hardware setup section defines the following parameters for each
+-Z8530:
++Z8530::
+ 
+-chip    1
+-data_a  0x300                   # data port A
+-ctrl_a  0x304                   # control port A
+-data_b  0x301                   # data port B
+-ctrl_b  0x305                   # control port B
+-irq     5                       # IRQ No. 5
+-pclock  4915200                 # clock
+-board   BAYCOM                  # hardware type
+-escc    no                      # enhanced SCC chip? (8580/85180/85280)
+-vector  0                       # latch for interrupt vector
+-special no                      # address of special function register
+-option  0                       # option to set via sfr
++    chip    1
++    data_a  0x300                   # data port A
++    ctrl_a  0x304                   # control port A
++    data_b  0x301                   # data port B
++    ctrl_b  0x305                   # control port B
++    irq     5                       # IRQ No. 5
++    pclock  4915200                 # clock
++    board   BAYCOM                  # hardware type
++    escc    no                      # enhanced SCC chip? (8580/85180/85280)
++    vector  0                       # latch for interrupt vector
++    special no                      # address of special function register
++    option  0                       # option to set via sfr
+ 
+ 
+-chip	- this is just a delimiter to make sccinit a bit simpler to
++chip
++	- this is just a delimiter to make sccinit a bit simpler to
+ 	  program. A parameter has no effect.
+ 
+-data_a  - the address of the data port A of this Z8530 (needed)
+-ctrl_a  - the address of the control port A (needed)
+-data_b  - the address of the data port B (needed)
+-ctrl_b  - the address of the control port B (needed)
++data_a
++	- the address of the data port A of this Z8530 (needed)
++ctrl_a
++	- the address of the control port A (needed)
++data_b
++	- the address of the data port B (needed)
++ctrl_b
++	- the address of the control port B (needed)
+ 
+-irq     - the used IRQ for this chip. Different chips can use different
+-          IRQs or the same. If they share an interrupt, it needs to be
++irq
++	- the used IRQ for this chip. Different chips can use different
++	  IRQs or the same. If they share an interrupt, it needs to be
+ 	  specified within one chip-definition only.
+ 
+ pclock  - the clock at the PCLK pin of the Z8530 (option, 4915200 is
+-          default), measured in Hertz
++	  default), measured in Hertz
+ 
+-board   - the "type" of the board:
++board
++	- the "type" of the board:
+ 
++	   =======================  ========
+ 	   SCC type                 value
+-	   ---------------------------------
++	   =======================  ========
+ 	   PA0HZP SCC card          PA0HZP
+ 	   EAGLE card               EAGLE
+ 	   PC100 card               PC100
+ 	   PRIMUS-PC (DG9BL) card   PRIMUS
+ 	   BayCom (U)SCC card       BAYCOM
++	   =======================  ========
+ 
+-escc    - if you want support for ESCC chips (8580, 85180, 85280), set
+-          this to "yes" (option, defaults to "no")
++escc
++	- if you want support for ESCC chips (8580, 85180, 85280), set
++	  this to "yes" (option, defaults to "no")
+ 
+-vector  - address of the vector latch (aka "intack port") for PA0HZP
+-          cards. There can be only one vector latch for all chips!
++vector
++	- address of the vector latch (aka "intack port") for PA0HZP
++	  cards. There can be only one vector latch for all chips!
+ 	  (option, defaults to 0)
+ 
+-special - address of the special function register on several cards.
+-          (option, defaults to 0)
++special
++	- address of the special function register on several cards.
++	  (option, defaults to 0)
+ 
+ option  - The value you write into that register (option, default is 0)
+ 
+ You can specify up to four chips (8 channels). If this is not enough,
+-just change
++just change::
+ 
+ 	#define MAXSCC 4
+ 
+@@ -138,75 +147,81 @@ to a higher value.
+ Example for the BAYCOM USCC:
+ ----------------------------
+ 
+-chip    1
+-data_a  0x300                   # data port A
+-ctrl_a  0x304                   # control port A
+-data_b  0x301                   # data port B
+-ctrl_b  0x305                   # control port B
+-irq     5                       # IRQ No. 5 (#)
+-board   BAYCOM                  # hardware type (*)
+-#
+-# SCC chip 2
+-#
+-chip    2
+-data_a  0x302
+-ctrl_a  0x306
+-data_b  0x303
+-ctrl_b  0x307
+-board   BAYCOM
++::
++
++	chip    1
++	data_a  0x300                   # data port A
++	ctrl_a  0x304                   # control port A
++	data_b  0x301                   # data port B
++	ctrl_b  0x305                   # control port B
++	irq     5                       # IRQ No. 5 (#)
++	board   BAYCOM                  # hardware type (*)
++	#
++	# SCC chip 2
++	#
++	chip    2
++	data_a  0x302
++	ctrl_a  0x306
++	data_b  0x303
++	ctrl_b  0x307
++	board   BAYCOM
+ 
+ An example for a PA0HZP card:
+ -----------------------------
+ 
+-chip 1
+-data_a 0x153
+-data_b 0x151
+-ctrl_a 0x152
+-ctrl_b 0x150
+-irq 9
+-pclock 4915200
+-board PA0HZP
+-vector 0x168
+-escc no
+-#
+-#
+-#
+-chip 2
+-data_a 0x157
+-data_b 0x155
+-ctrl_a 0x156
+-ctrl_b 0x154
+-irq 9
+-pclock 4915200
+-board PA0HZP
+-vector 0x168
+-escc no
++::
++
++	chip 1
++	data_a 0x153
++	data_b 0x151
++	ctrl_a 0x152
++	ctrl_b 0x150
++	irq 9
++	pclock 4915200
++	board PA0HZP
++	vector 0x168
++	escc no
++	#
++	#
++	#
++	chip 2
++	data_a 0x157
++	data_b 0x155
++	ctrl_a 0x156
++	ctrl_b 0x154
++	irq 9
++	pclock 4915200
++	board PA0HZP
++	vector 0x168
++	escc no
+ 
+ A DRSI would should probably work with this:
+ --------------------------------------------
+ (actually: two DRSI cards...)
+ 
+-chip 1
+-data_a 0x303
+-data_b 0x301
+-ctrl_a 0x302
+-ctrl_b 0x300
+-irq 7
+-pclock 4915200
+-board DRSI
+-escc no
+-#
+-#
+-#
+-chip 2
+-data_a 0x313
+-data_b 0x311
+-ctrl_a 0x312
+-ctrl_b 0x310
+-irq 7
+-pclock 4915200
+-board DRSI
+-escc no
++::
++
++	chip 1
++	data_a 0x303
++	data_b 0x301
++	ctrl_a 0x302
++	ctrl_b 0x300
++	irq 7
++	pclock 4915200
++	board DRSI
++	escc no
++	#
++	#
++	#
++	chip 2
++	data_a 0x313
++	data_b 0x311
++	ctrl_a 0x312
++	ctrl_b 0x310
++	irq 7
++	pclock 4915200
++	board DRSI
++	escc no
+ 
+ Note that you cannot use the on-board baudrate generator off DRSI
+ cards. Use "mode dpll" for clock source (see below).
+@@ -220,17 +235,19 @@ The utility "gencfg"
+ If you only know the parameters for the PE1CHL driver for DOS,
+ run gencfg. It will generate the correct port addresses (I hope).
+ Its parameters are exactly the same as the ones you use with
+-the "attach scc" command in net, except that the string "init" must 
+-not appear. Example:
++the "attach scc" command in net, except that the string "init" must
++not appear. Example::
+ 
+-gencfg 2 0x150 4 2 0 1 0x168 9 4915200 
++	gencfg 2 0x150 4 2 0 1 0x168 9 4915200
+ 
+ will print a skeleton z8530drv.conf for the OptoSCC to stdout.
+ 
+-gencfg 2 0x300 2 4 5 -4 0 7 4915200 0x10
++::
++
++	gencfg 2 0x300 2 4 5 -4 0 7 4915200 0x10
+ 
+ does the same for the BAYCOM USCC card. In my opinion it is much easier
+-to edit scc_config.h... 
++to edit scc_config.h...
+ 
+ 
+ 1.2.2 channel configuration
+@@ -239,58 +256,58 @@ to edit scc_config.h...
+ The channel definition is divided into three sub sections for each
+ channel:
+ 
+-An example for scc0:
++An example for scc0::
+ 
+-# DEVICE
++	# DEVICE
+ 
+-device scc0	# the device for the following params
++	device scc0	# the device for the following params
+ 
+-# MODEM / BUFFERS
++	# MODEM / BUFFERS
+ 
+-speed 1200		# the default baudrate
+-clock dpll		# clock source: 
+-			# 	dpll     = normal half duplex operation
+-			# 	external = MODEM provides own Rx/Tx clock
+-			#	divider  = use full duplex divider if
+-			#		   installed (1)
+-mode nrzi		# HDLC encoding mode
+-			#	nrzi = 1k2 MODEM, G3RUH 9k6 MODEM
+-			#	nrz  = DF9IC 9k6 MODEM
+-			#
+-bufsize	384		# size of buffers. Note that this must include
+-			# the AX.25 header, not only the data field!
+-			# (optional, defaults to 384)
++	speed 1200		# the default baudrate
++	clock dpll		# clock source:
++				# 	dpll     = normal half duplex operation
++				# 	external = MODEM provides own Rx/Tx clock
++				#	divider  = use full duplex divider if
++				#		   installed (1)
++	mode nrzi		# HDLC encoding mode
++				#	nrzi = 1k2 MODEM, G3RUH 9k6 MODEM
++				#	nrz  = DF9IC 9k6 MODEM
++				#
++	bufsize	384		# size of buffers. Note that this must include
++				# the AX.25 header, not only the data field!
++				# (optional, defaults to 384)
+ 
+-# KISS (Layer 1)
++	# KISS (Layer 1)
+ 
+-txdelay 36              # (see chapter 1.4)
+-persist 64
+-slot    8
+-tail    8
+-fulldup 0
+-wait    12
+-min     3
+-maxkey  7
+-idle    3
+-maxdef  120
+-group   0
+-txoff   off
+-softdcd on                   
+-slip    off
++	txdelay 36              # (see chapter 1.4)
++	persist 64
++	slot    8
++	tail    8
++	fulldup 0
++	wait    12
++	min     3
++	maxkey  7
++	idle    3
++	maxdef  120
++	group   0
++	txoff   off
++	softdcd on
++	slip    off
+ 
+ The order WITHIN these sections is unimportant. The order OF these
+ sections IS important. The MODEM parameters are set with the first
+ recognized KISS parameter...
+ 
+ Please note that you can initialize the board only once after boot
+-(or insmod). You can change all parameters but "mode" and "clock" 
+-later with the Sccparam program or through KISS. Just to avoid 
+-security holes... 
++(or insmod). You can change all parameters but "mode" and "clock"
++later with the Sccparam program or through KISS. Just to avoid
++security holes...
+ 
+ (1) this divider is usually mounted on the SCC-PBC (PA0HZP) or not
+-    present at all (BayCom). It feeds back the output of the DPLL 
+-    (digital pll) as transmit clock. Using this mode without a divider 
+-    installed will normally result in keying the transceiver until 
++    present at all (BayCom). It feeds back the output of the DPLL
++    (digital pll) as transmit clock. Using this mode without a divider
++    installed will normally result in keying the transceiver until
+     maxkey expires --- of course without sending anything (useful).
+ 
+ 2. Attachment of a channel by your AX.25 software
+@@ -299,15 +316,15 @@ security holes...
+ 2.1 Kernel AX.25
+ ================
+ 
+-To set up an AX.25 device you can simply type:
++To set up an AX.25 device you can simply type::
+ 
+ 	ifconfig scc0 44.128.1.1 hw ax25 dl0tha-7
+ 
+-This will create a network interface with the IP number 44.128.20.107 
+-and the callsign "dl0tha". If you do not have any IP number (yet) you 
+-can use any of the 44.128.0.0 network. Note that you do not need 
+-axattach. The purpose of axattach (like slattach) is to create a KISS 
+-network device linked to a TTY. Please read the documentation of the 
++This will create a network interface with the IP number 44.128.20.107
++and the callsign "dl0tha". If you do not have any IP number (yet) you
++can use any of the 44.128.0.0 network. Note that you do not need
++axattach. The purpose of axattach (like slattach) is to create a KISS
++network device linked to a TTY. Please read the documentation of the
+ ax25-utils and the AX.25-HOWTO to learn how to set the parameters of
+ the kernel AX.25.
+ 
+@@ -318,16 +335,16 @@ Since the TTY driver (aka KISS TNC emulation) is gone you need
+ to emulate the old behaviour. The cost of using these programs is
+ that you probably need to compile the kernel AX.25, regardless of whether
+ you actually use it or not. First setup your /etc/ax25/axports,
+-for example:
++for example::
+ 
+ 	9k6	dl0tha-9  9600  255 4 9600 baud port (scc3)
+ 	axlink	dl0tha-15 38400 255 4 Link to NOS
+ 
+-Now "ifconfig" the scc device:
++Now "ifconfig" the scc device::
+ 
+ 	ifconfig scc3 44.128.1.1 hw ax25 dl0tha-9
+ 
+-You can now axattach a pseudo-TTY:
++You can now axattach a pseudo-TTY::
+ 
+ 	axattach /dev/ptys0 axlink
+ 
+@@ -335,11 +352,11 @@ and start your NOS and attach /dev/ptys0 there. The problem is that
+ NOS is reachable only via digipeating through the kernel AX.25
+ (disastrous on a DAMA controlled channel). To solve this problem,
+ configure "rxecho" to echo the incoming frames from "9k6" to "axlink"
+-and outgoing frames from "axlink" to "9k6" and start:
++and outgoing frames from "axlink" to "9k6" and start::
+ 
+ 	rxecho
+ 
+-Or simply use "kissbridge" coming with z8530drv-utils:
++Or simply use "kissbridge" coming with z8530drv-utils::
+ 
+ 	ifconfig scc3 hw ax25 dl0tha-9
+ 	kissbridge scc3 /dev/ptys0
+@@ -351,55 +368,57 @@ Or simply use "kissbridge" coming with z8530drv-utils:
+ 3.1 Displaying SCC Parameters:
+ ==============================
+ 
+-Once a SCC channel has been attached, the parameter settings and 
+-some statistic information can be shown using the param program:
++Once a SCC channel has been attached, the parameter settings and
++some statistic information can be shown using the param program::
+ 
+-dl1bke-u:~$ sccstat scc0
++	dl1bke-u:~$ sccstat scc0
+ 
+-Parameters:
++	Parameters:
+ 
+-speed       : 1200 baud
+-txdelay     : 36
+-persist     : 255
+-slottime    : 0
+-txtail      : 8
+-fulldup     : 1
+-waittime    : 12
+-mintime     : 3 sec
+-maxkeyup    : 7 sec
+-idletime    : 3 sec
+-maxdefer    : 120 sec
+-group       : 0x00
+-txoff       : off
+-softdcd     : on
+-SLIP        : off
++	speed       : 1200 baud
++	txdelay     : 36
++	persist     : 255
++	slottime    : 0
++	txtail      : 8
++	fulldup     : 1
++	waittime    : 12
++	mintime     : 3 sec
++	maxkeyup    : 7 sec
++	idletime    : 3 sec
++	maxdefer    : 120 sec
++	group       : 0x00
++	txoff       : off
++	softdcd     : on
++	SLIP        : off
+ 
+-Status:
++	Status:
+ 
+-HDLC                  Z8530           Interrupts         Buffers
+------------------------------------------------------------------------
+-Sent       :     273  RxOver :     0  RxInts :   125074  Size    :  384
+-Received   :    1095  TxUnder:     0  TxInts :     4684  NoSpace :    0
+-RxErrors   :    1591                  ExInts :    11776
+-TxErrors   :       0                  SpInts :     1503
+-Tx State   :    idle
++	HDLC                  Z8530           Interrupts         Buffers
++	-----------------------------------------------------------------------
++	Sent       :     273  RxOver :     0  RxInts :   125074  Size    :  384
++	Received   :    1095  TxUnder:     0  TxInts :     4684  NoSpace :    0
++	RxErrors   :    1591                  ExInts :    11776
++	TxErrors   :       0                  SpInts :     1503
++	Tx State   :    idle
+ 
+ 
+ The status info shown is:
+ 
+-Sent		- number of frames transmitted
+-Received	- number of frames received
+-RxErrors	- number of receive errors (CRC, ABORT)
+-TxErrors	- number of discarded Tx frames (due to various reasons) 
+-Tx State	- status of the Tx interrupt handler: idle/busy/active/tail (2)
+-RxOver		- number of receiver overruns
+-TxUnder		- number of transmitter underruns
+-RxInts		- number of receiver interrupts
+-TxInts		- number of transmitter interrupts
+-EpInts		- number of receiver special condition interrupts
+-SpInts		- number of external/status interrupts
+-Size		- maximum size of an AX.25 frame (*with* AX.25 headers!)
+-NoSpace		- number of times a buffer could not get allocated
++==============	==============================================================
++Sent		number of frames transmitted
++Received	number of frames received
++RxErrors	number of receive errors (CRC, ABORT)
++TxErrors	number of discarded Tx frames (due to various reasons)
++Tx State	status of the Tx interrupt handler: idle/busy/active/tail (2)
++RxOver		number of receiver overruns
++TxUnder		number of transmitter underruns
++RxInts		number of receiver interrupts
++TxInts		number of transmitter interrupts
++EpInts		number of receiver special condition interrupts
++SpInts		number of external/status interrupts
++Size		maximum size of an AX.25 frame (*with* AX.25 headers!)
++NoSpace		number of times a buffer could not get allocated
++==============	==============================================================
+ 
+ An overrun is abnormal. If lots of these occur, the product of
+ baudrate and number of interfaces is too high for the processing
+@@ -411,32 +430,34 @@ driver or the kernel AX.25.
+ ======================
+ 
+ 
+-The setting of parameters of the emulated KISS TNC is done in the 
++The setting of parameters of the emulated KISS TNC is done in the
+ same way in the SCC driver. You can change parameters by using
+-the kissparms program from the ax25-utils package or use the program 
+-"sccparam":
++the kissparms program from the ax25-utils package or use the program
++"sccparam"::
+ 
+      sccparam <device> <paramname> <decimal-|hexadecimal value>
+ 
+ You can change the following parameters:
+ 
+-param	    : value
+-------------------------
+-speed       : 1200
+-txdelay     : 36
+-persist     : 255
+-slottime    : 0
+-txtail      : 8
+-fulldup     : 1
+-waittime    : 12
+-mintime     : 3
+-maxkeyup    : 7
+-idletime    : 3
+-maxdefer    : 120
+-group       : 0x00
+-txoff       : off
+-softdcd     : on
+-SLIP        : off
++===========   =====
++param	      value
++===========   =====
++speed         1200
++txdelay       36
++persist       255
++slottime      0
++txtail        8
++fulldup       1
++waittime      12
++mintime       3
++maxkeyup      7
++idletime      3
++maxdefer      120
++group         0x00
++txoff         off
++softdcd       on
++SLIP          off
++===========   =====
+ 
+ 
+ The parameters have the following meaning:
+@@ -447,92 +468,92 @@ speed:
+      Example: sccparam /dev/scc3 speed 9600
+ 
+ txdelay:
+-     The delay (in units of 10 ms) after keying of the 
+-     transmitter, until the first byte is sent. This is usually 
+-     called "TXDELAY" in a TNC.  When 0 is specified, the driver 
+-     will just wait until the CTS signal is asserted. This 
+-     assumes the presence of a timer or other circuitry in the 
+-     MODEM and/or transmitter, that asserts CTS when the 
++     The delay (in units of 10 ms) after keying of the
++     transmitter, until the first byte is sent. This is usually
++     called "TXDELAY" in a TNC.  When 0 is specified, the driver
++     will just wait until the CTS signal is asserted. This
++     assumes the presence of a timer or other circuitry in the
++     MODEM and/or transmitter, that asserts CTS when the
+      transmitter is ready for data.
+      A normal value of this parameter is 30-36.
+ 
+      Example: sccparam /dev/scc0 txd 20
+ 
+ persist:
+-     This is the probability that the transmitter will be keyed 
+-     when the channel is found to be free.  It is a value from 0 
+-     to 255, and the probability is (value+1)/256.  The value 
+-     should be somewhere near 50-60, and should be lowered when 
++     This is the probability that the transmitter will be keyed
++     when the channel is found to be free.  It is a value from 0
++     to 255, and the probability is (value+1)/256.  The value
++     should be somewhere near 50-60, and should be lowered when
+      the channel is used more heavily.
+ 
+      Example: sccparam /dev/scc2 persist 20
+ 
+ slottime:
+-     This is the time between samples of the channel. It is 
+-     expressed in units of 10 ms.  About 200-300 ms (value 20-30) 
++     This is the time between samples of the channel. It is
++     expressed in units of 10 ms.  About 200-300 ms (value 20-30)
+      seems to be a good value.
+ 
+      Example: sccparam /dev/scc0 slot 20
+ 
+ tail:
+-     The time the transmitter will remain keyed after the last 
+-     byte of a packet has been transferred to the SCC. This is 
+-     necessary because the CRC and a flag still have to leave the 
+-     SCC before the transmitter is keyed down. The value depends 
+-     on the baudrate selected.  A few character times should be 
++     The time the transmitter will remain keyed after the last
++     byte of a packet has been transferred to the SCC. This is
++     necessary because the CRC and a flag still have to leave the
++     SCC before the transmitter is keyed down. The value depends
++     on the baudrate selected.  A few character times should be
+      sufficient, e.g. 40ms at 1200 baud. (value 4)
+      The value of this parameter is in 10 ms units.
+ 
+      Example: sccparam /dev/scc2 4
+ 
+ full:
+-     The full-duplex mode switch. This can be one of the following 
++     The full-duplex mode switch. This can be one of the following
+      values:
+ 
+-     0:   The interface will operate in CSMA mode (the normal 
+-          half-duplex packet radio operation)
+-     1:   Fullduplex mode, i.e. the transmitter will be keyed at 
+-          any time, without checking the received carrier.  It 
+-          will be unkeyed when there are no packets to be sent.
+-     2:   Like 1, but the transmitter will remain keyed, also 
+-          when there are no packets to be sent.  Flags will be 
+-          sent in that case, until a timeout (parameter 10) 
+-          occurs.
++     0:   The interface will operate in CSMA mode (the normal
++	  half-duplex packet radio operation)
++     1:   Fullduplex mode, i.e. the transmitter will be keyed at
++	  any time, without checking the received carrier.  It
++	  will be unkeyed when there are no packets to be sent.
++     2:   Like 1, but the transmitter will remain keyed, also
++	  when there are no packets to be sent.  Flags will be
++	  sent in that case, until a timeout (parameter 10)
++	  occurs.
+ 
+      Example: sccparam /dev/scc0 fulldup off
+ 
+ wait:
+-     The initial waittime before any transmit attempt, after the 
+-     frame has been queue for transmit.  This is the length of 
++     The initial waittime before any transmit attempt, after the
++     frame has been queue for transmit.  This is the length of
+      the first slot in CSMA mode.  In full duplex modes it is
+      set to 0 for maximum performance.
+-     The value of this parameter is in 10 ms units. 
++     The value of this parameter is in 10 ms units.
+ 
+      Example: sccparam /dev/scc1 wait 4
+ 
+ maxkey:
+-     The maximal time the transmitter will be keyed to send 
+-     packets, in seconds.  This can be useful on busy CSMA 
+-     channels, to avoid "getting a bad reputation" when you are 
+-     generating a lot of traffic.  After the specified time has 
++     The maximal time the transmitter will be keyed to send
++     packets, in seconds.  This can be useful on busy CSMA
++     channels, to avoid "getting a bad reputation" when you are
++     generating a lot of traffic.  After the specified time has
+      elapsed, no new frame will be started. Instead, the trans-
+-     mitter will be switched off for a specified time (parameter 
+-     min), and then the selected algorithm for keyup will be 
++     mitter will be switched off for a specified time (parameter
++     min), and then the selected algorithm for keyup will be
+      started again.
+-     The value 0 as well as "off" will disable this feature, 
+-     and allow infinite transmission time. 
++     The value 0 as well as "off" will disable this feature,
++     and allow infinite transmission time.
+ 
+      Example: sccparam /dev/scc0 maxk 20
+ 
+ min:
+-     This is the time the transmitter will be switched off when 
++     This is the time the transmitter will be switched off when
+      the maximum transmission time is exceeded.
+ 
+      Example: sccparam /dev/scc3 min 10
+ 
+-idle
+-     This parameter specifies the maximum idle time in full duplex 
+-     2 mode, in seconds.  When no frames have been sent for this 
++idle:
++     This parameter specifies the maximum idle time in full duplex
++     2 mode, in seconds.  When no frames have been sent for this
+      time, the transmitter will be keyed down.  A value of 0 is
+      has same result as the fullduplex mode 1. This parameter
+      can be disabled.
+@@ -541,7 +562,7 @@ idle
+ 
+ maxdefer
+      This is the maximum time (in seconds) to wait for a free channel
+-     to send. When this timer expires the transmitter will be keyed 
++     to send. When this timer expires the transmitter will be keyed
+      IMMEDIATELY. If you love to get trouble with other users you
+      should set this to a very low value ;-)
+ 
+@@ -555,32 +576,38 @@ txoff:
+      Example: sccparam /dev/scc2 txoff on
+ 
+ group:
+-     It is possible to build special radio equipment to use more than 
+-     one frequency on the same band, e.g. using several receivers and 
++     It is possible to build special radio equipment to use more than
++     one frequency on the same band, e.g. using several receivers and
+      only one transmitter that can be switched between frequencies.
+-     Also, you can connect several radios that are active on the same 
+-     band.  In these cases, it is not possible, or not a good idea, to 
+-     transmit on more than one frequency.  The SCC driver provides a 
+-     method to lock transmitters on different interfaces, using the 
+-     "param <interface> group <x>" command.  This will only work when 
++     Also, you can connect several radios that are active on the same
++     band.  In these cases, it is not possible, or not a good idea, to
++     transmit on more than one frequency.  The SCC driver provides a
++     method to lock transmitters on different interfaces, using the
++     "param <interface> group <x>" command.  This will only work when
+      you are using CSMA mode (parameter full = 0).
+-     The number <x> must be 0 if you want no group restrictions, and 
++
++     The number <x> must be 0 if you want no group restrictions, and
+      can be computed as follows to create restricted groups:
+      <x> is the sum of some OCTAL numbers:
+ 
+-     200  This transmitter will only be keyed when all other 
+-          transmitters in the group are off.
+-     100  This transmitter will only be keyed when the carrier 
+-          detect of all other interfaces in the group is off.
+-     0xx  A byte that can be used to define different groups.  
+-          Interfaces are in the same group, when the logical AND 
+-          between their xx values is nonzero.
++
++     ===  =======================================================
++     200  This transmitter will only be keyed when all other
++	  transmitters in the group are off.
++     100  This transmitter will only be keyed when the carrier
++	  detect of all other interfaces in the group is off.
++     0xx  A byte that can be used to define different groups.
++	  Interfaces are in the same group, when the logical AND
++	  between their xx values is nonzero.
++     ===  =======================================================
+ 
+      Examples:
+-     When 2 interfaces use group 201, their transmitters will never be 
++
++     When 2 interfaces use group 201, their transmitters will never be
+      keyed at the same time.
+-     When 2 interfaces use group 101, the transmitters will only key 
+-     when both channels are clear at the same time.  When group 301, 
++
++     When 2 interfaces use group 101, the transmitters will only key
++     when both channels are clear at the same time.  When group 301,
+      the transmitters will not be keyed at the same time.
+ 
+      Don't forget to convert the octal numbers into decimal before
+@@ -595,19 +622,19 @@ softdcd:
+      Example: sccparam /dev/scc0 soft on
+ 
+ 
+-4. Problems 
++4. Problems
+ ===========
+ 
+ If you have tx-problems with your BayCom USCC card please check
+ the manufacturer of the 8530. SGS chips have a slightly
+-different timing. Try Zilog...  A solution is to write to register 8 
+-instead to the data port, but this won't work with the ESCC chips. 
++different timing. Try Zilog...  A solution is to write to register 8
++instead to the data port, but this won't work with the ESCC chips.
+ *SIGH!*
+ 
+ A very common problem is that the PTT locks until the maxkeyup timer
+ expires, although interrupts and clock source are correct. In most
+ cases compiling the driver with CONFIG_SCC_DELAY (set with
+-make config) solves the problems. For more hints read the (pseudo) FAQ 
++make config) solves the problems. For more hints read the (pseudo) FAQ
+ and the documentation coming with z8530drv-utils.
+ 
+ I got reports that the driver has problems on some 386-based systems.
+@@ -651,7 +678,9 @@ got it up-and-running?
+ Many thanks to Linus Torvalds and Alan Cox for including the driver
+ in the Linux standard distribution and their support.
+ 
+-Joerg Reuter	ampr-net: dl1bke@db0pra.ampr.org
+-		AX-25   : DL1BKE @ DB0ABH.#BAY.DEU.EU
+-		Internet: jreuter@yaina.de
+-		WWW     : http://yaina.de/jreuter
++::
++
++	Joerg Reuter	ampr-net: dl1bke@db0pra.ampr.org
++			AX-25   : DL1BKE @ DB0ABH.#BAY.DEU.EU
++			Internet: jreuter@yaina.de
++			WWW     : http://yaina.de/jreuter
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 990d1414ffd6..91098b704635 100644
+index 469e6c3149fe..a480267571b9 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -1280,7 +1280,7 @@ L:	netdev@vger.kernel.org
- S:	Supported
- W:	https://www.marvell.com/
- Q:	http://patchwork.ozlabs.org/project/netdev/list/
--F:	Documentation/networking/device_drivers/aquantia/atlantic.txt
-+F:	Documentation/networking/device_drivers/aquantia/atlantic.rst
- F:	drivers/net/ethernet/aquantia/atlantic/
+@@ -18690,7 +18690,7 @@ L:	linux-hams@vger.kernel.org
+ S:	Maintained
+ W:	http://yaina.de/jreuter/
+ W:	http://www.qsl.net/dl1bke/
+-F:	Documentation/networking/z8530drv.txt
++F:	Documentation/networking/z8530drv.rst
+ F:	drivers/net/hamradio/*scc.c
+ F:	drivers/net/hamradio/z8530.h
  
- AQUANTIA ETHERNET DRIVER PTP SUBSYSTEM
+diff --git a/drivers/net/hamradio/Kconfig b/drivers/net/hamradio/Kconfig
+index fe409819b56d..f4500f04147d 100644
+--- a/drivers/net/hamradio/Kconfig
++++ b/drivers/net/hamradio/Kconfig
+@@ -84,7 +84,7 @@ config SCC
+ 	---help---
+ 	  These cards are used to connect your Linux box to an amateur radio
+ 	  in order to communicate with other computers. If you want to use
+-	  this, read <file:Documentation/networking/z8530drv.txt> and the
++	  this, read <file:Documentation/networking/z8530drv.rst> and the
+ 	  AX25-HOWTO, available from
+ 	  <http://www.tldp.org/docs.html#howto>. Also make sure to say Y
+ 	  to "Amateur Radio AX.25 Level 2" support.
+@@ -98,7 +98,7 @@ config SCC_DELAY
+ 	help
+ 	  Say Y here if you experience problems with the SCC driver not
+ 	  working properly; please read
+-	  <file:Documentation/networking/z8530drv.txt> for details.
++	  <file:Documentation/networking/z8530drv.rst> for details.
+ 
+ 	  If unsure, say N.
+ 
+diff --git a/drivers/net/hamradio/scc.c b/drivers/net/hamradio/scc.c
+index 6c03932d8a6b..33fdd55c6122 100644
+--- a/drivers/net/hamradio/scc.c
++++ b/drivers/net/hamradio/scc.c
+@@ -7,7 +7,7 @@
+  *            ------------------
+  *
+  * You can find a subset of the documentation in 
+- * Documentation/networking/z8530drv.txt.
++ * Documentation/networking/z8530drv.rst.
+  */
+ 
+ /*
 -- 
 2.25.4
 
