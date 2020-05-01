@@ -2,132 +2,87 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4092C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF2AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9B7A20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F2820757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgEAOTs (ORCPT
+        id S1729513AbgEAOUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42090 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:20:25 -0400
+Received: from muru.com ([72.249.23.125]:52482 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728839AbgEAOTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:19:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 199BE20757;
-        Fri,  1 May 2020 14:19:44 +0000 (UTC)
-Date:   Fri, 1 May 2020 10:19:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>
-Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
- echo
-Message-ID: <20200501101942.5c0da986@gandalf.local.home>
-In-Reply-To: <158834028054.28357.398159034694277189.stgit@devnote2>
-References: <158834025077.28357.15141584656220094821.stgit@devnote2>
-        <158834028054.28357.398159034694277189.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728839AbgEAOUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:20:25 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 3BFC4810E;
+        Fri,  1 May 2020 14:21:10 +0000 (UTC)
+Date:   Fri, 1 May 2020 07:20:18 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200501142018.GB37466@atomide.com>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200501082111.GA7501@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501082111.GA7501@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 22:38:00 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Since the built-in echo has different behavior in POSIX shell
-> (dash) and bash, we forcibly use /bin/echo -E (not interpret
-> backslash escapes) by default.
+* Pavel Machek <pavel@denx.de> [200501 08:22]:
+> Hi!
 > 
-> This also fixes some test cases which expects built-in
-> echo command.
+> > Now without the chardev support, the /dev/gsmtty* using apps need
+> > to use "U1234AT+CFUN?" format for the packets. The advantage is
+> > less kernel code, and we keep the existing /dev/gsmtty* interface.
 > 
-> Reported-by: Liu Yiding <yidingx.liu@intel.com>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/testing/selftests/ftrace/test.d/functions    |    3 +++
->  .../test.d/trigger/trigger-trace-marker-hist.tc    |    2 +-
->  .../trigger-trace-marker-synthetic-kernel.tc       |    4 ++++
->  .../trigger/trigger-trace-marker-synthetic.tc      |    4 ++--
->  4 files changed, 10 insertions(+), 3 deletions(-)
+> Actually... yes, this works. But no, this is not "existing" tty
+> interface.
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-> index 5d4550591ff9..ea59b6ea2c3e 100644
-> --- a/tools/testing/selftests/ftrace/test.d/functions
-> +++ b/tools/testing/selftests/ftrace/test.d/functions
-> @@ -1,3 +1,6 @@
-> +# Since the built-in echo has different behavior in POSIX shell (dash) and
-> +# bash, we forcibly use /bin/echo -E (not interpret backslash escapes).
-> +alias echo="/bin/echo -E"
->  
->  clear_trace() { # reset trace output
->      echo > trace
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> index ab6bedb25736..b3f70f53ee69 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
-> @@ -30,7 +30,7 @@ fi
->  
->  echo "Test histogram trace_marker tigger"
->  
-> -echo 'hist:keys=common_pid' > events/ftrace/print/trigger
-> +echo 'hist:keys=ip' > events/ftrace/print/trigger
+> ttys work per character, and this interface definitely does not... it
+> is "packet" based, write() syscalls need exactly right lengths. You
+> can't just open minicom, and type "U1234...". You can't paste it,
+> either (I tried). tty controls like start/stop bits and baud rate are
+> useless here. CR/LF conversions are unwanted/dangerous because it is
+> confusing hard to debug if you get them wrong.
 
-This is doing more than just changing the echo being used. It's changing
-the test being done.
+Yes.. That's what n_gsm spins up.
 
->  for i in `seq 1 10` ; do echo "hello" > trace_marker; done
->  grep 'hitcount: *10$' events/ftrace/print/hist > /dev/null || \
->      fail "hist trigger did not trigger correct times on trace_marker"
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
-> index 18b4d1c2807e..c1625d945f4d 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
-> @@ -44,6 +44,10 @@ echo 'latency u64 lat' > synthetic_events
->  echo 'hist:keys=pid:ts0=common_timestamp.usecs' > events/sched/sched_waking/trigger
->  echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).latency($lat)' > events/ftrace/print/trigger
->  echo 'hist:keys=common_pid,lat:sort=lat' > events/synthetic/latency/trigger
-> +
-> +# We have to use the built-in echo here because waking up pid must be same
-> +# as echoing pid.
-> +alias echo=echo
->  sleep 1
->  echo "hello" > trace_marker
->  
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
-> index dd262d6d0db6..23e52c8d71de 100644
-> --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
-> @@ -36,8 +36,8 @@ fi
->  echo "Test histogram trace_marker to trace_marker latency histogram trigger"
->  
->  echo 'latency u64 lat' > synthetic_events
-> -echo 'hist:keys=common_pid:ts0=common_timestamp.usecs if buf == "start"' > events/ftrace/print/trigger
-> -echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$ts0:onmatch(ftrace.print).latency($lat) if buf == "end"' >> events/ftrace/print/trigger
-> +echo 'hist:keys=ip:ts0=common_timestamp.usecs if buf == "start"' > events/ftrace/print/trigger
-> +echo 'hist:keys=ip:lat=common_timestamp.usecs-$ts0:onmatch(ftrace.print).latency($lat) if buf == "end"' >> events/ftrace/print/trigger
+> Now, I don't see reason why this could not be made to work, and it may
+> be more important to have something in mainline and work with that. So
+> if you can make this into -next, I'll not complain too loudly. But it
+> is... still wrong and I liked motmdm* more :-).
 
-This too. And it's not explained in the change log why. In fact, these
-changes look like they belong in a separate patch.
+Yes.. There are issues too with the motmdm* char dev interface too.
 
--- Steve
+I don't think it would work as is for devices with network interfaces
+on some channel, and continuation packets could need more handling
+possibly.
 
->  echo 'hist:keys=common_pid,lat:sort=lat' > events/synthetic/latency/trigger
->  echo -n "start" > trace_marker
->  echo -n "end" > trace_marker
+But let's try to get the basics sorted out first and use the "raw"
+gsmtty* interface. More stuff can always be added later as needed.
+
+Regards,
+
+Tony
+
+
 
