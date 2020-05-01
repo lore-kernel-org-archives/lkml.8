@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956C1C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF16CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70AB7205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C652205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340854;
-	bh=Qy/7ktWiUWN9KLOmaszlUgnhiu3dsgRzyfBpp7k6h2Q=;
+	s=default; t=1588340856;
+	bh=QJO36q4IXEUTVwczK7dZ+w+1pFYj+cSeiVaPtCGjnPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pb8MtO4s1dwh5iYvviyhtUf7r2mzUyS5tLuxcIRHdK/hmSDAzFTtYm+meXOD6ILlx
-	 9d7e5YiJJohUxSeorX35a+w+DGmAbeY7pgLZDHcoKLcR72u2XHuWH1uHiA9omB6lc6
-	 M8n0Y+SfffzpTlJCNP95NjKWUq98ENRxTLOVJ7fA=
+	b=Ji4vQ7A8yxoE8seeUmRw4C3LcEnZT3WBu0pq0DMi0Q5OTv9L8EJ/Ye3Ewj+ZbDwmA
+	 Jyntf8ViD91e8vQdhh32uC7BB8bKk5YB6E4jj+/NCvm8no56d+p0eDXzoIGKHcdMMV
+	 a4NDLvChtTP/JfBu60bKAxEIGc+UqlLLNOjok2es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbgEANrd (ORCPT
+        id S1731626AbgEANnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:47:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731276AbgEANn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:29 -0400
+        id S1731619AbgEANnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75003205C9;
-        Fri,  1 May 2020 13:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4B520757;
+        Fri,  1 May 2020 13:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340607;
-        bh=Qy/7ktWiUWN9KLOmaszlUgnhiu3dsgRzyfBpp7k6h2Q=;
+        s=default; t=1588340600;
+        bh=QJO36q4IXEUTVwczK7dZ+w+1pFYj+cSeiVaPtCGjnPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8J+OMJp8I6k1egNjdZId2TYqQCJTi/yBjp8G+hYc28v/1WeL0HwfCNMbqcKXJ4VM
-         Dt9OshMmcoWOfWRf8B2k/JFbKtnjFJ71p8C3qdRcJDLNYpVI4qPdhuzcz5kzVbttnJ
-         EzJr9dAn3gkYzOIm1TXpW/yYWH4IhJM8Dd4avnkY=
+        b=R+qNicoRm4NVjAPU3N23o4XdEfAH2Mc7wlDVtiEhoSB67DV2be6Xg8AjmLzahp+qX
+         x/YFJ2bSYLHIqmslGMLuoQdaXquUdOjwcf5p83x3MNwVFpCVapAqeUykK/S/SW70O6
+         np3DoOhTygpMiVBrL58Qh0U5yRkD/Gn8r/oVi1wk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.6 051/106] remoteproc: mtk_scp: use dma_addr_t for DMA API
-Date:   Fri,  1 May 2020 15:23:24 +0200
-Message-Id: <20200501131549.784321275@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 5.6 048/106] ARM: dts: bcm283x: Disable dsi0 node
+Date:   Fri,  1 May 2020 15:23:21 +0200
+Message-Id: <20200501131549.463229361@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,79 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-commit c2781e4d9bc6d925dfc1ff833dfdaf12b69679de upstream.
+commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 upstream.
 
-dma_addr_t and phys_addr_t are distinct types and must not be
-mixed, as both the values and the size of the type may be
-different depending on what the remote device uses.
+Since its inception the module was meant to be disabled by default, but
+the original commit failed to add the relevant property.
 
-In this driver the compiler warns when the two types are different:
-
-drivers/remoteproc/mtk_scp.c: In function 'scp_map_memory_region':
-drivers/remoteproc/mtk_scp.c:454:9: error: passing argument 3 of 'dma_alloc_coherent' from incompatible pointer type [-Werror=incompatible-pointer-types]
-  454 |         &scp->phys_addr, GFP_KERNEL);
-      |         ^~~~~~~~~~~~~~~
-      |         |
-      |         phys_addr_t * {aka unsigned int *}
-In file included from drivers/remoteproc/mtk_scp.c:7:
-include/linux/dma-mapping.h:642:15: note: expected 'dma_addr_t *' {aka 'long long unsigned int *'} but argument is of type 'phys_addr_t *' {aka 'unsigned int *'}
-  642 |   dma_addr_t *dma_handle, gfp_t gfp)
-
-Change the phys_addr member to be typed and named according
-to how it is allocated.
-
-Fixes: 63c13d61eafe ("remoteproc/mediatek: add SCP support for mt8183")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200408155450.2186471-1-arnd@arndb.de
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/mtk_common.h |    2 +-
- drivers/remoteproc/mtk_scp.c    |    6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/bcm283x.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/remoteproc/mtk_common.h
-+++ b/drivers/remoteproc/mtk_common.h
-@@ -68,7 +68,7 @@ struct mtk_scp {
- 	wait_queue_head_t ack_wq;
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -372,6 +372,7 @@
+ 					     "dsi0_ddr2",
+ 					     "dsi0_ddr";
  
- 	void __iomem *cpu_addr;
--	phys_addr_t phys_addr;
-+	dma_addr_t dma_addr;
- 	size_t dram_size;
++			status = "disabled";
+ 		};
  
- 	struct rproc_subdev *rpmsg_subdev;
---- a/drivers/remoteproc/mtk_scp.c
-+++ b/drivers/remoteproc/mtk_scp.c
-@@ -330,7 +330,7 @@ static void *scp_da_to_va(struct rproc *
- 		if (offset >= 0 && (offset + len) < scp->sram_size)
- 			return (void __force *)scp->sram_base + offset;
- 	} else {
--		offset = da - scp->phys_addr;
-+		offset = da - scp->dma_addr;
- 		if (offset >= 0 && (offset + len) < scp->dram_size)
- 			return (void __force *)scp->cpu_addr + offset;
- 	}
-@@ -451,7 +451,7 @@ static int scp_map_memory_region(struct
- 	/* Reserved SCP code size */
- 	scp->dram_size = MAX_CODE_SIZE;
- 	scp->cpu_addr = dma_alloc_coherent(scp->dev, scp->dram_size,
--					   &scp->phys_addr, GFP_KERNEL);
-+					   &scp->dma_addr, GFP_KERNEL);
- 	if (!scp->cpu_addr)
- 		return -ENOMEM;
- 
-@@ -461,7 +461,7 @@ static int scp_map_memory_region(struct
- static void scp_unmap_memory_region(struct mtk_scp *scp)
- {
- 	dma_free_coherent(scp->dev, scp->dram_size, scp->cpu_addr,
--			  scp->phys_addr);
-+			  scp->dma_addr);
- 	of_reserved_mem_device_release(scp->dev);
- }
- 
+ 		aux: aux@7e215000 {
 
 
