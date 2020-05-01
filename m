@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70B7C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76B9C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78E6B20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A74B820757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339699;
-	bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
+	s=default; t=1588339703;
+	bh=wmutN43nL/kiGzXE/Vhy8WsrF7DsbBPsEgJA4G/c5Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yyRCLL37Fss7dSTg0p3hM13XBT5JDosXxU628ImpkJIkr/E2KtDaTIhoKUS2aqw8W
-	 LPJc58AchHR4dM4hSmEgejew0Kj9LapRu7gQZPWTXGbrD8z8cvZpyM4tyHUFProHd5
-	 LM/F3W6Wuy6i9K4NFFpezpXd9EHQyDhaLQyGfkv4=
+	b=zMB/teX7y88aCYAS191lv0la+TzrGvvfu5dzAWlcsF7N1OPBwrTiWbzkuIp8pCoUU
+	 YuXWT45XVXjp4DnL+F49PHxNggaGYAVkmDVBWARBWW2QdcVWzbHOG6vkWqvkhEN2OD
+	 9kwDFnjIcLYWOSlGlPzp3+D6ZPrNsUC04uj/UPMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgEAN2S (ORCPT
+        id S1729606AbgEAN2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbgEAN2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:28:15 -0400
+        id S1729083AbgEAN2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CE9820757;
-        Fri,  1 May 2020 13:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE7AD208DB;
+        Fri,  1 May 2020 13:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339694;
-        bh=PvYa5LNueK2pgmAse7CL4CXr3u4/vJXsWPDdgOf1QS8=;
+        s=default; t=1588339697;
+        bh=wmutN43nL/kiGzXE/Vhy8WsrF7DsbBPsEgJA4G/c5Qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCEOEhjYQfYkClpoH/aUxqMfXXN+YucKHhhMYdmPYt21Fq6MJqOBIeYizEQsRMrVG
-         A111RAyY1cQvkTuVc9O2SE38n05P48ha+V10kxy1sOQOJMkuBqWIM9+9z/qElysZrI
-         S4zKcE12EhDv+1g60pRXOAGo53EFJdClD9AEc1nA=
+        b=Z0cdcM1U2nC1XDk5gEAcZ38DhhSKFt1aMW23uZJ69AR3KqFbmXP8h44SyQyscCH9A
+         GT1R+TL0eK2TQn5XbkpIrj4UsN99MrnYmp08OuWVhS5rXVmL4P0D1FEs5Hh2B9bUXw
+         K0GXp0eId64CriKwSz+N8Mgfc2XnAmCn7XCdkrx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Wu Bo <wubo40@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/80] pwm: rcar: Fix late Runtime PM enablement
-Date:   Fri,  1 May 2020 15:21:05 +0200
-Message-Id: <20200501131517.428351831@linuxfoundation.org>
+Subject: [PATCH 4.9 12/80] scsi: iscsi: Report unbind session event when the target has been removed
+Date:   Fri,  1 May 2020 15:21:06 +0200
+Message-Id: <20200501131517.532000380@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -64,61 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 1451a3eed24b5fd6a604683f0b6995e0e7e16c79 ]
+[ Upstream commit 13e60d3ba287d96eeaf1deaadba51f71578119a3 ]
 
-Runtime PM should be enabled before calling pwmchip_add(), as PWM users
-can appear immediately after the PWM chip has been added.
-Likewise, Runtime PM should be disabled after the removal of the PWM
-chip.
+If the daemon is restarted or crashes while logging out of a session, the
+unbind session event sent by the kernel is not processed and is lost.  When
+the daemon starts again, the session can't be unbound because the daemon is
+waiting for the event message. However, the kernel has already logged out
+and the event will not be resent.
 
-Fixes: ed6c1476bf7f16d5 ("pwm: Add support for R-Car PWM Timer")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+When iscsid restart is complete, logout session reports error:
+
+Logging out of session [sid: 6, target: iqn.xxxxx, portal: xx.xx.xx.xx,3260]
+iscsiadm: Could not logout of [sid: 6, target: iscsiadm -m node iqn.xxxxx, portal: xx.xx.xx.xx,3260].
+iscsiadm: initiator reported error (9 - internal error)
+iscsiadm: Could not logout of all requested sessions
+
+Make sure the unbind event is emitted.
+
+[mkp: commit desc and applied by hand since patch was mangled]
+
+Link: https://lore.kernel.org/r/4eab1771-2cb3-8e79-b31c-923652340e99@huawei.com
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-rcar.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/scsi/scsi_transport_iscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
-index 0fcf94ffad321..c298bec25a90a 100644
---- a/drivers/pwm/pwm-rcar.c
-+++ b/drivers/pwm/pwm-rcar.c
-@@ -236,24 +236,28 @@ static int rcar_pwm_probe(struct platform_device *pdev)
- 	rcar_pwm->chip.base = -1;
- 	rcar_pwm->chip.npwm = 1;
- 
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = pwmchip_add(&rcar_pwm->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", ret);
-+		pm_runtime_disable(&pdev->dev);
- 		return ret;
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index fff9c4d0f7c80..42b97f1196232 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2016,7 +2016,7 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 	if (session->target_id == ISCSI_MAX_TARGET) {
+ 		spin_unlock_irqrestore(&session->lock, flags);
+ 		mutex_unlock(&ihost->mutex);
+-		return;
++		goto unbind_session_exit;
  	}
  
--	pm_runtime_enable(&pdev->dev);
--
- 	return 0;
- }
+ 	target_id = session->target_id;
+@@ -2028,6 +2028,8 @@ static void __iscsi_unbind_session(struct work_struct *work)
+ 		ida_simple_remove(&iscsi_sess_ida, target_id);
  
- static int rcar_pwm_remove(struct platform_device *pdev)
- {
- 	struct rcar_pwm_chip *rcar_pwm = platform_get_drvdata(pdev);
-+	int ret;
+ 	scsi_remove_target(&session->dev);
 +
-+	ret = pwmchip_remove(&rcar_pwm->chip);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--	return pwmchip_remove(&rcar_pwm->chip);
-+	return ret;
++unbind_session_exit:
+ 	iscsi_session_event(session, ISCSI_KEVENT_UNBIND_SESSION);
+ 	ISCSI_DBG_TRANS_SESSION(session, "Completed target removal\n");
  }
- 
- static const struct of_device_id rcar_pwm_of_table[] = {
 -- 
 2.20.1
 
