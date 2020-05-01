@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86EDC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ADCC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3E6C216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7BD2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340193;
-	bh=2VDesztP2ROqSYYtOtZc+6miggIYCWfiwpKp5Wx5348=;
+	s=default; t=1588340196;
+	bh=RhizNEJwD+CwQC0rV67dcaCqGdRQnDrXrADI2/skOwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGhUnN6oZxOAbzjhMZKmYsPzeBIL4HNIBfLPS+Aj/AQpVLWHlKo73GWnv8+PNUHR1
-	 aZHcCjWj3jFEtegR1eFgTdZmUNIlxz79uDu90+TYb4zEnd54pQs6Z/AwzOtGZ/ugWU
-	 GyTH7HSW6WZv9s4/EChhd8x5obHOqreJvX7BDyFk=
+	b=SOtlhpZ60m/d3ITZC38UenXvA8kEx63okuzRrkD1RU1B0+dxbyRuKD40F6mjMJEnm
+	 WBKtXRAGit78d9v5fapmk/VVBrqBNviAitRCzIbJcdhu2O2BU+BvoUSAXd8M4bQc2u
+	 pwRVdLYhpj5j1A+8RwStEDq0yZo0K3fDirWyK7tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730859AbgEANgd (ORCPT
+        id S1730869AbgEANgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730834AbgEANgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:13 -0400
+        id S1730851AbgEANgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA9724953;
-        Fri,  1 May 2020 13:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E26216FD;
+        Fri,  1 May 2020 13:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340173;
-        bh=2VDesztP2ROqSYYtOtZc+6miggIYCWfiwpKp5Wx5348=;
+        s=default; t=1588340183;
+        bh=RhizNEJwD+CwQC0rV67dcaCqGdRQnDrXrADI2/skOwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OquBBcfw/zoh52OU6feCvt9ycaHwl6pFwMyxMN7Q3Xp3npeJEis1x3biATe3qjYax
-         JY4QdBSYN0CW3wi0Ub0AC4gl+TW2auKAthDNVQQdTjdRE0ysdaW30CiFkU8/3CTpdA
-         cze2dQsmUYg/fIKV/6tXOzu2N8NPjEzv9Rl12uyw=
+        b=iBUQhKNNzXJqI31Ft4m2Pz1t5XM4cb+owoxpJqF1GV5s55VX0a5khNXcwH3F481oS
+         3+SFTy8evo3ef9DXOWXqIMExrcdnOkQc3yQEyYLQMhFpqKJLcqVNHABKDDlEt3d9bF
+         UjhZQmpFHwoRYngne64V4n17YerMSDWv35Tdf0u4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 10/46] ASoC: wm8960: Fix wrong clock after suspend & resume
-Date:   Fri,  1 May 2020 15:22:35 +0200
-Message-Id: <20200501131502.636315379@linuxfoundation.org>
+        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 22/46] net/mlx5: Fix failing fw tracer allocation on s390
+Date:   Fri,  1 May 2020 15:22:47 +0200
+Message-Id: <20200501131506.530970636@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -60,40 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-commit 1e060a453c8604311fb45ae2f84f67ed673329b4 upstream.
+commit a019b36123aec9700b21ae0724710f62928a8bc1 upstream.
 
-After suspend & resume, wm8960_hw_params may be called when
-bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
-is not called. But if sample rate is changed at that time, then
-the output clock rate will be not correct.
+On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
+allocation as done for the firmware tracer will always fail.
 
-So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
-is not necessary and it causes above issue.
+Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
+that copies the debug data into the trace array and there is no need for
+the allocation to be contiguous in physical memory. We can therefor use
+kvzalloc() instead of kzalloc() and get rid of the large contiguous
+allcoation.
 
-Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f53aaa31cce7 ("net/mlx5: FW tracer, implement tracer logic")
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/wm8960.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/soc/codecs/wm8960.c
-+++ b/sound/soc/codecs/wm8960.c
-@@ -863,8 +863,7 @@ static int wm8960_hw_params(struct snd_p
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+@@ -796,7 +796,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_cr
+ 		return NULL;
+ 	}
  
- 	wm8960->is_stream_in_use[tx] = true;
+-	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
++	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
+ 	if (!tracer)
+ 		return ERR_PTR(-ENOMEM);
  
--	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
--	    !wm8960->is_stream_in_use[!tx])
-+	if (!wm8960->is_stream_in_use[!tx])
- 		return wm8960_configure_clocking(component);
+@@ -842,7 +842,7 @@ destroy_workqueue:
+ 	tracer->dev = NULL;
+ 	destroy_workqueue(tracer->work_queue);
+ free_tracer:
+-	kfree(tracer);
++	kvfree(tracer);
+ 	return ERR_PTR(err);
+ }
  
- 	return 0;
+@@ -919,7 +919,7 @@ void mlx5_fw_tracer_destroy(struct mlx5_
+ 	mlx5_fw_tracer_destroy_log_buf(tracer);
+ 	flush_workqueue(tracer->work_queue);
+ 	destroy_workqueue(tracer->work_queue);
+-	kfree(tracer);
++	kvfree(tracer);
+ }
+ 
+ void mlx5_fw_tracer_event(struct mlx5_core_dev *dev, struct mlx5_eqe *eqe)
 
 
