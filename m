@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CB5C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 268BF2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB0A2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341082;
-	bh=kWRqHbfq8qMhGX8i/RgDx7P4m3rhy5cTC7RFr0ex7YI=;
+	s=default; t=1588341087;
+	bh=fmdMka6r2wpgXnVMGeFqUxtEH2GK2lsEyeancMPq7LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pldrqv8AIi8P+gfvw66IFZ3772wKh7Sc+6pJhbDG2xdiv/v1u0ZZgpYPV8x1taaZA
-	 kqtmgzISKyS2EYAYGDb65S3xlCRy5+nfCgrOr+jFApoKmH5rkdPQx5b+7UBm3vuz7D
-	 /QTH9M6SIfZQG6U727ShVv/atlqh57W1cIz5iobU=
+	b=gU3JVAzeoZB31aP1OhpE0jfqRSus0x9P7XeFWRKFHPrmV6YovQEr2cs4N6UjL8qBc
+	 clKOhhSboLb57iLmtih6zL7xdsFW6yaV6DYKJFIGdz3SgTUs9YVxfdqcjDiYPp22Ky
+	 xLhw5r2Q3Fi+oaRyeRuWzJnbxjCsuNpeWm8FG3cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731445AbgEANvU (ORCPT
+        id S1729346AbgEANig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38460 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:38:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731093AbgEANiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:52 -0400
+        id S1729711AbgEANi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A12B205C9;
-        Fri,  1 May 2020 13:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5098F24954;
+        Fri,  1 May 2020 13:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340331;
-        bh=kWRqHbfq8qMhGX8i/RgDx7P4m3rhy5cTC7RFr0ex7YI=;
+        s=default; t=1588340304;
+        bh=fmdMka6r2wpgXnVMGeFqUxtEH2GK2lsEyeancMPq7LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxO7lXupu+dRjSd9vDt8g0FY024fQLDxsyVs0ujKYP+lqD3v0EHURQyGjFtRKXfDw
-         Kvym/VswB69N8y+IG9h0pG5y4NEGr1UlO+JRxIONSWvzYhpx5d/gpudIGW5+zOmb9/
-         dz02ac1N0utOq/2VeLy6Byo7pEuah5KWk7e+cp58=
+        b=1i2inkwN6quxxsD2CGcs5Q/gZLZy8ebpFVHJrxGFE6HKXrEmZ7Tq2KZP1a5rx2a4V
+         jjdh5+GKfKL2/LNnBPdFOBGEAVbIMQtb3Ty9lMF49eiDiib96fUmrmA0NZL1Mw19yB
+         p3SignlLQqdZB2OYp0s1mIkISBCStkDgsGdrq/Kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raymond Pang <RaymondPang-oc@zhaoxin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.4 35/83] PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports
-Date:   Fri,  1 May 2020 15:23:14 +0200
-Message-Id: <20200501131533.238306482@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 24/83] net/cxgb4: Check the return from t4_query_params properly
+Date:   Fri,  1 May 2020 15:23:03 +0200
+Message-Id: <20200501131530.040739195@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,64 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit 299bd044a6f332b4a6c8f708575c27cad70a35c1 upstream.
+commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
 
-Many Zhaoxin Root Ports and Switch Downstream Ports do provide ACS-like
-capability but have no ACS Capability Structure.  Peer-to-Peer transactions
-could be blocked between these ports, so add quirk so devices behind them
-could be assigned to different IOMMU group.
+Positive return values are also failures that don't set val,
+although this probably can't happen. Fixes gcc 10 warning:
 
-Link: https://lore.kernel.org/r/20200327091148.5190-4-RaymondPang-oc@zhaoxin.com
-Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 3747 |  *phy_fw_ver = val;
+
+Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4371,6 +4371,29 @@ static int pci_acs_ctrl_enabled(u16 acs_
- }
- 
- /*
-+ * Many Zhaoxin Root Ports and Switch Downstream Ports have no ACS capability.
-+ * But the implementation could block peer-to-peer transactions between them
-+ * and provide ACS-like functionality.
-+ */
-+static int  pci_quirk_zhaoxin_pcie_ports_acs(struct pci_dev *dev, u16 acs_flags)
-+{
-+	if (!pci_is_pcie(dev) ||
-+	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
-+	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
-+		return -ENOTTY;
-+
-+	switch (dev->device) {
-+	case 0x0710 ... 0x071e:
-+	case 0x0721:
-+	case 0x0723 ... 0x0732:
-+		return pci_acs_ctrl_enabled(acs_flags,
-+			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-+	}
-+
-+	return false;
-+}
-+
-+/*
-  * AMD has indicated that the devices below do not support peer-to-peer
-  * in any system where they are found in the southbridge with an AMD
-  * IOMMU in the system.  Multifunction devices that do not support
-@@ -4772,6 +4795,8 @@ static const struct pci_dev_acs_enabled
- 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3038, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_ZHAOXIN, 0x3104, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_ZHAOXIN, 0x9083, pci_quirk_mf_endpoint_acs },
-+	/* Zhaoxin Root/Downstream Ports */
-+	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
- 	{ 0 }
- };
- 
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -3748,7 +3748,7 @@ int t4_phy_fw_ver(struct adapter *adap,
+ 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
+ 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
+ 			      &param, &val);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 	*phy_fw_ver = val;
+ 	return 0;
 
 
