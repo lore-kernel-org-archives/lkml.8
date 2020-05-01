@@ -2,156 +2,279 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05BDC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E747FC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E21620708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:41:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XPu4qCyE"
+	by mail.kernel.org (Postfix) with ESMTP id C89EF20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgEAOlC (ORCPT
+        id S1729535AbgEAOlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:41:02 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36807 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728918AbgEAOlB (ORCPT
+        Fri, 1 May 2020 10:41:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33048 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729078AbgEAOlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:41:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588344059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FMCVUX3SZIQcfGxvWeP6Mw5R9IcHL0EXZloLxMg4CEI=;
-        b=XPu4qCyELR0pt0+mjhA+gfy8tvJCVCfZVHh74qB7Yc9Kt1mVo8Oi8PYQwdW7O/XjxpEo+f
-        n6pJpCwwFDPQkfgV2dk974zJakLRPabdX3q2mjYHsZ/zVveU1z4xRrgQ0sUhTmm83gVZWZ
-        BcusGtGoovEQGbr+n0Kj/omU5wIwF30=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-t_d-xH-SNBm7h800OJtL5w-1; Fri, 01 May 2020 10:40:56 -0400
-X-MC-Unique: t_d-xH-SNBm7h800OJtL5w-1
-Received: by mail-wr1-f71.google.com with SMTP id r11so5754296wrx.21
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:40:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FMCVUX3SZIQcfGxvWeP6Mw5R9IcHL0EXZloLxMg4CEI=;
-        b=ByE0+uJVILjKUck5eZjRnJVLJ87NMRDQpGgHqSr5kHXs8b0bcP+WeugIL2t6d7CYYJ
-         hWPg4OqN3CU2CCb06V0ULGIWSJPr7Fhqe9JNtZd47rwYJ7wLUvouCnv9Sw34vu5gjlSf
-         OtAcPD8awhuvRawyIDsvBiWG6Wd8AqpDaIeC7O3M6HkDU/RlOYGBqS2m1AdEzEykth6z
-         nzm78SxwUG2lqy5zoKdVliPkeGOvyxSeH4bCpco71ILiSznU4b/s35Dg6BqBqDoHffg1
-         a3hmVuJPNw5KhRQyKcogJpZRTdz7KoL92R84wITmvZVh29jezQFtCTtKzentV0WDoS54
-         4wxw==
-X-Gm-Message-State: AGi0PuZ65D/XBMhIT12dgIQOe0MNS+TnSreRCrghAV0BWJI0VV7vbefJ
-        xO5flbjSQH0ysQLc7JIjEjjqSEsKSr7QkYeA7NUBKltDMX6auej5Xj/XyswZ9rtSDeF9TwpMECd
-        EEQ3UKEdGKdvOeXtOJFHG+g5L
-X-Received: by 2002:adf:df82:: with SMTP id z2mr4930986wrl.58.1588344054920;
-        Fri, 01 May 2020 07:40:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIlKvu49W7Dejd9vm/UPweyZkYbpJJGe7ZlU91a4UNN1ZrYUoJL1vdxXdT4Bd7iUQNCZUPcMg==
-X-Received: by 2002:adf:df82:: with SMTP id z2mr4930967wrl.58.1588344054718;
-        Fri, 01 May 2020 07:40:54 -0700 (PDT)
-Received: from steredhat (host108-207-dynamic.49-79-r.retail.telecomitalia.it. [79.49.207.108])
-        by smtp.gmail.com with ESMTPSA id j13sm4611452wrq.24.2020.05.01.07.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 07:40:53 -0700 (PDT)
-Date:   Fri, 1 May 2020 16:40:51 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jia He <justin.he@arm.com>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kaly Xin <Kaly.Xin@arm.com>
-Subject: Re: [PATCH v2] vhost: vsock: kick send_pkt worker once device is
- started
-Message-ID: <20200501144051.aotbofpyuy5tqcfp@steredhat>
-References: <20200501043840.186557-1-justin.he@arm.com>
+        Fri, 1 May 2020 10:41:03 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id E17FF2A0BDB
+Subject: Re: [PATCH v3 4/7] drm/mediatek: mtk_dsi: Convert to bridge driver
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+References: <20200417150614.2631786-1-enric.balletbo@collabora.com>
+ <20200417150614.2631786-5-enric.balletbo@collabora.com>
+ <CAAOTY_-nzdS-jg2pgpM1ksrsQVewB2AEB8TihHcCB-MJd+qFfw@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <72511ddc-c94d-3c20-14cb-e971b000fc48@collabora.com>
+Date:   Fri, 1 May 2020 16:40:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501043840.186557-1-justin.he@arm.com>
+In-Reply-To: <CAAOTY_-nzdS-jg2pgpM1ksrsQVewB2AEB8TihHcCB-MJd+qFfw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:38:40PM +0800, Jia He wrote:
-> Ning Bo reported an abnormal 2-second gap when booting Kata container [1].
-> The unconditional timeout was caused by VSOCK_DEFAULT_CONNECT_TIMEOUT of
-> connecting from the client side. The vhost vsock client tries to connect
-> an initializing virtio vsock server.
-> 
-> The abnormal flow looks like:
-> host-userspace           vhost vsock                       guest vsock
-> ==============           ===========                       ============
-> connect()     -------->  vhost_transport_send_pkt_work()   initializing
->    |                     vq->private_data==NULL
->    |                     will not be queued
->    V
-> schedule_timeout(2s)
->                          vhost_vsock_start()  <---------   device ready
->                          set vq->private_data
-> 
-> wait for 2s and failed
-> connect() again          vq->private_data!=NULL         recv connecting pkt
-> 
-> Details:
-> 1. Host userspace sends a connect pkt, at that time, guest vsock is under
->    initializing, hence the vhost_vsock_start has not been called. So
->    vq->private_data==NULL, and the pkt is not been queued to send to guest
-> 2. Then it sleeps for 2s
-> 3. After guest vsock finishes initializing, vq->private_data is set
-> 4. When host userspace wakes up after 2s, send connecting pkt again,
->    everything is fine.
-> 
-> As suggested by Stefano Garzarella, this fixes it by additional kicking the
-> send_pkt worker in vhost_vsock_start once the virtio device is started. This
-> makes the pending pkt sent again.
-> 
-> After this patch, kata-runtime (with vsock enabled) boot time is reduced
-> from 3s to 1s on a ThunderX2 arm64 server.
-> 
-> [1] https://github.com/kata-containers/runtime/issues/1917
-> 
-> Reported-by: Ning Bo <n.b@live.com>
-> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-> Signed-off-by: Jia He <justin.he@arm.com>
-> ---
-> v2: new solution suggested by Stefano Garzarella
-> 
->  drivers/vhost/vsock.c | 5 +++++
->  1 file changed, 5 insertions(+)
+Hi Chun-Kuang,
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Thank you for the review.
 
-Thanks,
-Stefano
-
+On 1/5/20 15:21, Chun-Kuang Hu wrote:
+> Hi, Enric:
 > 
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index e36aaf9ba7bd..0716a9cdffee 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -543,6 +543,11 @@ static int vhost_vsock_start(struct vhost_vsock *vsock)
->  		mutex_unlock(&vq->mutex);
->  	}
->  
-> +	/* Some packets may have been queued before the device was started,
-> +	 * let's kick the send worker to send them.
-> +	 */
-> +	vhost_work_queue(&vsock->dev, &vsock->send_pkt_work);
-> +
->  	mutex_unlock(&vsock->dev.mutex);
->  	return 0;
->  
-> -- 
-> 2.17.1
+> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年4月17日 週五 下午11:06寫道：
+>>
+>> Convert mtk_dsi to a bridge driver with built-in encoder support for
+>> compatibility with existing component drivers.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>> Changes in v3:
+>> - Add the bridge.type. (Laurent Pinchart)
+>>
+>> Changes in v2: None
+>>
+>>  drivers/gpu/drm/mediatek/mtk_dsi.c | 93 ++++++++++++++++++++++--------
+>>  1 file changed, 69 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+>> index 37b8d7ffd835..869ae0a2e9f8 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+>> @@ -180,6 +180,7 @@ struct mtk_dsi {
+>>         struct device *dev;
+>>         struct mipi_dsi_host host;
+>>         struct drm_encoder encoder;
+>> +       struct drm_bridge bridge;
+>>         struct drm_connector conn;
+>>         struct drm_panel *panel;
+>>         struct drm_bridge *next_bridge;
+>> @@ -205,9 +206,9 @@ struct mtk_dsi {
+>>         const struct mtk_dsi_driver_data *driver_data;
+>>  };
+>>
+>> -static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+>> +static inline struct mtk_dsi *bridge_to_dsi(struct drm_bridge *b)
+>>  {
+>> -       return container_of(e, struct mtk_dsi, encoder);
+>> +       return container_of(b, struct mtk_dsi, bridge);
+>>  }
+>>
+>>  static inline struct mtk_dsi *connector_to_dsi(struct drm_connector *c)
+>> @@ -796,32 +797,43 @@ static const struct drm_encoder_funcs mtk_dsi_encoder_funcs = {
+>>         .destroy = mtk_dsi_encoder_destroy,
+>>  };
+>>
+>> -static bool mtk_dsi_encoder_mode_fixup(struct drm_encoder *encoder,
+>> -                                      const struct drm_display_mode *mode,
+>> -                                      struct drm_display_mode *adjusted_mode)
+>> +static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi);
+>> +static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
+>> +
+>> +static int mtk_dsi_bridge_attach(struct drm_bridge *bridge,
+>> +                                enum drm_bridge_attach_flags flags)
+>> +{
+>> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+>> +
+>> +       return mtk_dsi_create_conn_enc(bridge->dev, dsi);
+>> +}
+>> +
+>> +static void mtk_dsi_bridge_detach(struct drm_bridge *bridge)
+>>  {
+>> -       return true;
+>> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+>> +
+>> +       mtk_dsi_destroy_conn_enc(dsi);
+>>  }
+>>
+>> -static void mtk_dsi_encoder_mode_set(struct drm_encoder *encoder,
+>> -                                    struct drm_display_mode *mode,
+>> -                                    struct drm_display_mode *adjusted)
+>> +static void mtk_dsi_bridge_mode_set(struct drm_bridge *bridge,
+>> +                                   const struct drm_display_mode *mode,
+>> +                                   const struct drm_display_mode *adjusted)
+>>  {
+>> -       struct mtk_dsi *dsi = encoder_to_dsi(encoder);
+>> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+>>
+>>         drm_display_mode_to_videomode(adjusted, &dsi->vm);
+>>  }
+>>
+>> -static void mtk_dsi_encoder_disable(struct drm_encoder *encoder)
+>> +static void mtk_dsi_bridge_disable(struct drm_bridge *bridge)
+>>  {
+>> -       struct mtk_dsi *dsi = encoder_to_dsi(encoder);
+>> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+>>
+>>         mtk_output_dsi_disable(dsi);
+>>  }
+>>
+>> -static void mtk_dsi_encoder_enable(struct drm_encoder *encoder)
+>> +static void mtk_dsi_bridge_enable(struct drm_bridge *bridge)
+>>  {
+>> -       struct mtk_dsi *dsi = encoder_to_dsi(encoder);
+>> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+>>
+>>         mtk_output_dsi_enable(dsi);
+>>  }
+>> @@ -833,11 +845,12 @@ static int mtk_dsi_connector_get_modes(struct drm_connector *connector)
+>>         return drm_panel_get_modes(dsi->panel, connector);
+>>  }
+>>
+>> -static const struct drm_encoder_helper_funcs mtk_dsi_encoder_helper_funcs = {
+>> -       .mode_fixup = mtk_dsi_encoder_mode_fixup,
+>> -       .mode_set = mtk_dsi_encoder_mode_set,
+>> -       .disable = mtk_dsi_encoder_disable,
+>> -       .enable = mtk_dsi_encoder_enable,
+>> +static const struct drm_bridge_funcs mtk_dsi_bridge_funcs = {
+>> +       .attach = mtk_dsi_bridge_attach,
+>> +       .detach = mtk_dsi_bridge_detach,
+>> +       .disable = mtk_dsi_bridge_disable,
+>> +       .enable = mtk_dsi_bridge_enable,
+>> +       .mode_set = mtk_dsi_bridge_mode_set,
+>>  };
+>>
+>>  static const struct drm_connector_funcs mtk_dsi_connector_funcs = {
+>> @@ -1123,6 +1136,34 @@ static const struct mipi_dsi_host_ops mtk_dsi_ops = {
+>>         .transfer = mtk_dsi_host_transfer,
+>>  };
+>>
+>> +static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_funcs,
+>> +                              DRM_MODE_ENCODER_DSI, NULL);
+> 
+> I'm a bit confused here. drm_encoder_init() exist here and in
+> mtk_dsi_create_conn_enc(). Do you plan to init encodr twice?
 > 
 
+Right, it should be removed from mtk_dsi_create_conn_enc(). I will do in next
+version.
+
+>> +       if (ret) {
+>> +               DRM_ERROR("Failed to encoder init to drm\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       /*
+>> +        * Currently display data paths are statically assigned to a crtc each.
+>> +        * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
+>> +        */
+>> +       dsi->encoder.possible_crtcs = 1;
+>> +
+>> +       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
+>> +       if (ret)
+>> +               goto err_cleanup_encoder;
+>> +
+>> +       return 0;
+>> +
+>> +err_cleanup_encoder:
+>> +       drm_encoder_cleanup(&dsi->encoder);
+>> +       return ret;
+>> +}
+>> +
+>>  static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+>>  {
+>>         int ret;
+>> @@ -1136,11 +1177,9 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
+>>                 return ret;
+>>         }
+>>
+>> -       ret = mtk_dsi_create_conn_enc(drm, dsi);
+>> -       if (ret) {
+>> -               DRM_ERROR("Encoder create failed with %d\n", ret);
+>> +       ret = mtk_dsi_encoder_init(drm, dsi);
+>> +       if (ret)
+>>                 goto err_unregister;
+>> -       }
+>>
+>>         return 0;
+>>
+>> @@ -1155,7 +1194,6 @@ static void mtk_dsi_unbind(struct device *dev, struct device *master,
+>>         struct drm_device *drm = data;
+>>         struct mtk_dsi *dsi = dev_get_drvdata(dev);
+>>
+>> -       mtk_dsi_destroy_conn_enc(dsi);
+> 
+> There is mtk_dsi_encoder_init() in bind(), why no mtk_dsi_encoder_uninit() here?
+> 
+
+Right, I need uninit the encoder but a simple call to drm_encoder_cleanup should
+be enough. I don't think is needed create a new function for that. I'll do in
+next version.
+
+> Regards,
+> Chun-Kuang.
+> 
+>>         mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
+>>  }
+>>
+>> @@ -1265,6 +1303,12 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+>>
+>>         platform_set_drvdata(pdev, dsi);
+>>
+>> +       dsi->bridge.funcs = &mtk_dsi_bridge_funcs;
+>> +       dsi->bridge.of_node = dev->of_node;
+>> +       dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
+>> +
+>> +       drm_bridge_add(&dsi->bridge);
+>> +
+>>         ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
+>>         if (ret) {
+>>                 dev_err(&pdev->dev, "failed to add component: %d\n", ret);
+>> @@ -1283,6 +1327,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+>>         struct mtk_dsi *dsi = platform_get_drvdata(pdev);
+>>
+>>         mtk_output_dsi_disable(dsi);
+>> +       drm_bridge_remove(&dsi->bridge);
+>>         component_del(&pdev->dev, &mtk_dsi_component_ops);
+>>         mipi_dsi_host_unregister(&dsi->host);
+>>
+>> --
+>> 2.25.1
+>>
