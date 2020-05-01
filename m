@@ -2,51 +2,54 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B140CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB8BC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB5A2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC672051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341171;
-	bh=NqVhar92cV8vxqKYSbx41FF4jkYwAr8PFeRL29yDkkw=;
+	s=default; t=1588341174;
+	bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fnyjvHOgY7bCUNs/oBaCIbg+m2IcHFDiJYeJ4IM+jlWO7xm6ZhTHIzdTLz8ECDRQb
-	 lM36MpEJPFKz0qFNPUkfqSJDGIq69551iWeRXJmGw8bcA4ewjLw8SxIge6gYXbdSZh
-	 tGeiI5bUawBD66dtzGJmaoz6reR26mMk3MW0xVsM=
+	b=PnYoFt9b2tJKcCfqAeaom4gZ6UqrJ+eBHIimvAXN0WGvdTm2n3Nf4RQmi/Kglbqdi
+	 MsNWEbnHiWDF1towXcB/71BWE5pxC72H2bsiDoW5V/54y8OpbjXCygpfymn7cmR5Zg
+	 I0i7pMKwia6LJaFz5xQ4+v/ui1hMLK0/HInp5gq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbgEANwv (ORCPT
+        id S1731869AbgEANwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36382 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730691AbgEANhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:24 -0400
+        id S1730248AbgEANh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25E924953;
-        Fri,  1 May 2020 13:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A5B24955;
+        Fri,  1 May 2020 13:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340242;
-        bh=NqVhar92cV8vxqKYSbx41FF4jkYwAr8PFeRL29yDkkw=;
+        s=default; t=1588340244;
+        bh=khfuUtphoGowJXyD29xSnB3vDa40rTfdz83YDfqA7vA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8Py8zWNwZKYp6toU0ujZlWDn0Lbu/zpHQeOLzr1n8d0b8n6fPgGq5cyF5e52zTYy
-         nMDAurMiGWcqUbDwxL7xEq2/RxRceAA9XWb842B83Cc+LMjoV+RsnwbnYQA3CHwkDg
-         d5DziWy9rPDLcc6D0/BkaAGN0AUjHdMxAuVDhnHs=
+        b=t/JSEOrvEpD+FbF2nZtFz2RLUSQq1qfk82b6SbnrCrXBEc5n+aWIFZWiBHoNfFVgb
+         WMKX2Cr5dJr7jvfOKvaF233h4sv4rxFxKIC24aiwGyhmXW7lY6IOuV7hcZnfQoNMZX
+         Rje1tNZ1KLq2YKbyLMFWTsvMhOvJiqJ3i6I48vIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/46] ALSA: hda: call runtime_allow() for all hda controllers
-Date:   Fri,  1 May 2020 15:23:03 +0200
-Message-Id: <20200501131512.083772503@linuxfoundation.org>
+        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 39/46] arm64: Delete the space separator in __emit_inst
+Date:   Fri,  1 May 2020 15:23:04 +0200
+Message-Id: <20200501131512.436917911@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -59,45 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Fangrui Song <maskray@google.com>
 
-[ Upstream commit 9a6418487b566503c772cb6e7d3d44e652b019b0 ]
+[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
 
-Before the pci_driver->probe() is called, the pci subsystem calls
-runtime_forbid() and runtime_get_sync() on this pci dev, so only call
-runtime_put_autosuspend() is not enough to enable the runtime_pm on
-this device.
+In assembly, many instances of __emit_inst(x) expand to a directive. In
+a few places __emit_inst(x) is used as an assembler macro argument. For
+example, in arch/arm64/kvm/hyp/entry.S
 
-For controllers with vgaswitcheroo feature, the pci/quirks.c will call
-runtime_allow() for this dev, then the controllers could enter
-rt_idle/suspend/resume, but for non-vgaswitcheroo controllers like
-Intel hda controllers, the runtime_pm is not enabled because the
-runtime_allow() is not called.
+  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
 
-Since it is no harm calling runtime_allow() twice, here let hda
-driver call runtime_allow() for all controllers. Then the runtime_pm
-is enabled on all controllers after the put_autosuspend() is called.
+expands to the following by the C preprocessor:
 
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200414142725.6020-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+Both comma and space are separators, with an exception that content
+inside a pair of parentheses/quotes is not split, so the clang
+integrated assembler splits the arguments to:
+
+   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
+(along with many other non-x86 backends) sees:
+
+  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # .inst(...) is parsed as one argument
+
+while its x86 backend sees:
+
+  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
+
+The non-x86 backend's behavior is considered unintentional
+(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
+So drop the space separator inside `.inst (...)` to make the clang
+integrated assembler work.
+
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/939
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/include/asm/sysreg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index ff448abb5449f..0d7981eda2c4f 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2477,6 +2477,7 @@ static int azx_probe_continue(struct azx *chip)
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 3091ae5975a3a..ed99d941c4623 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -60,7 +60,9 @@
+ #ifndef CONFIG_BROKEN_GAS_INST
  
- 	if (azx_has_pm_runtime(chip)) {
- 		pm_runtime_use_autosuspend(&pci->dev);
-+		pm_runtime_allow(&pci->dev);
- 		pm_runtime_put_autosuspend(&pci->dev);
- 	}
- 
+ #ifdef __ASSEMBLY__
+-#define __emit_inst(x)			.inst (x)
++// The space separator is omitted so that __emit_inst(x) can be parsed as
++// either an assembler directive or an assembler macro argument.
++#define __emit_inst(x)			.inst(x)
+ #else
+ #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+ #endif
 -- 
 2.20.1
 
