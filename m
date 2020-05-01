@@ -2,109 +2,83 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE27FC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DED1C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68BB20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F246C20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:49:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GaLqkKvW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgEAPsr (ORCPT
+        id S1729784AbgEAPt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:48:47 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:34860 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEAPsr (ORCPT
+        Fri, 1 May 2020 11:49:29 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38327 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728946AbgEAPt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:48:47 -0400
-Received: from [192.168.42.210] ([93.22.134.90])
-        by mwinf5d84 with ME
-        id ZToi220061xBBP903ToioQ; Fri, 01 May 2020 17:48:45 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 01 May 2020 17:48:45 +0200
-X-ME-IP: 93.22.134.90
-Subject: Re: [PATCH 4/4 v2] firmware: stratix10-svc: Slightly simplify code
-To:     Richard Gong <richard.gong@linux.intel.com>,
-        gregkh@linuxfoundation.org, atull@kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
- <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
- <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <c7ac6b7c-a1d5-e001-964b-0881707c41b1@wanadoo.fr>
-Date:   Fri, 1 May 2020 17:48:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 11:49:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588348167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s4RTZ0CbhEIBMzYEl8v7jF1WWsPB2iFQM6cIOM/+yR0=;
+        b=GaLqkKvWTYTrc6tqt5/OOucH3GKho7qLnk6H+bFY+oln4tcoZrL0YtKwDgiLWlEJWZI28a
+        hPDgXRmN2ODo+KgnjoiP3hjkwVv4xyVfUULiQ0TbSBSgEtRitpqiYoLVt092q+A02ehgSL
+        m2L/iiO+kXJzxhLSIO794sUovAhdo18=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-qLj1j1XkOU-fwqAOIoMv5w-1; Fri, 01 May 2020 11:49:23 -0400
+X-MC-Unique: qLj1j1XkOU-fwqAOIoMv5w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 744481902EBB;
+        Fri,  1 May 2020 15:49:22 +0000 (UTC)
+Received: from treble (ovpn-114-104.rdu2.redhat.com [10.10.114.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B9A3761524;
+        Fri,  1 May 2020 15:49:19 +0000 (UTC)
+Date:   Fri, 1 May 2020 10:49:17 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+Message-ID: <20200501154917.azhvf2wtfo6stlkl@treble>
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
+ <20200501010733.ptvgzl3nbxybo4rd@treble>
+ <20200501123319.GC3762@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200501123319.GC3762@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 01/05/2020 à 17:40, Richard Gong a écrit :
-> Hi,
->
-> On 4/29/20 1:52 AM, Christophe JAILLET wrote:
->> Replace 'devm_kmalloc_array(... | __GFP_ZERO)' with the equivalent and
->> shorter 'devm_kcalloc(...)'.
->>
-> It doesn't make much sense.
-> Actually devm_kcalloc returns devm_kmalloc_array(.., flag | __GFP_ZERO).
->
-The only goal is to have a sightly less verbose code.
-This saves one line of code and there is no need to wonder why we 
-explicitly pass __GFP_ZERO to kmalloc_array.
+On Fri, May 01, 2020 at 02:33:19PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 30, 2020 at 08:07:33PM -0500, Josh Poimboeuf wrote:
+> > On Thu, Apr 30, 2020 at 04:05:07PM +0200, Arnd Bergmann wrote:
+> > > lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x133: call to do_strncpy_from_user() with UACCESS enabled
+> > > lib/strnlen_user.o: warning: objtool: strnlen_user()+0x122: call to do_strnlen_user() with UACCESS enabled
+> > 
+> > Does this fix it?
+> > 
+> 
+> GCC is a moron, a static function with inline and a single callsite,
+> let's out-of-line it, shees!, try this instead:
 
-Mostly a matter of taste.
+Yeah, that's easier :-)
 
-'devm_kcalloc' is inlined, so the binary should be exactly the same.
-
-CJ
-
->> 'ctrl->genpool' can not be NULL, so axe a useless test in the remove
->> function.
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->>   drivers/firmware/stratix10-svc.c | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/firmware/stratix10-svc.c 
->> b/drivers/firmware/stratix10-svc.c
->> index 739004398877..c228337cb0a1 100644
->> --- a/drivers/firmware/stratix10-svc.c
->> +++ b/drivers/firmware/stratix10-svc.c
->> @@ -1002,8 +1002,7 @@ static int stratix10_svc_drv_probe(struct 
->> platform_device *pdev)
->>       if (!controller)
->>           return -ENOMEM;
->>   -    chans = devm_kmalloc_array(dev, SVC_NUM_CHANNEL,
->> -                   sizeof(*chans), GFP_KERNEL | __GFP_ZERO);
->> +    chans = devm_kcalloc(dev, SVC_NUM_CHANNEL, sizeof(*chans), 
->> GFP_KERNEL);
->>       if (!chans)
->>           return -ENOMEM;
->>   @@ -1086,8 +1085,7 @@ static int stratix10_svc_drv_remove(struct 
->> platform_device *pdev)
->>           kthread_stop(ctrl->task);
->>           ctrl->task = NULL;
->>       }
->> -    if (ctrl->genpool)
->> -        gen_pool_destroy(ctrl->genpool);
->> +    gen_pool_destroy(ctrl->genpool);
->>       list_del(&ctrl->node);
->>         return 0;
->>
->
-> Regards,
-> Richard
->
+-- 
+Josh
 
