@@ -2,120 +2,154 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB72C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638B6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46BB220857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457D42173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Nu25g7pI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PsVh7QRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgEARtM (ORCPT
+        id S1730032AbgEARtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:49:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        Fri, 1 May 2020 13:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729776AbgEARtL (ORCPT
+        by vger.kernel.org with ESMTP id S1729697AbgEARtU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:49:11 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40296C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:49:11 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b18so5155821ilf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:49:11 -0700 (PDT)
+        Fri, 1 May 2020 13:49:20 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB559C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:49:18 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id b17so5309473ybq.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FAkF2yaKZTirBIt4k8vbrMCWa7L6IDgN4q10kaek3iU=;
-        b=Nu25g7pInQqg92NCuHrYmayuvi3zj47l19mKYK+v6nZ4geQuwZmiJFA0Ii0QRLaf2k
-         xhcszlyfj33HWh3Xi5E56xHj2YdoWvAna+nzO5duPolVZHd5AwqU1VwJvEYWiKV5tNrZ
-         VVgz6Z8ZDZ1dlDXalq4Xzu5DlrcSogG11QqcmPgyBYcPsqY6QlxwCN7+yTLiZ4xKCo7Z
-         5wN4N3ChX/WfdltfWQ01AVZeB/vbq6zulX6fFL5caZZSbqoWdenu5DmZNr0JSsR6zNnz
-         7S4JvLkRqEBK1s7dysopowoExTk3x8svJXpsW2HZgqPm4pLLRFkJUqVbqHncgDwv96sp
-         7gbQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vr7i4KBzRAJaxFRYhCEC2mVKHkt5/69Cvw0YZLzHCkI=;
+        b=PsVh7QRveASnS9mQbzIV54P0vEmP87capTD8KvpENmUfjmXbCnci0GT90owMQxvORd
+         3mpwwpY+o3GxItma7tH2B2oc9+foqqtSJ0V1Pu6144iLPjzT4xLT4q9GnJEetWNKUzgU
+         K6D1UEk2LbOuE/iPnIhD5D00s1uAeI1jU3vvcpf4PtzlWhYcpTl8uv4mTZU9onHfWDQk
+         7LQNzkytaXi/vwuxxxVJ7xnJdib4Kt9oInZH+sQk9VVsKXli++rv6CwOcrdHlm76u/Z/
+         U58xhqjkfgwL0MuD25Vz2b7YpSRuPg59Bn9uG0tsAyuEIbAQ6vMdRGcV57cfg0Bw4QYk
+         mFWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FAkF2yaKZTirBIt4k8vbrMCWa7L6IDgN4q10kaek3iU=;
-        b=Q7fC6263ouwNFgHdb7C3B2iiSCOmPRhiwcfbsrZfyYLQhz9NcVbwMhV9VcoxdgCwsh
-         1darm8Yl7zaJzQ5TsTU2njTGx/IPAwx/wJmRyD1I0QN1oUGJObWh/BV+ISkJyACfvUC2
-         NJAnpiEX1TWfcgEoT2rc/os4VLz5yhG61CszfGZD5Y2ixMMSyHK3kaLHVyEG5sVTRAhp
-         hQymu0spBTIbz+eCNsvC1q4zW1nFV5uJukW7sZDJ3t7aMbQXJxPXfm5teH03D0kS2p7E
-         oh2uXD9jWpV5AiICaVxwrYc+79ZvZmSIlz2Y7fr65BbZ4ExNS0hiEJJqrux6N054TSBD
-         bZKw==
-X-Gm-Message-State: AGi0PuZjI+/bWqlxXi1AFzEkU3hmfNqaaOsh/Gsf435SOJWLA7l3NvBm
-        LUAxYMpdxazS3v4f7V9uDa7SdcJ6iZfqjw==
-X-Google-Smtp-Source: APiQypIjzlOj0z/RyQ2dh1il3B4WXx3fOLCltjGmV8lOFrB8LH4cwP0bYXdcjZVDSR+f+bbE+SWviQ==
-X-Received: by 2002:a92:4952:: with SMTP id w79mr4374379ila.15.1588355349738;
-        Fri, 01 May 2020 10:49:09 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d23sm1130687ioc.48.2020.05.01.10.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 10:49:08 -0700 (PDT)
-Subject: Re: [PATCH v2] eventfd: convert to f_op->read_iter()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <c71b2091-a86e-cc81-056d-de2f1e839f50@kernel.dk>
- <20200501174306.GM23230@ZenIV.linux.org.uk>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2fa3e8dc-172e-2ac6-bc5e-a8fea5491e22@kernel.dk>
-Date:   Fri, 1 May 2020 11:49:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vr7i4KBzRAJaxFRYhCEC2mVKHkt5/69Cvw0YZLzHCkI=;
+        b=c9Kv+thVsTQ44KvFdFoyWuxqmXOGQNdYSylAKhcpIVr2AEU5hied1W42yn2E/3yL4J
+         HY6IcU64XALiO5oaV263LEWJQI2Rch1f2/1oqf3/UwCiom09u9SBHV7oZazcbixPEC9+
+         1HdoSvXkAnIvgRHXPpCN6tI9rPJybF4h6514lzf58cNoT2RDw4JaYfUaWeuKGwCBt7Fv
+         sRnpFGa0aVIp4xGzV+oR2sj5OjPzS0t/Vhgr0Jw5zWWJB6rRFejX68nSK9YuorMEAgJ0
+         8GeG3PVUcfmrtIjpDzTusJnKG5eq44YI7XCWCrWeT96z0Rzc3GSZl1My9avu52cy75oo
+         Euig==
+X-Gm-Message-State: AGi0PuYhxWeRBIW5Q9jlEBVw8U51zCHdjDGEJ9wGh/1uXN0w+TyOxV0f
+        IagHyUJ9B0/K6wGzAYPPMbWnMnOStKn8+ik/ZhGzkg==
+X-Google-Smtp-Source: APiQypLVTKFhOiWfbcYQxrLnlEljDpT8buG+pzGvryeq4wTccpcCURS59rQbR8fqWP/X/WKvrSXFbSorBFD6L1zzZxc=
+X-Received: by 2002:a5b:9cb:: with SMTP id y11mr8303374ybq.177.1588355357976;
+ Fri, 01 May 2020 10:49:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200501174306.GM23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200501113448.1809037-1-jolsa@kernel.org>
+In-Reply-To: <20200501113448.1809037-1-jolsa@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 1 May 2020 10:49:06 -0700
+Message-ID: <CAP-5=fVCTDoQ--gwjo3rqp6FxiMqiJHoNxtP+b8AMZChhQ5dtg@mail.gmail.com>
+Subject: Re: [PATCH] perf session: Try to read pipe data from file
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20 11:43 AM, Al Viro wrote:
-> On Fri, May 01, 2020 at 11:18:05AM -0600, Jens Axboe wrote:
-> 
->> -	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
->> +	if (res > 0 && copy_to_iter(&ucnt, res, iov) < res)
-> 
-> *whoa*
-> 
-> It is correct, but only because here res > 0 <=> res == 8.
-> And that's not trivial at the first glance.
-> 
-> Please, turn that into something like
+On Fri, May 1, 2020 at 4:35 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> From: Jiri Olsa <jolsa@redhat.com>
+>
+> Ian came with the idea of having support to read the pipe
+> data also from file [1]. Currently pipe mode files fails
+> like:
+>
+>   $ perf record -o - sleep 1 > /tmp/perf.pipe.data
+>   $ perf report -i /tmp/perf.pipe.data
+>   incompatible file format (rerun with -v to learn more)
+>
+> This patch adds the support to do that by trying the pipe
+> header first, and if its successfully detected, switching
 
-Looks good to me, just one minor edit:
+nit: s/its/it's/
 
-> 	if (iov_iter_count(to) < sizeof(ucnt))
-> 		return -EINVAL;
-> 	spin_lock_irq(&ctx->wqh.lock);
-> 	if (!ctx->count) {
-> 		if (unlikely(file->f_flags & O_NONBLOCK) {
-> 			spin_unlock_irq(&ctx->wqh.lock)
-> 			return -EAGAIN;
-> 		}
-> 		__add_wait_queue(&ctx->wqh, &wait);
-> 		for (;;) {
-> 			set_current_state(TASK_INTERRUPTIBLE);
-> 			if (ctx->count)
-> 				break;
-> 			if (signal_pending(current)) {
-> 				spin_unlock_irq(&ctx->wqh.lock)
-> 				return -ERESTARTSYS;
-> 			}
+> the perf data to pipe mode.
+>
+> [1] https://lore.kernel.org/lkml/20200409185744.255881-1-irogers@google.com/
+> Original-patch-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-We need to remove waitq and re-set task state here. I'll run a sanity
-check on that and send out a v3.
+Tested and works great, thanks!
+Reviewed-by: Ian Rogers <irogers@google.com>
 
--- 
-Jens Axboe
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/header.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 0ce47283a8a1..8ca709f938b8 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3574,7 +3574,7 @@ static int perf_header__read_pipe(struct perf_session *session)
+>                 return -EINVAL;
+>         }
+>
+> -       return 0;
+> +       return f_header.size == sizeof(f_header) ? 0 : -1;
+>  }
+>
+>  static int read_attr(int fd, struct perf_header *ph,
+> @@ -3676,7 +3676,7 @@ int perf_session__read_header(struct perf_session *session)
+>         struct perf_file_header f_header;
+>         struct perf_file_attr   f_attr;
+>         u64                     f_id;
+> -       int nr_attrs, nr_ids, i, j;
+> +       int nr_attrs, nr_ids, i, j, err;
+>         int fd = perf_data__fd(data);
+>
+>         session->evlist = evlist__new();
+> @@ -3685,8 +3685,16 @@ int perf_session__read_header(struct perf_session *session)
+>
+>         session->evlist->env = &header->env;
+>         session->machines.host.env = &header->env;
+> -       if (perf_data__is_pipe(data))
+> -               return perf_header__read_pipe(session);
+> +
+> +       /*
+> +        * We can read 'pipe' data event from regular file,
+> +        * check for the pipe header regardless of source.
+> +        */
+> +       err = perf_header__read_pipe(session);
+> +       if (!err || (err && perf_data__is_pipe(data))) {
+> +               data->is_pipe = true;
+> +               return err;
+> +       }
+>
+>         if (perf_file_header__read(&f_header, header, fd) < 0)
+>                 return -EINVAL;
+> --
+> 2.25.4
+>
