@@ -2,104 +2,105 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2533C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF94C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B732C20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341309;
-	bh=olCRPt9Dh2xRa/1n1FT+MDS57VFZyyvyVxvWk8826K4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B2zwE+ebWCpz8iFb2r+CYy+lkBbrcybvap5WI47n33DPslmXSVZNunjbDaSbTejv8
-	 WyTrG7j/wK84lUtRjNXJdrW0V4gwRPNYzdS5RnBcSjmfwHabi7rfJUvswzgVm6fKmp
-	 zrRpP2aSSpx56YwHeGC2+JGZnhwLn4D3Ph+ge6aI=
+	by mail.kernel.org (Postfix) with ESMTP id B863F20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sWO4PNY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbgEANzJ (ORCPT
+        id S1732036AbgEANzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729914AbgEANe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730569AbgEANe2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 09:34:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66B202173E;
-        Fri,  1 May 2020 13:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340067;
-        bh=olCRPt9Dh2xRa/1n1FT+MDS57VFZyyvyVxvWk8826K4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oiitS3/UqJKTeQsteox88ITJfAh89W3Hn7dKyRfBcck9czxFYZDvww3UzdDkbb320
-         3KMJkzOc1J28kbTaznETi8WvL5itRiLyYeBQzfoPKugObaEHh/ooDVUHFaL+0aondr
-         UvqVDv3SnFLxnVihExVPNa37q9lOrYx1dMnqgTuU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Udipto Goswami <ugoswami@codeaurora.org>,
-        Sriharsha Allenki <sallenki@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: [PATCH 4.14 081/117] usb: f_fs: Clear OS Extended descriptor counts to zero in ffs_data_reset()
-Date:   Fri,  1 May 2020 15:21:57 +0200
-Message-Id: <20200501131554.456023496@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
-References: <20200501131544.291247695@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D42C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 06:34:27 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a5so2303726pjh.2
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 06:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=+bmrtSHAyFI7P6ziJ3xGe8cTwBT8YOneJTOxmYdhGZc=;
+        b=sWO4PNY9YAPlMcmQTFYRy58u3AGk/QRym0idM1ioVic2+sgGTcaVvxbRjP529xqfKo
+         QIY5xGGj0avqcE8fEdZEcmZttXUyjQhoKQFJR8zc9ocM8keWbLpJ0KDLD+j8WjDDtsdI
+         dhgVsmF0w2V2wqVrSe1MY711Uebu0smXDe3nolZ7UvkpSYjcA29No4nXX1zShE5IrBmO
+         uZcnPFpxjsowt25d6A/HMu+4gw5oTHDNekrJ6CNLntaDKePyVY0pXPTh1+kG2osYMl+H
+         B+RXPJVdTonCU3tSlVFljHkrXOVfL+OHrakrJolGC6ifg5LdN24VKGVbQyp3In3GQjpl
+         TvPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+bmrtSHAyFI7P6ziJ3xGe8cTwBT8YOneJTOxmYdhGZc=;
+        b=EGMsIORxhW8rie8tnrtTW2clcbVSTJyewCxzDp6HeaQITM0bIpZyX3tP4sd/w4dnA7
+         H3edfX1UrjJt9uJesG+fYKZ9Rbxb2I/vX9Q13vDHSO6UtO1MIkb8MV5kKD/NIq6rlI4q
+         Mhpan5n8umqaizFhlmsHapRlaycEbj2aYzF8ufa4jnjAewpm4HVhRdDYcyxhR3Cv5J+z
+         bSaoSzkE10yfuTWYFtwU/CCTzrcSO+Zzhg5Jl6EpC19Vm3ZG2yV3bjPUwv6QiDOv+qA2
+         a6ny39fg7ObRKs1JK9e5ZQWzqvL5+vsVG5MEnmSsHxLUGXLOs8fs4OOf9iIkpFF+mJQo
+         l7aQ==
+X-Gm-Message-State: AGi0PuY+jlxBUFoBbt9yXrUkExY6Vey8ebV8Z2RigRxGlttq6hyWLO7V
+        70Yb8/rI5yRINNZHkuwmI5xSC6wCDdrAaQ==
+X-Google-Smtp-Source: APiQypLxg0DxSuXSZ6n95JDcUikNRX6xaAN5w06xsc1r2DmCej7hLmZ2BDXQTy8ezdmV4N/JvVd9Ag==
+X-Received: by 2002:a17:902:20b:: with SMTP id 11mr4070767plc.209.1588340067042;
+        Fri, 01 May 2020 06:34:27 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id i190sm2323153pfe.114.2020.05.01.06.34.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 06:34:26 -0700 (PDT)
+Subject: Re: [PATCH 0/5] timeout fixes
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1588253029.git.asml.silence@gmail.com>
+ <8665e87d-98f8-5973-d11a-03cca3fdf66f@gmail.com>
+ <8d9b5e06-4100-c49a-c9ca-0efc389edaf3@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c7aefe37-d740-5324-905f-1b095cfb4ea7@kernel.dk>
+Date:   Thu, 30 Apr 2020 22:26:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d9b5e06-4100-c49a-c9ca-0efc389edaf3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Udipto Goswami <ugoswami@codeaurora.org>
+On 5/1/20 3:38 AM, Pavel Begunkov wrote:
+> On 01/05/2020 11:21, Pavel Begunkov wrote:
+>> On 30/04/2020 22:31, Pavel Begunkov wrote:
+>>> [1,2] are small random patches.
+>>> [3,4] are the last 2 timeout patches, but with 1 var renamed.
+>>> [5] fixes a timeout problem related to batched CQ commits. From
+>>> what I see, this should be the last fixing timeouts.
+>>
+>> Something gone wrong with testing or rebasing. Never mind this.
+> 
+> io_uring-5.7 hangs the first test in link_timeout.c. I'll debug it today,
+> but by any chance, does anyone happen to know something?
 
-commit 1c2e54fbf1da5e5445a0ab132c862b02ccd8d230 upstream.
+That's not your stuff, see:
 
-For userspace functions using OS Descriptors, if a function also supplies
-Extended Property descriptors currently the counts and lengths stored in
-the ms_os_descs_ext_prop_{count,name_len,data_len} variables are not
-getting reset to 0 during an unbind or when the epfiles are closed. If
-the same function is re-bound and the descriptors are re-written, this
-results in those count/length variables to monotonically increase
-causing the VLA allocation in _ffs_func_bind() to grow larger and larger
-at each bind/unbind cycle and eventually fail to allocate.
+https://lore.kernel.org/linux-fsdevel/269ef3a5-e30f-ceeb-5f5e-58563e7c5367@kernel.dk/T/#ma61d47f59eaaa7f04ae686c117fab69c957e0d7d
 
-Fix this by clearing the ms_os_descs_ext_prop count & lengths to 0 in
-ffs_data_reset().
+which then just turned into a modification to a patch in io_uring-5.7
+instead. Just force rebase that branch and it should work fine.
 
-Fixes: f0175ab51993 ("usb: gadget: f_fs: OS descriptors support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Udipto Goswami <ugoswami@codeaurora.org>
-Signed-off-by: Sriharsha Allenki <sallenki@codeaurora.org>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Link: https://lore.kernel.org/r/20200402044521.9312-1-sallenki@codeaurora.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/gadget/function/f_fs.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1727,6 +1727,10 @@ static void ffs_data_reset(struct ffs_da
- 	ffs->state = FFS_READ_DESCRIPTORS;
- 	ffs->setup_state = FFS_NO_SETUP;
- 	ffs->flags = 0;
-+
-+	ffs->ms_os_descs_ext_prop_count = 0;
-+	ffs->ms_os_descs_ext_prop_name_len = 0;
-+	ffs->ms_os_descs_ext_prop_data_len = 0;
- }
- 
- 
-
+-- 
+Jens Axboe
 
