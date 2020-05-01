@@ -2,88 +2,84 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCF8C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A208DC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D696216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7B72495F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwDhz8qF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="puZHq1iH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEAVyz (ORCPT
+        id S1726903AbgEAVzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:54:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59358 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVyz (ORCPT
+        Fri, 1 May 2020 17:55:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58310 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbgEAVy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:54:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588370093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vqe/h5bIx8Xwds5+Doaeo5m4e7NAmlXMvCMv86v34rc=;
-        b=IwDhz8qFqZ3P8Ga2hQugrbtYcW+J78pfO9cvPbMOkT2rAZinNz/4xtIRQ0uvgOVXePAlsA
-        Wdc9HX4DAUvE1T2BQqcWU6n0nH3f9fywqbfq2ZQPg09/bLMNlYOESYitMALTiCT3167M/z
-        YpXBLjdbXE42RAXUEiHQJcqqrIGHsnU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-Qwf3zUiVOfaeAGW9G-6Xxg-1; Fri, 01 May 2020 17:54:49 -0400
-X-MC-Unique: Qwf3zUiVOfaeAGW9G-6Xxg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 1 May 2020 17:54:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588370099; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=AQ70akaLPnIqMlM4CmJJfg3Ty/uXQB6hVv/IyZfwri4=; b=puZHq1iHgFyM/8BXyXTTlRnFLtvdplFxBhrcg/86dNIwFKeBIcKo6+idq8aAPjKq/D3V77mE
+ CLqVS7vzfKomiWkXAA7qnR1BXaZeyawb64SX3ZaqEsBfvY/7Nvx8UexKgH7qGrzCCR9C31Jl
+ oXeFERr/w8dEwIlXDIEufYOM3MY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eac9a9d.7f3115b200a0-smtp-out-n01;
+ Fri, 01 May 2020 21:54:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39FE3C43637; Fri,  1 May 2020 21:54:37 +0000 (UTC)
+Received: from sidgup-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0EA545F;
-        Fri,  1 May 2020 21:54:46 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BDE36A954;
-        Fri,  1 May 2020 21:54:44 +0000 (UTC)
-Date:   Fri, 1 May 2020 17:54:41 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, iamjoonsoo.kim@lge.com,
-        rientjes@google.com, penberg@kernel.org, cl@linux.com
-Subject: Re: [PATCH] mm: slub: add panic_on_error to the debug facilities
-Message-ID: <20200501215441.GE27720@optiplex-lnx>
-References: <20200501211540.71216-1-aquini@redhat.com>
- <21CF143C-B9D1-4D3F-A875-370924265593@lca.pw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21CF143C-B9D1-4D3F-A875-370924265593@lca.pw>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        (Authenticated sender: sidgup)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86360C433F2;
+        Fri,  1 May 2020 21:54:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86360C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts: headers_install: Exit with error on config leak
+Date:   Fri,  1 May 2020 14:54:25 -0700
+Message-Id: <1588370065-30312-1-git-send-email-sidgup@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 05:29:19PM -0400, Qian Cai wrote:
-> 
-> 
-> > On May 1, 2020, at 5:15 PM, Rafael Aquini <aquini@redhat.com> wrote:
-> > 
-> > Sometimes it is desirable to override SLUB's debug facilities
-> > default behavior upon stumbling on a cache or object error
-> > and just stop the execution in order to grab a coredump, at
-> > the error-spotting time, instead of trying to fix the issue
-> > and report in an attempt to keep the system rolling.
-> > 
-> > This patch introduces a new debug flag SLAB_PANIC_ON_ERROR,
-> > along with its related SLUB-machinery, in order to extend
-> > current slub_debug facilites and provide the aforementioned
-> > behavior override.
-> 
-> Instead of adding those things everywhere. How about adding something like panic_on_taint? Then, you could write specific taint flags you are interested in to that file because slab_bug() will taint it TAINT_BAD_PAGE.
->
-It seems like a good idea which also would required "adding things"
-elsewhere, but doesn't look mutually exclusive with the approach here.
+Misuse of CONFIG_* in UAPI headers should result in an error as it exposes
+configuration of different targets to userspace.
 
-Thanks
--- Rafael  
+Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+---
+ scripts/headers_install.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+index a07668a..bd6c93a 100755
+--- a/scripts/headers_install.sh
++++ b/scripts/headers_install.sh
+@@ -109,7 +109,8 @@ do
+ 	done
+ 
+ 	if [ "$warn" = 1 ]; then
+-		echo "warning: $INFILE: leak $c to user-space" >&2
++		echo "error: $INFILE: leak $c to user-space" >&2
++		exit 1
+ 	fi
+ done
+ 
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
