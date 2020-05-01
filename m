@@ -2,129 +2,145 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C054C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89460C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514B72051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F36B2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340838;
+	bh=kiWs6g3/hgzrVVzTYEvidsYjSeFIEvut602eFJMuhpU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WASw4fY4ui4Tmgb1XJDWstcrLJXrXFpTkezPOM7e+ruyCxUTzHM1jtL4IiSfvk0qT
+	 UlatiJGHdvitiBSP8+hLgobYn/hqXsLlrUpzZ1J02OggAkHjvEPGZDbKbwCx+a7reT
+	 Lf43dYXGix+LgoDzGU6GJi9FmnNCOqf8g/LrqOT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbgEANrO (ORCPT
+        id S1731887AbgEANrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:47:14 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38526 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbgEANpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:10 -0400
-Received: by mail-lf1-f68.google.com with SMTP id l11so3898488lfc.5;
-        Fri, 01 May 2020 06:45:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UjJIbG5PhVX5vmhqPNitT7lQ30lLq2zeuGUdDd0kBno=;
-        b=ii/dZOXMNrZNV8QMGycWL5eYUUGhoDWQyGJfFF+Md4PHlDjqs9IoKTxeBSoxv1OB3D
-         M/rWnP2+RWC/UswRA8h6ETXtWD77Ez3yy3j4GaslGVAaFof3LTG11tSvnIpJdoyjGdeS
-         JoX0rFuw/F8/WOSXqAjolvu7g2cYU5hyW2V2j2N76LQqv+6DwDqnUsTJLqoDP+e3q8Iw
-         FHMMwr/AhAZLQCjj8ZtRs9NfC+Vw5laAUxUngoTUFfO5VrtzGTO9joaryPpJx6Coxqa7
-         CmyqiywphXgIoqK/CZM9ljSaYGXvjRqQLFpmO8Jc2F7DQX6cntrkjZjkeza48Fy7Uhju
-         2mMg==
-X-Gm-Message-State: AGi0PubXipHgTwZZ/C/nmzYIRCK3vPp9qHKgsJVbz3YR3Tom2n4qurVG
-        iyJecKwZ9vTgM4u/vgTrVDtc1W+LdaU=
-X-Google-Smtp-Source: APiQypLpRwyPk/YLnGS6RZt+lZLtIcEoigTyTI4Fv+U69ZYu+k+Kk5S8LgwaIbSQAROqdGz0bj8YNQ==
-X-Received: by 2002:a19:42c3:: with SMTP id p186mr2590791lfa.194.1588340707226;
-        Fri, 01 May 2020 06:45:07 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.150.177])
-        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:45:06 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] floppy: add FD_AUTODETECT_SIZE define for struct floppy_drive_params
-Date:   Fri,  1 May 2020 16:44:14 +0300
-Message-Id: <20200501134416.72248-3-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200501134416.72248-1-efremov@linux.com>
-References: <20200501134416.72248-1-efremov@linux.com>
+        Fri, 1 May 2020 09:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731683AbgEANnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 770AE208C3;
+        Fri,  1 May 2020 13:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340634;
+        bh=kiWs6g3/hgzrVVzTYEvidsYjSeFIEvut602eFJMuhpU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GGVr4VHiH8VtOvKAOakaa4wLJhOPJKHZu7I4V0SWF394myru+pEYWCaPiIE7xJc07
+         SO9m/Bqxi96y+t8lnzrQvk75xq4rwuf7yd22G0OB1bw72pxBoAGNl8DvPAL7PBEG5q
+         cUWWHMwx9WWNjMgmcGPK3HHpH0txuKzh0w7hSOpc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Wang YanQing <udknight@gmail.com>
+Subject: [PATCH 5.6 062/106] bpf, x86_32: Fix clobbering of dst for BPF_JSET
+Date:   Fri,  1 May 2020 15:23:35 +0200
+Message-Id: <20200501131551.017586610@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use FD_AUTODETECT_SIZE for autodetect buffer size in struct
-floppy_drive_params instead of a magic number.
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
+commit 50fe7ebb6475711c15b3397467e6424e20026d94 upstream.
+
+The current JIT clobbers the destination register for BPF_JSET BPF_X
+and BPF_K by using "and" and "or" instructions. This is fine when the
+destination register is a temporary loaded from a register stored on
+the stack but not otherwise.
+
+This patch fixes the problem (for both BPF_K and BPF_X) by always loading
+the destination register into temporaries since BPF_JSET should not
+modify the destination register.
+
+This bug may not be currently triggerable as BPF_REG_AX is the only
+register not stored on the stack and the verifier uses it in a limited
+way.
+
+Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Wang YanQing <udknight@gmail.com>
+Link: https://lore.kernel.org/bpf/20200422173630.8351-2-luke.r.nels@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/floppy.c  | 9 +++++----
- include/uapi/linux/fd.h | 5 ++++-
- 2 files changed, 9 insertions(+), 5 deletions(-)
+ arch/x86/net/bpf_jit_comp32.c |   22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 3ab6e804b5ec..b82b3d38b834 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -2073,7 +2073,8 @@ static int next_valid_format(int drive)
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -2015,8 +2015,8 @@ static int do_jit(struct bpf_prog *bpf_p
+ 		case BPF_JMP | BPF_JSET | BPF_X:
+ 		case BPF_JMP32 | BPF_JSET | BPF_X: {
+ 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
+-			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
+-			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
++			u8 dreg_lo = IA32_EAX;
++			u8 dreg_hi = IA32_EDX;
+ 			u8 sreg_lo = sstk ? IA32_ECX : src_lo;
+ 			u8 sreg_hi = sstk ? IA32_EBX : src_hi;
  
- 	probed_format = drive_state[drive].probed_format;
- 	while (1) {
--		if (probed_format >= 8 || !drive_params[drive].autodetect[probed_format]) {
-+		if (probed_format >= FD_AUTODETECT_SIZE ||
-+		    !drive_params[drive].autodetect[probed_format]) {
- 			drive_state[drive].probed_format = 0;
- 			return 1;
- 		}
-@@ -3442,13 +3443,13 @@ static int fd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
- 	return 0;
- }
+@@ -2028,6 +2028,13 @@ static int do_jit(struct bpf_prog *bpf_p
+ 					      add_2reg(0x40, IA32_EBP,
+ 						       IA32_EDX),
+ 					      STACK_VAR(dst_hi));
++			} else {
++				/* mov dreg_lo,dst_lo */
++				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
++				if (is_jmp64)
++					/* mov dreg_hi,dst_hi */
++					EMIT2(0x89,
++					      add_2reg(0xC0, dreg_hi, dst_hi));
+ 			}
  
--static bool valid_floppy_drive_params(const short autodetect[8],
-+static bool valid_floppy_drive_params(const short autodetect[FD_AUTODETECT_SIZE],
- 		int native_format)
- {
- 	size_t floppy_type_size = ARRAY_SIZE(floppy_type);
- 	size_t i = 0;
+ 			if (sstk) {
+@@ -2052,8 +2059,8 @@ static int do_jit(struct bpf_prog *bpf_p
+ 		case BPF_JMP | BPF_JSET | BPF_K:
+ 		case BPF_JMP32 | BPF_JSET | BPF_K: {
+ 			bool is_jmp64 = BPF_CLASS(insn->code) == BPF_JMP;
+-			u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
+-			u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
++			u8 dreg_lo = IA32_EAX;
++			u8 dreg_hi = IA32_EDX;
+ 			u8 sreg_lo = IA32_ECX;
+ 			u8 sreg_hi = IA32_EBX;
+ 			u32 hi;
+@@ -2066,6 +2073,13 @@ static int do_jit(struct bpf_prog *bpf_p
+ 					      add_2reg(0x40, IA32_EBP,
+ 						       IA32_EDX),
+ 					      STACK_VAR(dst_hi));
++			} else {
++				/* mov dreg_lo,dst_lo */
++				EMIT2(0x89, add_2reg(0xC0, dreg_lo, dst_lo));
++				if (is_jmp64)
++					/* mov dreg_hi,dst_hi */
++					EMIT2(0x89,
++					      add_2reg(0xC0, dreg_hi, dst_hi));
+ 			}
  
--	for (i = 0; i < 8; ++i) {
-+	for (i = 0; i < FD_AUTODETECT_SIZE; ++i) {
- 		if (autodetect[i] < 0 ||
- 		    autodetect[i] >= floppy_type_size)
- 			return false;
-@@ -3673,7 +3674,7 @@ struct compat_floppy_drive_params {
- 	struct floppy_max_errors max_errors;
- 	char		flags;
- 	char		read_track;
--	short		autodetect[8];
-+	short		autodetect[FD_AUTODETECT_SIZE];
- 	compat_int_t	checkfreq;
- 	compat_int_t	native_format;
- };
-diff --git a/include/uapi/linux/fd.h b/include/uapi/linux/fd.h
-index 90fb94712c41..3f6b7be4c096 100644
---- a/include/uapi/linux/fd.h
-+++ b/include/uapi/linux/fd.h
-@@ -172,7 +172,10 @@ struct floppy_drive_params {
-  * used in succession to try to read the disk. If the FDC cannot lock onto
-  * the disk, the next format is tried. This uses the variable 'probing'.
-  */
--	short autodetect[8];		/* autodetected formats */
-+
-+#define FD_AUTODETECT_SIZE 8
-+
-+	short autodetect[FD_AUTODETECT_SIZE]; /* autodetected formats */
- 	
- 	int checkfreq; /* how often should the drive be checked for disk 
- 			* changes */
--- 
-2.25.3
+ 			/* mov ecx,imm32 */
+
 
