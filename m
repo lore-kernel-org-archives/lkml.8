@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E63C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 786B7C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D072208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48AA8216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339992;
-	bh=lep2OznbQAsF1N4ZIVEroOylZbhRXfVo0rg1xNBBgnM=;
+	s=default; t=1588339995;
+	bh=EjXI4xnL4Cjprb4Aa93w3O2TXHlJhQK22RWF6FH/Ry8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lT3e69GDFbexE05RmqFVj9eMSyx5Rqp9tXZt1KFe1IsKTJOVVuoDe9epCS3+imQI9
-	 Wcjs4watXh0hgjOszXZ/BJo/Kmeh/oJqocAsXrTYYnykIikXCIPcUkM8P/+k1+ep4U
-	 gNQxVaZRGSPF56mTx1ZBEUqM8OBiFqdlGcVEj550=
+	b=JdDxCV6gtmZ2nsaN/tUEcVoiRcY0nPrm5BZfPRSH/IA5C7DpE0SFlz5kRZ1+7o/+Z
+	 C1Fwcw0EDLgmF2KLLjtQdB6Hl+ERIPIWJO/p0gIA3aQ55aIgkgYd6Eyhvrj0tMSNCy
+	 DHAqueUpP2Xui5L3HZupxFs0W/iHjXCpbp90SH8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgEANdL (ORCPT
+        id S1729140AbgEANdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58310 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730376AbgEANdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:05 -0400
+        id S1730382AbgEANdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB18208C3;
-        Fri,  1 May 2020 13:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B853D208DB;
+        Fri,  1 May 2020 13:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339984;
-        bh=lep2OznbQAsF1N4ZIVEroOylZbhRXfVo0rg1xNBBgnM=;
+        s=default; t=1588339987;
+        bh=EjXI4xnL4Cjprb4Aa93w3O2TXHlJhQK22RWF6FH/Ry8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=st43WbV+8+UPpMk4TeG59flNiZj/TgqouykhBp1WDz8dvZjgaFXSEdvBHQjeZdmZ6
-         obPDIkuohVowlD9jjUpzp+NVKVF7C80jSUldR94Dwh15HgHVkX43VWw3FjTq21y/hR
-         j0Ty935GfAsf3LzEUGZJ/7UecTmAZmVyJNk8a2GI=
+        b=0IhigDqYbor3N+6W6zhQWHF/aI2A/uxO2t43EWOCEE14VL+/v3qN9OiVVgF5AYTLc
+         mdRsJD3kUxcMm7gbc3KamDUWgB3rAZ0afnC/hFAnFXN5er8kBMnVQkSi292SFgzqqA
+         7JfcWAB7XZK8cQF2BP5Ke6Nz2yG6CLlB53aRKIKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 059/117] KVM: Check validity of resolved slot when searching memslots
-Date:   Fri,  1 May 2020 15:21:35 +0200
-Message-Id: <20200501131552.516995312@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.14 048/117] overflow.h: Add arithmetic shift helper
+Date:   Fri,  1 May 2020 15:21:24 +0200
+Message-Id: <20200501131550.485127642@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -62,48 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit b6467ab142b708dd076f6186ca274f14af379c72 upstream.
+commit 0c66847793d1982d1083dc6f7adad60fa265ce9c upstream.
 
-Check that the resolved slot (somewhat confusingly named 'start') is a
-valid/allocated slot before doing the final comparison to see if the
-specified gfn resides in the associated slot.  The resolved slot can be
-invalid if the binary search loop terminated because the search index
-was incremented beyond the number of used slots.
+Add shift_overflow() helper to assist driver authors in ensuring that
+shift operations don't cause overflows or other odd conditions.
 
-This bug has existed since the binary search algorithm was introduced,
-but went unnoticed because KVM statically allocated memory for the max
-number of slots, i.e. the access would only be truly out-of-bounds if
-all possible slots were allocated and the specified gfn was less than
-the base of the lowest memslot.  Commit 36947254e5f98 ("KVM: Dynamically
-size memslot array based on number of used slots") eliminated the "all
-possible slots allocated" condition and made the bug embarrasingly easy
-to hit.
-
-Fixes: 9c1a5d38780e6 ("kvm: optimize GFN to memslot lookup with large slots amount")
-Reported-by: syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Message-Id: <20200408064059.8957-2-sean.j.christopherson@intel.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+[kees: tweaked comments and commit log, dropped unneeded assignment]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/kvm_host.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/overflow.h |   31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -945,7 +945,7 @@ search_memslots(struct kvm_memslots *slo
- 			start = slot + 1;
- 	}
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -202,4 +202,35 @@
  
--	if (gfn >= memslots[start].base_gfn &&
-+	if (start < slots->used_slots && gfn >= memslots[start].base_gfn &&
- 	    gfn < memslots[start].base_gfn + memslots[start].npages) {
- 		atomic_set(&slots->lru_slot, start);
- 		return &memslots[start];
+ #endif /* COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW */
+ 
++/** check_shl_overflow() - Calculate a left-shifted value and check overflow
++ *
++ * @a: Value to be shifted
++ * @s: How many bits left to shift
++ * @d: Pointer to where to store the result
++ *
++ * Computes *@d = (@a << @s)
++ *
++ * Returns true if '*d' cannot hold the result or when 'a << s' doesn't
++ * make sense. Example conditions:
++ * - 'a << s' causes bits to be lost when stored in *d.
++ * - 's' is garbage (e.g. negative) or so large that the result of
++ *   'a << s' is guaranteed to be 0.
++ * - 'a' is negative.
++ * - 'a << s' sets the sign bit, if any, in '*d'.
++ *
++ * '*d' will hold the results of the attempted shift, but is not
++ * considered "safe for use" if false is returned.
++ */
++#define check_shl_overflow(a, s, d) ({					\
++	typeof(a) _a = a;						\
++	typeof(s) _s = s;						\
++	typeof(d) _d = d;						\
++	u64 _a_full = _a;						\
++	unsigned int _to_shift =					\
++		_s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;		\
++	*_d = (_a_full << _to_shift);					\
++	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
++		(*_d >> _to_shift) != _a);				\
++})
++
+ #endif /* __LINUX_OVERFLOW_H */
 
 
