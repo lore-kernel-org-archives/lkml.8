@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C86CC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6252AC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECF9224984
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4008C24979
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgEASWg (ORCPT
+        id S1730775AbgEASWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
+        Fri, 1 May 2020 14:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730693AbgEASWa (ORCPT
+        by vger.kernel.org with ESMTP id S1730710AbgEASWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:22:30 -0400
+        Fri, 1 May 2020 14:22:31 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4C7C061A0C;
-        Fri,  1 May 2020 11:22:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7009C061A0C;
+        Fri,  1 May 2020 11:22:31 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIr-0003eG-08; Fri, 01 May 2020 20:22:25 +0200
+        id 1jUaIr-0003ei-SB; Fri, 01 May 2020 20:22:26 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 91C071C0085;
-        Fri,  1 May 2020 20:22:19 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:19 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8EB131C048C;
+        Fri,  1 May 2020 20:22:20 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:20 -0000
+From:   "tip-bot2 for Miroslav Benes" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] x86: Simplify retpoline declaration
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: objtool/core] objtool: Move the IRET hack into the arch decoder
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200428191700.091696925@infradead.org>
-References: <20200428191700.091696925@infradead.org>
+In-Reply-To: <20200428191659.913283807@infradead.org>
+References: <20200428191659.913283807@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158835733956.8414.14836642152180567436.tip-bot2@tip-bot2>
+Message-ID: <158835734054.8414.7454435298178677103.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,141 +61,151 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     ca3f0d80dd57c8828bfb5bc0bc79750ea7a1ba26
-Gitweb:        https://git.kernel.org/tip/ca3f0d80dd57c8828bfb5bc0bc79750ea7a1ba26
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 22 Apr 2020 17:03:22 +02:00
+Commit-ID:     b490f45362002fef57996388e395efc974b013f4
+Gitweb:        https://git.kernel.org/tip/b490f45362002fef57996388e395efc974b013f4
+Author:        Miroslav Benes <mbenes@suse.cz>
+AuthorDate:    Fri, 24 Apr 2020 16:30:42 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 30 Apr 2020 20:14:34 +02:00
+CommitterDate: Thu, 30 Apr 2020 20:14:33 +02:00
 
-x86: Simplify retpoline declaration
+objtool: Move the IRET hack into the arch decoder
 
-Because of how KSYM works, we need one declaration per line. Seeing
-how we're going to be doubling the amount of retpoline symbols,
-simplify the machinery in order to avoid having to copy/paste even
-more.
+Quoting Julien:
 
+  "And the other suggestion is my other email was that you don't even
+  need to add INSN_EXCEPTION_RETURN. You can keep IRET as
+  INSN_CONTEXT_SWITCH by default and x86 decoder lookups the symbol
+  conaining an iret. If it's a function symbol, it can just set the type
+  to INSN_OTHER so that it caries on to the next instruction after
+  having handled the stack_op."
+
+Suggested-by: Julien Thierry <jthierry@redhat.com>
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200428191700.091696925@infradead.org
+Link: https://lkml.kernel.org/r/20200428191659.913283807@infradead.org
 ---
- arch/x86/include/asm/GEN-for-each-reg.h | 25 ++++++++++++++++-
- arch/x86/include/asm/asm-prototypes.h   | 28 +++++-------------
- arch/x86/lib/retpoline.S                | 37 ++++++++++--------------
- 3 files changed, 49 insertions(+), 41 deletions(-)
- create mode 100644 arch/x86/include/asm/GEN-for-each-reg.h
+ tools/objtool/arch.h            |  1 -
+ tools/objtool/arch/x86/decode.c | 28 ++++++++++++++++++----------
+ tools/objtool/check.c           | 11 -----------
+ tools/objtool/elf.c             |  4 ++--
+ tools/objtool/elf.h             |  2 +-
+ 5 files changed, 21 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/include/asm/GEN-for-each-reg.h b/arch/x86/include/asm/GEN-for-each-reg.h
-new file mode 100644
-index 0000000..1b07fb1
---- /dev/null
-+++ b/arch/x86/include/asm/GEN-for-each-reg.h
-@@ -0,0 +1,25 @@
-+#ifdef CONFIG_64BIT
-+GEN(rax)
-+GEN(rbx)
-+GEN(rcx)
-+GEN(rdx)
-+GEN(rsi)
-+GEN(rdi)
-+GEN(rbp)
-+GEN(r8)
-+GEN(r9)
-+GEN(r10)
-+GEN(r11)
-+GEN(r12)
-+GEN(r13)
-+GEN(r14)
-+GEN(r15)
-+#else
-+GEN(eax)
-+GEN(ebx)
-+GEN(ecx)
-+GEN(edx)
-+GEN(esi)
-+GEN(edi)
-+GEN(ebp)
-+#endif
-diff --git a/arch/x86/include/asm/asm-prototypes.h b/arch/x86/include/asm/asm-prototypes.h
-index ce92c4a..aa7585e 100644
---- a/arch/x86/include/asm/asm-prototypes.h
-+++ b/arch/x86/include/asm/asm-prototypes.h
-@@ -17,24 +17,12 @@ extern void cmpxchg8b_emu(void);
- #endif
+diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+index 25dd4a9..cd118eb 100644
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -19,7 +19,6 @@ enum insn_type {
+ 	INSN_CALL,
+ 	INSN_CALL_DYNAMIC,
+ 	INSN_RETURN,
+-	INSN_EXCEPTION_RETURN,
+ 	INSN_CONTEXT_SWITCH,
+ 	INSN_BUG,
+ 	INSN_NOP,
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index e26bedb..d7b5d10 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -94,6 +94,7 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
+ 		      rex_x = 0, modrm = 0, modrm_mod = 0, modrm_rm = 0,
+ 		      modrm_reg = 0, sib = 0;
+ 	struct stack_op *op = NULL;
++	struct symbol *sym;
  
- #ifdef CONFIG_RETPOLINE
--#ifdef CONFIG_X86_32
--#define INDIRECT_THUNK(reg) extern asmlinkage void __x86_indirect_thunk_e ## reg(void);
--#else
--#define INDIRECT_THUNK(reg) extern asmlinkage void __x86_indirect_thunk_r ## reg(void);
--INDIRECT_THUNK(8)
--INDIRECT_THUNK(9)
--INDIRECT_THUNK(10)
--INDIRECT_THUNK(11)
--INDIRECT_THUNK(12)
--INDIRECT_THUNK(13)
--INDIRECT_THUNK(14)
--INDIRECT_THUNK(15)
--#endif
--INDIRECT_THUNK(ax)
--INDIRECT_THUNK(bx)
--INDIRECT_THUNK(cx)
--INDIRECT_THUNK(dx)
--INDIRECT_THUNK(si)
--INDIRECT_THUNK(di)
--INDIRECT_THUNK(bp)
-+
-+#define DECL_INDIRECT_THUNK(reg) \
-+	extern asmlinkage void __x86_indirect_thunk_ ## reg (void);
-+
-+#undef GEN
-+#define GEN(reg) DECL_INDIRECT_THUNK(reg)
-+#include <asm/GEN-for-each-reg.h>
-+
- #endif /* CONFIG_RETPOLINE */
-diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
-index 363ec13..9cc5480 100644
---- a/arch/x86/lib/retpoline.S
-+++ b/arch/x86/lib/retpoline.S
-@@ -24,25 +24,20 @@ SYM_FUNC_END(__x86_indirect_thunk_\reg)
-  * only see one instance of "__x86_indirect_thunk_\reg" rather
-  * than one per register with the correct names. So we do it
-  * the simple and nasty way...
-+ *
-+ * Worse, you can only have a single EXPORT_SYMBOL per line,
-+ * and CPP can't insert newlines, so we have to repeat everything
-+ * at least twice.
-  */
--#define __EXPORT_THUNK(sym) _ASM_NOKPROBE(sym); EXPORT_SYMBOL(sym)
--#define EXPORT_THUNK(reg) __EXPORT_THUNK(__x86_indirect_thunk_ ## reg)
--#define GENERATE_THUNK(reg) THUNK reg ; EXPORT_THUNK(reg)
+ 	x86_64 = is_x86_64(elf);
+ 	if (x86_64 == -1)
+@@ -469,17 +470,24 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
+ 		break;
+ 
+ 	case 0xcf: /* iret */
+-		*type = INSN_EXCEPTION_RETURN;
 -
--GENERATE_THUNK(_ASM_AX)
--GENERATE_THUNK(_ASM_BX)
--GENERATE_THUNK(_ASM_CX)
--GENERATE_THUNK(_ASM_DX)
--GENERATE_THUNK(_ASM_SI)
--GENERATE_THUNK(_ASM_DI)
--GENERATE_THUNK(_ASM_BP)
--#ifdef CONFIG_64BIT
--GENERATE_THUNK(r8)
--GENERATE_THUNK(r9)
--GENERATE_THUNK(r10)
--GENERATE_THUNK(r11)
--GENERATE_THUNK(r12)
--GENERATE_THUNK(r13)
--GENERATE_THUNK(r14)
--GENERATE_THUNK(r15)
--#endif
+-		ADD_OP(op) {
+-			/* add $40, %rsp */
+-			op->src.type = OP_SRC_ADD;
+-			op->src.reg = CFI_SP;
+-			op->src.offset = 5*8;
+-			op->dest.type = OP_DEST_REG;
+-			op->dest.reg = CFI_SP;
++		/*
++		 * Handle sync_core(), which has an IRET to self.
++		 * All other IRET are in STT_NONE entry code.
++		 */
++		sym = find_symbol_containing(sec, offset);
++		if (sym && sym->type == STT_FUNC) {
++			ADD_OP(op) {
++				/* add $40, %rsp */
++				op->src.type = OP_SRC_ADD;
++				op->src.reg = CFI_SP;
++				op->src.offset = 5*8;
++				op->dest.type = OP_DEST_REG;
++				op->dest.reg = CFI_SP;
++			}
++			break;
+ 		}
+-		break;
 +
-+#define __EXPORT_THUNK(sym)	_ASM_NOKPROBE(sym); EXPORT_SYMBOL(sym)
-+#define EXPORT_THUNK(reg)	__EXPORT_THUNK(__x86_indirect_thunk_ ## reg)
-+
-+#undef GEN
-+#define GEN(reg) THUNK reg
-+#include <asm/GEN-for-each-reg.h>
-+
-+#undef GEN
-+#define GEN(reg) EXPORT_THUNK(reg)
-+#include <asm/GEN-for-each-reg.h>
-+
++		/* fallthrough */
+ 
+ 	case 0xca: /* retf */
+ 	case 0xcb: /* retf */
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 4f3db2f..d822858 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2320,17 +2320,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 			break;
+ 
+-		case INSN_EXCEPTION_RETURN:
+-			/*
+-			 * This handles x86's sync_core() case, where we use an
+-			 * IRET to self. All 'normal' IRET instructions are in
+-			 * STT_NOTYPE entry symbols.
+-			 */
+-			if (func)
+-				break;
+-
+-			return 0;
+-
+ 		case INSN_CONTEXT_SWITCH:
+ 			if (func && (!next_insn || !next_insn->hint)) {
+ 				WARN_FUNC("unsupported instruction in callable function",
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 453b723..b6349ca 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -61,7 +61,7 @@ static void rb_add(struct rb_root *tree, struct rb_node *node,
+ 	rb_insert_color(node, tree);
+ }
+ 
+-static struct rb_node *rb_find_first(struct rb_root *tree, const void *key,
++static struct rb_node *rb_find_first(const struct rb_root *tree, const void *key,
+ 			       int (*cmp)(const void *key, const struct rb_node *))
+ {
+ 	struct rb_node *node = tree->rb_node;
+@@ -189,7 +189,7 @@ struct symbol *find_func_by_offset(struct section *sec, unsigned long offset)
+ 	return NULL;
+ }
+ 
+-struct symbol *find_symbol_containing(struct section *sec, unsigned long offset)
++struct symbol *find_symbol_containing(const struct section *sec, unsigned long offset)
+ {
+ 	struct rb_node *node;
+ 
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index 5e76ac3..9d6bb07 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -124,7 +124,7 @@ struct section *find_section_by_name(const struct elf *elf, const char *name);
+ struct symbol *find_func_by_offset(struct section *sec, unsigned long offset);
+ struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
+ struct symbol *find_symbol_by_name(const struct elf *elf, const char *name);
+-struct symbol *find_symbol_containing(struct section *sec, unsigned long offset);
++struct symbol *find_symbol_containing(const struct section *sec, unsigned long offset);
+ struct rela *find_rela_by_dest(const struct elf *elf, struct section *sec, unsigned long offset);
+ struct rela *find_rela_by_dest_range(const struct elf *elf, struct section *sec,
+ 				     unsigned long offset, unsigned int len);
