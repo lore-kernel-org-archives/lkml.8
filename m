@@ -2,131 +2,99 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC40C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08C6C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4D1205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340861;
-	bh=VRKwHyeST9eW8Jf751691ackqgxF3NVlkUp43jtpwUc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5fchfLuA0nRKhQMQWCIUWgQC295ruq08Corp64dbJXO8Z+0T4XYTDLZzO+AEQUW7
-	 UastgBBwlxiRM8f5KSnzkvIxbMecS7GZzOuIz3CK/5mCIxrpRwlSLqDsW0FXhNlvuq
-	 UV+5ZY9fybodEp19d1RV4KTDrNRBS76/yXUUCy24=
+	by mail.kernel.org (Postfix) with ESMTP id A9680205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731874AbgEANrk (ORCPT
+        id S1731886AbgEANrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731100AbgEANnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3925208DB;
-        Fri,  1 May 2020 13:43:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340598;
-        bh=VRKwHyeST9eW8Jf751691ackqgxF3NVlkUp43jtpwUc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THI21LGX7r4OhdteMLheU4Fn2PcgV/HJkfyF6UEbDjkFcF0molGyGmBMrwtbPXf3N
-         Zt2JIhy2U2eJ5NinCHSKnfdNW32ryUNICEosryhtU6pLSJL/6GCva8rtY1TzvXF8WY
-         5cspYf1wT9ot7/R94j7b0kx+X8plWoyY/GGw00vg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Lu=C3=ADs=20Mendes?= <luis.p.mendes@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Todd Poynor <toddpoynor@google.com>
-Subject: [PATCH 5.6 047/106] PCI: Move Apex Edge TPU class quirk to fix BAR assignment
-Date:   Fri,  1 May 2020 15:23:20 +0200
-Message-Id: <20200501131549.319111249@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
-References: <20200501131543.421333643@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 1 May 2020 09:47:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59409 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731613AbgEANnS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:18 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jUVwd-00067j-4A; Fri, 01 May 2020 13:43:11 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH] net: dsa: sja1105: fix speed setting for 10 MBPS
+Date:   Fri,  1 May 2020 14:43:10 +0100
+Message-Id: <20200501134310.289561-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 0a8f41023e8a3c100b3dc458ed2da651bf961ead upstream.
+The current logic for speed checking will never set the speed to 10 MBPS
+because bmcr & BMCR_SPEED10 is always 0 since BMCR_SPEED10 is 0. Also
+the erroneous setting where BMCR_SPEED1000 and BMCR_SPEED100 are both
+set causes the speed to be 1000 MBS.  Fix this by masking bps and checking
+for just the expected settings of BMCR_SPEED1000, BMCR_SPEED100 and
+BMCR_SPEED10 and defaulting to the unknown speed otherwise.
 
-Some Google Apex Edge TPU devices have a class code of 0
-(PCI_CLASS_NOT_DEFINED).  This prevents the PCI core from assigning
-resources for the Apex BARs because __dev_sort_resources() ignores
-classless devices, host bridges, and IOAPICs.
-
-On x86, firmware typically assigns those resources, so this was not a
-problem.  But on some architectures, firmware does *not* assign BARs, and
-since the PCI core didn't do it either, the Apex device didn't work
-correctly:
-
-  apex 0000:01:00.0: can't enable device: BAR 0 [mem 0x00000000-0x00003fff 64bit pref] not claimed
-  apex 0000:01:00.0: error enabling PCI device
-
-f390d08d8b87 ("staging: gasket: apex: fixup undefined PCI class") added a
-quirk to fix the class code, but it was in the apex driver, and if the
-driver was built as a module, it was too late to help.
-
-Move the quirk to the PCI core, where it will always run early enough that
-the PCI core will assign resources if necessary.
-
-Link: https://lore.kernel.org/r/CAEzXK1r0Er039iERnc2KJ4jn7ySNUOG9H=Ha8TD8XroVqiZjgg@mail.gmail.com
-Fixes: f390d08d8b87 ("staging: gasket: apex: fixup undefined PCI class")
-Reported-by: Luís Mendes <luis.p.mendes@gmail.com>
-Debugged-by: Luís Mendes <luis.p.mendes@gmail.com>
-Tested-by: Luis Mendes <luis.p.mendes@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Todd Poynor <toddpoynor@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Addresses-Coverity: ("Logically dead code")
+Fixes: ffe10e679cec ("net: dsa: sja1105: Add support for the SGMII port")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/pci/quirks.c                 |    7 +++++++
- drivers/staging/gasket/apex_driver.c |    7 -------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_main.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5567,3 +5567,10 @@ static void pci_fixup_no_d0_pme(struct p
- 	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
-+
-+static void apex_pci_fixup_class(struct pci_dev *pdev)
-+{
-+	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
-+}
-+DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
-+			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
---- a/drivers/staging/gasket/apex_driver.c
-+++ b/drivers/staging/gasket/apex_driver.c
-@@ -570,13 +570,6 @@ static const struct pci_device_id apex_p
- 	{ PCI_DEVICE(APEX_PCI_VENDOR_ID, APEX_PCI_DEVICE_ID) }, { 0 }
- };
- 
--static void apex_pci_fixup_class(struct pci_dev *pdev)
--{
--	pdev->class = (PCI_CLASS_SYSTEM_OTHER << 8) | pdev->class;
--}
--DECLARE_PCI_FIXUP_CLASS_HEADER(APEX_PCI_VENDOR_ID, APEX_PCI_DEVICE_ID,
--			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
--
- static int apex_pci_probe(struct pci_dev *pci_dev,
- 			  const struct pci_device_id *id)
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index 472f4eb20c49..59a9038cdc4e 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -1600,6 +1600,7 @@ static const char * const sja1105_reset_reasons[] = {
+ int sja1105_static_config_reload(struct sja1105_private *priv,
+ 				 enum sja1105_reset_reason reason)
  {
-
++	const int mask = (BMCR_SPEED1000 | BMCR_SPEED100 | BMCR_SPEED10);
+ 	struct ptp_system_timestamp ptp_sts_before;
+ 	struct ptp_system_timestamp ptp_sts_after;
+ 	struct sja1105_mac_config_entry *mac;
+@@ -1684,14 +1685,16 @@ int sja1105_static_config_reload(struct sja1105_private *priv,
+ 		sja1105_sgmii_pcs_config(priv, an_enabled, false);
+ 
+ 		if (!an_enabled) {
+-			int speed = SPEED_UNKNOWN;
++			int speed;
+ 
+-			if (bmcr & BMCR_SPEED1000)
++			if ((bmcr & mask) == BMCR_SPEED1000)
+ 				speed = SPEED_1000;
+-			else if (bmcr & BMCR_SPEED100)
++			else if ((bmcr & mask) == BMCR_SPEED100)
+ 				speed = SPEED_100;
+-			else if (bmcr & BMCR_SPEED10)
++			else if ((bmcr & mask) == BMCR_SPEED10)
+ 				speed = SPEED_10;
++			else
++				speed = SPEED_UNKNOWN;
+ 
+ 			sja1105_sgmii_pcs_force_speed(priv, speed);
+ 		}
+-- 
+2.25.1
 
