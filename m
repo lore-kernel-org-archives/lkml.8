@@ -2,146 +2,150 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA27EC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45372C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FA020836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2275620836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588345328;
+	bh=sLNsgBhDFkipYaV5v04vF4v+XXtyMcWu3BrBwAnjJDc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=gfeCMsq/ME3+jR064PZmSPmxRV2u+W+cLT+uI9HIXRQT0Pz4r4IBRxufRLvDzqHmB
+	 RXkbNzi2w5D5qp2ztiG+3Zxa7Oedl2QAHw0hIiO1sP5+pPNoCXMrh5VSMhta3nFHhP
+	 eSxEChQ5QCA+CaIgM4DnADS4kaBEF+yIY0w9WK3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbgEAO7s (ORCPT
+        id S1729112AbgEAPCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:59:48 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33296 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728724AbgEAO7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:59:48 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 3C1082A30D9
-Subject: Re: [PATCH v3 7/7] drm/mediatek: mtk_dsi: Create connector for
- bridges
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-References: <20200417150614.2631786-1-enric.balletbo@collabora.com>
- <20200417150614.2631786-8-enric.balletbo@collabora.com>
- <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <0584a198-02f2-a8a3-676e-74365a697bd4@collabora.com>
-Date:   Fri, 1 May 2020 16:59:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 11:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728933AbgEAPCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:02:07 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D15FF2137B;
+        Fri,  1 May 2020 15:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588345326;
+        bh=sLNsgBhDFkipYaV5v04vF4v+XXtyMcWu3BrBwAnjJDc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=a7DGgB7PsWk9EkjO5KG38cAprEstQ8RBYXbAvnRTfmdyNfONQIrvgdKI9ArmBi3FS
+         eI0cWVT8/YW6hDIle4KhEaqRithz3WtMyfrXRLno7WYwOr8yg0dHzBRBoqElNVUC6d
+         146KW5wNRSspc/UkQu4xsg90sR4AZiboUMQl+eQM=
+Date:   Fri, 1 May 2020 10:02:04 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Austin.Bolen@dell.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Mario.Limonciello@dell.com,
+        jonathan.derrick@intel.com, mr.nuke.me@gmail.com,
+        rjw@rjwysocki.net, kbusch@kernel.org, okaya@kernel.org,
+        tbaicar@codeaurora.org
+Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
+ ownership
+Message-ID: <20200501150204.GA109407@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <42c53d43bc094889b33c1ac8c2b99d33@AUSX13MPC107.AMER.DELL.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chun-Kuang,
-
-Thank you for your review.
-
-On 1/5/20 16:26, Chun-Kuang Hu wrote:
-> Hi, Enric:
+On Fri, May 01, 2020 at 02:40:23PM +0000, Austin.Bolen@dell.com wrote:
+> On 4/30/2020 6:02 PM, Bjorn Helgaas wrote:
+> > [Austin, help us understand the FIRMWARE_FIRST bit! :)]
+> >
+> > On Thu, Apr 30, 2020 at 05:40:22PM -0500, Bjorn Helgaas wrote:
+> >> On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> >>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>>
+> >>> Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
+> >>> determine the PCIe AER Capability ownership between OS and
+> >>> firmware. This support is added based on following spec
+> >>> reference.
+> >>>
+> >>> Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
+> >>> flags field BIT-0 and BIT-1 can be used to expose the
+> >>> ownership of error source between firmware and OSPM.
+> >>>
+> >>> Bit [0] - FIRMWARE_FIRST: If set, indicates that system
+> >>>           firmware will handle errors from this source
+> >>>           first.
+> >>> Bit [1] – GLOBAL: If set, indicates that the settings
+> >>>           contained in this structure apply globally to all
+> >>>           PCI Express Bridges.
+> >>>
+> >>> Although above spec reference states that setting
+> >>> FIRMWARE_FIRST bit means firmware will handle the error source
+> >>> first, it does not explicitly state anything about AER
+> >>> ownership. So using HEST to determine AER ownership is
+> >>> incorrect.
+> >>>
+> >>> Also, as per following specification references, _OSC can be
+> >>> used to negotiate the AER ownership between firmware and OS.
+> >>> Details are,
+> >>>
+> >>> Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
+> >>> of _OSC Control Field” and as per PCI firmware specification r3.2,
+> >>> sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
+> >>> to request control over PCI Express AER. If the OS successfully
+> >>> receives control of this feature, it must handle error reporting
+> >>> through the AER Capability as described in the PCI Express Base
+> >>> Specification.
+> >>>
+> >>> Since above spec references clearly states _OSC can be used to
+> >>> determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
+> >> I pulled out the _OSC part of this to a separate patch.  What's left
+> >> is below, and is essentially equivalent to Alex's patch:
+> >>
+> >>   https://lore.kernel.org/r/20190326172343.28946-3-mr.nuke.me@gmail.com/
+> >>
+> >> I like what this does, but what I don't like is the fact that we now
+> >> have this thing called pcie_aer_get_firmware_first() that is not
+> >> connected with the ACPI FIRMWARE_FIRST bit at all.
+> >
+> > Austin, if we remove this, we'll have no PCIe-related code that looks
+> > at the HEST FIRMWARE_FIRST bit at all.  Presumably it's there for some
+> > reason, but I'm not sure what the reason is.
+> >
+> > Alex's mail [1] has a nice table of _OSC AER/HEST FFS bits that looks
+> > useful, but the only actionable thing I can see is that in the (1,1)
+> > case, OSPM should do some initialization with masks/enables.
+> >
+> > But I have no clue what that means or how to connect that with the
+> > spec.  What are the masks/enables?  Is that something connected with
+> > ERST?
+> >
+> > [1] https://lore.kernel.org/r/20190326172343.28946-1-mr.nuke.me@gmail.com/
 > 
-> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年4月17日 週五 下午11:06寫道：
->>
->> Use the drm_bridge_connector helper to create a connector for pipelines
->> that use drm_bridge. This allows splitting connector operations across
->> multiple bridges when necessary, instead of having the last bridge in
->> the chain creating the connector and handling all connector operations
->> internally.
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->> Changes in v3:
->> - Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
->>
->> Changes in v2: None
->>
->>  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
->>  1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
->> index 157097c63b23..85f76b01ae4d 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
->> @@ -17,6 +17,7 @@
->>
->>  #include <drm/drm_atomic_helper.h>
->>  #include <drm/drm_bridge.h>
->> +#include <drm/drm_bridge_connector.h>
->>  #include <drm/drm_mipi_dsi.h>
->>  #include <drm/drm_of.h>
->>  #include <drm/drm_panel.h>
->> @@ -183,6 +184,7 @@ struct mtk_dsi {
->>         struct drm_encoder encoder;
->>         struct drm_bridge bridge;
->>         struct drm_bridge *next_bridge;
->> +       struct drm_connector *connector;
->>         struct phy *phy;
->>
->>         void __iomem *regs;
->> @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
->>          */
->>         dsi->encoder.possible_crtcs = 1;
->>
->> -       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
->> +       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
->> +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
->>         if (ret)
->>                 goto err_cleanup_encoder;
->>
->> +       dsi->connector = drm_bridge_connector_init(drm, &dsi->encoder);
->> +       if (IS_ERR(dsi->connector)) {
->> +               DRM_ERROR("Unable to create bridge connector\n");
->> +               ret = PTR_ERR(dsi->connector);
->> +               goto err_cleanup_encoder;
->> +       }
->> +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
->> +
+> The only values that make sense to me are (1, 0) for full native OS
+> init/handling of AER and (0, 1) for the firmware first model where
+> firmware does the init and handles errors first then passes control to
+> the OS. For these cases the FIRMWARE_FIRST flag in HEST is redundant and
+> not needed.
 > 
-> I'm not very clear about how brige-connector works, but why connector
-> does not attach to panel?
+> We did discuss the (1, 1) case in the ACPI working group and there were
+> a potential use case (which Alex documented in the link you provided)
+> but there is nothing specified in the standard about how that model
+> would actually work AFAICT. And no x86 system has the hardware support
+> needed for what was proposed that I'm aware of (not sure about other
+> architectures).
 > 
+> So unless and until someone documents how the firmware and OS are
+> supposed to behave in the (1, 1) or (0, 0) scenario and expresses a need
+> for those models, I would not bother adding support for them.  Just my 2
+> cents.
 
-Laurent or other drm maintainers might have more details than me, but, AFAIK the
-drm_bridge_connector_init initializes a connector for a chain of bridges that
-starts at the @encoder. At this point you don't know which bridge is connected
-to the panel physically but doesn't really matter as what you know is that will
-be only one connector in the  chain.
+Perfect, I think we should ignore the FIRMWARE_FIRST bit in the HEST
+PCIe entries for now.  Thanks a lot for your help with this!
 
-Thanks,
- Enric
-
-> Regards,
-> Chun-Kuang.
-> 
->>         return 0;
->>
->>  err_cleanup_encoder:
->> --
->> 2.25.1
->>
+Bjorn
