@@ -2,88 +2,93 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A275C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF91C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65545206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08CB2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:35:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="swS9lkWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgEAUd7 (ORCPT
+        id S1726562AbgEAUfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:33:59 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56944 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgEAUd4 (ORCPT
+        Fri, 1 May 2020 16:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgEAUf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:33:56 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 631651C020D; Fri,  1 May 2020 22:33:54 +0200 (CEST)
-Date:   Fri, 1 May 2020 22:33:54 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 2/6] dt-bindings: serdev: ngsm: Add binding for
- serdev-ngsm
-Message-ID: <20200501203354.GD6043@duo.ucw.cz>
-References: <20200430174615.41185-1-tony@atomide.com>
- <20200430174615.41185-3-tony@atomide.com>
+        Fri, 1 May 2020 16:35:29 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE57FC061A0C;
+        Fri,  1 May 2020 13:35:28 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h4so941975wmb.4;
+        Fri, 01 May 2020 13:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UJR6qkcEKg4zj/hYVeH+dQgI/I3RrXDHkrgPPab3suc=;
+        b=swS9lkWBq/1ZKZ/pPS+EuUDYX4EzjGYp5KnOwV7fSwBnRmJP1+6LuxpXDemfATNqj/
+         ZLKcGVcTEQE0VC5QTYSzw0IVfeWPqsWEsldFfbwNnaZPT3pmqnokCOAh7dqw1D38opun
+         MHLrNGJj5bTxgsLIyIrON2ZD1WAqzjYYnKLkq7Aqg30GNcfe4ZqVTRvlyG/4MJLmOvK1
+         +HYhzkn58JeqjCCYxUlsV6zunMKibLxydwuoL2H6Q7t7z0apov4S1oU5wt4eMqStAajZ
+         IwNkCoU+KQvfQu2KfnNidRHK7azRDYdPPvdWXuDp+ShsxJ3f3lH2BkKoYHqvfEZb8bqC
+         TWPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UJR6qkcEKg4zj/hYVeH+dQgI/I3RrXDHkrgPPab3suc=;
+        b=F3gv04BwxQgj9c5j3YiujwXTlMZPGsw1As14Lhy8B+Jp1h6N8j629sgR+NCnGpupzR
+         Mk3TTMHeSOsfGB9RM7WPG03HwdMMpC3Iweyw6ypbCKxVLFg89+jV2xNBQrs84qxGlKNB
+         UIwdhbJ5PGHOgm6tAFdtmqGMvFtRNrRWEbjlFp9ENV8kwFOUk/UUrcVqqkVLXkmVsQgd
+         nlg5JBH0uTsgOnS3o/RHWXKiRD850Ttkdzchw5jsSj51M6RnuCnXzSooNGUg2CX5g6Yt
+         x0/x2+faexNQ2ZlHgeZs7j2NMPPaI7rl0ae74y3p8o8FS4oiRW8bO29tACr5oZ+rPLr5
+         mliQ==
+X-Gm-Message-State: AGi0PuYy0BlgwM3sPekGJKbArftweVOIxVZwW3LLiMxnb1ONXg2ZH7JE
+        9Luue2zZslTYDUGiwCEatgDQP0XcbHnIEQ==
+X-Google-Smtp-Source: APiQypKUQLLMkja5nKTST+cqkC1H0dquaF9jzTsiLqbDvBgTDlFF3EJ/aVd5aHTHNbPEQ17+uCwSFw==
+X-Received: by 2002:a1c:ba09:: with SMTP id k9mr1213461wmf.176.1588365327680;
+        Fri, 01 May 2020 13:35:27 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id s12sm1021981wmc.7.2020.05.01.13.35.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 13:35:27 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     skrzynka@konradybcio.pl
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add support for venus on msm8939
+Date:   Fri,  1 May 2020 22:35:01 +0200
+Message-Id: <20200501203505.144362-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
-Content-Disposition: inline
-In-Reply-To: <20200430174615.41185-3-tony@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Konrad Dybcio (2):
+  media: venus: Add support for MSM8939
+  dt-bindings: media: Document MSM8939 Venus
 
---IDYEmSnFhs3mNXr+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ .../bindings/media/qcom,msm8939-venus.yaml    | 119 ++++++++++++++++++
+ drivers/media/platform/qcom/venus/core.c      |  33 +++++
+ 2 files changed, 152 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8939-venus.yaml
 
-On Thu 2020-04-30 10:46:11, Tony Lindgren wrote:
-> Add a binding document for a generic serdev-ngsm driver that can be
-> used to bring up TS 27.010 line discipline with Linux n_gsm support
-> on a serial port.
->=20
-> As the Motorola Mapphone modems require some custom handling, they
-> are handled with a separate compatible.
->=20
-> Let's also add vendor string for ETSI as we're using a ETSI 3GPP
-> TS 27.010 standard.
->=20
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+-- 
+2.26.1
 
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---IDYEmSnFhs3mNXr+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyHsgAKCRAw5/Bqldv6
-8qpmAJ4u6QcwJrnIodEOCgLHz//7PFwN5ACggpNJzLdgXm9ONB5Rczrm99TWPxg=
-=XuF9
------END PGP SIGNATURE-----
-
---IDYEmSnFhs3mNXr+--
