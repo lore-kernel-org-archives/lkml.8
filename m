@@ -7,43 +7,45 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C99C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 599CCC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 723C424961
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F62B2495E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgEASXT (ORCPT
+        id S1730913AbgEASXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        Fri, 1 May 2020 14:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730675AbgEASW3 (ORCPT
+        by vger.kernel.org with ESMTP id S1730660AbgEASW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:22:29 -0400
+        Fri, 1 May 2020 14:22:28 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103DDC061A0C;
-        Fri,  1 May 2020 11:22:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D517C08E934;
+        Fri,  1 May 2020 11:22:28 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIt-0003j2-EH; Fri, 01 May 2020 20:22:27 +0200
+        id 1jUaIn-0003fD-VN; Fri, 01 May 2020 20:22:22 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6C7101C0330;
-        Fri,  1 May 2020 20:22:24 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:24 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 527781C04CD;
+        Fri,  1 May 2020 20:22:21 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:21 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/apic: Move TSC deadline timer debug printk
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+Subject: [tip: objtool/core] objtool: Make handle_insn_ops() unconditional
+Cc:     Julien Thierry <jthierry@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87y2qhoshi.fsf@nanos.tec.linutronix.de>
-References: <87y2qhoshi.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200428191659.795115188@infradead.org>
+References: <20200428191659.795115188@infradead.org>
 MIME-Version: 1.0
-Message-ID: <158835734441.8414.16139957090362735390.tip-bot2@tip-bot2>
+Message-ID: <158835734130.8414.1839500420306776239.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,134 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the objtool/core branch of tip:
 
-Commit-ID:     c84cb3735fd53c91101ccdb191f2e3331a9262cb
-Gitweb:        https://git.kernel.org/tip/c84cb3735fd53c91101ccdb191f2e3331a9262cb
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 27 Apr 2020 16:55:57 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 01 May 2020 19:15:41 +02:00
+Commit-ID:     60041bcd8f5ab560dabf44dc384f58bbeb5a6a30
+Gitweb:        https://git.kernel.org/tip/60041bcd8f5ab560dabf44dc384f58bbeb5a6a30
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Fri, 24 Apr 2020 16:16:41 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 30 Apr 2020 20:14:32 +02:00
 
-x86/apic: Move TSC deadline timer debug printk
+objtool: Make handle_insn_ops() unconditional
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+Now that every instruction has a list of stack_ops; we can trivially
+distinquish those instructions that do not have stack_ops, their list
+is empty.
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
+This means we can now call handle_insn_ops() unconditionally.
 
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
-
-Mark the deadline timer check related functions and data __init while at
-it.
-
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
-
+Suggested-by: Julien Thierry <jthierry@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20200428191659.795115188@infradead.org
 ---
- arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ tools/objtool/check.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 81b9c63..e53dda2 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 068897d..6591c2d 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2259,6 +2259,9 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 				return 0;
+ 		}
+ 
++		if (handle_insn_ops(insn, &state))
++			return 1;
++
+ 		switch (insn->type) {
+ 
+ 		case INSN_RETURN:
+@@ -2318,9 +2321,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			break;
+ 
+ 		case INSN_EXCEPTION_RETURN:
+-			if (handle_insn_ops(insn, &state))
+-				return 1;
 -
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
- 	}
+ 			/*
+ 			 * This handles x86's sync_core() case, where we use an
+ 			 * IRET to self. All 'normal' IRET instructions are in
+@@ -2340,8 +2340,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 			return 0;
  
-@@ -546,7 +544,7 @@ static struct clock_event_device lapic_clockevent = {
- };
- static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
+ 		case INSN_STACK:
+-			if (handle_insn_ops(insn, &state))
+-				return 1;
+ 			break;
  
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -556,7 +554,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -568,7 +566,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -581,7 +579,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL( HASWELL_X,		&hsx_deadline_rev),
- 	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_X,	0x0b000020),
- 	X86_MATCH_INTEL_FAM6_MODEL( BROADWELL_D,	&bdx_deadline_rev),
-@@ -603,18 +601,19 @@ static const struct x86_cpu_id deadline_match[] = {
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -626,11 +625,12 @@ static void apic_check_deadline_errata(void)
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -2092,7 +2092,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
+ 		case INSN_STAC:
