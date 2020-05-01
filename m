@@ -2,97 +2,148 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E8DC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7ADC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72C1B2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:02:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="olcDTUG5"
+	by mail.kernel.org (Postfix) with ESMTP id 41FDD206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgEAOCB (ORCPT
+        id S1728925AbgEAOGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:02:01 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:37228 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729529AbgEAOB7 (ORCPT
+        Fri, 1 May 2020 10:06:47 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:54108 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgEAOGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:01:59 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041DvKvJ019635;
-        Fri, 1 May 2020 08:58:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=JzGqBIQszLu//+K3RgyjRVgYmCjC0eyp591kUihnjjw=;
- b=olcDTUG5L43shFMXwWoSRFqQCJ6rf1+sS+6IfQRtknWZEMgse4JyCVol2dlyaQO1dIv3
- RQULtVHb2mFr206A4+M5+MSZboaPSOn9ZUfJbCzr9QwLSdwQ5iRx5kZM+rBXEiHzNgFp
- 8+Z5hugcGI4IqKPTkTm87Q5ZSMmDLVsdDxtzofu1+7H/02MFrvjasK/iQrXOedjyeMsi
- g8el1KSP2qOywMzH5jghwuTGMECa+5WGZTli4q+e4p/Hdg3zFpJWgmB1RfBfYaZ6CjKL
- lnmF2xi/prlkvUACK0OOKRyi05H13n/3ynoD/vqIWskgGdGB6/m18LskVeX9xSPiZcwJ Tw== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 30r7eg91ky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 01 May 2020 08:58:54 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 1 May 2020
- 14:58:51 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 1 May 2020 14:58:51 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CD583448;
-        Fri,  1 May 2020 13:58:51 +0000 (UTC)
-Date:   Fri, 1 May 2020 13:58:51 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>
-Subject: Re: [PATCH] dt-bindings: sound: wm8994: Correct required supplies
- based on actual implementaion
-Message-ID: <20200501135851.GP44490@ediswmail.ad.cirrus.com>
-References: <20200501133534.6706-1-krzk@kernel.org>
+        Fri, 1 May 2020 10:06:46 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUWJM-0004gf-TM; Fri, 01 May 2020 08:06:40 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUWJK-0006hx-Mv; Fri, 01 May 2020 08:06:40 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Laura Abbott <labbott@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
+        <1588130803-20527-4-git-send-email-iamjoonsoo.kim@lge.com>
+Date:   Fri, 01 May 2020 09:03:19 -0500
+In-Reply-To: <1588130803-20527-4-git-send-email-iamjoonsoo.kim@lge.com> (js's
+        message of "Wed, 29 Apr 2020 12:26:36 +0900")
+Message-ID: <87h7wzvjko.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200501133534.6706-1-krzk@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1011 suspectscore=0
- impostorscore=0 spamscore=0 malwarescore=0 mlxlogscore=757 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005010109
+Content-Type: text/plain
+X-XM-SPF: eid=1jUWJK-0006hx-Mv;;;mid=<87h7wzvjko.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19OrQA4UGeE4A+/sWRinwFintIJ4nH0kP4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 03/10] kexec: separate PageHighMem() and PageHighMemZone() use case
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:35:34PM +0200, Krzysztof Kozlowski wrote:
-> The required supplies in bindings were actually not matching
-> implementation making the bindings incorrect and misleading.  The Linux
-> kernel driver requires all supplies to be present.  Also for wlf,wm8994
-> uses just DBVDD-supply instead of DBVDDn-supply (n: <1,3>).
-> 
-> Reported-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+js1304@gmail.com writes:
+
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>
+> Until now, PageHighMem() is used for two different cases. One is to check
+> if there is a direct mapping for this page or not. The other is to check
+> the zone of this page, that is, weather it is the highmem type zone or not.
+>
+> Now, we have separate functions, PageHighMem() and PageHighMemZone() for
+> each cases. Use appropriate one.
+>
+> Note that there are some rules to determine the proper macro.
+>
+> 1. If PageHighMem() is called for checking if the direct mapping exists
+> or not, use PageHighMem().
+> 2. If PageHighMem() is used to predict the previous gfp_flags for
+> this page, use PageHighMemZone(). The zone of the page is related to
+> the gfp_flags.
+> 3. If purpose of calling PageHighMem() is to count highmem page and
+> to interact with the system by using this count, use PageHighMemZone().
+> This counter is usually used to calculate the available memory for an
+> kernel allocation and pages on the highmem zone cannot be available
+> for an kernel allocation.
+> 4. Otherwise, use PageHighMemZone(). It's safe since it's implementation
+> is just copy of the previous PageHighMem() implementation and won't
+> be changed.
+>
+> I apply the rule #2 for this patch.
+
+Hmm.
+
+What happened to the notion of deprecating and reducing the usage of
+highmem?  I know that we have some embedded architectures where it is
+still important but this feels like it flies in the face of that.
+
+
+This part of kexec would be much more maintainable if it had a proper
+mm layer helper that tested to see if the page matched the passed in
+gfp flags.  That way the mm layer could keep changing and doing weird
+gyrations and this code would not care.
+
+
+What would be really helpful is if there was a straight forward way to
+allocate memory whose physical address fits in the native word size.
+
+
+All I know for certain about this patch is that it takes a piece of code
+that looked like it made sense, and transfroms it into something I can
+not easily verify, and can not maintain.
+
+As it makes the code unmaintainable.
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+
+Not to say that the code isn't questionable as it is, but this change just
+pushes it over the edge into gobbledy gook.
+
+Eric
+
+
+> Acked-by: Roman Gushchin <guro@fb.com>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > ---
-
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-
-Thanks,
-Charles
+>  kernel/kexec_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index ba1d91e..33097b7 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -766,7 +766,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  			 * gfp_flags honor the ones passed in.
+>  			 */
+>  			if (!(gfp_mask & __GFP_HIGHMEM) &&
+> -			    PageHighMem(old_page)) {
+> +			    PageHighMemZone(old_page)) {
+>  				kimage_free_pages(old_page);
+>  				continue;
+>  			}
