@@ -2,90 +2,89 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96375C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7263C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF5D2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:03:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KGfQLrW5"
+	by mail.kernel.org (Postfix) with ESMTP id 97F4720787
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbgEASDx (ORCPT
+        id S1729964AbgEASHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:03:53 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49070 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgEASDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:03:52 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041I3nol035250;
-        Fri, 1 May 2020 13:03:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588356229;
-        bh=/f2T/5gGoekOKSGJbuC7wezyx3Dx6eGpqW3pvT7eCDA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KGfQLrW5yPv/O/Fv58gSO4YkgdZw9Q0JTEi9jc3luGH7v15kxrnhF6Hn5t5cH3Unl
-         g7DQ1pjP0n0WVZep/LmV7LTDteTMYOW4k2zfbGMhyitxPupdvKBhAZoD4hXw6vlaq9
-         I8pXYGjaT3AxLX33VM5lyNJC57UGb/xsxiuiTZIs=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041I3nqZ067883
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 13:03:49 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 13:03:49 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 13:03:49 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041I3nE7003992;
-        Fri, 1 May 2020 13:03:49 -0500
-Subject: Re: [RESEND PATCH v5 0/3] BQ25150/155 Charger
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200304174025.31655-1-r-rivera-matos@ti.com>
- <eb5f0818-21c7-1b84-b0c9-904bce9721be@ti.com>
- <20200501172445.diiccfzbh7kzkxdl@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a83b5728-2896-3ec9-00f1-dc611c3aa471@ti.com>
-Date:   Fri, 1 May 2020 12:55:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 14:07:24 -0400
+Received: from namei.org ([65.99.196.166]:56664 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729138AbgEASHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 14:07:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 041I5rjc006112;
+        Fri, 1 May 2020 18:05:53 GMT
+Date:   Sat, 2 May 2020 04:05:53 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] fs: Enable to enforce noexec mounts or file exec
+ through RESOLVE_MAYEXEC
+In-Reply-To: <d1a81d06-7530-1f2b-858a-e42bc1ae2a7e@digikod.net>
+Message-ID: <alpine.LRH.2.21.2005020405210.5924@namei.org>
+References: <20200428175129.634352-1-mic@digikod.net> <20200428175129.634352-4-mic@digikod.net> <alpine.LRH.2.21.2005011409570.29679@namei.org> <d1a81d06-7530-1f2b-858a-e42bc1ae2a7e@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200501172445.diiccfzbh7kzkxdl@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/mixed; boundary="1665246916-1237382289-1588356355=:5924"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 5/1/20 12:24 PM, Sebastian Reichel wrote:
-> Hi,
->
-> I don't see any PATCHv5 (with or without RESEND) for bq25150 and
-> lore does not see anything either:
->
-> https://lore.kernel.org/linux-pm/?q=PATCH+v5+0%2F3%5D+BQ25150%2F155+Charger
+--1665246916-1237382289-1588356355=:5924
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8BIT
 
-I posted them for Ricardo.  Maybe he need a lore account.
+On Fri, 1 May 2020, Mickaël Salaün wrote:
 
-https://lore.kernel.org/patchwork/project/lkml/list/?series=441577
+> 
+> However, for fully controlled distros such as CLIP OS, it make sense to
+> enforce such restrictions at kernel build time. I can add an alternative
+> kernel configuration to enforce a particular policy at boot and disable
+> this sysctl.
 
-Not sure why his patches did not go through.
+Sounds good.
 
-Dan
+-- 
+James Morris
+<jmorris@namei.org>
 
+--1665246916-1237382289-1588356355=:5924--
