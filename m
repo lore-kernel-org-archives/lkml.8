@@ -2,279 +2,162 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E747FC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9231DC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89EF20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D89D20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="vDhiT4fr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgEAOlF (ORCPT
+        id S1729061AbgEAOoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:41:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33048 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgEAOlD (ORCPT
+        Fri, 1 May 2020 10:44:18 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:65377 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728896AbgEAOoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:41:03 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E17FF2A0BDB
-Subject: Re: [PATCH v3 4/7] drm/mediatek: mtk_dsi: Convert to bridge driver
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-References: <20200417150614.2631786-1-enric.balletbo@collabora.com>
- <20200417150614.2631786-5-enric.balletbo@collabora.com>
- <CAAOTY_-nzdS-jg2pgpM1ksrsQVewB2AEB8TihHcCB-MJd+qFfw@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <72511ddc-c94d-3c20-14cb-e971b000fc48@collabora.com>
-Date:   Fri, 1 May 2020 16:40:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 10:44:17 -0400
+X-UUID: 55359df475514474a6f5bdab7b596339-20200501
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=evW9M5xH2hSwwDxvwZiNYpsh4mIH0v4sdQGB+gToaUI=;
+        b=vDhiT4frFxhi5TgTmpe5GquHYUWVE9Ty8qPwDz2qGQLcOFn20+TkulcmkY8V2h1ST8cPXVgut6sL4sTkcSfaw/v8h8hs3b6n83sds/8JLkG9RRs6Lllu8S4Jf34dL9uLEokjJvlHVZMxmEYTDTXOLt+uZM+zZFk0PLqn01vODDE=;
+X-UUID: 55359df475514474a6f5bdab7b596339-20200501
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1745562342; Fri, 01 May 2020 22:38:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 1 May 2020 22:38:34 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 1 May 2020 22:38:34 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
+CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v3 1/5] scsi: ufs: enable WriteBooster on some pre-3.1 UFS devices
+Date:   Fri, 1 May 2020 22:38:31 +0800
+Message-ID: <20200501143835.26032-2-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200501143835.26032-1-stanley.chu@mediatek.com>
+References: <20200501143835.26032-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY_-nzdS-jg2pgpM1ksrsQVewB2AEB8TihHcCB-MJd+qFfw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chun-Kuang,
+V3JpdGVCb29zdGVyIGZlYXR1cmUgY2FuIGJlIHN1cHBvcnRlZCBieSBzb21lIHByZS0zLjEgVUZT
+IGRldmljZXMNCmJ5IHVwZ3JhZGluZyBmaXJtd2FyZS4NCg0KVG8gZW5hYmxlIFdyaXRlQm9vc3Rl
+ciBmZWF0dXJlIGluIHN1Y2ggZGV2aWNlcywgaW50cm9kdWNlIGEgZGV2aWNlDQpxdWlyayB0byBy
+ZWxheCB0aGUgZW50cmFuY2UgY29uZGl0aW9uIG9mIHVmc2hjZF93Yl9wcm9iZSgpIHRvIGFsbG93
+DQpob3N0IGRyaXZlciB0byBjaGVjayB0aG9zZSBkZXZpY2VzJyBXcml0ZUJvb3N0ZXIgY2FwYWJp
+bGl0eS4NCg0KV3JpdGVCb29zdGVyIGZlYXR1cmUgY2FuIGJlIGF2YWlsYWJsZSBpZiBiZWxvdyBh
+bGwgY29uZGl0aW9ucyBhcmUNCnNhdGlzZmllZCwNCg0KMS4gSG9zdCBlbmFibGVzIFdyaXRlQm9v
+c3RlciBjYXBhYmlsaXR5DQoyLiBVRlMgMy4xIGRldmljZSBvciBVRlMgcHJlLTMuMSBkZXZpY2Ug
+d2l0aCBxdWlyaw0KICAgVUZTX0RFVklDRV9RVUlSS19TVVBQT1JUX0VYVEVOREVEX0ZFQVRVUkVT
+IGVuYWJsZWQNCjMuIERldmljZSBkZXNjcmlwdG9yIGhhcyBkRXh0ZW5kZWRVRlNGZWF0dXJlc1N1
+cHBvcnQgZmllbGQNCjQuIFdyaXRlQm9vc3RlciBzdXBwb3J0IGlzIHNwZWNpZmllZCBpbiBhYm92
+ZSBmaWVsZA0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0
+ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNfcXVpcmtzLmggfCAgNyArKysrDQog
+ZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyAgICAgfCA2NiArKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0tLS0tLS0tLQ0KIDIgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKSwgMjUgZGVs
+ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaCBi
+L2RyaXZlcnMvc2NzaS91ZnMvdWZzX3F1aXJrcy5oDQppbmRleCBkZjdhMWU2ODA1YTMuLmUzMTc1
+YTYzYzY3NiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzX3F1aXJrcy5oDQorKysg
+Yi9kcml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaA0KQEAgLTEwMSw0ICsxMDEsMTEgQEAgc3Ry
+dWN0IHVmc19kZXZfZml4IHsNCiAgKi8NCiAjZGVmaW5lIFVGU19ERVZJQ0VfUVVJUktfSE9TVF9W
+U19ERUJVR1NBVkVDT05GSUdUSU1FCSgxIDw8IDkpDQogDQorLyoNCisgKiBTb21lIHByZS0zLjEg
+VUZTIGRldmljZXMgY2FuIHN1cHBvcnQgZXh0ZW5kZWQgZmVhdHVyZXMgYnkgdXBncmFkaW5nDQor
+ICogdGhlIGZpcm13YXJlLiBFbmFibGUgdGhpcyBxdWlyayB0byBtYWtlIFVGUyBjb3JlIGRyaXZl
+ciBwcm9iZSBhbmQgZW5hYmxlDQorICogc3VwcG9ydGVkIGZlYXR1cmVzIG9uIHN1Y2ggZGV2aWNl
+cy4NCisgKi8NCisjZGVmaW5lIFVGU19ERVZJQ0VfUVVJUktfU1VQUE9SVF9FWFRFTkRFRF9GRUFU
+VVJFUyAoMSA8PCAxMCkNCisNCiAjZW5kaWYgLyogVUZTX1FVSVJLU19IXyAqLw0KZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5j
+DQppbmRleCA5MTVlOTYzMzk4YzQuLmM2NjY4Nzk5ZDk1NiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+c2NzaS91ZnMvdWZzaGNkLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCkBAIC0y
+MjksNiArMjI5LDggQEAgc3RhdGljIHN0cnVjdCB1ZnNfZGV2X2ZpeCB1ZnNfZml4dXBzW10gPSB7
+DQogCQlVRlNfREVWSUNFX1FVSVJLX0hPU1RfUEFfU0FWRUNPTkZJR1RJTUUpLA0KIAlVRlNfRklY
+KFVGU19WRU5ET1JfU0tIWU5JWCwgImhCOGFMMSIgLypIMjhVNjIzMDFBTVIqLywNCiAJCVVGU19E
+RVZJQ0VfUVVJUktfSE9TVF9WU19ERUJVR1NBVkVDT05GSUdUSU1FKSwNCisJVUZTX0ZJWChVRlNf
+VkVORE9SX1NLSFlOSVgsICJIOUhRMjFBRkFNWkRBUiIsDQorCQlVRlNfREVWSUNFX1FVSVJLX1NV
+UFBPUlRfRVhURU5ERURfRkVBVFVSRVMpLA0KIA0KIAlFTkRfRklYDQogfTsNCkBAIC02ODAwLDkg
+KzY4MDIsMTkgQEAgc3RhdGljIGludCB1ZnNoY2Rfc2NzaV9hZGRfd2x1cyhzdHJ1Y3QgdWZzX2hi
+YSAqaGJhKQ0KIA0KIHN0YXRpYyB2b2lkIHVmc2hjZF93Yl9wcm9iZShzdHJ1Y3QgdWZzX2hiYSAq
+aGJhLCB1OCAqZGVzY19idWYpDQogew0KKwlpZiAoIXVmc2hjZF9pc193Yl9hbGxvd2VkKGhiYSkp
+DQorCQlyZXR1cm47DQorDQorCWlmIChoYmEtPmRlc2Nfc2l6ZS5kZXZfZGVzYyA8PSBERVZJQ0Vf
+REVTQ19QQVJBTV9FWFRfVUZTX0ZFQVRVUkVfU1VQKQ0KKwkJZ290byB3Yl9kaXNhYmxlZDsNCisN
+CiAJaGJhLT5kZXZfaW5mby5kX2V4dF91ZnNfZmVhdHVyZV9zdXAgPQ0KIAkJZ2V0X3VuYWxpZ25l
+ZF9iZTMyKGRlc2NfYnVmICsNCiAJCQkJICAgREVWSUNFX0RFU0NfUEFSQU1fRVhUX1VGU19GRUFU
+VVJFX1NVUCk7DQorDQorCWlmICghKGhiYS0+ZGV2X2luZm8uZF9leHRfdWZzX2ZlYXR1cmVfc3Vw
+ICYgVUZTX0RFVl9XUklURV9CT09TVEVSX1NVUCkpDQorCQlnb3RvIHdiX2Rpc2FibGVkOw0KKw0K
+IAkvKg0KIAkgKiBXQiBtYXkgYmUgc3VwcG9ydGVkIGJ1dCBub3QgY29uZmlndXJlZCB3aGlsZSBw
+cm92aXNpb25pbmcuDQogCSAqIFRoZSBzcGVjIHNheXMsIGluIGRlZGljYXRlZCB3YiBidWZmZXIg
+bW9kZSwNCkBAIC02ODE4LDExICs2ODMwLDI5IEBAIHN0YXRpYyB2b2lkIHVmc2hjZF93Yl9wcm9i
+ZShzdHJ1Y3QgdWZzX2hiYSAqaGJhLCB1OCAqZGVzY19idWYpDQogCWhiYS0+ZGV2X2luZm8uYl9w
+cmVzcnZfdXNwY19lbiA9DQogCQlkZXNjX2J1ZltERVZJQ0VfREVTQ19QQVJBTV9XQl9QUkVTUlZf
+VVNSU1BDX0VOXTsNCiANCi0JaWYgKCEoKGhiYS0+ZGV2X2luZm8uZF9leHRfdWZzX2ZlYXR1cmVf
+c3VwICYNCi0JCSBVRlNfREVWX1dSSVRFX0JPT1NURVJfU1VQKSAmJg0KLQkJaGJhLT5kZXZfaW5m
+by5iX3diX2J1ZmZlcl90eXBlICYmDQorCWlmICghKGhiYS0+ZGV2X2luZm8uYl93Yl9idWZmZXJf
+dHlwZSAmJg0KIAkgICAgICBoYmEtPmRldl9pbmZvLmRfd2JfYWxsb2NfdW5pdHMpKQ0KLQkJaGJh
+LT5jYXBzICY9IH5VRlNIQ0RfQ0FQX1dCX0VOOw0KKwkJZ290byB3Yl9kaXNhYmxlZDsNCisNCisJ
+cmV0dXJuOw0KKw0KK3diX2Rpc2FibGVkOg0KKwloYmEtPmNhcHMgJj0gflVGU0hDRF9DQVBfV0Jf
+RU47DQorfQ0KKw0KK3N0YXRpYyB2b2lkIHVmc19maXh1cF9kZXZpY2Vfc2V0dXAoc3RydWN0IHVm
+c19oYmEgKmhiYSkNCit7DQorCXN0cnVjdCB1ZnNfZGV2X2ZpeCAqZjsNCisJc3RydWN0IHVmc19k
+ZXZfaW5mbyAqZGV2X2luZm8gPSAmaGJhLT5kZXZfaW5mbzsNCisNCisJZm9yIChmID0gdWZzX2Zp
+eHVwczsgZi0+cXVpcms7IGYrKykgew0KKwkJaWYgKChmLT53bWFudWZhY3R1cmVyaWQgPT0gZGV2
+X2luZm8tPndtYW51ZmFjdHVyZXJpZCB8fA0KKwkJICAgICBmLT53bWFudWZhY3R1cmVyaWQgPT0g
+VUZTX0FOWV9WRU5ET1IpICYmDQorCQkgICAgICgoZGV2X2luZm8tPm1vZGVsICYmDQorCQkgICAg
+ICAgU1RSX1BSRlhfRVFVQUwoZi0+bW9kZWwsIGRldl9pbmZvLT5tb2RlbCkpIHx8DQorCQkgICAg
+ICAhc3RyY21wKGYtPm1vZGVsLCBVRlNfQU5ZX01PREVMKSkpDQorCQkJaGJhLT5kZXZfcXVpcmtz
+IHw9IGYtPnF1aXJrOw0KKwl9DQogfQ0KIA0KIHN0YXRpYyBpbnQgdWZzX2dldF9kZXZpY2VfZGVz
+YyhzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KQEAgLTY4NjIsMTAgKzY4OTIsNiBAQCBzdGF0aWMgaW50
+IHVmc19nZXRfZGV2aWNlX2Rlc2Moc3RydWN0IHVmc19oYmEgKmhiYSkNCiANCiAJbW9kZWxfaW5k
+ZXggPSBkZXNjX2J1ZltERVZJQ0VfREVTQ19QQVJBTV9QUkRDVF9OQU1FXTsNCiANCi0JLyogRW5h
+YmxlIFdCIG9ubHkgZm9yIFVGUy0zLjEgKi8NCi0JaWYgKGRldl9pbmZvLT53c3BlY3ZlcnNpb24g
+Pj0gMHgzMTApDQotCQl1ZnNoY2Rfd2JfcHJvYmUoaGJhLCBkZXNjX2J1Zik7DQotDQogCWVyciA9
+IHVmc2hjZF9yZWFkX3N0cmluZ19kZXNjKGhiYSwgbW9kZWxfaW5kZXgsDQogCQkJCSAgICAgICZk
+ZXZfaW5mby0+bW9kZWwsIFNEX0FTQ0lJX1NURCk7DQogCWlmIChlcnIgPCAwKSB7DQpAQCAtNjg3
+NCw2ICs2OTAwLDEzIEBAIHN0YXRpYyBpbnQgdWZzX2dldF9kZXZpY2VfZGVzYyhzdHJ1Y3QgdWZz
+X2hiYSAqaGJhKQ0KIAkJZ290byBvdXQ7DQogCX0NCiANCisJdWZzX2ZpeHVwX2RldmljZV9zZXR1
+cChoYmEpOw0KKw0KKwkvKiBFbmFibGUgV0Igb25seSBmb3IgVUZTLTMuMSAqLw0KKwlpZiAoZGV2
+X2luZm8tPndzcGVjdmVyc2lvbiA+PSAweDMxMCB8fA0KKwkgICAgKGhiYS0+ZGV2X3F1aXJrcyAm
+IFVGU19ERVZJQ0VfUVVJUktfU1VQUE9SVF9FWFRFTkRFRF9GRUFUVVJFUykpDQorCQl1ZnNoY2Rf
+d2JfcHJvYmUoaGJhLCBkZXNjX2J1Zik7DQorDQogCS8qDQogCSAqIHVmc2hjZF9yZWFkX3N0cmlu
+Z19kZXNjIHJldHVybnMgc2l6ZSBvZiB0aGUgc3RyaW5nDQogCSAqIHJlc2V0IHRoZSBlcnJvciB2
+YWx1ZQ0KQEAgLTY4OTMsMjEgKzY5MjYsNiBAQCBzdGF0aWMgdm9pZCB1ZnNfcHV0X2RldmljZV9k
+ZXNjKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogCWRldl9pbmZvLT5tb2RlbCA9IE5VTEw7DQogfQ0K
+IA0KLXN0YXRpYyB2b2lkIHVmc19maXh1cF9kZXZpY2Vfc2V0dXAoc3RydWN0IHVmc19oYmEgKmhi
+YSkNCi17DQotCXN0cnVjdCB1ZnNfZGV2X2ZpeCAqZjsNCi0Jc3RydWN0IHVmc19kZXZfaW5mbyAq
+ZGV2X2luZm8gPSAmaGJhLT5kZXZfaW5mbzsNCi0NCi0JZm9yIChmID0gdWZzX2ZpeHVwczsgZi0+
+cXVpcms7IGYrKykgew0KLQkJaWYgKChmLT53bWFudWZhY3R1cmVyaWQgPT0gZGV2X2luZm8tPndt
+YW51ZmFjdHVyZXJpZCB8fA0KLQkJICAgICBmLT53bWFudWZhY3R1cmVyaWQgPT0gVUZTX0FOWV9W
+RU5ET1IpICYmDQotCQkgICAgICgoZGV2X2luZm8tPm1vZGVsICYmDQotCQkgICAgICAgU1RSX1BS
+RlhfRVFVQUwoZi0+bW9kZWwsIGRldl9pbmZvLT5tb2RlbCkpIHx8DQotCQkgICAgICAhc3RyY21w
+KGYtPm1vZGVsLCBVRlNfQU5ZX01PREVMKSkpDQotCQkJaGJhLT5kZXZfcXVpcmtzIHw9IGYtPnF1
+aXJrOw0KLQl9DQotfQ0KLQ0KIC8qKg0KICAqIHVmc2hjZF90dW5lX3BhX3RhY3RpdmF0ZSAtIFR1
+bmVzIFBBX1RBY3RpdmF0ZSBvZiBsb2NhbCBVbmlQcm8NCiAgKiBAaGJhOiBwZXItYWRhcHRlciBp
+bnN0YW5jZQ0KQEAgLTcyNDQsOCArNzI2Miw2IEBAIHN0YXRpYyBpbnQgdWZzaGNkX2RldmljZV9w
+YXJhbXNfaW5pdChzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIA0KIAl1ZnNoY2RfZ2V0X3JlZl9jbGtf
+Z2F0aW5nX3dhaXQoaGJhKTsNCiANCi0JdWZzX2ZpeHVwX2RldmljZV9zZXR1cChoYmEpOw0KLQ0K
+IAlpZiAoIXVmc2hjZF9xdWVyeV9mbGFnX3JldHJ5KGhiYSwgVVBJVV9RVUVSWV9PUENPREVfUkVB
+RF9GTEFHLA0KIAkJCVFVRVJZX0ZMQUdfSUROX1BXUl9PTl9XUEUsICZmbGFnKSkNCiAJCWhiYS0+
+ZGV2X2luZm8uZl9wb3dlcl9vbl93cF9lbiA9IGZsYWc7DQotLSANCjIuMTguMA0K
 
-Thank you for the review.
-
-On 1/5/20 15:21, Chun-Kuang Hu wrote:
-> Hi, Enric:
-> 
-> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年4月17日 週五 下午11:06寫道：
->>
->> Convert mtk_dsi to a bridge driver with built-in encoder support for
->> compatibility with existing component drivers.
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> ---
->>
->> Changes in v3:
->> - Add the bridge.type. (Laurent Pinchart)
->>
->> Changes in v2: None
->>
->>  drivers/gpu/drm/mediatek/mtk_dsi.c | 93 ++++++++++++++++++++++--------
->>  1 file changed, 69 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
->> index 37b8d7ffd835..869ae0a2e9f8 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
->> @@ -180,6 +180,7 @@ struct mtk_dsi {
->>         struct device *dev;
->>         struct mipi_dsi_host host;
->>         struct drm_encoder encoder;
->> +       struct drm_bridge bridge;
->>         struct drm_connector conn;
->>         struct drm_panel *panel;
->>         struct drm_bridge *next_bridge;
->> @@ -205,9 +206,9 @@ struct mtk_dsi {
->>         const struct mtk_dsi_driver_data *driver_data;
->>  };
->>
->> -static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
->> +static inline struct mtk_dsi *bridge_to_dsi(struct drm_bridge *b)
->>  {
->> -       return container_of(e, struct mtk_dsi, encoder);
->> +       return container_of(b, struct mtk_dsi, bridge);
->>  }
->>
->>  static inline struct mtk_dsi *connector_to_dsi(struct drm_connector *c)
->> @@ -796,32 +797,43 @@ static const struct drm_encoder_funcs mtk_dsi_encoder_funcs = {
->>         .destroy = mtk_dsi_encoder_destroy,
->>  };
->>
->> -static bool mtk_dsi_encoder_mode_fixup(struct drm_encoder *encoder,
->> -                                      const struct drm_display_mode *mode,
->> -                                      struct drm_display_mode *adjusted_mode)
->> +static int mtk_dsi_create_conn_enc(struct drm_device *drm, struct mtk_dsi *dsi);
->> +static void mtk_dsi_destroy_conn_enc(struct mtk_dsi *dsi);
->> +
->> +static int mtk_dsi_bridge_attach(struct drm_bridge *bridge,
->> +                                enum drm_bridge_attach_flags flags)
->> +{
->> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
->> +
->> +       return mtk_dsi_create_conn_enc(bridge->dev, dsi);
->> +}
->> +
->> +static void mtk_dsi_bridge_detach(struct drm_bridge *bridge)
->>  {
->> -       return true;
->> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
->> +
->> +       mtk_dsi_destroy_conn_enc(dsi);
->>  }
->>
->> -static void mtk_dsi_encoder_mode_set(struct drm_encoder *encoder,
->> -                                    struct drm_display_mode *mode,
->> -                                    struct drm_display_mode *adjusted)
->> +static void mtk_dsi_bridge_mode_set(struct drm_bridge *bridge,
->> +                                   const struct drm_display_mode *mode,
->> +                                   const struct drm_display_mode *adjusted)
->>  {
->> -       struct mtk_dsi *dsi = encoder_to_dsi(encoder);
->> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
->>
->>         drm_display_mode_to_videomode(adjusted, &dsi->vm);
->>  }
->>
->> -static void mtk_dsi_encoder_disable(struct drm_encoder *encoder)
->> +static void mtk_dsi_bridge_disable(struct drm_bridge *bridge)
->>  {
->> -       struct mtk_dsi *dsi = encoder_to_dsi(encoder);
->> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
->>
->>         mtk_output_dsi_disable(dsi);
->>  }
->>
->> -static void mtk_dsi_encoder_enable(struct drm_encoder *encoder)
->> +static void mtk_dsi_bridge_enable(struct drm_bridge *bridge)
->>  {
->> -       struct mtk_dsi *dsi = encoder_to_dsi(encoder);
->> +       struct mtk_dsi *dsi = bridge_to_dsi(bridge);
->>
->>         mtk_output_dsi_enable(dsi);
->>  }
->> @@ -833,11 +845,12 @@ static int mtk_dsi_connector_get_modes(struct drm_connector *connector)
->>         return drm_panel_get_modes(dsi->panel, connector);
->>  }
->>
->> -static const struct drm_encoder_helper_funcs mtk_dsi_encoder_helper_funcs = {
->> -       .mode_fixup = mtk_dsi_encoder_mode_fixup,
->> -       .mode_set = mtk_dsi_encoder_mode_set,
->> -       .disable = mtk_dsi_encoder_disable,
->> -       .enable = mtk_dsi_encoder_enable,
->> +static const struct drm_bridge_funcs mtk_dsi_bridge_funcs = {
->> +       .attach = mtk_dsi_bridge_attach,
->> +       .detach = mtk_dsi_bridge_detach,
->> +       .disable = mtk_dsi_bridge_disable,
->> +       .enable = mtk_dsi_bridge_enable,
->> +       .mode_set = mtk_dsi_bridge_mode_set,
->>  };
->>
->>  static const struct drm_connector_funcs mtk_dsi_connector_funcs = {
->> @@ -1123,6 +1136,34 @@ static const struct mipi_dsi_host_ops mtk_dsi_ops = {
->>         .transfer = mtk_dsi_host_transfer,
->>  };
->>
->> +static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
->> +{
->> +       int ret;
->> +
->> +       ret = drm_encoder_init(drm, &dsi->encoder, &mtk_dsi_encoder_funcs,
->> +                              DRM_MODE_ENCODER_DSI, NULL);
-> 
-> I'm a bit confused here. drm_encoder_init() exist here and in
-> mtk_dsi_create_conn_enc(). Do you plan to init encodr twice?
-> 
-
-Right, it should be removed from mtk_dsi_create_conn_enc(). I will do in next
-version.
-
->> +       if (ret) {
->> +               DRM_ERROR("Failed to encoder init to drm\n");
->> +               return ret;
->> +       }
->> +
->> +       /*
->> +        * Currently display data paths are statically assigned to a crtc each.
->> +        * crtc 0 is OVL0 -> COLOR0 -> AAL -> OD -> RDMA0 -> UFOE -> DSI0
->> +        */
->> +       dsi->encoder.possible_crtcs = 1;
->> +
->> +       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
->> +       if (ret)
->> +               goto err_cleanup_encoder;
->> +
->> +       return 0;
->> +
->> +err_cleanup_encoder:
->> +       drm_encoder_cleanup(&dsi->encoder);
->> +       return ret;
->> +}
->> +
->>  static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->>  {
->>         int ret;
->> @@ -1136,11 +1177,9 @@ static int mtk_dsi_bind(struct device *dev, struct device *master, void *data)
->>                 return ret;
->>         }
->>
->> -       ret = mtk_dsi_create_conn_enc(drm, dsi);
->> -       if (ret) {
->> -               DRM_ERROR("Encoder create failed with %d\n", ret);
->> +       ret = mtk_dsi_encoder_init(drm, dsi);
->> +       if (ret)
->>                 goto err_unregister;
->> -       }
->>
->>         return 0;
->>
->> @@ -1155,7 +1194,6 @@ static void mtk_dsi_unbind(struct device *dev, struct device *master,
->>         struct drm_device *drm = data;
->>         struct mtk_dsi *dsi = dev_get_drvdata(dev);
->>
->> -       mtk_dsi_destroy_conn_enc(dsi);
-> 
-> There is mtk_dsi_encoder_init() in bind(), why no mtk_dsi_encoder_uninit() here?
-> 
-
-Right, I need uninit the encoder but a simple call to drm_encoder_cleanup should
-be enough. I don't think is needed create a new function for that. I'll do in
-next version.
-
-> Regards,
-> Chun-Kuang.
-> 
->>         mtk_ddp_comp_unregister(drm, &dsi->ddp_comp);
->>  }
->>
->> @@ -1265,6 +1303,12 @@ static int mtk_dsi_probe(struct platform_device *pdev)
->>
->>         platform_set_drvdata(pdev, dsi);
->>
->> +       dsi->bridge.funcs = &mtk_dsi_bridge_funcs;
->> +       dsi->bridge.of_node = dev->of_node;
->> +       dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
->> +
->> +       drm_bridge_add(&dsi->bridge);
->> +
->>         ret = component_add(&pdev->dev, &mtk_dsi_component_ops);
->>         if (ret) {
->>                 dev_err(&pdev->dev, "failed to add component: %d\n", ret);
->> @@ -1283,6 +1327,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
->>         struct mtk_dsi *dsi = platform_get_drvdata(pdev);
->>
->>         mtk_output_dsi_disable(dsi);
->> +       drm_bridge_remove(&dsi->bridge);
->>         component_del(&pdev->dev, &mtk_dsi_component_ops);
->>         mipi_dsi_host_unregister(&dsi->host);
->>
->> --
->> 2.25.1
->>
