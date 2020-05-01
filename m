@@ -2,52 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A6EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3427EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1DC24957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11097208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339681;
-	bh=t389B+7YVRykBZ82jpfWstK+R1RrjTgZegRMYVczFts=;
+	s=default; t=1588339684;
+	bh=VRbuhqsaG714iS2RnLYCQRuT3hk409iW9Hd2N+ezko4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BaxcGpSkyRpXgny1q4XiAvcyqL304tvFKgElS4V0iuHY8PsWnDwHTEwNq2iNDbUgI
-	 pDuzoyLyNcmp1QQpVuQppaO6M+uh9QYHgBFYJtjfMiFJzoS0rZWbHgRZVv1PKviA41
-	 vOhWQgaX9LsJjAAWjVAeqUjsMwT52HRUXGlPXAS0=
+	b=chjAq6bJHVTiYqyMALvs06asbn+8dJm4JWxRT9HR5u3yvMb5eCJu9cLJ3SWIqMGBC
+	 Kw46KUPZ3ERGm8ljlvDcghJa3PyZEPtEgucRDVrIgfkAbPGnwhKPlh9RCOAgl3ppZr
+	 NAhUiAjF4ALuYf+5HYOmBuNeMtBtMcWLAH2LzKf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgEAN2A (ORCPT
+        id S1729562AbgEAN2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729546AbgEAN1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:55 -0400
+        id S1729551AbgEAN2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68AE02166E;
-        Fri,  1 May 2020 13:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D9D62173E;
+        Fri,  1 May 2020 13:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339674;
-        bh=t389B+7YVRykBZ82jpfWstK+R1RrjTgZegRMYVczFts=;
+        s=default; t=1588339679;
+        bh=VRbuhqsaG714iS2RnLYCQRuT3hk409iW9Hd2N+ezko4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kedpyLis1MTixOliKfrPKSZozk0eBisds9FxD8lsTUoquWixZ9qUdyS90zkzPHW/E
-         80AoQ6FIiJvRf7ahZZH2MN9rnoBayP77jWIfrI2+edhm5qyLfznsRA0mu4tPRTYBuo
-         dWV2HkpB0rF6aolclB0tAjpgt1IxESRa0nqMUiIQ=
+        b=pmlUaqbHpVCz+HKcxIRFx6tuEXvUTRF0kFirVBfj4GlOSxm3WFLdk2kas9Le55S7S
+         /bQQAHg22NvOT4Tm6x89lO6fq9kRPDtlBV3cuxNsLK8GheWq3+6EXJ564ZeV1aQwJC
+         uPhxfACZkISFwdNk/g1K+xeRveg0eVZK7DIujecQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Sowden <jeremy@azazel.net>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 06/80] vti4: removed duplicate log message.
-Date:   Fri,  1 May 2020 15:21:00 +0200
-Message-Id: <20200501131515.061082404@linuxfoundation.org>
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 08/80] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+Date:   Fri,  1 May 2020 15:21:02 +0200
+Message-Id: <20200501131515.573675210@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -60,37 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 01ce31c57b3f07c91c9d45bbaf126124cce83a5d upstream.
+[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
 
-Removed info log-message if ipip tunnel registration fails during
-module-initialization: it adds nothing to the error message that is
-written on all failures.
+The following kasan bug was called out:
 
-Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
+ ...
+ Call Trace:
+ dump_stack+0x96/0xe0
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ print_address_description.constprop.6+0x1b/0x220
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ __kasan_report.cold.9+0x37/0x7c
+ ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ kasan_report+0xe/0x20
+ lpfc_unreg_login+0x7c/0xc0 [lpfc]
+ lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
+ ...
 
+When processing the completion of a "Reg Rpi" login mailbox command in
+lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
+extracted from the completing mailbox context and passed as an input for
+the next. However, the vpi stored in the mailbox command context is an
+absolute vpi, which for SLI4 represents both base + offset.  When used with
+a non-zero base component, (function id > 0) this results in an
+out-of-range access beyond the allocated phba->vpi_ids array.
+
+Fix by subtracting the function's base value to get an accurate vpi number.
+
+Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_vti.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -696,10 +696,8 @@ static int __init vti_init(void)
- 
- 	msg = "ipip tunnel";
- 	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
--	if (err < 0) {
--		pr_info("%s: cant't register tunnel\n",__func__);
-+	if (err < 0)
- 		goto xfrm_tunnel_failed;
--	}
- 
- 	msg = "netlink interface";
- 	err = rtnl_link_register(&vti_link_ops);
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index cbe808e83f477..1c34dc3355498 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -2210,6 +2210,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
+ 	    !pmb->u.mb.mbxStatus) {
+ 		rpi = pmb->u.mb.un.varWords[0];
+ 		vpi = pmb->u.mb.un.varRegLogin.vpi;
++		if (phba->sli_rev == LPFC_SLI_REV4)
++			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
+ 		lpfc_unreg_login(phba, vpi, rpi, pmb);
+ 		pmb->vport = vport;
+ 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
+-- 
+2.20.1
+
 
 
