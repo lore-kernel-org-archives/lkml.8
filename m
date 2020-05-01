@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C2CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F081C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548A124955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D552D24957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340112;
-	bh=Pg2DWFBA/wZ8V2TNH1P7vfR7KkbYL+wGWJDvFt2NJfQ=;
+	s=default; t=1588340118;
+	bh=ThW24rHB67QXfn8DBDct3fwUkUI14YNT5QcUKG2PlDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jiEquYZb39J4KD949Yz4qCcCXFwGf25t3ufzk9sP09wOvFoagXY8dqLYz6QH4K4eK
-	 RAp1sV4RN7U4x/P1yVf5mGPZ/R+IcUAlzzYCmE3XlRyB+rF9qFvc99FXZTpgDHVk+R
-	 0T47nVlNX5RplLl+eG+geQu8Bt4fUUnl35vNSTpQ=
+	b=s8vHLArBsnl8HcnlXmBaZ06RlNlBCMAmeG0KXKddRRzwuXWnP9oySHjONQzk7gGlH
+	 gadU244X86Rohn4oV8/KeuDVYkys3l7Bo2ERVIbLlC5vRZVwVDJUP3yNyrjJzHg+tm
+	 GBIY3af5oxc9vyiqWdrGksmrV3HGQr/3MCTbb0U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgEANfJ (ORCPT
+        id S1729893AbgEANfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33268 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:35:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730643AbgEANfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:02 -0400
+        id S1730729AbgEANfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 977022495A;
-        Fri,  1 May 2020 13:35:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66771216FD;
+        Fri,  1 May 2020 13:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340102;
-        bh=Pg2DWFBA/wZ8V2TNH1P7vfR7KkbYL+wGWJDvFt2NJfQ=;
+        s=default; t=1588340111;
+        bh=ThW24rHB67QXfn8DBDct3fwUkUI14YNT5QcUKG2PlDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vCOy1q9iwB7YiXaobDijvZjooFkQ7IUZhBSxAXHvUYIjbhzS36kkzhM128PYqQeiL
-         gv9/7cqdIHeJXghCuj9ztxNiTJXOZZE8LHriGJVyfPACX+oWDNSS/ZPNjjaqH1EC8U
-         vBA7BZKROryAS6x9vGneOR/MHGEUS5DCDs7Zu/YA=
+        b=L/dEVQqVn0kGQIE+FKJC+KN4trbmUbU7wzFGzGJ4LBTLk0WZmdP6f7rnWXwn5CFk0
+         gerdDQ1oiBaZjF3sbL0EDBaCT2+Ks6Grn76l6nb+iWUgK8DrWpSrU6ekPW85aZZvGp
+         DALhfX5eWWPvMrc9b9j/r0B+CXB4pMVmGXAT8rn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 094/117] net/cxgb4: Check the return from t4_query_params properly
-Date:   Fri,  1 May 2020 15:22:10 +0200
-Message-Id: <20200501131555.999408717@linuxfoundation.org>
+        stable@vger.kernel.org, Tyler Hicks <tyhicks@canonical.com>,
+        Todd Kjos <tkjos@android.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 088/117] binder: take read mode of mmap_sem in binder_alloc_free_page()
+Date:   Fri,  1 May 2020 15:22:04 +0200
+Message-Id: <20200501131555.108306626@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,36 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Tyler Hicks <tyhicks@canonical.com>
 
-commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
+commit 60d4885710836595192c42d3e04b27551d30ec91 upstream.
 
-Positive return values are also failures that don't set val,
-although this probably can't happen. Fixes gcc 10 warning:
+Restore the behavior of locking mmap_sem for reading in
+binder_alloc_free_page(), as was first done in commit 3013bf62b67a
+("binder: reduce mmap_sem write-side lock"). That change was
+inadvertently reverted by commit 5cec2d2e5839 ("binder: fix race between
+munmap() and direct reclaim").
 
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- 3747 |  *phy_fw_ver = val;
+In addition, change the name of the label for the error path to
+accurately reflect that we're taking the lock for reading.
 
-Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Backporting note: This fix is only needed when *both* of the commits
+mentioned above are applied. That's an unlikely situation since they
+both landed during the development of v5.1 but only one of them is
+targeted for stable.
+
+Fixes: 5cec2d2e5839 ("binder: fix race between munmap() and direct reclaim")
+Signed-off-by: Tyler Hicks <tyhicks@canonical.com>
+Acked-by: Todd Kjos <tkjos@android.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/android/binder_alloc.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3609,7 +3609,7 @@ int t4_phy_fw_ver(struct adapter *adap,
- 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
- 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
- 			      &param, &val);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 	*phy_fw_ver = val;
- 	return 0;
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -951,8 +951,8 @@ enum lru_status binder_alloc_free_page(s
+ 	mm = alloc->vma_vm_mm;
+ 	if (!mmget_not_zero(mm))
+ 		goto err_mmget;
+-	if (!down_write_trylock(&mm->mmap_sem))
+-		goto err_down_write_mmap_sem_failed;
++	if (!down_read_trylock(&mm->mmap_sem))
++		goto err_down_read_mmap_sem_failed;
+ 	vma = binder_alloc_get_vma(alloc);
+ 
+ 	list_lru_isolate(lru, item);
+@@ -967,7 +967,7 @@ enum lru_status binder_alloc_free_page(s
+ 
+ 		trace_binder_unmap_user_end(alloc, index);
+ 	}
+-	up_write(&mm->mmap_sem);
++	up_read(&mm->mmap_sem);
+ 	mmput(mm);
+ 
+ 	trace_binder_unmap_kernel_start(alloc, index);
+@@ -982,7 +982,7 @@ enum lru_status binder_alloc_free_page(s
+ 	mutex_unlock(&alloc->mutex);
+ 	return LRU_REMOVED_RETRY;
+ 
+-err_down_write_mmap_sem_failed:
++err_down_read_mmap_sem_failed:
+ 	mmput_async(mm);
+ err_mmget:
+ err_page_already_freed:
 
 
