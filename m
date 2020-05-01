@@ -2,109 +2,91 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD65C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A06C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 498402166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591EA2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bZuN+obO"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="uEMjOfva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgEAVxV (ORCPT
+        id S1726793AbgEAVyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVxV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:53:21 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA60DC061A0C;
-        Fri,  1 May 2020 14:53:20 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e2so8589414eje.13;
-        Fri, 01 May 2020 14:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aU6xJ+iSFx7gADks0AYYV1385t8GYvkG8uv7MDkA/d8=;
-        b=bZuN+obOrRVaaAyoc1isLnub49EQILFTo9ue9JKAVyyLXaa8HlcC3dU14wWXgdBYYe
-         hw0Q4ZAv0VyT6nzTWi0eJu05p5vWuxEQoc6lzwUVKytcwmFqmxtnY7uObPjBu+YSWgpP
-         +YgupdjAvyTotb2rbi2gcBoKKZBJLQxt9Rpw7EbH47oQWKzi286pLlL0kQy9gaJCJihZ
-         2jOHqxoNEOK5i2nJde4qZMEGE8/+RUvZG2sDs06GOM01hKmGE5P0iyAD+M6PB19IKjIC
-         ia0NF9A7QOTv2sTkzkUFNJOEjMXQQwh370jtD+qmeCamJrxSQfENmu2E+TbCyrHx5Qn9
-         frog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aU6xJ+iSFx7gADks0AYYV1385t8GYvkG8uv7MDkA/d8=;
-        b=YtnAS4NshaKEZvz8FEurwC60ATBI+FK/ypi/3uKqghKA8CGceGgFNoLdnfRXg23Fmw
-         Y2cXSynfYUrdgaqqxASw/1i53cirEBm2jfJb35TuJ/9280dxEMpceLAFNEDQ4oTFt9wC
-         sQw8449z5qC2NQb9w9giJbSUJBTqhk70K2owqEcGCkjWtFtElGy62RhJEdmrdxv+eaSd
-         Jm4/ju8XB04MzRsVB3jLZd4u5ShdWNz9eaJY8Ze+kUEF1paQMdyiNis2HZuhVl7erMVj
-         KVfk3mOD2SsOR0PVJghzCLXjst1zpWHSGWjWB6Qkrgfvijf2XV2YJ2LYw4I1nd5XxPi+
-         KOWw==
-X-Gm-Message-State: AGi0PuasMnieI3/VPMKtcq1srH+judWm1SG6mup//b814LNbEsdS+H63
-        SnSNbI948/uOMBNTkBsHMmWqTBwZiuuhfqaCkq7uVODKhyk=
-X-Google-Smtp-Source: APiQypJE6wRFk+W8/TX/hPebgvtvgJCEAM+/GlY3LrmThP8OdxemOb2dFwAO5d/KHVF7CH5V0uzlyXhD8yOdX5Yeq5M=
-X-Received: by 2002:a17:906:3004:: with SMTP id 4mr5235939ejz.381.1588369999417;
- Fri, 01 May 2020 14:53:19 -0700 (PDT)
+        Fri, 1 May 2020 17:54:33 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:57327 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgEAVyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:54:33 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 697688e6;
+        Fri, 1 May 2020 21:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=58S7gafTvCyAaihiGAJkt1yLd6Y=; b=uEMjOf
+        vaAoQm6Md4vl1zLH4e384tV3WtBAWLlgCo+K5pEl80lJ/GvpGM7c9fZDyOTsAkmv
+        cuKynBhaCqSRHqZBzqTqWXv6Z4HbPF3NqtVfde1VMOZHGonxruz94B6y8j3TcIsU
+        uMZdOgcG077zI+WnCV+P65QbA9sYgpXGtdgY65bj5PTj75+rbbisf87/GmQ91cZQ
+        JKagWB9eEWX77XQ8c2TM5CYF9dNqiKFdiQQYRHI2ADz7Hzq/L2X0R66E2It3cZ/G
+        U0lvdu8uQf4ysuexTDsNGdp569KlEKabIVY9ZUebiQQBot72XKZie2s2vflviruB
+        QmdrxR8gpZsEXDxg==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9ab6eb77 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Fri, 1 May 2020 21:42:27 +0000 (UTC)
+Received: by mail-il1-f182.google.com with SMTP id w6so5722552ilg.1;
+        Fri, 01 May 2020 14:54:31 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ2GNJJnpYDquv7xOZERTgYP9JgGeX/WqSkomrtz2kOdYBrBKZr
+        qX1jxcTgSaN7zwft8k826ph+7CbwSej1MKn2GDU=
+X-Google-Smtp-Source: APiQypKi8VgL32io/YMf/TnAiuoD4oQjdoDdZRV4jk7+CgfAceJlLxx1gZqoTLRU71ehr0skb3Rw0hz+zCqa+vWKwOI=
+X-Received: by 2002:a92:d98c:: with SMTP id r12mr5878280iln.224.1588370070637;
+ Fri, 01 May 2020 14:54:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
- <20200429201644.1144546-3-martin.blumenstingl@googlemail.com> <20200501210942.GA27082@bogus>
-In-Reply-To: <20200501210942.GA27082@bogus>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 1 May 2020 23:53:08 +0200
-Message-ID: <CAFBinCDmps-Nd-HokSa5P7=bR+o3nuwxsS_eiH9A6CCYywpabQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 02/11] dt-bindings: net: dwmac-meson: Document the
- "timing-adjustment" clock
-To:     Rob Herring <robh@kernel.org>
-Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        jianxin.pan@amlogic.com, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+References: <20200430221016.3866-1-Jason@zx2c4.com> <20200501104215.s2eftchxm66lmbvj@linutronix.de>
+In-Reply-To: <20200501104215.s2eftchxm66lmbvj@linutronix.de>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Fri, 1 May 2020 15:54:19 -0600
+X-Gmail-Original-Message-ID: <CAHmME9othY=_3szXKh-+4uAgcLpuvgXm4HX2-SU+Hg7KztXTFw@mail.gmail.com>
+Message-ID: <CAHmME9othY=_3szXKh-+4uAgcLpuvgXm4HX2-SU+Hg7KztXTFw@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: check to see if SIMD registers are available
+ before using SIMD
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Fri, May 1, 2020 at 4:42 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>    Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-On Fri, May 1, 2020 at 11:09 PM Rob Herring <robh@kernel.org> wrote:
+Thanks.
+
 >
-> On Wed, 29 Apr 2020 22:16:35 +0200, Martin Blumenstingl wrote:
-> > The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
-> > requires an internal re-timing circuit whose input clock is called
-> > "timing adjustment clock". Document this clock input so the clock can be
-> > enabled as needed.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
-I am seeing this on my own build machine as well, but only for the .yaml example
-The .dts example does not emit this warning
+> May I ask how large the memcpy can be? I'm asking in case it is large
+> and an explicit rescheduling point might be needed.
 
-Also I don't see what's wrong with my way of describing the new,
-optional clock and it's clock-name
-Can you please point me in the right direction here?
+Yea I was worried about that too. I'm not an i915 developer, but so
+far as I can tell:
 
+- The path from intel_engine_cmd_parser is  <= 256 KiB for "known
+users", so that's rather large.
+- The path from perf_memcpy is either 4k, 64k, or 4M, depending on the
+type of object, so that seems gigantic, but I think that might be
+selftest code.
+- The path from compress_page appears to be PAGE_SIZE, so 4k, which
+meshes with the limits we set agreed on few weeks ago for the crypto
+stuff.
+- The path from guc_read_update_log_buffer appears to be 8k, 32k, 2M,
+or 8M, depending on the type of object, so that seems absurdly huge
+and doesn't appear to be selftest code either like the other case.
 
-Thank you!
-Martin
+I have no doubt the i915 developers will jump in here waving their
+arms, but either way, it sure seems to me like you might have a point.
