@@ -2,109 +2,253 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F15C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D26C4725A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAA9216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE3C2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH+bf7rq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzVOZs7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgEAV5v (ORCPT
+        id S1727042AbgEAV6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:57:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45912 "EHLO
+        Fri, 1 May 2020 17:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgEAV5u (ORCPT
+        with ESMTP id S1726272AbgEAV6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:57:50 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D546BC061A0C;
-        Fri,  1 May 2020 14:57:50 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x77so2148706pfc.0;
-        Fri, 01 May 2020 14:57:50 -0700 (PDT)
+        Fri, 1 May 2020 17:58:23 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1316BC061A0C;
+        Fri,  1 May 2020 14:58:22 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id n4so8609629ejs.11;
+        Fri, 01 May 2020 14:58:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DJ7xsGG+aZH2HntpJQzEkkM1lh/twV6qWhYRNUXLISw=;
-        b=DH+bf7rqYVrmie/L/B3nneFaSvPORnBGd6QbCqk9hL6p56989o07CKK8JhVUekdk9D
-         LmmxCZw0wc2mWl3qebaBE3SPSbE7JVYzc2RjLvgeZv5Mdq0NH4EWenmcmxxyy3I2xFES
-         P6ZqWx5o4CauVS6CnRmzyboFOI6s6X51sb26XbfBmlDjvHB2WRdcD+GgTYOn8cNHHO7a
-         t8Kb5A9P3AthHu7S9aZUGyjPSUWYIAzk3kxJfZve6inq43oUI3ZHHcpaQlBV38rOjsl2
-         y6NlKta3CVtIzU192qpMrfMOCziSXLh+/L1yZCyluyFhP3CVD56cKddZeVGT+mfGmR40
-         WADw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+dwJLdu/AUk/G86mjwzD+ysAOGq1CMd9Bn28OzWKnDA=;
+        b=bzVOZs7Sy9eIjlfjP3sSyICDo5GQjI3QfRTJq+W0+jA7sz03eV6ZT/9wQ9DWelLdMa
+         8wFjPxrWssw2A+z1+fHfWu+HHGmpUUJjJws5jYCFYD3VZ2jhUV1Z04gqDuXH6jsfXjvw
+         +fDSdSWeI5aWeFoTV8gni6TWoKzwMG+pOyizR0ds+t0ZK3S+n9ccJZhRirErCyZOQ2G0
+         EamtxIXxbfdJ9tjx2hgzqt7hAPtcxZf6n5yh06lSXF3/f3+THWAQhIWTDf3ipjlC+nkz
+         6NJvUo0lVcL99ZtQ54rXT0UjhjmrLXsOIZSNise3fkCn0v5fLxcVI49n0ZQQULsZEr/E
+         rmVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DJ7xsGG+aZH2HntpJQzEkkM1lh/twV6qWhYRNUXLISw=;
-        b=KdYCXY6/wBfacgXr7NNSSTywXZakJ+NMUOjGau2SCn8KxUmDYuH8iZ9dwB1bzLjM7Q
-         3NS1A+IOf+l0/hv4zZAqd47TAZ/Fm1p1ygGupLqxJF5UalvOg2qbfaPx4ItFfQDfcFYo
-         o94jQKuvA7yayIcH/avBLOZCk9LO7PTDbmHR1zfHvigSPEHSS3KioF6UAGA7I+vmUj8n
-         VUUsEW3IyM7z/nAqGx2nZOrNC96Ki4Z0CyzHPttp4CfUxoaFWOzvxOofHLDQcIY5U1M0
-         O0dD99mi8E+lCQAc7vpMUihZOTnA/hRSgmmkSlZYOh50qLkiZgzutNOqhyNjLsid2etX
-         zlrw==
-X-Gm-Message-State: AGi0PubYaLZ4tDdBHmKHJE7H2HlWoQOpCl5KIbCjituHCP25i42gBKvv
-        8jq5oDlCL8CtQ+j9gDRSF2I=
-X-Google-Smtp-Source: APiQypKs4frHTCw/6OUF6kNtsir7IfdGTcSXaUmV8XCNsKa45E1NdnmyPEZMR6eI4dFNU8swPpOxKA==
-X-Received: by 2002:aa7:8091:: with SMTP id v17mr6163921pff.93.1588370270097;
-        Fri, 01 May 2020 14:57:50 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z190sm3049628pfz.84.2020.05.01.14.57.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 May 2020 14:57:48 -0700 (PDT)
-Date:   Fri, 1 May 2020 14:57:47 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/70] 4.4.221-rc1 review
-Message-ID: <20200501215747.GA44185@roeck-us.net>
-References: <20200501131513.302599262@linuxfoundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+dwJLdu/AUk/G86mjwzD+ysAOGq1CMd9Bn28OzWKnDA=;
+        b=bJsHDoOU56JjNFz5y2P0H17mdKc4PLIiMx6ZYpEgOMVOJ5fAWGkRp+ves2yGePpzR3
+         UikWgvkBPTF1hz4nkZA5vibCBJl7F6ftprBa1+FLp7EqFv4iP3POErhtjBbydWqFN5G6
+         IazbRjgX+Cs/w/54hW/WtpKc9PUPbVKSEr2UMatI/TPrsdrmaJ8PB23hA5vigpWK59d/
+         lFQ9zqcuJY7A5PpK7xq0fPZLfVncMLNrDSwa2Q88f099HFUXKjMHWL3CKn6rQcNoxLg+
+         yASwzPQoTz15zOSukMVlLmpYw7vTHzbOfs15P7T+Xv/FcSXM2cpQRpC0GfPekmiS6Mss
+         D+nA==
+X-Gm-Message-State: AGi0PuaAp4YU4TDC96ifKjc1z3zSP9kSwHKjCg2vsUkH6rZSB6QAuqkg
+        E10eZvwdR3Rrj62NT3DsvjM=
+X-Google-Smtp-Source: APiQypLHh4Na+gcbT1f57HiSPQIsGHc0U249ls5RhZMfwhSGUYhYwJW12/LWCove81eHc5QvP/7Ogw==
+X-Received: by 2002:a17:906:1751:: with SMTP id d17mr5158104eje.314.1588370300668;
+        Fri, 01 May 2020 14:58:20 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain ([79.37.253.240])
+        by smtp.googlemail.com with ESMTPSA id s5sm444934ejj.77.2020.05.01.14.58.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 14:58:20 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v5 2/2] devicetree: bindings: phy: Document ipq806x dwc3 qcom phy
+Date:   Fri,  1 May 2020 23:58:05 +0200
+Message-Id: <20200501215807.11175-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200501215807.11175-1-ansuelsmth@gmail.com>
+References: <20200501215807.11175-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:20:48PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.221 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 169 pass: 169 fail: 0
-Qemu test results:
-	total: 335 pass: 325 fail: 10
-Failed tests:
-	ppc64:mac99:ppc64_book3s_defconfig:smp:initrd
-	ppc64:mac99:ppc64_book3s_defconfig:smp:ide:rootfs
-	ppc64:mac99:ppc64_book3s_defconfig:smp:sdhci:mmc:rootfs
-	ppc64:mac99:ppc64_book3s_defconfig:smp:nvme:rootfs
-	ppc64:mac99:ppc64_book3s_defconfig:smp:scsi[DC395]:rootfs
-	ppc64:pseries:pseries_defconfig:initrd
-	ppc64:pseries:pseries_defconfig:scsi:rootfs
-	ppc64:pseries:pseries_defconfig:usb:rootfs
-	ppc64:pseries:pseries_defconfig:sdhci:mmc:rootfs
-	ppc64:pseries:pseries_defconfig:nvme:rootfs
+Document dwc3 qcom phy hs and ss phy bindings needed to correctly
+inizialize and use usb on ipq806x SoC.
 
-Patch "of: unittest: kmemleak on changeset destroy" results in UAF and must
-be reverted to fix the problem (this had sneaked in earlier and was dropped
-at least once).
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+v5:
+* Fix dt_binding_check error
+v4:
+* Add qcom to specific bindings
+v3:
+* Use explicit reg instead of regmap
 
-Guenter
+ .../bindings/phy/qcom,ipq806x-usb-phy-hs.yaml | 58 ++++++++++++++
+ .../bindings/phy/qcom,ipq806x-usb-phy-ss.yaml | 79 +++++++++++++++++++
+ 2 files changed, 137 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+new file mode 100644
+index 000000000000..c019de7478e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-hs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 HS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-hs
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    description: |
++      - "ref" Is required
++      - "xo"	Optional external reference clock
++    items:
++      - const: ref
++      - const: xo
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    hs_phy_0: phy@110f8800 {
++      compatible = "qcom,ipq806x-usb-phy-hs";
++      reg = <0x110f8800 0x30>;
++      clocks = <&gcc USB30_0_UTMI_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+new file mode 100644
+index 000000000000..fa10a1c51cf0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/qcom,ipq806x-usb-phy-ss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm ipq806x usb DWC3 SS PHY CONTROLLER
++
++maintainers:
++  - Ansuel Smith <ansuelsmth@gmail.com>
++
++description:
++  DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++  controllers used in ipq806x. Each DWC3 PHY controller should have its
++  own node.
++
++properties:
++  compatible:
++    const: qcom,ipq806x-usb-phy-ss
++
++  "#phy-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    description: |
++      - "ref" Required.
++      - "xo"	Optional external reference clock.
++    items:
++      - const: ref
++      - const: xo
++
++  qcom,rx_eq:
++    maxItems: 1
++    description: Override value for rx_eq.
++    default: 4
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++  qcom,tx_deamp_3_5db:
++    maxItems: 1
++    description: Override value for transmit preemphasis.
++    default: 23
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++  qcom,mpll:
++    maxItems: 1
++    description: Override value for mpll.
++    default: 0
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++required:
++  - compatible
++  - "#phy-cells"
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
++
++    ss_phy_0: phy@110f8830 {
++      compatible = "qcom,ipq806x-usb-phy-ss";
++      reg = <0x110f8830 0x30>;
++      clocks = <&gcc USB30_0_MASTER_CLK>;
++      clock-names = "ref";
++      #phy-cells = <0>;
++    };
+-- 
+2.25.1
+
