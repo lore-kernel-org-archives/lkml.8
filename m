@@ -2,63 +2,83 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EBEC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E30CC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C94216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76247216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgEAVax (ORCPT
+        id S1726926AbgEAVbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:30:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgEAVax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:30:53 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E353C061A0C;
-        Fri,  1 May 2020 14:30:53 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUdFA-00GEZa-1K; Fri, 01 May 2020 21:30:48 +0000
-Date:   Fri, 1 May 2020 22:30:48 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] exec: open code copy_string_kernel
-Message-ID: <20200501213048.GO23230@ZenIV.linux.org.uk>
-References: <20200501104105.2621149-1-hch@lst.de>
- <20200501104105.2621149-3-hch@lst.de>
- <20200501141903.5f7b1f81fdd38ae372d91f0e@linux-foundation.org>
+        Fri, 1 May 2020 17:31:16 -0400
+Received: from muru.com ([72.249.23.125]:52594 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgEAVbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:31:15 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id D85DF810E;
+        Fri,  1 May 2020 21:32:02 +0000 (UTC)
+Date:   Fri, 1 May 2020 14:31:11 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 1/6] tty: n_gsm: Add support for serdev drivers
+Message-ID: <20200501213111.GF37466@atomide.com>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-2-tony@atomide.com>
+ <20200501203130.GC6043@duo.ucw.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501141903.5f7b1f81fdd38ae372d91f0e@linux-foundation.org>
+In-Reply-To: <20200501203130.GC6043@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:19:03PM -0700, Andrew Morton wrote:
-> On Fri,  1 May 2020 12:41:05 +0200 Christoph Hellwig <hch@lst.de> wrote:
+* Pavel Machek <pavel@denx.de> [200501 20:32]:
+> > +static struct gsm_dlci *gsd_dlci_get(struct gsm_serdev *gsd, int line,
+> > +				     bool allocate)
+> > +{
+> > +	struct gsm_mux *gsm;
+> > +	struct gsm_dlci *dlci;
+> > +
+> > +	if (!gsd || !gsd->gsm)
+> > +		return ERR_PTR(-ENODEV);
+> > +
+> > +	gsm = gsd->gsm;
+> > +
+> > +	if (line < 1 || line >= 63)
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	mutex_lock(&gsm->mutex);
+> ...
+> > +	dlci = gsm_dlci_alloc(gsm, line);
+> > +	if (!dlci) {
+> > +		gsm = ERR_PTR(-ENOMEM);
+> > +		goto unlock;
 > 
-> > Currently copy_string_kernel is just a wrapper around copy_strings that
-> > simplifies the calling conventions and uses set_fs to allow passing a
-> > kernel pointer.  But due to the fact the we only need to handle a single
-> > kernel argument pointer, the logic can be sigificantly simplified while
-> > getting rid of the set_fs.
-> > 
-> 
-> I don't get why this is better?  copy_strings() is still there and
-> won't be going away - what's wrong with simply reusing it in this
-> fashion?
-> 
-> I guess set_fs() is a bit hacky, but there's the benefit of not having
-> to maintain two largely similar bits of code?
+> dlci = , or you get nice crash.
 
-Killing set_fs() would be a very good thing...
+Ah thanks yeah we return dlci and need to set dlci instead:
+
+	if (!dlci) {
+		dlci = ERR_PTR(-ENOMEM);
+		goto unlock;
+	}
+
+Regards,
+
+Tony
