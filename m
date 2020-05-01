@@ -2,74 +2,135 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AEEC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E0FC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D425A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D273421835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588367946;
-	bh=eS4UFrsPzGu4rvp9KfgUzgHF9eFBoLTYHJ7BQe382wk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Q9MVDaWZTNbbqOowiITCKxLMeO/WJ86mAtchTKHJ2UukgKfiZOtw2p85wf+HqtdV7
-	 32Ohj31GeE51y3AWT10GHDpaYs0Ja5iO8+myRti6Thymydm/7CzCXlxko7czrK7Ggl
-	 zr7tEezTZ7WSFEHpgmXCfqJCSnHa5utr6F+tQf9I=
+	s=default; t=1588367967;
+	bh=kr9vNjlo/JFn1BM7x1NypZ80ZRkkFHqd8pV3Z4G98lA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pX3QT0/J1ObxwK39AaLLwIsqHOhI9vOS7nUPU/qALO+nVrrBIgG64JHKdeB0rt/gI
+	 6OEl8Xhp41hvYhQQcrBEdj2e4WXSVjVFIHHZZ3gGcIidfeBsM4+ywdgUEQboaB8qCx
+	 oltdJIlCavZSfbDn1tANffaaATE8NQUqKfKGjCnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbgEAVTG (ORCPT
+        id S1726548AbgEAVT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:19:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAVTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:19:05 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E9E20787;
-        Fri,  1 May 2020 21:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588367945;
-        bh=eS4UFrsPzGu4rvp9KfgUzgHF9eFBoLTYHJ7BQe382wk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1OURwhfWhQ712LzjrmsRXv/qnPOWXnqXvqPjKnaoB1zOxQmDB2UaYfMMzEs4gZ8MP
-         Bt4ZnmD5d8sdd3IzGK5ZtRkNTg7zhWibaEwEUoFROYrODSFbELcTnYf+g936Wdu8vn
-         3ag5Fotuv7+d67bdifx+GdSZSf/mA6VoHUab1ekw=
-Date:   Fri, 1 May 2020 14:19:03 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] exec: open code copy_string_kernel
-Message-Id: <20200501141903.5f7b1f81fdd38ae372d91f0e@linux-foundation.org>
-In-Reply-To: <20200501104105.2621149-3-hch@lst.de>
-References: <20200501104105.2621149-1-hch@lst.de>
-        <20200501104105.2621149-3-hch@lst.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 1 May 2020 17:19:27 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38837 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAVT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:19:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r66so913344oie.5;
+        Fri, 01 May 2020 14:19:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jj4D32rdAES+cgO6FKoAP2CT6fMwIDdMNHoTKo0+8Lk=;
+        b=Z90d664sGc83VZKz8HjAZv1HJWkK0dJjAeVZMHN6N3DEqmSRNXBt9E5IlC3RMImv7g
+         Ps8OapDudqwt8sa5W/CEj9oZ/8HSx9p/757NxVlaYqNNZnjmyW3bWPDQA/ESlly3LZfz
+         DBgqojLciMdibiONvNVW6NmlYGxdaqTftQtszdQU3rZ/Sxk5ckmEx78be0/NXy5NZbH9
+         /7vZIl5O0f6moYTuaJs5/ix0ealX/0skyOXt9/+nL/GH0GdXCwMeeE1AnOOWAdgZPHcN
+         dLL80PcfAzxKB4Y7Kzb+Epa1PAeuZZn61wEwyRtQvnkHr245iip4Ta03eou8rxkBMvqx
+         knew==
+X-Gm-Message-State: AGi0PuZ55nPvVN5kDd/arMzhh25KZ0Wn9xxuXhsadickXr0YwOLkj+Cx
+        dAXbDuGs2m/oz0ByonYHDw==
+X-Google-Smtp-Source: APiQypIXivSBT2nsxuhVNY46WEmi1eojgcxHInHjaqkl2sBu8RqSX6qkRxz94QmIS/CqfLVJIXnqUg==
+X-Received: by 2002:aca:c50f:: with SMTP id v15mr1230004oif.115.1588367965592;
+        Fri, 01 May 2020 14:19:25 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a93sm1128819otc.12.2020.05.01.14.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 14:19:25 -0700 (PDT)
+Received: (nullmailer pid 14891 invoked by uid 1000);
+        Fri, 01 May 2020 21:19:24 -0000
+Date:   Fri, 1 May 2020 16:19:24 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 4/6] dt-bindings: gnss: Add binding for Motorola Mapphone
+ MDM6600 GNSS
+Message-ID: <20200501211924.GB6222@bogus>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-5-tony@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430174615.41185-5-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 12:41:05 +0200 Christoph Hellwig <hch@lst.de> wrote:
-
-> Currently copy_string_kernel is just a wrapper around copy_strings that
-> simplifies the calling conventions and uses set_fs to allow passing a
-> kernel pointer.  But due to the fact the we only need to handle a single
-> kernel argument pointer, the logic can be sigificantly simplified while
-> getting rid of the set_fs.
+On Thu, Apr 30, 2020 at 10:46:13AM -0700, Tony Lindgren wrote:
+> Add a binding document for Motorola Mapphone MDM6600 GNSS driver that
+> can be used with phones such as droid4.
 > 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../devicetree/bindings/gnss/motmdm.yaml      | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gnss/motmdm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gnss/motmdm.yaml b/Documentation/devicetree/bindings/gnss/motmdm.yaml
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gnss/motmdm.yaml
+> @@ -0,0 +1,29 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gnss/motmdm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Motorola Mapphone MDM6600 GNSS binding
+> +
+> +maintainers:
+> +  - Tony Lindgren <tony@atomide.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: motorola,mapphone-mdm6600-gnss
+> +
+> +  reg:
+> +    items:
+> +      description: TS 27.010 channel the GNSS device is using
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    gnss@4 {
 
-I don't get why this is better?  copy_strings() is still there and
-won't be going away - what's wrong with simply reusing it in this
-fashion?
+This is a child of what's in patch 2? I think I'd just combine this 
+schema into it.
 
-I guess set_fs() is a bit hacky, but there's the benefit of not having
-to maintain two largely similar bits of code?
+Or you can leave it, but better to have complete examples (which will 
+help fix what my bot reports). Examples have a default 
+#address/size-cells of 1.
 
+> +      compatible = "motorola,mapphone-mdm6600-gnss";
+> +      reg = <4>;
+> +    };
+> -- 
+> 2.26.2
