@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05238C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7224FC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D363020757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465D420836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340714;
-	bh=Luh2oDm0c16s04E5rrPEUu/9f/1cE33qOtpVkfApk8g=;
+	s=default; t=1588340723;
+	bh=DvlDhBQmYF808qQX01D63ZW+IKHd1PwrrIUL1r/J/2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DKoQktyzzviLLzp37CyoeQ12MG6Pt90IoO8n0BDpdfvIVrHdPluEh0df+DZuSydTg
-	 0BrHLj5iFMDdLUd178tRJzckAB7W/FE+vivrtbkh1uKv3allrRb22+23KqCIg8Q2Z9
-	 GM5Yoi4HLfysiAc/JeXtNMnxJLg35OHhlHA7B2G0=
+	b=C9OkP4zOBq8PrzlAum3mV9k8gIjQcNcm40yQYdHs55ahWTbiXJQn/QgqemKRI8JIM
+	 CpNVvQhJte2Yaa2Het0fKlce+fE4/rTUfzgU2eJQcIZqUFqfTgTEWl7FUPWFKRrLZW
+	 XIS5rDrEVsQ6kV7qSsSryUjUTNRg9qchmUfGurTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgEANpO (ORCPT
+        id S1731863AbgEANpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:45:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731840AbgEANpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:09 -0400
+        id S1731895AbgEANpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:45:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F9832051A;
-        Fri,  1 May 2020 13:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2182051A;
+        Fri,  1 May 2020 13:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340708;
-        bh=Luh2oDm0c16s04E5rrPEUu/9f/1cE33qOtpVkfApk8g=;
+        s=default; t=1588340713;
+        bh=DvlDhBQmYF808qQX01D63ZW+IKHd1PwrrIUL1r/J/2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B0Jn4hyU1dFG17z+4zQjDCzcA33ps1O77bnYBmd/ETdTLzkNE0t/TrtTfIcuWKt9a
-         zEE5ajLjpa0TpSdOLLzXONHNaHfxvu6MAP2+SqhzmoEHFNmlibPcD36rubjq7PBRce
-         mAo2wiFOtjFlKE5KskoQucKVWB5idlApYcNah8DE=
+        b=vPVkyFqzcmT2unkfgy/uF92vesWnU0/0ZhDlTZd3lkAXj1H8Z6zQo0wJsnG4jmpI3
+         it04nupVbhn2ta6bkPp3OXWRQT5HJ65canTui4iPR5tjKFfDmIO0XtWAhESSwuX4Z4
+         Pl30/Bn4jiJoQNCp14eEa5ajl1OL+u0S9W5wcWJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 092/106] irqchip/gic-v4.1: Add support for VPENDBASERs Dirty+Valid signaling
-Date:   Fri,  1 May 2020 15:24:05 +0200
-Message-Id: <20200501131554.494458105@linuxfoundation.org>
+Subject: [PATCH 5.6 094/106] irqchip/meson-gpio: Fix HARDIRQ-safe -> HARDIRQ-unsafe lock order
+Date:   Fri,  1 May 2020 15:24:07 +0200
+Message-Id: <20200501131554.672932968@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -61,140 +61,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 96806229ca033f85310bc5c203410189f8a1d2ee ]
+[ Upstream commit 0a66d6f90cf7d704c6a0f663f7058099eb8c97b0 ]
 
-When a vPE is made resident, the GIC starts parsing the virtual pending
-table to deliver pending interrupts. This takes place asynchronously,
-and can at times take a long while. Long enough that the vcpu enters
-the guest and hits WFI before any interrupt has been signaled yet.
-The vcpu then exits, blocks, and now gets a doorbell. Rince, repeat.
+Running a lockedp-enabled kernel on a vim3l board (Amlogic SM1)
+leads to the following splat:
 
-In order to avoid the above, a (optional on GICv4, mandatory on v4.1)
-feature allows the GIC to feedback to the hypervisor whether it is
-done parsing the VPT by clearing the GICR_VPENDBASER.Dirty bit.
-The hypervisor can then wait until the GIC is ready before actually
-running the vPE.
+[   13.557138] WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+[   13.587485] ip/456 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+[   13.625922] ffff000059908cf0 (&irq_desc_lock_class){-.-.}-{2:2}, at: __setup_irq+0xf8/0x8d8
+[   13.632273] which would create a new lock dependency:
+[   13.637272]  (&irq_desc_lock_class){-.-.}-{2:2} -> (&ctl->lock){+.+.}-{2:2}
+[   13.644209]
+[   13.644209] but this new dependency connects a HARDIRQ-irq-safe lock:
+[   13.654122]  (&irq_desc_lock_class){-.-.}-{2:2}
+[   13.654125]
+[   13.654125] ... which became HARDIRQ-irq-safe at:
+[   13.664759]   lock_acquire+0xec/0x368
+[   13.666926]   _raw_spin_lock+0x60/0x88
+[   13.669979]   handle_fasteoi_irq+0x30/0x178
+[   13.674082]   generic_handle_irq+0x38/0x50
+[   13.678098]   __handle_domain_irq+0x6c/0xc8
+[   13.682209]   gic_handle_irq+0x5c/0xb0
+[   13.685872]   el1_irq+0xd0/0x180
+[   13.689010]   arch_cpu_idle+0x40/0x220
+[   13.692732]   default_idle_call+0x54/0x60
+[   13.696677]   do_idle+0x23c/0x2e8
+[   13.699903]   cpu_startup_entry+0x30/0x50
+[   13.703852]   rest_init+0x1e0/0x2b4
+[   13.707301]   arch_call_rest_init+0x18/0x24
+[   13.711449]   start_kernel+0x4ec/0x51c
+[   13.715167]
+[   13.715167] to a HARDIRQ-irq-unsafe lock:
+[   13.722426]  (&ctl->lock){+.+.}-{2:2}
+[   13.722430]
+[   13.722430] ... which became HARDIRQ-irq-unsafe at:
+[   13.732319] ...
+[   13.732324]   lock_acquire+0xec/0x368
+[   13.735985]   _raw_spin_lock+0x60/0x88
+[   13.739452]   meson_gpio_irq_domain_alloc+0xcc/0x290
+[   13.744392]   irq_domain_alloc_irqs_hierarchy+0x24/0x60
+[   13.749586]   __irq_domain_alloc_irqs+0x160/0x2f0
+[   13.754254]   irq_create_fwspec_mapping+0x118/0x320
+[   13.759073]   irq_create_of_mapping+0x78/0xa0
+[   13.763360]   of_irq_get+0x6c/0x80
+[   13.766701]   of_mdiobus_register_phy+0x10c/0x238 [of_mdio]
+[   13.772227]   of_mdiobus_register+0x158/0x380 [of_mdio]
+[   13.777388]   mdio_mux_init+0x180/0x2e8 [mdio_mux]
+[   13.782128]   g12a_mdio_mux_probe+0x290/0x398 [mdio_mux_meson_g12a]
+[   13.788349]   platform_drv_probe+0x5c/0xb0
+[   13.792379]   really_probe+0xe4/0x448
+[   13.795979]   driver_probe_device+0xe8/0x140
+[   13.800189]   __device_attach_driver+0x94/0x120
+[   13.804639]   bus_for_each_drv+0x84/0xd8
+[   13.808474]   __device_attach+0xe4/0x168
+[   13.812361]   device_initial_probe+0x1c/0x28
+[   13.816592]   bus_probe_device+0xa4/0xb0
+[   13.820430]   deferred_probe_work_func+0xa8/0x100
+[   13.825064]   process_one_work+0x264/0x688
+[   13.829088]   worker_thread+0x4c/0x458
+[   13.832768]   kthread+0x154/0x158
+[   13.836018]   ret_from_fork+0x10/0x18
+[   13.839612]
+[   13.839612] other info that might help us debug this:
+[   13.839612]
+[   13.850354]  Possible interrupt unsafe locking scenario:
+[   13.850354]
+[   13.855720]        CPU0                    CPU1
+[   13.858774]        ----                    ----
+[   13.863242]   lock(&ctl->lock);
+[   13.866330]                                local_irq_disable();
+[   13.872233]                                lock(&irq_desc_lock_class);
+[   13.878705]                                lock(&ctl->lock);
+[   13.884297]   <Interrupt>
+[   13.886857]     lock(&irq_desc_lock_class);
+[   13.891014]
+[   13.891014]  *** DEADLOCK ***
 
-Plug the detection code as well as polling on vPE schedule. While
-at it, tidy-up the kernel message that displays the GICv4 optional
-features.
+The issue can occur when CPU1 is doing something like irq_set_type()
+and CPU0 performing an interrupt allocation, for example. Taking
+an interrupt (like the one being reconfigured) would lead to a deadlock.
 
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+A solution to this is:
+
+- Reorder the locking so that meson_gpio_irq_update_bits takes the lock
+  itself at all times, instead of relying on the caller to lock or not,
+  hence making the RMW sequence atomic,
+
+- Rework the critical section in meson_gpio_irq_request_channel to only
+  cover the allocation itself, and let the gpio_irq_sel_pin callback
+  deal with its own locking if required,
+
+- Take the private spin-lock with interrupts disabled at all times
+
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 19 +++++++++++++++++++
- drivers/irqchip/irq-gic-v3.c       | 11 +++++++----
- include/linux/irqchip/arm-gic-v3.h |  2 ++
- 3 files changed, 28 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-meson-gpio.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 7c8f65c9c32de..381513e053029 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -14,6 +14,7 @@
- #include <linux/dma-iommu.h>
- #include <linux/efi.h>
- #include <linux/interrupt.h>
-+#include <linux/iopoll.h>
- #include <linux/irqdomain.h>
- #include <linux/list.h>
- #include <linux/log2.h>
-@@ -3516,6 +3517,20 @@ out:
- 	return IRQ_SET_MASK_OK_DONE;
- }
- 
-+static void its_wait_vpt_parse_complete(void)
-+{
-+	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-+	u64 val;
-+
-+	if (!gic_rdists->has_vpend_valid_dirty)
-+		return;
-+
-+	WARN_ON_ONCE(readq_relaxed_poll_timeout(vlpi_base + GICR_VPENDBASER,
-+						val,
-+						!(val & GICR_VPENDBASER_Dirty),
-+						10, 500));
-+}
-+
- static void its_vpe_schedule(struct its_vpe *vpe)
+diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+index ccc7f823911bd..bc7aebcc96e9c 100644
+--- a/drivers/irqchip/irq-meson-gpio.c
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -144,12 +144,17 @@ struct meson_gpio_irq_controller {
+ static void meson_gpio_irq_update_bits(struct meson_gpio_irq_controller *ctl,
+ 				       unsigned int reg, u32 mask, u32 val)
  {
- 	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
-@@ -3546,6 +3561,8 @@ static void its_vpe_schedule(struct its_vpe *vpe)
- 	val |= vpe->idai ? GICR_VPENDBASER_IDAI : 0;
- 	val |= GICR_VPENDBASER_Valid;
- 	gicr_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
++	unsigned long flags;
+ 	u32 tmp;
+ 
++	spin_lock_irqsave(&ctl->lock, flags);
 +
-+	its_wait_vpt_parse_complete();
- }
- 
- static void its_vpe_deschedule(struct its_vpe *vpe)
-@@ -3752,6 +3769,8 @@ static void its_vpe_4_1_schedule(struct its_vpe *vpe,
- 	val |= FIELD_PREP(GICR_VPENDBASER_4_1_VPEID, vpe->vpe_id);
- 
- 	gicr_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
+ 	tmp = readl_relaxed(ctl->base + reg);
+ 	tmp &= ~mask;
+ 	tmp |= val;
+ 	writel_relaxed(tmp, ctl->base + reg);
 +
-+	its_wait_vpt_parse_complete();
++	spin_unlock_irqrestore(&ctl->lock, flags);
  }
  
- static void its_vpe_4_1_deschedule(struct its_vpe *vpe,
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 1eec9d4649d51..71a84f9c56965 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -866,6 +866,7 @@ static int __gic_update_rdist_properties(struct redist_region *region,
- 	gic_data.rdists.has_rvpeid &= !!(typer & GICR_TYPER_RVPEID);
- 	gic_data.rdists.has_direct_lpi &= (!!(typer & GICR_TYPER_DirectLPIS) |
- 					   gic_data.rdists.has_rvpeid);
-+	gic_data.rdists.has_vpend_valid_dirty &= !!(typer & GICR_TYPER_DIRTY);
+ static void meson_gpio_irq_init_dummy(struct meson_gpio_irq_controller *ctl)
+@@ -196,14 +201,15 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+ 			       unsigned long  hwirq,
+ 			       u32 **channel_hwirq)
+ {
++	unsigned long flags;
+ 	unsigned int idx;
  
- 	/* Detect non-sensical configurations */
- 	if (WARN_ON_ONCE(gic_data.rdists.has_rvpeid && !gic_data.rdists.has_vlpis)) {
-@@ -886,10 +887,11 @@ static void gic_update_rdist_properties(void)
- 	if (WARN_ON(gic_data.ppi_nr == UINT_MAX))
- 		gic_data.ppi_nr = 0;
- 	pr_info("%d PPIs implemented\n", gic_data.ppi_nr);
--	pr_info("%sVLPI support, %sdirect LPI support, %sRVPEID support\n",
--		!gic_data.rdists.has_vlpis ? "no " : "",
--		!gic_data.rdists.has_direct_lpi ? "no " : "",
--		!gic_data.rdists.has_rvpeid ? "no " : "");
-+	if (gic_data.rdists.has_vlpis)
-+		pr_info("GICv4 features: %s%s%s\n",
-+			gic_data.rdists.has_direct_lpi ? "DirectLPI " : "",
-+			gic_data.rdists.has_rvpeid ? "RVPEID " : "",
-+			gic_data.rdists.has_vpend_valid_dirty ? "Valid+Dirty " : "");
+-	spin_lock(&ctl->lock);
++	spin_lock_irqsave(&ctl->lock, flags);
+ 
+ 	/* Find a free channel */
+ 	idx = find_first_zero_bit(ctl->channel_map, NUM_CHANNEL);
+ 	if (idx >= NUM_CHANNEL) {
+-		spin_unlock(&ctl->lock);
++		spin_unlock_irqrestore(&ctl->lock, flags);
+ 		pr_err("No channel available\n");
+ 		return -ENOSPC;
+ 	}
+@@ -211,6 +217,8 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+ 	/* Mark the channel as used */
+ 	set_bit(idx, ctl->channel_map);
+ 
++	spin_unlock_irqrestore(&ctl->lock, flags);
++
+ 	/*
+ 	 * Setup the mux of the channel to route the signal of the pad
+ 	 * to the appropriate input of the GIC
+@@ -225,8 +233,6 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+ 	 */
+ 	*channel_hwirq = &(ctl->channel_irqs[idx]);
+ 
+-	spin_unlock(&ctl->lock);
+-
+ 	pr_debug("hwirq %lu assigned to channel %d - irq %u\n",
+ 		 hwirq, idx, **channel_hwirq);
+ 
+@@ -287,13 +293,9 @@ static int meson_gpio_irq_type_setup(struct meson_gpio_irq_controller *ctl,
+ 			val |= REG_EDGE_POL_LOW(params, idx);
+ 	}
+ 
+-	spin_lock(&ctl->lock);
+-
+ 	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
+ 				   REG_EDGE_POL_MASK(params, idx), val);
+ 
+-	spin_unlock(&ctl->lock);
+-
+ 	return 0;
  }
  
- /* Check whether it's single security state view */
-@@ -1614,6 +1616,7 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 	gic_data.rdists.has_rvpeid = true;
- 	gic_data.rdists.has_vlpis = true;
- 	gic_data.rdists.has_direct_lpi = true;
-+	gic_data.rdists.has_vpend_valid_dirty = true;
- 
- 	if (WARN_ON(!gic_data.domain) || WARN_ON(!gic_data.rdists.rdist)) {
- 		err = -ENOMEM;
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 83439bfb6c5b0..7613a84a2466b 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -241,6 +241,7 @@
- 
- #define GICR_TYPER_PLPIS		(1U << 0)
- #define GICR_TYPER_VLPIS		(1U << 1)
-+#define GICR_TYPER_DIRTY		(1U << 2)
- #define GICR_TYPER_DirectLPIS		(1U << 3)
- #define GICR_TYPER_LAST			(1U << 4)
- #define GICR_TYPER_RVPEID		(1U << 7)
-@@ -665,6 +666,7 @@ struct rdists {
- 	bool			has_vlpis;
- 	bool			has_rvpeid;
- 	bool			has_direct_lpi;
-+	bool			has_vpend_valid_dirty;
- };
- 
- struct irq_domain;
 -- 
 2.20.1
 
