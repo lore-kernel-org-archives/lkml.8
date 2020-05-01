@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80F8C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86844C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4CB208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A7E208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340585;
-	bh=jPVKI2qaxo/7QA2XlOawIZ/frg4b+VSJVx+26PioqTY=;
+	s=default; t=1588340590;
+	bh=JIjDI1yWmotW1ixclDVHEKfcxGRhfZ1evqCSWr+9Ni4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3ULqlwtE0/5ZtxLBB9HlaFyyg1FXurva3KIKKUObZlz43QKxBLWmrr6egMbyxSGN
-	 BCaAF0jav8o5iMjCKgBEWMP1/nBpEhQFN9Y0IAJqKqKNFQYIHP84WQL4WVTO+A95Pq
-	 UQInKDygQTiaa/+V0S5lsK8XxGWjrHeNbSemN3Rw=
+	b=Tbpjx0iYXyYimvcGYEkjDo0vWG4UcZLfffhapM/nso8dSPYmDR6JaZWaSMLTG61Dl
+	 YjxO5fDOuooITiusqdSDbE0LwX+mdf89XrsemiPMO2wigNO+iylJ+veTRjo1vyFzeg
+	 9Lb+d/D6XlEfPGTESWni/hOI/KI+GhPFyJMMzC4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbgEANnF (ORCPT
+        id S1731390AbgEANnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:43:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbgEANm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:42:56 -0400
+        id S1731078AbgEANnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B73216FD;
-        Fri,  1 May 2020 13:42:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6453120757;
+        Fri,  1 May 2020 13:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340575;
-        bh=jPVKI2qaxo/7QA2XlOawIZ/frg4b+VSJVx+26PioqTY=;
+        s=default; t=1588340580;
+        bh=JIjDI1yWmotW1ixclDVHEKfcxGRhfZ1evqCSWr+9Ni4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BkGsUL1pn/cBYXBaWU3Ukkw648v4/ns2lyzrYr2Wv4BOJMll04SSnDLtS/Svj9vj+
-         /iKXziaTFqEcelKce+YINlDIVPbeC3HshsFFaP3ZeXfdqlf3HZmwsZdh0ERLoYn192
-         g0K75XtBHV8PI7Hy6K6q+wgIRYzu9WapwHyfKWPU=
+        b=FEf8r1AOOP4SmyUd5b4YXTbjSV7te6olWNJ8YpsZdoAltPq9339sL6v84pvq+Xo9f
+         GXSyrk4+JAbDGU+Qyu5r5XJvUZStzeMYrskqNJ7a3l2w5P45ggyqDjTOmMUwry7V3d
+         siAcmGVW3yU0CvMiy2djnvsJSoU0cSWnmnekl06Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.6 028/106] i2c: altera: use proper variable to hold errno
-Date:   Fri,  1 May 2020 15:23:01 +0200
-Message-Id: <20200501131547.384550439@linuxfoundation.org>
+        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 052/106] net/mlx5: Fix failing fw tracer allocation on s390
+Date:   Fri,  1 May 2020 15:23:25 +0200
+Message-Id: <20200501131549.901718824@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -61,54 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-commit edb2c9dd3948738ef030c32b948543e84f4d3f81 upstream.
+commit a019b36123aec9700b21ae0724710f62928a8bc1 upstream.
 
-device_property_read_u32() returns errno or 0, so we should use the
-integer variable 'ret' and not the u32 'val' to hold the retval.
+On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
+allocation as done for the firmware tracer will always fail.
 
-Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
+that copies the debug data into the trace array and there is no need for
+the allocation to be contiguous in physical memory. We can therefor use
+kvzalloc() instead of kzalloc() and get rid of the large contiguous
+allcoation.
+
+Fixes: f53aaa31cce7 ("net/mlx5: FW tracer, implement tracer logic")
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-altera.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -384,7 +384,6 @@ static int altr_i2c_probe(struct platfor
- 	struct altr_i2c_dev *idev = NULL;
- 	struct resource *res;
- 	int irq, ret;
--	u32 val;
- 
- 	idev = devm_kzalloc(&pdev->dev, sizeof(*idev), GFP_KERNEL);
- 	if (!idev)
-@@ -411,17 +410,17 @@ static int altr_i2c_probe(struct platfor
- 	init_completion(&idev->msg_complete);
- 	spin_lock_init(&idev->lock);
- 
--	val = device_property_read_u32(idev->dev, "fifo-size",
-+	ret = device_property_read_u32(idev->dev, "fifo-size",
- 				       &idev->fifo_size);
--	if (val) {
-+	if (ret) {
- 		dev_err(&pdev->dev, "FIFO size set to default of %d\n",
- 			ALTR_I2C_DFLT_FIFO_SZ);
- 		idev->fifo_size = ALTR_I2C_DFLT_FIFO_SZ;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+@@ -935,7 +935,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_cr
+ 		return NULL;
  	}
  
--	val = device_property_read_u32(idev->dev, "clock-frequency",
-+	ret = device_property_read_u32(idev->dev, "clock-frequency",
- 				       &idev->bus_clk_rate);
--	if (val) {
-+	if (ret) {
- 		dev_err(&pdev->dev, "Default to 100kHz\n");
- 		idev->bus_clk_rate = 100000;	/* default clock rate */
- 	}
+-	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
++	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
+ 	if (!tracer)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -982,7 +982,7 @@ destroy_workqueue:
+ 	tracer->dev = NULL;
+ 	destroy_workqueue(tracer->work_queue);
+ free_tracer:
+-	kfree(tracer);
++	kvfree(tracer);
+ 	return ERR_PTR(err);
+ }
+ 
+@@ -1061,7 +1061,7 @@ void mlx5_fw_tracer_destroy(struct mlx5_
+ 	mlx5_fw_tracer_destroy_log_buf(tracer);
+ 	flush_workqueue(tracer->work_queue);
+ 	destroy_workqueue(tracer->work_queue);
+-	kfree(tracer);
++	kvfree(tracer);
+ }
+ 
+ static int fw_tracer_event(struct notifier_block *nb, unsigned long action, void *data)
 
 
