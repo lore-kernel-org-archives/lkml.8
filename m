@@ -2,82 +2,73 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5BDC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED5C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F38D2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596E02166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FX9Weop6"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="HqdoT0+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbgEAUgK (ORCPT
+        id S1726449AbgEAUmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:36:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38658 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgEAUgK (ORCPT
+        Fri, 1 May 2020 16:42:52 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:18456 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbgEAUmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:36:10 -0400
-Received: from [10.137.106.115] (unknown [131.107.174.243])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2E03E20B717B;
-        Fri,  1 May 2020 13:36:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2E03E20B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1588365369;
-        bh=cyxau+BJRB8pNdZIKeMiXqeTQ9iFyycCE0oPRNjr7fo=;
-        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
-        b=FX9Weop6wlrng0/8hGiSCdvgxdFkS+Z1/o9Fe4MU2xRO9DBB4XKEBWREI7DJ2vIxB
-         mVkhUIl3E7l3C9Q95xLWCgPgC+JrcQHOEv14018rn+OSDBX0RpMUzq2jsbqtw2LFQW
-         qxY32+/8JumhhaegNkX6DhGnshtSVVHR7REqYTnw=
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-Subject: Re: [PATCH v4 1/5] fs: Add support for an O_MAYEXEC flag on
- openat2(2)
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200430132320.699508-1-mic@digikod.net>
- <20200430132320.699508-2-mic@digikod.net>
-Message-ID: <12e3c9f0-a419-53a9-f404-7ce206709fe4@linux.microsoft.com>
-Date:   Fri, 1 May 2020 13:36:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 16:42:52 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041KVgME015276;
+        Fri, 1 May 2020 13:42:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0818;
+ bh=zdGCSE0RfOtLTaR0vOTzhigwD7PziyAalGU9rSI0oLs=;
+ b=HqdoT0+WYLkYD+aCGGzWhizAhm+WILTVkB7g0rAG5YljfwvpUi6xWL+DqCRXl4BedWeb
+ oJ8XlRrZ+xruYUW7NjLeFfiGKObTHd0rdHdzOmjkVmCdKtkox1MVZo48pv3L/06G8QQ5
+ oHCobV2U9NAxzbVgII8zSjkJRR0QChYNb3SYhUvnVwHmhkdwMdOORvDOLPtJaEp3Z8vy
+ OBclkUL+9pRsF+w0yK1mQEkGGG9PKlTEr28VeB9Th73Zf+2Ty1iOJ9gKv90YHpOydBKw
+ MeeLkbd4fcZUlmygCJlikjOEg8VpJw38MY3v23B8J0I0fYihAQPt53MIwTe99m+ruhIi PA== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 30r7e8mamc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 13:42:47 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 1 May
+ 2020 13:42:45 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 1 May 2020 13:42:45 -0700
+Received: from [10.193.46.2] (unknown [10.193.46.2])
+        by maili.marvell.com (Postfix) with ESMTP id 95B623F7040;
+        Fri,  1 May 2020 13:42:43 -0700 (PDT)
+Subject: Re: [EXT] [PATCH 15/37] docs: networking: device drivers: convert
+ aquantia/atlantic.txt to ReST
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>
+References: <cover.1588344146.git.mchehab+huawei@kernel.org>
+ <f6d8605f322899e9fa1a71248b165e7ad3840ab7.1588344146.git.mchehab+huawei@kernel.org>
+From:   Igor Russkikh <irusskikh@marvell.com>
+Message-ID: <c8976fe3-52fc-36e4-e75e-e0d505f11a25@marvell.com>
+Date:   Fri, 1 May 2020 23:42:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101
+ Thunderbird/76.0
 MIME-Version: 1.0
-In-Reply-To: <20200430132320.699508-2-mic@digikod.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <f6d8605f322899e9fa1a71248b165e7ad3840ab7.1588344146.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_14:2020-05-01,2020-05-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,11 +76,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 4/30/2020 6:23 AM, Mickaël Salaün wrote:
-> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
-> additional restrictions depending on a security policy managed by the
-> kernel through a sysctl or implemented by an LSM thanks to the
-> inode_permission hook. 
-> This new flag is ignored by open(2) and openat(2).
+On 01/05/2020 5:44 pm, Mauro Carvalho Chehab wrote:
+> External Email
+> 
+> ----------------------------------------------------------------------
+> - add SPDX header;
+> - use copyright symbol;
+> - adjust title and its markup;
+> - comment out text-only TOC from html/pdf output;
+> - mark code blocks and literals as such;
+> - adjust identation, whitespaces and blank lines where needed;
+> - add to networking/index.rst.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Reviewed-by: Deven Bowers <deven.desai@linux.microsoft.com>
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+
+Thanks alot, Mauro, for this conversion!
+
+  Igor
