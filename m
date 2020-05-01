@@ -2,159 +2,131 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52990C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B212BC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31DD7208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8DD214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yh+LoR0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhXnbMYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgEAIIP (ORCPT
+        id S1728397AbgEAIJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:08:15 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:18041 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728351AbgEAIIO (ORCPT
+        Fri, 1 May 2020 04:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgEAIJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:08:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588320493; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=qcrL4Oy4sFTZZxhYPssgoqySFm5x5kTnylNldDFq1lo=; b=Yh+LoR0/0MkTOjMZPK5/UYY5dbVkX77ACJ0jZkirGrSnOR8HnsbpFAkOc46nRNf2QDeHJw4s
- 1mTJbRuV0DQX+0mxwqhM8YPPDRxblgdbHKa4pSYaMExQLHupSlN7M6M9Vkb+3Hx754W33xB/
- iv7opZNi1fEy+k12ImAoEgQOjTQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eabd8e7.7f4fad3efc00-smtp-out-n03;
- Fri, 01 May 2020 08:08:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9F8E0C432C2; Fri,  1 May 2020 08:08:06 +0000 (UTC)
-Received: from [192.168.1.227] (unknown [49.204.180.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2FB1C433CB;
-        Fri,  1 May 2020 08:08:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2FB1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-Subject: Re: [Freedreno] [PATCH v2] dt-bindings: arm-smmu: Add sc7180
- compatible string and mem_iface clock
-To:     Doug Anderson <dianders@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-References: <1588219187-19295-1-git-send-email-smasetty@codeaurora.org>
- <20200430181233.GA21991@jcrouse1-lnx.qualcomm.com>
- <CAD=FV=Usp5RxgXtjtgBe6jR3o=-+EXkYZuVzx_AF3=BsVu+OeA@mail.gmail.com>
-From:   Sharat Masetty <smasetty@codeaurora.org>
-Message-ID: <d310dd37-edab-2218-7ee6-40b1aba6633b@codeaurora.org>
-Date:   Fri, 1 May 2020 13:38:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 1 May 2020 04:09:03 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C51C035494;
+        Fri,  1 May 2020 01:09:03 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id i13so2095034oie.9;
+        Fri, 01 May 2020 01:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pg+1ScPrEODM3uAFA9zTWu/I1ZfaUw4KVmoBAKoheA=;
+        b=YhXnbMYvvL2NERhKKxsDO4eX9F2iF5QES+58BPMPdkDa7+HWnKRPXBtihaQRlx5jhJ
+         ZJ+u6PNVJetL8DPyXrHPuRXEcd5/bi3d1s+fxldrozxvCiSxYrfbkwMuRZOHt7so1kAn
+         aiEHVbhCFKQAXa1VhD+k4dfmV7tkNmjJFq0NAXNXDGY0lueDa1Gg4pPmbic0IFrkPRlN
+         MIr4KPcfXB2XLJFMMuVotJ6iBWmim1etULPjiMGfMuxcGrgUBWdsfJIZUHIjejVd2NMD
+         zLRXjnFO6JT8OhAo0LD0S9lYl11vXLyJc2xc2LLFyC1GgYs46wc1cH263vVfeZ8MTfER
+         CRtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pg+1ScPrEODM3uAFA9zTWu/I1ZfaUw4KVmoBAKoheA=;
+        b=ParBG8551fVXdvJgmfb9CwMd5zAxRTHOSIEJZDXc/0yR8BIx1tgpm/n2L5x4R8F22L
+         3N/4vtM7rmziXk/SOshOoICm13/k4RPZ8CT9KL+lLlImInI+Lnshx5slslsS51KHdvRd
+         GMDXxbcprAB2/QXd03DEog+F14+fuGcGFuzsw9bzR/IOGf4OWt/4UctxIgEG6b/vt3RB
+         VcYSSuIY8ia9fxK+ss45xnoHiBC/9adoPUPstk+76kxLmth6kwB1Dv/f6Ee9gW1lR5Ay
+         aFLvNqLM/jfkWDBa/0fyKvOi1o7k2l0S/fRlcsfYcd+uJ1OCutVF1oy8M5wWlhRF9qyD
+         njug==
+X-Gm-Message-State: AGi0PubXLoX1c+QFSn2WFa7KR2f+6KXBjCOJAZS+DzSZ6U67UrCg6mEk
+        UnkZm6Tl066FwJoXpX+Tz/8sDrPfnN6oxktxkvs=
+X-Google-Smtp-Source: APiQypL4tkkgblP6s79WD1Ii4byJ0FZw7ndmwSXmo65KLcrLpTxyQBgTjG8TlCh5OP8wJ/Y3Cf7Oky6dSkWu7P5a6UQ=
+X-Received: by 2002:aca:b18b:: with SMTP id a133mr2294802oif.142.1588320542697;
+ Fri, 01 May 2020 01:09:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Usp5RxgXtjtgBe6jR3o=-+EXkYZuVzx_AF3=BsVu+OeA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 1 May 2020 09:08:36 +0100
+Message-ID: <CA+V-a8s7s7=kxOp9ohrMp+o6KDuO-Vn6P7YX2L6fC1=_A9kVwg@mail.gmail.com>
+Subject: Re: [PATCH 06/18] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Geert,
 
-On 4/30/2020 11:51 PM, Doug Anderson wrote:
-> Hi,
+Thank you for the review.
+
+On Thu, Apr 30, 2020 at 2:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> On Thu, Apr 30, 2020 at 11:12 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->> On Thu, Apr 30, 2020 at 09:29:47AM +0530, Sharat Masetty wrote:
->>> This patch adds a new compatible string for sc7180 and also an
->>> additional clock listing needed to power the TBUs and the TCU.
->>>
->>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->>> ---
->>> v2: Addressed review comments from Doug
->>>
->>>   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 8 ++++++++
->>>   1 file changed, 8 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
->>> index 6515dbe..ba5dba4 100644
->>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
->>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
->>> @@ -28,6 +28,7 @@ properties:
->>>             - enum:
->>>                 - qcom,msm8996-smmu-v2
->>>                 - qcom,msm8998-smmu-v2
->>> +              - qcom,sc7180-smmu-v2
->>>                 - qcom,sdm845-smmu-v2
->>>             - const: qcom,smmu-v2
->>>
->>> @@ -113,16 +114,23 @@ properties:
->>>         present in such cases.
->>>
->>>     clock-names:
->>> +    minItems: 2
->>> +    maxItems: 3
->>>       items:
->>>         - const: bus
->>>         - const: iface
->>> +      - const: mem_iface
->> Hi Sharat -
->>
->> I think there was a bit of confusion due to renaming between downstream and
->> upstream.  Currently for the sdm845 and friends we have:
->>
->>    clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
->>       <&gcc GCC_GPU_CFG_AHB_CLK>;
->>    clock-names = "bus", "iface";
->>
->> Confusingly these same clocks downstream are "mem_iface_clk" and "iface_clk"
->> respectively.
->>
->> It looks like you are trying to add GCC_DDRSS_GPU_AXI_CLK as "mem_iface" which
->> was formerly "mem_clk" downstream. I'm not sure if the naming change is
->> intentional or you were trying to make upstream and downstream match and didn't
->> realize that they were renamed.
->>
->> I'm not sure if we need DDRSS_GPU_AXI_CLK or not. Empirically it works without
->> it for sdm845 (I don't have a sc7180 to test) but we should probably loop back
->> with either the clock team or the hardware designers to be sure there isn't a
->> corner case that is missing. I agree with Doug that its always best if we don't
->> need to add a clock.
-
-Thanks Jordan and Doug for the updates. My intention was to add the 
-third clock as listed downstream, but as you said the naming is a bit 
-misleading. From the clock GCC_DDRSS_GPU_AXI_CLK description, this is 
-needed for the GPU to DDR access and all transactions to the DDR from 
-the GPU go through the SMMU. It is listed in the SMMU dt node because 
-its needed by SMMU to perform pagetable walks.
-
-I think we may be fine by not listing this clock in the SMMU node 
-because the same clock is listed in both the GMU and also the GPU.
-
-> I can confirm that on sc7180 the GPU seems to come up just fine
-> without the clock being specified in the iommu node.  Definitely would
-> be good to know what's broken and if nothing is broken maybe we can
-> change this patch to just add the sc7180 compatible string and drop
-> the clock.  I do note that the GMU already has a reference to the same
-> "GCC_DDRSS_GPU_AXI_CLK" clock.
+> Hi Prabhakar,
 >
-> -Doug
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> Thanks for your patch!
+>
+> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790).
+>
+> but lacks several automotive-specific peripherals.
+> So please split the pinmux groups and functions in common and automotive
+> parts.  From a quick look, for now the latter is limited to MLB
+> groups/functions.
+>
+Yes I can confirm its just limited to MLBP, Ill split up into common
+and automotive parts and send v2.
+
+Cheers,
+--Prabhakar
+
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> The rest looks good to me.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
