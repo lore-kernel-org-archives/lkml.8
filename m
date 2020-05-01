@@ -2,152 +2,119 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FABC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5808EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCF020857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344560;
-	bh=cbS/UvPxXHd/6qKkogBfad5uTRh7vyKuBBi1oajHudE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6qdlM0bk6939MI95wJ+n0lXtbZ+W2BmAtlrG46hpOpnOmkmL2Bpx0ernrummnm8E
-	 rpXbonAcKYuMnDg23IOE6iZtiaSfrXcTJ2biSD1b4jyxJjLFsKj174keT5WRwgX5Br
-	 1YrHl7DF67g92Usyq7lyjnEyj+V2SjgdWbmZZ2kc=
+	by mail.kernel.org (Postfix) with ESMTP id 368A420857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="W3eBxkRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgEAOtQ (ORCPT
+        id S1730589AbgEAOtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:45:06 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBC6320857;
-        Fri,  1 May 2020 14:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344305;
-        bh=cbS/UvPxXHd/6qKkogBfad5uTRh7vyKuBBi1oajHudE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c6s/cBheaWlXqvUtDzVeyOK6L+94HL+MiawJoaISJJbMvOsoWeBr+CDwlkVjiW3zA
-         ArYWytIDe71h2CT5HI+91e8/iy+4KkkTb2+I0SGIJI4yl/dVV0wgJRHL3c3/tK1iaf
-         WSAJC+wUgAiSWLfIIJ+wtpBoicf82h3PFc8Lt5z4=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCch-Ak; Fri, 01 May 2020 16:45:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 04/37] docs: networking: convert vxlan.txt to ReST
-Date:   Fri,  1 May 2020 16:44:26 +0200
-Message-Id: <f2a0c9b723a92b697e3161d2b93f5ae87cb3801b.1588344146.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
-References: <cover.1588344146.git.mchehab+huawei@kernel.org>
+        Fri, 1 May 2020 10:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729114AbgEAOtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:49:14 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56563C061A0C;
+        Fri,  1 May 2020 07:49:14 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id x1so7637246ejd.8;
+        Fri, 01 May 2020 07:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fxPFkW3QxOmRfYj2h3nMtAxuro0T/xEXMFbcE0LTrVU=;
+        b=W3eBxkRVCUkRmVjaeZxdY0eWXI1WeV14Y3GZ6cGG6qX2rTNYODG/BhL8vEpRBcwaX8
+         5zyBVQI+Panp/tiEK/dymKhhil24IaILyAaTbA3+8a3McJf9tacA3Zc7rwjq5i0wWM3R
+         kNZhVSx8yndKHndGwo7LMgJt+4oODm4bGQ7Xu4rUIJQYPUR40Ev/Jg4FjzSM5/gEV5+x
+         oQPS5n4+5GFiF2LMJceZVHlRYcpEj/Q9OldY0p8kPupcGJLxLMkoKGeFEXfmjNy1T8g+
+         5HfzjwGCytspb5OaBLFNKMcAUGG9Oz5jmvrc5BifLpcq/oGghD/DAsv+kcGzitsc9hJ8
+         702w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fxPFkW3QxOmRfYj2h3nMtAxuro0T/xEXMFbcE0LTrVU=;
+        b=PNu1Nk0KoaPPBBdpL15G3DrF3oKx7knlcPdqKvJrROP4L3RoNZyItdDd9YPp/r0I2D
+         7j6jMW/llYz4qfhYl6SqUQulWD87ryJzWhYyMxqDiH+mB9t05ZGAvXsGHDP7q/+G1Kjm
+         urWA5bAGtKuHEg0SP629ogsnJcHmAFO6BvZ1lVBD2lsE2leAof1If7Twk+ez+sEj46Fd
+         Y1BvXOvZGDL6RAPM6FiaPbwkdhGwFtKtMnke6T2bBxlRgb7GC8HS1YRedYc0WTM0wiA7
+         ni7pgnKYvHLulHca7oL1IsWPATHTjzbQ5Kt7aKJ7YG2SfMJtXeHfwl2AYNDQCNr+GWZr
+         h31w==
+X-Gm-Message-State: AGi0PuaZq3OMGmiFun309hY8LSRPsgeHOyrB3vX53DEDXJMspXgWGBZP
+        rF6Zz035nYW23sydtvQaDrBXffl6oGnG/spslyQ=
+X-Google-Smtp-Source: APiQypI+1+VQOUh4IFgtlgbygkJrSop4NKMEXZUd+7VOMUopczAN+iZLGHuyibbdAMVPCjuSWytmI5hAyJGDHqrKplU=
+X-Received: by 2002:a17:906:4048:: with SMTP id y8mr3549075ejj.258.1588344553010;
+ Fri, 01 May 2020 07:49:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com> <20200429212933.GA76972@lunn.ch>
+In-Reply-To: <20200429212933.GA76972@lunn.ch>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 1 May 2020 16:49:02 +0200
+Message-ID: <CAFBinCDAz48BKjvLHOmuHk6nME+vpCueFW14UWP1b8Ae_D1j5w@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 00/11] dwmac-meson8b Ethernet RX delay configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- add SPDX header;
-- adjust title markup;
-- mark code blocks and literals as such;
-- adjust identation, whitespaces and blank lines where needed;
-- add to networking/index.rst.
+Hi Andrew,
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/networking/index.rst            |  1 +
- .../networking/{vxlan.txt => vxlan.rst}       | 33 ++++++++++++-------
- 2 files changed, 22 insertions(+), 12 deletions(-)
- rename Documentation/networking/{vxlan.txt => vxlan.rst} (73%)
+On Wed, Apr 29, 2020 at 11:29 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > - Khadas VIM2 seems to have the RX delay built into the PCB trace
+> >   length. When I enable the RX delay on the PHY or MAC I can't get any
+> >   data through. I expect that we will have the same situation on all
+> >   GXBB, GXM, AXG, G12A, G12B and SM1 boards
+>
+> Hi Martin
+>
+> Can you actually see this on the PCB? The other possibility is that
+> the bootloader is configuring something, which is not getting
+> overridden when linux starts up.
+at least it doesn't jump straight into my eye.
+I checked in u-boot and Linux, and for both the RX delay is disabled
+in the PHY as well as in the MAC.
 
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index 2227b9f4509d..a72fdfb391b6 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -114,6 +114,7 @@ Contents:
-    tuntap
-    udplite
-    vrf
-+   vxlan
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/networking/vxlan.txt b/Documentation/networking/vxlan.rst
-similarity index 73%
-rename from Documentation/networking/vxlan.txt
-rename to Documentation/networking/vxlan.rst
-index c28f4989c3f0..ce239fa01848 100644
---- a/Documentation/networking/vxlan.txt
-+++ b/Documentation/networking/vxlan.rst
-@@ -1,3 +1,6 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================================
- Virtual eXtensible Local Area Networking documentation
- ======================================================
- 
-@@ -21,8 +24,9 @@ neighbors GRE and VLAN. Configuring VXLAN requires the version of
- iproute2 that matches the kernel release where VXLAN was first merged
- upstream.
- 
--1. Create vxlan device
-- # ip link add vxlan0 type vxlan id 42 group 239.1.1.1 dev eth1 dstport 4789
-+1. Create vxlan device::
-+
-+    # ip link add vxlan0 type vxlan id 42 group 239.1.1.1 dev eth1 dstport 4789
- 
- This creates a new device named vxlan0.  The device uses the multicast
- group 239.1.1.1 over eth1 to handle traffic for which there is no
-@@ -32,20 +36,25 @@ pre-dates the IANA's selection of a standard destination port number
- and uses the Linux-selected value by default to maintain backwards
- compatibility.
- 
--2. Delete vxlan device
--  # ip link delete vxlan0
-+2. Delete vxlan device::
- 
--3. Show vxlan info
--  # ip -d link show vxlan0
-+    # ip link delete vxlan0
-+
-+3. Show vxlan info::
-+
-+    # ip -d link show vxlan0
- 
- It is possible to create, destroy and display the vxlan
- forwarding table using the new bridge command.
- 
--1. Create forwarding table entry
--  # bridge fdb add to 00:17:42:8a:b4:05 dst 192.19.0.2 dev vxlan0
-+1. Create forwarding table entry::
- 
--2. Delete forwarding table entry
--  # bridge fdb delete 00:17:42:8a:b4:05 dev vxlan0
-+    # bridge fdb add to 00:17:42:8a:b4:05 dst 192.19.0.2 dev vxlan0
- 
--3. Show forwarding table
--  # bridge fdb show dev vxlan0
-+2. Delete forwarding table entry::
-+
-+    # bridge fdb delete 00:17:42:8a:b4:05 dev vxlan0
-+
-+3. Show forwarding table::
-+
-+    # bridge fdb show dev vxlan0
--- 
-2.25.4
+The schematics of the Khadas VIM2 also show the the RX delay in the
+PHY is turned off by pin-strapping, see page 7 on the right: [0]
+It's the same for the Khadas VIM3 schematics, also on page 7: [1]
+There are also high resolution images of the Khadas VIM3 online so you
+can look at it yourself (I couldn't find any for the Khadas VIM2 which
+is what I have): [2]
 
+I agree that we need to get an answer to the RX delay question on the
+arm64 SoCs.
+If there's no way to find out from the existing resources then I can
+contact Khadas and ask them about the PCB trace length on VIM2, VIM3
+and VIM3L (these are the ones with RGMII PHYs).
+
+For the older SoCs the RX delay has to be provided by either the MAC
+or the PHY and right now we're not configuring it.
+We cannot simply enable the RX delay at the PHY level because the
+bootloader enables it in the MAC (so we have to turn it off there).
+So it would be great if you could still review this series.
+
+
+Martin
+
+
+[0] https://dl.khadas.com/Hardware/VIM2/Schematic/VIM2_V12_Sch.pdf
+[1] https://dl.khadas.com/Hardware/VIM3/Schematic/VIM3_V12_Sch.pdf
+[2] https://forum.khadas.com/t/khadas-vim3-is-launching-on-24-june/4103
