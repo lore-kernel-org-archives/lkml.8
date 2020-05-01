@@ -2,53 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6F7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2031C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9D62051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23F32054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341290;
-	bh=O2TyYFxh3MUYpgMEMCMs5+7mz4YEVwlq/xM/fCquLs4=;
+	s=default; t=1588341294;
+	bh=34PwhXMO6WlPQvzAomV0MV8ud2ziFyS4VfpXW95+D7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0XvdYp4fAf67xd1oGvO93hE4ejOVXCcJnHoJYT/vA6G6szefFy2dKfxPYsD/LNqY
-	 c+gHyl0FWq6a6Z6kCEibB6dHYpEOwrk/pNOGsjBRD+2Dxhw8HHDFk+pD22Thuby9RG
-	 Tn1du/fsw2k9fCDLSrIenLTO9XvcPoDOG/7ekEyo=
+	b=NCgh+g8miSysrQcPYDCQFBGwlgPeZD80CgLIIU7lWb6Z1+lN+2AhGoIIOSmoWyl3O
+	 rMeQarm6GSamPIf3Yo0pxqr6xsnkeq9KvJBeMvnHpZFA5ylHqNtEuKkjdI+cKlugoI
+	 KpjGtn18gGYI9/3Zr9J6BNmEWSDfipjRP489yaqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbgEANyt (ORCPT
+        id S1730605AbgEANeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32936 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730175AbgEANer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:47 -0400
+        id S1730579AbgEANed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1359524953;
-        Fri,  1 May 2020 13:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EEB42173E;
+        Fri,  1 May 2020 13:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340087;
-        bh=O2TyYFxh3MUYpgMEMCMs5+7mz4YEVwlq/xM/fCquLs4=;
+        s=default; t=1588340072;
+        bh=34PwhXMO6WlPQvzAomV0MV8ud2ziFyS4VfpXW95+D7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WYgaHzAeCN9qXwU/Uusr28r9tQ1y/rRexffyFpVxTbH0I3KkRS6ZBDKR2lkhvxm8Y
-         pumG5atj6+RqdDdDUQMV6TYBm2gtWJopA/gcJC5r2O3bz7xfZPHVuExwFeneuVCyBt
-         Au1S4Y/98Ab9pREoM4oYD/yRE7uIX3oz0dF4e56A=
+        b=INXuxAO9dGgeTGnvA4o/+yVBciCLGN3oSZnNwf8m17d68l/CVIjhp7fhkRoKyF08K
+         EsEDENHSI/sqoqCl8fni7xTe7J7WIwOoY3XeHTqwWUaI3N+PaEl4PyZdH/3AufIMPa
+         tONP9kX+dAi2Oa52q63cG08dSSoMl+exTSmoQswU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/117] scsi: target: fix PR IN / READ FULL STATUS for FC
-Date:   Fri,  1 May 2020 15:22:17 +0200
-Message-Id: <20200501131557.622792846@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Suraj Jitindar Singh <surajjs@amazon.com>
+Subject: [PATCH 4.14 083/117] xfs: validate sb_logsunit is a multiple of the fs blocksize
+Date:   Fri,  1 May 2020 15:21:59 +0200
+Message-Id: <20200501131554.637574672@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,41 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
+commit 9c92ee208b1faa0ef2cc899b85fd0607b6fac7fe upstream.
 
-Creation of the response to READ FULL STATUS fails for FC based
-reservations. Reason is the too high loop limit (< 24) in
-fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
-long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
-executed a last time for the ending '\0' of the string and thus hex2bin()
-reports an error.
+Make sure the log stripe unit is sane before proceeding with mounting.
+AFAICT this means that logsunit has to be 0, 1, or a multiple of the fs
+block size.  Found this by setting the LSB of logsunit in xfs/350 and
+watching the system crash as soon as we try to write to the log.
 
-Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/target/target_core_fabric_lib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_log.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
-index 95aa47ac4dcd2..f8621fe673767 100644
---- a/drivers/target/target_core_fabric_lib.c
-+++ b/drivers/target/target_core_fabric_lib.c
-@@ -76,7 +76,7 @@ static int fc_get_pr_transport_id(
- 	 * encoded TransportID.
- 	 */
- 	ptr = &se_nacl->initiatorname[0];
--	for (i = 0; i < 24; ) {
-+	for (i = 0; i < 23; ) {
- 		if (!strncmp(&ptr[i], ":", 1)) {
- 			i++;
- 			continue;
--- 
-2.20.1
-
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -608,6 +608,7 @@ xfs_log_mount(
+ 	xfs_daddr_t	blk_offset,
+ 	int		num_bblks)
+ {
++	bool		fatal = xfs_sb_version_hascrc(&mp->m_sb);
+ 	int		error = 0;
+ 	int		min_logfsbs;
+ 
+@@ -659,9 +660,20 @@ xfs_log_mount(
+ 			 XFS_FSB_TO_B(mp, mp->m_sb.sb_logblocks),
+ 			 XFS_MAX_LOG_BYTES);
+ 		error = -EINVAL;
++	} else if (mp->m_sb.sb_logsunit > 1 &&
++		   mp->m_sb.sb_logsunit % mp->m_sb.sb_blocksize) {
++		xfs_warn(mp,
++		"log stripe unit %u bytes must be a multiple of block size",
++			 mp->m_sb.sb_logsunit);
++		error = -EINVAL;
++		fatal = true;
+ 	}
+ 	if (error) {
+-		if (xfs_sb_version_hascrc(&mp->m_sb)) {
++		/*
++		 * Log check errors are always fatal on v5; or whenever bad
++		 * metadata leads to a crash.
++		 */
++		if (fatal) {
+ 			xfs_crit(mp, "AAIEEE! Log failed size checks. Abort!");
+ 			ASSERT(0);
+ 			goto out_free_log;
 
 
