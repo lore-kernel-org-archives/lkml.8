@@ -2,54 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EABC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C7CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D276206D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BFF206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341701;
-	bh=sD6kM9YtnGhI/BuVDPhEHnyPkH8B8ivMCVvFiSdy2nM=;
+	s=default; t=1588341706;
+	bh=Qs78r1hJQ7eIwNzO01q2Oa9PHG7c6wH58tUjB1MxkYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=loidFaKT+4eiSw9KeA1OpbyrfL96Q3BQptk73rNce+Tq4OXWEhTOciY5odnJ9C09N
-	 6n5A/e/UyurepJOFFysJrXaUiVgKULGWNQAi+auoTgT/H1fnzWYiZc2v3i3L3pL1ov
-	 RtSJeul3PK6sClmo5MGaZi1C2xlIEGM7M8Z7S+b0=
+	b=16gwflqdKztLCcdIziPH+D5BbGNkpIENim13DvCo96fXGfjmhkZ+O98tGYQyCeh2V
+	 helgHRNb9vWGFTTrfP7FXezs/T99gVpIW8safS9lS3wdElqMe6sxzpEW+ykXb5obr/
+	 ohFHwrVgUTQ954wBEl4IvWfSjtzTsEdZHzX2xp8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgEAOBk (ORCPT
+        id S1730074AbgEAOBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:01:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46544 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728979AbgEANZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:32 -0400
+        id S1728854AbgEANZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56367208D6;
-        Fri,  1 May 2020 13:25:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1607E2166E;
+        Fri,  1 May 2020 13:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339531;
-        bh=sD6kM9YtnGhI/BuVDPhEHnyPkH8B8ivMCVvFiSdy2nM=;
+        s=default; t=1588339524;
+        bh=Qs78r1hJQ7eIwNzO01q2Oa9PHG7c6wH58tUjB1MxkYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzavyevKkDIurxbSkwkERpZ0C2RvC7S4VgKvdHOXiXV6L20J3qUdmX4yXdN6dgaNm
-         opYzYfkq3n+zZR31ikcSZnOw50cKnbp96wx7KP/s4qtjG0WRdluqcIY2ntXL64UF3k
-         uDn7Yqe6/ONAewgtrpWllTMWPdemIa7sefdSe6M4=
+        b=mj4OlbWmWcK+FcSqEKPsDvYEq2j4o1ORl+XrFdDO0dmO5BJNThducBtkEvIJzF6kC
+         b2w0kkW1de/lGwo1uH7DxE05lMaK+Ctc8umspVqttEMoFYs07nr3RtjsRAQKp4nVcl
+         KIH+PlD1kfnQkBk5GZkMeWwrLqpr/Hza73MwIMtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/70] s390/cio: avoid duplicated ADD uevents
-Date:   Fri,  1 May 2020 15:21:03 +0200
-Message-Id: <20200501131518.278040171@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 24/70] xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
+Date:   Fri,  1 May 2020 15:21:12 +0200
+Message-Id: <20200501131521.946706660@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -62,65 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
+[ Upstream commit 0c922a4850eba2e668f73a3f1153196e09abb251 ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+IPSKB_XFRM_TRANSFORMED and IP6SKB_XFRM_TRANSFORMED are skb flags set by
+xfrm code to tell other skb handlers that the packet has been passed
+through the xfrm output functions. Simplify the code and just always
+set them rather than conditionally based on netfilter enabled thus
+making the flag available for other users.
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
-
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/ipv4/xfrm4_output.c |    2 --
+ net/ipv6/xfrm6_output.c |    2 --
+ 2 files changed, 4 deletions(-)
 
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 6aae684128021..2389a1dc6d300 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -872,8 +872,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1082,8 +1084,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
- 		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
--- 
-2.20.1
-
+--- a/net/ipv4/xfrm4_output.c
++++ b/net/ipv4/xfrm4_output.c
+@@ -75,9 +75,7 @@ int xfrm4_output_finish(struct sock *sk,
+ {
+ 	memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+ 
+-#ifdef CONFIG_NETFILTER
+ 	IPCB(skb)->flags |= IPSKB_XFRM_TRANSFORMED;
+-#endif
+ 
+ 	return xfrm_output(sk, skb);
+ }
+--- a/net/ipv6/xfrm6_output.c
++++ b/net/ipv6/xfrm6_output.c
+@@ -125,9 +125,7 @@ int xfrm6_output_finish(struct sock *sk,
+ {
+ 	memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 
+-#ifdef CONFIG_NETFILTER
+ 	IP6CB(skb)->flags |= IP6SKB_XFRM_TRANSFORMED;
+-#endif
+ 
+ 	return xfrm_output(sk, skb);
+ }
 
 
