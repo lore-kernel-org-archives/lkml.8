@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721FFC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86EDC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4925824954
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E6C216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340191;
-	bh=jjzL8dEOpPjDZCYBJmZBJB+Z4r3Jm7DlFgVrJSvOJBk=;
+	s=default; t=1588340193;
+	bh=2VDesztP2ROqSYYtOtZc+6miggIYCWfiwpKp5Wx5348=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBLv04AY79Gy2nu9SLQy6vuk1E6L+JCUtyw71JCQt6WWliOBIhx6DPNy6ygyAViz1
-	 PZlWqRTtrdK5f6dYwgeCocOmy8gYGYxCQQn2w8jJSzt+psyH46vvvK84YnHTtMl94l
-	 MiwXGam5QDzWw/5UZUXJ4Sxw9tlmH+H+9nDvPzWE=
+	b=uGhUnN6oZxOAbzjhMZKmYsPzeBIL4HNIBfLPS+Aj/AQpVLWHlKo73GWnv8+PNUHR1
+	 aZHcCjWj3jFEtegR1eFgTdZmUNIlxz79uDu90+TYb4zEnd54pQs6Z/AwzOtGZ/ugWU
+	 GyTH7HSW6WZv9s4/EChhd8x5obHOqreJvX7BDyFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgEANga (ORCPT
+        id S1730859AbgEANgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:36:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730847AbgEANgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:18 -0400
+        id S1730834AbgEANgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D27B1208DB;
-        Fri,  1 May 2020 13:36:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA9724953;
+        Fri,  1 May 2020 13:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340178;
-        bh=jjzL8dEOpPjDZCYBJmZBJB+Z4r3Jm7DlFgVrJSvOJBk=;
+        s=default; t=1588340173;
+        bh=2VDesztP2ROqSYYtOtZc+6miggIYCWfiwpKp5Wx5348=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c2ZJLpGZ0qV4fkfsMPgZiq/fRLh7SCyUEL5xWTiRibbC62fgOems73WEPbqKYPzIO
-         /u9xXHVuDLqU5fiI+uQ8ZlF1YA/2w5Aizflygfg2fv+/RBOIVARAal4G3bbwXmb7JF
-         hUsQLk+bAfxBhtn8ED6UoHZDA9xss4E3Av/gpBgY=
+        b=OquBBcfw/zoh52OU6feCvt9ycaHwl6pFwMyxMN7Q3Xp3npeJEis1x3biATe3qjYax
+         JY4QdBSYN0CW3wi0Ub0AC4gl+TW2auKAthDNVQQdTjdRE0ysdaW30CiFkU8/3CTpdA
+         cze2dQsmUYg/fIKV/6tXOzu2N8NPjEzv9Rl12uyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4.19 20/46] ARM: dts: bcm283x: Disable dsi0 node
-Date:   Fri,  1 May 2020 15:22:45 +0200
-Message-Id: <20200501131505.878175580@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 10/46] ASoC: wm8960: Fix wrong clock after suspend & resume
+Date:   Fri,  1 May 2020 15:22:35 +0200
+Message-Id: <20200501131502.636315379@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -61,32 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit 90444b958461a5f8fc299ece0fe17eab15cba1e1 upstream.
+commit 1e060a453c8604311fb45ae2f84f67ed673329b4 upstream.
 
-Since its inception the module was meant to be disabled by default, but
-the original commit failed to add the relevant property.
+After suspend & resume, wm8960_hw_params may be called when
+bias_level is not SND_SOC_BIAS_ON, then wm8960_configure_clocking
+is not called. But if sample rate is changed at that time, then
+the output clock rate will be not correct.
 
-Fixes: 4aba4cf82054 ("ARM: dts: bcm2835: Add the DSI module nodes and clocks")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+So judgement of bias_level is SND_SOC_BIAS_ON in wm8960_hw_params
+is not necessary and it causes above issue.
+
+Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1587468525-27514-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/bcm283x.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/wm8960.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -476,6 +476,7 @@
- 					     "dsi0_ddr2",
- 					     "dsi0_ddr";
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+@@ -863,8 +863,7 @@ static int wm8960_hw_params(struct snd_p
  
-+			status = "disabled";
- 		};
+ 	wm8960->is_stream_in_use[tx] = true;
  
- 		thermal: thermal@7e212000 {
+-	if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_ON &&
+-	    !wm8960->is_stream_in_use[!tx])
++	if (!wm8960->is_stream_in_use[!tx])
+ 		return wm8960_configure_clocking(component);
+ 
+ 	return 0;
 
 
