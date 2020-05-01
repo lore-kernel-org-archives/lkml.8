@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F11C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED5EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07F3720836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F482205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340656;
-	bh=f5gA1/aIFeOtSaG/MyaRYS8peF9JIhvDtG2xbcm4O/I=;
+	s=default; t=1588340659;
+	bh=IUCErDYU5+chUFB9+LblbUcLmt79a5CAIndVF79zzyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QgB1BCaowLJZSSk8GxEcL04bBy7PV1CpeDBOw9/MeNxdvWGW6zYNk7GLzdrQKReQh
-	 qWHrp5rpcXq2Lf1eGI5HlohokCo6g6n2Fxafn9qJeAZOGJ+AK7y8kBpijAVlMpBmrH
-	 3iid0zEeI+CvGyDAOudfh+xFcQI9SxXjgRCbglO8=
+	b=b+LYXZ7pdf3vNoTcxz2z+NzgKS66le1gjfgvdiDFCfT0g/Mn2VWcwRJN4mmt2q572
+	 GVWwBjkUlvSZmlpcZnx4F7EwgMVN+N1q2m6yAZ846tQdDZQ3bSOuti4TlryOZ8cMs+
+	 nCsjsnSvpJV9eCcTTmvZh1NkQTV0jzv8sce6H49Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbgEANoP (ORCPT
+        id S1731491AbgEANoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731439AbgEANoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:10 -0400
+        id S1731726AbgEANoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DCC420836;
-        Fri,  1 May 2020 13:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11757205C9;
+        Fri,  1 May 2020 13:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340649;
-        bh=f5gA1/aIFeOtSaG/MyaRYS8peF9JIhvDtG2xbcm4O/I=;
+        s=default; t=1588340654;
+        bh=IUCErDYU5+chUFB9+LblbUcLmt79a5CAIndVF79zzyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UemDTjWZVRneklzZpJ3Tts22BaUJEhU/xtR4vwXFIasaXJ/wg+d4+GdC7ec8g06LP
-         zwYptXUui5YJyVDoG41T322ENveBqd2xPYjEfSjHALY4Ly/nWIVfKEzKjPhncAHRlM
-         jygrXEghTGwFAikODdcyAP6EeQ4B5V4csD+UGcH0=
+        b=vYzRXV8V9VII4vSoI9HB5vSaIm3v7foIAuofG+IjRvF4rpZWb0p0j8YLrYfGAyWLf
+         GS5X/Ek4+hWTC6S84TLq15vO/Lcj2jl0U402QrU68FJGitSZmw0mF+XC+RNcLQHdlA
+         bEI6R3hU97wJ0qFhDQcakG1WjuFbFlQUiT8C2GUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 080/106] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
-Date:   Fri,  1 May 2020 15:23:53 +0200
-Message-Id: <20200501131553.390611987@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 082/106] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
+Date:   Fri,  1 May 2020 15:23:55 +0200
+Message-Id: <20200501131553.569730620@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -64,67 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
+[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
 
-CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
-unreachable code path.  This includes __builtin_unreachable().  Because
-the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
-this results in a double UD2.  In this case objtool rightfully detects
-that the second UD2 is unreachable:
+xenbus_map_ring_valloc() maps a ring page and returns the status of the
+used grant (0 meaning success).
 
-  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+There are Xen hypervisors which might return the value 1 for the status
+of a failed grant mapping due to a bug. Some callers of
+xenbus_map_ring_valloc() test for errors by testing the returned status
+to be less than zero, resulting in no error detected and crashing later
+due to a not available ring page.
 
-We weren't able to figure out a way to get rid of the double UD2s, so
-just silence the warning.
+Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
+in case the grant status reported by Xen is greater than zero.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
+This is part of XSA-316.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Wei Liu <wl@xen.org>
+Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 2b765bbbef922..95c485d3d4d83 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2307,14 +2307,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
- 	    !strcmp(insn->sec->name, ".altinstr_aux"))
- 		return true;
- 
-+	if (!insn->func)
-+		return false;
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index e17ca81561713..a38292ef79f6d 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -448,7 +448,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
+ int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
+ 			   unsigned int nr_grefs, void **vaddr)
+ {
+-	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	int err;
 +
-+	/*
-+	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
-+	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
-+	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
-+	 * (or occasionally a JMP to UD2).
-+	 */
-+	if (list_prev_entry(insn, list)->dead_end &&
-+	    (insn->type == INSN_BUG ||
-+	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
-+	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
-+		return true;
++	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	/* Some hypervisors are buggy and can return 1. */
++	if (err > 0)
++		err = GNTST_general_error;
 +
- 	/*
- 	 * Check if this (or a subsequent) instruction is related to
- 	 * CONFIG_UBSAN or CONFIG_KASAN.
- 	 *
- 	 * End the search at 5 instructions to avoid going into the weeds.
- 	 */
--	if (!insn->func)
--		return false;
- 	for (i = 0; i < 5; i++) {
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
  
- 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
 -- 
 2.20.1
 
