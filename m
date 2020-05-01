@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1177DC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18D6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7492495E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FDC21924
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbgEASX2 (ORCPT
+        id S1730630AbgEASWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:23:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
+        Fri, 1 May 2020 14:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730657AbgEASW1 (ORCPT
+        by vger.kernel.org with ESMTP id S1730583AbgEASWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:22:27 -0400
+        Fri, 1 May 2020 14:22:19 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65245C061A0C;
-        Fri,  1 May 2020 11:22:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B85C061A0C;
+        Fri,  1 May 2020 11:22:18 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIn-0003ez-A5; Fri, 01 May 2020 20:22:21 +0200
+        id 1jUaIa-0003XB-HQ; Fri, 01 May 2020 20:22:08 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E8C4F1C0330;
-        Fri,  1 May 2020 20:22:20 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:20 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 19D971C0330;
+        Fri,  1 May 2020 20:22:08 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:08 -0000
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] objtool: Remove INSN_STACK
-Cc:     Julien Thierry <jthierry@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200428191659.854203028@infradead.org>
-References: <20200428191659.854203028@infradead.org>
+Subject: [tip: sched/core] sched/core: Fix illegal RCU from offline CPUs
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Qian Cai <cai@lca.pw>, Michael Ellerman <mpe@ellerman.id.au>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200401214033.8448-1-cai@lca.pw>
+References: <20200401214033.8448-1-cai@lca.pw>
 MIME-Version: 1.0
-Message-ID: <158835734088.8414.16395422459790306018.tip-bot2@tip-bot2>
+Message-ID: <158835732806.8414.13635392824259089476.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,242 +57,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the objtool/core branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     b09fb65e863733e192d4825a285b4b4998969ce0
-Gitweb:        https://git.kernel.org/tip/b09fb65e863733e192d4825a285b4b4998969ce0
+Commit-ID:     bf2c59fce4074e55d622089b34be3a6bc95484fb
+Gitweb:        https://git.kernel.org/tip/bf2c59fce4074e55d622089b34be3a6bc95484fb
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 24 Apr 2020 16:18:58 +02:00
+AuthorDate:    Wed, 01 Apr 2020 17:40:33 -04:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 30 Apr 2020 20:14:33 +02:00
+CommitterDate: Thu, 30 Apr 2020 20:14:41 +02:00
 
-objtool: Remove INSN_STACK
+sched/core: Fix illegal RCU from offline CPUs
 
-With the unconditional use of handle_insn_ops(), INSN_STACK has lost
-its purpose. Remove it.
+In the CPU-offline process, it calls mmdrop() after idle entry and the
+subsequent call to cpuhp_report_idle_dead(). Once execution passes the
+call to rcu_report_dead(), RCU is ignoring the CPU, which results in
+lockdep complaining when mmdrop() uses RCU from either memcg or
+debugobjects below.
 
-Suggested-by: Julien Thierry <jthierry@redhat.com>
+Fix it by cleaning up the active_mm state from BP instead. Every arch
+which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
+from AP. The only exception is parisc because it switches them to
+&init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
+but the patch will still work there because it calls mmgrab(&init_mm) in
+smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
+
+  WARNING: suspicious RCU usage
+  -----------------------------
+  kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
+
+  other info that might help us debug this:
+
+  RCU used illegally from offline CPU!
+  Call Trace:
+   dump_stack+0xf4/0x164 (unreliable)
+   lockdep_rcu_suspicious+0x140/0x164
+   get_work_pool+0x110/0x150
+   __queue_work+0x1bc/0xca0
+   queue_work_on+0x114/0x120
+   css_release+0x9c/0xc0
+   percpu_ref_put_many+0x204/0x230
+   free_pcp_prepare+0x264/0x570
+   free_unref_page+0x38/0xf0
+   __mmdrop+0x21c/0x2c0
+   idle_task_exit+0x170/0x1b0
+   pnv_smp_cpu_kill_self+0x38/0x2e0
+   cpu_die+0x48/0x64
+   arch_cpu_idle_dead+0x30/0x50
+   do_idle+0x2f4/0x470
+   cpu_startup_entry+0x38/0x40
+   start_secondary+0x7a8/0xa80
+   start_secondary_resume+0x10/0x14
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200428191659.854203028@infradead.org
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Link: https://lkml.kernel.org/r/20200401214033.8448-1-cai@lca.pw
 ---
- tools/objtool/arch.h            |  1 -
- tools/objtool/arch/x86/decode.c | 23 -----------------------
- tools/objtool/check.c           |  3 ---
- 3 files changed, 27 deletions(-)
+ arch/powerpc/platforms/powernv/smp.c |  1 -
+ include/linux/sched/mm.h             |  2 ++
+ kernel/cpu.c                         | 18 +++++++++++++++++-
+ kernel/sched/core.c                  |  5 +++--
+ 4 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index 445b8fa..25dd4a9 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -21,7 +21,6 @@ enum insn_type {
- 	INSN_RETURN,
- 	INSN_EXCEPTION_RETURN,
- 	INSN_CONTEXT_SWITCH,
--	INSN_STACK,
- 	INSN_BUG,
- 	INSN_NOP,
- 	INSN_STAC,
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index 97e66c7..e26bedb 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -141,7 +141,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		if (rex_w && !rex_b && modrm_mod == 3 && modrm_rm == 4) {
+diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
+index 13e2516..b2ba3e9 100644
+--- a/arch/powerpc/platforms/powernv/smp.c
++++ b/arch/powerpc/platforms/powernv/smp.c
+@@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
+ 	/* Standard hot unplug procedure */
  
- 			/* add/sub reg, %rsp */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_ADD;
- 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-@@ -154,7 +153,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 	case 0x50 ... 0x57:
+ 	idle_task_exit();
+-	current->active_mm = NULL; /* for sanity */
+ 	cpu = smp_processor_id();
+ 	DBG("CPU%d offline\n", cpu);
+ 	generic_set_cpu_dead(cpu);
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c49257a..a132d87 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+ 		__mmdrop(mm);
+ }
  
- 		/* push reg */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_REG;
- 			op->src.reg = op_to_cfi_reg[op1 & 0x7][rex_b];
-@@ -166,7 +164,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 	case 0x58 ... 0x5f:
++void mmdrop(struct mm_struct *mm);
++
+ /*
+  * This has to be called after a get_task_mm()/mmget_not_zero()
+  * followed by taking the mmap_sem for writing before modifying the
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 2371292..244d305 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -3,6 +3,7 @@
+  *
+  * This code is licenced under the GPL.
+  */
++#include <linux/sched/mm.h>
+ #include <linux/proc_fs.h>
+ #include <linux/smp.h>
+ #include <linux/init.h>
+@@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
+ 	return bringup_wait_for_ap(cpu);
+ }
  
- 		/* pop reg */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_POP;
- 			op->dest.type = OP_DEST_REG;
-@@ -178,7 +175,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 	case 0x68:
- 	case 0x6a:
- 		/* push immediate */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_CONST;
- 			op->dest.type = OP_DEST_PUSH;
-@@ -196,7 +192,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
++static int finish_cpu(unsigned int cpu)
++{
++	struct task_struct *idle = idle_thread_get(cpu);
++	struct mm_struct *mm = idle->active_mm;
++
++	/*
++	 * idle_task_exit() will have switched to &init_mm, now
++	 * clean up any remaining active_mm state.
++	 */
++	if (mm != &init_mm)
++		idle->active_mm = &init_mm;
++	mmdrop(mm);
++	return 0;
++}
++
+ /*
+  * Hotplug state machine related functions
+  */
+@@ -1549,7 +1565,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
+ 	[CPUHP_BRINGUP_CPU] = {
+ 		.name			= "cpu:bringup",
+ 		.startup.single		= bringup_cpu,
+-		.teardown.single	= NULL,
++		.teardown.single	= finish_cpu,
+ 		.cant_stop		= true,
+ 	},
+ 	/* Final state before CPU kills itself */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2e6ba9e..f6ae262 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6197,13 +6197,14 @@ void idle_task_exit(void)
+ 	struct mm_struct *mm = current->active_mm;
  
- 		if (modrm == 0xe4) {
- 			/* and imm, %rsp */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_AND;
- 				op->src.reg = CFI_SP;
-@@ -215,7 +210,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			break;
+ 	BUG_ON(cpu_online(smp_processor_id()));
++	BUG_ON(current != this_rq()->idle);
  
- 		/* add/sub imm, %rsp */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_ADD;
- 			op->src.reg = CFI_SP;
-@@ -229,7 +223,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		if (rex_w && !rex_r && modrm_mod == 3 && modrm_reg == 4) {
+ 	if (mm != &init_mm) {
+ 		switch_mm(mm, &init_mm, current);
+-		current->active_mm = &init_mm;
+ 		finish_arch_post_lock_switch();
+ 	}
+-	mmdrop(mm);
++
++	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
+ }
  
- 			/* mov %rsp, reg */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_REG;
- 				op->src.reg = CFI_SP;
-@@ -242,7 +235,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		if (rex_w && !rex_b && modrm_mod == 3 && modrm_rm == 4) {
- 
- 			/* mov reg, %rsp */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_REG;
- 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-@@ -258,7 +250,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		    (modrm_mod == 1 || modrm_mod == 2) && modrm_rm == 5) {
- 
- 			/* mov reg, disp(%rbp) */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_REG;
- 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-@@ -270,7 +261,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		} else if (rex_w && !rex_b && modrm_rm == 4 && sib == 0x24) {
- 
- 			/* mov reg, disp(%rsp) */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_REG;
- 				op->src.reg = op_to_cfi_reg[modrm_reg][rex_r];
-@@ -286,7 +276,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		if (rex_w && !rex_b && modrm_mod == 1 && modrm_rm == 5) {
- 
- 			/* mov disp(%rbp), reg */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_REG_INDIRECT;
- 				op->src.reg = CFI_BP;
-@@ -299,7 +288,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			   modrm_mod != 3 && modrm_rm == 4) {
- 
- 			/* mov disp(%rsp), reg */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_REG_INDIRECT;
- 				op->src.reg = CFI_SP;
-@@ -314,7 +302,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 	case 0x8d:
- 		if (sib == 0x24 && rex_w && !rex_b && !rex_x) {
- 
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				if (!insn.displacement.value) {
- 					/* lea (%rsp), reg */
-@@ -332,7 +319,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		} else if (rex == 0x48 && modrm == 0x65) {
- 
- 			/* lea disp(%rbp), %rsp */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_ADD;
- 				op->src.reg = CFI_BP;
-@@ -350,7 +336,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			 * Restoring rsp back to its original value after a
- 			 * stack realignment.
- 			 */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_ADD;
- 				op->src.reg = CFI_R10;
-@@ -368,7 +353,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 			 * Restoring rsp back to its original value after a
- 			 * stack realignment.
- 			 */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_ADD;
- 				op->src.reg = CFI_R13;
-@@ -382,7 +366,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 
- 	case 0x8f:
- 		/* pop to mem */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_POP;
- 			op->dest.type = OP_DEST_MEM;
-@@ -395,7 +378,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 
- 	case 0x9c:
- 		/* pushf */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_CONST;
- 			op->dest.type = OP_DEST_PUSHF;
-@@ -404,7 +386,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 
- 	case 0x9d:
- 		/* popf */
--		*type = INSN_STACK;
- 		ADD_OP(op) {
- 			op->src.type = OP_SRC_POPF;
- 			op->dest.type = OP_DEST_MEM;
-@@ -443,7 +424,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		} else if (op2 == 0xa0 || op2 == 0xa8) {
- 
- 			/* push fs/gs */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_CONST;
- 				op->dest.type = OP_DEST_PUSH;
-@@ -452,7 +432,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		} else if (op2 == 0xa1 || op2 == 0xa9) {
- 
- 			/* pop fs/gs */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_POP;
- 				op->dest.type = OP_DEST_MEM;
-@@ -469,7 +448,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		 * mov bp, sp
- 		 * pop bp
- 		 */
--		*type = INSN_STACK;
- 		ADD_OP(op)
- 			op->dest.type = OP_DEST_LEAVE;
- 
-@@ -537,7 +515,6 @@ int arch_decode_instruction(const struct elf *elf, const struct section *sec,
- 		else if (modrm_reg == 6) {
- 
- 			/* push from mem */
--			*type = INSN_STACK;
- 			ADD_OP(op) {
- 				op->src.type = OP_SRC_CONST;
- 				op->dest.type = OP_DEST_PUSH;
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 6591c2d..4f3db2f 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2339,9 +2339,6 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			}
- 			return 0;
- 
--		case INSN_STACK:
--			break;
--
- 		case INSN_STAC:
- 			if (state.uaccess) {
- 				WARN_FUNC("recursive UACCESS enable", sec, insn->offset);
+ /*
