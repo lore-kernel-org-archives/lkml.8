@@ -2,106 +2,119 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56FC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3DCC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29BF5206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:03:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PJsQ/R8E"
+	by mail.kernel.org (Postfix) with ESMTP id B4938206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgEARDR (ORCPT
+        id S1729985AbgEARDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:03:17 -0400
-Received: from mout.gmx.net ([212.227.15.18]:54439 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbgEARDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:03:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588352587;
-        bh=im7UoRGRqKTmxhp4QzZMb5sui+SkwX0MbHQyE4WNRh4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=PJsQ/R8E9aJ5gReDGn0eGTtHAjbO+cS6bIVE2l3zp7DA1cVrp/9ghI72RBVQ/ob7t
-         GY+cqwA/6sNwGto1LLPJdv5yPGuFXYsdYhftSPfxWMjK5351S3Uw0OzSW++VdNvgGI
-         4aex6ufg3J4qfh7K7+FtS0Z0m3acSKGry5gxXTgw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MKbgE-1jinaw3mAu-00KyZz; Fri, 01 May 2020 19:03:07 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rachel Kim <rachel.kim@atmel.com>,
-        Johnny Kim <johnny.kim@atmel.com>,
-        Chris Park <chris.park@atmel.com>,
-        Dean Lee <dean.lee@atmel.com>, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH] staging: wilc1000: Increase the size of wid_list array
-Date:   Fri,  1 May 2020 19:02:39 +0200
-Message-Id: <20200501170239.16917-1-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 1 May 2020 13:03:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37767 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728975AbgEARDV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:03:21 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jUZ4I-0001WR-EZ; Fri, 01 May 2020 17:03:18 +0000
+To:     "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Dirk Brandewie <dirk.j.brandewie@intel.com>,
+        Jeff Pieper <jeffrey.e.pieper@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: re: e1000: Add support for the CE4100 reference platform
+Message-ID: <e7e6b67a-69fe-ce79-cba5-d88020144796@canonical.com>
+Date:   Fri, 1 May 2020 18:03:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:l8IGiAo/+ZjQsmQfamzYuV5ZICWBc4esNNlTP6qfdg60KXL+SFI
- TAoOphehrGDD5qftiHjSRkuwN9mrFcL6aMazBYOeG6MmGT/rZNvgt4NsRzg7L+zZEtGSA4Y
- b+9Dh9y1tV7hmF+QSTcejPH8ct6NGKp0ElRn/PKnkSJHnkOCLfA8JiCv2+rLiMGMgxh+U8m
- A8m18mv9ZgRTrcn+wWwBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qG98HsMxVf0=:Nk6O7bJeZMQsMWt585Nx8H
- IS8Ll6KBFedpl1WmvXyemO1oswyIgz89xyMl6SlfEyQJvvk9HQHy4RbVl4GZfoWqi8v/2kXVR
- k5keEG9q1Em8V5vzHi6YecJaq1hw5WYn31ZPxZud7Tfq2dMEemUzwRI3rI3B6uM/qxX7nEyOR
- Xk56xGX7PpZQR8CgMYfCOTDSdieB7L1WCxAbx8FR9ji2NZzEJJw/0TY3xUQ8YBhPkxzcGfCEx
- Sp2mf0EPZG0kya4CCjk07pgWrzQpLppgZITx3ijKoUUGz5u9wEVG1ZrR53v9ua20yWi9G64cm
- h4JbS300kf/hAyR59HG3Bi2I43bAuTJncP11JAkETIKW6dCMNaOeVi+7GSajj+ic3ZhxesckE
- +ejs82H6C289QhMl1l5S0EHytBJ4ZaaOmK+VrY8vDUs3oVg/dcJYZEhdbm/twyswNfc+1129l
- NVVnpQdytgP/Vj8tJ0VwxAnjhz1uxrwXy5yIIaTGS+gSq3HnsoVC61J22Z0PchCzdVJu7MThP
- UUIkqulWaE5HzU0GnPhfB7rvIIJIFDleEdmek4vJ9siKwRhM0r876wRSnosQZtDuqqFMYAZa0
- /rg18PRghnnu+RPWnkzXtHsTwLzeAKYn8+4wYb8AYnATG82NFCnXA3Fd0ndmeq7kMZEnbyJtp
- OQhed3oRsAFfgn0kDVTOY3hTPZ6XYI7yo4aDzropnSAToAo4TfO9A3k6K5S0AKdq65L3o8Z86
- SkPVTLsr4o2UsSwbgmRDOKSHM3o3jpbFMwmPIxMMWzhcUgYDh5NmtHVgkXv8RjdmYvTBmcF9S
- GZDT60Qt7WppFLZsHigna/ZzDOR2Ax5c1Nm4JLriE/syQpkJ8xz+57N0mdxQv+YWtIDQPpuyw
- E/+/t1yFTIBTA0jbBwpdCtCrDml6ESfju6ofRnDhh+CurpL8Q2R3W71ffD8ujK50uOMuAQL5/
- MnO0nznr7XvgkTB5kCQzVeZ7JDJhrSo1R0C+tUBLdBax7ZJmcdPbsb3oPbmFgorCjaSl47Jdj
- QVmak2uddP+7WoLj3uBYqnOuWA8O2B0sGV2D1zVe+EBUwTC3PUGud2cfLWw34VckTkA+eT4VJ
- 6BuYl4FxbvBuW+w4+gJS+bq32gDCuab1XU01MWcB3sZUl7/gbizNG4YzgC9ac1kGU9KtWCCkR
- wcCVwbmFuojubMUrylM9cTlf3YbbmXTinkYbDFaZwWvKk+pyyD6T9eX4SvURGbbCu1Z/cHcrE
- NWzra6Ae54LKajJUS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Increase by one the size of wid_list array as index variable can reach a
-value of 5. If this happens, an out-of-bounds access is performed.
+Hi,
 
-Addresses-Coverity-ID: 1451981 ("Out-of-bounds access")
-Fixes: c5c77ba18ea66 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/wilc1000/hif.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Static analysis with Coverity has detected an issue with setting the
+speed control on the e1000 driver. This was introduced back in 2011 with
+the following commit:
 
-diff --git a/drivers/staging/wilc1000/hif.c b/drivers/staging/wilc1000/hif=
-.c
-index 6c7de2f8d3f2..128943c3be4f 100644
-=2D-- a/drivers/staging/wilc1000/hif.c
-+++ b/drivers/staging/wilc1000/hif.c
-@@ -151,7 +151,7 @@ int wilc_scan(struct wilc_vif *vif, u8 scan_source, u8=
- scan_type,
- 	      void *user_arg, struct cfg80211_scan_request *request)
- {
- 	int result =3D 0;
--	struct wid wid_list[5];
-+	struct wid wid_list[6];
- 	u32 index =3D 0;
- 	u32 i, scan_timeout;
- 	u8 *buffer;
-=2D-
-2.20.1
+commit 5377a4160bb65ee4dd11b4b1d081d86d56d92bff
+Author: Dirk Brandewie <dirk.j.brandewie@intel.com>
+Date:   Thu Jan 6 14:29:54 2011 +0000
 
+    e1000: Add support for the CE4100 reference platform
+
+The Coverity analysis is as follows for function
+e1000_config_mac_to_phy() in source
+drivers/net/ethernet/intel/e1000/e1000_hw.c:
+
+Operands don't affect result  (CONSTANT_EXPRESSION_RESULT)
+result_independent_of_operands: phy_data & 0x200000 is always 0
+regardless of the values of its operands. This occurs as the logical
+operand of if.
+
+1936                if (phy_data & RTL_PHY_CTRL_SPD_100)
+1937                        ctrl |= E1000_CTRL_SPD_100;
+1938                else
+1939                        ctrl |= E1000_CTRL_SPD_10;
+
+phy_data is a u16 and it is being and-ed with 0x200000 and this always
+is zero, so the E1000_CTRL_SPD_100 is never set.
+
+Colin
