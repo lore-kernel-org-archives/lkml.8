@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DEFC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A271C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D15A520836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3463A205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341157;
-	bh=QpfX3JTibHDMAjB4NRzfy85HK0q7fBbBFotvXBCEJJ0=;
+	s=default; t=1588341160;
+	bh=wOuKPrjxBqIWiZszReIQZcoXpdptGYDNhKxL4TUtiEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQiKc8noon7RFYsONa7Zwn+wEhmZgDeg4qt+ypaqkisJdvsrvNo65vrXPOFdzDaVd
-	 EFU1BzcPLcO5bV/SXYLqumh2xtEhr3jAIEef0u3LEtaCIe9PvPcOj4DCFm/U2aBJLX
-	 aRsmyTiXOzag+lTas705d8S8hxyLJzgoFy4XiPio=
+	b=uakmh8CyVSFwFcuOctQDxNnfjbYMBIZLWQZcrx9UKhXvpEqsMfN1TtlvuL8u5f4Em
+	 dqQX1ViriMgbawNSVno8Nlqvf8F3boUcNSEIuSF72OKBV1dic6bBVBh2+vyh1FqVA/
+	 BlxSK8UD6oAJBKCwFvvDdoF6MQv67uX3mgAoY04M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgEANha (ORCPT
+        id S1731831AbgEANwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36218 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730954AbgEANhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:17 -0400
+        id S1730277AbgEANhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E281E24954;
-        Fri,  1 May 2020 13:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2A0208DB;
+        Fri,  1 May 2020 13:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340237;
-        bh=QpfX3JTibHDMAjB4NRzfy85HK0q7fBbBFotvXBCEJJ0=;
+        s=default; t=1588340252;
+        bh=wOuKPrjxBqIWiZszReIQZcoXpdptGYDNhKxL4TUtiEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AI8TNOzvHV6UoO3K1jVYcEIO57X41ILK9yM/LFZtM4YPSTOsde3NsevC1bkM6JuqK
-         QfujoN63W14Xur+eCsBsWhvrHRZaXV/wmkCFBNi0Ol2JyDV+B+LeZfLE5slPvjm94R
-         54fukH/0niAQwmaFqneqTKijuaR65A+YGJ3wR4tI=
+        b=L+yC9n6HN0in8lOfLBE/XAbpnaowjdEmtKW5w5CvJjXWWKcn0XpyPuG7ciX5Ni5XB
+         ObPzuKYTAZ+WFYPoRYxhn5ubHo07KFrnR/rXYTG6VmzeYCbI6JhcZqyV4tx120fC7Y
+         nRz6tO9l7P5QUEIU4WzQTbs98c26PaDlTccweKZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/46] scsi: target: fix PR IN / READ FULL STATUS for FC
-Date:   Fri,  1 May 2020 15:22:58 +0200
-Message-Id: <20200501131510.504703079@linuxfoundation.org>
+Subject: [PATCH 4.19 42/46] ext4: convert BUG_ONs to WARN_ONs in mballoc.c
+Date:   Fri,  1 May 2020 15:23:07 +0200
+Message-Id: <20200501131513.390465961@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -61,39 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
+[ Upstream commit 907ea529fc4c3296701d2bfc8b831dd2a8121a34 ]
 
-Creation of the response to READ FULL STATUS fails for FC based
-reservations. Reason is the too high loop limit (< 24) in
-fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
-long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
-executed a last time for the ending '\0' of the string and thus hex2bin()
-reports an error.
+If the in-core buddy bitmap gets corrupted (or out of sync with the
+block bitmap), issue a WARN_ON and try to recover.  In most cases this
+involves skipping trying to allocate out of a particular block group.
+We can end up declaring the file system corrupted, which is fair,
+since the file system probably should be checked before we proceed any
+further.
 
-Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/r/20200414035649.293164-1-tytso@mit.edu
+Google-Bug-Id: 34811296
+Google-Bug-Id: 34639169
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_fabric_lib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/mballoc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
-index 10fae26b44add..939c6212d2ac5 100644
---- a/drivers/target/target_core_fabric_lib.c
-+++ b/drivers/target/target_core_fabric_lib.c
-@@ -76,7 +76,7 @@ static int fc_get_pr_transport_id(
- 	 * encoded TransportID.
- 	 */
- 	ptr = &se_nacl->initiatorname[0];
--	for (i = 0; i < 24; ) {
-+	for (i = 0; i < 23; ) {
- 		if (!strncmp(&ptr[i], ":", 1)) {
- 			i++;
- 			continue;
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 71121fcf9e8cc..8dd54a8a03610 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1936,7 +1936,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+ 	int free;
+ 
+ 	free = e4b->bd_info->bb_free;
+-	BUG_ON(free <= 0);
++	if (WARN_ON(free <= 0))
++		return;
+ 
+ 	i = e4b->bd_info->bb_first_free;
+ 
+@@ -1959,7 +1960,8 @@ void ext4_mb_complex_scan_group(struct ext4_allocation_context *ac,
+ 		}
+ 
+ 		mb_find_extent(e4b, i, ac->ac_g_ex.fe_len, &ex);
+-		BUG_ON(ex.fe_len <= 0);
++		if (WARN_ON(ex.fe_len <= 0))
++			break;
+ 		if (free < ex.fe_len) {
+ 			ext4_grp_locked_error(sb, e4b->bd_group, 0, 0,
+ 					"%d free clusters as per "
 -- 
 2.20.1
 
