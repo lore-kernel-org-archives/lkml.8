@@ -2,113 +2,177 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2581C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CBDC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92EAB2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588360861;
-	bh=db7jDFqtimcaGS6G56IOPeqMY8j/pX2B8ZtJZImeAy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pcQfXvw8wbbkVdLhpk/VQPWT6lAVz6h+/WGh/oJmsuMvxdwcfV/PPKMYovwFfmj9e
-	 xUVaB7jcOJ/1BRwwyyP/ojx9Ppx/EsBa8EvKl95fB0p69tvcfrWZVdOaAAkYFJxr+z
-	 ZS3rgMO6tZZb+ub2JtfxUhadhtXOHgJsNia28IGY=
+	by mail.kernel.org (Postfix) with ESMTP id B47982166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:21:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="cyUJfV0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbgEATVB (ORCPT
+        id S1726551AbgEATVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726045AbgEATVA (ORCPT
+        Fri, 1 May 2020 15:21:53 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:33370 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726045AbgEATVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:21:00 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC74C061A0C;
-        Fri,  1 May 2020 12:21:00 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id v18so5229665qvx.9;
-        Fri, 01 May 2020 12:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nIIK1K2iXdxODttszcTBcKN7K+PfigDaaJguqmSXmcc=;
-        b=mdKJ6+1nJapUDsjDuUidOOgO6uMkjigIGXjSxqMa6K5GikTVEi3CO5okvRmupRNh3t
-         DFExrKgVa9tTh26mVQI9QxUKw3zz6wu/Fp/FVPG9jRz9m8aF6FHvCmwCTt7OioMFBxxT
-         pPhrQxA9jfYh/pUXd5XPlUuAHVJhqyvdKAp6e/olP6cGH7W2QtE4olrlgKnd7CR+nWR1
-         jNFssvZPZ7zrYEt/H16TdQimm1QIzFLZrkR6T+YttKpz1zHPolqf4DRskSl1gWNNd3Af
-         fxQ+QBm6LSgkNMcdns/q5kR9xvjud+HoT5lGtJVANlMl4QswKdvuz+qhN59V+e1BjxGX
-         G2Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=nIIK1K2iXdxODttszcTBcKN7K+PfigDaaJguqmSXmcc=;
-        b=DQhal4KMeSL+j8YQw+GQzAzYxmTdAmjqjLcUbJ2Mvjbp5jGkOAoprltsJtYin96HQx
-         qUfEGldYk4iga+7Px68rgzjenlnfcfp3cMLfQv+mmOsd9Ww+Dyo4KhqJBy5ISGwwDkfO
-         aX7rb3fw38dtSdXADQDkgw8BelzLomhcNawcyoYye12M8FeCFY3l1QFafwODAonEuMob
-         lz6CsVlmT2dVFuRP1crAipDVy6+fvBAbF4j3qQk4xNcMVnigc0wv7Ml4Ia0uuhaRu8YK
-         sQhGLvGUVszNsILalW4i/3PgGiEvY6RwppZEl0MspWeAhuWipsKKt6PBmRxx+f2BR/SF
-         DUuA==
-X-Gm-Message-State: AGi0PuYb+010aOB5H6SANN0nfc+v0PyCT9YCLny/ywN2atSNT/yMmTOS
-        NAcO1TW4sj3vDh9KvDBxRs0=
-X-Google-Smtp-Source: APiQypIJ1sRtqQoX+F0xIOpResdc3RCRaE0bnFzpxYeOz3IGOGrc6RCuzJLn7HSG8oNkLdJ1WmznMw==
-X-Received: by 2002:a0c:da87:: with SMTP id z7mr5478109qvj.141.1588360859041;
-        Fri, 01 May 2020 12:20:59 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:e6fd])
-        by smtp.gmail.com with ESMTPSA id d26sm3338957qkk.69.2020.05.01.12.20.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 12:20:58 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:20:57 -0400
-From:   "tj@kernel.org" <tj@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "bfields@redhat.com" <bfields@redhat.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "jlayton@redhat.com" <jlayton@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "shli@fb.com" <shli@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "oleg@redhat.com" <oleg@redhat.com>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200501192057.GH5462@mtj.thefacebook.com>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
- <20200501184935.GD9191@pick.fieldses.org>
- <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d937c9956c0edb0d6fefb9f7dc826367015db4aa.camel@hammerspace.com>
+        Fri, 1 May 2020 15:21:52 -0400
+Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
+        by m0050095.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 041J4F3d018035;
+        Fri, 1 May 2020 20:20:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id; s=jan2016.eng;
+ bh=xi2XwmEmO17lonRkhoOFjRCCYjvN8J3PUPNEZ5GSX4s=;
+ b=cyUJfV0InaOm7AW4O/Dy9q+Evu5X1k7j0GLfKeY/0BzLliFRLq3Q17OOD2/d1kp1Q9IF
+ kr5fk31dF0StAPKOw8GT6Tpk3NUytm7fN5RK76fbJeSr7+EcwfdbIJTARwDSDPV+ackx
+ PA484vk2bDeRsv8fPU5Ck5h1sTULrGmb80ep0/KdqinfPq9CaS1N6sN2oRlByyGURTwc
+ 5eALAwGmArazIZDDvxkzFZ9oo0CKrFbEu7lQiVMib0cifVLRngAXk6XNTQ5DXbPODjGm
+ xdEz/4xV99Dq3b5ikazFBMMCB+6YEOETs3dgglVIFbDcfpZNabpPTpi7PDOHruPkalVz Rw== 
+Received: from prod-mail-ppoint7 (a72-247-45-33.deploy.static.akamaitechnologies.com [72.247.45.33] (may be forged))
+        by m0050095.ppops.net-00190b01. with ESMTP id 30r7j1kr2t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 May 2020 20:20:47 +0100
+Received: from pps.filterd (prod-mail-ppoint7.akamai.com [127.0.0.1])
+        by prod-mail-ppoint7.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 041JIi2a003912;
+        Fri, 1 May 2020 15:20:46 -0400
+Received: from prod-mail-relay15.akamai.com ([172.27.17.40])
+        by prod-mail-ppoint7.akamai.com with ESMTP id 30rs31r4jm-3;
+        Fri, 01 May 2020 15:20:46 -0400
+Received: from bos-lpjec.145bw.corp.akamai.com (bos-lpjec.145bw.corp.akamai.com [172.28.3.71])
+        by prod-mail-relay15.akamai.com (Postfix) with ESMTP id C284022024;
+        Fri,  1 May 2020 19:20:45 +0000 (GMT)
+From:   Jason Baron <jbaron@akamai.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>, stable@vger.kernel.org
+Subject: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+Date:   Fri,  1 May 2020 15:15:33 -0400
+Message-Id: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_14:2020-05-01,2020-05-01 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2005010143
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-01_11:2020-05-01,2020-05-01 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ suspectscore=1 bulkscore=0 clxscore=1011 phishscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005010142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Now that the ep_events_available() check is done in a lockless way, and
+we no longer perform wakeups from ep_scan_ready_list(), we need to ensure
+that either ep->rdllist has items or the overflow list is active. Prior to:
+commit 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested
+epoll"), we did wake_up(&ep->wq) after manipulating the ep->rdllist and the
+overflow list. Thus, any waiters would observe the correct state. However,
+with that wake_up() now removed we need to be more careful to ensure that
+condition.
 
-On Fri, May 01, 2020 at 07:05:46PM +0000, Trond Myklebust wrote:
-> Wen running an instance of knfsd from inside a container, you want to
-> be able to have the knfsd kthreads be parented to the container init
-> process so that they get killed off when the container is killed.
-> 
-> Right now, we can easily leak those kernel threads simply by killing
-> the container.
+Here's an example of what could go wrong:
 
-Hmm... I'm not sure that'd be a lot easier because they're in their own
-thread group. It's not like you can queue signal to the group leader cause
-the other kthreads to automatically die. Each would have to handle the exit
-explicitly. As long as there is a way to iterate the member kthreads (e.g.
-list going through kthread_data or sth else hanging off there), just using
-existing kthread interface might not be much different, or maybe even easier
-given how hairy signal handling in kthreads can get.
+We have epoll fds: epfd1, epfd2. And epfd1 is added to epfd2 and epfd2 is
+added to a socket: epfd1->epfd2->socket. Thread a is doing epoll_wait() on
+epfd1, and thread b is doing epoll_wait on epfd2. Then:
 
-Thanks.
+1) data comes in on socket
 
+ep_poll_callback() wakes up threads a and b
+
+2) thread a runs
+
+ep_poll()
+ ep_scan_ready_list()
+  ep_send_events_proc()
+   ep_item_poll()
+     ep_scan_ready_list()
+       list_splice_init(&ep->rdllist, &txlist);
+
+3) now thread b is running
+
+ep_poll()
+ ep_events_available()
+   returns false
+ schedule_hrtimeout_range()
+
+Thus, thread b has now scheduled and missed the wakeup.
+
+Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Heiher <r@hev.cc>
+Cc: Roman Penyaev <rpenyaev@suse.de>
+Cc: Khazhismel Kumykov <khazhy@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Davidlohr Bueso <dbueso@suse.de>
+Cc: <stable@vger.kernel.org>
+---
+ fs/eventpoll.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index aba03ee749f8..4af2d020f548 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -704,8 +704,14 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 	 * in a lockless way.
+ 	 */
+ 	write_lock_irq(&ep->lock);
+-	list_splice_init(&ep->rdllist, &txlist);
+ 	WRITE_ONCE(ep->ovflist, NULL);
++	/*
++	 * In ep_poll() we use ep_events_available() in a lockless way to decide
++	 * if events are available. So we need to preserve that either
++	 * ep->oflist != EP_UNACTIVE_PTR or there are events on the ep->rdllist.
++	 */
++	smp_wmb();
++	list_splice_init(&ep->rdllist, &txlist);
+ 	write_unlock_irq(&ep->lock);
+ 
+ 	/*
+@@ -737,16 +743,21 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+ 		}
+ 	}
+ 	/*
++	 * Quickly re-inject items left on "txlist".
++	 */
++	list_splice(&txlist, &ep->rdllist);
++	/*
++	 * In ep_poll() we use ep_events_available() in a lockless way to decide
++	 * if events are available. So we need to preserve that either
++	 * ep->oflist != EP_UNACTIVE_PTR or there are events on the ep->rdllist.
++	 */
++	smp_wmb();
++	/*
+ 	 * We need to set back ep->ovflist to EP_UNACTIVE_PTR, so that after
+ 	 * releasing the lock, events will be queued in the normal way inside
+ 	 * ep->rdllist.
+ 	 */
+ 	WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+-
+-	/*
+-	 * Quickly re-inject items left on "txlist".
+-	 */
+-	list_splice(&txlist, &ep->rdllist);
+ 	__pm_relax(ep->ws);
+ 	write_unlock_irq(&ep->lock);
+ 
 -- 
-tejun
+2.7.4
+
