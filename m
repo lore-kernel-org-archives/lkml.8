@@ -2,147 +2,91 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E02EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049BCC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA78206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1ADE20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbgEAOMB (ORCPT
+        id S1729210AbgEAOPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:12:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:42374 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728895AbgEAOMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:12:00 -0400
-IronPort-SDR: 7ak20+LFPjtInjHjoJcmymWKJLLS+kdVN7UR7UsBUeT6igxfqMVFF2JDvXv085hs0EOyeRSJY7
- Hn4uz74Fq9kA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 07:12:00 -0700
-IronPort-SDR: YfhOjwW3GA/XOJajdFbOtW1gpR+Ya8ypFpVT5wxq9f//dPzLOLk8a4rEO2PthVyP3bCFFbkmNf
- w4dFnmBlv73w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
-   d="scan'208";a="433322782"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 07:11:59 -0700
-Date:   Fri, 1 May 2020 07:11:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Haiwei Li <lihaiwei@tencent.com>
-Subject: Re: [PATCH v4 1/7] KVM: VMX: Introduce generic fastpath handler
-Message-ID: <20200501141159.GC3798@linux.intel.com>
-References: <1588055009-12677-1-git-send-email-wanpengli@tencent.com>
- <1588055009-12677-2-git-send-email-wanpengli@tencent.com>
- <87ees5f6gh.fsf@vitty.brq.redhat.com>
+        Fri, 1 May 2020 10:15:05 -0400
+Received: from smtp-42a9.mail.infomaniak.ch ([84.16.66.169]:33343 "EHLO
+        smtp-42a9.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728885AbgEAOPE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:15:04 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49DDm55ksLzlhP4P;
+        Fri,  1 May 2020 16:15:01 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49DDm327wYzlrK12;
+        Fri,  1 May 2020 16:14:59 +0200 (CEST)
+Subject: Re: [PATCH v3 1/5] fs: Add support for a RESOLVE_MAYEXEC flag on
+ openat2(2)
+To:     James Morris <jmorris@namei.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200428175129.634352-1-mic@digikod.net>
+ <20200428175129.634352-2-mic@digikod.net>
+ <alpine.LRH.2.21.2005011404420.29679@namei.org>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <d3555693-d09c-d434-e5a7-33d0c876c783@digikod.net>
+Date:   Fri, 1 May 2020 16:14:58 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ees5f6gh.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <alpine.LRH.2.21.2005011404420.29679@namei.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 03:28:46PM +0200, Vitaly Kuznetsov wrote:
-> Wanpeng Li <kernellwp@gmail.com> writes:
-> 
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Introduce generic fastpath handler to handle MSR fastpath, VMX-preemption
-> > timer fastpath etc, move it after vmx_complete_interrupts() in order that
-> > later patch can catch the case vmexit occurred while another event was
-> > being delivered to guest. There is no obversed performance difference for
-> > IPI fastpath testing after this move.
-> >
-> > Tested-by: Haiwei Li <lihaiwei@tencent.com>
-> > Cc: Haiwei Li <lihaiwei@tencent.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 21 ++++++++++++++++-----
-> >  1 file changed, 16 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 3ab6ca6..9b5adb4 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6583,6 +6583,20 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
-> >  	}
-> >  }
-> >  
-> > +static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
-> > +{
-> > +	if (!is_guest_mode(vcpu)) {
-> 
-> Nitpick: do we actually expect to have any fastpath handlers anytime
-> soon? If not, we could've written this as
-> 
-> 	if (is_guest_mode(vcpu))
-> 		return EXIT_FASTPATH_NONE;
-> 
-> and save on identation)
 
-Agreed.  An alternative approach would be to do the check in the caller, e.g.
-
-	if (is_guest_mode(vcpu))
-		return EXIT_FASTPATH_NONE;
-
-	return vmx_exit_handlers_fastpath(vcpu);
-
-I don't have a strong preference either way.
-
-> > +		switch (to_vmx(vcpu)->exit_reason) {
-> > +		case EXIT_REASON_MSR_WRITE:
-> > +			return handle_fastpath_set_msr_irqoff(vcpu);
-> > +		default:
-> > +			return EXIT_FASTPATH_NONE;
-> > +		}
-> > +	}
-> > +
-> > +	return EXIT_FASTPATH_NONE;
-> > +}
-> > +
-> >  bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
-> >  
-> >  static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> > @@ -6757,17 +6771,14 @@ static enum exit_fastpath_completion vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  	if (unlikely(vmx->exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY))
-> >  		return EXIT_FASTPATH_NONE;
-> >  
-> > -	if (!is_guest_mode(vcpu) && vmx->exit_reason == EXIT_REASON_MSR_WRITE)
-> > -		exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
-> > -	else
-> > -		exit_fastpath = EXIT_FASTPATH_NONE;
-> > -
-> >  	vmx->loaded_vmcs->launched = 1;
-> >  	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
-> >  
-> >  	vmx_recover_nmi_blocking(vmx);
-> >  	vmx_complete_interrupts(vmx);
-> >  
-> > +	exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
-
-No need for capturing the result in a local variable, just return the function
-call.
-
-> > +
-> >  	return exit_fastpath;
-> >  }
+On 01/05/2020 06:04, James Morris wrote:
+> On Tue, 28 Apr 2020, Mickaël Salaün wrote:
 > 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> When the RESOLVE_MAYEXEC flag is passed, openat2(2) may be subject to
+>> additional restrictions depending on a security policy managed by the
+>> kernel through a sysctl or implemented by an LSM thanks to the
+>> inode_permission hook.
 > 
-> -- 
-> Vitaly
 > 
+> Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+
+As requested, I switched back to O_MAYEXEC yesterday with the v4:
+https://lore.kernel.org/lkml/20200430132320.699508-2-mic@digikod.net/
