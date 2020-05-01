@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97EEC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B222C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951662051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F3A205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341054;
-	bh=p262YZn7SlOJ9SdgjgOh7lUmTweP6tiBeMxeDpl8gu0=;
+	s=default; t=1588341063;
+	bh=uNz9X7jFv1095SN1iz30H01MoEYgyreaxlkOKw/rAGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sAXgtdZFAdwJBvKnSNtb4N1SDvs1Ut0R711HhvC2WMJlbEPVokFJRHsNBYka6UOMX
-	 jmCJ5o+JlLb6xdBKheS9SBDc/L/RRj5kzvgTwJPIaacTTgF6Kly3co0rZ9woHBwcXL
-	 1CT9FxFINbOgtBaQnGBdrJBvrm4Cq1yuOMOooaMw=
+	b=QsvU22RX94jdresd/EyN49uJN1qbexWvCqk2iYFC3PQzudHlkU1kXmlbuyGD4DGj6
+	 dNkpvaE3qcU1kmeW33LBUD6O+fsPzgf1hA7hcZd/HQa2KBAL3+NHmvtait+RoGUxkx
+	 6xvyfAYIo+RuvULEGgPA6W3uzsNtqClsAloXwx3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbgEANuy (ORCPT
+        id S1731435AbgEANvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731179AbgEANjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:24 -0400
+        id S1731174AbgEANjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60158205C9;
-        Fri,  1 May 2020 13:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FAD6208DB;
+        Fri,  1 May 2020 13:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340363;
-        bh=p262YZn7SlOJ9SdgjgOh7lUmTweP6tiBeMxeDpl8gu0=;
+        s=default; t=1588340356;
+        bh=uNz9X7jFv1095SN1iz30H01MoEYgyreaxlkOKw/rAGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xsj576hEoQes6wKvS/cvdA9nuWhb5tyj684d8SuYn7oyd9f0qFCvaYcnIxr6l55jm
-         7MxcCkzEdqxMRp05howhJEL8JJSBmBtrO25Y2BIm4ZXq4R5VNH2wZyXmyaW4bqaxmG
-         96HzMJJskgPvxCJbOXEwl81s5XBtDo2Ipe2+FddI=
+        b=a19R4WbkA4Q13BtQIg6XdBEpB0+JIbQh/B9QVhylidrlLeUeQCYGBgUBXtkbOFjp/
+         YYjAygzZVO+WEJiK2UQX/h5cMPaLPwCcQeOKzgBGYmgJ1FA0DHJJ1OEsnXpDPZClnG
+         NPAqVTOGJIdWPJCY+5n7Cm+46/LBEVb4hMoL/8o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Furtado <paulfurtado91@gmail.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Chandan Rajendra <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Allison Collins <allison.henderson@oracle.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 5.4 25/83] xfs: acquire superblock freeze protection on eofblocks scans
-Date:   Fri,  1 May 2020 15:23:04 +0200
-Message-Id: <20200501131530.318495482@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.4 32/83] PCI: Make ACS quirk implementations more uniform
+Date:   Fri,  1 May 2020 15:23:11 +0200
+Message-Id: <20200501131531.779800051@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -63,79 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-commit 4b674b9ac852937af1f8c62f730c325fb6eadcdb upstream.
+commit c8de8ed2dcaac82e5d76d467dc0b02e0ee79809b upstream.
 
-The filesystem freeze sequence in XFS waits on any background
-eofblocks or cowblocks scans to complete before the filesystem is
-quiesced. At this point, the freezer has already stopped the
-transaction subsystem, however, which means a truncate or cowblock
-cancellation in progress is likely blocked in transaction
-allocation. This results in a deadlock between freeze and the
-associated scanner.
+The ACS quirks differ in needless ways, which makes them look more
+different than they really are.
 
-Fix this problem by holding superblock write protection across calls
-into the block reapers. Since protection for background scans is
-acquired from the workqueue task context, trylock to avoid a similar
-deadlock between freeze and blocking on the write lock.
+Reorder the ACS flags in order of definitions in the spec:
 
-Fixes: d6b636ebb1c9f ("xfs: halt auto-reclamation activities while rebuilding rmap")
-Reported-by: Paul Furtado <paulfurtado91@gmail.com>
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+  PCI_ACS_SV   Source Validation
+  PCI_ACS_TB   Translation Blocking
+  PCI_ACS_RR   P2P Request Redirect
+  PCI_ACS_CR   P2P Completion Redirect
+  PCI_ACS_UF   Upstream Forwarding
+  PCI_ACS_EC   P2P Egress Control
+  PCI_ACS_DT   Direct Translated P2P
+
+(PCIe r5.0, sec 7.7.8.2) and use similar code structure in all.  No
+functional change intended.
+
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/xfs_icache.c |   10 ++++++++++
- fs/xfs/xfs_ioctl.c  |    5 ++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c |   41 +++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -907,7 +907,12 @@ xfs_eofblocks_worker(
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4422,18 +4422,18 @@ static bool pci_quirk_cavium_acs_match(s
+ 
+ static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
  {
- 	struct xfs_mount *mp = container_of(to_delayed_work(work),
- 				struct xfs_mount, m_eofblocks_work);
++	if (!pci_quirk_cavium_acs_match(dev))
++		return -ENOTTY;
 +
-+	if (!sb_start_write_trylock(mp->m_super))
-+		return;
- 	xfs_icache_free_eofblocks(mp, NULL);
-+	sb_end_write(mp->m_super);
-+
- 	xfs_queue_eofblocks(mp);
+ 	/*
+-	 * Cavium root ports don't advertise an ACS capability.  However,
++	 * Cavium Root Ports don't advertise an ACS capability.  However,
+ 	 * the RTL internally implements similar protection as if ACS had
+-	 * Request Redirection, Completion Redirection, Source Validation,
++	 * Source Validation, Request Redirection, Completion Redirection,
+ 	 * and Upstream Forwarding features enabled.  Assert that the
+ 	 * hardware implements and enables equivalent ACS functionality for
+ 	 * these flags.
+ 	 */
+-	acs_flags &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
+-
+-	if (!pci_quirk_cavium_acs_match(dev))
+-		return -ENOTTY;
++	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+ 	return acs_flags ? 0 : 1;
+ }
+@@ -4451,7 +4451,7 @@ static int pci_quirk_xgene_acs(struct pc
  }
  
-@@ -934,7 +939,12 @@ xfs_cowblocks_worker(
- {
- 	struct xfs_mount *mp = container_of(to_delayed_work(work),
- 				struct xfs_mount, m_cowblocks_work);
-+
-+	if (!sb_start_write_trylock(mp->m_super))
-+		return;
- 	xfs_icache_free_cowblocks(mp, NULL);
-+	sb_end_write(mp->m_super);
-+
- 	xfs_queue_cowblocks(mp);
+ /*
+- * Many Intel PCH root ports do provide ACS-like features to disable peer
++ * Many Intel PCH Root Ports do provide ACS-like features to disable peer
+  * transactions and validate bus numbers in requests, but do not provide an
+  * actual PCIe ACS capability.  This is the list of device IDs known to fall
+  * into that category as provided by Intel in Red Hat bugzilla 1037684.
+@@ -4499,37 +4499,34 @@ static bool pci_quirk_intel_pch_acs_matc
+ 	return false;
  }
  
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -2401,7 +2401,10 @@ xfs_file_ioctl(
- 		if (error)
- 			return error;
+-#define INTEL_PCH_ACS_FLAGS (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV)
++#define INTEL_PCH_ACS_FLAGS (PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF)
  
--		return xfs_icache_free_eofblocks(mp, &keofb);
-+		sb_start_write(mp->m_super);
-+		error = xfs_icache_free_eofblocks(mp, &keofb);
-+		sb_end_write(mp->m_super);
-+		return error;
- 	}
+ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+-	u16 flags = dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK ?
+-		    INTEL_PCH_ACS_FLAGS : 0;
+-
+ 	if (!pci_quirk_intel_pch_acs_match(dev))
+ 		return -ENOTTY;
  
- 	default:
+-	return acs_flags & ~flags ? 0 : 1;
++	if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
++		acs_flags &= ~(INTEL_PCH_ACS_FLAGS);
++
++	return acs_flags ? 0 : 1;
+ }
+ 
+ /*
+- * These QCOM root ports do provide ACS-like features to disable peer
++ * These QCOM Root Ports do provide ACS-like features to disable peer
+  * transactions and validate bus numbers in requests, but do not provide an
+  * actual PCIe ACS capability.  Hardware supports source validation but it
+  * will report the issue as Completer Abort instead of ACS Violation.
+- * Hardware doesn't support peer-to-peer and each root port is a root
+- * complex with unique segment numbers.  It is not possible for one root
+- * port to pass traffic to another root port.  All PCIe transactions are
+- * terminated inside the root port.
++ * Hardware doesn't support peer-to-peer and each Root Port is a Root
++ * Complex with unique segment numbers.  It is not possible for one Root
++ * Port to pass traffic to another Root Port.  All PCIe transactions are
++ * terminated inside the Root Port.
+  */
+ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+-	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+-	int ret = acs_flags & ~flags ? 0 : 1;
+-
+-	pci_info(dev, "Using QCOM ACS Quirk (%d)\n", ret);
++	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+-	return ret;
++	return acs_flags ? 0 : 1;
+ }
+ 
+ static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
 
 
