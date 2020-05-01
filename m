@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A57C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D440C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6121208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339800;
-	bh=QpvCLsMVUmPNvhbcAdhLPAMk2bdjVhQBVqFvBHaLzLw=;
+	s=default; t=1588339803;
+	bh=FrPbYjdAs9QBWu+sGeZq7heSAjE/44KWUKf0zQO/x+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZY1w/TOf65eZdvQ+B1F7LjuDFuja30LeSfH7/+Zs/+BdfQMU1Sfh/1kIyVc7G+2PZ
-	 CirHQuhcRJtbFyloXV695dWxaCUVsrA5adqAzMapgcmOrIImRCFEb4bS1NR200TKUz
-	 nlG8PFf8LPMUCQ8Tt69M7Mu03d2pAu1wPVzr6hBE=
+	b=cZdmqzAsiqFZCW16JNKp+0a0WvnDg2mwLNNzRc71vLK8BV7GM+PHrQD5OLWuYZROB
+	 b+w6jyFGJAvcpagpeU9vQRxzGPL15ieVRHBDX/tVl4TefBPWm9DpRxldTs8Ol0o+ZG
+	 Mk5esyqIxmlVQC35cV6ASIK4yweE8jBSv/ekNquY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgEAN37 (ORCPT
+        id S1729865AbgEANaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbgEAN3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:55 -0400
+        id S1729156AbgEAN36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 140FA208DB;
-        Fri,  1 May 2020 13:29:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F545208D6;
+        Fri,  1 May 2020 13:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339795;
-        bh=QpvCLsMVUmPNvhbcAdhLPAMk2bdjVhQBVqFvBHaLzLw=;
+        s=default; t=1588339798;
+        bh=FrPbYjdAs9QBWu+sGeZq7heSAjE/44KWUKf0zQO/x+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rnwx1B2AQlCbcy+p2IjfwpVPyUOhscy/nLu1rHaPcr4N+i784okClnVpoMVplWnFY
-         Hfrzg2zpZUdTLoCG6GyoHU9VPO5mEdWuFh98tSW0NN/ENZ4aZyPedHGmqPgTSqrx0v
-         O9QmJUnQvsw2I0jUw2tuBYDE7MotVSHQCAoavr98=
+        b=Ic+lKbGrJpN31HJ8jq6REsDbEOT6s9RIOSxT1ARR13PxOy1UFgVm990oIqj/jpiEP
+         JMjO5yUfuNtFY2Q6R5xQugDO2Lo0JTOPRszKLvHVJJ6J1pawXJJqiMrnRWsiwgWOC9
+         BZJkeD2RezsXXHj6tzZwr25OtTWm1AbZYQ8Hiklo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 4.9 63/80] nfsd: memory corruption in nfsd4_lock()
-Date:   Fri,  1 May 2020 15:21:57 +0200
-Message-Id: <20200501131532.279438484@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 64/80] net/cxgb4: Check the return from t4_query_params properly
+Date:   Fri,  1 May 2020 15:21:58 +0200
+Message-Id: <20200501131532.746764921@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -60,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit e1e8399eee72e9d5246d4d1bcacd793debe34dd3 upstream.
+commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
 
-New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
-does not initialized nbl_list and nbl_lru.
-If conflock allocation fails rollback can call list_del_init()
-access uninitialized fields and corrupt memory.
+Positive return values are also failures that don't set val,
+although this probably can't happen. Fixes gcc 10 warning:
 
-v2: just initialize nbl_list and nbl_lru right after nbl allocation.
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
+drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 3747 |  *phy_fw_ver = val;
 
-Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for v4.1+ lock")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -246,6 +246,8 @@ find_or_allocate_block(struct nfs4_locko
- 	if (!nbl) {
- 		nbl= kmalloc(sizeof(*nbl), GFP_KERNEL);
- 		if (nbl) {
-+			INIT_LIST_HEAD(&nbl->nbl_list);
-+			INIT_LIST_HEAD(&nbl->nbl_lru);
- 			fh_copy_shallow(&nbl->nbl_fh, fh);
- 			locks_init_lock(&nbl->nbl_lock);
- 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
+--- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
+@@ -3400,7 +3400,7 @@ int t4_phy_fw_ver(struct adapter *adap,
+ 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
+ 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
+ 			      &param, &val);
+-	if (ret < 0)
++	if (ret)
+ 		return ret;
+ 	*phy_fw_ver = val;
+ 	return 0;
 
 
