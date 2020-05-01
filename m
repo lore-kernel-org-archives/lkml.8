@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927B8C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB28C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6910E205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8419D216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340536;
-	bh=7ACioUpGvxF1j7icMOqHMIk8C56G4vDbxmfYP/7Jros=;
+	s=default; t=1588340538;
+	bh=9NNJsc9JOP3hU8LNhjS2NaJS8yNIq1mysN+ebg5cZJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JwrC3G5m1AAV9j7WD1yC2JTIyduh5g+/qgwEtD5zoSvjzLNJl7UMXCAIS6BolwSb0
-	 0yPcNfgW2BYc1IJpQwfww6Vk86yVBBdoenHgXhO+olvxvrsWQRyQ0ftc9fcMcB3E85
-	 dbgG7kgbnbBJIlt0FD8d4RK+OJZNKus4RRkZeLY8=
+	b=YXdH6CnHa9bAzdurqF6Ds5a7hokYMBs6dhh05ae3raLr+Cl6qNJuCduhkuKC9f7UI
+	 grTfoIFLEn5EBygKmQeMAc+BjtEt8hl/CWx7h7LjJNXYGSsICFf1Ps0Cx8A4bKSQv4
+	 oF6cMyvuxmpdoiPl8DOUHaPR1Xotob7NGX/xRf6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbgEANmP (ORCPT
+        id S1731497AbgEANmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42580 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:42:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730702AbgEANmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:42:06 -0400
+        id S1731487AbgEANmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:42:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 042F9216FD;
-        Fri,  1 May 2020 13:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16AE82173E;
+        Fri,  1 May 2020 13:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340526;
-        bh=7ACioUpGvxF1j7icMOqHMIk8C56G4vDbxmfYP/7Jros=;
+        s=default; t=1588340531;
+        bh=9NNJsc9JOP3hU8LNhjS2NaJS8yNIq1mysN+ebg5cZJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fZ4jUS+tG82zRCRSCWXqAtv1jsEgfD9XKt8oQXg99bTYbKwP9u1MpxduhZ4rgKUZx
-         PncGlVjB//DoIyLcsxRwI65KOVh5nCyg3y6+F8/IY0D75I5YI44p/FXhw8Gfgj+w7B
-         isFHvieXad96ZwtN2mY0Kr9YqDAhuVjtNbvAZF28=
+        b=OEDBimgnyTYEKjPh+GQw1vdx+N4/xzkieq894mi6mboW4PQFqRdESwpa4bzcOqDhR
+         x3YEsgkUrcqC8QzYhP1xQ9GPUdBSbPqgjhOrNvFMBz/UzfI2mcmn9k8lcYstBskUB4
+         jwX51UBZBmjXLQohy5lLAI5PCU+Mj1CAViq55gCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Rorvick <chris@rorvick.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.6 018/106] iwlwifi: actually check allocated conf_tlv pointer
-Date:   Fri,  1 May 2020 15:22:51 +0200
-Message-Id: <20200501131546.357715759@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Puschmann <p.puschmann@pironex.de>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 020/106] ASoC: tas571x: disable regulators on failed probe
+Date:   Fri,  1 May 2020 15:22:53 +0200
+Message-Id: <20200501131546.542657061@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,37 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Rorvick <chris@rorvick.com>
+From: Philipp Puschmann <p.puschmann@pironex.de>
 
-commit a176e114ace4cca7df0e34b4bd90c301cdc6d653 upstream.
+commit 9df8ba7c63073508e5aa677dade48fcab6a6773e upstream.
 
-Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
-conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
-("iwlwifi: dbg: move debug data to a struct") but does not implement the
-check correctly.
+If probe fails after enabling the regulators regulator_put is called for
+each supply without having them disabled before. This produces some
+warnings like
 
-Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
-Tweeted-by: @grsecurity
-Signed-off-by: Chris Rorvick <chris@rorvick.com>
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200417074558.12316-1-sedat.dilek@gmail.com
+WARNING: CPU: 0 PID: 90 at drivers/regulator/core.c:2044 _regulator_put.part.0+0x154/0x15c
+[<c010f7a8>] (unwind_backtrace) from [<c010c544>] (show_stack+0x10/0x14)
+[<c010c544>] (show_stack) from [<c012b640>] (__warn+0xd0/0xf4)
+[<c012b640>] (__warn) from [<c012b9b4>] (warn_slowpath_fmt+0x64/0xc4)
+[<c012b9b4>] (warn_slowpath_fmt) from [<c04c4064>] (_regulator_put.part.0+0x154/0x15c)
+[<c04c4064>] (_regulator_put.part.0) from [<c04c4094>] (regulator_put+0x28/0x38)
+[<c04c4094>] (regulator_put) from [<c04c40cc>] (regulator_bulk_free+0x28/0x38)
+[<c04c40cc>] (regulator_bulk_free) from [<c0579b2c>] (release_nodes+0x1d0/0x22c)
+[<c0579b2c>] (release_nodes) from [<c05756dc>] (really_probe+0x108/0x34c)
+[<c05756dc>] (really_probe) from [<c0575aec>] (driver_probe_device+0xb8/0x16c)
+[<c0575aec>] (driver_probe_device) from [<c0575d40>] (device_driver_attach+0x58/0x60)
+[<c0575d40>] (device_driver_attach) from [<c0575da0>] (__driver_attach+0x58/0xcc)
+[<c0575da0>] (__driver_attach) from [<c0573978>] (bus_for_each_dev+0x78/0xc0)
+[<c0573978>] (bus_for_each_dev) from [<c0574b5c>] (bus_add_driver+0x188/0x1e0)
+[<c0574b5c>] (bus_add_driver) from [<c05768b0>] (driver_register+0x74/0x108)
+[<c05768b0>] (driver_register) from [<c061ab7c>] (i2c_register_driver+0x3c/0x88)
+[<c061ab7c>] (i2c_register_driver) from [<c0102df8>] (do_one_initcall+0x58/0x250)
+[<c0102df8>] (do_one_initcall) from [<c01a91bc>] (do_init_module+0x60/0x244)
+[<c01a91bc>] (do_init_module) from [<c01ab5a4>] (load_module+0x2180/0x2540)
+[<c01ab5a4>] (load_module) from [<c01abbd4>] (sys_finit_module+0xd0/0xe8)
+[<c01abbd4>] (sys_finit_module) from [<c01011e0>] (__sys_trace_return+0x0/0x20)
+
+Fixes: 3fd6e7d9a146 (ASoC: tas571x: New driver for TI TAS571x power amplifiers)
+Signed-off-by: Philipp Puschmann <p.puschmann@pironex.de>
+Link: https://lore.kernel.org/r/20200414112754.3365406-1-p.puschmann@pironex.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-drv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/codecs/tas571x.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-@@ -1467,7 +1467,7 @@ static void iwl_req_fw_callback(const st
- 				kmemdup(pieces->dbg_conf_tlv[i],
- 					pieces->dbg_conf_tlv_len[i],
- 					GFP_KERNEL);
--			if (!pieces->dbg_conf_tlv[i])
-+			if (!drv->fw.dbg.conf_tlv[i])
- 				goto out_free_fw;
- 		}
+--- a/sound/soc/codecs/tas571x.c
++++ b/sound/soc/codecs/tas571x.c
+@@ -820,8 +820,10 @@ static int tas571x_i2c_probe(struct i2c_
+ 
+ 	priv->regmap = devm_regmap_init(dev, NULL, client,
+ 					priv->chip->regmap_config);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
++	if (IS_ERR(priv->regmap)) {
++		ret = PTR_ERR(priv->regmap);
++		goto disable_regs;
++	}
+ 
+ 	priv->pdn_gpio = devm_gpiod_get_optional(dev, "pdn", GPIOD_OUT_LOW);
+ 	if (IS_ERR(priv->pdn_gpio)) {
+@@ -845,7 +847,7 @@ static int tas571x_i2c_probe(struct i2c_
+ 
+ 	ret = regmap_write(priv->regmap, TAS571X_OSC_TRIM_REG, 0);
+ 	if (ret)
+-		return ret;
++		goto disable_regs;
+ 
+ 	usleep_range(50000, 60000);
+ 
+@@ -861,12 +863,20 @@ static int tas571x_i2c_probe(struct i2c_
+ 		 */
+ 		ret = regmap_update_bits(priv->regmap, TAS571X_MVOL_REG, 1, 0);
+ 		if (ret)
+-			return ret;
++			goto disable_regs;
  	}
+ 
+-	return devm_snd_soc_register_component(&client->dev,
++	ret = devm_snd_soc_register_component(&client->dev,
+ 				      &priv->component_driver,
+ 				      &tas571x_dai, 1);
++	if (ret)
++		goto disable_regs;
++
++	return ret;
++
++disable_regs:
++	regulator_bulk_disable(priv->chip->num_supply_names, priv->supplies);
++	return ret;
+ }
+ 
+ static int tas571x_i2c_remove(struct i2c_client *client)
 
 
