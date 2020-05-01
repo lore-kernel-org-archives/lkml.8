@@ -2,101 +2,92 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BE8C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DE0C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED3A208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:00:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuOK1jGF"
+	by mail.kernel.org (Postfix) with ESMTP id DC17C208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgEAQAi (ORCPT
+        id S1730012AbgEAQBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:00:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgEAQAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:00:37 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E78FC061A0C;
-        Fri,  1 May 2020 09:00:36 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id b18so4856285ilf.2;
-        Fri, 01 May 2020 09:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2rqwM/jaHLwWYBPHidJQKqx4ERtMrKkzfEBH0ILAPwE=;
-        b=fuOK1jGF0lRA3iT4ovkVfORwHC2PAR0HIe5lF90ULNX8AAvof2micXgDnKMHc8NzuO
-         SpcPOF+fzPereacA+ei27icKneZH05k2Do/37NmY6Zk5E+s4JjyYy4xUW+3rrwxWfs3F
-         BN31nf2lbDMmxvmONm+tRMRPgn5OCT+3eOc7whAYh1QdXySyeNGwKZ5HmcGsfAcsp8bT
-         1MP3kdvliY2umH/Kgspsnu6VPZx3ES4gz8DFOiU3G/6pgGHWEJah91nMsKm3UCakFF1V
-         vPNatAG1cwz9hkaU2gY5jVoQxBsq7UHxWZsjv5tNTbBxtPPEVD2O8goW6BkpKyyuzaQW
-         iKRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2rqwM/jaHLwWYBPHidJQKqx4ERtMrKkzfEBH0ILAPwE=;
-        b=Ip9dV+CU7xv23A0UqZ8YDNNUUF5D7DhSb/s1/DT5FNphWSjelNKLJrAfSl09/if2+M
-         a/tSt/AUskprTAWGObg38zH+mrBDseFWa+yXCZNLayJH6p1E494WkGysfJ/bqC4308fZ
-         pjnCI5bCW/6KUgy7B9GCbmB42gq5oWutlvIaNhw+5IgwWQyVFP19Noi/WZMOjjRe8eER
-         zuCGmE3nFj4W8gW1LneQec94Be2GuGzMefDq2VEFgkxqkedh2del8XoCMu4m38ATHK3j
-         tOhXtPSCU2rqEL2CcgGSIiV6szfVo1YT9IoNq4EVcmSJoIHRFd4gyZ4/Ykf6rUEyDIIk
-         L35A==
-X-Gm-Message-State: AGi0PuYSx8Uhk3ML6I39eWxmLGHPFdb6tPkA6ZSyCJVa734zudsm8x6X
-        7iHgTSvj4AzBKqkUC0aHWyY=
-X-Google-Smtp-Source: APiQypJd608dA49hiBrjuMzpYfVrLQ7WelwHpb/Osh1TbYWQXAuu0kDv5e4KyLJN7gK1B1+GsSsEqw==
-X-Received: by 2002:a92:49c7:: with SMTP id k68mr4031412ilg.252.1588348835504;
-        Fri, 01 May 2020 09:00:35 -0700 (PDT)
-Received: from localhost.localdomain ([183.157.11.115])
-        by smtp.gmail.com with ESMTPSA id e89sm1416020ill.26.2020.05.01.09.00.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 09:00:34 -0700 (PDT)
-From:   yanxiaoyong5 <yanxiaoyong5@gmail.com>
-To:     ulf.hansson@linaro.org, rrangel@chromium.org, avri.altman@wdc.com,
-        kstewart@linuxfoundation.org, tglx@linutronix.de
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yanxiaoyong5 <yanxiaoyong5@gmail.com>
-Subject: [PATCH] mmc/core:fix mmc_sd_hw_reset oops mmc_sd_hw_reset function may be oops if the ejection of sd and the reset of sd simultaneously occur
-Date:   Fri,  1 May 2020 08:59:54 -0700
-Message-Id: <1588348794-4511-1-git-send-email-yanxiaoyong5@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 1 May 2020 12:01:55 -0400
+Received: from fieldses.org ([173.255.197.46]:40318 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEAQBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:01:54 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id D38A43158; Fri,  1 May 2020 12:01:53 -0400 (EDT)
+From:   "J. Bruce Fields" <bfields@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
+        David Howells <dhowells@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Shaohua Li <shli@fb.com>, Oleg Nesterov <oleg@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 0/4] allow multiple kthreadd's
+Date:   Fri,  1 May 2020 12:01:48 -0400
+Message-Id: <1588348912-24781-1-git-send-email-bfields@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: yanxiaoyong5 <yanxiaoyong5@gmail.com>
----
- drivers/mmc/core/sd.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+From: "J. Bruce Fields" <bfields@redhat.com>
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index fe914ff..73a1e68 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1247,8 +1247,13 @@ static int mmc_sd_runtime_resume(struct mmc_host *host)
- 
- static int mmc_sd_hw_reset(struct mmc_host *host)
- {
--	mmc_power_cycle(host, host->card->ocr);
--	return mmc_sd_init_card(host, host->card->ocr, host->card);
-+	struct mmc_card *card;
-+
-+	card = host->card;
-+	if (!card)
-+		return -EINVAL;
-+	mmc_power_cycle(host, card->ocr);
-+	return mmc_sd_init_card(host, card->ocr, host->card);
- }
- 
- static const struct mmc_bus_ops mmc_sd_ops = {
+These patches allow a caller to create its own kthreadd.
+
+The motivation is file delegations: currently any write operation from a
+client breaks all delegations, even delegations held by the same client.
+
+To fix that, we need to know which client is performing a given
+operation.
+
+So, we let nfsd put all the nfsd threads into the same thread group (by
+spawning them from its own private kthreadd), then patch the delegation
+code to treat delegation breaks from the same thread group as not
+conflicting, and then leave it to nfsd to sort out conflicts among its
+own clients.  Those patches are in:
+
+	git://linux-nfs.org/~bfields/linux.git deleg-fix-self-conflicts
+
+This was an idea from Trond.  Part of his motivation was that it could
+work for userspace servers (like Ganesha and Samba) as well.  (We don't
+currently let them request delegations, but probably will some day--it
+shouldn't be difficult.)
+
+Previously I considered instead adding a new field somewhere in the
+struct task.  That might require a new system call to expose to user
+space.  Or we might be able to put this in a keyring, if David Howells
+thought that would work.
+
+Before that I tried passing the identity of the breaker explicitly, but
+that looks like it would require passing the new argument around to huge
+swaths of the VFS.
+
+Anyway, does this multiple kthreadd approach look reasonable?
+
+(If so, who should handle the patches?)
+
+--b.
+
+J. Bruce Fields (4):
+  kthreads: minor kthreadd refactoring
+  kthreads: Simplify tsk_fork_get_node
+  kthreads: allow multiple kthreadd's
+  kthreads: allow cloning threads with different flags
+
+ include/linux/kthread.h |  21 +++++-
+ init/init_task.c        |   3 +
+ init/main.c             |   4 +-
+ kernel/fork.c           |   4 ++
+ kernel/kthread.c        | 140 +++++++++++++++++++++++++++++-----------
+ 5 files changed, 132 insertions(+), 40 deletions(-)
+
 -- 
-2.7.4
+2.26.2
 
