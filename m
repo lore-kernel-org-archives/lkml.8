@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A636C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D93FCC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3067C20857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7EE20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344314;
-	bh=CDa6UpW7/RGJVktJniWzFL5SPPJXC3PdL3ikarRe5hM=;
+	s=default; t=1588344316;
+	bh=qq2zKoYdCyEqjqt0U3RX9qvpvrnb6fBfrYVGRgOwH4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0xDPBUXrJQ1EWUK8sZVcGjf2B/vbLEXkNOS1fKa4SjuJkAxk1B5OQtgIbx4RCGrVp
-	 BUQVP205mm/gTTNc0frv+aTVAj9Qpk9g6u1NVGV9zR18QmN1vQPVoTkuoFAUs8utLj
-	 Hr357LPo6ioQEHO1R7zz2fvKEQkvjej94ZuWk0IM=
+	b=WrmeQl3TI9VUIetnRNg0E2A9ahnmlBNQswNNbTiWEY39zN/ZKJhWXef1T+XhLCluh
+	 5AQSguo734RCeLTiDVU0VCW9FaRwsiGT7CIrVXA5G1ONM8+v8ZWc+5n4TwXYKKhi/h
+	 /JolADr5Lyvxj8okzBCGVkQAwBAtRF6QEhisx2cM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgEAOpN (ORCPT
+        id S1729710AbgEAOpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:45:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52274 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729282AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0863224958;
+        by mail.kernel.org (Postfix) with ESMTPSA id F158724956;
         Fri,  1 May 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344305;
-        bh=CDa6UpW7/RGJVktJniWzFL5SPPJXC3PdL3ikarRe5hM=;
+        bh=qq2zKoYdCyEqjqt0U3RX9qvpvrnb6fBfrYVGRgOwH4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KzTdahS/PrJiGnxqv7C3Le46BJYDHNRcbR3uR0sicVk/9txPJb8iaFZ9z2KOlyMOD
-         Xx9JRf9ePmvur3+sKCtgA9yE/PvUUUoVkOblkDkxuiJE/UBWp1XSt1U08wnhOD/wzN
-         JZfWfmfUaHdRAZA400+81Bv6oAZMmFYnMo0/24ao=
+        b=Lbh0Vp46Y2jWH8lEr92N3b6ussd/33EaiPdihekY3jO3xEPEh64AmQt3OChsJgFlj
+         zMu1Cgs68HCgzFHcGeL9WsJQRkGto8EsI5Kqau9iNF6FC5jXTarImOfE41hB90xQg0
+         AY3xzBCL8+oU/SvEKf0B+VT7HXW+eCozkcQmmf4c=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCe8-O9; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCd8-Ej; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH 20/37] docs: networking: device drivers: convert dec/dmfe.txt to ReST
-Date:   Fri,  1 May 2020 16:44:42 +0200
-Message-Id: <e05cabf197a58952ad1610adfe60c9f400465f5d.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 09/37] docs: networking: convert xfrm_sync.txt to ReST
+Date:   Fri,  1 May 2020 16:44:31 +0200
+Message-Id: <ffea07769fc84dfdf950390d756ecd881c7d0b8f.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -63,143 +62,185 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
+- add a document title;
 - adjust titles and chapters, adding proper markups;
-- comment out text-only TOC from html/pdf output;
 - mark code blocks and literals as such;
-- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../device_drivers/dec/{dmfe.txt => dmfe.rst} | 35 +++++++++++--------
- .../networking/device_drivers/index.rst       |  1 +
- MAINTAINERS                                   |  2 +-
- drivers/net/ethernet/dec/tulip/Kconfig        |  2 +-
- 4 files changed, 23 insertions(+), 17 deletions(-)
- rename Documentation/networking/device_drivers/dec/{dmfe.txt => dmfe.rst} (68%)
+ Documentation/networking/index.rst            |  1 +
+ .../{xfrm_sync.txt => xfrm_sync.rst}          | 66 ++++++++++++-------
+ 2 files changed, 44 insertions(+), 23 deletions(-)
+ rename Documentation/networking/{xfrm_sync.txt => xfrm_sync.rst} (82%)
 
-diff --git a/Documentation/networking/device_drivers/dec/dmfe.txt b/Documentation/networking/device_drivers/dec/dmfe.rst
-similarity index 68%
-rename from Documentation/networking/device_drivers/dec/dmfe.txt
-rename to Documentation/networking/device_drivers/dec/dmfe.rst
-index 25320bf19c86..c4cf809cad84 100644
---- a/Documentation/networking/device_drivers/dec/dmfe.txt
-+++ b/Documentation/networking/device_drivers/dec/dmfe.rst
-@@ -1,6 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============================================================
-+Davicom DM9102(A)/DM9132/DM9801 fast ethernet driver for Linux
-+==============================================================
-+
- Note: This driver doesn't have a maintainer.
- 
--Davicom DM9102(A)/DM9132/DM9801 fast ethernet driver for Linux.
- 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General   Public License
-@@ -16,29 +21,29 @@ GNU General Public License for more details.
- This driver provides kernel support for Davicom DM9102(A)/DM9132/DM9801 ethernet cards ( CNET
- 10/100 ethernet cards uses Davicom chipset too, so this driver supports CNET cards too ).If you
- didn't compile this driver as a module, it will automatically load itself on boot and print a
--line similar to :
-+line similar to::
- 
- 	dmfe: Davicom DM9xxx net driver, version 1.36.4 (2002-01-17)
- 
--If you compiled this driver as a module, you have to load it on boot.You can load it with command :
-+If you compiled this driver as a module, you have to load it on boot.You can load it with command::
- 
- 	insmod dmfe
- 
- This way it will autodetect the device mode.This is the suggested way to load the module.Or you can pass
--a mode= setting to module while loading, like :
-+a mode= setting to module while loading, like::
- 
- 	insmod dmfe mode=0 # Force 10M Half Duplex
- 	insmod dmfe mode=1 # Force 100M Half Duplex
- 	insmod dmfe mode=4 # Force 10M Full Duplex
- 	insmod dmfe mode=5 # Force 100M Full Duplex
- 
--Next you should configure your network interface with a command similar to :
-+Next you should configure your network interface with a command similar to::
- 
- 	ifconfig eth0 172.22.3.18
--                      ^^^^^^^^^^^
-+		      ^^^^^^^^^^^
- 		     Your IP Address
- 
--Then you may have to modify the default routing table with command :
-+Then you may have to modify the default routing table with command::
- 
- 	route add default eth0
- 
-@@ -48,10 +53,10 @@ Now your ethernet card should be up and running.
- 
- TODO:
- 
--Implement pci_driver::suspend() and pci_driver::resume() power management methods.
--Check on 64 bit boxes.
--Check and fix on big endian boxes.
--Test and make sure PCI latency is now correct for all cases.
-+- Implement pci_driver::suspend() and pci_driver::resume() power management methods.
-+- Check on 64 bit boxes.
-+- Check and fix on big endian boxes.
-+- Test and make sure PCI latency is now correct for all cases.
- 
- 
- Authors:
-@@ -60,7 +65,7 @@ Sten Wang <sten_wang@davicom.com.tw >   : Original Author
- 
- Contributors:
- 
--Marcelo Tosatti <marcelo@conectiva.com.br>
--Alan Cox <alan@lxorguk.ukuu.org.uk>
--Jeff Garzik <jgarzik@pobox.com>
--Vojtech Pavlik <vojtech@suse.cz>
-+- Marcelo Tosatti <marcelo@conectiva.com.br>
-+- Alan Cox <alan@lxorguk.ukuu.org.uk>
-+- Jeff Garzik <jgarzik@pobox.com>
-+- Vojtech Pavlik <vojtech@suse.cz>
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 4ad13ffb5800..09728e964ce1 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -35,6 +35,7 @@ Contents:
-    cirrus/cs89x0
-    davicom/dm9000
-    dec/de4x5
-+   dec/dmfe
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index 3fe70efb632e..ec83bd95e4e9 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -119,6 +119,7 @@ Contents:
+    x25
+    xfrm_device
+    xfrm_proc
++   xfrm_sync
  
  .. only::  subproject and html
  
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 91098b704635..b92568479a71 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4710,7 +4710,7 @@ F:	net/ax25/sysctl_net_ax25.c
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
--F:	Documentation/networking/device_drivers/dec/dmfe.txt
-+F:	Documentation/networking/device_drivers/dec/dmfe.rst
- F:	drivers/net/ethernet/dec/tulip/dmfe.c
+diff --git a/Documentation/networking/xfrm_sync.txt b/Documentation/networking/xfrm_sync.rst
+similarity index 82%
+rename from Documentation/networking/xfrm_sync.txt
+rename to Documentation/networking/xfrm_sync.rst
+index 8d88e0f2ec49..6246503ceab2 100644
+--- a/Documentation/networking/xfrm_sync.txt
++++ b/Documentation/networking/xfrm_sync.rst
+@@ -1,3 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++====
++XFRM
++====
  
- DC390/AM53C974 SCSI driver
-diff --git a/drivers/net/ethernet/dec/tulip/Kconfig b/drivers/net/ethernet/dec/tulip/Kconfig
-index 8c4245d94bb2..177f36f4b89d 100644
---- a/drivers/net/ethernet/dec/tulip/Kconfig
-+++ b/drivers/net/ethernet/dec/tulip/Kconfig
-@@ -138,7 +138,7 @@ config DM9102
- 	  This driver is for DM9102(A)/DM9132/DM9801 compatible PCI cards from
- 	  Davicom (<http://www.davicom.com.tw/>).  If you have such a network
- 	  (Ethernet) card, say Y.  Some information is contained in the file
--	  <file:Documentation/networking/device_drivers/dec/dmfe.txt>.
-+	  <file:Documentation/networking/device_drivers/dec/dmfe.rst>.
+ The sync patches work is based on initial patches from
+ Krisztian <hidden@balabit.hu> and others and additional patches
+@@ -40,30 +45,32 @@ The netlink message types are:
+ XFRM_MSG_NEWAE and XFRM_MSG_GETAE.
  
- 	  To compile this driver as a module, choose M here. The module will
- 	  be called dmfe.
+ A XFRM_MSG_GETAE does not have TLVs.
++
+ A XFRM_MSG_NEWAE will have at least two TLVs (as is
+ discussed further below).
+ 
+-aevent_id structure looks like:
++aevent_id structure looks like::
+ 
+    struct xfrm_aevent_id {
+-             struct xfrm_usersa_id           sa_id;
+-             xfrm_address_t                  saddr;
+-             __u32                           flags;
+-             __u32                           reqid;
++	     struct xfrm_usersa_id           sa_id;
++	     xfrm_address_t                  saddr;
++	     __u32                           flags;
++	     __u32                           reqid;
+    };
+ 
+ The unique SA is identified by the combination of xfrm_usersa_id,
+ reqid and saddr.
+ 
+ flags are used to indicate different things. The possible
+-flags are:
+-        XFRM_AE_RTHR=1, /* replay threshold*/
+-        XFRM_AE_RVAL=2, /* replay value */
+-        XFRM_AE_LVAL=4, /* lifetime value */
+-        XFRM_AE_ETHR=8, /* expiry timer threshold */
+-        XFRM_AE_CR=16, /* Event cause is replay update */
+-        XFRM_AE_CE=32, /* Event cause is timer expiry */
+-        XFRM_AE_CU=64, /* Event cause is policy update */
++flags are::
++
++	XFRM_AE_RTHR=1, /* replay threshold*/
++	XFRM_AE_RVAL=2, /* replay value */
++	XFRM_AE_LVAL=4, /* lifetime value */
++	XFRM_AE_ETHR=8, /* expiry timer threshold */
++	XFRM_AE_CR=16, /* Event cause is replay update */
++	XFRM_AE_CE=32, /* Event cause is timer expiry */
++	XFRM_AE_CU=64, /* Event cause is policy update */
+ 
+ How these flags are used is dependent on the direction of the
+ message (kernel<->user) as well the cause (config, query or event).
+@@ -80,23 +87,27 @@ to get notified of these events.
+ -----------------------------------------
+ 
+ a) byte value (XFRMA_LTIME_VAL)
++
+ This TLV carries the running/current counter for byte lifetime since
+ last event.
+ 
+ b)replay value (XFRMA_REPLAY_VAL)
++
+ This TLV carries the running/current counter for replay sequence since
+ last event.
+ 
+ c)replay threshold (XFRMA_REPLAY_THRESH)
++
+ This TLV carries the threshold being used by the kernel to trigger events
+ when the replay sequence is exceeded.
+ 
+ d) expiry timer (XFRMA_ETIMER_THRESH)
++
+ This is a timer value in milliseconds which is used as the nagle
+ value to rate limit the events.
+ 
+ 3) Default configurations for the parameters:
+-----------------------------------------------
++---------------------------------------------
+ 
+ By default these events should be turned off unless there is
+ at least one listener registered to listen to the multicast
+@@ -108,6 +119,7 @@ we also provide default threshold values for these different parameters
+ in case they are not specified.
+ 
+ the two sysctls/proc entries are:
++
+ a) /proc/sys/net/core/sysctl_xfrm_aevent_etime
+ used to provide default values for the XFRMA_ETIMER_THRESH in incremental
+ units of time of 100ms. The default is 10 (1 second)
+@@ -120,37 +132,45 @@ in incremental packet count. The default is two packets.
+ ----------------
+ 
+ a) XFRM_MSG_GETAE issued by user-->kernel.
+-XFRM_MSG_GETAE does not carry any TLVs.
++   XFRM_MSG_GETAE does not carry any TLVs.
++
+ The response is a XFRM_MSG_NEWAE which is formatted based on what
+ XFRM_MSG_GETAE queried for.
++
+ The response will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
+-*if XFRM_AE_RTHR flag is set, then XFRMA_REPLAY_THRESH is also retrieved
+-*if XFRM_AE_ETHR flag is set, then XFRMA_ETIMER_THRESH is also retrieved
++* if XFRM_AE_RTHR flag is set, then XFRMA_REPLAY_THRESH is also retrieved
++* if XFRM_AE_ETHR flag is set, then XFRMA_ETIMER_THRESH is also retrieved
+ 
+ b) XFRM_MSG_NEWAE is issued by either user space to configure
+-or kernel to announce events or respond to a XFRM_MSG_GETAE.
++   or kernel to announce events or respond to a XFRM_MSG_GETAE.
+ 
+ i) user --> kernel to configure a specific SA.
++
+ any of the values or threshold parameters can be updated by passing the
+ appropriate TLV.
++
+ A response is issued back to the sender in user space to indicate success
+ or failure.
++
+ In the case of success, additionally an event with
+ XFRM_MSG_NEWAE is also issued to any listeners as described in iii).
+ 
+ ii) kernel->user direction as a response to XFRM_MSG_GETAE
++
+ The response will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
++
+ The threshold TLVs will be included if explicitly requested in
+ the XFRM_MSG_GETAE message.
+ 
+ iii) kernel->user to report as event if someone sets any values or
+-thresholds for an SA using XFRM_MSG_NEWAE (as described in #i above).
+-In such a case XFRM_AE_CU flag is set to inform the user that
+-the change happened as a result of an update.
+-The message will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
++     thresholds for an SA using XFRM_MSG_NEWAE (as described in #i above).
++     In such a case XFRM_AE_CU flag is set to inform the user that
++     the change happened as a result of an update.
++     The message will always have XFRMA_LTIME_VAL and XFRMA_REPLAY_VAL TLVs.
+ 
+ iv) kernel->user to report event when replay threshold or a timeout
+-is exceeded.
++    is exceeded.
++
+ In such a case either XFRM_AE_CR (replay exceeded) or XFRM_AE_CE (timeout
+ happened) is set to inform the user what happened.
+ Note the two flags are mutually exclusive.
 -- 
 2.25.4
 
