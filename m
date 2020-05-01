@@ -2,150 +2,101 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71139C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281D3C47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5662C2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06304218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:33:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq/oBJJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgEAWci (ORCPT
+        id S1727095AbgEAWdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:32:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10101 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgEAWci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:32:38 -0400
-IronPort-SDR: 6XhZMxwOSrHnnVV+pXaZzoh111Ac1a3Fbrxa02BKsw9ff8RikcZJyGGMryLo0Yg+Zby1PzciCn
- 37BotaS1XHew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 15:32:36 -0700
-IronPort-SDR: h0HDG6WOzMAx9Acn3e9Yz1/5hX+L6Tr04sNiBrKkZCQp2bg2OM3da5SAXcNd1kQG999b8gqGSy
- xxtLW+ogCo9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,341,1583222400"; 
-   d="scan'208";a="248657143"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.251.135.85]) ([10.251.135.85])
-  by fmsmga007.fm.intel.com with ESMTP; 01 May 2020 15:32:35 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
- <20200423194447.GF13640@mellanox.com>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <30dadd7a-bac2-d658-c2e4-77592de6118d@linux.intel.com>
-Date:   Fri, 1 May 2020 15:32:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 18:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgEAWdC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 18:33:02 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A58C061A0C;
+        Fri,  1 May 2020 15:33:02 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x18so13419401wrq.2;
+        Fri, 01 May 2020 15:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vseR8e8pFXD2+crzI5eV2VcW4ikr4KpriEQgDBp2Nkk=;
+        b=Jq/oBJJQjyVTpBQJaSRiwighOTctLBm/QkEyfvefS14WeNspzApxcFj6R6ZsB0KW4r
+         WrOBh9RWCkW0SiUc1qjuaQOF6Gg/bNHp8+ySsxOg6EKao3UhvNa3Ogzo+bW+142P9R/l
+         WjZKs6xG1yTNikKP63ePyoE91h/MuFm/7emy1WOf7Q5L5eRReC4Gv6NiIzb6IL1cTFAb
+         t6qmDID14xHAOQZLPafY0EcJnH1c4NeLs8c2npMq5JsOpLTW5A4636NKy4RzqCPkvmDu
+         4D+4I0riPUWU6eI1fvdkwMpVzHZN1BFlVDDDYWLH83nv1+xUEhHG3oNRxI+pH9pCNjcu
+         lBzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vseR8e8pFXD2+crzI5eV2VcW4ikr4KpriEQgDBp2Nkk=;
+        b=mk7aeIcv3R2rLa2988AxNj9C7iHtyGV/fbw5nLUo5y9LZUlzB+h4il99Cf82bozrpl
+         2c7MkBAgz9xiQgr5lrb6lQcDi/gNLU/Of0Lnih6yphqq6YXWJZd655/7+dX/A9g8+Ybv
+         rSvpLysxUhI3Eg4D28sEufDN1NF2/BunA31N7EyJCpVFnMmS/M6c8+QgUkaR10XM+IK+
+         H4c/ur9nYQKuxL28iBOsGBsCwe6lF5are5C+/OZvofdecx4ieZvn+DIT/KH/s95OToex
+         EcMdHaJZo5o9Y98cUusrBqAzyavORkzTpXrmRymQM59O/dRynXoFfG2GO6ovKqGcYGsZ
+         C09Q==
+X-Gm-Message-State: AGi0PuaXMxP9fgMlS2RtqXTffa2YJKIL5aAMLkKtdzKnFeXTrj0HF4x/
+        uyYNF0BgsyLxoMIYCKkQJGQ=
+X-Google-Smtp-Source: APiQypIqMshsvJKMdUEEJbNpBmLhC7igH7VDViy70/OfNgOXhRkvkU26tBFopkIkz/SG9QwB7PV9Jw==
+X-Received: by 2002:a05:6000:1242:: with SMTP id j2mr6081582wrx.274.1588372381333;
+        Fri, 01 May 2020 15:33:01 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id n9sm6237750wrx.61.2020.05.01.15.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 15:33:00 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 0/4] Add SMD RPM support for MSM8936
+Date:   Sat,  2 May 2020 00:32:28 +0200
+Message-Id: <20200501223232.275800-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-In-Reply-To: <20200423194447.GF13640@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+changes since v1:
+- added a forgotten patch that adds the compat string to the driver
 
+Konrad Dybcio (1):
+  drivers: soc: Add MSM8936 SMD RPM compatible
 
-On 4/23/2020 12:44 PM, Jason Gunthorpe wrote:
->>>> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
->>>> interrupts for the guest. This preserves MSIX for host usages and also allows a
->>>> significantly larger number of interrupt vectors for guest usage.
->>>
->>> I never did get a reply to my earlier remarks on the IMS patches.
->>>
->>> The concept of a device specific addr/data table format for MSI is not
->>> Intel specific. This should be general code. We have a device that can
->>> use this kind of kernel capability today.
->>
->> I am sorry if I did not address your comments earlier.
-> 
-> It appears noboy from Intel bothered to answer anyone else on that RFC
-> thread:
-> 
-> https://lore.kernel.org/lkml/1568338328-22458-1-git-send-email-megha.dey@linux.intel.com/
-> 
-> However, it seems kind of moot as I see now that this verion of IMS
-> bears almost no resemblance to the original RFC.
+Vincent Knecht (3):
+  clk: qcom: smd: Add support for MSM8936 rpm clocks
+  dt-bindings: clock: rpmcc: Document MSM8936 compatible
+  dt-bindings: soc: qcom: Document MSM8936 SMD RPM compatible
 
-hmm yeah, we changed most of the code after getting a lot of feedback 
-from you and folks at plumbers. But yes, I should have replied to all 
-the feedback, lesson learnt :)
+ .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+ .../bindings/soc/qcom/qcom,smd-rpm.txt        |  1 +
+ drivers/clk/qcom/clk-smd-rpm.c                | 50 +++++++++++++++++++
+ drivers/soc/qcom/smd-rpm.c                    |  1 +
+ 4 files changed, 53 insertions(+)
 
-> 
-> That said, the similiarity to platform-msi was striking, does this new
-> version harmonize with that?
+-- 
+2.26.1
 
-yes!
-> 
->> The present IMS code is quite generic, most of the code is in the drivers/
->> folder. We basically introduce 2 APIS: allocate and free IMS interrupts and
->> a IMS IRQ domain to allocate these interrupts from. These APIs are
->> architecture agnostic.
->>
->> We also introduce a new IMS IRQ domain which is architecture specific. This
->> is because IMS generates interrupts only in the remappable format, hence
->> interrupt remapping should be enabled for IMS. Currently, the interrupt
->> remapping code is only available for Intel and AMD and I don’t see anything
->> for ARM.
-> 
-> I don't understand these remarks though - IMS is simply the mapping of
-> a MemWr addr/data pair to a Linux IRQ number? Why does this intersect
-> with remapping?
-> 
-
- From your comments so far, I think your requirement is a subset of what 
-IMS is trying to do.
-
-What you want:
-have a dynamic means of allocating platform-msi interrupts
-
-On top of this IMS has a requirement that all of the interrupts should 
-be remapped.
-
-So we can have tiered code: generic dynamic platform-msi infrastructure
-and add the IMS specific bits (Intel specific) on top of this.
-
-The generic code will have no reference to IMS.
-
-> AFAIK, any platform that supports MSI today should have the inherent
-> HW capability to support IMS.
-> 
->> Also, could you give more details on the device that could use IMS? Do you
->> have some driver code already? We could then see if and how the current IMS
->> code could be made more generic.
-> 
-> We have several devices of interest, our NICs have very flexible PCI,
-> so it is no problem to take the MemWR addr/data from someplace other
-> than the MSI tables.
-> 
-> For this we want to have some way to allocate Linux IRQs dynamically
-> and get a addr/data pair to trigger them.
-> 
-> Our NIC devices are also linked to our ARM SOC family, so I'd expect
-> our ARM's to also be able to provide these APIs as the platform.
-
-cool, so I will hope that you can test out the generic APIs from the ARM 
-side!
-> 
-> Jason
-> 
