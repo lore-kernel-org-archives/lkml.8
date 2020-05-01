@@ -2,58 +2,81 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C278C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631D7C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3781020857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37196208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344504;
-	bh=EmTPsmxuwAaBR5KuHJWiqABZUfAUsQPhnqBEbYl9Y0k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9dau/VHTAOF+LwTweVXm2m/Ih9Z3StdFFk9FzhwlG0Y/gcyJXf2suTt+CHPPkpeF
-	 pr5drcV2IPkH19e7EZhotisKj9zgxwZouQ1n4Y+N/MJ93lVhHcwam2d3gRdaZEwAXJ
-	 noDxVSFaLqFBoHAvi9gc0wR4KKYrQJYti+fdVMaU=
+	s=default; t=1588344508;
+	bh=pgEeloihUJtDW9NEkL6jmFDK/ZInSPDNQO7niKknL3E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0Vukrdvs9bSjCRagSVg6YPZfYdFM1ogyFh/zp5mRr0LXOzSf07LBtqpuU2vMpc36X
+	 y8ONLu1DnezXZoQsQ+a0ODiJHreqKlgWdUNh4xIdOY0nEoyXAQZp4zo+EMVnchB3dN
+	 UlO4aKqgFJVRRllnvErqUqSgnbgX4RGXlGKIyXyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgEAOsS (ORCPT
+        id S1730441AbgEAOsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:48:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729352AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:08 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E8E82495C;
-        Fri,  1 May 2020 14:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CC324959;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588344305;
-        bh=EmTPsmxuwAaBR5KuHJWiqABZUfAUsQPhnqBEbYl9Y0k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0j1NQtY5ltDIOLbYlVd0Q2CaU6EAB6IgG6Jo2j50nM4/vON2DHxcItryfjuzrylT
-         wbiPlwbj789bPZ0yDpiD8Z6WAY7EZNtqW1hbneuHYIzn5uxE9leNuEor527V4idSOB
-         iHHUC0IcSYf8Hox1D8jqhWUPXRE/LJn3P3ffq1+4=
+        bh=pgEeloihUJtDW9NEkL6jmFDK/ZInSPDNQO7niKknL3E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SVEs1VMhjyuHELBkXcF4/1fWlbsaS7MgiAohJ3ePux485XSRhFIw+LT9CMyjWvZFi
+         ihz7fPrKmb/CyIscv5iZo1ghZ6L6por1RndA5qbcxiN/hqpCEtOv80OoyKzd7LfsEg
+         e5L/qaobT9VXcglAQbs4CKkx5QoFsFVnzoG5mfmc=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCeH-Pu; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCcS-77; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Samuel Chessman <chessman@tux.org>, netdev@vger.kernel.org,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        Zorik Machulsky <zorik@amazon.com>,
+        Sean Tranchetti <stranche@codeaurora.org>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-x25@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        linux-hyperv@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        David Ahern <dsahern@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
+        Joerg Reuter <jreuter@yaina.de>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Shrijeet Mukherjee <shrijeet@gmail.com>,
+        Netanel Belgazal <netanel@amazon.com>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        linux-wireless@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-parisc@vger.kernel.org,
+        Steffen Klassert <klassert@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 22/37] docs: networking: device drivers: convert freescale/dpaa.txt to ReST
-Date:   Fri,  1 May 2020 16:44:44 +0200
-Message-Id: <1f2de65c9290a0d3bc9c9a83102b48b454baa598.1588344146.git.mchehab+huawei@kernel.org>
+        Stephen Hemminger <sthemmin@microsoft.com>
+Subject: [PATCH 00/37]net: manually convert files to ReST format - part 3 (final)
+Date:   Fri,  1 May 2020 16:44:22 +0200
+Message-Id: <cover.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
-References: <cover.1588344146.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,266 +84,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- add SPDX header;
-- adjust titles and chapters, adding proper markups;
-- mark code blocks and literals as such;
-- use :field: markup;
-- add to networking/index.rst.
+That's the third part (and the final one) of my work to convert the networking
+text files into ReST. it is based on linux-next next-20200430 branch.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../freescale/{dpaa.txt => dpaa.rst}          | 139 ++++++++++--------
- .../networking/device_drivers/index.rst       |   1 +
- 2 files changed, 75 insertions(+), 65 deletions(-)
+The full series (including those ones) are at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=net-docs
+
+The  built output documents, on html format is at:
+
+	https://www.infradead.org/~mchehab/kernel_docs/networking/
+
+
+Mauro Carvalho Chehab (37):
+  docs: networking: convert tuntap.txt to ReST
+  docs: networking: convert udplite.txt to ReST
+  docs: networking: convert vrf.txt to ReST
+  docs: networking: convert vxlan.txt to ReST
+  docs: networking: convert x25-iface.txt to ReST
+  docs: networking: convert x25.txt to ReST
+  docs: networking: convert xfrm_device.txt to ReST
+  docs: networking: convert xfrm_proc.txt to ReST
+  docs: networking: convert xfrm_sync.txt to ReST
+  docs: networking: convert xfrm_sysctl.txt to ReST
+  docs: networking: convert z8530drv.txt to ReST
+  docs: networking: device drivers: convert 3com/3c509.txt to ReST
+  docs: networking: device drivers: convert 3com/vortex.txt to ReST
+  docs: networking: device drivers: convert amazon/ena.txt to ReST
+  docs: networking: device drivers: convert aquantia/atlantic.txt to
+    ReST
+  docs: networking: device drivers: convert chelsio/cxgb.txt to ReST
+  docs: networking: device drivers: convert cirrus/cs89x0.txt to ReST
+  docs: networking: device drivers: convert davicom/dm9000.txt to ReST
+  docs: networking: device drivers: convert dec/de4x5.txt to ReST
+  docs: networking: device drivers: convert dec/dmfe.txt to ReST
+  docs: networking: device drivers: convert dlink/dl2k.txt to ReST
+  docs: networking: device drivers: convert freescale/dpaa.txt to ReST
+  docs: networking: device drivers: convert freescale/gianfar.txt to
+    ReST
+  docs: networking: device drivers: convert intel/ipw2100.txt to ReST
+  docs: networking: device drivers: convert intel/ipw2200.txt to ReST
+  docs: networking: device drivers: convert microsoft/netvsc.txt to ReST
+  docs: networking: device drivers: convert neterion/s2io.txt to ReST
+  docs: networking: device drivers: convert neterion/vxge.txt to ReST
+  docs: networking: device drivers: convert qualcomm/rmnet.txt to ReST
+  docs: networking: device drivers: convert sb1000.txt to ReST
+  docs: networking: device drivers: convert smsc/smc9.txt to ReST
+  docs: networking: device drivers: convert ti/cpsw_switchdev.txt to
+    ReST
+  docs: networking: device drivers: convert ti/cpsw.txt to ReST
+  docs: networking: device drivers: convert ti/tlan.txt to ReST
+  docs: networking: device drivers: convert toshiba/spider_net.txt to
+    ReST
+  net: docs: add page_pool.rst to index.rst
+  docs: networking: arcnet-hardware.rst: don't duplicate chapter names
+
+ Documentation/networking/arcnet-hardware.rst  |   8 +-
+ .../3com/{3c509.txt => 3c509.rst}             | 158 +++--
+ .../3com/{vortex.txt => vortex.rst}           | 223 ++++---
+ .../amazon/{ena.txt => ena.rst}               | 142 ++--
+ .../aquantia/{atlantic.txt => atlantic.rst}   | 373 ++++++-----
+ .../chelsio/{cxgb.txt => cxgb.rst}            | 183 ++++--
+ .../cirrus/{cs89x0.txt => cs89x0.rst}         | 557 ++++++++--------
+ .../davicom/{dm9000.txt => dm9000.rst}        |  24 +-
+ .../dec/{de4x5.txt => de4x5.rst}              | 105 +--
+ .../device_drivers/dec/{dmfe.txt => dmfe.rst} |  35 +-
+ .../dlink/{dl2k.txt => dl2k.rst}              | 228 ++++---
+ .../freescale/{dpaa.txt => dpaa.rst}          | 139 ++--
+ .../freescale/{gianfar.txt => gianfar.rst}    |  21 +-
+ .../networking/device_drivers/index.rst       |  24 +
+ .../intel/{ipw2100.txt => ipw2100.rst}        | 242 ++++---
+ .../intel/{ipw2200.txt => ipw2200.rst}        | 410 +++++++-----
+ .../microsoft/{netvsc.txt => netvsc.rst}      |  57 +-
+ .../device_drivers/neterion/s2io.rst          | 196 ++++++
+ .../device_drivers/neterion/s2io.txt          | 141 ----
+ .../neterion/{vxge.txt => vxge.rst}           |  60 +-
+ .../qualcomm/{rmnet.txt => rmnet.rst}         |  43 +-
+ .../networking/device_drivers/sb1000.rst      | 222 +++++++
+ .../networking/device_drivers/sb1000.txt      | 207 ------
+ .../networking/device_drivers/smsc/smc9.rst   |  49 ++
+ .../networking/device_drivers/smsc/smc9.txt   |  42 --
+ .../networking/device_drivers/ti/cpsw.rst     | 587 +++++++++++++++++
+ .../networking/device_drivers/ti/cpsw.txt     | 541 ----------------
+ ...{cpsw_switchdev.txt => cpsw_switchdev.rst} | 239 ++++---
+ .../device_drivers/ti/{tlan.txt => tlan.rst}  |  73 ++-
+ .../{spider_net.txt => spider_net.rst}        |  58 +-
+ Documentation/networking/index.rst            |  12 +
+ .../networking/{tuntap.txt => tuntap.rst}     | 200 +++---
+ .../networking/{udplite.txt => udplite.rst}   | 175 ++---
+ Documentation/networking/vrf.rst              | 451 +++++++++++++
+ Documentation/networking/vrf.txt              | 418 ------------
+ .../networking/{vxlan.txt => vxlan.rst}       |  33 +-
+ .../{x25-iface.txt => x25-iface.rst}          |  10 +-
+ Documentation/networking/{x25.txt => x25.rst} |   4 +
+ .../{xfrm_device.txt => xfrm_device.rst}      |  33 +-
+ .../{xfrm_proc.txt => xfrm_proc.rst}          |  31 +
+ .../{xfrm_sync.txt => xfrm_sync.rst}          |  66 +-
+ .../{xfrm_sysctl.txt => xfrm_sysctl.rst}      |   7 +
+ .../networking/{z8530drv.txt => z8530drv.rst} | 609 +++++++++---------
+ MAINTAINERS                                   |  30 +-
+ drivers/net/Kconfig                           |   4 +-
+ drivers/net/ethernet/3com/3c59x.c             |   4 +-
+ drivers/net/ethernet/3com/Kconfig             |   2 +-
+ drivers/net/ethernet/chelsio/Kconfig          |   2 +-
+ drivers/net/ethernet/cirrus/Kconfig           |   2 +-
+ drivers/net/ethernet/dec/tulip/Kconfig        |   4 +-
+ drivers/net/ethernet/dlink/dl2k.c             |   2 +-
+ drivers/net/ethernet/neterion/Kconfig         |   4 +-
+ drivers/net/ethernet/smsc/Kconfig             |   4 +-
+ drivers/net/ethernet/ti/Kconfig               |   2 +-
+ drivers/net/ethernet/ti/tlan.c                |   2 +-
+ drivers/net/hamradio/Kconfig                  |   4 +-
+ drivers/net/hamradio/scc.c                    |   2 +-
+ drivers/net/wireless/intel/ipw2x00/Kconfig    |   4 +-
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c  |   2 +-
+ include/uapi/linux/if_x25.h                   |   2 +-
+ net/x25/Kconfig                               |   4 +-
+ 61 files changed, 4175 insertions(+), 3341 deletions(-)
+ rename Documentation/networking/device_drivers/3com/{3c509.txt => 3c509.rst} (68%)
+ rename Documentation/networking/device_drivers/3com/{vortex.txt => vortex.rst} (72%)
+ rename Documentation/networking/device_drivers/amazon/{ena.txt => ena.rst} (86%)
+ rename Documentation/networking/device_drivers/aquantia/{atlantic.txt => atlantic.rst} (63%)
+ rename Documentation/networking/device_drivers/chelsio/{cxgb.txt => cxgb.rst} (81%)
+ rename Documentation/networking/device_drivers/cirrus/{cs89x0.txt => cs89x0.rst} (61%)
+ rename Documentation/networking/device_drivers/davicom/{dm9000.txt => dm9000.rst} (92%)
+ rename Documentation/networking/device_drivers/dec/{de4x5.txt => de4x5.rst} (78%)
+ rename Documentation/networking/device_drivers/dec/{dmfe.txt => dmfe.rst} (68%)
+ rename Documentation/networking/device_drivers/dlink/{dl2k.txt => dl2k.rst} (59%)
  rename Documentation/networking/device_drivers/freescale/{dpaa.txt => dpaa.rst} (79%)
+ rename Documentation/networking/device_drivers/freescale/{gianfar.txt => gianfar.rst} (82%)
+ rename Documentation/networking/device_drivers/intel/{ipw2100.txt => ipw2100.rst} (70%)
+ rename Documentation/networking/device_drivers/intel/{ipw2200.txt => ipw2200.rst} (64%)
+ rename Documentation/networking/device_drivers/microsoft/{netvsc.txt => netvsc.rst} (83%)
+ create mode 100644 Documentation/networking/device_drivers/neterion/s2io.rst
+ delete mode 100644 Documentation/networking/device_drivers/neterion/s2io.txt
+ rename Documentation/networking/device_drivers/neterion/{vxge.txt => vxge.rst} (80%)
+ rename Documentation/networking/device_drivers/qualcomm/{rmnet.txt => rmnet.rst} (73%)
+ create mode 100644 Documentation/networking/device_drivers/sb1000.rst
+ delete mode 100644 Documentation/networking/device_drivers/sb1000.txt
+ create mode 100644 Documentation/networking/device_drivers/smsc/smc9.rst
+ delete mode 100644 Documentation/networking/device_drivers/smsc/smc9.txt
+ create mode 100644 Documentation/networking/device_drivers/ti/cpsw.rst
+ delete mode 100644 Documentation/networking/device_drivers/ti/cpsw.txt
+ rename Documentation/networking/device_drivers/ti/{cpsw_switchdev.txt => cpsw_switchdev.rst} (51%)
+ rename Documentation/networking/device_drivers/ti/{tlan.txt => tlan.rst} (73%)
+ rename Documentation/networking/device_drivers/toshiba/{spider_net.txt => spider_net.rst} (88%)
+ rename Documentation/networking/{tuntap.txt => tuntap.rst} (58%)
+ rename Documentation/networking/{udplite.txt => udplite.rst} (65%)
+ create mode 100644 Documentation/networking/vrf.rst
+ delete mode 100644 Documentation/networking/vrf.txt
+ rename Documentation/networking/{vxlan.txt => vxlan.rst} (73%)
+ rename Documentation/networking/{x25-iface.txt => x25-iface.rst} (96%)
+ rename Documentation/networking/{x25.txt => x25.rst} (96%)
+ rename Documentation/networking/{xfrm_device.txt => xfrm_device.rst} (92%)
+ rename Documentation/networking/{xfrm_proc.txt => xfrm_proc.rst} (95%)
+ rename Documentation/networking/{xfrm_sync.txt => xfrm_sync.rst} (82%)
+ rename Documentation/networking/{xfrm_sysctl.txt => xfrm_sysctl.rst} (52%)
+ rename Documentation/networking/{z8530drv.txt => z8530drv.rst} (57%)
 
-diff --git a/Documentation/networking/device_drivers/freescale/dpaa.txt b/Documentation/networking/device_drivers/freescale/dpaa.rst
-similarity index 79%
-rename from Documentation/networking/device_drivers/freescale/dpaa.txt
-rename to Documentation/networking/device_drivers/freescale/dpaa.rst
-index b06601ff9200..241c6c6f6e68 100644
---- a/Documentation/networking/device_drivers/freescale/dpaa.txt
-+++ b/Documentation/networking/device_drivers/freescale/dpaa.rst
-@@ -1,12 +1,14 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============================
- The QorIQ DPAA Ethernet Driver
- ==============================
- 
- Authors:
--Madalin Bucur <madalin.bucur@nxp.com>
--Camelia Groza <camelia.groza@nxp.com>
-+- Madalin Bucur <madalin.bucur@nxp.com>
-+- Camelia Groza <camelia.groza@nxp.com>
- 
--Contents
--========
-+.. Contents
- 
- 	- DPAA Ethernet Overview
- 	- DPAA Ethernet Supported SoCs
-@@ -34,7 +36,7 @@ following drivers in the Linux kernel:
-  - Queue Manager (QMan), Buffer Manager (BMan)
-     drivers/soc/fsl/qbman
- 
--A simplified view of the dpaa_eth interfaces mapped to FMan MACs:
-+A simplified view of the dpaa_eth interfaces mapped to FMan MACs::
- 
-   dpaa_eth       /eth0\     ...       /ethN\
-   driver        |      |             |      |
-@@ -42,89 +44,93 @@ A simplified view of the dpaa_eth interfaces mapped to FMan MACs:
-        -Ports  / Tx  Rx \    ...    / Tx  Rx \
-   FMan        |          |         |          |
-        -MACs  |   MAC0   |         |   MACN   |
--             /   dtsec0   \  ...  /   dtsecN   \ (or tgec)
--            /              \     /              \(or memac)
-+	     /   dtsec0   \  ...  /   dtsecN   \ (or tgec)
-+	    /              \     /              \(or memac)
-   ---------  --------------  ---  --------------  ---------
-       FMan, FMan Port, FMan SP, FMan MURAM drivers
-   ---------------------------------------------------------
-       FMan HW blocks: MURAM, MACs, Ports, SP
-   ---------------------------------------------------------
- 
--The dpaa_eth relation to the QMan, BMan and FMan:
--              ________________________________
-+The dpaa_eth relation to the QMan, BMan and FMan::
-+
-+	      ________________________________
-   dpaa_eth   /            eth0                \
-   driver    /                                  \
-   ---------   -^-   -^-   -^-   ---    ---------
-   QMan driver / \   / \   / \  \   /  | BMan    |
--             |Rx | |Rx | |Tx | |Tx |  | driver  |
-+	     |Rx | |Rx | |Tx | |Tx |  | driver  |
-   ---------  |Dfl| |Err| |Cnf| |FQs|  |         |
-   QMan HW    |FQ | |FQ | |FQs| |   |  |         |
--             /   \ /   \ /   \  \ /   |         |
-+	     /   \ /   \ /   \  \ /   |         |
-   ---------   ---   ---   ---   -v-    ---------
--            |        FMan QMI         |         |
--            | FMan HW       FMan BMI  | BMan HW |
--              -----------------------   --------
-+	    |        FMan QMI         |         |
-+	    | FMan HW       FMan BMI  | BMan HW |
-+	      -----------------------   --------
- 
- where the acronyms used above (and in the code) are:
--DPAA = Data Path Acceleration Architecture
--FMan = DPAA Frame Manager
--QMan = DPAA Queue Manager
--BMan = DPAA Buffers Manager
--QMI = QMan interface in FMan
--BMI = BMan interface in FMan
--FMan SP = FMan Storage Profiles
--MURAM = Multi-user RAM in FMan
--FQ = QMan Frame Queue
--Rx Dfl FQ = default reception FQ
--Rx Err FQ = Rx error frames FQ
--Tx Cnf FQ = Tx confirmation FQs
--Tx FQs = transmission frame queues
--dtsec = datapath three speed Ethernet controller (10/100/1000 Mbps)
--tgec = ten gigabit Ethernet controller (10 Gbps)
--memac = multirate Ethernet MAC (10/100/1000/10000)
-+
-+=============== ===========================================================
-+DPAA 		Data Path Acceleration Architecture
-+FMan 		DPAA Frame Manager
-+QMan 		DPAA Queue Manager
-+BMan 		DPAA Buffers Manager
-+QMI 		QMan interface in FMan
-+BMI 		BMan interface in FMan
-+FMan SP 	FMan Storage Profiles
-+MURAM 		Multi-user RAM in FMan
-+FQ 		QMan Frame Queue
-+Rx Dfl FQ 	default reception FQ
-+Rx Err FQ 	Rx error frames FQ
-+Tx Cnf FQ 	Tx confirmation FQs
-+Tx FQs 		transmission frame queues
-+dtsec 		datapath three speed Ethernet controller (10/100/1000 Mbps)
-+tgec 		ten gigabit Ethernet controller (10 Gbps)
-+memac 		multirate Ethernet MAC (10/100/1000/10000)
-+=============== ===========================================================
- 
- DPAA Ethernet Supported SoCs
- ============================
- 
- The DPAA drivers enable the Ethernet controllers present on the following SoCs:
- 
--# PPC
--P1023
--P2041
--P3041
--P4080
--P5020
--P5040
--T1023
--T1024
--T1040
--T1042
--T2080
--T4240
--B4860
-+PPC
-+- P1023
-+- P2041
-+- P3041
-+- P4080
-+- P5020
-+- P5040
-+- T1023
-+- T1024
-+- T1040
-+- T1042
-+- T2080
-+- T4240
-+- B4860
- 
--# ARM
--LS1043A
--LS1046A
-+ARM
-+- LS1043A
-+- LS1046A
- 
- Configuring DPAA Ethernet in your kernel
- ========================================
- 
--To enable the DPAA Ethernet driver, the following Kconfig options are required:
-+To enable the DPAA Ethernet driver, the following Kconfig options are required::
- 
--# common for arch/arm64 and arch/powerpc platforms
--CONFIG_FSL_DPAA=y
--CONFIG_FSL_FMAN=y
--CONFIG_FSL_DPAA_ETH=y
--CONFIG_FSL_XGMAC_MDIO=y
-+  # common for arch/arm64 and arch/powerpc platforms
-+  CONFIG_FSL_DPAA=y
-+  CONFIG_FSL_FMAN=y
-+  CONFIG_FSL_DPAA_ETH=y
-+  CONFIG_FSL_XGMAC_MDIO=y
- 
--# for arch/powerpc only
--CONFIG_FSL_PAMU=y
-+  # for arch/powerpc only
-+  CONFIG_FSL_PAMU=y
- 
--# common options needed for the PHYs used on the RDBs
--CONFIG_VITESSE_PHY=y
--CONFIG_REALTEK_PHY=y
--CONFIG_AQUANTIA_PHY=y
-+  # common options needed for the PHYs used on the RDBs
-+  CONFIG_VITESSE_PHY=y
-+  CONFIG_REALTEK_PHY=y
-+  CONFIG_AQUANTIA_PHY=y
- 
- DPAA Ethernet Frame Processing
- ==============================
-@@ -167,7 +173,9 @@ classes as follows:
- 	* priorities 8 to 11 - traffic class 2 (medium-high priority)
- 	* priorities 12 to 15 - traffic class 3 (high priority)
- 
--tc qdisc add dev <int> root handle 1: \
-+::
-+
-+  tc qdisc add dev <int> root handle 1: \
- 	 mqprio num_tc 4 map 0 0 0 0 1 1 1 1 2 2 2 2 3 3 3 3 hw 1
- 
- DPAA IRQ Affinity and Receive Side Scaling
-@@ -201,11 +209,11 @@ of these frame queues will arrive at the same portal and will always
- be processed by the same CPU. This ensures intra-flow order preservation
- and workload distribution for multiple traffic flows.
- 
--RSS can be turned off for a certain interface using ethtool, i.e.
-+RSS can be turned off for a certain interface using ethtool, i.e.::
- 
- 	# ethtool -N fm1-mac9 rx-flow-hash tcp4 ""
- 
--To turn it back on, one needs to set rx-flow-hash for tcp4/6 or udp4/6:
-+To turn it back on, one needs to set rx-flow-hash for tcp4/6 or udp4/6::
- 
- 	# ethtool -N fm1-mac9 rx-flow-hash udp4 sfdn
- 
-@@ -216,7 +224,7 @@ going to control the rx-flow-hashing for all protocols on that interface.
- Besides using the FMan Keygen computed hash for spreading traffic on the
- 128 Rx FQs, the DPAA Ethernet driver also sets the skb hash value when
- the NETIF_F_RXHASH feature is on (active by default). This can be turned
--on or off through ethtool, i.e.:
-+on or off through ethtool, i.e.::
- 
- 	# ethtool -K fm1-mac9 rx-hashing off
- 	# ethtool -k fm1-mac9 | grep hash
-@@ -246,6 +254,7 @@ The following statistics are exported for each interface through ethtool:
- 	- Rx error count per CPU
- 	- Rx error count per type
- 	- congestion related statistics:
-+
- 		- congestion status
- 		- time spent in congestion
- 		- number of time the device entered congestion
-@@ -254,7 +263,7 @@ The following statistics are exported for each interface through ethtool:
- The driver also exports the following information in sysfs:
- 
- 	- the FQ IDs for each FQ type
--	/sys/devices/platform/soc/<addr>.fman/<addr>.ethernet/dpaa-ethernet.<id>/net/fm<nr>-mac<nr>/fqids
-+	  /sys/devices/platform/soc/<addr>.fman/<addr>.ethernet/dpaa-ethernet.<id>/net/fm<nr>-mac<nr>/fqids
- 
- 	- the ID of the buffer pool in use
--	/sys/devices/platform/soc/<addr>.fman/<addr>.ethernet/dpaa-ethernet.<id>/net/fm<nr>-mac<nr>/bpids
-+	  /sys/devices/platform/soc/<addr>.fman/<addr>.ethernet/dpaa-ethernet.<id>/net/fm<nr>-mac<nr>/bpids
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index e5d1863379cb..7e59ee43c030 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -37,6 +37,7 @@ Contents:
-    dec/de4x5
-    dec/dmfe
-    dlink/dl2k
-+   freescale/dpaa
- 
- .. only::  subproject and html
- 
 -- 
 2.25.4
+
 
