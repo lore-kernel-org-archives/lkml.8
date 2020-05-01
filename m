@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FB5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4378AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E482051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1847F2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341335;
-	bh=qhGlq2nwd+F+3TQoXM4Nys//vTHfy280XtnLt2hcuYM=;
+	s=default; t=1588341349;
+	bh=UsXDmF+wQH+tJ5tRdHFW/fgPyCygc41l0cHrlTzW7t4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wrii4nXjdFYQlxp4brkblEmU5vdlrRzOnzqY0LuuTXLwKtbCCr3WAy8qgOuZTqMpe
-	 V6Lq7jch/gEuUhfVtiQEfnm0o/AWzqH83p8DeZcXoses9gf2bob6d9e5muukQ07Fru
-	 +/ynHcy2WIXn3lLm46Yca3iUyBM2WPplp9pUGztY=
+	b=Jmj+NY6HcqZyVAgMdKwsoRQBgoP77YfOMYbtsgCxsz+jrRjISbF1BxAwwN0DnjpYp
+	 19GiOiWirVTOi3+/hvekJlFU7bz2ZI7QTbunplPbmYZHjRhZEEuqK1kTc0bJAnTV6O
+	 foXRDdestuE2HwqhF9oO2N2fJWssAeScImf7RIKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731513AbgEANzc (ORCPT
+        id S1730451AbgEANzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730492AbgEANdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:51 -0400
+        id S1729452AbgEANdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98DA52051A;
-        Fri,  1 May 2020 13:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A439E208DB;
+        Fri,  1 May 2020 13:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340031;
-        bh=qhGlq2nwd+F+3TQoXM4Nys//vTHfy280XtnLt2hcuYM=;
+        s=default; t=1588340004;
+        bh=UsXDmF+wQH+tJ5tRdHFW/fgPyCygc41l0cHrlTzW7t4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1/wfHs39/MOtcXULflPDfCgEECsPVrHKapq9tMGw9YDbMLvSxJTk4qiuMqSnTyngy
-         KL3bfAroawUfDgPwhHAMiRv5o4D+zskrNjOsUUIZDuwe9J6Kuly96IZhkWrTAcI0/K
-         BjOsCK/TKPBWYyvzE8DSs6H+csdSz6vK+734+ir0=
+        b=I3A1AodyMsV8+7ENv6qUklM6LX0q98RAt1B6Z+UOC65BSDwbsHYmE542gtT+xZTd8
+         ESdR2KcaYT9oFFbKxz9hMOmWSEVNMieI0itQ38msKL1CQFUf+ld/yUpk7gFYK7oerz
+         wIGfFIv7o3MhG5qxKvB+oY/za71KbYGLPm/5yua8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 066/117] iwlwifi: pcie: actually release queue memory in TVQM
-Date:   Fri,  1 May 2020 15:21:42 +0200
-Message-Id: <20200501131553.048775965@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 055/117] ALSA: usb-audio: Fix usb audio refcnt leak when getting spdif
+Date:   Fri,  1 May 2020 15:21:31 +0200
+Message-Id: <20200501131552.176256749@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,47 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit b98b33d5560a2d940f3b80f6768a6177bf3dfbc0 upstream.
+commit 59e1947ca09ebd1cae147c08c7c41f3141233c84 upstream.
 
-The iwl_trans_pcie_dyn_txq_free() function only releases the frames
-that may be left on the queue by calling iwl_pcie_gen2_txq_unmap(),
-but doesn't actually free the DMA ring or byte-count tables for the
-queue. This leads to pretty large memory leaks (at least before my
-queue size improvements), in particular in monitor/sniffer mode on
-channel hopping since this happens on every channel change.
+snd_microii_spdif_default_get() invokes snd_usb_lock_shutdown(), which
+increases the refcount of the snd_usb_audio object "chip".
 
-This was also now more evident after the move to a DMA pool for the
-byte count tables, showing messages such as
+When snd_microii_spdif_default_get() returns, local variable "chip"
+becomes invalid, so the refcount should be decreased to keep refcount
+balanced.
 
-  BUG iwlwifi:bc (...): Objects remaining in iwlwifi:bc on __kmem_cache_shutdown()
+The reference counting issue happens in several exception handling paths
+of snd_microii_spdif_default_get(). When those error scenarios occur
+such as usb_ifnum_to_if() returns NULL, the function forgets to decrease
+the refcnt increased by snd_usb_lock_shutdown(), causing a refcnt leak.
 
-This fixes https://bugzilla.kernel.org/show_bug.cgi?id=206811.
+Fix this issue by jumping to "end" label when those error scenarios
+occur.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Fixes: 6b35ff91572f ("iwlwifi: pcie: introduce a000 TX queues management")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/iwlwifi.20200417100405.f5f4c4193ec1.Id5feebc9b4318041913a9c89fc1378bb5454292c@changeid
+Fixes: 447d6275f0c2 ("ALSA: usb-audio: Add sanity checks for endpoint accesses")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587617711-13200-1-git-send-email-xiyuyang19@fudan.edu.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/usb/mixer_quirks.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
-@@ -1124,6 +1124,9 @@ void iwl_trans_pcie_dyn_txq_free(struct
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1520,11 +1520,15 @@ static int snd_microii_spdif_default_get
  
- 	iwl_pcie_gen2_txq_unmap(trans, queue);
+ 	/* use known values for that card: interface#1 altsetting#1 */
+ 	iface = usb_ifnum_to_if(chip->dev, 1);
+-	if (!iface || iface->num_altsetting < 2)
+-		return -EINVAL;
++	if (!iface || iface->num_altsetting < 2) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	alts = &iface->altsetting[1];
+-	if (get_iface_desc(alts)->bNumEndpoints < 1)
+-		return -EINVAL;
++	if (get_iface_desc(alts)->bNumEndpoints < 1) {
++		err = -EINVAL;
++		goto end;
++	}
+ 	ep = get_endpoint(alts, 0)->bEndpointAddress;
  
-+	iwl_pcie_gen2_txq_free_memory(trans, trans_pcie->txq[queue]);
-+	trans_pcie->txq[queue] = NULL;
-+
- 	IWL_DEBUG_TX_QUEUES(trans, "Deactivate queue %d\n", queue);
- }
- 
+ 	err = snd_usb_ctl_msg(chip->dev,
 
 
