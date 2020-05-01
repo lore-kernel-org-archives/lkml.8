@@ -2,165 +2,92 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A2DC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A343C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8321320836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p87mHAf/"
+	by mail.kernel.org (Postfix) with ESMTP id 09F3B24954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 16:51:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588351909;
+	bh=++sDVtfRPslmaRC40X9+zsZ1c0TFAxBbEziiGGuGPdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HYn/eOa0sYe8PtgNbBWpAbRHVYbsf3TF2m6X7f/8YCW3NBexLQzhCbsf1DLBRuyE4
+	 pRXtad1hK13qJC7wTY4pGm/sdKP9Ha9Rq81kZ2wtw2uD0Zfn74sWZ/EDmv3vEr3VR6
+	 vO5mCHRXzyvZt7G7qrBVDm6VVkiOvQWTpXX5HkWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbgEAQv0 (ORCPT
+        id S1729410AbgEAQvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 12:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729037AbgEAQv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 12:51:26 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E45C061A0C;
-        Fri,  1 May 2020 09:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=n9haxtTdPsM3vis4cWiRkPW5G3zM3/2eGW7TPtvZcg0=; b=p87mHAf/eQIlGRTsID1xTYHySL
-        J/rH6ksVY6LA5439Bej9XhV0gjyBcM5Dy1mOK/YsWR3TnpcrRtcIVEdj1IQs7UvD/cteEll0QPEYU
-        0M9x0qdYj2pksoPOoyS931xv+Fg0z1n10akc39gnNyLO2lqKVLrNRuVU9DMZujTYSNYlolFaPnJAM
-        6gj8/rADpagmQ0wTj3Wy3yQ6lf+G/9CcgxOvoEOKBny4E4p/293UyvisK4C7tYItpctAiEmP28+Wz
-        JgcssccVpeDPcNQ7Z7TV5FkW87ABLjT7Z9wvh8YCKv2fGKYXUUXIah8DQBxc1r02zuVLuQCXmuTpo
-        fWrEaLhA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUYsg-0007Ss-CO; Fri, 01 May 2020 16:51:18 +0000
-Subject: Re: [PATCH] streamline_config.pl: add LOCALMODCONFIG_PRESERVE to
- preserve some kconfigs
-To:     Changbin Du <changbin.du@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-References: <20200501023708.108830-1-changbin.du@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <07f3fe15-ae8d-c11a-c29f-ed9c51c2addc@infradead.org>
-Date:   Fri, 1 May 2020 09:51:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 12:51:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728919AbgEAQvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 12:51:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FEA32173E;
+        Fri,  1 May 2020 16:51:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588351907;
+        bh=++sDVtfRPslmaRC40X9+zsZ1c0TFAxBbEziiGGuGPdw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WngqC7Pp4qUBPz23YQI6VXXQbL775RJYV1qHAbUnahMAU7i97p+hdeoTrHVZJmTc6
+         7eInjZEqMYXE9+rjz9GElVbALjjynHJg27bEE+WfpjG2pCDIB0KUOK498PLlFL+ilo
+         ZykZT9G0ACcVZ5kT76jLEejG1Jky7AZu9EVDwWGI=
+Date:   Fri, 1 May 2020 18:51:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] blktrace: break out of blktrace setup on
+ concurrent calls
+Message-ID: <20200501165145.GA2085362@kroah.com>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-6-mcgrof@kernel.org>
+ <20200429094937.GB2081185@kroah.com>
+ <20200501150626.GM11244@42.do-not-panic.com>
 MIME-Version: 1.0
-In-Reply-To: <20200501023708.108830-1-changbin.du@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501150626.GM11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/20 7:37 PM, Changbin Du wrote:
-> Sometimes it is useful to preserve batches of configs when making
-> localmodconfig. For example, I usually don't want any usb and fs
-> modules to be disabled. Now we can do it by:
+On Fri, May 01, 2020 at 03:06:26PM +0000, Luis Chamberlain wrote:
+> On Wed, Apr 29, 2020 at 11:49:37AM +0200, Greg KH wrote:
+> > On Wed, Apr 29, 2020 at 07:46:26AM +0000, Luis Chamberlain wrote:
+> > > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> > > index 5c52976bd762..383045f67cb8 100644
+> > > --- a/kernel/trace/blktrace.c
+> > > +++ b/kernel/trace/blktrace.c
+> > > @@ -516,6 +518,11 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+> > >  	 */
+> > >  	strreplace(buts->name, '/', '_');
+> > >  
+> > > +	if (q->blk_trace) {
+> > > +		pr_warn("Concurrent blktraces are not allowed\n");
+> > > +		return -EBUSY;
+> > 
+> > You have access to a block device here, please use dev_warn() instead
+> > here for that, that makes it obvious as to what device a "concurrent
+> > blktrace" was attempted for.
 > 
->  $ make LOCALMODCONFIG_PRESERVE="drivers/usb;fs" localmodconfig
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  Documentation/admin-guide/README.rst |  8 +++++++-
->  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
->  2 files changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> index cc6151fc0845..6deff95362f8 100644
-> --- a/Documentation/admin-guide/README.rst
-> +++ b/Documentation/admin-guide/README.rst
-> @@ -209,10 +209,16 @@ Configuring the kernel
->                             store the lsmod of that machine into a file
->                             and pass it in as a LSMOD parameter.
->  
-> +                           Also, you can preserve modules in certen folders
+> The block device may be empty, one example is for scsi-generic, but I'll
+> use buts->name.
 
-typo:                                                           certain
+That's fine, give us a chance to know what went wrong, your line as is
+does not do that :(
 
-> +                           or kconfig files by spcifying there paths in
+thanks,
 
-again:                                            specifying their
-
-> +                           parameter LOCALMODCONFIG_PRESERVE.
-> +
->                     target$ lsmod > /tmp/mylsmod
->                     target$ scp /tmp/mylsmod host:/tmp
->  
-> -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> +                   host$ make LSMOD=/tmp/mylsmod \
-> +                           LOCALMODCONFIG_PRESERVE="drivers/usb;drivers/gpu;fs" \
-> +                           localmodconfig
->  
->                             The above also works when cross compiling.
->  
-> diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-> index e2f8504f5a2d..ab5d1e10a5d0 100755
-> --- a/scripts/kconfig/streamline_config.pl
-> +++ b/scripts/kconfig/streamline_config.pl
-> @@ -143,6 +143,7 @@ my %depends;
->  my %selects;
->  my %prompts;
->  my %objects;
-> +my %config2kfile;
->  my $var;
->  my $iflevel = 0;
->  my @ifdeps;
-> @@ -201,6 +202,7 @@ sub read_kconfig {
->  	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
->  	    $state = "NEW";
->  	    $config = $2;
-> +	    $config2kfile{"CONFIG_$config"} = $kconfig;
->  
->  	    # Add depends for 'if' nesting
->  	    for (my $i = 0; $i < $iflevel; $i++) {
-> @@ -592,6 +594,22 @@ while ($repeat) {
->  
->  my %setconfigs;
->  
-> +my @presevered_kconfigs;
-> +@presevered_kconfigs = split(/;/,$ENV{LOCALMODCONFIG_PRESERVE}) if (defined($ENV{LOCALMODCONFIG_PRESERVE}));
-> +
-> +sub in_presevered_kconfigs {
-> +    my $kconfig = $config2kfile{$_[0]};
-> +    if (!defined($kconfig)) {
-> +        return 0;
-> +    }
-> +    foreach my $excl (@presevered_kconfigs) {
-> +        if($kconfig =~ /^$excl/) {
-> +            return 1;
-> +        }
-> +    }
-> +    return 0;
-> +}
-> +
->  # Finally, read the .config file and turn off any module enabled that
->  # we could not find a reason to keep enabled.
->  foreach my $line (@config_file) {
-> @@ -644,6 +662,11 @@ foreach my $line (@config_file) {
->      }
->  
->      if (/^(CONFIG.*)=(m|y)/) {
-> +        if (in_presevered_kconfigs($1)) {
-> +            dprint "Preserve config $1";
-> +            print;
-> +            next;
-> +        }
->  	if (defined($configs{$1})) {
->  	    if ($localyesconfig) {
->  	        $setconfigs{$1} = 'y';
-> 
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+greg k-h
