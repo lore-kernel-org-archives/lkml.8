@@ -1,157 +1,223 @@
 Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.3 required=3.0 tests=DEAR_SOMETHING,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FE6C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11203C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2B32073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71902173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=katerra.onmicrosoft.com header.i=@katerra.onmicrosoft.com header.b="JSExzm5T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xog+ZZ3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgEACLG (ORCPT
+        id S1728082AbgEACNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:11:06 -0400
-Received: from mail-bn7nam10on2102.outbound.protection.outlook.com ([40.107.92.102]:39008
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727889AbgEACLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:11:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WCisJ+tXF8j2N8vvHRHqxpXhjIZDLIV4XTSmD0aYJmcg+n8g0YprLIn6kaEEGcVniE8DOlstOtcZPwMWaAqhRiBTQFQMt/7n2BG0CUuhqbBAvJEmksCUA6YpVoandiKm/NpP+IxQAGLcPJjZ5lemKygqIFwZRBHyVl80VIRkpqkySho/S3oAGpvgPobvlRtYFD0Vxj3gDR6rIsaUzb9q1IBmE1fcIn57cfSrzl/wN4uo2XP35aru9i5vs7igqtpvw1dsOyRqM8QwsXMHRqixrM5pMwOq9DCRps2qYljjBHmR8oxvDCPPkUr5Vviv8uNm5sUdCM+9WyHto5+ijMiM6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFJ6ZVHxdHlU/pxACO7dZusCoygSqRqAOPLtk/vSgvg=;
- b=Nw9iLIZOpqgYAhHdbn4XBxmV3g9QQVIfFRE3FpiYdhSr1N2ARiZpxlTw/kH08xvOtHS93vRJCTxcv/U2cJL4sBGLgX+A0mkA4ZefSOANJRe0PnJ1YN8YFHc6gveEN/3q8LotH4Nx1yYEJXAZxBQA1JTyt8IHzIEqwBytOgJiraiMY6zVentaLr28Zpa/j9Tb+gVf0xm/htQURp1zyWOM6nt6BHug+Km8fLRQHO8LzufuH2yKYZmRUe1FH+1pXQJciGgOwqkDNaKM1c8WdaeoKJaKTc1gDhFj9Zs/gpUKGNGR6kvsYj3nU8zTj5HYKgeC8OzomJYVJIYxy9mTzQ/xhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=katerra.com; dmarc=pass action=none header.from=katerra.com;
- dkim=pass header.d=katerra.com; arc=none
+        Thu, 30 Apr 2020 22:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727889AbgEACNi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 22:13:38 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DD7C035494;
+        Thu, 30 Apr 2020 19:13:36 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id c2so3687042iow.7;
+        Thu, 30 Apr 2020 19:13:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=katerra.onmicrosoft.com; s=selector2-katerra-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFJ6ZVHxdHlU/pxACO7dZusCoygSqRqAOPLtk/vSgvg=;
- b=JSExzm5Tn5YIQtzT0OJCzySvWnqidtaKeS7li4en7B3r3GVDiz2n+NNqgm5uuVCnO6nkZROQwJAPeIuOzBCbliIxM3w7HvfRT/wZcpo8QYXqiDPE4E8pRITO0HYGCoS67eI+2NeWjZAWFXs6v8N8ZMYcUcbS+dXf3mIsDcUItlo=
-Received: from BY5PR11MB4118.namprd11.prod.outlook.com (2603:10b6:a03:191::19)
- by BY5PR11MB4070.namprd11.prod.outlook.com (2603:10b6:a03:181::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 1 May
- 2020 02:11:02 +0000
-Received: from BY5PR11MB4118.namprd11.prod.outlook.com
- ([fe80::5422:309d:653b:72ec]) by BY5PR11MB4118.namprd11.prod.outlook.com
- ([fe80::5422:309d:653b:72ec%7]) with mapi id 15.20.2937.023; Fri, 1 May 2020
- 02:11:01 +0000
-From:   Atul Kulkarni <Atul.Kulkarni@katerra.com>
-To:     "paulmck@kernel.org" <paulmck@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Reeves <Paul.Reeves@katerra.com>,
-        Mikhail Shoykher <Mikhail.Shoykher@katerra.com>
-Subject: RE: Need help on "Self Detected Stall on CPU"
-Thread-Topic: Need help on "Self Detected Stall on CPU"
-Thread-Index: AdYfH2sMtOQXo4fbTb+klSbNR9S/QgABI7KAAA4w5dA=
-Date:   Fri, 1 May 2020 02:11:01 +0000
-Message-ID: <BY5PR11MB411817B78A6FB4AF81FF2821E0AB0@BY5PR11MB4118.namprd11.prod.outlook.com>
-References: <BY5PR11MB4118B89CB3FAEB897AFC3819E0AA0@BY5PR11MB4118.namprd11.prod.outlook.com>
- <20200430191723.GX7560@paulmck-ThinkPad-P72>
-In-Reply-To: <20200430191723.GX7560@paulmck-ThinkPad-P72>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=katerra.com;
-x-originating-ip: [106.220.71.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cde4adca-e33a-4329-060e-08d7ed74e58d
-x-ms-traffictypediagnostic: BY5PR11MB4070:|BY5PR11MB4070:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB407089590CFFFC2863582C3EE0AB0@BY5PR11MB4070.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0390DB4BDA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(186003)(4326008)(478600001)(6916009)(107886003)(9686003)(33656002)(2906002)(52536014)(76116006)(8676002)(8936002)(86362001)(71200400001)(7696005)(5660300002)(53546011)(316002)(66556008)(66946007)(64756008)(66476007)(54906003)(66446008)(6506007)(26005)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nN9E4FuJRNRF6fTObUu26TJJDO+X9GoIYfH6iKeWIB2vTEH3nzfo/HonBtrzJEmMMQt1pgX7eNuj1w9fb+NcuAIrj/uiNCqvYEF9kPDev8nisX2WBn0aOQVRVmCLnBg+7eqBuqdZble/bo9/CxaS9mz92krSpdleUMDPPKp+8zgR48mgwE2bm9mvjroql1xSM4CB0fwfdVgs3Ns8RudH/qGdHxBJQ+NH4QEd7NagCxf2Eln9e0pRNObhnvi+0Zgf3K04oKjIempKVHdm5oBf4u8n9xrlo8ea9uMgkUUKR6M2Niff1jl+9KRJwA/KuhW3VRQP+Z5D0eYg5y34Mg65FXJgo2afspb/v2yY3ktoFXyJShxxKkkWLrUJGo+uIu+Rim+XMQ5zqvkOsKuXq5thMD7qXYJ3fvf/N2NRsGv+rjIQhubOj8K8Gm87hMRxYSC/
-x-ms-exchange-antispam-messagedata: THAxhcrAAbctRefyokNwI7TKefLkMB9Var8gPwsQ53mIujoR2BnrfjJQ6ci2f0XWbrEelZbrYbZFZwaBsq9y2LXg6aCP1XaGVyb1nobXK7pZTuHE/x/FKPNrqgJa2oq376zzL1dfj4odap/huiM9O8f2dtQ0q7q05vv1nYguZgvPArEPEceLx+RI07FrpvY2EH+SpI3RXe1k6mKrzZyq2V7X/pvV62fTqADIZeGsxB+k1YhJBbkn/waP3PRxZGRtS/+o14gnSF4VBUVzA32nbEn3m+9od/EvH5yNhpfOsVkTq3azah9gOG2x5kzN27RHgpLYIlwAZ4HHX1wUsOLPq8HkzI4H+e6jg4VrMnm1XFhTm7B84b0M3GoTp422QY9T614ESJfuHA0bQG1rGQs+itIjYy3bSkHhiBERUuL+6+GNU5VCw+Qq3XL9bWimU7rZajwThuiii9/keX8nkrlz4RmvOGL/SDB1PaazVRdzKDE1BY8aqVQkKuxY2pKOUBvvfkeHqBKgZyoRhGoNXDzA0VQ8PN2viCPRBV4ZUqmcyRiWIgfCURPgVlNUSAFLBCA8wesILla7LYMRMzAa0kBAYNZ7iNxR6PaBZywsoa9/i/d1pEej3IPpI0eVZpX1Zfcl7SmSNqoXXm04vVFFG0g+MFv2XDMXuatyhfOB2M4mfb7Cj0PTbFrcnEiIHFupjtYC/lZJaMRmd6aUy3wa4SuBcMDlt2GFk4NCF4hUigX3fkH07caGgkEt4GdFDqDVgq61QnC2Ke9GJAjzM+RuMn6Z2df2MVfbgLh6/I+mFm86Mic=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EYDJWeCLlhw8lr2MHLhmVsV4j9mOvkGGvmRilWGWRrg=;
+        b=Xog+ZZ3lCM/XaSVs+gBhESPLwp4WAlt3K7H146kG7Z6OxZj41VMjwJnXT9s0237dpB
+         76vjiueRHg/SNAru0/gtuf3l91l4oxhxmb5/7eL/SDC4k/AFQg+5u8uUXvtlQe0pYsp1
+         kmV2qpDLJxmzAS57vYTIDZPyMZ/L/Vh538ALb35lYy2T9/Jf4IzLli2P/PV9VC5czGcG
+         QXImWSoImGoev+0CYE7RKP6UKUoKP12x6/KC0ActMx6SzeN/o8EEAntBDBAYQ4aKFAKG
+         b4MT7QU1JXNPMA6mQFNCPs+5bsFUcN3KbIioAHnyazIpPH91oFDb3sLkoT+/I56sw3nM
+         dm/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EYDJWeCLlhw8lr2MHLhmVsV4j9mOvkGGvmRilWGWRrg=;
+        b=Q6/L0fGpStxD7CR1Yn9LEg+bQfQX/5Gj95gSgTC9cQMIeayjAz88gYn2G7LfgHix1R
+         Fe51om95+FeeMDmnd5HmduSQ7JtE0jF/XGQ7b4acj4M2mLGOcwILFhLsx+lkywzT0RiG
+         OfxzoGULnbSiU34QukIBcJqhEXS4GgUsXOmqs+1+a2GffYwjz2DdpY8GR+A50VAfJv39
+         YkwN1EsFXUWFFyFZ6LAeBpdxgxiwJqZ/O97HrPyNsHgOOqpbW+OUiqrlmVznppwG1J+J
+         OsY3N9Kk/T3auqo7JHe2MVHERezm/v74oqOAi2S/+zitrgcRMsWoLdcsoNJ7CIWG31AH
+         RDvw==
+X-Gm-Message-State: AGi0PuarO+2qHnUIUIAnwrZ84FGmshEVF2y02QLQtCI1lV0IYg1N4slT
+        FkshT6W3D8vm0xuLy+7ok2y5F8y8UsfiwcCfZmE=
+X-Google-Smtp-Source: APiQypKGz0Gne2nX+o+Qe1qKhOhnsWZuQcjrp1Y5mU4C2lDwzd9brFql0s85v6OJ6EpdeCnNPCbyDLk7pi82FXc9Vvc=
+X-Received: by 2002:a02:ccad:: with SMTP id t13mr1381837jap.64.1588299215975;
+ Thu, 30 Apr 2020 19:13:35 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: katerra.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cde4adca-e33a-4329-060e-08d7ed74e58d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2020 02:11:01.7799
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 82a61cce-7c23-4d88-931c-13b9a487cb25
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +16lDxl//4eqzCreK61tNmW9QTbSnsASyXg2tJSgeC7hDqC24vecPo8mA+0UApYLbxmTNAlD16S7HX1sIKGcSO7Js3hkgNpSE4Z9AXPAi1k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4070
+References: <20200430182712.237526-1-shakeelb@google.com> <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
+ <CALvZod4gZ_Q=Kuh-Fx-EsKzxmtPKy5xu+gpPpjV6MYW4Ku=JbA@mail.gmail.com>
+In-Reply-To: <CALvZod4gZ_Q=Kuh-Fx-EsKzxmtPKy5xu+gpPpjV6MYW4Ku=JbA@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 1 May 2020 10:12:59 +0800
+Message-ID: <CALOAHbC03gBh6d61yy0T6Vcy5jwNUS3EN7wE_Udx-zLyxT0COw@mail.gmail.com>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you sir for your guidance and quick response.
+On Fri, May 1, 2020 at 10:04 AM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Thu, Apr 30, 2020 at 6:39 PM Yafang Shao <laoar.shao@gmail.com> wrote:
+> >
+> > On Fri, May 1, 2020 at 2:27 AM Shakeel Butt <shakeelb@google.com> wrote:
+> > >
+> > > Lowering memory.max can trigger an oom-kill if the reclaim does not
+> > > succeed. However if oom-killer does not find a process for killing, it
+> > > dumps a lot of warnings.
+> > >
+> >
+> > I have been confused by this behavior for several months and I think
+> > it will confuse more memcg users.
+> > We should keep the memcg oom behavior consistent with system oom - no
+> > oom kill if no process.
+> >
+> > What about bellow change ?
+> >
+>
+> Seems fine to me. If others are ok with this, please do send a signed-off patch.
+>
 
-Let me introduce my colleagues Paul and Mikhail here (copied in CC). They w=
-ould be taking actions based on your guidance in this email and may reach y=
-ou with further queries.
+Sure, I will.
 
-Appreciate your support and help.
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index e28098e13f1c..25fbc37a747f 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -6086,6 +6086,9 @@ static ssize_t memory_max_write(struct
+> > kernfs_open_file *of,
+> >                         continue;
+> >                 }
+> >
+> > +               if (!cgroup_is_populated(memcg->css.cgroup))
+> > +                       break;
+> > +
+> >                 memcg_memory_event(memcg, MEMCG_OOM);
+> >                 if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
+> >                         break;
+> >
+> > > Deleting a memcg does not reclaim memory from it and the memory can
+> > > linger till there is a memory pressure. One normal way to proactively
+> > > reclaim such memory is to set memory.max to 0 just before deleting the
+> > > memcg. However if some of the memcg's memory is pinned by others, this
+> > > operation can trigger an oom-kill without any process and thus can log a
+> > > lot un-needed warnings. So, ignore all such warnings from memory.max.
+> > >
+> > > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > > ---
+> > >  include/linux/oom.h | 3 +++
+> > >  mm/memcontrol.c     | 9 +++++----
+> > >  mm/oom_kill.c       | 2 +-
+> > >  3 files changed, 9 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/include/linux/oom.h b/include/linux/oom.h
+> > > index c696c265f019..6345dc55df64 100644
+> > > --- a/include/linux/oom.h
+> > > +++ b/include/linux/oom.h
+> > > @@ -52,6 +52,9 @@ struct oom_control {
+> > >
+> > >         /* Used to print the constraint info. */
+> > >         enum oom_constraint constraint;
+> > > +
+> > > +       /* Do not warn even if there is no process to be killed. */
+> > > +       bool no_warn;
+> > >  };
+> > >
+> > >  extern struct mutex oom_lock;
+> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > > index 317dbbaac603..a1f00d9b9bb0 100644
+> > > --- a/mm/memcontrol.c
+> > > +++ b/mm/memcontrol.c
+> > > @@ -1571,7 +1571,7 @@ unsigned long mem_cgroup_size(struct mem_cgroup *memcg)
+> > >  }
+> > >
+> > >  static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+> > > -                                    int order)
+> > > +                                    int order, bool no_warn)
+> > >  {
+> > >         struct oom_control oc = {
+> > >                 .zonelist = NULL,
+> > > @@ -1579,6 +1579,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+> > >                 .memcg = memcg,
+> > >                 .gfp_mask = gfp_mask,
+> > >                 .order = order,
+> > > +               .no_warn = no_warn,
+> > >         };
+> > >         bool ret;
+> > >
+> > > @@ -1821,7 +1822,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
+> > >                 mem_cgroup_oom_notify(memcg);
+> > >
+> > >         mem_cgroup_unmark_under_oom(memcg);
+> > > -       if (mem_cgroup_out_of_memory(memcg, mask, order))
+> > > +       if (mem_cgroup_out_of_memory(memcg, mask, order, false))
+> > >                 ret = OOM_SUCCESS;
+> > >         else
+> > >                 ret = OOM_FAILED;
+> > > @@ -1880,7 +1881,7 @@ bool mem_cgroup_oom_synchronize(bool handle)
+> > >                 mem_cgroup_unmark_under_oom(memcg);
+> > >                 finish_wait(&memcg_oom_waitq, &owait.wait);
+> > >                 mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
+> > > -                                        current->memcg_oom_order);
+> > > +                                        current->memcg_oom_order, false);
+> > >         } else {
+> > >                 schedule();
+> > >                 mem_cgroup_unmark_under_oom(memcg);
+> > > @@ -6106,7 +6107,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+> > >                 }
+> > >
+> > >                 memcg_memory_event(memcg, MEMCG_OOM);
+> > > -               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
+> > > +               if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0, true))
+> > >                         break;
+> > >         }
+> > >
+> > > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > > index 463b3d74a64a..5ace39f6fe1e 100644
+> > > --- a/mm/oom_kill.c
+> > > +++ b/mm/oom_kill.c
+> > > @@ -1098,7 +1098,7 @@ bool out_of_memory(struct oom_control *oc)
+> > >
+> > >         select_bad_process(oc);
+> > >         /* Found nothing?!?! */
+> > > -       if (!oc->chosen) {
+> > > +       if (!oc->chosen && !oc->no_warn) {
+> > >                 dump_header(oc, NULL);
+> > >                 pr_warn("Out of memory and no killable processes...\n");
+> > >                 /*
+> > > --
+> > > 2.26.2.526.g744177e7f7-goog
+> > >
+> > >
+> >
+> >
+> > --
+> > Thanks
+> > Yafang
 
-Thanks,
-Atul
 
------Original Message-----
-From: Paul E. McKenney <paulmck@kernel.org>=20
-Sent: 01 May 2020 00:47
-To: Atul Kulkarni <Atul.Kulkarni@katerra.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: Need help on "Self Detected Stall on CPU"
 
-On Thu, Apr 30, 2020 at 06:47:20PM +0000, Atul Kulkarni wrote:
-> Dear Sir,
->=20
-> Hope you are doing well.  I have watched your various conference videos a=
-nd have read technical papers.
-> We are facing an issue with CPU stall on our systems and I felt like ther=
-e is no one better who can guide us on how we can deal with it.
->=20
-> I have attached logs for your reference. Towards end I have run couple of=
- sysreq commands and have taken crash dump using sysreq which may help prov=
-ide additional information.
-> Could you please guide us on how we could fix  this issue or identify wha=
-t is going wrong here?
-
-Let's focus on the first few lines of your console message:
-
-[20526.345089] INFO: rcu_preempt self-detected stall on CPU [20526.351110] =
- 0-...: (1051 ticks this GP) idle=3D1fe/140000000000002/0 softirq=3D146268/=
-146268 fqs=3D0
-[20526.360163]   (t=3D2101 jiffies g=3D96468 c=3D96467 q=3D2)
-[20526.365535] rcu_preempt kthread starved for 2101 jiffies! g96468 c96467 =
-f0x0 RCU_GP_WAIT_FQS(3) ->state=3D0x402 ->cpu=3D0
-
-The last line contains the hint, namely "rcu_preempt kthread starved for
-2101 jiffies!"  If you don't let RCU's kernel threads run, then RCU CPU sta=
-ll warnings are expected behavior.
-
-The "RCU_GP_WAIT_FQS(3)" means that this kthread's last act was to sleep fo=
-r three jiffies.  As you can see from earlier in that same line, that was 2=
-101 jiffies ago.  The "->state=3D0x402" means that the scheduler believes t=
-hat this kthread is blocked, that is not yet runnable.
-
-The usual way this sort of thing happens is a timer problem, be it a hardwa=
-re configuration problem, a timer-driver bug, an interrupt-handling problem=
-, and so on.  This sort of problem is especially common when bringing up ne=
-w hardware or when modifying timer code or when modifying code on the inter=
-rupt/exception paths.
-
-So the question to ask yourself is "Why is the timer wakeup not reaching th=
-is kthread?", with special attention to changed code and new hardware.
-
-							Thanx, Paul
+-- 
+Thanks
+Yafang
