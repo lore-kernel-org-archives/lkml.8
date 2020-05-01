@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578B1C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D913C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31F4C208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA20208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339924;
-	bh=hsqNaKKlfFUobAtuu5bXo+fEnWq/rXn9x2jK23bzFZQ=;
+	s=default; t=1588339928;
+	bh=8TbDRuEl7SW/hnCTYxbSPFoal6+jcufVGTTSkOU1tjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eDJu8XsmvamlHDWgNx+niBV19EBXJuxiLi7uHxexefVsYgcrgvm5z+fEHzkCfMqCR
-	 PnJDRhHNuVfS4TBfFInRqZpAxahESMOubbcEzCFn3o4k6h0bbknHO+rqWffp6QaE0S
-	 PnMYxtzPE7rHF0I0XwaL9egldyDvQFubjhfqalUg=
+	b=Dd8qwNpckVG39DEDknEhcA8EtzqoFYHKaueutxbOtyQ1Exc13StHfwm7vDfSvwe3Q
+	 a7uTa9sfMQwXtxnbjS/JTgxmPwUo51Mujoa4IAJtZhkcGU9EL1Y8V8KFvwx/wFSltZ
+	 WCiRlCoM/+sza9EMrtxqOSsYuVzLiw3xEijuDRQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbgEANcD (ORCPT
+        id S1729095AbgEANcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56688 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:32:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbgEANb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:56 -0400
+        id S1729353AbgEANcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 627F32166E;
-        Fri,  1 May 2020 13:31:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9D3E208C3;
+        Fri,  1 May 2020 13:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339915;
-        bh=hsqNaKKlfFUobAtuu5bXo+fEnWq/rXn9x2jK23bzFZQ=;
+        s=default; t=1588339923;
+        bh=8TbDRuEl7SW/hnCTYxbSPFoal6+jcufVGTTSkOU1tjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eps2Ov2oVFEgjdxA5jwI3ZigPSm+203RzwhiM929hq5DanC3szBwQ/iB3rdmVYh+N
-         Uees8x10VnG719E705ZhMAbBIfaHa0gkimbUi1lUHwamwZzx8l0ACDRlQa9774gRL2
-         nU2UqQK2ARSWjquPUSgYZstUDsou9uxkbuUTm9uk=
+        b=xzxi6t11NgSMGFU0p++M3v/gre/XdDiHpKmhUqPSIrTANwGJUJc7AURnDeFJyoCEf
+         QKcH32Q3fFWdpuLPYFBUVBu5KCmeDoHU+4SOxjtQ6qGM/25wow9ppbgIfomy3vjrtJ
+         nM9zT38rQcwV7P07nOlJGKAtblygqqklNR8LtgHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 018/117] s390/cio: avoid duplicated ADD uevents
-Date:   Fri,  1 May 2020 15:20:54 +0200
-Message-Id: <20200501131547.232779677@linuxfoundation.org>
+Subject: [PATCH 4.14 021/117] perf/core: Disable page faults when getting phys address
+Date:   Fri,  1 May 2020 15:20:57 +0200
+Message-Id: <20200501131547.532803973@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -62,63 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit 05ce3e53f375295c2940390b2b429e506e07655c ]
+[ Upstream commit d3296fb372bf7497b0e5d0478c4e7a677ec6f6e9 ]
 
-The common I/O layer delays the ADD uevent for subchannels and
-delegates generating this uevent to the individual subchannel
-drivers. The io_subchannel driver will do so when the associated
-ccw_device has been registered -- but unconditionally, so more
-ADD uevents will be generated if a subchannel has been unbound
-from the io_subchannel driver and later rebound.
+We hit following warning when running tests on kernel
+compiled with CONFIG_DEBUG_ATOMIC_SLEEP=y:
 
-To fix this, only generate the ADD event if uevents were still
-suppressed for the device.
+ WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
+ CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
+ RIP: 0010:__get_user_pages_fast+0x1a4/0x200
+ ...
+ Call Trace:
+  perf_prepare_sample+0xff1/0x1d90
+  perf_event_output_forward+0xe8/0x210
+  __perf_event_overflow+0x11a/0x310
+  __intel_pmu_pebs_event+0x657/0x850
+  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
+  handle_pmi_common+0x1b2/0x650
+  intel_pmu_handle_irq+0x17b/0x370
+  perf_event_nmi_handler+0x40/0x60
+  nmi_handle+0x192/0x590
+  default_do_nmi+0x6d/0x150
+  do_nmi+0x2f9/0x3c0
+  nmi+0x8e/0xd7
 
-Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-Message-Id: <20200327124503.9794-2-cohuck@redhat.com>
-Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+While __get_user_pages_fast() is IRQ-safe, it calls access_ok(),
+which warns on:
+
+  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
+
+Peter suggested disabling page faults around __get_user_pages_fast(),
+which gets rid of the warning in access_ok() call.
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/20200407141427.3184722-1-jolsa@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/device.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ kernel/events/core.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index e5c32f4b5287e..d2203cd178138 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -828,8 +828,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
- 	 * Now we know this subchannel will stay, we can throw
- 	 * our delayed uevent.
- 	 */
--	dev_set_uevent_suppress(&sch->dev, 0);
--	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	if (dev_get_uevent_suppress(&sch->dev)) {
-+		dev_set_uevent_suppress(&sch->dev, 0);
-+		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+	}
- 	/* make it known to the system */
- 	ret = ccw_device_add(cdev);
- 	if (ret) {
-@@ -1037,8 +1039,11 @@ static int io_subchannel_probe(struct subchannel *sch)
- 		 * Throw the delayed uevent for the subchannel, register
- 		 * the ccw_device and exit.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 845c8a1a9d30a..c16ce11049de3 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6119,9 +6119,12 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe __get_user_pages_fast first.
+ 		 * If failed, leave phys_addr as 0.
  		 */
--		dev_set_uevent_suppress(&sch->dev, 0);
--		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-+		if (dev_get_uevent_suppress(&sch->dev)) {
-+			/* should always be the case for the console */
-+			dev_set_uevent_suppress(&sch->dev, 0);
-+			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
+-		if ((current->mm != NULL) &&
+-		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
+-			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++		if (current->mm != NULL) {
++			pagefault_disable();
++			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
++				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++			pagefault_enable();
 +		}
- 		cdev = sch_get_cdev(sch);
- 		rc = ccw_device_add(cdev);
- 		if (rc) {
+ 
+ 		if (p)
+ 			put_page(p);
 -- 
 2.20.1
 
