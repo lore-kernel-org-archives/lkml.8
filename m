@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DD1C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE39C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABE8208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44F0216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339768;
-	bh=EjXI4xnL4Cjprb4Aa93w3O2TXHlJhQK22RWF6FH/Ry8=;
+	s=default; t=1588339772;
+	bh=9brijW7GuhDSeY1AtCRbki20nRFuzUWvoIMQLuBG7Rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2aQlHB20X20oGg77BUhcNFOVC1f90aPrOuy1yMAQERgz7neJpbnSiM2nlf8l+FjJ
-	 +blhoUFCgnbm+ciaIZSva9pmkyxRBgb48oX7/8I96yDtSsAdfkXfiy/DJn/5itkmDN
-	 2Qp8RO3jWIxroL4zkty+fZLbtxgEXWk0dQ4VsE8M=
+	b=fzm71ia4A9NWk3JkW7IzmSVLc44lKlDJZLmyvcVDdEPmX2JZ1Ls3WdzPPnWPnuwoA
+	 hQUz7Th93CzMFHVD3a9/zOWXzCf+zj0y5dlDifmvGGVu/Av83GvGcaA8YaAHpvSu4A
+	 +Eoguug4yPvVLoNoI114pF+gGB3inWjnzK5cXCQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbgEAN31 (ORCPT
+        id S1729792AbgEAN3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52904 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:29:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729771AbgEAN3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:24 -0400
+        id S1729771AbgEAN32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A63208D6;
-        Fri,  1 May 2020 13:29:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEED0208D6;
+        Fri,  1 May 2020 13:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339763;
-        bh=EjXI4xnL4Cjprb4Aa93w3O2TXHlJhQK22RWF6FH/Ry8=;
+        s=default; t=1588339768;
+        bh=9brijW7GuhDSeY1AtCRbki20nRFuzUWvoIMQLuBG7Rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4NhUao0BwI6I/ItMi5qLrRT5G3C9Pln2CqVj3n/kcNuzNA2XVRQlhDPDlrAQeA+Y
-         CC6CKFhhsoZCp6NUJPjistvfRuD5Iwz7XSAsyVpawIqbyEA9tiEu9L+1Hqb1KTs/ZQ
-         S198ZvisAhvnGA9Ptce4hl4ZUnqRV3bCRz275VLI=
+        b=0S4pNUGmsRr/aVvgYFGOzo2wPXud3AkztnAmcx66WTdDiLfF98AxY+FRkSNTTOJVU
+         WghEKZsktFXLwBr+S56hhN29SR4OuB8ugZukVMjwahXKJAmnwm39qI95+1jb2d9XST
+         +9ulYQi4UtFP4BIhoTyN4rjqOOq5pri1NVAzjRCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.9 38/80] overflow.h: Add arithmetic shift helper
-Date:   Fri,  1 May 2020 15:21:32 +0200
-Message-Id: <20200501131525.845641274@linuxfoundation.org>
+        stable@vger.kernel.org, Lin Yi <teroincn@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 40/80] ALSA: usx2y: Fix potential NULL dereference
+Date:   Fri,  1 May 2020 15:21:34 +0200
+Message-Id: <20200501131526.254332322@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -60,60 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 0c66847793d1982d1083dc6f7adad60fa265ce9c upstream.
+commit 7686e3485253635c529cdd5f416fc640abaf076f upstream.
 
-Add shift_overflow() helper to assist driver authors in ensuring that
-shift operations don't cause overflows or other odd conditions.
+The error handling code in usX2Y_rate_set() may hit a potential NULL
+dereference when an error occurs before allocating all us->urb[].
+Add a proper NULL check for fixing the corner case.
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-[kees: tweaked comments and commit log, dropped unneeded assignment]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Reported-by: Lin Yi <teroincn@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200420075529.27203-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/overflow.h |   31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ sound/usb/usx2y/usbusx2yaudio.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -202,4 +202,35 @@
- 
- #endif /* COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW */
- 
-+/** check_shl_overflow() - Calculate a left-shifted value and check overflow
-+ *
-+ * @a: Value to be shifted
-+ * @s: How many bits left to shift
-+ * @d: Pointer to where to store the result
-+ *
-+ * Computes *@d = (@a << @s)
-+ *
-+ * Returns true if '*d' cannot hold the result or when 'a << s' doesn't
-+ * make sense. Example conditions:
-+ * - 'a << s' causes bits to be lost when stored in *d.
-+ * - 's' is garbage (e.g. negative) or so large that the result of
-+ *   'a << s' is guaranteed to be 0.
-+ * - 'a' is negative.
-+ * - 'a << s' sets the sign bit, if any, in '*d'.
-+ *
-+ * '*d' will hold the results of the attempted shift, but is not
-+ * considered "safe for use" if false is returned.
-+ */
-+#define check_shl_overflow(a, s, d) ({					\
-+	typeof(a) _a = a;						\
-+	typeof(s) _s = s;						\
-+	typeof(d) _d = d;						\
-+	u64 _a_full = _a;						\
-+	unsigned int _to_shift =					\
-+		_s >= 0 && _s < 8 * sizeof(*d) ? _s : 0;		\
-+	*_d = (_a_full << _to_shift);					\
-+	(_to_shift != _s || *_d < 0 || _a < 0 ||			\
-+		(*_d >> _to_shift) != _a);				\
-+})
-+
- #endif /* __LINUX_OVERFLOW_H */
+--- a/sound/usb/usx2y/usbusx2yaudio.c
++++ b/sound/usb/usx2y/usbusx2yaudio.c
+@@ -691,6 +691,8 @@ static int usX2Y_rate_set(struct usX2Yde
+ 			us->submitted =	2*NOOF_SETRATE_URBS;
+ 			for (i = 0; i < NOOF_SETRATE_URBS; ++i) {
+ 				struct urb *urb = us->urb[i];
++				if (!urb)
++					continue;
+ 				if (urb->status) {
+ 					if (!err)
+ 						err = -ENODEV;
 
 
