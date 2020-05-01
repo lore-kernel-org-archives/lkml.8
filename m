@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF5AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F11C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF5D216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F3720836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340651;
-	bh=SAmhZ94kAm6nE8pFR6LQ+iQqbeuid7sTq8jwZcfG5/k=;
+	s=default; t=1588340656;
+	bh=f5gA1/aIFeOtSaG/MyaRYS8peF9JIhvDtG2xbcm4O/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WF3k+VwNDVr9KGg/OtzeJP6a8zSwGgdkeJ1Aj8ts6S2VMEZ3mdUWyIKeQWUjr1Sop
-	 UeJbZVzmXFMMN9ai0+t0vQSp0QnSpNy3tCryHoDweurPCUxWezjpUrSjgzo/B9cnGz
-	 fpUmK5sgJvKzVhMyj7dSl87EguDgF9M+Het/vQvM=
+	b=QgB1BCaowLJZSSk8GxEcL04bBy7PV1CpeDBOw9/MeNxdvWGW6zYNk7GLzdrQKReQh
+	 qWHrp5rpcXq2Lf1eGI5HlohokCo6g6n2Fxafn9qJeAZOGJ+AK7y8kBpijAVlMpBmrH
+	 3iid0zEeI+CvGyDAOudfh+xFcQI9SxXjgRCbglO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731720AbgEANoK (ORCPT
+        id S1731265AbgEANoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731717AbgEANoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:07 -0400
+        id S1731439AbgEANoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A89FB205C9;
-        Fri,  1 May 2020 13:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DCC420836;
+        Fri,  1 May 2020 13:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340647;
-        bh=SAmhZ94kAm6nE8pFR6LQ+iQqbeuid7sTq8jwZcfG5/k=;
+        s=default; t=1588340649;
+        bh=f5gA1/aIFeOtSaG/MyaRYS8peF9JIhvDtG2xbcm4O/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RtXF8czHrqkHqjiVyL76DLhmhdYjUPZB7iSOYmULv4oFIa32IMRqGVXCNoT92T4gq
-         QLxAqGZW+NE+o6JVfsoZ1b/P3Yrjb/r5U+1JWwEba0f5twL5IFG3QAso+xGXYQMqoz
-         lWcvD/Xrsgi6PN6FNCrX3h/gC3x8y/kFmM9AYWX4=
+        b=UemDTjWZVRneklzZpJ3Tts22BaUJEhU/xtR4vwXFIasaXJ/wg+d4+GdC7ec8g06LP
+         zwYptXUui5YJyVDoG41T322ENveBqd2xPYjEfSjHALY4Ly/nWIVfKEzKjPhncAHRlM
+         jygrXEghTGwFAikODdcyAP6EeQ4B5V4csD+UGcH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 071/106] signal: check sig before setting info in kill_pid_usb_asyncio
-Date:   Fri,  1 May 2020 15:23:44 +0200
-Message-Id: <20200501131552.648364843@linuxfoundation.org>
+Subject: [PATCH 5.6 080/106] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
+Date:   Fri,  1 May 2020 15:23:53 +0200
+Message-Id: <20200501131553.390611987@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,45 +64,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit eaec2b0bd30690575c581eebffae64bfb7f684ac ]
+[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
 
-In kill_pid_usb_asyncio, if signal is not valid, we do not need to
-set info struct.
+CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
+unreachable code path.  This includes __builtin_unreachable().  Because
+the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
+this results in a double UD2.  In this case objtool rightfully detects
+that the second UD2 is unreachable:
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/f525fd08-1cf7-fb09-d20c-4359145eb940@huawei.com
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+
+We weren't able to figure out a way to get rid of the double UD2s, so
+just silence the warning.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/signal.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/objtool/check.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 7938c60e11dd2..9abf962bbde47 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1510,15 +1510,15 @@ int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
- 	unsigned long flags;
- 	int ret = -EINVAL;
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 2b765bbbef922..95c485d3d4d83 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2307,14 +2307,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
+ 	    !strcmp(insn->sec->name, ".altinstr_aux"))
+ 		return true;
  
-+	if (!valid_signal(sig))
-+		return ret;
++	if (!insn->func)
++		return false;
 +
- 	clear_siginfo(&info);
- 	info.si_signo = sig;
- 	info.si_errno = errno;
- 	info.si_code = SI_ASYNCIO;
- 	*((sigval_t *)&info.si_pid) = addr;
++	/*
++	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
++	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
++	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
++	 * (or occasionally a JMP to UD2).
++	 */
++	if (list_prev_entry(insn, list)->dead_end &&
++	    (insn->type == INSN_BUG ||
++	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
++	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
++		return true;
++
+ 	/*
+ 	 * Check if this (or a subsequent) instruction is related to
+ 	 * CONFIG_UBSAN or CONFIG_KASAN.
+ 	 *
+ 	 * End the search at 5 instructions to avoid going into the weeds.
+ 	 */
+-	if (!insn->func)
+-		return false;
+ 	for (i = 0; i < 5; i++) {
  
--	if (!valid_signal(sig))
--		return ret;
--
- 	rcu_read_lock();
- 	p = pid_task(pid, PIDTYPE_PID);
- 	if (!p) {
+ 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
 -- 
 2.20.1
 
