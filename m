@@ -2,73 +2,75 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8063AC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F89C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E79B20731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C3620731
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:54:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pn/yiNkH"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Nx7BXMoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgEARyG (ORCPT
+        id S1730180AbgEARyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
+        Fri, 1 May 2020 13:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729291AbgEARyF (ORCPT
+        by vger.kernel.org with ESMTP id S1729973AbgEARyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:54:05 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D03C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:54:04 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id m5so5133011ilj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:54:04 -0700 (PDT)
+        Fri, 1 May 2020 13:54:38 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3343BC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:54:37 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id u11so5629375iow.4
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=dNu8cTkVAel6kkIGd2Z1GoaI4LYxnwwQdrPVYtjvHuw=;
-        b=pn/yiNkH2BolGsTY90r0F9u4gIdfHJl1zOjp55qnb3xiTh9PzYpVb2A1N8O9DP1Svv
-         w2NTNPf3TsfRpH9JftZ8IWVEkjOEC7RlENqSXU19puWMiK7krEinB/et2+ZMqzT/gFKS
-         DovjjVYTXGh1Wt4C+aNh80QnF58iHc9T1ujPPlCI+PcIWU3witBQMS3lVFb8S0tD3o8H
-         /OoekF/TkEbA7KQBvYXZmrGvqt9xsaRY9kWY2wL110pCnIlQI2J50s7dSq6n2uWS/gi6
-         o7CAcrG3VbW55MnpPp/1EclkTQC+T4OJ8m0Kg3Rl0gPDFlaga53kpX4+hK2aG49p9DYY
-         qVoQ==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Uhch7fSB/7Ki1vYFi3Z0iSi1LX7KXkljEn4AyEBquZE=;
+        b=Nx7BXMoSRhrWDV3OPwFEVATv5EIqod9Ke6TsglxqcaGtC5ZebrOKW3kUTkIyjnrbcv
+         drFHpu/isCG0aTZ9FZXSEf0Z54ZWsTcJlUx1ZlPTt8Nk9CchbeugUMSdwFQfMH9GYZ/P
+         Z5tf9J4N5cJ/CQHjxrLNoNQeGKHlS0Cjmoe+0+YCR5LqTlIgEzCyld0X4zHtA6qPLERc
+         Foi3m/rwrIOXx23Ap+0gIWMeZfh33maZDqF/jrVORJwzHr/jyja9Qf9om/FUQkeiZmfc
+         SACzicfCTmKby6ww6lOeYtQNXhgfaYUMydg++Oy9fy8YV+Wy3vfn6C3YzNAC9crGLKpu
+         Hvhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=dNu8cTkVAel6kkIGd2Z1GoaI4LYxnwwQdrPVYtjvHuw=;
-        b=FE03Ti1yPxgFvqou340dzCFojP3D4+25RbdAABNqpiyLlgdTtojQtzilNOSVxBAtuL
-         h8CgCrIioLQuEeXwABE1wuwwJzukDz2rkOHGg+c/bieAcoLnIWg9qU/HrnJKB25iLUi6
-         JDgDhRLCpP/qEWvtx18Q1NYIuvQhiikNTTpKUQ5Fu8VEdH45atcS3hEx5R1G1b+2wIO9
-         u7O0AlaS3zPc7yivFea7Wm2BoCzuEAJlvkBMlPx7f0zpIU8VQYCRWkQlCMw+mR2+DDUz
-         pxrdwBKdjlCykWKdMdz0ZAAdrEwvwldOweoFy7AN5akghF2swXj7An2G6DF2+jXaqXyc
-         sfHQ==
-X-Gm-Message-State: AGi0PuZsKHUcRZeb6O5RVrjyA03eeQ54HDmDFvpa3R992ypIOf3V4VIf
-        kTja+HWP9ggA+L0PRr9Ct7hbM3IWAeu47A==
-X-Google-Smtp-Source: APiQypLC47NdRLDraisAQcHfyWfCaDlj787RuTHv7zD4S6HnvPYtPXq2e7lDVuNbH+p/xQT2nAZGYA==
-X-Received: by 2002:a92:b6c4:: with SMTP id m65mr4851455ill.232.1588355643108;
-        Fri, 01 May 2020 10:54:03 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Uhch7fSB/7Ki1vYFi3Z0iSi1LX7KXkljEn4AyEBquZE=;
+        b=olfrG3f/cM3pmRzdz9OBye11YMJSJ91Ptuq5Z/j2cweYWtyU6fcZ2AX3BoTSiGyGXy
+         FFj4zG+GmWOq/QEgki7Q+TDrXIqFuaD5CZ97ceM45xEkKoEvWuueIreXQmVPzoM4ItIi
+         ukkO9Nxb+R/d8/pfzKPEqAL3aawuvoXnP/5Mqfs9MTtX/afiicvvR2Lll++8OhKv6wcC
+         Gwtv+grm0E6gBDVNLdkfHh2Jz2H5ihPhV8su9jWAAQSkBy6+aN+qf8fIvdUHURoR4u60
+         HKINTqSRixXNBw7vWp4Z/IbRBh2dxMn2gOIu1c0/qKuJJytoht3TqGTgggXdPMWjfV5W
+         M6aw==
+X-Gm-Message-State: AGi0PuaF6MnpwWw0jvmu+wGXwIqn7kNyPI3ADajAePkdYhctQeSfU/Gv
+        nf8pSsE01PxvvZA7CYdyIAs/Hed+/4Z9Ag==
+X-Google-Smtp-Source: APiQypJNFnYwbuS2xi8dA49XKVMcqRvoptJd8A3fVr/x8ct+Ixbn3LW9/DAsNtU6s1SUh3SiapWMQg==
+X-Received: by 2002:a02:c9cb:: with SMTP id c11mr4064657jap.93.1588355676393;
+        Fri, 01 May 2020 10:54:36 -0700 (PDT)
 Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u4sm1136668iop.1.2020.05.01.10.54.02
+        by smtp.gmail.com with ESMTPSA id k3sm1510390ilf.67.2020.05.01.10.54.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 May 2020 10:54:02 -0700 (PDT)
+        Fri, 01 May 2020 10:54:35 -0700 (PDT)
+Subject: Re: [PATCH v3] eventfd: convert to f_op->read_iter()
 From:   Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v3b] eventfd: convert to f_op->read_iter()
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <97a28bdb-284a-c215-c04d-288bcef66376@kernel.dk>
-Date:   Fri, 1 May 2020 11:54:01 -0600
+References: <4037e867-af74-6a11-a501-7e5b804beec5@kernel.dk>
+Message-ID: <222126cc-0eb5-31b1-2a31-ef1ff2b24f72@kernel.dk>
+Date:   Fri, 1 May 2020 11:54:35 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <4037e867-af74-6a11-a501-7e5b804beec5@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -77,128 +79,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-eventfd is using ->read() as it's file_operations read handler, but
-this prevents passing in information about whether a given IO operation
-is blocking or not. We can only use the file flags for that. To support
-async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
-support. Convert eventfd to using ->read_iter().
+On 5/1/20 11:53 AM, Jens Axboe wrote:
+> eventfd is using ->read() as it's file_operations read handler, but
+> this prevents passing in information about whether a given IO operation
+> is blocking or not. We can only use the file flags for that. To support
+> async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
+> support. Convert eventfd to using ->read_iter().
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
----
-
-Actually send out the right patch...
-
-Since v2:
-
-- Cleanup eventfd_read() as per Al's suggestions
-
-Since v1:
-
-- Add FMODE_NOWAIT to the eventfd file
-
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 78e41c7c3d05..c9fa1e9cf5e3 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -216,32 +216,32 @@ int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *w
- }
- EXPORT_SYMBOL_GPL(eventfd_ctx_remove_wait_queue);
- 
--static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
--			    loff_t *ppos)
-+static ssize_t eventfd_read(struct kiocb *iocb, struct iov_iter *to)
- {
-+	struct file *file = iocb->ki_filp;
- 	struct eventfd_ctx *ctx = file->private_data;
--	ssize_t res;
- 	__u64 ucnt = 0;
- 	DECLARE_WAITQUEUE(wait, current);
- 
--	if (count < sizeof(ucnt))
-+	if (iov_iter_count(to) < sizeof(ucnt))
- 		return -EINVAL;
--
- 	spin_lock_irq(&ctx->wqh.lock);
--	res = -EAGAIN;
--	if (ctx->count > 0)
--		res = sizeof(ucnt);
--	else if (!(file->f_flags & O_NONBLOCK)) {
-+	if (!ctx->count) {
-+		if ((file->f_flags & O_NONBLOCK) ||
-+		    (iocb->ki_flags & IOCB_NOWAIT)) {
-+			spin_unlock_irq(&ctx->wqh.lock);
-+			return -EAGAIN;
-+		}
- 		__add_wait_queue(&ctx->wqh, &wait);
- 		for (;;) {
- 			set_current_state(TASK_INTERRUPTIBLE);
--			if (ctx->count > 0) {
--				res = sizeof(ucnt);
-+			if (ctx->count)
- 				break;
--			}
- 			if (signal_pending(current)) {
--				res = -ERESTARTSYS;
--				break;
-+				__remove_wait_queue(&ctx->wqh, &wait);
-+				__set_current_state(TASK_RUNNING);
-+				spin_unlock_irq(&ctx->wqh.lock);
-+				return -ERESTARTSYS;
- 			}
- 			spin_unlock_irq(&ctx->wqh.lock);
- 			schedule();
-@@ -250,17 +250,14 @@ static ssize_t eventfd_read(struct file *file, char __user *buf, size_t count,
- 		__remove_wait_queue(&ctx->wqh, &wait);
- 		__set_current_state(TASK_RUNNING);
- 	}
--	if (likely(res > 0)) {
--		eventfd_ctx_do_read(ctx, &ucnt);
--		if (waitqueue_active(&ctx->wqh))
--			wake_up_locked_poll(&ctx->wqh, EPOLLOUT);
--	}
-+	eventfd_ctx_do_read(ctx, &ucnt);
-+	if (waitqueue_active(&ctx->wqh))
-+		wake_up_locked_poll(&ctx->wqh, EPOLLOUT);
- 	spin_unlock_irq(&ctx->wqh.lock);
--
--	if (res > 0 && put_user(ucnt, (__u64 __user *)buf))
-+	if (unlikely(copy_to_iter(&ucnt, sizeof(ucnt), to) != sizeof(ucnt)))
- 		return -EFAULT;
- 
--	return res;
-+	return sizeof(ucnt);
- }
- 
- static ssize_t eventfd_write(struct file *file, const char __user *buf, size_t count,
-@@ -329,7 +326,7 @@ static const struct file_operations eventfd_fops = {
- #endif
- 	.release	= eventfd_release,
- 	.poll		= eventfd_poll,
--	.read		= eventfd_read,
-+	.read_iter	= eventfd_read,
- 	.write		= eventfd_write,
- 	.llseek		= noop_llseek,
- };
-@@ -427,8 +424,17 @@ static int do_eventfd(unsigned int count, int flags)
- 
- 	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
- 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
--	if (fd < 0)
-+	if (fd < 0) {
- 		eventfd_free_ctx(ctx);
-+	} else {
-+		struct file *file;
-+
-+		file = fget(fd);
-+		if (file) {
-+			file->f_mode |= FMODE_NOWAIT;
-+			fput(file);
-+		}
-+	}
- 
- 	return fd;
- }
+Attached the wrong patch, forgot to update it... See 3b posting. I ran
+this through my io_uring related eventfd testing, and it looks good.
 
 -- 
 Jens Axboe
