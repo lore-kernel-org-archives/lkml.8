@@ -2,112 +2,141 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20FCC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29E9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B212A216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A385020708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K3AlNroQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AnssK3oQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbgEAPN1 (ORCPT
+        id S1729358AbgEAPOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:13:27 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6044 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgEAPN0 (ORCPT
+        Fri, 1 May 2020 11:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbgEAPOy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:13:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eac3c190000>; Fri, 01 May 2020 08:11:21 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 01 May 2020 08:13:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 01 May 2020 08:13:26 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May
- 2020 15:13:25 +0000
-Received: from [10.26.73.180] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 1 May 2020
- 15:13:22 +0000
-Subject: Re: [PATCH 4.4 00/70] 4.4.221-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200501131513.302599262@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5bd427c7-9a92-cae9-27c7-1998dbff2d83@nvidia.com>
-Date:   Fri, 1 May 2020 16:13:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 11:14:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63F8C061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 08:14:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id p25so1686606pfn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 08:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yQtu6NmXor3q3T6BriJjM2xAXvKakbFot/IDS62A53k=;
+        b=AnssK3oQX/IfypkPcOHYRgC5b2ILRpf7weo3QvCU8osdrQ4UixwDziPlE9sq6IADSJ
+         WsuvtzehOhBQmcjvezEcByHhKPwpgRb8JS3SrcfeDXASJcsoqmU1vy3q+zvAYT4cFWYi
+         23b8KP7xmlQAa+U6M+x+E7rjc7x4yhdgn/GxUr5Q848vDqjfzV2nVg/m+CwYK43lEwx9
+         yTfw9/cKw/+L/07rZgKXViH/+s69gk8q8jz4EGh7et2U4rzxJ25yJLDKRSeuDMtuIuNE
+         kdJpFfYT+Of61eVBIovgQs6uiUYouJxCPWa9iyd0MEGbF9ub6iosy7onTNvNfw8c26Qi
+         EsGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yQtu6NmXor3q3T6BriJjM2xAXvKakbFot/IDS62A53k=;
+        b=W3RwvZyfrxDYVelUpsaSsoH+uwSLupn6l1RrHfws4mV3dyQfk5Zx4/9+fMTLmm+QA9
+         dV57a+GFfIrsgLJwZf+s11wHIyX9sa//evz2Gh+cmb3XTEnFAnIEWtxQOfrJoRaqupcY
+         uI+7s1f6XPIwLcabJnbATMgw+Febr64Za1zJhPBL2zXeMAzZRvFCEnGJD2BiWPPX26nR
+         lbi95TK1dS0UsxN6JtGhX6X7iMrIy8jAf8mgUx1HTdVuV0XS+mDBEjx7UzgBc8yO1m9y
+         hf+ea/RxBt0JxfsBwQ7X7uKBGm+wklT2tVsyLYXq7qIVpFG6nxptAMjbLd+Gxveg9C25
+         LZOQ==
+X-Gm-Message-State: AGi0PubY6Jn9UgMySm7BL7bg+a9ysGNvaYTt7ti7eC5rJUNrsYZzCaEH
+        I2KXVvVcgETEMv6NCAN6/S8dIQ==
+X-Google-Smtp-Source: APiQypJEAT6s/4NmYITjEAj0Q1DJtgRXvDxJ9r5Z9c09X9UlRpF8ugS3SZBoEk4catarH+S94Jx7uA==
+X-Received: by 2002:a62:ab16:: with SMTP id p22mr4439784pff.216.1588346093263;
+        Fri, 01 May 2020 08:14:53 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id z190sm2502141pfz.84.2020.05.01.08.14.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 May 2020 08:14:52 -0700 (PDT)
+Date:   Fri, 1 May 2020 23:14:48 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <Al.Grant@arm.com>, James Clark <James.Clark@arm.com>,
+        tglx@linutronix.de
+Subject: Re: [PATCH] arm64: perf_event: Fix time_offset for arch timer
+Message-ID: <20200501151448.GA9650@leoy-ThinkPad-X240s>
+References: <20200320093545.28227-1-leo.yan@linaro.org>
+ <20200430145823.GA25258@willie-the-truck>
+ <4d924f705245c797a19d3a73eb0c1ba0@kernel.org>
+ <20200430160436.GC13575@hirez.programming.kicks-ass.net>
+ <20200430161815.GE25258@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588345881; bh=D1qWdXKYvcHZVzuSDVINfTGagAk3jxTBROcztaJ1+js=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=K3AlNroQGrZKvTDRf1+FgXJePPNdNVOFIUXM3f9g0tJnD24wIgvyBUfRofFS6QzBH
-         CTnw4yqpj6VAetUD4+4OGygAL0ZjCtWfeSbrNt2nrmHDNMqq6AvQucou+ZD+7+AS/L
-         sL32cXbbO9OxmuRqgNxWK3apfLz+6P2O56OqrbHQC3rq69tr1K4HmBx/IxXjqgGGju
-         Kt2RMyyBl9YeermR0niB7QMxIBlozp+J9Kx6J9EHDlYve05Oghp/Ra3uDKmNxhuesz
-         nSM3wIBldNskej61X/8E+f5TAD5qdq7/l5aCJB+0PWteJY1XlBy3sfMy2ThsYDt3Bp
-         Wz/Zy/LY5LLfQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430161815.GE25258@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
-On 01/05/2020 14:20, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.221 release.
-> There are 70 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Apr 30, 2020 at 05:18:15PM +0100, Will Deacon wrote:
+> On Thu, Apr 30, 2020 at 06:04:36PM +0200, Peter Zijlstra wrote:
+> > On Thu, Apr 30, 2020 at 04:29:23PM +0100, Marc Zyngier wrote:
+> > 
+> > > I wonder if we could/should make __sched_clock_offset available even when
+> > > CONFIG_HAVE_UNSTABLE_SCHED_CLOCK isn't defined. It feels like it would
+> > > help with this particular can or worm...
+> > 
+> > Errrgh. __sched_clock_offset is only needed on x86 because we transition
+> > from one clock device to another on boot. It really shouldn't exist on
+> > anything sane.
 > 
-> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> Anything received after that time might be too late.
+> I think we still transition from jiffies on arm64, because we don't register
+> with sched_clock until the timer driver probes. Marc, is that right?
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.221-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
+> > Let me try and understand your particular problem better.
 > 
-> thanks,
-> 
-> greg k-h
+> I think the long and short of it is that userspace needs a way to convert
+> the raw counter cycles into a ns value that can be compared against values
+> coming out of sched_clock. To do this accurately, I think it needs the
+> cycles value at the point when sched_clock was initialised.
 
+Will's understanding is exactly what I want to resolve in this patch.
 
-All tests are passing for Tegra ...
+The background info is for the ARM SPE [1] decoding with perf tool, if
+the timestamp is enabled, it uses the generic timer's counter as
+timestamp source.  SPE trace data only contains the raw counter cycles,
+as Will mentioned, the perf tool needs to convert it to a coordinate
+value with sched_clock.  This is why this patch tries to calculate the
+offset between the raw counter's ns value and sched_clock, eventually
+this offset value will be used by SPE's decoding code in Perf tool to
+calibrate a 'correct' timestamp.
 
-Test results for stable-v4.4:
-    6 builds:	6 pass, 0 fail
-    12 boots:	12 pass, 0 fail
-    19 tests:	19 pass, 0 fail
+Based on your suggestions, I will use __sched_clock_offset to resolve
+the accuracy issue in patch v2.  (I noticed Peter suggested to use a
+new API for wrapping clock_data structure, IIUC, __sched_clock_offset
+is more straightforward for this case).
 
-Linux version:	4.4.221-rc1-gbe0a2ec77b53
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
+Please correct if I miss anything.  Thank you for reviewing and
+suggestions!
 
-Cheers
-Jon
+Thanks,
+Leo
 
--- 
-nvpublic
+[1] https://lkml.org/lkml/2020/1/23/571
