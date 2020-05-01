@@ -2,334 +2,154 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EFFC47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23264C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC3F21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8582208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yq4Bv3Uk"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="S8VASFrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgEASO0 (ORCPT
+        id S1730312AbgEASPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:14:26 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59096 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730022AbgEASOY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:14:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588356861;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=3BcharDSS0C522XE+F74i8hftlx0y6kzvefhWCjcxR0=;
-        b=Yq4Bv3UkEASCTf2vz3i11ygxrCuyLov4Oh3Zi8xEu20EW1hNumthFqYTKL1CMkP+MRleSG
-        q6jAmXz6VS40mpYweXMNzC4jCPEdOdwLcb2QKk96gOHPsUU1y2ZAVXBUODZcvgXscbwbkz
-        CN1Cjm5sPFfbiB9F6+2KQ4kUdyXR/dQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-IwD9H75UMJmtlc6c2AUL0Q-1; Fri, 01 May 2020 14:14:20 -0400
-X-MC-Unique: IwD9H75UMJmtlc6c2AUL0Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA9551800D42;
-        Fri,  1 May 2020 18:14:17 +0000 (UTC)
-Received: from [10.36.112.180] (ovpn-112-180.ams2.redhat.com [10.36.112.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 731BF2B4CC;
-        Fri,  1 May 2020 18:14:11 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
- <20200430102908.10107-3-david@redhat.com>
- <87pnbp2dcz.fsf@x220.int.ebiederm.org>
- <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
- <871ro52ary.fsf@x220.int.ebiederm.org>
- <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
- <875zdg26hp.fsf@x220.int.ebiederm.org>
- <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
- <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
- <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
- <CAPcyv4j=YKnr1HW4OhAmpzbuKjtfP7FdAn4-V7uA=b-Tcpfu+A@mail.gmail.com>
- <2d019c11-a478-9d70-abd5-4fd2ebf4bc1d@redhat.com>
- <CAPcyv4iOqS0Wbfa2KPfE1axQFGXoRB4mmPRP__Lmqpw6Qpr_ig@mail.gmail.com>
- <62dd4ce2-86cc-5b85-734f-ec8766528a1b@redhat.com>
- <0169e822-a6cc-1543-88ed-2a85d95ffb93@redhat.com>
- <CAPcyv4jGnR_fPtpKBC1rD2KRcT88bTkhqnTMmuwuc+f9Dwrz1g@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <9f3a813e-dc1d-b675-6e69-85beed3057a4@redhat.com>
-Date:   Fri, 1 May 2020 20:14:10 +0200
+        Fri, 1 May 2020 14:15:23 -0400
+Received: from mout.web.de ([212.227.15.14]:37699 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729425AbgEASPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 14:15:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588356906;
+        bh=xjkKsoljwN5DN226VD+/6P5ZiuDy8ctAVl1hIg99XqE=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=S8VASFrGLcUUJuV40NC9CPYQ7oA7l1a+e1xCN0ZBg4Wu10cOWh6J/c0YqSqqPNf38
+         RyXzQokZE9Js/9GcIk+SO91MaEb2e1zt3niP/nV4igADzFsW18rilvxoySyRWTSTAq
+         xyW6KMdniD5T2ER2lCLWnQfdXc74CaqSBvQ+T6Ss=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.136.146]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Md16Y-1jmf2O0rII-00IEFr; Fri, 01
+ May 2020 20:15:06 +0200
+To:     Colin Ian King <colin.king@canonical.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Steve deRosier <derosier@cal-sierra.com>
+Subject: Re: [PATCH] libertas_tf: Avoid a null pointer dereference in
+ if_usb_disconnect()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <93740048-acc1-b140-3b91-a659408091ac@web.de>
+Date:   Fri, 1 May 2020 20:15:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jGnR_fPtpKBC1rD2KRcT88bTkhqnTMmuwuc+f9Dwrz1g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/dKeb0S9rbPjx25NWaRkRXvRQfJHDuX1LgZM5rUjlNh0Klczjh8
+ GnDeu331l0Pkc2hsKtDm5K/PCW8u26MIO4+foUIrcW1AoIBNMfu1SuRnGNpcr6fkoED2OTC
+ Az+UnGMouxAKvUKPCQKk2ssbX+Q3q/I2Ts9ACxjFv6GMY+ViADsDnIExYZ8MO+BUXhcTgek
+ FwVmhFy0y9Vl1f+uAxT8w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g5k29zEdniM=:5bGdlZ2q4bvE786PtMsVfy
+ 9XHapYEadoHSQh3iiL+wMwNfbjhFtCL667giKm1b3E1Yt2FtyXHITY2qCaluP1H6udP2NWNQF
+ OMzglM6OACVPTKeG+indQOoQmdMI2YiYCkIW2A7ASBHw0Sln+kJrWDSFiZwRt03pvDlA/wPyn
+ C9g4nWHQr75px0D8SjjO/g+sNDb88juA+jxAbnDu4Vd9xV7hMW1L9bBoGlZ6v1C9t/9DZpWrD
+ C2B5GNuIbMqp8B6E68cs1MITD7VcB0bytobQQSGpK9AEn3xJiQvQFhF43SuoAF5DQLdwsTnCA
+ 6w2UFG0XjVrmXl7rLTSON79d9cpytfkCxEuwA9i+FY/REkOvKOgpidNKvv8s8VqFmU0DXTkyu
+ ZPxB7NQQrFJh+v9ihqphb0iEViLnm+23zXQwbJ8suFFsqmZ5gOBLzrfKLU3YrFB7IrJEVf7YY
+ tuDt5oBj8113f8o/1YcrJ/cFOCH+pc5DrbBEfrm3J4GV//wI3ksz+5mgd2r45nGqcfEcI449R
+ Yu8zYYMddeoLOMtpuHd3Odm1vcJHMzikVTyvJNor+cCPj16MfEtwItW+bTn7VsMRF8Q35C7ZQ
+ FzM1hD/m8r5Zw8BPCvqzUt/x/8c22IlzTdIn4DsG7x/JPe2V1zPOkdlumFP1Xzih7H1LE0n1R
+ NHsGrbsjtQc2/EaDSd10yCnWptcLOSUUcvEnbkbZ6tNaRbnnPdfTgof28gUCNAZqZAYs6MN60
+ a7y67umAjXvESK3E5wj7b3emdvsnpCmhQRGV+DtDOPAfzY7+LUFuSADWqzEifKVVjbWLmVxVj
+ ySJQxz1R38z+h/c27Y+f9u8/d9xRRDZ8Ud3R0Ra8YZwfYoyX720bLfaiO/knGRzJ1wI9SvW7u
+ OoEpJCK3WVcrNRH5F+gjxtAUbJsSLwdRcZcwkW6r1lwhy4nAUfLP87Idnk+Tcloow4AihDeKd
+ MgrAOF16I+XUSq2tGxGDlwb9e+xfDIqvHYS/0JmCCrlQfbZMrhzRgtxes3mADthtNv+Z2WNMU
+ 5tIvcJ6rjj4XclRqW6daaiGXMM9pUuLWiGbCPvp5HHpHdPpvhTeu4ozXcdVEBK2sF3u1Q1GfF
+ vA4hkJtagDuoN+ihck2WlGfCb8ac7suQRB0JQLwQ+Wp/e3Lm4nsZUZyhUoSp0L60MJPcPxPS6
+ v/L4JXr+bjqhQ4uTk0e52BDzw3ap/dGA2uSMIn4mUdC5owwhmBgR1uD949Q3dkHar1Yqci3Ek
+ 7g2jm0RPiosEMkQrY
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.05.20 20:03, Dan Williams wrote:
-> On Fri, May 1, 2020 at 10:51 AM David Hildenbrand <david@redhat.com> wr=
-ote:
->>
->> On 01.05.20 19:45, David Hildenbrand wrote:
->>> On 01.05.20 19:39, Dan Williams wrote:
->>>> On Fri, May 1, 2020 at 10:21 AM David Hildenbrand <david@redhat.com>=
- wrote:
->>>>>
->>>>> On 01.05.20 18:56, Dan Williams wrote:
->>>>>> On Fri, May 1, 2020 at 2:34 AM David Hildenbrand <david@redhat.com=
-> wrote:
->>>>>>>
->>>>>>> On 01.05.20 00:24, Andrew Morton wrote:
->>>>>>>> On Thu, 30 Apr 2020 20:43:39 +0200 David Hildenbrand <david@redh=
-at.com> wrote:
->>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Why does the firmware map support hotplug entries?
->>>>>>>>>
->>>>>>>>> I assume:
->>>>>>>>>
->>>>>>>>> The firmware memmap was added primarily for x86-64 kexec (and s=
-till, is
->>>>>>>>> mostly used on x86-64 only IIRC). There, we had ACPI hotplug. W=
-hen DIMMs
->>>>>>>>> get hotplugged on real HW, they get added to e820. Same applies=
- to
->>>>>>>>> memory added via HyperV balloon (unless memory is unplugged via
->>>>>>>>> ballooning and you reboot ... the the e820 is changed as well).=
- I assume
->>>>>>>>> we wanted to be able to reflect that, to make kexec look like a=
- real reboot.
->>>>>>>>>
->>>>>>>>> This worked for a while. Then came dax/kmem. Now comes virtio-m=
-em.
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> But I assume only Andrew can enlighten us.
->>>>>>>>>
->>>>>>>>> @Andrew, any guidance here? Should we really add all memory to =
-the
->>>>>>>>> firmware memmap, even if this contradicts with the existing
->>>>>>>>> documentation? (especially, if the actual firmware memmap will =
-*not*
->>>>>>>>> contain that memory after a reboot)
->>>>>>>>
->>>>>>>> For some reason that patch is misattributed - it was authored by
->>>>>>>> Shaohui Zheng <shaohui.zheng@intel.com>, who hasn't been heard f=
-rom in
->>>>>>>> a decade.  I looked through the email discussion from that time =
-and I'm
->>>>>>>> not seeing anything useful.  But I wasn't able to locate Dave Ha=
-nsen's
->>>>>>>> review comments.
->>>>>>>
->>>>>>> Okay, thanks for checking. I think the documentation from 2008 is=
- pretty
->>>>>>> clear what has to be done here. I will add some of these details =
-to the
->>>>>>> patch description.
->>>>>>>
->>>>>>> Also, now that I know that esp. kexec-tools already don't conside=
-r
->>>>>>> dax/kmem memory properly (memory will not get dumped via kdump) a=
-nd
->>>>>>> won't really suffer from a name change in /proc/iomem, I will go =
-back to
->>>>>>> the MHP_DRIVER_MANAGED approach and
->>>>>>> 1. Don't create firmware memmap entries
->>>>>>> 2. Name the resource "System RAM (driver managed)"
->>>>>>> 3. Flag the resource via something like IORESOURCE_MEM_DRIVER_MAN=
-AGED.
->>>>>>>
->>>>>>> This way, kernel users and user space can figure out that this me=
-mory
->>>>>>> has different semantics and handle it accordingly - I think that =
-was
->>>>>>> what Eric was asking for.
->>>>>>>
->>>>>>> Of course, open for suggestions.
->>>>>>
->>>>>> I'm still more of a fan of this being communicated by "System RAM"
->>>>>
->>>>> I was mentioning somewhere in this thread that "System RAM" inside =
-a
->>>>> hierarchy (like dax/kmem) will already be basically ignored by
->>>>> kexec-tools. So, placing it inside a hierarchy already makes it loo=
-k
->>>>> special already.
->>>>>
->>>>> But after all, as we have to change kexec-tools either way, we can
->>>>> directly go ahead and flag it properly as special (in case there wi=
-ll
->>>>> ever be other cases where we could no longer distinguish it).
->>>>>
->>>>>> being parented especially because that tells you something about h=
-ow
->>>>>> the memory is driver-managed and which mechanism might be in play.
->>>>>
->>>>> The could be communicated to some degree via the resource hierarchy=
-.
->>>>>
->>>>> E.g.,
->>>>>
->>>>>             [root@localhost ~]# cat /proc/iomem
->>>>>             ...
->>>>>             140000000-33fffffff : Persistent Memory
->>>>>               140000000-1481fffff : namespace0.0
->>>>>               150000000-33fffffff : dax0.0
->>>>>                 150000000-33fffffff : System RAM (driver managed)
->>>>>
->>>>> vs.
->>>>>
->>>>>            :/# cat /proc/iomem
->>>>>             [...]
->>>>>             140000000-333ffffff : virtio-mem (virtio0)
->>>>>               140000000-147ffffff : System RAM (driver managed)
->>>>>               148000000-14fffffff : System RAM (driver managed)
->>>>>               150000000-157ffffff : System RAM (driver managed)
->>>>>
->>>>> Good enough for my taste.
->>>>>
->>>>>> What about adding an optional /sys/firmware/memmap/X/parent attrib=
-ute.
->>>>>
->>>>> I really don't want any firmware memmap entries for something that =
-is
->>>>> not part of the firmware provided memmap. In addition,
->>>>> /sys/firmware/memmap/ is still a fairly x86_64 specific thing. Only=
- mips
->>>>> and two arm configs enable it at all.
->>>>>
->>>>> So, IMHO, /sys/firmware/memmap/ is definitely not the way to go.
->>>>
->>>> I think that's a policy decision and policy decisions do not belong =
-in
->>>> the kernel. Give the tooling the opportunity to decide whether Syste=
-m
->>>> RAM stays that way over a kexec. The parenthetical reference otherwi=
-se
->>>> looks out of place to me in the /proc/iomem output. What makes it
->>>> "driver managed" is how the kernel handles it, not how the kernel
->>>> names it.
->>>
->>> At least, virtio-mem is different. It really *has to be handled* by t=
-he
->>> driver. This is not a policy. It's how it works.
->=20
-> ...but that's not necessarily how dax/kmem works.
->=20
+> Currently there is a check if priv is null when calling lbtf_remove_card
+> but not in a previous call to if_usb_reset_dev that can also dereference
+> priv.  Fix this by also only calling lbtf_remove_card if priv is null.
 
-Yes, and user space could still take that memory and add it to the
-firmware memmap if it really wants to. It knows that it is special. It
-can figure out that it belongs to a dax device using /proc/iomem.
+I suggest to recheck this description (and the corresponding patch subject=
+).
 
->>>
->>
->> Oh, and I don't see why "System RAM (driver managed)" would hinder any
->> policy in user case to still do what it thinks is the right thing to d=
-o
->> (e.g., for dax).
->>
->> "System RAM (driver managed)" would mean: Memory is not part of the ra=
-w
->> firmware memmap. It was detected and added by a driver. Handle with
->> care, this is special.
->=20
-> Oh, no, I was more reacting to your, "don't update
-> /sys/firmware/memmap for the (driver managed) range" choice as being a
-> policy decision. It otherwise feels to me "System RAM (driver
-> managed)" adds confusion for casual users of /proc/iomem and for clued
-> in tools they have the parent association to decide policy.
 
-Not sure if I understand correctly, so bear with me :).
+=E2=80=A6
+> +++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+> @@ -247,10 +247,10 @@ static void if_usb_disconnect(struct usb_interface=
+ *intf)
+>
+>  	lbtf_deb_enter(LBTF_DEB_MAIN);
+>
+> -	if_usb_reset_device(priv);
+> -
+> -	if (priv)
+> +	if (priv) {
+> +		if_usb_reset_device(priv);
+>  		lbtf_remove_card(priv);
+> +	}
+>
+>  	/* Unlink and free urb */
+>  	if_usb_free(cardp);
 
-Adding or not adding stuff to /sys/firmware/memmap is not a policy
-decision. If it's not part of the raw firmware-provided memmap, it has
-nothing to do in /sys/firmware/memmap. That's what the documentation
-from 2008 tells us.
+The patch code proposes to move a specific function call into an if branch
+according to a null pointer check.
 
-Again, my point is that we don't create /sys/firmware/memmap entries for
-dax/kmem and virtio-mem memory - because it's not part of the raw
-firmware-provided memmap. I was not suggesting to add something like
-"System RAM (driver managed)" there instead, maybe that part was confusin=
-g.
-
---=20
-Thanks,
-
-David / dhildenb
-
+Regards,
+Markus
