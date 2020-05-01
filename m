@@ -2,239 +2,121 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BCCC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC30C47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7457D2071C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLDxDqPs"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE0B2071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgEAIPc (ORCPT
+        id S1728426AbgEAIPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:15:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbgEAIPb (ORCPT
+        Fri, 1 May 2020 04:15:36 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:7601 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728325AbgEAIPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:15:31 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58D2C035494;
-        Fri,  1 May 2020 01:15:31 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id r66so2137485oie.5;
-        Fri, 01 May 2020 01:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=67PD+4N6OTeLQfdVEtLP8JgZsz239nlSbqS4Vkr8Dyw=;
-        b=kLDxDqPs9e69GaVMoTLIbt5TvwRXfennTnwhak3ZePa6Iw3AisJOdncZZtD5a3g+Iz
-         YF/82TokyreEFFn60NinKIGrC0hy0MwKvtZHCwyFrC85V4U2jf51couuP4yBrXn/TQAF
-         BLDeJG+s/qPBOdTUrh7x2jcV6xVGy1+FRUZAegp4jwA+7qmCYzGGJ8QUhZmEy9zXIWNo
-         4ih3ouFd+mP1Pnx96vHgtEw/r/WzELYEDu6LsgVwa5zBqJ8pQ7R2iM4deN5x8o+RZIB7
-         SHmgCDIJ9rKhPh32VzsySTwtLpGAnFTGMg9KICJnlJ2oJyqVxCkOIRyzEPpya8Ja6m5g
-         TOMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=67PD+4N6OTeLQfdVEtLP8JgZsz239nlSbqS4Vkr8Dyw=;
-        b=WIcdiBzxE2XIWJHgLQiPkHuf8HZ2i+gNO65heAlRZJ0ehtVSDnJc1EIRnniRNE9Qu8
-         kSmYz+7YCEnAzs6NNWrFQ3K+G/I+uyIsZMjhdtKIyBRlSyc6/GIXpg/fLTevNnGTLTjO
-         Z+6K70L7iLSyFpRqCtFjvxVBXvfyKgPhTnlSa6FjeXoZi7ST6HQty+6BcJx5NhfFRICE
-         cB2HKTZ7p2/QdKPIUht9CJUmlSAILqa+zfw3RUjc/9hc5LU0AaZkUsDjlqge9txCqTn8
-         7VgsHabVmM5O77570LF0yHQduswaDz44VpMks1DByPAOskY/uyTLb/iZqDwQMceGaZYq
-         p6kA==
-X-Gm-Message-State: AGi0PubnK+2j/xYC4PYs+LdIx9FBVkyr7fj/Yzb1znqm+hg1uoUTM2Sd
-        6a9xKLByN5Z+N4y0eVG3iPwSVH97FbJZMuaXJzI=
-X-Google-Smtp-Source: APiQypIgr6pyF8u5FiRXk8vY7iTPFETvjGXZfjd03HJ7Sse1ymzPq5v9ms+GEMVAq9d2o2xjZGdRdTbFSnFcUHZk+Yk=
-X-Received: by 2002:aca:b783:: with SMTP id h125mr2296549oif.62.1588320931075;
- Fri, 01 May 2020 01:15:31 -0700 (PDT)
+        Fri, 1 May 2020 04:15:35 -0400
+X-IronPort-AV: E=Sophos;i="5.73,339,1583164800"; 
+   d="scan'208";a="90959647"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 01 May 2020 16:15:29 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id BAA474BCC89C;
+        Fri,  1 May 2020 16:15:27 +0800 (CST)
+Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 1 May 2020 16:15:29 +0800
+Received: from TSO.g08.fujitsu.local (10.167.226.60) by
+ G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Fri, 1 May 2020 16:15:28 +0800
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>
+Subject: [PATCH] perf: fix compilation failure on i386
+Date:   Fri, 1 May 2020 16:15:27 +0800
+Message-ID: <20200501081527.4343-1-caoj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
-In-Reply-To: <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 1 May 2020 09:15:04 +0100
-Message-ID: <CA+V-a8sMKWD_FMcEhm-gAOPx2Xdr-4wRdgaiumWLA4vRBUkMMg@mail.gmail.com>
-Subject: Re: [PATCH 07/18] ARM: dts: r8a7742: Initial SoC device tree
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: BAA474BCC89C.ABF2A
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Compilation on i386 complains as following:
 
-Thank you for the review.
+util/session.c: In function 'perf_session__process_compressed_event':
+util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
+  pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
+           ^
 
-On Thu, Apr 30, 2020 at 2:49 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for your patch!
->
-> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Basic support for the RZ/G1H (R8A7742) SoC. Added placeholders
-> > for the peripherals supported by the SoC which will be filled up
-> > by incremental patches.
->
-> Please remove the placeholders, as there is nothing that depends on their
-> presence.
->
-Sure will drop that.
+util/zstd.c: In function 'zstd_decompress_stream':
+util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
+    pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
+           ^
 
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/r8a7742.dtsi
-> > @@ -0,0 +1,715 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the r8a7742 SoC
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include <dt-bindings/clock/r8a7742-cpg-mssr.h>
-> > +#include <dt-bindings/power/r8a7742-sysc.h>
-> > +
-> > +/ {
-> > +       compatible = "renesas,r8a7742";
-> > +       #address-cells = <2>;
-> > +       #size-cells = <2>;
-> > +
-> > +       /*
-> > +        * The external audio clocks are configured as 0 Hz fixed frequency
-> > +        * clocks by default.
-> > +        * Boards that provide audio clocks should override them.
-> > +        */
-> > +       audio_clk_a: audio_clk_a {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               clock-frequency = <0>;
-> > +       };
-> > +
-> > +       audio_clk_b: audio_clk_b {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               clock-frequency = <0>;
-> > +       };
-> > +
-> > +       audio_clk_c: audio_clk_c {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               clock-frequency = <0>;
-> > +       };
-> > +
-> > +       /* External CAN clock */
-> > +       can_clk: can {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               /* This value must be overridden by the board. */
-> > +               clock-frequency = <0>;
-> > +       };
->
-> Please drop the audio and CAN clocks for now, as they are not used.
->
-OK.
+util/zstd.c: In function 'zstd_compress_stream_to_records':
+util/zstd.c:77:11: error: format '%zd' expects argument of type 'signed size_t', but argument 4 has type 'long int' [-Werror=format=]
+    pr_err("failed to compress %zd bytes: %s\n",
+           ^
 
-> > +       /* External root clock */
-> > +       extal_clk: extal {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               /* This value must be overridden by the board. */
-> > +               clock-frequency = <0>;
-> > +       };
-> > +
-> > +       /* External PCIe clock - can be overridden by the board */
-> > +       pcie_bus_clk: pcie_bus {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               clock-frequency = <0>;
-> > +       };
->
-> Please drop the PCI clock for now, as it is not used.
->
-OK
+Fix them by pairing "%zd" to size_t.
 
-> > +
-> > +       /* External SCIF clock */
-> > +       scif_clk: scif {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               /* This value must be overridden by the board. */
-> > +               clock-frequency = <0>;
-> > +       };
->
-> This should be used (see below).
->
-> > +
-> > +       /* External USB clock - can be overridden by the board */
-> > +       usb_extal_clk: usb_extal {
-> > +               compatible = "fixed-clock";
-> > +               #clock-cells = <0>;
-> > +               clock-frequency = <48000000>;
-> > +       };
-> > +
-> > +       cpus {
->
-> Please sort nodes by unit-address (if present) per type, or alphabetically.
->
-Sure will take care of it.
+Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+---
+ tools/perf/util/session.c | 2 +-
+ tools/perf/util/zstd.c    | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> > +       soc {
->
-> > +               scifa2: serial@e6c60000 {
-> > +                       reg = <0 0xe6c60000 0 0x40>;
-> > +                       /* placeholder */
-> > +               };
->
-> I prefer to see a real node for the serial console, so the system can at
-> least be boot tested to a console prompt.
-> Note that this requires adding a minimal board DTS, too.
->
-OK so in that case Ill enable scifa2 and SDHI interface so it can be bootable.
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 0b0bfe5bef17..50c2ffa388ad 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 		session->decomp_last = decomp;
+ 	}
+ 
+-	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
++	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+index d2202392ffdb..877bfb79e4af 100644
+--- a/tools/perf/util/zstd.c
++++ b/tools/perf/util/zstd.c
+@@ -74,8 +74,8 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t
+ 		ret = ZSTD_compressStream(data->cstream, &output, &input);
+ 		ZSTD_flushStream(data->cstream, &output);
+ 		if (ZSTD_isError(ret)) {
+-			pr_err("failed to compress %ld bytes: %s\n",
+-				(long)src_size, ZSTD_getErrorName(ret));
++			pr_err("failed to compress %zd bytes: %s\n",
++				src_size, ZSTD_getErrorName(ret));
+ 			memcpy(dst, src, src_size);
+ 			return src_size;
+ 		}
+@@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+ 	while (input.pos < input.size) {
+ 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+ 		if (ZSTD_isError(ret)) {
+-			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
++			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
+ 			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+ 			break;
+ 		}
+-- 
+2.21.0
 
-Cheers,
---Prabhakar
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+
