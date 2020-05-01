@@ -2,116 +2,91 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0359C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E8AC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB56B208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UOVd+AsA"
+	by mail.kernel.org (Postfix) with ESMTP id CF2AE21835
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgEAUwX (ORCPT
+        id S1726788AbgEAUwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:52:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35528 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgEAUwW (ORCPT
+        Fri, 1 May 2020 16:52:51 -0400
+Received: from smtprelay0011.hostedemail.com ([216.40.44.11]:54408 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726307AbgEAUwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:52:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KqGqB072046;
-        Fri, 1 May 2020 15:52:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588366336;
-        bh=G0LrEdkVkiWRft5NWAGfdDX9uXu9hqB1LoI/z2eu9Kg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UOVd+AsAqu54ama0yvT6gp3B7jwV7s6GiFUTVGHJN121rj9y9wAil7wJVRUhTzGay
-         V76AKMglR3A1ON35kEKcJYJdcpbFvmP0JTULKfzir4MpUI2id5jLl7O7rYOHks/UhR
-         QkR885+tjIfs2w4MO5O/uUyFBQHX3h/uAM0i/MB8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041KqGhv091976
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 15:52:16 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 15:50:46 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 15:50:46 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041Kojml026584;
-        Fri, 1 May 2020 15:50:46 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Richard Cochran <richardcochran@gmail.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
-CC:     Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 5/7] arm64: dts: ti: k3-am65-main: add main navss cpts node
-Date:   Fri, 1 May 2020 23:50:09 +0300
-Message-ID: <20200501205011.14899-6-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
-References: <20200501205011.14899-1-grygorii.strashko@ti.com>
+        Fri, 1 May 2020 16:52:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 9AC98181D3025;
+        Fri,  1 May 2020 20:52:49 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: balls69_358bf361e1e3c
+X-Filterd-Recvd-Size: 2389
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  1 May 2020 20:52:47 +0000 (UTC)
+Message-ID: <93f764ad743082f2bbab4595eb892c2004e61b44.camel@perches.com>
+Subject: Re: [PATCH 03/24] rcu/tree: Use consistent style for comments
+From:   Joe Perches <joe@perches.com>
+To:     paulmck@kernel.org, "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Date:   Fri, 01 May 2020 13:52:46 -0700
+In-Reply-To: <20200501190555.GB7560@paulmck-ThinkPad-P72>
+References: <20200428205903.61704-1-urezki@gmail.com>
+         <20200428205903.61704-4-urezki@gmail.com>
+         <20200501190555.GB7560@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for Main NAVSS CPTS module.
+On Fri, 2020-05-01 at 12:05 -0700, Paul E. McKenney wrote:
+> On Tue, Apr 28, 2020 at 10:58:42PM +0200, Uladzislau Rezki (Sony) wrote:
+> > Simple clean up of comments in kfree_rcu() code to keep it consistent
+> > with majority of commenting styles.
+[]
+> on /* */ style?
+> 
+> I am (slowly) moving RCU to "//" for those reasons.  ;-)
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+I hope c99 comment styles are more commonly used soon too.
+checkpatch doesn't care.
+
+Perhaps a change to coding-style.rst
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ Documentation/process/coding-style.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 6fbb0f2f1d92..3450006260a6 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -583,6 +583,28 @@
- 						<0x5>; /* RX_CHAN */
- 			ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
- 		};
-+
-+		cpts@310d0000 {
-+			compatible = "ti,am65-cpts";
-+			reg = <0x0 0x310d0000 0x0 0x400>;
-+			reg-names = "cpts";
-+			clocks = <&main_cpts_mux>;
-+			clock-names = "cpts";
-+			interrupts-extended = <&intr_main_navss 163 0>;
-+			interrupt-names = "cpts";
-+			ti,cpts-periodic-outputs = <6>;
-+			ti,cpts-ext-ts-inputs = <8>;
-+
-+			main_cpts_mux: refclk-mux {
-+				#clock-cells = <0>;
-+				clocks = <&k3_clks 118 5>, <&k3_clks 118 11>,
-+					<&k3_clks 118 6>, <&k3_clks 118 3>,
-+					<&k3_clks 118 8>, <&k3_clks 118 14>,
-+					<&k3_clks 120 3>, <&k3_clks 121 3>;
-+				assigned-clocks = <&main_cpts_mux>;
-+				assigned-clock-parents = <&k3_clks 118 5>;
-+			};
-+		};
- 	};
+diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+index acb2f1b..fee647 100644
+--- a/Documentation/process/coding-style.rst
++++ b/Documentation/process/coding-style.rst
+@@ -565,6 +565,11 @@ comments is a little different.
+ 	 * but there is no initial almost-blank line.
+ 	 */
  
- 	main_gpio0:  main_gpio0@600000 {
--- 
-2.17.1
++.. code-block:: c
++
++	// Single line and inline comments may also use the c99 // style
++	// Block comments as well
++
+ It's also important to comment data, whether they are basic types or derived
+ types.  To this end, use just one data declaration per line (no commas for
+ multiple data declarations).  This leaves you room for a small comment on each
+
 
