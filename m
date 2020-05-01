@@ -2,224 +2,250 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2649BC35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B08EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF694208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382F4208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LRXc2J5d"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wpnPM3WC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgEAUt4 (ORCPT
+        id S1726827AbgEAUuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgEAUty (ORCPT
+        Fri, 1 May 2020 16:50:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35652 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgEAUuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:49:54 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87762C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 13:49:54 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mq3so367453pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 13:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Ed2JN9Qrs/BgbUyRA8SQWsPnAw1/64uJrHHZOYU0VuI=;
-        b=LRXc2J5dNQ3uETTwR3QtkKi8YwyPxqcCWiJWMZ0Zx1AMKYBQPM9FoYBozFdm6xi6Yp
-         UqAKlj4z7GDnp5s0UfHvitly9pen80OikbwqkkA/HvNicfPojTHZq/oV9AGdpWjUFKmr
-         hxvICPMaMdb3v1jLXZNevBMvu6HmSRBQ5WE8AL2ecLXpY26OvirTqOaD5Ko6I7kKRIRH
-         hia7ah2UB1/GCSILl0AnkuZfMMEuXaHQx63qkoW7TheedcokEn0lo9vU5AYLCi2/SC26
-         UmTn4IPwd2A92smMEmyIm79ch7bTxG99pqbO5NIsCmWHuYj7iKpcBpxoT0WKHct96nrU
-         AjCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Ed2JN9Qrs/BgbUyRA8SQWsPnAw1/64uJrHHZOYU0VuI=;
-        b=GL3hCbACxS/MzruCXnvI33ooA/hZIDzPAsTurex4W1qoRyUrB5zft1Y3ePxKHfs89v
-         28nnI0tJ2L8piV84U4+rtnaxvOTKY5+hjuddAwLURUn6S8wwjyCsMSsnOadNgMF3QhDu
-         /GFfhNLQiquumJWKbjz1/qMf/JGZgnpM6cgFMiGmwT8QplvyjLr0HZVe6KFsP6tqJK8t
-         QdLzSqBrTDvcSyIOWxQulbincHEzg4UcvjR6gzdCYe2xnuCKZBya7bHVXiwsvFwqHmq2
-         gQo0oJ8x9xwSfqSgXyYnxy5tMOICB5GU7cjduFn5IDwHPPSZeLQzvcTBPFrpc/lC1GUe
-         QUGw==
-X-Gm-Message-State: AGi0Pua7VFlqXj1mVHLw630O+MKfKXTrAfHAXnOpC2vTz3RnT4Jls5Q7
-        K9F86vmecyFubMt7aJmailwkCtT00Yg=
-X-Google-Smtp-Source: APiQypI1YN17UKMZ/YjQ+eiCcWhVTFiRDKM5wWBtUbYVBtYh8FR9LKUR+etDm/rl7sS+AngwbjDWjw==
-X-Received: by 2002:a17:90b:3444:: with SMTP id lj4mr1659462pjb.37.1588366193975;
-        Fri, 01 May 2020 13:49:53 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 23sm497072pjb.11.2020.05.01.13.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:49:53 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] rpmsg: core: Add support to retrieve name extension
-Date:   Fri,  1 May 2020 14:49:50 -0600
-Message-Id: <20200501204950.18629-3-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200501204950.18629-1-mathieu.poirier@linaro.org>
-References: <20200501204950.18629-1-mathieu.poirier@linaro.org>
+        Fri, 1 May 2020 16:50:25 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KoED9011902;
+        Fri, 1 May 2020 15:50:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588366214;
+        bh=sttXSPRWFfKNYpmJR/8jZ/NACgQEfJehdKwZvLb3aoA=;
+        h=From:To:CC:Subject:Date;
+        b=wpnPM3WCmaNhOO/CmnDKa6itIBcUTPMKPc0Ga7unvvYwXfa2k6E+McS6UfHPzbhmE
+         dkEZm1VeuA16hvgnGUAC3lfhuIADuWKOwuPkwxbkJrCHYR+nQfqzk/+QThSAoWUWQ0
+         p7jQCx8yVDmyn5n5oHRmIyYDR4n8VYm2njKvPmXw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041KoEEM039844
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 May 2020 15:50:14 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
+ 2020 15:50:14 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 1 May 2020 15:50:14 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041KoDFS076888;
+        Fri, 1 May 2020 15:50:14 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Richard Cochran <richardcochran@gmail.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 0/7] net: ethernet: ti: k3: introduce common platform time sync driver - cpts
+Date:   Fri, 1 May 2020 23:50:04 +0300
+Message-ID: <20200501205011.14899-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After adding support for rpmsg device name extension, this patch
-provides a function that returns the extension portion of an rpmsg
-device name.  That way users of the name extension functionality don't
-have to write the same boiler plate code to extract the information.
+Hi
 
-Suggested-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/rpmsg/rpmsg_core.c | 92 ++++++++++++++++++++++++++++++++++++++
- include/linux/rpmsg.h      | 12 +++++
- 2 files changed, 104 insertions(+)
+This series introduced support for significantly upgraded TI A65x/J721E Common
+platform time sync (CPTS) modules which are part of AM65xx Time Synchronization
+Architecture [1].
+The TI A65x/J721E now contain more than one CPTS instance:
+- MCU CPSW CPTS (IEEE 1588 compliant)
+- Main NAVSS CPTS (central)
+- PCIe CPTS(s) (PTM  compliant)
+- J721E: Main CPSW9g CPTS (IEEE 1588 compliant)
+which can work as separately as interact to each other through Time Sync Router
+(TSR) and Compare Event Router (CER). In addition there are also ICSS-G IEP
+blocks which can perform similar timsync functions, but require FW support.
+More info also available in TRM [2][3]. Not all above modules are available
+to the Linux by as of now as some of them are reserved for RTOS/FW purposes.
 
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index bfd25978fa35..86b6d26907ad 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -439,6 +439,98 @@ static int rpmsg_dev_match(struct device *dev, struct device_driver *drv)
- 	return of_driver_match_device(dev, drv);
- }
- 
-+/**
-+ * rpmsg_device_get_name_extension() - get the name extension of a rpmsg device
-+ * @rpdev: the rpmsg device to work with
-+ * @skip: how many characters in the extension should be skipped over
-+ *
-+ * With function rpmsg_id_match() allowing for extension of the base driver name
-+ * in order to differentiate services, this function returns the extension part
-+ * of an rpmsg device name.  As such and with the following rpmsg driver device
-+ * id table and rpmsg device names:
-+ *
-+ * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-+ *      { .name = "rpmsg-client-sample" },
-+ *      { },
-+ * }
-+ *
-+ * rpdev1->id.name == "rpmsg-client-sample";
-+ * rpdev2->id.name == "rpmsg-client-sample_instance0";
-+ *
-+ * Calling rpmsg_device_get_name_extension() will yields the following:
-+ *
-+ * rpmsg_device_get_name_extension(rpdev1, 0) == NULL;
-+ * rpmsg_device_get_name_extension(rpdev2, 0) == "_instance0";
-+ * rpmsg_device_get_name_extension(rpdev2, 1) == "instance0";
-+ *
-+ *
-+ * Note: The name extension should be free'd using kfree_const().
-+ *
-+ * Return: the name extension if found, NULL if not found and an error
-+ * code otherwise.
-+ */
-+const char *rpmsg_device_get_name_extension(struct rpmsg_device *rpdev,
-+					    unsigned int skip)
-+{
-+	const char *drv_name, *dev_name, *extension;
-+	const struct rpmsg_device_id *ids;
-+	struct device *dev = &rpdev->dev;
-+	struct rpmsg_driver *rpdrv;
-+	bool match = false;
-+	unsigned int i;
+The scope of this submission is TI A65x/J721E CPSW CPTS and Main NAVSS CPTS,
+and TSR was used for testing purposes.
+                                                                       +---------------------------+
+                                                                       | MCU CPSW                  |
++-------------------+           +------------------------+             |                TS         |
+| Main Navss CPTS   |           | Time Sync Router (TSR) |             |          +-------------+  |
+|                   |           |                        |             |          |             |  |
+|            HW1_TS +<----------+                        |             | +--------v-----+    +--+--+
+|                   |           |                        |             | |        CPTS  |    |Port |
+|              ...  |           |                        |           X+-->HW1_TS        |    |     |
+|            HW8_TS <------------<---------+             |           X|-->HW2_TS        |    +--^--+
+|                   |           |          |             +--------------->HW3_TS        |       |  |
+|                   |           |          |             +--------------->HW4_TS        |       |  |
+|                   |           |          |             |             | |              |       |  |
+|                   |           |          |             |             | |              |       |  |
+|            Genf0  +----------->          (A)---------+ +<--------------+Genf0         |       |  |
+|                   |           |          |             |             | |              |       |  |
+|              ...  |           |          +-----------> <---------------+Genf1     ESTf+-------+  |
+|                   |           |                        |             | |              |          |
+|                   |           |                        |             | +--------------+          |
+|            Genf8  +---------->+                        |             |                           |
+|                   |           |    SYNC0 ...    SYNC3  |             |                           |
++-------------------+           +------+------------+----+             +---------------------------+
+                                       +            +
+                                       X            X
+(A) shows possible routing path for MCU CPSW CPTS Genf0 signal as an example.
+
+Main features of the new TI A65x/J721E CPTS modules are:
+- 64-bit timestamp/counter mode support in ns by using add_val
+- implemented in HW PPM and nudge adjustment.
+- control of time sync events via interrupt or polling
+- selection of multiple external reference clock sources
+- hardware timestamp of ext. inputs events (HWx_TS_PUSH)
+- periodic generator function outputs (TS_GENFx)
+- (CPSW only) Ethernet Enhanced Scheduled Traffic Operations (CPTS_ESTFn),
+  which drives TSN schedule
+- timestamping of all RX packets bypassing CPTS FIFO
+
+Patch 1 - DT bindings
+Patch 2 - the AM65x/J721E driver
+Patch 3 - enables packet timestamping support in TI AM65x/J721E MCU CPSW driver.
+Patches 4-7 - DT updates.
+
+=== PTP Testing:
+
+phc2sys -s CLOCK_REALTIME -c eth0 -m -O 0 -u30                                            
+phc2sys[627.331]: eth0 rms 409912446712787392 max 1587584079521858304 freq  -6665 +/- 35040 delay   832 +/-  27
+phc2sys[657.335]: eth0 rms   33 max   66 freq     -0 +/-  28 delay   820 +/-  30
+phc2sys[687.339]: eth0 rms   37 max   70 freq     -1 +/-  32 delay   830 +/-  29
+phc2sys[717.343]: eth0 rms   33 max   71 freq     -0 +/-  29 delay   828 +/-  23
+phc2sys[747.346]: eth0 rms   35 max   75 freq     -0 +/-  31 delay   829 +/-  26
+phc2sys[777.350]: eth0 rms   37 max   68 freq     -1 +/-  32 delay   825 +/-  25
+phc2sys[807.354]: eth0 rms   28 max   57 freq     -1 +/-  25 delay   824 +/-  21
+phc2sys[837.358]: eth0 rms   43 max   81 freq     -1 +/-  37 delay   836 +/-  23
+phc2sys[867.361]: eth0 rms   33 max   74 freq     +0 +/-  29 delay   828 +/-  24
+phc2sys[897.365]: eth0 rms   35 max   77 freq     -2 +/-  30 delay   824 +/-  25
+phc2sys[927.369]: eth0 rms   28 max   50 freq     +0 +/-  25 delay   825 +/-  25
+
+ptp4l -P -2 -H -i eth0 -l 6 -m -q -p /dev/ptp1 -f ptp.cfg -s
+ptp4l[22095.754]: port 1: MASTER to UNCALIBRATED on RS_SLAVE
+ptp4l[22097.754]: port 1: UNCALIBRATED to SLAVE on MASTER_CLOCK_SELECTED
+ptp4l[22159.757]: rms  317 max 1418 freq    +79 +/- 186 delay   410 +/-   1
+ptp4l[22223.760]: rms    9 max   24 freq    +42 +/-  12 delay   409 +/-   1
+ptp4l[22287.763]: rms   10 max   28 freq    +41 +/-  11 delay   410 +/-   1
+ptp4l[22351.767]: rms   10 max   26 freq    +34 +/-  12 delay   410 +/-   1
+ptp4l[22415.770]: rms   10 max   26 freq    +49 +/-  14 delay   410 +/-   1
+
+=== Ext. HW_TS and Genf testing:
+
+For testing purposes Time Sync Router (TSR) can be modeled in DT as pin controller
++       timesync_router: timesync_router@A40000 {
++               compatible = "pinctrl-single";
++               reg = <0x0 0xA40000 0x0 0x800>;
++               #address-cells = <1>;
++               #size-cells = <0>;
++               #pinctrl-cells = <1>;
++               pinctrl-single,register-width = <32>;
++               pinctrl-single,function-mask = <0x800007ff>;
++       };
+
+then signals routing can be done in board file, for example:
++#define TS_OFFSET(pa, val)     (0x4+(pa)*4) (0x80000000 | val)
 +
-+	if (!dev->driver)
-+		return ERR_PTR(-EINVAL);
++&timesync_router {
++       pinctrl-names = "default";
++       pinctrl-0 = <&mcu_cpts>;
 +
-+	rpdrv = to_rpmsg_driver(dev->driver);
-+
-+	/*
-+	 * No point in going further if the device and the driver don't
-+	 * have a name or a table to work with.
-+	 */
-+	if (!rpdev->id.name[0] || !rpdrv->id_table)
-+		return ERR_PTR(-EINVAL);
-+
-+	ids = rpdrv->id_table;
-+	dev_name = rpdev->id.name;
-+
-+	/*
-+	 * See if any name in the driver's table match the beginning
-+	 * of the rpmsg device's name.
-+	 */
-+	for (i = 0; ids[i].name[0]; i++) {
-+		drv_name = ids[i].name;
-+		if (strncmp(drv_name,
-+			    dev_name, strlen(drv_name)) == 0) {
-+			match = true;
-+			break;
-+		}
-+	}
-+
-+	if (!match)
-+		return NULL;
-+
-+	 /* No name extension to return if device and driver are the same */
-+	if (strlen(dev_name) == strlen(drv_name))
-+		return NULL;
-+
-+	/*
-+	 * Make sure we were not requested to skip past the end
-+	 * of the device name.
-+	 */
-+	if (strlen(drv_name) + skip >= strlen(dev_name))
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Move past the base name published by the driver and
-+	 * skip any extra characters if needed.
-+	 */
-+	extension = dev_name + strlen(drv_name) + skip;
-+
-+	return kstrdup_const(extension, GFP_KERNEL);
-+}
-+EXPORT_SYMBOL(rpmsg_device_get_name_extension);
-+
- static int rpmsg_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-index 9fe156d1c018..5770c3fb3924 100644
---- a/include/linux/rpmsg.h
-+++ b/include/linux/rpmsg.h
-@@ -135,6 +135,9 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
- __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
- 			poll_table *wait);
- 
-+const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-+					    unsigned int skip);
-+
- #else
- 
- static inline int register_rpmsg_device(struct rpmsg_device *dev)
-@@ -242,6 +245,15 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
- 	return 0;
- }
- 
-+const char *rpmsg_device_get_name_extension(struct rpmsg_device *dev,
-+					    unsigned int skip)
-+{
-+	/* This shouldn't be possible */
-+	WARN_ON(1);
-+
-+	return NULL;
-+}
-+
- #endif /* IS_ENABLED(CONFIG_RPMSG) */
- 
- /* use a macro to avoid include chaining to get THIS_MODULE */
++       /* Example of the timesync routing */
++       mcu_cpts: mcu_cpts {
++               pinctrl-single,pins = <
++                       /* [cpts genf1] in13 -> out25 [cpts hw4_push] */
++                       TS_OFFSET(25, 13)
++                       /* [cpts genf1] in13 -> out0 [main cpts hw1_push] */
++                       TS_OFFSET(0, 13)
++                       /* [main cpts genf0] in4 -> out1 [main cpts hw2_push] */
++                       TS_OFFSET(1, 4)
++                       /* [main cpts genf0] in4 -> out24 [cpts hw3_push] */
++                       TS_OFFSET(24, 4)
++               >;
++       };
++};
+
+will create link:
+    cpsw cpts Genf1 -> main cpts hw1_push
+                    -> cpsw cpts hw4_push
+    
+    main cpts Genf0 -> main cpts hw2_push
+                    -> cpsw cpts hw3_push
+
+#enable Main CPTS Genf0, period 1sec
+ testptp -d /dev/ptp0 -i 0 -p 1000000000
+ periodic output request okay
+#enable Main CPTS HW2_TS and read 
+ testptp -d /dev/ptp0 -i 1 -e 5
+ external time stamp request okay
+ event index 1 at 22583.000000025
+ event index 1 at 22584.000000025
+ event index 1 at 22585.000000025
+ event index 1 at 22586.000000025
+ event index 1 at 22587.000000025
+#enable MCU CPSW CPTS HW3_TS and read                                                                                   
+ testptp -d /dev/ptp1 -i 2 -e 5
+ external time stamp request okay
+ event index 2 at 1587606764.249304554
+ event index 2 at 1587606765.249304467
+ event index 2 at 1587606766.249304380
+ event index 2 at 1587606767.249304293
+ event index 2 at 1587606768.249304206
+
+[1] https://www.ti.com/lit/pdf/spracp7
+[2] https://www.ti.com/lit/pdf/sprz452
+[3] https://www.ti.com/lit/pdf/spruil1
+
+Grygorii Strashko (7):
+  dt-binding: ti: am65x: document common platform time sync cpts module
+  net: ethernet: ti: introduce am654 common platform time sync driver
+  net: ethernet: ti: am65-cpsw-nuss: enable packet timestamping support
+  arm64: dts: ti: k3-am65-mcu: add cpsw cpts node
+  arm64: dts: ti: k3-am65-main: add main navss cpts node
+  arm64: dts: ti: k3-j721e-mcu: add mcu cpsw cpts node
+  arm64: dts: ti: j721e-main: add main navss cpts node
+
+ .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |    7 +
+ .../bindings/net/ti,k3-am654-cpts.yaml        |  152 +++
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |   22 +
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |   19 +
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     |   12 +
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |    9 +
+ drivers/net/ethernet/ti/Kconfig               |   15 +
+ drivers/net/ethernet/ti/Makefile              |    1 +
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |   24 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      |  172 +++
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h      |    6 +-
+ drivers/net/ethernet/ti/am65-cpts.c           | 1041 +++++++++++++++++
+ drivers/net/ethernet/ti/am65-cpts.h           |   50 +
+ 13 files changed, 1528 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpts.yaml
+ create mode 100644 drivers/net/ethernet/ti/am65-cpts.c
+ create mode 100644 drivers/net/ethernet/ti/am65-cpts.h
+
 -- 
-2.20.1
+2.17.1
 
