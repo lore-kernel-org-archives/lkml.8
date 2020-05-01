@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C161C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFA5C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC082051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE622051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341672;
-	bh=033F8hXUWVVEo3WAGzh52Hd8Hyl9z/HzVWphB95gwi4=;
+	s=default; t=1588341677;
+	bh=0ddaoSfvKALWn7x17WA7VemeWlSQsiVyT/+WjRgZR3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RUgp1L+Y7157rQZ43Naf61ud84CiDVmukPephFvseBK7fWciWV7qywvPmCM+GAiwQ
-	 njAdQhzXiyRrC5mJLiHXQSQ0C6W0AlpTmYP+ZVwpM5ZESctoq6+Uw5suTJs+OPhdCD
-	 Y7L55+YuW63i+SpFbOoGgQoVfCu3Zse2LLIW3SEc=
+	b=YXx36MVmmSzHBt12YYJDo7puN41nA+8XonDk/isE1lgDf4jzh5KgGisePxCImE/P+
+	 KQSLrKesyJcWTrTTUZ5f9m/BwUW1IfV7kHSbgZZtdUxeKUjdNSznQlHIluz8Ny4awB
+	 o4X3qAF/Y3uIFnuL6BS+Unbai4RJDRGkr1hvXKvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbgEAOBL (ORCPT
+        id S1729155AbgEAN0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbgEAN0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:24 -0400
+        id S1729124AbgEANZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4031220757;
-        Fri,  1 May 2020 13:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B3AA20757;
+        Fri,  1 May 2020 13:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339583;
-        bh=033F8hXUWVVEo3WAGzh52Hd8Hyl9z/HzVWphB95gwi4=;
+        s=default; t=1588339558;
+        bh=0ddaoSfvKALWn7x17WA7VemeWlSQsiVyT/+WjRgZR3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Si2kaMflPlrY0RIMZwqs7ZA9Mv8IV+uCf6DdjViKwZRQlX5pY1Mqi+DP1dqFExb6b
-         826UjCJqrBEpqRa+l9J1uFi7SpdYiHQDdDdxO15ogmLzgeAmLvSL+A5GGcld8JYS7/
-         2IUJAJWLkdTIpmah1RyTuH5IoW/2ZFuBR0mWuRVY=
+        b=JCr95xPyf433kh3RpgsWjnoXegIJuV/DI4y+aTpf7JvIo8PIb30EG0H4PWr2wGgYZ
+         E7QSrlC5/GqWrKOtU94JwlMVQEi+HUG2KYUgjN9PIFSYYMlpio9M9epeBMm0NrCFgX
+         J1tSigZg950iJFPGihaUpehOsF1+l3ifKgHWQ+WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Uros Bizjak <ubizjak@gmail.com>
-Subject: [PATCH 4.4 40/70] KVM: VMX: Enable machine check support for 32bit targets
-Date:   Fri,  1 May 2020 15:21:28 +0200
-Message-Id: <20200501131526.020953700@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Skobkin <skobkin-ru@ya.ru>,
+        Alexander Tsoy <alexander@tsoy.me>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 38/70] ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
+Date:   Fri,  1 May 2020 15:21:26 +0200
+Message-Id: <20200501131525.578464968@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,36 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uros Bizjak <ubizjak@gmail.com>
+From: Alexander Tsoy <alexander@tsoy.me>
 
-commit fb56baae5ea509e63c2a068d66a4d8ea91969fca upstream.
+commit 1c826792586f526a5a5cd21d55aad388f5bb0b23 upstream.
 
-There is no reason to limit the use of do_machine_check
-to 64bit targets. MCE handling works for both target familes.
+Many Focusrite devices supports a limited set of sample rates per
+altsetting. These includes audio interfaces with ADAT ports:
+ - Scarlett 18i6, 18i8 1st gen, 18i20 1st gen;
+ - Scarlett 18i8 2nd gen, 18i20 2nd gen;
+ - Scarlett 18i8 3rd gen, 18i20 3rd gen;
+ - Clarett 2Pre USB, 4Pre USB, 8Pre USB.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: a0861c02a981 ("KVM: Add VT-x machine check support")
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Message-Id: <20200414071414.45636-1-ubizjak@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Maximum rate is exposed in the last 4 bytes of Format Type descriptor
+which has a non-standard bLength = 10.
+
+Tested-by: Alexey Skobkin <skobkin-ru@ya.ru>
+Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200418175815.12211-1-alexander@tsoy.me
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/format.c |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -5441,7 +5441,7 @@ static int handle_rmode_exception(struct
-  */
- static void kvm_machine_check(void)
- {
--#if defined(CONFIG_X86_MCE) && defined(CONFIG_X86_64)
-+#if defined(CONFIG_X86_MCE)
- 	struct pt_regs regs = {
- 		.cs = 3, /* Fake ring 3 no matter what the guest ran on */
- 		.flags = X86_EFLAGS_IF,
+--- a/sound/usb/format.c
++++ b/sound/usb/format.c
+@@ -223,6 +223,52 @@ static int parse_audio_format_rates_v1(s
+ }
+ 
+ /*
++ * Many Focusrite devices supports a limited set of sampling rates per
++ * altsetting. Maximum rate is exposed in the last 4 bytes of Format Type
++ * descriptor which has a non-standard bLength = 10.
++ */
++static bool focusrite_valid_sample_rate(struct snd_usb_audio *chip,
++					struct audioformat *fp,
++					unsigned int rate)
++{
++	struct usb_interface *iface;
++	struct usb_host_interface *alts;
++	unsigned char *fmt;
++	unsigned int max_rate;
++
++	iface = usb_ifnum_to_if(chip->dev, fp->iface);
++	if (!iface)
++		return true;
++
++	alts = &iface->altsetting[fp->altset_idx];
++	fmt = snd_usb_find_csint_desc(alts->extra, alts->extralen,
++				      NULL, UAC_FORMAT_TYPE);
++	if (!fmt)
++		return true;
++
++	if (fmt[0] == 10) { /* bLength */
++		max_rate = combine_quad(&fmt[6]);
++
++		/* Validate max rate */
++		if (max_rate != 48000 &&
++		    max_rate != 96000 &&
++		    max_rate != 192000 &&
++		    max_rate != 384000) {
++
++			usb_audio_info(chip,
++				"%u:%d : unexpected max rate: %u\n",
++				fp->iface, fp->altsetting, max_rate);
++
++			return true;
++		}
++
++		return rate <= max_rate;
++	}
++
++	return true;
++}
++
++/*
+  * Helper function to walk the array of sample rate triplets reported by
+  * the device. The problem is that we need to parse whole array first to
+  * get to know how many sample rates we have to expect.
+@@ -258,6 +304,11 @@ static int parse_uac2_sample_rate_range(
+ 		}
+ 
+ 		for (rate = min; rate <= max; rate += res) {
++			/* Filter out invalid rates on Focusrite devices */
++			if (USB_ID_VENDOR(chip->usb_id) == 0x1235 &&
++			    !focusrite_valid_sample_rate(chip, fp, rate))
++				goto skip_rate;
++
+ 			if (fp->rate_table)
+ 				fp->rate_table[nr_rates] = rate;
+ 			if (!fp->rate_min || rate < fp->rate_min)
+@@ -272,6 +323,7 @@ static int parse_uac2_sample_rate_range(
+ 				break;
+ 			}
+ 
++skip_rate:
+ 			/* avoid endless loop */
+ 			if (res == 0)
+ 				break;
 
 
