@@ -2,121 +2,98 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802A5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D2FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E0524957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450D324958
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TtzgkSzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729820AbgEAPgW (ORCPT
+        id S1729834AbgEAPhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:36:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:42798 "EHLO foss.arm.com"
+        Fri, 1 May 2020 11:37:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:36520 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgEAPgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:36:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53DA130E;
-        Fri,  1 May 2020 08:36:21 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 050AD3F68F;
-        Fri,  1 May 2020 08:36:19 -0700 (PDT)
-Subject: Re: [PATCH] usb: usbfs: correct kernel->user page attribute mismatch
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Linton <jeremy.linton@arm.com>
-Cc:     git@thegavinli.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
-        stern@rowland.harvard.edu, linux-arm-kernel@lists.infradead.org
-References: <20200430211922.929165-1-jeremy.linton@arm.com>
- <20200501070500.GA887524@kroah.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e1ce8224-db38-c0c6-02c0-2032f4165903@arm.com>
-Date:   Fri, 1 May 2020 16:36:17 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728865AbgEAPhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:37:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CCW9t2Lcf3ESlVkJ4RGqmi6BmFZgD63tWCVuekoIumU=; b=TtzgkSzrEtfblR+H1wVwLbiwig
+        C8qarQ6oBZtfxDOULpsjFye+/KFqIcIkpqUOeMILNA//s3bR50E1daGGhbT5ptwh1DDApdNwbcOo5
+        sBLN/MpQUJSTzfYQgIEc4qimo/sF9UbZcCWJ9oL3Pg0y09HfCU4f0DqqOiHsHPtyZEJU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jUXjB-000YJL-8M; Fri, 01 May 2020 17:37:25 +0200
+Date:   Fri, 1 May 2020 17:37:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     robh+dt@kernel.org, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC v2 07/11] net: stmmac: dwmac-meson8b: Make the clock
+ enabling code re-usable
+Message-ID: <20200501153725.GG128733@lunn.ch>
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-8-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200501070500.GA887524@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429201644.1144546-8-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-01 8:05 am, Greg KH wrote:
-> On Thu, Apr 30, 2020 at 04:19:22PM -0500, Jeremy Linton wrote:
->> On arm64, and possibly other architectures, requesting
->> IO coherent memory may return Normal-NC if the underlying
->> hardware isn't coherent. If these pages are then
->> remapped into userspace as Normal, that defeats the
->> purpose of getting Normal-NC, as well as resulting in
->> mappings with differing cache attributes.
+On Wed, Apr 29, 2020 at 10:16:40PM +0200, Martin Blumenstingl wrote:
+> The timing adjustment clock will need similar logic as the RGMII clock:
+> It has to be enabled in the driver conditionally and when the driver is
+> unloaded it should be disabled again. Extract the existing code for the
+> RGMII clock into a new function so it can be re-used.
 > 
-> What is "Normal-NC"?
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 23 +++++++++++++++----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
 > 
->> In particular this happens with libusb, when it attempts
->> to create zero-copy buffers as is used by rtl-sdr, and
-> 
-> What is "rtl-sdr"
-> 
->> maybe other applications. The result is usually
->> application death.
-> 
-> So is this a new problem?  Old problem?  Old problem only showing up on
-> future devices?  On current devices?  I need a hint here as to know if
-> this is a bugfix or just work to make future devices work properly.
-> 
->>
->> If dma_mmap_attr() is used instead of remap_pfn_range,
->> the page cache/etc attributes can be matched between the
->> kernel and userspace.
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   drivers/usb/core/devio.c | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
->> index 6833c918abce..1e7458dd6e5d 100644
->> --- a/drivers/usb/core/devio.c
->> +++ b/drivers/usb/core/devio.c
->> @@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
->>   {
->>   	struct usb_memory *usbm = NULL;
->>   	struct usb_dev_state *ps = file->private_data;
->> +	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
->>   	size_t size = vma->vm_end - vma->vm_start;
->>   	void *mem;
->>   	unsigned long flags;
->> @@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
->>   	usbm->vma_use_count = 1;
->>   	INIT_LIST_HEAD(&usbm->memlist);
->>   
->> -	if (remap_pfn_range(vma, vma->vm_start,
->> -			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
->> -			size, vma->vm_page_prot) < 0) {
->> +	if (dma_mmap_attrs(hcd->self.sysdev, vma, mem, dma_handle, size, 0)) {
-> 
-> Given that this code has not changed since 2016, how has no one noticed
-> this issue before?
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+> index 41f3ef6bea66..d31f79c455de 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+> @@ -266,6 +266,22 @@ static int meson_axg_set_phy_mode(struct meson8b_dwmac *dwmac)
+>  	return 0;
+>  }
+>  
+> +static int meson8b_devm_clk_prepare_enable(struct meson8b_dwmac *dwmac,
+> +					   struct clk *clk)
+> +{
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	devm_add_action_or_reset(dwmac->dev,
+> +				 (void(*)(void *))clk_disable_unprepare,
+> +				 dwmac->rgmii_tx_clk);
+> +
+> +	return 0;
+> +}
 
-They have. Here's where the most recent one in my inbox ended, which has 
-breadcrumbs to a couple more:
+I'm surprised this does not exist in the core. It looks like there was
+some discussion about this, but nothing merged.
 
-https://lore.kernel.org/linux-arm-kernel/20190808130525.GA1756@kroah.com/
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Note the author ;)
-
- From memory, all the previous attempts wound up getting stuck on the 
-subtlety that buffers from hcd_alloc() may or may not actually have come 
-from the DMA API. Since then, the localmem_pool rework has probably 
-helped a bit, but I'm not sure we've ever really nailed down whether 
-kmalloc()ed buffers from PIO-mode controllers (i.e. the !hcd_uses_dma() 
-case) can end up down this devio path.
-
-Robin.
+    Andrew
