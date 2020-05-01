@@ -2,159 +2,100 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B82C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11D4C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 163472051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F4820757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340762;
+	bh=AiHOas8FpZ+35GyVOzSMP/dUHuS5mXTYhtblJ3qlYeA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Lv5BTLreNvP6Z304/uMAkg+AN2PQJ+2wsHTB0LkjhCZjNkfpFrC5jru87AMfe1Fc2
+	 F0SVT5vzly6fcnMEDTd/2zYywnRPeiC7lvf1aeOjQP5kzhv/3kyDmYRR/TzqIXpPGr
+	 /S/kAG4hXxScCPdsMteWOciVuTpqGtDYJW0YwxZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbgEANpU (ORCPT
+        id S1730996AbgEANpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:45:20 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38531 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731541AbgEANpO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:14 -0400
-Received: by mail-lf1-f67.google.com with SMTP id l11so3898611lfc.5;
-        Fri, 01 May 2020 06:45:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=84T0pCv1NUHY99+EIUt2kRwIXnXQcTzPiOYLMrXMKNI=;
-        b=uRd8skZcAgeL8fLulHY2Adc0M59m9MWJHiNj2jep4dlkDnmGVcXpA0r8BmEaYxt4EU
-         DQyjapijaMBQZsh/bqKS+LmvEnZ8l5x+hkX2yjcYKeC/uRsWKSZRe6fPrGxzs+IOmcIl
-         N0JIfdHus1VW+yxssKZn0UKHiJzG//fFNUJv+C9/ZK+3CA9yyzDHNxELX292WJd4KVG8
-         LEePvZiC/xEzLMLY+K/pzZ5Mw3rwDeUP+PAAdWa7YiDff3va6Rd+T1wGLTe+laTzTeAe
-         nvjEX10x7PxDpeSaR2TKOz9uuZ3SqBhWHhMCAdVsU4qgLh6/KET1YW7xk9Jvd+2Y0E6/
-         N5EQ==
-X-Gm-Message-State: AGi0PuZf+kcICSRUxTt7aJGpLMQTlRRm9owzZryy9MHfZABcVVz/houI
-        EO3VLoZFCCLx0+BZfACndTFGPoKwFH4=
-X-Google-Smtp-Source: APiQypI1EFhtVvq/oZA1yWy/XUHw1zB0+GFXJDQXQL3SsKS2vEbAEA1aHhauzMg8ygiv9o6vfRTvTA==
-X-Received: by 2002:ac2:46f9:: with SMTP id q25mr2637273lfo.149.1588340710968;
-        Fri, 01 May 2020 06:45:10 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.150.177])
-        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:45:10 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 3/4] floppy: add defines for sizes of cmd & reply buffers of floppy_raw_cmd
-Date:   Fri,  1 May 2020 16:44:15 +0300
-Message-Id: <20200501134416.72248-4-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200501134416.72248-1-efremov@linux.com>
-References: <20200501134416.72248-1-efremov@linux.com>
+        Fri, 1 May 2020 09:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731887AbgEANpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:45:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B39E1205C9;
+        Fri,  1 May 2020 13:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340711;
+        bh=AiHOas8FpZ+35GyVOzSMP/dUHuS5mXTYhtblJ3qlYeA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fCPrZBzZ9jYrC2EjR/qZ9VAAQK4tIRR1AOornr6+7wajOcXzIoc9TocwxwJSRCnmZ
+         RMgwmU0CeYrXppKH0Adc4+GleUL+rxNm52+2l3NXddQPuoWoguFXCo/ZzO36OMHhg4
+         rdCm1QLWFiv82dHh8Tnd8aq6Ux1cP0zh/i6oMzo0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 093/106] blk-mq: Put driver tag in blk_mq_dispatch_rq_list() when no budget
+Date:   Fri,  1 May 2020 15:24:06 +0200
+Message-Id: <20200501131554.580957203@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use FD_RAW_CMD_SIZE, FD_RAW_REPLY_SIZE defines instead of magic numbers
-for cmd & reply buffers of struct floppy_raw_cmd. Remove local to
-floppy.c MAX_REPLIES define, as it is now FD_RAW_REPLY_SIZE.
-FD_RAW_CMD_FULLSIZE added as we allow command to also fill reply_count
-and reply fields.
+From: John Garry <john.garry@huawei.com>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Denis Efremov <efremov@linux.com>
+[ Upstream commit 5fe56de799ad03e92d794c7936bf363922b571df ]
+
+If in blk_mq_dispatch_rq_list() we find no budget, then we break of the
+dispatch loop, but the request may keep the driver tag, evaulated
+in 'nxt' in the previous loop iteration.
+
+Fix by putting the driver tag for that request.
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c  | 19 +++++--------------
- include/uapi/linux/fd.h | 14 ++++++++++++--
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ block/blk-mq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index b82b3d38b834..9e098d53b046 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -337,8 +337,7 @@ static bool initialized;
- /*
-  * globals used by 'result()'
-  */
--#define MAX_REPLIES 16
--static unsigned char reply_buffer[MAX_REPLIES];
-+static unsigned char reply_buffer[FD_RAW_REPLY_SIZE];
- static int inr;		/* size of reply buffer, when called from interrupt */
- #define ST0		0
- #define ST1		1
-@@ -1162,7 +1161,7 @@ static int result(int fdc)
- 	int i;
- 	int status = 0;
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 37ff8dfb8ab9f..2c3a1b2e07537 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1205,8 +1205,10 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+ 		rq = list_first_entry(list, struct request, queuelist);
  
--	for (i = 0; i < MAX_REPLIES; i++) {
-+	for (i = 0; i < FD_RAW_REPLY_SIZE; i++) {
- 		status = wait_til_ready(fdc);
- 		if (status < 0)
+ 		hctx = rq->mq_hctx;
+-		if (!got_budget && !blk_mq_get_dispatch_budget(hctx))
++		if (!got_budget && !blk_mq_get_dispatch_budget(hctx)) {
++			blk_mq_put_driver_tag(rq);
  			break;
-@@ -3079,7 +3078,7 @@ static void raw_cmd_done(int flag)
- 		raw_cmd->flags |= FD_RAW_HARDFAILURE;
- 	} else {
- 		raw_cmd->reply_count = inr;
--		if (raw_cmd->reply_count > MAX_REPLIES)
-+		if (raw_cmd->reply_count > FD_RAW_REPLY_SIZE)
- 			raw_cmd->reply_count = 0;
- 		for (i = 0; i < raw_cmd->reply_count; i++)
- 			raw_cmd->reply[i] = reply_buffer[i];
-@@ -3190,18 +3189,10 @@ static int raw_cmd_copyin(int cmd, void __user *param,
- 	if (ret)
- 		return -EFAULT;
- 	param += sizeof(struct floppy_raw_cmd);
--	if (ptr->cmd_count > 33)
--			/* the command may now also take up the space
--			 * initially intended for the reply & the
--			 * reply count. Needed for long 82078 commands
--			 * such as RESTORE, which takes ... 17 command
--			 * bytes. Murphy's law #137: When you reserve
--			 * 16 bytes for a structure, you'll one day
--			 * discover that you really need 17...
--			 */
-+	if (ptr->cmd_count > FD_RAW_CMD_FULLSIZE)
- 		return -EINVAL;
++		}
  
--	for (i = 0; i < 16; i++)
-+	for (i = 0; i < FD_RAW_REPLY_SIZE; i++)
- 		ptr->reply[i] = 0;
- 	ptr->resultcode = 0;
- 
-diff --git a/include/uapi/linux/fd.h b/include/uapi/linux/fd.h
-index 3f6b7be4c096..2e9c2c1c18e6 100644
---- a/include/uapi/linux/fd.h
-+++ b/include/uapi/linux/fd.h
-@@ -360,10 +360,20 @@ struct floppy_raw_cmd {
- 	int buffer_length; /* length of allocated buffer */
- 
- 	unsigned char rate;
-+
-+#define FD_RAW_CMD_SIZE 16
-+#define FD_RAW_REPLY_SIZE 16
-+#define FD_RAW_CMD_FULLSIZE (FD_RAW_CMD_SIZE + 1 + FD_RAW_REPLY_SIZE)
-+
-+	/* The command may take up the space initially intended for the reply
-+	 * and the reply count. Needed for long 82078 commands such as RESTORE,
-+	 * which takes 17 command bytes.
-+	 */
-+
- 	unsigned char cmd_count;
--	unsigned char cmd[16];
-+	unsigned char cmd[FD_RAW_CMD_SIZE];
- 	unsigned char reply_count;
--	unsigned char reply[16];
-+	unsigned char reply[FD_RAW_REPLY_SIZE];
- 	int track;
- 	int resultcode;
- 
+ 		if (!blk_mq_get_driver_tag(rq)) {
+ 			/*
 -- 
-2.25.3
+2.20.1
+
+
 
