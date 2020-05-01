@@ -2,108 +2,203 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB45C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4499C4725B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE48220857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D1920857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588344422;
+	bh=hboY7LvkSkG+z9pZ1T82TwKQFJjcn1LXM91doMsst3M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vh10A17ta5QVEcGQIN9yVaSKxY0EwZeFvj66PNw691CzJ31Rjko89VKBguE/ly+rl
+	 +jBmYCZW45YMQp4AY9/qTYlkL8p3Wj6sHZgDAnNTgZ/XHCNb4rg4SxqsRKa7km4odN
+	 dQDw2OQ5dmDlPMkdJk+CUKLCy2BacpDR6mukHchs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbgEAOq7 (ORCPT
+        id S1729578AbgEAOpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:46:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:41952 "EHLO foss.arm.com"
+        Fri, 1 May 2020 10:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbgEAOqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:46:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C94F31FB;
-        Fri,  1 May 2020 07:46:48 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 895353F68F;
-        Fri,  1 May 2020 07:46:47 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:46:45 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robin.murphy@arm.com
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-Message-ID: <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
+        id S1728914AbgEAOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:05 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE090208DB;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588344305;
+        bh=hboY7LvkSkG+z9pZ1T82TwKQFJjcn1LXM91doMsst3M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rsPMDGoEYR9sGgftuvVNtqmzF35W8IbmSE422+UronlGfOib3qMp1x43IQZP5kdp3
+         ufwypaCJTzjls/26N5M1YHZ9fipdY0NxMAkT5hi88M/aidtscdJ28NbZPpPBvbjhbe
+         FpkRdUvezN2TaSInntJZpA85VQs4mdERYz/wpq28=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jUWuT-00FCd2-Dt; Fri, 01 May 2020 16:45:01 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 08/37] docs: networking: convert xfrm_proc.txt to ReST
+Date:   Fri,  1 May 2020 16:44:30 +0200
+Message-Id: <b888b39a925d0c8385b9a3fa338edb762cf78a7d.1588344146.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
+References: <cover.1588344146.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200417114322.31111-3-kishon@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Robin - to check on dma-ranges intepretation]
+- add SPDX header;
+- adjust title markup;
+- adjust identation, whitespaces and blank lines where needed;
+- add to networking/index.rst.
 
-I would need RobH and Robin to review this.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/networking/index.rst            |  1 +
+ .../{xfrm_proc.txt => xfrm_proc.rst}          | 31 +++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ rename Documentation/networking/{xfrm_proc.txt => xfrm_proc.rst} (95%)
 
-Also, An ACK from Tom is required - for the whole series.
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index e31f6cb564b4..3fe70efb632e 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -118,6 +118,7 @@ Contents:
+    x25-iface
+    x25
+    xfrm_device
++   xfrm_proc
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/networking/xfrm_proc.txt b/Documentation/networking/xfrm_proc.rst
+similarity index 95%
+rename from Documentation/networking/xfrm_proc.txt
+rename to Documentation/networking/xfrm_proc.rst
+index 2eae619ab67b..0a771c5a7399 100644
+--- a/Documentation/networking/xfrm_proc.txt
++++ b/Documentation/networking/xfrm_proc.rst
+@@ -1,5 +1,9 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==================================
+ XFRM proc - /proc/net/xfrm_* files
+ ==================================
++
+ Masahide NAKAMURA <nakam@linux-ipv6.org>
+ 
+ 
+@@ -14,42 +18,58 @@ as part of the linux private MIB.  These counters can be viewed in
+ 
+ Inbound errors
+ ~~~~~~~~~~~~~~
++
+ XfrmInError:
+ 	All errors which is not matched others
++
+ XfrmInBufferError:
+ 	No buffer is left
++
+ XfrmInHdrError:
+ 	Header error
++
+ XfrmInNoStates:
+ 	No state is found
+ 	i.e. Either inbound SPI, address, or IPsec protocol at SA is wrong
++
+ XfrmInStateProtoError:
+ 	Transformation protocol specific error
+ 	e.g. SA key is wrong
++
+ XfrmInStateModeError:
+ 	Transformation mode specific error
++
+ XfrmInStateSeqError:
+ 	Sequence error
+ 	i.e. Sequence number is out of window
++
+ XfrmInStateExpired:
+ 	State is expired
++
+ XfrmInStateMismatch:
+ 	State has mismatch option
+ 	e.g. UDP encapsulation type is mismatch
++
+ XfrmInStateInvalid:
+ 	State is invalid
++
+ XfrmInTmplMismatch:
+ 	No matching template for states
+ 	e.g. Inbound SAs are correct but SP rule is wrong
++
+ XfrmInNoPols:
+ 	No policy is found for states
+ 	e.g. Inbound SAs are correct but no SP is found
++
+ XfrmInPolBlock:
+ 	Policy discards
++
+ XfrmInPolError:
+ 	Policy error
++
+ XfrmAcquireError:
+ 	State hasn't been fully acquired before use
++
+ XfrmFwdHdrError:
+ 	Forward routing of a packet is not allowed
+ 
+@@ -57,26 +77,37 @@ Outbound errors
+ ~~~~~~~~~~~~~~~
+ XfrmOutError:
+ 	All errors which is not matched others
++
+ XfrmOutBundleGenError:
+ 	Bundle generation error
++
+ XfrmOutBundleCheckError:
+ 	Bundle check error
++
+ XfrmOutNoStates:
+ 	No state is found
++
+ XfrmOutStateProtoError:
+ 	Transformation protocol specific error
++
+ XfrmOutStateModeError:
+ 	Transformation mode specific error
++
+ XfrmOutStateSeqError:
+ 	Sequence error
+ 	i.e. Sequence number overflow
++
+ XfrmOutStateExpired:
+ 	State is expired
++
+ XfrmOutPolBlock:
+ 	Policy discards
++
+ XfrmOutPolDead:
+ 	Policy is dead
++
+ XfrmOutPolError:
+ 	Policy error
++
+ XfrmOutStateInvalid:
+ 	State is invalid, perhaps expired
+-- 
+2.25.4
 
-On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
-> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
-> property to configure the number of bits passed through from PCIe
-> address to internal address in Inbound Address Translation register.
-> 
-> However standard PCI dt-binding already defines "dma-ranges" to
-> describe the address range accessible by PCIe controller. Parse
-> "dma-ranges" property to configure the number of bits passed
-> through from PCIe address to internal address in Inbound Address
-> Translation register.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 9b1c3966414b..60f912a657b9 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	struct device *dev = rc->pcie.dev;
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct device_node *np = dev->of_node;
-> +	struct of_pci_range_parser parser;
->  	struct pci_host_bridge *bridge;
->  	struct list_head resources;
-> +	struct of_pci_range range;
->  	struct cdns_pcie *pcie;
->  	struct resource *res;
->  	int ret;
-> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	rc->max_regions = 32;
->  	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->  
-> -	rc->no_bar_nbits = 32;
-> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
-> +	if (!of_pci_dma_range_parser_init(&parser, np))
-> +		if (of_pci_range_parser_one(&parser, &range))
-> +			rc->no_bar_nbits = ilog2(range.size);
-> +
-> +	if (!rc->no_bar_nbits) {
-> +		rc->no_bar_nbits = 32;
-> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
-> +				     &rc->no_bar_nbits);
-> +	}
->  
->  	rc->vendor_id = 0xffff;
->  	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
-> -- 
-> 2.17.1
-> 
