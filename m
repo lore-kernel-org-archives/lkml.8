@@ -2,154 +2,246 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812FFC4725A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F93220731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F550206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kitVDdx/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3aIzTXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgEAI2G (ORCPT
+        id S1728419AbgEAIfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:28:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
+        Fri, 1 May 2020 04:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728325AbgEAI2F (ORCPT
+        with ESMTP id S1728325AbgEAIfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:28:05 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D38C035494;
-        Fri,  1 May 2020 01:28:05 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id t199so2139724oif.7;
-        Fri, 01 May 2020 01:28:05 -0700 (PDT)
+        Fri, 1 May 2020 04:35:22 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB5EC035494
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 01:35:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f11so2048699ljp.1
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 01:35:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iIaRGYpAPupU8ap77mm0+hl9zSz1kLjaWyzfce1Qs3Y=;
-        b=kitVDdx/L3DP0PkMGe4nbAT/OeUb9rxLisr3H1naWl4uvidfeWv+LsXSQEgmmyc0X/
-         iLi76W4bs3UsILqhkHUgncUHqEUqeBZ807rF4XZtjj2UQ67sZ4mxfq8Rz5lTBq2RNN+v
-         9/S7EJEZh7aqpKGRbqGY8MNKVZ1kFzS8Qyhlb5ZJs4YPTpvsgZQEVgDc8FP/aj/kr24B
-         mD/lDEQb5IO+ZfE5flM5Fs50UniK7R/Y60Rs+7W7iMXftdnv38rWWXkWJdLnEIk81P8R
-         YBN1wqcVZHOU0FJbuDxdB/nALwtchR1n48YTjEaft/fGl60RWwSo7g9wzWS58jpzwAKS
-         vXIQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uxqGfQnbNLpuSbmHYR3QsXvpUsDHwV7ckml89C19bGY=;
+        b=v3aIzTXfoKhvkGjKxC6G+5VDLUVMy4ljJXGauzCQ7yi5IPbVzHf03MD5aXHgIJXJgI
+         sjNAzsEM8mYVamdEwOPANA25PIa0/ek+m7HCYQt4kIJNhexTu5t8wyj7D13JcXb6ck/E
+         Q+iCtTR6I5LvnGBZjHD1QQFtTT4vKknBTakE1L54BWgIMRqlpOF5krEzDS9RCRdnVzfu
+         A2CaQLPaZs0p/qHBh6Wf536jXHxHLDnkZQkSgoUE+4VDu4LhsvrlwujdDKGuje6sMVhf
+         wz4iziS0upyDF1UTC+iivE0WaUxhfPG9D5tht5Mra85oMSPKvX1Ts7c3rIxXHnpUGv4M
+         TMaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iIaRGYpAPupU8ap77mm0+hl9zSz1kLjaWyzfce1Qs3Y=;
-        b=t7QM5ea78ctrTVc+To8N6dmev14LODMKeYrjA8lT9sGR0t/p1KeQdjMiWzsvjq1P7f
-         iqgpZhx8EwXkdoA6ljxWXeKCpBV1mZMKc800laWio8XpNC23FtdOt0R3oMZPZSVxGoqV
-         Ml5wAm5LJIkxtnxMWMLfO2kpuELD1KavEP2zrPMws4K23IUJV/EOeJxtZhOKksEzPqiS
-         3lHTfI5bw0B7wkJ2/il+L+eOsO7gSxLrgj4jAT2FWUZl3vCUdQ+5GdQTpeX7+TFizTfv
-         JobuwdBZbKboUsy5JYU81p1GK7OTle6b4TYbdO27V/IHxv3P+gwFy1NSi4c4su5u7Kmp
-         cKEA==
-X-Gm-Message-State: AGi0PubLcHCx9uT6L7kkjRMOvX/UpQgQ5RQvqObpoCY0t+fkrn6U8CLb
-        H46LWnsSN8N6ugroEQ80TkzRA3QWKyFNSQN8AdA=
-X-Google-Smtp-Source: APiQypK7F/qXasasin7MAQYiif3YYm7Zv+A3AA59LZg9zaayKtl+Wh4ZN+37kvvRqqUEkgvPlkOR6eZ2Unj/057MAYA=
-X-Received: by 2002:a05:6808:5c5:: with SMTP id d5mr2347754oij.8.1588321684000;
- Fri, 01 May 2020 01:28:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uxqGfQnbNLpuSbmHYR3QsXvpUsDHwV7ckml89C19bGY=;
+        b=hswUC+IKKkmb48sFDYJoFcPQA8aT0B46ClLvyfKykiv+KcbBG1q6ZM0YbQXtejKbOC
+         1bHIS6qdvBkX4o0sErJHZLPHE46kGwj/GYDEDnAHBKKBejrKExoml2O37CL036LYSOKZ
+         IBrhd07lk7T5JO6EYgTC9hlrzfNZdNfQfVu/KwVOk1ycHHm9c/yCYFER9CQKJfeW9iei
+         tqJyth+TtjA+Dd10tfQtMq0kcGmKu+yzlD6T9TSLL0MLnRKkd0fMr9tx2cZcEeDYRb2O
+         VAgRcMIMThL/C1xZO/VOvygrhuXDzgIn1FNnw195N/58UwM8LdZ6T1PO/VGzXAth2Huj
+         A/Hw==
+X-Gm-Message-State: AGi0Pua79Fl9RASjJenwboMKCZ2DpEuS5yalydXjTS8b7NOVySpWBJZ/
+        nIkG8Xu46Y5xu4eIBSiC3I0KMQ==
+X-Google-Smtp-Source: APiQypLeUHQb68HinR8YRkTEOArVX22KcIV3ZK1EdwqhmdUWRJWRL2LqrxoUz/j4wnNd645UHlqNQg==
+X-Received: by 2002:a2e:3c05:: with SMTP id j5mr1710060lja.280.1588322120443;
+        Fri, 01 May 2020 01:35:20 -0700 (PDT)
+Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
+        by smtp.gmail.com with ESMTPSA id t3sm1543110ljo.51.2020.05.01.01.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 01:35:19 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     brendanhiggins@google.com
+Cc:     gregkh@linuxfoundation.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, elver@google.com,
+        john.johansen@canonical.com, jmorris@namei.org, serge@hallyn.com,
+        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-security-module@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
+Date:   Fri,  1 May 2020 10:35:10 +0200
+Message-Id: <20200501083510.1413-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 1 May 2020 09:27:37 +0100
-Message-ID: <CA+V-a8sudn9kNs0QKQP9L_GL2wo1mifjRLcbA6sYjryD9cfZMw@mail.gmail.com>
-Subject: Re: [PATCH 00/18] Add R8A7742/RZG1H board support
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Make it easier to enable all KUnit fragments.  This is needed for kernel
+test-systems, so its easy to get all KUnit tests enabled and if new gets
+added they will be enabled as well.  Fragments that has to be builtin
+will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
 
-On Wed, Apr 29, 2020 at 10:57 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi All,
->
-> This patch set adds initial board support for R8A7742 SoC,
-> enabling R8A7742 arch in defconfigs with initial dtsi.
->
-> Cheers,
-> --Prabhakar
->
-> Lad Prabhakar (18):
->   soc: renesas: Add Renesas R8A7742 config option
->   ARM: shmobile: defconfig: Enable r8a7742 SoC
->   ARM: multi_v7_defconfig: Enable r8a7742 SoC
->   ARM: debug-ll: Add support for r8a7742
->   dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
->   pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
->   ARM: dts: r8a7742: Initial SoC device tree
->   dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
->   ARM: dts: r8a7742: Add IRQC support
->   dt-bindings: rcar-dmac: Document r8a7742 support
->   ARM: dts: r8a7742: Add SYS-DMAC support
->   dt-bindings: serial: renesas,scif: Document r8a7742 bindings
->   dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
->   dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
->   dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
->   ARM: dts: r8a7742: Add [H]SCIF{A|B} support
->   dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
->   ARM: dts: r8a7742: Add GPIO support
->
-Thank you for the review.
+Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
+someone wants that even though KUNIT_RUN_ALL is enabled.
 
-For v2 ill post patches from 6-18 fixing your review comments and
-including the Acks, as patches 1-5 have been queued.
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+---
+ drivers/base/Kconfig      |  3 ++-
+ drivers/base/test/Kconfig |  3 ++-
+ fs/ext4/Kconfig           |  3 ++-
+ lib/Kconfig.debug         |  6 ++++--
+ lib/Kconfig.kcsan         |  3 ++-
+ lib/kunit/Kconfig         | 15 ++++++++++++---
+ security/apparmor/Kconfig |  3 ++-
+ 7 files changed, 26 insertions(+), 10 deletions(-)
 
-Cheers,
---Prabhakar
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index 5f0bc74d2409..c48e6e4ef367 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -149,8 +149,9 @@ config DEBUG_TEST_DRIVER_REMOVE
+ 	  test this functionality.
+ 
+ config PM_QOS_KUNIT_TEST
+-	bool "KUnit Test for PM QoS features"
++	bool "KUnit Test for PM QoS features" if !KUNIT_RUN_ALL
+ 	depends on KUNIT=y
++	default KUNIT_RUN_ALL
+ 
+ config HMEM_REPORTING
+ 	bool
+diff --git a/drivers/base/test/Kconfig b/drivers/base/test/Kconfig
+index 305c7751184a..0d662d689f6b 100644
+--- a/drivers/base/test/Kconfig
++++ b/drivers/base/test/Kconfig
+@@ -9,5 +9,6 @@ config TEST_ASYNC_DRIVER_PROBE
+ 
+ 	  If unsure say N.
+ config KUNIT_DRIVER_PE_TEST
+-	bool "KUnit Tests for property entry API"
++	bool "KUnit Tests for property entry API" if !KUNIT_RUN_ALL
+ 	depends on KUNIT=y
++	default KUNIT_RUN_ALL
+diff --git a/fs/ext4/Kconfig b/fs/ext4/Kconfig
+index 2a592e38cdfe..76785143259d 100644
+--- a/fs/ext4/Kconfig
++++ b/fs/ext4/Kconfig
+@@ -103,9 +103,10 @@ config EXT4_DEBUG
+ 		echo 1 > /sys/module/ext4/parameters/mballoc_debug
+ 
+ config EXT4_KUNIT_TESTS
+-	tristate "KUnit tests for ext4"
++	tristate "KUnit tests for ext4" if !KUNIT_RUN_ALL
+ 	select EXT4_FS
+ 	depends on KUNIT
++	default KUNIT_RUN_ALL
+ 	help
+ 	  This builds the ext4 KUnit tests.
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 8e4aded46281..993e0c5549bc 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2123,8 +2123,9 @@ config TEST_SYSCTL
+ 	  If unsure, say N.
+ 
+ config SYSCTL_KUNIT_TEST
+-	tristate "KUnit test for sysctl"
++	tristate "KUnit test for sysctl" if !KUNIT_RUN_ALL
+ 	depends on KUNIT
++	default KUNIT_RUN_ALL
+ 	help
+ 	  This builds the proc sysctl unit test, which runs on boot.
+ 	  Tests the API contract and implementation correctness of sysctl.
+@@ -2134,8 +2135,9 @@ config SYSCTL_KUNIT_TEST
+ 	  If unsure, say N.
+ 
+ config LIST_KUNIT_TEST
+-	tristate "KUnit Test for Kernel Linked-list structures"
++	tristate "KUnit Test for Kernel Linked-list structures" if !KUNIT_RUN_ALL
+ 	depends on KUNIT
++	default KUNIT_RUN_ALL
+ 	help
+ 	  This builds the linked list KUnit test suite.
+ 	  It tests that the API and basic functionality of the list_head type
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index ea28245c6c1d..91398300a1bc 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -46,8 +46,9 @@ config KCSAN_SELFTEST
+ 	  works as intended.
+ 
+ config KCSAN_TEST
+-	tristate "KCSAN test for integrated runtime behaviour"
++	tristate "KCSAN test for integrated runtime behaviour" if !KUNIT_RUN_ALL
+ 	depends on TRACEPOINTS && KUNIT
++	default KUNIT_RUN_ALL
+ 	select TORTURE_TEST
+ 	help
+ 	  KCSAN test focusing on behaviour of the integrated runtime. Tests
+diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+index 95d12e3d6d95..d6a912779816 100644
+--- a/lib/kunit/Kconfig
++++ b/lib/kunit/Kconfig
+@@ -15,7 +15,8 @@ menuconfig KUNIT
+ if KUNIT
+ 
+ config KUNIT_DEBUGFS
+-	bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation"
++	bool "KUnit - Enable /sys/kernel/debug/kunit debugfs representation" if !KUNIT_RUN_ALL
++	default KUNIT_RUN_ALL
+ 	help
+ 	  Enable debugfs representation for kunit.  Currently this consists
+ 	  of /sys/kernel/debug/kunit/<test_suite>/results files for each
+@@ -23,7 +24,8 @@ config KUNIT_DEBUGFS
+ 	  run that occurred.
+ 
+ config KUNIT_TEST
+-	tristate "KUnit test for KUnit"
++	tristate "KUnit test for KUnit" if !KUNIT_RUN_ALL
++	default KUNIT_RUN_ALL
+ 	help
+ 	  Enables the unit tests for the KUnit test framework. These tests test
+ 	  the KUnit test framework itself; the tests are both written using
+@@ -32,7 +34,8 @@ config KUNIT_TEST
+ 	  expected.
+ 
+ config KUNIT_EXAMPLE_TEST
+-	tristate "Example test for KUnit"
++	tristate "Example test for KUnit" if !KUNIT_RUN_ALL
++	default KUNIT_RUN_ALL
+ 	help
+ 	  Enables an example unit test that illustrates some of the basic
+ 	  features of KUnit. This test only exists to help new users understand
+@@ -41,4 +44,10 @@ config KUNIT_EXAMPLE_TEST
+ 	  is intended for curious hackers who would like to understand how to
+ 	  use KUnit for kernel development.
+ 
++config KUNIT_RUN_ALL
++	tristate "KUnit run all test"
++	help
++	  Enables all KUnit tests. If they can be enabled.
++	  That depends on if KUnit is enabled as a module or builtin.
++
+ endif # KUNIT
+diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
+index 0fe336860773..c4648426ea5d 100644
+--- a/security/apparmor/Kconfig
++++ b/security/apparmor/Kconfig
+@@ -70,8 +70,9 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
+ 	  the kernel message buffer.
+ 
+ config SECURITY_APPARMOR_KUNIT_TEST
+-	bool "Build KUnit tests for policy_unpack.c"
++	bool "Build KUnit tests for policy_unpack.c" if !KUNIT_RUN_ALL
+ 	depends on KUNIT=y && SECURITY_APPARMOR
++	default KUNIT_RUN_ALL
+ 	help
+ 	  This builds the AppArmor KUnit tests.
+ 
+-- 
+2.20.1
 
->  .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |   1 +
->  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
->  .../interrupt-controller/renesas,irqc.yaml         |   1 +
->  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
->  .../devicetree/bindings/serial/renesas,hscif.yaml  |   1 +
->  .../devicetree/bindings/serial/renesas,scif.yaml   |   1 +
->  .../devicetree/bindings/serial/renesas,scifa.yaml  |   1 +
->  .../devicetree/bindings/serial/renesas,scifb.yaml  |   1 +
->  arch/arm/Kconfig.debug                             |  10 +
->  arch/arm/boot/dts/r8a7742.dtsi                     | 939 +++++++++++++++++++++
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm/configs/shmobile_defconfig                |   1 +
->  drivers/pinctrl/sh-pfc/Kconfig                     |   4 +
->  drivers/pinctrl/sh-pfc/Makefile                    |   1 +
->  drivers/pinctrl/sh-pfc/core.c                      |   6 +
->  drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  24 +
->  drivers/pinctrl/sh-pfc/sh_pfc.h                    |   1 +
->  drivers/soc/renesas/Kconfig                        |   7 +
->  18 files changed, 1002 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
->
-> --
-> 2.7.4
->
