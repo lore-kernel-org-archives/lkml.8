@@ -2,184 +2,137 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8B3C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5FAB20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:06:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="HaZQ4QnF"
+	by mail.kernel.org (Postfix) with ESMTP id 2FE45216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgEAUGR (ORCPT
+        id S1727115AbgEAUHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:06:17 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:16390 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726307AbgEAUGQ (ORCPT
+        Fri, 1 May 2020 16:07:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:60405 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgEAUHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:06:16 -0400
-X-Greylist: delayed 2664 seconds by postgrey-1.27 at vger.kernel.org; Fri, 01 May 2020 16:06:16 EDT
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041JN6vN020977;
-        Fri, 1 May 2020 20:27:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=FIb1tRSakOixa+KWRoQwQxkx2NZ7hP7elrzO5eAo2xQ=;
- b=HaZQ4QnFRwOyGdnOW8jnUd0CBlZwxoilEXTBO5jKomHjZLo+9MIRyC7/PjV6BijWAG64
- EMQqmBozS+ft/tl+ryi4e8Ez+1RIHkh+J7DcfpuYyuRlgO9XbB3DkrytCdSV44s67dj4
- JYZmW3W81fxXb0ai/pOcBcvI8JpKfrs4OH2lQJMOImka0Y4W8se3OeN1v9hGN8pjbAIv
- mzFLn8MVAKaFBHcvoolc6Cy1aa4Id5OD93Lk4nbKfnl38vjVs1Kn2Ds5OFMSAh1n+IxT
- U8vZUFqQuSMFg5D8nv+0YnAiqH8L/n6Nx00sYfUHsohKDBcEx5B7zIRBcPB9oEoZDrgx 7A== 
-Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 30r7jqbfqe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 20:27:19 +0100
-Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
-        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 041JIvlP013453;
-        Fri, 1 May 2020 12:27:18 -0700
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-        by prod-mail-ppoint5.akamai.com with ESMTP id 30mk6909vh-1;
-        Fri, 01 May 2020 12:27:18 -0700
-Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
-        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id DAD2034906;
-        Fri,  1 May 2020 19:27:17 +0000 (GMT)
-Subject: Re: [PATCH 2/2] epoll: atomically remove wait entry on wake up
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200430130326.1368509-1-rpenyaev@suse.de>
- <20200430130326.1368509-2-rpenyaev@suse.de>
-From:   Jason Baron <jbaron@akamai.com>
-Message-ID: <6cb1fc30-d4a1-f483-48b7-9fa594d9e46f@akamai.com>
-Date:   Fri, 1 May 2020 15:27:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 16:07:08 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MZTVu-1jhO1d035q-00WTo7; Fri, 01 May 2020 22:07:07 +0200
+Received: by mail-qk1-f172.google.com with SMTP id h124so10343955qke.11;
+        Fri, 01 May 2020 13:07:06 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaUr4imBaFb+wj3UVDiugtu4c4l8W4PjBfKNyerS4dXiHoQMHgf
+        iTl/9OfepIb5xRMRaWYmwoSYf6F4+BfGQV1QFqw=
+X-Google-Smtp-Source: APiQypIQL/PdnZHF8Wfz7ADpsLFsjVjLgWbRjmn9o8MDCsMnGYznSEI15n8DEv1cRiNlskgjAH1LuTuIBw3NFxtqVHM=
+X-Received: by 2002:a37:a492:: with SMTP id n140mr5418238qke.352.1588363625776;
+ Fri, 01 May 2020 13:07:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200430130326.1368509-2-rpenyaev@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_14:2020-05-01,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2002250000 definitions=main-2005010143
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_11:2020-05-01,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005010143
+References: <20200430213101.135134-9-arnd@arndb.de> <Pine.LNX.4.44L0.2004302231290.19755-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2004302231290.19755-100000@netrider.rowland.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 1 May 2020 22:06:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a19DSnyvzSRCFr6fQGAMudQwhZY7Wy2yS6HL8y3TsfoLw@mail.gmail.com>
+Message-ID: <CAK8P3a19DSnyvzSRCFr6fQGAMudQwhZY7Wy2yS6HL8y3TsfoLw@mail.gmail.com>
+Subject: Re: [PATCH 08/15] usb: ehci: avoid gcc-10 zero-length-bounds warning
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:xMHR+/oei8shEKjqO2aNZ3xjz7BHk5Lj/8vXQYotfGOzvKiM/Ju
+ zUpHkZvLjluojzxBfkVkt4+ioG52jT/EMBrClBCgMWTp0aYCQsF7w+4fb2PfLq63xymPPBe
+ n8fL27ToK5K2gkD85t0/WlbME7mHfDmt1Ws7LDFD0R4+83epSd0lT789VLjk2BCxCv0PTNc
+ nSgI4Fg6fMDFmwNA+iAwA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KVV7I/FEbdY=:XDUZ0FkiqS+pGR+84WeAxd
+ /hPXVKblcwFzPxol83ZdkPDHbw5eGn6Q01XhSrVuiKKEs1OymiuwYXAkd3QCvh7ZUXd6WZ0yS
+ oIH02jeZfCbH0QvBwrGUF5i+wegJXtxCJ7TuH8COsphQ8pZUHZfnK7Rf5mD3v5pnOmvBmTgO8
+ D0waHvE+pOeynLKUnqDPZWKm2gb3wIyZnvpgX5EyEfrK6Ge1+YcwPYuiqbmZS1zGkdSAjV9rp
+ VpurKtwFjMZjC7hw+Up/kG4YJvIZ66zUYRJOzhjPwenE6C7P44H9kFogxWxWcnPQEuoyGKzhN
+ tZnKNrAmzGxE+xhSt9BdiasECTBlWprzQKm7KGSNb96FZoWZi3liUs5YbXu06VqmseVzF+NKE
+ vmqmHnaAdo7yRWqz6zKa5wVti77ZRDI8H9PKcADoInFxxPmaRxHKf7w2xYgppP8A85AjpRUL7
+ 6WgenLbje7FFAXsL0ER+3sy2WG9CtZQ2SGWJFevJq6h3FUv5d2daR1+L0QgSTm1T/U74oRKt5
+ TkYw/myo+GT4tjTkHZVgXQsT4mFsz5CyDtpFA8Ohbjx7eKhJURG6g2VdzSi7mlkwDsFwgcNZ2
+ z+NoRYrgy3x7vfO9kmfNCNJ55ObHeNkZ2Xak79e3oMwmAXp5uKgNFMWXHw1czZIDtDSq/jPKd
+ 1WL9tXeHQJDEhYjGl5g6FWIre2r6boYoi48geZDyLO0k+9sQggIk+4POVz9UNw8gOygSZ1dgK
+ oah47pvlixF9A8rcNvDEr7cIdmkTmJIT3Fw0HyLG9Mwm/enObWKfnuCbauH2m6rYH470PsHMx
+ ewoAAKQS+nQ9fUv39e/sHLLf+7s7VK0TQr4uCRbCpAuZ3bUHIA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 1, 2020 at 4:42 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> On Thu, 30 Apr 2020, Arnd Bergmann wrote:
 
+>
+> No, they don't.
 
-On 4/30/20 9:03 AM, Roman Penyaev wrote:
-> This patch does two things:
-> 
-> 1. fixes lost wakeup introduced by:
->   339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
-> 
-> 2. improves performance for events delivery.
-> 
-> The description of the problem is the following: if N (>1) threads
-> are waiting on ep->wq for new events and M (>1) events come, it is
-> quite likely that >1 wakeups hit the same wait queue entry, because
-> there is quite a big window between __add_wait_queue_exclusive() and
-> the following __remove_wait_queue() calls in ep_poll() function.  This
-> can lead to lost wakeups, because thread, which was woken up, can
-> handle not all the events in ->rdllist. (in better words the problem
-> is described here: https://lkml.org/lkml/2019/10/7/905)
-> 
-> The idea of the current patch is to use init_wait() instead of
-> init_waitqueue_entry(). Internally init_wait() sets
-> autoremove_wake_function as a callback, which removes the wait entry
-> atomically (under the wq locks) from the list, thus the next coming
-> wakeup hits the next wait entry in the wait queue, thus preventing
-> lost wakeups.
-> 
-> Problem is very well reproduced by the epoll60 test case [1].
-> 
-> Wait entry removal on wakeup has also performance benefits, because
-> there is no need to take a ep->lock and remove wait entry from the
-> queue after the successful wakeup. Here is the timing output of
-> the epoll60 test case:
-> 
->   With explicit wakeup from ep_scan_ready_list() (the state of the
->   code prior 339ddb53d373):
-> 
->     real    0m6.970s
->     user    0m49.786s
->     sys     0m0.113s
-> 
->  After this patch:
-> 
->    real    0m5.220s
->    user    0m36.879s
->    sys     0m0.019s
-> 
-> The other testcase is the stress-epoll [2], where one thread consumes
-> all the events and other threads produce many events:
-> 
->   With explicit wakeup from ep_scan_ready_list() (the state of the
->   code prior 339ddb53d373):
-> 
->     threads  events/ms  run-time ms
->           8       5427         1474
->          16       6163         2596
->          32       6824         4689
->          64       7060         9064
->         128       6991        18309
-> 
->  After this patch:
-> 
->     threads  events/ms  run-time ms
->           8       5598         1429
->          16       7073         2262
->          32       7502         4265
->          64       7640         8376
->         128       7634        16767
-> 
->  (number of "events/ms" represents event bandwidth, thus higher is
->   better; number of "run-time ms" represents overall time spent
->   doing the benchmark, thus lower is better)
-> 
-> [1] tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-> [2] https://github.com/rouming/test-tools/blob/master/stress-epoll.c
-> 
-> Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Khazhismel Kumykov <khazhy@google.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Heiher <r@hev.cc>
-> Cc: Jason Baron <jbaron@akamai.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  fs/eventpoll.c | 43 ++++++++++++++++++++++++-------------------
->  1 file changed, 24 insertions(+), 19 deletions(-)
-> 
+> >       /* PORTSC: offset 0x44 */
+> > -     u32             port_status[0]; /* up to N_PORTS */
+> > +     union {
+> > +             u32             port_status[9]; /* up to N_PORTS */
+>
+> This array can have up to 15 elements, meaning that it can extend out
+> to offset 0x80.
 
-Looks good to me and nice speedups.
-Reviewed-by: Jason Baron <jbaron@akamai.com>
+Ok, thanks for the clarification!
 
-Thanks,
+> >  /* EHCI 1.1 addendum */
+> >  #define PORTSC_SUSPEND_STS_ACK 0
+> >  #define PORTSC_SUSPEND_STS_NYET 1
+> > @@ -165,7 +166,8 @@ struct ehci_regs {
+> >  #define PORT_CONNECT (1<<0)          /* device connected */
+> >  #define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
+> >
+> > -     u32             reserved3[9];
+> > +             u32             reserved3[9];
+> > +     };
+> >
+> >       /* USBMODE: offset 0x68 */
+> >       u32             usbmode;        /* USB Device mode */
+>
+> As you see, this next field actually lies inside the preceding array.
+> It's not a real conflict; any hardware which supports the usbmode field
+> uses only the first element of the port_status array.
+>
+> I don't know how you want to handle this.  Doing
+>
+> #define usbmode port_status[9]
+>
+> doesn't seem like a very good approach, but I can't think of anything
+> better at the moment.  Maybe just set the array size to 9, as you did,
+> but with a comment explaining what's really going on.
 
--Jason
+The easiest change would be to use an anonymous struct like this
 
+        /* PORTSC: offset 0x44 */
+        union {
+                u32             port_status[15]; /* up to N_PORTS */
+/* EHCI 1.1 addendum */
+#define PORTSC_SUSPEND_STS_ACK 0
+...
+#define PORT_RWC_BITS   (PORT_CSC | PORT_PEC | PORT_OCC)
+                struct {
+                        u32             reserved3[9];
 
+        /* USBMODE: offset 0x68 */
+                        u32             usbmode;        /* USB Device mode */
+#define USBMODE_SDIS    (1<<3)          /* Stream disable */
+#define USBMODE_BE      (1<<2)          /* BE/LE endianness select */
+#define USBMODE_CM_HC   (3<<0)          /* host controller mode */
+#define USBMODE_CM_IDLE (0<<0)          /* idle state */
+
+                        u32             reserved4[5];
+                };
+        };
+        u32             reserved5;
+
+It doesn't really improve readability, but it should correctly
+reflect the layout as you described it.
+
+       Arnd
