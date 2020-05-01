@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97F1C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2575C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEE520757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D6B20757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341687;
-	bh=FNhRyMpSGvDcWL+FkiSO+CoSo19v+u5k7e/iOZoQyfk=;
+	s=default; t=1588341693;
+	bh=0XSd+zX45sJ8FoxhyxF46ZGpGhtossW6oMCG/N5mrks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoyeYxn9zQoq87ht0dfw+N1IgNlqEXKuRUytaEwhCTOVf4AuffKWDs34nfP9LtTzW
-	 LqbEQDRJYYwqrfOQxtvYfqnmSdCzABGuaTcanEnQwcoPgR6cCimOSNxTOrxNuAltUf
-	 kyoQjFSmvm3Phr60gFjY2wRBYIjefZQcsG4v8MTc=
+	b=NB9eU4loWFQA1Dlh7k1acVWP/jkvuhSihW5KVfN71yPVDh1sVhMFKpTlC8iYrPPCG
+	 pLyoIN10a45v8+H4fUH/2KbkS0HAHZDlQ2Z6iMp9K1RK/Q+kQgzUH2fJrAQkDreGxv
+	 uNyT9Qhpb65RTm2hy9GvZf4qwLf7BRVniA0hxmgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgEAOB1 (ORCPT
+        id S1729041AbgEANZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47014 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbgEANZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:49 -0400
+        id S1729031AbgEANZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17D1208DB;
-        Fri,  1 May 2020 13:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D85B12173E;
+        Fri,  1 May 2020 13:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339549;
-        bh=FNhRyMpSGvDcWL+FkiSO+CoSo19v+u5k7e/iOZoQyfk=;
+        s=default; t=1588339529;
+        bh=0XSd+zX45sJ8FoxhyxF46ZGpGhtossW6oMCG/N5mrks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCtys+aLBD6QqMbJvll2HjfNFWVApCdHzruYpRse7GxZWdso5MIvdLOdpeU3Jj3JA
-         Q0wXR3zB7ip0x1SLAkhYH5Rt7ts/DPNznrKGiDwa+D6Bkou/uZW8RiHDYLnBCDopzX
-         3XbwvJt8kIs9aF79RHIr/SCAXQiH400FapT0lf2Q=
+        b=hdeIn4CcFWc3+h5jwg2FsJriomh2TTfD2ZAKCWxJWZYmQzFoZPhVRkmC/AzjpZce/
+         +5U11rpsvekz2cN2Rw23TfzUGpFWGBQORrNq+1fWo9XWAN9fBdq4/AFD2QynElHXuj
+         Png04GoEXHRLdHDPDP380qdVE+Cg/mdCsnhHsYwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/70] ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
-Date:   Fri,  1 May 2020 15:21:00 +0200
-Message-Id: <20200501131517.423153311@linuxfoundation.org>
+Subject: [PATCH 4.4 14/70] ipc/util.c: sysvipc_find_ipc() should increase position index
+Date:   Fri,  1 May 2020 15:21:02 +0200
+Message-Id: <20200501131517.910739446@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -61,40 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 81630dc042af998b9f58cd8e2c29dab9777ea176 ]
+[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
 
-sst_send_slot_map() uses sst_fill_and_send_cmd_unlocked() because in some
-places it is called with the drv->lock mutex already held.
+If seq_file .next function does not change position index, read after
+some lseek can generate unexpected output.
 
-So it must always be called with the mutex locked. This commit adds missing
-locking in the sst_set_be_modules() code-path.
-
-Fixes: 24c8d14192cc ("ASoC: Intel: mrfld: add DSP core controls")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200402185359.3424-1-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Waiman Long <longman@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: NeilBrown <neilb@suse.com>
+Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-atom-controls.c | 2 ++
- 1 file changed, 2 insertions(+)
+ ipc/util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/atom/sst-atom-controls.c b/sound/soc/intel/atom/sst-atom-controls.c
-index b070d47547450..067cee92d333b 100644
---- a/sound/soc/intel/atom/sst-atom-controls.c
-+++ b/sound/soc/intel/atom/sst-atom-controls.c
-@@ -963,7 +963,9 @@ static int sst_set_be_modules(struct snd_soc_dapm_widget *w,
- 	dev_dbg(c->dev, "Enter: widget=%s\n", w->name);
+diff --git a/ipc/util.c b/ipc/util.c
+index 0f401d94b7c65..2724f9071ab39 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -756,13 +756,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
+ 			total++;
+ 	}
  
- 	if (SND_SOC_DAPM_EVENT_ON(event)) {
-+		mutex_lock(&drv->lock);
- 		ret = sst_send_slot_map(drv);
-+		mutex_unlock(&drv->lock);
- 		if (ret)
- 			return ret;
- 		ret = sst_send_pipe_module_params(w, k);
++	*new_pos = pos + 1;
+ 	if (total >= ids->in_use)
+ 		return NULL;
+ 
+ 	for (; pos < IPCMNI; pos++) {
+ 		ipc = idr_find(&ids->ipcs_idr, pos);
+ 		if (ipc != NULL) {
+-			*new_pos = pos + 1;
+ 			rcu_read_lock();
+ 			ipc_lock_object(ipc);
+ 			return ipc;
 -- 
 2.20.1
 
