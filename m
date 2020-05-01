@@ -2,174 +2,103 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B4C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DFDC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54907205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:43:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oJCie5aG"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0352166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgEATnp (ORCPT
+        id S1726892AbgEATrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:43:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:40216 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbgEATnp (ORCPT
+        Fri, 1 May 2020 15:47:37 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:42097 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgEATrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:43:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588362223; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=8MTWVNBp7jmyXYFX7PHfvSnL9tpX1AfSD1FL7Ijrg/8=; b=oJCie5aG6tRUWug7xxDvNXoy24b16fM9nUa4bUq2111uhvPD+Ye79V/kSrOjtCCdx1qO0Whx
- FsFjoUZ3siqTLQ0WRwpPeo35kM5oDX8K3hneYm0enDKNHETYguOk4b47ZtB3luzWWgQnFrFi
- ovBE6KgYvmoZbiizZ//p6jxAVWQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eac7be6.7f104dc41b20-smtp-out-n01;
- Fri, 01 May 2020 19:43:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5B9B6C4478F; Fri,  1 May 2020 19:43:32 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 639C4C433CB;
-        Fri,  1 May 2020 19:43:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 639C4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, stable@vger.kernel.org,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] drm/msm: Check for powered down HW in the devfreq callbacks
-Date:   Fri,  1 May 2020 13:43:26 -0600
-Message-Id: <20200501194326.14593-1-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 1 May 2020 15:47:37 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mr8SG-1iqXej04RS-00oExn for <linux-kernel@vger.kernel.org>; Fri, 01 May
+ 2020 21:47:35 +0200
+Received: by mail-qk1-f179.google.com with SMTP id h124so10288389qke.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 12:47:34 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYD55mm+N6tv356HBqD8VQxYbjKsKvdHc8CExoOUnOEqt6443Ie
+        phxz7FIvmNKwWetHHOIKG4cAc2uaOmlEX02ke6c=
+X-Google-Smtp-Source: APiQypIMMXBc+ZC9udlQgMgh20G/t+TBYExcY6lhHyuX30JjHrYL92Cl6+BVcERHYQ7AsKKfU8XAfPjfYpWxygu12cU=
+X-Received: by 2002:a37:a492:: with SMTP id n140mr5339856qke.352.1588362453876;
+ Fri, 01 May 2020 12:47:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
+ <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
+ <CAK8P3a3exNWHzv7pyV4yvn2hPxUswzSF=G3UJ=evykT5bjfEsw@mail.gmail.com>
+ <20200501172616.GG3762@hirez.programming.kicks-ass.net> <20200501175022.yf3a34lu3ufui5ag@treble>
+In-Reply-To: <20200501175022.yf3a34lu3ufui5ag@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 1 May 2020 21:47:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3uiuS4g7eMtnq7ESQ5NZz5uwGDq7rJ5udQ84jf4T17-A@mail.gmail.com>
+Message-ID: <CAK8P3a3uiuS4g7eMtnq7ESQ5NZz5uwGDq7rJ5udQ84jf4T17-A@mail.gmail.com>
+Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:kCe/75rrtP5uA4CcPBLNPGdFw5wjx42O736SFohH1VHTTb1oie1
+ 4asOyfbwVlL3SgnQvKh9dYX4LWs2G9fVFhnHwurE8qpUK+OLnv08X0O4xdc7HeFMl4+DcBa
+ Ev/jBZxsKhLOVS5rocbn+tg17XZt0SiAlck58jQxTY4Cr5VHB0IDxKaBK6W0zigk1wqo4Wh
+ eg1LRlnWSGy0NaX+ivnnA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8yX7Yxp8mcM=:yQJ0202Ded2+UXsRhLDX4Q
+ 66I5xQ4CGCl4BcuSWJAlmHBmBS/xeZ6FAvHaESBURnvVKfqrR/+5s5G0TNafbB7DqM38iTcNJ
+ tog65Bg4V5Y653w4oyNP2AY5Xp33eeCqZ6X0z3X6c0ALmujpkawTx+GLb0EA3d2VkDqvLkGzn
+ q1R1xrmCk0OlnwcUw82D+zt2FM4pfuA+VxxQtwA/Ohg0fFBr3gDFokqmrpv83sCCdSvWNoGg9
+ Dvwy0K5EaF8VhwFN377FGsXCwm07n7YwoaIumJWXF/GZHi2lumWj6ad7L35EvIVlCn1D9aAQ4
+ rpQspI0Ko1JEWkq+wVu+JG55Hxq3aXgfECWIlgC47xJEwULChprRyPu6C1bKr0h1fu85gxkIA
+ fa7VNtiMmwyr2lk6vbzMQXmwxAt70u1s1OBuO9Gm1H2RNuq2Plxi1qa7nvO8q5neHH/b4A190
+ Zj0b6UuzexwG3GkTHgodKMw5thejcagIkdRRf2cv7yLbSQGsps5HOIY5ftSKYH4DKjrFJFZ4E
+ a9UBy48tIghq3wMEWACeLet7SoCDg34ST8FwY8BucvykxHu783cR2VJbiabKcSPY7QGT7f0kD
+ O0b/CPQUm0uyPz81oeaU2C+GxRAdNIyfxrb2Dr0fb4GVuENsiaTI3lPjlYw1sfyQS7/REzNqf
+ mqeGxu8it5fqSuNLsOHDGf0s2X17bjpPOYyjMAjRybUrCxZz8XwJGKZLbddm26fwxyXea608m
+ TT4t7cQqUFXMX1LPj7MyepYWvbrh7gS/icF9Pein0R2eRnPMDJQv6hUZZwZdAIlbQ2n/ARZH6
+ +3SlxlAq4DPYkRT4JRJWLHtBh/wqug8FzUzIFKb20yJQLolMEw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Writing to the devfreq sysfs nodes while the GPU is powered down can
-result in a system crash (on a5xx) or a nasty GMU error (on a6xx):
+On Fri, May 1, 2020 at 7:50 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Fri, May 01, 2020 at 07:26:16PM +0200, Peter Zijlstra wrote:
+> > On Fri, May 01, 2020 at 07:21:31PM +0200, Arnd Bergmann wrote:
+> > > On Thu, Apr 30, 2020 at 4:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > it gets into undefined behavior and stops emitting code after the call to
+> >
+> > > Do we consider this expected behavior on gcc's side, or is it something
+> > > that should not happen and needs a gcc bug report?
+> >
+> > When it hits UB it is of course free to do whatever it damn well
+> > pleases, but just stopping code gen seems a little extreme, at least
+> > issue a WARN that something is up or so.
+> >
+> > Not sure how the GCC folks feel about this though.
+>
+> When we've seen truncated code flow like this in the past, it's either
+> been a code bug (undefined behavior) or a GCC bug.  So this is new.
+>
+> Is it only seen with GCC_PLUGIN_SANCOV enabled?  Maybe (hopefully) it's
+> an issue with the plugin and how it interacts with GCC 10.
 
- $ /sys/class/devfreq/5000000.gpu# echo 500000000 > min_freq
-  [  104.841625] platform 506a000.gmu: [drm:a6xx_gmu_set_oob]
-	*ERROR* Timeout waiting for GMU OOB set GPU_DCVS: 0x0
+This is not the plugin but the built-in -fsanitize-coverage=trace-pc. With
+the reduced test case, I can also reproduce it on gcc-9.2 and gcc-9.3 but
+not on gcc-8.4.
 
-Despite the fact that we carefully try to suspend the devfreq device when
-the hardware is powered down there are lots of holes in the governors that
-don't check for the suspend state and blindly call into the devfreq
-callbacks that end up triggering hardware reads in the GPU driver.
+So far I have not been able to reproduce it without
+-fsanitize-coverage=trace-pc,
+as the automated creduce tends to run off into undefined behavior unless
+I tell it to ignore runs that produce the objtool warning without the
+-fsanitize-coverage=trace-pc flag.
 
-Call pm_runtime_get_if_in_use() in the gpu_busy() and gpu_set_freq()
-callbacks to skip the hardware access if it isn't active.
-
-v3: Only check pm_runtime_get_if_in_use() for == 0 per Eric Anholt
-v2: Use pm_runtime_get_if_in_use() per Eric Anholt
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
-
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 6 ++++++
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 8 ++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 7 +++++++
- 3 files changed, 21 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 724024a2243a..662d02289533 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -1404,6 +1404,10 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
- {
- 	u64 busy_cycles, busy_time;
- 
-+	/* Only read the gpu busy if the hardware is already active */
-+	if (pm_runtime_get_if_in_use(&gpu->pdev->dev) == 0)
-+		return 0;
-+
- 	busy_cycles = gpu_read64(gpu, REG_A5XX_RBBM_PERFCTR_RBBM_0_LO,
- 			REG_A5XX_RBBM_PERFCTR_RBBM_0_HI);
- 
-@@ -1412,6 +1416,8 @@ static unsigned long a5xx_gpu_busy(struct msm_gpu *gpu)
- 
- 	gpu->devfreq.busy_cycles = busy_cycles;
- 
-+	pm_runtime_put(&gpu->pdev->dev);
-+
- 	if (WARN_ON(busy_time > ~0LU))
- 		return ~0LU;
- 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index c4e71abbdd53..34607a98cc7c 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -108,6 +108,13 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	struct msm_gpu *gpu = &adreno_gpu->base;
- 	int ret;
- 
-+	/*
-+	 * This can get called from devfreq while the hardware is idle. Don't
-+	 * bring up the power if it isn't already active
-+	 */
-+	if (pm_runtime_get_if_in_use(gmu->dev) == 0)
-+		return;
-+
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_ACK_OPTION, 0);
- 
- 	gmu_write(gmu, REG_A6XX_GMU_DCVS_PERF_SETTING,
-@@ -134,6 +141,7 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
- 	 * for now leave it at max so that the performance is nominal.
- 	 */
- 	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-+	pm_runtime_put(gmu->dev);
- }
- 
- void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 68af24150de5..2c09d2c21773 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -810,6 +810,11 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
- 	u64 busy_cycles, busy_time;
- 
-+
-+	/* Only read the gpu busy if the hardware is already active */
-+	if (pm_runtime_get_if_in_use(a6xx_gpu->gmu.dev) == 0)
-+		return 0;
-+
- 	busy_cycles = gmu_read64(&a6xx_gpu->gmu,
- 			REG_A6XX_GMU_CX_GMU_POWER_COUNTER_XOCLK_0_L,
- 			REG_A6XX_GMU_CX_GMU_POWER_COUNTER_XOCLK_0_H);
-@@ -819,6 +824,8 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 
- 	gpu->devfreq.busy_cycles = busy_cycles;
- 
-+	pm_runtime_put(a6xx_gpu->gmu.dev);
-+
- 	if (WARN_ON(busy_time > ~0LU))
- 		return ~0LU;
- 
--- 
-2.17.1
+       Arnd
