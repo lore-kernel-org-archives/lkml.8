@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C63C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E9EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D9020836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E5E2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340731;
-	bh=t5G0LgOWL6P9GAICIqsd0ieuhfB9zxCfY/LCqMyZtxs=;
+	s=default; t=1588340737;
+	bh=SrFW6PsYUnBBUbuKnPpW4WJLdY11KpMBLrLY3B248qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U221VapQrNhm13XxI3ry/Erq8gkyLsRTNcZ7GgyY4nKxbXnlWOFeCqvVsOkN5h0p5
-	 FIgBp8bUT84xZAsLnwTSleTB6K+Sxxgb/vcKZ0yg+4TYM7JaQFSV3LHBga8Q9EYYAC
-	 t/1E0JMIUyGmf4hWalfhoHt1eFCi3xLIo0vT1D/w=
+	b=vwUxofzsK1SKZTGItY6qWWXqO89liEgNvOLC4r8nMcewhfQaKUdLnCMQ4dZoRX7Gk
+	 xh5WK6EQs5H3JSW2yWDmWCLwFttwPueOl1La4J6zZtRstJtLLiv6jB1Gx7aO1LL23b
+	 h0ZWFEtNs4EWzgxe5Z1hHS0BOMSfQPxtMFrLjVbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbgEANpa (ORCPT
+        id S1731928AbgEANpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:45:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731862AbgEANpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:21 -0400
+        id S1731881AbgEANp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:45:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8217B205C9;
-        Fri,  1 May 2020 13:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7F2120836;
+        Fri,  1 May 2020 13:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340721;
-        bh=t5G0LgOWL6P9GAICIqsd0ieuhfB9zxCfY/LCqMyZtxs=;
+        s=default; t=1588340728;
+        bh=SrFW6PsYUnBBUbuKnPpW4WJLdY11KpMBLrLY3B248qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRZWrM1CKS75OEjYVjTR+LzzNtgtcaKBG4C5sBkGGOxJkJLuHGyrktKfFQ95XqZiH
-         w5yBliWiU3WVb900APg8niCnvHQT/dGxkCjh8woCjbv3NTmNrRd54e7OrkSHPKxf75
-         nWz05h8XiZa+kQw6YD58MRirLqySJuNQWB5+lzBk=
+        b=JedXHGyPeUay/87ChKJft+L5keIeMH372t3FdDNLMQ0fUQyRRhX6CdSZpBkOl78OW
+         STgkSSWXnGk78iMAwhMO4M01DohqoGBzyk6bfxLWDxswguQ2piyiZnKPXfWYzkGoCF
+         NtGe8aTOuLwhO58PK914lULHgX9SMuklMZSrkHUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 101/106] net: use indirect call wrappers for skb_copy_datagram_iter()
-Date:   Fri,  1 May 2020 15:24:14 +0200
-Message-Id: <20200501131555.335484038@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.6 104/106] ASoC: soc-pcm: fix regression in soc_new_pcm()
+Date:   Fri,  1 May 2020 15:24:17 +0200
+Message-Id: <20200501131555.894730725@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -61,75 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 29f3490ba9d2399d3d1b20c4aa74592d92bd4e11 upstream.
+commit a4877a6fb2bd2e356a5eaacd86d6b6d69ff84e69 upstream.
 
-TCP recvmsg() calls skb_copy_datagram_iter(), which
-calls an indirect function (cb pointing to simple_copy_to_iter())
-for every MSS (fragment) present in the skb.
+Commit af4bac11531f ("ASoC: soc-pcm: crash in snd_soc_dapm_new_dai")
+swapped the SNDRV_PCM_STREAM_* parameter in the
+snd_soc_dai_stream_valid(cpu_dai, ...) checks. But that works only
+for codec2codec links. For normal links it breaks registration of
+playback/capture-only PCM devices.
 
-CONFIG_RETPOLINE=y forces a very expensive operation
-that we can avoid thanks to indirect call wrappers.
+E.g. on qcom/apq8016_sbc there is usually one playback-only and one
+capture-only PCM device, but they disappeared after the commit.
 
-This patch gives a 13% increase of performance on
-a single flow, if the bottleneck is the thread reading
-the TCP socket.
+The codec2codec case was added in commit a342031cdd08
+("ASoC: create pcm for codec2codec links as well") as an extra check
+(e.g. `playback = playback && cpu_playback->channels_min`).
 
-Fixes: 950fcaecd5cc ("datagram: consolidate datagram copy to iter helpers")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We should be able to simplify the code by checking directly for
+the correct stream type in the loop.
+This also fixes the regression because we check for PLAYBACK for
+both codec and cpu dai again when codec2codec is not used.
+
+Fixes: af4bac11531f ("ASoC: soc-pcm: crash in snd_soc_dapm_new_dai")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Sameer Pujar <spujar@nvidia.com>
+Link: https://lore.kernel.org/r/20200218103824.26708-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/datagram.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ sound/soc/soc-pcm.c |   15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
---- a/net/core/datagram.c
-+++ b/net/core/datagram.c
-@@ -51,6 +51,7 @@
- #include <linux/slab.h>
- #include <linux/pagemap.h>
- #include <linux/uio.h>
-+#include <linux/indirect_call_wrapper.h>
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2890,22 +2890,19 @@ int soc_new_pcm(struct snd_soc_pcm_runti
+ 		capture = rtd->dai_link->dpcm_capture;
+ 	} else {
+ 		/* Adapt stream for codec2codec links */
+-		struct snd_soc_pcm_stream *cpu_capture = rtd->dai_link->params ?
+-			&cpu_dai->driver->playback : &cpu_dai->driver->capture;
+-		struct snd_soc_pcm_stream *cpu_playback = rtd->dai_link->params ?
+-			&cpu_dai->driver->capture : &cpu_dai->driver->playback;
++		int cpu_capture = rtd->dai_link->params ?
++			SNDRV_PCM_STREAM_PLAYBACK : SNDRV_PCM_STREAM_CAPTURE;
++		int cpu_playback = rtd->dai_link->params ?
++			SNDRV_PCM_STREAM_CAPTURE : SNDRV_PCM_STREAM_PLAYBACK;
  
- #include <net/protocol.h>
- #include <linux/skbuff.h>
-@@ -414,6 +415,11 @@ int skb_kill_datagram(struct sock *sk, s
- }
- EXPORT_SYMBOL(skb_kill_datagram);
+ 		for_each_rtd_codec_dai(rtd, i, codec_dai) {
+ 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_PLAYBACK) &&
+-			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_CAPTURE))
++			    snd_soc_dai_stream_valid(cpu_dai,   cpu_playback))
+ 				playback = 1;
+ 			if (snd_soc_dai_stream_valid(codec_dai, SNDRV_PCM_STREAM_CAPTURE) &&
+-			    snd_soc_dai_stream_valid(cpu_dai,   SNDRV_PCM_STREAM_PLAYBACK))
++			    snd_soc_dai_stream_valid(cpu_dai,   cpu_capture))
+ 				capture = 1;
+ 		}
+-
+-		capture = capture && cpu_capture->channels_min;
+-		playback = playback && cpu_playback->channels_min;
+ 	}
  
-+INDIRECT_CALLABLE_DECLARE(static size_t simple_copy_to_iter(const void *addr,
-+						size_t bytes,
-+						void *data __always_unused,
-+						struct iov_iter *i));
-+
- static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
- 			       struct iov_iter *to, int len, bool fault_short,
- 			       size_t (*cb)(const void *, size_t, void *,
-@@ -427,7 +433,8 @@ static int __skb_datagram_iter(const str
- 	if (copy > 0) {
- 		if (copy > len)
- 			copy = len;
--		n = cb(skb->data + offset, copy, data, to);
-+		n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
-+				    skb->data + offset, copy, data, to);
- 		offset += n;
- 		if (n != copy)
- 			goto short_copy;
-@@ -449,8 +456,9 @@ static int __skb_datagram_iter(const str
- 
- 			if (copy > len)
- 				copy = len;
--			n = cb(vaddr + skb_frag_off(frag) + offset - start,
--			       copy, data, to);
-+			n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
-+					vaddr + skb_frag_off(frag) + offset - start,
-+					copy, data, to);
- 			kunmap(page);
- 			offset += n;
- 			if (n != copy)
+ 	if (rtd->dai_link->playback_only) {
 
 
