@@ -2,60 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ED4C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EDAC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7CDC208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F772166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339905;
-	bh=zlv96CrJzDmIqQ0algpSshTJ33jycy2ZeT8jmRg3rNY=;
+	s=default; t=1588339908;
+	bh=4nCNXyD6obRTeY32cehx4jMoRbm/cRm7MqVJD+jLOSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9GCRC0ppbh9Hek8CeDHim/c9oHWCb4E9hifGyvWyYwvVzM4oiCNRSGLuc+cUpD+b
-	 FVKI18M50czmgbQRLE8GJYdfeP4raIXGD+nC/iP6ayqd8e4dSDq/iTdQdjQoiWCv62
-	 vmWQD4r59c3SdsKnJYKW71Mvt43ti024cM2Rq7wA=
+	b=C/1toSqull+sz4cipn1roxgH9u9wNTNdCuK+udGFSKSPYD2bgu0HmbhK9NyToznKR
+	 2kpKvWhGK5uymutBVpKjWXRCA7ktJmPk5EgSTmWD6zeXpHoE/jEGT9yhlkqluUXh21
+	 31WMDE+Fbi9Wguuugz5otlb3SBb/vIdRvOeXZ+8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgEANbp (ORCPT
+        id S1730201AbgEANbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729610AbgEANbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:42 -0400
+        id S1730159AbgEANbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A757720757;
-        Fri,  1 May 2020 13:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28C432166E;
+        Fri,  1 May 2020 13:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339901;
-        bh=zlv96CrJzDmIqQ0algpSshTJ33jycy2ZeT8jmRg3rNY=;
+        s=default; t=1588339903;
+        bh=4nCNXyD6obRTeY32cehx4jMoRbm/cRm7MqVJD+jLOSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ydjd8p7vL2gRd+N7nxtVNbXLYd7RcROV4eXFlEcZlzP60SVrwonDz862oEx67Zuy+
-         +20to1CsG7Jd3r684G246Z8KazsC7NJsT5cpDBB4nN4j2iYY5/Ua8uyz2OOc74aj8v
-         AXJZMqECynWQ/ClsO2wNSnB50yBe8QvUbqmb2hQE=
+        b=yDct6ryfM/Et1wBRX+uk7jDvnnT35yWk7Ed2FYMUUV7ubi8cqJhdeVNOZOu33k/2A
+         zk6ursb6WXKVuuWAi6RkkmLenciG2JScgxbwXhkvG8zxj56S5qN7Gk2MysjEnLrtap
+         /HmZOxaOn21hAxDi7MEN/GEwB6CoVKeawfGNWrw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Waiman Long <longman@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>, NeilBrown <neilb@suse.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 017/117] ipc/util.c: sysvipc_find_ipc() should increase position index
-Date:   Fri,  1 May 2020 15:20:53 +0200
-Message-Id: <20200501131547.111481851@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 026/117] macsec: avoid to set wrong mtu
+Date:   Fri,  1 May 2020 15:21:02 +0200
+Message-Id: <20200501131548.038530034@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -68,52 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 89163f93c6f969da5811af5377cc10173583123b ]
+[ Upstream commit 7f327080364abccf923fa5a5b24e038eb0ba1407 ]
 
-If seq_file .next function does not change position index, read after
-some lseek can generate unexpected output.
+When a macsec interface is created, the mtu is calculated with the lower
+interface's mtu value.
+If the mtu of lower interface is lower than the length, which is needed
+by macsec interface, macsec's mtu value will be overflowed.
+So, if the lower interface's mtu is too low, macsec interface's mtu
+should be set to 0.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Waiman Long <longman@redhat.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/b7a20945-e315-8bb0-21e6-3875c14a8494@virtuozzo.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Test commands:
+    ip link add dummy0 mtu 10 type dummy
+    ip link add macsec0 link dummy0 type macsec
+    ip link show macsec0
+
+Before:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 4294967274
+After:
+    11: macsec0@dummy0: <BROADCAST,MULTICAST,M-DOWN> mtu 0
+
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- ipc/util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macsec.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/ipc/util.c b/ipc/util.c
-index 79b30eee32cd8..7989f5e532198 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -750,13 +750,13 @@ static struct kern_ipc_perm *sysvipc_find_ipc(struct ipc_ids *ids, loff_t pos,
- 			total++;
- 	}
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -3209,11 +3209,11 @@ static int macsec_newlink(struct net *ne
+ 			  struct netlink_ext_ack *extack)
+ {
+ 	struct macsec_dev *macsec = macsec_priv(dev);
++	rx_handler_func_t *rx_handler;
++	u8 icv_len = DEFAULT_ICV_LEN;
+ 	struct net_device *real_dev;
+-	int err;
++	int err, mtu;
+ 	sci_t sci;
+-	u8 icv_len = DEFAULT_ICV_LEN;
+-	rx_handler_func_t *rx_handler;
  
-+	*new_pos = pos + 1;
- 	if (total >= ids->in_use)
- 		return NULL;
+ 	if (!tb[IFLA_LINK])
+ 		return -EINVAL;
+@@ -3229,7 +3229,11 @@ static int macsec_newlink(struct net *ne
  
- 	for (; pos < IPCMNI; pos++) {
- 		ipc = idr_find(&ids->ipcs_idr, pos);
- 		if (ipc != NULL) {
--			*new_pos = pos + 1;
- 			rcu_read_lock();
- 			ipc_lock_object(ipc);
- 			return ipc;
--- 
-2.20.1
-
+ 	if (data && data[IFLA_MACSEC_ICV_LEN])
+ 		icv_len = nla_get_u8(data[IFLA_MACSEC_ICV_LEN]);
+-	dev->mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	mtu = real_dev->mtu - icv_len - macsec_extra_len(true);
++	if (mtu < 0)
++		dev->mtu = 0;
++	else
++		dev->mtu = mtu;
+ 
+ 	rx_handler = rtnl_dereference(real_dev->rx_handler);
+ 	if (rx_handler && rx_handler != macsec_handle_frame)
 
 
