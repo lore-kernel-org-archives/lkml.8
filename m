@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5997AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D092C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 280DA2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D0A2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341185;
-	bh=jXoDdEtNfeB8BTXIbqb3vTPcJhrKt3El9jj+j/6wG8c=;
+	s=default; t=1588341189;
+	bh=VzIi27zHtCFvQBF4AgI2T1BoOw7V/A9AHibylt2E0mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OpUbiTixtqCA3v2DrP7c1/Ny2VUdwcfRzWTzflDX6SQKtPqm+srwYEVWdUXA5NZ/P
-	 3KcAWXoogxmuLKtvgN/RPzqNS0PDouJCEPtH3q+aJWeXtWDJ5XgXTazrZFyQqfFzYi
-	 GDI1gaePYBr9k38glZH6sXJYS+xmQnXJeDGB28jU=
+	b=GZSf+UmvZdXtxKAUqxxWEj1KuOiQ3lCeSgOKYSaaH7gIYQjAaW4GVPhQrKbUdSsvu
+	 lsVh/m9gs0zcxbAJHUQ1IBP5DbPMOAkbdFe3M/85x3k9DOKkq5AryK1FIFnzTlssTe
+	 w66XYCtFVAqET2ssPxrkKRihC+KxnnbfO7i4TjEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbgEANgw (ORCPT
+        id S1731248AbgEANxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35414 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:53:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730176AbgEANgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:46 -0400
+        id S1730897AbgEANgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBDE224959;
-        Fri,  1 May 2020 13:36:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72CFD216FD;
+        Fri,  1 May 2020 13:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340205;
-        bh=jXoDdEtNfeB8BTXIbqb3vTPcJhrKt3El9jj+j/6wG8c=;
+        s=default; t=1588340207;
+        bh=VzIi27zHtCFvQBF4AgI2T1BoOw7V/A9AHibylt2E0mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROJ1Oupgj+M5ZU+QFgJ0+TCs/LcJnljPRBgeZMEv5sLWDAg2YBx3B65r1lcDcM2ob
-         H69EyqpG9uVBOiHisNYfk7YqlcbLj3jNojKrPYTLwO+Ed9EqpOREsJd2NT5SR1iwdZ
-         Lnqy87TTAZy1Xh7pNf0/I3smDppNr5WFlRG5UDk4=
+        b=HSBHTtJ40GcbLtOzYrTmWqCy0zYXukWIA/f10CGuh6jO3aDon34FuJvnYxMNNULSa
+         tg1H3ZTAXYrnFOjcA2nKZKvIOE5zQQ64w3OWxsFkWvefH3W+M6WysgU5d1WDJYC/uU
+         FtAlKnYnQdTywoT5gJq1LWDvxg7jLB8XMzqppnUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 18/46] PCI: Avoid ASMedia XHCI USB PME# from D0 defect
-Date:   Fri,  1 May 2020 15:22:43 +0200
-Message-Id: <20200501131505.355408092@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Puschmann <p.puschmann@pironex.de>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 09/46] ASoC: tas571x: disable regulators on failed probe
+Date:   Fri,  1 May 2020 15:22:34 +0200
+Message-Id: <20200501131502.366728597@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -60,50 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Philipp Puschmann <p.puschmann@pironex.de>
 
-commit 2880325bda8d53566dcb9725abc929eec871608e upstream.
+commit 9df8ba7c63073508e5aa677dade48fcab6a6773e upstream.
 
-The ASMedia USB XHCI Controller claims to support generating PME# while
-in D0:
+If probe fails after enabling the regulators regulator_put is called for
+each supply without having them disabled before. This produces some
+warnings like
 
-  01:00.0 USB controller: ASMedia Technology Inc. Device 2142 (prog-if 30 [XHCI])
-    Subsystem: SUNIX Co., Ltd. Device 312b
-    Capabilities: [78] Power Management version 3
-      Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot-,D3cold-)
-      Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+WARNING: CPU: 0 PID: 90 at drivers/regulator/core.c:2044 _regulator_put.part.0+0x154/0x15c
+[<c010f7a8>] (unwind_backtrace) from [<c010c544>] (show_stack+0x10/0x14)
+[<c010c544>] (show_stack) from [<c012b640>] (__warn+0xd0/0xf4)
+[<c012b640>] (__warn) from [<c012b9b4>] (warn_slowpath_fmt+0x64/0xc4)
+[<c012b9b4>] (warn_slowpath_fmt) from [<c04c4064>] (_regulator_put.part.0+0x154/0x15c)
+[<c04c4064>] (_regulator_put.part.0) from [<c04c4094>] (regulator_put+0x28/0x38)
+[<c04c4094>] (regulator_put) from [<c04c40cc>] (regulator_bulk_free+0x28/0x38)
+[<c04c40cc>] (regulator_bulk_free) from [<c0579b2c>] (release_nodes+0x1d0/0x22c)
+[<c0579b2c>] (release_nodes) from [<c05756dc>] (really_probe+0x108/0x34c)
+[<c05756dc>] (really_probe) from [<c0575aec>] (driver_probe_device+0xb8/0x16c)
+[<c0575aec>] (driver_probe_device) from [<c0575d40>] (device_driver_attach+0x58/0x60)
+[<c0575d40>] (device_driver_attach) from [<c0575da0>] (__driver_attach+0x58/0xcc)
+[<c0575da0>] (__driver_attach) from [<c0573978>] (bus_for_each_dev+0x78/0xc0)
+[<c0573978>] (bus_for_each_dev) from [<c0574b5c>] (bus_add_driver+0x188/0x1e0)
+[<c0574b5c>] (bus_add_driver) from [<c05768b0>] (driver_register+0x74/0x108)
+[<c05768b0>] (driver_register) from [<c061ab7c>] (i2c_register_driver+0x3c/0x88)
+[<c061ab7c>] (i2c_register_driver) from [<c0102df8>] (do_one_initcall+0x58/0x250)
+[<c0102df8>] (do_one_initcall) from [<c01a91bc>] (do_init_module+0x60/0x244)
+[<c01a91bc>] (do_init_module) from [<c01ab5a4>] (load_module+0x2180/0x2540)
+[<c01ab5a4>] (load_module) from [<c01abbd4>] (sys_finit_module+0xd0/0xe8)
+[<c01abbd4>] (sys_finit_module) from [<c01011e0>] (__sys_trace_return+0x0/0x20)
 
-However PME# only gets asserted when plugging USB 2.0 or USB 1.1 devices,
-but not for USB 3.0 devices.
-
-Remove PCI_PM_CAP_PME_D0 to avoid using PME under D0.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205919
-Link: https://lore.kernel.org/r/20191219192006.16270-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 3fd6e7d9a146 (ASoC: tas571x: New driver for TI TAS571x power amplifiers)
+Signed-off-by: Philipp Puschmann <p.puschmann@pironex.de>
+Link: https://lore.kernel.org/r/20200414112754.3365406-1-p.puschmann@pironex.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ sound/soc/codecs/tas571x.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5282,3 +5282,14 @@ out_disable:
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
- 			      PCI_CLASS_DISPLAY_VGA, 8,
- 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+--- a/sound/soc/codecs/tas571x.c
++++ b/sound/soc/codecs/tas571x.c
+@@ -824,8 +824,10 @@ static int tas571x_i2c_probe(struct i2c_
+ 
+ 	priv->regmap = devm_regmap_init(dev, NULL, client,
+ 					priv->chip->regmap_config);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
++	if (IS_ERR(priv->regmap)) {
++		ret = PTR_ERR(priv->regmap);
++		goto disable_regs;
++	}
+ 
+ 	priv->pdn_gpio = devm_gpiod_get_optional(dev, "pdn", GPIOD_OUT_LOW);
+ 	if (IS_ERR(priv->pdn_gpio)) {
+@@ -849,7 +851,7 @@ static int tas571x_i2c_probe(struct i2c_
+ 
+ 	ret = regmap_write(priv->regmap, TAS571X_OSC_TRIM_REG, 0);
+ 	if (ret)
+-		return ret;
++		goto disable_regs;
+ 
+ 	usleep_range(50000, 60000);
+ 
+@@ -865,12 +867,20 @@ static int tas571x_i2c_probe(struct i2c_
+ 		 */
+ 		ret = regmap_update_bits(priv->regmap, TAS571X_MVOL_REG, 1, 0);
+ 		if (ret)
+-			return ret;
++			goto disable_regs;
+ 	}
+ 
+-	return devm_snd_soc_register_component(&client->dev,
++	ret = devm_snd_soc_register_component(&client->dev,
+ 				      &priv->component_driver,
+ 				      &tas571x_dai, 1);
++	if (ret)
++		goto disable_regs;
 +
-+/*
-+ * Device [1b21:2142]
-+ * When in D0, PME# doesn't get asserted when plugging USB 3.0 device.
-+ */
-+static void pci_fixup_no_d0_pme(struct pci_dev *dev)
-+{
-+	pci_info(dev, "PME# does not work under D0, disabling it\n");
-+	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
++	return ret;
++
++disable_regs:
++	regulator_bulk_disable(priv->chip->num_supply_names, priv->supplies);
++	return ret;
+ }
+ 
+ static int tas571x_i2c_remove(struct i2c_client *client)
 
 
