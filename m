@@ -2,107 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71E0C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE27FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8851E24958
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588348097;
-	bh=sBnS1EAfBQE4efMp26hhUr4f8wzrVS3x6YefMaqZz78=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bm0Q3vj3aaBS3nfrzdzhEifb7DonZZBK00USI/yOdTHg7CxKdxgdgx8yOHp3t4uAL
-	 5oHtU1m85k5TrcfP6lduyiNaip4GmnvmEwnZ1jynSDgio7fYATxWHXJOJ3jidDFOlc
-	 9LIQfJ6JUdqxR/HCwpiMjq8HanQBJx8DmFQoB6pU=
+	by mail.kernel.org (Postfix) with ESMTP id D68BB20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgEAPsR (ORCPT
+        id S1729894AbgEAPsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:48:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgEAPsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:48:16 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F4E52137B;
-        Fri,  1 May 2020 15:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588348095;
-        bh=sBnS1EAfBQE4efMp26hhUr4f8wzrVS3x6YefMaqZz78=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DOPwEHGEjZEqnMfaWUQKHWkEMEd+Tmn4mT/4fCOCQuSLDpdqM5LvI/prO07lQVkNY
-         9djefE/1vYJ58NdJdo9JImILf5z5Eu9mrGb48pPQtkIdIBgtEO3yfRBTLD3QcMvqCj
-         PoC7eZ1+mBwZI7qhAbq6/geugvC9ZrxiCaHFzlyM=
-Received: by mail-ot1-f46.google.com with SMTP id e20so2836675otk.12;
-        Fri, 01 May 2020 08:48:15 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua3/uYObqY7xaHAPZCufel+aPB+M5Do3JoFjocssHbXGnroP0Uh
-        CfdEASWcBNtXGOjl9PyLAGb+lbsdP1gDokcs7Q==
-X-Google-Smtp-Source: APiQypLSuc1ficUgLIosueT06J05P8GWHscTEPVhw4ZK+6CAG+77HGOr9d8WOB+9XJU4M5RRsaeSpyrJ9RGJ98tkcT8=
-X-Received: by 2002:a9d:1441:: with SMTP id h59mr4125612oth.192.1588348094755;
- Fri, 01 May 2020 08:48:14 -0700 (PDT)
+        Fri, 1 May 2020 11:48:47 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:34860 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbgEAPsr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:48:47 -0400
+Received: from [192.168.42.210] ([93.22.134.90])
+        by mwinf5d84 with ME
+        id ZToi220061xBBP903ToioQ; Fri, 01 May 2020 17:48:45 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 01 May 2020 17:48:45 +0200
+X-ME-IP: 93.22.134.90
+Subject: Re: [PATCH 4/4 v2] firmware: stratix10-svc: Slightly simplify code
+To:     Richard Gong <richard.gong@linux.intel.com>,
+        gregkh@linuxfoundation.org, atull@kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
+ <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
+ <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <c7ac6b7c-a1d5-e001-964b-0881707c41b1@wanadoo.fr>
+Date:   Fri, 1 May 2020 17:48:40 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200501142831.35174-1-james.quinlan@broadcom.com> <20200501142831.35174-4-james.quinlan@broadcom.com>
-In-Reply-To: <20200501142831.35174-4-james.quinlan@broadcom.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 1 May 2020 10:48:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKjRYXbtDVRnR6POfKtLBHULn=VGHSe2KFj1PTWSbA57g@mail.gmail.com>
-Message-ID: <CAL_JsqKjRYXbtDVRnR6POfKtLBHULn=VGHSe2KFj1PTWSbA57g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: PCI: brcmstb: New prop 'aspm-no-l0s'
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 9:29 AM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+Le 01/05/2020 à 17:40, Richard Gong a écrit :
+> Hi,
 >
-> From: Jim Quinlan <jquinlan@broadcom.com>
+> On 4/29/20 1:52 AM, Christophe JAILLET wrote:
+>> Replace 'devm_kmalloc_array(... | __GFP_ZERO)' with the equivalent and
+>> shorter 'devm_kcalloc(...)'.
+>>
+> It doesn't make much sense.
+> Actually devm_kcalloc returns devm_kmalloc_array(.., flag | __GFP_ZERO).
 >
-> For various reasons, one may want to disable the ASPM L0s
-> capability.
->
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 77d3e81a437b..084e4cf68b95 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -56,6 +56,10 @@ properties:
->      description: Indicates usage of spread-spectrum clocking.
->      type: boolean
->
-> +  aspm-no-l0s:
-> +    description: Disables ASPM L0s capability.
-> +    type: boolean
+The only goal is to have a sightly less verbose code.
+This saves one line of code and there is no need to wonder why we 
+explicitly pass __GFP_ZERO to kmalloc_array.
 
-Copied from rockchip-pcie-host.txt? Let's make this a standard
-property. It should be documented here[1].
+Mostly a matter of taste.
 
-Then this doc just needs 'aspm-no-l0s: true' to indicate you are using it.
+'devm_kcalloc' is inlined, so the binary should be exactly the same.
 
-Rob
+CJ
 
-[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/pci/pci-bus.yaml
+>> 'ctrl->genpool' can not be NULL, so axe a useless test in the remove
+>> function.
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/firmware/stratix10-svc.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/firmware/stratix10-svc.c 
+>> b/drivers/firmware/stratix10-svc.c
+>> index 739004398877..c228337cb0a1 100644
+>> --- a/drivers/firmware/stratix10-svc.c
+>> +++ b/drivers/firmware/stratix10-svc.c
+>> @@ -1002,8 +1002,7 @@ static int stratix10_svc_drv_probe(struct 
+>> platform_device *pdev)
+>>       if (!controller)
+>>           return -ENOMEM;
+>>   -    chans = devm_kmalloc_array(dev, SVC_NUM_CHANNEL,
+>> -                   sizeof(*chans), GFP_KERNEL | __GFP_ZERO);
+>> +    chans = devm_kcalloc(dev, SVC_NUM_CHANNEL, sizeof(*chans), 
+>> GFP_KERNEL);
+>>       if (!chans)
+>>           return -ENOMEM;
+>>   @@ -1086,8 +1085,7 @@ static int stratix10_svc_drv_remove(struct 
+>> platform_device *pdev)
+>>           kthread_stop(ctrl->task);
+>>           ctrl->task = NULL;
+>>       }
+>> -    if (ctrl->genpool)
+>> -        gen_pool_destroy(ctrl->genpool);
+>> +    gen_pool_destroy(ctrl->genpool);
+>>       list_del(&ctrl->node);
+>>         return 0;
+>>
+>
+> Regards,
+> Richard
+>
+
