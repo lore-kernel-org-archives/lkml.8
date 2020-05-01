@@ -2,52 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614B9C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D971C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A022166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89952166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339644;
-	bh=mOL8kwx0fJd6+yTK39aLKxU65pkth2YFc6ofJzLg4Hk=;
+	s=default; t=1588339646;
+	bh=0zLG5dH1Rq1JDFb29VFSxBmi70aNXp5rUQ2OyGRCB7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcKaWNg0UdJgFC9OUCe8/Z3AXovIEphQtzvmLOrFZU+g8zRlha48Yp4s+W0kyJrHf
-	 Od6YCOy0mtak8Av17/8naf6rl4ljbBbs4PKXuSUN84Qv7MmGebsUdjBcSWQjwp9zMy
-	 MpPpjY2du76mPgvIH3AseYeEuRtZU4n4WrCqOgAE=
+	b=LNKcfWQYCUeo/N/TmwTooVoqA6eG385uaXhSac1AEQKw3PaZCjSEzwLyyX44EcfNu
+	 c11VacGQHGEDT8LzxH/THHHen3kPIEGVlyuFooHz375M5w6eXADjUUmQb5Zcwt71AK
+	 /R9/VEZ/LLl3+Se1atRdMoZYtu2jjcTP9RPZ23bY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgEAN1X (ORCPT
+        id S1729460AbgEAN1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbgEAN1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:18 -0400
+        id S1729449AbgEAN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FAD32166E;
-        Fri,  1 May 2020 13:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E8972173E;
+        Fri,  1 May 2020 13:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339637;
-        bh=mOL8kwx0fJd6+yTK39aLKxU65pkth2YFc6ofJzLg4Hk=;
+        s=default; t=1588339642;
+        bh=0zLG5dH1Rq1JDFb29VFSxBmi70aNXp5rUQ2OyGRCB7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TuGYznY5ypPFz5busYAnuOPXTcp0ZRaHzRQn/aIRzqxN5ZEqB/RVhIp5JMDenTJxK
-         /zn9jSMeEEwQbUA2ucYMd6g3PKCEwWFf9Cm59ZNqId9ZvuENEXbvn69CkOUcgJHFES
-         jVs6O9O9KW+uIRh0oSZOofqh3PTVPRVnDHEJtCko=
+        b=uIZpRBQu25m9yJMkd/44X/y+qb6aQoHuXx0xPveRlGaSHvySYwXR9DTE/9CE32vK1
+         3Dk4gxBf8gP6sn4t9RcMPuD44BBjfSNfrTDI74rAgcDHZIeAH+PZ2oDTMkF5/G0szZ
+         y0ZeW9dke2KHK65KN11wfavhvrwqMUsMUVW5gEGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 4.4 58/70] usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
-Date:   Fri,  1 May 2020 15:21:46 +0200
-Message-Id: <20200501131530.923569359@linuxfoundation.org>
+        stable@vger.kernel.org, KP Singh <kpsingh@google.com>,
+        Ian Rogers <irogers@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.4 60/70] perf/core: fix parent pid/tid in task exit events
+Date:   Fri,  1 May 2020 15:21:48 +0200
+Message-Id: <20200501131531.275176682@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -60,47 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Ian Rogers <irogers@google.com>
 
-commit 09b04abb70f096333bef6bc95fa600b662e7ee13 upstream.
+commit f3bed55e850926614b9898fe982f66d2541a36a5 upstream.
 
-When building with Clang + -Wtautological-pointer-compare:
+Current logic yields the child task as the parent.
 
-drivers/usb/gadget/udc/bdc/bdc_ep.c:543:28: warning: comparison of
-address of 'req->queue' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-                             ~~~~~^~~~~    ~~~~
-drivers/usb/gadget/udc/bdc/bdc_ep.c:543:51: warning: comparison of
-address of 'req->usb_req' equal to a null pointer is always false
-[-Wtautological-pointer-compare]
-        if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-                                                    ~~~~~^~~~~~~    ~~~~
-2 warnings generated.
+Before:
+$ perf record bash -c "perf list > /dev/null"
+$ perf script -D |grep 'FORK\|EXIT'
+4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
+4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
+4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
+                                                   ^
+  Note the repeated values here -------------------/
 
-As it notes, these statements will always evaluate to false so remove
-them.
+After:
+383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
+383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
+383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
 
-Fixes: efed421a94e6 ("usb: gadget: Add UDC driver for Broadcom USB3.0 device controller IP BDC")
-Link: https://github.com/ClangBuiltLinux/linux/issues/749
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
+Reported-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/bdc/bdc_ep.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/core.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -546,7 +546,7 @@ static void bdc_req_complete(struct bdc_
- {
- 	struct bdc *bdc = ep->bdc;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5810,10 +5810,17 @@ static void perf_event_task_output(struc
+ 		goto out;
  
--	if (req == NULL  || &req->queue == NULL || &req->usb_req == NULL)
-+	if (req == NULL)
- 		return;
+ 	task_event->event_id.pid = perf_event_pid(event, task);
+-	task_event->event_id.ppid = perf_event_pid(event, current);
+-
+ 	task_event->event_id.tid = perf_event_tid(event, task);
+-	task_event->event_id.ptid = perf_event_tid(event, current);
++
++	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
++		task_event->event_id.ppid = perf_event_pid(event,
++							task->real_parent);
++		task_event->event_id.ptid = perf_event_pid(event,
++							task->real_parent);
++	} else {  /* PERF_RECORD_FORK */
++		task_event->event_id.ppid = perf_event_pid(event, current);
++		task_event->event_id.ptid = perf_event_tid(event, current);
++	}
  
- 	dev_dbg(bdc->dev, "%s ep:%s status:%d\n", __func__, ep->name, status);
+ 	task_event->event_id.time = perf_event_clock(event);
+ 
 
 
