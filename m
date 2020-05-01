@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D286C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DA0C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06020216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67920216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339732;
-	bh=cLcingT9UZC2DXDyY3ttC+2t8ASx89ZFcEev5dxS7jU=;
+	s=default; t=1588339734;
+	bh=tTsw+yYwD3xrXKCecdUfo4izDlAh6sniyrh8KljU0Nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mc5snfzP5H5wQpP9/v8DV10Olvfuz5PfeRMKnU9gioXTUiCpFlzV5scdMDV9oZKql
-	 V5bHzux/teEGmbccnuMhDMYC9iRpj2jF6XKREtjnmCLe0KKs3zRfjnc3wIpdeEDRXK
-	 rnID37bsS5t3+fm4rVUKU9HdwK5EQgMCVojjG/qo=
+	b=zQZMdJDQMp+hfvzZHRhSRrl7xvuCfmtFKZN+VOJlckWxHyKM+cyVGQasLmjwm4eIZ
+	 KUTo1ef1a6IqoZ35HYt5b4m2eFObgW+7aaiQwc7gpfEIbbjGkGIgOPyP3SpLjJdKxJ
+	 WOhT1dc+xG7JaMX4L0UJxvZttSxtvqlEJ+ftuk+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgEAN2v (ORCPT
+        id S1729705AbgEAN2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:28:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52102 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729158AbgEAN2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:28:49 -0400
+        id S1729158AbgEAN2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:28:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67A9624959;
-        Fri,  1 May 2020 13:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD1DE20757;
+        Fri,  1 May 2020 13:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339728;
-        bh=cLcingT9UZC2DXDyY3ttC+2t8ASx89ZFcEev5dxS7jU=;
+        s=default; t=1588339731;
+        bh=tTsw+yYwD3xrXKCecdUfo4izDlAh6sniyrh8KljU0Nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aZTLnJPIAu0hbLDwddTGHD2KQe2xlY8Rm6HbyQBjiyHywK12dZ8+4e/W2mJjz88mg
-         JsrpqX45zwsjh125alESVslRDVX1iUOI+pdcnyEeKC4IT3WrZk1AOwaRdCTaOV83Rr
-         tlSnKGEg6da3ZPv2IGOOWaxGBjPW8ozQW4tfIFH8=
+        b=l9bzwdduGath70yNY6H6qOM91yEH+fSl58Ff28SVrGkzlnxD5am97y7RpNVYR0tiK
+         OJ8JV/nn/9CooZU/Ar+HtYQHdbE0gTL/7ffN2ReBA9qmT+MWU6vH5UVE5T3ESs9l8D
+         /hy25I9RRkT0uYYXUsixcKUCczZLXCcRSBd5HE3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+5035b1f9dc7ea4558d5a@syzkaller.appspotmail.com,
-        Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 22/80] macvlan: fix null dereference in macvlan_device_event()
-Date:   Fri,  1 May 2020 15:21:16 +0200
-Message-Id: <20200501131521.533881155@linuxfoundation.org>
+Subject: [PATCH 4.9 23/80] net: netrom: Fix potential nr_neigh refcnt leak in nr_add_node
+Date:   Fri,  1 May 2020 15:21:17 +0200
+Message-Id: <20200501131521.948479586@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,134 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 4dee15b4fd0d61ec6bbd179238191e959d34cf7a ]
+[ Upstream commit d03f228470a8c0a22b774d1f8d47071e0de4f6dd ]
 
-In the macvlan_device_event(), the list_first_entry_or_null() is used.
-This function could return null pointer if there is no node.
-But, the macvlan module doesn't check the null pointer.
-So, null-ptr-deref would occur.
+nr_add_node() invokes nr_neigh_get_dev(), which returns a local
+reference of the nr_neigh object to "nr_neigh" with increased refcnt.
 
-      bond0
-        |
-   +----+-----+
-   |          |
-macvlan0   macvlan1
-   |          |
- dummy0     dummy1
+When nr_add_node() returns, "nr_neigh" becomes invalid, so the refcount
+should be decreased to keep refcount balanced.
 
-The problem scenario.
-If dummy1 is removed,
-1. ->dellink() of dummy1 is called.
-2. NETDEV_UNREGISTER of dummy1 notification is sent to macvlan module.
-3. ->dellink() of macvlan1 is called.
-4. NETDEV_UNREGISTER of macvlan1 notification is sent to bond module.
-5. __bond_release_one() is called and it internally calls
-   dev_set_mac_address().
-6. dev_set_mac_address() calls the ->ndo_set_mac_address() of macvlan1,
-   which is macvlan_set_mac_address().
-7. macvlan_set_mac_address() calls the dev_set_mac_address() with dummy1.
-8. NETDEV_CHANGEADDR of dummy1 is sent to macvlan module.
-9. In the macvlan_device_event(), it calls list_first_entry_or_null().
-At this point, dummy1 and macvlan1 were removed.
-So, list_first_entry_or_null() will return NULL.
+The issue happens in one normal path of nr_add_node(), which forgets to
+decrease the refcnt increased by nr_neigh_get_dev() and causes a refcnt
+leak. It should decrease the refcnt before the function returns like
+other normal paths do.
 
-Test commands:
-    ip netns add nst
-    ip netns exec nst ip link add bond0 type bond
-    for i in {0..10}
-    do
-        ip netns exec nst ip link add dummy$i type dummy
-	ip netns exec nst ip link add macvlan$i link dummy$i \
-		type macvlan mode passthru
-	ip netns exec nst ip link set macvlan$i master bond0
-    done
-    ip netns del nst
+Fix this issue by calling nr_neigh_put() before the nr_add_node()
+returns.
 
-Splat looks like:
-[   40.585687][  T146] general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] SMP DEI
-[   40.587249][  T146] KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-[   40.588342][  T146] CPU: 1 PID: 146 Comm: kworker/u8:2 Not tainted 5.7.0-rc1+ #532
-[   40.589299][  T146] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   40.590469][  T146] Workqueue: netns cleanup_net
-[   40.591045][  T146] RIP: 0010:macvlan_device_event+0x4e2/0x900 [macvlan]
-[   40.591905][  T146] Code: 00 00 00 00 00 fc ff df 80 3c 06 00 0f 85 45 02 00 00 48 89 da 48 b8 00 00 00 00 00 fc ff d2
-[   40.594126][  T146] RSP: 0018:ffff88806116f4a0 EFLAGS: 00010246
-[   40.594783][  T146] RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[   40.595653][  T146] RDX: 0000000000000000 RSI: ffff88806547ddd8 RDI: ffff8880540f1360
-[   40.596495][  T146] RBP: ffff88804011a808 R08: fffffbfff4fb8421 R09: fffffbfff4fb8421
-[   40.597377][  T146] R10: ffffffffa7dc2107 R11: 0000000000000000 R12: 0000000000000008
-[   40.598186][  T146] R13: ffff88804011a000 R14: ffff8880540f1000 R15: 1ffff1100c22de9a
-[   40.599012][  T146] FS:  0000000000000000(0000) GS:ffff888067800000(0000) knlGS:0000000000000000
-[   40.600004][  T146] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   40.600665][  T146] CR2: 00005572d3a807b8 CR3: 000000005fcf4003 CR4: 00000000000606e0
-[   40.601485][  T146] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   40.602461][  T146] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   40.603443][  T146] Call Trace:
-[   40.603871][  T146]  ? nf_tables_dump_setelem+0xa0/0xa0 [nf_tables]
-[   40.604587][  T146]  ? macvlan_uninit+0x100/0x100 [macvlan]
-[   40.605212][  T146]  ? __module_text_address+0x13/0x140
-[   40.605842][  T146]  notifier_call_chain+0x90/0x160
-[   40.606477][  T146]  dev_set_mac_address+0x28e/0x3f0
-[   40.607117][  T146]  ? netdev_notify_peers+0xc0/0xc0
-[   40.607762][  T146]  ? __module_text_address+0x13/0x140
-[   40.608440][  T146]  ? notifier_call_chain+0x90/0x160
-[   40.609097][  T146]  ? dev_set_mac_address+0x1f0/0x3f0
-[   40.609758][  T146]  dev_set_mac_address+0x1f0/0x3f0
-[   40.610402][  T146]  ? __local_bh_enable_ip+0xe9/0x1b0
-[   40.611071][  T146]  ? bond_hw_addr_flush+0x77/0x100 [bonding]
-[   40.611823][  T146]  ? netdev_notify_peers+0xc0/0xc0
-[   40.612461][  T146]  ? bond_hw_addr_flush+0x77/0x100 [bonding]
-[   40.613213][  T146]  ? bond_hw_addr_flush+0x77/0x100 [bonding]
-[   40.613963][  T146]  ? __local_bh_enable_ip+0xe9/0x1b0
-[   40.614631][  T146]  ? bond_time_in_interval.isra.31+0x90/0x90 [bonding]
-[   40.615484][  T146]  ? __bond_release_one+0x9f0/0x12c0 [bonding]
-[   40.616230][  T146]  __bond_release_one+0x9f0/0x12c0 [bonding]
-[   40.616949][  T146]  ? bond_enslave+0x47c0/0x47c0 [bonding]
-[   40.617642][  T146]  ? lock_downgrade+0x730/0x730
-[   40.618218][  T146]  ? check_flags.part.42+0x450/0x450
-[   40.618850][  T146]  ? __mutex_unlock_slowpath+0xd0/0x670
-[   40.619519][  T146]  ? trace_hardirqs_on+0x30/0x180
-[   40.620117][  T146]  ? wait_for_completion+0x250/0x250
-[   40.620754][  T146]  bond_netdev_event+0x822/0x970 [bonding]
-[   40.621460][  T146]  ? __module_text_address+0x13/0x140
-[   40.622097][  T146]  notifier_call_chain+0x90/0x160
-[   40.622806][  T146]  rollback_registered_many+0x660/0xcf0
-[   40.623522][  T146]  ? netif_set_real_num_tx_queues+0x780/0x780
-[   40.624290][  T146]  ? notifier_call_chain+0x90/0x160
-[   40.624957][  T146]  ? netdev_upper_dev_unlink+0x114/0x180
-[   40.625686][  T146]  ? __netdev_adjacent_dev_unlink_neighbour+0x30/0x30
-[   40.626421][  T146]  ? mutex_is_locked+0x13/0x50
-[   40.627016][  T146]  ? unregister_netdevice_queue+0xf2/0x240
-[   40.627663][  T146]  unregister_netdevice_many.part.134+0x13/0x1b0
-[   40.628362][  T146]  default_device_exit_batch+0x2d9/0x390
-[   40.628987][  T146]  ? unregister_netdevice_many+0x40/0x40
-[   40.629615][  T146]  ? dev_change_net_namespace+0xcb0/0xcb0
-[   40.630279][  T146]  ? prepare_to_wait_exclusive+0x2e0/0x2e0
-[   40.630943][  T146]  ? ops_exit_list.isra.9+0x97/0x140
-[   40.631554][  T146]  cleanup_net+0x441/0x890
-[ ... ]
-
-Fixes: e289fd28176b ("macvlan: fix the problem when mac address changes for passthru mode")
-Reported-by: syzbot+5035b1f9dc7ea4558d5a@syzkaller.appspotmail.com
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macvlan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netrom/nr_route.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -1607,7 +1607,7 @@ static int macvlan_device_event(struct n
- 						struct macvlan_dev,
- 						list);
+--- a/net/netrom/nr_route.c
++++ b/net/netrom/nr_route.c
+@@ -199,6 +199,7 @@ static int __must_check nr_add_node(ax25
+ 		/* refcount initialized at 1 */
+ 		spin_unlock_bh(&nr_node_list_lock);
  
--		if (macvlan_sync_address(vlan->dev, dev->dev_addr))
-+		if (vlan && macvlan_sync_address(vlan->dev, dev->dev_addr))
- 			return NOTIFY_BAD;
- 
- 		break;
++		nr_neigh_put(nr_neigh);
+ 		return 0;
+ 	}
+ 	nr_node_lock(nr_node);
 
 
