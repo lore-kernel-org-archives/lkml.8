@@ -4,111 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64EFC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAC3C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A622173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C6220708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgEAMj0 (ORCPT
+        id S1728791AbgEAMlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 08:39:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60040 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgEAMjZ (ORCPT
+        Fri, 1 May 2020 08:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728712AbgEAMlr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 08:39:25 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 007712A2E1D
-Received: by earth.universe (Postfix, from userid 1000)
-        id D91B73C08C7; Fri,  1 May 2020 14:39:21 +0200 (CEST)
-Date:   Fri, 1 May 2020 14:39:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/11] power: supply: core: fix HWMON temperature
- labels
-Message-ID: <20200501123921.k4vgng7ggcjoe6ux@earth.universe>
-References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
- <4c33741ba56d3c7830827c140bccf13621e59232.1585944770.git.mirq-linux@rere.qmqm.pl>
+        Fri, 1 May 2020 08:41:47 -0400
+X-Greylist: delayed 4393 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 01 May 2020 05:41:47 PDT
+Received: from smtp.tuxdriver.com (tunnel92311-pt.tunnel.tserv13.ash1.ipv6.he.net [IPv6:2001:470:7:9c9::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C41CC061A0C;
+        Fri,  1 May 2020 05:41:47 -0700 (PDT)
+Received: from [107.15.85.130] (helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1jUTq8-0005B2-96; Fri, 01 May 2020 07:28:26 -0400
+Date:   Fri, 1 May 2020 07:28:14 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>, Joe Perches <joe@perches.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 07/15] drop_monitor: work around gcc-10 stringop-overflow
+ warning
+Message-ID: <20200501112814.GA2175875@hmswarspite.think-freely.org>
+References: <20200430213101.135134-1-arnd@arndb.de>
+ <20200430213101.135134-8-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5wm5ps46dek33h7p"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c33741ba56d3c7830827c140bccf13621e59232.1585944770.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <20200430213101.135134-8-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---5wm5ps46dek33h7p
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, Apr 03, 2020 at 10:20:33PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> tempX_label files are swapped compared to what
-> power_supply_hwmon_temp_to_property() uses. Make them match.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+On Thu, Apr 30, 2020 at 11:30:49PM +0200, Arnd Bergmann wrote:
+> The current gcc-10 snapshot produces a false-positive warning:
+> 
+> net/core/drop_monitor.c: In function 'trace_drop_common.constprop':
+> cc1: error: writing 8 bytes into a region of size 0 [-Werror=stringop-overflow=]
+> In file included from net/core/drop_monitor.c:23:
+> include/uapi/linux/net_dropmon.h:36:8: note: at offset 0 to object 'entries' with size 4 declared here
+>    36 |  __u32 entries;
+>       |        ^~~~~~~
+> 
+> I reported this in the gcc bugzilla, but in case it does not get
+> fixed in the release, work around it by using a temporary variable.
+> 
+> Fixes: 9a8afc8d3962 ("Network Drop Monitor: Adding drop monitor implementation & Netlink protocol")
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94881
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> v2: split parameter checking to separate patch
-> ---
-
-Thanks, queued.
-
--- Sebastian
-
->  drivers/power/supply/power_supply_hwmon.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/su=
-pply/power_supply_hwmon.c
-> index 75cf861ba492..67b6ee60085e 100644
-> --- a/drivers/power/supply/power_supply_hwmon.c
-> +++ b/drivers/power/supply/power_supply_hwmon.c
-> @@ -144,7 +144,7 @@ static int power_supply_hwmon_read_string(struct devi=
-ce *dev,
->  					  u32 attr, int channel,
->  					  const char **str)
+>  net/core/drop_monitor.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+> index 8e33cec9fc4e..2ee7bc4c9e03 100644
+> --- a/net/core/drop_monitor.c
+> +++ b/net/core/drop_monitor.c
+> @@ -213,6 +213,7 @@ static void sched_send_work(struct timer_list *t)
+>  static void trace_drop_common(struct sk_buff *skb, void *location)
 >  {
-> -	*str =3D channel ? "temp" : "temp ambient";
-> +	*str =3D channel ? "temp ambient" : "temp";
->  	return 0;
->  }
-> =20
-> --=20
-> 2.20.1
->=20
-
---5wm5ps46dek33h7p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6sGHkACgkQ2O7X88g7
-+pofYg/8CYre6kxA2y2v+h3U9Em6zL/Y3RQ0ulhetV5MBKzguQjQJ6hMPl/gB+pF
-/NeyPJ5ba3NDaUumtiQBfhGZ/3w3GEh0JTjd9ddOIFymYhKlh//zTHfWprxwnkmc
-bcikO700CUG9YepsMODt19onA7WDjYVfzTcKprpQi9QN1+zWNZF2vh6KhJ8nysg8
-tv1ctbPK3k5fm0YGDyEJnv/JVzvcRacA/LhG18RbE15HyFsUyMoXpGSChBK5bH6e
-1rnao3RBzDKeV/W0JG2OKqMU+KPHPerSBHs8j0+k5+JGvF79ZVmBWaxTfYdyn956
-a/3bu0ugd/FbbB6pgJcRqSuPY8rbb9pmhycyvlhJdyuijlqIcUUvyD0IXXAsEqyK
-+HCPxAQp1dVfhs3mA2Q2aZIpM2M29aj4gMjv2fvo0dRwWXe7fH5EBdsxRiuAoF19
-51Gek3OgD2vIWqcyrEc47L5jclPzsR9IpnZJN8N14B1FfiVq++W7TZeN91KuPm9b
-9dIUnfoEoWAi1IIROsdwFECQ50d01Ql5WSF46l/x2YGNPmayY+DjCcJ8O4YzpYS2
-8E5gdSxqGDvxaTz3aECmDuXkaqVdeyeKWJJL2hbyIB45trw9bkdDqTStNoxetHCZ
-opBGn5DoOHP0YIT/avfHGsKxxArh9vFQso1c0k8wiZXEDlEpGvs=
-=kCn8
------END PGP SIGNATURE-----
-
---5wm5ps46dek33h7p--
+>  	struct net_dm_alert_msg *msg;
+> +	struct net_dm_drop_point *point;
+>  	struct nlmsghdr *nlh;
+>  	struct nlattr *nla;
+>  	int i;
+> @@ -231,11 +232,13 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+>  	nlh = (struct nlmsghdr *)dskb->data;
+>  	nla = genlmsg_data(nlmsg_data(nlh));
+>  	msg = nla_data(nla);
+> +	point = msg->points;
+>  	for (i = 0; i < msg->entries; i++) {
+> -		if (!memcmp(&location, msg->points[i].pc, sizeof(void *))) {
+> -			msg->points[i].count++;
+> +		if (!memcmp(&location, &point->pc, sizeof(void *))) {
+> +			point->count++;
+>  			goto out;
+>  		}
+> +		point++;
+>  	}
+>  	if (msg->entries == dm_hit_limit)
+>  		goto out;
+> @@ -244,8 +247,8 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+>  	 */
+>  	__nla_reserve_nohdr(dskb, sizeof(struct net_dm_drop_point));
+>  	nla->nla_len += NLA_ALIGN(sizeof(struct net_dm_drop_point));
+> -	memcpy(msg->points[msg->entries].pc, &location, sizeof(void *));
+> -	msg->points[msg->entries].count = 1;
+> +	memcpy(point->pc, &location, sizeof(void *));
+> +	point->count = 1;
+>  	msg->entries++;
+>  
+>  	if (!timer_pending(&data->send_timer)) {
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
