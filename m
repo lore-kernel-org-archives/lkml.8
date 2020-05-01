@@ -2,139 +2,82 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F77C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8E3C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1AEE2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588322923;
-	bh=s7p+LO9j4KJ1A6bMFQW3AQzimPpkK8R+GwfnVNdaQkk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kec+162bvfaOt3NUoe7rdyHxj5vCw/XXJDvFupOoiN9GlPKPCUMV6uCHmkMfnRYk5
-	 uIl9Iu5j/Bp1qrQc4KaDxPpugSgrZvxGqeJiERk+7xHlOcnWqCh8k/5Zi/b+zyBB/O
-	 QLEG1+OA9BryWUJNjzqdzYDbu7OKuY7YmerUbXU8=
+	by mail.kernel.org (Postfix) with ESMTP id 760392076D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 08:49:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cxv4wmdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgEAIsn (ORCPT
+        id S1728551AbgEAItc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 04:48:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgEAIsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 04:48:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7045F2076D;
-        Fri,  1 May 2020 08:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588322921;
-        bh=s7p+LO9j4KJ1A6bMFQW3AQzimPpkK8R+GwfnVNdaQkk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=plJY6EY6KB+Vql7RUWNO7v7+xm2zjEou5hyAnf8hjJXT98CITB5cSA/1xawapxM+e
-         C1wShILufb+Qq15zsrXekbvMBlgB4htIJgg/5x8wkHZJho0CiPcInbuCOMgwt1ggcE
-         OpDPe0de5jTQuoEqxsiEZycQTpFVSV3E2xvNXRkU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jURLb-008IE5-TD; Fri, 01 May 2020 09:48:40 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 May 2020 09:48:39 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
+        Fri, 1 May 2020 04:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgEAItc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 04:49:32 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB63C035494;
+        Fri,  1 May 2020 01:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=cxv4wmdQmYLgM/mJ7TYKFLTaub
+        lSTAB8iTgI33j617YwMOtppwA82NtdwT5SsWhO3XaIPYna+FzqQmTcj7QtjHYBSYuFOI6UYUO/kTd
+        0oIIcUfjJc/+nyYSkpsULXqE0IwbUTNx3A8KFXP6oZs1PqnI3S3qC8F/rnRWV+0IBeLMzoQ03n8G6
+        bqVreLBvH0fRjsnGuC2axvEu40VrCFqVIXeqxOIibrsAPSBAlZD30oegxa4rtkLOUlruSSupI66xE
+        1F1QbYg8QxterAArvEL1Q40RTWkLMu8+sH6zEul6OPOKh49aK2CKyUG6BYxd//y+UEh0vSz3jYidn
+        R69hE/Fw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jURMQ-000405-Hl; Fri, 01 May 2020 08:49:30 +0000
+Date:   Fri, 1 May 2020 01:49:30 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v1] irqchip: Add IRQCHIP_MODULE_BEGIN/END helper
- macros
-In-Reply-To: <CAGETcx_d0aM+MdeOFDaXDnTEs85rVY=H7zvhZf7NNB4w-t_CGg@mail.gmail.com>
-References: <20200411045918.179455-1-saravanak@google.com>
- <86sghas7so.wl-maz@kernel.org>
- <CALAqxLXkbNh4GVC82SqXNoib+4FQS2Y3XbePyhreJcwWoVEQaw@mail.gmail.com>
- <CAGETcx92fj-VEjYsYx0E4_TCV8fW1fvvxn_DyV=b4BJ7B5zG2Q@mail.gmail.com>
- <20200429102832.4eee22b4@why>
- <CAGETcx_d0aM+MdeOFDaXDnTEs85rVY=H7zvhZf7NNB4w-t_CGg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.3
-Message-ID: <5b605bd46d3ef213c7ec82d02967e4bb@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: saravanak@google.com, john.stultz@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-team@android.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Helge Deller <deller@gmx.de>, x86@kernel.org,
+        linux-csky@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Chris Zankel <chris@zankel.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH V1 10/10] drm: Remove drm specific kmap_atomic code
+Message-ID: <20200501084930.GK27858@infradead.org>
+References: <20200430203845.582900-1-ira.weiny@intel.com>
+ <20200430203845.582900-11-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430203845.582900-11-ira.weiny@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-29 20:04, Saravana Kannan wrote:
-> On Wed, Apr 29, 2020 at 2:28 AM Marc Zyngier <maz@kernel.org> wrote:
+Looks good,
 
-[...]
-
->> One thing though: this seems to be exclusively DT driven. Have you
->> looked into how that would look like for other firmware types such as
->> ACPI?
-> 
-> I'm not very familiar with ACPI at all. I've just started to learn
-> about how it works in the past few months poking at code when I have
-> some time. So I haven't tried to get this to work with ACPI nor do I
-> think I'll be able to do that anytime in the near future. I hope that
-> doesn't block this from being used for DT based platforms.
-
-As long as you don't try to modularise a driver that does both DT and
-ACPI, you'll be safe. I'm also actively trying to discourage people
-from inventing custom irqchips on ACPI platforms (the spec almost
-forbids them, but not quite).
-
->> Another thing is the handling of dependencies. Statically built
->> irqchips are initialized in the right order based on the topology
->> described in DT, and are initialized early enough that client devices
->> will find their irqchip This doesn't work here, obviously.
-> 
-> Yeah, I read that code thoroughly :)
-> 
->> How do you
->> propose we handle these dependencies, both between irqchip drivers and
->> client drivers?
-> 
-> For client drivers, we don't need to do anything. The IRQ apis seem to
-> already handle -EPROBE_DEFER correctly in this case.
-> 
-> For irqchip drivers, the easy answer can be: Load the IRQ modules
-> early if you make them modules.
-
-Uhuh. I'm afraid that's not a practical solution. We need to offer the
-same behaviour for both and not rely on the user to understand the
-topology of the SoC.
-
-> But in my case, I've been testing this with fw_devlink=on. The TL;DR
-> of "fw_devlink=on" in this context is that the IRQ devices will get
-> device links created based on "interrupt-parent" property. So, with
-> the magic of device links, these IRQ devices will probe in the right
-> topological order without any wasted deferred probe attempts. For
-> cases without fw_devlink=on, I think I can improve
-> platform_irqchip_probe() in my patch to check if the parent device has
-> probed and defer if it hasn't.
-
-Seems like an interesting option. Two things then:
-
-- Can we enforce the use of fw_devlink for modularized irqchips?
-- For those irqchips that can be modularized, it is apparent that they
-   should have been written as platform devices the first place. Maybe
-   we should just do that (long term, though).
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Reviewed-by: Christoph Hellwig <hch@lst.de>
