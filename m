@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B6AC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44AAC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E700208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECE42166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339579;
-	bh=NVWrPhJfnyt59n+JxxM935SAPZawW9c0/ULMAUsj5oM=;
+	s=default; t=1588339581;
+	bh=R6UamDJw4+3i3yj/3AJ3ccIrqCqsDtmzcI8grnRycKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExS9DrP9Yd9fBokDx7n271aM8WNyOcB+ALYmHpzdC9jRVsAGSJds6s+BhUsP5+TGv
-	 e78CIj7xf5YkxJbwEAt3pwznDm1z3FtRXHKoDKvi+baO0ngCNaR4kO6db+rUONHMH9
-	 rukdYQulXA6ree4tSHUzZmIvg1Cg5SH7LY45UXMU=
+	b=omCU/pIWWN+dR1RTRwqhUluad2zJ883hNPuaspgvhD1RxxDG+c9I2c6IdH3uhsjua
+	 PZo92Y3jhFKzANS2EaMXOC/QKT1Qw8YHHq1hTwVyulsNrJDuTCi8wYOzaiVm2t0Mu8
+	 LllVGkyvb8YeT5e9o4EYjSUBLUnlRZXgNuBOr+WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbgEAN0S (ORCPT
+        id S1728872AbgEAN0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47720 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:26:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgEAN0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:14 -0400
+        id S1728900AbgEAN0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7587C208D6;
-        Fri,  1 May 2020 13:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAD620757;
+        Fri,  1 May 2020 13:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339573;
-        bh=NVWrPhJfnyt59n+JxxM935SAPZawW9c0/ULMAUsj5oM=;
+        s=default; t=1588339576;
+        bh=R6UamDJw4+3i3yj/3AJ3ccIrqCqsDtmzcI8grnRycKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2njpnFuZA2CHhnolHZ4Im/Hj613UWvvP1TY1aIsKTzBss7ie1QuS+r75M7vf9suVO
-         nKn/iPNWrbAYTnNwdXwE7NONZ2Rr83kv5L0mUKIBwWA5a9Zv4MWY5M4H/x/E4V4Ldt
-         d2C2uTKsWrpxFHHMZani6SBfdPeBXeW6I8GK9uIE=
+        b=FpYpwSuUeyUVwwHOcwRWvAzo1pDe3k/2fB9IlqeJSfAe0+85jhDhgxVzpJjO3eIJc
+         6Oh+YLLTBASRIoChRttlr5VuYBf5Y/QkO0bbW2clvj2G+AmA5tISYRPUlKKrVBJWmq
+         bmuxtwFrfGXD56LgpN6E9nH/O8PGt7GJntdCNzkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        David Mosberger <davidm@egauge.net>
-Subject: [PATCH 4.4 33/70] drivers: usb: core: Minimize irq disabling in usb_sg_cancel()
-Date:   Fri,  1 May 2020 15:21:21 +0200
-Message-Id: <20200501131524.490779383@linuxfoundation.org>
+        Kyungtae Kim <kt0755@gmail.com>
+Subject: [PATCH 4.4 34/70] USB: core: Fix free-while-in-use bug in the USB S-Glibrary
+Date:   Fri,  1 May 2020 15:21:22 +0200
+Message-Id: <20200501131524.704761628@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -59,69 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Mosberger <davidm@egauge.net>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 5f2e5fb873e269fcb806165715d237f0de4ecf1d upstream.
+commit 056ad39ee9253873522f6469c3364964a322912b upstream.
 
-Restructure usb_sg_cancel() so we don't have to disable interrupts
-while cancelling the URBs.
+FuzzUSB (a variant of syzkaller) found a free-while-still-in-use bug
+in the USB scatter-gather library:
 
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: David Mosberger <davidm@egauge.net>
+BUG: KASAN: use-after-free in atomic_read
+include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
+drivers/usb/core/hcd.c:1607
+Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
+
+CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.10.2-1ubuntu1 04/01/2014
+Workqueue: scsi_tmf_2 scmd_eh_abort_handler
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xce/0x128 lib/dump_stack.c:118
+ print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
+ __kasan_report+0x153/0x1cb mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:639
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
+ __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
+ usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
+ usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
+ usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
+
+This bug occurs when cancellation of the S-G transfer races with
+transfer completion.  When that happens, usb_sg_cancel() may continue
+to access the transfer's URBs after usb_sg_wait() has freed them.
+
+The bug is caused by the fact that usb_sg_cancel() does not take any
+sort of reference to the transfer, and so there is nothing to prevent
+the URBs from being deallocated while the routine is trying to use
+them.  The fix is to take such a reference by incrementing the
+transfer's io->count field while the cancellation is in progres and
+decrementing it afterward.  The transfer's URBs are not deallocated
+until io->complete is triggered, which happens when io->count reaches
+zero.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2003281615140.14837-100000@netrider.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/message.c |   37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ drivers/usb/core/message.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 --- a/drivers/usb/core/message.c
 +++ b/drivers/usb/core/message.c
-@@ -581,31 +581,28 @@ EXPORT_SYMBOL_GPL(usb_sg_wait);
- void usb_sg_cancel(struct usb_sg_request *io)
- {
- 	unsigned long flags;
-+	int i, retval;
+@@ -584,12 +584,13 @@ void usb_sg_cancel(struct usb_sg_request
+ 	int i, retval;
  
  	spin_lock_irqsave(&io->lock, flags);
-+	if (io->status) {
-+		spin_unlock_irqrestore(&io->lock, flags);
-+		return;
-+	}
-+	/* shut everything down */
-+	io->status = -ECONNRESET;
-+	spin_unlock_irqrestore(&io->lock, flags);
- 
--	/* shut everything down, if it didn't already */
--	if (!io->status) {
--		int i;
--
--		io->status = -ECONNRESET;
--		spin_unlock(&io->lock);
--		for (i = 0; i < io->entries; i++) {
--			int retval;
--
--			usb_block_urb(io->urbs[i]);
-+	for (i = io->entries - 1; i >= 0; --i) {
-+		usb_block_urb(io->urbs[i]);
- 
--			retval = usb_unlink_urb(io->urbs[i]);
--			if (retval != -EINPROGRESS
--					&& retval != -ENODEV
--					&& retval != -EBUSY
--					&& retval != -EIDRM)
--				dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
--					__func__, retval);
--		}
--		spin_lock(&io->lock);
-+		retval = usb_unlink_urb(io->urbs[i]);
-+		if (retval != -EINPROGRESS
-+		    && retval != -ENODEV
-+		    && retval != -EBUSY
-+		    && retval != -EIDRM)
-+			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
-+				 __func__, retval);
+-	if (io->status) {
++	if (io->status || io->count == 0) {
+ 		spin_unlock_irqrestore(&io->lock, flags);
+ 		return;
  	}
--	spin_unlock_irqrestore(&io->lock, flags);
+ 	/* shut everything down */
+ 	io->status = -ECONNRESET;
++	io->count++;		/* Keep the request alive until we're done */
+ 	spin_unlock_irqrestore(&io->lock, flags);
+ 
+ 	for (i = io->entries - 1; i >= 0; --i) {
+@@ -603,6 +604,12 @@ void usb_sg_cancel(struct usb_sg_request
+ 			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
+ 				 __func__, retval);
+ 	}
++
++	spin_lock_irqsave(&io->lock, flags);
++	io->count--;
++	if (!io->count)
++		complete(&io->complete);
++	spin_unlock_irqrestore(&io->lock, flags);
  }
  EXPORT_SYMBOL_GPL(usb_sg_cancel);
  
