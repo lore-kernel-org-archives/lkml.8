@@ -2,105 +2,194 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C386BC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542D8C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9845221775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588371926;
-	bh=fAFOAbBKXQ/muqSxf3aq391Xmdkj8QsPanvq7XU+Gd8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=k3MAvCPJ2TxfLrbPXFD2x+XwXxEFt+GasLiTsCnw3Dq8i7FjC4JPlopqhMo7dIOaG
-	 8pRQzuapLuBTzZBCQhCdkrid2M+bA3vj2zWNmSptiX3aISUZc3o5SUKWfqkeVPXNGn
-	 nrSaGozboqSF9hF3NhyH3TP+IFCultjldw7nkqKg=
+	by mail.kernel.org (Postfix) with ESMTP id 2E174208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V9OzOtkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgEAWZ0 (ORCPT
+        id S1726799AbgEAW0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAWZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:25:25 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED82216FD;
-        Fri,  1 May 2020 22:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588371925;
-        bh=fAFOAbBKXQ/muqSxf3aq391Xmdkj8QsPanvq7XU+Gd8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=LUJ44MnGrBvXaO0Eo1sLi9gTiVGhgIffNg8lHNyVbaW44jdnTHUSukVmnVxa2T2f/
-         7/bCwZGAaABbxu46WG6Yn0RBh4yLHAFEd8Sg8aisEVxYrfF4VwDhgwZ/INWq+T+utU
-         Q7Tmy43+jCg4awi52SWO67rDlWV6WImvyBxy5hBc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DA41D3522B72; Fri,  1 May 2020 15:25:24 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:25:24 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 10/24] rcu/tree: add rcutree.rcu_min_cached_objs
- description
-Message-ID: <20200501222524.GA6283@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-11-urezki@gmail.com>
+        Fri, 1 May 2020 18:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgEAW0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 18:26:15 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C50C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 15:26:14 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so3922137ljg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 15:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OJjcJqpyMAKLr/KT3rvGMFcPeeM7SZEHY1XEJFFO0e0=;
+        b=V9OzOtkFarZLDHJN0AZsF4CdX+1JpkVrNZdz4oT0AqVI1iQlafNeeJYvh9LC8wNtch
+         yZNk9A2S0j0Qp/yIKIEepwuZr+6GnmdkEMlF4ePN22TuA7lEN9CdFpoBgTGg7uOv6pNn
+         hXb+dR5ckf2TooYqn3Jxi7Ah7T1Vw629/9roHrDLndMEtkD6BqHH5Hh5T0RJkkzSgdl9
+         SH4FYVktMKaM71fz7qNvJ+3wljg4jb+3LPK2tiDhQtfvHs0P5sU4qtNnRE9GeF5vjYzD
+         ojOd+j1mvHswOobgInKkAeK9dhIC+G2M7Pd03YBKOmPMqX2z/lUUMJVaCsLKg6whbEt6
+         Gydw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OJjcJqpyMAKLr/KT3rvGMFcPeeM7SZEHY1XEJFFO0e0=;
+        b=fUVqnuW9QqF7E37gqC2ntFMuq6pFcryGAdjVfJlFhJo+83vKuv7AupJYtC9lZDXxV0
+         J1FsYnDpFP1Q1L5xJ45uXnqRforMtvpEML+HAeOqLu8oA5fneS9ZDhBrDZU+Ox+c8e5J
+         U8BuvQwvO7/Gu3eVIsPu+756YHofT34c2Mzj/XbnRl/egNi73oIei3bEnYK5Qm9Zb8Zg
+         0lTh4ZD5FdnUdh0ZiDfp52ZQkqMkqXgmIHnUc4lnAOspULhROTXxTyV/p6l1z5HW3Ha4
+         dsRjgQriar/OM+ex2ep4kZwV6D3fTLeLnbSbPUmgtx39dFVpJrSgc/81vAiGKzJ00EI9
+         ksGw==
+X-Gm-Message-State: AGi0PuZXmr8WaqyLBaV8mR5QgOiqHCIDXicFGYd2CJBLv8MzVP8sdCRM
+        6sdHmiJ6aQMYfUc8wvoFdtO4s5KzT4a0jKF74SW0E6oee12/7w==
+X-Google-Smtp-Source: APiQypIRa8fjlN7Fk9+hR9dbgIq6xhlxAMdY36Hs5BHzpRbvaeOSXCbe7TBD8mvHCuDy+7MWloN7XSEfCRlzJfgeWr8=
+X-Received: by 2002:a2e:9455:: with SMTP id o21mr3616252ljh.245.1588371973114;
+ Fri, 01 May 2020 15:26:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428205903.61704-11-urezki@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200501131544.291247695@linuxfoundation.org>
+In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 2 May 2020 03:56:01 +0530
+Message-ID: <CA+G9fYs5Ep4Uq4n_LnbkeMUhpu0kLHFA_3f2wf43aaVnc8WObQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/117] 4.14.178-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:58:49PM +0200, Uladzislau Rezki (Sony) wrote:
-> Document the rcutree.rcu_min_cached_objs sysfs kernel parameter.
-> 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+On Fri, 1 May 2020 at 19:01, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.178 release.
+> There are 117 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.178-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Could you please combine this wtih the patch that created this sysfs
-parameter?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-							Thanx, Paul
+Summary
+------------------------------------------------------------------------
 
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 828ff975fbc6..b2b7022374af 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3977,6 +3977,14 @@
->  			latencies, which will choose a value aligned
->  			with the appropriate hardware boundaries.
->  
-> +	rcutree.rcu_min_cached_objs= [KNL]
-> +			Minimum number of objects which are cached and
-> +			maintained per one CPU. Object size is equal
-> +			to PAGE_SIZE. The cache allows to reduce the
-> +			pressure to page allocator, also it makes the
-> +			whole algorithm to behave better in low memory
-> +			condition.
-> +
->  	rcutree.jiffies_till_first_fqs= [KNL]
->  			Set delay from grace-period initialization to
->  			first attempt to force quiescent states.
-> -- 
-> 2.20.1
-> 
+kernel: 4.14.178-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: b24d32661fe15b71ca1f5f6913749d2c8be9e0ae
+git describe: v4.14.177-118-gb24d32661fe1
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.177-118-gb24d32661fe1
+
+No regressions (compared to build v4.14.177)
+
+No fixes (compared to build v4.14.177)
+
+
+Ran 26220 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* perf
+* v4l2-compliance
+* libhugetlbfs
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-cve-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
