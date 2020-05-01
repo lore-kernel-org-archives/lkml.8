@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC88DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2580C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0FA216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD0524956
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340069;
-	bh=pvqg+T3fegrWc6pRXGDLuGW+rkYe0Io6nNfeOYwhRiY=;
+	s=default; t=1588340072;
+	bh=GGWQ67jdRD0wSmMauQa4FV3WSwv4RIz4968TpQMGWfU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oM8MKdVesRRwuy5TdhBbpXzn8dBXFtlXfwCHbmTPSvCcDNqz3q0/FWrh/pzsAS5ch
-	 62TaSZNsEwuTuJEKOifVTImTcWU7gu4P6NuSjjkdfGv2P0Kr2d86h8faOwBtkQKwVf
-	 35Hdc00mk5RdzEIUhaPIYhxbsCPTZwOWm3lUG14I=
+	b=kIsYLob0k2uf125I8TWZ1XnfIIxvtdPbpKbeBDQzRUdYZBiPE+unDnwc21iuQ9JXZ
+	 RXQaiYGvtRYkzbH1btHkBCh5hAnzX1rXSoHIbUKWwRhyL+rb1d+no1f/pIj6Z7irLG
+	 fLj2U2kK10Etz3BJmYNSEDAcf44hrZFxEjRiOLLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgEANe2 (ORCPT
+        id S1730577AbgEANeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60520 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730558AbgEANeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:20 -0400
+        id S1730546AbgEANeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1673924957;
-        Fri,  1 May 2020 13:34:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3419C2495C;
+        Fri,  1 May 2020 13:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340060;
-        bh=pvqg+T3fegrWc6pRXGDLuGW+rkYe0Io6nNfeOYwhRiY=;
+        s=default; t=1588340055;
+        bh=GGWQ67jdRD0wSmMauQa4FV3WSwv4RIz4968TpQMGWfU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsz7QF9V3m8/kPyk7ckZRe1qo6XDtk2pmJpejUcIN2iYG4wUA5VvfI72LYnry8BKi
-         9nDzh8JDIq8BUckbexvF8inrUS/hjfOdcbzoQ8P+RhTdrm1TA+a+GVwjNZoRd+qXr5
-         EexxJnOl0Uy74i+NOh5J9cZeGhVV3qriPmH8isBo=
+        b=hCQP0cWsyONU3A7DkFhF8yY3+vmANy9jmlvaw+cO9l3rGKVBEM8dtNssuglRQdNp8
+         wdHoTwEoNQFB2TikdWdYzpRL2wzlQMAzmwyH4Oe3NbZdRwYgx850zc7xIMAwlGcHM3
+         JEoDKtVPf2HtSeOS9kjLqA4WSWmFtorvkGepm+pY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Jonas Karlsson <jonas.karlsson@actia.se>
-Subject: [PATCH 4.14 078/117] cdc-acm: introduce a cool down
-Date:   Fri,  1 May 2020 15:21:54 +0200
-Message-Id: <20200501131554.172370804@linuxfoundation.org>
+        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
+Subject: [PATCH 4.14 076/117] staging: vt6656: Power save stop wake_up_count wrap around.
+Date:   Fri,  1 May 2020 15:21:52 +0200
+Message-Id: <20200501131553.988606590@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,137 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Malcolm Priestley <tvboxspy@gmail.com>
 
-commit a4e7279cd1d19f48f0af2a10ed020febaa9ac092 upstream.
+commit ea81c3486442f4643fc9825a2bb1b430b829bccd upstream.
 
-Immediate submission in case of a babbling device can lead
-to a busy loop. Introducing a delayed work.
+conf.listen_interval can sometimes be zero causing wake_up_count
+to wrap around up to many beacons too late causing
+CTRL-EVENT-BEACON-LOSS as in.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+wpa_supplicant[795]: message repeated 45 times: [..CTRL-EVENT-BEACON-LOSS ]
+
+Fixes: 43c93d9bf5e2 ("staging: vt6656: implement power saving code.")
 Cc: stable <stable@vger.kernel.org>
-Tested-by: Jonas Karlsson <jonas.karlsson@actia.se>
-Link: https://lore.kernel.org/r/20200415151358.32664-2-oneukum@suse.com
+Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
+Link: https://lore.kernel.org/r/fce47bb5-7ca6-7671-5094-5c6107302f2b@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-acm.c |   30 ++++++++++++++++++++++++++++--
- drivers/usb/class/cdc-acm.h |    5 ++++-
- 2 files changed, 32 insertions(+), 3 deletions(-)
+ drivers/staging/vt6656/int.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -424,9 +424,12 @@ static void acm_ctrl_irq(struct urb *urb
+--- a/drivers/staging/vt6656/int.c
++++ b/drivers/staging/vt6656/int.c
+@@ -153,7 +153,8 @@ void vnt_int_process_data(struct vnt_pri
+ 				priv->wake_up_count =
+ 					priv->hw->conf.listen_interval;
  
- exit:
- 	retval = usb_submit_urb(urb, GFP_ATOMIC);
--	if (retval && retval != -EPERM)
-+	if (retval && retval != -EPERM && retval != -ENODEV)
- 		dev_err(&acm->control->dev,
- 			"%s - usb_submit_urb failed: %d\n", __func__, retval);
-+	else
-+		dev_vdbg(&acm->control->dev,
-+			"control resubmission terminated %d\n", retval);
- }
+-			--priv->wake_up_count;
++			if (priv->wake_up_count)
++				--priv->wake_up_count;
  
- static int acm_submit_read_urb(struct acm *acm, int index, gfp_t mem_flags)
-@@ -442,6 +445,8 @@ static int acm_submit_read_urb(struct ac
- 			dev_err(&acm->data->dev,
- 				"urb %d failed submission with %d\n",
- 				index, res);
-+		} else {
-+			dev_vdbg(&acm->data->dev, "intended failure %d\n", res);
- 		}
- 		set_bit(index, &acm->read_urbs_free);
- 		return res;
-@@ -484,6 +489,7 @@ static void acm_read_bulk_callback(struc
- 	int status = urb->status;
- 	bool stopped = false;
- 	bool stalled = false;
-+	bool cooldown = false;
- 
- 	dev_vdbg(&acm->data->dev, "got urb %d, len %d, status %d\n",
- 		rb->index, urb->actual_length, status);
-@@ -510,6 +516,14 @@ static void acm_read_bulk_callback(struc
- 			__func__, status);
- 		stopped = true;
- 		break;
-+	case -EOVERFLOW:
-+	case -EPROTO:
-+		dev_dbg(&acm->data->dev,
-+			"%s - cooling babbling device\n", __func__);
-+		usb_mark_last_busy(acm->dev);
-+		set_bit(rb->index, &acm->urbs_in_error_delay);
-+		cooldown = true;
-+		break;
- 	default:
- 		dev_dbg(&acm->data->dev,
- 			"%s - nonzero urb status received: %d\n",
-@@ -531,9 +545,11 @@ static void acm_read_bulk_callback(struc
- 	 */
- 	smp_mb__after_atomic();
- 
--	if (stopped || stalled) {
-+	if (stopped || stalled || cooldown) {
- 		if (stalled)
- 			schedule_work(&acm->work);
-+		else if (cooldown)
-+			schedule_delayed_work(&acm->dwork, HZ / 2);
- 		return;
- 	}
- 
-@@ -585,6 +601,12 @@ static void acm_softint(struct work_stru
- 		}
- 	}
- 
-+	if (test_and_clear_bit(ACM_ERROR_DELAY, &acm->flags)) {
-+		for (i = 0; i < ACM_NR; i++)
-+			if (test_and_clear_bit(i, &acm->urbs_in_error_delay))
-+					acm_submit_read_urb(acm, i, GFP_NOIO);
-+	}
-+
- 	if (test_and_clear_bit(EVENT_TTY_WAKEUP, &acm->flags))
- 		tty_port_tty_wakeup(&acm->port);
- }
-@@ -1374,6 +1396,7 @@ made_compressed_probe:
- 	acm->readsize = readsize;
- 	acm->rx_buflimit = num_rx_buf;
- 	INIT_WORK(&acm->work, acm_softint);
-+	INIT_DELAYED_WORK(&acm->dwork, acm_softint);
- 	init_waitqueue_head(&acm->wioctl);
- 	spin_lock_init(&acm->write_lock);
- 	spin_lock_init(&acm->read_lock);
-@@ -1587,6 +1610,7 @@ static void acm_disconnect(struct usb_in
- 
- 	acm_kill_urbs(acm);
- 	cancel_work_sync(&acm->work);
-+	cancel_delayed_work_sync(&acm->dwork);
- 
- 	tty_unregister_device(acm_tty_driver, acm->minor);
- 
-@@ -1629,6 +1653,8 @@ static int acm_suspend(struct usb_interf
- 
- 	acm_kill_urbs(acm);
- 	cancel_work_sync(&acm->work);
-+	cancel_delayed_work_sync(&acm->dwork);
-+	acm->urbs_in_error_delay = 0;
- 
- 	return 0;
- }
---- a/drivers/usb/class/cdc-acm.h
-+++ b/drivers/usb/class/cdc-acm.h
-@@ -108,8 +108,11 @@ struct acm {
- 	unsigned long flags;
- #		define EVENT_TTY_WAKEUP	0
- #		define EVENT_RX_STALL	1
-+#		define ACM_ERROR_DELAY	3
-+	unsigned long urbs_in_error_delay;		/* these need to be restarted after a delay */
- 	struct usb_cdc_line_coding line;		/* bits, stop, parity */
--	struct work_struct work;			/* work queue entry for line discipline waking up */
-+	struct work_struct work;			/* work queue entry for various purposes*/
-+	struct delayed_work dwork;			/* for cool downs needed in error recovery */
- 	unsigned int ctrlin;				/* input control lines (DCD, DSR, RI, break, overruns) */
- 	unsigned int ctrlout;				/* output control lines (DTR, RTS) */
- 	struct async_icount iocount;			/* counters for control line changes */
+ 			/* Turn on wake up to listen next beacon */
+ 			if (priv->wake_up_count == 1)
 
 
