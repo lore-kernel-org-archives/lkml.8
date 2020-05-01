@@ -2,135 +2,127 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7404C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4023FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E5820708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bU9qHVx0"
+	by mail.kernel.org (Postfix) with ESMTP id 25FF720708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgEAPZZ (ORCPT
+        id S1729552AbgEAP0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:25:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbgEAPZY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:25:24 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39391C061A0C;
-        Fri,  1 May 2020 08:25:24 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o185so4691356pgo.3;
-        Fri, 01 May 2020 08:25:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=dAeSZvNZMQXDqJlUqtS3Ql4DBa9037cFjMUtWfOB8LY=;
-        b=bU9qHVx0wOmVaH0gDZL/CnxJRT9/wID9QouT+BfYlH1sq4r/36z6qlaZS9zt4HMzaq
-         bImUyhsmyviLEyNpToB2N9bRtVkvKeFxbw4w/9q08DUkwrbMRg1FCWhWrQJB/UL/jNdV
-         ZeHfFb3lK1G5RgeMVeeTBMQ7XOLSHrnzGXWgNd2qHzaKy92XEQsfgbjZ9SC2PQ+QXTZ5
-         4u/aLhZA5tmYohVQkBxjq4HrBEbYggLmubZZkDp0yWdqw9+XqQfpu2YetvLfKG+0DGBn
-         AGbgsK4EUrqwMJMojTjRvucuqKtyXh5iV+4BGnGX3zvfYPpFVZtNA0eSQOyURwd0FCq3
-         iPCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=dAeSZvNZMQXDqJlUqtS3Ql4DBa9037cFjMUtWfOB8LY=;
-        b=NtkuwP3xUrO3C4AEioDgWlcADA2rJKrOQ1nupBF5d2dUDZnsFgvKWjpITn8dkLwa4H
-         P2K4ckuXwQaNBaE/bPvLD1UcdfyfTkhPhv0yAO0AP6ZGdL3MUG4bbs5JqC90SUU74+bh
-         D6Ob4SW96Y0+orE+96MbxzsMgMCEz3HPI1xCSd/II5hnpYS6XxicHVwnMCAuRHHH8j8D
-         vLuvNKYWhNaXYhr+4gRDVoNkwOhOYZMImpz/J8oHRmmzUxRWrXTufBE0H1U8/MZIpa2t
-         guiZ/T2iiIyq/CA8sQea2E9hfPG6JUlTKhWKXYDotRB17Wp5GpVB02lk7jY/dXohUqqh
-         wScA==
-X-Gm-Message-State: AGi0PuaTyVG2DvF90p+hIQLRg2z75LPi3MtS17G3nh4OsVdeo8vg68uM
-        WxzITIsfb4/rJ1dMNBiomcE=
-X-Google-Smtp-Source: APiQypJ3ooMOdWJHnDylgqEuIXANhYHe9A29Vf38JrKTGlpb0/WPJyP+gYgiiBVuf/k/KrCdTGnOQQ==
-X-Received: by 2002:a62:76c3:: with SMTP id r186mr4567105pfc.190.1588346723341;
-        Fri, 01 May 2020 08:25:23 -0700 (PDT)
-Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
-        by smtp.gmail.com with ESMTPSA id q11sm2528147pfl.97.2020.05.01.08.25.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 08:25:22 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Fri, 1 May 2020 11:26:13 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2145 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728443AbgEAP0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:26:13 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 0D367C3A7F7E74A2CE70;
+        Fri,  1 May 2020 16:26:11 +0100 (IST)
+Received: from [127.0.0.1] (10.47.3.165) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 1 May 2020
+ 16:26:10 +0100
+Subject: Re: [PATCH 5/5] arm/arm64: smccc: Add ARCH_SOC_ID support
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
-Thread-Topic: [PATCH] PCI: dwc: Fix inner MSI IRQ domain registration
-Thread-Index: AXotNjkw5GEX6TEnWRYx1vOqydMHfLflLPuG
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Fri, 1 May 2020 15:25:17 +0000
-Message-ID: <SL2P216MB0105440F639E502B31DE6A42AAAB0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-References: <20200501113921.366597-1-maz@kernel.org>
-In-Reply-To: <20200501113921.366597-1-maz@kernel.org>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Price <steven.price@arm.com>,
+        "harb@amperecomputing.com" <harb@amperecomputing.com>,
+        Will Deacon <will@kernel.org>
+References: <20200430114814.14116-1-sudeep.holla@arm.com>
+ <20200430114814.14116-6-sudeep.holla@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <426ff8ab-9c13-4301-a91e-989c19c4ff58@huawei.com>
+Date:   Fri, 1 May 2020 16:25:27 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <20200430114814.14116-6-sudeep.holla@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.3.165]
+X-ClientProxiedBy: lhreml727-chm.china.huawei.com (10.201.108.78) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20, 7:39 AM, Marc Zyngier wrote:
-> On a system that uses the internal DWC MSI widget, I get this
-> warning from debugfs when CONFIG_GENERIC_IRQ_DEBUGFS is selected:
->
->   debugfs: File ':soc:pcie@fc000000' in directory 'domains' already prese=
-nt!
->
-> This is due to the fact that the DWC MSI code tries to register two
-> IRQ domains for the same firmware node, without telling the low
-> level code how to distinguish them (by setting a bus token). This
-> further confuses debugfs which tries to create corresponding
-> files for each domain.
->
-> Fix it by tagging the inner domain as DOMAIN_BUS_NEXUS, which is
-> the closest thing we have as to "generic MSI".
->
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
-
-
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
-pci/controller/dwc/pcie-designware-host.c
-> index 395feb8ca051..3c43311bb95c 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -264,6 +264,8 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
->  		return -ENOMEM;
->  	}
-> =20
-> +	irq_domain_update_bus_token(pp->irq_domain, DOMAIN_BUS_NEXUS);
+On 30/04/2020 12:48, Sudeep Holla wrote:
+> +static int __init smccc_soc_init(void)
+> +{
+> +	struct device *dev;
+> +	int ret, soc_id_rev;
+> +	struct arm_smccc_res res;
+> +	static char soc_id_str[8], soc_id_rev_str[12];
 > +
->  	pp->msi_domain =3D pci_msi_create_irq_domain(fwnode,
->  						   &dw_pcie_msi_domain_info,
->  						   pp->irq_domain);
-> --=20
-> 2.26.2
+> +	if (arm_smccc_get_version() < ARM_SMCCC_VERSION_1_2)
+> +		return 0;
+> +
+> +	ret = smccc_soc_id_support_check();
+> +	if (ret)
+> +		return ret;
+> +
+> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 0, &res);
+> +
+> +	ret = smccc_map_error_codes(res.a0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	soc_id_version = res.a0;
+> +
+> +	arm_smccc_1_1_invoke(ARM_SMCCC_ARCH_SOC_ID, 1, &res);
+> +
+> +	ret = smccc_map_error_codes(res.a0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	soc_id_rev = res.a0;
+> +
+> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> +	if (!soc_dev_attr)
+> +		return -ENOMEM;
+> +
+> +	sprintf(soc_id_str, "0x%04x", IMP_DEF_SOC_ID(soc_id_version));
+> +	sprintf(soc_id_rev_str, "0x%08x", soc_id_rev);
+> +
+> +	soc_dev_attr->soc_id = soc_id_str;
+> +	soc_dev_attr->revision = soc_id_rev_str;
+> +
+> +	soc_dev = soc_device_register(soc_dev_attr);
+> +	if (IS_ERR(soc_dev)) {
+> +		ret = PTR_ERR(soc_dev);
+> +		goto free_soc;
+> +	}
+> +
+> +	dev = soc_device_to_device(soc_dev);
+> +
+
+Just wondering, what about if the platform already had a SoC driver - 
+now it could have another one, such that we may have multiple sysfs soc 
+devices, right?
+
+Thanks,
+John
+
+> +	ret = devm_device_add_groups(dev, jep106_id_groups);
+> +	if (ret) {
+> +		dev_err(dev, "sysfs create failed: %d\n", ret);
+> +		goto unregister_soc;
+> +	}
+> +
+> +	pr_info("SMCCC SoC ID: %s Revision %s\n", soc_dev_attr->soc_id,
+> +		soc_dev_attr->revision);
+> +
+> +	return 0;
 
