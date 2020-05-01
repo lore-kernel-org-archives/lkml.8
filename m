@@ -2,83 +2,144 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359E4C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3715AC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 125C42137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A4A208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588338027;
+	bh=BWUe7EXlOsidQCIzUxlz5wZpVtCjuHQG92CPfzEXpfU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=192NsvtOTqJ7MeNe3whdpVQJGCi3BPCOJIhD8nsM6ixHR8WVvZF7WrRSKBdILYY8E
+	 tMoIqMiKxAxlP+IkYCjGJz7XGYco8B6fbIwDx054swLC6xISgLH9Sm+nfmxfS7lplT
+	 7aXI1KbNyAjZV4BJ0D0ftyeNhDb0P8CLmBgpT9Do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgEAM4E (ORCPT
+        id S1728800AbgEANA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 08:56:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:6076 "EHLO mga04.intel.com"
+        Fri, 1 May 2020 09:00:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbgEAM4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 08:56:04 -0400
-IronPort-SDR: wsEfjivoHtQiaXrgPWugWUD2CEUEw6YaVlrcqgoBPHj7uUXy4fwG6sKgmG57jOiibH9DbcXDyC
- qiZHBDW373Yg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 05:56:03 -0700
-IronPort-SDR: O1sHduvFuwfKtaL4uz4pw1IBSDCYH9a0CZOcFxZ+onPDZCl2PtAWDmbITI5Pah1hopL9FkkfJN
- zVv5v1bQqW/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
-   d="scan'208";a="258606958"
-Received: from ssp-jcv-cdi286.jf.intel.com ([10.54.39.33])
-  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 05:56:03 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, eranian@google.com,
-        Kan Liang <kan.liang@linux.intel.com>, stable@vger.kernel.org
-Subject: [RESEND PATCH] perf/x86/intel: Add more available bits for OFFCORE_RESPONSE of Intel Tremont
-Date:   Fri,  1 May 2020 05:54:42 -0700
-Message-Id: <20200501125442.7030-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.21.1
+        id S1728443AbgEANAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:00:25 -0400
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68340208DB;
+        Fri,  1 May 2020 13:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588338024;
+        bh=BWUe7EXlOsidQCIzUxlz5wZpVtCjuHQG92CPfzEXpfU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Vf3phx6EjoLechZGqAyIJzHaodjpqok+7KMQmqhvMmsFpzJpE/dwh3wVNnuvNUZSv
+         RCedCyVj2aF0Gewezdac7+I5NaAVjnhc2qoJRcsoqTSB9cxMcWTPiaTU1QdQdYtlrG
+         63drkoP99qUH24x0egbaQjmtDVjBYaT5pcbeJp/c=
+Received: by mail-ot1-f54.google.com with SMTP id j4so2455675otr.11;
+        Fri, 01 May 2020 06:00:24 -0700 (PDT)
+X-Gm-Message-State: AGi0PuacsgmJWrPGFnS2yhMYIAMuUU0nBlJvs6xCxRWsVB9dGSWr1LvW
+        UxXn49NGP/GrcC7G2n23vHGse0TL0gCojm2m+g==
+X-Google-Smtp-Source: APiQypK3dk8MycjE7hcrX9esCM3sjQAJDFPgVwsJfUuGfzFCk4JV3xfSG7wrUhO1CVlMQhC6Z9Nmwu1YB8ZtO1uVP8I=
+X-Received: by 2002:a05:6830:4d6:: with SMTP id s22mr3476584otd.129.1588338023659;
+ Fri, 01 May 2020 06:00:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200417170825.2551367-1-thierry.reding@gmail.com>
+ <20200430140701.GA21776@bogus> <20200430141520.GA101194@piout.net>
+In-Reply-To: <20200430141520.GA101194@piout.net>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 1 May 2020 08:00:11 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+HzG8QT+kHUjqC8joDxfm1WM+N_F1ZwYXg7cL5faGxVA@mail.gmail.com>
+Message-ID: <CAL_Jsq+HzG8QT+kHUjqC8joDxfm1WM+N_F1ZwYXg7cL5faGxVA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: Document the RTC present on MAX77620
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, Apr 30, 2020 at 9:15 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> On 30/04/2020 09:07:01-0500, Rob Herring wrote:
+> > On Fri, Apr 17, 2020 at 07:08:23PM +0200, Thierry Reding wrote:
+> > > From: Thierry Reding <treding@nvidia.com>
+> > >
+> > > The RTC present on MAX77620 can be used to generate an alarm at a given
+> > > time, which in turn can be used as a wakeup source for the system if it
+> > > is properly wired up.
+> > >
+> > > Document how to enable the RTC to act as a wakeup source.
+> > >
+> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > ---
+> > >  .../devicetree/bindings/mfd/max77620.txt          | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+> > > index 5a642a51d58e..f05005b0993e 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/max77620.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+> > > @@ -125,6 +125,17 @@ MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
+> > >                     control) then, GPIO1/nRST_IO goes LOW.
+> > >                     this property is valid for max20024 only.
+> > >
+> > > +Realtime Clock
+> > > +--------------
+> > > +The MAX77620 family of power management ICs contain a realtime clock block
+> > > +that can be used to keep track of time even when the system is powered off.
+> > > +
+> > > +The realtime clock can also be programmed to trigger alerts, which can be
+> > > +used to wake the system up from sleep. In order to configure the RTC to act
+> > > +as a wakeup source, add an "rtc" child node and add the "wakeup-source"
+> > > +property.
+> > > +
+> > > +
+> > >  For DT binding details of different sub modules like GPIO, pincontrol,
+> > >  regulator, power, please refer respective device-tree binding document
+> > >  under their respective sub-system directories.
+> > > @@ -159,4 +170,8 @@ max77620@3c {
+> > >                     maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
+> > >             };
+> > >     };
+> > > +
+> > > +   rtc {
+> > > +           wakeup-source;
+> >
+> > Is the RTC really the only thing that could wake the system in this
+> > PMIC?
+> >
+> > I don't think it's really valid to have 'wakeup-source' without
+> > 'interrupts' unless the wakeup mechanism is somehow not an interrupt. So
+> > I think this belongs in the parent node.
+> >
+>
+> I don't think this is true because in the case of a discrete RTC, its
+> interrupt pin can be connected directly to a PMIC to power up a board
+> instead of being connected to the SoC. In that case we don't have an
+> interrupt property but the RTC is still a wakeup source. This is the
+> usual use case for wakeup-source in the RTC subsystem. Else, if there is
+> an interrupt, then we assume the RTC is a wakeup source and there is no
+> need to have the wakeup-source property.
 
-The mask in the extra_regs for Intel Tremont need to be extended to
-allow more defined bits.
+Yes, that would be an example of "unless the wakeup mechanism is
+somehow not an interrupt". I guess I should add not an interrupt from
+the perspective of the OS.
 
-"Outstanding Requests" (bit 63) is only available on MSR_OFFCORE_RSP0;
+So if the wakeup is self contained within the PMIC, why do we need a
+DT property? The capability is always there and enabling/disabling
+wakeup from it is userspace policy.
 
-Fixes: 6daeb8737f8a ("perf/x86/intel: Add Tremont core PMU support")
-Reported-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 3be51aa06e67..ba08ad1f560b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1892,8 +1892,8 @@ static __initconst const u64 tnt_hw_cache_extra_regs
- 
- static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
- 	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
--	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
--	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
-+	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff0ffffff9fffull, RSP_0),
-+	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xff0ffffff9fffull, RSP_1),
- 	EVENT_EXTRA_END
- };
- 
--- 
-2.21.1
-
+Rob
