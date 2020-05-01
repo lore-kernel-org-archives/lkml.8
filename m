@@ -2,94 +2,103 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15527C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F00C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E777D2137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6763221775
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="Jq0gyM+D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+M6ffx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgEATdg (ORCPT
+        id S1727060AbgEATeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51552 "EHLO
+        Fri, 1 May 2020 15:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726377AbgEATdf (ORCPT
+        by vger.kernel.org with ESMTP id S1726475AbgEATeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:33:35 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC76AC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 12:33:34 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id g4so3602497ljl.2
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 12:33:34 -0700 (PDT)
+        Fri, 1 May 2020 15:34:10 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8A4C061A0C;
+        Fri,  1 May 2020 12:34:10 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id i7so1916422qkl.12;
+        Fri, 01 May 2020 12:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cbgIzQF7PGrW8iZRTdusJ7sWvtSgO8I59OYVHO8ilyI=;
-        b=Jq0gyM+DbVcz/JPpoz7PFl9wWIqqXst6dmmpqHr251cQCf/affWv5tyeNPC1NxFtrs
-         rHVkw7afU4AU1kptcgxMzMXJjmsiX7beJ/TAJdVzf58jzxrlTAZ+7IHLV49avIIVfSlK
-         M+L7q9oDIZySdc0nW2uOazr29HUEziuOVlXQ3kJgqx0FjmaxI9gIzQL5hnp9rXG7DAjN
-         OxQlOM04vRcm7nKkWJImhMUI0hcrMP8UUN3sArAh3/4zJCd6d0mPiMqw2e5S/0znzY3V
-         kN//NemPzGZf2L/F/3rxqZn+lqpGDTVlWMYloWT2POlqwyBopkwYrasqt4D8YBM1nZfC
-         WEdg==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=kfVrPN6y9lsLFf6FqSXZapvj2RnD4kAcpEoqz9NVXVA=;
+        b=l+M6ffx8Kub9ieJ5klTStggW2FMVS0kYfyOWyBXasFLngqRD92GB65VNCbXOh9HInw
+         N55Re0WbtaIF7p2xBP/aunGnncfJ5xuyVUnDSuA0BKbZZk1FFgjLLeDiwUU/iRvSKrML
+         EVVPH1W/I7tFsiclreaRCVEz+6rsvPjLKIarZ/HiGcXv6ilvX9bz3tZW7glktxoNU49g
+         xA6U+500y+XE8Q1NEpvWOFA0tIRepTIgbMVezuv+ncVPzOJlI+43OdbHKkM8VM7mEtQD
+         1EmQQ+e+rfj398T+qSu4Vyh3pco/q/GOn47Pc1Fa1SGKcutwsrVXAxmjTcY60eZEPfi7
+         6PPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cbgIzQF7PGrW8iZRTdusJ7sWvtSgO8I59OYVHO8ilyI=;
-        b=VC/YGKhx7EvDaeBimCsaAIsdDdpXi5JRu27GfGYxwi+PL9SkeBHClmgWmyymI+z6sX
-         9PQRBqWy73/vqM/haGoicgv+291HUPWCL+nzQO/8qWvqhI97na2NUh4D3pRFKbNVjewf
-         FQVeJtP3MScB20onI5KDtwbPq+Rpc6sog/mjuku8SLv6d+dL+4bFkOwgw+dG1qLo4C0h
-         YtD3BgcFv2zXZtx8+DxtM8UM90oP72QyOewPswCx2Fmi4I4hbBHriAG/u4x4/dhHc+4a
-         og1kURqovf8ZRn3F27bvUkMVQ/ZO4kmX7JAimFffJ6r9qvQCv5EMajxWz6YpHftq1Uk7
-         IOBA==
-X-Gm-Message-State: AGi0Pub+tzec+05sGYwD8TXSTT1ARu7qeNMHGRcMpzP4Cale4Ee7QXvj
-        W2BRPL5jh9ZRpq9CCQDnroMVYY+BsL7hO677gQCBJw==
-X-Google-Smtp-Source: APiQypI5FzFKZQUnrmYo7NPbtZgUKeFqJ22lMs6ihVyKaw+XsL4/3vntaEYBwQ6F+HJ9B6Kgj9Npto2TP85IVCC7TR8=
-X-Received: by 2002:a2e:864f:: with SMTP id i15mr3431858ljj.179.1588361612920;
- Fri, 01 May 2020 12:33:32 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=kfVrPN6y9lsLFf6FqSXZapvj2RnD4kAcpEoqz9NVXVA=;
+        b=RiR9Bd/sY271g5N3kEvSWp6fHh5+Wc5l/uL9mdsHB25sT6kgIDoBH9p+wL79DN5r+v
+         acRlkEMkdgm6ESs9Ptkyy/g3rsO57uRxTDSlWNfksLvWkVt4Do+9omrTS6Msqp3F7Sa7
+         JtU9Xjw96sLhym3Ymv6ez/4Cfu9p7L9AdYY/j2JovFcWdQINLVZgw1DmjPjW2REOO8v6
+         NbiWx8Wv97bj2v6cUrzShmtEpgeACQLTJRBbp+9sc3poNA8+YF8YpOHW6qBkrWNqV2z3
+         KhZqMwrGztY38SPLJxz1o8/AFnC1oxMGnPpx3hbvggIRnqUbNHuKMTEKa64QAJmaq1Ec
+         zcCQ==
+X-Gm-Message-State: AGi0PuZ8zMmRuow+chfy/I/DbOIOQD1k5IV5pTLQSumxNJRUdANCy5M+
+        AGVtD43pWxLujsTDtKBnoovH1Vc5/Gtczw==
+X-Google-Smtp-Source: APiQypJZPCbu5MQXz1ynhnhYrfqdUD4mueLaxvwiSauDlRPwu+3OvCoXPzjHW1cMBypPaUjLvyck1w==
+X-Received: by 2002:a05:620a:2199:: with SMTP id g25mr648855qka.147.1588361649910;
+        Fri, 01 May 2020 12:34:09 -0700 (PDT)
+Received: from josh-ZenBook ([70.32.0.110])
+        by smtp.gmail.com with ESMTPSA id u7sm3334136qkc.1.2020.05.01.12.34.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 01 May 2020 12:34:09 -0700 (PDT)
+From:   Joshua Abraham <j.abraham1776@gmail.com>
+X-Google-Original-From: Joshua Abraham <sinisterpatrician@gmail.com>
+Date:   Fri, 1 May 2020 15:34:06 -0400
+To:     pbonzini@redhat.com
+Cc:     corbet@lwn.net, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, j.abraham1776@gmail.com
+Subject: [PATCH] docs: kvm: Fix KVM_KVMCLOCK_CTRL API doc
+Message-ID: <20200501193404.GA19745@josh-ZenBook>
 MIME-Version: 1.0
-References: <20200429140341.13294-1-maco@android.com> <20200429140341.13294-5-maco@android.com>
- <20200501173032.GD22792@lst.de>
-In-Reply-To: <20200501173032.GD22792@lst.de>
-From:   Martijn Coenen <maco@android.com>
-Date:   Fri, 1 May 2020 21:33:23 +0200
-Message-ID: <CAB0TPYFJT5A-+T-B6tD1O0X8GGK_LFOpBDZv+fFc7LqDyN_aAg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/10] loop: Refactor loop_set_status() size calculation
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Narayan Kamath <narayan@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
-        Martijn Coenen <maco@google.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 7:30 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> For some reason this fails to apply for me against both
-> Jens' for-5.8/block and Linus' current tree.
->
-> What is the baseline for this series?
+The KVM_KVMCLOCK_CTRL ioctl signals to supported KVM guests
+that the hypervisor has paused it. This updates the documentation 
+to reflect that the guest, not the host is notified by this API.
 
-This was based on Linus' tree from a week or two ago or so, but I
-think you're most likely missing this one?
+Signed-off-by: Joshua Abraham <j.abraham1776@gmail.com>
+---
+ Documentation/virt/kvm/api.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://lkml.org/lkml/2020/3/31/755
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index efbbe570aa9b..06a4d9bfc6e5 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -2572,7 +2572,7 @@ list in 4.68.
+ :Parameters: None
+ :Returns: 0 on success, -1 on error
+ 
+-This signals to the host kernel that the specified guest is being paused by
++This signals to the guest kernel that the specified guest is being paused by
+ userspace.  The host will set a flag in the pvclock structure that is checked
+ from the soft lockup watchdog.  The flag is part of the pvclock structure that
+ is shared between guest and host, specifically the second bit of the flags
+-- 
+2.17.1
 
-(I mentioned it in the cover letter, but can make it a part of this
-series if you prefer).
