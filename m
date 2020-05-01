@@ -2,161 +2,177 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1DDC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0986C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7DE4208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBAC2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+7irlew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgEALIz (ORCPT
+        id S1728645AbgEALJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:08:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:38750 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgEALIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:08:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBF4A30E;
-        Fri,  1 May 2020 04:08:53 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7C0A3F73D;
-        Fri,  1 May 2020 04:08:50 -0700 (PDT)
-Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
- regions tagged with "linux,cma-heap"
-To:     Brian Starkey <brian.starkey@arm.com>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Fri, 1 May 2020 07:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728532AbgEALJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 07:09:09 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F373C08E859;
+        Fri,  1 May 2020 04:09:07 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id f8so3613418lfe.12;
+        Fri, 01 May 2020 04:09:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JbMZH52YEWSxdCQl8+jIQlPQEAuYbjyzNeqiNbuukKE=;
+        b=U+7irlew5ltgB9neJ2IUW9PFrMwsCCgcyWeEJKaaQtm1AN/QWS8zwTw5fMSCNsLDag
+         A4bQA4vEuetXw/3nPDcycMnRS0CZdgF10nDi8vKpNePilWT0vFCalcmGy6eyQSrpiCn9
+         GAdlJhJhJsJD7/sRBPHjcKe4F6G5b6I0SrFci4/YYke7JHMBqNuXaQVxZiv4C4OEY8ND
+         i1+mNIM2n+t7osIVAz+hwD3HG4cDIbDbec9CYYoO6OF5RjjFx2WNN3yghLU5XlLjOKWL
+         z71GvyadUkZIo/D5hP7/rpXHuTXrrOh0msvzT1rJCtDXKkgKFheJi4IDnmoBHlhI74DT
+         IKNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JbMZH52YEWSxdCQl8+jIQlPQEAuYbjyzNeqiNbuukKE=;
+        b=OGC957zT2vZHwZVtSFDpA4UD3Gg7Dy7SOHlToYUkrZScsK0LAn+3vZtW6zssw0dFqv
+         7y7RreQ2A3tyIHPuzuTNyyAElKUvspVSmJmPLlRMXIGLbYQTZdqdhaLH3gPNhj3gl41O
+         hIY2uCvg51meWNnWvz5cKy/2W/iGjNZjRn7ICVDsvgNTu5iU/1dgZWXxD+yZQ1b+LkwV
+         o9kDssRNsz0LfHUHAi2fd+hNgBUyWieh0rj3eOSAwk0wVp7R1XH12Z+vyfRht5r6TWKW
+         fpQ1f39qZQxcVFBcTW1sBO9cKZuRjGPoVeZn/OHOslbTcicdVMpuAs5UtqMi1PZX3+Mq
+         jApg==
+X-Gm-Message-State: AGi0Pua2sU1lmzJ1GdF2/XMGlYNp6quI8d7VHU27hac7hiNnPVO85vNH
+        vymqVYeb1MTJuHMm1RtOFfw=
+X-Google-Smtp-Source: APiQypIsazxBBI9m765GGp7qZdwhkRJkVk9sBcmxyN15Eo1/skHafCF+d9fBKRIPWxxi6ZBDSafi7Q==
+X-Received: by 2002:a05:6512:44d:: with SMTP id y13mr1940676lfk.118.1588331345952;
+        Fri, 01 May 2020 04:09:05 -0700 (PDT)
+Received: from [192.168.0.74] ([178.233.178.9])
+        by smtp.gmail.com with ESMTPSA id t16sm1755806ljg.41.2020.05.01.04.09.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 04:09:05 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/3] Prefer working VT console over SPCR and
+ device-tree chosen stdout-path
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
+        linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, nd@arm.com
-References: <20200501073949.120396-1-john.stultz@linaro.org>
- <20200501073949.120396-4-john.stultz@linaro.org>
- <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com>
-Date:   Fri, 1 May 2020 12:08:48 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
+ <20200501013044.GA288759@jagdpanzerIV.localdomain>
+From:   Alper Nebi Yasak <alpernebiyasak@gmail.com>
+Message-ID: <818ba356-ba35-68de-b7bf-f145a89280f1@gmail.com>
+Date:   Fri, 1 May 2020 14:08:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200501013044.GA288759@jagdpanzerIV.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-01 11:21 am, Brian Starkey wrote:
-> Hi John,
-> 
-> On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
->> This patch reworks the cma_heap initialization so that
->> we expose both the default CMA region and any CMA regions
->> tagged with "linux,cma-heap" in the device-tree.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> Cc: "Andrew F. Davis" <afd@ti.com>
->> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
->> Cc: Liam Mark <lmark@codeaurora.org>
->> Cc: Pratik Patel <pratikp@codeaurora.org>
->> Cc: Laura Abbott <labbott@redhat.com>
->> Cc: Brian Starkey <Brian.Starkey@arm.com>
->> Cc: Chenbo Feng <fengc@google.com>
->> Cc: Alistair Strachan <astrachan@google.com>
->> Cc: Sandeep Patil <sspatil@google.com>
->> Cc: Hridya Valsaraju <hridya@google.com>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: devicetree@vger.kernel.org
->> Cc: dri-devel@lists.freedesktop.org
->> Cc: linux-mm@kvack.org
->> Signed-off-by: John Stultz <john.stultz@linaro.org>
->> ---
->>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
->>   1 file changed, 9 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
->> index 626cf7fd033a..dd154e2db101 100644
->> --- a/drivers/dma-buf/heaps/cma_heap.c
->> +++ b/drivers/dma-buf/heaps/cma_heap.c
->> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
->>   {
->>   	struct cma_heap *cma_heap;
->>   	struct dma_heap_export_info exp_info;
->> +	struct cma *default_cma = dev_get_cma_area(NULL);
->> +
->> +	/* We only add the default heap and explicitly tagged heaps */
->> +	if (cma != default_cma && !cma_dma_heap_enabled(cma))
->> +		return 0;
-> 
-> Thinking about the pl111 thread[1], I'm wondering if we should also
-> let drivers call this directly to expose their CMA pools, even if they
-> aren't tagged for dma-heaps in DT. But perhaps that's too close to
-> policy.
+On 01/05/2020 04:30, Sergey Senozhatsky wrote:> Well, if there is a "mandated console", then why would we prefer
+> any other console?
 
-That sounds much like what my first thoughts were - apologies if I'm 
-wildly off-base here, but as far as I understand:
+From what I understand, the firmware provides serial console settings to
+be used as the preferred _serial_ console (where it would be OK to
+switch to graphical consoles later on) and the kernel currently
+understands that such a console should be the preferred _system_ console
+(always preferred over even graphical ones). By "mandated" I'm referring
+to the kernel's current behavior, not to (in my understanding) the
+firmware's intentions.
 
-- Device drivers know whether they have their own "memory-region" or not.
-- Device drivers already have to do *something* to participate in dma-buf.
-- Device drivers know best how they make use of both the above.
-- Therefore couldn't it be left to drivers to choose whether to register 
-their CMA regions as heaps, without having to mess with DT at all?
+Even if the firmware/specifications is really asking the kernel to (tell
+userspace programs to) always use the serial console instead of the
+framebuffer console, while on e.g. a laptop-like device intended to be
+used with a keyboard and display -- is that the correct thing to do?
 
-Robin.
+From the userspace, under the conditions:
 
-> 
-> Cheers,
-> -Brian
-> 
-> [1] https://lists.freedesktop.org/archives/dri-devel/2020-April/264358.html
-> 
->>   
->>   	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
->>   	if (!cma_heap)
->> @@ -162,16 +167,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
->>   	return 0;
->>   }
->>   
->> -static int add_default_cma_heap(void)
->> +static int cma_heaps_init(void)
->>   {
->> -	struct cma *default_cma = dev_get_cma_area(NULL);
->> -	int ret = 0;
->> -
->> -	if (default_cma)
->> -		ret = __add_cma_heap(default_cma, NULL);
->> -
->> -	return ret;
->> +	cma_for_each_area(__add_cma_heap, NULL);
->> +	return 0;
->>   }
->> -module_init(add_default_cma_heap);
->> +module_init(cma_heaps_init);
->>   MODULE_DESCRIPTION("DMA-BUF CMA Heap");
->>   MODULE_LICENSE("GPL v2");
->> -- 
->> 2.17.1
->>
+- CONFIG_VT_CONSOLE is enabled
+- There is a working graphics adapter and a display
+- There is no console argument given in the kernel command line
+
+I expect that:
+
+- tty0 is included in the /proc/consoles list [1]
+- tty0 is the preferred console and /dev/console refers to it [2]
+
+With SPCR both are false, and with stdout-path only the second is false.
+Again, I'm OK with these being false during earlier stages until
+graphics start working, but I'm arguing they should be true after then.
+
+In the patches I tried to keep these serial consoles still enabled and
+preferred during early stages of boot, by trying to switch to vt only
+after a real working graphical backend for it is initialized.
+
+I mean, if my expectations are unreasonable and the current kernel
+behaviour is considered correct, these patches would be conceptually
+wrong; so please tell me if I got anything right/wrong in all this.
+
+
+[1] From the descripion of CONFIG_VT_CONSOLE:
+
+> [...] If you answer Y here, a virtual terminal (the device used to
+> interact with a physical terminal) can be used as system console.
+> [...] you should say Y here unless you want the kernel messages be
+> output only to a serial port [...]
+
+and by "as a prerequisite of [2]"
+
+
+[2] From the descripion of CONFIG_VT_CONSOLE:
+
+> If you do say Y here, by default the currently visible virtual
+> terminal (/dev/tty0) will be used as system console. You can change
+> that with a kernel command line option such as "console=tty3" which
+> would use the third virtual terminal as system console. [...]
+
+I'm assuming "by default" here means "without console arguments"
+regardless of firmware requests. This paragraph (with small changes) is
+repeated on many other Kconfig descriptions (drivers/tty/serial/Kconfig,
+drivers/tty/serial/8250/Kconfig, arch/sparc/Kconfig from grepping for
+'/dev/tty0' on **/Kconfig).
+
+From Documentation/admin-guide/serial-console.rst:
+
+> You can specify multiple console= options on the kernel command line.
+> [...]
+> Note that you can only define one console per device type (serial, video).
+>
+> If no console device is specified, the first device found capable of
+> acting as a system console will be used. At this time, the system
+> first looks for a VGA card and then for a serial port. So if you don't
+> have a VGA card in your system the first serial port will automatically
+> become the console.
+
+and later on:
+
+> Note that if you boot without a ``console=`` option (or with
+> ``console=/dev/tty0``), ``/dev/console`` is the same as ``/dev/tty0``.
+> In that case everything will still work.
