@@ -2,150 +2,97 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45372C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A61AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2275620836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588345328;
-	bh=sLNsgBhDFkipYaV5v04vF4v+XXtyMcWu3BrBwAnjJDc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=gfeCMsq/ME3+jR064PZmSPmxRV2u+W+cLT+uI9HIXRQT0Pz4r4IBRxufRLvDzqHmB
-	 RXkbNzi2w5D5qp2ztiG+3Zxa7Oedl2QAHw0hIiO1sP5+pPNoCXMrh5VSMhta3nFHhP
-	 eSxEChQ5QCA+CaIgM4DnADS4kaBEF+yIY0w9WK3E=
+	by mail.kernel.org (Postfix) with ESMTP id 0A73D20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XoXKYZkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgEAPCH (ORCPT
+        id S1728933AbgEAPFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbgEAPCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:02:07 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D15FF2137B;
-        Fri,  1 May 2020 15:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588345326;
-        bh=sLNsgBhDFkipYaV5v04vF4v+XXtyMcWu3BrBwAnjJDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=a7DGgB7PsWk9EkjO5KG38cAprEstQ8RBYXbAvnRTfmdyNfONQIrvgdKI9ArmBi3FS
-         eI0cWVT8/YW6hDIle4KhEaqRithz3WtMyfrXRLno7WYwOr8yg0dHzBRBoqElNVUC6d
-         146KW5wNRSspc/UkQu4xsg90sR4AZiboUMQl+eQM=
-Date:   Fri, 1 May 2020 10:02:04 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Austin.Bolen@dell.com
-Cc:     sathyanarayanan.kuppuswamy@linux.intel.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Mario.Limonciello@dell.com,
-        jonathan.derrick@intel.com, mr.nuke.me@gmail.com,
-        rjw@rjwysocki.net, kbusch@kernel.org, okaya@kernel.org,
-        tbaicar@codeaurora.org
-Subject: Re: [PATCH v1 1/1] PCI/AER: Use _OSC negotiation to determine AER
- ownership
-Message-ID: <20200501150204.GA109407@bjorn-Precision-5520>
+        Fri, 1 May 2020 11:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728839AbgEAPFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:05:41 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0417DC061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 08:05:40 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id z2so5119051iol.11
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 08:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=OywnYsOX9HSwp3HTdJRlErOVC37z2JBjZDdUK+Itl5s=;
+        b=XoXKYZklpDZih+9yxf0ODOQ/y0+Vmxko1JosGAeZXU45gZMn6YNFWNUWCp9GuaNntH
+         O7H5d5gaqvWtU8h0jphO0HZcqqolrQAbHqvWbezjVKK5+M8BF0kxwHFYYSbU86ZbYUKT
+         meDetoUN6obcwwZp7R5gR4ZU0dBT+ZBlI6YhoTDNSwjlvWrUSTC1Xuelb2HLtGpyDoMC
+         RnmB8M/kQ+XNb0UyKvOQl6BbTj667ABkx5+Uvs2tPgzCP9146Jun+CltJGNQUouL+woA
+         xZV6R0wPt4RRMUaJC9bYDt8zAr6jnF//yUv8hXhz2L45SdSeIY1P9SYEVkNgbQgrMMd+
+         q/0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OywnYsOX9HSwp3HTdJRlErOVC37z2JBjZDdUK+Itl5s=;
+        b=JHIOsGQWo3sHwklacoqB7Pp+RqG4uI9Z9cpHB5WLyjlmUDhxV8cnf69LioQJ+h5aD/
+         X0OjBIcaTI6Z9z3dDKHNqXVlioo8BB55t3OS/IfrrXmvIVdXLIScXUsS9s1AdUv0KQ+2
+         Y07DihTz0myZpizt0nT+PbHIh3bAe1elwk4JG2N5Yevax4Yvt/11vL5jlSYhmeDPnFA9
+         ysvDCq5b25L60HQHJ9GjVE1P2vuz6VN68QjSNaFaHDJE0CNlDKga8TsQ6bNzqdgeasbF
+         2MCmYR04aHkLwOmnfNAtJFjfnluGLNaxpE/FTFcdAygSoTCeGVMWWz3KVAClNtFsLnkE
+         S13Q==
+X-Gm-Message-State: AGi0PuZMG7ZfYzPwROqUoXQmSmFbsAKFaGnpo9Hhco3DkLFoTtf8WV60
+        74skrbdqCeLTYK4QBYV4AKYk4O0ieAZXIQ==
+X-Google-Smtp-Source: APiQypKJmeTbRVpekRlRZX2ChMEx0WDcl6JX+ShhzejzFCOyGuQBkN1mqfwiMRrg1Cnf8jtwyxEEXg==
+X-Received: by 2002:a5e:9518:: with SMTP id r24mr4292114ioj.209.1588345538701;
+        Fri, 01 May 2020 08:05:38 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id i20sm1047218ioj.14.2020.05.01.08.05.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 08:05:38 -0700 (PDT)
+Subject: Re: [PATCH 0/3] small fixes for-5.7
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1588341674.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f621d20a-b81e-62ec-1f5c-a81bafa4c9be@kernel.dk>
+Date:   Fri, 1 May 2020 09:05:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <cover.1588341674.git.asml.silence@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42c53d43bc094889b33c1ac8c2b99d33@AUSX13MPC107.AMER.DELL.COM>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:40:23PM +0000, Austin.Bolen@dell.com wrote:
-> On 4/30/2020 6:02 PM, Bjorn Helgaas wrote:
-> > [Austin, help us understand the FIRMWARE_FIRST bit! :)]
-> >
-> > On Thu, Apr 30, 2020 at 05:40:22PM -0500, Bjorn Helgaas wrote:
-> >> On Sun, Apr 26, 2020 at 11:30:06AM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> >>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> >>>
-> >>> Currently PCIe AER driver uses HEST FIRMWARE_FIRST bit to
-> >>> determine the PCIe AER Capability ownership between OS and
-> >>> firmware. This support is added based on following spec
-> >>> reference.
-> >>>
-> >>> Per ACPI spec r6.3, table 18-387, 18-388, 18-389, HEST table
-> >>> flags field BIT-0 and BIT-1 can be used to expose the
-> >>> ownership of error source between firmware and OSPM.
-> >>>
-> >>> Bit [0] - FIRMWARE_FIRST: If set, indicates that system
-> >>>           firmware will handle errors from this source
-> >>>           first.
-> >>> Bit [1] – GLOBAL: If set, indicates that the settings
-> >>>           contained in this structure apply globally to all
-> >>>           PCI Express Bridges.
-> >>>
-> >>> Although above spec reference states that setting
-> >>> FIRMWARE_FIRST bit means firmware will handle the error source
-> >>> first, it does not explicitly state anything about AER
-> >>> ownership. So using HEST to determine AER ownership is
-> >>> incorrect.
-> >>>
-> >>> Also, as per following specification references, _OSC can be
-> >>> used to negotiate the AER ownership between firmware and OS.
-> >>> Details are,
-> >>>
-> >>> Per ACPI spec r6.3, sec 6.2.11.3, table titled “Interpretation
-> >>> of _OSC Control Field” and as per PCI firmware specification r3.2,
-> >>> sec 4.5.1, table 4-5, OS can set bit 3 of _OSC control field
-> >>> to request control over PCI Express AER. If the OS successfully
-> >>> receives control of this feature, it must handle error reporting
-> >>> through the AER Capability as described in the PCI Express Base
-> >>> Specification.
-> >>>
-> >>> Since above spec references clearly states _OSC can be used to
-> >>> determine AER ownership, don't depend on HEST FIRMWARE_FIRST bit.
-> >> I pulled out the _OSC part of this to a separate patch.  What's left
-> >> is below, and is essentially equivalent to Alex's patch:
-> >>
-> >>   https://lore.kernel.org/r/20190326172343.28946-3-mr.nuke.me@gmail.com/
-> >>
-> >> I like what this does, but what I don't like is the fact that we now
-> >> have this thing called pcie_aer_get_firmware_first() that is not
-> >> connected with the ACPI FIRMWARE_FIRST bit at all.
-> >
-> > Austin, if we remove this, we'll have no PCIe-related code that looks
-> > at the HEST FIRMWARE_FIRST bit at all.  Presumably it's there for some
-> > reason, but I'm not sure what the reason is.
-> >
-> > Alex's mail [1] has a nice table of _OSC AER/HEST FFS bits that looks
-> > useful, but the only actionable thing I can see is that in the (1,1)
-> > case, OSPM should do some initialization with masks/enables.
-> >
-> > But I have no clue what that means or how to connect that with the
-> > spec.  What are the masks/enables?  Is that something connected with
-> > ERST?
-> >
-> > [1] https://lore.kernel.org/r/20190326172343.28946-1-mr.nuke.me@gmail.com/
+On 5/1/20 8:09 AM, Pavel Begunkov wrote:
+> I split the sent patchset, please consider this part for current.
 > 
-> The only values that make sense to me are (1, 0) for full native OS
-> init/handling of AER and (0, 1) for the firmware first model where
-> firmware does the init and handles errors first then passes control to
-> the OS. For these cases the FIRMWARE_FIRST flag in HEST is redundant and
-> not needed.
+> I'll send a test for [1] in a day or so.
 > 
-> We did discuss the (1, 1) case in the ACPI working group and there were
-> a potential use case (which Alex documented in the link you provided)
-> but there is nothing specified in the standard about how that model
-> would actually work AFAICT. And no x86 system has the hardware support
-> needed for what was proposed that I'm aware of (not sure about other
-> architectures).
-> 
-> So unless and until someone documents how the firmware and OS are
-> supposed to behave in the (1, 1) or (0, 0) scenario and expresses a need
-> for those models, I would not bother adding support for them.  Just my 2
-> cents.
+> Regarding [3], Jens, I haven't looked properly yet, how long
+> splice can wait on a inode mutex, but it can be problematic,
+> especially for latencies. How about go safe for-5.7, and
+> maybe think something out for next?
 
-Perfect, I think we should ignore the FIRMWARE_FIRST bit in the HEST
-PCIe entries for now.  Thanks a lot for your help with this!
+Agree, let's play it safe for 5.7, and look further into expanding
+this for 5.8 so we don't always have to go async.
 
-Bjorn
+Series looks good to me, applied. Thanks Pavel!
+
+-- 
+Jens Axboe
+
