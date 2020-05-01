@@ -2,274 +2,197 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F97C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D5C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A1E216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C082166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mQEbCFSG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c2RRApqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgEAVq4 (ORCPT
+        id S1726483AbgEAVtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44144 "EHLO
+        Fri, 1 May 2020 17:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgEAVqe (ORCPT
+        with ESMTP id S1726045AbgEAVty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:46:34 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C10C09B040
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:46:33 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id h26so9062745qtu.8
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:46:33 -0700 (PDT)
+        Fri, 1 May 2020 17:49:54 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5738DC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:49:54 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id l11so4899752lfc.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8gxTSUogDwuGLJulsmZ9RxF75CEfaqEdykWJgqsyHRs=;
-        b=mQEbCFSG03FogeRAqzrIa13/XN1kbi5D36jDNukOmTu+o7J6EmE3NP2IKE+WPGx+0g
-         bTQmHp2wZhUHtfw2mINbOZ1dZYOCazzFF1BI1FmmISZnM1ZJVMGCr0YXGbxU+nbjrVcE
-         Qc5JwRo+yzKNBcg3vXMQEDn43yD0Z8OmqhX+t9E+VnurbZkiQdUGEZlgiKufJdQ/lxYb
-         pKOvZ2bRvzzpHN1THbRMkZT3Wjfl59tHqNdw1mzlge1OzLMLkNmNJXMnt1xXSXAJ4DLy
-         WYVofSHGHa1VvXWqdZAsGvPMP+fF1nKqH/QdoGNbdQr7BzPjnf4cRtZ1OlClxyootJEf
-         rpUg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ppgaHl6cSgNWAC/eU/OoA0QTmOCWQ6geVBF21oFi/iU=;
+        b=c2RRApqWRYey+5q+fGhivtgpZLBoNYYVSxsgYqDukBcT1pC+X1l3QiEIU+npLlu8Km
+         sZmlrIrtLYAy158atE7AiqJwC7WsI0zUvtiWtZiwKtzHbKLd8fZ4JQwyaweWWeXQKG7L
+         WZg2hHNlEQgRxMu51oPmydWLeYKGwBZ4d8gUoHzDOmcNJeMwCA89L/UHHrldbI3SKawv
+         xGFvoSeZeEHRZsIoBLAG0emC7vdYc37Hp9OrODT0goJwdP2L331VqB+SNhk/U80nDUOV
+         LdRD12m8rhrswcVa0869pGgj2jIxCja9zFLC3nDZalLFWwp0OiCgiQA824N2wwpynW6U
+         DgCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8gxTSUogDwuGLJulsmZ9RxF75CEfaqEdykWJgqsyHRs=;
-        b=n8YKq7wNOBhJlOHEVgQOZpr8ukzbAWj8tcKNUivgRzusTeAZLZaBfugfMvNKHj1eWM
-         wQniuu14+UpeomOooZ5BNPGBzEhkPZgm+OIybvs6U9lRoE1FANcoZ5O4s4DWzskC0Wpa
-         CcwPvvhQUOEn9Ghohyv0GEuf3YVp4ClyvxgJuR+4lhyvNiH9c+D8AgtEJAp3NJqzVU0Z
-         9GzMQT+r5yTTxdWVmn3+fuPrGbHWAQbDhqRA7sr2pi/WBh1C3A15FWBp3EhMzsDfenih
-         O304OyO+DctyjrMgHJA5nLegErAodDtyUwTvQUBwivqW4UHHVwSVG4RwAyIVqgQ5nDyN
-         k0gQ==
-X-Gm-Message-State: AGi0PubHGfSpwkupxnz8MkDCma+2UkV+YUUJzGBkafrSjGf5iQxLp42Q
-        yUlJrIsXkJP38ZfHJ/1hc2Mqdg==
-X-Google-Smtp-Source: APiQypIIqwtR3OM/3zGi5DIPfwsyDFHMqqlj+kjboPAogLyhmOkseCui/dghUIqb4bkEfE9iB3tLOg==
-X-Received: by 2002:ac8:46d0:: with SMTP id h16mr6146683qto.242.1588369593085;
-        Fri, 01 May 2020 14:46:33 -0700 (PDT)
-Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id z18sm3470982qti.47.2020.05.01.14.46.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 14:46:32 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net
-Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH net-next 2/4] net: ipa: redefine struct ipa_mem_data
-Date:   Fri,  1 May 2020 16:46:23 -0500
-Message-Id: <20200501214625.31539-3-elder@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200501214625.31539-1-elder@linaro.org>
-References: <20200501214625.31539-1-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ppgaHl6cSgNWAC/eU/OoA0QTmOCWQ6geVBF21oFi/iU=;
+        b=IGMCptB6St4IMFh5wvhAualXbt/I7mwa421n1etcVlxdXaJv8d8FzBz0vBZmGvcCd2
+         Xu5v7AlrzbEt9AlLRLekj8e67tjP55b/vV1m3urHFFfnr1L2NoJCArPJVHgv2qTkn3sI
+         aDoVa8kvlXGUbIzR0waaI3YJ6CueztDYBAjxZCrWJLf/9whlh31+/kMbnoaTyXhsK1mK
+         Xu5ReQM08ZBgqdHw+IRzxWX3o+o/UT3YkWIv51NUiVZ9YTipJ02dG0bPqhRtwHVqnIgZ
+         RzQhx0Eiw8YOzwSjvwxU956x0Nudz9cqIHwKIHqA9YKHjPHZW4xc/gRYJMLYaFQixZwv
+         9vzw==
+X-Gm-Message-State: AGi0PubE4la2NmGtYmfEG8TfTsEZROQ9yizm9ykhkDz3SRw3ycjY3qb9
+        V7lvu5J4ne446SQeSSecJ8rWJs4cKS5fSGLRtHswTVTcZ0xhGA==
+X-Google-Smtp-Source: APiQypLowFKPTc8b0ADJ+W6+ScqnSj9D8IkjQm01RGC+zP/cUNAk+b7iBtMPM4oIYlaPgd8tmQ9M4XmTb/mI3GYR5Fw=
+X-Received: by 2002:a19:40d2:: with SMTP id n201mr3327092lfa.82.1588369792597;
+ Fri, 01 May 2020 14:49:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200501131524.004332640@linuxfoundation.org>
+In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sat, 2 May 2020 03:19:40 +0530
+Message-ID: <CA+G9fYtikBkBLyV0_yZua7GDpZCmTooZOCuE9xdkE62J_Gtk2A@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/83] 5.4.37-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ipa_mem_data structure type was never actually used.  Instead,
-the IPA memory regions were defined using the ipa_mem structure.
+On Fri, 1 May 2020 at 19:08, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.37 release.
+> There are 83 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.37-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Redefine struct ipa_mem_data so it encapsulates the array of IPA-local
-memory region descriptors along with the count of entries in that
-array.  Pass just an ipa_mem structure pointer to ipa_mem_init().
 
-Rename the ipa_mem_data[] array ipa_mem_local_data[] to emphasize
-that the memory regions it defines are IPA-local memory.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/ipa_data-sc7180.c | 10 +++++++---
- drivers/net/ipa/ipa_data-sdm845.c | 10 +++++++---
- drivers/net/ipa/ipa_data.h        | 13 +++++--------
- drivers/net/ipa/ipa_main.c        |  2 +-
- drivers/net/ipa/ipa_mem.c         |  9 +++++----
- drivers/net/ipa/ipa_mem.h         |  3 ++-
- 6 files changed, 27 insertions(+), 20 deletions(-)
+Summary
+------------------------------------------------------------------------
 
-diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
-index 042b5fc3c135..f97e7e4e61c1 100644
---- a/drivers/net/ipa/ipa_data-sc7180.c
-+++ b/drivers/net/ipa/ipa_data-sc7180.c
-@@ -193,7 +193,7 @@ static const struct ipa_resource_data ipa_resource_data = {
- };
- 
- /* IPA-resident memory region configuration for the SC7180 SoC. */
--static const struct ipa_mem ipa_mem_data[] = {
-+static const struct ipa_mem ipa_mem_local_data[] = {
- 	[IPA_MEM_UC_SHARED] = {
- 		.offset		= 0x0000,
- 		.size		= 0x0080,
-@@ -296,12 +296,16 @@ static const struct ipa_mem ipa_mem_data[] = {
- 	},
- };
- 
-+static struct ipa_mem_data ipa_mem_data = {
-+	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-+	.local		= ipa_mem_local_data,
-+};
-+
- /* Configuration data for the SC7180 SoC. */
- const struct ipa_data ipa_data_sc7180 = {
- 	.version	= IPA_VERSION_4_2,
- 	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
- 	.endpoint_data	= ipa_gsi_endpoint_data,
- 	.resource_data	= &ipa_resource_data,
--	.mem_count	= ARRAY_SIZE(ipa_mem_data),
--	.mem_data	= ipa_mem_data,
-+	.mem_data	= &ipa_mem_data,
- };
-diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
-index 0d9c36e1e806..c55507e94559 100644
---- a/drivers/net/ipa/ipa_data-sdm845.c
-+++ b/drivers/net/ipa/ipa_data-sdm845.c
-@@ -235,7 +235,7 @@ static const struct ipa_resource_data ipa_resource_data = {
- };
- 
- /* IPA-resident memory region configuration for the SDM845 SoC. */
--static const struct ipa_mem ipa_mem_data[] = {
-+static const struct ipa_mem ipa_mem_local_data[] = {
- 	[IPA_MEM_UC_SHARED] = {
- 		.offset		= 0x0000,
- 		.size		= 0x0080,
-@@ -318,12 +318,16 @@ static const struct ipa_mem ipa_mem_data[] = {
- 	},
- };
- 
-+static struct ipa_mem_data ipa_mem_data = {
-+	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-+	.local		= ipa_mem_local_data,
-+};
-+
- /* Configuration data for the SDM845 SoC. */
- const struct ipa_data ipa_data_sdm845 = {
- 	.version	= IPA_VERSION_3_5_1,
- 	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
- 	.endpoint_data	= ipa_gsi_endpoint_data,
- 	.resource_data	= &ipa_resource_data,
--	.mem_count	= ARRAY_SIZE(ipa_mem_data),
--	.mem_data	= ipa_mem_data,
-+	.mem_data	= &ipa_mem_data,
- };
-diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-index 7110de2de817..51d8e5a6f23a 100644
---- a/drivers/net/ipa/ipa_data.h
-+++ b/drivers/net/ipa/ipa_data.h
-@@ -246,14 +246,12 @@ struct ipa_resource_data {
- 
- /**
-  * struct ipa_mem - IPA-local memory region description
-- * @offset:		offset in IPA memory space to base of the region
-- * @size:		size in bytes base of the region
-- * @canary_count:	number of 32-bit "canary" values that precede region
-+ * @local_count:	number of regions defined in the local[] array
-+ * @local:		array of IPA-local memory region descriptors
-  */
- struct ipa_mem_data {
--	u32 offset;
--	u16 size;
--	u16 canary_count;
-+	u32 local_count;
-+	const struct ipa_mem *local;
- };
- 
- /**
-@@ -270,8 +268,7 @@ struct ipa_data {
- 	u32 endpoint_count;	/* # entries in endpoint_data[] */
- 	const struct ipa_gsi_endpoint_data *endpoint_data;
- 	const struct ipa_resource_data *resource_data;
--	u32 mem_count;		/* # entries in mem_data[] */
--	const struct ipa_mem *mem_data;
-+	const struct ipa_mem_data *mem_data;
- };
- 
- extern const struct ipa_data ipa_data_sdm845;
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index 28998dcce3d2..9295a9122e8e 100644
---- a/drivers/net/ipa/ipa_main.c
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -778,7 +778,7 @@ static int ipa_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_kfree_ipa;
- 
--	ret = ipa_mem_init(ipa, data->mem_count, data->mem_data);
-+	ret = ipa_mem_init(ipa, data->mem_data);
- 	if (ret)
- 		goto err_reg_exit;
- 
-diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-index 42d2c29d9f0c..fb4de2a12796 100644
---- a/drivers/net/ipa/ipa_mem.c
-+++ b/drivers/net/ipa/ipa_mem.c
-@@ -12,6 +12,7 @@
- 
- #include "ipa.h"
- #include "ipa_reg.h"
-+#include "ipa_data.h"
- #include "ipa_cmd.h"
- #include "ipa_mem.h"
- #include "ipa_data.h"
-@@ -266,15 +267,15 @@ int ipa_mem_zero_modem(struct ipa *ipa)
- }
- 
- /* Perform memory region-related initialization */
--int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
-+int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
- {
- 	struct device *dev = &ipa->pdev->dev;
- 	struct resource *res;
- 	int ret;
- 
--	if (count > IPA_MEM_COUNT) {
-+	if (mem_data->local_count > IPA_MEM_COUNT) {
- 		dev_err(dev, "to many memory regions (%u > %u)\n",
--			count, IPA_MEM_COUNT);
-+			mem_data->local_count, IPA_MEM_COUNT);
- 		return -EINVAL;
- 	}
- 
-@@ -302,7 +303,7 @@ int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
- 	ipa->mem_size = resource_size(res);
- 
- 	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
--	ipa->mem = mem;
-+	ipa->mem = mem_data->local;
- 
- 	return 0;
- }
-diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
-index 065cb499ebe5..f99180f84f0d 100644
---- a/drivers/net/ipa/ipa_mem.h
-+++ b/drivers/net/ipa/ipa_mem.h
-@@ -7,6 +7,7 @@
- #define _IPA_MEM_H_
- 
- struct ipa;
-+struct ipa_mem_data;
- 
- /**
-  * DOC: IPA Local Memory
-@@ -84,7 +85,7 @@ void ipa_mem_teardown(struct ipa *ipa);
- 
- int ipa_mem_zero_modem(struct ipa *ipa);
- 
--int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
-+int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data);
- void ipa_mem_exit(struct ipa *ipa);
- 
- #endif /* _IPA_MEM_H_ */
--- 
-2.20.1
+kernel: 5.4.37-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: becd7d89321d9b96617ee5a99498213c703be541
+git describe: v5.4.36-84-gbecd7d89321d
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.36-84-gbecd7d89321d
 
+No regressions (compared to build v5.4.36)
+
+No fixes (compared to build v5.4.36)
+
+
+Ran 28653 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* libgpiod
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-math-tests
+* perf
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* network-basic-tests
+* v4l2-compliance
+* kselftest/net
+* kselftest/networking
+* ltp-fs-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
