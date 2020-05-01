@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ACEC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87224C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38C5205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5FA2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341013;
-	bh=17Z6ur9/JVGYgU+ovwJDkUoJXP5IFKxDcHNAtxzeoZ4=;
+	s=default; t=1588341017;
+	bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdh4FHXzBA7pt1SVMClVobUhcOZ0K5Wbb6/vogj5lWT5OaHEPpL1nvPhZCJ6s74cm
-	 0LNYuCcNKplPbLARTzhoN+mRD6+Lv8tOz3+PfEgQPrUNtrxY5/ID2XW82SlMMOGTMm
-	 T4mXNIejIqkVp9q5S7DB79Ecuglw/dWU9Tko0fIM=
+	b=nJnKgtNxfz1KxEoZ0IiZHb8HXvNdLwjK1+bJj9qC+cG+uWaCHt2MlcUqMEpK8iiRM
+	 bJNOQVL+b7X3uXNhP9MOTavcoQ7R1uYZmaEJzWgQVP6Db3T2s3mEB3WyKV2OP33oED
+	 CrchX3SMOZlaYDswSifzB4tMUOavw3TXpeDK0DZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbgEANkW (ORCPT
+        id S1731992AbgEANuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40348 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730978AbgEANkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:18 -0400
+        id S1731255AbgEANkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D4A3208DB;
-        Fri,  1 May 2020 13:40:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CF5208DB;
+        Fri,  1 May 2020 13:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340418;
-        bh=17Z6ur9/JVGYgU+ovwJDkUoJXP5IFKxDcHNAtxzeoZ4=;
+        s=default; t=1588340413;
+        bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/4ojm8bN6TkI9spTiKauJ1qxiZvYobLWCFuOUSUz4X9MWCk1Gv+PlAdciskaIkaQ
-         TiPg91D8O+OZxrCk6OylnGKPUPoD+hkBh3T88YoJtpviaTYsWPhV2ebN/0JhfGBs0o
-         QrdbjGSGsEqlAieUWY8oII8l/MkZUe4lp+P9lRnA=
+        b=PUBjGKeC34zieqpt/zhuDtTIvGKNzjeLknD0670Ofpa8Lxy4PLIuZVk81BWKY8omE
+         gUkIz6ZO7ytrzvGYlaUSnFSaSFvrKnhJ12KkocT4xjbunCOO+qqCgb+n2TwxM7OQ66
+         xaBGFT4ehx9ulnLA9aiuzUlVChmO3Hq82sPvfu2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 57/83] afs: Fix length of dump of bad YFSFetchStatus record
-Date:   Fri,  1 May 2020 15:23:36 +0200
-Message-Id: <20200501131539.936291012@linuxfoundation.org>
+Subject: [PATCH 5.4 68/83] net: stmmac: socfpga: Allow all RGMII modes
+Date:   Fri,  1 May 2020 15:23:47 +0200
+Message-Id: <20200501131541.183432435@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,43 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
 
-[ Upstream commit 3efe55b09a92a59ed8214db801683cf13c9742c4 ]
+[ Upstream commit a7a0d6269652846671312b29992143f56e2866b8 ]
 
-Fix the length of the dump of a bad YFSFetchStatus record.  The function
-was copied from the AFS version, but the YFS variant contains bigger fields
-and extra information, so expand the dump to match.
+Allow all the RGMII modes to be used.  (Not only "rgmii", "rgmii-id"
+but "rgmii-txid", "rgmii-rxid")
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/yfsclient.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index 31b236c6b1f76..39230880f372b 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -165,15 +165,15 @@ static void xdr_dump_bad(const __be32 *bp)
- 	int i;
- 
- 	pr_notice("YFS XDR: Bad status record\n");
--	for (i = 0; i < 5 * 4 * 4; i += 16) {
-+	for (i = 0; i < 6 * 4 * 4; i += 16) {
- 		memcpy(x, bp, 16);
- 		bp += 4;
- 		pr_notice("%03x: %08x %08x %08x %08x\n",
- 			  i, ntohl(x[0]), ntohl(x[1]), ntohl(x[2]), ntohl(x[3]));
- 	}
- 
--	memcpy(x, bp, 4);
--	pr_notice("0x50: %08x\n", ntohl(x[0]));
-+	memcpy(x, bp, 8);
-+	pr_notice("0x60: %08x %08x\n", ntohl(x[0]), ntohl(x[1]));
- }
- 
- /*
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index e0212d2fc2a12..fa32cd5b418ef 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -241,6 +241,8 @@ static int socfpga_set_phy_mode_common(int phymode, u32 *val)
+ 	switch (phymode) {
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		*val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
+ 		break;
+ 	case PHY_INTERFACE_MODE_MII:
 -- 
 2.20.1
 
