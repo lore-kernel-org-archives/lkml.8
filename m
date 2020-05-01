@@ -2,63 +2,90 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40641C47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA62C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26BCA2071C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982552071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 03:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgEADyb (ORCPT
+        id S1728244AbgEADzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 23:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbgEADya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 23:54:30 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB06C035494;
-        Thu, 30 Apr 2020 20:54:30 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7BE4912777A88;
-        Thu, 30 Apr 2020 20:54:30 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 20:54:29 -0700 (PDT)
-Message-Id: <20200430.205429.1968774502632115295.davem@davemloft.net>
-To:     michael@walle.cc
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk
-Subject: Re: [PATCH net-next] net: phy: at803x: add downshift support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200428211502.1290-1-michael@walle.cc>
-References: <20200428211502.1290-1-michael@walle.cc>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 30 Apr 2020 20:54:30 -0700 (PDT)
+        Thu, 30 Apr 2020 23:55:10 -0400
+Received: from namei.org ([65.99.196.166]:56396 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728193AbgEADzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 23:55:10 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 0413roZg030164;
+        Fri, 1 May 2020 03:53:51 GMT
+Date:   Fri, 1 May 2020 13:53:50 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?ISO-8859-15?Q?Philippe_Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] Add support for RESOLVE_MAYEXEC
+In-Reply-To: <20200428175129.634352-1-mic@digikod.net>
+Message-ID: <alpine.LRH.2.21.2005011352300.29679@namei.org>
+References: <20200428175129.634352-1-mic@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="1665246916-598047033-1588305232=:29679"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
-Date: Tue, 28 Apr 2020 23:15:02 +0200
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> The AR8031 and AR8035 support the link speed downshift. Add driver
-> support for it. One peculiarity of these PHYs is that it needs a
-> software reset after changing the setting, thus add the .soft_reset()
-> op and do a phy_init_hw() if necessary.
-> 
-> This was tested on a custom board with the AR8031.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+--1665246916-598047033-1588305232=:29679
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-Applied, thank you.
+On Tue, 28 Apr 2020, Mickaël Salaün wrote:
+
+> Furthermore, the security policy can also be delegated to an LSM, either
+> a MAC system or an integrity system.  For instance, the new kernel
+> MAY_OPENEXEC flag closes a major IMA measurement/appraisal interpreter
+> integrity gap by bringing the ability to check the use of scripts [1].
+> Other uses are expected, such as for openat2(2) [2], SGX integration
+> [3], bpffs [4] or IPE [5].
+
+Confirming that this is a highly desirable feature for the proposed IPE 
+LSM.
+
+-- 
+James Morris
+<jmorris@namei.org>
+
+--1665246916-598047033-1588305232=:29679--
