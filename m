@@ -2,54 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE614C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DEFC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9516C205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15A520836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341156;
-	bh=oV6YG3KBmVsKh2hALrLGtg4+/xaDxIwbUFVk/sCmzaY=;
+	s=default; t=1588341157;
+	bh=QpfX3JTibHDMAjB4NRzfy85HK0q7fBbBFotvXBCEJJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sX8dGq5xUdnwIyldFKM6+hBjcVYXB10Z2GnS3Ci0ECIAOTk99DS++MfGbEcEU7osd
-	 65XuVVp6U+K17ZrokcsV4B2lV26ZfSEHIiramhHuGcsrri2VTtzQYgPYr5uWB3wOYA
-	 30Zh0JEvpK9mT+fDjHpqsvTw0o/eGpyGF9GsVQCY=
+	b=RQiKc8noon7RFYsONa7Zwn+wEhmZgDeg4qt+ypaqkisJdvsrvNo65vrXPOFdzDaVd
+	 EFU1BzcPLcO5bV/SXYLqumh2xtEhr3jAIEef0u3LEtaCIe9PvPcOj4DCFm/U2aBJLX
+	 aRsmyTiXOzag+lTas705d8S8hxyLJzgoFy4XiPio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgEANhd (ORCPT
+        id S1730701AbgEANha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36278 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:37:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730552AbgEANhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:20 -0400
+        id S1730954AbgEANhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 683942173E;
-        Fri,  1 May 2020 13:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E281E24954;
+        Fri,  1 May 2020 13:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340239;
-        bh=oV6YG3KBmVsKh2hALrLGtg4+/xaDxIwbUFVk/sCmzaY=;
+        s=default; t=1588340237;
+        bh=QpfX3JTibHDMAjB4NRzfy85HK0q7fBbBFotvXBCEJJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbCoeJ7AlBMACaOFKTJ7UVngT21btdgOjBFA0V311ZMB83+8QbMf6U8iHSenpbbdU
-         u2gXgUKKLN6ETlDKuCs+vUW44KiS0odMHz6LrOw0M7JIAOjyp1Bokj+A9Z6yrVrhy9
-         GHyzBOqcnhd8dqQ9k+HHeSuclHHRRgwQ3xn6AMJQ=
+        b=AI8TNOzvHV6UoO3K1jVYcEIO57X41ILK9yM/LFZtM4YPSTOsde3NsevC1bkM6JuqK
+         QfujoN63W14Xur+eCsBsWhvrHRZaXV/wmkCFBNi0Ol2JyDV+B+LeZfLE5slPvjm94R
+         54fukH/0niAQwmaFqneqTKijuaR65A+YGJ3wR4tI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "H. Peter Anvin (Intel)" <hpa@zytor.com>,
-        Wang YanQing <udknight@gmail.com>
-Subject: [PATCH 4.19 24/46] bpf, x86_32: Fix incorrect encoding in BPF_LDX zero-extension
-Date:   Fri,  1 May 2020 15:22:49 +0200
-Message-Id: <20200501131507.375996284@linuxfoundation.org>
+        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 33/46] scsi: target: fix PR IN / READ FULL STATUS for FC
+Date:   Fri,  1 May 2020 15:22:58 +0200
+Message-Id: <20200501131510.504703079@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -62,55 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-commit 5fa9a98fb10380e48a398998cd36a85e4ef711d6 upstream.
+[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
 
-The current JIT uses the following sequence to zero-extend into the
-upper 32 bits of the destination register for BPF_LDX BPF_{B,H,W},
-when the destination register is not on the stack:
+Creation of the response to READ FULL STATUS fails for FC based
+reservations. Reason is the too high loop limit (< 24) in
+fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
+long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
+executed a last time for the ending '\0' of the string and thus hex2bin()
+reports an error.
 
-  EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
-
-The problem is that C7 /0 encodes a MOV instruction that requires a 4-byte
-immediate; the current code emits only 1 byte of the immediate. This
-means that the first 3 bytes of the next instruction will be treated as
-the rest of the immediate, breaking the stream of instructions.
-
-This patch fixes the problem by instead emitting "xor dst_hi,dst_hi"
-to clear the upper 32 bits. This fixes the problem and is more efficient
-than using MOV to load a zero immediate.
-
-This bug may not be currently triggerable as BPF_REG_AX is the only
-register not stored on the stack and the verifier uses it in a limited
-way, and the verifier implements a zero-extension optimization. But the
-JIT should avoid emitting incorrect encodings regardless.
-
-Fixes: 03f5781be2c7b ("bpf, x86_32: add eBPF JIT compiler for ia32")
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Acked-by: Wang YanQing <udknight@gmail.com>
-Link: https://lore.kernel.org/bpf/20200422173630.8351-1-luke.r.nels@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/net/bpf_jit_comp32.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/target/target_core_fabric_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -1830,7 +1830,9 @@ static int do_jit(struct bpf_prog *bpf_p
- 					      STACK_VAR(dst_hi));
- 					EMIT(0x0, 4);
- 				} else {
--					EMIT3(0xC7, add_1reg(0xC0, dst_hi), 0);
-+					/* xor dst_hi,dst_hi */
-+					EMIT2(0x33,
-+					      add_2reg(0xC0, dst_hi, dst_hi));
- 				}
- 				break;
- 			case BPF_DW:
+diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
+index 10fae26b44add..939c6212d2ac5 100644
+--- a/drivers/target/target_core_fabric_lib.c
++++ b/drivers/target/target_core_fabric_lib.c
+@@ -76,7 +76,7 @@ static int fc_get_pr_transport_id(
+ 	 * encoded TransportID.
+ 	 */
+ 	ptr = &se_nacl->initiatorname[0];
+-	for (i = 0; i < 24; ) {
++	for (i = 0; i < 23; ) {
+ 		if (!strncmp(&ptr[i], ":", 1)) {
+ 			i++;
+ 			continue;
+-- 
+2.20.1
+
 
 
