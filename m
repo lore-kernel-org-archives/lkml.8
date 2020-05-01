@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1A0C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB96C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB25A20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDCF208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339812;
-	bh=jE1eHyRUZAFUgL84lcggnF8nNakHCrXRY2sxN6aP3ck=;
+	s=default; t=1588339814;
+	bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XfQTfUFa/+xb6uEEEbLZMt3tuHddx9IvZavbe7WNaZJTlOyIXV5ez9j/p4qEt3uU
-	 Da8/CX3KTDIJJkVFHeetl/uDi9TKzcJg1oVHK10pt5w8pZpXoydQWghM0vLDDy9lwR
-	 zfWVvj9aLsKRVhglzzc8NHP8SO+/q7JtS3ol5NBU=
+	b=JujC7FXMCmLP13yPJFPI7ZpQgah+fvveMh9VlPXVogr13WynwRzNkCRIn5w1h76LQ
+	 r43oIZ3pGTsget1YK0GesCbmgucF20V1xPRNtLKl7psNTqW5QY0rKN4ysz2732gtAq
+	 t+/aI+FfRqIXZJXlFHOa9sBa15mA2dWgTEhaYg0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgEANaL (ORCPT
+        id S1729427AbgEANaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729871AbgEANaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:05 -0400
+        id S1729032AbgEANaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBD222166E;
-        Fri,  1 May 2020 13:30:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B781A208D6;
+        Fri,  1 May 2020 13:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339805;
-        bh=jE1eHyRUZAFUgL84lcggnF8nNakHCrXRY2sxN6aP3ck=;
+        s=default; t=1588339810;
+        bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0sWKr6IicKTZGXo5JDNWliB/OHSr0ezfzyrWBmVuCkAU2QFqPx2+uBGq4cvIECL2o
-         /iO6N3uvbshVbkrXdr7OUDaCZYKggipgcSABvlnAmVKMyVeSeAfHholo9ia4t6Mx00
-         rstdVctkQ5qCGvjnmCFfgqReoNe3IVfSlVY45tRM=
+        b=SDmIlfpybFALJLGUvkP7SNyg3QSA5vtqMT4wWwTIrL62oHEDqhZqupPog75S7JsKJ
+         OnMWfSchb4jO/wHmEKuSgtiXfJIL02oiZame6R74hiLHpZUsrAhykM0rbf56d7XmiX
+         G8YnAPzbyFMqwZNItpUT81LDg62qaFYENNpzO0Lc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.9 54/80] staging: vt6656: Fix drivers TBTT timing counter.
-Date:   Fri,  1 May 2020 15:21:48 +0200
-Message-Id: <20200501131530.040889821@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.9 56/80] UAS: no use logging any details in case of ENODEV
+Date:   Fri,  1 May 2020 15:21:50 +0200
+Message-Id: <20200501131530.483623421@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -58,45 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 09057742af98a39ebffa27fac4f889dc873132de upstream.
+commit 5963dec98dc52d52476390485f07a29c30c6a582 upstream.
 
-The drivers TBTT counter is not synchronized with mac80211 timestamp.
+Once a device is gone, the internal state does not matter anymore.
+There is no need to spam the logs.
 
-Reorder the functions and use vnt_update_next_tbtt to do the final
-synchronize.
-
-Fixes: c15158797df6 ("staging: vt6656: implement TSF counter")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/375d0b25-e8bc-c8f7-9b10-6cc705d486ee@gmail.com
+Fixes: 326349f824619 ("uas: add dead request list")
+Link: https://lore.kernel.org/r/20200415141750.811-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/vt6656/main_usb.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/storage/uas.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -755,12 +755,15 @@ static void vnt_bss_info_changed(struct
- 			vnt_mac_reg_bits_on(priv, MAC_REG_TFTCTL,
- 					    TFTCTL_TSFCNTREN);
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -191,6 +191,9 @@ static void uas_log_cmd_state(struct scs
+ 	struct uas_cmd_info *ci = (void *)&cmnd->SCp;
+ 	struct uas_cmd_info *cmdinfo = (void *)&cmnd->SCp;
  
--			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
--				       conf->sync_tsf, priv->current_tsf);
--
- 			vnt_mac_set_beacon_interval(priv, conf->beacon_int);
- 
- 			vnt_reset_next_tbtt(priv, conf->beacon_int);
++	if (status == -ENODEV) /* too late */
++		return;
 +
-+			vnt_adjust_tsf(priv, conf->beacon_rate->hw_value,
-+				       conf->sync_tsf, priv->current_tsf);
-+
-+			vnt_update_next_tbtt(priv,
-+					     conf->sync_tsf, conf->beacon_int);
- 		} else {
- 			vnt_clear_current_tsf(priv);
- 
+ 	scmd_printk(KERN_INFO, cmnd,
+ 		    "%s %d uas-tag %d inflight:%s%s%s%s%s%s%s%s%s%s%s%s ",
+ 		    prefix, status, cmdinfo->uas_tag,
 
 
