@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43719C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5410CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24795205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319132051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341177;
-	bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
+	s=default; t=1588341181;
+	bh=j2t6aAKl8zLrt0Hxrw86AzQhKEI6iRPEJt+Q45nQCAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBoGt0e/aSaFsTUQQ2qg2CIWA77KLnjtR+HVDuzkZ5t/3mNxoJEc4EvCBC48ykZAD
-	 AbF8tSXvDA9417KLbvsgmwioAnxoDB1QcxM5TEsnzaECRhje42lq8eVGQyCQ2TQ6mv
-	 66QOXHXSZny8fNIBQ949huLPbRYH2qVy5EOepdW8=
+	b=VEHlGC9a/CUzXu2ecdfc8br7EqO5J6ObTXUdaY4Whob/o9loVmgpqpoKx2qGf7/LP
+	 b6MuN4ZfRq+foFsbN5jVZKrhCkHu6DW0a6hUXWu0wQPzB1tBFvSZIe98cHhHfMn8/T
+	 DNVOASysvEufirBc5H9uHEDaACsJJ/+EgkousBZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgEANhB (ORCPT
+        id S1731259AbgEANxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35586 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:53:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730913AbgEANgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:55 -0400
+        id S1730523AbgEANhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C92152173E;
-        Fri,  1 May 2020 13:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B42E2173E;
+        Fri,  1 May 2020 13:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340215;
-        bh=Mi2EeL3jHCWIbg8Moz3TNZ/gICusH4EaR9zxNVDG98U=;
+        s=default; t=1588340222;
+        bh=j2t6aAKl8zLrt0Hxrw86AzQhKEI6iRPEJt+Q45nQCAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A704BlUBxms2tvuOuWIFHQOED2tuGIjqUEt0oih7YI1FsV/T00NXh5JsbCSY668Vq
-         2m733FO1xaOiVkO4b1klgL11YNAF0RYt+aff3lfLT1Skd69trwdLpZ+29JFIVLI6Nz
-         ZcO1YUOgIx40VSYKSHHogmuaXrjMhdjgHClBJ7Ag=
+        b=cqCT3LYPHJDGx3xA9//0oNCSgax8yV2SZyyKTN/gCR+of8EUTe0XVJZ5pMJmICG0g
+         75y3pIASoFIbdH5Wfzp84ND7TYy6xQaXED7gzwPz+D98wp3lxLIU5pddq0lXLoI62x
+         51zdV42Yv0XfotmCCdIzjnahQ8bPLfxNtIgDhnfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/46] objtool: Fix CONFIG_UBSAN_TRAP unreachable warnings
-Date:   Fri,  1 May 2020 15:23:00 +0200
-Message-Id: <20200501131511.262749709@linuxfoundation.org>
+Subject: [PATCH 4.19 27/46] bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
+Date:   Fri,  1 May 2020 15:22:52 +0200
+Message-Id: <20200501131508.182238651@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -64,67 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-[ Upstream commit bd841d6154f5f41f8a32d3c1b0bc229e326e640a ]
+[ Upstream commit aee194b14dd2b2bde6252b3acf57d36dccfc743a ]
 
-CONFIG_UBSAN_TRAP causes GCC to emit a UD2 whenever it encounters an
-unreachable code path.  This includes __builtin_unreachable().  Because
-the BUG() macro uses __builtin_unreachable() after it emits its own UD2,
-this results in a double UD2.  In this case objtool rightfully detects
-that the second UD2 is unreachable:
+This patch fixes an encoding bug in emit_stx for BPF_B when the source
+register is BPF_REG_FP.
 
-  init/main.o: warning: objtool: repair_env_string()+0x1c8: unreachable instruction
+The current implementation for BPF_STX BPF_B in emit_stx saves one REX
+byte when the operands can be encoded using Mod-R/M alone. The lower 8
+bits of registers %rax, %rbx, %rcx, and %rdx can be accessed without using
+a REX prefix via %al, %bl, %cl, and %dl, respectively. Other registers,
+(e.g., %rsi, %rdi, %rbp, %rsp) require a REX prefix to use their 8-bit
+equivalents (%sil, %dil, %bpl, %spl).
 
-We weren't able to figure out a way to get rid of the double UD2s, so
-just silence the warning.
+The current code checks if the source for BPF_STX BPF_B is BPF_REG_1
+or BPF_REG_2 (which map to %rdi and %rsi), in which case it emits the
+required REX prefix. However, it misses the case when the source is
+BPF_REG_FP (mapped to %rbp).
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
+The result is that BPF_STX BPF_B with BPF_REG_FP as the source operand
+will read from register %ch instead of the correct %bpl. This patch fixes
+the problem by fixing and refactoring the check on which registers need
+the extra REX byte. Since no BPF registers map to %rsp, there is no need
+to handle %spl.
+
+Fixes: 622582786c9e0 ("net: filter: x86: internal BPF JIT")
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200418232655.23870-1-luke.r.nels@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/check.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/x86/net/bpf_jit_comp.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 9479c74af9baf..4613d796492ab 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2086,14 +2086,27 @@ static bool ignore_unreachable_insn(struct instruction *insn)
- 	    !strcmp(insn->sec->name, ".altinstr_aux"))
- 		return true;
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index a32fc3d994076..46ab928312517 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -142,6 +142,19 @@ static bool is_ereg(u32 reg)
+ 			     BIT(BPF_REG_AX));
+ }
  
-+	if (!insn->func)
-+		return false;
++/*
++ * is_ereg_8l() == true if BPF register 'reg' is mapped to access x86-64
++ * lower 8-bit registers dil,sil,bpl,spl,r8b..r15b, which need extra byte
++ * of encoding. al,cl,dl,bl have simpler encoding.
++ */
++static bool is_ereg_8l(u32 reg)
++{
++	return is_ereg(reg) ||
++	    (1 << reg) & (BIT(BPF_REG_1) |
++			  BIT(BPF_REG_2) |
++			  BIT(BPF_REG_FP));
++}
 +
-+	/*
-+	 * CONFIG_UBSAN_TRAP inserts a UD2 when it sees
-+	 * __builtin_unreachable().  The BUG() macro has an unreachable() after
-+	 * the UD2, which causes GCC's undefined trap logic to emit another UD2
-+	 * (or occasionally a JMP to UD2).
-+	 */
-+	if (list_prev_entry(insn, list)->dead_end &&
-+	    (insn->type == INSN_BUG ||
-+	     (insn->type == INSN_JUMP_UNCONDITIONAL &&
-+	      insn->jump_dest && insn->jump_dest->type == INSN_BUG)))
-+		return true;
-+
- 	/*
- 	 * Check if this (or a subsequent) instruction is related to
- 	 * CONFIG_UBSAN or CONFIG_KASAN.
- 	 *
- 	 * End the search at 5 instructions to avoid going into the weeds.
- 	 */
--	if (!insn->func)
--		return false;
- 	for (i = 0; i < 5; i++) {
- 
- 		if (is_kasan_insn(insn) || is_ubsan_insn(insn))
+ static bool is_axreg(u32 reg)
+ {
+ 	return reg == BPF_REG_0;
+@@ -751,9 +764,8 @@ st:			if (is_imm8(insn->off))
+ 			/* STX: *(u8*)(dst_reg + off) = src_reg */
+ 		case BPF_STX | BPF_MEM | BPF_B:
+ 			/* Emit 'mov byte ptr [rax + off], al' */
+-			if (is_ereg(dst_reg) || is_ereg(src_reg) ||
+-			    /* We have to add extra byte for x86 SIL, DIL regs */
+-			    src_reg == BPF_REG_1 || src_reg == BPF_REG_2)
++			if (is_ereg(dst_reg) || is_ereg_8l(src_reg))
++				/* Add extra byte for eregs or SIL,DIL,BPL in src_reg */
+ 				EMIT2(add_2mod(0x40, dst_reg, src_reg), 0x88);
+ 			else
+ 				EMIT1(0x88);
 -- 
 2.20.1
 
