@@ -2,96 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DEDC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E6BC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF4CC2173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588328528;
-	bh=8PiUkTNj8dS4j695LU0tBOc5dYcnMnyHpPrN0SZQOK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iB7qud/v4+i2or5R+F1R1Jds3nKZ5X6i+5jToXj64KyMM6fMCWow4jMKsgRyhfgZT
-	 z4riIp+gl7Samt0OqUSDPOhjSORnha6QGm4P3Z7MJAUbLL9i5GoJYM6JO1t4AhXLki
-	 rPgj1mapPJU83LfPkIMMED2u3tiTJFk+Fh72Oa44=
+	by mail.kernel.org (Postfix) with ESMTP id 4D99320787
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="opcW+Syg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgEAKWI (ORCPT
+        id S1728579AbgEAKWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 06:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728430AbgEAKWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 06:22:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD15820787;
-        Fri,  1 May 2020 10:22:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588328521;
-        bh=8PiUkTNj8dS4j695LU0tBOc5dYcnMnyHpPrN0SZQOK8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cOTspiVozJzNRZAUtA9SvU4tVEBPMFtj4vbtNeG6j7iIG8fu+SN9CPpX/usVudhHG
-         90faFkROucGSYAftqdqz1jipFHOZFG+o8VAZDRm/Jo7UklZnQenp4mycxHsoLer497
-         xxaJqhb+0gcSkrvvWXRSjHALoZq3IzqGO6NMEZMU=
-Date:   Fri, 1 May 2020 11:21:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] ASoC: fsl_esai: Add support for imx8qm
-Message-ID: <20200501102158.GA5276@sirena.org.uk>
-References: <cover.1588320655.git.shengjiu.wang@nxp.com>
- <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-In-Reply-To: <a933bafd2d6a60a69f840d9d4b613337efcf2816.1588320656.git.shengjiu.wang@nxp.com>
-X-Cookie: Think honk if you're a telepath.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 1 May 2020 06:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728229AbgEAKWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 06:22:38 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46760C08E859
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 03:22:37 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x17so11018740wrt.5
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 03:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RdVIC3YIQFyu8urT7zjdWEwHBVKl2OyL0ZV9zzoG76c=;
+        b=opcW+SygN2MlxXFPpvkL1LawTKos+FIxVumGnJRRers9BpyMFpHuFnf7COK9b7mhs7
+         KRMDNhrTckGyvj5U+cUMa/euYs3uhEHEAKsr9wv9T4msIqxSXTr1ETLKwbK5vJCTC1VM
+         jjEaKdJ6G/gjJKU9we0oDpgyxe2vdzUtrUlO3V8XqI14JmB/VBhpSJyvxm/o1xwSB6tj
+         iJUzaFB0io6r8CWEeafysWDwHnkYSzRQJK7kIRyncuLafU3cVOQAjnIZYuULolZJ3FZe
+         uaHbtkHvWygr0KQ7P/qY54tY9MfkSU88Cv8HctcVUzGqY9NMWdmxGaDeFt319S6aT3sx
+         SEgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RdVIC3YIQFyu8urT7zjdWEwHBVKl2OyL0ZV9zzoG76c=;
+        b=phUI/6TAtu7uGzQTYaT/RELELsc9IIS5NYurV/34NZIxrgdo2mvCVo9t44IrlpEbC4
+         NudNzaRHdAdSqlsqxQHz6zIHchHClGsN1nlRzGk9/j1CmHGB0trgFbdwDjwdibiKhRvg
+         kWpkZyo82lapmXfvjs4asumavRAwPiFU1Z7EKxSMmeG14+y3buBJeEjQAtQQGN5Fxhj0
+         vzCu1mHOlmqIRANhezOm1PaYsCGmHy5mxmaqOF1ITHbu6BuNV+EBOfrlfaqSLxCrYUvC
+         kYPjavsSzAtPbWCWgtiaTm1vQ7OErSvR3e5shzBDqxZB4gfm+55tmzd2+0zKdZW8tyuo
+         xTRg==
+X-Gm-Message-State: AGi0PuZNfzOJeHFUrqutPVieODrp2kRX32r9Uxt8y7H6mdY/iDLEG3BR
+        1c5pR94IWhYcrl06vCuwF2+vcLkn
+X-Google-Smtp-Source: APiQypKxSZ1Qs4jIf235zrEuXMlpoFqM8GksJvjrfSUuXD49l3PleXxRL4rVkLTLopYkRgnrz9V3ew==
+X-Received: by 2002:a05:6000:1242:: with SMTP id j2mr3377369wrx.274.1588328555570;
+        Fri, 01 May 2020 03:22:35 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id u3sm3528121wrt.93.2020.05.01.03.22.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 03:22:34 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org, Dotan Barak <dbarak@habana.ai>
+Subject: [PATCH] habanalabs: print all CB handles as hex numbers
+Date:   Fri,  1 May 2020 14:28:19 +0300
+Message-Id: <20200501112819.5466-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dotan Barak <dbarak@habana.ai>
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Make all the CB handles printed in the same way and not some as decimal and
+some as hex numbers.
 
-On Fri, May 01, 2020 at 04:12:05PM +0800, Shengjiu Wang wrote:
-> The difference for esai on imx8qm is that DMA device is EDMA.
->=20
-> EDMA requires the period size to be multiple of maxburst. Otherwise
-> the remaining bytes are not transferred and thus noise is produced.
+Signed-off-by: Dotan Barak <dbarak@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/command_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If this constraint comes from the DMA controller then normally you'd
-expect the DMA controller integration to be enforcing this - is there no
-information in the DMA API that lets us know that this constraint is
-there?
+diff --git a/drivers/misc/habanalabs/command_buffer.c b/drivers/misc/habanalabs/command_buffer.c
+index 6cb92efce4d9..02d13f71b1df 100644
+--- a/drivers/misc/habanalabs/command_buffer.c
++++ b/drivers/misc/habanalabs/command_buffer.c
+@@ -288,7 +288,7 @@ int hl_cb_mmap(struct hl_fpriv *hpriv, struct vm_area_struct *vma)
+ 	cb = hl_cb_get(hdev, &hpriv->cb_mgr, handle);
+ 	if (!cb) {
+ 		dev_err(hdev->dev,
+-			"CB mmap failed, no match to handle %d\n", handle);
++			"CB mmap failed, no match to handle 0x%x\n", handle);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -357,7 +357,7 @@ struct hl_cb *hl_cb_get(struct hl_device *hdev, struct hl_cb_mgr *mgr,
+ 	if (!cb) {
+ 		spin_unlock(&mgr->cb_lock);
+ 		dev_warn(hdev->dev,
+-			"CB get failed, no match to handle %d\n", handle);
++			"CB get failed, no match to handle 0x%x\n", handle);
+ 		return NULL;
+ 	}
+ 
+-- 
+2.17.1
 
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6r+EIACgkQJNaLcl1U
-h9DfFQf/TcF/ZY/a5ix0r9s1n6xwh2QMqCs8szfQsOfEi3yLY75x5EptEuWovv0O
-f0qx5o8tPjQNc6Ta+xw5OLLyOOTRSq5Gh703vik1g4SHjBWt6+Yn3SXovi9Y0j4V
-ldBR/b2hTetKB3kxy5Ye0zimM1m/ifUuixaPTe5tfugJDWTAFaC2ZWFBlF1mveIb
-5elPV0W1IYhCLo73wQa3Y/5evQCBv/uVMjWQAs44wt0LR/IVENEtBx/C4xkjgfrz
-97uSY2xEEUsWDP/xi1fLlI5bU24PGepYE0cfN4N8hKNJGuL16WXZxnZRaN4LBk/A
-n0v9+0DGJjzdrSsDZq/KxIk0QOQtsQ==
-=RLMk
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
