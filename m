@@ -2,163 +2,109 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361EFC47259
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD65C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 129E821775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498402166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mklS7vIK"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bZuN+obO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgEAVwR (ORCPT
+        id S1726581AbgEAVxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
+        Fri, 1 May 2020 17:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgEAVwQ (ORCPT
+        with ESMTP id S1726045AbgEAVxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:52:16 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE64BC08E859
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:52:15 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id w2so8304703edx.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:52:15 -0700 (PDT)
+        Fri, 1 May 2020 17:53:21 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA60DC061A0C;
+        Fri,  1 May 2020 14:53:20 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id e2so8589414eje.13;
+        Fri, 01 May 2020 14:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l07ccX0wm+AEN60sydd1sDGIVZzQnw4FgS9Ujh07hXI=;
-        b=mklS7vIKVEUdl7wntEpgBeCcvwVfQHQL1n/rmnKFbnOtHIZRisDisf4dMQS+dM0Nv0
-         /mRQLawzCoRa0iAq+jVvpf0LYqgCjY+tO0Nl2pQjod+pUu+y/cbys3B6QuzFNwIhgq+e
-         J0hSqTnwqIVOMJOuynhAAZ9fW5a6Vt9Xzotvtdm26jvNeifB0m/HBJs7okf++OwjA9rv
-         5lz3SdD51W3h8Z5eRe/aaTM0oZ8G7J5TGcoo4kQ/achD7IKEF7tdsapTw8o+0ZAJulwF
-         tm+BI0y7Xg01WDXA39uPG+FQVFMkDZI0YOggS1Fzhv4x3y9WAQf7Z6g1qNe1txuqYjtH
-         o9jg==
+        bh=aU6xJ+iSFx7gADks0AYYV1385t8GYvkG8uv7MDkA/d8=;
+        b=bZuN+obOrRVaaAyoc1isLnub49EQILFTo9ue9JKAVyyLXaa8HlcC3dU14wWXgdBYYe
+         hw0Q4ZAv0VyT6nzTWi0eJu05p5vWuxEQoc6lzwUVKytcwmFqmxtnY7uObPjBu+YSWgpP
+         +YgupdjAvyTotb2rbi2gcBoKKZBJLQxt9Rpw7EbH47oQWKzi286pLlL0kQy9gaJCJihZ
+         2jOHqxoNEOK5i2nJde4qZMEGE8/+RUvZG2sDs06GOM01hKmGE5P0iyAD+M6PB19IKjIC
+         ia0NF9A7QOTv2sTkzkUFNJOEjMXQQwh370jtD+qmeCamJrxSQfENmu2E+TbCyrHx5Qn9
+         frog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l07ccX0wm+AEN60sydd1sDGIVZzQnw4FgS9Ujh07hXI=;
-        b=XZkpK9QoBdGAZV6IZHwFIKjFCCfNgsQa2plRZrM1AD6yFbJrJ2+B1fN9T/4vzc7jIb
-         WF5Hd6JnwPlEvM7jbCPBrBnB+V/DRDEj4i/fpfEqFfhfvMnfcEvu39dhzgjdolbwNk+S
-         u/ALa7OOxPftrNkkExGV09+lxty+1sFOZAGTmkxy4jWNhh4b0KxUEGRmga/a6XhYXklI
-         qEbv78MBUExHB1un2PnG6+8qbQK1L+5gJPjbh4jR7ZSSVOv8g4yMSFq75w+2vlpJgidy
-         p5t510i7zvMIquGpVCBGXdXYAMyVfoiEXKDy0Qcv7OMYPF+MDJ39yZYJlZF9TWRmc4hv
-         C4wQ==
-X-Gm-Message-State: AGi0PuakRiDlWGmk+hYBb7xBqId2jPb+Ym30b+tQq3rfDgOZKEfaRV35
-        mdTTbF/3xW2XlJe9Q7EvUNCzsu10b8ALrBnzZpnsxw==
-X-Google-Smtp-Source: APiQypJmId2DaeM7LwaM8l70eo6m7yrxIS8YHkCL5rA5nuZuCXHz7IuoKF/W4HpVt52A/r7auZb6rjukAuRVUpn3RXs=
-X-Received: by 2002:a05:6402:759:: with SMTP id p25mr5505386edy.102.1588369934563;
- Fri, 01 May 2020 14:52:14 -0700 (PDT)
+        bh=aU6xJ+iSFx7gADks0AYYV1385t8GYvkG8uv7MDkA/d8=;
+        b=YtnAS4NshaKEZvz8FEurwC60ATBI+FK/ypi/3uKqghKA8CGceGgFNoLdnfRXg23Fmw
+         Y2cXSynfYUrdgaqqxASw/1i53cirEBm2jfJb35TuJ/9280dxEMpceLAFNEDQ4oTFt9wC
+         sQw8449z5qC2NQb9w9giJbSUJBTqhk70K2owqEcGCkjWtFtElGy62RhJEdmrdxv+eaSd
+         Jm4/ju8XB04MzRsVB3jLZd4u5ShdWNz9eaJY8Ze+kUEF1paQMdyiNis2HZuhVl7erMVj
+         KVfk3mOD2SsOR0PVJghzCLXjst1zpWHSGWjWB6Qkrgfvijf2XV2YJ2LYw4I1nd5XxPi+
+         KOWw==
+X-Gm-Message-State: AGi0PuasMnieI3/VPMKtcq1srH+judWm1SG6mup//b814LNbEsdS+H63
+        SnSNbI948/uOMBNTkBsHMmWqTBwZiuuhfqaCkq7uVODKhyk=
+X-Google-Smtp-Source: APiQypJE6wRFk+W8/TX/hPebgvtvgJCEAM+/GlY3LrmThP8OdxemOb2dFwAO5d/KHVF7CH5V0uzlyXhD8yOdX5Yeq5M=
+X-Received: by 2002:a17:906:3004:: with SMTP id 4mr5235939ejz.381.1588369999417;
+ Fri, 01 May 2020 14:53:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200430102908.10107-1-david@redhat.com> <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
- <871ro52ary.fsf@x220.int.ebiederm.org> <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
- <875zdg26hp.fsf@x220.int.ebiederm.org> <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
- <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
- <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com> <CAPcyv4j=YKnr1HW4OhAmpzbuKjtfP7FdAn4-V7uA=b-Tcpfu+A@mail.gmail.com>
- <2d019c11-a478-9d70-abd5-4fd2ebf4bc1d@redhat.com> <CAPcyv4iOqS0Wbfa2KPfE1axQFGXoRB4mmPRP__Lmqpw6Qpr_ig@mail.gmail.com>
- <62dd4ce2-86cc-5b85-734f-ec8766528a1b@redhat.com> <0169e822-a6cc-1543-88ed-2a85d95ffb93@redhat.com>
- <CAPcyv4jGnR_fPtpKBC1rD2KRcT88bTkhqnTMmuwuc+f9Dwrz1g@mail.gmail.com>
- <9f3a813e-dc1d-b675-6e69-85beed3057a4@redhat.com> <CAPcyv4jjrxQ27rsfmz6wYPgmedevU=KG+wZ0GOm=qiE6tqa+VA@mail.gmail.com>
- <04242d48-5fa9-6da4-3e4a-991e401eb580@redhat.com> <CAPcyv4iXyOUDZgqhWH1KCObvATL=gP55xEr64rsRfUuJg5B+eQ@mail.gmail.com>
- <8242c0c5-2df2-fc0c-079a-3be62c113a11@redhat.com>
-In-Reply-To: <8242c0c5-2df2-fc0c-079a-3be62c113a11@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 1 May 2020 14:52:03 -0700
-Message-ID: <CAPcyv4h1nWjszkVJQgeXkUc=-nPv5=Me25BOGFQCpihUyFsD6w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>
+References: <20200429201644.1144546-1-martin.blumenstingl@googlemail.com>
+ <20200429201644.1144546-3-martin.blumenstingl@googlemail.com> <20200501210942.GA27082@bogus>
+In-Reply-To: <20200501210942.GA27082@bogus>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 1 May 2020 23:53:08 +0200
+Message-ID: <CAFBinCDmps-Nd-HokSa5P7=bR+o3nuwxsS_eiH9A6CCYywpabQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 02/11] dt-bindings: net: dwmac-meson: Document the
+ "timing-adjustment" clock
+To:     Rob Herring <robh@kernel.org>
+Cc:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 2:11 PM David Hildenbrand <david@redhat.com> wrote:
+Hi Rob,
+
+On Fri, May 1, 2020 at 11:09 PM Rob Herring <robh@kernel.org> wrote:
 >
-> On 01.05.20 22:12, Dan Williams wrote:
-[..]
-> >>> Consider the case of EFI Special Purpose (SP) Memory that is
-> >>> marked EFI Conventional Memory with the SP attribute. In that case the
-> >>> firmware memory map marked it as conventional RAM, but the kernel
-> >>> optionally marks it as System RAM vs Soft Reserved. The 2008 patch
-> >>> simply does not consider that case. I'm not sure strict textualism
-> >>> works for coding decisions.
-> >>
-> >> I am no expert on that matter (esp EFI). But looking at the users of
-> >> firmware_map_add_early(), the single user is in arch/x86/kernel/e820.c
-> >> . So the single source of /sys/firmware/memmap is (besides hotplug) e820.
-> >>
-> >> "'e820_table_firmware': the original firmware version passed to us by
-> >> the bootloader - not modified by the kernel. ... inform the user about
-> >> the firmware's notion of memory layout via /sys/firmware/memmap"
-> >> (arch/x86/kernel/e820.c)
-> >>
-> >> How is the EFI Special Purpose (SP) Memory represented in e820?
-> >> /sys/firmware/memmap is really simple: just dump in e820. No policies IIUC.
+> On Wed, 29 Apr 2020 22:16:35 +0200, Martin Blumenstingl wrote:
+> > The PRG_ETHERNET registers can add an RX delay in RGMII mode. This
+> > requires an internal re-timing circuit whose input clock is called
+> > "timing adjustment clock". Document this clock input so the clock can be
+> > enabled as needed.
 > >
-> > e820 now has a Soft Reserved translation for this which means "try to
-> > reserve, but treat as System RAM is ok too". It seems generically
-> > useful to me that the toggle for determining whether Soft Reserved or
-> > System RAM shows up /sys/firmware/memmap is a determination that
-> > policy can make. The kernel need not preemptively block it.
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml   | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
 >
-> So, I think I have to clarify something here. We do have two ways to kexec
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> 1. kexec_load(): User space (kexec-tools) crafts the memmap (e.g., using
-> /sys/firmware/memmap on x86-64) and selects memory where to place the
-> kexec images (e.g., using /proc/iomem)
->
-> 2. kexec_file_load(): The kernel reuses the (basically) raw firmware
-> memmap and selects memory where to place kexec images.
->
-> We are talking about changing 1, to behave like 2 in regards to
-> dax/kmem. 2. does currently not add any hotplugged memory to the
-> fixed-up e820, and it should be fixed regarding hotplugged DIMMs that
-> would appear in e820 after a reboot.
->
-> Now, all these policy discussions are nice and fun, but I don't really
-> see a good reason to (ab)use /sys/firmware/memmap for that (e.g., parent
-> properties). If you want to be able to make this configurable, then
-> e.g., add a way to configure this in the kernel (for example along with
-> kmem) to make 1. and 2. behave the same way. Otherwise, you really only
-> can change 1.
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: Additional items are not allowed ([4294967295] was unexpected)
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/amlogic,meson-dwmac.example.dt.yaml: ethernet@c9410000: clocks: [[4294967295], [4294967295], [4294967295], [4294967295]] is too long
+I am seeing this on my own build machine as well, but only for the .yaml example
+The .dts example does not emit this warning
 
-That's clearer.
+Also I don't see what's wrong with my way of describing the new,
+optional clock and it's clock-name
+Can you please point me in the right direction here?
 
->
->
-> Now, let's clarify what I want regarding virtio-mem:
->
-> 1. kexec should not add virtio-mem memory to the initial firmware
->    memmap. The driver has to be in charge as discussed.
-> 2. kexec should not place kexec images onto virtio-mem memory. That
->    would end badly.
-> 3. kexec should still dump virtio-mem memory via kdump.
 
-Ok, but then seems to say to me that dax/kmem is a different type of
-(driver managed) than virtio-mem and it's confusing to try to apply
-the same meaning. Why not just call your type for the distinct type it
-is "System RAM (virtio-mem)" and let any other driver managed memory
-follow the same "System RAM ($driver)" format if it wants?
+Thank you!
+Martin
