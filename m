@@ -2,129 +2,427 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MISSING_MIMEOLE,MSGID_FROM_MTA_HEADER,PI_IMPORTANCE_HIGH,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E4EC47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C86CC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAC4321775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A724208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rePtkf+j"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ulgqH0Kw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgEAVaC (ORCPT
+        id S1726846AbgEAVak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgEAVaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:30:01 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61539C061A0C;
-        Fri,  1 May 2020 14:30:01 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id d16so8276149edv.8;
-        Fri, 01 May 2020 14:30:01 -0700 (PDT)
+        Fri, 1 May 2020 17:30:40 -0400
+Received: from mail-dm6nam10on2056.outbound.protection.outlook.com ([40.107.93.56]:33505
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726272AbgEAVaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:30:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cZL+UA3HiR99HYGP2Q9g2diSSZVTtOMyDw7PV1XCLuiDt+pxOAg0ASWNSLqx/gnSvMazE/t+kTtC6Cfdx0mqR++kdXxPUutS3QXFpS7ZKdVrT2vfbnMuFbvSbvYFTNPhejUEtP+n3ssQcAubik2hbnZNkdiYMB3RbC8dMHhPNcTgjbwbVVOd+Z0dy+p1qLlrs7pH02q1U96ccrDNanHTGVeicUQRJPCUsclG0oA0MtYh+5hJ2FZAs/Ttp06EBD6r1M++jTmE7cPJS/db1ajma9wUgLQmHyQ+gBXBMxPy7LHBF0CKpQty9T2RJafRLsKuD6fKEfB5q1lb1S/PdG7Y+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+BS7U69YI38WaIB1mGkpDcHz14Li59tHB9NHbcLegY=;
+ b=DuILA3JTwOwLxncTfglsDFVaEYFijHNnRYSavqxh2owRx3HbT1eygPkeT2YQBp2buXE0vjCU2R+182ewfh4DX7UOTF8rBuT/IahnSgbvkPwCCNYdWsp1qu+PkmIocdN1gZOXaeGalZV1F2+0SZJK+lESgZLw4gPQmX3Ac1xcz1nhK9aaERb386UU0UomWWM079vaugm+Psm9LMf6NIep47wLO+aYa3G0NINhoM1bxWl64mzlBOUurNG1bMtVXzlhy5wZuNCuR6c8O0+rkhzc0mE7HFnTt6hGwtvFEj+bPmTRXFldo7sacRQHFYdKs5JjghSWCv/GrPKVG6xWZj/tMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k4vhp0VlA+4eKJJcpzlGuSTcol2cbO4w29cWTar5YXw=;
-        b=rePtkf+jPvelgNBY44aw3nYMFa5z7pgcs5SldQ92lZp43pUqhAGeePfH2odr3ADJDA
-         QcZ2cYJvsG8/zzDg8bG5QqCa5nIgYZUXusJKm70zAXfwDKs2VRWUnGzmiCKrgFLSp4md
-         AxGc42MrTZwXh0z5npeuKdDg/q0hsILpewPYO3tmaGmP4e5ZTaTMubB/inuhUXp3f5Lv
-         mGpNnEBsRoH8SFO5PuH61qp73o+idjmg7CjB9UnzjvHyMRcpu/uBjAQeWhU3OQmQEDx1
-         3fjjnP3++pQIv+Bh+qPKNRhTiU2fnq4OoNZugrikgH7RDm4xhW75IKYDqC6XT3Kl1Q0q
-         wojQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k4vhp0VlA+4eKJJcpzlGuSTcol2cbO4w29cWTar5YXw=;
-        b=TYqSIqpO+++2+yv9Brf1Xig7lrldCGX/c3OUUsZ/aDK0zPxn3eJ+baBF7O8P8XVh3K
-         Dg3vDFhPyI6DDNyGm8J4tKMO3hs0hKpXCYBGmrB1QUmudwBnbvEDejbAqVfI3tUKe9et
-         ryhDqLg4raoIBvxjnUYQrxrbzZP4uA9g3SZ3mz55wTl7UzJzZjQ84xC0A0kCGW1kH4DL
-         KLeBK+xYoNGovvfZvoElV+qDH2WLMtPXsAXwqQG4h64MVOPUu5NUZS2kGJxpozilRAqI
-         ATnDTmx+tzvuZuzcK5IWla3bSj/ev1HYwJ3Uyw6FO+lriL9aYfZRkqNSjLoZ6tYljkIK
-         jImA==
-X-Gm-Message-State: AGi0PuZBFor+iJpQehAsCka0xIkBghAHDm/Pi554bveyEmNHMw75k4y1
-        FugXACmswaawpophHKTQH4Qem4r+6D/UoqUt/gU=
-X-Google-Smtp-Source: APiQypJtLZZnIVsTjvuuhCzWaXfXP7wpnGa9G6PIdiNusehMFzCx8SssWzyKYi0NZLrZBEfGDbSYqPU6qlS+yngIqY4=
-X-Received: by 2002:aa7:dcc3:: with SMTP id w3mr5012926edu.231.1588368599999;
- Fri, 01 May 2020 14:29:59 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U+BS7U69YI38WaIB1mGkpDcHz14Li59tHB9NHbcLegY=;
+ b=ulgqH0KwP0ipm2nKDo4VfITrZROTPaifbvboJ8T0B1cC36QtFUOLnDjx71oH6rWnSkeAne3gYUuIlzZ/Twuk9mFYOK1lDQwESYQVaDgsX0+8BvHhFJ6JjJo6huZnGGjF8FameyVAUyGQVZaBfDMbNuVY9IZP8MKTFCrepTPp9P8=
+Authentication-Results: baidu.com; dkim=none (message not signed)
+ header.d=none;baidu.com; dmarc=none action=none header.from=amd.com;
+Received: from SA0PR12MB4560.namprd12.prod.outlook.com (2603:10b6:806:97::17)
+ by SA0PR12MB4526.namprd12.prod.outlook.com (2603:10b6:806:98::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Fri, 1 May
+ 2020 21:30:34 +0000
+Received: from SA0PR12MB4560.namprd12.prod.outlook.com
+ ([fe80::c827:69cd:c298:da3d]) by SA0PR12MB4560.namprd12.prod.outlook.com
+ ([fe80::c827:69cd:c298:da3d%9]) with mapi id 15.20.2958.027; Fri, 1 May 2020
+ 21:30:34 +0000
+Date:   Fri, 1 May 2020 16:30:33 -0500
+From:   Wei Huang <wei.huang2@amd.com>
+To:     Li RongQing <lirongqing@baidu.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org,
+        hpa@zytor.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de,
+        jmattson@google.com, wanpengli@tencent.com, vkuznets@redhat.com,
+        sean.j.christopherson@intel.com, pbonzini@redhat.com,
+        xiaoyao.li@intel.com
+Subject: Re: [PATCH] [v3] kvm: x86: support APERF/MPERF registers
+Message-ID: <20200501213033.GA1176754@weiserver.amd.com>
+References: <1588243556-11477-1-git-send-email-lirongqing@baidu.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588243556-11477-1-git-send-email-lirongqing@baidu.com>
+X-ClientProxiedBy: SN4PR0501CA0018.namprd05.prod.outlook.com
+ (2603:10b6:803:40::31) To SA0PR12MB4560.namprd12.prod.outlook.com
+ (2603:10b6:806:97::17)
+Importance: high
 MIME-Version: 1.0
-References: <20200501204825.146424-1-konradybcio@gmail.com> <20200501210038.GB26726@ravnborg.org>
-In-Reply-To: <20200501210038.GB26726@ravnborg.org>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Fri, 1 May 2020 23:29:24 +0200
-Message-ID: <CAMS8qEXLAoY9mA5iEA8hqhpejwvDQj1CC_E6QFh3+qgrEWb6cA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Add support for TM5P5 NT35596 video mode panel
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     skrzynka@konradybcio.pl, Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (165.204.77.1) by SN4PR0501CA0018.namprd05.prod.outlook.com (2603:10b6:803:40::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.18 via Frontend Transport; Fri, 1 May 2020 21:30:34 +0000
+X-Priority: 1 (Highest)
+X-MSMail-Priority: High
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d3242a02-7ffa-4783-54ea-08d7ee16e1f9
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4526:
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4526060715A614A345FB0EE8CFAB0@SA0PR12MB4526.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OfhofsrhYwl7KKQYNnGEarKJMzxRUsvk7vnb64k/a0c7g0LaxLYXIlAYvMTQZJ6Ck+0WwVPT8ArD/+hQQM+KE5ioZqgw8nKRvIew0AuEDMa02/96SC5uIdmKI+ar6+UJUAprNA5TMJR5GP3tiYbtnI2w88FvnDp6v5la5gEeQWwJrUSJfGuQ3RYO/izGD5hMZj53zSh54v5OwG9/obOZlk/NJdtixEx4+WZZVqYudB11jVSDaQ62u/qYCfLEaoVi4DMSgUU4FntyQLvY1BwWSEjqgJq27e6DtToWrXGKc5kj/LPHlqE8fJLWkXR/GIrbIr9mKsMGar+dOQc9wqCqhMoBNteOSFopWSw77cEliTviamHUWfKzCf+ZQ6qAx1V2uig4DddItWKDU4paH4eMzBmwUlDd99ajXJkbhbkcbeA89i3YIwowZR5MtGGi/0YG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(366004)(8936002)(7416002)(6486002)(956004)(8676002)(6916009)(478600001)(2906002)(5660300002)(30864003)(52116002)(33656002)(6496006)(1076003)(16526019)(316002)(186003)(66476007)(66556008)(66946007)(4326008)(86362001)(26005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 18Xu97k5LwL8ivMuCb+sAtnSC7ixmE5wzgSCHrsLqNiegVHRSqim1eDTeMUogr+egZ/5vR7v2h66jF1Ak4bCSzubLXdpBuvM+HVKzrVraQADbJPTlO60GTavLynskxBczG719QGORDKRH5wnlIKBULY79NM9mYykhUP5/C37SUxuGbDBN0W2igCUgc8VviJ7gNV1HUo4rm1XykcR98OIJdlX0vcCyN6IiMcP+0XxDleaJR9oe1RGY+4HnRYHrZ0RP5gHXt+URjcm99kV0rb/49KjRjZuWlEelZW6WVN+WsZwdHT1RBJipgcCsltbqV2I3Pp1sh126yzuX40jfA5bsh5vaPFBxs14GPv1b/K7x+BOoK/XZ8m+QFhDV3cPVgQ4klVhZvwgc11IblAsrYR3boZ3dakbVCktf1l/J3M6QMcgpcVXapFOYLIiq5rhZVmeZApe3GlT1YWeW14PnVSjz3ZpbTjom/q/vPN/u3duWAXUdjZcFKZF/skJF5qpyRCyPDDaYdoW9dYSqH1kHCJmSkNDfXFVAogDDNbNtsgBnqfAMj2R5hEPN0fzx7qBsMSWRIOxC64u3JpZCaUwSBua9KOYLeWebF6FhecmdYetpQpsw4r8ncL0ARgNHyXYiJ7vKSg+5MB01dVeiJn5Kt21zCk1EDJTCLPt9DUnTYByn04apllc0ws++nK1G5svnNq7Vs1xrtey6JTsnrQdEvu1/Hq/StZSOMIFn6IjS31c9oeqZVW+A1TDPpmfj5D/XebfSt3y2iJ7TTpiNl18WaikpN+YJayr31jUKpIOYcMQhgs=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3242a02-7ffa-4783-54ea-08d7ee16e1f9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 21:30:34.7514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZV/JfVvYKnszccT/5JPb/VuyQO1jhui4I/OV1yvRRA3LZEdRtvEknJRxBDie6+i6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4526
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Very strange.. I just fetched drm-misc-next and had no issues building...
+On 04/30 06:45, Li RongQing wrote:
+> Guest kernel reports a fixed cpu frequency in /proc/cpuinfo,
+> this is confused to user when turbo is enable, and aperf/mperf
+> can be used to show current cpu frequency after 7d5905dc14a
+> "(x86 / CPU: Always show current CPU frequency in /proc/cpuinfo)"
+> so guest should support aperf/mperf capability
+> 
+> this patch implements aperf/mperf by three mode: none, software
+  ^^^^
+  This
 
-Thanks for your initial thoughts!
+> emulation, and pass-through
+> 
+> none: default mode, guest does not support aperf/mperf
+> 
+> software emulation: the period of aperf/mperf in guest mode are
+> accumulated as emulated value
+> 
+> pass-though: it is only suitable for KVM_HINTS_REALTIME, Because
+> that hint guarantees we have a 1:1 vCPU:CPU binding and guaranteed
+> no over-commit.
 
-pt., 1 maj 2020 o 23:00 Sam Ravnborg <sam@ravnborg.org> napisa=C5=82(a):
+If we save/restore the values of aperf/mperf properly during vcpu migration
+among different cores, is pinning still required?
+
+> 
+> and a per-VM capability is added to configure aperfmperf mode
+> 
+> Signed-off-by: Li RongQing <lirongqing@baidu.com>
+> Signed-off-by: Chai Wen <chaiwen@baidu.com>
+> Signed-off-by: Jia Lina <jialina01@baidu.com>
+> ---
+> diff v2:
+> support aperfmperf pass though
+> move common codes to kvm_get_msr_common
+> 
+> diff v1:
+> 1. support AMD, but not test
+
+pt-mode doesn't work doesn't work on AMD. See below.
+
+> 2. support per-vm capability to enable
+>  Documentation/virt/kvm/api.rst  | 10 ++++++++++
+>  arch/x86/include/asm/kvm_host.h | 11 +++++++++++
+>  arch/x86/kvm/cpuid.c            | 13 ++++++++++++-
+>  arch/x86/kvm/svm.c              |  8 ++++++++
+>  arch/x86/kvm/vmx/vmx.c          |  6 ++++++
+>  arch/x86/kvm/x86.c              | 42 +++++++++++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/x86.h              | 15 +++++++++++++++
+>  include/uapi/linux/kvm.h        |  1 +
+>  8 files changed, 105 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index efbbe570aa9b..c3be3b6a1717 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -6109,3 +6109,13 @@ KVM can therefore start protected VMs.
+>  This capability governs the KVM_S390_PV_COMMAND ioctl and the
+>  KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+>  guests when the state change is invalid.
+> +
+> +8.23 KVM_CAP_APERFMPERF
+> +----------------------------
+> +
+> +:Architectures: x86
+> +:Parameters: args[0] is aperfmperf mode;
+> +             0 for not support, 1 for software emulation, 2 for pass-through
+> +:Returns: 0 on success; -1 on error
+> +
+> +This capability indicates that KVM supports APERF and MPERF MSR registers
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 42a2d0d3984a..81477f676f60 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -820,6 +820,9 @@ struct kvm_vcpu_arch {
+>  
+>  	/* AMD MSRC001_0015 Hardware Configuration */
+>  	u64 msr_hwcr;
+> +
+> +	u64 v_mperf;
+> +	u64 v_aperf;
+>  };
+>  
+>  struct kvm_lpage_info {
+> @@ -885,6 +888,12 @@ enum kvm_irqchip_mode {
+>  	KVM_IRQCHIP_SPLIT,        /* created with KVM_CAP_SPLIT_IRQCHIP */
+>  };
+>  
+> +enum kvm_aperfmperf_mode {
+> +	KVM_APERFMPERF_NONE,
+> +	KVM_APERFMPERF_SOFT,      /* software emulate aperfmperf */
+> +	KVM_APERFMPERF_PT,        /* pass-through aperfmperf to guest */
+> +};
+> +
+>  #define APICV_INHIBIT_REASON_DISABLE    0
+>  #define APICV_INHIBIT_REASON_HYPERV     1
+>  #define APICV_INHIBIT_REASON_NESTED     2
+> @@ -982,6 +991,8 @@ struct kvm_arch {
+>  
+>  	struct kvm_pmu_event_filter *pmu_event_filter;
+>  	struct task_struct *nx_lpage_recovery_thread;
+> +
+> +	enum kvm_aperfmperf_mode aperfmperf_mode;
+>  };
+>  
+>  struct kvm_vm_stat {
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 901cd1fdecd9..7a64ea2c3eef 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -124,6 +124,14 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  					   MSR_IA32_MISC_ENABLE_MWAIT);
+>  	}
+>  
+> +	best = kvm_find_cpuid_entry(vcpu, 6, 0);
+> +	if (best) {
+> +		if (guest_has_aperfmperf(vcpu->kvm) &&
+> +			boot_cpu_has(X86_FEATURE_APERFMPERF))
+> +			best->ecx |= 1;
+> +		else
+> +			best->ecx &= ~1;
+> +	}
+>  	/* Update physical-address width */
+>  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+>  	kvm_mmu_reset_context(vcpu);
+> @@ -558,7 +566,10 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>  	case 6: /* Thermal management */
+>  		entry->eax = 0x4; /* allow ARAT */
+>  		entry->ebx = 0;
+> -		entry->ecx = 0;
+> +		if (boot_cpu_has(X86_FEATURE_APERFMPERF))
+> +			entry->ecx = 0x1;
+> +		else
+> +			entry->ecx = 0x0;
+>  		entry->edx = 0;
+>  		break;
+>  	/* function 7 has additional index. */
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 851e9cc79930..5646b6475049 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+                 ^^^^^^^^^
+The latest kernel moves svm-related files to arch/x86/kvm/svm
+directory. You need to update your patches.
+
+> @@ -2292,6 +2292,14 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+>  	svm->msrpm = page_address(msrpm_pages);
+>  	svm_vcpu_init_msrpm(svm->msrpm);
+>  
+> +	if (guest_aperfmperf_soft(vcpu->kvm)) {
+> +		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 1, 0);
+> +		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 1, 0);
+> +	} else if (guest_aperfmperf_pt(vcpu->kvm)) {
+> +		set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 0, 0);
+> +		set_msr_interception(svm->msrpm, MSR_IA32_APERF, 0, 0);
+> +	}
+
+The bit setting for KVM_APERFMPERF_SOFT and KVM_APERFMPERF_PT is
+incorrect. set_msr_interception() takes read/write as parameters. When
+they are 1, it means svm doesn't intercept this specific MSR. So, you
+code should look like:
+
+     if (guest_aperfmperf_soft(vcpu->kvm)) {
+             set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 0, 0);
+             set_msr_interception(svm->msrpm, MSR_IA32_APERF, 0, 0);
+     } else if (guest_aperfmperf_pt(vcpu->kvm)) {
+             set_msr_interception(svm->msrpm, MSR_IA32_MPERF, 1, 0);
+             set_msr_interception(svm->msrpm, MSR_IA32_APERF, 1, 0);
+     }
+
+
+> +
+>  	svm->nested.msrpm = page_address(nested_msrpm_pages);
+>  	svm_vcpu_init_msrpm(svm->nested.msrpm);
+>  
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 91749f1254e8..023c411ce5ad 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6759,6 +6759,12 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
+>  		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+>  		vmx_disable_intercept_for_msr(msr_bitmap, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+>  	}
+> +
+> +	if (guest_aperfmperf_pt(vcpu->kvm)) {
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_MPERF, MSR_TYPE_R);
+> +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_APERF, MSR_TYPE_R);
+> +	}
+> +
+>  	vmx->msr_bitmap_mode = 0;
+>  
+>  	vmx->loaded_vmcs = &vmx->vmcs01;
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index b8124b562dea..a57f69a0eb6e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -3227,6 +3227,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	case MSR_K7_HWCR:
+>  		msr_info->data = vcpu->arch.msr_hwcr;
+>  		break;
+> +	case MSR_IA32_MPERF:
+> +		msr_info->data = vcpu->arch.v_mperf;
+> +		break;
+> +	case MSR_IA32_APERF:
+> +		msr_info->data = vcpu->arch.v_aperf;
+> +		break;
+>  	default:
+>  		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
+>  			return kvm_pmu_get_msr(vcpu, msr_info->index, &msr_info->data);
+> @@ -3435,6 +3441,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_HYPERV_ENLIGHTENED_VMCS:
+>  		r = kvm_x86_ops.nested_enable_evmcs != NULL;
+>  		break;
+> +	case KVM_CAP_APERFMPERF:
+> +		r = boot_cpu_has(X86_FEATURE_APERFMPERF) ? 1 : 0;
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -4883,6 +4892,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+>  		kvm->arch.exception_payload_enabled = cap->args[0];
+>  		r = 0;
+>  		break;
+> +	case KVM_CAP_APERFMPERF:
+> +		kvm->arch.aperfmperf_mode =
+> +			boot_cpu_has(X86_FEATURE_APERFMPERF) ? cap->args[0] : 0;
+> +		r = 0;
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		break;
+> @@ -8163,6 +8177,25 @@ void __kvm_request_immediate_exit(struct kvm_vcpu *vcpu)
+>  }
+>  EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+>  
+> +
+> +static void guest_enter_aperfmperf(u64 *mperf, u64 *aperf)
+> +{
+> +	rdmsrl(MSR_IA32_MPERF, *mperf);
+> +	rdmsrl(MSR_IA32_APERF, *aperf);
+> +}
+> +
+> +static void guest_exit_aperfmperf(struct kvm_vcpu *vcpu,
+> +		u64 mperf, u64 aperf)
+> +{
+> +	u64 perf;
+> +
+> +	rdmsrl(MSR_IA32_MPERF, perf);
+> +	vcpu->arch.v_mperf += perf - mperf;
+> +
+> +	rdmsrl(MSR_IA32_APERF, perf);
+> +	vcpu->arch.v_aperf += perf - aperf;
+> +}
+> +
+>  /*
+>   * Returns 1 to let vcpu_run() continue the guest execution loop without
+>   * exiting to the userspace.  Otherwise, the value will be returned to the
+> @@ -8176,7 +8209,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  		kvm_cpu_accept_dm_intr(vcpu);
+>  	enum exit_fastpath_completion exit_fastpath = EXIT_FASTPATH_NONE;
+>  
+> +	bool enable_aperfmperf = guest_aperfmperf_soft(vcpu->kvm);
+>  	bool req_immediate_exit = false;
+> +	u64 mperf, aperf;
+>  
+>  	if (kvm_request_pending(vcpu)) {
+>  		if (kvm_check_request(KVM_REQ_GET_VMCS12_PAGES, vcpu)) {
+> @@ -8326,6 +8361,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  
+>  	preempt_disable();
+>  
+> +	if (unlikely(enable_aperfmperf))
+> +		guest_enter_aperfmperf(&mperf, &aperf);
+> +
+>  	kvm_x86_ops.prepare_guest_switch(vcpu);
+>  
+>  	/*
+> @@ -8449,6 +8487,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	local_irq_enable();
+> +
+> +	if (unlikely(enable_aperfmperf))
+> +		guest_exit_aperfmperf(vcpu, mperf, aperf);
+> +
+>  	preempt_enable();
+>  
+>  	vcpu->srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index b968acc0516f..d58dc4e4f96d 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -355,6 +355,21 @@ static inline bool kvm_dr7_valid(u64 data)
+>  	return !(data >> 32);
+>  }
+>  
+> +static inline bool guest_has_aperfmperf(struct kvm *kvm)
+> +{
+> +	return kvm->arch.aperfmperf_mode != KVM_APERFMPERF_NONE;
+> +}
+> +
+> +static inline bool guest_aperfmperf_soft(struct kvm *kvm)
+> +{
+> +	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_SOFT;
+> +}
+> +
+> +static inline bool guest_aperfmperf_pt(struct kvm *kvm)
+> +{
+> +	return kvm->arch.aperfmperf_mode == KVM_APERFMPERF_PT;
+> +}
+> +
+>  void kvm_load_guest_xsave_state(struct kvm_vcpu *vcpu);
+>  void kvm_load_host_xsave_state(struct kvm_vcpu *vcpu);
+>  u64 kvm_spec_ctrl_valid_bits(struct kvm_vcpu *vcpu);
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 428c7dde6b4b..c67109a02a4d 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1017,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
+>  #define KVM_CAP_S390_VCPU_RESETS 179
+>  #define KVM_CAP_S390_PROTECTED 180
+>  #define KVM_CAP_PPC_SECURE_GUEST 181
+> +#define KVM_CAP_APERFMPERF 182
+>  
+>  #ifdef KVM_CAP_IRQ_ROUTING
+>  
 >
-> Hi Konrad.
->
-> On Fri, May 01, 2020 at 10:48:21PM +0200, Konrad Dybcio wrote:
-> > I am aware of the fact that this is probably not the correct
-> > naming of this panel, yet I am unable to retrieve any additional
-> > information about it, as it is used in a smartphone to which no
-> > schematics are released.
-> >
-> > The driver has been generated with the help of
-> > linux-mdss-dsi-panel-driver-generator [1] and works perfectly
-> > on a Asus Zenfone 2 Laser Z00T smartphone, including brighness
-> > control and switching on/off.
-> >
-> > [1] https://github.com/msm8916-mainline/linux-mdss-dsi-panel-driver-gen=
-erator
->
-> Panle driver looks good.
-> Will take a closer look tomorrow.
->
-> Any chance you can work on the TODO in the driver so we can have that
-> resolved before we apply it?
->
-> Also for a v2 it would be perfect if you could work on top of
-> drm-misc-next.
-> There is at least one small fix needed to build that I spotted.
->
-> But wait until I get back on the driver patch before submitting a v2.
->
->         Sam
->
-> >
-> > Konrad Dybcio (2):
-> >   drivers: drm: panel: Add TM5P5 NT35596 panel driver
-> >   dt-bindings: display: Document TM5P5 NT35596 panel compatible
-> >
-> >  .../bindings/display/panel/tm5p5,nt35596.txt  |   7 +
-> >  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> >  drivers/gpu/drm/panel/Makefile                |   1 +
-> >  drivers/gpu/drm/panel/panel-tm5p5-nt35596.c   | 366 ++++++++++++++++++
-> >  4 files changed, 383 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/tm5=
-p5,nt35596.txt
-> >  create mode 100644 drivers/gpu/drm/panel/panel-tm5p5-nt35596.c
-> >
-> > --
-> > 2.26.1
