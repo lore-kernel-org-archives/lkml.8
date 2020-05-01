@@ -2,145 +2,150 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F6C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AD8C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BACF20836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F5D2137B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588352860;
+	bh=HSlpgB4cakLv+R39qkkcQgmHk+36wQXD52MTboqytnI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=sMgnM+tSoFy3LPaoBoGWprrhdsmg1xhRSVa1M/gY5TzZFdY3fc0uOzNsUbswn6axi
+	 TyyxAKcCGDEEK6AWNvA9vckU2eWNfSmQXbat0iZGKHxzMvkYtXtQ84biTszmr9fCwL
+	 gssGUixlH3i5/tXGRHMx+M/2HzD1T/3pABVRWmHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbgEARHc (ORCPT
+        id S1729936AbgEARHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:07:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 13:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgEARHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:07:31 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1728970AbgEARHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:07:39 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB90120836;
-        Fri,  1 May 2020 17:07:30 +0000 (UTC)
-Date:   Fri, 1 May 2020 13:07:29 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH] streamline_config.pl: add LOCALMODCONFIG_PRESERVE to
- preserve some kconfigs
-Message-ID: <20200501130729.3a3e4994@gandalf.local.home>
-In-Reply-To: <20200501023708.108830-1-changbin.du@gmail.com>
-References: <20200501023708.108830-1-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5556D20857;
+        Fri,  1 May 2020 17:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588352858;
+        bh=HSlpgB4cakLv+R39qkkcQgmHk+36wQXD52MTboqytnI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ww3GKHKclFIad96d/VkKC5pcHDUX9mlZA/ugl1W8spvvK1ZRKC7QiXCR6Iav6eWOM
+         nCcZZck/KLqWZrW4Jl/VJvcz8ZO098W5/l9hamC6nM8+vd0keDlYWDFUpPsPMWXmmH
+         JroqMRfDrYaTKmu534yvn7pX0J6MMbeEBfW/L+Ck=
+Date:   Fri, 1 May 2020 12:07:36 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/11] Multiple fixes in PCIe qcom driver
+Message-ID: <20200501170736.GA115107@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430220619.3169-1-ansuelsmth@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 10:37:08 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
-
-> Sometimes it is useful to preserve batches of configs when making
-> localmodconfig. For example, I usually don't want any usb and fs
-> modules to be disabled. Now we can do it by:
+On Fri, May 01, 2020 at 12:06:07AM +0200, Ansuel Smith wrote:
+> This contains multiple fix for PCIe qcom driver.
+> Some optional reset and clocks were missing.
+> Fix a problem with no PARF programming that cause kernel lock on load.
+> Add support to force gen 1 speed if needed. (due to hardware limitation)
+> Add ipq8064 rev 2 support that use a different tx termination offset.
 > 
->  $ make LOCALMODCONFIG_PRESERVE="drivers/usb;fs" localmodconfig
-
-That's too much typing ;-) What about just "KEEP='drivers/usb;fs'"?
-
-
+> v3:
+> * Fix check reported by checkpatch --strict
+> * Rename force_gen1 to gen
+> * Fix spelling error
+> * Better describe qcom_clear_and_set_dword
+> * Make PARF deemph and equalization configurable
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  Documentation/admin-guide/README.rst |  8 +++++++-
->  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
->  2 files changed, 30 insertions(+), 1 deletion(-)
+> v2:
+> * Drop iATU programming (already done in pcie init)
+> * Use max-link-speed instead of force-gen1 custom definition
+> * Drop MRRS to 256B (Can't find a realy reason why this was suggested)
+> * Introduce a new variant for different revision of ipq8064
 > 
-> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-> index cc6151fc0845..6deff95362f8 100644
-> --- a/Documentation/admin-guide/README.rst
-> +++ b/Documentation/admin-guide/README.rst
-> @@ -209,10 +209,16 @@ Configuring the kernel
->                             store the lsmod of that machine into a file
->                             and pass it in as a LSMOD parameter.
->  
-> +                           Also, you can preserve modules in certen folders
-> +                           or kconfig files by spcifying there paths in
-> +                           parameter LOCALMODCONFIG_PRESERVE.
-> +
->                     target$ lsmod > /tmp/mylsmod
->                     target$ scp /tmp/mylsmod host:/tmp
->  
-> -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-> +                   host$ make LSMOD=/tmp/mylsmod \
-> +                           LOCALMODCONFIG_PRESERVE="drivers/usb;drivers/gpu;fs" \
-> +                           localmodconfig
->  
->                             The above also works when cross compiling.
->  
-> diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-> index e2f8504f5a2d..ab5d1e10a5d0 100755
-> --- a/scripts/kconfig/streamline_config.pl
-> +++ b/scripts/kconfig/streamline_config.pl
-> @@ -143,6 +143,7 @@ my %depends;
->  my %selects;
->  my %prompts;
->  my %objects;
-> +my %config2kfile;
->  my $var;
->  my $iflevel = 0;
->  my @ifdeps;
-> @@ -201,6 +202,7 @@ sub read_kconfig {
->  	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
->  	    $state = "NEW";
->  	    $config = $2;
-> +	    $config2kfile{"CONFIG_$config"} = $kconfig;
->  
->  	    # Add depends for 'if' nesting
->  	    for (my $i = 0; $i < $iflevel; $i++) {
-> @@ -592,6 +594,22 @@ while ($repeat) {
->  
->  my %setconfigs;
->  
-> +my @presevered_kconfigs;
-> +@presevered_kconfigs = split(/;/,$ENV{LOCALMODCONFIG_PRESERVE}) if (defined($ENV{LOCALMODCONFIG_PRESERVE}));
-> +
-> +sub in_presevered_kconfigs {
-> +    my $kconfig = $config2kfile{$_[0]};
-> +    if (!defined($kconfig)) {
-> +        return 0;
-> +    }
-> +    foreach my $excl (@presevered_kconfigs) {
-> +        if($kconfig =~ /^$excl/) {
-> +            return 1;
-> +        }
-> +    }
-> +    return 0;
-> +}
-> +
->  # Finally, read the .config file and turn off any module enabled that
->  # we could not find a reason to keep enabled.
->  foreach my $line (@config_file) {
-> @@ -644,6 +662,11 @@ foreach my $line (@config_file) {
->      }
->  
->      if (/^(CONFIG.*)=(m|y)/) {
-> +        if (in_presevered_kconfigs($1)) {
-> +            dprint "Preserve config $1";
-> +            print;
-> +            next;
-> +        }
->  	if (defined($configs{$1})) {
->  	    if ($localyesconfig) {
->  	        $setconfigs{$1} = 'y';
+> Abhishek Sahu (1):
+>   PCI: qcom: change duplicate PCI reset to phy reset
+> 
+> Ansuel Smith (8):
+>   PCI: qcom: add missing ipq806x clocks in PCIe driver
 
-I'll have to test it out, but I like the idea!
+s/in PCIe driver// (obvious from context)
 
--- Steve
+>   devicetree: bindings: pci: add missing clks to qcom,pcie
+>   PCI: qcom: add missing reset for ipq806x
+>   devicetree: bindings: pci: add ext reset to qcom,pcie
+
+s/to qcom,pcie// (obvious from context after updating as below)
+
+>   PCI: qcom: introduce qcom_clear_and_set_dword
+>   PCI: qcom: add support for defining some PARF params
+>   devicetree: bindings: pci: document PARF params bindings
+>   devicetree: bindings: pci: add ipq8064 rev 2 variant to qcom,pcie
+
+s/to qcom,pcie// (obvious from context after updating as below)
+
+> Sham Muthayyan (2):
+>   PCI: qcom: add ipq8064 rev2 variant and set tx term offset
+>   PCI: qcom: add Force GEN1 support
+
+Hi Ansuel, if you post this again, would you mind adjusting your
+subject lines to match the history, e.g.,
+
+  $ git log --oneline drivers/pci/controller/dwc/pcie-qcom.c
+  604f3956524a PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+  ed8cc3b1fc84 PCI: qcom: Add support for SDM845 PCIe controller
+  64adde31c8e9 PCI: qcom: Ensure that PERST is asserted for at least 100 ms
+  ...
+
+  $ git log --oneline Documentation/devicetree/bindings/pci/qcom,pcie.txt
+  5d28bee7c91e dt-bindings: PCI: qcom: Add support for SDM845 PCIe
+  29a50257a9d6 dt-bindings: PCI: qcom: Add QCS404 to the binding
+
+(Capitalize first word, follow "dt-bindings: PCI: qcom" example).
+
+Some of the commit logs also have random-length short lines.  Please
+wrap them to use the entire ~75 column width and add blank lines
+between paragraphs.
+
+Add ("..") on the Fixes: lines.  See git log for common practice.  I
+use this alias to make them:
+
+  $ type gsr
+  gsr is aliased to `git --no-pager show -s --abbrev-commit --abbrev=12 --pretty=format:"%h (\"%s\")%n"'
+  $ gsr 82a823833f4e
+  82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+
+Some of the logs use "SoC", some use "soc".  I prefer "SoC" because
+"soc" really isn't an English word.
+
+You don't need to post a new version just for these tweaks, but maybe
+make them in your local copy so if you do post a v4 for some other
+reason, they'll be included.
+
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  51 +++-
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 241 ++++++++++++------
+>  2 files changed, 211 insertions(+), 81 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
