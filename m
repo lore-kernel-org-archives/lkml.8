@@ -2,153 +2,111 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BA9C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449AD20836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E667D20836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588343215;
-	bh=GWJwkvt0+8TQNxyG05ofo9WUCas5EChknR0I2IxYgog=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JD4O3PJbL0TVEQqy5Hsn0dnhwbczIEQQF5nrETSlNRj4ghoyzS2h9pGToIdRVrNnQ
-	 U/iGz2YGb3W2SJ7zNH0zA4q/n5D0TVQv6wb2mNKEWxoYnqG2hUturEKGekk+iZYDbg
-	 uBvWY6Hk5Zwh5d1wNSLgmdzjeRVW7JGy4yssn6HY=
+	s=default; t=1588343288;
+	bh=uc0jeKtWs3Lu3Yt9mmc+LlPjm0LoSh7dRyHqZCfrsV0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=GroiIBT/9bV9+3lO5OfEAOchD9LZCPhXAr/T4gk5Br/I19alcNoHHUEEbT6EOOb5W
+	 6/H1YVbsMHIOy+3wzuXLzbZdYY6MJcaMCk0AKD5fCToaywrR1Po8Sf/rIEL1TAlpYc
+	 z1fBB473GfhRXlpoEJuqYySloQTtrpqLnH+AwPA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgEAO0y (ORCPT
+        id S1729518AbgEAO2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbgEAO0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:26:53 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE0DE2137B
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588343213;
-        bh=GWJwkvt0+8TQNxyG05ofo9WUCas5EChknR0I2IxYgog=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=J6GWbaettKOvk+oK9TnS51EkolS6QgEhWLhlRy8UMkMDxWBHVuBv0+IIaYp3/dbh3
-         HltRsMIZPGLN1o4ykQmmop96R4hv/4qpB/f5wZtLIdF6am4OujLdcpaQk45OAm3HnP
-         29dXCjiaGEX2RTL6bdKguIrkBNsgDAXISfnoZx/o=
-Received: by mail-ed1-f47.google.com with SMTP id t12so7377047edw.3
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:26:52 -0700 (PDT)
-X-Gm-Message-State: AGi0PuarYxnJjkDnS/SUIMktf+u1WclrG3xLmT33NtisZ07fxj60Iiu/
-        FYUTIQdvSXgo7zd9l3rBz2xlVts/MuS1qNtYfA==
-X-Google-Smtp-Source: APiQypJN7wZ4G/nD2HBUrq+csPQL5onomudMxtaCzeqVlUIAwpqC80OOjadus0NF19FGaH+HaaWVunxmRN799sICD4s=
-X-Received: by 2002:aa7:dcd7:: with SMTP id w23mr3810850edu.300.1588343211141;
- Fri, 01 May 2020 07:26:51 -0700 (PDT)
+        Fri, 1 May 2020 10:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729050AbgEAO2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:28:07 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 446C6C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 07:28:07 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id b12so5008405ion.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 07:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qFn7gkPMpYmrr60w9n8c1qnQXMXv7MA2WqU4Vb048CQ=;
+        b=FSHjDh6mE+SLHTo6uWK4BNB8pkEFPuJ3ZSajl02AKtDC/z4FJ3yaVftHc9hD7WkgRU
+         oXoAj94KsBc/Q/sLhnXx/DtzkcJpdwoJ7SEAoIquOgp26bYuxGDlTNcRFgOjIlvn4G+H
+         StEyTreXxgB+tJCSwnGCNmzEjAnnz+MJpCWUY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qFn7gkPMpYmrr60w9n8c1qnQXMXv7MA2WqU4Vb048CQ=;
+        b=FTsXKVCieqoG507nHuineZcMJ4n+K6cQs0iD7dflElKq0c89hgtO2UIr558+mMUgqI
+         PqGCIauXFaNWUEEEU1wP+AnUdK/nLzuzzizvsl6sG5EB7jzDMwZX57LykO3No9jAZADY
+         +4i8Z3DpYE5tuwPyreOlVcofla10FyEi1J1AjjqQC8vQfek+YwjeyR0UH4skZXnaplS8
+         QyJaiF1nlUl7yycDiiO6q6cHcTfcVPTw83tCAK8kYCs3FfhqVN55rsh6oueXUD/rBBdw
+         nq7DPB/u597msvvpmoNQfwAkeRI6wnj6BuX2VaguQ2EqWDZxufY9KV3apmTGPZoamc71
+         rajQ==
+X-Gm-Message-State: AGi0PuYU3mRwHRE2r6K44hw6zOs4hTIIksGYD+O+MUO4wV+Ua53Da3wM
+        c51liA9YERrkkNMVoEWjc6v/fxxWgow=
+X-Google-Smtp-Source: APiQypIV8SjoKr6rXC8O9phDKiSS9vCYzDsnS8K9NLjxFVbMq93JYaDRdRC3XWg84TcQ0M0SFZvnkA==
+X-Received: by 2002:a5d:96ca:: with SMTP id r10mr4033777iol.19.1588343286616;
+        Fri, 01 May 2020 07:28:06 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id p7sm1027884iob.7.2020.05.01.07.28.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 07:28:06 -0700 (PDT)
+Subject: Re: [PATCH 0/3] selftests/ftrace: Fix ftracetest testcases for dash,
+ etc.
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+ <20200501102113.151d38c1@gandalf.local.home>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5334156d-a8f8-9eeb-f6d9-299992582c6f@linuxfoundation.org>
+Date:   Fri, 1 May 2020 08:28:05 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200417150614.2631786-1-enric.balletbo@collabora.com> <20200417150614.2631786-8-enric.balletbo@collabora.com>
-In-Reply-To: <20200417150614.2631786-8-enric.balletbo@collabora.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 1 May 2020 22:26:37 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
-Message-ID: <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] drm/mediatek: mtk_dsi: Create connector for bridges
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200501102113.151d38c1@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+On 5/1/20 8:21 AM, Steven Rostedt wrote:
+> 
+> [ FYI, Shuah responds better from her linuxfoundation.org email ]
+> 
+> Shuah,
+> 
+> Feel free to take the first two patches of this series (I acked one, and
+> reviewed the other).
+> 
+> The last patch I had some issues with, and is still under discussion.
+> 
+> Thanks!
+> 
+> -- Steve
+> 
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B44=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:06=E5=AF=
-=AB=E9=81=93=EF=BC=9A
->
-> Use the drm_bridge_connector helper to create a connector for pipelines
-> that use drm_bridge. This allows splitting connector operations across
-> multiple bridges when necessary, instead of having the last bridge in
-> the chain creating the connector and handling all connector operations
-> internally.
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->
-> Changes in v3:
-> - Move the bridge.type line to the patch that adds drm_bridge support. (L=
-aurent Pinchart)
->
-> Changes in v2: None
->
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
-k/mtk_dsi.c
-> index 157097c63b23..85f76b01ae4d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -17,6 +17,7 @@
->
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_bridge.h>
-> +#include <drm/drm_bridge_connector.h>
->  #include <drm/drm_mipi_dsi.h>
->  #include <drm/drm_of.h>
->  #include <drm/drm_panel.h>
-> @@ -183,6 +184,7 @@ struct mtk_dsi {
->         struct drm_encoder encoder;
->         struct drm_bridge bridge;
->         struct drm_bridge *next_bridge;
-> +       struct drm_connector *connector;
->         struct phy *phy;
->
->         void __iomem *regs;
-> @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *=
-drm, struct mtk_dsi *dsi)
->          */
->         dsi->encoder.possible_crtcs =3D 1;
->
-> -       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
-> +       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
-> +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
->         if (ret)
->                 goto err_cleanup_encoder;
->
-> +       dsi->connector =3D drm_bridge_connector_init(drm, &dsi->encoder);
-> +       if (IS_ERR(dsi->connector)) {
-> +               DRM_ERROR("Unable to create bridge connector\n");
-> +               ret =3D PTR_ERR(dsi->connector);
-> +               goto err_cleanup_encoder;
-> +       }
-> +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
-> +
+Will apply the first two.
 
-I'm not very clear about how brige-connector works, but why connector
-does not attach to panel?
+thanks,
+-- Shuah
 
-Regards,
-Chun-Kuang.
-
->         return 0;
->
->  err_cleanup_encoder:
-> --
-> 2.25.1
->
