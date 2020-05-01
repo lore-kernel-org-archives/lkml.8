@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B2BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7128C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E915D21924
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929AB2495F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgEASWe (ORCPT
+        id S1730869AbgEASW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
+        Fri, 1 May 2020 14:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730664AbgEASW2 (ORCPT
+        by vger.kernel.org with ESMTP id S1730748AbgEASWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:22:28 -0400
+        Fri, 1 May 2020 14:22:34 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68BAFC061A0E;
-        Fri,  1 May 2020 11:22:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F269C08E859;
+        Fri,  1 May 2020 11:22:34 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIm-0003eX-A5; Fri, 01 May 2020 20:22:20 +0200
+        id 1jUaIv-0003jY-Od; Fri, 01 May 2020 20:22:29 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DEF711C0330;
-        Fri,  1 May 2020 20:22:19 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:19 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 29E8B1C0822;
+        Fri,  1 May 2020 20:22:25 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:25 -0000
+From:   "tip-bot2 for Rick Edgecombe" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/core] x86/speculation: Change FILL_RETURN_BUFFER to
- work with objtool
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200428191700.032079304@infradead.org>
-References: <20200428191700.032079304@infradead.org>
+Subject: [tip: x86/urgent] x86/mm/cpa: Flush direct map alias during cpa
+Cc:     Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200424105343.GA20730@hirez.programming.kicks-ass.net>
+References: <20200424105343.GA20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <158835733988.8414.1414237916672825411.tip-bot2@tip-bot2>
+Message-ID: <158835734513.8414.3180412857061455686.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,100 +57,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the objtool/core branch of tip:
+The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     089dd8e53126ebaf506e2dc0bf89d652c36bfc12
-Gitweb:        https://git.kernel.org/tip/089dd8e53126ebaf506e2dc0bf89d652c36bfc12
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 14 Apr 2020 12:36:16 +02:00
+Commit-ID:     ab5130186d7476dcee0d4e787d19a521ca552ce9
+Gitweb:        https://git.kernel.org/tip/ab5130186d7476dcee0d4e787d19a521ca552ce9
+Author:        Rick Edgecombe <rick.p.edgecombe@intel.com>
+AuthorDate:    Wed, 22 Apr 2020 20:13:55 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 30 Apr 2020 20:14:34 +02:00
+CommitterDate: Thu, 30 Apr 2020 20:14:30 +02:00
 
-x86/speculation: Change FILL_RETURN_BUFFER to work with objtool
+x86/mm/cpa: Flush direct map alias during cpa
 
-Change FILL_RETURN_BUFFER so that objtool groks it and can generate
-correct ORC unwind information.
+As an optimization, cpa_flush() was changed to optionally only flush
+the range in @cpa if it was small enough.  However, this range does
+not include any direct map aliases changed in cpa_process_alias(). So
+small set_memory_() calls that touch that alias don't get the direct
+map changes flushed. This situation can happen when the virtual
+address taking variants are passed an address in vmalloc or modules
+space.
 
- - Since ORC is alternative invariant; that is, all alternatives
-   should have the same ORC entries, the __FILL_RETURN_BUFFER body
-   can not be part of an alternative.
+In these cases, force a full TLB flush.
 
-   Therefore, move it out of the alternative and keep the alternative
-   as a sort of jump_label around it.
+Note this issue does not extend to cases where the set_memory_() calls are
+passed a direct map address, or page array, etc, as the primary target. In
+those cases the direct map would be flushed.
 
- - Use the ANNOTATE_INTRA_FUNCTION_CALL annotation to white-list
-   these 'funny' call instructions to nowhere.
-
- - Use UNWIND_HINT_EMPTY to 'fill' the speculation traps, otherwise
-   objtool will consider them unreachable.
-
- - Move the RSP adjustment into the loop, such that the loop has a
-   deterministic stack layout.
-
+Fixes: 935f5839827e ("x86/mm/cpa: Optimize cpa_flush_array() TLB invalidation")
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200428191700.032079304@infradead.org
+Link: https://lkml.kernel.org/r/20200424105343.GA20730@hirez.programming.kicks-ass.net
 ---
- arch/x86/include/asm/nospec-branch.h | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/x86/mm/pat/set_memory.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index 7e9a281..b8890e1 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -4,11 +4,13 @@
- #define _ASM_X86_NOSPEC_BRANCH_H_
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 59eca6a..b8c55a2 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -43,7 +43,8 @@ struct cpa_data {
+ 	unsigned long	pfn;
+ 	unsigned int	flags;
+ 	unsigned int	force_split		: 1,
+-			force_static_prot	: 1;
++			force_static_prot	: 1,
++			force_flush_all		: 1;
+ 	struct page	**pages;
+ };
  
- #include <linux/static_key.h>
-+#include <linux/frame.h>
+@@ -355,10 +356,10 @@ static void cpa_flush(struct cpa_data *data, int cache)
+ 		return;
+ 	}
  
- #include <asm/alternative.h>
- #include <asm/alternative-asm.h>
- #include <asm/cpufeatures.h>
- #include <asm/msr-index.h>
-+#include <asm/unwind_hints.h>
+-	if (cpa->numpages <= tlb_single_page_flush_ceiling)
+-		on_each_cpu(__cpa_flush_tlb, cpa, 1);
+-	else
++	if (cpa->force_flush_all || cpa->numpages > tlb_single_page_flush_ceiling)
+ 		flush_tlb_all();
++	else
++		on_each_cpu(__cpa_flush_tlb, cpa, 1);
  
- /*
-  * This should be used immediately before a retpoline alternative. It tells
-@@ -46,21 +48,25 @@
- #define __FILL_RETURN_BUFFER(reg, nr, sp)	\
- 	mov	$(nr/2), reg;			\
- 771:						\
-+	ANNOTATE_INTRA_FUNCTION_CALL;		\
- 	call	772f;				\
- 773:	/* speculation trap */			\
-+	UNWIND_HINT_EMPTY;			\
- 	pause;					\
- 	lfence;					\
- 	jmp	773b;				\
- 772:						\
-+	ANNOTATE_INTRA_FUNCTION_CALL;		\
- 	call	774f;				\
- 775:	/* speculation trap */			\
-+	UNWIND_HINT_EMPTY;			\
- 	pause;					\
- 	lfence;					\
- 	jmp	775b;				\
- 774:						\
-+	add	$(BITS_PER_LONG/8) * 2, sp;	\
- 	dec	reg;				\
--	jnz	771b;				\
--	add	$(BITS_PER_LONG/8) * nr, sp;
-+	jnz	771b;
+ 	if (!cache)
+ 		return;
+@@ -1598,6 +1599,8 @@ static int cpa_process_alias(struct cpa_data *cpa)
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
  
- #ifdef __ASSEMBLY__
++		cpa->force_flush_all = 1;
++
+ 		ret = __change_page_attr_set_clr(&alias_cpa, 0);
+ 		if (ret)
+ 			return ret;
+@@ -1618,6 +1621,7 @@ static int cpa_process_alias(struct cpa_data *cpa)
+ 		alias_cpa.flags &= ~(CPA_PAGES_ARRAY | CPA_ARRAY);
+ 		alias_cpa.curpage = 0;
  
-@@ -137,10 +143,8 @@
-   */
- .macro FILL_RETURN_BUFFER reg:req nr:req ftr:req
- #ifdef CONFIG_RETPOLINE
--	ANNOTATE_NOSPEC_ALTERNATIVE
--	ALTERNATIVE "jmp .Lskip_rsb_\@",				\
--		__stringify(__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP))	\
--		\ftr
-+	ALTERNATIVE "jmp .Lskip_rsb_\@", "", \ftr
-+	__FILL_RETURN_BUFFER(\reg,\nr,%_ASM_SP)
- .Lskip_rsb_\@:
- #endif
- .endm
++		cpa->force_flush_all = 1;
+ 		/*
+ 		 * The high mapping range is imprecise, so ignore the
+ 		 * return value.
