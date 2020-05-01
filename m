@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A8C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30045C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3DB20708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04B22051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341444;
-	bh=u3WJmEf+Y+rA88Fg6ye7fFbRzFH5LlMsn1YCXE2XJ+M=;
+	s=default; t=1588341450;
+	bh=761Bbgf25zGCxuCWZFVc4F5QdNTSleGkwcKFWnr7NLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fAZ6qjOXYgfZ/hJa1ViZLW7sHGINpkGRd9B/nWCfMhRgFTx+iUwivxaKGANBBqQW0
-	 yusURLa+tVyd9YFgfI4tUx8Ixiw1ywWtGxcRrjgv6un/3o8kwej0VdphIJIUg1MbMB
-	 UYcqZ7BCTsIP9L8c76IEVsON2wTWRi0hM83dNdVc=
+	b=SWo4UNT5dW2b466YdyA+kZEDMW4eRbnGRpXJzHJUxpDbdXdVTT/OSFpd0sqmkGw+S
+	 +ZuSYQnDnAA7TEE3HxsSZBEzKT0at7XCvTi5KvwFUzkFyd0kYhuQ3FTpUtB04d62mm
+	 hmPPNKcN3wRGfqq8HkvyqDDMRTrs7HaKx76GgDrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgEANb2 (ORCPT
+        id S1730750AbgEAN53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55922 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730114AbgEANbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:31:21 -0400
+        id S1729078AbgEANbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E647C24953;
-        Fri,  1 May 2020 13:31:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C59420757;
+        Fri,  1 May 2020 13:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339881;
-        bh=u3WJmEf+Y+rA88Fg6ye7fFbRzFH5LlMsn1YCXE2XJ+M=;
+        s=default; t=1588339879;
+        bh=761Bbgf25zGCxuCWZFVc4F5QdNTSleGkwcKFWnr7NLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1sEYvQr1RXf4vmeZ7BQIFXjiG+fZ+0K7QPBiCiOabOxzhF+5NnFZDepZFPq9xYq1
-         9iUcTrG9nlKmxGjdHQ/2Te+1to3TKO9MyKui33C81UT/6YRCifN83wGiYhLr3OY/aM
-         BfiqBHwUo//HUhttQv+/OzbpMeEt7/aX3zBdAZ74=
+        b=BQRfgAHj/gUhJAx+4TiEhhImKO7zrrIGj6Hf/s7ttBWvxsnXV44Is9BzNxsflkCXT
+         /aooutbBE+dPRz7LSmfBDVed80G+LiW/FrYhEQaNwVg/Ugm83ySmJOEMltICyMHh3s
+         lYV+tQ6JDIRiONTRlRVkQqNfFoLCIFLPzwzbyhGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        James Morris <jmorris@namei.org>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        Stephan Mueller <smueller@chronox.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        James Morris <james.morris@microsoft.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 004/117] keys: Fix the use of the C++ keyword "private" in uapi/linux/keyctl.h
-Date:   Fri,  1 May 2020 15:20:40 +0200
-Message-Id: <20200501131545.904633704@linuxfoundation.org>
+Subject: [PATCH 4.14 003/117] net: ipv4: avoid unused variable warning for sysctl
+Date:   Fri,  1 May 2020 15:20:39 +0200
+Message-Id: <20200501131545.832201653@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -67,62 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 2ecefa0a15fd0ef88b9cd5d15ceb813008136431 upstream.
+commit 773daa3caf5d3f87fdb1ab43e9c1b367a38fa394 upstream.
 
-The keyctl_dh_params struct in uapi/linux/keyctl.h contains the symbol
-"private" which means that the header file will cause compilation failure
-if #included in to a C++ program.  Further, the patch that added the same
-struct to the keyutils package named the symbol "priv", not "private".
+The newly introudced ip_min_valid_pmtu variable is only used when
+CONFIG_SYSCTL is set:
 
-The previous attempt to fix this (commit 8a2336e549d3) did so by simply
-renaming the kernel's copy of the field to dh_private, but this then breaks
-existing userspace and as such has been reverted (commit 8c0f9f5b309d).
+net/ipv4/route.c:135:12: error: 'ip_min_valid_pmtu' defined but not used [-Werror=unused-variable]
 
-[And note, to those who think that wrapping the struct in extern "C" {}
- will work: it won't; that only changes how symbol names are presented to
- the assembler and linker.].
+This moves it to the other variables like it, to avoid the harmless
+warning.
 
-Instead, insert an anonymous union around the "private" member and add a
-second member in there with the name "priv" to match the one in the
-keyutils package.  The "private" member is then wrapped in !__cplusplus
-cpp-conditionals to hide it from C++.
-
-Fixes: ddbb41148724 ("KEYS: Add KEYCTL_DH_COMPUTE command")
-Fixes: 8a2336e549d3 ("uapi/linux/keyctl.h: don't use C++ reserved keyword as a struct member name")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Randy Dunlap <rdunlap@infradead.org>
-cc: Lubomir Rintel <lkundrak@v3.sk>
-cc: James Morris <jmorris@namei.org>
-cc: Mat Martineau <mathew.j.martineau@linux.intel.com>
-cc: Stephan Mueller <smueller@chronox.de>
-cc: Andrew Morton <akpm@linux-foundation.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
-cc: stable@vger.kernel.org
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Fixes: c7272c2f1229 ("net: ipv4: don't allow setting net.ipv4.route.min_pmtu below 68")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/keyctl.h |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/ipv4/route.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/include/uapi/linux/keyctl.h
-+++ b/include/uapi/linux/keyctl.h
-@@ -65,7 +65,12 @@
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -133,8 +133,6 @@ static int ip_rt_min_advmss __read_mostl
  
- /* keyctl structures */
- struct keyctl_dh_params {
--	__s32 private;
-+	union {
-+#ifndef __cplusplus
-+		__s32 private;
-+#endif
-+		__s32 priv;
-+	};
- 	__s32 prime;
- 	__s32 base;
- };
+ static int ip_rt_gc_timeout __read_mostly	= RT_GC_TIMEOUT;
+ 
+-static int ip_min_valid_pmtu __read_mostly	= IPV4_MIN_MTU;
+-
+ /*
+  *	Interface to generic destination cache.
+  */
+@@ -2869,6 +2867,7 @@ void ip_rt_multicast_event(struct in_dev
+ static int ip_rt_gc_interval __read_mostly  = 60 * HZ;
+ static int ip_rt_gc_min_interval __read_mostly	= HZ / 2;
+ static int ip_rt_gc_elasticity __read_mostly	= 8;
++static int ip_min_valid_pmtu __read_mostly	= IPV4_MIN_MTU;
+ 
+ static int ipv4_sysctl_rtcache_flush(struct ctl_table *__ctl, int write,
+ 					void __user *buffer,
 
 
