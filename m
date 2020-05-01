@@ -7,183 +7,257 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8075BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF9C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60FF024958
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA9224957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588347493;
-	bh=OkqVTyJHlSgHHi60ZQtwTsdw3lbAKzeOmZo1DT2RrRY=;
+	s=default; t=1588347494;
+	bh=DqV5tt7bHxzmhEDH0R92jdv94glyuDJHK0UGYQwwLAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y1dqUVu8oWvtI6bV+nrmTthzmC8FrgIghcn+nMiZj0NHlHOapa+lytBHt9xM4LXu6
-	 bWTR6vAjuCJ3klAIrzF/GegpVzacURWQ+lPm1Oj6HDMk+EM98ttKLmptO5rjTfxGik
-	 Mr16Bg3oe+oGGU2ItSBlnfoLy5NFpVg2BpajloVw=
+	b=llAyprt5QMvu45VjAfb7aHfQqTT3/H6HiTo6w9B9YYWWo4tb02R6qxYing2YWHtle
+	 Ktsneyxza3vLrkQCq2U61pU4zgttsWLsWeeP+D+NQKuuZMCbYxYBN9wSRo7zrOuNYo
+	 GNCx5AdcjUc8p51LOSWkJzPByl0z5jGqE8KZjrII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbgEAPiM (ORCPT
+        id S1730003AbgEAPiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52480 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 11:38:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729840AbgEAPiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:38:04 -0400
+        id S1729835AbgEAPiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:38:05 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2503F24966;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DFCC24963;
         Fri,  1 May 2020 15:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588347483;
-        bh=OkqVTyJHlSgHHi60ZQtwTsdw3lbAKzeOmZo1DT2RrRY=;
+        bh=DqV5tt7bHxzmhEDH0R92jdv94glyuDJHK0UGYQwwLAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HwLryyDV9dMteAeO3qxETGfzzk+h+M40YrRPckTxYJ9O2ZPflRAdACrHzRibfNTNg
-         4jr5QYU5uZof7TlGLC0/3YTgPPXmiWOMQaRFoTPskzRu0mciUxX6rupsO3IY4GPmiN
-         1zbsLnPbAmh4k/9/TfnG/UyfIzsvv+fUisqs9+iE=
+        b=iVenbniXkCZCXAgoaKy3+95cQPpeXNYFzXl423hKovJnmAWcKoasW02KFDTBQOuUF
+         NQTydk3YFUafOo3MPmZhuVwDQ0u8/YZbKS8lP93tYTWydmtuwu0KiYZAVJ5bQPA0HT
+         8gS89dSuJFLr+Qz0NY85QxHtYjoXCI1PytwvodXo=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUXjl-00FE54-72; Fri, 01 May 2020 17:38:01 +0200
+        id 1jUXjl-00FE4r-4b; Fri, 01 May 2020 17:38:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
         "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: [PATCH 10/14] docs: move locking-specific documenta to locking/ directory
-Date:   Fri,  1 May 2020 17:37:54 +0200
-Message-Id: <dd833a10bbd0b2c1461d78913f5ec28a7e27f00b.1588345503.git.mchehab+huawei@kernel.org>
+        linux-ia64@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 07/14] docs: add IRQ documentation at the core-api book
+Date:   Fri,  1 May 2020 17:37:51 +0200
+Message-Id: <2da7485c3718e1442e6b4c2dd66857b776e8899b.1588345503.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588345503.git.mchehab+huawei@kernel.org>
 References: <cover.1588345503.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several files under Documentation/*.txt describe some type of
-locking API. Move them to locking/ subdir and add to the
-locking/index.rst index file.
+There are 4 IRQ documentation files under Documentation/*.txt.
+
+Move them into a new directory (core-api/irq) and add a new
+index file for it.
+
+While here, use a title markup for the Debugging section of the
+irq-domain.rst file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../{futex-requeue-pi.txt => locking/futex-requeue-pi.rst} | 0
- Documentation/{hwspinlock.txt => locking/hwspinlock.rst}   | 0
- Documentation/locking/index.rst                            | 7 +++++++
- .../percpu-rw-semaphore.rst}                               | 0
- Documentation/{pi-futex.txt => locking/pi-futex.rst}       | 0
- .../{preempt-locking.txt => locking/preempt-locking.rst}   | 0
- .../{robust-futex-ABI.txt => locking/robust-futex-ABI.rst} | 0
- .../{robust-futexes.txt => locking/robust-futexes.rst}     | 0
- Documentation/locking/rt-mutex.rst                         | 2 +-
- MAINTAINERS                                                | 6 +++---
- 10 files changed, 11 insertions(+), 4 deletions(-)
- rename Documentation/{futex-requeue-pi.txt => locking/futex-requeue-pi.rst} (100%)
- rename Documentation/{hwspinlock.txt => locking/hwspinlock.rst} (100%)
- rename Documentation/{percpu-rw-semaphore.txt => locking/percpu-rw-semaphore.rst} (100%)
- rename Documentation/{pi-futex.txt => locking/pi-futex.rst} (100%)
- rename Documentation/{preempt-locking.txt => locking/preempt-locking.rst} (100%)
- rename Documentation/{robust-futex-ABI.txt => locking/robust-futex-ABI.rst} (100%)
- rename Documentation/{robust-futexes.txt => locking/robust-futexes.rst} (100%)
+ Documentation/admin-guide/hw-vuln/l1tf.rst            |  2 +-
+ Documentation/admin-guide/kernel-per-CPU-kthreads.rst |  2 +-
+ Documentation/core-api/index.rst                      |  1 +
+ Documentation/{IRQ.txt => core-api/irq/concepts.rst}  |  0
+ Documentation/core-api/irq/index.rst                  | 11 +++++++++++
+ .../irq/irq-affinity.rst}                             |  0
+ .../{IRQ-domain.txt => core-api/irq/irq-domain.rst}   |  3 ++-
+ .../irq/irqflags-tracing.rst}                         |  0
+ Documentation/ia64/irq-redir.rst                      |  2 +-
+ Documentation/networking/scaling.rst                  |  4 ++--
+ Documentation/translations/zh_CN/IRQ.txt              |  4 ++--
+ MAINTAINERS                                           |  2 +-
+ 12 files changed, 22 insertions(+), 9 deletions(-)
+ rename Documentation/{IRQ.txt => core-api/irq/concepts.rst} (100%)
+ create mode 100644 Documentation/core-api/irq/index.rst
+ rename Documentation/{IRQ-affinity.txt => core-api/irq/irq-affinity.rst} (100%)
+ rename Documentation/{IRQ-domain.txt => core-api/irq/irq-domain.rst} (99%)
+ rename Documentation/{irqflags-tracing.txt => core-api/irq/irqflags-tracing.rst} (100%)
 
-diff --git a/Documentation/futex-requeue-pi.txt b/Documentation/locking/futex-requeue-pi.rst
-similarity index 100%
-rename from Documentation/futex-requeue-pi.txt
-rename to Documentation/locking/futex-requeue-pi.rst
-diff --git a/Documentation/hwspinlock.txt b/Documentation/locking/hwspinlock.rst
-similarity index 100%
-rename from Documentation/hwspinlock.txt
-rename to Documentation/locking/hwspinlock.rst
-diff --git a/Documentation/locking/index.rst b/Documentation/locking/index.rst
-index 5d6800a723dc..d785878cad65 100644
---- a/Documentation/locking/index.rst
-+++ b/Documentation/locking/index.rst
-@@ -16,6 +16,13 @@ locking
-     rt-mutex
-     spinlocks
-     ww-mutex-design
-+    preempt-locking
-+    pi-futex
-+    futex-requeue-pi
-+    hwspinlock
-+    percpu-rw-semaphore
-+    robust-futexes
-+    robust-futex-ABI
+diff --git a/Documentation/admin-guide/hw-vuln/l1tf.rst b/Documentation/admin-guide/hw-vuln/l1tf.rst
+index f83212fae4d5..3eeeb488d955 100644
+--- a/Documentation/admin-guide/hw-vuln/l1tf.rst
++++ b/Documentation/admin-guide/hw-vuln/l1tf.rst
+@@ -268,7 +268,7 @@ Guest mitigation mechanisms
+    /proc/irq/$NR/smp_affinity[_list] files. Limited documentation is
+    available at:
  
- .. only::  subproject and html
+-   https://www.kernel.org/doc/Documentation/IRQ-affinity.txt
++   https://www.kernel.org/doc/Documentation/core-api/irq/irq-affinity.rst
  
-diff --git a/Documentation/percpu-rw-semaphore.txt b/Documentation/locking/percpu-rw-semaphore.rst
-similarity index 100%
-rename from Documentation/percpu-rw-semaphore.txt
-rename to Documentation/locking/percpu-rw-semaphore.rst
-diff --git a/Documentation/pi-futex.txt b/Documentation/locking/pi-futex.rst
-similarity index 100%
-rename from Documentation/pi-futex.txt
-rename to Documentation/locking/pi-futex.rst
-diff --git a/Documentation/preempt-locking.txt b/Documentation/locking/preempt-locking.rst
-similarity index 100%
-rename from Documentation/preempt-locking.txt
-rename to Documentation/locking/preempt-locking.rst
-diff --git a/Documentation/robust-futex-ABI.txt b/Documentation/locking/robust-futex-ABI.rst
-similarity index 100%
-rename from Documentation/robust-futex-ABI.txt
-rename to Documentation/locking/robust-futex-ABI.rst
-diff --git a/Documentation/robust-futexes.txt b/Documentation/locking/robust-futexes.rst
-similarity index 100%
-rename from Documentation/robust-futexes.txt
-rename to Documentation/locking/robust-futexes.rst
-diff --git a/Documentation/locking/rt-mutex.rst b/Documentation/locking/rt-mutex.rst
-index c365dc302081..3b5097a380e6 100644
---- a/Documentation/locking/rt-mutex.rst
-+++ b/Documentation/locking/rt-mutex.rst
-@@ -4,7 +4,7 @@ RT-mutex subsystem with PI support
+ .. _smt_control:
  
- RT-mutexes with priority inheritance are used to support PI-futexes,
- which enable pthread_mutex_t priority inheritance attributes
--(PTHREAD_PRIO_INHERIT). [See Documentation/pi-futex.txt for more details
-+(PTHREAD_PRIO_INHERIT). [See Documentation/locking/pi-futex.rst for more details
- about PI-futexes.]
+diff --git a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+index 21818aca4708..dc36aeb65d0a 100644
+--- a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
++++ b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
+@@ -10,7 +10,7 @@ them to a "housekeeping" CPU dedicated to such work.
+ References
+ ==========
  
- This technology was developed in the -rt tree and streamlined for
+--	Documentation/IRQ-affinity.txt:  Binding interrupts to sets of CPUs.
++-	Documentation/core-api/irq/irq-affinity.rst:  Binding interrupts to sets of CPUs.
+ 
+ -	Documentation/admin-guide/cgroup-v1:  Using cgroups to bind tasks to sets of CPUs.
+ 
+diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+index ab056b3626f4..49a885e83a55 100644
+--- a/Documentation/core-api/index.rst
++++ b/Documentation/core-api/index.rst
+@@ -52,6 +52,7 @@ How Linux keeps everything from happening at the same time.  See
+ 
+    atomic_ops
+    refcount-vs-atomic
++   irq/index
+    local_ops
+    padata
+    ../RCU/index
+diff --git a/Documentation/IRQ.txt b/Documentation/core-api/irq/concepts.rst
+similarity index 100%
+rename from Documentation/IRQ.txt
+rename to Documentation/core-api/irq/concepts.rst
+diff --git a/Documentation/core-api/irq/index.rst b/Documentation/core-api/irq/index.rst
+new file mode 100644
+index 000000000000..0d65d11e5420
+--- /dev/null
++++ b/Documentation/core-api/irq/index.rst
+@@ -0,0 +1,11 @@
++====
++IRQs
++====
++
++.. toctree::
++   :maxdepth: 1
++
++   concepts
++   irq-affinity
++   irq-domain
++   irqflags-tracing
+diff --git a/Documentation/IRQ-affinity.txt b/Documentation/core-api/irq/irq-affinity.rst
+similarity index 100%
+rename from Documentation/IRQ-affinity.txt
+rename to Documentation/core-api/irq/irq-affinity.rst
+diff --git a/Documentation/IRQ-domain.txt b/Documentation/core-api/irq/irq-domain.rst
+similarity index 99%
+rename from Documentation/IRQ-domain.txt
+rename to Documentation/core-api/irq/irq-domain.rst
+index 507775cce753..096db12f32d5 100644
+--- a/Documentation/IRQ-domain.txt
++++ b/Documentation/core-api/irq/irq-domain.rst
+@@ -263,7 +263,8 @@ needs to:
+ Hierarchy irq_domain is in no way x86 specific, and is heavily used to
+ support other architectures, such as ARM, ARM64 etc.
+ 
+-=== Debugging ===
++Debugging
++=========
+ 
+ Most of the internals of the IRQ subsystem are exposed in debugfs by
+ turning CONFIG_GENERIC_IRQ_DEBUGFS on.
+diff --git a/Documentation/irqflags-tracing.txt b/Documentation/core-api/irq/irqflags-tracing.rst
+similarity index 100%
+rename from Documentation/irqflags-tracing.txt
+rename to Documentation/core-api/irq/irqflags-tracing.rst
+diff --git a/Documentation/ia64/irq-redir.rst b/Documentation/ia64/irq-redir.rst
+index 39bf94484a15..6bbbbe4f73ef 100644
+--- a/Documentation/ia64/irq-redir.rst
++++ b/Documentation/ia64/irq-redir.rst
+@@ -7,7 +7,7 @@ IRQ affinity on IA64 platforms
+ 
+ By writing to /proc/irq/IRQ#/smp_affinity the interrupt routing can be
+ controlled. The behavior on IA64 platforms is slightly different from
+-that described in Documentation/IRQ-affinity.txt for i386 systems.
++that described in Documentation/core-api/irq/irq-affinity.rst for i386 systems.
+ 
+ Because of the usage of SAPIC mode and physical destination mode the
+ IRQ target is one particular CPU and cannot be a mask of several
+diff --git a/Documentation/networking/scaling.rst b/Documentation/networking/scaling.rst
+index f78d7bf27ff5..8f0347b9fb3d 100644
+--- a/Documentation/networking/scaling.rst
++++ b/Documentation/networking/scaling.rst
+@@ -81,7 +81,7 @@ of queues to IRQs can be determined from /proc/interrupts. By default,
+ an IRQ may be handled on any CPU. Because a non-negligible part of packet
+ processing takes place in receive interrupt handling, it is advantageous
+ to spread receive interrupts between CPUs. To manually adjust the IRQ
+-affinity of each interrupt see Documentation/IRQ-affinity.txt. Some systems
++affinity of each interrupt see Documentation/core-api/irq/irq-affinity.rst. Some systems
+ will be running irqbalance, a daemon that dynamically optimizes IRQ
+ assignments and as a result may override any manual settings.
+ 
+@@ -160,7 +160,7 @@ can be configured for each receive queue using a sysfs file entry::
+ 
+ This file implements a bitmap of CPUs. RPS is disabled when it is zero
+ (the default), in which case packets are processed on the interrupting
+-CPU. Documentation/IRQ-affinity.txt explains how CPUs are assigned to
++CPU. Documentation/core-api/irq/irq-affinity.rst explains how CPUs are assigned to
+ the bitmap.
+ 
+ 
+diff --git a/Documentation/translations/zh_CN/IRQ.txt b/Documentation/translations/zh_CN/IRQ.txt
+index 956026d5cf82..9aec8dca4fcf 100644
+--- a/Documentation/translations/zh_CN/IRQ.txt
++++ b/Documentation/translations/zh_CN/IRQ.txt
+@@ -1,4 +1,4 @@
+-Chinese translated version of Documentation/IRQ.txt
++Chinese translated version of Documentation/core-api/irq/index.rst
+ 
+ If you have any comment or update to the content, please contact the
+ original document maintainer directly.  However, if you have a problem
+@@ -9,7 +9,7 @@ or if there is a problem with the translation.
+ Maintainer: Eric W. Biederman <ebiederman@xmission.com>
+ Chinese maintainer: Fu Wei <tekkamanninja@gmail.com>
+ ---------------------------------------------------------------------
+-Documentation/IRQ.txt 的中文翻译
++Documentation/core-api/irq/index.rst 的中文翻译
+ 
+ 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
+ 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6eb3d85a646f..1aa6e89e7424 100644
+index a1d7af532950..6eb3d85a646f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -7042,13 +7042,13 @@ R:	Darren Hart <dvhart@infradead.org>
- L:	linux-kernel@vger.kernel.org
+@@ -8974,7 +8974,7 @@ IRQ DOMAINS (IRQ NUMBER MAPPING LIBRARY)
+ M:	Marc Zyngier <maz@kernel.org>
  S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
--F:	Documentation/*futex*
-+F:	Documentation/locking/*futex*
- F:	include/asm-generic/futex.h
- F:	include/linux/futex.h
- F:	include/uapi/linux/futex.h
- F:	kernel/futex.c
- F:	tools/perf/bench/futex*
--F:	tools/testing/selftests/futex/
-+F:	Documentation/locking/*futex*
- 
- GASKET DRIVER FRAMEWORK
- M:	Rob Springer <rspringer@google.com>
-@@ -7519,7 +7519,7 @@ L:	linux-remoteproc@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git hwspinlock-next
- F:	Documentation/devicetree/bindings/hwlock/
--F:	Documentation/hwspinlock.txt
-+F:	Documentation/locking/hwspinlock.rst
- F:	drivers/hwspinlock/
- F:	include/linux/hwspinlock.h
- 
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
+-F:	Documentation/IRQ-domain.txt
++F:	Documentation/core-api/irq/irq-domain.rst
+ F:	include/linux/irqdomain.h
+ F:	kernel/irq/irqdomain.c
+ F:	kernel/irq/msi.c
 -- 
 2.25.4
 
