@@ -2,81 +2,99 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2C8C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98497C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5A620708
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PQMcoMIX"
+	by mail.kernel.org (Postfix) with ESMTP id 7951E20708
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 15:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgEAPYF (ORCPT
+        id S1729744AbgEAPYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 11:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729537AbgEAPYB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 11:24:01 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272FFC061A0E;
-        Fri,  1 May 2020 08:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4jZBUar+kwlxf2npvTvVYY+2uyA6OkDur+ekCP/I/n4=; b=PQMcoMIXaHBSFdreh0e0CE+EW1
-        UkgeqGCLPbD6ya0kmRq4nvF5UKcqFJlWSKj1Iybj0oSkquznHqiNMWWTdEWcC4Zd1VqgyaYa1GlJ8
-        0ajMqmspKHSSPaqYW7aPqJvye/Sb234VuoDxCdBlPp+HGu35lV3Fro7YMeLsuXQJ4+uAJokq7bWPy
-        6j4Jg/Ib+gmOUEh6pzhl61DwVwAJm7sdK18+9sV7+EHUngupKzFzenyzy5XgNTEzWUe6StL6poqq0
-        iPoTnYmX/SKM8sEdEWd+hSzi1WlPz4nVImfTimXZUvdlNXzpkwiadDRN6COCYCHcg0g3Fm9KDbg7f
-        A0ellLFg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUXVu-0002Bt-Ap; Fri, 01 May 2020 15:23:42 +0000
-Date:   Fri, 1 May 2020 08:23:42 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Karstens, Nate" <Nate.Karstens@garmin.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Changli Gao <xiaosuo@gmail.com>
-Subject: Re: [PATCH 1/4] fs: Implement close-on-fork
-Message-ID: <20200501152342.GA29705@bombadil.infradead.org>
-References: <20200420071548.62112-1-nate.karstens@garmin.com>
- <20200420071548.62112-2-nate.karstens@garmin.com>
- <36dce9b4-a0bf-0015-f6bc-1006938545b1@gmail.com>
- <0e884704c25740df8e652d50431facff@garmin.com>
+        Fri, 1 May 2020 11:24:10 -0400
+Received: from mga11.intel.com ([192.55.52.93]:25819 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729623AbgEAPYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 11:24:02 -0400
+IronPort-SDR: ntsT+1LZcKEMJjSji8aS+k0L1KfS4d4hlSpbSQyq1EJJ3cADn9UzjTqZzySEiwy66/2J6BSWdn
+ kecTv0q7ETIw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 08:24:02 -0700
+IronPort-SDR: 47tymbPfl9qbTTlfysUzknikXccfyXgrbod4kYl4O78cywd5rglwBV6HBEZ8t3NQ+M9AjVwqUQ
+ n7VPmxEa4G+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
+   d="scan'208";a="433341664"
+Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
+  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 08:24:01 -0700
+Subject: Re: [PATCH 4/4 v2] firmware: stratix10-svc: Slightly simplify code
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        gregkh@linuxfoundation.org, atull@kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <cover.1588142343.git.christophe.jaillet@wanadoo.fr>
+ <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
+From:   Richard Gong <richard.gong@linux.intel.com>
+Message-ID: <1f8ae50d-6830-7fbb-e999-3e8110fe7cd6@linux.intel.com>
+Date:   Fri, 1 May 2020 10:40:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e884704c25740df8e652d50431facff@garmin.com>
+In-Reply-To: <8c505c686438c54da61ad4fe15e1eae722011153.1588142343.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:45:16PM +0000, Karstens, Nate wrote:
-> Others -- I will respond to feedback outside of implementation details in a separate message.
+Hi,
 
-FWIW, I'm opposed to the entire feature.  Improving the implementation
-will not change that.
+On 4/29/20 1:52 AM, Christophe JAILLET wrote:
+> Replace 'devm_kmalloc_array(... | __GFP_ZERO)' with the equivalent and
+> shorter 'devm_kcalloc(...)'.
+> 
+It doesn't make much sense.
+Actually devm_kcalloc returns devm_kmalloc_array(.., flag | __GFP_ZERO).
+
+> 'ctrl->genpool' can not be NULL, so axe a useless test in the remove
+> function.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>   drivers/firmware/stratix10-svc.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+> index 739004398877..c228337cb0a1 100644
+> --- a/drivers/firmware/stratix10-svc.c
+> +++ b/drivers/firmware/stratix10-svc.c
+> @@ -1002,8 +1002,7 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
+>   	if (!controller)
+>   		return -ENOMEM;
+>   
+> -	chans = devm_kmalloc_array(dev, SVC_NUM_CHANNEL,
+> -				   sizeof(*chans), GFP_KERNEL | __GFP_ZERO);
+> +	chans = devm_kcalloc(dev, SVC_NUM_CHANNEL, sizeof(*chans), GFP_KERNEL);
+>   	if (!chans)
+>   		return -ENOMEM;
+>   
+> @@ -1086,8 +1085,7 @@ static int stratix10_svc_drv_remove(struct platform_device *pdev)
+>   		kthread_stop(ctrl->task);
+>   		ctrl->task = NULL;
+>   	}
+> -	if (ctrl->genpool)
+> -		gen_pool_destroy(ctrl->genpool);
+> +	gen_pool_destroy(ctrl->genpool);
+>   	list_del(&ctrl->node);
+>   
+>   	return 0;
+> 
+
+Regards,
+Richard
