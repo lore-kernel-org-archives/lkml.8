@@ -2,53 +2,55 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21FDC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D826C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04B320757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DA3205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341046;
-	bh=JEfPVeCIXS2ihp4wiKoaxqcfVeN9Aopia2uXZyuMbzs=;
+	s=default; t=1588341049;
+	bh=Yj53TDZGyhIVReXyvNdN+DVUhHo/t6zGJIeir/EWXzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d749BvnQG0uM1ngudy7DMo1maWl2Ak2mInttPemctxSrhiIxq1+lJy7CZetSDRZU7
-	 hP/F9p/HkcVIOWoCTRc0T0KVBB9OHT5QKlSvEeRP00vGkAIDsICdMYVQ0eRPdbKYtW
-	 D5w8ZV+69Bvw1C1qTkg3UHsJ+Av2t/RBgT83NVhs=
+	b=JxDeCSC4C5DG4dN/aippYwWV2fuoj+91w2pv4VdJxfoD22pS355yMZyARl4GSp6Vt
+	 3ntvcfVHXbeS9xJDLcrz8J7tRvY7j2e3n6aUmg/WY7lmR3R8Hx8uL7wns+Xm4R2EQD
+	 hZUiJy2oYT8+rfWmFUq7E1DRcReT/GNcchisQ/Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbgEANuq (ORCPT
+        id S1731190AbgEANja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729339AbgEANjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:36 -0400
+        id S1729798AbgEANj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C34DB20757;
-        Fri,  1 May 2020 13:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC1020757;
+        Fri,  1 May 2020 13:39:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340376;
-        bh=JEfPVeCIXS2ihp4wiKoaxqcfVeN9Aopia2uXZyuMbzs=;
+        s=default; t=1588340366;
+        bh=Yj53TDZGyhIVReXyvNdN+DVUhHo/t6zGJIeir/EWXzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2sGXyFNmNM4fTIMGSsCDevmR2WfFS6hjWgxmnaBXqypLef57yjTY5Tcwoov0QTZx
-         qV2RZXZ+L4y617cPoImMtvrOMJXCCE71+lWGKSryKkcimmmW/bsiihG5cpKsO4f9Ra
-         2dpEe51tAD3b+VWOX/OcvuLhkLN/0vUwEZfOkQho=
+        b=I8yCSMlbma2KQvMts741ai1fAS+6kNjkEBA5dGcgvQ2G+zdxHE4kXi22cL68kQ0oM
+         e4+/CAmRJtR3yhn+WMnOqYrIO7Vevg3uFzjHZec6C3FYZnixZaeDr+I9Ou6i/2xKBT
+         hjLDExkrnJ2WDVH+LNegD9GZ5sfqcmdKnCO5y4UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Cline <jcline@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 53/83] libbpf: Initialize *nl_pid so gcc 10 is happy
-Date:   Fri,  1 May 2020 15:23:32 +0200
-Message-Id: <20200501131538.906016002@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chitti Babu Theegala <ctheegal@codeaurora.org>,
+        Quentin Perret <qperret@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: [PATCH 5.4 41/83] sched/core: Fix reset-on-fork from RT with uclamp
+Date:   Fri,  1 May 2020 15:23:20 +0200
+Message-Id: <20200501131535.781214366@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -61,54 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Cline <jcline@redhat.com>
+From: Quentin Perret <qperret@google.com>
 
-[ Upstream commit 4734b0fefbbf98f8c119eb8344efa19dac82cd2c ]
+commit eaf5a92ebde5bca3bb2565616115bd6d579486cd upstream.
 
-Builds of Fedora's kernel-tools package started to fail with "may be
-used uninitialized" warnings for nl_pid in bpf_set_link_xdp_fd() and
-bpf_get_link_xdp_info() on the s390 architecture.
+uclamp_fork() resets the uclamp values to their default when the
+reset-on-fork flag is set. It also checks whether the task has a RT
+policy, and sets its uclamp.min to 1024 accordingly. However, during
+reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
+hence leading to an erroneous uclamp.min setting for the new task if it
+was forked from RT.
 
-Although libbpf_netlink_open() always returns a negative number when it
-does not set *nl_pid, the compiler does not determine this and thus
-believes the variable might be used uninitialized. Assuage gcc's fears
-by explicitly initializing nl_pid.
+Fix this by removing the unnecessary check on rt_task() in
+uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
+set.
 
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1807781
+Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
+Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
+Signed-off-by: Quentin Perret <qperret@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Link: https://lkml.kernel.org/r/20200416085956.217587-1-qperret@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200404051430.698058-1-jcline@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/netlink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/core.c |    9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/tools/lib/bpf/netlink.c b/tools/lib/bpf/netlink.c
-index ce3ec81b71c01..88416be2bf994 100644
---- a/tools/lib/bpf/netlink.c
-+++ b/tools/lib/bpf/netlink.c
-@@ -137,7 +137,7 @@ int bpf_set_link_xdp_fd(int ifindex, int fd, __u32 flags)
- 		struct ifinfomsg ifinfo;
- 		char             attrbuf[64];
- 	} req;
--	__u32 nl_pid;
-+	__u32 nl_pid = 0;
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1233,13 +1233,8 @@ static void uclamp_fork(struct task_stru
+ 		return;
  
- 	sock = libbpf_netlink_open(&nl_pid);
- 	if (sock < 0)
-@@ -254,7 +254,7 @@ int bpf_get_link_xdp_id(int ifindex, __u32 *prog_id, __u32 flags)
- {
- 	struct xdp_id_md xdp_id = {};
- 	int sock, ret;
--	__u32 nl_pid;
-+	__u32 nl_pid = 0;
- 	__u32 mask;
+ 	for_each_clamp_id(clamp_id) {
+-		unsigned int clamp_value = uclamp_none(clamp_id);
+-
+-		/* By default, RT tasks always get 100% boost */
+-		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
+-			clamp_value = uclamp_none(UCLAMP_MAX);
+-
+-		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
++		uclamp_se_set(&p->uclamp_req[clamp_id],
++			      uclamp_none(clamp_id), false);
+ 	}
+ }
  
- 	if (flags & ~XDP_FLAGS_MASK)
--- 
-2.20.1
-
 
 
