@@ -2,54 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A88C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F43EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D6B24955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0512208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340442;
-	bh=Hs8s9eHC6FrR8kVw+W14GPnW2VfpOKl6QsOnOLWjeE4=;
+	s=default; t=1588340445;
+	bh=7ZQPgD1vN6rg/lz6fp4Tt3s+4GGNgfJfgi2+4DuHIU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pKFgkfuUgFD7uogpZnmH9Tr7PPtpEQUUYN0bE1vOVo3YGl69gMQUOAOrr1+rbN/8X
-	 w3+1bdhbako1vDhyLiBfc6qGina33vbIINzje6kbdQ9TsqDwTO59CSNY09kpIkGJNG
-	 F9zJeyw7vR3mmYwIJjf0hi1zD8wJu3faiJXqrg2I=
+	b=x+baXNgk8a5j4k/5TQRcssnt1sJO0qyBty7PSnA2nSnfVVs6vzfBzTRGNk4L4o5H+
+	 xR2xlQ7GVlcTBESPX0R78BWVbZg5mUDxyr8vzEqTX7byzZk4a4azXvJwAYfXqUHvU1
+	 YTFiCROHluLUpur7rCF41fyZAgNR8N5PeKY6T5Qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731347AbgEANkl (ORCPT
+        id S1731047AbgEANkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:40:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731335AbgEANki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:38 -0400
+        id S1731021AbgEANkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351DE205C9;
-        Fri,  1 May 2020 13:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A045E2495F;
+        Fri,  1 May 2020 13:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340437;
-        bh=Hs8s9eHC6FrR8kVw+W14GPnW2VfpOKl6QsOnOLWjeE4=;
+        s=default; t=1588340440;
+        bh=7ZQPgD1vN6rg/lz6fp4Tt3s+4GGNgfJfgi2+4DuHIU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dBlaMSx4AbCpMXcs6i3TKk2HktuzrSue3+Yi6C6NlYC0tC3P1u1t3lEhGWO0Kmrl9
-         uIb7KdGeTZKxjcDqp7H5936MYmfaGhfqdgIaUwG0J51sV5aeI0Mf60xgii5A83JfLO
-         M8UoTihlIFnNzujruhRdglRoE+mRkCo3EpUp23hU=
+        b=2mWhovxOwIPKEgqfsKeV6qNtw7YZZzWN7zF8r3b2TyzfoeDS4sUSSNHoIxStGgu8+
+         UIX8+HNDck7Ugubu8gPFvqF3ZqMP8YZcdgcChFuA6aZs+19HLR/YQwA422Vna+wgoR
+         Ub5Q2/T7Pe6dW+Md/mnXSZ21ZfOkiaVVU6XMIOBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 70/83] arm64: Delete the space separator in __emit_inst
-Date:   Fri,  1 May 2020 15:23:49 +0200
-Message-Id: <20200501131541.423621153@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 79/83] net: use indirect call wrappers for skb_copy_datagram_iter()
+Date:   Fri,  1 May 2020 15:23:58 +0200
+Message-Id: <20200501131542.761532213@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -62,69 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
+commit 29f3490ba9d2399d3d1b20c4aa74592d92bd4e11 upstream.
 
-In assembly, many instances of __emit_inst(x) expand to a directive. In
-a few places __emit_inst(x) is used as an assembler macro argument. For
-example, in arch/arm64/kvm/hyp/entry.S
+TCP recvmsg() calls skb_copy_datagram_iter(), which
+calls an indirect function (cb pointing to simple_copy_to_iter())
+for every MSS (fragment) present in the skb.
 
-  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
+CONFIG_RETPOLINE=y forces a very expensive operation
+that we can avoid thanks to indirect call wrappers.
 
-expands to the following by the C preprocessor:
+This patch gives a 13% increase of performance on
+a single flow, if the bottleneck is the thread reading
+the TCP socket.
 
-  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+Fixes: 950fcaecd5cc ("datagram: consolidate datagram copy to iter helpers")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Both comma and space are separators, with an exception that content
-inside a pair of parentheses/quotes is not split, so the clang
-integrated assembler splits the arguments to:
-
-   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
-
-GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
-(along with many other non-x86 backends) sees:
-
-  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # .inst(...) is parsed as one argument
-
-while its x86 backend sees:
-
-  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
-  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
-
-The non-x86 backend's behavior is considered unintentional
-(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
-So drop the space separator inside `.inst (...)` to make the clang
-integrated assembler work.
-
-Suggested-by: Ilie Halip <ilie.halip@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/939
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/sysreg.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/core/datagram.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 6e919fafb43dd..9b68f1b3915ec 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -49,7 +49,9 @@
- #ifndef CONFIG_BROKEN_GAS_INST
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -51,6 +51,7 @@
+ #include <linux/slab.h>
+ #include <linux/pagemap.h>
+ #include <linux/uio.h>
++#include <linux/indirect_call_wrapper.h>
  
- #ifdef __ASSEMBLY__
--#define __emit_inst(x)			.inst (x)
-+// The space separator is omitted so that __emit_inst(x) can be parsed as
-+// either an assembler directive or an assembler macro argument.
-+#define __emit_inst(x)			.inst(x)
- #else
- #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
- #endif
--- 
-2.20.1
-
+ #include <net/protocol.h>
+ #include <linux/skbuff.h>
+@@ -407,6 +408,11 @@ int skb_kill_datagram(struct sock *sk, s
+ }
+ EXPORT_SYMBOL(skb_kill_datagram);
+ 
++INDIRECT_CALLABLE_DECLARE(static size_t simple_copy_to_iter(const void *addr,
++						size_t bytes,
++						void *data __always_unused,
++						struct iov_iter *i));
++
+ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+ 			       struct iov_iter *to, int len, bool fault_short,
+ 			       size_t (*cb)(const void *, size_t, void *,
+@@ -420,7 +426,8 @@ static int __skb_datagram_iter(const str
+ 	if (copy > 0) {
+ 		if (copy > len)
+ 			copy = len;
+-		n = cb(skb->data + offset, copy, data, to);
++		n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
++				    skb->data + offset, copy, data, to);
+ 		offset += n;
+ 		if (n != copy)
+ 			goto short_copy;
+@@ -442,8 +449,9 @@ static int __skb_datagram_iter(const str
+ 
+ 			if (copy > len)
+ 				copy = len;
+-			n = cb(vaddr + skb_frag_off(frag) + offset - start,
+-			       copy, data, to);
++			n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
++					vaddr + skb_frag_off(frag) + offset - start,
++					copy, data, to);
+ 			kunmap(page);
+ 			offset += n;
+ 			if (n != copy)
 
 
