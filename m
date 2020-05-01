@@ -2,98 +2,104 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA63AC47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A108AC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C176E20787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B65B2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgEAHqu (ORCPT
+        id S1728419AbgEAHq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 03:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728311AbgEAHqt (ORCPT
+        Fri, 1 May 2020 03:46:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:24646 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728406AbgEAHqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 03:46:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADB0C08E859
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 00:46:48 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jUQNa-0001Z0-Cr; Fri, 01 May 2020 09:46:38 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jUQNW-0006Mu-Is; Fri, 01 May 2020 09:46:34 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: [PATCH net-next v4 0/2] provide support for PHY master/slave configuration
-Date:   Fri,  1 May 2020 09:46:31 +0200
-Message-Id: <20200501074633.24421-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Fri, 1 May 2020 03:46:54 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-236-crWB7YfiO5yLJYsQLeM4Tg-1; Fri, 01 May 2020 08:46:50 +0100
+X-MC-Unique: crWB7YfiO5yLJYsQLeM4Tg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 1 May 2020 08:46:49 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 1 May 2020 08:46:49 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andy Lutomirski' <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "Erwin Tsaur" <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Thread-Topic: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Thread-Index: AQHWHx8fSK33XHL44ESHjM2jwgOtw6iS1wyw
+Date:   Fri, 1 May 2020 07:46:48 +0000
+Message-ID: <6c0ca300a3b54b86abac79d6549a0a40@AcuMS.aculab.com>
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+In-Reply-To: <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-changes v3:
-- rename port_mode to master_slave 
-- move validation code to net/ethtool/linkmodes.c 
-- add UNSUPPORTED state and avoid sending unsupported fields
-- more formatting and naming fixes
-- tja11xx: support only force mode
-- tja11xx: mark state as unsupported
-
-changes v3:
-- provide separate field for config and state.
-- make state rejected on set
-- add validation
-
-changes v2:
-- change names. Use MASTER_PREFERRED instead of MULTIPORT
-- configure master/slave only on request. Default configuration can be
-  provided by PHY or eeprom
-- status and configuration to the user space.
-
-Oleksij Rempel (2):
-  ethtool: provide UAPI for PHY master/slave configuration.
-  net: phy: tja11xx: add support for master-slave configuration
-
- Documentation/networking/ethtool-netlink.rst | 35 ++++----
- drivers/net/phy/nxp-tja11xx.c                | 47 +++++++++-
- drivers/net/phy/phy.c                        |  4 +-
- drivers/net/phy/phy_device.c                 | 95 ++++++++++++++++++++
- include/linux/phy.h                          |  3 +
- include/uapi/linux/ethtool.h                 | 16 +++-
- include/uapi/linux/ethtool_netlink.h         |  2 +
- include/uapi/linux/mii.h                     |  2 +
- net/ethtool/linkmodes.c                      | 48 ++++++++++
- 9 files changed, 233 insertions(+), 19 deletions(-)
-
--- 
-2.26.2
+RnJvbTogQW5keSBMdXRvbWlyc2tpDQo+IFNlbnQ6IDMwIEFwcmlsIDIwMjAgMTk6NDINCi4uLg0K
+PiBJIHN1cHBvc2UgdGhlcmUgY291bGQgYmUgYSBjb25zaXN0ZW50IG5hbWluZyBsaWtlIHRoaXM6
+DQo+IA0KPiBjb3B5X2Zyb21fdXNlcigpDQo+IGNvcHlfdG9fdXNlcigpDQo+IA0KPiBjb3B5X2Zy
+b21fdW5jaGVja2VkX2tlcm5lbF9hZGRyZXNzKCkgW3doYXQgcHJvYmVfa2VybmVsX3JlYWQoKSBp
+c10NCj4gY29weV90b191bmNoZWNrZWRfa2VybmVsX2FkZHJlc3MoKSBbd2hhdCBwcm9iZV9rZXJu
+ZWxfd3JpdGUoKSBpc10NCj4gDQo+IGNvcHlfZnJvbV9mYWxsaWJsZSgpIFtmcm9tIGEga2VybmVs
+IGFkZHJlc3MgdGhhdCBjYW4gZmFpbCB0byBhIGtlcm5lbA0KPiBhZGRyZXNzIHRoYXQgY2FuJ3Qg
+ZmFpbF0NCj4gY29weV90b19mYWxsaWJsZSgpIFt0aGUgb3Bwb3NpdGUsIGJ1dCBob3BlZnVsbHkg
+aWRlbnRpY2FsIHRvIG1lbWNweSgpIG9uIHg4Nl0NCj4gDQo+IGNvcHlfZnJvbV9mYWxsaWJsZV90
+b191c2VyKCkNCj4gY29weV9mcm9tX3VzZXJfdG9fZmFsbGlibGUoKQ0KDQpZb3UgbWlzc2VkIG91
+dDoNCmNvcHlfdG8vZnJvbV9pbygpDQpjb3B5X3RvX2lvX2Zyb21fdXNlcigpDQpjb3B5X2Zyb21f
+aW9fdG9fdXNlcigpDQpBbGwgb2Ygd2hpY2ggd2FudCBhbGlnbmVkIGFkZHJlc3NlcyBvbiB0aGUg
+J2lvJyBzaWRlLg0KDQpJdCBtaWdodCBldmVuIGJlIHdvcnRoIHNheWluZyB0aGF0IHRoZSBjb3B5
+X3RvL2Zyb21faW8oKSBjYW4NCmZhaWwgZHVlIHRvIGJhZCBJTyBhY2Nlc3NlcyAocmF0aGVyIHRo
+YW4gYmFkIGFkZHJlc3NlcykuDQpUaGlzIGlzIG5vdCBlbnRpcmVseSB1bmV4cGVjdGVkIHNpbmNl
+IGFsbCBQQ0llIGFjY2Vzc2VzDQpjYW4gZmFpbCB1bmV4cGVjdGVkbHkgKHVzdWFsbHkgd2l0aG91
+dCBhIHRyYXAgYW5kIHJldHVybmluZyAtMSkuDQpCdXQgYSBzeXN0ZW0gY291bGQgYXJyYW5nZSB0
+byBnZW5lcmF0ZSBhIHN5bmNocm9ub3VzIGZhdWx0Lg0KDQpJZiB5b3UgYXJlIGNvcHlpbmcgZGly
+ZWN0bHkgZnJvbSBpbyB0byB1c2VyIHlvdSBuZWVkIHRvDQpkaWZmZXJlbnRpYXRlIGJldHdlZW4g
+YSB1c2VyIHBhZ2UgZmF1bHQgYW5kIGFuIGlvIGFjY2Vzcw0KZXJyb3IuIFRoZSBsYXR0ZXIgc2hv
+dWxkbid0IGdlbmVyYXRlIFNJR1NFR1YuDQpQb3NzaWJseSByZXR1cm4gLUVGQVVMVCBvbiB1c2Vy
+IHBhZ2UgZmF1bHQgYW5kICd0cmFuc2Zlcg0KbGVuZ3RoIHJlbWFpbmluZycgb24gaW8gYWNjZXNz
+IGVycm9yLg0KQWx0aG91Z2ggZmlsbGluZyB0aGUgcmVzdCBvZiB0aGUgYnVmZmVyIHdpdGggMHhm
+ZiBtaWdodCBiZQ0KYXBwcm9wcmlhdGUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJl
+c3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsx
+IDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
