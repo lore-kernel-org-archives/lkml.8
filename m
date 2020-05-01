@@ -2,165 +2,221 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797FDC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5ADC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 407512071C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D4D2071C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="djTYzpjj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9WxwNF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgEAKws (ORCPT
+        id S1728645AbgEAKwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 1 May 2020 06:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728615AbgEAKws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 06:52:48 -0400
-Received: from mail-mw2nam10on2042.outbound.protection.outlook.com ([40.107.94.42]:6117
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728268AbgEAKwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 06:52:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XfTQpHXkiDMUiExoWtLJm6Pvd34DxXUvyfunZnePYR7E4aLHzgakvxakPEYWoFyXc93uXrIVMSmzyK1K7JREG93hJ2ByuFGZKBTSCDv+QesfSwz9qv2PdUt2SIPsrcd1+LE+g211dTHFNwJsEfC1ktFUpNXqTnQ/njkMDMhFjYac1RR35X8LqBHSA5aR0web/mYg1rwVdhh+hQHsEczg2DfK3x+jQZx7ndwz3I0mKISnzBbUPUvC/HvrS55Cg/GSt8vdSr5ZmRkymTJt6P+SoSEB9C3btWtFE/yDOqVC9L0rHK+BBNLKavCm3lHp/6rKPt3Uv4kGgPFlyZuCUyxaTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Thw+s4qdYO8SQXU9N7HA0sRw/J0et2+3mdtKo82XHdw=;
- b=BFv/eeizNQXuOPJcBf95rjRYqirfcrPBlxVIfNhIXqIgIdlSn0QbrjrOyUEFQMQc8paBvtmmobfnHHKO45YvwwoYn91pOKXx8d5JUFnwN20j9VjuKtUYDsp1itSY5XIURjk/NEEaPO0bX0MGFEHArlq6e6i4vRosvOASi6R1Hzo6Lqu79h5BcIajUilxIISqNZifMaf1hhNGlb7gxrFPLK8P65K7oap+j0wwPTQZxx5h3eOZ5mEf3/j5oi2FIBpL7W3DGbL2SiHO+7f+KIDwtTK4S6Ekd2VWoBD/LsHVjBcfNHOJdHwmi4mTxk8FZrRardd+1rk4Mg74myVvcejOlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315DEC08E859
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 03:52:48 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id v26so7623239qto.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 03:52:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Thw+s4qdYO8SQXU9N7HA0sRw/J0et2+3mdtKo82XHdw=;
- b=djTYzpjjX2yKUVKNmAvMPTBhcnNnq6a/1zyDc2r/nxZaPCLPQCJ38jFvRXHLa89zzqQE7QJpAkgodl+dGPD5xt9a6rtYPsCbdREc0Lm9nJprPRvZqWJLn+cmr8iZNsgRt58cfPum/y2SGbsAjpBBSJSAB6ALlQ8fls2aphQWQRM=
-Received: from DM5PR13CA0050.namprd13.prod.outlook.com (2603:10b6:3:117::12)
- by BN7PR02MB4131.namprd02.prod.outlook.com (2603:10b6:406:f6::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.21; Fri, 1 May
- 2020 10:52:44 +0000
-Received: from CY1NAM02FT032.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:117:cafe::d9) by DM5PR13CA0050.outlook.office365.com
- (2603:10b6:3:117::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14 via Frontend
- Transport; Fri, 1 May 2020 10:52:44 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT032.mail.protection.outlook.com (10.152.75.184) with Microsoft SMTP
- Server id 15.20.2937.19 via Frontend Transport; Fri, 1 May 2020 10:52:43
- +0000
-Received: from [149.199.38.66] (port=50830 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1jUTHd-00005o-Rf; Fri, 01 May 2020 03:52:41 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1jUTHf-00043h-DE; Fri, 01 May 2020 03:52:43 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 041Aqep5019321;
-        Fri, 1 May 2020 03:52:40 -0700
-Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <rajan.vaja@xilinx.com>)
-        id 1jUTHc-00043E-NE; Fri, 01 May 2020 03:52:40 -0700
-From:   Rajan Vaja <rajan.vaja@xilinx.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        gregkh@linuxfoundation.org, kalyani.akula@xilinx.com
-Cc:     michal.simek@xilinx.com, jolly.shah@xilinx.com,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>
-Subject: [PATCH char-misc-next v2] crypto: xilinx: Handle AES PM API return status
-Date:   Fri,  1 May 2020 03:52:34 -0700
-Message-Id: <1588330354-27942-1-git-send-email-rajan.vaja@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588328091-16368-1-git-send-email-rajan.vaja@xilinx.com>
-References: <1588328091-16368-1-git-send-email-rajan.vaja@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(136003)(346002)(46966005)(81166007)(4326008)(70206006)(70586007)(186003)(26005)(36756003)(6666004)(7696005)(316002)(9786002)(426003)(336012)(5660300002)(47076004)(8936002)(356005)(82310400002)(82740400003)(2616005)(44832011)(2906002)(8676002)(107886003)(6636002)(478600001);DIR:OUT;SFP:1101;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CKSWEhR47OrXn/8dOC2MOqQVcUKFbmXG90P7o5aVE8c=;
+        b=V9WxwNF2rHyEYvnA0zGGt8w7B58qoUIf9ewJ5d1B8wOGtvxFNIAsipVA5Y9CRz61gK
+         NaT8/XnkaR+L0+bCE0Hyx1LUvo/YXMQVK2GL/LpLChR2wN1+QwNE9lTEkkslIK6GqZXh
+         oNLTdhuMVcfSDyEYzBnUNqmoLpYGQiIfl19++n+I8I3nE6CzjWNAiNnrYDZa68gibmcs
+         dQSqWa1xywl9UbC0Y/SfwOOrRBY5PGOy3soSGH7Yk0YZyg79JzXeKIx5U5uDAnOAQ0Bp
+         9MF2dlrjWkV051D393hydRx9YYhMfKWstNiauG7G8bFe7VeAz0iZx5nRJ8xiDDOOi6Dv
+         cHCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CKSWEhR47OrXn/8dOC2MOqQVcUKFbmXG90P7o5aVE8c=;
+        b=dBAsMsHyU9caN22F3wYEBkKXfw+2gITghg4i3Ror96QqxYDK3PwuBiBl0dPBcCGpsS
+         oe/U9cpl8Upaj4ar50hy9nbfu8peldnqXQX0eAppYDcwgpjc+Z4GCWsBraLBDjPerCZv
+         PBODHcAICtkGWMwnz8xVJhHoqM+0D6F6DLYGx0mRM4pN1pE8l5nZv7K0t5K8jjz+/CFn
+         OOMMf439k3qbMWG3PedpP9JQ94xcFJTm14TNjAEa+ok4lheGrhl99W7zB1fJAiLdR09w
+         EvQmDBIkWOKMWVrOmKH99X0nER3TpsZFOz+KkiqI495ews0TTGuy1Rlxtar7tfdMxyeP
+         IbWQ==
+X-Gm-Message-State: AGi0PuZCcjgsrn2V9wXRsizw324fsR+dsSMZaPKJlEZEpQs0q/IpTTCz
+        le9Kf/wRa/Odm9AtR/aGOafm4rXyWV0YW0YG+wiDnz3zvpM=
+X-Google-Smtp-Source: APiQypKXjEL1RmHTSzXwlVnlyybCY6qyE6NYilstbhLWFeHgxL09NfX2tGRosNYxqEU3zw3qGm+peP0ETc3l5lTBCQI=
+X-Received: by 2002:ac8:724b:: with SMTP id l11mr3265642qtp.35.1588330367309;
+ Fri, 01 May 2020 03:52:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6bad77a4-de7e-4653-5667-08d7edbdc6d5
-X-MS-TrafficTypeDiagnostic: BN7PR02MB4131:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB41318C2BFD6D3D13B1CF25B3B7AB0@BN7PR02MB4131.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0390DB4BDA
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L4+cXY+FA7xIty/vqSUUf8o1gueGiZnP53hQM6mbLi5NokBvXCASK70n/2hv3p4yvnu3WuvP8pmSyvl2XokzbpIbKBYRvoe3c3gwNcftG+MhxEGE6Pjtxcli058ZVAZS7LK/hTTngM+Y1dlhvlcKQeDCTXIBlGBcFNduiY7W9Xsgv8H3FNcWF5xDzuJBFTZebzOM4Dx8IY2MwY9PH4qeUMo1ySOMy+JmOzg9hO81ACnknPNlilNalT2Mb5f6J/dgFk1VeUAAE3a7oiIcRc2sSb1oajeGCsm7shN77C095ePhfZOQruSAmIIHi3Z2iBpvctXT4kdVwjGCR1rJ71VAXDAM9Tlj+nyMZKSBt4PcCTuakJgiCAWTErPB4o9vHL1djBpzWCpTseFLcOTUaIjz0gWeSxbmdL4QAtL+3plusD4FHgu5pYKLlLELwk76Vu6OWrZUDR+TgJdkbEnU5P0sswm9DH5H9uBnfVFbrA4p7SlSlrGg0jfUF1IC9TOWp5ZiPosaMvKVLzUPKRSD9gqKQw==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 10:52:43.6586
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bad77a4-de7e-4653-5667-08d7edbdc6d5
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4131
+References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com> <20200429184711.9d603da097fdea80f574f1f1@linux-foundation.org>
+In-Reply-To: <20200429184711.9d603da097fdea80f574f1f1@linux-foundation.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 1 May 2020 19:52:35 +0900
+Message-ID: <CAAmzW4NC4LHXSoU8r6Jrh7WP8fouuaSkM--0gQVWf8G4wkDupg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] change the implementation of the PageHighMem()
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Laura Abbott <labbott@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
+        Christoph Hellwig <hch@infradead.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return value of AES PM API is not handled which may result in
-unexpected value of "status" in zynqmp_pm_aes_engine().
+2020=EB=85=84 4=EC=9B=94 30=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 10:47, =
+Andrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+>
+> On Wed, 29 Apr 2020 12:26:33 +0900 js1304@gmail.com wrote:
+>
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > Changes on v2
+> > - add "acked-by", "reviewed-by" tags
+> > - replace PageHighMem() with use open-code, instead of using
+> > new PageHighMemZone() macro. Related file is "include/linux/migrate.h"
+> >
+> > Hello,
+> >
+> > This patchset separates two use cases of PageHighMem() by introducing
+> > PageHighMemZone() macro. And, it changes the implementation of
+> > PageHighMem() to reflect the actual meaning of this macro. This patchse=
+t
+> > is a preparation step for the patchset,
+> > "mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE" [=
+1].
+> >
+> > PageHighMem() is used for two different cases. One is to check if there
+> > is a direct mapping for this page or not. The other is to check the
+> > zone of this page, that is, weather it is the highmem type zone or not.
+> >
+> > Until now, both the cases are the perfectly same thing. So, implementat=
+ion
+> > of the PageHighMem() uses the one case that checks if the zone of the p=
+age
+> > is the highmem type zone or not.
+> >
+> > "#define PageHighMem(__p) is_highmem_idx(page_zonenum(__p))"
+> >
+> > ZONE_MOVABLE is special. It is considered as normal type zone on
+> > !CONFIG_HIGHMEM, but, it is considered as highmem type zone
+> > on CONFIG_HIGHMEM. Let's focus on later case. In later case, all pages
+> > on the ZONE_MOVABLE has no direct mapping until now.
+> >
+> > However, following patchset
+> > "mm/cma: manage the memory of the CMA area by using the ZONE_MOVABLE"
+> > , which is once merged and reverted, will be tried again and will break
+> > this assumption that all pages on the ZONE_MOVABLE has no direct mappin=
+g.
+> > Hence, the ZONE_MOVABLE which is considered as highmem type zone could
+> > have the both types of pages, direct mapped and not. Since
+> > the ZONE_MOVABLE could have both type of pages, __GFP_HIGHMEM is still
+> > required to allocate the memory from it. And, we conservatively need to
+> > consider the ZONE_MOVABLE as highmem type zone.
+> >
+> > Even in this situation, PageHighMem() for the pages on the ZONE_MOVABLE
+> > when it is called for checking the direct mapping should return correct
+> > result. Current implementation of PageHighMem() just returns TRUE
+> > if the zone of the page is on a highmem type zone. So, it could be wron=
+g
+> > if the page on the MOVABLE_ZONE is actually direct mapped.
+> >
+> > To solve this potential problem, this patch introduces a new
+> > PageHighMemZone() macro. In following patches, two use cases of
+> > PageHighMem() are separated by calling proper macro, PageHighMem() and
+> > PageHighMemZone(). Then, implementation of PageHighMem() will be change=
+d
+> > as just checking if the direct mapping exists or not, regardless of
+> > the zone of the page.
+> >
+> > Note that there are some rules to determine the proper macro.
+> >
+> > 1. If PageHighMem() is called for checking if the direct mapping exists
+> > or not, use PageHighMem().
+> > 2. If PageHighMem() is used to predict the previous gfp_flags for
+> > this page, use PageHighMemZone(). The zone of the page is related to
+> > the gfp_flags.
+> > 3. If purpose of calling PageHighMem() is to count highmem page and
+> > to interact with the system by using this count, use PageHighMemZone().
+> > This counter is usually used to calculate the available memory for an
+> > kernel allocation and pages on the highmem zone cannot be available
+> > for an kernel allocation.
+> > 4. Otherwise, use PageHighMemZone(). It's safe since it's implementatio=
+n
+> > is just copy of the previous PageHighMem() implementation and won't
+> > be changed.
+>
+> hm, this won't improve maintainability :(
+>
+> - Everyone will need to remember when to use PageHighMem() and when
+>   to use PageHighMemZone().  If they get it wrong, they're unlikely to
+>   notice any problem in their runtime testing, correct?
+>
+> - New code will pop up which gets it wrong and nobody will notice for
+>   a long time.
 
-Consider "status" value as valid only if AES PM API is successful.
+Hmm... I think that it's not that hard to decide correct macro. If we renam=
+e
+PageHighMem() with PageDirectMapped(), they, PageDirectMapped() and
+PageHighMemZone(), are self-explanation macro. There would be no
+confusion to use.
 
-Fixes: bc86f9c54616 ("firmware: xilinx: Remove eemi ops for aes engine")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
----
-Changes in v2:
-- Add fixes tag above s-o-b section
-- Add reported-by
----
- drivers/crypto/xilinx/zynqmp-aes-gcm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> So I guess we need to be pretty confident that the series "mm/cma:
+> manage the memory of the CMA area by using the ZONE_MOVABLE" will be
+> useful and merged before proceeding with this, yes?
 
-diff --git a/drivers/crypto/xilinx/zynqmp-aes-gcm.c b/drivers/crypto/xilinx/zynqmp-aes-gcm.c
-index d0a0daf..a27e3550 100644
---- a/drivers/crypto/xilinx/zynqmp-aes-gcm.c
-+++ b/drivers/crypto/xilinx/zynqmp-aes-gcm.c
-@@ -85,6 +85,7 @@ static int zynqmp_aes_aead_cipher(struct aead_request *req)
- 	dma_addr_t dma_addr_data, dma_addr_hw_req;
- 	unsigned int data_size;
- 	unsigned int status;
-+	int ret;
- 	size_t dma_size;
- 	char *kbuf;
- 	int err;
-@@ -132,9 +133,12 @@ static int zynqmp_aes_aead_cipher(struct aead_request *req)
- 		hwreq->key = 0;
- 	}
- 
--	zynqmp_pm_aes_engine(dma_addr_hw_req, &status);
-+	ret = zynqmp_pm_aes_engine(dma_addr_hw_req, &status);
- 
--	if (status) {
-+	if (ret) {
-+		dev_err(dev, "ERROR: AES PM API failed\n");
-+		err = ret;
-+	} else if (status) {
- 		switch (status) {
- 		case ZYNQMP_AES_GCM_TAG_MISMATCH_ERR:
- 			dev_err(dev, "ERROR: Gcm Tag mismatch\n");
--- 
-2.7.4
+Yes and my assumption is that we (MM) have agreed with usefulness of
+CMA series.
 
+> On the other hand, this whole series is a no-op until [10/10]
+> (correct?) so it can be effectively reverted with a single line change,
+
+Correct!
+
+> with later cleanups which revert the other 9 patches.
+>
+> So I think I'd like to take another look at "mm/cma: manage the memory
+> of the CMA area by using the ZONE_MOVABLE" before figuring out what to
+> do here.  Mainly to answer the question "is the new feature valuable
+> enough to justify the maintainability impact".  So please do take some
+> care in explaining the end-user benefit when preparing the new version
+> of that patchset.
+
+So, do you mean to send the new version of CMA patchset with more
+explanation before merging this patchset? If yes, I can do. But, I'm not su=
+re
+that it's worth doing. Problems of CMA are still not solved although
+the utilization problem will be partially solved by Roman's "mm,page_alloc,=
+cma:
+conditionally prefer cma pageblocks for movable allocations" patch
+in this (v5.7) release. Rationale that we agree with CMA patchset is still
+remained.
+
+Anyway, if you mean that, I will send the CMA patchset with more explanatio=
+n.
+
+Thanks.
