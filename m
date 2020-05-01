@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAF5C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17213C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B022166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E989E2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339571;
-	bh=7sIjFwst6s3p63WthfN6bA9Lj1cHZ+10OxwwnLvN4I0=;
+	s=default; t=1588339575;
+	bh=XbN+XK43HYEmFbefRCu63/+LCwj5Fxct5UImYlR+yoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AnWbh4ifQE/VQhBHw3sw5sAS00Z1bIbHyJam2RX03hFnjfHwPmWK34+RD7tXLxbHe
-	 A6831Ge1I0wn4RCUszaqFOSJD2Z2v+GLy66C+cJXk5BxcXotv3EoMu6DUGU+fAnjlr
-	 RkYQxG25pDWMBHoTo+Pf6pNacz4XFWSUVFT6qQwc=
+	b=mJiHthiwjhceMFbYGhJiUitgHgvV9fXJd+LuzV1QvftSbV6tTZmVUsI+gjzkpuSFk
+	 IsVYnmoGKQenkJI2cQ1qnJ7WijK74hMCTqbiWlCeMPziAwLs6SNqR96M+ycWWL8VXQ
+	 XduDslA76JIrSxZ+HU+e5TN7Qm2vN7v7aB/PL52c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgEAN0L (ORCPT
+        id S1729206AbgEAN0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:26:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgEAN0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:09 -0400
+        id S1729184AbgEAN0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 789CA2495C;
-        Fri,  1 May 2020 13:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E408820757;
+        Fri,  1 May 2020 13:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339568;
-        bh=7sIjFwst6s3p63WthfN6bA9Lj1cHZ+10OxwwnLvN4I0=;
+        s=default; t=1588339571;
+        bh=XbN+XK43HYEmFbefRCu63/+LCwj5Fxct5UImYlR+yoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnUb41sDzOtqb4TNiytj3A9MW8hGvSJxWFiNjBF8BMVTvFJXD5DlpTDeXedXZyScc
-         em0o5FaxynDgwBNBAGZUFHPtvON2rcSTo8csVH97pI8rWuQ080i8w0+LppRMAjfWnl
-         ak/virzCEwZZbLADJOUDyBIrHrnREV0SnQBIVZQw=
+        b=WJo4dto57S1c2D4EFMgSZx3607pELUGLnzaBhLc3XBhx1AniO/iGlbUZ9pzyAMxdS
+         L8TUBECIOLL97g2RJTbZ21N1ao6TQ1q3T6c7lRtXLwvJfj4Vq7yPZBOOxUUOVZlC3O
+         IJozssyHh2vgRbj4wOy05jKqgZJKdjkxGnVMGz/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Cox <jonathan@jdcox.net>
-Subject: [PATCH 4.4 31/70] USB: Add USB_QUIRK_DELAY_CTRL_MSG and USB_QUIRK_DELAY_INIT for Corsair K70 RGB RAPIDFIRE
-Date:   Fri,  1 May 2020 15:21:19 +0200
-Message-Id: <20200501131523.938466228@linuxfoundation.org>
+        stable@vger.kernel.org, David Mosberger <davidm@egauge.net>
+Subject: [PATCH 4.4 32/70] drivers: usb: core: Dont disable irqs in usb_sg_wait() during URB submit.
+Date:   Fri,  1 May 2020 15:21:20 +0200
+Message-Id: <20200501131524.259332967@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -58,35 +58,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cox <jonathan@jdcox.net>
+From: David Mosberger <davidm@egauge.net>
 
-commit be34a5854b4606bd7a160ad3cb43415d623596c7 upstream.
+commit 98b74b0ee57af1bcb6e8b2e76e707a71c5ef8ec9 upstream.
 
-The Corsair K70 RGB RAPIDFIRE needs the USB_QUIRK_DELAY_INIT and
-USB_QUIRK_DELAY_CTRL_MSG to function or it will randomly not
-respond on boot, just like other Corsair keyboards
+usb_submit_urb() may take quite long to execute.  For example, a
+single sg list may have 30 or more entries, possibly leading to that
+many calls to DMA-map pages.  This can cause interrupt latency of
+several hundred micro-seconds.
 
-Signed-off-by: Jonathan Cox <jonathan@jdcox.net>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200410212427.2886-1-jonathan@jdcox.net
+Avoid the problem by releasing the io->lock spinlock and re-enabling
+interrupts before calling usb_submit_urb().  This opens races with
+usb_sg_cancel() and sg_complete().  Handle those races by using
+usb_block_urb() to stop URBs from being submitted after
+usb_sg_cancel() or sg_complete() with error.
+
+Note that usb_unlink_urb() is guaranteed to return -ENODEV if
+!io->urbs[i]->dev and since the -ENODEV case is already handled,
+we don't have to check for !io->urbs[i]->dev explicitly.
+
+Before this change, reading 512MB from an ext3 filesystem on a USB
+memory stick showed a throughput of 12 MB/s with about 500 missed
+deadlines.
+
+With this change, reading the same file gave the same throughput but
+only one or two missed deadlines.
+
+Signed-off-by: David Mosberger <davidm@egauge.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/core/message.c |   15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -272,6 +272,10 @@ static const struct usb_device_id usb_qu
- 	/* Corsair K70 LUX */
- 	{ USB_DEVICE(0x1b1c, 0x1b36), .driver_info = USB_QUIRK_DELAY_INIT },
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -306,9 +306,10 @@ static void sg_complete(struct urb *urb)
+ 		 */
+ 		spin_unlock(&io->lock);
+ 		for (i = 0, found = 0; i < io->entries; i++) {
+-			if (!io->urbs[i] || !io->urbs[i]->dev)
++			if (!io->urbs[i])
+ 				continue;
+ 			if (found) {
++				usb_block_urb(io->urbs[i]);
+ 				retval = usb_unlink_urb(io->urbs[i]);
+ 				if (retval != -EINPROGRESS &&
+ 				    retval != -ENODEV &&
+@@ -519,12 +520,10 @@ void usb_sg_wait(struct usb_sg_request *
+ 		int retval;
  
-+	/* Corsair K70 RGB RAPDIFIRE */
-+	{ USB_DEVICE(0x1b1c, 0x1b38), .driver_info = USB_QUIRK_DELAY_INIT |
-+	  USB_QUIRK_DELAY_CTRL_MSG },
+ 		io->urbs[i]->dev = io->dev;
+-		retval = usb_submit_urb(io->urbs[i], GFP_ATOMIC);
+-
+-		/* after we submit, let completions or cancellations fire;
+-		 * we handshake using io->status.
+-		 */
+ 		spin_unlock_irq(&io->lock);
 +
- 	/* MIDI keyboard WORLDE MINI */
- 	{ USB_DEVICE(0x1c75, 0x0204), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
++		retval = usb_submit_urb(io->urbs[i], GFP_NOIO);
++
+ 		switch (retval) {
+ 			/* maybe we retrying will recover */
+ 		case -ENXIO:	/* hc didn't queue this one */
+@@ -594,8 +593,8 @@ void usb_sg_cancel(struct usb_sg_request
+ 		for (i = 0; i < io->entries; i++) {
+ 			int retval;
+ 
+-			if (!io->urbs[i]->dev)
+-				continue;
++			usb_block_urb(io->urbs[i]);
++
+ 			retval = usb_unlink_urb(io->urbs[i]);
+ 			if (retval != -EINPROGRESS
+ 					&& retval != -ENODEV
 
 
