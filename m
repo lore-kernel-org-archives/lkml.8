@@ -2,126 +2,121 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E20C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D09EC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C698A2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588311304;
-	bh=L+aYmWipJYsP/Mjay3nZEu6524fFdHe9QbZoCsdWlpU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VmNmOVZ9H4eAOIvEVn5TKEBtvpG1l+SJnhTnOeRD7fhBzIW75sR6bS453rYN5cYXd
-	 /tyVXonbmafnhMjxToKpzdw0U+mbyc0kL0Dc8rWb733/zBMe5PYC0uZtfWq4DaG5E7
-	 xK0nX4pIWufIVExUM4UI6ZimV3SJudWsVZiotpoI=
+	by mail.kernel.org (Postfix) with ESMTP id D455A2073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:35:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="XB10f927"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgEAFfE (ORCPT
+        id S1728254AbgEAFfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:35:04 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:37858 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAFfD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:35:03 -0400
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 0415YlWG006461;
-        Fri, 1 May 2020 14:34:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0415YlWG006461
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588311288;
-        bh=UZWM7i0RZnnhTnaPc+bA3fPcd9baVcIj+Fep60CTyUs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xb1tWHX+qf/bEwuP5QwZN3txKaLAhrMlkqnWAq/VdLZk3v9AaHY25ESw83N3pY+gW
-         16vjsuMzXn4l1aG1zjpGPugovTV9Cw7bH2pVfPg7YreyluxMei+Pw1Tm52uZ0Xdb7j
-         Nh806VgdZWuFpFS/nOiHkTnzoRln9+/QIraTEUUjjeLcQKJTh5RhCIPWvjfrZf8zLW
-         GyGGw+0tQYZW2/Kua6aLQjfLFvBjppDN9nPbCbCfZWG+7McRVuIFz6jgl6lYZqri29
-         pJZa1qZ+up0ZIUAztW/edIXgtMWOvuV/+hlO3pRR1IHhKVtWQV2vov44+nKraio4dx
-         fK5+CMDs8geMQ==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id j127so539900vke.4;
-        Thu, 30 Apr 2020 22:34:48 -0700 (PDT)
-X-Gm-Message-State: AGi0Puadh3i0+MzohG43G81E4Uo3gTuAK4v23oxlwscVEJFQhWy6p7WZ
-        JuIDY4mviK+IcYR2+0hrhLyr/N/QJeNLfid5eII=
-X-Google-Smtp-Source: APiQypK4SZZYkVLuWaMc9Uw+UZeiEdzKkKJRzZ9ZgTZ2v9epE8PC2KDbGf6W9JA1PKc3iWvYSQ0vKisDIVhrEpPLdDs=
-X-Received: by 2002:a1f:d182:: with SMTP id i124mr1573782vkg.26.1588311287171;
- Thu, 30 Apr 2020 22:34:47 -0700 (PDT)
+        Fri, 1 May 2020 01:35:07 -0400
+Received: from mail-mw2nam12on2093.outbound.protection.outlook.com ([40.107.244.93]:51585
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726452AbgEAFfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 01:35:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=STA9DQGeRVHjz+p6qI/71MR52cW/jMJ2DY+Oe0GpULevyCZf6Okl0FYg9l5c6AJGC4XTAKRU6fjGPrloqr02jj29Updr68RsEHbQmMMd51X6QkuOELs0FQra1qJskNaat6G3EMLBXnKcAYUKsMik3gbfQc0Tpn1UYk3sQDbaLdcpHMjNVEiaD5j8Ul4XIfcEITvJPCTnuFvg2bKeu/fY2oqbRBmW2o7vGRokhnrd8TRmhOt7hqxdVPhOfUIJEXm5NHruH3QcetRTy/fvOTOUWU4UxM/K+Vtpt2a2JzTcChJS1NQRlu04tXBr4N4XrliqOM2+7Y3M7+Ij9oKF/dERGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5rh9luNE76MKdECbAXH7pNTxnmbJhEd07982l+DfWl4=;
+ b=jFuw3CAHWC9PzB1q5ZROkyiXvtmH38u5r1hgMPPukdo649U+BHxP2gyUS7RUvD06Ec3WAw3b8syfuNKdSsIcZQTtgGxI2O3fR7AmGYwfivlODc/hlolv9Ar0u02MJqvOVdZ72PeG4n+dCHb37Yu5yHqgLQGyEZ2gf7jyc/lBh44XNOJpgF65dGinHF8dTx11YqAfH31o0Y3h1OOJ6EWgMO6Yq/EujIAvHrLt1rhzxBSLzX+akIRZWLXdfTgIw7+yTjjeY+2CsmWmEj3zF7BghrQDFDC7J6eoxaxItOTHiIXROIqBMzGnhHCtOX3wd00GWJdviDULKq6k72LvFiJo1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5rh9luNE76MKdECbAXH7pNTxnmbJhEd07982l+DfWl4=;
+ b=XB10f927nE0dN01Szv1BTmhxUuc9LP/2MDeeBG7xZrA5z7KaY7J11gQQ6CYOhsj8fZDcyST/SE9aFq4Wr0l9GSC8JCDe3dHT2NDqVFda/czZwKvosYggKpqBNR3+hI4TvAIg2aIQeWWebsKcYV8HL1wmTnSn02fu81v7S+Gcea8=
+Authentication-Results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com (2603:10b6:805:8::12)
+ by SN6PR2101MB0992.namprd21.prod.outlook.com (2603:10b6:805:4::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.4; Fri, 1 May
+ 2020 05:35:03 +0000
+Received: from SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55]) by SN6PR2101MB1021.namprd21.prod.outlook.com
+ ([fe80::a9e6:4244:f67e:c55%5]) with mapi id 15.20.2979.009; Fri, 1 May 2020
+ 05:35:03 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        bhelgaas@google.com, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com, mikelley@microsoft.com
+Cc:     Wei Hu <weh@microsoft.com>
+Subject: [PATCH v2 0/2] Fix PCI HyperV device error handling
+Date:   Fri,  1 May 2020 13:28:42 +0800
+Message-Id: <20200501052842.24620-1-weh@microsoft.com>
+X-Mailer: git-send-email 2.20.1
+Reply-To: weh@microsoft.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0014.apcprd02.prod.outlook.com
+ (2603:1096:3:17::26) To SN6PR2101MB1021.namprd21.prod.outlook.com
+ (2603:10b6:805:8::12)
 MIME-Version: 1.0
-References: <20200423142354.312088-1-masahiroy@kernel.org>
-In-Reply-To: <20200423142354.312088-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 1 May 2020 14:34:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQH07KvoCgv5B8jUs+EUsJ167omM1U2AWHKdaAB+nAMCQ@mail.gmail.com>
-Message-ID: <CAK7LNAQH07KvoCgv5B8jUs+EUsJ167omM1U2AWHKdaAB+nAMCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] kbuild: use $(CC_VERSION_TEXT) to evaluate
- CC_IS_GCC and CC_IS_CLANG
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from weh-g1-u1904d-testwin10.corp.microsoft.com (167.220.255.113) by SG2PR02CA0014.apcprd02.prod.outlook.com (2603:1096:3:17::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 05:34:58 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [167.220.255.113]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2f3760f0-0022-4e1f-d8fe-08d7ed91656a
+X-MS-TrafficTypeDiagnostic: SN6PR2101MB0992:|SN6PR2101MB0992:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR2101MB09927937598E3433D27FCA7BBBAB0@SN6PR2101MB0992.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: LXbIIqc9cI+FDIxEH4JeBBHub99WvtYUcc9qeEjUPSUmkqEckYnHuAwWc035MW68iwJRXCeUEpw7aDL0j7KwLXJ4FCca4xqZP5TspZHkjMFwPX+nVAxJxpOg4ql+9WvjONZwIRvvKIKqcp4cniUOGioLetPsTz/c84yI6ydmvvTBq7SdxZmrQMknO7IZzIKsQrkK+2+iMOaZebHRSX/K5W1i+98nyKz0jLp4STZa6dh4Ip7Gvv1L9mDf9Mg6QfrtboZYEzCxHiro52BqG9mcJkkZheSfYegpjDlR5MsN7dfOJ2GJCE4XcjQoUFrDbEOQrMvW2o14dJ6T5ptjVITsEKF/VtEA5ngBRIxCw8KjiqS25THcrdGrqZjqgv6uoqpb+TunRaYHDNq0bQ1cZ7TziStMnp468cA4E0FEk5YL9XrtYyPPwwRLVvLAkHh4LzJ40qreSuzXzECQUbMStGnpxpE9lVwbUXs5QusrGSjaVkM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR2101MB1021.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(16526019)(186003)(3450700001)(8676002)(8936002)(5660300002)(26005)(6486002)(7696005)(52116002)(4744005)(107886003)(1076003)(82950400001)(86362001)(6666004)(316002)(36756003)(82960400001)(2906002)(10290500003)(2616005)(956004)(4326008)(66946007)(66476007)(66556008)(6636002)(478600001)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: /AmY8B+jpcTYzCDrsWiBNb/eulntPJPA/DvgpSJbB/gUtsNNP58b0Ny54CloySjnPydOlV3h3sH5MPOW63UxC/IeK+cpFMUOZXxdSEFzkR85X9TdBrB5Wjzi9b4HBe5Pe7Vr4c5M0ynt1p2V4N/y9mqbdTzdBXPn0ClwumvyVkzka8KYE0L4bFwOIXN5lU4eYcuHKbHTJUj2YEOKzNXezQ0t7FpCNgPY++6QEeDS4vwz+c2yZDCHV3sIr02SQwcFV/FLaXwDyCPrshQpJJyn/+YQhqRrtVOUisBXOnevCX8cmU3CwXNU1PtbSla96PnSwctfjvPI2WZAv72GqgGzB6PXZ4fmgJaYWojiZD+mieoTxFvUs0lhKlHpERzrU35A6KQTlBlJJucq9d00i9vGencOVWPltxvVvZCqong6RdYYn10THpgu6TtwKUYWc0Ct7K9plaCaF1q7hAq+ludeZdG3nzjbhBrjokIA6BOZ0zYx1D++6hlVbsYqDO2VrnYe7Mx6uJxZVBnJ8mP34ri6IJeUQ/E1OcAcCCH48Ktd1U0ZldV9onT/zO6uRUBlEPqw9n00JQ/YIcaBeXgljwKLzSfdPnUla8C0CWmTecZBcho11zG5k/1mqfqF48wDQeybKWeAjKKmIJUTMvALbsznZILHjJqqdpBs4W5HD5ypCp4RSFQdfYth6Lt5XLWm8ZZr6lDoPzeIv4wVkza1qsXB12XgjODMlD0h5h69CDgnPb5IwjkzyZPea4T5HF+X98qWq9n9vmhr6voK1/5nnkeZXNzMgInOXS0sABwJsWW04UAGf5FMrkFkHByEP24weoA3
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f3760f0-0022-4e1f-d8fe-08d7ed91656a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 05:35:02.9673
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8iFM5mM4Do7wNHY/O+DlmHC7b+VvIHQW5h3XJW1WK/Xjpt04axNeuUX6o5OQudR5kFviZ+ahRNg7G5B4Hwpc3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0992
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 11:24 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> The result of '$(CC) --version | head -n 1' is already computed by the
-> top Makefile, and stored in the environment variable, CC_VERSION_TEXT.
->
-> 'echo' is probably less expensive than the two commands $(CC) and
-> 'head' although this optimization is not noticeable level.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+This series better handles some PCI HyperV error cases in general and
+for kdump case. Some of review comments from previous individual
+patch reviews, including splitting into separate patches, have
+already been incorporated.
 
-Applied to linux-kbuild.
+Thanks,
+Wei
 
 
+Wei Hu (2):
+  PCI: hv: Fix the PCI HyperV probe failure path to release resource
+    properly
+  PCI: hv: Retry PCI bus D0 entry when the first attempt failed with
+    invalid device state
 
-> ---
->
-> Changes in v2:
->   - new patch
->
->  init/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 9e22ee8fbd75..5f797df3f043 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -9,7 +9,7 @@ config DEFCONFIG_LIST
->         default "arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)"
->
->  config CC_IS_GCC
-> -       def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
-> +       def_bool $(success,echo "$(CC_VERSION_TEXT)" | grep -q gcc)
->
->  config GCC_VERSION
->         int
-> @@ -21,7 +21,7 @@ config LD_VERSION
->         default $(shell,$(LD) --version | $(srctree)/scripts/ld-version.sh)
->
->  config CC_IS_CLANG
-> -       def_bool $(success,$(CC) --version | head -n 1 | grep -q clang)
-> +       def_bool $(success,echo "$(CC_VERSION_TEXT)" | grep -q clang)
->
->  config CLANG_VERSION
->         int
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200423142354.312088-1-masahiroy%40kernel.org.
-
-
+ drivers/pci/controller/pci-hyperv.c | 60 ++++++++++++++++++++++++++---
+ 1 file changed, 54 insertions(+), 6 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
