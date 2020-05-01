@@ -2,129 +2,117 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AAFC47247
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AC4C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B39472073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BxdaX6Bc"
+	by mail.kernel.org (Postfix) with ESMTP id 857F8208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgEAAt2 (ORCPT
+        id S1727981AbgEAAun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 20:49:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40104 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgEAAt0 (ORCPT
+        Thu, 30 Apr 2020 20:50:43 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:56167 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgEAAun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 20:49:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0410nMRJ030314;
-        Fri, 1 May 2020 00:49:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=7kqQDAeQl0l0aYzQ7rQfhAPkIJYa5BicloGh5FRHiGU=;
- b=BxdaX6Bchfr+lWkpaYeHMXzelXRozRs9ExpYJAWpqJC4MgBjM/XlteJ8p65v2J65f9Uz
- p+X8mTBltQNx87IwIO+iUucdJOInyIlxIJePP4Cbvia/wlZM9ZftbG06u4VfSoEOZbwU
- wOCyh7JbIA3e6pshngCuQOyLw1X9xSwqCzibgo6mmHRAA9DKeE301rTZGUeKFuLnRzSP
- MiD/8k64LTI2+v1tlISZWx1/v3vNe92sZvHes0fYeu83qbQRgfpaJhJakMrY5dfI9QdL
- mDUjBRmeDSZdcBITD1Us30xvBTm5gmthFenzPAyT5kr9W7ClsLyeGX/zzDdJTdYg2eAO 2Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 30r7f5rb4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 May 2020 00:49:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0410mGOL115929;
-        Fri, 1 May 2020 00:49:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 30qtg29hbt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 01 May 2020 00:49:18 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0410nH6I014270;
-        Fri, 1 May 2020 00:49:17 GMT
-Received: from ca-dev-arm29.us.oracle.com (/10.129.136.23)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Apr 2020 17:49:17 -0700
-From:   Henry Willard <henry.willard@oracle.com>
-To:     <akpm@linux-foundation.org>
-Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm: Limit boost_watermark on small zones.
-Date:   Thu, 30 Apr 2020 17:49:08 -0700
-Message-Id: <1588294148-6586-1-git-send-email-henry.willard@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 adultscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005010001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9607 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
- clxscore=1011 phishscore=0 impostorscore=0 suspectscore=3 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005010001
+        Thu, 30 Apr 2020 20:50:43 -0400
+X-Originating-IP: 50.39.163.217
+Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4F0B7FF805;
+        Fri,  1 May 2020 00:50:28 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 17:50:26 -0700
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] padata: parallelize deferred page init
+Message-ID: <20200501005026.GA104377@localhost>
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430143131.7b8ff07f022ed879305de82f@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200430143131.7b8ff07f022ed879305de82f@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
-fragmentation event occurs") adds a boost_watermark() function which
-increases the min watermark in a zone by at least pageblock_nr_pages or
-the number of pages in a page block. On Arm64, with 64K pages and 512M
-huge pages, this is 8192 pages or 512M. It does this regardless of the
-number of managed pages managed in the zone or the likelihood of success.
-This can put the zone immediately under water in terms of allocating pages
-from the zone, and can cause a small machine to fail immediately due to
-OoM. Unlike set_recommended_min_free_kbytes(), which substantially
-increases min_free_kbytes and is tied to THP, boost_watermark() can be
-called even if THP is not active. The problem is most likely to appear
-on architectures such as Arm64 where pageblock_nr_pages is very large.
+On Thu, Apr 30, 2020 at 02:31:31PM -0700, Andrew Morton wrote:
+> On Thu, 30 Apr 2020 16:11:18 -0400 Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+> > Sometimes the kernel doesn't take full advantage of system memory
+> > bandwidth, leading to a single CPU spending excessive time in
+> > initialization paths where the data scales with memory size.
+> > 
+> > Multithreading naturally addresses this problem, and this series is the
+> > first step.
+> > 
+> > It extends padata, a framework that handles many parallel singlethreaded
+> > jobs, to handle multithreaded jobs as well by adding support for
+> > splitting up the work evenly, specifying a minimum amount of work that's
+> > appropriate for one helper thread to do, load balancing between helpers,
+> > and coordinating them.  More documentation in patches 4 and 7.
+> > 
+> > The first user is deferred struct page init, a large bottleneck in
+> > kernel boot--actually the largest for us and likely others too.  This
+> > path doesn't require concurrency limits, resource control, or priority
+> > adjustments like future users will (vfio, hugetlb fallocate, munmap)
+> > because it happens during boot when the system is otherwise idle and
+> > waiting on page init to finish.
+> > 
+> > This has been tested on a variety of x86 systems and speeds up kernel
+> > boot by 6% to 49% by making deferred init 63% to 91% faster.
+> 
+> How long is this up-to-91% in seconds?  If it's 91% of a millisecond
+> then not impressed.  If it's 91% of two weeks then better :)
 
-It is desirable to run the kdump capture kernel in as small a space as
-possible to avoid wasting memory. In some architectures, such as Arm64,
-there are restrictions on where the capture kernel can run, and therefore,
-the space available. A capture kernel running in 768M can fail due to OoM
-immediately after boost_watermark() sets the min in zone DMA32, where
-most of the memory is, to 512M. It fails even though there is over 500M of
-free memory. With boost_watermark() suppressed, the capture kernel can run
-successfully in 448M.
+Some test results on a system with 96 CPUs and 192GB of memory:
 
-This patch limits boost_watermark() to boosting a zone's min watermark only
-when there are enough pages that the boost will produce positive results.
-In this case that is estimated to be four times as many pages as
-pageblock_nr_pages.
+Without this patch series:
+[    0.487132] node 0 initialised, 23398907 pages in 292ms
+[    0.499132] node 1 initialised, 24189223 pages in 304ms
+...
+[    0.629376] Run /sbin/init as init process
 
-Signed-off-by: Henry Willard <henry.willard@oracle.com>
----
- mm/page_alloc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+With this patch series:
+[    0.227868] node 0 initialised, 23398907 pages in 28ms
+[    0.230019] node 1 initialised, 24189223 pages in 28ms
+...
+[    0.361069] Run /sbin/init as init process
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 69827d4fa052..67805e794660 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2400,6 +2400,14 @@ static inline void boost_watermark(struct zone *zone)
- 
- 	if (!watermark_boost_factor)
- 		return;
-+	/*
-+	 * Don't bother in zones that are unlikely to produce results.
-+	 * On small machines, including kdump capture kernels running
-+	 * in a small area, boosting the watermark can cause an out of
-+	 * memory situation immediately.
-+	 */
-+	if ((pageblock_nr_pages * 4) > zone_managed_pages(zone))
-+		return;
- 
- 	max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
- 			watermark_boost_factor, 10000);
--- 
-1.8.3.1
+That makes a huge difference; memory initialization is the largest
+remaining component of boot time.
 
+> Relatedly, how important is boot time on these large machines anyway? 
+> They presumably have lengthy uptimes so boot time is relatively
+> unimportant?
+
+Cloud systems and other virtual machines may have a huge amount of
+memory but not necessarily run for a long time; on such systems, boot
+time becomes critically important. Reducing boot time on cloud systems
+and VMs makes the difference between "leave running to reduce latency"
+and "just boot up when needed".
+
+- Josh Triplett
