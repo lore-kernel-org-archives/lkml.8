@@ -2,145 +2,156 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E97BC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7155C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D21220857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:09:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t+M1Kbn4"
+	by mail.kernel.org (Postfix) with ESMTP id C5E6124954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588353014;
+	bh=AZtGupY3KVT174f6mc/9Z29DqA2plgz5WC6ENyZ6TPE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Bu9wL+a+9oVDBKYXtt8GYvsN8Wbd4t71XQobYy0a90E8IYvCCogDifgn8yz3Oh9I9
+	 FcrUajiSGIPhLZ6GFy8B41VJ+PUbuZhxXpopqPjUHLajj4C94Ob2QK0wlTcZ6JYq0m
+	 5yXBKhcSzzOZUi1nSz0KQBXCOJISJ2K+SkZoJtpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgEARJD (ORCPT
+        id S1730097AbgEARKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:09:03 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44486 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728970AbgEARJC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:09:02 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041H8xO0023136;
-        Fri, 1 May 2020 12:08:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588352939;
-        bh=lXV4W/J4p3Alq0xOCow6eOHuCKTPPX9evdAxwBeNS0g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=t+M1Kbn4iCS4hxHlV/OQF9IyyuYrvyp+O7kcW1QT2l143zVmxLQ4lyc95PC0D0zGc
-         Wvo/B1SvOm1+p8cdOeV/w0G8CcbuIk6Sn5O9wEolVXLU1LHCV2fNFr9chrzHcPO85w
-         tQ3Lb/grDUAZH0HH8aN0O6Xd7UbhxWjYLTaSp8XI=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041H8xYj000612
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 12:08:59 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 12:08:59 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 12:08:59 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041H8wr0030634;
-        Fri, 1 May 2020 12:08:58 -0500
-Subject: Re: [PATCH] dt-bindings: power: Convert power_supply text to yaml
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
-References: <20200430151841.17453-1-dmurphy@ti.com>
- <20200501165829.2y2soxprt6naemki@earth.universe>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0caf4ac4-386f-b554-9702-76c7023bb72f@ti.com>
-Date:   Fri, 1 May 2020 12:00:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 13:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgEARKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:10:13 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1C6C2137B;
+        Fri,  1 May 2020 17:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588353013;
+        bh=AZtGupY3KVT174f6mc/9Z29DqA2plgz5WC6ENyZ6TPE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PBt0yxaZV/zHBhSkjLZbx2e68r1SeWS0rIaOCYIyY1T/juir9wkfAEotoNf0Pv7UG
+         YFlTN1FA2MgY60VvWQWC71/qkgHXC1qnlNlFjaZyxujhRhRp++Suc5WqQQlYztBHIl
+         HT1CeSIrQedVZhkaX1SyQLwHwRRv+9ec8VC8Vo1c=
+Date:   Fri, 1 May 2020 12:10:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 12/19] docs: pci:
+ endpoint/function/binding/pci-test.txt convert to ReST
+Message-ID: <20200501171011.GA116051@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200501165829.2y2soxprt6naemki@earth.universe>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa73d1a7fb6c4691899a110a732216bcdac75f2b.1588263270.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sebastian
+On Thu, Apr 30, 2020 at 06:18:26PM +0200, Mauro Carvalho Chehab wrote:
+> Convert this file to ReST by adding a proper title to it and
+> use the right markups for a table.
+> 
+> While here, add a SPDX header.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On 5/1/20 11:58 AM, Sebastian Reichel wrote:
-> Hi,
->
-> On Thu, Apr 30, 2020 at 10:18:41AM -0500, Dan Murphy wrote:
->> Convert the power_supply.txt to power-supply.yaml.
->> This conversion entailed fixing up the binding to being yaml and dt
->> checker compliant.
-> Looks mostly good to me, thanks for taking care of it.
->
->> Added a note in the power_supply.txt to reference the power-supply.yaml
-> Yes, we should keep the file until all bindings referencing the file
-> have been converted to YAML.
-Ack
->> CC: Rob Herring <robh@kernel.org>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
->>   .../bindings/power/supply/power_supply.txt    | 25 +-----------
->>   2 files changed, 42 insertions(+), 23 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/power/supply/power-supply.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
->> new file mode 100644
->> index 000000000000..cfbc79833ed8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
->> @@ -0,0 +1,40 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/supply/power_supply.yaml#"
-> This should be power-supply instead of power_supply, which is also
-> reported by dtb_binding_check on my system :)
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Yeah I had an untracked file called power_supply.yaml and removed it 
-after checking it in.
-
-I will change this
-
->
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Power Supply Core Support
->> +
->> +maintainers:
->> +  - Sebastian Reichel <sre@kernel.org>
->> +
->> +properties:
->> +  power-supplies:
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->> +    description:
->> +      This property is added to a supply in order to list the devices which
->> +      supply it power, referenced by their phandles.
->> +
->> +examples:
->> +  - |
->> +    power {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      usb_charger:power@e {
->> +        compatible = "some,usb-charger";
->> +        reg = <0xe>;
->> +      };
->> +
->> +      ac_charger:power@c {
-> ^^^ while at it, let's also fix this up and use
-> charger instead of power (for both entries).
-
-Ack
-
-Dan
+> ---
+>  .../endpoint/function/binding/pci-test.rst    | 26 +++++++++++++++++++
+>  .../endpoint/function/binding/pci-test.txt    | 19 --------------
+>  Documentation/PCI/endpoint/index.rst          |  2 ++
+>  .../misc-devices/pci-endpoint-test.rst        |  2 +-
+>  4 files changed, 29 insertions(+), 20 deletions(-)
+>  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.rst
+>  delete mode 100644 Documentation/PCI/endpoint/function/binding/pci-test.txt
+> 
+> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.rst b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+> new file mode 100644
+> index 000000000000..57ee866fb165
+> --- /dev/null
+> +++ b/Documentation/PCI/endpoint/function/binding/pci-test.rst
+> @@ -0,0 +1,26 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==========================
+> +PCI Test Endpoint Function
+> +==========================
+> +
+> +name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+> +
+> +Configurable Fields:
+> +
+> +================   ===========================================================
+> +vendorid	   should be 0x104c
+> +deviceid	   should be 0xb500 for DRA74x and 0xb501 for DRA72x
+> +revid		   don't care
+> +progif_code	   don't care
+> +subclass_code	   don't care
+> +baseclass_code	   should be 0xff
+> +cache_line_size	   don't care
+> +subsys_vendor_id   don't care
+> +subsys_id	   don't care
+> +interrupt_pin	   Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
+> +msi_interrupts	   Should be 1 to 32 depending on the number of MSI interrupts
+> +		   to test
+> +msix_interrupts	   Should be 1 to 2048 depending on the number of MSI-X
+> +		   interrupts to test
+> +================   ===========================================================
+> diff --git a/Documentation/PCI/endpoint/function/binding/pci-test.txt b/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> deleted file mode 100644
+> index cd76ba47394b..000000000000
+> --- a/Documentation/PCI/endpoint/function/binding/pci-test.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -PCI TEST ENDPOINT FUNCTION
+> -
+> -name: Should be "pci_epf_test" to bind to the pci_epf_test driver.
+> -
+> -Configurable Fields:
+> -vendorid	 : should be 0x104c
+> -deviceid	 : should be 0xb500 for DRA74x and 0xb501 for DRA72x
+> -revid		 : don't care
+> -progif_code	 : don't care
+> -subclass_code	 : don't care
+> -baseclass_code	 : should be 0xff
+> -cache_line_size	 : don't care
+> -subsys_vendor_id : don't care
+> -subsys_id	 : don't care
+> -interrupt_pin	 : Should be 1 - INTA, 2 - INTB, 3 - INTC, 4 -INTD
+> -msi_interrupts	 : Should be 1 to 32 depending on the number of MSI interrupts
+> -		   to test
+> -msix_interrupts	 : Should be 1 to 2048 depending on the number of MSI-X
+> -		   interrupts to test
+> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> index d114ea74b444..4ca7439fbfc9 100644
+> --- a/Documentation/PCI/endpoint/index.rst
+> +++ b/Documentation/PCI/endpoint/index.rst
+> @@ -11,3 +11,5 @@ PCI Endpoint Framework
+>     pci-endpoint-cfs
+>     pci-test-function
+>     pci-test-howto
+> +
+> +   function/binding/pci-test
+> diff --git a/Documentation/misc-devices/pci-endpoint-test.rst b/Documentation/misc-devices/pci-endpoint-test.rst
+> index 26e5d9ba146b..4cf3f4433be7 100644
+> --- a/Documentation/misc-devices/pci-endpoint-test.rst
+> +++ b/Documentation/misc-devices/pci-endpoint-test.rst
+> @@ -53,4 +53,4 @@ ioctl
+>  	      Perform read tests. The size of the buffer should be passed
+>  	      as argument.
+>  
+> -.. [1] Documentation/PCI/endpoint/function/binding/pci-test.txt
+> +.. [1] Documentation/PCI/endpoint/function/binding/pci-test.rst
+> -- 
+> 2.25.4
+> 
