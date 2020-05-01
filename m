@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139F3C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0516C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F074721924
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C3821924
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730958AbgEASXj (ORCPT
+        id S1730991AbgEASXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40362 "EHLO
+        Fri, 1 May 2020 14:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730628AbgEASWW (ORCPT
+        by vger.kernel.org with ESMTP id S1730611AbgEASWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:22:22 -0400
+        Fri, 1 May 2020 14:22:21 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C38AC061A0C;
-        Fri,  1 May 2020 11:22:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42EF8C061A0E;
+        Fri,  1 May 2020 11:22:21 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jUaIj-0003aA-O6; Fri, 01 May 2020 20:22:17 +0200
+        id 1jUaIh-0003bM-9g; Fri, 01 May 2020 20:22:15 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 605E41C04DD;
-        Fri,  1 May 2020 20:22:11 +0200 (CEST)
-Date:   Fri, 01 May 2020 18:22:11 -0000
-From:   "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 73AC11C04CD;
+        Fri,  1 May 2020 20:22:12 +0200 (CEST)
+Date:   Fri, 01 May 2020 18:22:12 -0000
+From:   "tip-bot2 for Paul Turner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] exit: Move preemption fixup up, move blocking
- operations down
-Cc:     Jann Horn <jannh@google.com>,
+Subject: [tip: sched/core] sched/fair: Eliminate bandwidth race between
+ throttling and distribution
+Cc:     Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
+        Josh Don <joshdon@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200305220657.46800-1-jannh@google.com>
-References: <20200305220657.46800-1-jannh@google.com>
+        Phil Auld <pauld@redhat.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200410225208.109717-2-joshdon@google.com>
+References: <20200410225208.109717-2-joshdon@google.com>
 MIME-Version: 1.0
-Message-ID: <158835733131.8414.13953310081122413619.tip-bot2@tip-bot2>
+Message-ID: <158835733243.8414.17537878158175326698.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,83 +62,175 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     586b58cac8b4683eb58a1446fbc399de18974e40
-Gitweb:        https://git.kernel.org/tip/586b58cac8b4683eb58a1446fbc399de18974e40
-Author:        Jann Horn <jannh@google.com>
-AuthorDate:    Thu, 05 Mar 2020 23:06:57 +01:00
+Commit-ID:     e98fa02c4f2ea4991dae422ac7e34d102d2f0599
+Gitweb:        https://git.kernel.org/tip/e98fa02c4f2ea4991dae422ac7e34d102d2f0599
+Author:        Paul Turner <pjt@google.com>
+AuthorDate:    Fri, 10 Apr 2020 15:52:07 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Thu, 30 Apr 2020 20:14:38 +02:00
 
-exit: Move preemption fixup up, move blocking operations down
+sched/fair: Eliminate bandwidth race between throttling and distribution
 
-With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
-non-preemptible context look untidy; after the main oops, the kernel prints
-a "sleeping function called from invalid context" report because
-exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
-can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
-fixup.
+There is a race window in which an entity begins throttling before quota
+is added to the pool, but does not finish throttling until after we have
+finished with distribute_cfs_runtime(). This entity is not observed by
+distribute_cfs_runtime() because it was not on the throttled list at the
+time that distribution was running. This race manifests as rare
+period-length statlls for such entities.
 
-It looks like the same thing applies to profile_task_exit() and
-kcov_task_exit().
+Rather than heavy-weight the synchronization with the progress of
+distribution, we can fix this by aborting throttling if bandwidth has
+become available. Otherwise, we immediately add the entity to the
+throttled list so that it can be observed by a subsequent distribution.
 
-Fix it by moving the preemption fixup up and the calls to
-profile_task_exit() and kcov_task_exit() down.
+Additionally, we can remove the case of adding the throttled entity to
+the head of the throttled list, and simply always add to the tail.
+Thanks to 26a8b12747c97, distribute_cfs_runtime() no longer holds onto
+its own pool of runtime. This means that if we do hit the !assign and
+distribute_running case, we know that distribution is about to end.
 
-Fixes: 1dc0fffc48af ("sched/core: Robustify preemption leak checks")
-Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Paul Turner <pjt@google.com>
+Signed-off-by: Ben Segall <bsegall@google.com>
+Signed-off-by: Josh Don <joshdon@google.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200305220657.46800-1-jannh@google.com
+Reviewed-by: Phil Auld <pauld@redhat.com>
+Link: https://lkml.kernel.org/r/20200410225208.109717-2-joshdon@google.com
 ---
- kernel/exit.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ kernel/sched/fair.c | 79 ++++++++++++++++++++++++++------------------
+ 1 file changed, 47 insertions(+), 32 deletions(-)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index ce2a75b..d56fe51 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -708,8 +708,12 @@ void __noreturn do_exit(long code)
- 	struct task_struct *tsk = current;
- 	int group_dead;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 02f323b..0c13a41 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4588,16 +4588,16 @@ static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+ }
  
--	profile_task_exit(tsk);
--	kcov_task_exit(tsk);
-+	/*
-+	 * We can get here from a kernel oops, sometimes with preemption off.
-+	 * Start by checking for critical errors.
-+	 * Then fix up important state like USER_DS and preemption.
-+	 * Then do everything else.
-+	 */
+ /* returns 0 on failure to allocate runtime */
+-static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
++static int __assign_cfs_rq_runtime(struct cfs_bandwidth *cfs_b,
++				   struct cfs_rq *cfs_rq, u64 target_runtime)
+ {
+-	struct task_group *tg = cfs_rq->tg;
+-	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(tg);
+-	u64 amount = 0, min_amount;
++	u64 min_amount, amount = 0;
++
++	lockdep_assert_held(&cfs_b->lock);
  
- 	WARN_ON(blk_needs_flush_plug(tsk));
+ 	/* note: this is a positive sum as runtime_remaining <= 0 */
+-	min_amount = sched_cfs_bandwidth_slice() - cfs_rq->runtime_remaining;
++	min_amount = target_runtime - cfs_rq->runtime_remaining;
  
-@@ -727,6 +731,16 @@ void __noreturn do_exit(long code)
- 	 */
- 	set_fs(USER_DS);
+-	raw_spin_lock(&cfs_b->lock);
+ 	if (cfs_b->quota == RUNTIME_INF)
+ 		amount = min_amount;
+ 	else {
+@@ -4609,13 +4609,25 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 			cfs_b->idle = 0;
+ 		}
+ 	}
+-	raw_spin_unlock(&cfs_b->lock);
  
-+	if (unlikely(in_atomic())) {
-+		pr_info("note: %s[%d] exited with preempt_count %d\n",
-+			current->comm, task_pid_nr(current),
-+			preempt_count());
-+		preempt_count_set(PREEMPT_ENABLED);
+ 	cfs_rq->runtime_remaining += amount;
+ 
+ 	return cfs_rq->runtime_remaining > 0;
+ }
+ 
++/* returns 0 on failure to allocate runtime */
++static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
++{
++	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
++	int ret;
++
++	raw_spin_lock(&cfs_b->lock);
++	ret = __assign_cfs_rq_runtime(cfs_b, cfs_rq, sched_cfs_bandwidth_slice());
++	raw_spin_unlock(&cfs_b->lock);
++
++	return ret;
++}
++
+ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ {
+ 	/* dock delta_exec before expiring quota (as it could span periods) */
+@@ -4704,13 +4716,33 @@ static int tg_throttle_down(struct task_group *tg, void *data)
+ 	return 0;
+ }
+ 
+-static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
++static bool throttle_cfs_rq(struct cfs_rq *cfs_rq)
+ {
+ 	struct rq *rq = rq_of(cfs_rq);
+ 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
+ 	struct sched_entity *se;
+ 	long task_delta, idle_task_delta, dequeue = 1;
+-	bool empty;
++
++	raw_spin_lock(&cfs_b->lock);
++	/* This will start the period timer if necessary */
++	if (__assign_cfs_rq_runtime(cfs_b, cfs_rq, 1)) {
++		/*
++		 * We have raced with bandwidth becoming available, and if we
++		 * actually throttled the timer might not unthrottle us for an
++		 * entire period. We additionally needed to make sure that any
++		 * subsequent check_cfs_rq_runtime calls agree not to throttle
++		 * us, as we may commit to do cfs put_prev+pick_next, so we ask
++		 * for 1ns of runtime rather than just check cfs_b.
++		 */
++		dequeue = 0;
++	} else {
++		list_add_tail_rcu(&cfs_rq->throttled_list,
++				  &cfs_b->throttled_cfs_rq);
 +	}
++	raw_spin_unlock(&cfs_b->lock);
 +
-+	profile_task_exit(tsk);
-+	kcov_task_exit(tsk);
-+
- 	ptrace_event(PTRACE_EVENT_EXIT, code);
++	if (!dequeue)
++		return false;  /* Throttle no longer required. */
  
- 	validate_creds_for_do_exit(tsk);
-@@ -744,13 +758,6 @@ void __noreturn do_exit(long code)
+ 	se = cfs_rq->tg->se[cpu_of(rq_of(cfs_rq))];
  
- 	exit_signals(tsk);  /* sets PF_EXITING */
+@@ -4744,29 +4776,13 @@ static void throttle_cfs_rq(struct cfs_rq *cfs_rq)
+ 	if (!se)
+ 		sub_nr_running(rq, task_delta);
  
--	if (unlikely(in_atomic())) {
--		pr_info("note: %s[%d] exited with preempt_count %d\n",
--			current->comm, task_pid_nr(current),
--			preempt_count());
--		preempt_count_set(PREEMPT_ENABLED);
--	}
+-	cfs_rq->throttled = 1;
+-	cfs_rq->throttled_clock = rq_clock(rq);
+-	raw_spin_lock(&cfs_b->lock);
+-	empty = list_empty(&cfs_b->throttled_cfs_rq);
 -
- 	/* sync mm's RSS info before statistics gathering */
- 	if (tsk->mm)
- 		sync_mm_rss(tsk->mm);
+-	/*
+-	 * Add to the _head_ of the list, so that an already-started
+-	 * distribute_cfs_runtime will not see us. If disribute_cfs_runtime is
+-	 * not running add to the tail so that later runqueues don't get starved.
+-	 */
+-	if (cfs_b->distribute_running)
+-		list_add_rcu(&cfs_rq->throttled_list, &cfs_b->throttled_cfs_rq);
+-	else
+-		list_add_tail_rcu(&cfs_rq->throttled_list, &cfs_b->throttled_cfs_rq);
+-
+ 	/*
+-	 * If we're the first throttled task, make sure the bandwidth
+-	 * timer is running.
++	 * Note: distribution will already see us throttled via the
++	 * throttled-list.  rq->lock protects completion.
+ 	 */
+-	if (empty)
+-		start_cfs_bandwidth(cfs_b);
+-
+-	raw_spin_unlock(&cfs_b->lock);
++	cfs_rq->throttled = 1;
++	cfs_rq->throttled_clock = rq_clock(rq);
++	return true;
+ }
+ 
+ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+@@ -5121,8 +5137,7 @@ static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 	if (cfs_rq_throttled(cfs_rq))
+ 		return true;
+ 
+-	throttle_cfs_rq(cfs_rq);
+-	return true;
++	return throttle_cfs_rq(cfs_rq);
+ }
+ 
+ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
