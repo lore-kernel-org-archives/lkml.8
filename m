@@ -2,197 +2,121 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D5C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C0EC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C082166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E042166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c2RRApqW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kq+6SN7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgEAVtz (ORCPT
+        id S1726736AbgEAVuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44672 "EHLO
+        Fri, 1 May 2020 17:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbgEAVty (ORCPT
+        with ESMTP id S1726307AbgEAVuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:49:54 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5738DC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 14:49:54 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id l11so4899752lfc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 14:49:54 -0700 (PDT)
+        Fri, 1 May 2020 17:50:14 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC4FC061A0C;
+        Fri,  1 May 2020 14:50:14 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t16so4080417plo.7;
+        Fri, 01 May 2020 14:50:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ppgaHl6cSgNWAC/eU/OoA0QTmOCWQ6geVBF21oFi/iU=;
-        b=c2RRApqWRYey+5q+fGhivtgpZLBoNYYVSxsgYqDukBcT1pC+X1l3QiEIU+npLlu8Km
-         sZmlrIrtLYAy158atE7AiqJwC7WsI0zUvtiWtZiwKtzHbKLd8fZ4JQwyaweWWeXQKG7L
-         WZg2hHNlEQgRxMu51oPmydWLeYKGwBZ4d8gUoHzDOmcNJeMwCA89L/UHHrldbI3SKawv
-         xGFvoSeZeEHRZsIoBLAG0emC7vdYc37Hp9OrODT0goJwdP2L331VqB+SNhk/U80nDUOV
-         LdRD12m8rhrswcVa0869pGgj2jIxCja9zFLC3nDZalLFWwp0OiCgiQA824N2wwpynW6U
-         DgCw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sCwnL9j5tuq9C/zCfZk+GBElwtsC97H/4kGQxJh9yoE=;
+        b=kq+6SN7e26oYWrvqvD/PA/9Es8QwBjsr2gG4NxFyAibz89l3IQti445oA24zTob1RZ
+         YJ/2OTzeKhsphayq+l15QLDGwz4yZc5aCC8b6e8weZjIhZPPuA5aecfJB25MypwQMqbY
+         YDLddZW+q4yqko3e3hjvXTgJYlTXgSknrXim/jyUys1ZGpTd3fsinQ/5k1CkDVTbwGaz
+         NQKYIu3rjI94Z7ES2rMcYybAaOx4lEtnFiAchY41w47dRuRNrH6HoYoh26iiC2W/wZtX
+         nY02lCNJRhV7LgBYPaIFkZ62BNAM/eeDcvjf1b9mv5HB3iQXTzU0Lrn3yBE0cO08cIs3
+         N+Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ppgaHl6cSgNWAC/eU/OoA0QTmOCWQ6geVBF21oFi/iU=;
-        b=IGMCptB6St4IMFh5wvhAualXbt/I7mwa421n1etcVlxdXaJv8d8FzBz0vBZmGvcCd2
-         Xu5v7AlrzbEt9AlLRLekj8e67tjP55b/vV1m3urHFFfnr1L2NoJCArPJVHgv2qTkn3sI
-         aDoVa8kvlXGUbIzR0waaI3YJ6CueztDYBAjxZCrWJLf/9whlh31+/kMbnoaTyXhsK1mK
-         Xu5ReQM08ZBgqdHw+IRzxWX3o+o/UT3YkWIv51NUiVZ9YTipJ02dG0bPqhRtwHVqnIgZ
-         RzQhx0Eiw8YOzwSjvwxU956x0Nudz9cqIHwKIHqA9YKHjPHZW4xc/gRYJMLYaFQixZwv
-         9vzw==
-X-Gm-Message-State: AGi0PubE4la2NmGtYmfEG8TfTsEZROQ9yizm9ykhkDz3SRw3ycjY3qb9
-        V7lvu5J4ne446SQeSSecJ8rWJs4cKS5fSGLRtHswTVTcZ0xhGA==
-X-Google-Smtp-Source: APiQypLowFKPTc8b0ADJ+W6+ScqnSj9D8IkjQm01RGC+zP/cUNAk+b7iBtMPM4oIYlaPgd8tmQ9M4XmTb/mI3GYR5Fw=
-X-Received: by 2002:a19:40d2:: with SMTP id n201mr3327092lfa.82.1588369792597;
- Fri, 01 May 2020 14:49:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501131524.004332640@linuxfoundation.org>
-In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 2 May 2020 03:19:40 +0530
-Message-ID: <CA+G9fYtikBkBLyV0_yZua7GDpZCmTooZOCuE9xdkE62J_Gtk2A@mail.gmail.com>
-Subject: Re: [PATCH 5.4 00/83] 5.4.37-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sCwnL9j5tuq9C/zCfZk+GBElwtsC97H/4kGQxJh9yoE=;
+        b=MDbRLuU3SWXVJy31MknFyzVdBj4zDScZhRNIxIE4z67fQoKHFLLfVyPuh0pjuZ+IrZ
+         5AXhMIMWDVNQcvnr7eCwi/uMQT9suYYK4s6VqWhZDvK5e9m43V+etcAfTebiEN/MZMws
+         QW3DMC6sKGNTSdJpy5FgZFmaFY9U759ealt4YjpD98y/2E4gBFaDqVZ6Rdc8hVLTQ/da
+         IVYtabxHmMpX+0Gd5uIS/UjT1LqYQDxF5e/ZoAgoGl8Iv9ubC4BAfTU7v3KNOtZ43vlq
+         K5WXUrWB5wOkm22jiq5YzbBbA3xvy9uAOWxZhXUa59LWLl0VroBAIVL1xwRuubQUumsA
+         M77A==
+X-Gm-Message-State: AGi0PubEQQ59Kcxz1ylR25afElZQsWjA/jamsE+rVdLeoAE8g4w4r1zI
+        Azi1tKMWuFrqj8GQ78n0Id9uk8BK
+X-Google-Smtp-Source: APiQypJQ7Nfrbks03oaOCxMJQ3OHB+u/pNUinmspXJ8F4Pe3OkpqRQo9et58+4EuthMBfNUZtngURw==
+X-Received: by 2002:a17:90a:1f4b:: with SMTP id y11mr2015936pjy.136.1588369814033;
+        Fri, 01 May 2020 14:50:14 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([171.48.31.149])
+        by smtp.gmail.com with ESMTPSA id h26sm2088769pfk.35.2020.05.01.14.50.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 14:50:13 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     b.zolnierkie@samsung.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] video/fbdev/matroxfb: Remove dead code
+Date:   Sat,  2 May 2020 03:28:11 +0530
+Message-Id: <1588370291-7746-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 at 19:08, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.37 release.
-> There are 83 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.37-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+These are dead code since 3.15. If there is no plan to use it further
+it can be removed forever.
 
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+ drivers/video/fbdev/matrox/matroxfb_DAC1064.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+diff --git a/drivers/video/fbdev/matrox/matroxfb_DAC1064.c b/drivers/video/fbdev/matrox/matroxfb_DAC1064.c
+index 765e805..9c2a2c0 100644
+--- a/drivers/video/fbdev/matrox/matroxfb_DAC1064.c
++++ b/drivers/video/fbdev/matrox/matroxfb_DAC1064.c
+@@ -603,9 +603,6 @@ static void MGA1064_ramdac_init(struct matrox_fb_info *minfo)
+ /* BIOS environ */
+ static int x7AF4 = 0x10;	/* flags, maybe 0x10 = SDRAM, 0x00 = SGRAM??? */
+ 				/* G100 wants 0x10, G200 SGRAM does not care... */
+-#if 0
+-static int def50 = 0;	/* reg50, & 0x0F, & 0x3000 (only 0x0000, 0x1000, 0x2000 (0x3000 disallowed and treated as 0) */
+-#endif
+ 
+ static void MGAG100_progPixClock(const struct matrox_fb_info *minfo, int flags,
+ 				 int m, int n, int p)
+@@ -843,9 +840,6 @@ static int MGAG100_preinit(struct matrox_fb_info *minfo)
+ 	struct matrox_hw_state *hw = &minfo->hw;
+ 
+         u_int32_t reg50;
+-#if 0
+-	u_int32_t q;
+-#endif
+ 
+ 	DBG(__func__)
+ 
+@@ -927,11 +921,6 @@ static int MGAG100_preinit(struct matrox_fb_info *minfo)
+ 		mga_writeb(minfo->video.vbase, 0x0000, 0xAA);
+ 		mga_writeb(minfo->video.vbase, 0x0800, 0x55);
+ 		mga_writeb(minfo->video.vbase, 0x4000, 0x55);
+-#if 0
+-		if (mga_readb(minfo->video.vbase, 0x0000) != 0xAA) {
+-			hw->MXoptionReg &= ~0x1000;
+-		}
+-#endif
+ 		hw->MXoptionReg |= 0x00078020;
+ 	} else if (minfo->devflags.accelerator == FB_ACCEL_MATROX_MGAG200) {
+ 		pci_read_config_dword(minfo->pcidev, PCI_OPTION2_REG, &reg50);
+-- 
+1.9.1
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.37-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: becd7d89321d9b96617ee5a99498213c703be541
-git describe: v5.4.36-84-gbecd7d89321d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.36-84-gbecd7d89321d
-
-No regressions (compared to build v5.4.36)
-
-No fixes (compared to build v5.4.36)
-
-
-Ran 28653 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libgpiod
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-math-tests
-* perf
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* network-basic-tests
-* v4l2-compliance
-* kselftest/net
-* kselftest/networking
-* ltp-fs-tests
-* ltp-open-posix-tests
-* ltp-syscalls-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
