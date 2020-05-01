@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6400CC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71DBC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39031206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FAF206D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341533;
-	bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
+	s=default; t=1588341536;
+	bh=4fz6TkF5RAvabsQkUNjcu1N+TC5NKWc9Q/pUApOKaKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2OwBTwFmBNkk0e/2bKel76EgYFYTJljWv0zyQsTODWwFS0XmVqPCgdUlVtm1Sa0sg
-	 qFCXUP/ZfxSii2t4gDnA6w86QUYAHm4D8evn/3N7bcCoPadcjmEtBtsoWJAzqybQ5J
-	 yaSH74sGNNKV46Z4z27hBRLzGIJ3E9jL/0ri/Ai0=
+	b=MjUhCYcYIPWSHYGzvPun2dcH44flKtlCjSdis7AFQ8clrMP98pxpQvow5aGNGi9lA
+	 7YkahGGlFFccULrrq6+gfwGwp8+eteCspoZeaVI2+Q8/u5Vtbfw6Qws2Jbf6IkqLxP
+	 FjTFX9SZpSDzsh3KcYroOeqEXw9CbHO+QC9sw6Sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbgEAN6w (ORCPT
+        id S1730184AbgEAN6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53800 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbgEANaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:01 -0400
+        id S1729840AbgEAN3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E710F208DB;
-        Fri,  1 May 2020 13:29:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 276BF20757;
+        Fri,  1 May 2020 13:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339800;
-        bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
+        s=default; t=1588339790;
+        bh=4fz6TkF5RAvabsQkUNjcu1N+TC5NKWc9Q/pUApOKaKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvCIrqsfZu8qMHxmW4T5+hCvr4eOIoFup0VkiGIy4vzda1loqQs07gzAOxOTpeGJZ
-         Ux/VeUtt1VdhCZYV108nhgWrmoBlhSuJ/s6tX6Gf3W4Q9EVUYgWILPuuuN2y925Ifc
-         yBGA/SKuoq467JBov0RwTJAJcDocYg1+tTAjsH24=
+        b=sNyolAQ+rKqwWiZUbvUfpQ6DxIoxaQP5L2asTcFr3Grpnri8xycn1U9gBnGbLOUAn
+         /BCiV9xFryncEDvhvFO27ZK73cID4FmnkvlYFBLJYqbF+iYVe2/cyLMUem/3nuqDEi
+         32pLwV3uDZIsSQtr9tqOEWoqtSBWzpx/i7It8Gwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 52/80] staging: comedi: dt2815: fix writing hi byte of analog output
-Date:   Fri,  1 May 2020 15:21:46 +0200
-Message-Id: <20200501131529.726360587@linuxfoundation.org>
+        stable@vger.kernel.org, Yi Huaijie <yihuaijie@huawei.com>,
+        Liu Jian <liujian56@huawei.com>,
+        Tokunori Ikegami <ikegami_to@yahoo.co.jp>,
+        Richard Weinberger <richard@nod.at>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 61/80] mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
+Date:   Fri,  1 May 2020 15:21:55 +0200
+Message-Id: <20200501131531.660978566@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -58,62 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Liu Jian <liujian56@huawei.com>
 
-commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
+commit d9b8a67b3b95a5c5aae6422b8113adc1c2485f2b upstream.
 
-The DT2815 analog output command is 16 bits wide, consisting of the
-12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
-and a voltage or current selector in bit 0.  Both bytes of the 16-bit
-command need to be written in turn to a single 8-bit data register.
-However, the driver currently only writes the low 8-bits.  It is broken
-and appears to have always been broken.
+In function do_write_buffer(), in the for loop, there is a case
+chip_ready() returns 1 while chip_good() returns 0, so it never
+break the loop.
+To fix this, chip_good() is enough and it should timeout if it stay
+bad for a while.
 
-Electronic copies of the DT2815 User's Manual seem impossible to find
-online, but looking at the source code, a best guess for the sequence
-the driver intended to use to write the analog output command is as
-follows:
-
-1. Wait for the status register to read 0x00.
-2. Write the low byte of the command to the data register.
-3. Wait for the status register to read 0x80.
-4. Write the high byte of the command to the data register.
-
-Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
-driver.
-
-Also add a "FIXME" comment about setting bit 0 of the low byte of the
-command.  Supposedly, it is used to choose between voltage output and
-current output, but the current driver always sets it to 1.
-
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
+Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt2815.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mtd/chips/cfi_cmdset_0002.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/drivers/dt2815.c
-+++ b/drivers/staging/comedi/drivers/dt2815.c
-@@ -101,6 +101,7 @@ static int dt2815_ao_insn(struct comedi_
- 	int ret;
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -1879,7 +1879,11 @@ static int __xipram do_write_buffer(stru
+ 			continue;
+ 		}
  
- 	for (i = 0; i < insn->n; i++) {
-+		/* FIXME: lo bit 0 chooses voltage output or current output */
- 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
- 		hi = (data[i] & 0xff0) >> 4;
+-		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
++		/*
++		 * We check "time_after" and "!chip_good" before checking "chip_good" to avoid
++		 * the failure due to scheduling.
++		 */
++		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
+ 			break;
  
-@@ -114,6 +115,8 @@ static int dt2815_ao_insn(struct comedi_
- 		if (ret)
- 			return ret;
- 
-+		outb(hi, dev->iobase + DT2815_DATA);
-+
- 		devpriv->ao_readback[chan] = data[i];
- 	}
- 	return i;
+ 		if (chip_good(map, adr, datum)) {
 
 
