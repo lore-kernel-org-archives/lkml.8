@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C76BC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C114C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6383A208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6635224956
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339862;
-	bh=+ONsByQjosCqxU9ehFEMvDwxrPv9dLGz5S8YJ76OkgE=;
+	s=default; t=1588339867;
+	bh=OgoQkKV0zIrAg2Vj0DcalAL3eiZv3rhgHBPJP+JEHXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tkkQ64QLTLut8QE51D2FQpa5LcwE0AB8uL0Qj/i5b+NTShgQBU6w5/jfDSeea2CFm
-	 nnyFW1ak+b0jrEnwYaJZXVHyKdCGlN1V92qOcJ4NBrXVCTeqts5wrlbtI5S1DNVWOa
-	 lprmCno8UKknxh2+X63TY/hpfndbbkQmNkoY2kpA=
+	b=pwu059UfP3MiJ0qTcxctatfFMFHQr6SE+nOiCa2dWaHP09Q7DPJYIRvCVhFww9pgh
+	 NZNq7E3lW2er2Rp5SLYgrr3kAaIx9/RTucxv7FinZ55GFiblCesvPkzSs6jGrJhavL
+	 B7q9zgp0uDh6ETFweIWG/J9QLfziVDBXHO8Ir2Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgEANbA (ORCPT
+        id S1729548AbgEANbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730059AbgEANa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:57 -0400
+        id S1730072AbgEANbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7816208C3;
-        Fri,  1 May 2020 13:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB8A216FD;
+        Fri,  1 May 2020 13:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339857;
-        bh=+ONsByQjosCqxU9ehFEMvDwxrPv9dLGz5S8YJ76OkgE=;
+        s=default; t=1588339859;
+        bh=OgoQkKV0zIrAg2Vj0DcalAL3eiZv3rhgHBPJP+JEHXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otuQSc7x9QEIqI9BOiUQbxNuXhk5JC7E/abkLAybls6guhibSsBWgCknNiF41jO58
-         3kZSL1PwOKN5jkyDSv34+ceD6DFM9CS1ta2IhfUuk7uD+j3+mmErYTzIHKjF6SF2ug
-         U8tWneOydy96d/hd7cVuoCwjpGWtVagkXjksXXIw=
+        b=IjXtTyQi77p1TqLe32H3aRb9Gs6UohMM0YRP/iSCq3jI1ihxFcKR9k7XBz/dQCBXV
+         W8D3XxFdrMyQSdqxWvTqZqeeoe+eGcji0w2ol+vqONHfbwnUucAWFKUFUD6fuMUbgW
+         s9XabajGy+U6S75BTVOpu14R060jt4MpDULYqjdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KP Singh <kpsingh@google.com>,
-        Ian Rogers <irogers@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.9 65/80] perf/core: fix parent pid/tid in task exit events
-Date:   Fri,  1 May 2020 15:21:59 +0200
-Message-Id: <20200501131533.235703039@linuxfoundation.org>
+        stable@vger.kernel.org, Harish Sriram <harish@linux.ibm.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 4.9 80/80] ext4: check for non-zero journal inum in ext4_calculate_overhead
+Date:   Fri,  1 May 2020 15:22:14 +0200
+Message-Id: <20200501131538.163291058@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -60,59 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-commit f3bed55e850926614b9898fe982f66d2541a36a5 upstream.
+commit f1eec3b0d0a849996ebee733b053efa71803dad5 upstream.
 
-Current logic yields the child task as the parent.
+While calculating overhead for internal journal, also check
+that j_inum shouldn't be 0. Otherwise we get below error with
+xfstests generic/050 with external journal (XXX_LOGDEV config) enabled.
 
-Before:
-$ perf record bash -c "perf list > /dev/null"
-$ perf script -D |grep 'FORK\|EXIT'
-4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
-                                                   ^
-  Note the repeated values here -------------------/
+It could be simply reproduced with loop device with an external journal
+and marking blockdev as RO before mounting.
 
-After:
-383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
+[ 3337.146838] EXT4-fs error (device pmem1p2): ext4_get_journal_inode:4634: comm mount: inode #0: comm mount: iget: illegal inode #
+------------[ cut here ]------------
+generic_make_request: Trying to write to read-only block-device pmem1p2 (partno 2)
+WARNING: CPU: 107 PID: 115347 at block/blk-core.c:788 generic_make_request_checks+0x6b4/0x7d0
+CPU: 107 PID: 115347 Comm: mount Tainted: G             L   --------- -t - 4.18.0-167.el8.ppc64le #1
+NIP:  c0000000006f6d44 LR: c0000000006f6d40 CTR: 0000000030041dd4
+<...>
+NIP [c0000000006f6d44] generic_make_request_checks+0x6b4/0x7d0
+LR [c0000000006f6d40] generic_make_request_checks+0x6b0/0x7d0
+<...>
+Call Trace:
+generic_make_request_checks+0x6b0/0x7d0 (unreliable)
+generic_make_request+0x3c/0x420
+submit_bio+0xd8/0x200
+submit_bh_wbc+0x1e8/0x250
+__sync_dirty_buffer+0xd0/0x210
+ext4_commit_super+0x310/0x420 [ext4]
+__ext4_error+0xa4/0x1e0 [ext4]
+__ext4_iget+0x388/0xe10 [ext4]
+ext4_get_journal_inode+0x40/0x150 [ext4]
+ext4_calculate_overhead+0x5a8/0x610 [ext4]
+ext4_fill_super+0x3188/0x3260 [ext4]
+mount_bdev+0x778/0x8f0
+ext4_mount+0x28/0x50 [ext4]
+mount_fs+0x74/0x230
+vfs_kern_mount.part.6+0x6c/0x250
+do_mount+0x2fc/0x1280
+sys_mount+0x158/0x180
+system_call+0x5c/0x70
+EXT4-fs (pmem1p2): no journal found
+EXT4-fs (pmem1p2): can't get journal size
+EXT4-fs (pmem1p2): mounted filesystem without journal. Opts: dax,norecovery
 
-Fixes: 94d5d1b2d891 ("perf_counter: Report the cloning task as parent on perf_counter_fork()")
-Reported-by: KP Singh <kpsingh@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200417182842.12522-1-irogers@google.com
+Fixes: 3c816ded78bb ("ext4: use journal inode to determine journal overhead")
+Reported-by: Harish Sriram <harish@linux.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200316093038.25485-1-riteshh@linux.ibm.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/events/core.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/ext4/super.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6431,10 +6431,17 @@ static void perf_event_task_output(struc
- 		goto out;
- 
- 	task_event->event_id.pid = perf_event_pid(event, task);
--	task_event->event_id.ppid = perf_event_pid(event, current);
--
- 	task_event->event_id.tid = perf_event_tid(event, task);
--	task_event->event_id.ptid = perf_event_tid(event, current);
-+
-+	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
-+		task_event->event_id.ppid = perf_event_pid(event,
-+							task->real_parent);
-+		task_event->event_id.ptid = perf_event_pid(event,
-+							task->real_parent);
-+	} else {  /* PERF_RECORD_FORK */
-+		task_event->event_id.ppid = perf_event_pid(event, current);
-+		task_event->event_id.ptid = perf_event_tid(event, current);
-+	}
- 
- 	task_event->event_id.time = perf_event_clock(event);
- 
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -3337,7 +3337,8 @@ int ext4_calculate_overhead(struct super
+ 	 */
+ 	if (sbi->s_journal && !sbi->journal_bdev)
+ 		overhead += EXT4_NUM_B2C(sbi, sbi->s_journal->j_maxlen);
+-	else if (ext4_has_feature_journal(sb) && !sbi->s_journal) {
++	else if (ext4_has_feature_journal(sb) && !sbi->s_journal && j_inum) {
++		/* j_inum for internal journal is non-zero */
+ 		j_inode = ext4_get_journal_inode(sb, j_inum);
+ 		if (j_inode) {
+ 			j_blocks = j_inode->i_size >> sb->s_blocksize_bits;
 
 
