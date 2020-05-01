@@ -2,94 +2,77 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C2C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B68C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D88FA206D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B67206D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgEAOJX (ORCPT
+        id S1729092AbgEAOKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:09:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:26239 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgEAOJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:09:22 -0400
-IronPort-SDR: oqzMxGezNetHf1zVxqo1/37tdvdP2zOc1I7Md452rwzg+SLJ+2CtM0qmkejT7Ki6QfLGAgWa//
- Rg9ap2dNWnSQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 07:09:21 -0700
-IronPort-SDR: T8F0QqIQVBxO8n19+0hE/vGhvzYePOPeBHTI9gbaOnHqLw9nF12kUm+ibLM91YufzG0lEtO7Jh
- TDHwScBUPBRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
-   d="scan'208";a="460272134"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga006.fm.intel.com with ESMTP; 01 May 2020 07:09:21 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 1 May 2020 07:09:20 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.83]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.187]) with mapi id 14.03.0439.000;
- Fri, 1 May 2020 07:09:20 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        stable <stable@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "Tsaur, Erwin" <erwin.tsaur@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
-Thread-Topic: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
-Thread-Index: AQHWHsst2+7frPAw9kCYaqQsGNEgp6iSJ9mAgAAvKwCAAAcmgIAAF8EA//+WBACAAH0TAIAAQ4gAgAAE/4CAAAO1gIAAb4YQ
-Date:   Fri, 1 May 2020 14:09:20 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F60EBB6@ORSMSX115.amr.corp.intel.com>
-References: <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
- <1962EE67-8AD1-409D-963A-4F1E1AB3B865@amacapital.net>
-In-Reply-To: <1962EE67-8AD1-409D-963A-4F1E1AB3B865@amacapital.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 1 May 2020 10:10:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60497 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgEAOKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:10:21 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jUWMr-0000uj-19; Fri, 01 May 2020 14:10:17 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: stmmac: gmac5+: fix potential integer overflow on 32 bit multiply
+Date:   Fri,  1 May 2020 15:10:16 +0100
+Message-Id: <20200501141016.290699-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBOb3cgbWF5YmUgY29weV90b191c2VyKCkgc2hvdWxkICphbHdheXMqIHdvcmsgdGhpcyB3YXks
-IGJ1dCBJ4oCZbSBub3QgY29udmluY2VkLg0KPiBDZXJ0YWlubHkgcHV0X3VzZXIoKSBzaG91bGRu
-4oCZdCDigJQgdGhlIHJlc3VsdCB3b3VsZG7igJl0IGV2ZW4gYmUgd2VsbCBkZWZpbmVkLiBBbmQg
-SeKAmW0NCj4gIHVuY29udmluY2VkIHRoYXQgaXQgbWFrZXMgbXVjaCBzZW5zZSBmb3IgdGhlIG1h
-am9yaXR5IG9mIGNvcHlfdG9fdXNlcigpIGNhbGxlcnMNCj4gIHRoYXQgYXJlIGFsc28gZGlyZWN0
-bHkgYWNjZXNzaW5nIHRoZSBzb3VyY2Ugc3RydWN0dXJlLg0KDQpPbmUgY2FzZSB0aGF0IG1pZ2h0
-IHdvcmsgaXMgY29weV90b191c2VyKCkgdGhhdCdzIGNvcHlpbmcgZnJvbSB0aGUga2VybmVsIHBh
-Z2UgY2FjaGUNCnRvIHRoZSB1c2VyIGluIHJlc3BvbnNlIHRvIGEgcmVhZCgyKSBzeXN0ZW0gY2Fs
-bC4gIEFjdGlvbiB3b3VsZCBiZSB0byBjaGVjayBpZiB3ZSBjb3VsZA0KcmUtcmVhZCBmcm9tIHRo
-ZSBmaWxlIHN5c3RlbSB0byBhIGRpZmZlcmVudCBwYWdlLiBJZiBub3QsIHJldHVybiAtRUlPLiBF
-aXRoZXIgd2F5IGRpdGNoIHRoZQ0KcG9pc29uIHBhZ2UgZnJvbSB0aGUgcGFnZSBjYWNoZS4NCg0K
-LVRvbnkNCg==
+From: Colin Ian King <colin.king@canonical.com>
+
+The multiplication of cfg->ctr[1] by 1000000000 is performed using a
+32 bit multiplication (since cfg->ctr[1] is a u32) and this can lead
+to a potential overflow. Fix this by making the constant a ULL to
+ensure a 64 bit multiply occurs.
+
+Fixes: 504723af0d85 ("net: stmmac: Add basic EST support for GMAC5+")
+Addresses-Coverity: ("Unintentional integer overflow")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index 494c859b4ade..67ba67ed0cb9 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -624,7 +624,7 @@ int dwmac5_est_configure(void __iomem *ioaddr, struct stmmac_est *cfg,
+ 		total_offset += offset;
+ 	}
+ 
+-	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000;
++	total_ctr = cfg->ctr[0] + cfg->ctr[1] * 1000000000ULL;
+ 	total_ctr += total_offset;
+ 
+ 	ctr_low = do_div(total_ctr, 1000000000);
+-- 
+2.25.1
+
