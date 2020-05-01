@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2ABC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC70C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E74208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2AF9208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339979;
-	bh=LmpQIxXgd4sQZVcscMsOXJbFpiz8wPrmMdzRd9rSilo=;
+	s=default; t=1588339985;
+	bh=OP8WiCr8UK7BiBkW5BkjG12JCF/DOznvOiPbeV7myKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONeskvuVbyiMTOnZNB+0PWXylztFgxtfznrVXoL2IYGDybvTdIrN9kRxOYINBXrUN
-	 A4UTfAty6YN29OtykGWGjxPyzIhb00Gu2YSXKbqmZ9EgpeXBZ1SGghtE6v6HZr3zjN
-	 h9tXkPkKGY73SIjlYeMf+UeRL/XNGA5qn9ADrkos=
+	b=oAI4AoN8wk3C/PKUZzXPDdFzPrwubZIwtBYOSmFokpLITEJlJJQipIHqFEkQ5XUa8
+	 xEZxl+NzlC4SBwr5XLUettw+++txnhaEueGHROyrpU+sxOaAXvEMG9ebP5MrAGHj4z
+	 AZrekXL90y7n+hzAbdx/nGeBiSB6Oz89Zdu1j7TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgEANc6 (ORCPT
+        id S1730375AbgEANdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:33:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729798AbgEANcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:55 -0400
+        id S1730366AbgEANdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7068D208C3;
-        Fri,  1 May 2020 13:32:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F38A208C3;
+        Fri,  1 May 2020 13:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339974;
-        bh=LmpQIxXgd4sQZVcscMsOXJbFpiz8wPrmMdzRd9rSilo=;
+        s=default; t=1588339979;
+        bh=OP8WiCr8UK7BiBkW5BkjG12JCF/DOznvOiPbeV7myKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YoOLAE8vF861FbZYqKgDE2ksN+vbIqT0Go5hX2PPx63FVAEpNJTUZYjjzXS9bww7Q
-         u0wDPDCjLEDLKMyTZ6eSx4tnbjHOho4FPKrXEELxnzYyMfG07PA79lImYkGZ+1i9qm
-         ji0Kj9+4J9q9twwihx5HBfatMY4gRiBu6VJxOsvQ=
+        b=m8kzzx2oRXJO4ycEmecCr1G5hEvFjhsA23KdX46E1c4/E5/USdeFihX03IMSDz34K
+         1QrZitBp7UJhvwyXrORhFW9CsWmIFMAbolB4xGEEHRJiuk3Wa+Qs3uD8sBfF59d/Er
+         mtWXMwScyumSQTJ3/LFXMWBILhQtMgX0zWU0t7eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Paul Zimmerman <pauldzim@gmail.com>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.14 047/117] USB: hub: Fix handling of connect changes during sleep
-Date:   Fri,  1 May 2020 15:21:23 +0200
-Message-Id: <20200501131550.361609021@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [PATCH 4.14 057/117] tpm/tpm_tis: Free IRQ if probing fails
+Date:   Fri,  1 May 2020 15:21:33 +0200
+Message-Id: <20200501131552.384123088@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,78 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-commit 9f952e26295d977dbfc6fedeaf8c4f112c818d37 upstream.
+commit b160c94be5d2816b62c8ac338605668304242959 upstream.
 
-Commit 8099f58f1ecd ("USB: hub: Don't record a connect-change event
-during reset-resume") wasn't very well conceived.  The problem it
-tried to fix was that if a connect-change event occurred while the
-system was asleep (such as a device disconnecting itself from the bus
-when it is suspended and then reconnecting when it resumes)
-requiring a reset-resume during the system wakeup transition, the hub
-port's change_bit entry would remain set afterward.  This would cause
-the hub driver to believe another connect-change event had occurred
-after the reset-resume, which was wrong and would lead the driver to
-send unnecessary requests to the device (which could interfere with a
-firmware update).
+Call disable_interrupts() if we have to revert to polling in order not to
+unnecessarily reserve the IRQ for the life-cycle of the driver.
 
-The commit tried to fix this by not setting the change_bit during the
-wakeup.  But this was the wrong thing to do; it means that when a
-device is unplugged while the system is asleep, the hub driver doesn't
-realize anything has happened: The change_bit flag which would tell it
-to handle the disconnect event is clear.
-
-The commit needs to be reverted and the problem fixed in a different
-way.  Fortunately an alternative solution was noted in the commit's
-Changelog: We can continue to set the change_bit entry in
-hub_activate() but then clear it when a reset-resume occurs.  That way
-the the hub driver will see the change_bit when a device is
-disconnected but won't see it when the device is still present.
-
-That's what this patch does.
-
-Reported-and-tested-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Fixes: 8099f58f1ecd ("USB: hub: Don't record a connect-change event during reset-resume")
-Tested-by: Paul Zimmerman <pauldzim@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2004221602480.11262-100000@iolanthe.rowland.org
+Cc: stable@vger.kernel.org # 4.5.x
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: e3837e74a06d ("tpm_tis: Refactor the interrupt setup")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hub.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/char/tpm/tpm_tis_core.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -1195,6 +1195,11 @@ static void hub_activate(struct usb_hub
- #ifdef CONFIG_PM
- 			udev->reset_resume = 1;
- #endif
-+			/* Don't set the change_bits when the device
-+			 * was powered off.
-+			 */
-+			if (test_bit(port1, hub->power_bits))
-+				set_bit(port1, hub->change_bits);
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -331,6 +331,9 @@ static void disable_interrupts(struct tp
+ 	u32 intmask;
+ 	int rc;
  
- 		} else {
- 			/* The power session is gone; tell hub_wq */
-@@ -3008,6 +3013,15 @@ static int check_port_resume_type(struct
- 		if (portchange & USB_PORT_STAT_C_ENABLE)
- 			usb_clear_port_feature(hub->hdev, port1,
- 					USB_PORT_FEAT_C_ENABLE);
++	if (priv->irq == 0)
++		return;
 +
-+		/*
-+		 * Whatever made this reset-resume necessary may have
-+		 * turned on the port1 bit in hub->change_bits.  But after
-+		 * a successful reset-resume we want the bit to be clear;
-+		 * if it was on it would indicate that something happened
-+		 * following the reset-resume.
-+		 */
-+		clear_bit(port1, hub->change_bits);
- 	}
- 
- 	return status;
+ 	rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
+ 	if (rc < 0)
+ 		intmask = 0;
+@@ -874,9 +877,12 @@ int tpm_tis_core_init(struct device *dev
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+ 						 irq);
+-			if (!(chip->flags & TPM_CHIP_FLAG_IRQ))
++			if (!(chip->flags & TPM_CHIP_FLAG_IRQ)) {
+ 				dev_err(&chip->dev, FW_BUG
+ 					"TPM interrupt not working, polling instead\n");
++
++				disable_interrupts(chip);
++			}
+ 		} else {
+ 			tpm_tis_probe_irq(chip, intmask);
+ 		}
 
 
