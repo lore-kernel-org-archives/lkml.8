@@ -2,154 +2,122 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF39C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A7EC47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700B521775
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588359957;
-	bh=WFEAbiJuGiBc56bdGlx6e9LjlEwFLSX5UruuTUgU1Hw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=qs30MQ/akiPr26PD2NHHbgIBRErMPK2NAI57fkyZF3VDhcG/cIeBEIDMAfU2YYjEL
-	 gVfx3z2+YtNKIVmBdcTs0gDGpayxbvMXu6UZ14K1PHIzzhQXy1hnMEEhNRhiUYfXa4
-	 s3ij5JHrwgYr3hNL1sYH+AqEA9zE2VU+TeHW9Mw4=
+	by mail.kernel.org (Postfix) with ESMTP id 29388216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 19:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bkY90fbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgEATF5 (ORCPT
+        id S1730463AbgEATIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 15:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729766AbgEATF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 15:05:56 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BCE02173E;
-        Fri,  1 May 2020 19:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588359955;
-        bh=WFEAbiJuGiBc56bdGlx6e9LjlEwFLSX5UruuTUgU1Hw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Pr5OeNBQ9DlPdUbXC1upaqlySgvnzxf7IjJ5D1ZaEqkSSgYR5nbxiSxqKSifLtb5V
-         cQ1pBuL2NKxRxDUjmzKtMC1S4QTm+2MJULv2G5TEcro1JUbSqLGtkVwRVhWafBzY87
-         yPfNfp7lIruW6+KsTw6sEcr8WyRKs0FGb6xhZg1w=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3E7503522690; Fri,  1 May 2020 12:05:55 -0700 (PDT)
-Date:   Fri, 1 May 2020 12:05:55 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 03/24] rcu/tree: Use consistent style for comments
-Message-ID: <20200501190555.GB7560@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-4-urezki@gmail.com>
+        Fri, 1 May 2020 15:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729766AbgEATIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 15:08:22 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A803C061A0E
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 12:08:21 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 18so1953154pfv.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 12:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=12753pvCs41oaRWN2f3fDLkKSoGRm3fE1KHXq7bPLrQ=;
+        b=bkY90fbnY1XYGa0d8K57hg+77EDktHM/phFxEqzYengai1tDm2GYhy/LwgmaVg32Gt
+         bXngLucaA7iU/uc/3atFx5qMMYxYMkWf6Z81h/gVnbxlDB8bwW5UFxXTkf7XFq7SbSOx
+         dF6fGsVNyR1WoY5gQ0kZrqdFGP/Ml8YhyIWR2X/j/rSaE79SvpAmjqauJPVhCRN+9QYb
+         /7Oqqs35izW8u3pE3Ay5FCOzefx1NnwZDo+n4xowCBqmPEJX/sQbXqlpcOvltF3DGupG
+         3z1Hy/DceEFd1t1T19Yh+gPIw6oVbCTtGT5HTNi1Ln1b2zUEcHPFIWoaYX76/7vRSZVk
+         xfhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=12753pvCs41oaRWN2f3fDLkKSoGRm3fE1KHXq7bPLrQ=;
+        b=SNpVK+hqDnD/j+gE/pXflwuJkDYYUpOCMqkpVbwCUhKUFm0s9X51Z3xFFRca2VgEwM
+         baLC6DHGpRFWSkDqP3FzAIF4g06SYmN1LwE5OCtvy/Tzl0U12LTNm34ycTugzqReH4HX
+         u/LjVa3RSlSI1RRoqSp3dnJslqerFPIjDrrhWAb2qleoRkSvI2JlOiJ+LCai4QTn2EbJ
+         Noeew/fqjA3zklq+K51CwX0DReNheqLexv/lRnWEOd8vDMCFPdO2JQ3sUtO64NAwon62
+         IWX1+BtjqPgK0up5gTyHoKIYi6sjj2aYh+fInYfkmEqicxTCfdkCM2CIiN7Bi+D/XyyF
+         0rTw==
+X-Gm-Message-State: AGi0PuayQpGhGWMqlCcjBF6XmfMSZc9uq+5ZBzakpQrfsOTDHGK/8zcb
+        X3evr4xJ/uGLeSQNwtW94qxy+/nhvRmaZA==
+X-Google-Smtp-Source: APiQypK73kKvog/67sF9fNxwenhO3t7N+W4fXoQLOC5oFOHI03fkwaHBEkWbCceIXcUTZ39Pgp5kKw==
+X-Received: by 2002:a63:c00a:: with SMTP id h10mr5776405pgg.238.1588360100452;
+        Fri, 01 May 2020 12:08:20 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id u8sm321012pjy.16.2020.05.01.12.08.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 12:08:19 -0700 (PDT)
+Subject: Re: [PATCH v3b] eventfd: convert to f_op->read_iter()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <97a28bdb-284a-c215-c04d-288bcef66376@kernel.dk>
+ <20200501190018.GN23230@ZenIV.linux.org.uk>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <db9405e8-5960-787f-5a4c-8266b2e456f2@kernel.dk>
+Date:   Fri, 1 May 2020 13:08:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428205903.61704-4-urezki@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200501190018.GN23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 10:58:42PM +0200, Uladzislau Rezki (Sony) wrote:
-> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+On 5/1/20 1:00 PM, Al Viro wrote:
+> On Fri, May 01, 2020 at 11:54:01AM -0600, Jens Axboe wrote:
 > 
-> Simple clean up of comments in kfree_rcu() code to keep it consistent
-> with majority of commenting styles.
+>> @@ -427,8 +424,17 @@ static int do_eventfd(unsigned int count, int flags)
+>>  
+>>  	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
+>>  			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
+>> -	if (fd < 0)
+>> +	if (fd < 0) {
+>>  		eventfd_free_ctx(ctx);
+>> +	} else {
+>> +		struct file *file;
+>> +
+>> +		file = fget(fd);
+>> +		if (file) {
+>> +			file->f_mode |= FMODE_NOWAIT;
+>> +			fput(file);
+>> +		}
 > 
-> Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-
-Hmmm...
-
-Exactly why is three additional characters per line preferable?  Or in
-the case of block comments, either one or two additional lines, depending
-on /* */ style?
-
-I am (slowly) moving RCU to "//" for those reasons.  ;-)
-
-							Thanx, Paul
-
-> ---
->  kernel/rcu/tree.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> No.  The one and only thing you can do to return value of anon_inode_getfd() is to
+> return the fscker to userland.  You *CAN* *NOT* assume that descriptor table is
+> still pointing to whatever you've just created.
 > 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index cd61649e1b00..1487af8e11e8 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3043,15 +3043,15 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
->  static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
->  					  unsigned long flags)
->  {
-> -	// Attempt to start a new batch.
-> +	/* Attempt to start a new batch. */
->  	krcp->monitor_todo = false;
->  	if (queue_kfree_rcu_work(krcp)) {
-> -		// Success! Our job is done here.
-> +		/* Success! Our job is done here. */
->  		raw_spin_unlock_irqrestore(&krcp->lock, flags);
->  		return;
->  	}
->  
-> -	// Previous RCU batch still in progress, try again later.
-> +	/* Previous RCU batch still in progress, try again later. */
->  	krcp->monitor_todo = true;
->  	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
->  	raw_spin_unlock_irqrestore(&krcp->lock, flags);
-> @@ -3151,14 +3151,14 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->  	unsigned long flags;
->  	struct kfree_rcu_cpu *krcp;
->  
-> -	local_irq_save(flags);	// For safely calling this_cpu_ptr().
-> +	local_irq_save(flags);	/* For safely calling this_cpu_ptr(). */
->  	krcp = this_cpu_ptr(&krc);
->  	if (krcp->initialized)
->  		raw_spin_lock(&krcp->lock);
->  
-> -	// Queue the object but don't yet schedule the batch.
-> +	/* Queue the object but don't yet schedule the batch. */
->  	if (debug_rcu_head_queue(head)) {
-> -		// Probable double kfree_rcu(), just leak.
-> +		/* Probable double kfree_rcu(), just leak. */
->  		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
->  			  __func__, head);
->  		goto unlock_return;
-> @@ -3176,7 +3176,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->  
->  	WRITE_ONCE(krcp->count, krcp->count + 1);
->  
-> -	// Set timer to drain after KFREE_DRAIN_JIFFIES.
-> +	/* Set timer to drain after KFREE_DRAIN_JIFFIES. */
->  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
->  	    !krcp->monitor_todo) {
->  		krcp->monitor_todo = true;
-> @@ -3722,7 +3722,7 @@ int rcutree_offline_cpu(unsigned int cpu)
->  
->  	rcutree_affinity_setting(cpu, cpu);
->  
-> -	// nohz_full CPUs need the tick for stop-machine to work quickly
-> +	/* nohz_full CPUs need the tick for stop-machine to work quickly */
->  	tick_dep_set(TICK_DEP_BIT_RCU);
->  	return 0;
->  }
-> -- 
-> 2.20.1
+> As soon as it's in descriptor table, it's out of your hands.  And frankly, if you
+> are playing with descriptors, you should be very well aware of that.
 > 
+> Descriptor tables are fundamentally shared objects; they *can* be accessed and
+> modified by other threads, right behind your back.
+> 
+> *IF* you are going to play with ->f_mode, you must use get_unused_fd_flags(),
+> anon_inode_getfile(), modify ->f_mode of the result and use fd_install() to
+> put it into descriptor table.  With put_unused_fd() as cleanup in case
+> of allocation failure.
+
+OK, that makes sense, so we've got f_mode set before the fd_install() and fd
+visibility. I wrote that up, will test, and send out a v4... Thanks Al, this
+is very helpful.
+
+-- 
+Jens Axboe
+
