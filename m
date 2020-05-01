@@ -2,91 +2,88 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A06C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCF8C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591EA2166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D696216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 21:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="uEMjOfva"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IwDhz8qF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgEAVyd (ORCPT
+        id S1726811AbgEAVyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 17:54:33 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:57327 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAVyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 17:54:33 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 697688e6;
-        Fri, 1 May 2020 21:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=58S7gafTvCyAaihiGAJkt1yLd6Y=; b=uEMjOf
-        vaAoQm6Md4vl1zLH4e384tV3WtBAWLlgCo+K5pEl80lJ/GvpGM7c9fZDyOTsAkmv
-        cuKynBhaCqSRHqZBzqTqWXv6Z4HbPF3NqtVfde1VMOZHGonxruz94B6y8j3TcIsU
-        uMZdOgcG077zI+WnCV+P65QbA9sYgpXGtdgY65bj5PTj75+rbbisf87/GmQ91cZQ
-        JKagWB9eEWX77XQ8c2TM5CYF9dNqiKFdiQQYRHI2ADz7Hzq/L2X0R66E2It3cZ/G
-        U0lvdu8uQf4ysuexTDsNGdp569KlEKabIVY9ZUebiQQBot72XKZie2s2vflviruB
-        QmdrxR8gpZsEXDxg==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 9ab6eb77 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Fri, 1 May 2020 21:42:27 +0000 (UTC)
-Received: by mail-il1-f182.google.com with SMTP id w6so5722552ilg.1;
-        Fri, 01 May 2020 14:54:31 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ2GNJJnpYDquv7xOZERTgYP9JgGeX/WqSkomrtz2kOdYBrBKZr
-        qX1jxcTgSaN7zwft8k826ph+7CbwSej1MKn2GDU=
-X-Google-Smtp-Source: APiQypKi8VgL32io/YMf/TnAiuoD4oQjdoDdZRV4jk7+CgfAceJlLxx1gZqoTLRU71ehr0skb3Rw0hz+zCqa+vWKwOI=
-X-Received: by 2002:a92:d98c:: with SMTP id r12mr5878280iln.224.1588370070637;
- Fri, 01 May 2020 14:54:30 -0700 (PDT)
+        Fri, 1 May 2020 17:54:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59358 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726045AbgEAVyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 17:54:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588370093;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vqe/h5bIx8Xwds5+Doaeo5m4e7NAmlXMvCMv86v34rc=;
+        b=IwDhz8qFqZ3P8Ga2hQugrbtYcW+J78pfO9cvPbMOkT2rAZinNz/4xtIRQ0uvgOVXePAlsA
+        Wdc9HX4DAUvE1T2BQqcWU6n0nH3f9fywqbfq2ZQPg09/bLMNlYOESYitMALTiCT3167M/z
+        YpXBLjdbXE42RAXUEiHQJcqqrIGHsnU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-Qwf3zUiVOfaeAGW9G-6Xxg-1; Fri, 01 May 2020 17:54:49 -0400
+X-MC-Unique: Qwf3zUiVOfaeAGW9G-6Xxg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0EA545F;
+        Fri,  1 May 2020 21:54:46 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BDE36A954;
+        Fri,  1 May 2020 21:54:44 +0000 (UTC)
+Date:   Fri, 1 May 2020 17:54:41 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, iamjoonsoo.kim@lge.com,
+        rientjes@google.com, penberg@kernel.org, cl@linux.com
+Subject: Re: [PATCH] mm: slub: add panic_on_error to the debug facilities
+Message-ID: <20200501215441.GE27720@optiplex-lnx>
+References: <20200501211540.71216-1-aquini@redhat.com>
+ <21CF143C-B9D1-4D3F-A875-370924265593@lca.pw>
 MIME-Version: 1.0
-References: <20200430221016.3866-1-Jason@zx2c4.com> <20200501104215.s2eftchxm66lmbvj@linutronix.de>
-In-Reply-To: <20200501104215.s2eftchxm66lmbvj@linutronix.de>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Fri, 1 May 2020 15:54:19 -0600
-X-Gmail-Original-Message-ID: <CAHmME9othY=_3szXKh-+4uAgcLpuvgXm4HX2-SU+Hg7KztXTFw@mail.gmail.com>
-Message-ID: <CAHmME9othY=_3szXKh-+4uAgcLpuvgXm4HX2-SU+Hg7KztXTFw@mail.gmail.com>
-Subject: Re: [PATCH] drm/i915: check to see if SIMD registers are available
- before using SIMD
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21CF143C-B9D1-4D3F-A875-370924265593@lca.pw>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 4:42 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->    Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-
-Thanks.
-
+On Fri, May 01, 2020 at 05:29:19PM -0400, Qian Cai wrote:
+> 
+> 
+> > On May 1, 2020, at 5:15 PM, Rafael Aquini <aquini@redhat.com> wrote:
+> > 
+> > Sometimes it is desirable to override SLUB's debug facilities
+> > default behavior upon stumbling on a cache or object error
+> > and just stop the execution in order to grab a coredump, at
+> > the error-spotting time, instead of trying to fix the issue
+> > and report in an attempt to keep the system rolling.
+> > 
+> > This patch introduces a new debug flag SLAB_PANIC_ON_ERROR,
+> > along with its related SLUB-machinery, in order to extend
+> > current slub_debug facilites and provide the aforementioned
+> > behavior override.
+> 
+> Instead of adding those things everywhere. How about adding something like panic_on_taint? Then, you could write specific taint flags you are interested in to that file because slab_bug() will taint it TAINT_BAD_PAGE.
 >
-> May I ask how large the memcpy can be? I'm asking in case it is large
-> and an explicit rescheduling point might be needed.
+It seems like a good idea which also would required "adding things"
+elsewhere, but doesn't look mutually exclusive with the approach here.
 
-Yea I was worried about that too. I'm not an i915 developer, but so
-far as I can tell:
+Thanks
+-- Rafael  
 
-- The path from intel_engine_cmd_parser is  <= 256 KiB for "known
-users", so that's rather large.
-- The path from perf_memcpy is either 4k, 64k, or 4M, depending on the
-type of object, so that seems gigantic, but I think that might be
-selftest code.
-- The path from compress_page appears to be PAGE_SIZE, so 4k, which
-meshes with the limits we set agreed on few weeks ago for the crypto
-stuff.
-- The path from guc_read_update_log_buffer appears to be 8k, 32k, 2M,
-or 8M, depending on the type of object, so that seems absurdly huge
-and doesn't appear to be selftest code either like the other case.
-
-I have no doubt the i915 developers will jump in here waving their
-arms, but either way, it sure seems to me like you might have a point.
