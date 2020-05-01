@@ -2,127 +2,95 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F57AC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FBFC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0E2208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CECB32070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 06:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588312935;
+	bh=fjxO29s3fMRS8RHF3y7tjdoDNW7QReg78iJ8tzaU9ZE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iIvH3qotaPSE5yf4tH/eGbrZwo33fvZhE1g9XmV4TKHEtgaxmZr4kpDti8eLOuIgb
+	 artp8gB0Wpaksz9z3R6/2MdU54vyL8UVkCd0PBV5ry+ojm0dpr331ImEFaZRuUSEfB
+	 cwB0hZDQmJy/7lhKvCu2RVJC+a7n6hVur+yaKtn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgEAGAg (ORCPT
+        id S1728263AbgEAGCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 02:00:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgEAGAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 02:00:36 -0400
-Received: from [192.168.0.106] (unknown [202.53.39.250])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE2482070B;
-        Fri,  1 May 2020 06:00:30 +0000 (UTC)
-Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem
- properly in there
-To:     Rich Felker <dalias@libc.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20200429214954.44866-1-jannh@google.com>
- <20200429215620.GM1551@shell.armlinux.org.uk>
- <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
- <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
- <20200430145123.GE21576@brightrain.aerifal.cx>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <6dd187b4-1958-fc40-73c4-3de53ed69a1e@linux-m68k.org>
-Date:   Fri, 1 May 2020 16:00:28 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 02:02:15 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:37642 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgEAGCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 02:02:14 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 04161hVg014581;
+        Fri, 1 May 2020 15:01:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 04161hVg014581
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588312903;
+        bh=yTZNYHQtPbMeCpcIyjfdklxtVVJs41vlWoODKcjffw4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ntNjf0qCPCGGztpWKkm7EiPzZ2Swvw/EagQYh5g2jRHT/x+bGAajjM2RVTgXiuWFC
+         q7gzLLZub3t3yXCMh7LooIkR8FtAuS/dj2r2hqS6mb1qBw8AT9T24z1eyDL1VGScWq
+         GKD/unkont9M9z2+D1nMNDHrx4SnqO32YZIDY69zbQ7UFXuVA3oOUYIGeYXGnQdyhh
+         xjEQG6gSRWRai/WPaXc5NvapFkIcvTjTpXuAKpvEOUPvNTEHCFnI8Nlg7AAxSLXcVa
+         7nzbXRK7SjZkEKVqtplAlqZpaYlzQsHPufw/edoFhWcNhF4NPre5NfwBVUktSJm+0x
+         jNyhq0n6YQ6rw==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH] kbuild: invoke syncconfig if autoconf.h is missing
+Date:   Fri,  1 May 2020 15:01:41 +0900
+Message-Id: <20200501060141.1924489-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200430145123.GE21576@brightrain.aerifal.cx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If include/generated/autoconf.h is accidentally lost somehow,
+there is no clear way to fix it. Make it self-healing.
 
-On 1/5/20 12:51 am, Rich Felker wrote:
-> On Fri, May 01, 2020 at 12:10:05AM +1000, Greg Ungerer wrote:
->>
->>
->> On 30/4/20 9:03 am, Linus Torvalds wrote:
->>> On Wed, Apr 29, 2020 at 2:57 PM Russell King - ARM Linux admin
->>> <linux@armlinux.org.uk> wrote:
->>>>
->>>> I've never had any reason to use FDPIC, and I don't have any binaries
->>>> that would use it.  Nicolas Pitre added ARM support, so I guess he
->>>> would be the one to talk to about it.  (Added Nicolas.)
->>>
->>> While we're at it, is there anybody who knows binfmt_flat?
->>>
->>> It might be Nicolas too.
->>>
->>> binfmt_flat doesn't do core-dumping, but it has some other oddities.
->>> In particular, I'd like to bring sanity to the installation of the new
->>> creds, and all the _normal_ binfmt cases do it largely close together
->>> with setup_new_exec().
->>>
->>> binfmt_flat is doing odd things. It's doing this:
->>>
->>>          /* Flush all traces of the currently running executable */
->>>          if (id == 0) {
->>>                  ret = flush_old_exec(bprm);
->>>                  if (ret)
->>>                          goto err;
->>>
->>>                  /* OK, This is the point of no return */
->>>                  set_personality(PER_LINUX_32BIT);
->>>                  setup_new_exec(bprm);
->>>          }
->>>
->>> in load_flat_file() - which is also used to loading _libraries_. Where
->>> it makes no sense at all.
->>
->> I haven't looked at the shared lib support in there for a long time,
->> but I thought that "id" is only 0 for the actual final program.
->> Libraries have a slot or id number associated with them.
-> 
-> This sounds correct. My understanding of FLAT shared library support
-> is that it's really bad and based on having preassigned slot indices
-> for each library on the system, and a global array per-process to give
-> to data base address for each library. Libraries are compiled to know
-> their own slot numbers so that they just load from fixed_reg[slot_id]
-> to get what's effectively their GOT pointer.
-> 
-> I'm not sure if anybody has actually used this in over a decade. Last
-> time I looked the tooling appeared broken, but in this domain lots of
-> users have forked private tooling that's not publicly available or at
-> least not publicly indexed, so it's hard to say for sure.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Be at least 12 or 13 years since I last had a working shared library
-build for m68knommu. I have not bothered with it since then, not that I
-even used it much when it worked. Seemed more pain than it was worth.
+ Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Regards
-Greg
-
+diff --git a/Makefile b/Makefile
+index 9ff00bfe0575..f0b6f9fd5d25 100644
+--- a/Makefile
++++ b/Makefile
+@@ -698,7 +698,7 @@ $(KCONFIG_CONFIG):
+ # This exploits the 'multi-target pattern rule' trick.
+ # The syncconfig should be executed only once to make all the targets.
+ # (Note: use the grouped target '&:' when we bump to GNU Make 4.3)
+-%/auto.conf %/auto.conf.cmd: $(KCONFIG_CONFIG)
++%/config/auto.conf %/config/auto.conf.cmd %/generated/autoconf.h: $(KCONFIG_CONFIG)
+ 	$(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
+ else # !may-sync-config
+ # External modules and some install targets need include/generated/autoconf.h
+@@ -1141,7 +1141,8 @@ scripts: scripts_basic scripts_dtc
+ PHONY += prepare archprepare
+ 
+ archprepare: outputmakefile archheaders archscripts scripts include/config/kernel.release \
+-	asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h
++	asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h \
++	include/generated/autoconf.h
+ 
+ prepare0: archprepare
+ 	$(Q)$(MAKE) $(build)=scripts/mod
+-- 
+2.25.1
 
