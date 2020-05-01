@@ -2,88 +2,142 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B8EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEA3C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D84E2137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1YXw33IL"
+	by mail.kernel.org (Postfix) with ESMTP id E4A9C24956
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588353413;
+	bh=O3zHkG0xK7vnhchvk9LwPWiRO6iM2S6Twy28fLvh81w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=EHX6TwcCunjVSeZq9qK+/8FxZPZ687AEvrLqrPpQYTq8BUK3RDCmlLpgYyedVHDf4
+	 wXK7swj1n96suxNS/mKb+29xzUVKXEjbxSmZ05TINQQMZCqA7Wt5WkTGcVH/Lk4eWs
+	 fPfxDaJtYOPPg05HDfAmq6kTF9OOtp2IAFabyUno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgEARQm (ORCPT
+        id S1730145AbgEARQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729951AbgEARQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:16:41 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A858CC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/l3zOAnDi9DKZar5oCraWARLMZ5QjkXjzkWoreOxc9w=; b=1YXw33ILwhYlmrposW28v4Rv0r
-        v5wS+POxan9edlR9ycvkAop2l5sYxGYv9fHhBzTaMKQAiUiZzEogiz5RG1W69w1Zj6hYlPdTK4lZs
-        mkz/4imtgUrqu9EaoRktr9mRc07JazLirJ9kPdZiDmgDsl+zQtaTGO1tlM2VlPqnbTgiK2Rp7JfRU
-        IB2fzFQnZzcStJbrSBOrBXVCFJH0hC+jH8xr0hdsYFlEaYtFr5oJD4p95vX/yjTMndthi2dRshUF+
-        b+tjLKy2rCzBMYTqSHZbUL1/NtRfj6jg/fFLZG8nVs9kEqED/XCjcGuSU0wykGknfGXr1b5VAHVQb
-        zZDhOjtA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUZGw-00038H-FF; Fri, 01 May 2020 17:16:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Fri, 1 May 2020 13:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729246AbgEARQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:16:52 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 04C18300F28;
-        Fri,  1 May 2020 19:16:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DD115205E6F0C; Fri,  1 May 2020 19:16:18 +0200 (CEST)
-Date:   Fri, 1 May 2020 19:16:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Remaining randconfig objtool warnings, linux-next-20200428
-Message-ID: <20200501171618.GF3762@hirez.programming.kicks-ass.net>
-References: <CAK8P3a2qLJkokMGt48JRky=WUeAbJRuNmoD1oqfWdrGSC6y1LA@mail.gmail.com>
- <CAK8P3a2Gzj9SVZSGo+PxWR0cMJb1sFwv+ii9J6jEGE-Z41Fr+A@mail.gmail.com>
- <20200501002858.4wuiqqv5o32jcvxf@treble>
- <CAK8P3a3_aC9rJDXta+6D2Oq5RSJgfXaT5-wFU_tM-6x7unbuPg@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 852552137B;
+        Fri,  1 May 2020 17:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588353411;
+        bh=O3zHkG0xK7vnhchvk9LwPWiRO6iM2S6Twy28fLvh81w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ooJMbUXwRSn08VpK+bFeKUUTOGpcnXCZn935/9HH/jPOYsPDZDUTgaUvNJE1drWjJ
+         McE+bPtrWP0t4EvfnpiZrRMffZ8mkvajeaAy/pIJW63HH95tAegyTRVMywFD/KrtvQ
+         RCHGyxvdCSukM66+sSGnbMRT0eRR8glacInJnRAI=
+Date:   Fri, 1 May 2020 12:16:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Rajat Jain <rajatja@google.com>,
+        "Patel, Mayurkumar" <mayurkumar.patel@intel.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI/ERR: Allow Native AER/DPC using _OSC
+Message-ID: <20200501171649.GA116404@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3_aC9rJDXta+6D2Oq5RSJgfXaT5-wFU_tM-6x7unbuPg@mail.gmail.com>
+In-Reply-To: <1588272369-2145-1-git-send-email-jonathan.derrick@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 01:41:30PM +0200, Arnd Bergmann wrote:
-> disappears, and it also goes away if I disable inlining that function:
-
-Yes, makes sense. The state objtool tracks is strictly per function.
-
-And I suppose GCC-10 just changed around the inline heuristc a bit and
-we got lucky.
-
-> --- a/lib/locking-selftest.c
-> +++ b/lib/locking-selftest.c
-> @@ -1134,7 +1134,7 @@ static int testcase_successes;
->  static int expected_testcase_failures;
->  static int unexpected_testcase_failures;
+On Thu, Apr 30, 2020 at 12:46:07PM -0600, Jon Derrick wrote:
+> Hi Bjorn & Kuppuswamy,
 > 
-> -static void dotest(void (*testcase_fn)(void), int expected, int lockclass_mask)
-> +static noinline void dotest(void (*testcase_fn)(void), int expected,
-> int lockclass_mask)
->  {
->         unsigned long saved_preempt_count = preempt_count();
+> I see a problem in the DPC ECN [1] to _OSC in that it doesn't give us a way to
+> determine if firmware supports _OSC DPC negotation, and therefore how to handle
+> DPC.
 > 
->     Arnd
+> Here is the wording of the ECN that implies that Firmware without _OSC DPC
+> negotiation support should have the OSPM rely on _OSC AER negotiation when
+> determining DPC control:
+> 
+>   PCIe Base Specification suggests that Downstream Port Containment may be
+>   controlled either by the Firmware or the Operating System. It also suggests
+>   that the Firmware retain ownership of Downstream Port Containment if it also
+>   owns AER. When the Firmware owns Downstream Port Containment, it is expected
+>   to use the new "Error Disconnect Recover" notification to alert OSPM of a
+>   Downstream Port Containment event.
+> 
+> In legacy platforms, as bits in _OSC are reserved prior to implementation, ACPI
+> Root Bus enumeration will mark these Host Bridges as without Native DPC
+> support, even though the specification implies it's expected that AER _OSC
+> negotiation determines DPC control for these platforms. There seems to be a
+> need for a way to determine if the DPC control bit in _OSC is supported and
+> fallback on AER otherwise.
+> 
+> 
+> Currently portdrv assumes DPC control if the port has Native AER services:
+> 
+> static int get_port_device_capability(struct pci_dev *dev)
+> ...
+> 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+> 	    pci_aer_available() &&
+> 	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+> 		services |= PCIE_PORT_SERVICE_DPC;
+> 
+> Newer firmware may not grant OSPM DPC control, if for instance, it expects to
+> use Error Disconnect Recovery. However it looks like ACPI will use DPC services
+> via the EDR driver, without binding the full DPC port service driver.
+> 
+> 
+> If we change portdrv to probe based on host->native_dpc and not AER, then we
+> break instances with legacy firmware where OSPM will clear host->native_dpc
+> solely due to _OSC bits being reserved:
+> 
+> struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
+> ...
+> 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
+> 		host_bridge->native_dpc = 0;
+> 
+> 
+> 
+> So my assumption instead is that host->native_dpc can be 0 and expect Native
+> DPC services if AER is used. In other words, if and only if DPC probe is
+> invoked from portdrv, then it needs to rely on the AER dependency. Otherwise it
+> should be assumed that ACPI set up DPC via EDR. This covers legacy firmware.
+> 
+> However it seems like that could be trouble with newer firmware that might give
+> OSPM control of AER but not DPC, and would result in both Native DPC and EDR
+> being in effect.
+> 
+> 
+> Anyways here are two patches that give control of AER and DPC on the results of
+> _OSC. They don't mess with the HEST parser as I expect those to be removed at
+> some point. I need these for VMD support which doesn't even rely on _OSC, but I
+> suspect this won't be the last effort as we detangle Firmware First.
+> 
+> [1] https://members.pcisig.com/wg/PCI-SIG/document/12888
+
+Hi Jon, I think we need to sort out the _OSC/FIRMWARE_FIRST patches
+from Alex and Sathy first, then see what needs to be done on top of
+those, so I'm going to push these off for a few days and they'll
+probably need a refresh.
+
+Bjorn
