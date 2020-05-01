@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED5EC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754EC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F482205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6B020836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340659;
-	bh=IUCErDYU5+chUFB9+LblbUcLmt79a5CAIndVF79zzyc=;
+	s=default; t=1588340662;
+	bh=LHTo9DvQW6BxdBodV8TTM9gnOIZGXIo1XYPR6CZ17V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b+LYXZ7pdf3vNoTcxz2z+NzgKS66le1gjfgvdiDFCfT0g/Mn2VWcwRJN4mmt2q572
-	 GVWwBjkUlvSZmlpcZnx4F7EwgMVN+N1q2m6yAZ846tQdDZQ3bSOuti4TlryOZ8cMs+
-	 nCsjsnSvpJV9eCcTTmvZh1NkQTV0jzv8sce6H49Q=
+	b=f0wokTW8H6Q5/eGrfGeUtkSxusXV2WIV1R9zUl0TkDzJMiXUeBUL7zRFsp6p5Uo3f
+	 lD2S0vJu4OvQbDdj/nOo/mLLMaMBahYXlkUQo7nTu4TfjYZnPrTcgjiGAIQd8SuebS
+	 Vk6cxccvnhACuhNEoyWt1AaHUKGfbhPxiMpGqCLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731491AbgEANoS (ORCPT
+        id S1731736AbgEANoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731726AbgEANoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:15 -0400
+        id S1730973AbgEANoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11757205C9;
-        Fri,  1 May 2020 13:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F4F5216FD;
+        Fri,  1 May 2020 13:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340654;
-        bh=IUCErDYU5+chUFB9+LblbUcLmt79a5CAIndVF79zzyc=;
+        s=default; t=1588340657;
+        bh=LHTo9DvQW6BxdBodV8TTM9gnOIZGXIo1XYPR6CZ17V8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYzRXV8V9VII4vSoI9HB5vSaIm3v7foIAuofG+IjRvF4rpZWb0p0j8YLrYfGAyWLf
-         GS5X/Ek4+hWTC6S84TLq15vO/Lcj2jl0U402QrU68FJGitSZmw0mF+XC+RNcLQHdlA
-         bEI6R3hU97wJ0qFhDQcakG1WjuFbFlQUiT8C2GUo=
+        b=LlDlgSeE3TL31ZwYhajbSe717eatPh/o+mAlWI2cAERXoOCfvBHi5fHcqLhIJ3bvp
+         IobA9BtQrFKBviPAeVFUlPcTBdeg4CMRGj1oHcBqi9Hk0WHXg95fN/CcWJi6q11ZzN
+         4K9sOFODBJ9N4io8Wvf4LxgQhI9bi7wDKLAfRrbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 082/106] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
-Date:   Fri,  1 May 2020 15:23:55 +0200
-Message-Id: <20200501131553.569730620@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 083/106] ALSA: hda: call runtime_allow() for all hda controllers
+Date:   Fri,  1 May 2020 15:23:56 +0200
+Message-Id: <20200501131553.663916801@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,52 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
+[ Upstream commit 9a6418487b566503c772cb6e7d3d44e652b019b0 ]
 
-xenbus_map_ring_valloc() maps a ring page and returns the status of the
-used grant (0 meaning success).
+Before the pci_driver->probe() is called, the pci subsystem calls
+runtime_forbid() and runtime_get_sync() on this pci dev, so only call
+runtime_put_autosuspend() is not enough to enable the runtime_pm on
+this device.
 
-There are Xen hypervisors which might return the value 1 for the status
-of a failed grant mapping due to a bug. Some callers of
-xenbus_map_ring_valloc() test for errors by testing the returned status
-to be less than zero, resulting in no error detected and crashing later
-due to a not available ring page.
+For controllers with vgaswitcheroo feature, the pci/quirks.c will call
+runtime_allow() for this dev, then the controllers could enter
+rt_idle/suspend/resume, but for non-vgaswitcheroo controllers like
+Intel hda controllers, the runtime_pm is not enabled because the
+runtime_allow() is not called.
 
-Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
-in case the grant status reported by Xen is greater than zero.
+Since it is no harm calling runtime_allow() twice, here let hda
+driver call runtime_allow() for all controllers. Then the runtime_pm
+is enabled on all controllers after the put_autosuspend() is called.
 
-This is part of XSA-316.
-
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Wei Liu <wl@xen.org>
-Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200414142725.6020-1-hui.wang@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index e17ca81561713..a38292ef79f6d 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -448,7 +448,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
- int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
- 			   unsigned int nr_grefs, void **vaddr)
- {
--	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-+	int err;
-+
-+	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
-+	/* Some hypervisors are buggy and can return 1. */
-+	if (err > 0)
-+		err = GNTST_general_error;
-+
-+	return err;
- }
- EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 4f6d8a4b38452..59b60b1f26f80 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2339,6 +2339,7 @@ static int azx_probe_continue(struct azx *chip)
+ 
+ 	if (azx_has_pm_runtime(chip)) {
+ 		pm_runtime_use_autosuspend(&pci->dev);
++		pm_runtime_allow(&pci->dev);
+ 		pm_runtime_put_autosuspend(&pci->dev);
+ 	}
  
 -- 
 2.20.1
