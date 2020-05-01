@@ -2,176 +2,147 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7D3C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ED6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4030720731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:54:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AjM7yFpP"
+	by mail.kernel.org (Postfix) with ESMTP id B1F3A20731
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbgEARyu (ORCPT
+        id S1730241AbgEAR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729973AbgEARyt (ORCPT
+        Fri, 1 May 2020 13:56:04 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39360 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729612AbgEAR4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:54:49 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959ECC061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 10:54:49 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l20so4846972pgb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 10:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DRg3zcbdwJvHwwdmWPDqLT8eUhyWI38G+2e6Y0MIzuw=;
-        b=AjM7yFpPFJFc/Xp09RqIRFsPyXCGYSShJyQBSCnCAyE+7w0uxt38ym2oxCXiPcXovx
-         Q/VYY+Ad7CH5P3WyBOeGS99Gdjk8IzNpvQltN/LRSZn/sTMubaTznSKXIxSKFFacj5il
-         FaBkG5E3ASrBNabkNSKuWq3L8ENPNZ3qHMXlcXhdGhiV9b7UZAb2guXey8knRe3/cXsc
-         ahnapvrVM0moMOfekNoNbIoNxB4q5i/KZLK9r1TJrfDu7ZYbV9qYNod8IdCEnAuw+GQz
-         POEKAE5o/gcllW5kSLgV85yXbaJt99SohMDdSB6PkngnJ998oezxGG0uRjzsnrf/qmmI
-         yA3w==
+        Fri, 1 May 2020 13:56:04 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s20so3882495plp.6;
+        Fri, 01 May 2020 10:56:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DRg3zcbdwJvHwwdmWPDqLT8eUhyWI38G+2e6Y0MIzuw=;
-        b=KbM0olXvXvB04emZ0A5zVFFjsN0mXAIgmNkA6riWqBOnM1NJPGodS5dGf0V/h6aA5u
-         Gu2dsEd/JcASMcdilBrTxr+BqSOvuCNo8NCgI5tSYlk1lxIID5f0hGdOcHI0Sfu2fMtZ
-         V5YJDhpHwHEJvBPlGMPjTVfEEmEmo6wgjkKCqxS8/8IBJmm533/bWD4uEcqyb921D4a2
-         XQ6U2Cq4g3i0GqMkzN0gxKjJq0ZjnsPlwrTXPaQ6Bjl6s45yLTlS+mLhWc+YgySUY2k9
-         M0DO6VcDzIoTI4YeRqJMCmcyUhZvenhxVIov4F7uVseiPWu1HbNQQpTq4Ldmow3AYjwc
-         x7QQ==
-X-Gm-Message-State: AGi0PuZJaZCMsveah6ihZ5IQVRFFJz9YazuM4ruuPNgMhpTJit/Ml6vk
-        tgNdGqOOo/bGa8/OmOQpxfVtvw==
-X-Google-Smtp-Source: APiQypKinFwjLxwudUbIQPJSzcgT/R+sN9xYkeIHLb7Ej4S4Zq5Bpmiy+iZT5kj2ZM3AoMThjH03xA==
-X-Received: by 2002:a63:564e:: with SMTP id g14mr5324203pgm.63.1588355689010;
-        Fri, 01 May 2020 10:54:49 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id s38sm2528104pgk.31.2020.05.01.10.54.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 10:54:48 -0700 (PDT)
-Date:   Fri, 1 May 2020 11:54:46 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        loic.pallardy@st.com, linux-remoteproc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 12/12] remoteproc: stm32: Set synchronisation state
- machine if needed
-Message-ID: <20200501175446.GF18004@xps15>
-References: <20200424202505.29562-1-mathieu.poirier@linaro.org>
- <20200424202505.29562-13-mathieu.poirier@linaro.org>
- <defc59b2-4d64-a108-2e5e-ecc579f70a8b@st.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1aqquKGO2wHWbUexSvjMjT6g8z9HBOodi6i/dl3yEfk=;
+        b=cQexM/kYFYJpXn6aS1izW2XzHWcS6NIZp3yX/iYwfjesflUlXNwEBP0VzUb6d6cGTC
+         npa1SoRQprM5fKyjcHgUbxwMi4fH+oYi4fU9bp3djO4xEDuJdWaq38hZk4Sdp9+eow3G
+         ElsbczAfvUhpeVJ+k0XgnaFlrmX6mJ8NxPuGPVJ8Pwo+YwD69MYVaIfTlUplOm5ZEc5T
+         lJTNSG6WRmXrUchstmHApfMI11r7h7E/TtS+Oh5vi87Nki1zBG1nV3nxTiE7q73P/iv+
+         MScnsYGIksWgIlO2bnuQrTkIZo/cmBjjrU5aLNRZZM43EvvKHwZoKQqi8wQALQTEiLHZ
+         XRMA==
+X-Gm-Message-State: AGi0PubKu09CnpWV2A5fie44HWOEJRPh1z34uVtKPPF7q+xyRFwyh3AF
+        FU0A77zZvq0KVa1AeepTfT0SIaiI5Yc=
+X-Google-Smtp-Source: APiQypIT3opjLOUaHJ3jc4/L/Xy850luB3XjovfnMiVpHV7k3y4Xa8smFGSFG2H3Tp3fwi3Jrnu5zA==
+X-Received: by 2002:a17:90a:e2c1:: with SMTP id fr1mr910145pjb.124.1588355762840;
+        Fri, 01 May 2020 10:56:02 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:81bd:8aa3:a8d:a322? ([2601:647:4000:d7:81bd:8aa3:a8d:a322])
+        by smtp.gmail.com with ESMTPSA id kb10sm297454pjb.6.2020.05.01.10.56.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 May 2020 10:56:01 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
+ during system resume
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
+        beanhuo@micron.com, Avri.Altman@wdc.com,
+        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
+ <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
+ <1ef85ee212bee679f7b2927cbbc79cba@codeaurora.org>
+ <ef23a815-118a-52fe-4880-19e7fc4fcd10@acm.org>
+ <1e2a2e39dbb3a0f06fe95bbfd66e1648@codeaurora.org>
+ <226048f7-6ad3-a625-c2ed-d9d13e096803@acm.org>
+ <3bfa692ce706c5c198f565e674afb56f@codeaurora.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <2356ab42-bbdd-d214-30f5-a533fe978dcb@acm.org>
+Date:   Fri, 1 May 2020 10:56:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <defc59b2-4d64-a108-2e5e-ecc579f70a8b@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3bfa692ce706c5c198f565e674afb56f@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:47:19PM +0200, Arnaud POULIQUEN wrote:
+On 2020-04-30 22:12, Can Guo wrote:
+> diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
+> index 3717eea..d18271d 100644
+> --- a/drivers/scsi/scsi_pm.c
+> +++ b/drivers/scsi/scsi_pm.c
+> @@ -74,12 +74,15 @@ static int scsi_dev_type_resume(struct device *dev,
+>  {
+>         const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>         int err = 0;
+> +       bool was_rpm_suspended = false;
 > 
+>         err = cb(dev, pm);
+>         scsi_device_resume(to_scsi_device(dev));
+>         dev_dbg(dev, "scsi resume: %d\n", err);
 > 
-> On 4/24/20 10:25 PM, Mathieu Poirier wrote:
-> > Set the flags and operations to use if the M4 has been started
-> > by another entity than the remoteproc core.
-> > 
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > ---
-> >  drivers/remoteproc/stm32_rproc.c | 16 +++++++++++++++-
-> >  1 file changed, 15 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> > index dcae6103e3df..02dad3f51c7a 100644
-> > --- a/drivers/remoteproc/stm32_rproc.c
-> > +++ b/drivers/remoteproc/stm32_rproc.c
-> > @@ -598,13 +598,20 @@ static struct rproc_ops st_rproc_ops = {
-> >  	.get_boot_addr	= rproc_elf_get_boot_addr,
-> >  };
-> >  
-> > -static __maybe_unused struct rproc_ops st_rproc_sync_ops = {
-> > +static struct rproc_ops st_rproc_sync_ops = {
-> >  	.start		= stm32_rproc_sync_start,
-> >  	.stop		= stm32_rproc_stop,
-> > +	.kick		= stm32_rproc_kick,
-> 
-> Seems independent of the path.
+>         if (err == 0) {
+> +               was_rpm_suspended = pm_runtime_suspended(dev);
+> +
 
-I agree - on the flip side I didn't find a better place to put it.  Had I did a
-one line patch someone would have asked me to stuff it somewhere.  I'll have
-another look to see if I can find something decent.
+How about renaming this variable into "was_runtime_suspended"? How about
+moving the declaration of that variable inside the if-statement?
 
-> 
-> >  	.parse_fw       = stm32_rproc_sync_parse_fw,
-> >  	.find_loaded_rsc_table = stm32_rproc_sync_elf_find_loaded_rsc_table,
-> >  };
-> >  
-> > +static struct rproc_sync_flags st_sync_flags = {
-> > +	.on_init = true, /* sync with MCU when the kernel boots */
-> > +	.after_stop = false, /* don't resync with MCU if stopped from sysfs */
-> > +	.after_crash = false, /* don't resync with MCU after a crash */
-> > +};
-> > +
-> could be const
+>                 pm_runtime_disable(dev);
+>                 err = pm_runtime_set_active(dev);
+>                 pm_runtime_enable(dev);
+> @@ -93,8 +96,10 @@ static int scsi_dev_type_resume(struct device *dev,
+>                  */
+>                 if (!err && scsi_is_sdev_device(dev)) {
+>                         struct scsi_device *sdev = to_scsi_device(dev);
+> -
+> -                       blk_set_runtime_active(sdev->request_queue);
+> +                       if (was_rpm_suspended)
+> +                              blk_post_runtime_resume(sdev->request_queue, 0);
+> +                       else
+> +                              blk_set_runtime_active(sdev->request_queue);
+>                 }
+>         }
 
-If I do make this a const I'll have to move the call to
-rproc_set_state_machine() inside the "if (state == M4_STATE_CRUN)".  It also
-means that people won't be able to make dynamic adjustment to the
-synchronisation states based on specifics discovered at probe() time.  They will
-need to declare different synchronisation ops for all the potential scenarios.
+Does other code always call both blk_pre_runtime_resume() and
+blk_post_runtime_resume() upon runtime resume? How about adding a
+blk_pre_runtime_resume() call before the blk_post_runtime_resume() call?
 
-I don't have a strong opinion on any of this.  I'll wait a little to see what
-other people think.  If nobody chimes in I'll make this a const in the next
-revision.
+Thanks,
 
-> 
-> >  static const struct of_device_id stm32_rproc_match[] = {
-> >  	{ .compatible = "st,stm32mp1-m4" },
-> >  	{},
-> > @@ -803,6 +810,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
-> >  	struct stm32_rproc *ddata;
-> >  	struct device_node *np = dev->of_node;
-> >  	struct rproc *rproc;
-> > +	struct rproc_sync_flags sync_flags = {0};
-> >  	unsigned int state;
-> >  	bool auto_boot = false;
-> >  	int ret;
-> > @@ -837,11 +845,17 @@ static int stm32_rproc_probe(struct platform_device *pdev)
-> >  	}
-> >  
-> >  	if (state == M4_STATE_CRUN) {
-> > +		auto_boot = true;
-> > +		sync_flags = st_sync_flags;
-> 
-> seems an useless copy 
-> 
-> Regards,
-> Arnaud
-> 
-> >  		ret = stm32_rproc_get_loaded_rsc_table(pdev, ddata);
-> >  		if (ret)
-> >  			goto free_rproc;
-> >  	}
-> >  
-> > +	ret = rproc_set_state_machine(rproc, &st_rproc_sync_ops, sync_flags);
-> > +	if (ret)
-> > +		goto free_rproc;
-> > +
-> >  	rproc->auto_boot = auto_boot;
-> >  	rproc->has_iommu = false;
-> >  	ddata->workqueue = create_workqueue(dev_name(dev));
-> > 
+Bart.
+
