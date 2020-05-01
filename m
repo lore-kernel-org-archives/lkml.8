@@ -2,156 +2,119 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9150EC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 750A6C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D18820731
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:17:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XB7dR5aK"
+	by mail.kernel.org (Postfix) with ESMTP id 27D222073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588311259;
+	bh=SZo3DVsZ0TuxJuX2Z5shMnylT7+yzknrxW3MToG5NxQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=usTcSabiCF9sC3+CFsgjOO/a71uY3udgNeo7Em3Z7kbc6v1OOCAVpvbpVgP9Xajh6
+	 IqL+swPz8eb6AHtXBMM2Omrn+BIsdkuhFf+BG8nOa4MKOglWpwV2FpVstu7IX6qVHJ
+	 tV6VRJIyDm82phdJQGs7PeL8lQM19lxTUxhKLQyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgEAFRT (ORCPT
+        id S1728191AbgEAFeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:17:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39866 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727922AbgEAFRS (ORCPT
+        Fri, 1 May 2020 01:34:18 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:58019 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgEAFeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:17:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588310236;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GSWin1sVu+RpjdOrQAPHPFQk2idbIftWleHLnOyDrQE=;
-        b=XB7dR5aKgo8r4ddX3aPRknTQLj9xPjFbeJ7+ou2e4kyEHl0p7e99EiwKNz+FDA4+NZY1N+
-        CXgrPSG1W/yZzGz0WkEIqeBt+eK8mDUn6qE9CuV+ZjKp89WvXvKlGcpGL8eM3n+TcRkAXE
-        El6rrndEp5KwboIliZcQTGL+3vBDgyg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-K88sYPXGMUaNtOBjygk2fQ-1; Fri, 01 May 2020 01:17:12 -0400
-X-MC-Unique: K88sYPXGMUaNtOBjygk2fQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34C831895A2C;
-        Fri,  1 May 2020 05:17:11 +0000 (UTC)
-Received: from treble (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EEF7C600E5;
-        Fri,  1 May 2020 05:17:08 +0000 (UTC)
-Date:   Fri, 1 May 2020 00:17:06 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC][PATCH] x86/ftrace: Have ftrace trampolines turn read-only
- at the end of system boot up
-Message-ID: <20200501051706.4wkrqwovybt2p6hr@treble>
-References: <20200430202147.4dc6e2de@oasis.local.home>
- <20200501044733.eqf6hc6erucsd43x@treble>
+        Fri, 1 May 2020 01:34:17 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 0415Xv7h011238;
+        Fri, 1 May 2020 14:33:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 0415Xv7h011238
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588311238;
+        bh=oOUTjHbglUckIEy8WVvMgD3ZhjrrhESz7wu9wTM0qt8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jPIC9BRAIB9gWJZqCfy5olbgMzB5gtYjxvxZV8vB3/20I/w8YksC++qd7vBvzEYh2
+         GsSeFMclrVoYAkD8WZp0qlc+Vt5QAOYHhfjsRAThxSshwDkpgEw+12TwbY0TULiStT
+         qh6hnfD+fsDsOgsC8Uj3GgXmkwAVvbDrYWYn8RejYsv1eagVwJaMC0DQ+ThW+57Nqm
+         m94prNdcVoeJDpAa9zEcWxJwytj26VVPuBzvJ00iY/v6x2bmW518NNA3g1So15R8yz
+         TDZne2D0mkUFepXrZulc9eYmuzAQZuDhoeNNSHAhVaMAjwXsUzDZV8qZbnbgogh62e
+         TJxfU16w4E4yQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id b6so3411581uak.6;
+        Thu, 30 Apr 2020 22:33:58 -0700 (PDT)
+X-Gm-Message-State: AGi0PubUFw4YbTpGHwci+bFRfhI7fZ27+FzGl2BWlCe2Y7X6I235wfmG
+        v+U+8FEpf+U07m1s2n1S2Z/XTmXhRZXqI3BkY+c=
+X-Google-Smtp-Source: APiQypIt+xGZssmIimHEiLPklzB0CvviZARI0GxQsMAFDkLql6zAbzBItxLWUDKzY8bQva8cbq5ggd2pjqqU32QwpLM=
+X-Received: by 2002:ab0:7298:: with SMTP id w24mr1787087uao.95.1588311237065;
+ Thu, 30 Apr 2020 22:33:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200501044733.eqf6hc6erucsd43x@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200424161502.656103-1-masahiroy@kernel.org> <009101d61a6b$71f93a70$55ebaf50$@codeaurora.org>
+In-Reply-To: <009101d61a6b$71f93a70$55ebaf50$@codeaurora.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 1 May 2020 14:33:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR+PjvE3yQS7xdKo5Cf_K1xDg+NijistAqWX7Ob=_irWg@mail.gmail.com>
+Message-ID: <CAK7LNAR+PjvE3yQS7xdKo5Cf_K1xDg+NijistAqWX7Ob=_irWg@mail.gmail.com>
+Subject: Re: [PATCH] hexagon: suppress error message for 'make clean'
+To:     bcain@codeaurora.org
+Cc:     linux-hexagon@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 11:47:33PM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 30, 2020 at 08:21:47PM -0400, Steven Rostedt wrote:
-> > The cause is the "ftrace=function" would register the function tracer
-> > and create a trampoline, and it will set it as executable and
-> > read-only. Then the "trace_options=func_stack_trace" would then update
-> > the same trampoline to include the stack tracer version of the function
-> > tracer. But since the trampoline already exists, it updates it with
-> > text_poke_bp(). The problem is that text_poke_bp() called while
-> > system_state == SYSTEM_BOOTING, it will simply do a memcpy() and not
-> > the page mapping, as it would think that the text is still read-write.
-> > But in this case it is not, and we take a fault and crash.
-> > 
-> > Instead, lets keep the ftrace trampolines read-write during boot up,
-> > and then when the kernel executable text is set to read-only, the
-> > ftrace trampolines get set to read-only as well.
-> 
-> Would it be easier to just call a new __text_poke_bp() which skips the
-> SYSTEM_BOOTING check, since you know the trampoline will always be
-> read-only?
-> 
-> Like:
+On Sat, Apr 25, 2020 at 4:06 AM Brian Cain <bcain@codeaurora.org> wrote:
+>
+> > -----Original Message-----
+> > From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
+> > owner@vger.kernel.org> On Behalf Of Masahiro Yamada
+> ...
+> > 'make ARCH=hexagon clean' emits an error message as follows:
+> >
+> >   $ make ARCH=hexagon clean
+> >   gcc: error: unrecognized command line option '-G0'
+> >
+> > You can suppress it by setting the correct CROSS_COMPILE=, but we should
+> > not require any compiler for cleaning.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>
+>
+> Acked-by: Brian Cain <bcain@codeaurora.org>
 
-early_trace_init() is called after mm_init(), so I thought it might
-work, but I guess not:
+Applied to linux-kbuild. Thanks.
 
-[    0.206271] Starting tracer 'function'
-[    0.232032] BUG: kernel NULL pointer dereference, address: 0000000000000050
-[    0.232035] #PF: supervisor read access in kernel mode
-[    0.232036] #PF: error_code(0x0000) - not-present page
-[    0.232037] PGD 0 P4D 0 
-[    0.232040] Oops: 0000 [#1] PREEMPT SMP PTI
-[    0.232042] CPU: 0 PID: 0 Comm: swapper Not tainted 5.7.0-rc2-next-20200424+ #127
-[    0.232043] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-[    0.232047] RIP: 0010:walk_to_pmd+0x11/0x140
-[    0.232048] Code: 78 c1 32 82 e8 a0 68 ff ff 0f 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 0f 1f 44 00 00 48 89 f0 48 c1 e8 24 25 f8 0f 00 00 <48> 03 47 50 0f 84 12 01 00 00 41 54 49 89 fc 55 48 89 c5 53 48 8b
-[    0.232050] RSP: 0000:ffffffff82603c68 EFLAGS: 00010046
-[    0.232051] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[    0.232052] RDX: ffffffff82603cc8 RSI: 0000000000000000 RDI: 0000000000000000
-[    0.232053] RBP: 8000000000000063 R08: 0000000000000001 R09: fff0000000000fff
-[    0.232054] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82603cc8
-[    0.232055] R13: 0000000000000000 R14: 0000000000000066 R15: fffffffffffffeff
-[    0.232056] FS:  0000000000000000(0000) GS:ffff88813b600000(0000) knlGS:0000000000000000
-[    0.232057] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.232058] CR2: 0000000000000050 CR3: 0000000002612001 CR4: 00000000000606b0
-[    0.232061] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    0.232062] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    0.232063] Call Trace:
-[    0.232066]  __get_locked_pte+0x19/0x100
-[    0.232069]  ? 0xffffffffa0000065
-[    0.232071]  __text_poke+0x14d/0x640
-[    0.232073]  ? 0xffffffffa0000065
-[    0.232076]  text_poke_bp_batch+0x8b/0x1c0
-[    0.232078]  ? 0xffffffffa0000065
-[    0.232080]  __text_poke_bp+0x3a/0x60
-[    0.232083]  arch_ftrace_update_trampoline+0xac/0x300
-[    0.232087]  __register_ftrace_function+0x7c/0xc0
-[    0.232089]  ftrace_startup+0x1e/0xf0
-[    0.232091]  register_ftrace_function+0x24/0x70
-[    0.232093]  func_set_flag+0x6f/0x90
-[    0.232096]  __set_tracer_option.isra.0+0x24/0x50
-[    0.232098]  trace_set_options+0x149/0x160
-[    0.232102]  apply_trace_boot_options+0x44/0x6d
-[    0.232105]  register_tracer+0x1d8/0x1e9
-[    0.232107]  early_trace_init+0x266/0x378
-[    0.232109]  start_kernel+0x337/0x614
-[    0.232112]  ? x86_family+0x5/0x20
-[    0.232114]  secondary_startup_64+0xa4/0xb0
-[    0.232119] Modules linked in:
-[    0.232120] CR2: 0000000000000050
-[    0.232126] random: get_random_bytes called from print_oops_end_marker+0x26/0x40 with crng_init=0
-[    0.232128] ---[ end trace 71e23a89b9b5224f ]---
-[    0.232130] RIP: 0010:walk_to_pmd+0x11/0x140
-[    0.232131] Code: 78 c1 32 82 e8 a0 68 ff ff 0f 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 0f 1f 44 00 00 48 89 f0 48 c1 e8 24 25 f8 0f 00 00 <48> 03 47 50 0f 84 12 01 00 00 41 54 49 89 fc 55 48 89 c5 53 48 8b
-[    0.232133] RSP: 0000:ffffffff82603c68 EFLAGS: 00010046
-[    0.232134] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[    0.232135] RDX: ffffffff82603cc8 RSI: 0000000000000000 RDI: 0000000000000000
-[    0.232136] RBP: 8000000000000063 R08: 0000000000000001 R09: fff0000000000fff
-[    0.232137] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff82603cc8
-[    0.232138] R13: 0000000000000000 R14: 0000000000000066 R15: fffffffffffffeff
-[    0.232139] FS:  0000000000000000(0000) GS:ffff88813b600000(0000) knlGS:0000000000000000
-[    0.232140] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.232141] CR2: 0000000000000050 CR3: 0000000002612001 CR4: 00000000000606b0
-[    0.232142] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    0.232143] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    0.232144] Kernel panic - not syncing: Attempted to kill the idle task!
-[    0.232184] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
 
+>
+> > ---
+> >
+> >  arch/hexagon/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/hexagon/Makefile b/arch/hexagon/Makefile index
+> > 4c5858b80f0e..c168c6980d05 100644
+> > --- a/arch/hexagon/Makefile
+> > +++ b/arch/hexagon/Makefile
+> > @@ -30,7 +30,7 @@ TIR_NAME := r19
+> >  KBUILD_CFLAGS += -ffixed-$(TIR_NAME) -
+> > DTHREADINFO_REG=$(TIR_NAME) -D__linux__  KBUILD_AFLAGS += -
+> > DTHREADINFO_REG=$(TIR_NAME)
+> >
+> > -LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
+> > +LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name
+> > +2>/dev/null)
+> >  libs-y += $(LIBGCC)
+> >
+> >  head-y := arch/hexagon/kernel/head.o
+> > --
+> > 2.25.1
+>
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
