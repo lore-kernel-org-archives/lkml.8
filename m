@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC462C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96112C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995D124958
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7429E24953
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340436;
-	bh=0q/xyRhBBkaXhh1rqSS+bdiBtGSIXDcfrgR5fSDD1xA=;
+	s=default; t=1588340439;
+	bh=S1pFrNshqtwbqsTvzoUTRMylnIQecyR9t7n1Hbdwejo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/qfACX/IL7nfVCxUsmBFejaMMnhsxkmxAtr/GRxU3OZQ8HqIkcGAG7w4gKT3//kj
-	 gllIctDhZedWDuXnYSdrwo3ZkpdgWiPW/eoYbUbE+TbFsAmynXTGGyV0dFVOJLIepF
-	 lIzEfn4xWZxRCX62u0lgULByDoLM3Cymzt7wbNbY=
+	b=ClERdmKQ4VFAx+Rs8gx9QpszK3u3NdW2jKWTkw2LF5aJtTRCnTVHEUoUoGKFpdc5U
+	 kIZaNy7d2WJzuefnGE0mI7xn2ODg6pwUFBW4rsNjzP9Ls2MeZeVWQpmde38qhrtX7y
+	 DhaEMneh63fWK6MbNhPRK/W12tYXDNDRkVPstEDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbgEANkf (ORCPT
+        id S1731338AbgEANki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:40:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:40:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730458AbgEANka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:30 -0400
+        id S1730350AbgEANkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4E02208DB;
-        Fri,  1 May 2020 13:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F29C205C9;
+        Fri,  1 May 2020 13:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340430;
-        bh=0q/xyRhBBkaXhh1rqSS+bdiBtGSIXDcfrgR5fSDD1xA=;
+        s=default; t=1588340432;
+        bh=S1pFrNshqtwbqsTvzoUTRMylnIQecyR9t7n1Hbdwejo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vZ5KDLXokPCrh5ajvZiY5XXf8UNymbCSOYBwrVLDpO3/AyHp743X9qbvC47iD31WH
-         8nlHDDsqqXNlF1/XYss50Xa6mijoZo4TcCLCud/30NvnGRRYP/mezDpSSu6u5hwtTM
-         NNOQCxsQ5v1ZaJ1ivJI3jX4tOJe+NYFddci6rpSk=
+        b=aayDskhJW/67XlbXXR3OZUAtuLPqjDHdp8RntAdvNFWH+OArlDEQ2mHg6gDDaoOzU
+         WH3S/oZ2jMW88kJVdXyf1/4kw8jrYlLONSwaTOTNkQNWa+85GjlHmtqlzTHuIbcUeU
+         OWyDuhZlDSy5VP+dvxdABn/HzH1i+x7SLfF/JDq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Mike Christie <mchristi@redhat.com>,
+        stable@vger.kernel.org, Mike Christie <mchristi@redhat.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 62/83] scsi: target: fix PR IN / READ FULL STATUS for FC
-Date:   Fri,  1 May 2020 15:23:41 +0200
-Message-Id: <20200501131540.467938058@linuxfoundation.org>
+Subject: [PATCH 5.4 63/83] scsi: target: tcmu: reset_ring should reset TCMU_DEV_BIT_BROKEN
+Date:   Fri,  1 May 2020 15:23:42 +0200
+Message-Id: <20200501131540.585278307@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -63,37 +63,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
+[ Upstream commit 066f79a5fd6d1b9a5cc57b5cd445b3e4bb68a5b2 ]
 
-Creation of the response to READ FULL STATUS fails for FC based
-reservations. Reason is the too high loop limit (< 24) in
-fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
-long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
-executed a last time for the ending '\0' of the string and thus hex2bin()
-reports an error.
+In case command ring buffer becomes inconsistent, tcmu sets device flag
+TCMU_DEV_BIT_BROKEN.  If the bit is set, tcmu rejects new commands from LIO
+core with TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE, and no longer processes
+completions from the ring.  The reset_ring attribute can be used to
+completely clean up the command ring, so after reset_ring the ring no
+longer is inconsistent.
 
-Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
+Therefore reset_ring also should reset bit TCMU_DEV_BIT_BROKEN to allow
+normal processing.
+
+Link: https://lore.kernel.org/r/20200409101026.17872-1-bstroesser@ts.fujitsu.com
+Acked-by: Mike Christie <mchristi@redhat.com>
 Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_fabric_lib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/target/target_core_user.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
-index 6b4b354c88aa0..b5c970faf5854 100644
---- a/drivers/target/target_core_fabric_lib.c
-+++ b/drivers/target/target_core_fabric_lib.c
-@@ -63,7 +63,7 @@ static int fc_get_pr_transport_id(
- 	 * encoded TransportID.
- 	 */
- 	ptr = &se_nacl->initiatorname[0];
--	for (i = 0; i < 24; ) {
-+	for (i = 0; i < 23; ) {
- 		if (!strncmp(&ptr[i], ":", 1)) {
- 			i++;
- 			continue;
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 35be1be87d2a1..9425354aef99c 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -2073,6 +2073,7 @@ static void tcmu_reset_ring(struct tcmu_dev *udev, u8 err_level)
+ 	mb->cmd_tail = 0;
+ 	mb->cmd_head = 0;
+ 	tcmu_flush_dcache_range(mb, sizeof(*mb));
++	clear_bit(TCMU_DEV_BIT_BROKEN, &udev->flags);
+ 
+ 	del_timer(&udev->cmd_timer);
+ 
 -- 
 2.20.1
 
