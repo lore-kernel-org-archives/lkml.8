@@ -1,83 +1,157 @@
 Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.3 required=3.0 tests=DEAR_SOMETHING,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345CCC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FE6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143EE2073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2B32073E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=katerra.onmicrosoft.com header.i=@katerra.onmicrosoft.com header.b="JSExzm5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgEACJZ (ORCPT
+        id S1728096AbgEACLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:09:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727889AbgEACJY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:09:24 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC428C035494;
-        Thu, 30 Apr 2020 19:09:24 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUL72-00FWOz-Ta; Fri, 01 May 2020 02:09:13 +0000
-Date:   Fri, 1 May 2020 03:09:12 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V1 05/10] arch/kmap_atomic: Consolidate duplicate code
-Message-ID: <20200501020912.GD23230@ZenIV.linux.org.uk>
-References: <20200430203845.582900-1-ira.weiny@intel.com>
- <20200430203845.582900-6-ira.weiny@intel.com>
+        Thu, 30 Apr 2020 22:11:06 -0400
+Received: from mail-bn7nam10on2102.outbound.protection.outlook.com ([40.107.92.102]:39008
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727889AbgEACLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 22:11:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WCisJ+tXF8j2N8vvHRHqxpXhjIZDLIV4XTSmD0aYJmcg+n8g0YprLIn6kaEEGcVniE8DOlstOtcZPwMWaAqhRiBTQFQMt/7n2BG0CUuhqbBAvJEmksCUA6YpVoandiKm/NpP+IxQAGLcPJjZ5lemKygqIFwZRBHyVl80VIRkpqkySho/S3oAGpvgPobvlRtYFD0Vxj3gDR6rIsaUzb9q1IBmE1fcIn57cfSrzl/wN4uo2XP35aru9i5vs7igqtpvw1dsOyRqM8QwsXMHRqixrM5pMwOq9DCRps2qYljjBHmR8oxvDCPPkUr5Vviv8uNm5sUdCM+9WyHto5+ijMiM6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QFJ6ZVHxdHlU/pxACO7dZusCoygSqRqAOPLtk/vSgvg=;
+ b=Nw9iLIZOpqgYAhHdbn4XBxmV3g9QQVIfFRE3FpiYdhSr1N2ARiZpxlTw/kH08xvOtHS93vRJCTxcv/U2cJL4sBGLgX+A0mkA4ZefSOANJRe0PnJ1YN8YFHc6gveEN/3q8LotH4Nx1yYEJXAZxBQA1JTyt8IHzIEqwBytOgJiraiMY6zVentaLr28Zpa/j9Tb+gVf0xm/htQURp1zyWOM6nt6BHug+Km8fLRQHO8LzufuH2yKYZmRUe1FH+1pXQJciGgOwqkDNaKM1c8WdaeoKJaKTc1gDhFj9Zs/gpUKGNGR6kvsYj3nU8zTj5HYKgeC8OzomJYVJIYxy9mTzQ/xhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=katerra.com; dmarc=pass action=none header.from=katerra.com;
+ dkim=pass header.d=katerra.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=katerra.onmicrosoft.com; s=selector2-katerra-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QFJ6ZVHxdHlU/pxACO7dZusCoygSqRqAOPLtk/vSgvg=;
+ b=JSExzm5Tn5YIQtzT0OJCzySvWnqidtaKeS7li4en7B3r3GVDiz2n+NNqgm5uuVCnO6nkZROQwJAPeIuOzBCbliIxM3w7HvfRT/wZcpo8QYXqiDPE4E8pRITO0HYGCoS67eI+2NeWjZAWFXs6v8N8ZMYcUcbS+dXf3mIsDcUItlo=
+Received: from BY5PR11MB4118.namprd11.prod.outlook.com (2603:10b6:a03:191::19)
+ by BY5PR11MB4070.namprd11.prod.outlook.com (2603:10b6:a03:181::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 1 May
+ 2020 02:11:02 +0000
+Received: from BY5PR11MB4118.namprd11.prod.outlook.com
+ ([fe80::5422:309d:653b:72ec]) by BY5PR11MB4118.namprd11.prod.outlook.com
+ ([fe80::5422:309d:653b:72ec%7]) with mapi id 15.20.2937.023; Fri, 1 May 2020
+ 02:11:01 +0000
+From:   Atul Kulkarni <Atul.Kulkarni@katerra.com>
+To:     "paulmck@kernel.org" <paulmck@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Reeves <Paul.Reeves@katerra.com>,
+        Mikhail Shoykher <Mikhail.Shoykher@katerra.com>
+Subject: RE: Need help on "Self Detected Stall on CPU"
+Thread-Topic: Need help on "Self Detected Stall on CPU"
+Thread-Index: AdYfH2sMtOQXo4fbTb+klSbNR9S/QgABI7KAAA4w5dA=
+Date:   Fri, 1 May 2020 02:11:01 +0000
+Message-ID: <BY5PR11MB411817B78A6FB4AF81FF2821E0AB0@BY5PR11MB4118.namprd11.prod.outlook.com>
+References: <BY5PR11MB4118B89CB3FAEB897AFC3819E0AA0@BY5PR11MB4118.namprd11.prod.outlook.com>
+ <20200430191723.GX7560@paulmck-ThinkPad-P72>
+In-Reply-To: <20200430191723.GX7560@paulmck-ThinkPad-P72>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=katerra.com;
+x-originating-ip: [106.220.71.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cde4adca-e33a-4329-060e-08d7ed74e58d
+x-ms-traffictypediagnostic: BY5PR11MB4070:|BY5PR11MB4070:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB407089590CFFFC2863582C3EE0AB0@BY5PR11MB4070.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0390DB4BDA
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(366004)(186003)(4326008)(478600001)(6916009)(107886003)(9686003)(33656002)(2906002)(52536014)(76116006)(8676002)(8936002)(86362001)(71200400001)(7696005)(5660300002)(53546011)(316002)(66556008)(66946007)(64756008)(66476007)(54906003)(66446008)(6506007)(26005)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nN9E4FuJRNRF6fTObUu26TJJDO+X9GoIYfH6iKeWIB2vTEH3nzfo/HonBtrzJEmMMQt1pgX7eNuj1w9fb+NcuAIrj/uiNCqvYEF9kPDev8nisX2WBn0aOQVRVmCLnBg+7eqBuqdZble/bo9/CxaS9mz92krSpdleUMDPPKp+8zgR48mgwE2bm9mvjroql1xSM4CB0fwfdVgs3Ns8RudH/qGdHxBJQ+NH4QEd7NagCxf2Eln9e0pRNObhnvi+0Zgf3K04oKjIempKVHdm5oBf4u8n9xrlo8ea9uMgkUUKR6M2Niff1jl+9KRJwA/KuhW3VRQP+Z5D0eYg5y34Mg65FXJgo2afspb/v2yY3ktoFXyJShxxKkkWLrUJGo+uIu+Rim+XMQ5zqvkOsKuXq5thMD7qXYJ3fvf/N2NRsGv+rjIQhubOj8K8Gm87hMRxYSC/
+x-ms-exchange-antispam-messagedata: THAxhcrAAbctRefyokNwI7TKefLkMB9Var8gPwsQ53mIujoR2BnrfjJQ6ci2f0XWbrEelZbrYbZFZwaBsq9y2LXg6aCP1XaGVyb1nobXK7pZTuHE/x/FKPNrqgJa2oq376zzL1dfj4odap/huiM9O8f2dtQ0q7q05vv1nYguZgvPArEPEceLx+RI07FrpvY2EH+SpI3RXe1k6mKrzZyq2V7X/pvV62fTqADIZeGsxB+k1YhJBbkn/waP3PRxZGRtS/+o14gnSF4VBUVzA32nbEn3m+9od/EvH5yNhpfOsVkTq3azah9gOG2x5kzN27RHgpLYIlwAZ4HHX1wUsOLPq8HkzI4H+e6jg4VrMnm1XFhTm7B84b0M3GoTp422QY9T614ESJfuHA0bQG1rGQs+itIjYy3bSkHhiBERUuL+6+GNU5VCw+Qq3XL9bWimU7rZajwThuiii9/keX8nkrlz4RmvOGL/SDB1PaazVRdzKDE1BY8aqVQkKuxY2pKOUBvvfkeHqBKgZyoRhGoNXDzA0VQ8PN2viCPRBV4ZUqmcyRiWIgfCURPgVlNUSAFLBCA8wesILla7LYMRMzAa0kBAYNZ7iNxR6PaBZywsoa9/i/d1pEej3IPpI0eVZpX1Zfcl7SmSNqoXXm04vVFFG0g+MFv2XDMXuatyhfOB2M4mfb7Cj0PTbFrcnEiIHFupjtYC/lZJaMRmd6aUy3wa4SuBcMDlt2GFk4NCF4hUigX3fkH07caGgkEt4GdFDqDVgq61QnC2Ke9GJAjzM+RuMn6Z2df2MVfbgLh6/I+mFm86Mic=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430203845.582900-6-ira.weiny@intel.com>
+X-OriginatorOrg: katerra.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cde4adca-e33a-4329-060e-08d7ed74e58d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2020 02:11:01.7799
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 82a61cce-7c23-4d88-931c-13b9a487cb25
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +16lDxl//4eqzCreK61tNmW9QTbSnsASyXg2tJSgeC7hDqC24vecPo8mA+0UApYLbxmTNAlD16S7HX1sIKGcSO7Js3hkgNpSE4Z9AXPAi1k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 01:38:40PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Every arch has the same code to ensure atomic operations and a check for
-> !HIGHMEM page.
-> 
-> Remove the duplicate code by defining a core kmap_atomic() which only
-> calls the arch specific kmap_atomic_high() when the page is high memory.
+Thank you sir for your guidance and quick response.
 
-Err....  AFAICS, you've just silently changed the semantics for
-kmap_atomic_prot() here.  And while most of the callers are converted,
-drivers/gpu/drm/ttm/ttm_bo_util.c one is not, so at the very least it's
-a bisect hazard...
+Let me introduce my colleagues Paul and Mikhail here (copied in CC). They w=
+ould be taking actions based on your guidance in this email and may reach y=
+ou with further queries.
 
-And I would argue that having kmap_atomic() differ from kmap_atomic_prot()
-wrt disabling preempt is asking for trouble.
+Appreciate your support and help.
+
+Thanks,
+Atul
+
+-----Original Message-----
+From: Paul E. McKenney <paulmck@kernel.org>=20
+Sent: 01 May 2020 00:47
+To: Atul Kulkarni <Atul.Kulkarni@katerra.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: Need help on "Self Detected Stall on CPU"
+
+On Thu, Apr 30, 2020 at 06:47:20PM +0000, Atul Kulkarni wrote:
+> Dear Sir,
+>=20
+> Hope you are doing well.  I have watched your various conference videos a=
+nd have read technical papers.
+> We are facing an issue with CPU stall on our systems and I felt like ther=
+e is no one better who can guide us on how we can deal with it.
+>=20
+> I have attached logs for your reference. Towards end I have run couple of=
+ sysreq commands and have taken crash dump using sysreq which may help prov=
+ide additional information.
+> Could you please guide us on how we could fix  this issue or identify wha=
+t is going wrong here?
+
+Let's focus on the first few lines of your console message:
+
+[20526.345089] INFO: rcu_preempt self-detected stall on CPU [20526.351110] =
+ 0-...: (1051 ticks this GP) idle=3D1fe/140000000000002/0 softirq=3D146268/=
+146268 fqs=3D0
+[20526.360163]   (t=3D2101 jiffies g=3D96468 c=3D96467 q=3D2)
+[20526.365535] rcu_preempt kthread starved for 2101 jiffies! g96468 c96467 =
+f0x0 RCU_GP_WAIT_FQS(3) ->state=3D0x402 ->cpu=3D0
+
+The last line contains the hint, namely "rcu_preempt kthread starved for
+2101 jiffies!"  If you don't let RCU's kernel threads run, then RCU CPU sta=
+ll warnings are expected behavior.
+
+The "RCU_GP_WAIT_FQS(3)" means that this kthread's last act was to sleep fo=
+r three jiffies.  As you can see from earlier in that same line, that was 2=
+101 jiffies ago.  The "->state=3D0x402" means that the scheduler believes t=
+hat this kthread is blocked, that is not yet runnable.
+
+The usual way this sort of thing happens is a timer problem, be it a hardwa=
+re configuration problem, a timer-driver bug, an interrupt-handling problem=
+, and so on.  This sort of problem is especially common when bringing up ne=
+w hardware or when modifying timer code or when modifying code on the inter=
+rupt/exception paths.
+
+So the question to ask yourself is "Why is the timer wakeup not reaching th=
+is kthread?", with special attention to changed code and new hardware.
+
+							Thanx, Paul
