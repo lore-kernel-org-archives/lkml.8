@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECF2C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D62C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79652166E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A0C2166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339618;
-	bh=vX5JsdCGV5Kz/GCsCmRJZkoJVehBUkNy3fA9Hk+Rjv4=;
+	s=default; t=1588339621;
+	bh=KnH9XDnMyRahOYpiIFkke00TmrZSxSRtFPurF5f0YHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHqxif6DCq6+wHeH3i/0+Z2xrt1bT6UVNGZS7hbSzOk9RUa+kh5q3H/izRVkodYVb
-	 ktFw5my4DW0uAXdbSBAGTr3Hgzyl+H/Aek+kuATU7LcXw/uxwrdmGb1iD6cGw4lVAQ
-	 wvMJANLHVaZWyhg/Xg5KYcTXe55bqUMnpQsl7fq4=
+	b=SydLIlKRq7R6+v/Xa1r5xIldyYLHf69B3qO9l/Nd7GeyN8zIC3uZPFg2drgQAn9j3
+	 xXJKKwhIoM7VjXlOpwjy+ulLpz7QYvudxs/tzsbFDWlQZ91quxZ2C4e2uSCPeRoL+D
+	 J8TGi7kRE3Kwpz15WvNLcCSiooxw1/XWhEV46Q9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgEAN06 (ORCPT
+        id S1729378AbgEAN1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729338AbgEAN0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:51 -0400
+        id S1729330AbgEAN0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2192166E;
-        Fri,  1 May 2020 13:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B134E20757;
+        Fri,  1 May 2020 13:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339610;
-        bh=vX5JsdCGV5Kz/GCsCmRJZkoJVehBUkNy3fA9Hk+Rjv4=;
+        s=default; t=1588339608;
+        bh=KnH9XDnMyRahOYpiIFkke00TmrZSxSRtFPurF5f0YHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8vTRFa9IvQSF9wKCxulpZU1TPb2DMN4clAxp3KLdWhDhT4iw9X8/GDM9WXztYNQS
-         ZbvXP25a4HkLQnoOnSZ5gACJO/sW39Te6pfmwCu6Oon22pH5P+hAsBlzKjtlEBoZf/
-         Qd5ugiVjMKD8Bqr31Nls9g/mJPNS9iBiibuHLMBs=
+        b=gKdgfPXjpXV1z40Wht4ufy0B7Vn3SjESlNTfMqx7/5dha+LGbER31dnyzpGdi9equ
+         3ThRdqRYbfDayu7Sj+cUWAoKRDOQst6efNZSwiozh4atYK/5oIV+OT3u6BxLk0BJzH
+         sOqV934uYf0OMsNOtodjHftgb07ZZO05Z2qFSjQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Roland Hieber <rhi@pengutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.4 46/70] ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
-Date:   Fri,  1 May 2020 15:21:34 +0200
-Message-Id: <20200501131527.546871988@linuxfoundation.org>
+        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.4 45/70] ASoC: dapm: fixup dapm kcontrol widget
+Date:   Fri,  1 May 2020 15:21:33 +0200
+Message-Id: <20200501131527.231986635@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -62,46 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Gyeongtaek Lee <gt82.lee@samsung.com>
 
-commit f1baca8896ae18e12c45552a4c4ae2086aa7e02c upstream.
+commit ebf1474745b4373fdde0fcf32d9d1f369b50b212 upstream.
 
-512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
-introduced an unintended linker error for i.MX6 configurations that have
-ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
-nor ARM_PSCI_FW are selected.
+snd_soc_dapm_kcontrol widget which is created by autodisable control
+should contain correct on_val, mask and shift because it is set when the
+widget is powered and changed value is applied on registers by following
+code in dapm_seq_run_coalesced().
 
-Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
-calls is available as well.
+		mask |= w->mask << w->shift;
+		if (w->power)
+			value |= w->on_val << w->shift;
+		else
+			value |= w->off_val << w->shift;
 
-The C declaration for the function remains unguarded to avoid future code
-inadvertently using a stub and introducing a regression to the bug the
-original commit fixed.
+Shift on the mask in dapm_kcontrol_data_alloc() is removed to prevent
+double shift.
+And, on_val in dapm_kcontrol_set_value() is modified to get correct
+value in the dapm_seq_run_coalesced().
 
-Cc: <stable@vger.kernel.org>
-Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
-Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Tested-by: Roland Hieber <rhi@pengutronix.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/000001d61537$b212f620$1638e260$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-imx/Makefile |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-dapm.c |   20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -91,8 +91,10 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
- obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
- obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
- endif
-+ifeq ($(CONFIG_ARM_CPU_SUSPEND),y)
- AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
- obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
-+endif
- obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -384,7 +384,7 @@ static int dapm_kcontrol_data_alloc(stru
  
- obj-$(CONFIG_SOC_IMX50) += mach-imx50.o
+ 			memset(&template, 0, sizeof(template));
+ 			template.reg = e->reg;
+-			template.mask = e->mask << e->shift_l;
++			template.mask = e->mask;
+ 			template.shift = e->shift_l;
+ 			template.off_val = snd_soc_enum_item_to_val(e, 0);
+ 			template.on_val = template.off_val;
+@@ -510,8 +510,22 @@ static bool dapm_kcontrol_set_value(cons
+ 	if (data->value == value)
+ 		return false;
+ 
+-	if (data->widget)
+-		data->widget->on_val = value;
++	if (data->widget) {
++		switch (dapm_kcontrol_get_wlist(kcontrol)->widgets[0]->id) {
++		case snd_soc_dapm_switch:
++		case snd_soc_dapm_mixer:
++		case snd_soc_dapm_mixer_named_ctl:
++			data->widget->on_val = value & data->widget->mask;
++			break;
++		case snd_soc_dapm_demux:
++		case snd_soc_dapm_mux:
++			data->widget->on_val = value >> data->widget->shift;
++			break;
++		default:
++			data->widget->on_val = value;
++			break;
++		}
++	}
+ 
+ 	data->value = value;
+ 
 
 
