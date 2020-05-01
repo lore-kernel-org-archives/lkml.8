@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3C7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78E6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D60B524955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EC324954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340239;
-	bh=lX7GO5zZRgBAxgEabLCkym2MplVXRl3kwn5k981MtVQ=;
+	s=default; t=1588340243;
+	bh=GZCl39VIH5zDp0nkCodPTNaCNT1yMG52x4YMPziwtFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1F5DgMmrq5C5TA6pe4N2phmEZP3v4LhP96mM2Y9tPpd4qHeham1nDGYVBcLTgXyWo
-	 p/Akalz+/JFyGSeWngxZzUQ6Rvu3zREtp+3bgvIPkB/t+8eiWanS5idUMkj8IrA8ya
-	 v/0ZtrqKXK0KdjGlHzbyrOA0ZRgEHD49lFbJrPgk=
+	b=dsFg76HjG/AeTK51msSPXTE8IOccn1JkLOBU8VZaETxUAcT2lxaOXjh0MepumJu1c
+	 DwjBNdmfMzGsftNVXGFNOdyKrQVq6swsBTgG/TIFXRSj8G6ngmYTJI7ZFSOatxmPuT
+	 LXxcN0MZRhkRI2XWE9TTSuCvsFBTSlnbtmbd3CDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730960AbgEANhS (ORCPT
+        id S1730685AbgEANhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35918 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730933AbgEANhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:07 -0400
+        id S1729200AbgEANhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1980A24953;
-        Fri,  1 May 2020 13:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED8192173E;
+        Fri,  1 May 2020 13:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340227;
-        bh=lX7GO5zZRgBAxgEabLCkym2MplVXRl3kwn5k981MtVQ=;
+        s=default; t=1588340232;
+        bh=GZCl39VIH5zDp0nkCodPTNaCNT1yMG52x4YMPziwtFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pwLzLcXswMdeSyvK9rI7qw1A6SHhBOJBORsCWNXy9YpPsKIlQbupXum0Epz2tEVp+
-         J+bbp1A+K39Mbj0SNcRmKD2EpHLRfaXe3Xk7NckXVz5mVyhFBcR8pMsaSS8wAHUoVS
-         oGqtN+k48ngIwLL4EQnIGMqlNt+gayQ3wDRFQWaA=
+        b=fzZ5RzRnNahSawy7uphFwacxRbxRfO0hVrOk0szcTajZk9vpa8/gx73FXd7hNfHo6
+         2PmTRYKebLhrfSzZzpH5qImTY3Uqbea996s8BAWgjlz8qf16/na8sOwsqdRmhTWXZ0
+         6Y7HQNjwNXF1DECqo47VjgjHGR9xASD+x8B9Sy0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olaf Hering <olaf@aepfle.de>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/46] x86: hyperv: report value of misc_features
-Date:   Fri,  1 May 2020 15:22:54 +0200
-Message-Id: <20200501131509.204198464@linuxfoundation.org>
+        stable@vger.kernel.org, Roy Spliet <nouveau@spliet.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/46] ALSA: hda: Keep the controller initialization even if no codecs found
+Date:   Fri,  1 May 2020 15:22:56 +0200
+Message-Id: <20200501131509.715298157@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -59,36 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olaf Hering <olaf@aepfle.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
+[ Upstream commit 9479e75fca370a5220784f7596bf598c4dad0b9b ]
 
-A few kernel features depend on ms_hyperv.misc_features, but unlike its
-siblings ->features and ->hints, the value was never reported during boot.
+Currently, when the HD-audio controller driver doesn't detect any
+codecs, it tries to abort the probe.  But this abort happens at the
+delayed probe, i.e. the primary probe call already returned success,
+hence the driver is never unbound until user does so explicitly.
+As a result, it may leave the HD-audio device in the running state
+without the runtime PM.  More badly, if the device is a HD-audio bus
+that is tied with a GPU, GPU cannot reach to the full power down and
+consumes unnecessarily much power.
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
-Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+This patch changes the logic after no-codec situation; it continues
+probing without the further codec initialization but keep the
+controller driver running normally.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
+Tested-by: Roy Spliet <nouveau@spliet.org>
+Link: https://lore.kernel.org/r/20200413082034.25166-5-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mshyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/hda_intel.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index fc93ae3255153..f8b0fa2dbe374 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -214,8 +214,8 @@ static void __init ms_hyperv_init_platform(void)
- 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 0502042c16163..72c268e887e55 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2054,7 +2054,7 @@ static int azx_first_init(struct azx *chip)
+ 	/* codec detection */
+ 	if (!azx_bus(chip)->codec_mask) {
+ 		dev_err(card->dev, "no codecs found!\n");
+-		return -ENODEV;
++		/* keep running the rest for the runtime PM */
+ 	}
  
--	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
--		ms_hyperv.features, ms_hyperv.hints);
-+	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-+		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+ 	if (azx_acquire_irq(chip, 0) < 0)
+@@ -2440,9 +2440,11 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
  
- 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
- 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+ 	/* create codec instances */
+-	err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
+-	if (err < 0)
+-		goto out_free;
++	if (bus->codec_mask) {
++		err = azx_probe_codecs(chip, azx_max_codecs[chip->driver_type]);
++		if (err < 0)
++			goto out_free;
++	}
+ 
+ #ifdef CONFIG_SND_HDA_PATCH_LOADER
+ 	if (chip->fw) {
+@@ -2456,7 +2458,7 @@ static int azx_probe_continue(struct azx *chip)
+ #endif
+ 	}
+ #endif
+-	if ((probe_only[dev] & 1) == 0) {
++	if (bus->codec_mask && !(probe_only[dev] & 1)) {
+ 		err = azx_codec_configure(chip);
+ 		if (err < 0)
+ 			goto out_free;
 -- 
 2.20.1
 
