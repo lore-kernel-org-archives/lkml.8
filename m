@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923D2C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF257C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7962063A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B7D2063A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340015;
-	bh=f/fwzZFg0f1HI+4wKwzeOAmlMY6UcodpWxR9NRYIXsc=;
+	s=default; t=1588340018;
+	bh=13vhvx7c692PAJM9gk7L0KsDuCIQKgT3anH1uEiPt2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdLO8IZqoQVczjc0sbxbzasUR916ZZ7CSLptONsLMEXeWSkBEiusfOw4mNfxPJHBL
-	 mkPlgAUil+B1mPKFMr9oEe2RO+rLJumiF3Q6Ow3HfQJP57K+F81CM2vMtI9Fd+T7kc
-	 5fPZ4s14mpYbmyKog1PiysbEaQDXiS3lIN8a3gyk=
+	b=nqV4jU6Vj/dWm0//cyIA/U192Ls/GwF8xdXrOuowl4SWLAXitlxHSZ6smnJaX+kNp
+	 zCFd7aYkSeOIplozOvCyobMRJdQhPVWnyr5xQRrysZ4vX2y5dOzWyyUYK4GYgkpbqF
+	 HwZ4GDENrOOm2OwvdWWIjD1AIZivNWqKTyKa+QVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgEANdd (ORCPT
+        id S1730454AbgEANdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbgEANdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:31 -0400
+        id S1730433AbgEANde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14DAB208C3;
-        Fri,  1 May 2020 13:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96A1F2068E;
+        Fri,  1 May 2020 13:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340011;
-        bh=f/fwzZFg0f1HI+4wKwzeOAmlMY6UcodpWxR9NRYIXsc=;
+        s=default; t=1588340014;
+        bh=13vhvx7c692PAJM9gk7L0KsDuCIQKgT3anH1uEiPt2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UlCfgXiwWDeXEMsaitUKI+DT7aqA74EthUBIqNh7Gy+Y/jlYBsnb7qo806sTLaJBr
-         Gfs0WPZMtqkRRBZcvHCJXmfEUIC0abcQjaLXRhnWwgqzv41JzN3odQzUfwI0B1Nl70
-         EfwJdJDGFCPG+VVf3sOVhc8rwNv+kW6n0lRAk1Dc=
+        b=uQNt6oebChE7mqsYGfoEKlfgmXYaYRx/5EPz06z70/M+Kr2EZw9uN4iL73tmAev9l
+         L0nGgb3DdNQ+0zVV8J9a8CbSiesoI7lM4XcTyJwMsRz18sVpsCN7shuDEzUq2HV21r
+         qzWGGCZAC1PjhGyrOSA9481bOJSwG467bXfZ71DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 070/117] staging: comedi: Fix comedi_device refcnt leak in comedi_open
-Date:   Fri,  1 May 2020 15:21:46 +0200
-Message-Id: <20200501131553.439947944@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>
+Subject: [PATCH 4.14 071/117] vt: dont hardcode the mem allocation upper bound
+Date:   Fri,  1 May 2020 15:21:47 +0200
+Message-Id: <20200501131553.523399758@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,49 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-commit 332e0e17ad49e084b7db670ef43b5eb59abd9e34 upstream.
+commit 2717769e204e83e65b8819c5e2ef3e5b6639b270 upstream.
 
-comedi_open() invokes comedi_dev_get_from_minor(), which returns a
-reference of the COMEDI device to "dev" with increased refcount.
+The code in vc_do_resize() bounds the memory allocation size to avoid
+exceeding MAX_ORDER down the kzalloc() call chain and generating a
+runtime warning triggerable from user space. However, not only is it
+unwise to use a literal value here, but MAX_ORDER may also be
+configurable based on CONFIG_FORCE_MAX_ZONEORDER.
+Let's use KMALLOC_MAX_SIZE instead.
 
-When comedi_open() returns, "dev" becomes invalid, so the refcount
-should be decreased to keep refcount balanced.
+Note that prior commit bb1107f7c605 ("mm, slab: make sure that
+KMALLOC_MAX_SIZE will fit into MAX_ORDER") the KMALLOC_MAX_SIZE value
+could not be relied upon.
 
-The reference counting issue happens in one exception handling path of
-comedi_open(). When "cfp" allocation is failed, the refcnt increased by
-comedi_dev_get_from_minor() is not decreased, causing a refcnt leak.
-
-Fix this issue by calling comedi_dev_put() on this error path when "cfp"
-allocation is failed.
-
-Fixes: 20f083c07565 ("staging: comedi: prepare support for per-file read and write subdevices")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/1587361459-83622-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: <stable@vger.kernel.org> # v4.10+
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2003281702410.2671@knanqh.ubzr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/comedi_fops.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/vt/vt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/comedi_fops.c
-+++ b/drivers/staging/comedi/comedi_fops.c
-@@ -2603,8 +2603,10 @@ static int comedi_open(struct inode *ino
- 	}
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -880,7 +880,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
  
- 	cfp = kzalloc(sizeof(*cfp), GFP_KERNEL);
--	if (!cfp)
-+	if (!cfp) {
-+		comedi_dev_put(dev);
- 		return -ENOMEM;
-+	}
- 
- 	cfp->dev = dev;
- 
+-	if (new_screen_size > (4 << 20))
++	if (new_screen_size > KMALLOC_MAX_SIZE)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
 
 
