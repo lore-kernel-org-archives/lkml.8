@@ -2,153 +2,130 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3537DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DA1C28CBC
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B9082073E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBE8208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 02:41:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="eYQGDTA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgEACjX (ORCPT
+        id S1728113AbgEACl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 22:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgEACjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 22:39:22 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 30 Apr 2020 22:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728012AbgEACl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 22:41:57 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD18C035494;
+        Thu, 30 Apr 2020 19:41:56 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A57B2071C;
-        Fri,  1 May 2020 02:39:20 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 22:39:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Subject: Re: [RFC][PATCH] x86/mm: Sync all vmalloc mappings before
- text_poke()
-Message-ID: <20200430223919.50861011@gandalf.local.home>
-In-Reply-To: <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
-References: <20200429054857.66e8e333@oasis.local.home>
-        <20200429105941.GQ30814@suse.de>
-        <20200429082854.6e1796b5@oasis.local.home>
-        <20200429100731.201312a9@gandalf.local.home>
-        <20200430141120.GA8135@suse.de>
-        <20200430121136.6d7aeb22@gandalf.local.home>
-        <20200430191434.GC8135@suse.de>
-        <20200430211308.74a994dc@oasis.local.home>
-        <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49CxNJ3jFWz9sRY;
+        Fri,  1 May 2020 12:41:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588300913;
+        bh=vUF1fXtpIoKJqTpWNPfnW5x1ycGQaYIW4GV4pb93qXc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eYQGDTA5bAn1VyClZ0fNAx5OdZYWL7oQpEyFqoVf4TzPe0s5C/c/tCTWzlMGq2a9e
+         cNOndxGtbxPmcYFP25SMc2377uPhkYmFeqGFm6+7NvdofhFgTM/d0e5lYsPkhRZb+/
+         xm3LjcNaawsUFIZenbrosq2BpotdqnBmzmdp1tysxHGOd49PbB0qV7L1qfRcG8WCFg
+         /j2dqeLZ6fjlv/PkYZtviUjgAiOYwwn4japLnJepnvsnHQiOM57oBHa8OuKzo62H36
+         x0ulcWE3Pm37QeBDX70AFic6q1T4mrYL3OiFimNwyc1NIyuyhhSPCD7C07D8TShmcz
+         lhlYB61z6GvKw==
+Date:   Fri, 1 May 2020 12:41:16 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Florian Westphal <fw@strlen.de>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200501124116.794c82ee@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/hudxFM=ID.usjgK48nTX2ne";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 22:26:55 -0400 (EDT)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+--Sig_/hudxFM=ID.usjgK48nTX2ne
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> ----- On Apr 30, 2020, at 9:13 PM, rostedt rostedt@goodmis.org wrote:
-> 
-> > [ Joerg, sending again this time not just to you. (hit reply to sender
-> >  and not reply to all). Feel free to resend what you wrote before to this ]
-> > 
-> > On Thu, 30 Apr 2020 21:14:34 +0200
-> > Joerg Roedel <jroedel@suse.de> wrote:
-> >   
-> >> And alloc_percpu() calls down into pcpu_alloc(), which allocates new
-> >> percpu chunks using vmalloc() on x86. And there we are again in the
-> >> vmalloc area.  
-> > 
-> > So after a vmalloc() is made, should the page tables be synced?  
-> 
-> Why should it ? Usually, the page fault handler is able to resolve the
-> resulting minor page faults lazily.
-> 
-> > 
-> > This is a rather subtle bug, and I don't think it should be the caller of
-> > percpu_alloc() that needs to call vmalloc_sync_mappings().  
-> 
-> Who said tracing was easy ? ;-)
+Hi all,
 
-But anyone can hook to a tracepoint, and then if they hook to one that is
-in the page fault handler, and they use vmalloc, they can lock up the
-machine.
+Today's linux-next merge of the net-next tree got a conflict in:
 
-> 
-> > What's your suggestion for a fix?  
-> 
-> I know the question is not addressed to me, but here are my 2 cents:
-> 
-> It's subtle because ftrace is tracing the page fault handler through
-> tracepoints. It would not make sense to slow down all vmalloc or
-> percpu_alloc() just because tracing recurses when tracing page faults.
+  include/net/mptcp.h
 
-What's so damn special about alloc_percpu()? It's definitely not a fast
-path. And it's not used often.
+between commit:
 
-> 
-> I think the right approach to solve this is to call vmalloc_sync_mappings()
-> before any vmalloc'd memory ends up being observable by instrumentation.
-> This can be achieved by adding a vmalloc_sync_mappings call on tracepoint
-> registration like I proposed in my patchset a few week ago:
-> 
-> https://lore.kernel.org/r/20200409193543.18115-2-mathieu.desnoyers@efficios.com
-> 
-> The tracers just have to make sure they perform their vmalloc'd memory
-> allocation before registering the tracepoint which can touch it, else they
-> need to issue vmalloc_sync_mappings() on their own before making the
-> newly allocated memory observable by instrumentation.
-> 
-> This approach is not new: register_die_notifier() does exactly that today.
-> 
+  cfde141ea3fa ("mptcp: move option parsing into mptcp_incoming_options()")
 
-I'll give the answer I gave to Joerg when he replied to my accidental
-private (not public) email:
+from the net tree and commit:
 
-Or even my original patch would be better than having the generic tracing
-code understanding the intrinsic properties of vmalloc() and
-alloc_percpu() on x86_64. I really don't think it is wise to have:
+  071c8ed6e88d ("tcp: mptcp: use mptcp receive buffer space to select rcv w=
+indow")
 
-	foo = alloc_percpu();
+from the net-next tree.
 
-	/*
-	 * Because of some magic with the way alloc_percpu() works on
-	 * x86_64, we need to synchronize the pgd of all the tables,
-	 * otherwise the trace events that happen in x86_64 page fault
-	 * handlers can't cope with accessing the chance that a
-	 * alloc_percpu()'d memory might be touched in the page fault trace
-	 * event. Oh, and we need to audit all alloc_percpu() and vmalloc()
-	 * calls in tracing, because something might get triggered within a
-	 * page fault trace event!
-	 */
-	vmalloc_sync_mappings();
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-That would be exactly what I add as a comment if it were to be added in the
-generic tracing code.
+--=20
+Cheers,
+Stephen Rothwell
 
-And we would need to audit any percpu alloc'd code in all tracing, or
-anything that might git hooked into something that hooks to the page fault
-trace point.
+diff --cc include/net/mptcp.h
+index 3bce2019e4da,5288fba56e55..000000000000
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@@ -68,8 -68,13 +68,10 @@@ static inline bool rsk_is_mptcp(const s
+  	return tcp_rsk(req)->is_mptcp;
+  }
+ =20
++ void mptcp_space(const struct sock *ssk, int *space, int *full_space);
++=20
+ -void mptcp_parse_option(const struct sk_buff *skb, const unsigned char *p=
+tr,
+ -			int opsize, struct tcp_options_received *opt_rx);
+  bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
+  		       unsigned int *size, struct mptcp_out_options *opts);
+ -void mptcp_rcv_synsent(struct sock *sk);
+  bool mptcp_synack_options(const struct request_sock *req, unsigned int *s=
+ize,
+  			  struct mptcp_out_options *opts);
+  bool mptcp_established_options(struct sock *sk, struct sk_buff *skb,
 
-Since this worked for a decade without this, I'm strongly against adding it
-in the generic code due to some issues with a single architecture.
+--Sig_/hudxFM=ID.usjgK48nTX2ne
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- Steve
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6rjEwACgkQAVBC80lX
+0GyeTwgAkps7ZAfwWEf59WesPtHVUi1cy4pZ/UwKctzDHiMSKSM7I7/mKbVNrCdn
+EdYo1zRxM6tbmXXdWxAA8Q3ab/3DPq10z6BiBuI9/qift1fZ3k2G8ZS0JYl6sE2s
+rf83xx1SPB2ls1f+tif7ZG+tXzMLI8NszDBYjd4w/gsVDtE/OJ+3dykl5Z1pr2M4
+1OLHb+c5h0MdFJAlbFwVs/xKFeabQn1CViBpIsW6khv4sm4TLVhgUjUvj3WRw1zO
+ICvFfNtGDe7H9LTv3LNqOPSTTHaCgJ092VrMZWnUR83J7lHMM6q69Kz7OUkEDT/M
+P+Xo6QFhk1mUsEScoh49jKwPhJ+d4Q==
+=90ZQ
+-----END PGP SIGNATURE-----
+
+--Sig_/hudxFM=ID.usjgK48nTX2ne--
