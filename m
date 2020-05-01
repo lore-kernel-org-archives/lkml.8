@@ -2,95 +2,63 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE7C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF0FC47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBB72064C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:18:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXm40yQq"
+	by mail.kernel.org (Postfix) with ESMTP id D510F208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgEAWSe (ORCPT
+        id S1726660AbgEAWVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49176 "EHLO
+        Fri, 1 May 2020 18:21:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgEAWSd (ORCPT
+        with ESMTP id S1726045AbgEAWVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:18:33 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C937C061A0C;
-        Fri,  1 May 2020 15:18:33 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id r14so2171939pfg.2;
-        Fri, 01 May 2020 15:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MSZ85RFQ7IUhZsF9jO/p7n0EJoXIwqWHxV7g4grXlFs=;
-        b=NXm40yQqR5jOz1kmv+KHZ7ALZri/nOn+acl0YxdqpgaOqYJDM6+bJL65F2UDkPQDzF
-         Cy77/tZknrnvSfHZcHyvDJInaWGAGT3HGcDvPCgjbxs/4ttEFBHwmnc1MRsBtxceUmu2
-         RYdEBhtOmwg1g4uRs/wMrqz+xS6bhUe9tuGNj5teZ7l1pXRcfqOEQSOhS3NVY8UCg9RK
-         y+TJiqrJ0qUOje8lv8luyWwfBr+yoMsXN8ZVapqY/EItOqcqLSbqoJdJZHfi+Elo0L2+
-         WL2iB8UmhfVcaRwG+JeOK0C46gXpwOpO7InJmusRVBGxRNuxQaedcFIQR5N/Fmdzja5s
-         3ZCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MSZ85RFQ7IUhZsF9jO/p7n0EJoXIwqWHxV7g4grXlFs=;
-        b=S/JDYxOh2QmXpCCd7ZR7xeLsPQ1PeXIzHrLNteAar/VENp+sHGIOHkYI5Jpjy/e103
-         RLBEcUZTPHSQdkd6KRFj0ZlA/AnD86VP6NxHI8M8nndoS99q+E7/f2HFZ/6ikenoJC/a
-         RUOMVYcA8f0CM8mrd9DmELvLR66U72XYP5OFSCRV5Tgs3boizqTamHyT6md2iNc610XD
-         i0wmZUwB/XSaopQFbkwKtsf57HB6RZeFHSiQbQ68mg65PeJHu2v3VO5GEDDZBltGfMCG
-         gUXQzbJjLjyKm38mfkTpJZewPy6D56Ka3cv06JPdKWLwCIkVg6JQcpB8ZerWvzqRWRxb
-         Sesg==
-X-Gm-Message-State: AGi0PuapO/3K6oPc7jpJHkzEbJLGbwqVS/5+G6zv3AFy7vJpCfHz/UjT
-        taZWbX1V8mwNSiFcYNCDZGI=
-X-Google-Smtp-Source: APiQypKK3Ozzr5Yu0qzjmYA4ZsD/HMRzx1awNo2uacPpltUAcS/a7yg9W21Zz6IItVzKPwRl6CNZAw==
-X-Received: by 2002:a62:a10c:: with SMTP id b12mr6465144pff.14.1588371512673;
-        Fri, 01 May 2020 15:18:32 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v7sm3071200pfm.146.2020.05.01.15.18.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 01 May 2020 15:18:32 -0700 (PDT)
-Date:   Fri, 1 May 2020 15:18:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 000/106] 5.6.9-rc1 review
-Message-ID: <20200501221831.GF44185@roeck-us.net>
-References: <20200501131543.421333643@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 1 May 2020 18:21:32 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D953C061A0C;
+        Fri,  1 May 2020 15:21:32 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AF92B14EFC4E4;
+        Fri,  1 May 2020 15:21:30 -0700 (PDT)
+Date:   Fri, 01 May 2020 15:21:30 -0700 (PDT)
+Message-Id: <20200501.152130.2290341369746144284.davem@davemloft.net>
+To:     hayashi.kunihiko@socionext.com
+Cc:     robh+dt@kernel.org, yamada.masahiro@socionext.com,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller
+ to json-schema
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 01 May 2020 15:21:31 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:22:33PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.9 release.
-> There are 106 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> Anything received after that time might be too late.
-> 
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Date: Tue, 28 Apr 2020 15:31:22 +0900
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 428 pass: 428 fail: 0
+> Convert the UniPhier AVE4 controller binding to DT schema format.
+> This changes phy-handle property to required.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-Guenter
+DT folks, is it ok if I take this into net-next or do you folks want to
+take it instead?
+
+Thanks.
