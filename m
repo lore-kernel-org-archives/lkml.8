@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87224C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AA8C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5FA2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81BB2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341017;
-	bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
+	s=default; t=1588341022;
+	bh=IUCErDYU5+chUFB9+LblbUcLmt79a5CAIndVF79zzyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJnKgtNxfz1KxEoZ0IiZHb8HXvNdLwjK1+bJj9qC+cG+uWaCHt2MlcUqMEpK8iiRM
-	 bJNOQVL+b7X3uXNhP9MOTavcoQ7R1uYZmaEJzWgQVP6Db3T2s3mEB3WyKV2OP33oED
-	 CrchX3SMOZlaYDswSifzB4tMUOavw3TXpeDK0DZI=
+	b=QraPq5aDhwxkvEjd52oZmZ59ZsD5/LKcIcZU/WoCUMYsBWvaDeqqYTfcrBuKpo+aQ
+	 2AtGZmUi7qRcKoxnJ4FZ7wrsfrqH+NYytHIlR0rKXMlTolPQb1mg7QS5RcfvVSGQbS
+	 uQdX8nDEZssGDxjJ0txhqv1ZEeAMIAs529ggBw0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbgEANuQ (ORCPT
+        id S1731391AbgEANuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40222 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:50:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731255AbgEANkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:13 -0400
+        id S1731267AbgEANkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98CF5208DB;
-        Fri,  1 May 2020 13:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B052B205C9;
+        Fri,  1 May 2020 13:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340413;
-        bh=gQAWuW39xI8mn+xgNei4VJx/ZoOFJOfZegmSKlqk98g=;
+        s=default; t=1588340408;
+        bh=IUCErDYU5+chUFB9+LblbUcLmt79a5CAIndVF79zzyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUBjGKeC34zieqpt/zhuDtTIvGKNzjeLknD0670Ofpa8Lxy4PLIuZVk81BWKY8omE
-         gUkIz6ZO7ytrzvGYlaUSnFSaSFvrKnhJ12KkocT4xjbunCOO+qqCgb+n2TwxM7OQ66
-         xaBGFT4ehx9ulnLA9aiuzUlVChmO3Hq82sPvfu2k=
+        b=jSOZWJdjx1nmR1fwxkHfES4u6qnBHO96LuY3WAHUqi39XVlxWh6ifTba5YW4I/EnD
+         7QT4PkByCg04gk0wTaHE1ravVfxhFHRJJbDbLL1Zfs3REhidOwRDsVYqMnLU2v+ZjU
+         BhvsOMlKdDYVZLZNll0GNGLYlxNzcbw3r0KhlNIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 68/83] net: stmmac: socfpga: Allow all RGMII modes
-Date:   Fri,  1 May 2020 15:23:47 +0200
-Message-Id: <20200501131541.183432435@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Wei Liu <wl@xen.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 66/83] xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
+Date:   Fri,  1 May 2020 15:23:45 +0200
+Message-Id: <20200501131540.943357495@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,33 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit a7a0d6269652846671312b29992143f56e2866b8 ]
+[ Upstream commit 6b51fd3f65a22e3d1471b18a1d56247e246edd46 ]
 
-Allow all the RGMII modes to be used.  (Not only "rgmii", "rgmii-id"
-but "rgmii-txid", "rgmii-rxid")
+xenbus_map_ring_valloc() maps a ring page and returns the status of the
+used grant (0 meaning success).
 
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+There are Xen hypervisors which might return the value 1 for the status
+of a failed grant mapping due to a bug. Some callers of
+xenbus_map_ring_valloc() test for errors by testing the returned status
+to be less than zero, resulting in no error detected and crashing later
+due to a not available ring page.
+
+Set the return value of xenbus_map_ring_valloc() to GNTST_general_error
+in case the grant status reported by Xen is greater than zero.
+
+This is part of XSA-316.
+
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Wei Liu <wl@xen.org>
+Link: https://lore.kernel.org/r/20200326080358.1018-1-jgross@suse.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/xen/xenbus/xenbus_client.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index e0212d2fc2a12..fa32cd5b418ef 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -241,6 +241,8 @@ static int socfpga_set_phy_mode_common(int phymode, u32 *val)
- 	switch (phymode) {
- 	case PHY_INTERFACE_MODE_RGMII:
- 	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		*val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
- 		break;
- 	case PHY_INTERFACE_MODE_MII:
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index e17ca81561713..a38292ef79f6d 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -448,7 +448,14 @@ EXPORT_SYMBOL_GPL(xenbus_free_evtchn);
+ int xenbus_map_ring_valloc(struct xenbus_device *dev, grant_ref_t *gnt_refs,
+ 			   unsigned int nr_grefs, void **vaddr)
+ {
+-	return ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	int err;
++
++	err = ring_ops->map(dev, gnt_refs, nr_grefs, vaddr);
++	/* Some hypervisors are buggy and can return 1. */
++	if (err > 0)
++		err = GNTST_general_error;
++
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(xenbus_map_ring_valloc);
+ 
 -- 
 2.20.1
 
