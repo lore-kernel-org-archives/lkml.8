@@ -2,164 +2,114 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57009C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86FEC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F4820836
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A2220857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 05:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mzzFIhaK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCHL0GWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgEAFMW (ORCPT
+        id S1728237AbgEAFQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 01:12:22 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:26681 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727922AbgEAFMV (ORCPT
+        Fri, 1 May 2020 01:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbgEAFQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 01:12:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588309941; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Gb5UVWrknkO+6yt6LwWbrza8osaP6Xld9YYD0ScSLPA=;
- b=mzzFIhaKhODcgxdqY5Ozx4DMbupH+eueG5ea4sH/FRn7yuozY2Xf6VdiGWLPWJ257SNA32fX
- zcOJmae8NqNAhqDFffAYDUn0cYPJWdaHeMCMod2mkwADwm+UeLw1EYYnMbKMBHD97P79HnyJ
- 0tJ9aMDkRRPwbfRZCEAH0nDnWlc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eabafb4.7f7e4515ad50-smtp-out-n03;
- Fri, 01 May 2020 05:12:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 80208C4478F; Fri,  1 May 2020 05:12:18 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78AAFC433CB;
-        Fri,  1 May 2020 05:12:17 +0000 (UTC)
+        Fri, 1 May 2020 01:16:06 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D13C035494;
+        Thu, 30 Apr 2020 22:16:04 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f18so1655149lja.13;
+        Thu, 30 Apr 2020 22:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D00DqwLp1pIkCBQPFGQl7gIJVCS8/hRa1H7R7PcZvC0=;
+        b=KCHL0GWQjV+/Vcy6mMKmvihoMXLEC1KLzWhotLuUqEhNq1BCETeBtFuU0xquauOwQW
+         PKf2wIk5/m/wKKS2YKd5PyMgR8f9uTHNg+Q7tulGlUwO6BmuX5VTJBE0Q4MLc2Yk++az
+         6BzbmTU9isVBiJIucl3uFdzOpzJxf40dD8TJG0aWPRjseCZjsjS5hgbCKZDwFgqlWu5w
+         swDucdz3ti+cUoNMouMDmbVFAryxKuCEae9Iy4V7+my9YaGKCiTEte3VS9ga2vrUw+Rl
+         CEWwnJWQpu63K/8AfUwl5En80amp+kVWvTH7BpXkTSVzFspPG/vRzwfiSJCJoCc69S9W
+         TJ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D00DqwLp1pIkCBQPFGQl7gIJVCS8/hRa1H7R7PcZvC0=;
+        b=W8kYA62Ytp8M8RkmGUEu8UzkEBQbsb9uWn+mlQUAY/I4oz0ShVnCWnLUisGqdLnpdA
+         XkZR4iLjggBU0io0qGEcVXSXG04fwwCZE+8kbrYhraySRR1yFtb5B7a69bvFKQsYWo/i
+         zPJRtowI8KOsuT5oxnmHLEDqyRkMvtmi0YUG+OGyzhoIBg1RH/sA7BC4GhWH0m3uLM66
+         OpNRcZ0Id97aKggWQOWiSMryjAbYcNa5j2BT/TcdutPhwcLTGcxbOad7pb2lCpA00WY0
+         s3LvUXdxU+GvVqXSWTFm3Ns5PU4Y6H/78lW8x5V2EROhT2hMfSPJD2Xs1cOOgJxuXT6R
+         7Brg==
+X-Gm-Message-State: AGi0PuYah0f8pZjgJUECVr6bg9bV9I+lmhttj8d4XGVKO8LmonhWujtz
+        XitcGwtNWVHH4jr37jY0FQrcdwUdSraBXYVhTvX88w==
+X-Google-Smtp-Source: APiQypKi4WrKP2xDoGnVXIC/UwV7doDPgLzDNy1snvMiqG21XF1URHfcuQljZvH54wwj5brVMztQOnS98yRF5Go25XA=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr1431017ljo.212.1588310163069;
+ Thu, 30 Apr 2020 22:16:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 May 2020 13:12:17 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
-        beanhuo@micron.com, Avri.Altman@wdc.com,
-        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
- during system resume
-In-Reply-To: <226048f7-6ad3-a625-c2ed-d9d13e096803@acm.org>
-References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
- <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
- <1ef85ee212bee679f7b2927cbbc79cba@codeaurora.org>
- <ef23a815-118a-52fe-4880-19e7fc4fcd10@acm.org>
- <1e2a2e39dbb3a0f06fe95bbfd66e1648@codeaurora.org>
- <226048f7-6ad3-a625-c2ed-d9d13e096803@acm.org>
-Message-ID: <3bfa692ce706c5c198f565e674afb56f@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <CAK7LNARHd0DXRLONf6vH_ghsYZjzoduzkixqNDpVqqPx0yHbHg@mail.gmail.com>
+ <CAADnVQ+RvDq9qvNgSkwaMO8QcDG1gCm-SkGgNHyy1gVC3_0w=A@mail.gmail.com> <CAK7LNAQ5NMZWrQ_1yk+_-06zrmYMOcKvNnuX=u1sReuy6wg9Gw@mail.gmail.com>
+In-Reply-To: <CAK7LNAQ5NMZWrQ_1yk+_-06zrmYMOcKvNnuX=u1sReuy6wg9Gw@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 30 Apr 2020 22:15:51 -0700
+Message-ID: <CAADnVQKymMnEs0jFg8-qZLXS5n0DxMrqhmwQ17Do=TKd+niqhw@mail.gmail.com>
+Subject: Re: BPFilter: bit size mismatch between bpfiter_umh and vmliux
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-01 09:50, Bart Van Assche wrote:
-> On 2020-04-30 18:42, Can Guo wrote:
->> On 2020-05-01 04:32, Bart Van Assche wrote:
->> > Has it been considered to test directly whether a SCSI device has been
->> > runtime suspended instead of relying on blk_queue_pm_only()? How about
->> > using pm_runtime_status_suspended() or adding a function in
->> > block/blk-pm.h that checks whether q->rpm_status == RPM_SUSPENDED?
->> 
->> Yes, I used to make the patch like that way, and it also worked well, 
->> as
->> both ways are equal actually. I kinda like the current code because we
->> should be confident that after scsi_dev_type_resume() returns, pm_only
->> must be 0. Different reviewers may have different opinions, either way
->> works well anyways.
-> 
-> Hi Can,
-> 
-> Please note that this is not a matter of personal preferences of a
-> reviewer but a matter of correctness. blk_queue_pm_only() does not only
-> return a value > 0 if a SCSI device has been runtime suspended but also
-> returns true if scsi_device_quiesce() was called for another reason.
-> Hence my request to test the "runtime suspended" status directly and 
-> not
-> to rely on blk_queue_pm_only().
-> 
-> Thanks,
-> 
-> Bart.
+On Thu, Apr 30, 2020 at 9:06 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi Alexei,
+>
+> On Wed, Apr 29, 2020 at 1:14 AM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > At least, the build was successful,
+> > > but does this work at runtime?
+> > >
+> > > If this is a bug, I can fix it cleanly.
+> > >
+> > > I think the bit size of the user mode helper
+> > > should match to the kernel bit size. Is this correct?
+> >
+> > yes. they should match.
+> > In theory we can have -m32 umh running on 64-bit kernel,
+> > but I wouldn't bother adding support for such thing
+> > until there is a use case.
+> > Running 64-bit umh on 32-bit kernel is no go.
+>
+>
+> Thanks for the comments.
+>
+>
+> This issue will be fixed by this:
+> https://patchwork.kernel.org/patch/11515997/
+>
+> and the Makefile will be cleaned up by this:
+> https://patchwork.kernel.org/patch/11515995/
+>
+>
+> They are parts of the big series of Makefile cleanups.
+> So, I will apply the whole to kbuild tree.
 
-Hi Bart,
-
-I agree we are pursuing correctness here, but as I said, I think both
-way are equally correct. I also agree with you that the alternative way,
-see [2], is much easier to be understood, we can take the alternative 
-way
-if you are OK with it.
-
-[1] Currently, scsi_dev_type_resume() is the hooker for resume, thaw and
-restore. Per my understanding, when scsi_dev_type_resume() is running,
-it is not possible that scsi_device_quiesce() can be called to this 
-sdev,
-at least not possible in current code base. So it is OK to rely on
-blk_queue_pm_only() in scsi_dev_type_resume().
-
-[2] The alternative way which I have tested with is like below. I think
-it is what you requested for if my understanding is right, please 
-correct
-me if I am wrong.
-
-diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
-index 3717eea..d18271d 100644
---- a/drivers/scsi/scsi_pm.c
-+++ b/drivers/scsi/scsi_pm.c
-@@ -74,12 +74,15 @@ static int scsi_dev_type_resume(struct device *dev,
-  {
-         const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : 
-NULL;
-         int err = 0;
-+       bool was_rpm_suspended = false;
-
-         err = cb(dev, pm);
-         scsi_device_resume(to_scsi_device(dev));
-         dev_dbg(dev, "scsi resume: %d\n", err);
-
-         if (err == 0) {
-+               was_rpm_suspended = pm_runtime_suspended(dev);
-+
-                 pm_runtime_disable(dev);
-                 err = pm_runtime_set_active(dev);
-                 pm_runtime_enable(dev);
-@@ -93,8 +96,10 @@ static int scsi_dev_type_resume(struct device *dev,
-                  */
-                 if (!err && scsi_is_sdev_device(dev)) {
-                         struct scsi_device *sdev = to_scsi_device(dev);
--
--                       blk_set_runtime_active(sdev->request_queue);
-+                       if (was_rpm_suspended)
-+                               
-blk_post_runtime_resume(sdev->request_queue, 0);
-+                       else
-+                               
-blk_set_runtime_active(sdev->request_queue);
-                 }
-         }
-
-Thanks,
-
-Can Guo
+thank you.
+I saw the patches, but didn't have time to test or comment on them.
+To be fair umh logic was bit rotting a bit, but that will change soon.
