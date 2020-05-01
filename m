@@ -2,148 +2,94 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CAC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1990C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C4F2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991A52051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340773;
+	bh=qRKLakTkNpBRDAmnVe8QB4b67u4G86AZBXWXJ2CFwIw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jjmJVIlPs/EPz4Dd8vAlJZfnszwUUYwNoCMVmoQZyzcPKlj3p+Kwhg0RdAW5oaDVm
+	 eT+DKv0I1dLhWe/HT4bRjxyIijnAqgum3zi3NC4a4kAXpIktFieomuK3wJUEA5q8DS
+	 twc1s0AXq+a34xJsR0HUR3DCoj/vtAwoo1+1uyw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbgEANqE (ORCPT
+        id S1731381AbgEANpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:46:04 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34617 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731899AbgEANpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:45:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f11so2677317ljp.1;
-        Fri, 01 May 2020 06:45:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=B1dBZygdOuEOVVgRDxzrxsbu/gYOSkCw10Yi3BStOb4=;
-        b=nhF7S23Y/ZJo0T5XTS8G/hjloPB2T52myLZuRnIGr+uVidboPKqGYmLGRMYw3yTeX4
-         D8MbshqU3fKZEFG3qXOuFzZcMeUbZWkQkwOhYAnS8Y6YTjTkRhFTIH8LsNCLf+djiI3C
-         rXHo3jiJvCVPkk6TXbHgjCiK+5ZjlfEYeB8oRNjXXr9mz0i4487FxLcneML0ZkvIEgsH
-         fPdy9V/37jDYvFPEXQeU5NFxyFh4kLl7RXRDYfoo+y7FFGLSN0kmF9sWlWdx1hubjVwQ
-         m1j9RQHkHND1WsPaaCJIxMJVBaUBMYNivSl4KfmChn26+9Zmim48dxkwkQXLm+/UOpPr
-         rxvQ==
-X-Gm-Message-State: AGi0PubTuHdHGkr/U55JgAy0DSnQLP84qRm4AWyRSZ4pzttsw7sfYZuK
-        uliy3LhSFmhf6s1cVJWA13X4Ars1zHg=
-X-Google-Smtp-Source: APiQypInacq2l4k+DFDSlOyzVO50Ra94dXuWronVpuTuWv/pg1lpXsHb9rnMxjf94v3FqxocLu8ipQ==
-X-Received: by 2002:a2e:731a:: with SMTP id o26mr2570638ljc.189.1588340714141;
-        Fri, 01 May 2020 06:45:14 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.150.177])
-        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:45:13 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 4/4] floppy: suppress UBSAN warning in setup_rw_floppy()
-Date:   Fri,  1 May 2020 16:44:16 +0300
-Message-Id: <20200501134416.72248-5-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200501134416.72248-1-efremov@linux.com>
-References: <20200501134416.72248-1-efremov@linux.com>
+        Fri, 1 May 2020 09:45:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731764AbgEANov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB6612051A;
+        Fri,  1 May 2020 13:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340691;
+        bh=qRKLakTkNpBRDAmnVe8QB4b67u4G86AZBXWXJ2CFwIw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gxSUhR/Hpi+ahOD9WiR08tIAqp+7t82RMgO/iSHhIyGvcTlrzsNvDJ65d/TUIZuaE
+         ypRn3YMZAwvAUCxNkpN4aJmf3CO8HNu+P+/AqnaeWLssbGRwzKZps6i+wapmy+R8/f
+         TzTaTT+CuS80IP3ExclnSEaY1DhUblNAfXAUHTgA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 097/106] taprio: do not use BIT() in TCA_TAPRIO_ATTR_FLAG_* definitions
+Date:   Fri,  1 May 2020 15:24:10 +0200
+Message-Id: <20200501131554.959277957@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UBSAN: array-index-out-of-bounds in drivers/block/floppy.c:1521:45
-index 16 is out of range for type 'unsigned char [16]'
-Call Trace:
-...
- setup_rw_floppy+0x5c3/0x7f0
- floppy_ready+0x2be/0x13b0
- process_one_work+0x2c1/0x5d0
- worker_thread+0x56/0x5e0
- kthread+0x122/0x170
- ret_from_fork+0x35/0x40
+From: Eugene Syromiatnikov <esyr@redhat.com>
 
-From include/uapi/linux/fd.h:
-struct floppy_raw_cmd {
-	...
-	unsigned char cmd_count;
-	unsigned char cmd[16];
-	unsigned char reply_count;
-	unsigned char reply[16];
-	...
-}
+commit 673040c3a82a7564423e09c791e242a846591e30 upstream.
 
-This out-of-bounds access is intentional. The command in struct
-floppy_raw_cmd may take up the space initially intended for the reply
-and the reply count. It is needed for long 82078 commands such as
-RESTORE, which takes 17 command bytes. Initial cmd size is not enough
-and since struct setup_rw_floppy is a part of uapi we check that
-cmd_count is in [0:16+1+16] in raw_cmd_copyin().
+BIT() macro definition is internal to the Linux kernel and is not
+to be used in UAPI headers; replace its usage with the _BITUL() macro
+that is already used elsewhere in the header.
 
-The patch adds union with original cmd,reply_count,reply fields and
-fullcmd field of equivalent size. The cmd accesses are turned to
-fullcmd where appropriate to suppress UBSAN warning.
+Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/block/floppy.c  |  4 ++--
- include/uapi/linux/fd.h | 11 ++++++++---
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ include/uapi/linux/pkt_sched.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 9e098d53b046..064c1acb9f00 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -1070,7 +1070,7 @@ static void setup_DMA(void)
- 	if (raw_cmd->length == 0) {
- 		print_hex_dump(KERN_INFO, "zero dma transfer size: ",
- 			       DUMP_PREFIX_NONE, 16, 1,
--			       raw_cmd->cmd, raw_cmd->cmd_count, false);
-+			       raw_cmd->fullcmd, raw_cmd->cmd_count, false);
- 		cont->done(0);
- 		fdc_state[current_fdc].reset = 1;
- 		return;
-@@ -1515,7 +1515,7 @@ static void setup_rw_floppy(void)
+--- a/include/uapi/linux/pkt_sched.h
++++ b/include/uapi/linux/pkt_sched.h
+@@ -1197,8 +1197,8 @@ enum {
+  *       [TCA_TAPRIO_ATTR_SCHED_ENTRY_INTERVAL]
+  */
  
- 	r = 0;
- 	for (i = 0; i < raw_cmd->cmd_count; i++)
--		r |= output_byte(current_fdc, raw_cmd->cmd[i]);
-+		r |= output_byte(current_fdc, raw_cmd->fullcmd[i]);
+-#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST	BIT(0)
+-#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	BIT(1)
++#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST	_BITUL(0)
++#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD	_BITUL(1)
  
- 	debugt(__func__, "rw_command");
- 
-diff --git a/include/uapi/linux/fd.h b/include/uapi/linux/fd.h
-index 2e9c2c1c18e6..8b80c63b971c 100644
---- a/include/uapi/linux/fd.h
-+++ b/include/uapi/linux/fd.h
-@@ -371,9 +371,14 @@ struct floppy_raw_cmd {
- 	 */
- 
- 	unsigned char cmd_count;
--	unsigned char cmd[FD_RAW_CMD_SIZE];
--	unsigned char reply_count;
--	unsigned char reply[FD_RAW_REPLY_SIZE];
-+	union {
-+		struct {
-+			unsigned char cmd[FD_RAW_CMD_SIZE];
-+			unsigned char reply_count;
-+			unsigned char reply[FD_RAW_REPLY_SIZE];
-+		};
-+		unsigned char fullcmd[FD_RAW_CMD_FULLSIZE];
-+	};
- 	int track;
- 	int resultcode;
- 
--- 
-2.25.3
+ enum {
+ 	TCA_TAPRIO_ATTR_UNSPEC,
+
 
