@@ -2,53 +2,54 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F6C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB080C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637A62051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2EA2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341255;
-	bh=RnHZ55ZQd+oFxIjGZK85Q+Q5EPPSaa4vig9BLZFgBww=;
+	s=default; t=1588341258;
+	bh=BXcwvlX4xYmDb9kkPjtAmi+mkbP52raSx2DGCqbG/mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZgo/PhEA17ft5QRlWkvKBeQdH67dzIMukKJ3wlBH2xd93IHQFsoOKsq1F2t1VIbs
-	 5iYyCoPRUZFwQgEr+S+EAlB0/xhgzj8jxsB78Kqi0aDY0WVNH4GOvBk1po4oVAPqav
-	 ogwXTEWrQVMyyAJFqUIrp/GWFPr569mwi+F5LTk0=
+	b=HIzEzcDYoR3cwUgjF2mpPJrTPHODBBhFbMMk+61p95hXoRdpplW+KFKJV9I7djENA
+	 ohzx8ERwRgRpLyb4ULH0ZLpFuLkcXzDubo4oUtUqO0yFaoSfoQX445WyMgTJPmjPsb
+	 Z6+hEcAmwwGt8u/nMGZ4RJ8EtX9mnae0g+QIW65M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgEANfZ (ORCPT
+        id S1731865AbgEANyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:54:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730747AbgEANfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:35:17 -0400
+        id S1730101AbgEANf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF0F24953;
-        Fri,  1 May 2020 13:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CA5208DB;
+        Fri,  1 May 2020 13:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340116;
-        bh=RnHZ55ZQd+oFxIjGZK85Q+Q5EPPSaa4vig9BLZFgBww=;
+        s=default; t=1588340129;
+        bh=BXcwvlX4xYmDb9kkPjtAmi+mkbP52raSx2DGCqbG/mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQOVd1xL2/iyHHMpugEYNQnTIort+BwF40JlSPHs7h3yVvDWADee3oWFS26dB/CfX
-         B1ROaF7R6WjRXWVKlMSBSZcRMLN0guTyAnsWotLWG9cqle4CgUOUxPsxmPtF2wf20r
-         PpX0e+qSlcWnaAmT+X+4bKOWJEzEOhJXccb6yzK8=
+        b=J6MyErFdUjEKxYRdjj2MLJ4XYsGtJsgPVDBctPYEQ2u2mI3pVBKlpWn+hDj/DiTT1
+         ZNn0QfvTCt0xbwufwPNUtO5PVqTqaGmvankOAV9S0ID4HIZiF0S9eGVbFmQBeWdJMy
+         NwrByVRfXu3A/Q84ZYyITHriT4mlTI0lxbqK3AGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Rue <dan.rue@linaro.org>,
-        Theodore Tso <tytso@mit.edu>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Ashwin H <ashwinh@vmware.com>
-Subject: [PATCH 4.14 113/117] ext4: dont perform block validity checks on the journal inode
-Date:   Fri,  1 May 2020 15:22:29 +0200
-Message-Id: <20200501131558.445362488@linuxfoundation.org>
+        stable@vger.kernel.org, Ilie Halip <ilie.halip@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/117] arm64: Delete the space separator in __emit_inst
+Date:   Fri,  1 May 2020 15:22:21 +0200
+Message-Id: <20200501131557.872901473@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -61,56 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Fangrui Song <maskray@google.com>
 
-commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 upstream.
+[ Upstream commit c9a4ef66450145a356a626c833d3d7b1668b3ded ]
 
-Since the journal inode is already checked when we added it to the
-block validity's system zone, if we check it again, we'll just trigger
-a failure.
+In assembly, many instances of __emit_inst(x) expand to a directive. In
+a few places __emit_inst(x) is used as an assembler macro argument. For
+example, in arch/arm64/kvm/hyp/entry.S
 
-This was causing failures like this:
+  ALTERNATIVE(nop, SET_PSTATE_PAN(1), ARM64_HAS_PAN, CONFIG_ARM64_PAN)
 
-[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
-#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
-[   53.938480] Aborting journal on device sda-8.
+expands to the following by the C preprocessor:
 
-... but only if the system was under enough memory pressure that
-logical->physical mapping for the journal inode gets pushed out of the
-extent cache.  (This is why it wasn't noticed earlier.)
+  alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
 
-Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
-Reported-by: Dan Rue <dan.rue@linaro.org>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Ashwin H <ashwinh@vmware.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Both comma and space are separators, with an exception that content
+inside a pair of parentheses/quotes is not split, so the clang
+integrated assembler splits the arguments to:
 
+   nop, .inst, (0xd500401f | ((0) << 16 | (4) << 5) | ((!!1) << 8)), 4, 1
+
+GNU as preprocesses the input with do_scrub_chars(). Its arm64 backend
+(along with many other non-x86 backends) sees:
+
+  alternative_insn nop,.inst(0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # .inst(...) is parsed as one argument
+
+while its x86 backend sees:
+
+  alternative_insn nop,.inst (0xd500401f|((0)<<16|(4)<<5)|((!!1)<<8)),4,1
+  # The extra space before '(' makes the whole .inst (...) parsed as two arguments
+
+The non-x86 backend's behavior is considered unintentional
+(https://sourceware.org/bugzilla/show_bug.cgi?id=25750).
+So drop the space separator inside `.inst (...)` to make the clang
+integrated assembler work.
+
+Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Fangrui Song <maskray@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/939
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/sysreg.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -554,10 +554,14 @@ __read_extent_tree_block(const char *fun
- 	}
- 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
- 		return bh;
--	err = __ext4_ext_check(function, line, inode,
--			       ext_block_hdr(bh), depth, pblk);
--	if (err)
--		goto errout;
-+	if (!ext4_has_feature_journal(inode->i_sb) ||
-+	    (inode->i_ino !=
-+	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
-+		err = __ext4_ext_check(function, line, inode,
-+				       ext_block_hdr(bh), depth, pblk);
-+		if (err)
-+			goto errout;
-+	}
- 	set_buffer_verified(bh);
- 	/*
- 	 * If this is a leaf block, cache all of its entries
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 50a89bcf9072e..2564dd429ab68 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -60,7 +60,9 @@
+ #ifndef CONFIG_BROKEN_GAS_INST
+ 
+ #ifdef __ASSEMBLY__
+-#define __emit_inst(x)			.inst (x)
++// The space separator is omitted so that __emit_inst(x) can be parsed as
++// either an assembler directive or an assembler macro argument.
++#define __emit_inst(x)			.inst(x)
+ #else
+ #define __emit_inst(x)			".inst " __stringify((x)) "\n\t"
+ #endif
+-- 
+2.20.1
+
 
 
