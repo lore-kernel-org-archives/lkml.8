@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0DCC47259
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AFCC4725A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61C4208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E448220857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344373;
-	bh=10r26z69r9wu8Pq+TQWNjuhSpIIYfOTBaBhJ/i5UtVw=;
+	s=default; t=1588344379;
+	bh=IOVRqp8dN/LRKfokaK8zYd4K1YaI4tINbkY6jxbkZ/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JK8aHRtwBcNKIeTZ86lEYp2cXQloN0ZESYZj6gtAv/e62B5QBOdUkNYUsOshdGvhG
-	 bmtBCdGUL6XR7BO2iNI6ZpZwcN4FGHJFhowRldCq9+z8ikVi/aSlNcZi8A/KWX13Cn
-	 jgx8L1/s91nugJ03A8mQw1hfigchYZ/u4CPfkMtg=
+	b=au/v8SW6jMSLzVLmIvm4Hs0qOcEeKq8qQpjRD3mLCrBuo78SeX63Xhpt3W6vXbHhS
+	 bUmVdK6Vo451K3n0B53fuAJw82whRYUFTt5UGiD01hLpuUdJhYD1jX4NP3t7gsoJwT
+	 kgD3W95me9ZA8ngc++qnokvZLira2cHhbYq3TC2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbgEAOp4 (ORCPT
+        id S1729644AbgEAOpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729631AbgEAOpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729281AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:06 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E92D224963;
-        Fri,  1 May 2020 14:45:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD10208D6;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344308;
-        bh=10r26z69r9wu8Pq+TQWNjuhSpIIYfOTBaBhJ/i5UtVw=;
+        s=default; t=1588344305;
+        bh=IOVRqp8dN/LRKfokaK8zYd4K1YaI4tINbkY6jxbkZ/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKOl8p+sEWPnaOBMIxC3Zz2MKex5RfAXLalcBFKIF2tho9+twe61M6SXDRWmpiHVx
-         iUwjhEdbATDgePPfx4bdMehyjzv93NZi/qU9ECKC3B42ffBDwscjjcndoS+XoVsTWo
-         3M7bS78L6Wo2Pbn/tUrmx++pwMGzsBULrdB/eqWQ=
+        b=WJuoGW1bEJYpq0KlcwjYh4gCtqZfktqTkNFCzjvgy140WddSeVbzKmL1HrgMhCtgz
+         6DyH0yZEyaqy8nRwfeg5OAZxj/rZbXr8uNUnVeXR9N4ems2epvPx7dALCxLQbi3DiU
+         G45fMhdA4MPq7sggHTq1PplWOH8uqGDQsTqtJil0=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuU-00FCfV-6x; Fri, 01 May 2020 16:45:02 +0200
+        id 1jUWuT-00FCcs-CH; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH 37/37] docs: networking: arcnet-hardware.rst: don't duplicate chapter names
-Date:   Fri,  1 May 2020 16:44:59 +0200
-Message-Id: <9cbadbb1186788433909bd365c8a3f01543b9d40.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        netdev@vger.kernel.org, linux-x25@vger.kernel.org
+Subject: [PATCH 06/37] docs: networking: convert x25.txt to ReST
+Date:   Fri,  1 May 2020 16:44:28 +0200
+Message-Id: <577bc9abec90b75e85e2df602ee5d918345183eb.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -61,45 +63,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since changeset 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst"),
-auto-references for chapters are generated. This is a nice feature, but
-has a drawback: no chapters can have the same sumber.
+Not much to be done here:
+- add SPDX header;
+- add a document title;
+- add to networking/index.rst.
 
-So, we need to change two chapter titles, to avoid warnings when
-building the docs.
-
-Fixes: 58ad30cf91f0 ("docs: fix reference to core-api/namespaces.rst")
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/networking/arcnet-hardware.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/networking/index.rst            | 1 +
+ Documentation/networking/{x25.txt => x25.rst} | 4 ++++
+ net/x25/Kconfig                               | 2 +-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+ rename Documentation/networking/{x25.txt => x25.rst} (96%)
 
-diff --git a/Documentation/networking/arcnet-hardware.rst b/Documentation/networking/arcnet-hardware.rst
-index b5a1a020c824..ac249ac8fcf2 100644
---- a/Documentation/networking/arcnet-hardware.rst
-+++ b/Documentation/networking/arcnet-hardware.rst
-@@ -1296,8 +1296,8 @@ DIP Switches:
- 	11111           0xC400 (guessed - crashes tested system)
- 	=============   ============================================
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index 7a4bdbc111b0..75521e6c473b 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -116,6 +116,7 @@ Contents:
+    vrf
+    vxlan
+    x25-iface
++   x25
  
--CNet Technology Inc.
--====================
-+CNet Technology Inc. (8-bit cards)
-+==================================
+ .. only::  subproject and html
  
- 120 Series (8-bit cards)
- ------------------------
-@@ -1520,8 +1520,8 @@ The jumpers labeled EXT1 and EXT2 are used to determine the timeout
- parameters. These two jumpers are normally left open.
+diff --git a/Documentation/networking/x25.txt b/Documentation/networking/x25.rst
+similarity index 96%
+rename from Documentation/networking/x25.txt
+rename to Documentation/networking/x25.rst
+index c91c6d7159ff..00e45d384ba0 100644
+--- a/Documentation/networking/x25.txt
++++ b/Documentation/networking/x25.rst
+@@ -1,4 +1,8 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==================
+ Linux X.25 Project
++==================
  
+ As my third year dissertation at University I have taken it upon myself to
+ write an X.25 implementation for Linux. My aim is to provide a complete X.25
+diff --git a/net/x25/Kconfig b/net/x25/Kconfig
+index a328f79885d1..9f0d58b0b90b 100644
+--- a/net/x25/Kconfig
++++ b/net/x25/Kconfig
+@@ -20,7 +20,7 @@ config X25
+ 	  You can read more about X.25 at <http://www.sangoma.com/tutorials/x25/> and
+ 	  <http://docwiki.cisco.com/wiki/X.25>.
+ 	  Information about X.25 for Linux is contained in the files
+-	  <file:Documentation/networking/x25.txt> and
++	  <file:Documentation/networking/x25.rst> and
+ 	  <file:Documentation/networking/x25-iface.rst>.
  
--CNet Technology Inc.
--====================
-+CNet Technology Inc. (16-bit cards)
-+===================================
- 
- 160 Series (16-bit cards)
- -------------------------
+ 	  One connects to an X.25 network either with a dedicated network card
 -- 
 2.25.4
 
