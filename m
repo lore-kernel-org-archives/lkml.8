@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0358AC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E98C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3D842051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09244216FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340032;
-	bh=/W9kmleYDQifA/dC9xCYaF8sHgRuad5wEpIdoHhk3Ac=;
+	s=default; t=1588340035;
+	bh=+r+srJX8hquEpA7t0IW71IHLe0QFyhrogr8b/R2VQkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVeqPhRZZnAqOaaEYI9R5vIn6QDoGmlBkEtwm6zbXkV10kAf2W5vRBcf07KQzskHz
-	 LZTVkDvz2Uy6+uiR+i9q47OsFxiHstkQIE46lVpS/v6f6RiROPuQs2xPQfpT3ErHFx
-	 NQkChNRHqzwPlu/CkhmAeyiZ9X3Uut27VrS+6Zjk=
+	b=L3dUSCLffKSh0uZkg2/VEz83f2Kn7o3cizagUHbkg6mmiy45PG6UUzUTEfhO3MW3+
+	 BrrSUTLwBoVkMXQ32SzYgvETy51mvWj4/tHc6lCpy7k0Gb49JFjxsHjx175aUWrL8m
+	 h4whWu5R1A1LM1bJy1H58SHSTRaEtVpnQKDBN9Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbgEANdw (ORCPT
+        id S1730502AbgEANdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59568 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730479AbgEANdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:33:46 -0400
+        id S1730484AbgEANdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:33:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA0072051A;
-        Fri,  1 May 2020 13:33:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C554208C3;
+        Fri,  1 May 2020 13:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340026;
-        bh=/W9kmleYDQifA/dC9xCYaF8sHgRuad5wEpIdoHhk3Ac=;
+        s=default; t=1588340028;
+        bh=+r+srJX8hquEpA7t0IW71IHLe0QFyhrogr8b/R2VQkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMg12s/W9JoD2s4ZD3o7qdRcG9sy3dJS/F2bph5Pf01I19CZzld+nXvDUOkXS2bnC
-         e+pTXzVffXhFCU7GCBrFrGyg936XteqBjNLFkSh3CvxJJOF2NmpPonNOby+RdH1Jzm
-         s8IKHoSXD3cK0/n/+TiRSGlh0MDusW2/4NUgv65A=
+        b=yy3FyuJE1u98tbJUy0n6MH8LebRZxQ+Hco3jxawQGTK0ljNv5gqPCericf6OjG4SW
+         5h+Gl2XGoOd4d4LNL9O+9eSAl9F5P08Ah3ONz2Vcb7wBOMo55XckcvutiDDbIJlGOc
+         9dxZc0OpJiPSTb3vUYsMjs0gIYvmqIHp/J2rnFG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.14 064/117] audit: check the length of userspace generated audit records
-Date:   Fri,  1 May 2020 15:21:40 +0200
-Message-Id: <20200501131552.860458643@linuxfoundation.org>
+        stable@vger.kernel.org, Gyeongtaek Lee <gt82.lee@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.14 065/117] ASoC: dapm: fixup dapm kcontrol widget
+Date:   Fri,  1 May 2020 15:21:41 +0200
+Message-Id: <20200501131552.952789045@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -60,38 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Gyeongtaek Lee <gt82.lee@samsung.com>
 
-commit 763dafc520add02a1f4639b500c509acc0ea8e5b upstream.
+commit ebf1474745b4373fdde0fcf32d9d1f369b50b212 upstream.
 
-Commit 756125289285 ("audit: always check the netlink payload length
-in audit_receive_msg()") fixed a number of missing message length
-checks, but forgot to check the length of userspace generated audit
-records.  The good news is that you need CAP_AUDIT_WRITE to submit
-userspace audit records, which is generally only given to trusted
-processes, so the impact should be limited.
+snd_soc_dapm_kcontrol widget which is created by autodisable control
+should contain correct on_val, mask and shift because it is set when the
+widget is powered and changed value is applied on registers by following
+code in dapm_seq_run_coalesced().
 
+		mask |= w->mask << w->shift;
+		if (w->power)
+			value |= w->on_val << w->shift;
+		else
+			value |= w->off_val << w->shift;
+
+Shift on the mask in dapm_kcontrol_data_alloc() is removed to prevent
+double shift.
+And, on_val in dapm_kcontrol_set_value() is modified to get correct
+value in the dapm_seq_run_coalesced().
+
+Signed-off-by: Gyeongtaek Lee <gt82.lee@samsung.com>
 Cc: stable@vger.kernel.org
-Fixes: 756125289285 ("audit: always check the netlink payload length in audit_receive_msg()")
-Reported-by: syzbot+49e69b4d71a420ceda3e@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Link: https://lore.kernel.org/r/000001d61537$b212f620$1638e260$@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/audit.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/soc-dapm.c |   20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1292,6 +1292,9 @@ static int audit_receive_msg(struct sk_b
- 	case AUDIT_FIRST_USER_MSG2 ... AUDIT_LAST_USER_MSG2:
- 		if (!audit_enabled && msg_type != AUDIT_USER_AVC)
- 			return 0;
-+		/* exit early if there isn't at least one character to print */
-+		if (data_len < 2)
-+			return -EINVAL;
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -413,7 +413,7 @@ static int dapm_kcontrol_data_alloc(stru
  
- 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
- 		if (err == 1) { /* match or error */
+ 			memset(&template, 0, sizeof(template));
+ 			template.reg = e->reg;
+-			template.mask = e->mask << e->shift_l;
++			template.mask = e->mask;
+ 			template.shift = e->shift_l;
+ 			template.off_val = snd_soc_enum_item_to_val(e, 0);
+ 			template.on_val = template.off_val;
+@@ -539,8 +539,22 @@ static bool dapm_kcontrol_set_value(cons
+ 	if (data->value == value)
+ 		return false;
+ 
+-	if (data->widget)
+-		data->widget->on_val = value;
++	if (data->widget) {
++		switch (dapm_kcontrol_get_wlist(kcontrol)->widgets[0]->id) {
++		case snd_soc_dapm_switch:
++		case snd_soc_dapm_mixer:
++		case snd_soc_dapm_mixer_named_ctl:
++			data->widget->on_val = value & data->widget->mask;
++			break;
++		case snd_soc_dapm_demux:
++		case snd_soc_dapm_mux:
++			data->widget->on_val = value >> data->widget->shift;
++			break;
++		default:
++			data->widget->on_val = value;
++			break;
++		}
++	}
+ 
+ 	data->value = value;
+ 
 
 
