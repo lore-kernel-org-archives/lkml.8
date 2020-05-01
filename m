@@ -2,76 +2,115 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DD8C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3F6C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983AD2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637A62051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588341255;
+	bh=RnHZ55ZQd+oFxIjGZK85Q+Q5EPPSaa4vig9BLZFgBww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uZgo/PhEA17ft5QRlWkvKBeQdH67dzIMukKJ3wlBH2xd93IHQFsoOKsq1F2t1VIbs
+	 5iYyCoPRUZFwQgEr+S+EAlB0/xhgzj8jxsB78Kqi0aDY0WVNH4GOvBk1po4oVAPqav
+	 ogwXTEWrQVMyyAJFqUIrp/GWFPr569mwi+F5LTk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbgEANyI (ORCPT
+        id S1730204AbgEANfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:54:08 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:13148 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730661AbgEANyF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:54:05 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.7]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75eac29d8f34-dc397; Fri, 01 May 2020 21:53:31 +0800 (CST)
-X-RM-TRANSID: 2ee75eac29d8f34-dc397
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.0.104] (unknown[112.1.172.204])
-        by rmsmtp-syy-appsvr04-12004 (RichMail) with SMTP id 2ee45eac29d99fd-e9ba9;
-        Fri, 01 May 2020 21:53:31 +0800 (CST)
-X-RM-TRANSID: 2ee45eac29d99fd-e9ba9
-Subject: Re: [PATCH v2]iommu/qcom:fix local_base status check
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robdclark@gmail.com,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200418134703.1760-1-tangbin@cmss.chinamobile.com>
- <20200501113745.GE18423@8bytes.org>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <f59a9807-e804-5331-4ba6-ddcc8cc78f8b@cmss.chinamobile.com>
-Date:   Fri, 1 May 2020 21:54:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 09:35:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730747AbgEANfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF0F24953;
+        Fri,  1 May 2020 13:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340116;
+        bh=RnHZ55ZQd+oFxIjGZK85Q+Q5EPPSaa4vig9BLZFgBww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CQOVd1xL2/iyHHMpugEYNQnTIort+BwF40JlSPHs7h3yVvDWADee3oWFS26dB/CfX
+         B1ROaF7R6WjRXWVKlMSBSZcRMLN0guTyAnsWotLWG9cqle4CgUOUxPsxmPtF2wf20r
+         PpX0e+qSlcWnaAmT+X+4bKOWJEzEOhJXccb6yzK8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Rue <dan.rue@linaro.org>,
+        Theodore Tso <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Ashwin H <ashwinh@vmware.com>
+Subject: [PATCH 4.14 113/117] ext4: dont perform block validity checks on the journal inode
+Date:   Fri,  1 May 2020 15:22:29 +0200
+Message-Id: <20200501131558.445362488@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
+References: <20200501131544.291247695@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200501113745.GE18423@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Theodore Ts'o <tytso@mit.edu>
 
-On 2020/5/1 19:37, Joerg Roedel wrote:
-> On Sat, Apr 18, 2020 at 09:47:03PM +0800, Tang Bin wrote:
->> The function qcom_iommu_device_probe() does not perform sufficient
->> error checking after executing devm_ioremap_resource(), which can
->> result in crashes if a critical error path is encountered.
->>
->> Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
->>
->> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
->> ---
->> v2:
->>   - fix commit message and add fixed tag
->> ---
->>   drivers/iommu/qcom_iommu.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
-> Applied for v5.7, thanks.
+commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 upstream.
 
-Thank you very much.
+Since the journal inode is already checked when we added it to the
+block validity's system zone, if we check it again, we'll just trigger
+a failure.
 
-Tang Bin
+This was causing failures like this:
 
->
+[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
+#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
+[   53.938480] Aborting journal on device sda-8.
+
+... but only if the system was under enough memory pressure that
+logical->physical mapping for the journal inode gets pushed out of the
+extent cache.  (This is why it wasn't noticed earlier.)
+
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Reported-by: Dan Rue <dan.rue@linaro.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Ashwin H <ashwinh@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ext4/extents.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -554,10 +554,14 @@ __read_extent_tree_block(const char *fun
+ 	}
+ 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
+ 		return bh;
+-	err = __ext4_ext_check(function, line, inode,
+-			       ext_block_hdr(bh), depth, pblk);
+-	if (err)
+-		goto errout;
++	if (!ext4_has_feature_journal(inode->i_sb) ||
++	    (inode->i_ino !=
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
++		err = __ext4_ext_check(function, line, inode,
++				       ext_block_hdr(bh), depth, pblk);
++		if (err)
++			goto errout;
++	}
+ 	set_buffer_verified(bh);
+ 	/*
+ 	 * If this is a leaf block, cache all of its entries
 
 
