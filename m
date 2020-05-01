@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7995C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC16C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4262495E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA7324955
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339513;
-	bh=Z5FTm0I7htD8O8iicnQOKr9GS7r2PJvsZxRMoXwPYHw=;
+	s=default; t=1588339518;
+	bh=x2nQX49DejcTSMkqKDh8blNT4ob6Yff8fCJ441kAin0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s83bDd+5CwkQQBUlvXqOVlcxBhnom1yAWPB1xsMmrYMNtkIIVfQF0Zz8xh9nMR8N/
-	 7rU+1LZHt5VFoKl/n8686ooVm3H0Kqe3xCcTJbpx/MGAwX31gEVdDnju1ilKp2+TnF
-	 EqYbuYLk8ez7YAcc/HP91ubLvWeCo7ltXcrDeIY0=
+	b=bcMHrIvsrwfbfrNGXiF8HhVrGjdOhG8X20nLy9N8glZwIOlsXrSqBph+ovtsxEKba
+	 +O9p0d4ZdDKcU9KbMnmhpQhPTTb67ESmVtxQTH95kOApcT1Nexp/eAFUONr5KdEztz
+	 EqWmFZXAjXJjDmxOGSE3mRcCXyLk0JEhPk+a9SWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgEANZL (ORCPT
+        id S1728990AbgEANZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728942AbgEANZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:07 -0400
+        id S1728969AbgEANZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C355B24959;
-        Fri,  1 May 2020 13:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A13920757;
+        Fri,  1 May 2020 13:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339507;
-        bh=Z5FTm0I7htD8O8iicnQOKr9GS7r2PJvsZxRMoXwPYHw=;
+        s=default; t=1588339509;
+        bh=x2nQX49DejcTSMkqKDh8blNT4ob6Yff8fCJ441kAin0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ebConEbzQyvUOBNlCc3TO5oGErSg8uvhQQd1MUR/VXQKBhhRH+t/d8HMULG98MQMA
-         fJYM/GTnsdnNa24VqxByOBtOVFyMOosbuAJpCbdDyoQSRVE8zy1ToLU+84WsoYKdqj
-         zH4Fo2Kzaw1LR5l+TaVH6nB0ziRnUfF+JsTC19tQ=
+        b=IMiz5EtC8gflX1pFyl0HKdrxaOldzt8ihKRGvrCJe3zUL+foni6mF96mp4epmS2H4
+         vj6uYwHUsUfUVW+EvCBeMv3g7rlf8nDPEMlf9RJq51yNXZ9T8dJHV0nM5byCOL5VOP
+         xZB/BjLIL04lCqiWnBUGQwKQiY8DwpkenxruFzdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 07/70] scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
-Date:   Fri,  1 May 2020 15:20:55 +0200
-Message-Id: <20200501131514.951810627@linuxfoundation.org>
+Subject: [PATCH 4.4 08/70] ceph: return ceph_mdsc_do_request() errors from __get_parent()
+Date:   Fri,  1 May 2020 15:20:56 +0200
+Message-Id: <20200501131515.096286832@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -61,60 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit 38503943c89f0bafd9e3742f63f872301d44cbea ]
+[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
 
-The following kasan bug was called out:
+Return the error returned by ceph_mdsc_do_request(). Otherwise,
+r_target_inode ends up being NULL this ends up returning ENOENT
+regardless of the error.
 
- BUG: KASAN: slab-out-of-bounds in lpfc_unreg_login+0x7c/0xc0 [lpfc]
- Read of size 2 at addr ffff889fc7c50a22 by task lpfc_worker_3/6676
- ...
- Call Trace:
- dump_stack+0x96/0xe0
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- print_address_description.constprop.6+0x1b/0x220
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- __kasan_report.cold.9+0x37/0x7c
- ? lpfc_unreg_login+0x7c/0xc0 [lpfc]
- kasan_report+0xe/0x20
- lpfc_unreg_login+0x7c/0xc0 [lpfc]
- lpfc_sli_def_mbox_cmpl+0x334/0x430 [lpfc]
- ...
-
-When processing the completion of a "Reg Rpi" login mailbox command in
-lpfc_sli_def_mbox_cmpl, a call may be made to lpfc_unreg_login. The vpi is
-extracted from the completing mailbox context and passed as an input for
-the next. However, the vpi stored in the mailbox command context is an
-absolute vpi, which for SLI4 represents both base + offset.  When used with
-a non-zero base component, (function id > 0) this results in an
-out-of-range access beyond the allocated phba->vpi_ids array.
-
-Fix by subtracting the function's base value to get an accurate vpi number.
-
-Link: https://lore.kernel.org/r/20200322181304.37655-2-jsmart2021@gmail.com
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/ceph/export.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 065fdc17bbfbb..7a94c2d352390 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -2186,6 +2186,8 @@ lpfc_sli_def_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 	    !pmb->u.mb.mbxStatus) {
- 		rpi = pmb->u.mb.un.varWords[0];
- 		vpi = pmb->u.mb.un.varRegLogin.vpi;
-+		if (phba->sli_rev == LPFC_SLI_REV4)
-+			vpi -= phba->sli4_hba.max_cfg_param.vpi_base;
- 		lpfc_unreg_login(phba, vpi, rpi, pmb);
- 		pmb->mbox_cmpl = lpfc_sli_def_mbox_cmpl;
- 		rc = lpfc_sli_issue_mbox(phba, pmb, MBX_NOWAIT);
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index fe02ae7f056a3..ff9e60daf086b 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -146,6 +146,11 @@ static struct dentry *__get_parent(struct super_block *sb,
+ 	}
+ 	req->r_num_caps = 1;
+ 	err = ceph_mdsc_do_request(mdsc, NULL, req);
++	if (err) {
++		ceph_mdsc_put_request(req);
++		return ERR_PTR(err);
++	}
++
+ 	inode = req->r_target_inode;
+ 	if (inode)
+ 		ihold(inode);
 -- 
 2.20.1
 
