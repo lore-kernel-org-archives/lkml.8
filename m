@@ -2,286 +2,139 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E411FC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648EC47247
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8F8C216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6254320757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 00:23:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="r4d1DSiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgEAAVv (ORCPT
+        id S1726384AbgEAAXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 30 Apr 2020 20:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgEAAVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 30 Apr 2020 20:21:51 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74AB3208DB;
-        Fri,  1 May 2020 00:21:49 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 20:21:47 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 30 Apr 2020 20:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726545AbgEAAXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 30 Apr 2020 20:23:35 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04863C035495
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 17:23:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f8so3048558plt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 Apr 2020 17:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=q6XSSbORtzdGM5wsbVVdblLZLp4drz8TDfwttIDJ1z4=;
+        b=r4d1DSiLI7OzhNnrgDQYPizLp5Uolgf7Mc7ZMXQsfzXIivOBc1mAMesjCUhkWWIi2y
+         yex588qrp8KlVr1SuLZUCj9OssMwY+aaAfCKjy+x9+JfSDfBS1Y/gdhgJEH3q8iiqNex
+         iDvrz7IM41lpzKYWJEv4iBMdnX7oCb0T30GM+GIC5l5Y9epnFFE69w6a4yfNUb5zdep1
+         faAEeWjW4wlEC6m2J+TuNWxWVWiWbHwVnhwmwehvckJUO9vNL5ReuvTC8nMM66+/SQYe
+         QSm0RTZ8YdH0IZK2Jqm+j2sNapESRzuwTfkfqlKsYv8m5cvyFuWu8KPZsccCLJzeSRtV
+         DVLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=q6XSSbORtzdGM5wsbVVdblLZLp4drz8TDfwttIDJ1z4=;
+        b=Z0uwW+1dKDuT7elBP5lex7OvOc5xA1k+0L5GKawWSUY//tR1RQpj6NH6OfJloy2fhU
+         CtOTwOU8qY6hTbl9svZQ/36R0001Ey7MzCW57ccV9XRDUbdVFU0Eb1ybp4b5gD0qTEiC
+         /sUYLCooaYni1BX/ipi6vp8k77p7sMyey6KAxbatHS3HSIEHABHEUmx1xMPpEnz3Keh8
+         uEYtE53gXaO2ATXdyVrcAOjKVo2LqdOE9chNgH5juhiVpG7nMDuD372BA0uXe2xmtc+F
+         nihxS1YSFRsTuEvSyatMsNhlNG3yFFa+UiLlevWGLTq+1wy+KYC9VK69cQoUnUZBsAnE
+         GMFA==
+X-Gm-Message-State: AGi0PuaRkeeHXBPgwRIdRH2BKm0TXIkTjvPXMZVB780kQEc2jsoeqXf5
+        ZtKwQQlsRq9AKV0LcH87HSCdhQ==
+X-Google-Smtp-Source: APiQypJVozuXgtmFv1oxaxiVxd1C0J2JT+J68tf0qsuERm2lt0FgWE/aW2WqeSKKnq7hUTr7lXX6cQ==
+X-Received: by 2002:a17:90a:fe06:: with SMTP id ck6mr1694160pjb.4.1588292614361;
+        Thu, 30 Apr 2020 17:23:34 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:d495:581b:d692:e814? ([2601:646:c200:1ef2:d495:581b:d692:e814])
+        by smtp.gmail.com with ESMTPSA id c2sm781538pfp.118.2020.04.30.17.23.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Apr 2020 17:23:33 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Date:   Thu, 30 Apr 2020 17:23:31 -0700
+Message-Id: <1962EE67-8AD1-409D-963A-4F1E1AB3B865@amacapital.net>
+References: <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [RFC][PATCH] x86/ftrace: Have ftrace trampolines turn read-only at
- the end of system boot up
-Message-ID: <20200430202147.4dc6e2de@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Booting one of my machines, it triggered the following crash:
+> On Apr 30, 2020, at 5:10 PM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+> =EF=BB=BFOn Thu, Apr 30, 2020 at 4:52 PM Dan Williams <dan.j.williams@inte=
+l.com> wrote:
+>>=20
+>> You had me until here. Up to this point I was grokking that Andy's
+>> "_fallible" suggestion does help explain better than "_safe", because
+>> the copy is doing extra safety checks. copy_to_user() and
+>> copy_to_user_fallible() mean *something* where copy_to_user_safe()
+>> does not.
+>=20
+> It's a horrible word, btw. The word doesn't actually mean what Andy
+> means it to mean. "fallible" means "can make mistakes", not "can
+> fault".
+>=20
+> So "fallible" is a horrible name.
 
- Kernel/User page tables isolation: enabled
- ftrace: allocating 36577 entries in 143 pages
- Starting tracer 'function'
- BUG: unable to handle page fault for address: ffffffffa000005c
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0003) - permissions violation
- PGD 2014067 P4D 2014067 PUD 2015063 PMD 7b253067 PTE 7b252061
- Oops: 0003 [#1] PREEMPT SMP PTI
- CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-test+ #24
- Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./To be filled by O.E.M., BIOS SDBLI944.86P 05/08/2007
- RIP: 0010:text_poke_early+0x4a/0x58
- Code: 34 24 48 89 54 24 08 e8 bf 72 0b 00 48 8b 34 24 48 8b 4c 24 08 84 c0 74 0b 48 89 df f3 a4 48 83 c4 10 5b c3 9c 58 fa 48 89 df <f3> a4 50 9d 48 83 c4 10 5b e9 d6 f9 ff ff
-0 41 57 49
- RSP: 0000:ffffffff82003d38 EFLAGS: 00010046
- RAX: 0000000000000046 RBX: ffffffffa000005c RCX: 0000000000000005
- RDX: 0000000000000005 RSI: ffffffff825b9a90 RDI: ffffffffa000005c
- RBP: ffffffffa000005c R08: 0000000000000000 R09: ffffffff8206e6e0
- R10: ffff88807b01f4c0 R11: ffffffff8176c106 R12: ffffffff8206e6e0
- R13: ffffffff824f2440 R14: 0000000000000000 R15: ffffffff8206eac0
- FS:  0000000000000000(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: ffffffffa000005c CR3: 0000000002012000 CR4: 00000000000006b0
- Call Trace:
-  text_poke_bp+0x27/0x64
-  ? mutex_lock+0x36/0x5d
-  arch_ftrace_update_trampoline+0x287/0x2d5
-  ? ftrace_replace_code+0x14b/0x160
-  ? ftrace_update_ftrace_func+0x65/0x6c
-  __register_ftrace_function+0x6d/0x81
-  ftrace_startup+0x23/0xc1
-  register_ftrace_function+0x20/0x37
-  func_set_flag+0x59/0x77
-  __set_tracer_option.isra.19+0x20/0x3e
-  trace_set_options+0xd6/0x13e
-  apply_trace_boot_options+0x44/0x6d
-  register_tracer+0x19e/0x1ac
-  early_trace_init+0x21b/0x2c9
-  start_kernel+0x241/0x518
-  ? load_ucode_intel_bsp+0x21/0x52
-  secondary_startup_64+0xa4/0xb0
+What I was trying to get at was not =E2=80=9Ccan fault=E2=80=9D but =E2=80=9C=
+can malfunction=E2=80=9D.  Maybe =E2=80=9Cunreliable=E2=80=9D?  Better words=
+ welcome.
 
-I was able to trigger it on other machines, when I added to the kernel
-command line of both "ftrace=function" and "trace_options=func_stack_trace".
+>=20
+> But anyway, I don't hate something like "copy_to_user_fallible()"
+> conceptually. The naming needs to be fixed, in that "user" can always
+> take a fault, so it's the _source_ that can fault, not the "user"
+> part.
 
-The cause is the "ftrace=function" would register the function tracer
-and create a trampoline, and it will set it as executable and
-read-only. Then the "trace_options=func_stack_trace" would then update
-the same trampoline to include the stack tracer version of the function
-tracer. But since the trampoline already exists, it updates it with
-text_poke_bp(). The problem is that text_poke_bp() called while
-system_state == SYSTEM_BOOTING, it will simply do a memcpy() and not
-the page mapping, as it would think that the text is still read-write.
-But in this case it is not, and we take a fault and crash.
+I don=E2=80=99t like this.  =E2=80=9Cuser=E2=80=9D already implied that basi=
+cally anything can be wrong with the memory =E2=80=94 it can be unmapped ent=
+irely, it can have the wrong permissions, it can have the wrong protection k=
+ey, it can have an ECC error, etc.  If the operation you want is =E2=80=9Cco=
+py from unreliable kernel memory (but with a definitely valid pointer) to us=
+er memory=E2=80=9D, you want copy_unreliable_to_user().
 
-Instead, lets keep the ftrace trampolines read-write during boot up,
-and then when the kernel executable text is set to read-only, the
-ftrace trampolines get set to read-only as well.
+Now maybe copy_to_user() should *always* work this way, but I=E2=80=99m not c=
+onvinced. Certainly put_user() shouldn=E2=80=99t =E2=80=94 the result wouldn=
+=E2=80=99t even be well defined. And I=E2=80=99m unconvinced that it makes m=
+uch sense for the majority of copy_to_user() callers that are also directly a=
+ccessing the source structure.
 
-Cc: stable@vger.kernel.org
-Fixes: 768ae4406a5c ("x86/ftrace: Use text_poke()")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index dbd9b08bf173..e14f792b106c 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -43,6 +43,12 @@ struct dyn_arch_ftrace {
- 
- #ifndef __ASSEMBLY__
- 
-+#ifdef CONFIG_FUNCTION_TRACER
-+extern void set_ftrace_ops_ro(void);
-+#else
-+static inline void set_ftrace_ops_ro(void) { }
-+#endif
-+
- #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
- static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
- {
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 3d8adeba2651..dd30ba1e0244 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -419,7 +419,8 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 
- 	set_vm_flush_reset_perms(trampoline);
- 
--	set_memory_ro((unsigned long)trampoline, npages);
-+	if (likely(system_state != SYSTEM_BOOTING))
-+		set_memory_ro((unsigned long)trampoline, npages);
- 	set_memory_x((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
-@@ -427,6 +428,32 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	return 0;
- }
- 
-+void set_ftrace_ops_ro(void)
-+{
-+	struct ftrace_ops *ops;
-+	unsigned long start_offset;
-+	unsigned long end_offset;
-+	unsigned long npages;
-+	unsigned long size;
-+
-+	do_for_each_ftrace_op(ops, ftrace_ops_list) {
-+		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
-+			continue;
-+
-+		if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-+			start_offset = (unsigned long)ftrace_regs_caller;
-+			end_offset = (unsigned long)ftrace_regs_caller_end;
-+		} else {
-+			start_offset = (unsigned long)ftrace_caller;
-+			end_offset = (unsigned long)ftrace_epilogue;
-+		}
-+		size = end_offset - start_offset;
-+		size = size + RET_SIZE + sizeof(void *);
-+		npages = DIV_ROUND_UP(size, PAGE_SIZE);
-+		set_memory_ro((unsigned long)ops->trampoline, npages);
-+	} while_for_each_ftrace_op(ops);
-+}
-+
- static unsigned long calc_trampoline_call_offset(bool save_regs)
- {
- 	unsigned long start_offset;
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index 930edeb41ec3..75d5d2e591ea 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -52,6 +52,7 @@
- #include <asm/page_types.h>
- #include <asm/cpu_entry_area.h>
- #include <asm/init.h>
-+#include <asm/ftrace.h>
- 
- #include "mm_internal.h"
- 
-@@ -930,6 +931,8 @@ void mark_rodata_ro(void)
- 
- 	kernel_set_to_readonly = 1;
- 
-+	set_ftrace_ops_ro();
-+
- #ifdef CONFIG_CPA_DEBUG
- 	pr_info("Testing CPA: Reverting %lx-%lx\n", start, start + size);
- 	set_pages_rw(virt_to_page(start), size >> PAGE_SHIFT);
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index dcb9bc961b39..d36da393a947 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -54,6 +54,7 @@
- #include <asm/init.h>
- #include <asm/uv/uv.h>
- #include <asm/setup.h>
-+#include <asm/ftrace.h>
- 
- #include "mm_internal.h"
- 
-@@ -1326,6 +1327,8 @@ void mark_rodata_ro(void)
- 	all_end = roundup((unsigned long)_brk_end, PMD_SIZE);
- 	set_memory_nx(text_end, (all_end - text_end) >> PAGE_SHIFT);
- 
-+	set_ftrace_ops_ro();
-+
- #ifdef CONFIG_CPA_DEBUG
- 	printk(KERN_INFO "Testing CPA: undo %lx-%lx\n", start, end);
- 	set_memory_rw(start, (end-start) >> PAGE_SHIFT);
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 9141f2263286..f97626cbfbdf 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -203,6 +203,29 @@ struct ftrace_ops {
- #endif
- };
- 
-+extern struct ftrace_ops __rcu *ftrace_ops_list;
-+extern struct ftrace_ops ftrace_list_end;
-+
-+/*
-+ * Traverse the ftrace_global_list, invoking all entries.  The reason that we
-+ * can use rcu_dereference_raw_check() is that elements removed from this list
-+ * are simply leaked, so there is no need to interact with a grace-period
-+ * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
-+ * concurrent insertions into the ftrace_global_list.
-+ *
-+ * Silly Alpha and silly pointer-speculation compiler optimizations!
-+ */
-+#define do_for_each_ftrace_op(op, list)			\
-+	op = rcu_dereference_raw_check(list);			\
-+	do
-+
-+/*
-+ * Optimized for just a single item in the list (as that is the normal case).
-+ */
-+#define while_for_each_ftrace_op(op)				\
-+	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
-+	       unlikely((op) != &ftrace_list_end))
-+
- /*
-  * Type of the current tracing.
-  */
-diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
-index 0456e0a3dab1..382775edf690 100644
---- a/kernel/trace/ftrace_internal.h
-+++ b/kernel/trace/ftrace_internal.h
-@@ -4,28 +4,6 @@
- 
- #ifdef CONFIG_FUNCTION_TRACER
- 
--/*
-- * Traverse the ftrace_global_list, invoking all entries.  The reason that we
-- * can use rcu_dereference_raw_check() is that elements removed from this list
-- * are simply leaked, so there is no need to interact with a grace-period
-- * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
-- * concurrent insertions into the ftrace_global_list.
-- *
-- * Silly Alpha and silly pointer-speculation compiler optimizations!
-- */
--#define do_for_each_ftrace_op(op, list)			\
--	op = rcu_dereference_raw_check(list);			\
--	do
--
--/*
-- * Optimized for just a single item in the list (as that is the normal case).
-- */
--#define while_for_each_ftrace_op(op)				\
--	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
--	       unlikely((op) != &ftrace_list_end))
--
--extern struct ftrace_ops __rcu *ftrace_ops_list;
--extern struct ftrace_ops ftrace_list_end;
- extern struct mutex ftrace_lock;
- extern struct ftrace_ops global_ops;
- 
+I also tend to think that the probe_kernel stuff should just stay separate. T=
+hose are really for two totally separate types of use: either the kernel is t=
+rying its best to print an errr message without exploding worse, or it=E2=80=
+=99s involved in eBPF or trading hacks in which address is arbitrary and ess=
+entially untrusted.
