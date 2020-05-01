@@ -2,53 +2,51 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D3BC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3559AC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CEE9208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3FE208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339841;
-	bh=JcTR8buJrcrSvAWGM4jhzwvVThj9pWLXakvE+Oissvo=;
+	s=default; t=1588339843;
+	bh=l6I8N9mAySJ1NIPQgd/YPEign4VOEC6ZJUPecdttEXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KENdiIu6LCspgxM5P0kPF4a1IudQzANW35mMot0UM8b8Z8rvXR97ccDqR4h5uWjsR
-	 vgxk9P560O9U1ePDS622gwYC/RmeZCFA+OFWfudYMGTfkMfENfmKdQWQhp4Qva9/WL
-	 obPzBC69exsmJSS9ZODf/l0T10QcCdi/0t6f6t9U=
+	b=i8uVpVOCrTQRnB9IHhU7VmtcUryyyUMMXPr6LweuTLvZ6sLJqgt7cVHsp0ghBvgrf
+	 AFGaMVe0DgAxQnNQ9ds5Nh9aTMuC5hvqDRQ4Nf5FOszihKfBbY75mKDk2JBXAV6cy3
+	 p1wVyqecuxPWqoAx9r8hpQM3eiPPajmuXHq+9O7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgEANak (ORCPT
+        id S1729123AbgEANam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729974AbgEANah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:37 -0400
+        id S1729965AbgEANaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE13220757;
-        Fri,  1 May 2020 13:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 703A420757;
+        Fri,  1 May 2020 13:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339837;
-        bh=JcTR8buJrcrSvAWGM4jhzwvVThj9pWLXakvE+Oissvo=;
+        s=default; t=1588339834;
+        bh=l6I8N9mAySJ1NIPQgd/YPEign4VOEC6ZJUPecdttEXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHCQ2hFdgA1xw2kgIHd1Iw5pbyfYideIM+0U20VAejp/4UO2abWL8HOsMAnlvBMj0
-         bwKxgab8R7A/Haeu49pf3c6W7M4t7B9diXxhiveIKsYo2BZjmiUqMj0dR9kCNpsa8j
-         qFB7lEgho/Tu+KmATy6kFZZDf3i1FEHc22yYWgL0=
+        b=b4rx1E5BVHRec+6b3urh6DIfvD9PP8zNgg4mGYtpaZM4n6gEG6wIju/WJUgzDX/Ry
+         kNv0JsIaypZILrEPZF1IHfkF4qMFqs/0uXAfXN+XjL3VEHhV0SpHPG31CPNxu8DerK
+         67ksef7Dsf8z2GFPeULN/F6/xFGEL1jMImAykZEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 67/80] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
-Date:   Fri,  1 May 2020 15:22:01 +0200
-Message-Id: <20200501131534.974029037@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Theodore Tso <tytso@mit.edu>, Ashwin H <ashwinh@vmware.com>
+Subject: [PATCH 4.9 79/80] ext4: unsigned int compared against zero
+Date:   Fri,  1 May 2020 15:22:13 +0200
+Message-Id: <20200501131537.893149960@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,38 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit c142932c29e533ee892f87b44d8abc5719edceec ]
+commit fbbbbd2f28aec991f3fbc248df211550fbdfd58c upstream.
 
-In the reflink extent remap function, it turns out that uirec (the block
-mapping corresponding only to the part of the passed-in mapping that got
-unmapped) was not fully initialized.  Specifically, br_state was not
-being copied from the passed-in struct to the uirec.  This could lead to
-unpredictable results such as the reflinked mapping being marked
-unwritten in the destination file.
+There are two cases where u32 variables n and err are being checked
+for less than zero error values, the checks is always false because
+the variables are not signed. Fix this by making the variables ints.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Ashwin H <ashwinh@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/xfs/xfs_reflink.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/block_validity.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 17d3c964a2a23..6b753b969f7b8 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1162,6 +1162,7 @@ xfs_reflink_remap_extent(
- 		uirec.br_startblock = irec->br_startblock + rlen;
- 		uirec.br_startoff = irec->br_startoff + rlen;
- 		uirec.br_blockcount = unmap_len - rlen;
-+		uirec.br_state = irec->br_state;
- 		unmap_len = rlen;
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -141,7 +141,8 @@ static int ext4_protect_reserved_inode(s
+ 	struct inode *inode;
+ 	struct ext4_sb_info *sbi = EXT4_SB(sb);
+ 	struct ext4_map_blocks map;
+-	u32 i = 0, err = 0, num, n;
++	u32 i = 0, num;
++	int err = 0, n;
  
- 		/* If this isn't a real mapping, we're done. */
--- 
-2.20.1
-
+ 	if ((ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
 
 
