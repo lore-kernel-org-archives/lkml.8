@@ -2,88 +2,204 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D25C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A636C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 018C720857
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:44:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oYTqZP5o"
+	by mail.kernel.org (Postfix) with ESMTP id 3067C20857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588344314;
+	bh=CDa6UpW7/RGJVktJniWzFL5SPPJXC3PdL3ikarRe5hM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0xDPBUXrJQ1EWUK8sZVcGjf2B/vbLEXkNOS1fKa4SjuJkAxk1B5OQtgIbx4RCGrVp
+	 BUQVP205mm/gTTNc0frv+aTVAj9Qpk9g6u1NVGV9zR18QmN1vQPVoTkuoFAUs8utLj
+	 Hr357LPo6ioQEHO1R7zz2fvKEQkvjej94ZuWk0IM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgEAOoU (ORCPT
+        id S1729691AbgEAOpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:44:20 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:65377 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728916AbgEAOoS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 10:44:18 -0400
-X-UUID: ba1aafaed5cc4401a081e101100872b4-20200501
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=76OLCwfX6Gu9wxMlwzFdygqKRZ9AvkGO+i5uev8RfB0=;
-        b=oYTqZP5ogRhcen8vD/zje7xCWAjRNo/j7nsSNUDGSMUCvQYXJ4erAb6yqZD3+lHQMsEKrTtbDJvsrcleSozmtpkJExeCw/J5glPFHyMnqmNyq7moOUqfC+2YQbA9TGN6qHsde+v8rSxVm9WwT8bxZs3Ro1wpyXJSor1pm2jTfhY=;
-X-UUID: ba1aafaed5cc4401a081e101100872b4-20200501
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1616754347; Fri, 01 May 2020 22:38:38 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 1 May 2020 22:38:34 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 1 May 2020 22:38:33 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v3 0/5] scsi: ufs: support LU Dedicated buffer type for WriteBooster
-Date:   Fri, 1 May 2020 22:38:30 +0800
-Message-ID: <20200501143835.26032-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 1 May 2020 10:45:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729292AbgEAOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 10:45:06 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0863224958;
+        Fri,  1 May 2020 14:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588344305;
+        bh=CDa6UpW7/RGJVktJniWzFL5SPPJXC3PdL3ikarRe5hM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KzTdahS/PrJiGnxqv7C3Le46BJYDHNRcbR3uR0sicVk/9txPJb8iaFZ9z2KOlyMOD
+         Xx9JRf9ePmvur3+sKCtgA9yE/PvUUUoVkOblkDkxuiJE/UBWp1XSt1U08wnhOD/wzN
+         JZfWfmfUaHdRAZA400+81Bv6oAZMmFYnMo0/24ao=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jUWuT-00FCe8-O9; Fri, 01 May 2020 16:45:01 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH 20/37] docs: networking: device drivers: convert dec/dmfe.txt to ReST
+Date:   Fri,  1 May 2020 16:44:42 +0200
+Message-Id: <e05cabf197a58952ad1610adfe60c9f400465f5d.1588344146.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
+References: <cover.1588344146.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 75152929AB62C60A90DD79E3896054B044F54FEB05576F22D2B5529405A9B3A82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNClRoaXMgcGF0Y2hzZXQgYWRkcyBMVSBkZWRpY2F0ZWQgYnVmZmVyIG1vZGUgc3VwcG9y
-dCBmb3IgV3JpdGVCb29zdGVyLg0KDQpJbiB0aGUgbWVhbndoaWxlLCBlbmFibGUgV3JpdGVCb29z
-dGVyIGNhcGFiaWxpdHkgb24gTWVkaWFUZWsgVUZTIHBsYXRmb3Jtcy4NCg0KdjIgLT4gdjM6DQog
-IC0gSW50cm9kdWNlIGEgZGV2aWNlIHF1aXJrIHRvIHN1cHBvcnQgV3JpdGVCb29zdGVyIGluIHBy
-ZS0zLjEgVUZTIGRldmljZXMgKEF2cmkgQWx0bWFuKQ0KICAtIEZpeCBXcml0ZUJvb3N0ZXIgcmVs
-YXRlZCBzeXNmcyBub2Rlcy4gTm93IGFsbCBXcml0ZUJvb3N0ZXIgcmVsYXRlZCBzeXNmcyBub2Rl
-cyBhcmUgc3BlY2lmaWNhbGx5IG1hcHBlZCB0byB0aGUgTFVOIHdpdGggV3JpdGVCb29zdGVyIGVu
-YWJsZWQgaW4gTFUgRGVkaWNhdGVkIGJ1ZmZlciBtb2RlIChBdnJpIEFsdG1hbikNCg0KdjEgLT4g
-djI6DQogIC0gQ2hhbmdlIHRoZSBkZWZpbml0aW9uIG5hbWUgb2YgV3JpdGVCb29zdGVyIGJ1ZmZl
-ciBtb2RlIHRvIGNvcnJlc3BvbmQgdG8gc3BlY2lmaWNhdGlvbiAoQmVhbiBIdW8pDQogIC0gQWRk
-IHBhdGNoICM1OiAic2NzaTogdWZzOiBjbGVhbnVwIFdyaXRlQm9vc3RlciBmZWF0dXJlIg0KDQpT
-dGFubGV5IENodSAoNSk6DQogIHNjc2k6IHVmczogZW5hYmxlIFdyaXRlQm9vc3RlciBvbiBzb21l
-IHByZS0zLjEgVUZTIGRldmljZXMNCiAgc2NzaTogdWZzOiBhZGQgImluZGV4IiBpbiBwYXJhbWV0
-ZXIgbGlzdCBvZiB1ZnNoY2RfcXVlcnlfZmxhZygpDQogIHNjc2k6IHVmczogYWRkIExVIERlZGlj
-YXRlZCBidWZmZXIgbW9kZSBzdXBwb3J0IGZvciBXcml0ZUJvb3N0ZXINCiAgc2NzaTogdWZzLW1l
-ZGlhdGVrOiBlbmFibGUgV3JpdGVCb29zdGVyIGNhcGFiaWxpdHkNCiAgc2NzaTogdWZzOiBjbGVh
-bnVwIFdyaXRlQm9vc3RlciBmZWF0dXJlDQoNCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRl
-ay5jIHwgICAzICsNCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1zeXNmcy5jICAgIHwgIDE0ICsrLQ0K
-IGRyaXZlcnMvc2NzaS91ZnMvdWZzLmggICAgICAgICAgfCAgIDcgKysNCiBkcml2ZXJzL3Njc2kv
-dWZzL3Vmc19xdWlya3MuaCAgIHwgICA3ICsrDQogZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyAg
-ICAgICB8IDE1NiArKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQ0KIGRyaXZlcnMvc2Nz
-aS91ZnMvdWZzaGNkLmggICAgICAgfCAgIDMgKy0NCiA2IGZpbGVzIGNoYW5nZWQsIDEzNSBpbnNl
-cnRpb25zKCspLCA1NSBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjE4LjANCg==
+- add SPDX header;
+- adjust titles and chapters, adding proper markups;
+- comment out text-only TOC from html/pdf output;
+- mark code blocks and literals as such;
+- mark tables as such;
+- adjust identation, whitespaces and blank lines where needed;
+- add to networking/index.rst.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../device_drivers/dec/{dmfe.txt => dmfe.rst} | 35 +++++++++++--------
+ .../networking/device_drivers/index.rst       |  1 +
+ MAINTAINERS                                   |  2 +-
+ drivers/net/ethernet/dec/tulip/Kconfig        |  2 +-
+ 4 files changed, 23 insertions(+), 17 deletions(-)
+ rename Documentation/networking/device_drivers/dec/{dmfe.txt => dmfe.rst} (68%)
+
+diff --git a/Documentation/networking/device_drivers/dec/dmfe.txt b/Documentation/networking/device_drivers/dec/dmfe.rst
+similarity index 68%
+rename from Documentation/networking/device_drivers/dec/dmfe.txt
+rename to Documentation/networking/device_drivers/dec/dmfe.rst
+index 25320bf19c86..c4cf809cad84 100644
+--- a/Documentation/networking/device_drivers/dec/dmfe.txt
++++ b/Documentation/networking/device_drivers/dec/dmfe.rst
+@@ -1,6 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++==============================================================
++Davicom DM9102(A)/DM9132/DM9801 fast ethernet driver for Linux
++==============================================================
++
+ Note: This driver doesn't have a maintainer.
+ 
+-Davicom DM9102(A)/DM9132/DM9801 fast ethernet driver for Linux.
+ 
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General   Public License
+@@ -16,29 +21,29 @@ GNU General Public License for more details.
+ This driver provides kernel support for Davicom DM9102(A)/DM9132/DM9801 ethernet cards ( CNET
+ 10/100 ethernet cards uses Davicom chipset too, so this driver supports CNET cards too ).If you
+ didn't compile this driver as a module, it will automatically load itself on boot and print a
+-line similar to :
++line similar to::
+ 
+ 	dmfe: Davicom DM9xxx net driver, version 1.36.4 (2002-01-17)
+ 
+-If you compiled this driver as a module, you have to load it on boot.You can load it with command :
++If you compiled this driver as a module, you have to load it on boot.You can load it with command::
+ 
+ 	insmod dmfe
+ 
+ This way it will autodetect the device mode.This is the suggested way to load the module.Or you can pass
+-a mode= setting to module while loading, like :
++a mode= setting to module while loading, like::
+ 
+ 	insmod dmfe mode=0 # Force 10M Half Duplex
+ 	insmod dmfe mode=1 # Force 100M Half Duplex
+ 	insmod dmfe mode=4 # Force 10M Full Duplex
+ 	insmod dmfe mode=5 # Force 100M Full Duplex
+ 
+-Next you should configure your network interface with a command similar to :
++Next you should configure your network interface with a command similar to::
+ 
+ 	ifconfig eth0 172.22.3.18
+-                      ^^^^^^^^^^^
++		      ^^^^^^^^^^^
+ 		     Your IP Address
+ 
+-Then you may have to modify the default routing table with command :
++Then you may have to modify the default routing table with command::
+ 
+ 	route add default eth0
+ 
+@@ -48,10 +53,10 @@ Now your ethernet card should be up and running.
+ 
+ TODO:
+ 
+-Implement pci_driver::suspend() and pci_driver::resume() power management methods.
+-Check on 64 bit boxes.
+-Check and fix on big endian boxes.
+-Test and make sure PCI latency is now correct for all cases.
++- Implement pci_driver::suspend() and pci_driver::resume() power management methods.
++- Check on 64 bit boxes.
++- Check and fix on big endian boxes.
++- Test and make sure PCI latency is now correct for all cases.
+ 
+ 
+ Authors:
+@@ -60,7 +65,7 @@ Sten Wang <sten_wang@davicom.com.tw >   : Original Author
+ 
+ Contributors:
+ 
+-Marcelo Tosatti <marcelo@conectiva.com.br>
+-Alan Cox <alan@lxorguk.ukuu.org.uk>
+-Jeff Garzik <jgarzik@pobox.com>
+-Vojtech Pavlik <vojtech@suse.cz>
++- Marcelo Tosatti <marcelo@conectiva.com.br>
++- Alan Cox <alan@lxorguk.ukuu.org.uk>
++- Jeff Garzik <jgarzik@pobox.com>
++- Vojtech Pavlik <vojtech@suse.cz>
+diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
+index 4ad13ffb5800..09728e964ce1 100644
+--- a/Documentation/networking/device_drivers/index.rst
++++ b/Documentation/networking/device_drivers/index.rst
+@@ -35,6 +35,7 @@ Contents:
+    cirrus/cs89x0
+    davicom/dm9000
+    dec/de4x5
++   dec/dmfe
+ 
+ .. only::  subproject and html
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 91098b704635..b92568479a71 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4710,7 +4710,7 @@ F:	net/ax25/sysctl_net_ax25.c
+ DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
+ L:	netdev@vger.kernel.org
+ S:	Orphan
+-F:	Documentation/networking/device_drivers/dec/dmfe.txt
++F:	Documentation/networking/device_drivers/dec/dmfe.rst
+ F:	drivers/net/ethernet/dec/tulip/dmfe.c
+ 
+ DC390/AM53C974 SCSI driver
+diff --git a/drivers/net/ethernet/dec/tulip/Kconfig b/drivers/net/ethernet/dec/tulip/Kconfig
+index 8c4245d94bb2..177f36f4b89d 100644
+--- a/drivers/net/ethernet/dec/tulip/Kconfig
++++ b/drivers/net/ethernet/dec/tulip/Kconfig
+@@ -138,7 +138,7 @@ config DM9102
+ 	  This driver is for DM9102(A)/DM9132/DM9801 compatible PCI cards from
+ 	  Davicom (<http://www.davicom.com.tw/>).  If you have such a network
+ 	  (Ethernet) card, say Y.  Some information is contained in the file
+-	  <file:Documentation/networking/device_drivers/dec/dmfe.txt>.
++	  <file:Documentation/networking/device_drivers/dec/dmfe.rst>.
+ 
+ 	  To compile this driver as a module, choose M here. The module will
+ 	  be called dmfe.
+-- 
+2.25.4
 
