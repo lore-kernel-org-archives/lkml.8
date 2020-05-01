@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4AFC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECF2C47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A3F20757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79652166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339616;
-	bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
+	s=default; t=1588339618;
+	bh=vX5JsdCGV5Kz/GCsCmRJZkoJVehBUkNy3fA9Hk+Rjv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTx63i1m8OwKIQgVVYa2zTeKqKVKfgy7i80M7SCpCxRupr9wIV4PkXq/NtoWMxupQ
-	 sWJY8c3VcHIcuoIz9ueqaE5RhvSd8yMqywtqiRBU1Qi+m8QlwsCRDrqcvWrsiQGbgX
-	 gFkUgN8PIRBJj3YC5k63Nof6zjPL9Z8J2c3RZ83Y=
+	b=DHqxif6DCq6+wHeH3i/0+Z2xrt1bT6UVNGZS7hbSzOk9RUa+kh5q3H/izRVkodYVb
+	 ktFw5my4DW0uAXdbSBAGTr3Hgzyl+H/Aek+kuATU7LcXw/uxwrdmGb1iD6cGw4lVAQ
+	 wvMJANLHVaZWyhg/Xg5KYcTXe55bqUMnpQsl7fq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgEAN0z (ORCPT
+        id S1729372AbgEAN06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729357AbgEAN0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:26:53 -0400
+        id S1729338AbgEAN0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:26:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7205208D6;
-        Fri,  1 May 2020 13:26:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2192166E;
+        Fri,  1 May 2020 13:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339613;
-        bh=VsYap1cvGow2jSCcWvjNno49atcuMeOuC56eocJemgs=;
+        s=default; t=1588339610;
+        bh=vX5JsdCGV5Kz/GCsCmRJZkoJVehBUkNy3fA9Hk+Rjv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFZPWLwfPhPx+/bfBS3nL1Ygpqi7HN2z8WTEKHfweaiLprUaoHsdGZFwaFIep9OkO
-         VUKW7kxiQCVTnExMU7vVBPDxqtAHU0vTd69OGd+LCceXce5KdWSPpFee1PxBo0ia57
-         1pvbekTBk7pHhbdm/lFKizLVv5G0zBgnqQoctW+g=
+        b=k8vTRFa9IvQSF9wKCxulpZU1TPb2DMN4clAxp3KLdWhDhT4iw9X8/GDM9WXztYNQS
+         ZbvXP25a4HkLQnoOnSZ5gACJO/sW39Te6pfmwCu6Oon22pH5P+hAsBlzKjtlEBoZf/
+         Qd5ugiVjMKD8Bqr31Nls9g/mJPNS9iBiibuHLMBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.4 47/70] staging: comedi: dt2815: fix writing hi byte of analog output
-Date:   Fri,  1 May 2020 15:21:35 +0200
-Message-Id: <20200501131528.012059340@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Roland Hieber <rhi@pengutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.4 46/70] ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
+Date:   Fri,  1 May 2020 15:21:34 +0200
+Message-Id: <20200501131527.546871988@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -58,62 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-commit ed87d33ddbcd9a1c3b5ae87995da34e6f51a862c upstream.
+commit f1baca8896ae18e12c45552a4c4ae2086aa7e02c upstream.
 
-The DT2815 analog output command is 16 bits wide, consisting of the
-12-bit sample value in bits 15 to 4, the channel number in bits 3 to 1,
-and a voltage or current selector in bit 0.  Both bytes of the 16-bit
-command need to be written in turn to a single 8-bit data register.
-However, the driver currently only writes the low 8-bits.  It is broken
-and appears to have always been broken.
+512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+introduced an unintended linker error for i.MX6 configurations that have
+ARM_CPU_SUSPEND=n which can happen if neither CONFIG_PM, CONFIG_CPU_IDLE,
+nor ARM_PSCI_FW are selected.
 
-Electronic copies of the DT2815 User's Manual seem impossible to find
-online, but looking at the source code, a best guess for the sequence
-the driver intended to use to write the analog output command is as
-follows:
+Fix this by having v7_cpu_resume() compiled only when cpu_resume() it
+calls is available as well.
 
-1. Wait for the status register to read 0x00.
-2. Write the low byte of the command to the data register.
-3. Wait for the status register to read 0x80.
-4. Write the high byte of the command to the data register.
+The C declaration for the function remains unguarded to avoid future code
+inadvertently using a stub and introducing a regression to the bug the
+original commit fixed.
 
-Step 4 is missing from the driver.  Add step 4 to (hopefully) fix the
-driver.
-
-Also add a "FIXME" comment about setting bit 0 of the low byte of the
-command.  Supposedly, it is used to choose between voltage output and
-current output, but the current driver always sets it to 1.
-
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200406142015.126982-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <stable@vger.kernel.org>
+Fixes: 512a928affd5 ("ARM: imx: build v7_cpu_resume() unconditionally")
+Reported-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Tested-by: Roland Hieber <rhi@pengutronix.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt2815.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/mach-imx/Makefile |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/staging/comedi/drivers/dt2815.c
-+++ b/drivers/staging/comedi/drivers/dt2815.c
-@@ -101,6 +101,7 @@ static int dt2815_ao_insn(struct comedi_
- 	int ret;
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -91,8 +91,10 @@ AFLAGS_suspend-imx6.o :=-Wa,-march=armv7
+ obj-$(CONFIG_SOC_IMX6) += suspend-imx6.o
+ obj-$(CONFIG_SOC_IMX53) += suspend-imx53.o
+ endif
++ifeq ($(CONFIG_ARM_CPU_SUSPEND),y)
+ AFLAGS_resume-imx6.o :=-Wa,-march=armv7-a
+ obj-$(CONFIG_SOC_IMX6) += resume-imx6.o
++endif
+ obj-$(CONFIG_SOC_IMX6) += pm-imx6.o
  
- 	for (i = 0; i < insn->n; i++) {
-+		/* FIXME: lo bit 0 chooses voltage output or current output */
- 		lo = ((data[i] & 0x0f) << 4) | (chan << 1) | 0x01;
- 		hi = (data[i] & 0xff0) >> 4;
- 
-@@ -114,6 +115,8 @@ static int dt2815_ao_insn(struct comedi_
- 		if (ret)
- 			return ret;
- 
-+		outb(hi, dev->iobase + DT2815_DATA);
-+
- 		devpriv->ao_readback[chan] = data[i];
- 	}
- 	return i;
+ obj-$(CONFIG_SOC_IMX50) += mach-imx50.o
 
 
