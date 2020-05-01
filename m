@@ -2,51 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3F5C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05209C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAC62173E
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A0124957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340255;
-	bh=21jnwet0trPW2Kv3E6ihRnckW6TR5od8KkJAPHwPeqE=;
+	s=default; t=1588340260;
+	bh=ACTRU1UUEm6ye6yZ2p3caxXTQ7iwAUF7bdVTOxW/sA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQx0MsJrEajM9xyu8cXpRsVeHtPc9uW+aIA7+HzuvRFmo8HdAiBAOpeoAd6c+TL2t
-	 RqvwvCqRZmXPv/u3e+l12RblwkBqGlTdjHT6sAxqoks9GaK1bf6dLhKnzAaMNzu3vR
-	 PeLSN+WNdQR47FASu675/3fLNMOGUWQSbO+c1quk=
+	b=BUD3qLczUgrQiKyfy+lqhM/MmFKwdc+eEDKFMockw4PsQmqeKnN2RJgSmb4oNUpmn
+	 MB3HT0b4uUNCmeSxmhpap6qu2LdlUMsvjNk8D8KOf5dqC9tb3QevWk9Tea4EHRFn7W
+	 IJXQ6MDF5jYL0U2VlCa/ZFlMAMFhJjJgRe8o6tgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgEANhe (ORCPT
+        id S1730967AbgEANhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36594 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730704AbgEANha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:30 -0400
+        id S1730580AbgEANhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:37:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34F7024953;
-        Fri,  1 May 2020 13:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E11216FD;
+        Fri,  1 May 2020 13:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340249;
-        bh=21jnwet0trPW2Kv3E6ihRnckW6TR5od8KkJAPHwPeqE=;
+        s=default; t=1588340254;
+        bh=ACTRU1UUEm6ye6yZ2p3caxXTQ7iwAUF7bdVTOxW/sA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/u/k+BlKCXwgMdzKiz/2GtDmsF6atN3Xuu8g1HJDdwvGXGwxMCi7nPjA5Trn1/vW
-         WPe69Gnj2lAJc2mr9R3hygH769MWVX7id8UK/DhJFjm0bBxAwYZ7Pg+0Ds43JTzFuW
-         YoDaiRq00oaY2/jIAWDZIe36A/8b69gz5+X6wkEo=
+        b=GiuWPujX62/RvLzhGOnlGol1AVVGgLa7maZHMDrOBWcvI7ny+Ml8QU9xECd0fcd61
+         skMPZ+HVM8bs6xKpuWQRt8ItRjglcAGnNANWzWLu3z+CB1aGsXi2pSivuC8zg7js8G
+         +tDhcFKGbrzlsqJ6yECJroigt24ANUzGWpDcug74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 41/46] ext4: increase wait time needed before reuse of deleted inode numbers
-Date:   Fri,  1 May 2020 15:23:06 +0200
-Message-Id: <20200501131513.092895370@linuxfoundation.org>
+Subject: [PATCH 4.19 43/46] hwmon: (jc42) Fix name to have no illegal characters
+Date:   Fri,  1 May 2020 15:23:08 +0200
+Message-Id: <20200501131513.660829988@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -59,40 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit a17a9d935dc4a50acefaf319d58030f1da7f115a ]
+[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
 
-Current wait times have proven to be too short to protect against inode
-reuses that lead to metadata inconsistencies.
+The jc42 driver passes I2C client's name as hwmon device name. In case
+of device tree probed devices this ends up being part of the compatible
+string, "jc-42.4-temp". This name contains hyphens and the hwmon core
+doesn't like this:
 
-Now that we will retry the inode allocation if we can't find any
-recently deleted inodes, it's a lot safer to increase the recently
-deleted time from 5 seconds to a minute.
+jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
 
-Link: https://lore.kernel.org/r/20200414023925.273867-1-tytso@mit.edu
-Google-Bug-Id: 36602237
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This changes the name to "jc42" which doesn't have any illegal
+characters.
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/ialloc.c | 2 +-
+ drivers/hwmon/jc42.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/ialloc.c b/fs/ext4/ialloc.c
-index dafa7e4aaecb9..8876eaad10f68 100644
---- a/fs/ext4/ialloc.c
-+++ b/fs/ext4/ialloc.c
-@@ -665,7 +665,7 @@ static int find_group_other(struct super_block *sb, struct inode *parent,
-  * block has been written back to disk.  (Yes, these values are
-  * somewhat arbitrary...)
-  */
--#define RECENTCY_MIN	5
-+#define RECENTCY_MIN	60
- #define RECENTCY_DIRTY	300
+--- a/drivers/hwmon/jc42.c
++++ b/drivers/hwmon/jc42.c
+@@ -527,7 +527,7 @@ static int jc42_probe(struct i2c_client
+ 	}
+ 	data->config = config;
  
- static int recently_deleted(struct super_block *sb, ext4_group_t group, int ino)
--- 
-2.20.1
-
+-	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
++	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
+ 							 data, &jc42_chip_info,
+ 							 NULL);
+ 	return PTR_ERR_OR_ZERO(hwmon_dev);
 
 
