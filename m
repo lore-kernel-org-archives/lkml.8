@@ -2,68 +2,76 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF23C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD4AC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B7D206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70AE720787
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:39:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mxvBVDR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgEAKhX (ORCPT
+        id S1728605AbgEAKjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 06:37:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:38456 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbgEAKhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 06:37:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BA4F30E;
-        Fri,  1 May 2020 03:37:22 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.7.8])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8266F3F73D;
-        Fri,  1 May 2020 03:37:20 -0700 (PDT)
-Date:   Fri, 1 May 2020 11:37:12 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, git@thegavinli.com,
-        jarkko.sakkinen@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] usb: usbfs: correct kernel->user page attribute mismatch
-Message-ID: <20200501103712.GA51954@C02TD0UTHF1T.local>
-References: <20200430211922.929165-1-jeremy.linton@arm.com>
- <20200501070500.GA887524@kroah.com>
+        Fri, 1 May 2020 06:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728545AbgEAKjZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 06:39:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C80C08E859;
+        Fri,  1 May 2020 03:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=X1Y0Wt6aI8L3G9yDhhqkxUs7nTDNlMdgsRMLyS3/fVY=; b=mxvBVDR55vQ4J21c+gDS/xpNzV
+        sT7KKju9wOmEwkosAuvSu1RzF28PY8SZnV3gQDUL29bTu7M5rV8xSRWfJk2HhpgwdgSVnHx8KsUMK
+        ePujyWpjogMkD+Xgn4pMxqIsvyz1qbekXEn+mut0d+BPpxHrDkT0/RufZXNSmG8NQr6839+SH7SsP
+        ZAvEpbonz8NqI56mVD7E1Ho/DGrldcoyRI6zrl3jSyuq0K0HUJvCGpa2arFIA2yzuGk8tVLFSIE6/
+        tdWFGiGlxABYKj9dOd5hO449FSA5xXFzxyeUBxZ0X8i4K90DRVOoRy7tLo2MCvsebczn9zrGyXv4v
+        svQwlDZg==;
+Received: from [2001:4bb8:18c:10bd:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUT4X-0005Ty-G6; Fri, 01 May 2020 10:39:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     arnd@arndb.de
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] asm-generic: remove an empty ifdef block from signal.h
+Date:   Fri,  1 May 2020 12:39:02 +0200
+Message-Id: <20200501103902.2620910-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501070500.GA887524@kroah.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 09:05:00AM +0200, Greg KH wrote:
-> On Thu, Apr 30, 2020 at 04:19:22PM -0500, Jeremy Linton wrote:
-> > On arm64, and possibly other architectures, requesting
-> > IO coherent memory may return Normal-NC if the underlying
-> > hardware isn't coherent. If these pages are then
-> > remapped into userspace as Normal, that defeats the
-> > purpose of getting Normal-NC, as well as resulting in
-> > mappings with differing cache attributes.
-> 
-> What is "Normal-NC"?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/asm-generic/signal.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-Arm terminology for "Normal Non-Cacheable"; it might be better to say
-something like:
+diff --git a/include/asm-generic/signal.h b/include/asm-generic/signal.h
+index c53984fa97614..663dd6d0795dc 100644
+--- a/include/asm-generic/signal.h
++++ b/include/asm-generic/signal.h
+@@ -5,8 +5,6 @@
+ #include <uapi/asm-generic/signal.h>
+ 
+ #ifndef __ASSEMBLY__
+-#ifdef SA_RESTORER
+-#endif
+ 
+ #include <asm/sigcontext.h>
+ #undef __HAVE_ARCH_SIG_BITOPS
+-- 
+2.26.2
 
-On some architectures (e.g. arm64) an IO coherent mapping may use
-non-cachable attributes if the relevant device is cache coherent.
-If userspace mappings are cacheable, these may not be coherent with
-non-cacheable mappings. On arm64 this is the case for Normal-NC and
-Normal (cacheable) mappings.
-
-Thanks,
-Mark.
