@@ -2,158 +2,125 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD7AC47256
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDF5C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EDA4214D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:04:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="qrIcrvdj"
+	by mail.kernel.org (Postfix) with ESMTP id 87C03214D8
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 07:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588316704;
+	bh=+XNsx/y7wpr3wXy4+AywlP59DpP+Q7EqeGtvYes8QWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UfaXKTLC3lVRdnonpD7L8OgKvcwk+KGbIhUjc01Bs6XZj0eiJdQB8gGK3Kcyjwy1K
+	 eS6fzf8yeApZjhEvVwJLIFQ2BISWyT90XF47uXVL1SQO2Tv5GARjCC3s6hfszYb/zm
+	 KVfWPxg3PXJ706puiVqq5nybpc35gj6NjAnLuB+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEAHEQ (ORCPT
+        id S1728313AbgEAHFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 03:04:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgEAHEP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 03:04:15 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F341DC035494
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 00:04:14 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y3so3268900lfy.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 00:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qCLOpkksHkdYh4ykPVpJ06w/keNadYsgtn64kTqCr0o=;
-        b=qrIcrvdjsOXbi4j/UHEuFriKwEvCA1iz+1e5OHIsiMuxukviKMoDZ9q/XG+IB7TnXu
-         YnTGDXvPjY1CCk2TOdW3lrUN5Yt3VPgopQlt6DuW9SzzG+U8NP6eajswUZpK+4Bxw2tM
-         s7O0yx5TUoSu1W1pRRHV4XhioJpnaO4/mbyM2M11A2u6SyXqodQppBwV76aCqYQEILRP
-         WCKGUGvtxQQgeL0T2VMLMGdBepdugEqueqimopqNV/x5fdSHH44e8fF20rfmOjRKl4V5
-         1n6sEsiZ9BCmeLt753BnsYVWmU4mU8NhTvg5/mggcDc72QWy9D1KTbAwcqTnv9Y5Xuix
-         +5kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qCLOpkksHkdYh4ykPVpJ06w/keNadYsgtn64kTqCr0o=;
-        b=bLGADgyvva7at7BpiaIoRy0EfVp9oXW0/YQjF83JUrBMr9c3VnnNpaiKuVu1GYbFD0
-         dAberFcXJIi4Ifrei+6qbRsvTP5sKNW6poxmLN0AxC1nuxAezAOS8s0jOfrc4YLzMD7P
-         Z0yu785TIVzQmG397mArmWljXCToCAE86jLmn/cEWvfd8SHDbAXyTznPJJ//whePfg8z
-         0zHhoHrc84c1rtrVgyQWclwld+++6wl4j/AxrsD3B7WKwZKFtPeG30fiBS3Yez3CdVOb
-         iLdRd+Kb8KAKRDoQiQAPWtrJU0+F2XWdmjs0/HMKlKbEekbL/umU4bMxnFIubRexsXv9
-         ECkw==
-X-Gm-Message-State: AGi0PuZtJqFtuviLU8PXwKOu04xUZljHA6++NcU1Y30iU+VonMHM8WMe
-        UJyKFgLo993rG/a5/GapQBhvy5/ulYw=
-X-Google-Smtp-Source: APiQypKJIrgmF/BqPWAQ31tqddSJmsLtNFzezH7xZgekAp+cPvl7IaOvC17MAI9Swc7MSl0zffkcHg==
-X-Received: by 2002:ac2:530e:: with SMTP id c14mr1724785lfh.154.1588316653320;
-        Fri, 01 May 2020 00:04:13 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r14sm1444367ljn.4.2020.05.01.00.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 00:04:12 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id ECFC910241E; Fri,  1 May 2020 10:04:24 +0300 (+03)
-Date:   Fri, 1 May 2020 10:04:24 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 linux-next PATCH 2/2] mm: khugepaged: don't have to put
- being freed page back to lru
-Message-ID: <20200501070424.a5uugk7am2yzzx4v@box>
-References: <1588279279-61908-1-git-send-email-yang.shi@linux.alibaba.com>
- <1588279279-61908-2-git-send-email-yang.shi@linux.alibaba.com>
+        Fri, 1 May 2020 03:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgEAHFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 03:05:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3458D20787;
+        Fri,  1 May 2020 07:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588316702;
+        bh=+XNsx/y7wpr3wXy4+AywlP59DpP+Q7EqeGtvYes8QWk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0HQDrcctKw6flmvjHVvIBWYkP25DJeJXiS0x+RkzSggT6XtcSFNPt0PjIwM6NmBw/
+         72L/lTCOQWWxEHvoGp22DQ8IKTCVHcygWsxqpJ27+br65wjoP68yqHNdzdTK1U9A9q
+         M9FwRrSn1Fj5fEpdJakqcJP0gm2B+VZrgkXud5dk=
+Date:   Fri, 1 May 2020 09:05:00 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        git@thegavinli.com, jarkko.sakkinen@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] usb: usbfs: correct kernel->user page attribute mismatch
+Message-ID: <20200501070500.GA887524@kroah.com>
+References: <20200430211922.929165-1-jeremy.linton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1588279279-61908-2-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <20200430211922.929165-1-jeremy.linton@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 04:41:19AM +0800, Yang Shi wrote:
-> When khugepaged successfully isolated and copied data from old page to
-> collapsed THP, the old page is about to be freed if its last mapcount
-> is gone.  So putting the page back to lru sounds not that productive in
-> this case since the page might be isolated by vmscan but it can't be
-> reclaimed by vmscan since it can't be unmapped by try_to_unmap() at all.
-> 
-> Actually if khugepaged is the last user of this page so it can be freed
-> directly.  So, clearing active and unevictable flags, unlocking and
-> dropping refcount from isolate instead of calling putback_lru_page().
+On Thu, Apr 30, 2020 at 04:19:22PM -0500, Jeremy Linton wrote:
+> On arm64, and possibly other architectures, requesting
+> IO coherent memory may return Normal-NC if the underlying
+> hardware isn't coherent. If these pages are then
+> remapped into userspace as Normal, that defeats the
+> purpose of getting Normal-NC, as well as resulting in
+> mappings with differing cache attributes.
 
-Any reason putback_lru_page() cannot do it internally? I mean if it is
-page_count() == 1, free the page.
+What is "Normal-NC"?
+
+> In particular this happens with libusb, when it attempts
+> to create zero-copy buffers as is used by rtl-sdr, and
+
+What is "rtl-sdr"
+
+> maybe other applications. The result is usually
+> application death.
+
+So is this a new problem?  Old problem?  Old problem only showing up on
+future devices?  On current devices?  I need a hint here as to know if
+this is a bugfix or just work to make future devices work properly.
+
 > 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> If dma_mmap_attr() is used instead of remap_pfn_range,
+> the page cache/etc attributes can be matched between the
+> kernel and userspace.
+> 
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 > ---
-> v2: Check mapcount and skip putback lru if the last mapcount is gone
+>  drivers/usb/core/devio.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
->  mm/khugepaged.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 0c8d30b..1fdd677 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -559,10 +559,18 @@ void __khugepaged_exit(struct mm_struct *mm)
->  static void release_pte_page(struct page *page)
+> diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+> index 6833c918abce..1e7458dd6e5d 100644
+> --- a/drivers/usb/core/devio.c
+> +++ b/drivers/usb/core/devio.c
+> @@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
 >  {
->  	mod_node_page_state(page_pgdat(page),
-> -			NR_ISOLATED_ANON + page_is_file_lru(page),
-> -			-compound_nr(page));
-> -	unlock_page(page);
-> -	putback_lru_page(page);
-> +		NR_ISOLATED_ANON + page_is_file_lru(page), -compound_nr(page));
-> +
-> +	if (total_mapcount(page)) {
-> +		unlock_page(page);
-> +		putback_lru_page(page);
-> +	} else {
-> +		ClearPageActive(page);
-> +		ClearPageUnevictable(page);
-> +		unlock_page(page);
-> +		/* Drop refcount from isolate */
-> +		put_page(page);
-> +	}
->  }
+>  	struct usb_memory *usbm = NULL;
+>  	struct usb_dev_state *ps = file->private_data;
+> +	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
+>  	size_t size = vma->vm_end - vma->vm_start;
+>  	void *mem;
+>  	unsigned long flags;
+> @@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
+>  	usbm->vma_use_count = 1;
+>  	INIT_LIST_HEAD(&usbm->memlist);
 >  
->  static void release_pte_pages(pte_t *pte, pte_t *_pte,
-> @@ -771,8 +779,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->  		} else {
->  			src_page = pte_page(pteval);
->  			copy_user_highpage(page, src_page, address, vma);
-> -			if (!PageCompound(src_page))
-> -				release_pte_page(src_page);
->  			/*
->  			 * ptl mostly unnecessary, but preempt has to
->  			 * be disabled to update the per-cpu stats
-> @@ -786,6 +792,8 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->  			pte_clear(vma->vm_mm, address, _pte);
->  			page_remove_rmap(src_page, false);
->  			spin_unlock(ptl);
-> +			if (!PageCompound(src_page))
-> +				release_pte_page(src_page);
->  			free_page_and_swap_cache(src_page);
->  		}
->  	}
-> -- 
-> 1.8.3.1
-> 
-> 
+> -	if (remap_pfn_range(vma, vma->vm_start,
+> -			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+> -			size, vma->vm_page_prot) < 0) {
+> +	if (dma_mmap_attrs(hcd->self.sysdev, vma, mem, dma_handle, size, 0)) {
 
--- 
- Kirill A. Shutemov
+Given that this code has not changed since 2016, how has no one noticed
+this issue before?
+
+And have you tested this change out on other systems (i.e. x86) to
+ensure that this still works properly?
+
+And why isn't this call used more by drivers if this is a real issue?
+And will this cause issues with how the userspace mapping is handled as
+now we rely on userspace to do things differently?  Or am I reading the
+dma_mmap_attrs() documentation wrong?
+
+thanks,
+
+greg k-h
