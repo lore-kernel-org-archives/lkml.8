@@ -2,93 +2,95 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A88C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F7C47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13862051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C9B205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340786;
+	bh=tD3zOv8bsJgydoBG6kFrPw2CiE43HwdTyu1zaZF25Mo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vq3ldW/IkYeFG+U/NukGzrbb/XBfxjUaODzx6H5gO1gd9hQe77Aqw4JZ+fZwstx6T
+	 oVBeUCYFrqtkAzWBLxNgtuhHDZCCCY+4ivj9vnnj3fLsAoorV4bAn35d2Bpx5Ru8h2
+	 8f/IRaN2BoUD8+UA7HzjEK/YHPANEw31SAIKlJdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgEANqR (ORCPT
+        id S1731793AbgEANox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:46:17 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41127 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731801AbgEANo5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j3so2625727ljg.8;
-        Fri, 01 May 2020 06:44:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HfgY/DHsULUZEl+7rWuesO+JiGINR2RoKVUEnFZIbxY=;
-        b=pxXj1FjY94uKiY9NjZ20d37GK+1O1u7oXO9tUyCiEc0ovwW2BufjqFedJyGDc0Ilik
-         H7IOODCIGaTPLp2BBkTp80LTjeaCasB377ri6AIYpbUO50nR4GcRHGoGwlUPDPwUjl3y
-         krcxBl0CXex5g1po9+OSMxCTRd9JkH6v0BjYgoigBJDTmBNLykM3pwmCyrjP9ur1D4CF
-         viuOc3AVKU9OHTmVj+RZBiqPSG3fHiEoN3zqOKnAXcoqE8ZOTPtlWPSyPfj2EoCbL/Rs
-         ONL0sWoUiJ68coTmv4LK7EDIHfILo114XLGOtpj7e+y5snA3QOU5+qQ5oca1VmAOY7eU
-         AdDw==
-X-Gm-Message-State: AGi0PuZcqvRHFNkoUrzYa9Oefr4qpGWV71qxcGO225lRHBeoqHZrOB4U
-        MVaPTjKBOtXSCp0qW2096+Jou24KDoY=
-X-Google-Smtp-Source: APiQypLLnLvr4dk8xp7GQLrt6zVvZS8jE+F2qmlVymQDLmCndkfNoRtlWTL3RdGAcX7Y5jA6B94WvQ==
-X-Received: by 2002:a2e:a417:: with SMTP id p23mr2628367ljn.19.1588340695103;
-        Fri, 01 May 2020 06:44:55 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.150.177])
-        by smtp.googlemail.com with ESMTPSA id b2sm2269194lfi.14.2020.05.01.06.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:44:54 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-block@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, Willy Tarreau <w@1wt.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] floppy: use print_hex_dump() in setup_DMA()
-Date:   Fri,  1 May 2020 16:44:13 +0300
-Message-Id: <20200501134416.72248-2-efremov@linux.com>
-X-Mailer: git-send-email 2.25.3
-In-Reply-To: <20200501134416.72248-1-efremov@linux.com>
-References: <20200501134416.72248-1-efremov@linux.com>
+        Fri, 1 May 2020 09:44:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729386AbgEANom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A25420836;
+        Fri,  1 May 2020 13:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340681;
+        bh=tD3zOv8bsJgydoBG6kFrPw2CiE43HwdTyu1zaZF25Mo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=famoT9SQSYDiZrpJAgl/O9ElcZyytq292Orh8hxudfA3j/9oeyoAU/CmwvlLmwQPk
+         mn0Z37vsiIzSp7j3Wrm/51ypOXQsSHc1Z5hly4DsAQYau9/OxrZXi5Tq3036WRf9XI
+         zA9mzMdnVBqytvGjtN22/nk+ceSqcZp9Mv8P+KyE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Olaf Hering <olaf@aepfle.de>,
+        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 070/106] x86: hyperv: report value of misc_features
+Date:   Fri,  1 May 2020 15:23:43 +0200
+Message-Id: <20200501131552.594887594@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove pr_cont() and use print_hex_dump() in setup_DMA() to print the
-contents of the cmd buffer.
+From: Olaf Hering <olaf@aepfle.de>
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Denis Efremov <efremov@linux.com>
+[ Upstream commit 97d9f1c43bedd400301d6f1eff54d46e8c636e47 ]
+
+A few kernel features depend on ms_hyperv.misc_features, but unlike its
+siblings ->features and ->hints, the value was never reported during boot.
+
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
+Link: https://lore.kernel.org/r/20200407172739.31371-1-olaf@aepfle.de
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/mshyperv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 2817170dd403..3ab6e804b5ec 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -1069,12 +1069,9 @@ static void setup_DMA(void)
- 	unsigned long f;
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 5e296a7e60363..ebf34c7bc8bc0 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
+ 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
+ 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
  
- 	if (raw_cmd->length == 0) {
--		int i;
--
--		pr_info("zero dma transfer size:");
--		for (i = 0; i < raw_cmd->cmd_count; i++)
--			pr_cont("%x,", raw_cmd->cmd[i]);
--		pr_cont("\n");
-+		print_hex_dump(KERN_INFO, "zero dma transfer size: ",
-+			       DUMP_PREFIX_NONE, 16, 1,
-+			       raw_cmd->cmd, raw_cmd->cmd_count, false);
- 		cont->done(0);
- 		fdc_state[current_fdc].reset = 1;
- 		return;
+-	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
+-		ms_hyperv.features, ms_hyperv.hints);
++	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
++		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
+ 
+ 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
+ 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
 -- 
-2.25.3
+2.20.1
+
+
 
