@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F5C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAFCDC47259
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C9E208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8310320857
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344332;
-	bh=i+lrJtK79ZaXiQi7kH81Bt50ZwWqRguIb+LxCqpjH30=;
+	s=default; t=1588344334;
+	bh=bFUSU0CDHE5bMJp0MuJssCpCSNpjL04f4SSrum4JlSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBLeWLj/D7iouNylP3Jadp2N4sXQ3kLIwttDTUb7JFPUA+9ezEQv7TrvPA2w+KA+l
-	 KauPzs7/qiaEkrnOPPcJwVtVRwkVAw0LfsnIkG/oD+sWKclLQ4NRGV+2DojRLB89kw
-	 yG/0c6mIbjKyVnzPwDFF35WAgFQH4XimcKeOI4GY=
+	b=tS1mEW2LDKMis8KZ/JeIklPFORf7unx1bEtii4tNI2gD14GgBL6CSqmFr9M0DF4nf
+	 ap0lfXzpTC1K3bSlfNcefkEcyYRzdaSON76fRuRF/S+nRlasZL2V0kN0sl/uno6wnJ
+	 uJPIb0zd1LI8rLpk2/Suo/rrMjnXkcRocUfdgUYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgEAOp2 (ORCPT
+        id S1729801AbgEAOp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgEAOpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729582AbgEAOpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:12 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A6B524964;
-        Fri,  1 May 2020 14:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC84A2499A;
+        Fri,  1 May 2020 14:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344308;
-        bh=i+lrJtK79ZaXiQi7kH81Bt50ZwWqRguIb+LxCqpjH30=;
+        s=default; t=1588344307;
+        bh=bFUSU0CDHE5bMJp0MuJssCpCSNpjL04f4SSrum4JlSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZU0K1QgxxAI9rLf9ttqocELdAPAOPi1PYgrKlo5LvO9QT5Qu4VXVD/6T/htKaEYq
-         b5V6HMhTiqWP4YiSQZBJd+0+QxYtjxtuCpb63Ic5YozlvxtQsS6SjVuaJe+QkwbcQY
-         fvjkz3VgmBohjPXpt3e73AVW52YmpJITS1txCslY=
+        b=1HY3viXkg/ce+4Lsps7SyAbfYUV4XIK3F2wLKZtfGcTquw/WMwZfsI7Ut6yVI4+X5
+         g3Gkbhijgaj5rMGZ/osWC+mMjQ0vs2LPi9HzjpnOI5E0IS5GDZY22sE0XVdzxACBZT
+         dCHgSnZIAsrDK+aFiw5/DK/ZcoeHPI8mxZioILX4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuU-00FCfG-40; Fri, 01 May 2020 16:45:02 +0200
+        id 1jUWuT-00FCeS-RX; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Samuel Chessman <chessman@tux.org>, netdev@vger.kernel.org
-Subject: [PATCH 34/37] docs: networking: device drivers: convert ti/tlan.txt to ReST
-Date:   Fri,  1 May 2020 16:44:56 +0200
-Message-Id: <7964e7144500da480550be3b1b1edfaaab131744.1588344146.git.mchehab+huawei@kernel.org>
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: [PATCH 24/37] docs: networking: device drivers: convert intel/ipw2100.txt to ReST
+Date:   Fri,  1 May 2020 16:44:46 +0200
+Message-Id: <9f8e6ca792b65b691fadafc5a1f20de20b4f7c6f.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
 References: <cover.1588344146.git.mchehab+huawei@kernel.org>
@@ -64,232 +66,454 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 - add SPDX header;
 - adjust titles and chapters, adding proper markups;
-- mark tables as such;
+- comment out text-only TOC from html/pdf output;
+- use copyright symbol;
+- use :field: markup;
 - mark code blocks and literals as such;
+- mark tables as such;
 - adjust identation, whitespaces and blank lines where needed;
 - add to networking/index.rst.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../networking/device_drivers/index.rst       |  1 +
- .../device_drivers/ti/{tlan.txt => tlan.rst}  | 73 ++++++++++++-------
- MAINTAINERS                                   |  2 +-
- drivers/net/ethernet/ti/Kconfig               |  2 +-
- drivers/net/ethernet/ti/tlan.c                |  2 +-
- 5 files changed, 52 insertions(+), 28 deletions(-)
- rename Documentation/networking/device_drivers/ti/{tlan.txt => tlan.rst} (73%)
+ .../networking/device_drivers/index.rst       |   1 +
+ .../intel/{ipw2100.txt => ipw2100.rst}        | 242 ++++++++++--------
+ MAINTAINERS                                   |   2 +-
+ drivers/net/wireless/intel/ipw2x00/Kconfig    |   2 +-
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c  |   2 +-
+ 5 files changed, 140 insertions(+), 109 deletions(-)
+ rename Documentation/networking/device_drivers/intel/{ipw2100.txt => ipw2100.rst} (70%)
 
 diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 1d3b664e6921..adc0bf65fb02 100644
+index cec3415ee459..54ed10f3d1a7 100644
 --- a/Documentation/networking/device_drivers/index.rst
 +++ b/Documentation/networking/device_drivers/index.rst
-@@ -49,6 +49,7 @@ Contents:
-    smsc/smc9
-    ti/cpsw_switchdev
-    ti/cpsw
-+   ti/tlan
+@@ -39,6 +39,7 @@ Contents:
+    dlink/dl2k
+    freescale/dpaa
+    freescale/gianfar
++   intel/ipw2100
  
  .. only::  subproject and html
  
-diff --git a/Documentation/networking/device_drivers/ti/tlan.txt b/Documentation/networking/device_drivers/ti/tlan.rst
-similarity index 73%
-rename from Documentation/networking/device_drivers/ti/tlan.txt
-rename to Documentation/networking/device_drivers/ti/tlan.rst
-index 34550dfcef74..4fdc0907f4fc 100644
---- a/Documentation/networking/device_drivers/ti/tlan.txt
-+++ b/Documentation/networking/device_drivers/ti/tlan.rst
-@@ -1,20 +1,33 @@
+diff --git a/Documentation/networking/device_drivers/intel/ipw2100.txt b/Documentation/networking/device_drivers/intel/ipw2100.rst
+similarity index 70%
+rename from Documentation/networking/device_drivers/intel/ipw2100.txt
+rename to Documentation/networking/device_drivers/intel/ipw2100.rst
+index 6f85e1d06031..d54ad522f937 100644
+--- a/Documentation/networking/device_drivers/intel/ipw2100.txt
++++ b/Documentation/networking/device_drivers/intel/ipw2100.rst
+@@ -1,31 +1,37 @@
 +.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
+ 
+-Intel(R) PRO/Wireless 2100 Driver for Linux in support of:
++===========================================
++Intel(R) PRO/Wireless 2100 Driver for Linux
++===========================================
+ 
+-Intel(R) PRO/Wireless 2100 Network Connection
++Support for:
+ 
+-Copyright (C) 2003-2006, Intel Corporation
++- Intel(R) PRO/Wireless 2100 Network Connection
 +
++Copyright |copy| 2003-2006, Intel Corporation
+ 
+ README.ipw2100
+ 
+-Version: git-1.1.5
+-Date   : January 25, 2006
++:Version: git-1.1.5
++:Date:    January 25, 2006
++
++.. Index
++
++    0. IMPORTANT INFORMATION BEFORE USING THIS DRIVER
++    1. Introduction
++    2. Release git-1.1.5 Current Features
++    3. Command Line Parameters
++    4. Sysfs Helper Files
++    5. Radio Kill Switch
++    6. Dynamic Firmware
++    7. Power Management
++    8. Support
++    9. License
++
+ 
+-Index
+------------------------------------------------
+ 0. IMPORTANT INFORMATION BEFORE USING THIS DRIVER
+-1. Introduction
+-2. Release git-1.1.5 Current Features
+-3. Command Line Parameters
+-4. Sysfs Helper Files
+-5. Radio Kill Switch
+-6. Dynamic Firmware
+-7. Power Management
+-8. Support
+-9. License
+-
+-
+-0.   IMPORTANT INFORMATION BEFORE USING THIS DRIVER
+------------------------------------------------
++=================================================
+ 
+ Important Notice FOR ALL USERS OR DISTRIBUTORS!!!!
+ 
+@@ -75,10 +81,10 @@ obtain a tested driver from Intel Customer Support at:
+ http://www.intel.com/support/wireless/sb/CS-006408.htm
+ 
+ 1. Introduction
+------------------------------------------------
++===============
+ 
+-This document provides a brief overview of the features supported by the 
+-IPW2100 driver project.  The main project website, where the latest 
++This document provides a brief overview of the features supported by the
++IPW2100 driver project.  The main project website, where the latest
+ development version of the driver can be found, is:
+ 
+ 	http://ipw2100.sourceforge.net
+@@ -89,10 +95,11 @@ for the driver project.
+ 
+ 
+ 2. Release git-1.1.5 Current Supported Features
+------------------------------------------------
++===============================================
++
+ - Managed (BSS) and Ad-Hoc (IBSS)
+ - WEP (shared key and open)
+-- Wireless Tools support 
++- Wireless Tools support
+ - 802.1x (tested with XSupplicant 1.0.1)
+ 
+ Enabled (but not supported) features:
+@@ -105,11 +112,11 @@ performed on a given feature.
+ 
+ 
+ 3. Command Line Parameters
+------------------------------------------------
++==========================
+ 
+ If the driver is built as a module, the following optional parameters are used
+ by entering them on the command line with the modprobe command using this
+-syntax:
++syntax::
+ 
+ 	modprobe ipw2100 [<option>=<VAL1><,VAL2>...]
+ 
+@@ -119,61 +126,76 @@ For example, to disable the radio on driver loading, enter:
+ 
+ The ipw2100 driver supports the following module parameters:
+ 
+-Name		Value		Example:
+-debug		0x0-0xffffffff	debug=1024
+-mode		0,1,2		mode=1   /* AdHoc */
+-channel		int		channel=3 /* Only valid in AdHoc or Monitor */
+-associate	boolean		associate=0 /* Do NOT auto associate */
+-disable		boolean		disable=1 /* Do not power the HW */
++=========	==============	============  ==============================
++Name		Value		Example       Meaning
++=========	==============	============  ==============================
++debug		0x0-0xffffffff	debug=1024    Debug level set to 1024
++mode		0,1,2		mode=1        AdHoc
++channel		int		channel=3     Only valid in AdHoc or Monitor
++associate	boolean		associate=0   Do NOT auto associate
++disable		boolean		disable=1     Do not power the HW
++=========	==============	============  ==============================
+ 
+ 
+ 4. Sysfs Helper Files
+----------------------------     
+------------------------------------------------
 +=====================
-+TLAN driver for Linux
-+=====================
-+
-+:Version: 1.14a
-+
- (C) 1997-1998 Caldera, Inc.
-+
- (C) 1998 James Banks
-+
- (C) 1999-2001 Torben Mathiasen <tmm@image.dk, torben.mathiasen@compaq.com>
  
- For driver information/updates visit http://www.compaq.com
+-There are several ways to control the behavior of the driver.  Many of the 
++There are several ways to control the behavior of the driver.  Many of the
+ general capabilities are exposed through the Wireless Tools (iwconfig).  There
+ are a few capabilities that are exposed through entries in the Linux Sysfs.
  
  
--TLAN driver for Linux, version 1.14a
--README
- 
- 
--I.  Supported Devices.
+------ Driver Level ------
++**Driver Level**
 +
-+I. Supported Devices
+ For the driver level files, look in /sys/bus/pci/drivers/ipw2100/
+ 
+-  debug_level  
+-	
+-	This controls the same global as the 'debug' module parameter.  For 
+-        information on the various debugging levels available, run the 'dvals'
++  debug_level
++	This controls the same global as the 'debug' module parameter.  For
++	information on the various debugging levels available, run the 'dvals'
+ 	script found in the driver source directory.
+ 
+-	NOTE:  'debug_level' is only enabled if CONFIG_IPW2100_DEBUG is turn
+-	       on.
++	.. note::
++
++	      'debug_level' is only enabled if CONFIG_IPW2100_DEBUG is turn on.
++
++**Device Level**
++
++For the device level files look in::
+ 
+------ Device Level ------
+-For the device level files look in
+-	
+ 	/sys/bus/pci/drivers/ipw2100/{PCI-ID}/
+ 
+-For example:
++For example::
++
+ 	/sys/bus/pci/drivers/ipw2100/0000:02:01.0
+ 
+ For the device level files, see /sys/bus/pci/drivers/ipw2100:
+ 
+   rf_kill
+-	read - 
+-	0 = RF kill not enabled (radio on)
+-	1 = SW based RF kill active (radio off)
+-	2 = HW based RF kill active (radio off)
+-	3 = Both HW and SW RF kill active (radio off)
+-	write -
+-	0 = If SW based RF kill active, turn the radio back on
+-	1 = If radio is on, activate SW based RF kill
+-
+-	NOTE: If you enable the SW based RF kill and then toggle the HW
+-  	based RF kill from ON -> OFF -> ON, the radio will NOT come back on
++	read
++
++	==  =========================================
++	0   RF kill not enabled (radio on)
++	1   SW based RF kill active (radio off)
++	2   HW based RF kill active (radio off)
++	3   Both HW and SW RF kill active (radio off)
++	==  =========================================
++
++	write
++
++	==  ==================================================
++	0   If SW based RF kill active, turn the radio back on
++	1   If radio is on, activate SW based RF kill
++	==  ==================================================
++
++	.. note::
++
++	   If you enable the SW based RF kill and then toggle the HW
++	   based RF kill from ON -> OFF -> ON, the radio will NOT come back on
+ 
+ 
+ 5. Radio Kill Switch
+------------------------------------------------
 +====================
- 
-     Only PCI devices will work with this driver.
- 
-     Supported:
 +
-+    =========	=========	===========================================
-     Vendor ID	Device ID	Name
-+    =========	=========	===========================================
-     0e11	ae32		Compaq Netelligent 10/100 TX PCI UTP
-     0e11	ae34		Compaq Netelligent 10 T PCI UTP
-     0e11	ae35		Compaq Integrated NetFlex 3/P
-@@ -25,13 +38,14 @@ I.  Supported Devices.
-     0e11	b030		Compaq Netelligent 10/100 TX UTP
-     0e11	f130		Compaq NetFlex 3/P
-     0e11	f150		Compaq NetFlex 3/P
--    108d	0012		Olicom OC-2325	
-+    108d	0012		Olicom OC-2325
-     108d	0013		Olicom OC-2183
--    108d	0014		Olicom OC-2326	
-+    108d	0014		Olicom OC-2326
-+    =========	=========	===========================================
+ Most laptops provide the ability for the user to physically disable the radio.
+ Some vendors have implemented this as a physical switch that requires no
+ software to turn the radio off and on.  On other laptops, however, the switch
+@@ -186,9 +208,10 @@ on your system.
  
  
-     Caveats:
--    
+ 6. Dynamic Firmware
+------------------------------------------------
+-As the firmware is licensed under a restricted use license, it can not be 
+-included within the kernel sources.  To enable the IPW2100 you will need a 
++===================
 +
-     I am not sure if 100BaseTX daughterboards (for those cards which
-     support such things) will work.  I haven't had any solid evidence
-     either way.
-@@ -41,21 +55,25 @@ I.  Supported Devices.
++As the firmware is licensed under a restricted use license, it can not be
++included within the kernel sources.  To enable the IPW2100 you will need a
+ firmware image to load into the wireless NIC's processors.
  
-     The "Netelligent 10 T/2 PCI UTP/Coax" (b012) device is untested,
-     but I do not expect any problems.
--    
+ You can obtain these images from <http://ipw2100.sf.net/firmware.php>.
+@@ -197,52 +220,57 @@ See INSTALL for instructions on installing the firmware.
  
--II.   Driver Options
+ 
+ 7. Power Management
+------------------------------------------------
+-The IPW2100 supports the configuration of the Power Save Protocol 
+-through a private wireless extension interface.  The IPW2100 supports 
++===================
 +
-+II. Driver Options
-+==================
++The IPW2100 supports the configuration of the Power Save Protocol
++through a private wireless extension interface.  The IPW2100 supports
+ the following different modes:
+ 
++	===	===========================================================
+ 	off	No power management.  Radio is always on.
+ 	on	Automatic power management
+-	1-5	Different levels of power management.  The higher the 
+-		number the greater the power savings, but with an impact to 
+-		packet latencies. 
++	1-5	Different levels of power management.  The higher the
++		number the greater the power savings, but with an impact to
++		packet latencies.
++	===	===========================================================
+ 
+-Power management works by powering down the radio after a certain 
+-interval of time has passed where no packets are passed through the 
+-radio.  Once powered down, the radio remains in that state for a given 
+-period of time.  For higher power savings, the interval between last 
++Power management works by powering down the radio after a certain
++interval of time has passed where no packets are passed through the
++radio.  Once powered down, the radio remains in that state for a given
++period of time.  For higher power savings, the interval between last
+ packet processed to sleep is shorter and the sleep period is longer.
+ 
+-When the radio is asleep, the access point sending data to the station 
+-must buffer packets at the AP until the station wakes up and requests 
+-any buffered packets.  If you have an AP that does not correctly support 
+-the PSP protocol you may experience packet loss or very poor performance 
+-while power management is enabled.  If this is the case, you will need 
+-to try and find a firmware update for your AP, or disable power 
+-management (via `iwconfig eth1 power off`)
++When the radio is asleep, the access point sending data to the station
++must buffer packets at the AP until the station wakes up and requests
++any buffered packets.  If you have an AP that does not correctly support
++the PSP protocol you may experience packet loss or very poor performance
++while power management is enabled.  If this is the case, you will need
++to try and find a firmware update for your AP, or disable power
++management (via ``iwconfig eth1 power off``)
+ 
+-To configure the power level on the IPW2100 you use a combination of 
+-iwconfig and iwpriv.  iwconfig is used to turn power management on, off, 
++To configure the power level on the IPW2100 you use a combination of
++iwconfig and iwpriv.  iwconfig is used to turn power management on, off,
+ and set it to auto.
+ 
++	=========================  ====================================
+ 	iwconfig eth1 power off    Disables radio power down
+-	iwconfig eth1 power on     Enables radio power management to 
++	iwconfig eth1 power on     Enables radio power management to
+ 				   last set level (defaults to AUTO)
+-	iwpriv eth1 set_power 0    Sets power level to AUTO and enables 
+-				   power management if not previously 
++	iwpriv eth1 set_power 0    Sets power level to AUTO and enables
++				   power management if not previously
+ 				   enabled.
+-	iwpriv eth1 set_power 1-5  Set the power level as specified, 
+-				   enabling power management if not 
++	iwpriv eth1 set_power 1-5  Set the power level as specified,
++				   enabling power management if not
+ 				   previously enabled.
++	=========================  ====================================
 +
- 	1. You can append debug=x to the end of the insmod line to get
--           debug messages, where x is a bit field where the bits mean
-+	   debug messages, where x is a bit field where the bits mean
- 	   the following:
--	   
++You can view the current power level setting via::
+ 
+-You can view the current power level setting via:
+-	
+ 	iwpriv eth1 get_power
+ 
+ It will return the current period or timeout that is configured as a string
+ in the form of xxxx/yyyy (z) where xxxx is the timeout interval (amount of
+-time after packet processing), yyyy is the period to sleep (amount of time to 
++time after packet processing), yyyy is the period to sleep (amount of time to
+ wait before powering the radio and querying the access point for buffered
+ packets), and z is the 'power level'.  If power management is turned off the
+ xxxx/yyyy will be replaced with 'off' -- the level reported will be the active
+@@ -250,44 +278,46 @@ level if `iwconfig eth1 power on` is invoked.
+ 
+ 
+ 8. Support
+------------------------------------------------
++==========
+ 
+ For general development information and support,
+ go to:
+-	
 +
-+	   ====		=====================================
- 	   0x01		Turn on general debugging messages.
- 	   0x02		Turn on receive debugging messages.
- 	   0x04		Turn on transmit debugging messages.
- 	   0x08		Turn on list debugging messages.
-+	   ====		=====================================
+     http://ipw2100.sf.net/
  
- 	2. You can append aui=1 to the end of the insmod line to cause
--           the adapter to use the AUI interface instead of the 10 Base T
--           interface.  This is also what to do if you want to use the BNC
-+	   the adapter to use the AUI interface instead of the 10 Base T
-+	   interface.  This is also what to do if you want to use the BNC
- 	   connector on a TLAN based device.  (Setting this option on a
- 	   device that does not have an AUI/BNC connector will probably
- 	   cause it to not function correctly.)
-@@ -70,41 +88,45 @@ II.   Driver Options
+-The ipw2100 1.1.0 driver and firmware can be downloaded from:  
++The ipw2100 1.1.0 driver and firmware can be downloaded from:
  
- 	5. You have to use speed=X duplex=Y together now. If you just
- 	   do "insmod tlan.o speed=100" the driver will do Auto-Neg.
--	   To force a 10Mbps Half-Duplex link do "insmod tlan.o speed=10 
-+	   To force a 10Mbps Half-Duplex link do "insmod tlan.o speed=10
- 	   duplex=1".
+     http://support.intel.com
  
- 	6. If the driver is built into the kernel, you can use the 3rd
- 	   and 4th parameters to set aui and debug respectively.  For
--	   example:
-+	   example::
+-For installation support on the ipw2100 1.1.0 driver on Linux kernels 
+-2.6.8 or greater, email support is available from:  
++For installation support on the ipw2100 1.1.0 driver on Linux kernels
++2.6.8 or greater, email support is available from:
  
--	   ether=0,0,0x1,0x7,eth0
-+		ether=0,0,0x1,0x7,eth0
+     http://supportmail.intel.com
  
- 	   This sets aui to 0x1 and debug to 0x7, assuming eth0 is a
- 	   supported TLAN device.
+ 9. License
+------------------------------------------------
++==========
  
- 	   The bits in the third byte are assigned as follows:
+-  Copyright(c) 2003 - 2006 Intel Corporation. All rights reserved.
++  Copyright |copy| 2003 - 2006 Intel Corporation. All rights reserved.
  
--		0x01 = aui
--		0x02 = use half duplex
--		0x04 = use full duplex
--		0x08 = use 10BaseT
--		0x10 = use 100BaseTx
-+		====   ===============
-+		0x01   aui
-+		0x02   use half duplex
-+		0x04   use full duplex
-+		0x08   use 10BaseT
-+		0x10   use 100BaseTx
-+		====   ===============
- 
- 	   You also need to set both speed and duplex settings when forcing
--	   speeds with kernel-parameters. 
-+	   speeds with kernel-parameters.
- 	   ether=0,0,0x12,0,eth0 will force link to 100Mbps Half-Duplex.
- 
- 	7. If you have more than one tlan adapter in your system, you can
- 	   use the above options on a per adapter basis. To force a 100Mbit/HD
--	   link with your eth1 adapter use:
--	   
--	   insmod tlan speed=0,100 duplex=0,1
-+	   link with your eth1 adapter use::
+-  This program is free software; you can redistribute it and/or modify it 
+-  under the terms of the GNU General Public License (version 2) as 
++  This program is free software; you can redistribute it and/or modify it
++  under the terms of the GNU General Public License (version 2) as
+   published by the Free Software Foundation.
+-  
+-  This program is distributed in the hope that it will be useful, but WITHOUT 
+-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
 +
-+		insmod tlan speed=0,100 duplex=0,1
- 
- 	   Now eth0 will use auto-neg and eth1 will be forced to 100Mbit/HD.
- 	   Note that the tlan driver supports a maximum of 8 adapters.
- 
- 
--III.  Things to try if you have problems.
-+III. Things to try if you have problems
-+=======================================
++  This program is distributed in the hope that it will be useful, but WITHOUT
++  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+   more details.
+-  
 +
- 	1. Make sure your card's PCI id is among those listed in
- 	   section I, above.
- 	2. Make sure routing is correct.
-@@ -113,5 +135,6 @@ III.  Things to try if you have problems.
- 
- There is also a tlan mailing list which you can join by sending "subscribe tlan"
- in the body of an email to majordomo@vuser.vu.union.edu.
+   You should have received a copy of the GNU General Public License along with
+-  this program; if not, write to the Free Software Foundation, Inc., 59 
++  this program; if not, write to the Free Software Foundation, Inc., 59
+   Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+-  
 +
- There is also a tlan website at http://www.compaq.com
+   The full GNU General Public License is included in this distribution in the
+   file called LICENSE.
+-  
++
+   License Contact Information:
++
+   James P. Ketrenos <ipw2100-admin@linux.intel.com>
++
+   Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
  
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0054a0a87d5f..b0b352389d14 100644
+index b92568479a71..2ac9c94ff4f2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -17017,7 +17017,7 @@ M:	Samuel Chessman <chessman@tux.org>
- L:	tlan-devel@lists.sourceforge.net (subscribers-only)
+@@ -8762,7 +8762,7 @@ INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
+ M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
+ L:	linux-wireless@vger.kernel.org
  S:	Maintained
- W:	http://sourceforge.net/projects/tlan/
--F:	Documentation/networking/device_drivers/ti/tlan.txt
-+F:	Documentation/networking/device_drivers/ti/tlan.rst
- F:	drivers/net/ethernet/ti/tlan.*
+-F:	Documentation/networking/device_drivers/intel/ipw2100.txt
++F:	Documentation/networking/device_drivers/intel/ipw2100.rst
+ F:	Documentation/networking/device_drivers/intel/ipw2200.txt
+ F:	drivers/net/wireless/intel/ipw2x00/
  
- TM6000 VIDEO4LINUX DRIVER
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index 89cec778cf2d..7b0ad777828d 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -138,7 +138,7 @@ config TLAN
+diff --git a/drivers/net/wireless/intel/ipw2x00/Kconfig b/drivers/net/wireless/intel/ipw2x00/Kconfig
+index ab17903ba9f8..b0b3cd6296f3 100644
+--- a/drivers/net/wireless/intel/ipw2x00/Kconfig
++++ b/drivers/net/wireless/intel/ipw2x00/Kconfig
+@@ -16,7 +16,7 @@ config IPW2100
+ 	  A driver for the Intel PRO/Wireless 2100 Network
+ 	  Connection 802.11b wireless network adapter.
  
- 	  Devices currently supported by this driver are Compaq Netelligent,
- 	  Compaq NetFlex and Olicom cards.  Please read the file
--	  <file:Documentation/networking/device_drivers/ti/tlan.txt>
-+	  <file:Documentation/networking/device_drivers/ti/tlan.rst>
- 	  for more details.
+-	  See <file:Documentation/networking/device_drivers/intel/ipw2100.txt>
++	  See <file:Documentation/networking/device_drivers/intel/ipw2100.rst>
+ 	  for information on the capabilities currently enabled in this driver
+ 	  and for tips for debugging issues and problems.
  
- 	  To compile this driver as a module, choose M here. The module
-diff --git a/drivers/net/ethernet/ti/tlan.c b/drivers/net/ethernet/ti/tlan.c
-index ad465202980a..857709828058 100644
---- a/drivers/net/ethernet/ti/tlan.c
-+++ b/drivers/net/ethernet/ti/tlan.c
-@@ -70,7 +70,7 @@ MODULE_DESCRIPTION("Driver for TI ThunderLAN based ethernet PCI adapters");
- MODULE_LICENSE("GPL");
- 
- /* Turn on debugging.
-- * See Documentation/networking/device_drivers/ti/tlan.txt for details
-+ * See Documentation/networking/device_drivers/ti/tlan.rst for details
-  */
- static  int		debug;
- module_param(debug, int, 0);
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+index 97ea6e2035e6..624fe721e2b5 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+@@ -8352,7 +8352,7 @@ static int ipw2100_mod_firmware_load(struct ipw2100_fw *fw)
+ 	if (IPW2100_FW_MAJOR(h->version) != IPW2100_FW_MAJOR_VERSION) {
+ 		printk(KERN_WARNING DRV_NAME ": Firmware image not compatible "
+ 		       "(detected version id of %u). "
+-		       "See Documentation/networking/device_drivers/intel/ipw2100.txt\n",
++		       "See Documentation/networking/device_drivers/intel/ipw2100.rst\n",
+ 		       h->version);
+ 		return 1;
+ 	}
 -- 
 2.25.4
 
