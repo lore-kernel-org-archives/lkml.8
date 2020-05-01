@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA574C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2CDC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB02208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CA220757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340335;
-	bh=EzBuUbP+MAp5jtdhazYUJEvVoX5tSl+lvg7WtwU5M/E=;
+	s=default; t=1588340343;
+	bh=XpXa5FENFiLrqyQDdoQL5Q7GRlnfAR/wzA1XRDQltGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DSVs7yX57+Ucri6plWuoo6qyAinQwhplCA9tu5afRkZZkgDRy28JhK31bUge/Erun
-	 +Ppi4ZreHGQukIsIX2ePW/r1nT23C9ixPDEpDngLfpx0N65V/fHIG5LJ30sHW0VN7m
-	 hF00i3iG1wWit4uT2A/NRoGrgDkqZhLG6R5cdpX4=
+	b=en+Za1AnziAfuG8/3z0qXe/QFu1c682jsteg/8+FfEy+nGWjiidgbjb/Xu+Ozu2Zx
+	 E0Ne0NLl4bfXPJ4uaEc2NADwasBDBh/qekHd2auZPWjdQjk91ogxt4UsIK/l2FLW80
+	 J28jqsxN2+7JXRIBYtb2f3HiQ2OSENBzug2BN9KM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgEANiy (ORCPT
+        id S1730205AbgEANjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbgEANip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:38:45 -0400
+        id S1731119AbgEANi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:38:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1638220757;
-        Fri,  1 May 2020 13:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D55E920757;
+        Fri,  1 May 2020 13:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340324;
-        bh=EzBuUbP+MAp5jtdhazYUJEvVoX5tSl+lvg7WtwU5M/E=;
+        s=default; t=1588340339;
+        bh=XpXa5FENFiLrqyQDdoQL5Q7GRlnfAR/wzA1XRDQltGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ziWPgqnUz8VYhb1Od3tUnxA3fYhJBZPGEXkJx/Y5aSNauv5Q0xKmEBSjAyIWzkZZo
-         8tu3/mZR+7r1SDBuuSncW+gb5+NUbLbjuIbHcc+avX9znnBgB7DPngadrN0AXOF1A2
-         e8vO8CVEPiVfqI1ZBUU2F+OnIb8CDLuzbwzAEFzw=
+        b=myDXmWw1tpZkjoNPs4VwsMuXbmsgK626LXL4JjFnC8UyMfqQB3LxefZQDThRvo5Pu
+         Cs1CypHTmOeSmPm5DPSODJTtJtU8r73Wnt+jJSUd+w6vkCAt0GP1wnuzzkmlwluTUv
+         ovcDQVVQ8JsH842no6aGTtOMA9noQzCufICpr7BI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 5.4 19/83] drivers: soc: xilinx: fix firmware driver Kconfig dependency
-Date:   Fri,  1 May 2020 15:22:58 +0200
-Message-Id: <20200501131528.930744749@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.4 38/83] cpumap: Avoid warning when CONFIG_DEBUG_PER_CPU_MAPS is enabled
+Date:   Fri,  1 May 2020 15:23:17 +0200
+Message-Id: <20200501131535.507056182@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -59,49 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-commit d0384eedcde21276ac51f57c641f875605024b32 upstream.
+commit bc23d0e3f717ced21fbfacab3ab887d55e5ba367 upstream.
 
-The firmware driver is optional, but the power driver depends on it,
-which needs to be reflected in Kconfig to avoid link errors:
+When the kernel is built with CONFIG_DEBUG_PER_CPU_MAPS, the cpumap code
+can trigger a spurious warning if CONFIG_CPUMASK_OFFSTACK is also set. This
+happens because in this configuration, NR_CPUS can be larger than
+nr_cpumask_bits, so the initial check in cpu_map_alloc() is not sufficient
+to guard against hitting the warning in cpumask_check().
 
-aarch64-linux-ld: drivers/soc/xilinx/zynqmp_power.o: in function `zynqmp_pm_isr':
-zynqmp_power.c:(.text+0x284): undefined reference to `zynqmp_pm_invoke_fn'
+Fix this by explicitly checking the supplied key against the
+nr_cpumask_bits variable before calling cpu_possible().
 
-The firmware driver can probably be allowed for compile-testing as
-well, so it's best to drop the dependency on the ZYNQ platform
-here and allow building as long as the firmware code is built-in.
-
-Fixes: ab272643d723 ("drivers: soc: xilinx: Add ZynqMP PM driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200408155224.2070880-1-arnd@arndb.de
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Fixes: 6710e1126934 ("bpf: introduce new bpf cpu map type BPF_MAP_TYPE_CPUMAP")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Xiumei Mu <xmu@redhat.com>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Link: https://lore.kernel.org/bpf/20200416083120.453718-1-toke@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/soc/xilinx/Kconfig |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/bpf/cpumap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/soc/xilinx/Kconfig
-+++ b/drivers/soc/xilinx/Kconfig
-@@ -19,7 +19,7 @@ config XILINX_VCU
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -486,7 +486,7 @@ static int cpu_map_update_elem(struct bp
+ 		return -EOVERFLOW;
  
- config ZYNQMP_POWER
- 	bool "Enable Xilinx Zynq MPSoC Power Management driver"
--	depends on PM && ARCH_ZYNQMP
-+	depends on PM && ZYNQMP_FIRMWARE
- 	default y
- 	help
- 	  Say yes to enable power management support for ZyqnMP SoC.
-@@ -31,7 +31,7 @@ config ZYNQMP_POWER
- config ZYNQMP_PM_DOMAINS
- 	bool "Enable Zynq MPSoC generic PM domains"
- 	default y
--	depends on PM && ARCH_ZYNQMP && ZYNQMP_FIRMWARE
-+	depends on PM && ZYNQMP_FIRMWARE
- 	select PM_GENERIC_DOMAINS
- 	help
- 	  Say yes to enable device power management through PM domains
+ 	/* Make sure CPU is a valid possible cpu */
+-	if (!cpu_possible(key_cpu))
++	if (key_cpu >= nr_cpumask_bits || !cpu_possible(key_cpu))
+ 		return -ENODEV;
+ 
+ 	if (qsize == 0) {
 
 
