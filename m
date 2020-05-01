@@ -2,93 +2,138 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3E0C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13845C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37DF12137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TZFNVyLm"
+	by mail.kernel.org (Postfix) with ESMTP id EC68C24955
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgEAMec (ORCPT
+        id S1728765AbgEAMgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 08:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
+        Fri, 1 May 2020 08:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728682AbgEAMeb (ORCPT
+        by vger.kernel.org with ESMTP id S1728639AbgEAMga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 08:34:31 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F994C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 05:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OFdEjkK9jwgd0OlQdpKQakLpH/7u8tRK6UnJTEvP0yE=; b=TZFNVyLmvaFYCPmOoBQtCT8LbO
-        KtKzjwYT3U74sRbqJs/Z1oBAzhMS/kd6rAH3tl7VxdFTJeIMAur6Yj+mZ85A4krspgMQy3rWsH6qo
-        HusitmEyOqEqd0kgFe6dLVdM7TMD+lRvDuN+OUsa6o+/JR+C0yK6xftYg6vh89a3f6nTKJwEmKwca
-        78UrEHxNth3LG15agZHExbxpowRrDLJzWTduaQ3YDfej9H7lIPyOU2RBVPE1ugVKsSVkX59dkby4B
-        +mKvFK1Bla71Q/8523zGvGK9xtYDeEix7V0D2qeZDEItMJxtYiSp25ByXhADkdTVm2P1CGGeY3+Hm
-        /pCJqLew==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUUs9-0007mt-MI; Fri, 01 May 2020 12:34:29 +0000
-Date:   Fri, 1 May 2020 05:34:29 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 00/10] change the implementation of the PageHighMem()
-Message-ID: <20200501123429.GA26861@infradead.org>
-References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
- <20200429184711.9d603da097fdea80f574f1f1@linux-foundation.org>
- <CAAmzW4NC4LHXSoU8r6Jrh7WP8fouuaSkM--0gQVWf8G4wkDupg@mail.gmail.com>
- <20200501105545.GA29460@infradead.org>
- <CAAmzW4M+EoPqhossgJKxpZ_5=uto1jXK56qYmUd6SNKmbswuJQ@mail.gmail.com>
+        Fri, 1 May 2020 08:36:30 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9138BC061A0C;
+        Fri,  1 May 2020 05:36:30 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 23CC62A2FC1
+Received: by earth.universe (Postfix, from userid 1000)
+        id EC7103C08C7; Fri,  1 May 2020 14:36:26 +0200 (CEST)
+Date:   Fri, 1 May 2020 14:36:26 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 04/11] power: supply: core: reduce
+ power_supply_show_usb_type() parameters
+Message-ID: <20200501123626.nwxd2pzhwstu2rb3@earth.universe>
+References: <cover.1585944770.git.mirq-linux@rere.qmqm.pl>
+ <16ca50739c664b3fa373306f3c08882d9d4cf55d.1585944770.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gwo25vnp5ep6zq4j"
 Content-Disposition: inline
-In-Reply-To: <CAAmzW4M+EoPqhossgJKxpZ_5=uto1jXK56qYmUd6SNKmbswuJQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <16ca50739c664b3fa373306f3c08882d9d4cf55d.1585944770.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 09:15:30PM +0900, Joonsoo Kim wrote:
-> I think that PageHighMemZone() is long and complicated enough to have
-> a macro.
 
-It is.  But then again it also shouldn't really be used by anything
-but MM internals.
+--gwo25vnp5ep6zq4j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> PageHighMemZone(page) = is_highmem_idx(zone_idx(page_zone(page))
-> 
-> Instead of open-code, how about changing the style of macro like as
-> page_from_highmem()? What PageHighMemZone() represent is derivated
-> attribute from the page so PageXXX() style may not be appropriate.
+Hi,
 
-Maybe page_is_highmem_zone() with a big kerneldoc comment explaining
-the use case?  Bonus points of killing enough users that it can be
-in mm/internal.h.
+On Fri, Apr 03, 2020 at 10:20:32PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
+> Reduce power_supply_show_usb_type() parameter count by folding
+> power_supply_desc dereference into the function.  This makes following
+> patch making usb_types const easier.
+>=20
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/power_supply_sysfs.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
+pply/power_supply_sysfs.c
+> index f37ad4eae60b..51de3f47b25d 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -78,8 +78,7 @@ static const char * const power_supply_scope_text[] =3D=
+ {
+>  };
+> =20
+>  static ssize_t power_supply_show_usb_type(struct device *dev,
+> -					  enum power_supply_usb_type *usb_types,
+> -					  ssize_t num_usb_types,
+> +					  const struct power_supply_desc *desc,
+>  					  union power_supply_propval *value,
+>  					  char *buf)
+>  {
+> @@ -88,8 +87,8 @@ static ssize_t power_supply_show_usb_type(struct device=
+ *dev,
+>  	bool match =3D false;
+>  	int i;
+> =20
+> -	for (i =3D 0; i < num_usb_types; ++i) {
+> -		usb_type =3D usb_types[i];
+> +	for (i =3D 0; i < desc->num_usb_types; ++i) {
+> +		usb_type =3D desc->usb_types[i];
+> =20
+>  		if (value->intval =3D=3D usb_type) {
+>  			count +=3D sprintf(buf + count, "[%s] ",
+> @@ -163,8 +162,7 @@ static ssize_t power_supply_show_property(struct devi=
+ce *dev,
+>  			      power_supply_type_text[value.intval]);
+>  		break;
+>  	case POWER_SUPPLY_PROP_USB_TYPE:
+> -		ret =3D power_supply_show_usb_type(dev, psy->desc->usb_types,
+> -						 psy->desc->num_usb_types,
+> +		ret =3D power_supply_show_usb_type(dev, psy->desc,
+>  						 &value, buf);
+>  		break;
+>  	case POWER_SUPPLY_PROP_SCOPE:
+> --=20
+> 2.20.1
+>=20
+
+--gwo25vnp5ep6zq4j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6sF7YACgkQ2O7X88g7
++prwyQ//QdWswtGX6RqxYWjdwijzqG9iTJPBEHqDvYNRGU4hw/946g55l71UCjnB
+1PxcRlSEbHKUDcO/RLkoBoPr654aM3cQNg0ML3BIumR2Y/P3yvp0yZY6uiLtImyc
+Ye6Nzz0FdCXn8Ab4x9bqgLyZHNPajON43mjWwOV7xLZ4NJPg92/i/AFu3PjsQscD
+0vcdh9A1DDFcrgnZ1iG9y6J9c3aQqgPK6mE31OsldzVQrnaIciH1U0iWRaSFHRZE
+9jcUF+DDpM+vryEM1duEVQ5G9svIMePjKRi0xFg0mfOg+CsY05PthiPhXBN4Oowo
+fDLEdVoLi+hVfZgYxONrZx+7sfrlvKyyzjbVvfodZNbzVvWIgNPKhloLiI4JwJ/n
+VETOhC3diUDB8s7mBAL4vTI0hyLUWbWyANAErAWK4rvfXm/6KchydM6HkYexmb14
+SNlX/sSH9TBuvrca3b9eqdK8+hNyXuvGNNomgBD11DQg30cBxWBZAYCh0k8UXp18
+UwLDdeC+2/uFzbajUFHb1Pxpa2QAYPpHD/wq1lwHvFvJx6y1RjzlUNIfDLQ6mclY
+d0Tt6l5RtdZz/Mncs5tMdwgzjbowrRoigpB6JaEQsw+E0lbrlUMlKwnMy+Bv9J7T
+vrtQ63G3Utv3sQsx7DtCEYVsK32DeOliM1WLhZwUi+2mSex8hOM=
+=xY64
+-----END PGP SIGNATURE-----
+
+--gwo25vnp5ep6zq4j--
