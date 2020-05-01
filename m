@@ -2,104 +2,116 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87D0C35280
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0359C35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD3621835
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB56B208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UOVd+AsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgEAUwQ (ORCPT
+        id S1727906AbgEAUwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:52:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53472 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726384AbgEAUwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:52:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 615D0ACB1;
-        Fri,  1 May 2020 20:52:13 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id 307A1602E9; Fri,  1 May 2020 22:52:12 +0200 (CEST)
-Date:   Fri, 1 May 2020 22:52:12 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        Fri, 1 May 2020 16:52:23 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35528 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgEAUwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:52:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KqGqB072046;
+        Fri, 1 May 2020 15:52:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588366336;
+        bh=G0LrEdkVkiWRft5NWAGfdDX9uXu9hqB1LoI/z2eu9Kg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=UOVd+AsAqu54ama0yvT6gp3B7jwV7s6GiFUTVGHJN121rj9y9wAil7wJVRUhTzGay
+         V76AKMglR3A1ON35kEKcJYJdcpbFvmP0JTULKfzir4MpUI2id5jLl7O7rYOHks/UhR
+         QkR885+tjIfs2w4MO5O/uUyFBQHX3h/uAM0i/MB8=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041KqGhv091976
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 1 May 2020 15:52:16 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
+ 2020 15:50:46 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 1 May 2020 15:50:46 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041Kojml026584;
+        Fri, 1 May 2020 15:50:46 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Richard Cochran <richardcochran@gmail.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        mkl@pengutronix.de, Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v4 1/2] ethtool: provide UAPI for PHY
- master/slave configuration.
-Message-ID: <20200501205212.GE8976@lion.mk-sys.cz>
-References: <20200501074633.24421-1-o.rempel@pengutronix.de>
- <20200501074633.24421-2-o.rempel@pengutronix.de>
- <20200501155210.GD8976@lion.mk-sys.cz>
+        Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 5/7] arm64: dts: ti: k3-am65-main: add main navss cpts node
+Date:   Fri, 1 May 2020 23:50:09 +0300
+Message-ID: <20200501205011.14899-6-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
+References: <20200501205011.14899-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501155210.GD8976@lion.mk-sys.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 05:52:10PM +0200, Michal Kubecek wrote:
-> On Fri, May 01, 2020 at 09:46:32AM +0200, Oleksij Rempel wrote:
-> [...]
-> >  static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
-> >  				  struct ethtool_link_ksettings *ksettings,
-> >  				  bool *mod)
-> >  {
-> >  	struct ethtool_link_settings *lsettings = &ksettings->base;
-> >  	bool req_speed, req_duplex;
-> > +	const struct nlattr *attr;
-> >  	int ret;
-> >  
-> > +	attr = tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG];
-> > +	if (attr) {
-> 
-> Introducing the variable makes little sense if this is the only place
-> where it is used. But if you decide to use it also in the two other
-> places working with the attribute, it should probably have more
-> descriptive name.
-> 
-> Michal
-> 
-> > +		u8 cfg = nla_get_u8(tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG]);
-> > +		if (!ethnl_validate_master_slave_cfg(cfg))
-> > +			return -EOPNOTSUPP;
-> > +	}
+Add DT node for Main NAVSS CPTS module.
 
-Also, please set extack error message and bad attribute when the check
-fails.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Michal
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 6fbb0f2f1d92..3450006260a6 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -583,6 +583,28 @@
+ 						<0x5>; /* RX_CHAN */
+ 			ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
+ 		};
++
++		cpts@310d0000 {
++			compatible = "ti,am65-cpts";
++			reg = <0x0 0x310d0000 0x0 0x400>;
++			reg-names = "cpts";
++			clocks = <&main_cpts_mux>;
++			clock-names = "cpts";
++			interrupts-extended = <&intr_main_navss 163 0>;
++			interrupt-names = "cpts";
++			ti,cpts-periodic-outputs = <6>;
++			ti,cpts-ext-ts-inputs = <8>;
++
++			main_cpts_mux: refclk-mux {
++				#clock-cells = <0>;
++				clocks = <&k3_clks 118 5>, <&k3_clks 118 11>,
++					<&k3_clks 118 6>, <&k3_clks 118 3>,
++					<&k3_clks 118 8>, <&k3_clks 118 14>,
++					<&k3_clks 120 3>, <&k3_clks 121 3>;
++				assigned-clocks = <&main_cpts_mux>;
++				assigned-clock-parents = <&k3_clks 118 5>;
++			};
++		};
+ 	};
+ 
+ 	main_gpio0:  main_gpio0@600000 {
+-- 
+2.17.1
 
-> > +
-> >  	*mod = false;
-> >  	req_speed = tb[ETHTOOL_A_LINKMODES_SPEED];
-> >  	req_duplex = tb[ETHTOOL_A_LINKMODES_DUPLEX];
-> > @@ -311,6 +357,8 @@ static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
-> >  			 mod);
-> >  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
-> >  			mod);
-> > +	ethnl_update_u8(&lsettings->master_slave_cfg,
-> > +			tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG], mod);
-> >  
-> >  	if (!tb[ETHTOOL_A_LINKMODES_OURS] && lsettings->autoneg &&
-> >  	    (req_speed || req_duplex) &&
-> > -- 
-> > 2.26.2
-> > 
