@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C2CC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ADCC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2798D24957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4F120757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339819;
-	bh=PfmHYvVYYPHRR8l7nqz1iLpSdLhmCb4oaAshHsMMEv0=;
+	s=default; t=1588339824;
+	bh=JZJ6dw1MBV0VmUloaY0uX5m+6fq5uN/5lbLMBBNi8R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=enjSHI/QqfOc4/cIQwgziwvajg4zv9alMSum2PP6wZFhoP5QOr2fN/IVxhvheuoB6
-	 8JZPEkN7xTUAwDpMS4bYDxKJn6ewm+KbEb7iYN9u2efsBLUM7ZYLokjD5l8p9vBPFj
-	 a5+Pw3FhKzoRsdPy0tUD+s2j4kSZW0sDBEoznVk0=
+	b=V71XH6+z6n+IiAtKXKDJoxCoBmuU4TE+AXqp4uIzUPMra7P57dCUsOd6oHFputvvL
+	 pvKL0BgASdTLHDrNqUnX4roXY3TQzikrIBQZXYxXAYF3xJog3kcTD78/j/xE2tI6HY
+	 BF6spV41PeycmHXCV9HUO+iYjszP5p0BzIwgonSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgEANaS (ORCPT
+        id S1729930AbgEANaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbgEANaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:13 -0400
+        id S1729911AbgEANaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B6ED208C3;
-        Fri,  1 May 2020 13:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310EE208D6;
+        Fri,  1 May 2020 13:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339812;
-        bh=PfmHYvVYYPHRR8l7nqz1iLpSdLhmCb4oaAshHsMMEv0=;
+        s=default; t=1588339817;
+        bh=JZJ6dw1MBV0VmUloaY0uX5m+6fq5uN/5lbLMBBNi8R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+1lbP5DUt4pzWSY7nIrGpsLmCjCUcPfKkuLj6iFlZA8MGAMZMY6uEQfdeSw25XGv
-         SXXNuyU21BrbxzsNbfQ/4bV/moO3Q2MBRpd/wRAZg4ns2ijv4ntKiaN5ihLsEVAkQD
-         sVqsjSjPUObl0FH7/1k67bAKV09X0IbkjmTqRuIo=
+        b=lYyu9vkbCxJj6eNFM0WTsEl+uPkv/NpQLotXfU/vevkIWiD+w9IUoG/4aL77ieFxF
+         fJobo7kBE4j+0AP0PsbLeD9hBiZTOKmTxZTF6URhIJbPaDTz3rtipJE6bvqH0BpQXc
+         5TJuaHqQ9niIZ8ZN2PifDGd8lLIl/Xa22R/wDj50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.9 57/80] UAS: fix deadlock in error handling and PM flushing work
-Date:   Fri,  1 May 2020 15:21:51 +0200
-Message-Id: <20200501131530.792275212@linuxfoundation.org>
+        stable@vger.kernel.org, Clement Leger <cleger@kalray.eu>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: [PATCH 4.9 59/80] remoteproc: Fix wrong rvring index computation
+Date:   Fri,  1 May 2020 15:21:53 +0200
+Message-Id: <20200501131531.273408824@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -58,99 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Clement Leger <cleger@kalray.eu>
 
-commit f6cc6093a729ede1ff5658b493237c42b82ba107 upstream.
+commit 00a0eec59ddbb1ce966b19097d8a8d2f777e726a upstream.
 
-A SCSI error handler and block runtime PM must not allocate
-memory with GFP_KERNEL. Furthermore they must not wait for
-tasks allocating memory with GFP_KERNEL.
-That means that they cannot share a workqueue with arbitrary tasks.
+Index of rvring is computed using pointer arithmetic. However, since
+rvring->rvdev->vring is the base of the vring array, computation
+of rvring idx should be reversed. It previously lead to writing at negative
+indices in the resource table.
 
-Fix this for UAS using a private workqueue.
-
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Fixes: f9dc024a2da1f ("uas: pre_reset and suspend: Fix a few races")
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200415141750.811-2-oneukum@suse.com
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+Link: https://lore.kernel.org/r/20191004073736.8327-1-cleger@kalray.eu
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Doug Anderson <dianders@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |   43 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+ drivers/remoteproc/remoteproc_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -82,6 +82,19 @@ static void uas_free_streams(struct uas_
- static void uas_log_cmd_state(struct scsi_cmnd *cmnd, const char *prefix,
- 				int status);
- 
-+/*
-+ * This driver needs its own workqueue, as we need to control memory allocation.
-+ *
-+ * In the course of error handling and power management uas_wait_for_pending_cmnds()
-+ * needs to flush pending work items. In these contexts we cannot allocate memory
-+ * by doing block IO as we would deadlock. For the same reason we cannot wait
-+ * for anything allocating memory not heeding these constraints.
-+ *
-+ * So we have to control all work items that can be on the workqueue we flush.
-+ * Hence we cannot share a queue and need our own.
-+ */
-+static struct workqueue_struct *workqueue;
-+
- static void uas_do_work(struct work_struct *work)
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -284,7 +284,7 @@ void rproc_free_vring(struct rproc_vring
  {
- 	struct uas_dev_info *devinfo =
-@@ -110,7 +123,7 @@ static void uas_do_work(struct work_stru
- 		if (!err)
- 			cmdinfo->state &= ~IS_IN_WORK_LIST;
- 		else
--			schedule_work(&devinfo->work);
-+			queue_work(workqueue, &devinfo->work);
- 	}
- out:
- 	spin_unlock_irqrestore(&devinfo->lock, flags);
-@@ -135,7 +148,7 @@ static void uas_add_work(struct uas_cmd_
+ 	int size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
+ 	struct rproc *rproc = rvring->rvdev->rproc;
+-	int idx = rvring->rvdev->vring - rvring;
++	int idx = rvring - rvring->rvdev->vring;
+ 	struct fw_rsc_vdev *rsc;
  
- 	lockdep_assert_held(&devinfo->lock);
- 	cmdinfo->state |= IS_IN_WORK_LIST;
--	schedule_work(&devinfo->work);
-+	queue_work(workqueue, &devinfo->work);
- }
- 
- static void uas_zap_pending(struct uas_dev_info *devinfo, int result)
-@@ -1236,7 +1249,31 @@ static struct usb_driver uas_driver = {
- 	.id_table = uas_usb_ids,
- };
- 
--module_usb_driver(uas_driver);
-+static int __init uas_init(void)
-+{
-+	int rv;
-+
-+	workqueue = alloc_workqueue("uas", WQ_MEM_RECLAIM, 0);
-+	if (!workqueue)
-+		return -ENOMEM;
-+
-+	rv = usb_register(&uas_driver);
-+	if (rv) {
-+		destroy_workqueue(workqueue);
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit uas_exit(void)
-+{
-+	usb_deregister(&uas_driver);
-+	destroy_workqueue(workqueue);
-+}
-+
-+module_init(uas_init);
-+module_exit(uas_exit);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR(
+ 	dma_free_coherent(rproc->dev.parent, size, rvring->va, rvring->dma);
 
 
