@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A93DC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892CBC35280
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10174208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4B7208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wPIVT1ko"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AzWR0avd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEAUvC (ORCPT
+        id S1727806AbgEAUvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:51:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35446 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgEAUvA (ORCPT
+        Fri, 1 May 2020 16:51:05 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49238 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgEAUvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:51:00 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KosCN071718;
-        Fri, 1 May 2020 15:50:54 -0500
+        Fri, 1 May 2020 16:51:03 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041KouFD080776;
+        Fri, 1 May 2020 15:50:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588366254;
-        bh=0xkcc0doKGwbrKG85FZWXCmTENNzrWbpiBRtDHniyeE=;
+        s=ti-com-17Q1; t=1588366256;
+        bh=LhttJw1JbjTgnmdvEPuQ5xgCDkw1lEfTeMZ9lnsUOOs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wPIVT1koIPSRPyQGiS5DGTL5ysutGFSGNdJeU5781PgIhbuNud+lwpq3qbc3F1ptz
-         H6L/tVgZs62Z34SJv/kSisDGCDGBzFlEArKyACkY8U6+6A2s3l9yMlj44eM7nwnq2j
-         9ob1IT8NTVzLMJKW4R9KjfPzgN2xKZ3UkOFA2jDE=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041KosW4088978
+        b=AzWR0avdQVa+SIH4vJtK+qkZQ4OmgWJCjaJyzRMov1mHKc7E7pPJ+aq/5TDX/7mSc
+         aa9FrD4umBIX6dkuHJ7w7lnKA9j7ff58oecw7Gvzs2W3wVMv4/ci8zqhHRgmNv70uY
+         t8FnNWOLluMH6OaFXdnJ/K0exkWZMThpSL/KzyIU=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041Kougc049222
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 15:50:54 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 1 May 2020 15:50:56 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 15:50:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 15:50:55 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 15:50:53 -0500
+ Frontend Transport; Fri, 1 May 2020 15:50:55 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041KoqaG029008;
-        Fri, 1 May 2020 15:50:53 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041KosiP099423;
+        Fri, 1 May 2020 15:50:55 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Richard Cochran <richardcochran@gmail.com>,
         Murali Karicheri <m-karicheri2@ti.com>,
@@ -58,9 +58,9 @@ CC:     Lokesh Vutla <lokeshvutla@ti.com>, <netdev@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, Nishanth Menon <nm@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 6/7] arm64: dts: ti: k3-j721e-mcu: add mcu cpsw cpts node
-Date:   Fri, 1 May 2020 23:50:10 +0300
-Message-ID: <20200501205011.14899-7-grygorii.strashko@ti.com>
+Subject: [PATCH net-next 7/7] arm64: dts: ti: j721e-main: add main navss cpts node
+Date:   Fri, 1 May 2020 23:50:11 +0300
+Message-ID: <20200501205011.14899-8-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200501205011.14899-1-grygorii.strashko@ti.com>
 References: <20200501205011.14899-1-grygorii.strashko@ti.com>
@@ -72,32 +72,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for The TI J721E MCU CPSW CPTS which is part of MCU CPSW NUSS.
+Add DT node for Main NAVSS CPTS module.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 3d6064125b40..37c355e5a833 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -338,5 +338,14 @@
- 			clock-names = "fck";
- 			bus_freq = <1000000>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 0b9d14b838a1..844a5b50cf09 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -254,6 +254,18 @@
+ 						<0x0c>; /* RX_UHCHAN */
+ 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
  		};
 +
-+		cpts {
-+			clocks = <&k3_clks 18 2>;
++		cpts@310d0000 {
++			compatible = "ti,j721e-cpts";
++			reg = <0x0 0x310d0000 0x0 0x400>;
++			reg-names = "cpts";
++			clocks = <&k3_clks 201 1>;
 +			clock-names = "cpts";
-+			interrupts-extended = <&gic500 GIC_SPI 858 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts-extended = <&main_navss_intr 201 0>;
 +			interrupt-names = "cpts";
-+			ti,cpts-ext-ts-inputs = <4>;
-+			ti,cpts-periodic-outputs = <2>;
++			ti,cpts-periodic-outputs = <6>;
++			ti,cpts-ext-ts-inputs = <8>;
 +		};
  	};
- };
+ 
+ 	main_pmx0: pinmux@11c000 {
 -- 
 2.17.1
 
