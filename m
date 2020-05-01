@@ -2,149 +2,246 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086BDC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212D6C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF5320787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B692184D
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="QxjdcS8j"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="McN6Y2zi";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="McN6Y2zi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgEAKRb (ORCPT
+        id S1728532AbgEAKWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 06:17:31 -0400
-Received: from mail-bn8nam12on2088.outbound.protection.outlook.com ([40.107.237.88]:51271
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Fri, 1 May 2020 06:22:00 -0400
+Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:52389
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728119AbgEAKR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 06:17:29 -0400
+        id S1728430AbgEAKV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 06:21:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6bFt/YSuPZ1GdsBCmdZ2CeasT3vR7OsD9EdH0NLeQEg=;
+ b=McN6Y2ziAclg4vIIQe/dZ59Zyq1IvtmHnqWZNVqP50HV+ztkNv1tc8h8HC+Y+2goGEUCwjL+YeIC568Cs6+9PaJ3vrmIBY88yyPiksSwOaSS2vEuiOxlnjE+IsskVvDaT2oW3KFRsEkI7LXo+YlnYfZaQrYBRuwplRfRAaqVHAU=
+Received: from AM0PR06CA0079.eurprd06.prod.outlook.com (2603:10a6:208:fa::20)
+ by AM0PR08MB3779.eurprd08.prod.outlook.com (2603:10a6:208:101::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Fri, 1 May
+ 2020 10:21:53 +0000
+Received: from AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:208:fa:cafe::b2) by AM0PR06CA0079.outlook.office365.com
+ (2603:10a6:208:fa::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
+ Transport; Fri, 1 May 2020 10:21:53 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT057.mail.protection.outlook.com (10.152.17.44) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 10:21:52 +0000
+Received: ("Tessian outbound e88319d7ccd0:v54"); Fri, 01 May 2020 10:21:52 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 29a0d038b367c97b
+X-CR-MTA-TID: 64aa7808
+Received: from 6f3b2fe72522.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9708DBC2-C762-4AD2-9BC8-608F74154E3E.1;
+        Fri, 01 May 2020 10:21:47 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6f3b2fe72522.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 01 May 2020 10:21:47 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PQAPy9wnoR0fki75Ccwv0vMsibyI2Odzmx5lwNg7t16Qb4bB9Bb655jezpSkpbkn1egXpz1enN0VdOqxPBuqKkpRjEuDPiAHYJL0YrK6cln9KBk7oNR7SsxR4xQq7hLedoiAm9sA+DhLHdFiM7WSS7LntU4CYGyfR7bNVqmuqUPuq5T3MrH7llmhcnIjBrZIr8Z4KdNYGHBiDeulaBcKnwWzwylMHlOwFBpZvm+LEAFvTXCSAPYKosNwGJUS88ZMoCOy0YLcG5nlhT1ecaNx2c9xNX+w0wOqi5UrlgJjwb00taUKprlxCiqB98seka7Sz75Y75PXAni6lsOabrAS8g==
+ b=bqYENF8SoN6XEcOa4Tw8PLnfFFGI9hK9x/kW5LCUCnK/TGPk9naIgje/UN8UZp09GbYQFDjXl43kHKmVyJau0093YzAjmS13+Pu1wokUhfRfnL9N3UHitph7wVUUaWFxFvwg5wjX/LXuSTNbk1xHGh2yzf/T99kvK0Mx16J2a0xA5l3EcRRCq+Rnr1h40NoFgT4x1+uqxoiXeESDH9ZTCdvsw6EpH4HIOUOLaMeN3b7Rq3O0sU4VmJKICPnAu3EtL5NQBfHbAKSAo/DUV+IEiGEAvqZ4pPIotOQUE0OR3dtpImsqIQDSzRXNYMputXiVRbkPtAcuRt7PfPklgpEFmQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4LzIl2lNKNTYSaF3G9TwrJ3SbEV5Lah76+QBemFfm20=;
- b=FMfb1kYWB7rCAoZLmSgdRopQ9VJIeFDDZb9MLj5vKqqt+Oi2OULR1n/V9hFgxNPquBrCaO8CbJHNJUvSXea67No+GiZOIuXN5rir0eyaKq0RC7oPIVLM+5JAEZbWE0++KehV9PSvpYMylv3gSyf1lQwyzsKtD3XjHsQ+rl1Ddf2RxZI5gcOBtSF9EpJ2CBvyPoQiym5ThoE4KwZprpUG3VrbG9GdXjpiyJRRLf+AGobk7ZssWV8E6HrXpTzvGyJolAvuefnBA48sbNMQe3oQ5KNUv5Snxaqw3q4+q8T7Udhk0trpuWdgzfgGJxfHAd6cQLklAkuFL/xf26ENxDF5iQ==
+ bh=6bFt/YSuPZ1GdsBCmdZ2CeasT3vR7OsD9EdH0NLeQEg=;
+ b=CaDf+s0Ey3wh8zUJWiB0g0QcPse3boeqGXSMX2C/EfHiomkrTK/BO3hmdUP9QGpqhuY/3XC2sR4Pz1/nkuFpacPTdbwXD82qdMSZ0WNr4kldm+iry8e3SgsFODUAd5LKB0VXHg2flWrVfKAqbch03iiz4t1GO1DNVgzCoYwDHW8x9Ix68TAoVLGZlIPS6NVdZ/yLVzi98c1AzoAE/rT/nIj65ZbSkQojR/NCewv1SywbtPaTHOZGR1teqcUU+yz+nKtcSFUa7Z8QJiY8nIae3WaVtjCIzPxmSAFAB/W4Q0VUK5SEDa1SBLtoXiw8BRPFZp5HMUDgZGefp9MnyLDxAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4LzIl2lNKNTYSaF3G9TwrJ3SbEV5Lah76+QBemFfm20=;
- b=QxjdcS8jo/m8OkJd8PouyJaPb1oSLb/udKAaVgPLlTj5TvJ2iNOIJInbEdhOVPRVvT5earV+AZcnyTL78cZD4FAyKOL7CiySwWAjoz78sTRvqs1eEBH/hUflJ/8Nl3O/ulMw+vxdJMeSsnp30EUFfXMqxB9NktWF+czlD7mYFms=
-Received: from BYAPR02MB3941.namprd02.prod.outlook.com (2603:10b6:a02:f8::18)
- by BYAPR02MB5736.namprd02.prod.outlook.com (2603:10b6:a03:119::15) with
+ bh=6bFt/YSuPZ1GdsBCmdZ2CeasT3vR7OsD9EdH0NLeQEg=;
+ b=McN6Y2ziAclg4vIIQe/dZ59Zyq1IvtmHnqWZNVqP50HV+ztkNv1tc8h8HC+Y+2goGEUCwjL+YeIC568Cs6+9PaJ3vrmIBY88yyPiksSwOaSS2vEuiOxlnjE+IsskVvDaT2oW3KFRsEkI7LXo+YlnYfZaQrYBRuwplRfRAaqVHAU=
+Authentication-Results-Original: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=arm.com;
+Received: from AM6PR08MB3829.eurprd08.prod.outlook.com (2603:10a6:20b:85::14)
+ by AM6SPR01MB0041.eurprd08.prod.outlook.com (2603:10a6:20b:29::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Fri, 1 May
- 2020 10:17:26 +0000
-Received: from BYAPR02MB3941.namprd02.prod.outlook.com
- ([fe80::10b5:a33c:e9c7:6c0a]) by BYAPR02MB3941.namprd02.prod.outlook.com
- ([fe80::10b5:a33c:e9c7:6c0a%7]) with mapi id 15.20.2958.027; Fri, 1 May 2020
- 10:17:26 +0000
-From:   Rajan Vaja <RAJANV@xilinx.com>
-To:     Greg KH <greg@kroah.com>, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jolly Shah <JOLLYS@xilinx.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: linux-next: build warning after merge of the char-misc tree
-Thread-Topic: linux-next: build warning after merge of the char-misc tree
-Thread-Index: AQHWH4G2altuXUaUlkqQcFuutK4Ug6iSy/gAgAA4OWA=
-Date:   Fri, 1 May 2020 10:17:26 +0000
-Message-ID: <BYAPR02MB3941A306B8435DD8B09E62CBB7AB0@BYAPR02MB3941.namprd02.prod.outlook.com>
-References: <20200501162806.155c44ed@canb.auug.org.au>
- <20200501065526.GA886609@kroah.com>
-In-Reply-To: <20200501065526.GA886609@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: kroah.com; dkim=none (message not signed)
- header.d=none;kroah.com; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7fbf77ef-92df-4839-aeb2-08d7edb8d8d3
-x-ms-traffictypediagnostic: BYAPR02MB5736:|BYAPR02MB5736:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB5736DD14FE3A743C46E0497AB7AB0@BYAPR02MB5736.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0390DB4BDA
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: APZErLztcviZUn5JyxYr1/5VcWWmFTUH/s0KW+OUj+zksAr44pRa821tWmcjDhF4X7wkITGrrifpVi6+HiOVrBxjc1E50GTv70Z1DNUisxmE0Pw5DUmj2RJBy8n/9HWE16X04bUTS1KwJBgxaAy8/cJegqjwAZ4w0bVCUsNLfNAgvULs9pCnSIDKSey37D51CRiqvXsdKAwlg1K5Usn0h2Ubtw0/Gy4bFNll6Ek9s7Q1XHEi4YbK5QQm3Pb3twMT/QDVa6Vgrw0dxoT4a0Pq1Dq20+B9jjLt0/wXXXqdxaoXZnKUJQUwTV9HZ2hLYj1IyMHycyRLP7IN9WZVWF6Mqi9lDxGFSfXCQGHQ0SDIxwQVDMb3NgqUHd+abVh8SJPGWQdhGksLttAWj1DxSTDWIhVtY1PZnmHgCFBtc5NDmAz5MGQfQOnlPk4gIEytCw3t
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB3941.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(346002)(376002)(136003)(110136005)(54906003)(8676002)(4326008)(8936002)(316002)(186003)(64756008)(66476007)(66446008)(66556008)(66946007)(478600001)(76116006)(26005)(6636002)(52536014)(55016002)(9686003)(5660300002)(33656002)(2906002)(53546011)(6506007)(7696005)(71200400001)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: WDqKT3asVLIcMfQE8KguvwKixLajWV2KA3puQjmxCewHDkHmj0JM1oJcPIW1pQHTBhB1wHDqgFCTsW8jrDC+F97MuRQovRAHL7SH0kFBXWI+f0n/Exkey3wpQCKT6XdH6N4Dme/bmSlP4Wn9CEIxUHK6ZjpcNGFcvEe8cM8IKB45eFadBiQQIu0d0CaaxMt9VCTd9DQ4jLwcI62OGoo84113CTr1JCYaQewbQq6PH4pyw7zuXdy048mnc6nishBMDR8y5mw1cGS/ZUYoXBiLRqyVxL9ZxNuHXAjAIEwyQPgU8OWpqhyEflcsaMaNWA3Ooa80xGO8m5W3vtkvd/tbcWnKqzSSmsA0hiGuue3iZff6HQpnipNcLbKOOX9C9uKKu5oeb7LpcJewOFRlMOalu2uOgQLvRrPbFPTYOBVevC+skKZ+HtzUt87yoN08Rw3Ey/5jUtu6VWI2fDuX6bpxyNOG6uxsWASGage/vW/2lXBfdvmznuj/1q0uePRcStL0eAc4Et+ZjnilU1Csn7+VZfhdRChZzbxB0/BC1QFToTneb+2wdHyAWOjSKype4SpdRv3jhmLZuCzrygZdtpbNQdYIBXtwBYWMnaqbR7MacXm2Ob7hrRiu6F8Ad5FgrxEi96Qlt7O1VmTryEwaQtZVtV2p1C424Y1rBnTpvJdOEGq/YWRQ/nD+YY2RX2EzE+WSOwZIOvPgNFGXkwjOusQsbWZfSlwY4532kKQr/dDNK2ZdL/BDfqZh9NxcppXMtWBYerOwSD7dy8ru4jTvzNJrM2b0ItWowCPcbZo+eQXkeGU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Fri, 1 May
+ 2020 10:21:44 +0000
+Received: from AM6PR08MB3829.eurprd08.prod.outlook.com
+ ([fe80::78d3:4ffd:f7da:b26d]) by AM6PR08MB3829.eurprd08.prod.outlook.com
+ ([fe80::78d3:4ffd:f7da:b26d%3]) with mapi id 15.20.2958.027; Fri, 1 May 2020
+ 10:21:44 +0000
+Date:   Fri, 1 May 2020 11:21:43 +0100
+From:   Brian Starkey <brian.starkey@arm.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, nd@arm.com
+Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
+ regions tagged with "linux,cma-heap"
+Message-ID: <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
+References: <20200501073949.120396-1-john.stultz@linaro.org>
+ <20200501073949.120396-4-john.stultz@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501073949.120396-4-john.stultz@linaro.org>
+User-Agent: NeoMutt/20180716-849-147d51-dirty
+X-ClientProxiedBy: LO2P265CA0293.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a5::17) To AM6PR08MB3829.eurprd08.prod.outlook.com
+ (2603:10a6:20b:85::14)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fbf77ef-92df-4839-aeb2-08d7edb8d8d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2020 10:17:26.2182
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from DESKTOP-E1NTVVP.localdomain (82.1.208.173) by LO2P265CA0293.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a5::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 10:21:42 +0000
+X-Originating-IP: [82.1.208.173]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8a5db13b-b8c7-4230-33b1-08d7edb977a4
+X-MS-TrafficTypeDiagnostic: AM6SPR01MB0041:|AM6SPR01MB0041:|AM0PR08MB3779:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB3779E2493EE4E4F5F489F3B9F0AB0@AM0PR08MB3779.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;OLM:5236;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: gEbRJMvyaSoud/C1/IHSIHIinS+A0QpoNgC7nbMVWBT+EojWxI0VphW7gHktIc3jYwM7uZKvUNFNAxwnFr2cF7haCJDUyg/Hd2ZUZxWVkVMMriu1aMe00zL85Pp08hQnZoUGVSJFhRxpdthOAsTYsh5AuAoDAPwaRNrqC5L5uKTVWSEOoMGT+P/t0WF2TiNnagKJHcKhzf7eHBhFrGxfFyGEzHvDs6kcZ2p7PxjzZv1VahOO8L+PQZQRXESIHW0qvORnYZEwiHpfwYCM889QXf7teQNumIWAWC0XeX9LHK+G/5cCwrNEjqODzsGp1olJV+HPGghw3ix/Cd/yZOeOl16M655yDF04XNkEU+dFEf/RZDMofb1dTJL7v+/PBljjsb5lypafh2R7Hbn8D1BM5+uHNyepUPryLLgtEskHjwtw0T3GbjU3Q7eYjUC3/N5dQW+3rFct/af+88Kd+JNgkVeUpH2ZSPFq9a90cb9SMhi1Lm2K5Bd8KuQ5BDkMvpLM/ijNn7P5p54tGSglVDsg9A==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3829.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(396003)(366004)(16526019)(44832011)(26005)(55016002)(66476007)(66946007)(66556008)(186003)(1076003)(5660300002)(4326008)(7696005)(316002)(8676002)(86362001)(6916009)(6506007)(52116002)(7416002)(2906002)(8936002)(9686003)(966005)(956004)(54906003)(478600001)(142933001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: n8aSPr1PZZoXnwqv3uvcu2gpzeV/ytbmejNje8WY0bWDioh4dNJDzh6MT7E5AWrwM8SA+W9NGqtGTtuyLlgMkf9yK/HNG/ZNLk71qXLCsyldK93QfYIksuJBsc2zvETpJu68laKcjhD7Li/oSxNH5LCBz6PmXRJvpqQhlFI2oPHgPxLbI6DtXJqPkthoTlYrZiWu3R0z1ZqrMFwyIMJ73rt/P4XbnERmRb6G/HF1FDpWkbRl3uq3UAAhq/PPxx7ffj+2QpyxJNWM4Fk7vB9QqeL7LeOXjtXdCyPVXnONblkRG3hwHHm9N/fOVMCqTfn6eU46spjHDqC2wwq4k6FrD3O+7+6cvjy/5JDqiyKhx9omYxyGsj0h+Yzi6y//laRJMD2ruiaJVOiliQ1pqSfy2SIK0LTn3KC+tg6sLJZ3XvNNcjFbaDfXGbPGWkSwLghMVHaH9SyLlz3+LhI2JXCH71gkb/l1VVV81qVpltIs84SkHVUwIhGaeTeb2dsGeJA+S1e6mu5E2K8NS3YQQOYdUmQ2jOvSOVHZUWHUDhU/zpqIp16Jl7ziU5mnLNA//HXZXCu+mfxflzJiiphFSJDoA4bjZDBK4Wvkl4To0yym8imApZhy1g/wFI7XTEYH9z4dYa0aM0kyWuTmHr7b/fv181pYa2hefqF0AbLEiqRTG3b+cI3fAObwSs+eeFHzuDhR2NYVYC9a6RLPI4pteGxpJbNv56uaUyCZQ48Zc+9FeNXwQbx7bh9k6I4MrDzFd3QP9o7bTB5EYcJhKBgyAR6152iwvTCvgNHhn6Jao2Vaafg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6SPR01MB0041
+Original-Authentication-Results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(46966005)(70586007)(44832011)(36906005)(82740400003)(55016002)(450100002)(9686003)(4326008)(966005)(6862004)(47076004)(478600001)(82310400002)(86362001)(8676002)(70206006)(356005)(956004)(336012)(5660300002)(8936002)(6506007)(54906003)(26005)(7696005)(81166007)(2906002)(186003)(1076003)(16526019)(316002)(142933001);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 2aedde36-fd95-4d7b-a561-08d7edb97227
+X-Forefront-PRVS: 0390DB4BDA
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UGmXU+69NBEz8wGNq45QS0axY/iwCCWNJBo+ufgtkPe1Irv0nUxjpjc6AOqvkQYrr6iIiGQihkRRc9wIaUffrOgMf4JlOqb1fCENRj6VbVunpjkJmJIXsZ683CXVRrLepBuzJY4p3xiquURMzWKvn2mj6ZjMehS33lnF41YHCc1w6640b0dkVSfkaosQ3Cl7WeEP8bRgz5lUTUkQZ3bVihNEPxImYxGLAbuKtTtFb+ESjmdPPI+06KgIvH1t7bx7ZAeNuPjd7yGJjp7zrQB3I2HLoWybsPYDJYT5CJTQEWwSfGOaS2hULhnMkWd2FVMNps9cKZse67xhg+kMwnHgNah4oDaVrjfyPNBE+o1G4IaZ2SnZlxWFngKmRQgIM1U9SSMvbygxV1jLDX0395KlEOQFUAa+zKfRpBWkVDnyuodMmNxKR9XZNit2C1ClN3JC1GEq/3SrSiuDd6RZM7U95+Jmd7hsGUmQKdX7PEpeyKFFsEYuMgS8BifZg4oxMjjxBlWb/j8KVRhrW7pP0Rykzti1SEmAW+I+F7cESb9KNpwJgUogEkJbRN14pA3dhUPjmQ4gjj0QBFzd5dAApaVpNg==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 10:21:52.7247
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qW6Wq3u4yMC/f0Uh0rMGDAJhWnlFA4giF/lT0gvMuGjPbJdiNtD9Gaoa+r6zfdrck3VHnEmssD7uTotfQI2gxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5736
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a5db13b-b8c7-4230-33b1-08d7edb977a4
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3779
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi John,
 
-Thanks for notifying. I have submitted "[PATCH char-misc-next] crypto: xili=
-nx: Handle AES PM API return status" to fix warning.
+On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
+> This patch reworks the cma_heap initialization so that
+> we expose both the default CMA region and any CMA regions
+> tagged with "linux,cma-heap" in the device-tree.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: "Andrew F. Davis" <afd@ti.com>
+> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Cc: Liam Mark <lmark@codeaurora.org>
+> Cc: Pratik Patel <pratikp@codeaurora.org>
+> Cc: Laura Abbott <labbott@redhat.com>
+> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> Cc: Chenbo Feng <fengc@google.com>
+> Cc: Alistair Strachan <astrachan@google.com>
+> Cc: Sandeep Patil <sspatil@google.com>
+> Cc: Hridya Valsaraju <hridya@google.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-mm@kvack.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+> index 626cf7fd033a..dd154e2db101 100644
+> --- a/drivers/dma-buf/heaps/cma_heap.c
+> +++ b/drivers/dma-buf/heaps/cma_heap.c
+> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
+>  {
+>  	struct cma_heap *cma_heap;
+>  	struct dma_heap_export_info exp_info;
+> +	struct cma *default_cma = dev_get_cma_area(NULL);
+> +
+> +	/* We only add the default heap and explicitly tagged heaps */
+> +	if (cma != default_cma && !cma_dma_heap_enabled(cma))
+> +		return 0;
 
-Thanks,
-Rajan
+Thinking about the pl111 thread[1], I'm wondering if we should also
+let drivers call this directly to expose their CMA pools, even if they
+aren't tagged for dma-heaps in DT. But perhaps that's too close to
+policy.
 
-> -----Original Message-----
-> From: Greg KH <greg@kroah.com>
-> Sent: Friday, May 1, 2020 12:25 PM
-> To: Stephen Rothwell <sfr@canb.auug.org.au>; Rajan Vaja
-> <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>; Linux Next Mailing List <linux-
-> next@vger.kernel.org>; Linux Kernel Mailing List <linux-
-> kernel@vger.kernel.org>
-> Subject: Re: linux-next: build warning after merge of the char-misc tree
->=20
-> CAUTION: This message has originated from an External Source. Please use
-> proper judgment and caution when opening attachments, clicking links, or
-> responding to this email.
->=20
->=20
-> On Fri, May 01, 2020 at 04:28:06PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > After merging the char-misc tree, today's linux-next build (x86_64
-> > allmodconfig) produced this warning:
-> >
-> > drivers/crypto/xilinx/zynqmp-aes-gcm.c: In function
-> 'zynqmp_handle_aes_req':
-> > drivers/crypto/xilinx/zynqmp-aes-gcm.c:137:5: warning: 'status' may be
-> used uninitialized in this function [-Wmaybe-uninitialized]
-> >   137 |  if (status) {
-> >       |     ^
-> > drivers/crypto/xilinx/zynqmp-aes-gcm.c:87:15: note: 'status' was declar=
-ed
-> here
-> >    87 |  unsigned int status;
-> >       |               ^~~~~~
-> >
-> > Introduced by commit
-> >
-> >   bc86f9c54616 ("firmware: xilinx: Remove eemi ops for aes engine")
->=20
-> Rajan, can you send me a patch to fix this up please?
->=20
-> thanks,
->=20
-> greg k-h
+Cheers,
+-Brian
+
+[1] https://lists.freedesktop.org/archives/dri-devel/2020-April/264358.html
+
+>  
+>  	cma_heap = kzalloc(sizeof(*cma_heap), GFP_KERNEL);
+>  	if (!cma_heap)
+> @@ -162,16 +167,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
+>  	return 0;
+>  }
+>  
+> -static int add_default_cma_heap(void)
+> +static int cma_heaps_init(void)
+>  {
+> -	struct cma *default_cma = dev_get_cma_area(NULL);
+> -	int ret = 0;
+> -
+> -	if (default_cma)
+> -		ret = __add_cma_heap(default_cma, NULL);
+> -
+> -	return ret;
+> +	cma_for_each_area(__add_cma_heap, NULL);
+> +	return 0;
+>  }
+> -module_init(add_default_cma_heap);
+> +module_init(cma_heaps_init);
+>  MODULE_DESCRIPTION("DMA-BUF CMA Heap");
+>  MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.1
+> 
