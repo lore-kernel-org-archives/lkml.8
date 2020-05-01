@@ -2,99 +2,92 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08C6C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D26AC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9680205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5716E205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588340872;
+	bh=BUGZ/+RII62MViYkx/XiviL/cx9e/eDbNIIw0pTyWgI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sZT0ckZ24vkMN69hgp+Suhwfku5q0CntD2xn0G+akZ9775dSln0xa0aCp9DMmzIvd
+	 VDhMYY0u9vr4YEvQi4cbeii6batFIcmM5C+TyAsgO3rk4flEXeji8J+ZvMucS6/OTS
+	 XjQB1RmCe9006NF0DFjkeopImLfCEdBHfLYvkqdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbgEANrn (ORCPT
+        id S1731889AbgEANru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:47:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59409 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731613AbgEANnS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:43:18 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jUVwd-00067j-4A; Fri, 01 May 2020 13:43:11 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH] net: dsa: sja1105: fix speed setting for 10 MBPS
-Date:   Fri,  1 May 2020 14:43:10 +0100
-Message-Id: <20200501134310.289561-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 1 May 2020 09:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731607AbgEANnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:43:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8315208DB;
+        Fri,  1 May 2020 13:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340593;
+        bh=BUGZ/+RII62MViYkx/XiviL/cx9e/eDbNIIw0pTyWgI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fSPeU1GWApFg2F4C1txieFaDGvG8kCnkBg7i+yYn5wj2O1myZdonsRDJ4iSRwN+Zs
+         y6qOoZ5G7An7PPkcP3m2zJNCiqQiEEwHLGPSUq/+c+ErvO9C0RDElGFEdrpNNOjeP5
+         a6ntBdlRyKR0XA1WLjsmsS4GFs4t5HDvE+F55ohE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Raymond Pang <RaymondPang-oc@zhaoxin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.6 045/106] PCI: Add ACS quirk for Zhaoxin multi-function devices
+Date:   Fri,  1 May 2020 15:23:18 +0200
+Message-Id: <20200501131549.104771513@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
+References: <20200501131543.421333643@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Raymond Pang <RaymondPang-oc@zhaoxin.com>
 
-The current logic for speed checking will never set the speed to 10 MBPS
-because bmcr & BMCR_SPEED10 is always 0 since BMCR_SPEED10 is 0. Also
-the erroneous setting where BMCR_SPEED1000 and BMCR_SPEED100 are both
-set causes the speed to be 1000 MBS.  Fix this by masking bps and checking
-for just the expected settings of BMCR_SPEED1000, BMCR_SPEED100 and
-BMCR_SPEED10 and defaulting to the unknown speed otherwise.
+commit 0325837c51cb7c9a5bd3e354ac0c0cda0667d50e upstream.
 
-Addresses-Coverity: ("Logically dead code")
-Fixes: ffe10e679cec ("net: dsa: sja1105: Add support for the SGMII port")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Some Zhaoxin endpoints are implemented as multi-function devices without an
+ACS capability, but they actually don't support peer-to-peer transactions.
+Add ACS quirks to declare DMA isolation.
+
+Link: https://lore.kernel.org/r/20200327091148.5190-3-RaymondPang-oc@zhaoxin.com
+Signed-off-by: Raymond Pang <RaymondPang-oc@zhaoxin.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/dsa/sja1105/sja1105_main.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/quirks.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 472f4eb20c49..59a9038cdc4e 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -1600,6 +1600,7 @@ static const char * const sja1105_reset_reasons[] = {
- int sja1105_static_config_reload(struct sja1105_private *priv,
- 				 enum sja1105_reset_reason reason)
- {
-+	const int mask = (BMCR_SPEED1000 | BMCR_SPEED100 | BMCR_SPEED10);
- 	struct ptp_system_timestamp ptp_sts_before;
- 	struct ptp_system_timestamp ptp_sts_after;
- 	struct sja1105_mac_config_entry *mac;
-@@ -1684,14 +1685,16 @@ int sja1105_static_config_reload(struct sja1105_private *priv,
- 		sja1105_sgmii_pcs_config(priv, an_enabled, false);
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4767,6 +4767,10 @@ static const struct pci_dev_acs_enabled
+ 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+ 	/* Amazon Annapurna Labs */
+ 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
++	/* Zhaoxin multi-function devices */
++	{ PCI_VENDOR_ID_ZHAOXIN, 0x3038, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_ZHAOXIN, 0x3104, pci_quirk_mf_endpoint_acs },
++	{ PCI_VENDOR_ID_ZHAOXIN, 0x9083, pci_quirk_mf_endpoint_acs },
+ 	{ 0 }
+ };
  
- 		if (!an_enabled) {
--			int speed = SPEED_UNKNOWN;
-+			int speed;
- 
--			if (bmcr & BMCR_SPEED1000)
-+			if ((bmcr & mask) == BMCR_SPEED1000)
- 				speed = SPEED_1000;
--			else if (bmcr & BMCR_SPEED100)
-+			else if ((bmcr & mask) == BMCR_SPEED100)
- 				speed = SPEED_100;
--			else if (bmcr & BMCR_SPEED10)
-+			else if ((bmcr & mask) == BMCR_SPEED10)
- 				speed = SPEED_10;
-+			else
-+				speed = SPEED_UNKNOWN;
- 
- 			sja1105_sgmii_pcs_force_speed(priv, speed);
- 		}
--- 
-2.25.1
+
 
