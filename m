@@ -2,106 +2,108 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2688C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E01C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A004216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1dtSs59"
+	by mail.kernel.org (Postfix) with ESMTP id 8EE5D208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588366690;
+	bh=PHAeuAjto7YSPUcW9IpDpIz6jTr+6+rE49PpUYBb17o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AlwpsyQjDRYhouPZUK00qo8m8qZ4Pdp/qhJQrOzQbJFyl7lwaA+igWjmVXcHfrn1L
+	 s8vIG/GKN8HPKn0Nt89cJLYJWfZwaV0O21pBlnp7P7BdytPZ6P1oRDaEtdQA6enpO+
+	 eJkkkbo/gXNKx/bvRA/gX7fFNG9QiWsXjVgEBMiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgEAU6E (ORCPT
+        id S1726937AbgEAU6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgEAU6C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:58:02 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80098C061A0C;
-        Fri,  1 May 2020 13:58:02 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id h4so1032304wmb.4;
-        Fri, 01 May 2020 13:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=l1iUiHlCX8vszl1pLIMm9oBcP0m3wLHIgAhR3pi1/gc=;
-        b=R1dtSs59fsjFRzPHIwWb4yTRE+E31KHdnKdsneQGBe3PMI7wjfX/XnBNLubf0Cau7I
-         11Pt525kwopAdHxhdpZLEWDe0qShC0nOI9H4Da/HZLql43PySYSNgrZT7fd+iD9D5U6B
-         oqre17gV5IZIEXQ2JaV6+ZJ7LGO9G7mHVv/DD5P5NyW/WNCA+7JwSsJLrsJyx9OKRiZZ
-         7vYjc0ZeI5LHltRx5a3j50azGNFIjp99gd5GlR395WdeacJ+UzAXO4n2Jh1FFmys10uD
-         mR+aqaOmKtmP5mSNkTzYOJT4UyzZuZLJ9yto+8caeEkBK2n63sSi3ZXpFNEVc2AuATXV
-         EpcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=l1iUiHlCX8vszl1pLIMm9oBcP0m3wLHIgAhR3pi1/gc=;
-        b=QKW7MImAyRhUIZ2iCjNfa4pa7iQQP9uM2919S6+6gmGpqw6ZTYp5dunHOIdo8HwS+B
-         6/Tq365xm8IPEVjLnu3JV9qd52ke6TY8mUR3dQTxkNJCB79E0A/FfFG4KciRJmJcnliN
-         9HYmGA9T3+Agpr/I7py8o0BN7A5pRtL3+32vSnVS1qwW/Og0HgPwCbFQuuLvYg87ptpL
-         4KxIXqPhw2rbc22m6Ibx3/Q4bmYn66yMST49eSWhWDCkDSqrNs81nFiwkpaVpHugtDRY
-         OXqwa4kNkHWqwIwRyX7sXoz/6Gonq9Al5HElqJBOiK6wvn36m4AQXbd9WvD6/5Ec2qDX
-         LL0Q==
-X-Gm-Message-State: AGi0PuYeMuaskcOeKvII5TDlzNRuF5IkPHYkuv73Dml/RYMwXaNEsRsI
-        UNYf7K+ctFMzCUwdhUAPcPQ=
-X-Google-Smtp-Source: APiQypKmMgxPx4x1odH3xpcFPlhTeEUfH/zoPMEBSYJLJcNOIh0g0pVsNllKp8TxSaZmSQkwXNW8tw==
-X-Received: by 2002:a7b:c944:: with SMTP id i4mr1423202wml.144.1588366681245;
-        Fri, 01 May 2020 13:58:01 -0700 (PDT)
-Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
-        by smtp.googlemail.com with ESMTPSA id k14sm5970446wrp.53.2020.05.01.13.57.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 13:58:00 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Vincent Knecht <vincent.knecht@mailoo.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: soc: qcom: Document MSM8936 SMD RPM compatible
-Date:   Fri,  1 May 2020 22:57:28 +0200
-Message-Id: <20200501205728.152048-3-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200501205728.152048-1-konradybcio@gmail.com>
-References: <20200501205728.152048-1-konradybcio@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 1 May 2020 16:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgEAU6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:58:07 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53E3216FD;
+        Fri,  1 May 2020 20:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588366687;
+        bh=PHAeuAjto7YSPUcW9IpDpIz6jTr+6+rE49PpUYBb17o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iBbqAgH/8G5kCVKRHKmsayQJh12Ske4yDZYyRWiSbMac1qjEi90aavUHh0afBsqR2
+         9b2wMVEluTKDUehCxsaBSkmWlBZUqA3R2Tgc4CVEM8Y4zm0ooqXv/G256MzCeXWp/V
+         sn5RY0Y6djNBT/M7VKJ6c65X4E7PnY5aH0OcUQz8=
+Date:   Fri, 1 May 2020 13:58:06 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+Message-Id: <20200501135806.4eebf0b92f84ab60bba3e1e7@linux-foundation.org>
+In-Reply-To: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+References: <CA+G9fYu2ruH-8uxBHE0pdE6RgRTSx4QuQPAN=Nv3BCdRd2ouYA@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Knecht <vincent.knecht@mailoo.org>
+On Fri, 1 May 2020 18:08:28 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
----
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
- 1 file changed, 1 insertion(+)
+> mkfs -t ext4 invoked oom-killer on i386 kernel running on x86_64 device
+> and started happening on linux -next master branch kernel tag next-20200430
+> and next-20200501. We did not bisect this problem.
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 616fddcd09fd8..55f8abd845a7e 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -21,6 +21,7 @@ resources.
- 	Definition: must be one of:
- 		    "qcom,rpm-apq8084"
- 		    "qcom,rpm-msm8916"
-+		    "qcom,rpm-msm8936"
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8976"
- 		    "qcom,rpm-msm8998"
--- 
-2.26.1
+It would be wonderful if you could do so, please.  I can't immediately see
+any MM change in this area which might cause this.
 
+> metadata
+>   git branch: master
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>   git commit: e4a08b64261ab411b15580c369a3b8fbed28bbc1
+>   git describe: next-20200430
+>   make_kernelversion: 5.7.0-rc3
+>   kernel-config:
+> https://builds.tuxbuild.com/1YrE_XUQ6odA52tSBM919w/kernel.config
+> 
+> Steps to reproduce: (always reproducible)
+
+Reproducibility helps!
+
+> oom-killer: gfp_mask=0x101cc0(GFP_USER|__GFP_WRITE), order=0,
+
+> [   34.793430]  pagecache_get_page+0xae/0x260
+
+> [   34.897923] active_anon:5366 inactive_anon:2172 isolated_anon:0
+> [   34.897923]  active_file:4151 inactive_file:212494 isolated_file:0
+> [   34.897923]  unevictable:0 dirty:16505 writeback:6520 unstable:0
+
+> [ 34.987678] Normal free:3948kB min:7732kB low:8640kB high:9548kB
+> reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB
+> active_file:1096kB inactive_file:786400kB unevictable:0kB
+> writepending:65432kB present:884728kB managed:845576kB mlocked:0kB
+> kernel_stack:1112kB pagetables:0kB bounce:0kB free_pcp:2908kB
+> local_pcp:500kB free_cma:0kB
+
+ZONE_NORMAL has a huge amount of clean pagecache stuck on the
+inactive list, not being reclaimed.
