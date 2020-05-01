@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2580C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B595C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD0524956
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CFE208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340072;
-	bh=GGWQ67jdRD0wSmMauQa4FV3WSwv4RIz4968TpQMGWfU=;
+	s=default; t=1588340076;
+	bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kIsYLob0k2uf125I8TWZ1XnfIIxvtdPbpKbeBDQzRUdYZBiPE+unDnwc21iuQ9JXZ
-	 RXQaiYGvtRYkzbH1btHkBCh5hAnzX1rXSoHIbUKWwRhyL+rb1d+no1f/pIj6Z7irLG
-	 fLj2U2kK10Etz3BJmYNSEDAcf44hrZFxEjRiOLLM=
+	b=IA2pvWRLZqZ8CVF6AQF7v9mp1eMcc3n53KX/ZGHpf0A9SGjUtO2tatscB9ovdeYe7
+	 BS5np8u8xEhRjh7Un70kclfMxQdON3/cMYzJGQNss42kGK8F7EHYBVgU8ycfNfZGAh
+	 L/6fNvv5mVNTwjJc5l7DnTZGpp7KulgBU1g6Dhuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbgEANeb (ORCPT
+        id S1730585AbgEANef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730546AbgEANeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:15 -0400
+        id S1729028AbgEANeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3419C2495C;
-        Fri,  1 May 2020 13:34:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 843932173E;
+        Fri,  1 May 2020 13:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340055;
-        bh=GGWQ67jdRD0wSmMauQa4FV3WSwv4RIz4968TpQMGWfU=;
+        s=default; t=1588340063;
+        bh=2C+zaXH0NcVwovhzxCpIT+U1m1TU7namuJZfIR6ant8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hCQP0cWsyONU3A7DkFhF8yY3+vmANy9jmlvaw+cO9l3rGKVBEM8dtNssuglRQdNp8
-         wdHoTwEoNQFB2TikdWdYzpRL2wzlQMAzmwyH4Oe3NbZdRwYgx850zc7xIMAwlGcHM3
-         JEoDKtVPf2HtSeOS9kjLqA4WSWmFtorvkGepm+pY=
+        b=yKUfI3+UUNsBik10wJ+HYHIcFlWkskI9X2OP5Huc1bLBR2rV0+YQ8oZVTThypF9/C
+         EzPYNhyMtfzkH2gIv5wUkVGqXyheAx18wHmqVE4wNBOnC5NyG7u2IKHwtMah7lIc8P
+         d5gcrK7mxvE2bXoBqjmC3mSrQeZcW37mtdTWPwBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.14 076/117] staging: vt6656: Power save stop wake_up_count wrap around.
-Date:   Fri,  1 May 2020 15:21:52 +0200
-Message-Id: <20200501131553.988606590@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.14 079/117] UAS: no use logging any details in case of ENODEV
+Date:   Fri,  1 May 2020 15:21:55 +0200
+Message-Id: <20200501131554.270401032@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -58,37 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit ea81c3486442f4643fc9825a2bb1b430b829bccd upstream.
+commit 5963dec98dc52d52476390485f07a29c30c6a582 upstream.
 
-conf.listen_interval can sometimes be zero causing wake_up_count
-to wrap around up to many beacons too late causing
-CTRL-EVENT-BEACON-LOSS as in.
+Once a device is gone, the internal state does not matter anymore.
+There is no need to spam the logs.
 
-wpa_supplicant[795]: message repeated 45 times: [..CTRL-EVENT-BEACON-LOSS ]
-
-Fixes: 43c93d9bf5e2 ("staging: vt6656: implement power saving code.")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/fce47bb5-7ca6-7671-5094-5c6107302f2b@gmail.com
+Fixes: 326349f824619 ("uas: add dead request list")
+Link: https://lore.kernel.org/r/20200415141750.811-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/vt6656/int.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/storage/uas.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/vt6656/int.c
-+++ b/drivers/staging/vt6656/int.c
-@@ -153,7 +153,8 @@ void vnt_int_process_data(struct vnt_pri
- 				priv->wake_up_count =
- 					priv->hw->conf.listen_interval;
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -191,6 +191,9 @@ static void uas_log_cmd_state(struct scs
+ 	struct uas_cmd_info *ci = (void *)&cmnd->SCp;
+ 	struct uas_cmd_info *cmdinfo = (void *)&cmnd->SCp;
  
--			--priv->wake_up_count;
-+			if (priv->wake_up_count)
-+				--priv->wake_up_count;
- 
- 			/* Turn on wake up to listen next beacon */
- 			if (priv->wake_up_count == 1)
++	if (status == -ENODEV) /* too late */
++		return;
++
+ 	scmd_printk(KERN_INFO, cmnd,
+ 		    "%s %d uas-tag %d inflight:%s%s%s%s%s%s%s%s%s%s%s%s ",
+ 		    prefix, status, cmdinfo->uas_tag,
 
 
