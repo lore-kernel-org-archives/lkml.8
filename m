@@ -2,107 +2,145 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E21C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F6C47257
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B1E24954
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588352826;
-	bh=5qpeiH/fIZx6UC1kR7bhjR0C7h+7C+1d7gOLo/CuMeo=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1Tg/vO3ZayzavFEQUPzh5pQvXhzrl6MMGWvBVdItNOqECNWP3tqT51uJLPt6nWiVQ
-	 XmYSqU87vqTiBz9DZ3e0v+Eg3hJwK+RVseRndH92YCD8nnXT5kJhdvb5ksSq2YJZJC
-	 W5ndzyPbWCiuc1jXOeItwHRAOQiFqkIR6ge97TDA=
+	by mail.kernel.org (Postfix) with ESMTP id 2BACF20836
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbgEARHF (ORCPT
+        id S1729581AbgEARHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 13:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728972AbgEARHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:07:05 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728925AbgEARHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 13:07:31 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8867920836;
-        Fri,  1 May 2020 17:07:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588352824;
-        bh=5qpeiH/fIZx6UC1kR7bhjR0C7h+7C+1d7gOLo/CuMeo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TOfOVINGDu9vjdORFKv18QMxsZE425V3mgVpVH8wHxSmnLk14qPJgROgCktsu83+T
-         gDSRwfrDlR9cSg1bHZYp7ZVXDpzBQf4XfW3REnsxacFn/2p1jWQVp9NyYIp9ytOqCB
-         NXeDevyNj7ZGR60CP2qZ42UCPN1SfbV/NZXyMZ3w=
-Subject: Re: [PATCH -next] cpupower: Remove unneeded semicolon
-To:     Zou Wei <zou_wei@huawei.com>, trenn@suse.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <1588066995-71840-1-git-send-email-zou_wei@huawei.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <a51e2f2b-3381-bd5d-9599-0f291520b272@kernel.org>
-Date:   Fri, 1 May 2020 11:07:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id AB90120836;
+        Fri,  1 May 2020 17:07:30 +0000 (UTC)
+Date:   Fri, 1 May 2020 13:07:29 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] streamline_config.pl: add LOCALMODCONFIG_PRESERVE to
+ preserve some kconfigs
+Message-ID: <20200501130729.3a3e4994@gandalf.local.home>
+In-Reply-To: <20200501023708.108830-1-changbin.du@gmail.com>
+References: <20200501023708.108830-1-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1588066995-71840-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zou Wei,
+On Fri,  1 May 2020 10:37:08 +0800
+Changbin Du <changbin.du@gmail.com> wrote:
 
-On 4/28/20 3:43 AM, Zou Wei wrote:
-> Fixes coccicheck warnings:
+> Sometimes it is useful to preserve batches of configs when making
+> localmodconfig. For example, I usually don't want any usb and fs
+> modules to be disabled. Now we can do it by:
+> 
+>  $ make LOCALMODCONFIG_PRESERVE="drivers/usb;fs" localmodconfig
 
-I am not finding these in my coccicheck run. Can you send me the options
-you are using?
+That's too much typing ;-) What about just "KEEP='drivers/usb;fs'"?
+
 
 > 
-> tools/power/cpupower/utils/cpupower-info.c:65:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/cpupower-set.c:75:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c:120:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c:175:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c:56:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c:75:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c:82:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/nhm_idle.c:94:2-3: Unneeded semicolon
-> tools/power/cpupower/utils/idle_monitor/snb_idle.c:80:2-3: Unneeded semicolon
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > ---
->   tools/power/cpupower/utils/cpupower-info.c                | 2 +-
->   tools/power/cpupower/utils/cpupower-set.c                 | 2 +-
->   tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c | 2 +-
->   tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c   | 6 +++---
->   tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c    | 2 +-
->   tools/power/cpupower/utils/idle_monitor/nhm_idle.c        | 2 +-
->   tools/power/cpupower/utils/idle_monitor/snb_idle.c        | 2 +-
->   7 files changed, 9 insertions(+), 9 deletions(-)
+>  Documentation/admin-guide/README.rst |  8 +++++++-
+>  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
+>  2 files changed, 30 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/power/cpupower/utils/cpupower-info.c b/tools/power/cpupower/utils/cpupower-info.c
-> index d3755ea..0ba61a2 100644
-> --- a/tools/power/cpupower/utils/cpupower-info.c
-> +++ b/tools/power/cpupower/utils/cpupower-info.c
-> @@ -62,7 +62,7 @@ int cmd_info(int argc, char **argv)
->   		default:
->   			print_wrong_arg_exit();
->   		}
-> -	};
-> +	}
->   
+> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+> index cc6151fc0845..6deff95362f8 100644
+> --- a/Documentation/admin-guide/README.rst
+> +++ b/Documentation/admin-guide/README.rst
+> @@ -209,10 +209,16 @@ Configuring the kernel
+>                             store the lsmod of that machine into a file
+>                             and pass it in as a LSMOD parameter.
+>  
+> +                           Also, you can preserve modules in certen folders
+> +                           or kconfig files by spcifying there paths in
+> +                           parameter LOCALMODCONFIG_PRESERVE.
+> +
+>                     target$ lsmod > /tmp/mylsmod
+>                     target$ scp /tmp/mylsmod host:/tmp
+>  
+> -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
+> +                   host$ make LSMOD=/tmp/mylsmod \
+> +                           LOCALMODCONFIG_PRESERVE="drivers/usb;drivers/gpu;fs" \
+> +                           localmodconfig
+>  
+>                             The above also works when cross compiling.
+>  
+> diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+> index e2f8504f5a2d..ab5d1e10a5d0 100755
+> --- a/scripts/kconfig/streamline_config.pl
+> +++ b/scripts/kconfig/streamline_config.pl
+> @@ -143,6 +143,7 @@ my %depends;
+>  my %selects;
+>  my %prompts;
+>  my %objects;
+> +my %config2kfile;
+>  my $var;
+>  my $iflevel = 0;
+>  my @ifdeps;
+> @@ -201,6 +202,7 @@ sub read_kconfig {
+>  	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
+>  	    $state = "NEW";
+>  	    $config = $2;
+> +	    $config2kfile{"CONFIG_$config"} = $kconfig;
+>  
+>  	    # Add depends for 'if' nesting
+>  	    for (my $i = 0; $i < $iflevel; $i++) {
+> @@ -592,6 +594,22 @@ while ($repeat) {
+>  
+>  my %setconfigs;
+>  
+> +my @presevered_kconfigs;
+> +@presevered_kconfigs = split(/;/,$ENV{LOCALMODCONFIG_PRESERVE}) if (defined($ENV{LOCALMODCONFIG_PRESERVE}));
+> +
+> +sub in_presevered_kconfigs {
+> +    my $kconfig = $config2kfile{$_[0]};
+> +    if (!defined($kconfig)) {
+> +        return 0;
+> +    }
+> +    foreach my $excl (@presevered_kconfigs) {
+> +        if($kconfig =~ /^$excl/) {
+> +            return 1;
+> +        }
+> +    }
+> +    return 0;
+> +}
+> +
+>  # Finally, read the .config file and turn off any module enabled that
+>  # we could not find a reason to keep enabled.
+>  foreach my $line (@config_file) {
+> @@ -644,6 +662,11 @@ foreach my $line (@config_file) {
+>      }
+>  
+>      if (/^(CONFIG.*)=(m|y)/) {
+> +        if (in_presevered_kconfigs($1)) {
+> +            dprint "Preserve config $1";
+> +            print;
+> +            next;
+> +        }
+>  	if (defined($configs{$1})) {
+>  	    if ($localyesconfig) {
+>  	        $setconfigs{$1} = 'y';
 
-The patch itself is fine.
+I'll have to test it out, but I like the idea!
 
-thanks,
--- Shuah
+-- Steve
