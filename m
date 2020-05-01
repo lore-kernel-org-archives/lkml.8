@@ -2,158 +2,84 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A3C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09874C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE5C24953
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tSnPkGiY"
+	by mail.kernel.org (Postfix) with ESMTP id E08522166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 17:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgEARhz (ORCPT
+        id S1730172AbgEARjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 13:37:55 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47060 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729040AbgEARhz (ORCPT
+        Fri, 1 May 2020 13:39:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38787 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729040AbgEARjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 13:37:55 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 041Hbsiw029531;
-        Fri, 1 May 2020 12:37:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588354674;
-        bh=kl6qxjXpK8WjVJ4rxTSpNCEet+Pn0TlP5V/ouUJcsA0=;
-        h=From:To:CC:Subject:Date;
-        b=tSnPkGiYiB4BbC7Jl6xNHDULDeETvYTe2x6bX3D5mABtgKNdko8nLjffJspd/1F6s
-         ambWdSFwAohmPmtGrGQAcGN3xzYiMVM/vWT984qu2ipFIhzI0HpsnSBaMvHdSL8aV7
-         zdvPejHxeF8DqcvH9UFOoVsEqRV7g6gEhjcsqXds=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 041HbsU7046998
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 1 May 2020 12:37:54 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 1 May
- 2020 12:37:53 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 1 May 2020 12:37:54 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 041Hbr8J087346;
-        Fri, 1 May 2020 12:37:53 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2] dt-bindings: power: Convert power_supply text to yaml
-Date:   Fri, 1 May 2020 12:29:13 -0500
-Message-ID: <20200501172913.23537-1-dmurphy@ti.com>
+        Fri, 1 May 2020 13:39:06 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jUZcr-0004Ox-2y; Fri, 01 May 2020 17:39:01 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Steve deRosier <derosier@cal-sierra.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] libertas_tf: avoid a null dereference in pointer priv
+Date:   Fri,  1 May 2020 18:39:00 +0100
+Message-Id: <20200501173900.296658-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the power_supply.txt to power-supply.yaml.
-This conversion entailed fixing up the binding to being yaml and dt
-checker compliant.
+From: Colin Ian King <colin.king@canonical.com>
 
-Added a note in the power_supply.txt to reference the power-supply.yaml
+Currently there is a check if priv is null when calling lbtf_remove_card
+but not in a previous call to if_usb_reset_dev that can also dereference
+priv.  Fix this by also only calling lbtf_remove_card if priv is null.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+It is noteable that there don't seem to be any bugs reported that the
+null pointer dereference has ever occurred, so I'm not sure if the null
+check is required, but since we're doing a null check anyway it should
+be done for both function calls.
+
+Addresses-Coverity: ("Dereference before null check")
+Fixes: baa0280f08c7 ("libertas_tf: don't defer firmware loading until start()")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- .../bindings/power/supply/power-supply.yaml   | 40 +++++++++++++++++++
- .../bindings/power/supply/power_supply.txt    | 25 +-----------
- 2 files changed, 42 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/power-supply.yaml
+ drivers/net/wireless/marvell/libertas_tf/if_usb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/power-supply.yaml b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
-new file mode 100644
-index 000000000000..3bb02bb3a2d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/power-supply.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/power-supply.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Power Supply Core Support
-+
-+maintainers:
-+  - Sebastian Reichel <sre@kernel.org>
-+
-+properties:
-+  power-supplies:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      This property is added to a supply in order to list the devices which
-+      supply it power, referenced by their phandles.
-+
-+examples:
-+  - |
-+    power {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      usb_charger:charger@e {
-+        compatible = "some,usb-charger";
-+        reg = <0xe>;
-+      };
-+
-+      ac_charger:charger@c {
-+        compatible = "some,ac-charger";
-+        reg = <0xc>;
-+      };
-+
-+      battery:battery@b {
-+        compatible = "some,battery";
-+        reg = <0xb>;
-+        power-supplies = <&usb_charger>, <&ac_charger>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/power/supply/power_supply.txt b/Documentation/devicetree/bindings/power/supply/power_supply.txt
-index 8391bfa0edac..d9693e054509 100644
---- a/Documentation/devicetree/bindings/power/supply/power_supply.txt
-+++ b/Documentation/devicetree/bindings/power/supply/power_supply.txt
-@@ -1,23 +1,2 @@
--Power Supply Core Support
+diff --git a/drivers/net/wireless/marvell/libertas_tf/if_usb.c b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+index 25ac9db35dbf..bedc09215088 100644
+--- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
++++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
+@@ -247,10 +247,10 @@ static void if_usb_disconnect(struct usb_interface *intf)
+ 
+ 	lbtf_deb_enter(LBTF_DEB_MAIN);
+ 
+-	if_usb_reset_device(priv);
 -
--Optional Properties:
-- - power-supplies : This property is added to a supply in order to list the
--   devices which supply it power, referenced by their phandles.
--
--Example:
--
--	usb-charger: power@e {
--		compatible = "some,usb-charger";
--		...
--	};
--
--	ac-charger: power@c {
--		compatible = "some,ac-charger";
--		...
--	};
--
--	battery@b {
--		compatible = "some,battery";
--		...
--		power-supplies = <&usb-charger>, <&ac-charger>;
--	};
-+This binding has been converted to yaml please see power-supply.yaml in this
-+directory.
+-	if (priv)
++	if (priv) {
++		if_usb_reset_device(priv);
+ 		lbtf_remove_card(priv);
++	}
+ 
+ 	/* Unlink and free urb */
+ 	if_usb_free(cardp);
 -- 
 2.25.1
 
