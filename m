@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC16C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01463C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA7324955
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D412A2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339518;
-	bh=x2nQX49DejcTSMkqKDh8blNT4ob6Yff8fCJ441kAin0=;
+	s=default; t=1588339522;
+	bh=/GX9T0D4odWQTx9IHT/mYKVbwAc7xE3hb7UQOZAveCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcMHrIvsrwfbfrNGXiF8HhVrGjdOhG8X20nLy9N8glZwIOlsXrSqBph+ovtsxEKba
-	 +O9p0d4ZdDKcU9KbMnmhpQhPTTb67ESmVtxQTH95kOApcT1Nexp/eAFUONr5KdEztz
-	 EqWmFZXAjXJjDmxOGSE3mRcCXyLk0JEhPk+a9SWA=
+	b=QPzC2iH5FBFyDGTASWVQ97FvDkRGyEkbDmUo0tbUh4IUZ+B9TpfHrRdbgAufnSijU
+	 KrO9tIj6aXe8YTu5AAcHcZh17pUmZI3oiLHK1UcrcyNOwYefQ1DIKfB5/6BewUQnA7
+	 qDAH18ZuaFX6NwSdacwedjFcBEZULz0BZq3ynkzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgEANZQ (ORCPT
+        id S1729001AbgEANZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbgEANZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:25:10 -0400
+        id S1728979AbgEANZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:25:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A13920757;
-        Fri,  1 May 2020 13:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A806724955;
+        Fri,  1 May 2020 13:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339509;
-        bh=x2nQX49DejcTSMkqKDh8blNT4ob6Yff8fCJ441kAin0=;
+        s=default; t=1588339512;
+        bh=/GX9T0D4odWQTx9IHT/mYKVbwAc7xE3hb7UQOZAveCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMiz5EtC8gflX1pFyl0HKdrxaOldzt8ihKRGvrCJe3zUL+foni6mF96mp4epmS2H4
-         vj6uYwHUsUfUVW+EvCBeMv3g7rlf8nDPEMlf9RJq51yNXZ9T8dJHV0nM5byCOL5VOP
-         xZB/BjLIL04lCqiWnBUGQwKQiY8DwpkenxruFzdk=
+        b=Otr2T64zKqvcAvMKZ2afRTh0+apWLKiXOQU6bkjaIizfaYZ4mX0UVQLHBFJsqpA5h
+         +yczS+mXAb8Rp7ctR+21AJkHj+AZ5GV2aJ+NuNFlVOgsUeKavUO5c0b5u3UWL89x+A
+         yyc+Kotyb34oY2x0qiq7xzDIxWffqQYkcTszg0wQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        stable@vger.kernel.org, "Yan, Zheng" <zyan@redhat.com>,
         Jeff Layton <jlayton@kernel.org>,
         Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 08/70] ceph: return ceph_mdsc_do_request() errors from __get_parent()
-Date:   Fri,  1 May 2020 15:20:56 +0200
-Message-Id: <20200501131515.096286832@linuxfoundation.org>
+Subject: [PATCH 4.4 09/70] ceph: dont skip updating wanted caps when cap is stale
+Date:   Fri,  1 May 2020 15:20:57 +0200
+Message-Id: <20200501131515.294796911@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -61,38 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Yan, Zheng <zyan@redhat.com>
 
-[ Upstream commit c6d50296032f0b97473eb2e274dc7cc5d0173847 ]
+[ Upstream commit 0aa971b6fd3f92afef6afe24ef78d9bb14471519 ]
 
-Return the error returned by ceph_mdsc_do_request(). Otherwise,
-r_target_inode ends up being NULL this ends up returning ENOENT
-regardless of the error.
+1. try_get_cap_refs() fails to get caps and finds that mds_wanted
+   does not include what it wants. It returns -ESTALE.
+2. ceph_get_caps() calls ceph_renew_caps(). ceph_renew_caps() finds
+   that inode has cap, so it calls ceph_check_caps().
+3. ceph_check_caps() finds that issued caps (without checking if it's
+   stale) already includes caps wanted by open file, so it skips
+   updating wanted caps.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Above events can cause an infinite loop inside ceph_get_caps().
+
+Signed-off-by: "Yan, Zheng" <zyan@redhat.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/export.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ceph/caps.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index fe02ae7f056a3..ff9e60daf086b 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -146,6 +146,11 @@ static struct dentry *__get_parent(struct super_block *sb,
- 	}
- 	req->r_num_caps = 1;
- 	err = ceph_mdsc_do_request(mdsc, NULL, req);
-+	if (err) {
-+		ceph_mdsc_put_request(req);
-+		return ERR_PTR(err);
-+	}
-+
- 	inode = req->r_target_inode;
- 	if (inode)
- 		ihold(inode);
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index aa4df4a022525..efdf81ea3b5f8 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -1734,8 +1734,12 @@ retry_locked:
+ 		}
+ 
+ 		/* want more caps from mds? */
+-		if (want & ~(cap->mds_wanted | cap->issued))
+-			goto ack;
++		if (want & ~cap->mds_wanted) {
++			if (want & ~(cap->mds_wanted | cap->issued))
++				goto ack;
++			if (!__cap_is_valid(cap))
++				goto ack;
++		}
+ 
+ 		/* things we might delay */
+ 		if ((cap->issued & ~retain) == 0 &&
 -- 
 2.20.1
 
