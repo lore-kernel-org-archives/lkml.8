@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397CFC47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA02C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1855420757
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE30F208D6
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339788;
-	bh=fAeSOCyDZWHZwB1xapsOFAfJK2fFtww/H82lacETJ7U=;
+	s=default; t=1588339790;
+	bh=oKPEVnF03r3G2DLWNq0tK6eovYLjR0lpVzFPy7t21Bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBObKSeTWvbuzgg3TlRjC6s2HIgrxzvZ8woJyOKL4BBEo6tMQv4Q4JnH61AECoeM7
-	 fXVREYdPiFmy7Hdeg+IKkIhhRSO+0bjxJXZnkvhhBoiLsXVSDMM3XQ96EkpDUfPdUa
-	 hDMrMtPmEQPr6Q0ZVc6afXQyxEmpwqRvCzaLGTWk=
+	b=FodEuoWv6RQlqJHLyVHwSpY3BU5f0CLrFVZmv3ne/BPAz2V9YeajdL2MSig59DGGI
+	 6mrS/F5LfapSlOmiAC5brPK4DnFEQEdq3CTatCcjeUs5kYQtvdUES5BnkBNtoBz8Hw
+	 Z1MKwBhHWNrrxwEPXZCeQKX65Bq+QOPc2oOBxS8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbgEAN3r (ORCPT
+        id S1729838AbgEAN3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53390 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbgEAN3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:29:43 -0400
+        id S1729819AbgEAN3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:29:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFE64208DB;
-        Fri,  1 May 2020 13:29:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47B572495A;
+        Fri,  1 May 2020 13:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339783;
-        bh=fAeSOCyDZWHZwB1xapsOFAfJK2fFtww/H82lacETJ7U=;
+        s=default; t=1588339780;
+        bh=oKPEVnF03r3G2DLWNq0tK6eovYLjR0lpVzFPy7t21Bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0fWZb29nILJjx9d5xiu8AMRU9KL+WBCxiNTqBXSXe+Zeo5+zhn3v0UYWpj7sWHLT
-         fhAK6xAjict5FAfIEi4sXyWabPbvvKcojm9nch1/CZndUIy99zoIhTlF2+rsEbcueH
-         AexUb+5Q6RdIS5LUZAcBPYmm6UvQKwkE2FwQ9En8=
+        b=sxvT/c/YkGfyd7cMOzg/y/MCY8RxiVvm1gkg2+hqmrhORvRcK9TAWhtOpCcFYiZFe
+         JVuaTUownaf+bAjk+kkKFvTtmP17JaOoWTjP5LZy7tO1R10iS/y48MDjPz2bsNV5Ut
+         26/4Fibxo3alUeg5lZcwrz82oG1f6HbV+PIj3Id8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Kyungtae Kim <kt0755@gmail.com>
-Subject: [PATCH 4.9 36/80] USB: core: Fix free-while-in-use bug in the USB S-Glibrary
-Date:   Fri,  1 May 2020 15:21:30 +0200
-Message-Id: <20200501131525.462585701@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Uros Bizjak <ubizjak@gmail.com>
+Subject: [PATCH 4.9 45/80] KVM: VMX: Enable machine check support for 32bit targets
+Date:   Fri,  1 May 2020 15:21:39 +0200
+Message-Id: <20200501131527.915393222@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -59,90 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Uros Bizjak <ubizjak@gmail.com>
 
-commit 056ad39ee9253873522f6469c3364964a322912b upstream.
+commit fb56baae5ea509e63c2a068d66a4d8ea91969fca upstream.
 
-FuzzUSB (a variant of syzkaller) found a free-while-still-in-use bug
-in the USB scatter-gather library:
+There is no reason to limit the use of do_machine_check
+to 64bit targets. MCE handling works for both target familes.
 
-BUG: KASAN: use-after-free in atomic_read
-include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: use-after-free in usb_hcd_unlink_urb+0x5f/0x170
-drivers/usb/core/hcd.c:1607
-Read of size 4 at addr ffff888065379610 by task kworker/u4:1/27
-
-CPU: 1 PID: 27 Comm: kworker/u4:1 Not tainted 5.5.11 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.10.2-1ubuntu1 04/01/2014
-Workqueue: scsi_tmf_2 scmd_eh_abort_handler
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xce/0x128 lib/dump_stack.c:118
- print_address_description.constprop.4+0x21/0x3c0 mm/kasan/report.c:374
- __kasan_report+0x153/0x1cb mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x152/0x1b0 mm/kasan/generic.c:192
- __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
- atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
- usb_hcd_unlink_urb+0x5f/0x170 drivers/usb/core/hcd.c:1607
- usb_unlink_urb+0x72/0xb0 drivers/usb/core/urb.c:657
- usb_sg_cancel+0x14e/0x290 drivers/usb/core/message.c:602
- usb_stor_stop_transport+0x5e/0xa0 drivers/usb/storage/transport.c:937
-
-This bug occurs when cancellation of the S-G transfer races with
-transfer completion.  When that happens, usb_sg_cancel() may continue
-to access the transfer's URBs after usb_sg_wait() has freed them.
-
-The bug is caused by the fact that usb_sg_cancel() does not take any
-sort of reference to the transfer, and so there is nothing to prevent
-the URBs from being deallocated while the routine is trying to use
-them.  The fix is to take such a reference by incrementing the
-transfer's io->count field while the cancellation is in progres and
-decrementing it afterward.  The transfer's URBs are not deallocated
-until io->complete is triggered, which happens when io->count reaches
-zero.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: Kyungtae Kim <kt0755@gmail.com>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2003281615140.14837-100000@netrider.rowland.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: stable@vger.kernel.org
+Fixes: a0861c02a981 ("KVM: Add VT-x machine check support")
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Message-Id: <20200414071414.45636-1-ubizjak@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/message.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -585,12 +585,13 @@ void usb_sg_cancel(struct usb_sg_request
- 	int i, retval;
- 
- 	spin_lock_irqsave(&io->lock, flags);
--	if (io->status) {
-+	if (io->status || io->count == 0) {
- 		spin_unlock_irqrestore(&io->lock, flags);
- 		return;
- 	}
- 	/* shut everything down */
- 	io->status = -ECONNRESET;
-+	io->count++;		/* Keep the request alive until we're done */
- 	spin_unlock_irqrestore(&io->lock, flags);
- 
- 	for (i = io->entries - 1; i >= 0; --i) {
-@@ -604,6 +605,12 @@ void usb_sg_cancel(struct usb_sg_request
- 			dev_warn(&io->dev->dev, "%s, unlink --> %d\n",
- 				 __func__, retval);
- 	}
-+
-+	spin_lock_irqsave(&io->lock, flags);
-+	io->count--;
-+	if (!io->count)
-+		complete(&io->complete);
-+	spin_unlock_irqrestore(&io->lock, flags);
- }
- EXPORT_SYMBOL_GPL(usb_sg_cancel);
- 
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -5785,7 +5785,7 @@ static int handle_rmode_exception(struct
+  */
+ static void kvm_machine_check(void)
+ {
+-#if defined(CONFIG_X86_MCE) && defined(CONFIG_X86_64)
++#if defined(CONFIG_X86_MCE)
+ 	struct pt_regs regs = {
+ 		.cs = 3, /* Fake ring 3 no matter what the guest ran on */
+ 		.flags = X86_EFLAGS_IF,
 
 
