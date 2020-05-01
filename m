@@ -2,140 +2,264 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF9C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B94C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECB72051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jwW+pW2c"
+	by mail.kernel.org (Postfix) with ESMTP id 36DF42051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588341263;
+	bh=lVj3HBRVvftPoVTU+f2gffGmhA98BzLYOR+6QXbf+wk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NKATtE+O0i7netyOUHDkrF3j9VAyWd7hN3/iYI/uh4T2MPvom2FeJk4kd1AffWEwR
+	 tb9Oo5LJa3XBeWAJXo3bq6stD8fuLbIZK6XiJPJA7WEF9njACP9quHtIzBCvMuX6gb
+	 FnA6gE8hSYm4CjawBnZVr3eO4vRRi+U1rCLydXtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731431AbgEANyT (ORCPT
+        id S1731962AbgEANyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:54:19 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:30937 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731944AbgEANyO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:54:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588341254; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=UyUTdX3ycZLsp/fRiUOxWmX80RtczvRBethpLLRPbxE=; b=jwW+pW2cTROSWF6ArTws05s44pDQ4exZRMlzcbMPP4U453vXXeg9tMRv9RSMpkwd/nt0qELS
- aCu2T7iUDVCXq/6D673fOwahF9mBHv61DYB3BjzN779xSRKV5ykhafMZZaCUnVYO7dCNetbi
- JGf7zWu9DZD/oPKwhX//Vnuhl+0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eac29f2.7f0f27c2d3e8-smtp-out-n01;
- Fri, 01 May 2020 13:53:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DC578C44795; Fri,  1 May 2020 13:53:52 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 1 May 2020 09:54:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730693AbgEANfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:35:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AD883C432C2;
-        Fri,  1 May 2020 13:53:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AD883C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Krishna Konda <kkonda@codeaurora.org>,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Bradley Bolen <bradleybolen@gmail.com>
-Subject: [PATCH V1] mmc: core: expose info about enhanced rpmb support
-Date:   Fri,  1 May 2020 19:23:01 +0530
-Message-Id: <1588341189-4371-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id BF15E24953;
+        Fri,  1 May 2020 13:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588340124;
+        bh=lVj3HBRVvftPoVTU+f2gffGmhA98BzLYOR+6QXbf+wk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2WI7Wg8yLUzOx3KJvRM30yMgWtU6sGoi/rUoKclmi7AttOyMNb0Wwj5WAu0YRZyg9
+         VPWHtXkIox0l8G1OIqJnlofzEFYCPMPNDUH49Eo5fMdbtOZghfQnKgwWGuYX44XHuS
+         DqQFcwugOm0LQ5l3ArQ6IURfM3o3EUsEhVZILAeE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michal Kalderon <mkalderon@marvell.com>,
+        Yuval Bason <ybason@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 116/117] qed: Fix use after free in qed_chain_free
+Date:   Fri,  1 May 2020 15:22:32 +0200
+Message-Id: <20200501131558.652223176@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
+References: <20200501131544.291247695@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishna Konda <kkonda@codeaurora.org>
+From: Yuval Basson <ybason@marvell.com>
 
-Following eMMC JEDEC JESD84-B51 standard, an enhanced form of
-rpmb is supported. What this enhanced mode supports is in addition
-to be able to write one rpmb or two rpmb frames at a time,
-32 frames can be written at a time.
+commit 8063f761cd7c17fc1d0018728936e0c33a25388a upstream.
 
-Expose this information present in ext csd field so that the
-user space application that wants to make use of this can do so.
+The qed_chain data structure was modified in
+commit 1a4a69751f4d ("qed: Chain support for external PBL") to support
+receiving an external pbl (due to iWARP FW requirements).
+The pages pointed to by the pbl are allocated in qed_chain_alloc
+and their virtual address are stored in an virtual addresses array to
+enable accessing and freeing the data. The physical addresses however
+weren't stored and were accessed directly from the external-pbl
+during free.
 
-Signed-off-by: Krishna Konda <kkonda@codeaurora.org>
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Destroy-qp flow, leads to freeing the external pbl before the chain is
+freed, when the chain is freed it tries accessing the already freed
+external pbl, leading to a use-after-free. Therefore we need to store
+the physical addresses in additional to the virtual addresses in a
+new data structure.
+
+Fixes: 1a4a69751f4d ("qed: Chain support for external PBL")
+Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
+Signed-off-by: Yuval Bason <ybason@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/core/mmc.c   | 6 ++++++
- include/linux/mmc/card.h | 1 +
- include/linux/mmc/mmc.h  | 1 +
- 3 files changed, 8 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c |   38 ++++++++++++------------------
+ include/linux/qed/qed_chain.h             |   24 +++++++++++-------
+ 2 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index de94fbe..4203303 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -647,6 +647,9 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
- 				 mmc_hostname(card->host),
- 				 card->ext_csd.cmdq_depth);
- 		}
-+		card->ext_csd.enhanced_rpmb_supported =
-+					(card->ext_csd.rel_param &
-+					 EXT_CSD_WR_REL_PARAM_EN_RPMB_REL_WR);
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -3151,26 +3151,20 @@ static void qed_chain_free_single(struct
+ 
+ static void qed_chain_free_pbl(struct qed_dev *cdev, struct qed_chain *p_chain)
+ {
+-	void **pp_virt_addr_tbl = p_chain->pbl.pp_virt_addr_tbl;
++	struct addr_tbl_entry *pp_addr_tbl = p_chain->pbl.pp_addr_tbl;
+ 	u32 page_cnt = p_chain->page_cnt, i, pbl_size;
+-	u8 *p_pbl_virt = p_chain->pbl_sp.p_virt_table;
+ 
+-	if (!pp_virt_addr_tbl)
++	if (!pp_addr_tbl)
+ 		return;
+ 
+-	if (!p_pbl_virt)
+-		goto out;
+-
+ 	for (i = 0; i < page_cnt; i++) {
+-		if (!pp_virt_addr_tbl[i])
++		if (!pp_addr_tbl[i].virt_addr || !pp_addr_tbl[i].dma_map)
+ 			break;
+ 
+ 		dma_free_coherent(&cdev->pdev->dev,
+ 				  QED_CHAIN_PAGE_SIZE,
+-				  pp_virt_addr_tbl[i],
+-				  *(dma_addr_t *)p_pbl_virt);
+-
+-		p_pbl_virt += QED_CHAIN_PBL_ENTRY_SIZE;
++				  pp_addr_tbl[i].virt_addr,
++				  pp_addr_tbl[i].dma_map);
  	}
- out:
- 	return err;
-@@ -786,6 +789,8 @@ static int mmc_compare_ext_csds(struct mmc_card *card, unsigned bus_width)
- 		card->ext_csd.enhanced_area_offset);
- MMC_DEV_ATTR(enhanced_area_size, "%u\n", card->ext_csd.enhanced_area_size);
- MMC_DEV_ATTR(raw_rpmb_size_mult, "%#x\n", card->ext_csd.raw_rpmb_size_mult);
-+MMC_DEV_ATTR(enhanced_rpmb_supported, "%#x\n",
-+	card->ext_csd.enhanced_rpmb_supported);
- MMC_DEV_ATTR(rel_sectors, "%#x\n", card->ext_csd.rel_sectors);
- MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
- MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
-@@ -843,6 +848,7 @@ static ssize_t mmc_dsr_show(struct device *dev,
- 	&dev_attr_enhanced_area_offset.attr,
- 	&dev_attr_enhanced_area_size.attr,
- 	&dev_attr_raw_rpmb_size_mult.attr,
-+	&dev_attr_enhanced_rpmb_supported.attr,
- 	&dev_attr_rel_sectors.attr,
- 	&dev_attr_ocr.attr,
- 	&dev_attr_rca.attr,
-diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
-index cf3780a..7d46411 100644
---- a/include/linux/mmc/card.h
-+++ b/include/linux/mmc/card.h
-@@ -48,6 +48,7 @@ struct mmc_ext_csd {
- 	u8			sec_feature_support;
- 	u8			rel_sectors;
- 	u8			rel_param;
-+	bool			enhanced_rpmb_supported;
- 	u8			part_config;
- 	u8			cache_ctrl;
- 	u8			rst_n_function;
-diff --git a/include/linux/mmc/mmc.h b/include/linux/mmc/mmc.h
-index 4b85ef0..d9a65c6 100644
---- a/include/linux/mmc/mmc.h
-+++ b/include/linux/mmc/mmc.h
-@@ -325,6 +325,7 @@ static inline bool mmc_ready_for_data(u32 status)
-  */
  
- #define EXT_CSD_WR_REL_PARAM_EN		(1<<2)
-+#define EXT_CSD_WR_REL_PARAM_EN_RPMB_REL_WR	(1<<4)
+ 	pbl_size = page_cnt * QED_CHAIN_PBL_ENTRY_SIZE;
+@@ -3180,9 +3174,9 @@ static void qed_chain_free_pbl(struct qe
+ 				  pbl_size,
+ 				  p_chain->pbl_sp.p_virt_table,
+ 				  p_chain->pbl_sp.p_phys_table);
+-out:
+-	vfree(p_chain->pbl.pp_virt_addr_tbl);
+-	p_chain->pbl.pp_virt_addr_tbl = NULL;
++
++	vfree(p_chain->pbl.pp_addr_tbl);
++	p_chain->pbl.pp_addr_tbl = NULL;
+ }
  
- #define EXT_CSD_BOOT_WP_B_PWR_WP_DIS	(0x40)
- #define EXT_CSD_BOOT_WP_B_PERM_WP_DIS	(0x10)
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+ void qed_chain_free(struct qed_dev *cdev, struct qed_chain *p_chain)
+@@ -3283,19 +3277,19 @@ qed_chain_alloc_pbl(struct qed_dev *cdev
+ {
+ 	u32 page_cnt = p_chain->page_cnt, size, i;
+ 	dma_addr_t p_phys = 0, p_pbl_phys = 0;
+-	void **pp_virt_addr_tbl = NULL;
++	struct addr_tbl_entry *pp_addr_tbl;
+ 	u8 *p_pbl_virt = NULL;
+ 	void *p_virt = NULL;
+ 
+-	size = page_cnt * sizeof(*pp_virt_addr_tbl);
+-	pp_virt_addr_tbl = vzalloc(size);
+-	if (!pp_virt_addr_tbl)
++	size = page_cnt * sizeof(*pp_addr_tbl);
++	pp_addr_tbl =  vzalloc(size);
++	if (!pp_addr_tbl)
+ 		return -ENOMEM;
+ 
+ 	/* The allocation of the PBL table is done with its full size, since it
+ 	 * is expected to be successive.
+ 	 * qed_chain_init_pbl_mem() is called even in a case of an allocation
+-	 * failure, since pp_virt_addr_tbl was previously allocated, and it
++	 * failure, since tbl was previously allocated, and it
+ 	 * should be saved to allow its freeing during the error flow.
+ 	 */
+ 	size = page_cnt * QED_CHAIN_PBL_ENTRY_SIZE;
+@@ -3309,8 +3303,7 @@ qed_chain_alloc_pbl(struct qed_dev *cdev
+ 		p_chain->b_external_pbl = true;
+ 	}
+ 
+-	qed_chain_init_pbl_mem(p_chain, p_pbl_virt, p_pbl_phys,
+-			       pp_virt_addr_tbl);
++	qed_chain_init_pbl_mem(p_chain, p_pbl_virt, p_pbl_phys, pp_addr_tbl);
+ 	if (!p_pbl_virt)
+ 		return -ENOMEM;
+ 
+@@ -3329,7 +3322,8 @@ qed_chain_alloc_pbl(struct qed_dev *cdev
+ 		/* Fill the PBL table with the physical address of the page */
+ 		*(dma_addr_t *)p_pbl_virt = p_phys;
+ 		/* Keep the virtual address of the page */
+-		p_chain->pbl.pp_virt_addr_tbl[i] = p_virt;
++		p_chain->pbl.pp_addr_tbl[i].virt_addr = p_virt;
++		p_chain->pbl.pp_addr_tbl[i].dma_map = p_phys;
+ 
+ 		p_pbl_virt += QED_CHAIN_PBL_ENTRY_SIZE;
+ 	}
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -97,6 +97,11 @@ struct qed_chain_u32 {
+ 	u32 cons_idx;
+ };
+ 
++struct addr_tbl_entry {
++	void *virt_addr;
++	dma_addr_t dma_map;
++};
++
+ struct qed_chain {
+ 	/* fastpath portion of the chain - required for commands such
+ 	 * as produce / consume.
+@@ -107,10 +112,11 @@ struct qed_chain {
+ 
+ 	/* Fastpath portions of the PBL [if exists] */
+ 	struct {
+-		/* Table for keeping the virtual addresses of the chain pages,
+-		 * respectively to the physical addresses in the pbl table.
++		/* Table for keeping the virtual and physical addresses of the
++		 * chain pages, respectively to the physical addresses
++		 * in the pbl table.
+ 		 */
+-		void **pp_virt_addr_tbl;
++		struct addr_tbl_entry *pp_addr_tbl;
+ 
+ 		union {
+ 			struct qed_chain_pbl_u16 u16;
+@@ -287,7 +293,7 @@ qed_chain_advance_page(struct qed_chain
+ 				*(u32 *)page_to_inc = 0;
+ 			page_index = *(u32 *)page_to_inc;
+ 		}
+-		*p_next_elem = p_chain->pbl.pp_virt_addr_tbl[page_index];
++		*p_next_elem = p_chain->pbl.pp_addr_tbl[page_index].virt_addr;
+ 	}
+ }
+ 
+@@ -537,7 +543,7 @@ static inline void qed_chain_init_params
+ 
+ 	p_chain->pbl_sp.p_phys_table = 0;
+ 	p_chain->pbl_sp.p_virt_table = NULL;
+-	p_chain->pbl.pp_virt_addr_tbl = NULL;
++	p_chain->pbl.pp_addr_tbl = NULL;
+ }
+ 
+ /**
+@@ -575,11 +581,11 @@ static inline void qed_chain_init_mem(st
+ static inline void qed_chain_init_pbl_mem(struct qed_chain *p_chain,
+ 					  void *p_virt_pbl,
+ 					  dma_addr_t p_phys_pbl,
+-					  void **pp_virt_addr_tbl)
++					  struct addr_tbl_entry *pp_addr_tbl)
+ {
+ 	p_chain->pbl_sp.p_phys_table = p_phys_pbl;
+ 	p_chain->pbl_sp.p_virt_table = p_virt_pbl;
+-	p_chain->pbl.pp_virt_addr_tbl = pp_virt_addr_tbl;
++	p_chain->pbl.pp_addr_tbl = pp_addr_tbl;
+ }
+ 
+ /**
+@@ -644,7 +650,7 @@ static inline void *qed_chain_get_last_e
+ 		break;
+ 	case QED_CHAIN_MODE_PBL:
+ 		last_page_idx = p_chain->page_cnt - 1;
+-		p_virt_addr = p_chain->pbl.pp_virt_addr_tbl[last_page_idx];
++		p_virt_addr = p_chain->pbl.pp_addr_tbl[last_page_idx].virt_addr;
+ 		break;
+ 	}
+ 	/* p_virt_addr points at this stage to the last page of the chain */
+@@ -716,7 +722,7 @@ static inline void qed_chain_pbl_zero_me
+ 	page_cnt = qed_chain_get_page_cnt(p_chain);
+ 
+ 	for (i = 0; i < page_cnt; i++)
+-		memset(p_chain->pbl.pp_virt_addr_tbl[i], 0,
++		memset(p_chain->pbl.pp_addr_tbl[i].virt_addr, 0,
+ 		       QED_CHAIN_PAGE_SIZE);
+ }
+ 
+
+
