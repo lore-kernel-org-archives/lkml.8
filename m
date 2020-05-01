@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4765C47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FCEC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEE624953
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E0724954
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340231;
-	bh=bYiTDvsbvgv/pWBNPUAEXwI+44yG39clSKcicpwBy7A=;
+	s=default; t=1588340234;
+	bh=L+se4EUE/pZckriwgIxSr/w/Hv9fDqIMZfph3JCGnEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MghkmRqHaNmXhvA+Bnn8m4LZkpJwVPQXMQ9Adh3ZJAqA2R/10gEWVJu8/TXBenssl
-	 yJAEliFxIwK0zFEbihuud8dINWcj9EYyMfwreLzpxoMiq2X2lyTnkAEnudXO3ZJP83
-	 Bc2sekQb68KcyMa1L8a/g+gp7VbJEeJxmdamQYgU=
+	b=qRYnlOBW6DIfHVNM3OmilO2IertoQf8hLJmq64ZP0PlS2tdfUodacM5DEqXRNTa0/
+	 CI7DWSteG5e+t8N+Da/ypZddo7BUPRXn85uH5rP1rjuq0m1iJawmks2W+6rVOhIkMq
+	 NixONSzyHsDsIuzaOKdvzp8gMvXkiPZNMshopWf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgEANhK (ORCPT
+        id S1730913AbgEANhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35866 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:37:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730928AbgEANhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:37:06 -0400
+        id S1730203AbgEANg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A5672173E;
-        Fri,  1 May 2020 13:37:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F85B24953;
+        Fri,  1 May 2020 13:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340225;
-        bh=bYiTDvsbvgv/pWBNPUAEXwI+44yG39clSKcicpwBy7A=;
+        s=default; t=1588340217;
+        bh=L+se4EUE/pZckriwgIxSr/w/Hv9fDqIMZfph3JCGnEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AN/+s5x5t/Bx3/2TybfAYEm+XKsB/ZOLsdUgwz5WmUYlCmHLdmnSvrInvZp69yA2+
-         W2y3Nr4hMtNY550oAMlsyFMiKWg9F4YvgOtjD+u/e37ebKgM6ktv52NDG1GWFepUuX
-         2tZBy26mxChLbKBzFiAu2PaKB3dfWBkSlp4UzRgg=
+        b=q3fN9xCDl6xET0xhKn9innrCHGXJh2N/WUBuR0Q5AnXj0QQI+fg7H8EZOvEUvJg33
+         6SZEOb7b0qk2FsdOANbn77LYjfPKMXdd2PIe1uH3//5JDQXe/3QY6fmQhL5nmZuYJb
+         EfUVgleP5abXLr+IieMY3y7AG5NE9m386qx0Uqxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/46] net: fec: set GPR bit on suspend by DT configuration.
-Date:   Fri,  1 May 2020 15:22:53 +0200
-Message-Id: <20200501131508.798164692@linuxfoundation.org>
+Subject: [PATCH 4.19 36/46] objtool: Support Clang non-section symbols in ORC dump
+Date:   Fri,  1 May 2020 15:23:01 +0200
+Message-Id: <20200501131511.713496669@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -62,313 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Fuzzey <martin.fuzzey@flowbird.group>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit da722186f6549d752ea5b5fbc18111833c81a133 ]
+[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
 
-On some SoCs, such as the i.MX6, it is necessary to set a bit
-in the SoC level GPR register before suspending for wake on lan
-to work.
+Historically, the relocation symbols for ORC entries have only been
+section symbols:
 
-The fec platform callback sleep_mode_enable was intended to allow this
-but the platform implementation was NAK'd back in 2015 [1]
+  .text+0: sp:sp+8 bp:(und) type:call end:0
 
-This means that, currently, wake on lan is broken on mainline for
-the i.MX6 at least.
+However, the Clang assembler is aggressive about stripping section
+symbols.  In that case we will need to use function symbols:
 
-So implement the required bit setting in the fec driver by itself
-by adding a new optional DT property indicating the GPR register
-and adding the offset and bit information to the driver.
+  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
 
-[1] https://www.spinics.net/lists/netdev/msg310922.html
+In preparation for the generation of such entries in "objtool orc
+generate", add support for reading them in "objtool orc dump".
 
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fec.h      |   7 +
- drivers/net/ethernet/freescale/fec_main.c | 149 +++++++++++++++++-----
- 2 files changed, 127 insertions(+), 29 deletions(-)
+ tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
+ 1 file changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index bf80855dd0dd4..d06a89e99872d 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -488,6 +488,12 @@ struct fec_enet_priv_rx_q {
- 	struct  sk_buff *rx_skbuff[RX_RING_SIZE];
- };
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
+index faa444270ee3a..1a3e774941f8e 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -78,7 +78,7 @@ int orc_dump(const char *_objname)
+ 	char *name;
+ 	size_t nr_sections;
+ 	Elf64_Addr orc_ip_addr = 0;
+-	size_t shstrtab_idx;
++	size_t shstrtab_idx, strtab_idx = 0;
+ 	Elf *elf;
+ 	Elf_Scn *scn;
+ 	GElf_Shdr sh;
+@@ -139,6 +139,8 @@ int orc_dump(const char *_objname)
  
-+struct fec_stop_mode_gpr {
-+	struct regmap *gpr;
-+	u8 reg;
-+	u8 bit;
-+};
-+
- /* The FEC buffer descriptors track the ring buffers.  The rx_bd_base and
-  * tx_bd_base always point to the base of the buffer descriptors.  The
-  * cur_rx and cur_tx point to the currently available buffer.
-@@ -563,6 +569,7 @@ struct fec_enet_private {
- 	int hwts_tx_en;
- 	struct delayed_work time_keep;
- 	struct regulator *reg_phy;
-+	struct fec_stop_mode_gpr stop_gpr;
- 
- 	unsigned int tx_align;
- 	unsigned int rx_align;
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 9142992ccd5a7..48c58f93b124b 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -62,6 +62,8 @@
- #include <linux/if_vlan.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/prefetch.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- #include <soc/imx/cpuidle.h>
- 
- #include <asm/cacheflush.h>
-@@ -84,6 +86,56 @@ static void fec_enet_itr_coal_init(struct net_device *ndev);
- #define FEC_ENET_OPD_V	0xFFF0
- #define FEC_MDIO_PM_TIMEOUT  100 /* ms */
- 
-+struct fec_devinfo {
-+	u32 quirks;
-+	u8 stop_gpr_reg;
-+	u8 stop_gpr_bit;
-+};
-+
-+static const struct fec_devinfo fec_imx25_info = {
-+	.quirks = FEC_QUIRK_USE_GASKET | FEC_QUIRK_MIB_CLEAR |
-+		  FEC_QUIRK_HAS_FRREG,
-+};
-+
-+static const struct fec_devinfo fec_imx27_info = {
-+	.quirks = FEC_QUIRK_MIB_CLEAR | FEC_QUIRK_HAS_FRREG,
-+};
-+
-+static const struct fec_devinfo fec_imx28_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME |
-+		  FEC_QUIRK_SINGLE_MDIO | FEC_QUIRK_HAS_RACC |
-+		  FEC_QUIRK_HAS_FRREG,
-+};
-+
-+static const struct fec_devinfo fec_imx6q_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
-+		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
-+		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
-+		  FEC_QUIRK_HAS_RACC,
-+	.stop_gpr_reg = 0x34,
-+	.stop_gpr_bit = 27,
-+};
-+
-+static const struct fec_devinfo fec_mvf600_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_RACC,
-+};
-+
-+static const struct fec_devinfo fec_imx6x_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
-+		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
-+		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_HAS_AVB |
-+		  FEC_QUIRK_ERR007885 | FEC_QUIRK_BUG_CAPTURE |
-+		  FEC_QUIRK_HAS_RACC | FEC_QUIRK_HAS_COALESCE,
-+};
-+
-+static const struct fec_devinfo fec_imx6ul_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
-+		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
-+		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR007885 |
-+		  FEC_QUIRK_BUG_CAPTURE | FEC_QUIRK_HAS_RACC |
-+		  FEC_QUIRK_HAS_COALESCE,
-+};
-+
- static struct platform_device_id fec_devtype[] = {
- 	{
- 		/* keep it for coldfire */
-@@ -91,39 +143,25 @@ static struct platform_device_id fec_devtype[] = {
- 		.driver_data = 0,
- 	}, {
- 		.name = "imx25-fec",
--		.driver_data = FEC_QUIRK_USE_GASKET | FEC_QUIRK_MIB_CLEAR |
--			       FEC_QUIRK_HAS_FRREG,
-+		.driver_data = (kernel_ulong_t)&fec_imx25_info,
- 	}, {
- 		.name = "imx27-fec",
--		.driver_data = FEC_QUIRK_MIB_CLEAR | FEC_QUIRK_HAS_FRREG,
-+		.driver_data = (kernel_ulong_t)&fec_imx27_info,
- 	}, {
- 		.name = "imx28-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME |
--				FEC_QUIRK_SINGLE_MDIO | FEC_QUIRK_HAS_RACC |
--				FEC_QUIRK_HAS_FRREG,
-+		.driver_data = (kernel_ulong_t)&fec_imx28_info,
- 	}, {
- 		.name = "imx6q-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
--				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
--				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
--				FEC_QUIRK_HAS_RACC,
-+		.driver_data = (kernel_ulong_t)&fec_imx6q_info,
- 	}, {
- 		.name = "mvf600-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_RACC,
-+		.driver_data = (kernel_ulong_t)&fec_mvf600_info,
- 	}, {
- 		.name = "imx6sx-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
--				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
--				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_HAS_AVB |
--				FEC_QUIRK_ERR007885 | FEC_QUIRK_BUG_CAPTURE |
--				FEC_QUIRK_HAS_RACC | FEC_QUIRK_HAS_COALESCE,
-+		.driver_data = (kernel_ulong_t)&fec_imx6x_info,
- 	}, {
- 		.name = "imx6ul-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
--				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
--				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR007885 |
--				FEC_QUIRK_BUG_CAPTURE | FEC_QUIRK_HAS_RACC |
--				FEC_QUIRK_HAS_COALESCE,
-+		.driver_data = (kernel_ulong_t)&fec_imx6ul_info,
- 	}, {
- 		/* sentinel */
- 	}
-@@ -1089,11 +1127,28 @@ fec_restart(struct net_device *ndev)
- 
- }
- 
-+static void fec_enet_stop_mode(struct fec_enet_private *fep, bool enabled)
-+{
-+	struct fec_platform_data *pdata = fep->pdev->dev.platform_data;
-+	struct fec_stop_mode_gpr *stop_gpr = &fep->stop_gpr;
-+
-+	if (stop_gpr->gpr) {
-+		if (enabled)
-+			regmap_update_bits(stop_gpr->gpr, stop_gpr->reg,
-+					   BIT(stop_gpr->bit),
-+					   BIT(stop_gpr->bit));
-+		else
-+			regmap_update_bits(stop_gpr->gpr, stop_gpr->reg,
-+					   BIT(stop_gpr->bit), 0);
-+	} else if (pdata && pdata->sleep_mode_enable) {
-+		pdata->sleep_mode_enable(enabled);
-+	}
-+}
-+
- static void
- fec_stop(struct net_device *ndev)
- {
- 	struct fec_enet_private *fep = netdev_priv(ndev);
--	struct fec_platform_data *pdata = fep->pdev->dev.platform_data;
- 	u32 rmii_mode = readl(fep->hwp + FEC_R_CNTRL) & (1 << 8);
- 	u32 val;
- 
-@@ -1122,9 +1177,7 @@ fec_stop(struct net_device *ndev)
- 		val = readl(fep->hwp + FEC_ECNTRL);
- 		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
- 		writel(val, fep->hwp + FEC_ECNTRL);
--
--		if (pdata && pdata->sleep_mode_enable)
--			pdata->sleep_mode_enable(true);
-+		fec_enet_stop_mode(fep, true);
- 	}
- 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
- 
-@@ -3347,6 +3400,37 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- 	return irq_cnt;
- }
- 
-+static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
-+				   struct fec_devinfo *dev_info,
-+				   struct device_node *np)
-+{
-+	struct device_node *gpr_np;
-+	int ret = 0;
-+
-+	if (!dev_info)
-+		return 0;
-+
-+	gpr_np = of_parse_phandle(np, "gpr", 0);
-+	if (!gpr_np)
-+		return 0;
-+
-+	fep->stop_gpr.gpr = syscon_node_to_regmap(gpr_np);
-+	if (IS_ERR(fep->stop_gpr.gpr)) {
-+		dev_err(&fep->pdev->dev, "could not find gpr regmap\n");
-+		ret = PTR_ERR(fep->stop_gpr.gpr);
-+		fep->stop_gpr.gpr = NULL;
-+		goto out;
-+	}
-+
-+	fep->stop_gpr.reg = dev_info->stop_gpr_reg;
-+	fep->stop_gpr.bit = dev_info->stop_gpr_bit;
-+
-+out:
-+	of_node_put(gpr_np);
-+
-+	return ret;
-+}
-+
- static int
- fec_probe(struct platform_device *pdev)
- {
-@@ -3362,6 +3446,7 @@ fec_probe(struct platform_device *pdev)
- 	int num_rx_qs;
- 	char irq_name[8];
- 	int irq_cnt;
-+	struct fec_devinfo *dev_info;
- 
- 	fec_enet_get_queue_num(pdev, &num_tx_qs, &num_rx_qs);
- 
-@@ -3379,7 +3464,9 @@ fec_probe(struct platform_device *pdev)
- 	of_id = of_match_device(fec_dt_ids, &pdev->dev);
- 	if (of_id)
- 		pdev->id_entry = of_id->data;
--	fep->quirks = pdev->id_entry->driver_data;
-+	dev_info = (struct fec_devinfo *)pdev->id_entry->driver_data;
-+	if (dev_info)
-+		fep->quirks = dev_info->quirks;
- 
- 	fep->netdev = ndev;
- 	fep->num_rx_queues = num_rx_qs;
-@@ -3414,6 +3501,10 @@ fec_probe(struct platform_device *pdev)
- 	if (of_get_property(np, "fsl,magic-packet", NULL))
- 		fep->wol_flag |= FEC_WOL_HAS_MAGIC_PACKET;
- 
-+	ret = fec_enet_init_stop_mode(fep, dev_info, np);
-+	if (ret)
-+		goto failed_stop_mode;
-+
- 	phy_node = of_parse_phandle(np, "phy-handle", 0);
- 	if (!phy_node && of_phy_is_fixed_link(np)) {
- 		ret = of_phy_register_fixed_link(np);
-@@ -3583,6 +3674,7 @@ failed_clk:
- 	if (of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
- 	of_node_put(phy_node);
-+failed_stop_mode:
- failed_phy:
- 	dev_id--;
- failed_ioremap:
-@@ -3660,7 +3752,6 @@ static int __maybe_unused fec_resume(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct fec_enet_private *fep = netdev_priv(ndev);
--	struct fec_platform_data *pdata = fep->pdev->dev.platform_data;
- 	int ret;
- 	int val;
- 
-@@ -3678,8 +3769,8 @@ static int __maybe_unused fec_resume(struct device *dev)
- 			goto failed_clk;
+ 		if (!strcmp(name, ".symtab")) {
+ 			symtab = data;
++		} else if (!strcmp(name, ".strtab")) {
++			strtab_idx = i;
+ 		} else if (!strcmp(name, ".orc_unwind")) {
+ 			orc = data->d_buf;
+ 			orc_size = sh.sh_size;
+@@ -150,7 +152,7 @@ int orc_dump(const char *_objname)
  		}
- 		if (fep->wol_flag & FEC_WOL_FLAG_ENABLE) {
--			if (pdata && pdata->sleep_mode_enable)
--				pdata->sleep_mode_enable(false);
-+			fec_enet_stop_mode(fep, false);
+ 	}
+ 
+-	if (!symtab || !orc || !orc_ip)
++	if (!symtab || !strtab_idx || !orc || !orc_ip)
+ 		return 0;
+ 
+ 	if (orc_size % sizeof(*orc) != 0) {
+@@ -171,21 +173,29 @@ int orc_dump(const char *_objname)
+ 				return -1;
+ 			}
+ 
+-			scn = elf_getscn(elf, sym.st_shndx);
+-			if (!scn) {
+-				WARN_ELF("elf_getscn");
+-				return -1;
+-			}
+-
+-			if (!gelf_getshdr(scn, &sh)) {
+-				WARN_ELF("gelf_getshdr");
+-				return -1;
+-			}
+-
+-			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
+-			if (!name || !*name) {
+-				WARN_ELF("elf_strptr");
+-				return -1;
++			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
++				scn = elf_getscn(elf, sym.st_shndx);
++				if (!scn) {
++					WARN_ELF("elf_getscn");
++					return -1;
++				}
 +
- 			val = readl(fep->hwp + FEC_ECNTRL);
- 			val &= ~(FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
- 			writel(val, fep->hwp + FEC_ECNTRL);
++				if (!gelf_getshdr(scn, &sh)) {
++					WARN_ELF("gelf_getshdr");
++					return -1;
++				}
++
++				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
++			} else {
++				name = elf_strptr(elf, strtab_idx, sym.st_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
+ 			}
+ 
+ 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
 -- 
 2.20.1
 
