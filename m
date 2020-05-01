@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06B7C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B6CC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F31E216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3462051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340813;
-	bh=M1z3zsP5aQW5/15IlODjI3cgmA2AHNWa2283H9/XnqU=;
+	s=default; t=1588340819;
+	bh=YphpFFixkiyfnywxVYFRTXsrp7Q0WASly/v6cgjf3Eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMKeXq7rzDWQQ3ZvZg/SSwJ6F+ceXZcHiD9AwiFB2O2a0fn/I2OV8PYlHdkzxWxHo
-	 Hjk/7IwOPnPBxhYJLlfzkeLDszs019xzY/wdqsI81ALodBiqzPlAt+5/ejvhldlUdS
-	 /qe4L943THVtbcu57KvZ7R1DLvvQPTtM9p0z/CMc=
+	b=FLxEXnMZrvYoD4GJLGg4lRc0tDwmRSZKH+xyb3lD+Ar3LwqElnnuOLpq3nQmZf3qS
+	 sFp4PD7n4rNMWFpcuBqy/oenrfh96tzDGeKIXs7FFiZIA168OEx31CNdhuHQYVkBQw
+	 5WUtDFytcULc8GpqkKxth5Iwd2J6EYLZNDRLavgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgEANqt (ORCPT
+        id S1731780AbgEANq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45714 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:46:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731744AbgEANo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:27 -0400
+        id S1731423AbgEANoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CBC20757;
-        Fri,  1 May 2020 13:44:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E60524959;
+        Fri,  1 May 2020 13:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340666;
-        bh=M1z3zsP5aQW5/15IlODjI3cgmA2AHNWa2283H9/XnqU=;
+        s=default; t=1588340652;
+        bh=YphpFFixkiyfnywxVYFRTXsrp7Q0WASly/v6cgjf3Eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1N1CFu2+UecN1aCpeWjnfHq9wz9hYB8Ooaea2C19scPI+XwiLLmjkqK3GuTf/htAJ
-         4IFPal+WkUaDfcb2kAUuwyedyTWte8MFhyQ5JLUh+LOmxSHsJ1pzttTK9csdooyx6w
-         X24aiwxpeYHH+t18ZNhlM/uRjR8bXhgByinxShXg=
+        b=QQIQLUgBbuqnz/ch0sHHcJi72Rsb9iLItbpI0fOLbPGWUo8cYjuvvYyneazEThxYT
+         TdkuDr+i0mawkKwK3rEhRFOtVntd/4b+RIYk2U/Vcnw4+RCqClpuG68Gknicf96Ce4
+         BEoxV0DLS/Om6kdIfw11x6e1U/+Zf+mqM4e0rMMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Borislav Petkov <bp@suse.de>, Miroslav Benes <mbenes@suse.cz>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 074/106] ALSA: hda: Release resources at error in delayed probe
-Date:   Fri,  1 May 2020 15:23:47 +0200
-Message-Id: <20200501131552.865351475@linuxfoundation.org>
+Subject: [PATCH 5.6 081/106] objtool: Support Clang non-section symbols in ORC dump
+Date:   Fri,  1 May 2020 15:23:54 +0200
+Message-Id: <20200501131553.487022224@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -59,139 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 2393e7555b531a534152ffe7bfd1862cacedaacb ]
+[ Upstream commit 8782e7cab51b6bf01a5a86471dd82228af1ac185 ]
 
-snd-hda-intel driver handles the most of its probe task in the delayed
-work (either via workqueue or via firmware loader).  When an error
-happens in the later delayed probe, we can't deregister the device
-itself because the probe callback already returned success and the
-device was bound.  So, for now, we set hda->init_failed flag and make
-the rest untouched until the device gets really unbound.
-However, this leaves the device up running, keeping the resources
-without any use that prevents other operations.
+Historically, the relocation symbols for ORC entries have only been
+section symbols:
 
-In this patch, we release the resources at first when a probe error
-happens in the delayed probe stage, but keeps the top-level object, so
-that the PM and other ops can still refer to the object itself.
+  .text+0: sp:sp+8 bp:(und) type:call end:0
 
-Also for simplicity, snd_hda_intel object is allocated via devm, so
-that we can get rid of the explicit kfree calls.
+However, the Clang assembler is aggressive about stripping section
+symbols.  In that case we will need to use function symbols:
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207043
-Link: https://lore.kernel.org/r/20200413082034.25166-4-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  freezing_slow_path+0: sp:sp+8 bp:(und) type:call end:0
+
+In preparation for the generation of such entries in "objtool orc
+generate", add support for reading them in "objtool orc dump".
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/b811b5eb1a42602c3b523576dc5efab9ad1c174d.1585761021.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 29 ++++++++++++++++-------------
- sound/pci/hda/hda_intel.h |  1 +
- 2 files changed, 17 insertions(+), 13 deletions(-)
+ tools/objtool/orc_dump.c | 44 ++++++++++++++++++++++++----------------
+ 1 file changed, 27 insertions(+), 17 deletions(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index af21e9583c0d3..3047dc357b38b 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -1203,10 +1203,8 @@ static void azx_vs_set_state(struct pci_dev *pci,
- 		if (!disabled) {
- 			dev_info(chip->card->dev,
- 				 "Start delayed initialization\n");
--			if (azx_probe_continue(chip) < 0) {
-+			if (azx_probe_continue(chip) < 0)
- 				dev_err(chip->card->dev, "initialization error\n");
--				hda->init_failed = true;
--			}
+diff --git a/tools/objtool/orc_dump.c b/tools/objtool/orc_dump.c
+index 13ccf775a83a4..ba4cbb1cdd632 100644
+--- a/tools/objtool/orc_dump.c
++++ b/tools/objtool/orc_dump.c
+@@ -66,7 +66,7 @@ int orc_dump(const char *_objname)
+ 	char *name;
+ 	size_t nr_sections;
+ 	Elf64_Addr orc_ip_addr = 0;
+-	size_t shstrtab_idx;
++	size_t shstrtab_idx, strtab_idx = 0;
+ 	Elf *elf;
+ 	Elf_Scn *scn;
+ 	GElf_Shdr sh;
+@@ -127,6 +127,8 @@ int orc_dump(const char *_objname)
+ 
+ 		if (!strcmp(name, ".symtab")) {
+ 			symtab = data;
++		} else if (!strcmp(name, ".strtab")) {
++			strtab_idx = i;
+ 		} else if (!strcmp(name, ".orc_unwind")) {
+ 			orc = data->d_buf;
+ 			orc_size = sh.sh_size;
+@@ -138,7 +140,7 @@ int orc_dump(const char *_objname)
  		}
- 	} else {
- 		dev_info(chip->card->dev, "%s via vga_switcheroo\n",
-@@ -1339,12 +1337,15 @@ static int register_vga_switcheroo(struct azx *chip)
- /*
-  * destructor
-  */
--static int azx_free(struct azx *chip)
-+static void azx_free(struct azx *chip)
- {
- 	struct pci_dev *pci = chip->pci;
- 	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
- 	struct hdac_bus *bus = azx_bus(chip);
- 
-+	if (hda->freed)
-+		return;
-+
- 	if (azx_has_pm_runtime(chip) && chip->running)
- 		pm_runtime_get_noresume(&pci->dev);
- 	chip->running = 0;
-@@ -1388,9 +1389,8 @@ static int azx_free(struct azx *chip)
- 
- 	if (chip->driver_caps & AZX_DCAPS_I915_COMPONENT)
- 		snd_hdac_i915_exit(bus);
--	kfree(hda);
- 
--	return 0;
-+	hda->freed = 1;
- }
- 
- static int azx_dev_disconnect(struct snd_device *device)
-@@ -1406,7 +1406,8 @@ static int azx_dev_disconnect(struct snd_device *device)
- 
- static int azx_dev_free(struct snd_device *device)
- {
--	return azx_free(device->device_data);
-+	azx_free(device->device_data);
-+	return 0;
- }
- 
- #ifdef SUPPORT_VGA_SWITCHEROO
-@@ -1773,7 +1774,7 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
- 	if (err < 0)
- 		return err;
- 
--	hda = kzalloc(sizeof(*hda), GFP_KERNEL);
-+	hda = devm_kzalloc(&pci->dev, sizeof(*hda), GFP_KERNEL);
- 	if (!hda) {
- 		pci_disable_device(pci);
- 		return -ENOMEM;
-@@ -1814,7 +1815,6 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
- 
- 	err = azx_bus_init(chip, model[dev]);
- 	if (err < 0) {
--		kfree(hda);
- 		pci_disable_device(pci);
- 		return err;
  	}
-@@ -2339,13 +2339,16 @@ static int azx_probe_continue(struct azx *chip)
- 		pm_runtime_put_autosuspend(&pci->dev);
  
- out_free:
--	if (err < 0 || !hda->need_i915_power)
-+	if (err < 0) {
-+		azx_free(chip);
-+		return err;
-+	}
+-	if (!symtab || !orc || !orc_ip)
++	if (!symtab || !strtab_idx || !orc || !orc_ip)
+ 		return 0;
+ 
+ 	if (orc_size % sizeof(*orc) != 0) {
+@@ -159,21 +161,29 @@ int orc_dump(const char *_objname)
+ 				return -1;
+ 			}
+ 
+-			scn = elf_getscn(elf, sym.st_shndx);
+-			if (!scn) {
+-				WARN_ELF("elf_getscn");
+-				return -1;
+-			}
+-
+-			if (!gelf_getshdr(scn, &sh)) {
+-				WARN_ELF("gelf_getshdr");
+-				return -1;
+-			}
+-
+-			name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
+-			if (!name || !*name) {
+-				WARN_ELF("elf_strptr");
+-				return -1;
++			if (GELF_ST_TYPE(sym.st_info) == STT_SECTION) {
++				scn = elf_getscn(elf, sym.st_shndx);
++				if (!scn) {
++					WARN_ELF("elf_getscn");
++					return -1;
++				}
 +
-+	if (!hda->need_i915_power)
- 		display_power(chip, false);
--	if (err < 0)
--		hda->init_failed = 1;
- 	complete_all(&hda->probe_wait);
- 	to_hda_bus(bus)->bus_probing = 0;
--	return err;
-+	return 0;
- }
++				if (!gelf_getshdr(scn, &sh)) {
++					WARN_ELF("gelf_getshdr");
++					return -1;
++				}
++
++				name = elf_strptr(elf, shstrtab_idx, sh.sh_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
++			} else {
++				name = elf_strptr(elf, strtab_idx, sym.st_name);
++				if (!name) {
++					WARN_ELF("elf_strptr");
++					return -1;
++				}
+ 			}
  
- static void azx_remove(struct pci_dev *pci)
-diff --git a/sound/pci/hda/hda_intel.h b/sound/pci/hda/hda_intel.h
-index 2acfff3da1a04..3fb119f090408 100644
---- a/sound/pci/hda/hda_intel.h
-+++ b/sound/pci/hda/hda_intel.h
-@@ -27,6 +27,7 @@ struct hda_intel {
- 	unsigned int use_vga_switcheroo:1;
- 	unsigned int vga_switcheroo_registered:1;
- 	unsigned int init_failed:1; /* delayed init failed */
-+	unsigned int freed:1; /* resources already released */
- 
- 	bool need_i915_power:1; /* the hda controller needs i915 power */
- };
+ 			printf("%s+%llx:", name, (unsigned long long)rela.r_addend);
 -- 
 2.20.1
 
