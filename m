@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D826C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97EEC47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DA3205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951662051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341049;
-	bh=Yj53TDZGyhIVReXyvNdN+DVUhHo/t6zGJIeir/EWXzw=;
+	s=default; t=1588341054;
+	bh=p262YZn7SlOJ9SdgjgOh7lUmTweP6tiBeMxeDpl8gu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxDeCSC4C5DG4dN/aippYwWV2fuoj+91w2pv4VdJxfoD22pS355yMZyARl4GSp6Vt
-	 3ntvcfVHXbeS9xJDLcrz8J7tRvY7j2e3n6aUmg/WY7lmR3R8Hx8uL7wns+Xm4R2EQD
-	 hZUiJy2oYT8+rfWmFUq7E1DRcReT/GNcchisQ/Ks=
+	b=sAXgtdZFAdwJBvKnSNtb4N1SDvs1Ut0R711HhvC2WMJlbEPVokFJRHsNBYka6UOMX
+	 jmCJ5o+JlLb6xdBKheS9SBDc/L/RRj5kzvgTwJPIaacTTgF6Kly3co0rZ9woHBwcXL
+	 1CT9FxFINbOgtBaQnGBdrJBvrm4Cq1yuOMOooaMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgEANja (ORCPT
+        id S1731532AbgEANuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39166 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:50:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729798AbgEANj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:39:27 -0400
+        id S1731179AbgEANjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:39:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC1020757;
-        Fri,  1 May 2020 13:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60158205C9;
+        Fri,  1 May 2020 13:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340366;
-        bh=Yj53TDZGyhIVReXyvNdN+DVUhHo/t6zGJIeir/EWXzw=;
+        s=default; t=1588340363;
+        bh=p262YZn7SlOJ9SdgjgOh7lUmTweP6tiBeMxeDpl8gu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I8yCSMlbma2KQvMts741ai1fAS+6kNjkEBA5dGcgvQ2G+zdxHE4kXi22cL68kQ0oM
-         e4+/CAmRJtR3yhn+WMnOqYrIO7Vevg3uFzjHZec6C3FYZnixZaeDr+I9Ou6i/2xKBT
-         hjLDExkrnJ2WDVH+LNegD9GZ5sfqcmdKnCO5y4UE=
+        b=xsj576hEoQes6wKvS/cvdA9nuWhb5tyj684d8SuYn7oyd9f0qFCvaYcnIxr6l55jm
+         7MxcCkzEdqxMRp05howhJEL8JJSBmBtrO25Y2BIm4ZXq4R5VNH2wZyXmyaW4bqaxmG
+         96HzMJJskgPvxCJbOXEwl81s5XBtDo2Ipe2+FddI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chitti Babu Theegala <ctheegal@codeaurora.org>,
-        Quentin Perret <qperret@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: [PATCH 5.4 41/83] sched/core: Fix reset-on-fork from RT with uclamp
-Date:   Fri,  1 May 2020 15:23:20 +0200
-Message-Id: <20200501131535.781214366@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Furtado <paulfurtado91@gmail.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Chandan Rajendra <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Allison Collins <allison.henderson@oracle.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 5.4 25/83] xfs: acquire superblock freeze protection on eofblocks scans
+Date:   Fri,  1 May 2020 15:23:04 +0200
+Message-Id: <20200501131530.318495482@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -63,51 +63,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Perret <qperret@google.com>
+From: Brian Foster <bfoster@redhat.com>
 
-commit eaf5a92ebde5bca3bb2565616115bd6d579486cd upstream.
+commit 4b674b9ac852937af1f8c62f730c325fb6eadcdb upstream.
 
-uclamp_fork() resets the uclamp values to their default when the
-reset-on-fork flag is set. It also checks whether the task has a RT
-policy, and sets its uclamp.min to 1024 accordingly. However, during
-reset-on-fork, the task's policy is lowered to SCHED_NORMAL right after,
-hence leading to an erroneous uclamp.min setting for the new task if it
-was forked from RT.
+The filesystem freeze sequence in XFS waits on any background
+eofblocks or cowblocks scans to complete before the filesystem is
+quiesced. At this point, the freezer has already stopped the
+transaction subsystem, however, which means a truncate or cowblock
+cancellation in progress is likely blocked in transaction
+allocation. This results in a deadlock between freeze and the
+associated scanner.
 
-Fix this by removing the unnecessary check on rt_task() in
-uclamp_fork() as this doesn't make sense if the reset-on-fork flag is
-set.
+Fix this problem by holding superblock write protection across calls
+into the block reapers. Since protection for background scans is
+acquired from the workqueue task context, trylock to avoid a similar
+deadlock between freeze and blocking on the write lock.
 
-Fixes: 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks")
-Reported-by: Chitti Babu Theegala <ctheegal@codeaurora.org>
-Signed-off-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Patrick Bellasi <patrick.bellasi@matbug.net>
-Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Link: https://lkml.kernel.org/r/20200416085956.217587-1-qperret@google.com
+Fixes: d6b636ebb1c9f ("xfs: halt auto-reclamation activities while rebuilding rmap")
+Reported-by: Paul Furtado <paulfurtado91@gmail.com>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Chandan Rajendra <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/core.c |    9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ fs/xfs/xfs_icache.c |   10 ++++++++++
+ fs/xfs/xfs_ioctl.c  |    5 ++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1233,13 +1233,8 @@ static void uclamp_fork(struct task_stru
- 		return;
- 
- 	for_each_clamp_id(clamp_id) {
--		unsigned int clamp_value = uclamp_none(clamp_id);
--
--		/* By default, RT tasks always get 100% boost */
--		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			clamp_value = uclamp_none(UCLAMP_MAX);
--
--		uclamp_se_set(&p->uclamp_req[clamp_id], clamp_value, false);
-+		uclamp_se_set(&p->uclamp_req[clamp_id],
-+			      uclamp_none(clamp_id), false);
- 	}
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -907,7 +907,12 @@ xfs_eofblocks_worker(
+ {
+ 	struct xfs_mount *mp = container_of(to_delayed_work(work),
+ 				struct xfs_mount, m_eofblocks_work);
++
++	if (!sb_start_write_trylock(mp->m_super))
++		return;
+ 	xfs_icache_free_eofblocks(mp, NULL);
++	sb_end_write(mp->m_super);
++
+ 	xfs_queue_eofblocks(mp);
  }
  
+@@ -934,7 +939,12 @@ xfs_cowblocks_worker(
+ {
+ 	struct xfs_mount *mp = container_of(to_delayed_work(work),
+ 				struct xfs_mount, m_cowblocks_work);
++
++	if (!sb_start_write_trylock(mp->m_super))
++		return;
+ 	xfs_icache_free_cowblocks(mp, NULL);
++	sb_end_write(mp->m_super);
++
+ 	xfs_queue_cowblocks(mp);
+ }
+ 
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -2401,7 +2401,10 @@ xfs_file_ioctl(
+ 		if (error)
+ 			return error;
+ 
+-		return xfs_icache_free_eofblocks(mp, &keofb);
++		sb_start_write(mp->m_super);
++		error = xfs_icache_free_eofblocks(mp, &keofb);
++		sb_end_write(mp->m_super);
++		return error;
+ 	}
+ 
+ 	default:
 
 
