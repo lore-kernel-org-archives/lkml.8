@@ -2,53 +2,53 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156E9C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9CEC47258
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB2EA2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501CC2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341499;
-	bh=oN4xXc//JXVyLYe37q429CpdJ1zd5XafytMl0uRgsEU=;
+	s=default; t=1588341502;
+	bh=RnHZ55ZQd+oFxIjGZK85Q+Q5EPPSaa4vig9BLZFgBww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ksud2jIZf+QpG8R3m+Uy6l9jnSS9yrVS5zi6KkW3v/2FdkheJwlvDBpthhDAW3uoP
-	 IrCOw993ngZNmt2iNlxyhMtXFWaRp04yC/OSoMPW6Pwh6XIR4tj0eAMGKu/GBEM9nl
-	 ZrWSsy262y2titZ93i8MLEt3yLL/1yLwJihuhxeU=
+	b=gRlXTlH2+0ZFfBd4XZQELnOsKDh8kyQjojYHR43mXViToPF/fEJPQvpeM2pJIABcN
+	 ek9DwXIUz1/fqGmUWbwjv0t+bZiBFbmKhh+OTb1zLRFPiZPUMnH2DiSftZkMmhI/km
+	 UNTfuWRoHeHPRsuvVOallZkoVpwGlss/kUyJsE40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgEAN6S (ORCPT
+        id S1729964AbgEANae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbgEANak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:30:40 -0400
+        id S1729956AbgEANaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:30:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50055208C3;
-        Fri,  1 May 2020 13:30:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783A020757;
+        Fri,  1 May 2020 13:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339839;
-        bh=oN4xXc//JXVyLYe37q429CpdJ1zd5XafytMl0uRgsEU=;
+        s=default; t=1588339829;
+        bh=RnHZ55ZQd+oFxIjGZK85Q+Q5EPPSaa4vig9BLZFgBww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oWeEoDRcEpaFJtX7tRixcryGQuRR8u8sq5f7wDqIWw81rasbaZOJe+vVzfrSWqiXy
-         Fky+dIXtar0UaRo+coAo4kdedYAOpJ4dXLIogWA886i2QoiUrpVHY5NWkf7OebLq2D
-         RAMypqZJ4LrV+r8SrOSA8TG/NTXorbXOGZo2voeo=
+        b=VUlWhGjRoVjClL4HtIUbqvjFdEzJ9om1aYx4C2aSLqxVj4loO1Dvim0uWaRPXibpQ
+         4j/ofyC+sNNeMVl7PKsoMQT9Jg2761Cb5Yqn5XqAZ1ENUENlIXfIRPEOQ53pd8lyNW
+         A5N3oqfEl67UHFebfWdm7hro4UDRaNChQo4a/4j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 68/80] scsi: target: fix PR IN / READ FULL STATUS for FC
-Date:   Fri,  1 May 2020 15:22:02 +0200
-Message-Id: <20200501131535.521378337@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Rue <dan.rue@linaro.org>,
+        Theodore Tso <tytso@mit.edu>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Ashwin H <ashwinh@vmware.com>
+Subject: [PATCH 4.9 77/80] ext4: dont perform block validity checks on the journal inode
+Date:   Fri,  1 May 2020 15:22:11 +0200
+Message-Id: <20200501131537.255299635@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.810761598@linuxfoundation.org>
 References: <20200501131513.810761598@linuxfoundation.org>
@@ -61,41 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 8fed04eb79a74cbf471dfaa755900a51b37273ab ]
+commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 upstream.
 
-Creation of the response to READ FULL STATUS fails for FC based
-reservations. Reason is the too high loop limit (< 24) in
-fc_get_pr_transport_id(). The string representation of FC WWPN is 23 chars
-long only ("11:22:33:44:55:66:77:88"). So when i is 23, the loop body is
-executed a last time for the ending '\0' of the string and thus hex2bin()
-reports an error.
+Since the journal inode is already checked when we added it to the
+block validity's system zone, if we check it again, we'll just trigger
+a failure.
 
-Link: https://lore.kernel.org/r/20200408132610.14623-3-bstroesser@ts.fujitsu.com
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This was causing failures like this:
+
+[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
+#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
+[   53.938480] Aborting journal on device sda-8.
+
+... but only if the system was under enough memory pressure that
+logical->physical mapping for the journal inode gets pushed out of the
+extent cache.  (This is why it wasn't noticed earlier.)
+
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Reported-by: Dan Rue <dan.rue@linaro.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Ashwin H <ashwinh@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/target/target_core_fabric_lib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext4/extents.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/target/target_core_fabric_lib.c b/drivers/target/target_core_fabric_lib.c
-index 6e75095af6818..2ecb2f7042a13 100644
---- a/drivers/target/target_core_fabric_lib.c
-+++ b/drivers/target/target_core_fabric_lib.c
-@@ -75,7 +75,7 @@ static int fc_get_pr_transport_id(
- 	 * encoded TransportID.
- 	 */
- 	ptr = &se_nacl->initiatorname[0];
--	for (i = 0; i < 24; ) {
-+	for (i = 0; i < 23; ) {
- 		if (!strncmp(&ptr[i], ":", 1)) {
- 			i++;
- 			continue;
--- 
-2.20.1
-
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -554,10 +554,14 @@ __read_extent_tree_block(const char *fun
+ 	}
+ 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
+ 		return bh;
+-	err = __ext4_ext_check(function, line, inode,
+-			       ext_block_hdr(bh), depth, pblk);
+-	if (err)
+-		goto errout;
++	if (!ext4_has_feature_journal(inode->i_sb) ||
++	    (inode->i_ino !=
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
++		err = __ext4_ext_check(function, line, inode,
++				       ext_block_hdr(bh), depth, pblk);
++		if (err)
++			goto errout;
++	}
+ 	set_buffer_verified(bh);
+ 	/*
+ 	 * If this is a leaf block, cache all of its entries
 
 
