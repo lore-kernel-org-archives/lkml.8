@@ -2,123 +2,110 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833F7C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06086C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED5A206F0
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EbrurM0p"
+	by mail.kernel.org (Postfix) with ESMTP id D78FD2137B
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 12:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588335940;
+	bh=lbHm2sZNgmp3xDR80ZjBmeiaApE7ajQoqCcVAqDgfgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fJFugseOsYgrqyrsgdGbaCsMxlc1Bp3TgzeuS0upmoYLdHt7c8eRcyRE3gmFjpGtv
+	 3HgVE1QDkiSg/g1AuqHoV3vvwoHR8Es0/CMosZR2zB87kgDjK3bbG322Hb2zFvYNSq
+	 WQsRvI2GmR34zlzdE/UKvHBy1wNHmyzY9jUrOXso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgEAMY3 (ORCPT
+        id S1728768AbgEAMZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 08:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726131AbgEAMY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 08:24:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD18FC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 05:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=d8B/MysH0iSyYJt4VMjpzq137TPEbHeCixl/G5VtNO0=; b=EbrurM0pZcDW79I3d230iHROz9
-        UkQB7jjd+34VLhwrqzQzsYIXOkWHknFbSzg4pAtBlCYaEKHZZRruG0WgYK5KcDB1f6rtF3O0e4K/d
-        ekRb6CyN3w1OiCOjlOs65VbScyvfKjQ9zRjHK5hZL4lRuP+ihXqRh/bAU9Pv4s6xUXVc8xQpldAwS
-        4Tpv8/Um7Sn5Up2qS39kAiEtbh5LiJMYy/adIvSNv+Ds5azkXz7rOj2RuF62kYavl1Pkp7MQPSukk
-        CcGgkFcjo9ztRz8qLZcn1faB1fvxG7WW+FQPHazJeH5eMqnFWXsdRdQHPmWx3zIt89isbRH9t9JQU
-        Y9W0GR0A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUUiR-0000wL-Oz; Fri, 01 May 2020 12:24:27 +0000
-Date:   Fri, 1 May 2020 05:24:27 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     js1304@gmail.com
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 05/10] mm/gup: separate PageHighMem() and
- PageHighMemZone() use case
-Message-ID: <20200501122427.GB21897@infradead.org>
-References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1588130803-20527-6-git-send-email-iamjoonsoo.kim@lge.com>
+        Fri, 1 May 2020 08:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbgEAMZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 08:25:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8D7F206F0;
+        Fri,  1 May 2020 12:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588335939;
+        bh=lbHm2sZNgmp3xDR80ZjBmeiaApE7ajQoqCcVAqDgfgg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zrF3lGKQPpXX6JTIbE+Knz2sn0YQPnyc4YtbdPh/DiS+5mS6DF5Ygk3fQa42tDBwa
+         cVHsrt1i8wqi82NsuS5SeRrh7UeZNVimqtdPm4ZsFNrYs3iBiMmljn+uUma2PTRrpg
+         7PuEpijuzm3s3AMAP+01cNeMfLDGfysSqJsKwzzg=
+Date:   Fri, 1 May 2020 13:25:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernelci@groups.io, Kevin Hilman <khilman@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, stable@vger.kernel.org
+Subject: Re: stable-rc/linux-5.4.y bisection: baseline.dmesg.alert on
+ meson-g12a-x96-max
+Message-ID: <20200501122536.GA38314@sirena.org.uk>
+References: <5eabecbf.1c69fb81.2c617.628f@mx.google.com>
+ <cc10812b-19bd-6bd1-75da-32082241640a@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
 Content-Disposition: inline
-In-Reply-To: <1588130803-20527-6-git-send-email-iamjoonsoo.kim@lge.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <cc10812b-19bd-6bd1-75da-32082241640a@collabora.com>
+X-Cookie: Androphobia:
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 12:26:38PM +0900, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> Until now, PageHighMem() is used for two different cases. One is to check
-> if there is a direct mapping for this page or not. The other is to check
-> the zone of this page, that is, weather it is the highmem type zone or not.
-> 
-> Now, we have separate functions, PageHighMem() and PageHighMemZone() for
-> each cases. Use appropriate one.
-> 
-> Note that there are some rules to determine the proper macro.
-> 
-> 1. If PageHighMem() is called for checking if the direct mapping exists
-> or not, use PageHighMem().
-> 2. If PageHighMem() is used to predict the previous gfp_flags for
-> this page, use PageHighMemZone(). The zone of the page is related to
-> the gfp_flags.
-> 3. If purpose of calling PageHighMem() is to count highmem page and
-> to interact with the system by using this count, use PageHighMemZone().
-> This counter is usually used to calculate the available memory for an
-> kernel allocation and pages on the highmem zone cannot be available
-> for an kernel allocation.
-> 4. Otherwise, use PageHighMemZone(). It's safe since it's implementation
-> is just copy of the previous PageHighMem() implementation and won't
-> be changed.
-> 
-> I apply the rule #2 for this patch.
-> 
-> Acked-by: Roman Gushchin <guro@fb.com>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> ---
->  mm/gup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 11fda53..9652eed 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1608,7 +1608,7 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  	 */
->  	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
->  
-> -	if (PageHighMem(page))
-> +	if (PageHighMemZone(page))
->  		gfp_mask |= __GFP_HIGHMEM;
 
-I think this wants to stay PageHighMem.  This migrates CMA pages to
-other places before doing a long term pin.  Anything that didn't have
-a direct mapping before won't need one for the new page, which could
-also include non-highmem zones without a highmem mapping.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, May 01, 2020 at 12:57:27PM +0100, Guillaume Tucker wrote:
+
+> The call stack is not the same as in the commit message found by
+> the bisection, so maybe it only fixed part of the problem:
+
+No, it is a backport which was fixing an issue that wasn't present in
+v5.4.
+
+> >   Result:     09f4294793bd3 ASoC: meson: axg-card: fix codec-to-codec link setup
+
+As I said in reply to the AUTOSEL mail:
+
+| > Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
+| > playback/capture if supported"), meson-axg cards which have codec-to-codec
+| > links fail to init and Oops:
+
+| This clearly describes the issue as only being present after the above
+| commit which is not in v5.6.
+
+Probably best that this not be backported.
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6sFT8ACgkQJNaLcl1U
+h9CjCwf6A/KP149/7ilTWJylUigNvyI1cVIskzDBGQREGWK0VI2Z8qGOKkNgLzZw
+F8H2cYXmeDRb0MJRqgNwV0mDl3iHd7l2lqtIUd4kQdvL7id2OlZV2NEso/o28AwF
+x5GDVyl5E9rRto72Krs/X1R1V2+ACbNJORJiargnx7mv7QlmY5L0axZKbifhjP/C
+aEA5DlAD6eZXLpOCh++yPZYuatnik0c5uSao+TKsurFgxfC2+xdUnFC9QTYRd7NA
+jchP5RvU86y4V7yzhlBcndg+msHZ9/EjcJj1zdbJuaeDX2y895T3jCtgLzlhHVAM
+bCa8P2t5jxwaaDQxCLHjRE+uFUbt+w==
+=Ue/C
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
