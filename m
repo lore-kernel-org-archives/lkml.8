@@ -2,97 +2,132 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8B1C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4833C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76A5208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A566420787
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 18:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SB0oRYCk"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Obli+T0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgEASto (ORCPT
+        id S1730300AbgEASul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 14:49:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22981 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729767AbgEAStn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 14:49:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588358982;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UWBw6vpYtZb0E4Qraw0yWbVU2/WZXleDlQcMtBsJSWY=;
-        b=SB0oRYCk6LQGoFHQ56Z1ZAe7qLw+DHJ8XxLIB7Z+th2LYE+dJsekT3yffvkjyCeEZQzoSe
-        78fKbTAqYmNnG6LTrpnYXEt37f2PnpGDaudUGgbbCyZoI/EYOF/IxxAva1UPLvn+mgOksd
-        Eg02el6WGj+tXjMSeAf93hoEPRKbNa8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-511-Y0Qb86jFM8G7mChzPLlpow-1; Fri, 01 May 2020 14:49:40 -0400
-X-MC-Unique: Y0Qb86jFM8G7mChzPLlpow-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7107045F;
-        Fri,  1 May 2020 18:49:39 +0000 (UTC)
-Received: from pick.fieldses.org (ovpn-114-161.phx2.redhat.com [10.3.114.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B227B6084A;
-        Fri,  1 May 2020 18:49:36 +0000 (UTC)
-Received: by pick.fieldses.org (Postfix, from userid 2815)
-        id BDE851202A6; Fri,  1 May 2020 14:49:35 -0400 (EDT)
-Date:   Fri, 1 May 2020 14:49:35 -0400
-From:   "J. Bruce Fields" <bfields@redhat.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        David Howells <dhowells@redhat.com>, Shaohua Li <shli@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] allow multiple kthreadd's
-Message-ID: <20200501184935.GD9191@pick.fieldses.org>
-References: <1588348912-24781-1-git-send-email-bfields@redhat.com>
- <CAHk-=wiGhZ_5xCRyUN+yMFdneKMQ-S8fBvdBp8o-JWPV4v+nVw@mail.gmail.com>
- <20200501182154.GG5462@mtj.thefacebook.com>
+        Fri, 1 May 2020 14:50:41 -0400
+Received: from mout.web.de ([212.227.15.3]:48039 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729767AbgEASuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 14:50:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588359028;
+        bh=KGj5kUIq0wb9zc+sr/PsxqDhfB9kBqi2Y4I1V3kh8wM=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=Obli+T0th8KGJMiDeEhiWa4idM6ObZEteOHASEXbCPIxA9l5mHiYcE+Sl3Tjofbvr
+         YT2TDmfWlypBaCMZUNPgkSwuGOzOVTi3KiadLG35dqJhpYo5o/FgL1PWHTDAXV18Ck
+         3Zhl5sRXACxpUzZUBz7W5MycEBGR7vo+VVYmePrA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.136.146]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LwI74-1j5sbq0Ie6-0182aA; Fri, 01
+ May 2020 20:50:28 +0200
+To:     yanxiaoyong5@gmail.com, linux-mmc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc/core: Avoid oops in mmc_sd_runtime_resume()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <2085b083-42f0-5aaf-9810-f73195fa579c@web.de>
+Date:   Fri, 1 May 2020 20:50:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501182154.GG5462@mtj.thefacebook.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:zNnPd0T9AKNn/cJFS4GZ/sjXWy8cXipIjgXLG0XMmL+q2DUCvyP
+ CmJ+cyKGXhwZgubh/2bEK1tYbEcqOAV6DmZxnmh2afzKzgwcFo/G3rYDcYZ38h5ySljs/PI
+ raXDZ8B8mHJWTRQjhiI2TcTbcM5qsNXnYJnrJw9BIDxkNExcClYc5iIHDepuEqqI3//6ACa
+ aT57mdkoCga1jC5sn7ekw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iVbTyEj7ryY=:96ecXnnSKpP+1hJ7uM5gcj
+ aa5lIsW9od749RXGh05FYgRAQU0xRst3OCmYmpGVYVb+M0JMW3cSkaviD/YB/PJOdCK0+2MtE
+ ZxY7K/y6DSk58TNzwSdS4YdQeK4sxCClP76/ymbAGxTslmNYwNb9Jcjgq/0bAI1iAcP00u6mb
+ 76dw+h3wWhIF3I0yh53PMH6a7SzG1hq+Thx5SZGJNacEd0iiMk8MmH19k5Kd7hLdJZ1m4mj5O
+ d4ExzuWGhxZGInO4lNesxO38PrDWdHiMZAfCt+cco5tsL8OdDfYMYn/thDDPzEEuWdNO8zrkr
+ /oUqgXoM2Aau/vgvoUDMJpU0HmoB2cgPjYr9OpETfZENpwwX6Yo8eVhu6gqQZG2yUzdBmLh5z
+ sYekw/HFg9P5sxGJ4faT2FeU/isLdbM1DkYH4vuJcqa+iNBszOUcs8PCMjXHuCXDV2cL/OWVQ
+ 9hVU5I+Vd+4mpKzejqWQPmDHCyBy/SxhaDfQiexzOamGTr7IfHHxUY68Bytt+l3UHG8RQsL6N
+ 2O1uuw2fja1wrDBo8B/XM23FTSYuFthLILqddxFBygpmuTrhIJPtxIKoZ5RB+o0s2MXu5SOUC
+ BJ7teTYc2AZ5Ab7DlNoJsswdS8TrwsemIinDqhCI5a5NZjyHanUEKSUnCXqKkDZ+MZlzKs984
+ nFObAXLoU8zpo3vOfS8AbZHH+6qCIYFBR0Q9+vueECdmA3Bd+GI+KbMXnGCDL0Wz2+D990lPp
+ Wy9Ak6yvknhDp+b/NZ+HWLku/ohL9+kMp7jSTLf0zqgSX69Bxp4dzLG04LO+EOAFhJJDSccn1
+ SnSg2jMJBhPTOqyjaU3w1Xa/vihjXwSNoRz67mdp+jd0Q5LNvWLwBkuYkaI9aWaCYySCKrtp1
+ j3736YBQSPSYQbqHTaXq0ZbzA348gVF1Gt81ojHLGsWNrJK19pa5/EbU3L9I1p+QglrNqdnSi
+ MQe2sVpixBvQ1YNXi/ow6tQ7EweZAcbgoHx5OrtsOYSJlFllfAaca1RuUCCbZ3ytzpSBuQd63
+ 3F+1+MqcPk7obnVSksuL9fgd27aq3U3ER04wxXsrknXLvNJJKge3kVYOIPkE0oKFV9FGMQc97
+ lIUf7/LWNYMzeK8lbFDlui8v4UOnojc5kxUSJO8Q7k2ABiny6PfKEdrpsW3c9j7Z0SotGKfrC
+ vT/NsO6T6r62rCMoI8P0wFBmZ1r9vcYzNnFJRYhMGKziCJltMB7eJWrDhsZPeypNokcDDv4XC
+ fCOz81xOSGFJrK+oW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:21:54PM -0400, Tejun Heo wrote:
-> Hello,
-> 
-> On Fri, May 01, 2020 at 10:59:24AM -0700, Linus Torvalds wrote:
-> > Which kind of makes me want to point a finger at Tejun. But it's been
-> > mostly PeterZ touching this file lately..
-> 
-> Looks fine to me too. I don't quite understand the usecase tho. It looks
-> like all it's being used for is to tag some kthreads as belonging to the
-> same group.
+Please send a patch with a corrected commit message.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=052c467cb58748e302a95546925928e637025acc#n102
 
-Pretty much.
+1. The patch subject was not succinct.
 
-> Can't that be done with kthread_data()?
+2. The change description was missing.
 
-Huh, maybe so, thanks.
+3. The real name is expected for the signature.
 
-I need to check this from generic file locking code that could be run by
-any task--but I assume there's an easy way I can check if I'm a kthread
-before calling  kthread_data(current).
-
-I do expect to expose a delegation interface for userspace servers
-eventually too.  But we could do the tgid check for them and still use
-kthread_data() for nfsd.  That might work.
-
---b.
-
+Regards,
+Markus
