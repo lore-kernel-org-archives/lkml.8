@@ -2,55 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C9C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421C6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 525CB2054F
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A682054F
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341421;
-	bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
+	s=default; t=1588341429;
+	bh=TIDW1O+XunI+ndei1fj20NuEKsENS1mU14MYLt4g7J8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=an+JrDZbCYtvBVogb4EqJVJWKnUpOFl963lZIvd899aPglgHhZacNt2BirI0gZLFQ
-	 UlzLE3WZF9z+i5WGPx9++dASsfrqnt6/BQJpEY4fkJm/7HbZNYSlbgv002eW6cmhPu
-	 0l0/myqNYkQ/Qu/LFWyZneNi+bruO3rFWGJlGH0U=
+	b=zmFT+tEo4Omd4/UpVGApnf3ejZStsIOjgEUbdq1VV2hq6O52uiG/9Qy8EBBc1J8qH
+	 HBbWDuXv5UFgdNYYlPcxoJDZS0N2FIVyQjAY935WIDatRS94p6zDB1k+p55pekI74e
+	 Wid6dz7htyf2XQN7sDOvx+uT3iL3URXFsycOuhBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731099AbgEAN5A (ORCPT
+        id S1731375AbgEAN5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgEANcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:01 -0400
+        id S1730159AbgEANbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:31:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E83E208DB;
-        Fri,  1 May 2020 13:32:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17937208C3;
+        Fri,  1 May 2020 13:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339920;
-        bh=xcrADyEDg2EnQ7Xpdv5Hhi8g3f0y/fZgGhF4abv15RU=;
+        s=default; t=1588339908;
+        bh=TIDW1O+XunI+ndei1fj20NuEKsENS1mU14MYLt4g7J8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgHh/Ds67l+itqNYpOLdHR8oR5pFG6LMnLhBy4Qn1dRf3vmxfAIC5fUyCxuxVRNvt
-         sslR8CTqrczK0CPOB9LM91GVk1v9yTDd0Wt0HrOrNMdCA/QQcWkcOi2gh8OkA3xh0F
-         RPgnxTxHI8tgTA2viPLaQ26afsZfGdOkbfLwQBoU=
+        b=0exOwOCv2vxJNjaMK6ReGi1VJod/9HhbJWsLqWF3K0JdiDTlsfdjlZcYitmKvCPpS
+         p/nmp3N1D9AEa4ufwPfd+vgzCJlm0ekkqt6WjYep+DYOHxGnA465AJbQOF+hYvVAYO
+         wN1oa+LRom5s3Y3Gtx4s24AabMFHEoBibfU+tbjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 020/117] pwm: bcm2835: Dynamically allocate base
-Date:   Fri,  1 May 2020 15:20:56 +0200
-Message-Id: <20200501131547.424417185@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 028/117] net: bcmgenet: correct per TX/RX ring statistics
+Date:   Fri,  1 May 2020 15:21:04 +0200
+Message-Id: <20200501131548.233610904@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -63,39 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 2c25b07e5ec119cab609e41407a1fb3fa61442f5 ]
+[ Upstream commit a6d0b83f25073bdf08b8547aeff961a62c6ab229 ]
 
-The newer 2711 and 7211 chips have two PWM controllers and failure to
-dynamically allocate the PWM base would prevent the second PWM
-controller instance being probed for succeeding with an -EEXIST error
-from alloc_pwms().
+The change to track net_device_stats per ring to better support SMP
+missed updating the rx_dropped member.
 
-Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The ndo_get_stats method is also needed to combine the results for
+ethtool statistics (-S) before filling in the ethtool structure.
+
+Fixes: 37a30b435b92 ("net: bcmgenet: Track per TX/RX rings statistics")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pwm/pwm-bcm2835.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index db001cba937fd..e340ad79a1ec9 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -166,6 +166,7 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -973,6 +973,8 @@ static void bcmgenet_get_ethtool_stats(s
+ 	if (netif_running(dev))
+ 		bcmgenet_update_mib_counters(priv);
  
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &bcm2835_pwm_ops;
-+	pc->chip.base = -1;
- 	pc->chip.npwm = 2;
- 	pc->chip.of_xlate = of_pwm_xlate_with_flags;
- 	pc->chip.of_pwm_n_cells = 3;
--- 
-2.20.1
-
++	dev->netdev_ops->ndo_get_stats(dev);
++
+ 	for (i = 0; i < BCMGENET_STATS_LEN; i++) {
+ 		const struct bcmgenet_stats *s;
+ 		char *p;
+@@ -3215,6 +3217,7 @@ static struct net_device_stats *bcmgenet
+ 	dev->stats.rx_packets = rx_packets;
+ 	dev->stats.rx_errors = rx_errors;
+ 	dev->stats.rx_missed_errors = rx_errors;
++	dev->stats.rx_dropped = rx_dropped;
+ 	return &dev->stats;
+ }
+ 
 
 
