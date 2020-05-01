@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B845CC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8653FC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C94424957
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6347C2173E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340058;
-	bh=cnL9i4QD9VSaNR2UsO45mXpYGTQ8qPnpMveOLtulI1Q=;
+	s=default; t=1588340061;
+	bh=iyB7jYnakYPDqumcyEXSoel5QyTvyXki8tVZ+K2WuzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rTBklw6YcVlGuO4oQWevO3XCup9jroJ8pJSA7FOrwsGgG97NZ7sLhLPlYUCJCXGLy
-	 W8g0TI26B+6JyPXGR1JqLUrRM/RT3g69+weN/ZIgSNpdZgSrJamcm5lr9NEtUl0LJ9
-	 XtxeYirnR5YuHmNzbdWsrTWvsFBKFVoi06und1iM=
+	b=ed/XuuEdY2yu8KG9QJIexLTNE2enpz5mep8dC8SwcxFj6gpQE9qXZXxthQcPqyAUp
+	 X0gBrFO6DGwGfRK6DNbjDEaD23LahkPB5NCjCWTHeSAFxJaI6utCSbfYm3Oagl9hGu
+	 37cqy1PULF+R1736r7u5SkqL9txxFsy06lxnJkfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbgEANeR (ORCPT
+        id S1730557AbgEANeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:34:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgEANeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:34:11 -0400
+        id S1730531AbgEANeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:34:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E413216FD;
-        Fri,  1 May 2020 13:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF307208DB;
+        Fri,  1 May 2020 13:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340050;
-        bh=cnL9i4QD9VSaNR2UsO45mXpYGTQ8qPnpMveOLtulI1Q=;
+        s=default; t=1588340053;
+        bh=iyB7jYnakYPDqumcyEXSoel5QyTvyXki8tVZ+K2WuzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nQbeoRN9ZoJiYIJ9wCouADrfG4pElq8F7UP5czWW7SFX7lcrUghCCh7IUOBjs6G3c
-         eNovKJg3BRe4fCRSrXBM08cYoeDO3Vg3Vr7v8aAaHlXnf/yqaiPUxJa5Osmxls6flk
-         WI7uAhWKjhj5YbPkIghf2FaaQ2Js5Dmh2SGX3y+o=
+        b=tXcnLLuYL2IDLAMWSmqcupXt9xg46wrErx04ZixMgXB38sv7MbvMefrc0n8IfwgRE
+         wS6TkvWjN3i+QAwxDM9N7KAgmB/oVRtcRfB9OcEblNVnR4PAunRcbRo94lLvoVWh+S
+         7yAbWC8FWHwh+STmJ/xlycAhY36iToBeluTZS0a0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yi Huaijie <yihuaijie@huawei.com>,
-        Liu Jian <liujian56@huawei.com>,
-        Tokunori Ikegami <ikegami_to@yahoo.co.jp>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 086/117] mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
-Date:   Fri,  1 May 2020 15:22:02 +0200
-Message-Id: <20200501131554.917192410@linuxfoundation.org>
+Subject: [PATCH 4.14 087/117] include/uapi/linux/swab.h: fix userspace breakage, use __BITS_PER_LONG for swap
+Date:   Fri,  1 May 2020 15:22:03 +0200
+Message-Id: <20200501131555.017804314@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -62,42 +68,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-commit d9b8a67b3b95a5c5aae6422b8113adc1c2485f2b upstream.
+commit 467d12f5c7842896d2de3ced74e4147ee29e97c8 upstream.
 
-In function do_write_buffer(), in the for loop, there is a case
-chip_ready() returns 1 while chip_good() returns 0, so it never
-break the loop.
-To fix this, chip_good() is enough and it should timeout if it stay
-bad for a while.
+QEMU has a funny new build error message when I use the upstream kernel
+headers:
 
-Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
-Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+      CC      block/file-posix.o
+    In file included from /home/cborntra/REPOS/qemu/include/qemu/timer.h:4,
+                     from /home/cborntra/REPOS/qemu/include/qemu/timed-average.h:29,
+                     from /home/cborntra/REPOS/qemu/include/block/accounting.h:28,
+                     from /home/cborntra/REPOS/qemu/include/block/block_int.h:27,
+                     from /home/cborntra/REPOS/qemu/block/file-posix.c:30:
+    /usr/include/linux/swab.h: In function `__swab':
+    /home/cborntra/REPOS/qemu/include/qemu/bitops.h:20:34: error: "sizeof" is not defined, evaluates to 0 [-Werror=undef]
+       20 | #define BITS_PER_LONG           (sizeof (unsigned long) * BITS_PER_BYTE)
+          |                                  ^~~~~~
+    /home/cborntra/REPOS/qemu/include/qemu/bitops.h:20:41: error: missing binary operator before token "("
+       20 | #define BITS_PER_LONG           (sizeof (unsigned long) * BITS_PER_BYTE)
+          |                                         ^
+    cc1: all warnings being treated as errors
+    make: *** [/home/cborntra/REPOS/qemu/rules.mak:69: block/file-posix.o] Error 1
+    rm tests/qemu-iotests/socket_scm_helper.o
+
+This was triggered by commit d5767057c9a ("uapi: rename ext2_swab() to
+swab() and share globally in swab.h").  That patch is doing
+
+  #include <asm/bitsperlong.h>
+
+but it uses BITS_PER_LONG.
+
+The kernel file asm/bitsperlong.h provide only __BITS_PER_LONG.
+
+Let us use the __ variant in swap.h
+
+Link: http://lkml.kernel.org/r/20200213142147.17604-1-borntraeger@de.ibm.com
+Fixes: d5767057c9a ("uapi: rename ext2_swab() to swab() and share globally in swab.h")
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Yury Norov <yury.norov@gmail.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Joe Perches <joe@perches.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/chips/cfi_cmdset_0002.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/uapi/linux/swab.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -1883,7 +1883,11 @@ static int __xipram do_write_buffer(stru
- 			continue;
- 		}
+--- a/include/uapi/linux/swab.h
++++ b/include/uapi/linux/swab.h
+@@ -135,9 +135,9 @@ static inline __attribute_const__ __u32
  
--		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
-+		/*
-+		 * We check "time_after" and "!chip_good" before checking "chip_good" to avoid
-+		 * the failure due to scheduling.
-+		 */
-+		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
- 			break;
- 
- 		if (chip_good(map, adr, datum)) {
+ static __always_inline unsigned long __swab(const unsigned long y)
+ {
+-#if BITS_PER_LONG == 64
++#if __BITS_PER_LONG == 64
+ 	return __swab64(y);
+-#else /* BITS_PER_LONG == 32 */
++#else /* __BITS_PER_LONG == 32 */
+ 	return __swab32(y);
+ #endif
+ }
 
 
