@@ -2,194 +2,81 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542D8C47254
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A68C47256
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E174208DB
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V9OzOtkF"
+	by mail.kernel.org (Postfix) with ESMTP id 61BC620643
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 22:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgEAW0P (ORCPT
+        id S1726778AbgEAW2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 18:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        Fri, 1 May 2020 18:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgEAW0P (ORCPT
+        with ESMTP id S1726333AbgEAW2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 18:26:15 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C50C061A0E
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 15:26:14 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h4so3922137ljg.12
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 15:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OJjcJqpyMAKLr/KT3rvGMFcPeeM7SZEHY1XEJFFO0e0=;
-        b=V9OzOtkFarZLDHJN0AZsF4CdX+1JpkVrNZdz4oT0AqVI1iQlafNeeJYvh9LC8wNtch
-         yZNk9A2S0j0Qp/yIKIEepwuZr+6GnmdkEMlF4ePN22TuA7lEN9CdFpoBgTGg7uOv6pNn
-         hXb+dR5ckf2TooYqn3Jxi7Ah7T1Vw629/9roHrDLndMEtkD6BqHH5Hh5T0RJkkzSgdl9
-         SH4FYVktMKaM71fz7qNvJ+3wljg4jb+3LPK2tiDhQtfvHs0P5sU4qtNnRE9GeF5vjYzD
-         ojOd+j1mvHswOobgInKkAeK9dhIC+G2M7Pd03YBKOmPMqX2z/lUUMJVaCsLKg6whbEt6
-         Gydw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OJjcJqpyMAKLr/KT3rvGMFcPeeM7SZEHY1XEJFFO0e0=;
-        b=fUVqnuW9QqF7E37gqC2ntFMuq6pFcryGAdjVfJlFhJo+83vKuv7AupJYtC9lZDXxV0
-         J1FsYnDpFP1Q1L5xJ45uXnqRforMtvpEML+HAeOqLu8oA5fneS9ZDhBrDZU+Ox+c8e5J
-         U8BuvQwvO7/Gu3eVIsPu+756YHofT34c2Mzj/XbnRl/egNi73oIei3bEnYK5Qm9Zb8Zg
-         0lTh4ZD5FdnUdh0ZiDfp52ZQkqMkqXgmIHnUc4lnAOspULhROTXxTyV/p6l1z5HW3Ha4
-         dsRjgQriar/OM+ex2ep4kZwV6D3fTLeLnbSbPUmgtx39dFVpJrSgc/81vAiGKzJ00EI9
-         ksGw==
-X-Gm-Message-State: AGi0PuZXmr8WaqyLBaV8mR5QgOiqHCIDXicFGYd2CJBLv8MzVP8sdCRM
-        6sdHmiJ6aQMYfUc8wvoFdtO4s5KzT4a0jKF74SW0E6oee12/7w==
-X-Google-Smtp-Source: APiQypIRa8fjlN7Fk9+hR9dbgIq6xhlxAMdY36Hs5BHzpRbvaeOSXCbe7TBD8mvHCuDy+7MWloN7XSEfCRlzJfgeWr8=
-X-Received: by 2002:a2e:9455:: with SMTP id o21mr3616252ljh.245.1588371973114;
- Fri, 01 May 2020 15:26:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200501131544.291247695@linuxfoundation.org>
-In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Sat, 2 May 2020 03:56:01 +0530
-Message-ID: <CA+G9fYs5Ep4Uq4n_LnbkeMUhpu0kLHFA_3f2wf43aaVnc8WObQ@mail.gmail.com>
-Subject: Re: [PATCH 4.14 000/117] 4.14.178-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 1 May 2020 18:28:40 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211B4C061A0C;
+        Fri,  1 May 2020 15:28:40 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5545014F4BE24;
+        Fri,  1 May 2020 15:28:38 -0700 (PDT)
+Date:   Fri, 01 May 2020 15:28:37 -0700 (PDT)
+Message-Id: <20200501.152837.1463395932472619581.davem@davemloft.net>
+To:     clay@daemons.net
+Cc:     arnd@arndb.de, richardcochran@gmail.com, nico@fluxnic.net,
+        grygorii.strashko@ti.com, geert@linux-m68k.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com, olteanv@gmail.com,
+        nicolas.ferre@microchip.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, brouer@redhat.com,
+        ilias.apalodimas@linaro.org, kishon@ti.com, maowenan@huawei.com,
+        ivan.khoronzhuk@linaro.org, ecree@solarflare.com,
+        josh@joshtriplett.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: Make PTP-specific drivers depend on
+ PTP_1588_CLOCK
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200429075903.19788-1-clay@daemons.net>
+References: <20200429072959.GA10194@arctic-shiba-lx>
+        <20200429075903.19788-1-clay@daemons.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 01 May 2020 15:28:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 at 19:01, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.178 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.178-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Clay McClure <clay@daemons.net>
+Date: Wed, 29 Apr 2020 00:59:00 -0700
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+> Commit d1cbfd771ce8 ("ptp_clock: Allow for it to be optional") changed
+> all PTP-capable Ethernet drivers from `select PTP_1588_CLOCK` to `imply
+> PTP_1588_CLOCK`, "in order to break the hard dependency between the PTP
+> clock subsystem and ethernet drivers capable of being clock providers."
+> As a result it is possible to build PTP-capable Ethernet drivers without
+> the PTP subsystem by deselecting PTP_1588_CLOCK. Drivers are required to
+> handle the missing dependency gracefully.
+ ...
+> Note how these symbols all reference PTP or timestamping in their name;
+> this is a clue that they depend on PTP_1588_CLOCK.
+> 
+> Change them from `imply PTP_1588_CLOCK` [2] to `depends on PTP_1588_CLOCK`.
+> I'm not using `select PTP_1588_CLOCK` here because PTP_1588_CLOCK has
+> its own dependencies, which `select` would not transitively apply.
+> 
+> Additionally, remove the `select NET_PTP_CLASSIFY` from CPTS_TI_MOD;
+> PTP_1588_CLOCK already selects that.
+ ...
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.14.178-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: b24d32661fe15b71ca1f5f6913749d2c8be9e0ae
-git describe: v4.14.177-118-gb24d32661fe1
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.177-118-gb24d32661fe1
-
-No regressions (compared to build v4.14.177)
-
-No fixes (compared to build v4.14.177)
-
-
-Ran 26220 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* perf
-* v4l2-compliance
-* libhugetlbfs
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-cve-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Applied, thanks.
