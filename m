@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AD5C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD368C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA64C2051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16642051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341205;
-	bh=fmdMka6r2wpgXnVMGeFqUxtEH2GK2lsEyeancMPq7LE=;
+	s=default; t=1588341211;
+	bh=ZcR8fE72NMSdoevTFV4ONDhJoo0/JXowIl78uaXJIYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iDB6u06Z6ENT/y/Vfw2+NJYSIlr4EieHNTS+0MDar7tx3Mksj9ULI9RytrIqE+n80
-	 zbYExvxr6FQT8UPry7yE3Q6GGUtzEsfgqZp35bIV93EgR88rFLc9RrMEIWrNhMTNWu
-	 i8w1GUUVzeikCkkcIt3XHvHK6A/9Zur+e2LZ8SNE=
+	b=rYFPToCWZ54AG6f18b/O1JQXyijdD5AJMkqAm83k3gMR/x/dhqjc2cJyRsUACfiix
+	 l6MpDidU2Hz+QDoveFC/nzd2y4G9j5Jf+8h7cDLWwvwwnxPHMeqJf3nCWUa2uHJBU9
+	 g8FBxI0Kp6R/zyDi5IrGw/DlPZodqBrM1V6boXoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbgEANxY (ORCPT
+        id S1730417AbgEANxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:53:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730871AbgEANgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:36:36 -0400
+        id S1729602AbgEANg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:36:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0176216FD;
-        Fri,  1 May 2020 13:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1CBD216FD;
+        Fri,  1 May 2020 13:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340195;
-        bh=fmdMka6r2wpgXnVMGeFqUxtEH2GK2lsEyeancMPq7LE=;
+        s=default; t=1588340188;
+        bh=ZcR8fE72NMSdoevTFV4ONDhJoo0/JXowIl78uaXJIYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o1P5en8t7inM8HkdqNFfGryoGZ6rF7Tj5aQKJWjNVFCRx7OLcyVQs84T5WY+SVhnw
-         LIqD8IA/5XOWU2HGkwptKkHmKDyBFbk9HpWtTvyNFV4BQh35jyK8NYZbjH45mwCrhD
-         uo9qmUOuMlY4C6cd56FX8WMLZV2WMf24lQ9SKyvY=
+        b=lcQqKk3WZVk8qMTk+tsXM9BpglU3k+kRi/B9BYeL1Wr2xSORXsd8OdMUsl+i2h1gQ
+         LfUSUc69eo+JHMSQxVwilAg5f5j0IOFHYbs0APLMB8VKUeikNrPS5fLNnM5z6hOgxw
+         yEhLj2Gr+TNW6wkOZ2TyG7DfE2RoP/k+/CmySAXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 14/46] net/cxgb4: Check the return from t4_query_params properly
-Date:   Fri,  1 May 2020 15:22:39 +0200
-Message-Id: <20200501131503.624452994@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 4.19 11/46] nfsd: memory corruption in nfsd4_lock()
+Date:   Fri,  1 May 2020 15:22:36 +0200
+Message-Id: <20200501131502.909739035@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131457.023036302@linuxfoundation.org>
 References: <20200501131457.023036302@linuxfoundation.org>
@@ -59,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
+commit e1e8399eee72e9d5246d4d1bcacd793debe34dd3 upstream.
 
-Positive return values are also failures that don't set val,
-although this probably can't happen. Fixes gcc 10 warning:
+New struct nfsd4_blocked_lock allocated in find_or_allocate_block()
+does not initialized nbl_list and nbl_lru.
+If conflock allocation fails rollback can call list_del_init()
+access uninitialized fields and corrupt memory.
 
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- 3747 |  *phy_fw_ver = val;
+v2: just initialize nbl_list and nbl_lru right after nbl allocation.
 
-Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 76d348fadff5 ("nfsd: have nfsd4_lock use blocking locks for v4.1+ lock")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3748,7 +3748,7 @@ int t4_phy_fw_ver(struct adapter *adap,
- 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
- 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
- 			      &param, &val);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 	*phy_fw_ver = val;
- 	return 0;
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -252,6 +252,8 @@ find_or_allocate_block(struct nfs4_locko
+ 	if (!nbl) {
+ 		nbl= kmalloc(sizeof(*nbl), GFP_KERNEL);
+ 		if (nbl) {
++			INIT_LIST_HEAD(&nbl->nbl_list);
++			INIT_LIST_HEAD(&nbl->nbl_lru);
+ 			fh_copy_shallow(&nbl->nbl_fh, fh);
+ 			locks_init_lock(&nbl->nbl_lock);
+ 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
 
 
