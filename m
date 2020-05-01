@@ -2,202 +2,134 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47CAC47258
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB251C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80742208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939D82166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 11:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgEALKQ (ORCPT
+        id S1728628AbgEALQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 07:10:16 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:47916 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728485AbgEALKO (ORCPT
+        Fri, 1 May 2020 07:16:51 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:53452 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728485AbgEALQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 07:10:14 -0400
-Received: by mail-io1-f69.google.com with SMTP id v23so4409917ioj.14
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 04:10:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=805zBc87YjZKh++vea6KHONgCzLVRm9bLbOYZJbmGEM=;
-        b=BNYF3F2qzwMYYLIzOD7PJStYHKdgkr3izR+LVqTbFoFisUYNX5qSRW1Gm1c86bLhQT
-         Ao2o/2WEoLyp0KaoCMQekUlAwktNvCelrwTCspFi4kcdExKNktP7J7oN8yfTtyYdG52K
-         3RI+Yal3LzYLFhu/to6Ub9/NLk2sNb0Y8OL9tBrOSE8EzMUv2gfvVnLXEusmvfi+iDhO
-         U+02sqsIHguvXAYwwbt0RQ/r+mmvQpytYtxoRnMfSBdhYSc18AR62KCV/3MM2kqqIzdh
-         72Bmf15ksegtcfVtg24FUxeZ8KyXOLAYgXwCktWfAzsBBVB9gIzEAtf0hLaLvUB+bAnP
-         wUmQ==
-X-Gm-Message-State: AGi0PuaxZF5QBfRbGV1UaCTOAshwRdBVqRqDb5/IfNSZYsk+O+hiqjmu
-        ywS4lfa1W4W3EEXeNMK2UkBF9IFjvUGkdvEXeP0ylz+VKlHG
-X-Google-Smtp-Source: APiQypJXLoz6OkLldVGcPoJsS2tBVjQnuFwa49wLMYRV2HwiAPmx4AurWuYkGPc+S64EZkMaYU1DCw+CGWLgYwrKp12Fy1veOjJU
+        Fri, 1 May 2020 07:16:50 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUTeu-0007G0-HZ; Fri, 01 May 2020 05:16:44 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jUTet-0006Wp-Mr; Fri, 01 May 2020 05:16:44 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Greg Ungerer <gerg@linux-m68k.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jann Horn <jannh@google.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200429214954.44866-1-jannh@google.com>
+        <20200429215620.GM1551@shell.armlinux.org.uk>
+        <CAHk-=wgpoEr33NJwQ+hqK1dz3Rs9jSw+BGotsSdt2Kb3HqLV7A@mail.gmail.com>
+        <31196268-2ff4-7a1d-e9df-6116e92d2190@linux-m68k.org>
+        <CAHk-=wjau_zmdLaFDLcY3xnqiFaC7VZDXnnzFG9QDHL4kqStYQ@mail.gmail.com>
+        <87imhgyeqt.fsf@x220.int.ebiederm.org>
+        <9dd76936-0009-31e4-d869-f64d01886642@linux-m68k.org>
+Date:   Fri, 01 May 2020 06:13:24 -0500
+In-Reply-To: <9dd76936-0009-31e4-d869-f64d01886642@linux-m68k.org> (Greg
+        Ungerer's message of "Fri, 1 May 2020 15:44:03 +1000")
+Message-ID: <87wo5vx60b.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9505:: with SMTP id d5mr3200308iom.185.1588331411970;
- Fri, 01 May 2020 04:10:11 -0700 (PDT)
-Date:   Fri, 01 May 2020 04:10:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000989de905a494396b@google.com>
-Subject: KASAN: slab-out-of-bounds Read in inet_diag_bc_sk
-From:   syzbot <syzbot+ee80f840d9bf6893223b@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        john.fastabend@gmail.com, kafai@fb.com, khlebnikov@yandex-team.ru,
-        kpsingh@chromium.org, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org, zeil@yandex-team.ru
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jUTet-0006Wp-Mr;;;mid=<87wo5vx60b.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18Ja6ZhJX6gmVl5+uqwyRJT9MkgBLIzECc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 0/5] Fix ELF / FDPIC ELF core dumping, and use mmap_sem properly in there
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Greg Ungerer <gerg@linux-m68k.org> writes:
 
-syzbot found the following crash on:
+> On 1/5/20 5:07 am, Eric W. Biederman wrote:
+>> Linus Torvalds <torvalds@linux-foundation.org> writes:
+>>
+>>> On Thu, Apr 30, 2020 at 7:10 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
+>>
+>>>>> Most of that file goes back to pre-git days. And most of the commits
+>>>>> since are not so much about binfmt_flat, as they are about cleanups or
+>>>>> changes elsewhere where binfmt_flat was just a victim.
+>>>>
+>>>> I'll have a look at this.
+>>>
+>>> Thanks.
+>>>
+>>>> Quick hack test shows moving setup_new_exec(bprm) to be just before
+>>>> install_exec_creds(bprm) works fine for the static binaries case.
+>>>> Doing the flush_old_exec(bprm) there too crashed out - I'll need to
+>>>> dig into that to see why.
+>>>
+>>> Just moving setup_new_exec() would at least allow us to then join the
+>>> two together, and just say "setup_new_exec() does the credential
+>>> installation too".
+>>
+>> But it is only half a help if we allow failure points between
+>> flush_old_exec and install_exec_creds.
+>>
+>> Greg do things work acceptably if install_exec_creds is moved to right
+>> after setup_new_exec? (patch below)
+>
+> Yes, confirmed. Worked fine with that patch applied.
 
-HEAD commit:    37ecb5b8 hinic: Use kmemdup instead of kzalloc and memcpy
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f93c4c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b1494ce3fbc02154
-dashboard link: https://syzkaller.appspot.com/bug?extid=ee80f840d9bf6893223b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11337a9c100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f67d40100000
+Good.  Thank you.
 
-The bug was bisected to:
+That is what we need for other cleanups.  All three of those together.
 
-commit b1f3e43dbfacfcd95296b0f80f84b186add9ef54
-Author: Dmitry Yakunin <zeil@yandex-team.ru>
-Date:   Thu Apr 30 15:51:15 2020 +0000
+>> This is what I was thinking about applying.
+>>
+>> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+>> index 831a2b25ba79..1a1d1fcb893f 100644
+>> --- a/fs/binfmt_flat.c
+>> +++ b/fs/binfmt_flat.c
+>> @@ -541,6 +541,7 @@ static int load_flat_file(struct linux_binprm *bprm,
+>>   		/* OK, This is the point of no return */
+>>   		set_personality(PER_LINUX_32BIT);
+>>   		setup_new_exec(bprm);
+>> +		install_exec_creds(bprm);
+>>   	}
+>>     	/*
+>> @@ -963,8 +964,6 @@ static int load_flat_binary(struct linux_binprm *bprm)
+>>   		}
+>>   	}
+>>   -	install_exec_creds(bprm);
+>> -
+>>   	set_binfmt(&flat_format);
+>>     #ifdef CONFIG_MMU
 
-    inet_diag: add support for cgroup filter
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10c3ec4c100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12c3ec4c100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c3ec4c100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ee80f840d9bf6893223b@syzkaller.appspotmail.com
-Fixes: b1f3e43dbfac ("inet_diag: add support for cgroup filter")
-
-batman_adv: batadv0: Interface activated: batadv_slave_1
-==================================================================
-BUG: KASAN: slab-out-of-bounds in __read_once_size include/linux/compiler.h:199 [inline]
-BUG: KASAN: slab-out-of-bounds in sock_cgroup_ptr include/linux/cgroup.h:836 [inline]
-BUG: KASAN: slab-out-of-bounds in inet_diag_bc_sk+0xb64/0xc70 net/ipv4/inet_diag.c:749
-Read of size 8 at addr ffff888093b72260 by task syz-executor021/7043
-
-CPU: 1 PID: 7043 Comm: syz-executor021 Not tainted 5.7.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:382
- __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- __read_once_size include/linux/compiler.h:199 [inline]
- sock_cgroup_ptr include/linux/cgroup.h:836 [inline]
- inet_diag_bc_sk+0xb64/0xc70 net/ipv4/inet_diag.c:749
- inet_diag_dump_icsk+0xbe4/0x1306 net/ipv4/inet_diag.c:1061
- __inet_diag_dump+0x8d/0x240 net/ipv4/inet_diag.c:1113
- netlink_dump+0x50b/0xf50 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x63f/0x910 net/netlink/af_netlink.c:2353
- netlink_dump_start include/linux/netlink.h:246 [inline]
- inet_diag_handler_cmd+0x263/0x2c0 net/ipv4/inet_diag.c:1278
- __sock_diag_cmd net/core/sock_diag.c:233 [inline]
- sock_diag_rcv_msg+0x2fe/0x3e0 net/core/sock_diag.c:264
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- sock_diag_rcv+0x26/0x40 net/core/sock_diag.c:275
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- sock_write_iter+0x289/0x3c0 net/socket.c:1004
- call_write_iter include/linux/fs.h:1907 [inline]
- do_iter_readv_writev+0x5a8/0x850 fs/read_write.c:694
- do_iter_write fs/read_write.c:999 [inline]
- do_iter_write+0x18b/0x600 fs/read_write.c:980
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1072
- do_writev+0x27f/0x300 fs/read_write.c:1115
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x443519
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc1c84dbe8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443519
-RDX: 0000000000000001 RSI: 0000000020000140 RDI: 0000000000000005
-RBP: 00007ffc1c84dbf0 R08: 000000000000001c R09: 0000000001bbbbbb
-R10: 000000000000001c R11: 0000000000000246 R12: 00007ffc1c84dc00
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 0:
- save_stack+0x1b/0x40 mm/kasan/common.c:49
- set_track mm/kasan/common.c:57 [inline]
- __kasan_kmalloc mm/kasan/common.c:495 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
- slab_post_alloc_hook mm/slab.h:586 [inline]
- slab_alloc mm/slab.c:3320 [inline]
- kmem_cache_alloc+0x11b/0x740 mm/slab.c:3484
- dst_alloc+0x103/0x1c0 net/core/dst.c:93
- ip6_dst_alloc+0x2e/0x90 net/ipv6/route.c:355
- icmp6_dst_alloc+0x69/0x460 net/ipv6/route.c:3135
- mld_sendpack+0x5dd/0xdf0 net/ipv6/mcast.c:1671
- mld_send_cr net/ipv6/mcast.c:1978 [inline]
- mld_ifc_timer_expire+0x42e/0x920 net/ipv6/mcast.c:2477
- call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1405
- expire_timers kernel/time/timer.c:1450 [inline]
- __run_timers kernel/time/timer.c:1774 [inline]
- __run_timers kernel/time/timer.c:1741 [inline]
- run_timer_softirq+0x623/0x1600 kernel/time/timer.c:1787
- __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
-
-Freed by task 9:
- save_stack+0x1b/0x40 mm/kasan/common.c:49
- set_track mm/kasan/common.c:57 [inline]
- kasan_set_free_info mm/kasan/common.c:317 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:456
- __cache_free mm/slab.c:3426 [inline]
- kmem_cache_free+0x7f/0x320 mm/slab.c:3694
- dst_destroy+0x27f/0x3a0 net/core/dst.c:129
- rcu_do_batch kernel/rcu/tree.c:2206 [inline]
- rcu_core+0x59f/0x1370 kernel/rcu/tree.c:2433
- __do_softirq+0x26c/0x9f7 kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff888093b72180
- which belongs to the cache ip6_dst_cache of size 224
-The buggy address is located 0 bytes to the right of
- 224-byte region [ffff888093b72180, ffff888093b72260)
-The buggy address belongs to the page:
-page:ffffea00024edc80 refcount:1 mapcount:0 mapping:0000000071da7a3c index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000226ef88 ffffea00024e6b88 ffff88809a706700
-raw: 0000000000000000 ffff888093b72040 000000010000000c 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888093b72100: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888093b72180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888093b72200: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                                                       ^
- ffff888093b72280: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
- ffff888093b72300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Eric
