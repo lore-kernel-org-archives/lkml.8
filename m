@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB005C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C232C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF0C24958
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2EC208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340420;
-	bh=JZaTmJJXTPqdDqVV9cglD1jNKO+CJtv6Qa925dntYME=;
+	s=default; t=1588340426;
+	bh=UZvpkegmnSWHNOHIpwg6phsBbyHqa0UGJDoWFKjqTSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cNcZ2Q1CVq7Qb0mzuB4hs5FyhSS+dhnUBx2y18dLsf/d4ysJqNY5QujGQUBHM8s2Q
-	 IE8/r9X/Rpp1pPEbmGDH1mnJvJpjpchkBgB/jwEb67fBvhZw5Xah3KS49mec/PUaNv
-	 VHsaGn1CKwN3ynp5ZI4yoSE7LUEig4Y69ZbxDVtI=
+	b=snsDN/D1sm9xt+ynt6xOamGawCgnJ96oRNsBvYLQdR2yblAFOR9HFVoz4mX6//VEz
+	 Hr61rKdkw2QCcMUvk1ooIvZWOitWBQD1w2pKxbl3ysnoFaFGaQY4FwsefuDD5v7oZo
+	 FsTIn3k4zk0ICiP1MWHinMWGdiXxu8yv9O0aQEtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731284AbgEANkT (ORCPT
+        id S1731313AbgEANkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:40:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40286 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730965AbgEANkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:40:15 -0400
+        id S1731277AbgEANkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:40:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED9F205C9;
-        Fri,  1 May 2020 13:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154AE24953;
+        Fri,  1 May 2020 13:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340415;
-        bh=JZaTmJJXTPqdDqVV9cglD1jNKO+CJtv6Qa925dntYME=;
+        s=default; t=1588340420;
+        bh=UZvpkegmnSWHNOHIpwg6phsBbyHqa0UGJDoWFKjqTSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPnj2WqLXQ8ys9ElcYg94FabFgTHDf71S4e+wuIlHvu0MrvOO4qceAzqHZY/CFBPZ
-         t6JVU5h7k87sl3mDAQj+LGHEMt7ASY8QN1b0kJFD+jU541PtdcefDmvoztjXW7dReu
-         0aVuyJVu2jvcjMBrxMEYX48D4dBN7jh3TejaAzgY=
+        b=ZZAbVy5XCCiY+Ss3sqLl8xF5kZxN9SquPdgUZnSbs6WRzsj+Vw6U013xdAb6xackD
+         /xP5gvGTP8XENHUgl8H22scsNS9REmb7XRpSZY9CJNQl9kNImJ3e7WOqb5WLhPj7Xl
+         SjNEQqAdSXvMbP2OltmB+kr/H7RTyIQIs3CrIyxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 56/83] signal: check sig before setting info in kill_pid_usb_asyncio
-Date:   Fri,  1 May 2020 15:23:35 +0200
-Message-Id: <20200501131539.870805829@linuxfoundation.org>
+Subject: [PATCH 5.4 58/83] xfs: fix partially uninitialized structure in xfs_reflink_remap_extent
+Date:   Fri,  1 May 2020 15:23:37 +0200
+Message-Id: <20200501131540.021594402@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131524.004332640@linuxfoundation.org>
 References: <20200501131524.004332640@linuxfoundation.org>
@@ -60,45 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit eaec2b0bd30690575c581eebffae64bfb7f684ac ]
+[ Upstream commit c142932c29e533ee892f87b44d8abc5719edceec ]
 
-In kill_pid_usb_asyncio, if signal is not valid, we do not need to
-set info struct.
+In the reflink extent remap function, it turns out that uirec (the block
+mapping corresponding only to the part of the passed-in mapping that got
+unmapped) was not fully initialized.  Specifically, br_state was not
+being copied from the passed-in struct to the uirec.  This could lead to
+unpredictable results such as the reflinked mapping being marked
+unwritten in the destination file.
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/f525fd08-1cf7-fb09-d20c-4359145eb940@huawei.com
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/signal.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_reflink.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 2b9295f2d2445..595a36ab87d02 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -1510,15 +1510,15 @@ int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr,
- 	unsigned long flags;
- 	int ret = -EINVAL;
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 0f08153b49941..6a4fd1738b086 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -1053,6 +1053,7 @@ xfs_reflink_remap_extent(
+ 		uirec.br_startblock = irec->br_startblock + rlen;
+ 		uirec.br_startoff = irec->br_startoff + rlen;
+ 		uirec.br_blockcount = unmap_len - rlen;
++		uirec.br_state = irec->br_state;
+ 		unmap_len = rlen;
  
-+	if (!valid_signal(sig))
-+		return ret;
-+
- 	clear_siginfo(&info);
- 	info.si_signo = sig;
- 	info.si_errno = errno;
- 	info.si_code = SI_ASYNCIO;
- 	*((sigval_t *)&info.si_pid) = addr;
- 
--	if (!valid_signal(sig))
--		return ret;
--
- 	rcu_read_lock();
- 	p = pid_task(pid, PIDTYPE_PID);
- 	if (!p) {
+ 		/* If this isn't a real mapping, we're done. */
 -- 
 2.20.1
 
