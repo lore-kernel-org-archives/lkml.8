@@ -2,51 +2,58 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C494EC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10EBC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 962652051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DEC2051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341398;
-	bh=9tc8fPx4MlbTBY/4o/GxMr3ZbiC4JW1ibenV4AKQe6E=;
+	s=default; t=1588341404;
+	bh=yHNIDzVNvLCL4X8ZcRKD4Aum8vu9I5J85OgiF0T+xoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tpa/J2uzTR1yi7l9mqCCzshYxS4XlOYWhEUosfC9POMt1Boxpif6T6+xQRMyzlvG5
-	 QvmDyR2rb0fmkUBzytIKET77NbIU59AARb0UwyxZ8FmDTR/pARAJLFK/1BpX6BCE6Q
-	 9sHGevWobsJfzFlZ1Nxyg+TOIxjGWFD0/JncMdPg=
+	b=M/f9Bt8vTQDKqr+LYy5nG2EQ+iarziigHT7tUWv/riiZxbzWwtG/ZKmzKZLuOqvMt
+	 W5nux+fyTTybU5XSEJOXEyS0/qQyxI1FP21HqboY/n0DILyYAlS2KR6f5lW19MY+7A
+	 NagnmWeD1IG8r+g14R9WTxONvX+DnZ4qd25tZX2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgEAN4h (ORCPT
+        id S1731013AbgEAN4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57278 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729728AbgEANcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:24 -0400
+        id S1728943AbgEANcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73FFA216FD;
-        Fri,  1 May 2020 13:32:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022D4208C3;
+        Fri,  1 May 2020 13:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339942;
-        bh=9tc8fPx4MlbTBY/4o/GxMr3ZbiC4JW1ibenV4AKQe6E=;
+        s=default; t=1588339935;
+        bh=yHNIDzVNvLCL4X8ZcRKD4Aum8vu9I5J85OgiF0T+xoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4770NtZj+ILwToS+STBCsMJOZA9WBaZ8wnroVEufpbiVPMdQyJ2L+JjZyFMxEJPp
-         EQ3aDT8qIwc+c6Dc/VgLo3ziioHQMs+BnXnLIIOhm/7FBf1NlVCYv5U1G9CbiffqQc
-         9ej5O3XD5w3+46Zl/Yps0tAVQTHB9KZH1/FE0gfI=
+        b=KjdZvkZXjFa5mFEVWYBrvsnVMqArreqoNX9tV9FkruxDy/Vqg1uh2KBNp6TbvCxzB
+         9ZOcP5+wdu7w/XgY4qEOifPspW+GYvCfdvPNMSfVEtKkPWGpu/uJkp2hmGmDTh2Nn5
+         mHplwAUzKITqgC5JEMgVKr4gpb/vooqQ0s8SN/cM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, greg@kroah.com
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Piotr Krysiuk <piotras@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 4.14 042/117] fs/namespace.c: fix mountpoint reference counter race
-Date:   Fri,  1 May 2020 15:21:18 +0200
-Message-Id: <20200501131549.790734364@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jeff Vander Stoep <jeffv@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 016/117] selftests: kmod: fix handling test numbers above 9
+Date:   Fri,  1 May 2020 15:20:52 +0200
+Message-Id: <20200501131546.984146418@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -59,46 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eric Biggers <ebiggers@google.com>
 
-From: Piotr Krysiuk <piotras@gmail.com>
+[ Upstream commit 6d573a07528308eb77ec072c010819c359bebf6e ]
 
-A race condition between threads updating mountpoint reference counter
-affects longterm releases 4.4.220, 4.9.220, 4.14.177 and 4.19.118.
+get_test_count() and get_test_enabled() were broken for test numbers
+above 9 due to awk interpreting a field specification like '$0010' as
+octal rather than decimal.  Fix it by stripping the leading zeroes.
 
-The mountpoint reference counter corruption may occur when:
-* one thread increments m_count member of struct mountpoint
-  [under namespace_sem, but not holding mount_lock]
-    pivot_root()
-* another thread simultaneously decrements the same m_count
-  [under mount_lock, but not holding namespace_sem]
-    put_mountpoint()
-      unhash_mnt()
-        umount_mnt()
-          mntput_no_expire()
-
-To fix this race condition, grab mount_lock before updating m_count in
-pivot_root().
-
-Reference: CVE-2020-12114
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Piotr Krysiuk <piotras@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jeff Vander Stoep <jeffv@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: NeilBrown <neilb@suse.com>
+Link: http://lkml.kernel.org/r/20200318230515.171692-5-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/namespace.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3216,8 +3216,8 @@ SYSCALL_DEFINE2(pivot_root, const char _
- 	/* make certain new is below the root */
- 	if (!is_path_reachable(new_mnt, new.dentry, &root))
- 		goto out4;
--	root_mp->m_count++; /* pin it so it won't go away */
- 	lock_mount_hash();
-+	root_mp->m_count++; /* pin it so it won't go away */
- 	detach_mnt(new_mnt, &parent_path);
- 	detach_mnt(root_mnt, &root_parent);
- 	if (root_mnt->mnt.mnt_flags & MNT_LOCKED) {
+diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
+index 7956ea3be6675..eed5d5b81226b 100755
+--- a/tools/testing/selftests/kmod/kmod.sh
++++ b/tools/testing/selftests/kmod/kmod.sh
+@@ -502,18 +502,23 @@ function test_num()
+ 	fi
+ }
+ 
+-function get_test_count()
++function get_test_data()
+ {
+ 	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	local field_num=$(echo $1 | sed 's/^0*//')
++	echo $ALL_TESTS | awk '{print $'$field_num'}'
++}
++
++function get_test_count()
++{
++	TEST_DATA=$(get_test_data $1)
+ 	LAST_TWO=${TEST_DATA#*:*}
+ 	echo ${LAST_TWO%:*}
+ }
+ 
+ function get_test_enabled()
+ {
+-	test_num $1
+-	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
++	TEST_DATA=$(get_test_data $1)
+ 	echo ${TEST_DATA#*:*:}
+ }
+ 
+-- 
+2.20.1
+
 
 
