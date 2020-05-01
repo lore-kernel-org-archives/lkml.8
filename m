@@ -2,92 +2,87 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA0DC4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35647C47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987C12137B
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DBF02166E
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 20:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgEAUSi (ORCPT
+        id S1726551AbgEAUTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 16:18:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43681 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgEAUSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 16:18:37 -0400
-IronPort-SDR: KgY3oqt3PPtapMb+U91UqjGB7/Uyg/o+zT7SLAsVphlnG1NoxZlvzAujic8jclOvWAg93YHq0b
- Ce624zheFcww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 13:18:37 -0700
-IronPort-SDR: hxrraMGFZU4NpRZqTnivv/G+Fa1fPCvrMCuNhSyVoJ8gQiqMJ40ejpUf6SaLfWFZudKbORQWTZ
- 74TfWVfb4lxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
-   d="scan'208";a="460016158"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 01 May 2020 13:18:36 -0700
-Date:   Fri, 1 May 2020 13:18:36 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joshua Abraham <j.abraham1776@gmail.com>
-Cc:     pbonzini@redhat.com, corbet@lwn.net, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: kvm: Fix KVM_KVMCLOCK_CTRL API doc
-Message-ID: <20200501201836.GB4760@linux.intel.com>
-References: <20200501193404.GA19745@josh-ZenBook>
+        Fri, 1 May 2020 16:19:08 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55654 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgEAUTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 16:19:08 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 17F191C020C; Fri,  1 May 2020 22:19:06 +0200 (CEST)
+Date:   Fri, 1 May 2020 22:19:05 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200501201905.GA6043@duo.ucw.cz>
+References: <20200430174615.41185-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
 Content-Disposition: inline
-In-Reply-To: <20200501193404.GA19745@josh-ZenBook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200430174615.41185-1-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:34:06PM -0400, Joshua Abraham wrote:
-> The KVM_KVMCLOCK_CTRL ioctl signals to supported KVM guests
-> that the hypervisor has paused it.  This updates the documentation
-> to reflect that the guest, not the host is notified by this API.
 
-No, the current documentation is correct.  It's probably not as clear as
-it could be, but it's accurate as written.  More below.
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Joshua Abraham <j.abraham1776@gmail.com>
-> ---
->  Documentation/virt/kvm/api.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index efbbe570aa9b..06a4d9bfc6e5 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -2572,7 +2572,7 @@ list in 4.68.
->  :Parameters: None
->  :Returns: 0 on success, -1 on error
->  
-> -This signals to the host kernel that the specified guest is being paused by
-> +This signals to the guest kernel that the specified guest is being paused by
->  userspace.
+Hi!
 
-The ioctl() signals to the host kernel that host userspace has paused the
-vCPU.
+> My guess is that at least with the pending ofono patches, we just
+> want to use the raw interface for /dev/gsmtty* interface and stop
+> pretending we have a modem that is AT compatible.
 
->  The host will set a flag in the pvclock structure that is checked
+Ok, so I got ofono back to work. ... I believe. It was not that
+bad. SMS send/receive and outgoing call start/hangup worked at some
+point (I did not play with mixers).
 
-The host kernel, i.e. KVM, then takes that information and forwards it to
-the guest kernel via the aforementioned pvclock flag.
+To github.com:pavelmachek/ofono.git
+   61d3d727..195760e9  mux-v1.29-1 -> mux-v1.29-1
 
-The proposed change would imply the ioctl() is somehow getting routed
-directly to the guest, which is wrong.
+Best regards,
+									Pavel
 
->  from the soft lockup watchdog.  The flag is part of the pvclock structure that
->  is shared between guest and host, specifically the second bit of the flags
-> -- 
-> 2.17.1
-> 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXqyEOQAKCRAw5/Bqldv6
+8nWNAJ0YiT+Sq5AwuqS5PaFbK/cp13xE4QCgjMG4ORPk+/2ETGiFGpu8yuhiF2o=
+=r4yx
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
