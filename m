@@ -2,49 +2,49 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD4AC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABFBC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70AE720787
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E71A208C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 10:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mxvBVDR5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qgwvs7q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgEAKjZ (ORCPT
+        id S1728588AbgEAKlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 06:39:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
+        Fri, 1 May 2020 06:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728545AbgEAKjZ (ORCPT
+        by vger.kernel.org with ESMTP id S1728119AbgEAKlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 06:39:25 -0400
+        Fri, 1 May 2020 06:41:10 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C80C08E859;
-        Fri,  1 May 2020 03:39:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7361C08E859;
+        Fri,  1 May 2020 03:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
         Content-ID:Content-Description:In-Reply-To:References;
-        bh=X1Y0Wt6aI8L3G9yDhhqkxUs7nTDNlMdgsRMLyS3/fVY=; b=mxvBVDR55vQ4J21c+gDS/xpNzV
-        sT7KKju9wOmEwkosAuvSu1RzF28PY8SZnV3gQDUL29bTu7M5rV8xSRWfJk2HhpgwdgSVnHx8KsUMK
-        ePujyWpjogMkD+Xgn4pMxqIsvyz1qbekXEn+mut0d+BPpxHrDkT0/RufZXNSmG8NQr6839+SH7SsP
-        ZAvEpbonz8NqI56mVD7E1Ho/DGrldcoyRI6zrl3jSyuq0K0HUJvCGpa2arFIA2yzuGk8tVLFSIE6/
-        tdWFGiGlxABYKj9dOd5hO449FSA5xXFzxyeUBxZ0X8i4K90DRVOoRy7tLo2MCvsebczn9zrGyXv4v
-        svQwlDZg==;
+        bh=nMHTHopnpI53GREMKbZkrmjBzcZEM4PhTQEMOGI5dqk=; b=Qgwvs7q+Z4AjAu6jPyZD5fu9rU
+        CeckHuGNFh8PTRLCZDNld/Lxiq3/auUqE30cK74hk0Tc6G1zSu/ubdiIMN3yxSqxp1qbT1kN27NzI
+        x4kq1XUGP4OJDafsBO7UufYJEl3L915CzFuAwif+vM4ZuMTIyD2KAv75DULcfP6U6RkPEHip2Vry2
+        a70sLRbyTljdgYsunlwrHbev3PJgvnhp3KWiwGei7lO6N4BwAsCETtWJtXQ/1LWRlHP6IHACkQhbW
+        NK2j2RPLXtyA3N1IunBFWuiQ8/VA82Xm1GC5KlCnJpn3UR5wZuggdkOsU4LrIb6domxEdZGAcNXIj
+        1KTwfHSw==;
 Received: from [2001:4bb8:18c:10bd:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jUT4X-0005Ty-G6; Fri, 01 May 2020 10:39:13 +0000
+        id 1jUT6R-0008Da-EV; Fri, 01 May 2020 10:41:07 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     arnd@arndb.de
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] asm-generic: remove an empty ifdef block from signal.h
-Date:   Fri,  1 May 2020 12:39:02 +0200
-Message-Id: <20200501103902.2620910-1-hch@lst.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: remove set_fs from copy_strings_kernel
+Date:   Fri,  1 May 2020 12:41:03 +0200
+Message-Id: <20200501104105.2621149-1-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -54,24 +54,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/asm-generic/signal.h | 2 --
- 1 file changed, 2 deletions(-)
+Hi Al and Andrew,
 
-diff --git a/include/asm-generic/signal.h b/include/asm-generic/signal.h
-index c53984fa97614..663dd6d0795dc 100644
---- a/include/asm-generic/signal.h
-+++ b/include/asm-generic/signal.h
-@@ -5,8 +5,6 @@
- #include <uapi/asm-generic/signal.h>
- 
- #ifndef __ASSEMBLY__
--#ifdef SA_RESTORER
--#endif
- 
- #include <asm/sigcontext.h>
- #undef __HAVE_ARCH_SIG_BITOPS
--- 
-2.26.2
+can one of you pick up this small series to avoid the set_fs
+call in copy_strings_kernel?
 
