@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0DEC47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34F6C4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89114216FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B421624957
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588339957;
-	bh=NIbft6V8F//k/CbPqI9h4qGjA4meZGzEFcylyGbRsNQ=;
+	s=default; t=1588339959;
+	bh=wNCuuLXS0rituLo0KCCOgprFLFL+V0H/YZ9ILTjzuNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHejlzyC6UL1CgX9352+x29bdo5eCSKCUYRcVpmyEtKj1Vgz7dbFF5CtIb3iVY2Rj
-	 hEUbFhCgZTmClt7D04Dx1hcSVC8zfrIAO1+fm++HRDVu3G1pungUpbTRQAhwTM1LX6
-	 37KPcyH7OeQ7uDuz+PZ22Nj1eLzpJeRba0n40BnY=
+	b=knKJtNm7cKr+ZnI+zCVIZK5+Pa2zOHwnmE0sHAlc+ymZCwetcZ+Xb+PR4qfaRvwj/
+	 +kqKTOK4xDO45Cwk7e+pehECxHo/LzMsaLupORT4DrB+i89+13b95bzCj027pICsK/
+	 k1woHCl8SVCeAKhM7Wzt0tpVDGfJO9OHRVxRDnDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgEANcg (ORCPT
+        id S1730329AbgEANci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:32:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57446 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgEANcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:32:31 -0400
+        id S1729734AbgEANce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:32:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D2C216FD;
-        Fri,  1 May 2020 13:32:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5258A208C3;
+        Fri,  1 May 2020 13:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339950;
-        bh=NIbft6V8F//k/CbPqI9h4qGjA4meZGzEFcylyGbRsNQ=;
+        s=default; t=1588339952;
+        bh=wNCuuLXS0rituLo0KCCOgprFLFL+V0H/YZ9ILTjzuNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dQXbSVnOedBaGw9jRxio8VHi/Ho99Mc/q+hlJ/mjej/AF659zWYNXoiWK1AFDbsPk
-         p7Nv/gbE28yV3W2xPeOOTXCvR2hHXpj1iYu3n9l7agBF2SUd3h0V1IpXxAP3RrPreI
-         LqWIyYc5/QN7LcT+IKGuVgj5u283VfyGpeFfMvp4=
+        b=HIViKhD+7pTeF4fjnzENQYbYo7FiXu/o1covzol6MRDmxvYT5CK2yuqaLvjgggH6o
+         4lxjydgb+i/5T3q4YkpOwr+o0a0QxPmfB8YrXAS01NDeO9tfuer7sKMOuf9+yLAT0H
+         7/KZxegvCIp0n/MbNCzpFZY7KkUezfhBc7Y5HSzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>
-Subject: [PATCH 4.14 045/117] USB: early: Handle AMDs spec-compliant identifiers, too
-Date:   Fri,  1 May 2020 15:21:21 +0200
-Message-Id: <20200501131550.128270018@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 033/117] net: dsa: b53: Fix ARL register definitions
+Date:   Fri,  1 May 2020 15:21:09 +0200
+Message-Id: <20200501131548.751795758@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131544.291247695@linuxfoundation.org>
 References: <20200501131544.291247695@linuxfoundation.org>
@@ -58,98 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 7dbdb53d72a51cea9b921d9dbba54be00752212a upstream.
+[ Upstream commit c2e77a18a7ed65eb48f6e389b6a59a0fd753646a ]
 
-This fixes a bug that causes the USB3 early console to freeze after
-printing a single line on AMD machines because it can't parse the
-Transfer TRB properly.
+The ARL {MAC,VID} tuple and the forward entry were off by 0x10 bytes,
+which means that when we read/wrote from/to ARL bin index 0, we were
+actually accessing the ARLA_RWCTRL register.
 
-The spec at
-https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/extensible-host-controler-interface-usb-xhci.pdf
-says in section "4.5.1 Device Context Index" that the Context Index,
-also known as Endpoint ID according to
-section "1.6 Terms and Abbreviations", is normally computed as
-`DCI = (Endpoint Number * 2) + Direction`, which matches the current
-definitions of XDBC_EPID_OUT and XDBC_EPID_IN.
-
-However, the numbering in a Debug Capability Context data structure is
-supposed to be different:
-Section "7.6.3.2 Endpoint Contexts and Transfer Rings" explains that a
-Debug Capability Context data structure has the endpoints mapped to indices
-0 and 1.
-
-Change XDBC_EPID_OUT/XDBC_EPID_IN to the spec-compliant values, add
-XDBC_EPID_OUT_INTEL/XDBC_EPID_IN_INTEL with Intel's incorrect values, and
-let xdbc_handle_tx_event() handle both.
-
-I have verified that with this patch applied, the USB3 early console works
-on both an Intel and an AMD machine.
-
-Fixes: aeb9dd1de98c ("usb/early: Add driver for xhci debug capability")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/r/20200401074619.8024-1-jannh@google.com
+Fixes: 1da6df85c6fb ("net: dsa: b53: Implement ARL add/del/dump operations")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/early/xhci-dbc.c |    8 ++++----
- drivers/usb/early/xhci-dbc.h |   18 ++++++++++++++++--
- 2 files changed, 20 insertions(+), 6 deletions(-)
+ drivers/net/dsa/b53/b53_regs.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/early/xhci-dbc.c
-+++ b/drivers/usb/early/xhci-dbc.c
-@@ -738,19 +738,19 @@ static void xdbc_handle_tx_event(struct
- 	case COMP_USB_TRANSACTION_ERROR:
- 	case COMP_STALL_ERROR:
- 	default:
--		if (ep_id == XDBC_EPID_OUT)
-+		if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL)
- 			xdbc.flags |= XDBC_FLAGS_OUT_STALL;
--		if (ep_id == XDBC_EPID_IN)
-+		if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL)
- 			xdbc.flags |= XDBC_FLAGS_IN_STALL;
+--- a/drivers/net/dsa/b53/b53_regs.h
++++ b/drivers/net/dsa/b53/b53_regs.h
+@@ -294,7 +294,7 @@
+  *
+  * BCM5325 and BCM5365 share most definitions below
+  */
+-#define B53_ARLTBL_MAC_VID_ENTRY(n)	(0x10 * (n))
++#define B53_ARLTBL_MAC_VID_ENTRY(n)	((0x10 * (n)) + 0x10)
+ #define   ARLTBL_MAC_MASK		0xffffffffffffULL
+ #define   ARLTBL_VID_S			48
+ #define   ARLTBL_VID_MASK_25		0xff
+@@ -306,7 +306,7 @@
+ #define   ARLTBL_VALID_25		BIT(63)
  
- 		xdbc_trace("endpoint %d stalled\n", ep_id);
- 		break;
- 	}
- 
--	if (ep_id == XDBC_EPID_IN) {
-+	if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL) {
- 		xdbc.flags &= ~XDBC_FLAGS_IN_PROCESS;
- 		xdbc_bulk_transfer(NULL, XDBC_MAX_PACKET, true);
--	} else if (ep_id == XDBC_EPID_OUT) {
-+	} else if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL) {
- 		xdbc.flags &= ~XDBC_FLAGS_OUT_PROCESS;
- 	} else {
- 		xdbc_trace("invalid endpoint id %d\n", ep_id);
---- a/drivers/usb/early/xhci-dbc.h
-+++ b/drivers/usb/early/xhci-dbc.h
-@@ -123,8 +123,22 @@ struct xdbc_ring {
- 	u32			cycle_state;
- };
- 
--#define XDBC_EPID_OUT		2
--#define XDBC_EPID_IN		3
-+/*
-+ * These are the "Endpoint ID" (also known as "Context Index") values for the
-+ * OUT Transfer Ring and the IN Transfer Ring of a Debug Capability Context data
-+ * structure.
-+ * According to the "eXtensible Host Controller Interface for Universal Serial
-+ * Bus (xHCI)" specification, section "7.6.3.2 Endpoint Contexts and Transfer
-+ * Rings", these should be 0 and 1, and those are the values AMD machines give
-+ * you; but Intel machines seem to use the formula from section "4.5.1 Device
-+ * Context Index", which is supposed to be used for the Device Context only.
-+ * Luckily the values from Intel don't overlap with those from AMD, so we can
-+ * just test for both.
-+ */
-+#define XDBC_EPID_OUT		0
-+#define XDBC_EPID_IN		1
-+#define XDBC_EPID_OUT_INTEL	2
-+#define XDBC_EPID_IN_INTEL	3
- 
- struct xdbc_state {
- 	u16			vendor;
+ /* ARL Table Data Entry N Registers (32 bit) */
+-#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x08)
++#define B53_ARLTBL_DATA_ENTRY(n)	((0x10 * (n)) + 0x18)
+ #define   ARLTBL_DATA_PORT_ID_MASK	0x1ff
+ #define   ARLTBL_TC(tc)			((3 & tc) << 11)
+ #define   ARLTBL_AGE			BIT(14)
 
 
