@@ -2,52 +2,52 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95118C47253
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0ABC4724C
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741F2205C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D5420757
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 13:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588340795;
-	bh=LzaJ2JGuxR36Bl2C5fYqaxdJYoYBFLXUni+mnJfTD7M=;
+	s=default; t=1588340799;
+	bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHt3+31JskbonW913RloRnQr2slIZLQug9thyw/o6+g7js5QgDizQXKSyCLh23DnT
-	 IOluOaxfVdI7DTGAsbRCFG3QLMvzshxImIqhTiwq4OteWo7N074t3aHOx/S5aNCGE+
-	 Kk/wRMJyr1mHeoUCIcIAGekEw5Xsm70g7x5y3Cno=
+	b=DYXYW0J9otX7BEKYY/OWioYxOx7ItYnkS4h5DrlTQxtMM+vqsHgXGnxkaETc1LCNk
+	 Y3S1Zyd3juj0vlMgRZAj/DxqUo4QPSdvrflC/wz9ygFYFmUORKLzpUCrLK+uIeSJiE
+	 gRuyZytDnV35Oxeveud9+gQhrZEuLy6MhEoR7DrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbgEANqe (ORCPT
+        id S1731839AbgEANqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 09:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46154 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 09:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731762AbgEANot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:44:49 -0400
+        id S1731772AbgEANor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:44:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BB34216FD;
-        Fri,  1 May 2020 13:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1392120836;
+        Fri,  1 May 2020 13:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588340689;
-        bh=LzaJ2JGuxR36Bl2C5fYqaxdJYoYBFLXUni+mnJfTD7M=;
+        s=default; t=1588340686;
+        bh=PtDDryNXCt/9ihdYD2ZXT+uVLrhInNakO1Houm02HMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0iEbFqQ0orrXZbon0W/UK6Ta6wyKZ7jHgET87WhTGdo12Pnyv37/Z7caYddIVW1k
-         J7eGohPaOZBGoI8G83yJaJYlgnYtq5b7NnNpYmFJjhKN6oUxKm1QCWQPW45ts6JMkX
-         gWQQ8WJmDduYZPnElh2iYnJlrPtxE4QoYjXbtIoM=
+        b=RZi930XWV8VC8/hRgCZWRJf7i+vZnRhRNT5WCT3xcdQLsaUQT1FNQgneQh17VqLat
+         JEhhZslF8nd0BBHvkl3EGLqCDxfrD+aJaB3rX+E6C0lC3jJVp/RgdHMKvfPutVE/6j
+         +AIs5hujhU5ythnu8hMJ8FGt/Zuf1pVzX5Wo6vp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Edward Cree <ecree@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 096/106] sfc: fix XDP-redirect in this driver
-Date:   Fri,  1 May 2020 15:24:09 +0200
-Message-Id: <20200501131554.859491441@linuxfoundation.org>
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 095/106] hwmon: (jc42) Fix name to have no illegal characters
+Date:   Fri,  1 May 2020 15:24:08 +0200
+Message-Id: <20200501131554.770091351@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131543.421333643@linuxfoundation.org>
 References: <20200501131543.421333643@linuxfoundation.org>
@@ -60,121 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-commit 86e85bf6981c0c265c427d6bfe9e2a0111797444 upstream.
+[ Upstream commit c843b382e61b5f28a3d917712c69a344f632387c ]
 
-XDP-redirect is broken in this driver sfc. XDP_REDIRECT requires
-tailroom for skb_shared_info when creating an SKB based on the
-redirected xdp_frame (both in cpumap and veth).
+The jc42 driver passes I2C client's name as hwmon device name. In case
+of device tree probed devices this ends up being part of the compatible
+string, "jc-42.4-temp". This name contains hyphens and the hwmon core
+doesn't like this:
 
-The fix requires some initial explaining. The driver uses RX page-split
-when possible. It reserves the top 64 bytes in the RX-page for storing
-dma_addr (struct efx_rx_page_state). It also have the XDP recommended
-headroom of XDP_PACKET_HEADROOM (256 bytes). As it doesn't reserve any
-tailroom, it can still fit two standard MTU (1500) frames into one page.
+jc42 2-0018: hwmon: 'jc-42.4-temp' is not a valid name attribute, please fix
 
-The sizeof struct skb_shared_info in 320 bytes. Thus drivers like ixgbe
-and i40e, reduce their XDP headroom to 192 bytes, which allows them to
-fit two frames with max 1536 bytes into a 4K page (192+1536+320=2048).
+This changes the name to "jc42" which doesn't have any illegal
+characters.
 
-The fix is to reduce this drivers headroom to 128 bytes and add the 320
-bytes tailroom. This account for reserved top 64 bytes in the page, and
-still fit two frame in a page for normal MTUs.
-
-We must never go below 128 bytes of headroom for XDP, as one cacheline
-is for xdp_frame area and next cacheline is reserved for metadata area.
-
-Fixes: eb9a36be7f3e ("sfc: perform XDP processing on received packets")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Link: https://lore.kernel.org/r/20200417092853.31206-1-s.hauer@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sfc/efx_common.c |    9 +++++----
- drivers/net/ethernet/sfc/net_driver.h |    6 ++++++
- drivers/net/ethernet/sfc/rx.c         |    2 +-
- drivers/net/ethernet/sfc/rx_common.c  |    6 +++---
- 4 files changed, 15 insertions(+), 8 deletions(-)
+ drivers/hwmon/jc42.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/sfc/efx_common.c
-+++ b/drivers/net/ethernet/sfc/efx_common.c
-@@ -200,11 +200,11 @@ void efx_link_status_changed(struct efx_
- unsigned int efx_xdp_max_mtu(struct efx_nic *efx)
- {
- 	/* The maximum MTU that we can fit in a single page, allowing for
--	 * framing, overhead and XDP headroom.
-+	 * framing, overhead and XDP headroom + tailroom.
- 	 */
- 	int overhead = EFX_MAX_FRAME_LEN(0) + sizeof(struct efx_rx_page_state) +
- 		       efx->rx_prefix_size + efx->type->rx_buffer_padding +
--		       efx->rx_ip_align + XDP_PACKET_HEADROOM;
-+		       efx->rx_ip_align + EFX_XDP_HEADROOM + EFX_XDP_TAILROOM;
+diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+index f2d81b0558e56..e3f1ebee71306 100644
+--- a/drivers/hwmon/jc42.c
++++ b/drivers/hwmon/jc42.c
+@@ -506,7 +506,7 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	}
+ 	data->config = config;
  
- 	return PAGE_SIZE - overhead;
- }
-@@ -302,8 +302,9 @@ static void efx_start_datapath(struct ef
- 	efx->rx_dma_len = (efx->rx_prefix_size +
- 			   EFX_MAX_FRAME_LEN(efx->net_dev->mtu) +
- 			   efx->type->rx_buffer_padding);
--	rx_buf_len = (sizeof(struct efx_rx_page_state) + XDP_PACKET_HEADROOM +
--		      efx->rx_ip_align + efx->rx_dma_len);
-+	rx_buf_len = (sizeof(struct efx_rx_page_state)   + EFX_XDP_HEADROOM +
-+		      efx->rx_ip_align + efx->rx_dma_len + EFX_XDP_TAILROOM);
-+
- 	if (rx_buf_len <= PAGE_SIZE) {
- 		efx->rx_scatter = efx->type->always_rx_scatter;
- 		efx->rx_buffer_order = 0;
---- a/drivers/net/ethernet/sfc/net_driver.h
-+++ b/drivers/net/ethernet/sfc/net_driver.h
-@@ -91,6 +91,12 @@
- #define EFX_RX_BUF_ALIGNMENT	4
- #endif
- 
-+/* Non-standard XDP_PACKET_HEADROOM and tailroom to satisfy XDP_REDIRECT and
-+ * still fit two standard MTU size packets into a single 4K page.
-+ */
-+#define EFX_XDP_HEADROOM	128
-+#define EFX_XDP_TAILROOM	SKB_DATA_ALIGN(sizeof(struct skb_shared_info))
-+
- /* Forward declare Precision Time Protocol (PTP) support structure. */
- struct efx_ptp_data;
- struct hwtstamp_config;
---- a/drivers/net/ethernet/sfc/rx.c
-+++ b/drivers/net/ethernet/sfc/rx.c
-@@ -302,7 +302,7 @@ static bool efx_do_xdp(struct efx_nic *e
- 	       efx->rx_prefix_size);
- 
- 	xdp.data = *ehp;
--	xdp.data_hard_start = xdp.data - XDP_PACKET_HEADROOM;
-+	xdp.data_hard_start = xdp.data - EFX_XDP_HEADROOM;
- 
- 	/* No support yet for XDP metadata */
- 	xdp_set_data_meta_invalid(&xdp);
---- a/drivers/net/ethernet/sfc/rx_common.c
-+++ b/drivers/net/ethernet/sfc/rx_common.c
-@@ -412,10 +412,10 @@ static int efx_init_rx_buffers(struct ef
- 			index = rx_queue->added_count & rx_queue->ptr_mask;
- 			rx_buf = efx_rx_buffer(rx_queue, index);
- 			rx_buf->dma_addr = dma_addr + efx->rx_ip_align +
--					   XDP_PACKET_HEADROOM;
-+					   EFX_XDP_HEADROOM;
- 			rx_buf->page = page;
- 			rx_buf->page_offset = page_offset + efx->rx_ip_align +
--					      XDP_PACKET_HEADROOM;
-+					      EFX_XDP_HEADROOM;
- 			rx_buf->len = efx->rx_dma_len;
- 			rx_buf->flags = 0;
- 			++rx_queue->added_count;
-@@ -433,7 +433,7 @@ static int efx_init_rx_buffers(struct ef
- void efx_rx_config_page_split(struct efx_nic *efx)
- {
- 	efx->rx_page_buf_step = ALIGN(efx->rx_dma_len + efx->rx_ip_align +
--				      XDP_PACKET_HEADROOM,
-+				      EFX_XDP_HEADROOM + EFX_XDP_TAILROOM,
- 				      EFX_RX_BUF_ALIGNMENT);
- 	efx->rx_bufs_per_page = efx->rx_buffer_order ? 1 :
- 		((PAGE_SIZE - sizeof(struct efx_rx_page_state)) /
+-	hwmon_dev = devm_hwmon_device_register_with_info(dev, client->name,
++	hwmon_dev = devm_hwmon_device_register_with_info(dev, "jc42",
+ 							 data, &jc42_chip_info,
+ 							 NULL);
+ 	return PTR_ERR_OR_ZERO(hwmon_dev);
+-- 
+2.20.1
+
 
 
