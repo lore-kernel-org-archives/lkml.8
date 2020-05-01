@@ -2,81 +2,63 @@ Return-Path: <SRS0=nvtT=6P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631D7C47257
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90851C47253
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37196208D6
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67526208DB
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588344508;
-	bh=pgEeloihUJtDW9NEkL6jmFDK/ZInSPDNQO7niKknL3E=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0Vukrdvs9bSjCRagSVg6YPZfYdFM1ogyFh/zp5mRr0LXOzSf07LBtqpuU2vMpc36X
-	 y8ONLu1DnezXZoQsQ+a0ODiJHreqKlgWdUNh4xIdOY0nEoyXAQZp4zo+EMVnchB3dN
-	 UlO4aKqgFJVRRllnvErqUqSgnbgX4RGXlGKIyXyE=
+	s=default; t=1588344521;
+	bh=LzZm9/U3E6zV1Rtxksb2atmQbCTG1SrCaFI5en8K55Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kab+aFe1wZRO/KSkJo19V4HLauRE0vZ1ORK8Ec5anyUxFfmlAwuFzCG7Ze4kKdbud
+	 z3itloSj55uEun3nWQ0OGNcXaJYqn2Q2Lseet4V50YVLnM+sGOj4FpNKmFy4zuhnif
+	 5ZcizypBDVZF8/BOfHJAOsiZcsw3PEGevxireASY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbgEAOsO (ORCPT
+        id S1730495AbgEAOsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729470AbgEAOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 1 May 2020 10:45:08 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13CC324959;
-        Fri,  1 May 2020 14:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10BA24987;
+        Fri,  1 May 2020 14:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588344305;
-        bh=pgEeloihUJtDW9NEkL6jmFDK/ZInSPDNQO7niKknL3E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SVEs1VMhjyuHELBkXcF4/1fWlbsaS7MgiAohJ3ePux485XSRhFIw+LT9CMyjWvZFi
-         ihz7fPrKmb/CyIscv5iZo1ghZ6L6por1RndA5qbcxiN/hqpCEtOv80OoyKzd7LfsEg
-         e5L/qaobT9VXcglAQbs4CKkx5QoFsFVnzoG5mfmc=
+        s=default; t=1588344306;
+        bh=LzZm9/U3E6zV1Rtxksb2atmQbCTG1SrCaFI5en8K55Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I5TepsA1cD/QrW2DKk8H0/Mv+39uUtcne4cefhlWfRxc14ZZTJ2yvJnNGKMUMIZpx
+         dMk8v1APZb6tVZmXy6UHLxtby3QHefx555v6JeJxZ1yeT1XuXpvKTYhxW6z7KejGhg
+         NMOM+4eKD9XlbPvDsYTmn8ZTm7OSq6Qq9bsoQzfE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jUWuT-00FCcS-77; Fri, 01 May 2020 16:45:01 +0200
+        id 1jUWuT-00FCdY-J1; Fri, 01 May 2020 16:45:01 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Samuel Chessman <chessman@tux.org>, netdev@vger.kernel.org,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        Zorik Machulsky <zorik@amazon.com>,
-        Sean Tranchetti <stranche@codeaurora.org>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        linux-x25@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        linux-hyperv@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        David Ahern <dsahern@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
-        Joerg Reuter <jreuter@yaina.de>,
-        Saeed Bishara <saeedb@amazon.com>,
-        Shrijeet Mukherjee <shrijeet@gmail.com>,
         Netanel Belgazal <netanel@amazon.com>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Guy Tzalik <gtzalik@amazon.com>,
-        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
         Arthur Kiyanovski <akiyano@amazon.com>,
-        linux-wireless@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-parisc@vger.kernel.org,
-        Steffen Klassert <klassert@kernel.org>,
+        Guy Tzalik <gtzalik@amazon.com>,
+        Saeed Bishara <saeedb@amazon.com>,
+        Zorik Machulsky <zorik@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Stephen Hemminger <sthemmin@microsoft.com>
-Subject: [PATCH 00/37]net: manually convert files to ReST format - part 3 (final)
-Date:   Fri,  1 May 2020 16:44:22 +0200
-Message-Id: <cover.1588344146.git.mchehab+huawei@kernel.org>
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 14/37] docs: networking: device drivers: convert amazon/ena.txt to ReST
+Date:   Fri,  1 May 2020 16:44:36 +0200
+Message-Id: <1c8f7109570ea829ed832596a14ec1f76b59e5ec.1588344146.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <cover.1588344146.git.mchehab+huawei@kernel.org>
+References: <cover.1588344146.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,165 +66,356 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That's the third part (and the final one) of my work to convert the networking
-text files into ReST. it is based on linux-next next-20200430 branch.
+- add SPDX header;
+- adjust titles and chapters, adding proper markups;
+- mark code blocks and literals as such;
+- mark tables as such;
+- adjust identation, whitespaces and blank lines where needed;
+- add to networking/index.rst.
 
-The full series (including those ones) are at:
-
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=net-docs
-
-The  built output documents, on html format is at:
-
-	https://www.infradead.org/~mchehab/kernel_docs/networking/
-
-
-Mauro Carvalho Chehab (37):
-  docs: networking: convert tuntap.txt to ReST
-  docs: networking: convert udplite.txt to ReST
-  docs: networking: convert vrf.txt to ReST
-  docs: networking: convert vxlan.txt to ReST
-  docs: networking: convert x25-iface.txt to ReST
-  docs: networking: convert x25.txt to ReST
-  docs: networking: convert xfrm_device.txt to ReST
-  docs: networking: convert xfrm_proc.txt to ReST
-  docs: networking: convert xfrm_sync.txt to ReST
-  docs: networking: convert xfrm_sysctl.txt to ReST
-  docs: networking: convert z8530drv.txt to ReST
-  docs: networking: device drivers: convert 3com/3c509.txt to ReST
-  docs: networking: device drivers: convert 3com/vortex.txt to ReST
-  docs: networking: device drivers: convert amazon/ena.txt to ReST
-  docs: networking: device drivers: convert aquantia/atlantic.txt to
-    ReST
-  docs: networking: device drivers: convert chelsio/cxgb.txt to ReST
-  docs: networking: device drivers: convert cirrus/cs89x0.txt to ReST
-  docs: networking: device drivers: convert davicom/dm9000.txt to ReST
-  docs: networking: device drivers: convert dec/de4x5.txt to ReST
-  docs: networking: device drivers: convert dec/dmfe.txt to ReST
-  docs: networking: device drivers: convert dlink/dl2k.txt to ReST
-  docs: networking: device drivers: convert freescale/dpaa.txt to ReST
-  docs: networking: device drivers: convert freescale/gianfar.txt to
-    ReST
-  docs: networking: device drivers: convert intel/ipw2100.txt to ReST
-  docs: networking: device drivers: convert intel/ipw2200.txt to ReST
-  docs: networking: device drivers: convert microsoft/netvsc.txt to ReST
-  docs: networking: device drivers: convert neterion/s2io.txt to ReST
-  docs: networking: device drivers: convert neterion/vxge.txt to ReST
-  docs: networking: device drivers: convert qualcomm/rmnet.txt to ReST
-  docs: networking: device drivers: convert sb1000.txt to ReST
-  docs: networking: device drivers: convert smsc/smc9.txt to ReST
-  docs: networking: device drivers: convert ti/cpsw_switchdev.txt to
-    ReST
-  docs: networking: device drivers: convert ti/cpsw.txt to ReST
-  docs: networking: device drivers: convert ti/tlan.txt to ReST
-  docs: networking: device drivers: convert toshiba/spider_net.txt to
-    ReST
-  net: docs: add page_pool.rst to index.rst
-  docs: networking: arcnet-hardware.rst: don't duplicate chapter names
-
- Documentation/networking/arcnet-hardware.rst  |   8 +-
- .../3com/{3c509.txt => 3c509.rst}             | 158 +++--
- .../3com/{vortex.txt => vortex.rst}           | 223 ++++---
- .../amazon/{ena.txt => ena.rst}               | 142 ++--
- .../aquantia/{atlantic.txt => atlantic.rst}   | 373 ++++++-----
- .../chelsio/{cxgb.txt => cxgb.rst}            | 183 ++++--
- .../cirrus/{cs89x0.txt => cs89x0.rst}         | 557 ++++++++--------
- .../davicom/{dm9000.txt => dm9000.rst}        |  24 +-
- .../dec/{de4x5.txt => de4x5.rst}              | 105 +--
- .../device_drivers/dec/{dmfe.txt => dmfe.rst} |  35 +-
- .../dlink/{dl2k.txt => dl2k.rst}              | 228 ++++---
- .../freescale/{dpaa.txt => dpaa.rst}          | 139 ++--
- .../freescale/{gianfar.txt => gianfar.rst}    |  21 +-
- .../networking/device_drivers/index.rst       |  24 +
- .../intel/{ipw2100.txt => ipw2100.rst}        | 242 ++++---
- .../intel/{ipw2200.txt => ipw2200.rst}        | 410 +++++++-----
- .../microsoft/{netvsc.txt => netvsc.rst}      |  57 +-
- .../device_drivers/neterion/s2io.rst          | 196 ++++++
- .../device_drivers/neterion/s2io.txt          | 141 ----
- .../neterion/{vxge.txt => vxge.rst}           |  60 +-
- .../qualcomm/{rmnet.txt => rmnet.rst}         |  43 +-
- .../networking/device_drivers/sb1000.rst      | 222 +++++++
- .../networking/device_drivers/sb1000.txt      | 207 ------
- .../networking/device_drivers/smsc/smc9.rst   |  49 ++
- .../networking/device_drivers/smsc/smc9.txt   |  42 --
- .../networking/device_drivers/ti/cpsw.rst     | 587 +++++++++++++++++
- .../networking/device_drivers/ti/cpsw.txt     | 541 ----------------
- ...{cpsw_switchdev.txt => cpsw_switchdev.rst} | 239 ++++---
- .../device_drivers/ti/{tlan.txt => tlan.rst}  |  73 ++-
- .../{spider_net.txt => spider_net.rst}        |  58 +-
- Documentation/networking/index.rst            |  12 +
- .../networking/{tuntap.txt => tuntap.rst}     | 200 +++---
- .../networking/{udplite.txt => udplite.rst}   | 175 ++---
- Documentation/networking/vrf.rst              | 451 +++++++++++++
- Documentation/networking/vrf.txt              | 418 ------------
- .../networking/{vxlan.txt => vxlan.rst}       |  33 +-
- .../{x25-iface.txt => x25-iface.rst}          |  10 +-
- Documentation/networking/{x25.txt => x25.rst} |   4 +
- .../{xfrm_device.txt => xfrm_device.rst}      |  33 +-
- .../{xfrm_proc.txt => xfrm_proc.rst}          |  31 +
- .../{xfrm_sync.txt => xfrm_sync.rst}          |  66 +-
- .../{xfrm_sysctl.txt => xfrm_sysctl.rst}      |   7 +
- .../networking/{z8530drv.txt => z8530drv.rst} | 609 +++++++++---------
- MAINTAINERS                                   |  30 +-
- drivers/net/Kconfig                           |   4 +-
- drivers/net/ethernet/3com/3c59x.c             |   4 +-
- drivers/net/ethernet/3com/Kconfig             |   2 +-
- drivers/net/ethernet/chelsio/Kconfig          |   2 +-
- drivers/net/ethernet/cirrus/Kconfig           |   2 +-
- drivers/net/ethernet/dec/tulip/Kconfig        |   4 +-
- drivers/net/ethernet/dlink/dl2k.c             |   2 +-
- drivers/net/ethernet/neterion/Kconfig         |   4 +-
- drivers/net/ethernet/smsc/Kconfig             |   4 +-
- drivers/net/ethernet/ti/Kconfig               |   2 +-
- drivers/net/ethernet/ti/tlan.c                |   2 +-
- drivers/net/hamradio/Kconfig                  |   4 +-
- drivers/net/hamradio/scc.c                    |   2 +-
- drivers/net/wireless/intel/ipw2x00/Kconfig    |   4 +-
- drivers/net/wireless/intel/ipw2x00/ipw2100.c  |   2 +-
- include/uapi/linux/if_x25.h                   |   2 +-
- net/x25/Kconfig                               |   4 +-
- 61 files changed, 4175 insertions(+), 3341 deletions(-)
- rename Documentation/networking/device_drivers/3com/{3c509.txt => 3c509.rst} (68%)
- rename Documentation/networking/device_drivers/3com/{vortex.txt => vortex.rst} (72%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../amazon/{ena.txt => ena.rst}               | 142 +++++++++++-------
+ .../networking/device_drivers/index.rst       |   1 +
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 91 insertions(+), 54 deletions(-)
  rename Documentation/networking/device_drivers/amazon/{ena.txt => ena.rst} (86%)
- rename Documentation/networking/device_drivers/aquantia/{atlantic.txt => atlantic.rst} (63%)
- rename Documentation/networking/device_drivers/chelsio/{cxgb.txt => cxgb.rst} (81%)
- rename Documentation/networking/device_drivers/cirrus/{cs89x0.txt => cs89x0.rst} (61%)
- rename Documentation/networking/device_drivers/davicom/{dm9000.txt => dm9000.rst} (92%)
- rename Documentation/networking/device_drivers/dec/{de4x5.txt => de4x5.rst} (78%)
- rename Documentation/networking/device_drivers/dec/{dmfe.txt => dmfe.rst} (68%)
- rename Documentation/networking/device_drivers/dlink/{dl2k.txt => dl2k.rst} (59%)
- rename Documentation/networking/device_drivers/freescale/{dpaa.txt => dpaa.rst} (79%)
- rename Documentation/networking/device_drivers/freescale/{gianfar.txt => gianfar.rst} (82%)
- rename Documentation/networking/device_drivers/intel/{ipw2100.txt => ipw2100.rst} (70%)
- rename Documentation/networking/device_drivers/intel/{ipw2200.txt => ipw2200.rst} (64%)
- rename Documentation/networking/device_drivers/microsoft/{netvsc.txt => netvsc.rst} (83%)
- create mode 100644 Documentation/networking/device_drivers/neterion/s2io.rst
- delete mode 100644 Documentation/networking/device_drivers/neterion/s2io.txt
- rename Documentation/networking/device_drivers/neterion/{vxge.txt => vxge.rst} (80%)
- rename Documentation/networking/device_drivers/qualcomm/{rmnet.txt => rmnet.rst} (73%)
- create mode 100644 Documentation/networking/device_drivers/sb1000.rst
- delete mode 100644 Documentation/networking/device_drivers/sb1000.txt
- create mode 100644 Documentation/networking/device_drivers/smsc/smc9.rst
- delete mode 100644 Documentation/networking/device_drivers/smsc/smc9.txt
- create mode 100644 Documentation/networking/device_drivers/ti/cpsw.rst
- delete mode 100644 Documentation/networking/device_drivers/ti/cpsw.txt
- rename Documentation/networking/device_drivers/ti/{cpsw_switchdev.txt => cpsw_switchdev.rst} (51%)
- rename Documentation/networking/device_drivers/ti/{tlan.txt => tlan.rst} (73%)
- rename Documentation/networking/device_drivers/toshiba/{spider_net.txt => spider_net.rst} (88%)
- rename Documentation/networking/{tuntap.txt => tuntap.rst} (58%)
- rename Documentation/networking/{udplite.txt => udplite.rst} (65%)
- create mode 100644 Documentation/networking/vrf.rst
- delete mode 100644 Documentation/networking/vrf.txt
- rename Documentation/networking/{vxlan.txt => vxlan.rst} (73%)
- rename Documentation/networking/{x25-iface.txt => x25-iface.rst} (96%)
- rename Documentation/networking/{x25.txt => x25.rst} (96%)
- rename Documentation/networking/{xfrm_device.txt => xfrm_device.rst} (92%)
- rename Documentation/networking/{xfrm_proc.txt => xfrm_proc.rst} (95%)
- rename Documentation/networking/{xfrm_sync.txt => xfrm_sync.rst} (82%)
- rename Documentation/networking/{xfrm_sysctl.txt => xfrm_sysctl.rst} (52%)
- rename Documentation/networking/{z8530drv.txt => z8530drv.rst} (57%)
 
+diff --git a/Documentation/networking/device_drivers/amazon/ena.txt b/Documentation/networking/device_drivers/amazon/ena.rst
+similarity index 86%
+rename from Documentation/networking/device_drivers/amazon/ena.txt
+rename to Documentation/networking/device_drivers/amazon/ena.rst
+index 1bb55c7b604c..11af6388ea87 100644
+--- a/Documentation/networking/device_drivers/amazon/ena.txt
++++ b/Documentation/networking/device_drivers/amazon/ena.rst
+@@ -1,8 +1,12 @@
+-Linux kernel driver for Elastic Network Adapter (ENA) family:
+-=============================================================
++.. SPDX-License-Identifier: GPL-2.0
++
++============================================================
++Linux kernel driver for Elastic Network Adapter (ENA) family
++============================================================
++
++Overview
++========
+ 
+-Overview:
+-=========
+ ENA is a networking interface designed to make good use of modern CPU
+ features and system architectures.
+ 
+@@ -35,32 +39,40 @@ debug logs.
+ Some of the ENA devices support a working mode called Low-latency
+ Queue (LLQ), which saves several more microseconds.
+ 
+-Supported PCI vendor ID/device IDs:
++Supported PCI vendor ID/device IDs
++==================================
++
++=========   =======================
++1d0f:0ec2   ENA PF
++1d0f:1ec2   ENA PF with LLQ support
++1d0f:ec20   ENA VF
++1d0f:ec21   ENA VF with LLQ support
++=========   =======================
++
++ENA Source Code Directory Structure
+ ===================================
+-1d0f:0ec2 - ENA PF
+-1d0f:1ec2 - ENA PF with LLQ support
+-1d0f:ec20 - ENA VF
+-1d0f:ec21 - ENA VF with LLQ support
+ 
+-ENA Source Code Directory Structure:
+-====================================
+-ena_com.[ch]      - Management communication layer. This layer is
+-                    responsible for the handling all the management
+-                    (admin) communication between the device and the
+-                    driver.
+-ena_eth_com.[ch]  - Tx/Rx data path.
+-ena_admin_defs.h  - Definition of ENA management interface.
+-ena_eth_io_defs.h - Definition of ENA data path interface.
+-ena_common_defs.h - Common definitions for ena_com layer.
+-ena_regs_defs.h   - Definition of ENA PCI memory-mapped (MMIO) registers.
+-ena_netdev.[ch]   - Main Linux kernel driver.
+-ena_syfsfs.[ch]   - Sysfs files.
+-ena_ethtool.c     - ethtool callbacks.
+-ena_pci_id_tbl.h  - Supported device IDs.
++=================   ======================================================
++ena_com.[ch]        Management communication layer. This layer is
++		    responsible for the handling all the management
++		    (admin) communication between the device and the
++		    driver.
++ena_eth_com.[ch]    Tx/Rx data path.
++ena_admin_defs.h    Definition of ENA management interface.
++ena_eth_io_defs.h   Definition of ENA data path interface.
++ena_common_defs.h   Common definitions for ena_com layer.
++ena_regs_defs.h     Definition of ENA PCI memory-mapped (MMIO) registers.
++ena_netdev.[ch]     Main Linux kernel driver.
++ena_syfsfs.[ch]     Sysfs files.
++ena_ethtool.c       ethtool callbacks.
++ena_pci_id_tbl.h    Supported device IDs.
++=================   ======================================================
+ 
+ Management Interface:
+ =====================
++
+ ENA management interface is exposed by means of:
++
+ - PCIe Configuration Space
+ - Device Registers
+ - Admin Queue (AQ) and Admin Completion Queue (ACQ)
+@@ -78,6 +90,7 @@ vendor-specific extensions. Most of the management operations are
+ framed in a generic Get/Set feature command.
+ 
+ The following admin queue commands are supported:
++
+ - Create I/O submission queue
+ - Create I/O completion queue
+ - Destroy I/O submission queue
+@@ -96,12 +109,16 @@ be reported using ACQ. AENQ events are subdivided into groups. Each
+ group may have multiple syndromes, as shown below
+ 
+ The events are:
++
++	====================	===============
+ 	Group			Syndrome
+-	Link state change	- X -
+-	Fatal error		- X -
++	====================	===============
++	Link state change	**X**
++	Fatal error		**X**
+ 	Notification		Suspend traffic
+ 	Notification		Resume traffic
+-	Keep-Alive		- X -
++	Keep-Alive		**X**
++	====================	===============
+ 
+ ACQ and AENQ share the same MSI-X vector.
+ 
+@@ -113,8 +130,8 @@ the device every second. The driver re-arms the WD upon reception of a
+ Keep-Alive event. A missed Keep-Alive event causes the WD handler to
+ fire.
+ 
+-Data Path Interface:
+-====================
++Data Path Interface
++===================
+ I/O operations are based on Tx and Rx Submission Queues (Tx SQ and Rx
+ SQ correspondingly). Each SQ has a completion queue (CQ) associated
+ with it.
+@@ -123,11 +140,15 @@ The SQs and CQs are implemented as descriptor rings in contiguous
+ physical memory.
+ 
+ The ENA driver supports two Queue Operation modes for Tx SQs:
++
+ - Regular mode
++
+   * In this mode the Tx SQs reside in the host's memory. The ENA
+     device fetches the ENA Tx descriptors and packet data from host
+     memory.
++
+ - Low Latency Queue (LLQ) mode or "push-mode".
++
+   * In this mode the driver pushes the transmit descriptors and the
+     first 128 bytes of the packet directly to the ENA device memory
+     space. The rest of the packet payload is fetched by the
+@@ -142,6 +163,7 @@ Note: Not all ENA devices support LLQ, and this feature is negotiated
+ 
+ The driver supports multi-queue for both Tx and Rx. This has various
+ benefits:
++
+ - Reduced CPU/thread/process contention on a given Ethernet interface.
+ - Cache miss rate on completion is reduced, particularly for data
+   cache lines that hold the sk_buff structures.
+@@ -151,8 +173,8 @@ benefits:
+   packet is running.
+ - In hardware interrupt re-direction.
+ 
+-Interrupt Modes:
+-================
++Interrupt Modes
++===============
+ The driver assigns a single MSI-X vector per queue pair (for both Tx
+ and Rx directions). The driver assigns an additional dedicated MSI-X vector
+ for management (for ACQ and AENQ).
+@@ -163,9 +185,12 @@ removed. I/O queue interrupt registration is performed when the Linux
+ interface of the adapter is opened, and it is de-registered when the
+ interface is closed.
+ 
+-The management interrupt is named:
++The management interrupt is named::
++
+    ena-mgmnt@pci:<PCI domain:bus:slot.function>
+-and for each queue pair, an interrupt is named:
++
++and for each queue pair, an interrupt is named::
++
+    <interface name>-Tx-Rx-<queue index>
+ 
+ The ENA device operates in auto-mask and auto-clear interrupt
+@@ -173,8 +198,8 @@ modes. That is, once MSI-X is delivered to the host, its Cause bit is
+ automatically cleared and the interrupt is masked. The interrupt is
+ unmasked by the driver after NAPI processing is complete.
+ 
+-Interrupt Moderation:
+-=====================
++Interrupt Moderation
++====================
+ ENA driver and device can operate in conventional or adaptive interrupt
+ moderation mode.
+ 
+@@ -202,45 +227,46 @@ delay value to each level.
+ The user can enable/disable adaptive moderation, modify the interrupt
+ delay table and restore its default values through sysfs.
+ 
+-RX copybreak:
+-=============
++RX copybreak
++============
+ The rx_copybreak is initialized by default to ENA_DEFAULT_RX_COPYBREAK
+ and can be configured by the ETHTOOL_STUNABLE command of the
+ SIOCETHTOOL ioctl.
+ 
+-SKB:
+-====
++SKB
++===
+ The driver-allocated SKB for frames received from Rx handling using
+ NAPI context. The allocation method depends on the size of the packet.
+ If the frame length is larger than rx_copybreak, napi_get_frags()
+ is used, otherwise netdev_alloc_skb_ip_align() is used, the buffer
+ content is copied (by CPU) to the SKB, and the buffer is recycled.
+ 
+-Statistics:
+-===========
++Statistics
++==========
+ The user can obtain ENA device and driver statistics using ethtool.
+ The driver can collect regular or extended statistics (including
+ per-queue stats) from the device.
+ 
+ In addition the driver logs the stats to syslog upon device reset.
+ 
+-MTU:
+-====
++MTU
++===
+ The driver supports an arbitrarily large MTU with a maximum that is
+ negotiated with the device. The driver configures MTU using the
+ SetFeature command (ENA_ADMIN_MTU property). The user can change MTU
+ via ip(8) and similar legacy tools.
+ 
+-Stateless Offloads:
+-===================
++Stateless Offloads
++==================
+ The ENA driver supports:
++
+ - TSO over IPv4/IPv6
+ - TSO with ECN
+ - IPv4 header checksum offload
+ - TCP/UDP over IPv4/IPv6 checksum offloads
+ 
+-RSS:
+-====
++RSS
++===
+ - The ENA device supports RSS that allows flexible Rx traffic
+   steering.
+ - Toeplitz and CRC32 hash functions are supported.
+@@ -255,11 +281,13 @@ RSS:
+ - The user can provide a hash key, hash function, and configure the
+   indirection table through ethtool(8).
+ 
+-DATA PATH:
+-==========
+-Tx:
+----
++DATA PATH
++=========
++Tx
++--
++
+ end_start_xmit() is called by the stack. This function does the following:
++
+ - Maps data buffers (skb->data and frags).
+ - Populates ena_buf for the push buffer (if the driver and device are
+   in push mode.)
+@@ -271,8 +299,10 @@ end_start_xmit() is called by the stack. This function does the following:
+ - Calls ena_com_prepare_tx(), an ENA communication layer that converts
+   the ena_bufs to ENA descriptors (and adds meta ENA descriptors as
+   needed.)
++
+   * This function also copies the ENA descriptors and the push buffer
+     to the Device memory space (if in push mode.)
++
+ - Writes doorbell to the ENA device.
+ - When the ENA device finishes sending the packet, a completion
+   interrupt is raised.
+@@ -280,14 +310,16 @@ end_start_xmit() is called by the stack. This function does the following:
+ - The ena_clean_tx_irq() function is called. This function handles the
+   completion descriptors generated by the ENA, with a single
+   completion descriptor per completed packet.
++
+   * req_id is retrieved from the completion descriptor. The tx_info of
+     the packet is retrieved via the req_id. The data buffers are
+     unmapped and req_id is returned to the empty req_id ring.
+   * The function stops when the completion descriptors are completed or
+     the budget is reached.
+ 
+-Rx:
+----
++Rx
++--
++
+ - When a packet is received from the ENA device.
+ - The interrupt handler schedules NAPI.
+ - The ena_clean_rx_irq() function is called. This function calls
+@@ -296,13 +328,17 @@ Rx:
+   no new packet is found.
+ - Then it calls the ena_clean_rx_irq() function.
+ - ena_eth_rx_skb() checks packet length:
++
+   * If the packet is small (len < rx_copybreak), the driver allocates
+     a SKB for the new packet, and copies the packet payload into the
+     SKB data buffer.
++
+     - In this way the original data buffer is not passed to the stack
+       and is reused for future Rx packets.
++
+   * Otherwise the function unmaps the Rx buffer, then allocates the
+     new SKB structure and hooks the Rx buffer to the SKB frags.
++
+ - The new SKB is updated with the necessary information (protocol,
+   checksum hw verify result, etc.), and then passed to the network
+   stack, using the NAPI interface function napi_gro_receive().
+diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
+index aaac502b81ea..019a0d2efe67 100644
+--- a/Documentation/networking/device_drivers/index.rst
++++ b/Documentation/networking/device_drivers/index.rst
+@@ -29,6 +29,7 @@ Contents:
+    stmicro/stmmac
+    3com/3c509
+    3com/vortex
++   amazon/ena
+ 
+ .. only::  subproject and html
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a45ab6a25942..990d1414ffd6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -816,7 +816,7 @@ R:	Saeed Bishara <saeedb@amazon.com>
+ R:	Zorik Machulsky <zorik@amazon.com>
+ L:	netdev@vger.kernel.org
+ S:	Supported
+-F:	Documentation/networking/device_drivers/amazon/ena.txt
++F:	Documentation/networking/device_drivers/amazon/ena.rst
+ F:	drivers/net/ethernet/amazon/
+ 
+ AMAZON RDMA EFA DRIVER
 -- 
 2.25.4
-
 
