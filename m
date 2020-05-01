@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2538C4724C
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A0EC47254
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7632051A
-	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0332051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  1 May 2020 14:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588341634;
-	bh=iCbh3q6xWJn/RtDfI77FmGLwgX0MhGfofN7ZmqcW6tg=;
+	s=default; t=1588341640;
+	bh=ba5UviiqirxX2VhbhVmCa6180lZgvgjE1tT7+Kq3bn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JdWLG1+8ydIWSKzFV6v2voWooCjyiqa6I1M0ilIaD0mQGNH7oQ6ATwzNuq98+Pxxd
-	 KRQL1iYeXqUgHwLIwcXrGCI5feSy1Cg2nwoaEBkTnXsq3xYvuI4Q+OL8n4/kRh16xa
-	 +xAzoACRKCLRVDFg3y+75ZHG3EJbNkfdnCbPCFRg=
+	b=k5VxW92KflwIt8aEmHhUQ6Ii59WyGIrb7iDnDaB4V7OHjl+nedi9Uho9BjO0pgeM+
+	 v8fRbaMp6g1zNcgtVdqlHSIKANHi5E8+AghGNj7DWtloobVxmW82ijbzi5OC9xuRHi
+	 6r/9sdwanYjku7Ylia0+rW17Cct5gu9JOECV6Bak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbgEAOAc (ORCPT
+        id S1730249AbgEAOAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 10:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49596 "EHLO mail.kernel.org"
+        Fri, 1 May 2020 10:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgEAN1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 09:27:20 -0400
+        id S1729429AbgEAN1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 09:27:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB802166E;
-        Fri,  1 May 2020 13:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF262208DB;
+        Fri,  1 May 2020 13:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588339640;
-        bh=iCbh3q6xWJn/RtDfI77FmGLwgX0MhGfofN7ZmqcW6tg=;
+        s=default; t=1588339635;
+        bh=ba5UviiqirxX2VhbhVmCa6180lZgvgjE1tT7+Kq3bn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zsw8pFb7FmTUjzW0Q0PlajvE2waaT/GdLzwvwHuCEng8GkBh+2A5axW3qrwj3ZfKO
-         zTHXnfl4tTJnE/hVw38OQ+Jto5Zwwu6y6kV7c3rSfCROXn8O5wOMpai2qQ/fvZhQVI
-         moxPJqthLoqzEnnkzkaOqNip31ke1xwuzWfl8GIA=
+        b=KHTMOx1PqAxv7F/V5GwVuUXtw+8VBq8Vss6tPqEn17CI2QNZtCJcvbP+Vjc11HPg+
+         k88PsB2wzBQuxt8KGXMKD1m8idUnOv5OqKgQzCqvhx19qM9QMyWoBcYyPI9oMLK3if
+         M3pZ5eh7eqwHyIDBtLO5sdjJqFrq+/7h2I8Kmv3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 59/70] net/cxgb4: Check the return from t4_query_params properly
-Date:   Fri,  1 May 2020 15:21:47 +0200
-Message-Id: <20200501131531.132718575@linuxfoundation.org>
+        stable@vger.kernel.org, Yi Huaijie <yihuaijie@huawei.com>,
+        Liu Jian <liujian56@huawei.com>,
+        Tokunori Ikegami <ikegami_to@yahoo.co.jp>,
+        Richard Weinberger <richard@nod.at>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 57/70] mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
+Date:   Fri,  1 May 2020 15:21:45 +0200
+Message-Id: <20200501131530.691671109@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200501131513.302599262@linuxfoundation.org>
 References: <20200501131513.302599262@linuxfoundation.org>
@@ -59,36 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Liu Jian <liujian56@huawei.com>
 
-commit c799fca8baf18d1bbbbad6c3b736eefbde8bdb90 upstream.
+commit d9b8a67b3b95a5c5aae6422b8113adc1c2485f2b upstream.
 
-Positive return values are also failures that don't set val,
-although this probably can't happen. Fixes gcc 10 warning:
+In function do_write_buffer(), in the for loop, there is a case
+chip_ready() returns 1 while chip_good() returns 0, so it never
+break the loop.
+To fix this, chip_good() is enough and it should timeout if it stay
+bad for a while.
 
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c: In function ‘t4_phy_fw_ver’:
-drivers/net/ethernet/chelsio/cxgb4/t4_hw.c:3747:14: warning: ‘val’ may be used uninitialized in this function [-Wmaybe-uninitialized]
- 3747 |  *phy_fw_ver = val;
-
-Fixes: 01b6961410b7 ("cxgb4: Add PHY firmware support for T420-BT cards")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: dfeae1073583("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
+Signed-off-by: Yi Huaijie <yihuaijie@huawei.com>
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Reviewed-by: Tokunori Ikegami <ikegami_to@yahoo.co.jp>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/chips/cfi_cmdset_0002.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/t4_hw.c
-@@ -3341,7 +3341,7 @@ int t4_phy_fw_ver(struct adapter *adap,
- 		 FW_PARAMS_PARAM_Z_V(FW_PARAMS_PARAM_DEV_PHYFW_VERSION));
- 	ret = t4_query_params(adap, adap->mbox, adap->pf, 0, 1,
- 			      &param, &val);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 	*phy_fw_ver = val;
- 	return 0;
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -1881,7 +1881,11 @@ static int __xipram do_write_buffer(stru
+ 			continue;
+ 		}
+ 
+-		if (time_after(jiffies, timeo) && !chip_ready(map, adr))
++		/*
++		 * We check "time_after" and "!chip_good" before checking "chip_good" to avoid
++		 * the failure due to scheduling.
++		 */
++		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum))
+ 			break;
+ 
+ 		if (chip_good(map, adr, datum)) {
 
 
