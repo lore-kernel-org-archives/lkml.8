@@ -2,68 +2,135 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D65C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 21:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B439BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 21:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB23E20757
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 21:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A19B20757
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 21:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="yoDjO/be"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="qiXSHn3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgEBVGE (ORCPT
+        id S1728541AbgEBVLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 17:06:04 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:47671 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgEBVGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 17:06:04 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id bcf3d9cb;
-        Sat, 2 May 2020 20:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=OMy6OqY10ehs479MElnvca/O1bE=; b=yoDjO/
-        be+oyUCShp4ZVLh4bPBUDlMzJ381RWsGyzIpE1hzbTBjllfAwEuYsCABvqau8hbi
-        5dmW11+dq0k4bAMiLm5uczDpn89mVsWbU2NXf3odIashJvLoOIqKrnP39XRaAKax
-        NN0am5x4sJ6S+u6pbvSy5o/r6zW6XAT40WtD6sfTDZ/iUybbrewr2AymtptJg8XI
-        DbjQ+pe05O1q2SKWDoAPP/IJ8K8V+DSWFKiiIc3x/2GhsFb1s5i73SssFvHdmHKw
-        9fpK7wPbHaB2N4pENA7n6CaqbU4UEsHiopaTqAfnodmoTFZPI5c5U4yLq87FSD74
-        VW+NkN3yOcyPQ92w==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 27513ec7 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Sat, 2 May 2020 20:53:47 +0000 (UTC)
-Received: by mail-il1-f182.google.com with SMTP id i16so7629837ils.12;
-        Sat, 02 May 2020 14:05:58 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaqsbzFGwCzAXma9DaTVlIhbjp2Hy3bEP4CwlqnBimHdctLcvc3
-        5cBx35rTilVi+8TB822JoN6wEVznfPrkXhTDod0=
-X-Google-Smtp-Source: APiQypKSzW4iIdGBa55HbjRTCDEbI2+eoByi/qgW5rc/uPvsaHpDBAI1P1dPctYeyAYkAyWYUinKdqXT86JVKoxUnpE=
-X-Received: by 2002:a92:5c82:: with SMTP id d2mr9968866ilg.231.1588453557814;
- Sat, 02 May 2020 14:05:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200502182427.104383-1-ebiggers@kernel.org>
-In-Reply-To: <20200502182427.104383-1-ebiggers@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sat, 2 May 2020 15:05:46 -0600
-X-Gmail-Original-Message-ID: <CAHmME9oPqWfTwTtawM-29Lqck-N-kYo4nGr1-4hCW975DhB0Uw@mail.gmail.com>
-Message-ID: <CAHmME9oPqWfTwTtawM-29Lqck-N-kYo4nGr1-4hCW975DhB0Uw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] sha1 library cleanup
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Paolo Abeni <pabeni@redhat.com>,
-        mptcp@lists.01.org, linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 2 May 2020 17:11:09 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:53558 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbgEBVLJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 17:11:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49F1xl6sb4z9vKlq
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 21:11:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oSteTtLyjhaa for <linux-kernel@vger.kernel.org>;
+        Sat,  2 May 2020 16:11:07 -0500 (CDT)
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49F1xl5Sltz9vKTj
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 16:11:07 -0500 (CDT)
+Received: by mail-qk1-f197.google.com with SMTP id d187so7069865qkc.18
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 14:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=98Gw/YIKBAo25+eia8JVZ/k22pWYO0PDQMHyI7+B3/Y=;
+        b=qiXSHn3VnvB/69IWAG+v5cQyvBCq6ZxUOeK/CmnxT5yJCxiSzFhnxlJML24aAdXu8D
+         +eaj2Nsq05zO4XATqr44CfX8qbwWcBAq0IVDFn1r4Ful+yx3U24s84fh6ZYmKT5bV1wn
+         TPw5LykhGf79lQojJ6PSpVILIStk9+PpXQlaCQe+ShXXT8nFkyWgmOmGucjxQsAUpLNQ
+         ECn8BFafsy5uQlIZNhJVhBnNFiOKUAULkKEo55x9szxvFXUvVrT3W5GUgJawmSf0tAV/
+         ppNdq0kCTqyO3v+kQbAIi7otRocRzuJ96dpQvq2WrIhPIrgnNj1aYCYJXJ37qjP2yXsI
+         iPhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=98Gw/YIKBAo25+eia8JVZ/k22pWYO0PDQMHyI7+B3/Y=;
+        b=R1LBTNCmdS8AlYf7WWNMmoJC6L4ceduSh5tzisye4xE6qsX5nf+gcJRKKeOOvo6Oha
+         n7hc9BmNOPfIIoylKeYdbin1pU19vkF8i5baFJAP0JPW/EX5/Od3wTcdn6Ic9KrBGPQr
+         i1jkGl5zBIuNT1YDe74Dqmu+mT/J5t6FYj2erhlaFg0OvF3+dAUXkgsMj/SqlmMvV25T
+         3Raoz5f+n5b0Fx9hqWa/hDXizQHGXaAj98VjrWbLlGAefBtetQ2nA/Hv94uUmgF5Cnpy
+         Bsw6UtsD3pYKmpq8YAVH4axTWpK8Ifmm98MhTgN9ig/35apefKloROwz+6I/z2CvxfX5
+         IRaA==
+X-Gm-Message-State: AGi0PuZbI/D28Zu/qHdWeSrAxdHc4aQ4NXbFnN/rMzs5wpuxK5WOGPrc
+        YwsulZGVMqj0RWAbQsgrT+PTZmq1ulwzQH5Rj6RtOklVikA8HrhQ85V7S1YE0drjPSTtvHRWK9L
+        zVwkWQtCPJJr3GPC29zT/ALcV+3wo
+X-Received: by 2002:a37:a186:: with SMTP id k128mr9694072qke.149.1588453867094;
+        Sat, 02 May 2020 14:11:07 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLDJ29emRSGxtOrg7phOUBKtXGhr9D7AIFJJXZK+qKPj9RkQfFg5OekLu1Lbs0v6owzYNPvoA==
+X-Received: by 2002:a37:a186:: with SMTP id k128mr9694039qke.149.1588453866425;
+        Sat, 02 May 2020 14:11:06 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id l12sm5919552qke.89.2020.05.02.14.11.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 14:11:05 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu, wu000273@umn.edu
+Subject: [PATCH] power: supply: fix memory leaks
+Date:   Sat,  2 May 2020 16:10:56 -0500
+Message-Id: <20200502211056.20975-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for this series. I like the general idea. I think it might make
-sense, though, to separate things out into sha1.h and sha256.h. That
-will be nice preparation work for when we eventually move obsolete
-primitives into some <crypto/dangerous/> subdirectory.
+From: Qiushi Wu <wu000273@umn.edu>
+
+In function power_supply_add_hwmon_sysfs(), psyhw->props is
+allocated by bitmap_zalloc(). But this pointer is not deallocated
+in several error paths, which lead to memory leak bugs. To fix
+this, we can call bitmap_free() to free this pointer.
+
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/power/supply/power_supply_hwmon.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
+index 75cf861ba492..7453390ab7a4 100644
+--- a/drivers/power/supply/power_supply_hwmon.c
++++ b/drivers/power/supply/power_supply_hwmon.c
+@@ -307,7 +307,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+ 	ret = devm_add_action(dev, power_supply_hwmon_bitmap_free,
+ 			      psyhw->props);
+ 	if (ret)
+-		goto error;
++		goto out_free;
+ 
+ 	for (i = 0; i < desc->num_properties; i++) {
+ 		const enum power_supply_property prop = desc->properties[i];
+@@ -342,7 +342,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+ 		new_name = devm_kstrdup(dev, name, GFP_KERNEL);
+ 		if (!new_name) {
+ 			ret = -ENOMEM;
+-			goto error;
++			goto out_free;
+ 		}
+ 		strreplace(new_name, '-', '_');
+ 		name = new_name;
+@@ -353,10 +353,12 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
+ 						NULL);
+ 	ret = PTR_ERR_OR_ZERO(hwmon);
+ 	if (ret)
+-		goto error;
++		goto out_free;
+ 
+ 	devres_close_group(dev, power_supply_add_hwmon_sysfs);
+ 	return 0;
++out_free:
++	bitmap_free(psyhw->props);
+ error:
+ 	devres_release_group(dev, NULL);
+ 	return ret;
+-- 
+2.17.1
+
