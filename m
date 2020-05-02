@@ -2,118 +2,136 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC12C4724C
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FF0C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D3020643
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B742073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxJsTXbu"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JOixvvnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgEBDLw (ORCPT
+        id S1726787AbgEBDQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 23:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
+        Fri, 1 May 2020 23:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgEBDLw (ORCPT
+        with ESMTP id S1726439AbgEBDQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 23:11:52 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD46C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 20:11:50 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id z17so4182006oto.4
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 20:11:50 -0700 (PDT)
+        Fri, 1 May 2020 23:16:27 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DEEC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 20:16:27 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id h6so5690087qvz.8
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 20:16:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=lca.pw; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TRgN7dqYpnfJ32iv0mEp+A1meuKHRpjuIr6fo6bZQDI=;
-        b=RxJsTXbup9QlEvWS3tzliDOKUX4V8Ve9nGRFJT1tPzsN41ZaP28hHRRjaQmVMXYH4X
-         jxts4KMj4xPuN0zLE+MUuwbxdM6n4rfUiJea6QlzNwcT5eJJQJclqPnYZbAM/QvpGcsR
-         GxXMEB+FoAwX7zEcUWqYGmcYoGW10XFa9/FwFp7y9pF7D/Q5qN362YPRXDPgtyLgisqZ
-         kzGuKyegQx5QjgazWys8w7f6+/aSLhn5Bp01HY+CiRPNiKZ2vp6+JaBOyJ3OVjRY39PW
-         SGq2AzacvGQsBFLshM9JVauz2hcankfK0kJmBIJcB6CgNRNYP6pEqmmtpSr/XZ+jvudK
-         Cv+g==
+        bh=lworb5UpeNJ31ys+5ITTrjwjHLN/UBHgYQzxeY/UWSo=;
+        b=JOixvvnm2PR5uwk2LWcLrBVanrBNhBVeaTDWR/IKBzx5R+33lRaJ1gThE7UktcTRDs
+         sy2A2TQHBNmQpgFkfvv5QY8vg5FJjy9sKTN2c56ZupeKWrJQqTTZm3O72r70AKXJlcEq
+         j5Td8mYMii7DxTf+ymu9Vv/ePUEJYop+XEsA92B4/GrxEY4SROAKQWZinQdqlZBUPws9
+         NVpPI9bEod9OZVA4WT1a11p9vAN4qK9qa3d05UKToW0eBS7HVnJerRfyMlDKULU+Xzly
+         fliUwrR5OsxievIIebshI32+WLnkdwC/M57y34G865/iTekTY692cyz7i5RaEOVKbBGq
+         EaEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=TRgN7dqYpnfJ32iv0mEp+A1meuKHRpjuIr6fo6bZQDI=;
-        b=bDhqMDghk0b1ioflLvZmykYgx3IgZa6Ydi8RhTsRtdch4Hn47zigElhdMDO0Z9ggc5
-         ep7WRlNe5pfIeQx0G9AN09T0Qb6Sk1oliHbpMQyIO2ovbaQ2Ed73F7xihxTwBiXPo0pe
-         QeN3kY/cn+BOaCthRc8Su+uGCqBC5myfqed6ce9h9/uBz9TMIY+Ids8czh3ZQdihFIdD
-         F9q7lMt0ocDvf7olGJo4ojdLACrOS7IOEAdHN2tUZW1Anz/4mnzXxIVsVh7EoOyvKF2Y
-         2xl3Paqry2xPk2mhFxQHpS3+ZD+RwqmNg1uVU93GF4WMdJuy2rmzXa49d0wNSGwU834r
-         XAMA==
-X-Gm-Message-State: AGi0Puayaq5Cobpih5HAmtfiq+tvIsn14PGnthLFIe/TYrH66h+3b0B7
-        /DIuhKS4kK10LoQE0wtDDts=
-X-Google-Smtp-Source: APiQypKZcYdkpeLuzk63sx5uVK3c25pfnOfguhe3seCLZhWjtHD4C6Zuh/aw67LW6ih2Vhcg2sVuWw==
-X-Received: by 2002:a9d:57cb:: with SMTP id q11mr6060158oti.11.1588389110029;
-        Fri, 01 May 2020 20:11:50 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id l6sm1317704otq.48.2020.05.01.20.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 20:11:49 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/amdgpu: Avoid integer overflow in amdgpu_device_suspend_display_audio
-Date:   Fri,  1 May 2020 20:11:41 -0700
-Message-Id: <20200502031141.2732221-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        bh=lworb5UpeNJ31ys+5ITTrjwjHLN/UBHgYQzxeY/UWSo=;
+        b=sGwyxbCBtXSXs7yD1lR1GtwNLV/hYGzvkso725RJs9bELTnQcZW04a30AXVmtvi+wQ
+         IUimm3wvXsXXo3iz2W3BuT5LUBChiRQKG1i5aHZPJIgpeIO1gqni0c2jpJBMNIlKUuE9
+         gdfrGqAM0xbq6I+MdzB71iFhMZ9A5W2QQfs+MMTDPXar/XKtck9hRIa3ENHOw0RnNaV8
+         k+5Cw8rIawUeaQDxXCjZD4oiw/Y/PV83kno3rH7Di6/DANEXIuGTop/U5fuQ781ARxib
+         lkFYA6xnJmzTKuR/frFtd0DGrM1l/AcIXTLa861F2eARiZBzNIX/pr6REuSU1JVT5yQ6
+         4LCw==
+X-Gm-Message-State: AGi0PuZq8pugcqvbnf1LjXS++ILafQSl5Bx7gFNOCcK+LiAYzcDM07Wf
+        Fe+sGmKitORtnw6R05OfHmX0Dg==
+X-Google-Smtp-Source: APiQypLJj58lOu5lGcplNS+Tiyudn02eVeYcPZQIMtWaeHOntzj35Uc1/rmg1qAnaw0+uRzDjMDPZw==
+X-Received: by 2002:ad4:4c03:: with SMTP id bz3mr6821544qvb.224.1588389386189;
+        Fri, 01 May 2020 20:16:26 -0700 (PDT)
+Received: from ovpn-112-11.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id c5sm4325806qkj.101.2020.05.01.20.16.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 20:16:25 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Qian Cai <cai@lca.pw>
+Subject: [PATCH] net: fix memory leaks in flush_backlog() with RPS
+Date:   Fri,  1 May 2020 23:15:16 -0400
+Message-Id: <20200502031516.2825-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with Clang:
+netif_receive_skb_list_internal() could call enqueue_to_backlog() to put
+some skb to softnet_data.input_pkt_queue and then in
+ip_route_input_slow(), it allocates a dst_entry to be used in
+skb_dst_set(). Later,
 
-drivers/gpu/drm/amd/amdgpu/amdgpu_device.c:4160:53: warning: overflow in
-expression; result is -294967296 with type 'long' [-Winteger-overflow]
-                expires = ktime_get_mono_fast_ns() + NSEC_PER_SEC * 4L;
-                                                                  ^
-1 warning generated.
+cleanup_net
+  default_device_exit_batch
+    unregister_netdevice_many
+      rollback_registered_many
+        flush_all_backlogs
 
-Multiplication happens first due to order of operations and both
-NSEC_PER_SEC and 4 are long literals so the expression overflows. To
-avoid this, make 4 an unsigned long long literal, which matches the
-type of expires (u64).
+will call flush_backlog() for all CPUs which would call kfree_skb() for
+each skb on the input_pkt_queue without calling skb_dst_drop() first.
 
-Fixes: 3f12acc8d6d4 ("drm/amdgpu: put the audio codec into suspend state before gpu reset V3")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1017
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+unreferenced object 0xffff97008e4c4040 (size 176):
+ comm "softirq", pid 0, jiffies 4295173845 (age 32012.550s)
+ hex dump (first 32 bytes):
+   00 d0 a5 74 04 97 ff ff 40 72 1a 96 ff ff ff ff  ...t....@r......
+   c1 a3 c5 95 ff ff ff ff 00 00 00 00 00 00 00 00  ................
+ backtrace:
+   [<0000000030483fae>] kmem_cache_alloc+0x184/0x430
+   [<000000007ae17545>] dst_alloc+0x8e/0x128
+   [<000000001efe9a1f>] rt_dst_alloc+0x6f/0x1e0
+   rt_dst_alloc at net/ipv4/route.c:1628
+   [<00000000e67d4dac>] ip_route_input_rcu+0xdfe/0x1640
+   ip_route_input_slow at net/ipv4/route.c:2218
+   (inlined by) ip_route_input_rcu at net/ipv4/route.c:2348
+   [<000000009f30cbc0>] ip_route_input_noref+0xab/0x1a0
+   [<000000004f53bd04>] arp_process+0x83a/0xf50
+   arp_process at net/ipv4/arp.c:813 (discriminator 1)
+   [<0000000061fd547d>] arp_rcv+0x276/0x330
+   [<0000000007dbfa7a>] __netif_receive_skb_list_core+0x4d2/0x500
+   [<0000000062d5f6d2>] netif_receive_skb_list_internal+0x4cb/0x7d0
+   [<000000002baa2b74>] gro_normal_list+0x55/0xc0
+   [<0000000093d04885>] napi_complete_done+0xea/0x350
+   [<00000000467dd088>] tg3_poll_msix+0x174/0x310 [tg3]
+   [<00000000498af7d9>] net_rx_action+0x278/0x890
+   [<000000001e81d7e6>] __do_softirq+0xd9/0x589
+   [<00000000087ee354>] irq_exit+0xa2/0xc0
+   [<000000001c4db0cd>] do_IRQ+0x87/0x180
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 6f93af972b0a..caa38e7d502e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -4157,7 +4157,7 @@ static int amdgpu_device_suspend_display_audio(struct amdgpu_device *adev)
- 		 * the audio controller default autosuspend delay setting.
- 		 * 4S used here is guaranteed to cover that.
- 		 */
--		expires = ktime_get_mono_fast_ns() + NSEC_PER_SEC * 4L;
-+		expires = ktime_get_mono_fast_ns() + NSEC_PER_SEC * 4ULL;
- 
- 	while (!pm_runtime_status_suspended(&(p->dev))) {
- 		if (!pm_runtime_suspend(&(p->dev)))
-
-base-commit: fb9d670f57e3f6478602328bbbf71138be06ca4f
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 522288177bbd..b898cd3036da 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5496,6 +5496,7 @@ static void flush_backlog(struct work_struct *work)
+ 	skb_queue_walk_safe(&sd->input_pkt_queue, skb, tmp) {
+ 		if (skb->dev->reg_state == NETREG_UNREGISTERING) {
+ 			__skb_unlink(skb, &sd->input_pkt_queue);
++			skb_dst_drop(skb);
+ 			kfree_skb(skb);
+ 			input_queue_head_incr(sd);
+ 		}
 -- 
-2.26.2
+2.21.0 (Apple Git-122.2)
 
