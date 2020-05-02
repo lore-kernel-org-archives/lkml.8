@@ -2,347 +2,94 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79BAC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DA0C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB6824953
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E7F21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:55:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F34zdE2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgEBOz1 (ORCPT
+        id S1728202AbgEBOzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 10:55:27 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:52984 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgEBOz0 (ORCPT
+        Sat, 2 May 2020 10:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgEBOzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 10:55:26 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUtY4-00054T-MN; Sat, 02 May 2020 08:55:24 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUtY2-0001OS-Uz; Sat, 02 May 2020 08:55:24 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jann Horn <jannh@google.com>, linux-api@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200430165717.1001605-1-christian.brauner@ubuntu.com>
-        <87y2qczvz9.fsf@x220.int.ebiederm.org>
-        <20200501154251.j4iuz42tntnjcvaa@wittgenstein>
-        <874ksytsye.fsf@x220.int.ebiederm.org>
-        <20200502143243.ip4ayr35afdykvyb@wittgenstein>
-Date:   Sat, 02 May 2020 09:52:03 -0500
-In-Reply-To: <20200502143243.ip4ayr35afdykvyb@wittgenstein> (Christian
-        Brauner's message of "Sat, 2 May 2020 16:32:43 +0200")
-Message-ID: <87a72qs830.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sat, 2 May 2020 10:55:41 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852C7C061A0C;
+        Sat,  2 May 2020 07:55:41 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w3so4820006plz.5;
+        Sat, 02 May 2020 07:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ImEL3kEha8swo46OkwuN7UmVsslsvFGrzhZBeji10/k=;
+        b=F34zdE2TqIqf9gVO9/LI4agEqqwyZK8yaYZpw2h254OvgDbvkGCihIndMPrbTlkAuc
+         78h6PZujAj3phKId8CwXmE0z36lY5Zgx6KJdSFbbC9pl27HCEvpFL3vw4PMDFI/CrKi4
+         o68aUKc0f0LLGziUlMjFyNFDX3+eAsbsNx3fmRCXsrTa+YPodQplkiwpyEWmVAKiAAyk
+         /vASWexRJZ/jGjt24uZtmsEX0t9/Iye4x5FEQTjy47/P/npe3L6SLnvuf+NWpsQ6N6rW
+         E579Ej+8JrZd/2leB0p+z3S5zvIcfpazgzo94lycQbSbr6YIZZDTsv5KdQEt8IQ2mEz+
+         1JoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ImEL3kEha8swo46OkwuN7UmVsslsvFGrzhZBeji10/k=;
+        b=qom+cVJ37TQJGKX3+GYko89Iy3vxjn4X12mzkArjHxK9xP0XL7Ap9qQqtVeZEOKI4X
+         XABOmxo+gacaj3Er2fhqynrCilygmS9++pq7izxIwbSqKlkJAQ2o/I5IC8/nImM8Hv8N
+         F8o4pUc1T8l809688NuRvYiVsSFPPl0YsGD0mLk2jpfmdEeTOan0raQOktbfUQ5bmETv
+         rDieCWWSrJ6+VQuUSpZDdY0aiHZlDTdsC11IzYXsWLA9mS3WOljV5EJUC9hKDg4t3wBe
+         eFkhcHWLT2SWZbpDreF9sNCc9r2sWPOWyKwyoaXProHo6YhwpLWlnog5PrR2Muk3BZ+Q
+         Wtag==
+X-Gm-Message-State: AGi0PubqkeKJikprX5m0TVVxW5FdjWJqSRd5ADiP9UPp9dpwunEtf+yp
+        2teI6b9IN4pIuYzqOZUDLtfoRG10
+X-Google-Smtp-Source: APiQypLhdgEe9YJ5NE6xoNxJcM1ks3cfVKN0bDFCLzRMxqo+n0wUXV2khF9jYh3d+hm/GqcB5oSnbw==
+X-Received: by 2002:a17:902:a706:: with SMTP id w6mr9569035plq.173.1588431341115;
+        Sat, 02 May 2020 07:55:41 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y24sm4681612pfn.211.2020.05.02.07.55.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 02 May 2020 07:55:40 -0700 (PDT)
+Date:   Sat, 2 May 2020 07:55:39 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/70] 4.4.221-rc2 review
+Message-ID: <20200502145539.GA189389@roeck-us.net>
+References: <20200502064240.568495432@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jUtY2-0001OS-Uz;;;mid=<87a72qs830.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+l+mj2NDOkTQN7xzVp65cvLKHm+PLdbBA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 1/4] capability: add ns_capable_cred()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200502064240.568495432@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
+On Sat, May 02, 2020 at 08:46:53AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.221 release.
+> There are 70 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Mon, 04 May 2020 06:40:34 +0000.
+> Anything received after that time might be too late.
+> 
+Build results:
+	total: 169 pass: 169 fail: 0
+Qemu test results:
+	total: 335 pass: 335 fail: 0
 
-> On Sat, May 02, 2020 at 07:35:53AM -0500, Eric W. Biederman wrote:
->> Christian Brauner <christian.brauner@ubuntu.com> writes:
->> 
->> > On Thu, Apr 30, 2020 at 01:09:30PM -0500, Eric W. Biederman wrote:
->> >> Christian Brauner <christian.brauner@ubuntu.com> writes:
->> >> 
->> >> > Add a simple capability helper which makes it possible to determine
->> >> > whether a set of creds is ns capable wrt to the passed in credentials.
->> >> > This is not something exciting it's just a more pleasant wrapper around
->> >> > security_capable() by allowing ns_capable_common() to ake a const struct
->> >> > cred argument. In ptrace_has_cap() for example, we're using
->> >> > security_capable() directly. ns_capable_cred() will be used in the next
->> >> > patch to check against the target credentials the caller is going to
->> >> > switch to.
->> >> 
->> >> Given that this is to suppot setns.  I don't understand the
->> >> justification for this.
->> >> 
->> >> Is it your intention to use the reduced permissions that you get
->> >> when you install a user namespace?
->> >
->> > Indeed.
->> >
->> >> 
->> >> Why do you want to use the reduced permissions when installing multiple
->> >> namespaces at once?
->> >
->> > The intention is to use the target credentials we are going to install
->> > when setns() hits the point of no return. The target permissions are
->> > either the permissions of the caller or the reduced permissions if
->> > CLONE_NEWUSER has been requested. This has multiple reasons.
->> >
->> > The most obvious reason imho is that all other namespaces have an owning
->> > user namespace. Attaching to any other namespace requires the attacher
->> > to be privileged over the owning user namespace of that namespace.
->> > Consequently, all our current install handlers for every namespace we
->> > have check whether we are privileged in the owning user namespace of
->> > that user namespace. So in order to attach to any of those namespaces -
->> > especially when attaching as an unprivileged user - requires that we are
->> > attached to the user namespace first.
->> 
->> No actually it doesn't.  As if you have privileges to attach to the user
->> namespace you have the privileges to attach to anything it owns.  Or you
->> should I think I am missing some subtle detail at the moment.
->
-> Sorry, I phrased that very misleadingly. What I'm talking about should
-> be obvious in the second patch:
->
-> -static int utsns_install(struct nsproxy *nsproxy, struct ns_common *new)
-> +static int utsns_install(struct nsset *nsset, struct ns_common *new)
->  {
-> +       struct nsproxy *nsproxy = nsset->nsproxy;
->         struct uts_namespace *ns = to_uts_ns(new);
->
-> -       if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
-> -           !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> +       if (!ns_capable_cred(nsset->cred, ns->user_ns, CAP_SYS_ADMIN) ||
-> +           !ns_capable_cred(nsset->cred, nsset->cred->user_ns, CAP_SYS_ADMIN))
->                 return -EPERM;
->
-> All our current install handlers check that we're privileged wrt to our
-> _current_ user namespace, i.e. they all have a
-> ns_capable(current_user_ns(), CAP_SYS_ADMIN)
-> line. So if we specify
-> setns(CLONE_NEWUSER | CLONE_NEW*)
-> as an unprivileged user we aren't able to attach to any other namespace
-> unless we check against the target credentials.
->
->> 
->> 
->> > (That's especially useful given
->> > that most users especially container runtimes will unshare all
->> > namespaces. Doing it this way we can not just have attach privileged
->> > users attach to their containers but also unprivileged users to their
->> > containers in one shot.)
->> 
->> That is a wonderful reason for doing things, and it is the reason
->> why I am asking about it because I think you have it backwards.
->> 
->> Especially in the context of some container runtimes like Kubernetes
->> that I have been told will do things like share a network namespace
->> across all containers in a POD.
->
-> Kubernetes doesn't use user namespace at all so they need to run as root
-> anyway so that's not a problem. And if we're talking about scenarios
-> where some namespaces are shared and other's aren't then there'll be
-> batch-attaching any, i.e. not all at once but some at once. So I don't
-> think this is a good argument.
->
->> 
->> > A few other points about this. If one looks at clone(CLONE_NEW*) or
->> > unshare(CLONE_NEW*) then the ordering and permissions checking is the
->> > same way. All permissions checks are performed against the reduced
->> > permissions, i.e. if CLONE_NEWUSER is specified you check privilege
->> > against the reduced permissions too otherwise you wouldn't be able to
->> > spawn into a complete set of new namespaces as an unprivileged user.
->> 
->> That is a good catch and definitely a reason for looking at doing
->> things in this order.
->> 
->> For unshare and clone putting things in a user namespace means you can
->> create namespaces you could not create otherwise.
->> 
->> 
->> > This logic is also expressed in how setns() is already used in
->> > userspace. Any container runtime will attach to the user namespace first,
->> > so all subsequent calls to attach to other namespaces perform the checks
->> > against the reduced permissions. It also has to be that way because of
->> > fully unprivileged containers.
->> 
->> So I sat and looked.  For nsetner it winds up trying to enter
->> the namespaces in either order.
->> 
->>         /*
->>          * Now that we know which namespaces we want to enter, enter
->>          * them.  Do this in two passes, not entering the user
->>          * namespace on the first pass.  So if we're deprivileging the
->>          * container we'll enter the user namespace last and if we're
->>          * privileging it then we enter the user namespace first
->>          * (because the initial setns will fail).
->>          */
->>         for (pass = 0; pass < 2; pass ++) {
->>                 for (nsfile = namespace_files + 1 - pass; nsfile->nstype; nsfile++) {
->>                         if (nsfile->fd < 0)
->>                                 continue;
->>                         if (nsfile->nstype == CLONE_NEWPID && do_fork == -1)
->>                                 do_fork = 1;
->>                         if (setns(nsfile->fd, nsfile->nstype)) {
->>                                 if (pass != 0)
->>                                         err(EXIT_FAILURE,
->>                                             _("reassociate to namespace '%s' failed"),
->>                                             nsfile->name);
->>                                 else
->>                                         continue;
->>                         }
->> 
->>                         close(nsfile->fd);
->>                         nsfile->fd = -1;
->>                 }
->>         }
->> 
->> 
->> Looking a little close we have at least for entering the mntns the
->> following checks:
->> 
->> 	if (!ns_capable(mnt_ns->user_ns, CAP_SYS_ADMIN) ||
->> 	    !ns_capable(current_user_ns(), CAP_SYS_CHROOT) ||
->> 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
->> 		return -EPERM;
->> 
->> Which require CAP_SYS_CHROOT and CAP_SYS_ADMIN in the current user namespace.
->> 
->> So there is defintiely an issue there.
->> 
->> I suspect the clean approach is to simply require CAP_SYS_CHROOT in
->> the new user namespace, when we are setting several of them at once.
->
-> See my example above. All install handlers check for
-> ns_capable(current_user_ns(), CAP_SYS_ADMIN).
->
->
-> static int ipcns_install(struct nsproxy *nsproxy, struct ns_common *new)
-> {
-> 	struct ipc_namespace *ns = to_ipc_ns(new);
-> 	if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
-> 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> 		return -EPERM;
->
->
-> static int netns_install(struct nsproxy *nsproxy, struct ns_common *ns)
-> {
-> 	struct net *net = to_net_ns(ns);
->
-> 	if (!ns_capable(net->user_ns, CAP_SYS_ADMIN) ||
-> 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> 		return -EPERM;
->
-> static int mntns_install(struct nsproxy *nsproxy, struct ns_common *ns)
-> {
-> 	struct fs_struct *fs = current->fs;
-> 	struct mnt_namespace *mnt_ns = to_mnt_ns(ns), *old_mnt_ns;
-> 	struct path root;
-> 	int err;
->
-> 	if (!ns_capable(mnt_ns->user_ns, CAP_SYS_ADMIN) ||
-> 	    !ns_capable(current_user_ns(), CAP_SYS_CHROOT) ||
-> 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> 		return -EPERM;
->
-> static int cgroupns_install(struct nsproxy *nsproxy, struct ns_common *ns)
-> {
-> 	struct cgroup_namespace *cgroup_ns = to_cg_ns(ns);
->
-> 	if (!ns_capable(current_user_ns(), CAP_SYS_ADMIN) ||
-> 	    !ns_capable(cgroup_ns->user_ns, CAP_SYS_ADMIN))
-> 		return -EPERM;
->
-> static int utsns_install(struct nsproxy *nsproxy, struct ns_common *new)
-> {
-> 	struct uts_namespace *ns = to_uts_ns(new);
->
-> 	if (!ns_capable(ns->user_ns, CAP_SYS_ADMIN) ||
-> 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> 		return -EPERM;
->
-> static int pidns_install(struct nsproxy *nsproxy, struct ns_common *ns)
-> {
-> 	struct pid_namespace *active = task_active_pid_ns(current);
-> 	struct pid_namespace *ancestor, *new = to_pid_ns(ns);
->
-> 	if (!ns_capable(new->user_ns, CAP_SYS_ADMIN) ||
-> 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-> 		return -EPERM;
->
->> 
->> > To put it another way, if we were to always perform the permission checks
->> > against the current permissions (i.e. no matter if CLONE_NEWUSER is
->> > specified or not) then we'd never be able to attach to a set of
->> > namespaces at once as an unprivileged user.
->> > We also really want to be able to express both semantics:
->> > 1. setns(flags & ~CLONE_NEWUSER) --> attach to all namespaces with my
->> >    current permission level
->> > 2. setns(flags | CLONE_NEWUSER) attach to all namespaces with the target
->> >    permission level
->> > It feels weird if both 1 and 2 would mean the exact same thing given
->> > that the user namespace has an owernship relation with all the other
->> > namespaces.
->> 
->> It feels weird to me to disallow anything that we have permissions for.
->> 
->> Can you dig up the actual install permissions checks and see if there is
->> anything other than the mount namespace that needs permissions in the
->> current user namespace?
->
-> Yep did, all of them check ns_capable(current_user_ns(), CAP_SYS_ADMIN),
-> see above please.
->
->> 
->> Please let's walk this through.  I think there should be a way to
->> carefully phrase the permission checks that we don't need
->> ns_capable_cred that will allow goofy cases like setns into Kuberneties
->> PODs that share network namespaces.
->
-> Hm, Kubernetes doesn't use user namespace. I think I misunderstand your
-> concern maybe. But see below for a suggestion.
->
->> 
->> I believe that will be a way to phrase the permission checks so that
->> with or without CLONE_NEWUSER they make sense, and give very similar
->> results.
->> 
->> Certainly attaching to a mount namespace is going to need either being
->> root or attaching to a user namespace at the same time.  Because
->> attaching to a mount namespace needs functionality that the user
->> namespace provides.
->
-> So how about we add a new flag to setns()
-> SETNS_NEWUSER_CRED that is only valid in
-> conjunction with CLONE_NEWUSER and which allows callers to tell the
-> kernel "assume the target credentials first". This way we can support
-> both cases and users can specify what they want and we can clearly
-> document it on the manpages.
-
-Let's not get complicated.  Let's make this very simple.
-
-Change "ns_capable(current_user_user_ns(), CAP_SYS_ADMIN)"
-to     "ns_capable(nsset->cred->user_ns, CAP_SYS_ADMIN)".
-
-We still use the current credentials, but we require the caller of setns
-to have CAP_SYS_ADMIN in the user namespace you are going to wind up in.
-That is exactly what userns_install does today.
-
-That won't be any kind of security hole because we still require
-     	"ns_capable(ns->user_ns, CAP_SYS_ADMIN)"
-on all of the namespaces as well.
-
-That way if you are sufficiently privileged you can still handle joining
-namespaces that are not owned by the owner of the processes user
-namespace.  So we can join weird processes.
-
-Does that make sense?
-
-Eric
+Guenter
