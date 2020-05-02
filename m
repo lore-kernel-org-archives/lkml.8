@@ -2,136 +2,151 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0585C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD0FC2064C
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588421940;
-	bh=iIMxmKSfhwt9Y6WBsiFbb6OU8iD5jqB42Z04kdSzJG0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TpssLE8Vnwh7H2yto6z8SjU4btIG3gf6mPXVj3O4JExG810VrICtamwYv7OPfH0m3
-	 H5Dy1nKOBosMpY2dWbACSTcBHng+z33cXhCF4YKQpCYk8YhU3ybf9W71SYPwj/Ory+
-	 U+DhXJEFmLj0yy4tyZHBwour0165H2FUtNegVkBU=
+	by mail.kernel.org (Postfix) with ESMTP id 6EA2820787
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:21:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="VVkqCu9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgEBMSx (ORCPT
+        id S1727889AbgEBMV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgEBMSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:18:53 -0400
-Received: from localhost (p5486C608.dip0.t-ipconnect.de [84.134.198.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE2C2064C;
-        Sat,  2 May 2020 12:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588421932;
-        bh=iIMxmKSfhwt9Y6WBsiFbb6OU8iD5jqB42Z04kdSzJG0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Jf5QJEKFAF9qRkTYpsdkEocVaUAt1PasLUrUUArEVzlSONdl31rDeP5hrDwOFJNA/
-         /xns3DCnNoOBuM2otzCp8X4r6BBCQoKAdOEktzEVbdDHEDIlgRcxKdQeC+OWfeqNM2
-         Ix4zcoC+7JiBN4P/23YxeUg3m1f09VwyRzQcHzhc=
-From:   Wolfram Sang <wsa@kernel.org>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: use my kernel.org address from now on
-Date:   Sat,  2 May 2020 14:18:35 +0200
-Message-Id: <20200502121840.9544-1-wsa@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Sat, 2 May 2020 08:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727823AbgEBMV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 08:21:26 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD07C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 05:21:25 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id h26so2866661lfg.6
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 05:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ceg32SJO0EfoqNJv2X/qLbUtrniOfXr61mP5NwTkMnU=;
+        b=VVkqCu9RDWzq6YBs/j7mOw6q8qNZldPYjfP4UuI2Y4rWUHx4Ici/alROEbx5tk1pt2
+         oIa9S2ePWl69sn0ufl+SZuQVtMeGSJNPIaDp9cqtdvFJLWkXC2NkY3nkx2vKH1JRuu9O
+         jVsrQKte+hcB1DSDCuPb5gJXNSU+KQ1/o3yMLiqIHNEcnQVfwrX6HOAR421LY+I4Cr6L
+         7863hIoMUdmSE1H7gUbE9oQTVt5n7tLHBjgZZZNqIoWlCttTRCbqKXrvSfYjrKJ2w6B4
+         Nqki6Cwxnl5HWqNl4fWMDs+FPd7Wlxw4VViQeqDA5ZR/i4Ynr0qroqlkcu6BTvA+NuN3
+         d0Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ceg32SJO0EfoqNJv2X/qLbUtrniOfXr61mP5NwTkMnU=;
+        b=keO+1rUkKSgKZ8Jy+Qd8FjrCrp3BcxbmiBe84HF9rAitHOy2HFORfjK+4DkENtSANI
+         rfNYqvRj9TB0ECvi7avJqMcX+OZ+oy1181vCsV2uZi/QoTGYC5IRD7l8XGCmZ4/eNG7D
+         3SBZGC1Ybu90rqT5KBV4Y/9rA/U7fSQDkSODQovOlFzDE1pMv0YLmIpcUzhEwbIVfxeB
+         AZ1XiTTRoDDQvIDOO6KhcqOhMGrhczyIeEKFinNdgYhX7oHB1WJpDLCkpQbcmUU/8woD
+         jBaXodaSAveK+NmL1TgN8pahoqNGARRaQX7TpmUGJSUhHW/VTR5hZpm9144irNO4JqDX
+         RvdA==
+X-Gm-Message-State: AGi0PuZvk+rzUABt+J67oLzEJB8ZUI3j/Ff93AY5C1Hx7YgmC/cW13PK
+        3SofgpBtjddI7/XUle/ZUNW0JA==
+X-Google-Smtp-Source: APiQypK/eS7/y7LmA2plGuu3YKGMbgawTzyGOOoUslRJ6ZF24W0m4iEHUiqZ8X6omdaDwmTd0IR4Kw==
+X-Received: by 2002:a19:10:: with SMTP id 16mr5486216lfa.145.1588422083405;
+        Sat, 02 May 2020 05:21:23 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:44e2:b75:5482:ef8f:6eeb:f75c? ([2a00:1fa0:44e2:b75:5482:ef8f:6eeb:f75c])
+        by smtp.gmail.com with ESMTPSA id h24sm4650568lji.99.2020.05.02.05.21.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 May 2020 05:21:22 -0700 (PDT)
+Subject: Re: [PATCH] net: dsa: sja1105: fix speed setting for 10 MBPS
+To:     Colin King <colin.king@canonical.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, netdev@vger.kernel.org
+References: <20200501134310.289561-1-colin.king@canonical.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <ccfa3bc1-cdbd-f990-321f-55555531d56d@cogentembedded.com>
+Date:   Sat, 2 May 2020 15:21:20 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200501134310.289561-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old email is still active, but for easier handling, I am going to
-use my kernel.org address from now on. Also, add a mailmap for the now
-defunct Pengutronix address.
+Hello!
 
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
----
- .mailmap                    | 2 ++
- MAINTAINERS                 | 2 +-
- drivers/i2c/i2c-core-base.c | 2 +-
- drivers/i2c/i2c-core-of.c   | 2 +-
- include/linux/i2c.h         | 2 +-
- 5 files changed, 6 insertions(+), 4 deletions(-)
+On 01.05.2020 16:43, Colin King wrote:
 
-diff --git a/.mailmap b/.mailmap
-index db3754a41018..4f906b4e9785 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -288,6 +288,8 @@ Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@virtuozzo.com>
- Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@parallels.com>
- Takashi YOSHII <takashi.yoshii.zj@renesas.com>
- Will Deacon <will@kernel.org> <will.deacon@arm.com>
-+Wolfram Sang <wsa@kernel.org> <wsa@the-dreams.de>
-+Wolfram Sang <wsa@kernel.org> <w.sang@pengutronix.de>
- Yakir Yang <kuankuan.y@gmail.com> <ykk@rock-chips.com>
- Yusuke Goda <goda.yusuke@renesas.com>
- Gustavo Padovan <gustavo@las.ic.unicamp.br>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 26f281d9f32a..46049787d27e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7949,7 +7949,7 @@ F:	Documentation/i2c/busses/i2c-parport.rst
- F:	drivers/i2c/busses/i2c-parport.c
- 
- I2C SUBSYSTEM
--M:	Wolfram Sang <wsa@the-dreams.de>
-+M:	Wolfram Sang <wsa@kernel.org>
- L:	linux-i2c@vger.kernel.org
- S:	Maintained
- W:	https://i2c.wiki.kernel.org/
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index a66912782064..ee013313b727 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -7,7 +7,7 @@
-  *   Mux support by Rodolfo Giometti <giometti@enneenne.com> and
-  *   Michael Lawnick <michael.lawnick.ext@nsn.com>
-  *
-- * Copyright (C) 2013-2017 Wolfram Sang <wsa@the-dreams.de>
-+ * Copyright (C) 2013-2017 Wolfram Sang <wsa@kernel.org>
-  */
- 
- #define pr_fmt(fmt) "i2c-core: " fmt
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index 6787c1f71483..3ed74aa4b44b 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -5,7 +5,7 @@
-  * Copyright (C) 2008 Jochen Friedrich <jochen@scram.de>
-  * based on a previous patch from Jon Smirl <jonsmirl@gmail.com>
-  *
-- * Copyright (C) 2013, 2018 Wolfram Sang <wsa@the-dreams.de>
-+ * Copyright (C) 2013, 2018 Wolfram Sang <wsa@kernel.org>
-  */
- 
- #include <dt-bindings/i2c/i2c.h>
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 45d36ba4826b..49d29054e657 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -2,7 +2,7 @@
- /*
-  * i2c.h - definitions for the Linux i2c bus interface
-  * Copyright (C) 1995-2000 Simon G. Vogl
-- * Copyright (C) 2013-2019 Wolfram Sang <wsa@the-dreams.de>
-+ * Copyright (C) 2013-2019 Wolfram Sang <wsa@kernel.org>
-  *
-  * With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi> and
-  * Frodo Looijaard <frodol@dds.nl>
--- 
-2.20.1
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The current logic for speed checking will never set the speed to 10 MBPS
+> because bmcr & BMCR_SPEED10 is always 0 since BMCR_SPEED10 is 0. Also
+> the erroneous setting where BMCR_SPEED1000 and BMCR_SPEED100 are both
+> set causes the speed to be 1000 MBS.  Fix this by masking bps and checking
+> for just the expected settings of BMCR_SPEED1000, BMCR_SPEED100 and
+> BMCR_SPEED10 and defaulting to the unknown speed otherwise.
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Fixes: ffe10e679cec ("net: dsa: sja1105: Add support for the SGMII port")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/net/dsa/sja1105/sja1105_main.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+> index 472f4eb20c49..59a9038cdc4e 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_main.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
+> @@ -1600,6 +1600,7 @@ static const char * const sja1105_reset_reasons[] = {
+>   int sja1105_static_config_reload(struct sja1105_private *priv,
+>   				 enum sja1105_reset_reason reason)
+>   {
+> +	const int mask = (BMCR_SPEED1000 | BMCR_SPEED100 | BMCR_SPEED10);
 
+    Why not declare it in the block it's used in? Also, () not needed here.
+
+>   	struct ptp_system_timestamp ptp_sts_before;
+>   	struct ptp_system_timestamp ptp_sts_after;
+>   	struct sja1105_mac_config_entry *mac;
+> @@ -1684,14 +1685,16 @@ int sja1105_static_config_reload(struct sja1105_private *priv,
+>   		sja1105_sgmii_pcs_config(priv, an_enabled, false);
+>   
+>   		if (!an_enabled) {
+> -			int speed = SPEED_UNKNOWN;
+> +			int speed;
+
+    Why not the following?
+
+		int mask = bmcr & (BMCR_SPEED1000 | BMCR_SPEED100 |
+			   BMCR_SPEED10);			
+
+>   
+> -			if (bmcr & BMCR_SPEED1000)
+> +			if ((bmcr & mask) == BMCR_SPEED1000)
+>   				speed = SPEED_1000;
+> -			else if (bmcr & BMCR_SPEED100)
+> +			else if ((bmcr & mask) == BMCR_SPEED100)
+>   				speed = SPEED_100;
+> -			else if (bmcr & BMCR_SPEED10)
+> +			else if ((bmcr & mask) == BMCR_SPEED10)
+>   				speed = SPEED_10;
+> +			else
+> +				speed = SPEED_UNKNOWN;
+>   
+>   			sja1105_sgmii_pcs_force_speed(priv, speed);
+>   		}
+
+MBR, Sergei
