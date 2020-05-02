@@ -2,173 +2,100 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A59C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424D1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8215E2137B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588422227;
-	bh=VFZRfbxaSvB4UZ1zviOZTlVRbHiO20UoTo/B+qSaaG4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kz+DN+nYzTCJrUWX6vm5++yTlNF7O+2WITMCHfw+aYku/BitRjh2+qEShfGhVSln8
-	 p78kVC6yCRlDD3dX1mlMU7E0K6/mwRMyzQcCJNuL05ycGWqVm6p6VrlVxtjTwNLajQ
-	 mzA15gxwv/8dPxk5wS9X0XUNaGs05LywKfK0PJcI=
+	by mail.kernel.org (Postfix) with ESMTP id 1356520731
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:30:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXBFXl71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgEBMXr (ORCPT
+        id S1727839AbgEBMa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgEBMXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:23:46 -0400
-Received: from localhost (unknown [117.99.89.89])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B612072E;
-        Sat,  2 May 2020 12:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588422225;
-        bh=VFZRfbxaSvB4UZ1zviOZTlVRbHiO20UoTo/B+qSaaG4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JpJkJ9V2yIOYst2+CnADV6vZYbBSsji5p95E18XUDniryQPcpKFxZB5djNDn5HRTZ
-         Q8T87KG0xlmNwr+jnKYaX+rWSjBxosCZnJVea4ZTG0FVprle9Ef/q0v+aarIWkqcuf
-         aqSex9O5rdCoke0a5TWf4vvQkTreuuttfb06KRh0=
-Date:   Sat, 2 May 2020 17:53:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
-Message-ID: <20200502122333.GA1375924@vkoul-mobl>
-References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
+        Sat, 2 May 2020 08:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727029AbgEBMaZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 08:30:25 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A39FC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 05:30:25 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id b12so7421928ion.8
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 05:30:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3uQvbmBtPfau0c36fVvnAuHUvWsyQdwrd424BAs7J+Y=;
+        b=UXBFXl71pOYoRRRS+69JMI7kA/Bv6mS1Yx+8Xjs48McZ4AtgCisNneooKsURx+qMF7
+         Z+Ip8/VkFZrYl9mSllXS27y8/l7stxnKMnQIkg3V+0at2HAPkOAn0ubBy0qTwQcfNWmq
+         c1rTKavWivbWGyjxRL7erEIvFW8NNEoL8VipSxHt8aBnhoMrFVpNWndaMbuaSUJDEDnx
+         4EryewuRfShz3kyrMYL/8f8DLxsPShSc0ikmbJi2zNTZXhAB2q4/zWbFr9SRr12T1CfD
+         vjbm49l37Dea5S76BW66SYUWH6UpWFanaAL3lff4eM7zokC/NDBCy0iT4t+J9tHcBklB
+         o/Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3uQvbmBtPfau0c36fVvnAuHUvWsyQdwrd424BAs7J+Y=;
+        b=RqYsS00BGTv7BrHcT/NyCgntmtu2UocMGFqH8AoPeAb1J3J/ps6pJto56c1vZ/bhiU
+         bDQrNycJnnL1lQVbM7zDhKHgunN6XhUv1mBjcmED5Zy0hBfUapGauwNJ8LvhWQfk75Ed
+         WnVfDERBuYw91pouVigh6khWGlFUMUnTWl6scePgKw6Q4m9W5BKJL8MfDhDynqn5QAt4
+         6nik/O1UaDlWr2011UqolOXR7htQhKK0ax7rgmiSLXXfeDG2qo/r3BmI8XcOVdI8uDX8
+         rUqOM+GsV3QM2Bourq4pE5aAkXHWr1QwEY3tERlIO8ydzip2jokaUxyTKhoXb6HrGCD8
+         PfvQ==
+X-Gm-Message-State: AGi0PubE5ByFYvIWggnOs//C2W6H+paf+B513mZ0TgyuL1veFmhCnFNU
+        DMqOew4bDxzA3y4QWoUTXTMctH94Ek+XbZDP/+Pu1ZNB
+X-Google-Smtp-Source: APiQypKjQEJr50SSD+wZTKC4UtIKG9oBaPBilJhbM81K49d+oej84dCFNh0SFdsE2H8POwnSgGZvyGv9VRtL6QGheUo=
+X-Received: by 2002:a5e:8203:: with SMTP id l3mr4649643iom.35.1588422624364;
+ Sat, 02 May 2020 05:30:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
+References: <20200306103839.1231057-1-aford173@gmail.com>
+In-Reply-To: <20200306103839.1231057-1-aford173@gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sat, 2 May 2020 07:30:13 -0500
+Message-ID: <CAHCN7xJ+3kvkt2TGe3j2JC6YVbxgsOzrSrDN6jaae2TZskOu4Q@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable IMX27 PWM controller
+To:     arm-soc <linux-arm-kernel@lists.infradead.org>
+Cc:     Adam Ford-BE <aford@beaconembedded.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cristian,
+On Fri, Mar 6, 2020 at 4:38 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> The i.MX8M Mini and others use the i.MX27 PWM controller.
+> This patch enables it as a module so various boards can use it.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-On 29-04-20, 18:28, Cristian Ciocaltea wrote:
-> When the kernel is built with lockdep support and the owl-dma driver is
-> used, the following message is shown:
+I don't know who the right person is to ping for this, but it's still
+awaiting approval.
 
-First the patch title needs upate, we describe the patch in the title
-and not the cause. So use correct lock, or use od lock might be better
-titles, pls revise.
-
-Second, the susbsystem is named dmaengine:... not dma:.. You can always
-check that by using git log on the respective file
-
-Pls do add fixes and further acks received on next iteration.
-
-> 
-> [    2.496939] INFO: trying to register non-static key.
-> [    2.501889] the code is fine but needs lockdep annotation.
-> [    2.507357] turning off the locking correctness validator.
-> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-> [    2.519084] Hardware name: Generic DT based system
-> [    2.523878] Workqueue: events_freezable mmc_rescan
-> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
-> 
-> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-> 'owl_dma_terminate_pchan'.
-> 
-> Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
-> and removes the 'lock' attribute in 'owl_dma_pchan' struct.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> Changes in v3:
-> * Get rid of the kerneldoc comment for the removed struct attribute
-> * Add the Reviewed-by tag in the commit message
-> 
-> Changes in v2:
-> * Improve the fix as suggested by Manivannan Sadhasivam: substitute
->   'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
->   'owl_dma_pchan' struct
-> * Update the commit message to reflect the changes
-> 
->  drivers/dma/owl-dma.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-> index c683051257fd..66ef70b00ec0 100644
-> --- a/drivers/dma/owl-dma.c
-> +++ b/drivers/dma/owl-dma.c
-> @@ -175,13 +175,11 @@ struct owl_dma_txd {
->   * @id: physical index to this channel
->   * @base: virtual memory base for the dma channel
->   * @vchan: the virtual channel currently being served by this physical channel
-> - * @lock: a lock to use when altering an instance of this struct
->   */
->  struct owl_dma_pchan {
->  	u32			id;
->  	void __iomem		*base;
->  	struct owl_dma_vchan	*vchan;
-> -	spinlock_t		lock;
->  };
->  
->  /**
-> @@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
->  	for (i = 0; i < od->nr_pchans; i++) {
->  		pchan = &od->pchans[i];
->  
-> -		spin_lock_irqsave(&pchan->lock, flags);
-> +		spin_lock_irqsave(&od->lock, flags);
->  		if (!pchan->vchan) {
->  			pchan->vchan = vchan;
-> -			spin_unlock_irqrestore(&pchan->lock, flags);
-> +			spin_unlock_irqrestore(&od->lock, flags);
->  			break;
->  		}
->  
-> -		spin_unlock_irqrestore(&pchan->lock, flags);
-> +		spin_unlock_irqrestore(&od->lock, flags);
->  	}
->  
->  	return pchan;
-> -- 
-> 2.26.2
-
--- 
-~Vinod
+>
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index a8de3d327d03..d19ca82b3c40 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -830,6 +830,7 @@ CONFIG_MPL3115=m
+>  CONFIG_PWM=y
+>  CONFIG_PWM_BCM2835=m
+>  CONFIG_PWM_CROS_EC=m
+> +CONFIG_PWM_IMX27=m
+>  CONFIG_PWM_MESON=m
+>  CONFIG_PWM_RCAR=m
+>  CONFIG_PWM_ROCKCHIP=y
+> --
+> 2.25.0
+>
