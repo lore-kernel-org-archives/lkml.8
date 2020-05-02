@@ -2,138 +2,156 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FDCC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB74C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C633F208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZBTP92mI"
+	by mail.kernel.org (Postfix) with ESMTP id 8D29D208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgEBAfd (ORCPT
+        id S1727095AbgEBAgt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:35:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51018 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726352AbgEBAfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:35:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588379730;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ujwsyw/O/+AeBjWrVJ65oHPAkvklfR2fQlh0BfXvrl8=;
-        b=ZBTP92mIRRydB5tWbYn4+BYzcU5GpxAbkeCFx62DxaoijGCiD2UuyQJJyO8SlyW1Dic+Nx
-        6Cspe7o6Ecy8GJTg6vF56U1UbvMmkBaw9xsfR5aE1sBGmWw2dfldCyF2NTOUrnhOBEWwQp
-        MeggRtiFSQGQr0nScidNp7DjNhuYs7g=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-260-9zCLmeDGOR2A_AFPmm_4Ew-1; Fri, 01 May 2020 20:35:27 -0400
-X-MC-Unique: 9zCLmeDGOR2A_AFPmm_4Ew-1
-Received: by mail-qk1-f198.google.com with SMTP id h186so11931690qkc.22
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 17:35:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ujwsyw/O/+AeBjWrVJ65oHPAkvklfR2fQlh0BfXvrl8=;
-        b=SakNbwwGtm4Zvv4RyOIxdZcd/hQeGg7h0O5jA5AiRUaW+e7tAZHdEnkIhSl+PVz3cy
-         NWIkYs0eZ8OQ5j6zgfOvZuFkYwcXbz3cbFcPObED6/+VcpYy22Kx3mCkf5Akxs9mbbqK
-         NRBnq3FZ0+/LHYExZcClrhf16IKPxWH/ncuszIL0aO0HDW+PsJiQP6s2yZJUC0CxQrqf
-         C+DigCFwL05VzlkJ87+WdObufUQEhsa3l++imquDaYbaABPVkFEi++yz4vOHuMM5js7k
-         nTr2hSV54uMjZpWay+cplXpOx7ee+wtbQ2Cxw9MKF83U0GpT0JPgGVY1xi6po1AFgOBG
-         DBRA==
-X-Gm-Message-State: AGi0PuYNt/Ru0+UwexixbUfMr7LE+L0W3o87dRATuccLwASWPy6Kf7di
-        yMxut/yM9tUePlcUSZFae5ZLmZq5VhIxJYPaaK2fsdPcJn7LTtrj9SFHpWfaQBCjL23deVevWW8
-        7G1q3hLIdFkRJLEsLyZazn43Q
-X-Received: by 2002:a0c:e305:: with SMTP id s5mr6695560qvl.234.1588379726269;
-        Fri, 01 May 2020 17:35:26 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIKjxGjbQD1Flb1NGYaaAesLEVchYYS9XDerFgmnbjkuTL/GCEnpwLpmoav+xBLnP8sNFxrUw==
-X-Received: by 2002:a0c:e305:: with SMTP id s5mr6695538qvl.234.1588379725927;
-        Fri, 01 May 2020 17:35:25 -0700 (PDT)
-Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id g123sm4044892qkd.95.2020.05.01.17.35.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 17:35:24 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     peterx@redhat.com, Alex Williamson <alex.williamson@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] mm/gup: Fix fixup_user_fault() on multiple retries
-Date:   Fri,  1 May 2020 20:35:23 -0400
-Message-Id: <20200502003523.8204-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 1 May 2020 20:36:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:10180 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbgEBAgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 20:36:49 -0400
+IronPort-SDR: LyvviBwtccCuECDn9RiBJif07x0A+jnbpoAHNPm5CQevW62DPCW0ocEehyBB3UCUMB/+j+kXQK
+ TK6ChT3CHXOA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 17:36:48 -0700
+IronPort-SDR: UCDwa9xtBMPQP7l3w3ldOXffn+6aQQoL2ybbc1llYelWmorhUp2R9ZOqcVoAejc/vEK+4nHXFE
+ 7XKeD6tcz+DQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
+   d="scan'208";a="368582392"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga001.fm.intel.com with ESMTP; 01 May 2020 17:36:48 -0700
+Received: from orsmsx151.amr.corp.intel.com ([169.254.7.25]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.249]) with mapi id 14.03.0439.000;
+ Fri, 1 May 2020 17:36:48 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Joe Perches <joe@perches.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Jakub Kicinski <kuba@kernel.org>,
+        Andy Whitcroft <apw@canonical.com>
+Subject: RE: [PATCH] checkpatch: add NL_SET_ERR_MSG to 80 column exceptions
+Thread-Topic: [PATCH] checkpatch: add NL_SET_ERR_MSG to 80 column exceptions
+Thread-Index: AQHWIA3lrxYd/voAoky496eGOdAMeKiUWXYA//+l34CAAGefgP//i+5w
+Date:   Sat, 2 May 2020 00:36:48 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB58C0774F94@ORSMSX151.amr.corp.intel.com>
+References: <20200501231131.2389319-1-jacob.e.keller@intel.com>
+         <e1e12e3f6992c00c005ba2b3bcf671c033a1dccc.camel@perches.com>
+         <5a1da586-0cc0-1900-477f-6fef61af7f95@intel.com>
+ <1c86e75bb56693bc2343d30e5baba09c783b02a2.camel@perches.com>
+In-Reply-To: <1c86e75bb56693bc2343d30e5baba09c783b02a2.camel@perches.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This part is overlooked when reworking the gup code on multiple retries.  When
-we get the 2nd+ retry, we'll be with TRIED flag set.  Current code will bail
-out on the 2nd retry because the !TRIED check will fail so the retry logic will
-be skipped.  What's worse is that, it will also return zero which errornously
-hints the caller that the page is faulted in while it's not.
+> -----Original Message-----
+> From: Joe Perches <joe@perches.com>
+> Sent: Friday, May 01, 2020 5:30 PM
+> To: Keller, Jacob E <jacob.e.keller@intel.com>; linux-kernel@vger.kernel.org
+> Cc: Jakub Kicinski <kuba@kernel.org>; Andy Whitcroft <apw@canonical.com>
+> Subject: Re: [PATCH] checkpatch: add NL_SET_ERR_MSG to 80 column
+> exceptions
+> 
+> On Fri, 2020-05-01 at 17:19 -0700, Jacob Keller wrote:
+> >
+> > On 5/1/2020 4:42 PM, Joe Perches wrote:
+> > > On Fri, 2020-05-01 at 16:11 -0700, Jacob Keller wrote:
+> > > > NL_SET_ERR_MSG and NL_SET_ERR_MSG_MOD are used to report
+> extended error
+> > > > responses about failure of a netlink command. These strings often end up
+> > > > going over the 80-column limit. Just like logging messages, it is
+> > > > preferred to leave the message all on a single line.
+> > > >
+> > > > Add these to the exception list so that checkpatch.pl will no longer
+> > > > complain about the long lines due to use of these macros.
+> > > >
+> > > > Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+> > > > Cc: Jakub Kicinski <kuba@kernel.org>
+> > > > Cc: Andy Whitcroft <apw@canonical.com>
+> > > > Cc: Joe Perches <joe@perches.com>
+> > > > ---
+> > > >  scripts/checkpatch.pl | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > > index eac40f0abd56..5da3b06fbeaa 100755
+> > > > --- a/scripts/checkpatch.pl
+> > > > +++ b/scripts/checkpatch.pl
+> > > > @@ -471,7 +471,8 @@ our $logFunctions = qr{(?x:
+> > > >  	WARN(?:_RATELIMIT|_ONCE|)|
+> > > >  	panic|
+> > > >  	MODULE_[A-Z_]+|
+> > > > -	seq_vprintf|seq_printf|seq_puts
+> > > > +	seq_vprintf|seq_printf|seq_puts|
+> > > > +	NL_SET_ERR_MSG(?:_MOD)?
+> > > >  )};
+> > > >
+> > > >  our $allocFunctions = qr{(?x:
+> > >
+> > > <shrug>  OK I guess.
+> > >
+> > > What about GENL_SET_ERR_MSG ?
+> > >
+> >
+> > This appears in far fewer locations, but it does seem reasonable to add
+> > it to this list as well.
+> >
+> > > btw:
+> > >
+> > > There are some uses with what appear to be unnecessary newlines.
+> > > Maybe these newlines should be removed.
+> >
+> > Yea, there's a number of places which seem to have put a newline break
+> > after the extack pointer.
+> >
+> > A quick search shows that there are about 970 or so uses where we don't
+> > put a newline, and around 220 where we do.
+> >
+> > I suppose I can make a series that cleans all of those up along with
+> > this patch.
+> 
+> That's not what I meant.
+> I don't care if there are multiple source lines used.
+> In fact, I think it's mostly nicer with multiple lines.
 
-The !TRIED flag check seems to not be needed even before the mutliple retries
-change because if we get a VM_FAULT_RETRY, it must be the 1st retry, and we
-should not have TRIED set for that.
+Ah. Sure. I just noticed that one was more common than the other.
 
-Fix it by removing the !TRIED check, at the meantime check against fatal
-signals properly before the page fault so we can still properly respond to the
-user killing the process during retries.
+> 
+> The ones I specified previously use:
+> 
+> 	NL_SET_ERR_MSG_MOD(extack, "message\n");
+> 
+> where all the others uses are:
+> 
+> 	NL_SET_ERR_MSG_MOD(extack, "message");
+> 
+> without the \n termination of the message.
+> 
 
-CC: Alex Williamson <alex.williamson@redhat.com>
-Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
+I see. Yea, I think the trailing newline isn't needed, but I'm not sure.
 
-I don't have a case to trigger the problem, so I only smoke tested the patch.
-However I think this should be the right thing to do...  Please have a look,
-thanks.
----
- mm/gup.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 50681f0286de..87a6a59fe667 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1218,6 +1218,10 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 	if (!vma_permits_fault(vma, fault_flags))
- 		return -EFAULT;
- 
-+	if ((fault_flags & FAULT_FLAG_KILLABLE) &&
-+	    fatal_signal_pending(current))
-+		return -EINTR;
-+
- 	ret = handle_mm_fault(vma, address, fault_flags);
- 	major |= ret & VM_FAULT_MAJOR;
- 	if (ret & VM_FAULT_ERROR) {
-@@ -1230,11 +1234,9 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 
- 	if (ret & VM_FAULT_RETRY) {
- 		down_read(&mm->mmap_sem);
--		if (!(fault_flags & FAULT_FLAG_TRIED)) {
--			*unlocked = true;
--			fault_flags |= FAULT_FLAG_TRIED;
--			goto retry;
--		}
-+		*unlocked = true;
-+		fault_flags |= FAULT_FLAG_TRIED;
-+		goto retry;
- 	}
- 
- 	if (tsk) {
--- 
-2.26.2
+Thanks,
+Jake
 
