@@ -2,390 +2,209 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571FAC47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16C1C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEF1206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588440668;
-	bh=Un4jyA+lzOxIUevxBXaZkTNsi2B49jZeVzIglPjaOWg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Qa+hqeUWONSRG+8SeIJTQ5zh/E5LPYh9tvtdSh1H+MA8Li5xy806GVpyrT/cNU8Jf
-	 Wq8pOmh0d+dBy+eWCC7CHkOWRLZzlfFy3wU8vN7esRRYitGkpk7dHk86h6AAuGRqUy
-	 vEk3IdzxYZgZsxasyTbYOOakwu3j5OKt1B8vTZlg=
+	by mail.kernel.org (Postfix) with ESMTP id AAA3120775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:35:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyxzkjJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgEBRbH (ORCPT
+        id S1728437AbgEBRfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 13:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbgEBRbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 13:31:07 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44DF6206B8;
-        Sat,  2 May 2020 17:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588440666;
-        bh=Un4jyA+lzOxIUevxBXaZkTNsi2B49jZeVzIglPjaOWg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=F5bje+/Vvao4S/KkOUBoaHA9PzSDhufrYZ7x2m4yEy2BP7QDg51ETS7WZOi4EBD0E
-         FDEgm6tS/FJ3Lkm9zqxNeOTjCMhm3Pkhjm2P7MM9Hs/PvvKoJHxerNc05et3yFunJd
-         gdTBAOpufbtC1k6JS6tr1sFQmVzevaS6xB7dSSps=
-Date:   Sat, 2 May 2020 18:31:02 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
-        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
- at91_adc_current_chan_is_touch() helper
-Message-ID: <20200502183102.4e916203@archlinux>
-In-Reply-To: <b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com>
-References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
-        <20200413180556.20638f3b@archlinux>
-        <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
-        <20200414184505.0cd39249@archlinux>
-        <f13b4286c5f133e7461d59965d7f84af059c8e89.camel@analog.com>
-        <208699ad-1302-aac1-c2e7-4f469e39a7eb@microchip.com>
-        <b50961e86a536223be7e3df0f276e572a435f644.camel@analog.com>
-        <be31bfcde7dc35b07855302d5cbf6db42bc7f634.camel@analog.com>
-        <b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 2 May 2020 13:35:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728382AbgEBRfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 13:35:05 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6CCC061A0C;
+        Sat,  2 May 2020 10:35:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g13so15708351wrb.8;
+        Sat, 02 May 2020 10:35:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gKb7iyknzWu1WCRpWVs4myLLU2HoGPdepjCNgtl1lVk=;
+        b=kyxzkjJXONeJir9EunNEAivfkNjtnLOFCyryMDDzRWMUY/pelv1VrTrtDvFuxYLhw2
+         +pbWXofrgXJ5fJescMyKPQVAZOcoCJBS7MS5ygdXStp9EqOFE4GpSlWZhZfzW4psVYXp
+         a2ODxt8YzvlGDY2IxFzZbvQyUkRF0X4dPcMZ0BbUO/TrhcqNUuo3K3/2E/nQMmiVW81Q
+         REdm4ZuwcUHag89eJlQMuCGlLSzDbakWomGU3AoGiF1Zwx7Qh8+8XqKTtUMYtUk9/q4+
+         zhyCfdRRHUBxor/3PEMjDnqUMtNsQD3y3ygYvMkIB8dWrKWqdgui2U54HJszlhOlcjcj
+         qmpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gKb7iyknzWu1WCRpWVs4myLLU2HoGPdepjCNgtl1lVk=;
+        b=tSSAtxwMBFykstVkptZ1iL2ZSQgxFXXJlyAATBh2zU8hkoGm6b/867afsvPQFvW4+8
+         TZmdgO6QYKlYeMgNEjwZ8A+JorwoOw69qrdEpDv3CPmY6tZVnetf6SCrzgQNt0XrNlWf
+         oocr74UZDegIUUI6QDWH8+SxqD/glRK+jrXCWMkgvnMu9HwiV+CfFl9y6ADq3LD/wOA2
+         exR4rySbJy+iyB8UebOIoC9FfMdaKCIP54ZjI+3mZg/t+JfTS9ouIB9TngXOcW6W+ZZl
+         Al7pdosMXMP5Ga1YqA+NntEz1cMoZSUQMs8iGfoPvThp6s8eihAL+8j+zBnQU+8hzDPA
+         bIKw==
+X-Gm-Message-State: AGi0PuYgofscxrJnt5l8QdTaZEnZQLscEFANQZswe6NZ0MW+ojvi1QOC
+        YPxolb5wvFgCYctcJcteFUc=
+X-Google-Smtp-Source: APiQypLRaFs3MmL+TMU7Ef0N2tOYOr02tMqqYzHwApC/hpx/j/Kj+pLIpsyCgAZpTETm+K2fB77IZQ==
+X-Received: by 2002:a5d:6305:: with SMTP id i5mr11440815wru.60.1588440903631;
+        Sat, 02 May 2020 10:35:03 -0700 (PDT)
+Received: from BV030612LT ([188.24.130.199])
+        by smtp.gmail.com with ESMTPSA id y31sm2175991wrd.83.2020.05.02.10.35.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 02 May 2020 10:35:03 -0700 (PDT)
+Date:   Sat, 2 May 2020 20:35:00 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
+Message-ID: <20200502173500.GA7621@BV030612LT>
+References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
+ <20200502122333.GA1375924@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200502122333.GA1375924@vkoul-mobl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 08:10:29 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+On Sat, May 02, 2020 at 05:53:33PM +0530, Vinod Koul wrote:
+> Hi Cristian,
+> 
+> On 29-04-20, 18:28, Cristian Ciocaltea wrote:
+> > When the kernel is built with lockdep support and the owl-dma driver is
+> > used, the following message is shown:
+> 
+> First the patch title needs upate, we describe the patch in the title
+> and not the cause. So use correct lock, or use od lock might be better
+> titles, pls revise.
+> 
+> Second, the susbsystem is named dmaengine:... not dma:.. You can always
+> check that by using git log on the respective file
+> 
+> Pls do add fixes and further acks received on next iteration.
+>
 
-> On Thu, 2020-04-30 at 07:30 +0000, Ardelean, Alexandru wrote:
-> > On Mon, 2020-04-27 at 13:00 +0000, Ardelean, Alexandru wrote:  
-> > > [External]
-> > > 
-> > > On Mon, 2020-04-27 at 12:20 +0000, Eugen.Hristev@microchip.com wrote:  
-> > > > [External]
-> > > > 
-> > > > On 15.04.2020 09:33, Ardelean, Alexandru wrote:
-> > > >   
-> > > > > On Tue, 2020-04-14 at 18:45 +0100, Jonathan Cameron wrote:  
-> > > > > > On Tue, 14 Apr 2020 12:22:45 +0000
-> > > > > > <Eugen.Hristev@microchip.com> wrote:
-> > > > > >   
-> > > > > > > On 13.04.2020 20:05, Jonathan Cameron wrote:  
-> > > > > > > > On Wed, 4 Mar 2020 10:42:18 +0200
-> > > > > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> > > > > > > >   
-> > > > > > > > > This change moves the logic to check if the current channel is
-> > > > > > > > > the
-> > > > > > > > > touchscreen channel to a separate helper.
-> > > > > > > > > This reduces some code duplication, but the main intent is to
-> > > > > > > > > re-
-> > > > > > > > > use
-> > > > > > > > > this
-> > > > > > > > > in the next patches.
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com  
-> > > > > > > > > >  
-> > > > > > > > Eugen / Ludovic,
-> > > > > > > > 
-> > > > > > > > Have you had a chance to look at this series?  
-> > > > > > > 
-> > > > > > > Hi Jonathan,
-> > > > > > > 
-> > > > > > > Does the patch apply correctly for you ?  
-> > > > > > 
-> > > > > > I haven't tried yet :)
-> > > > > >   
-> > > > > 
-> > > > > I've rebased this patchset on top of current iio/testing and it still
-> > > > > applies.
-> > > > >   
-> > > > 
-> > > > Hi Alex,
-> > > > 
-> > > > I tried this patch on top of my tree (however I am testing with an older 
-> > > > kernel 5.4) , and I have issues starting the buffer after you moved my 
-> > > > code to the preenable callback.
-> > > > 
-> > > > Namely, on the line:
-> > > > 
-> > > > if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
-> > > >                 return -EINVAL;  
-> > 
-> > In the meantime I found this patch:
-> > https://urldefense.com/v3/__https://lore.kernel.org/linux-iio/1431525891-19285-5-git-send-email-lars@metafoo.de/__;!!A3Ni8CS0y2Y!ocQuNvFF_8rd-cCvMNXU0cTk9mLezpCPyzelQyhbxMGdKgFo0_JTgTD1q1VU-kj10aqxxA$ 
-> > 
-> > from about ~5 years ago;
+Hi Vinod,
 
-Yup.  That started the transition to claim_direct_mode to avoid the locking
-issues.   There are probably a few drivers that never got there but 
-in theory moving the setting of this parameter earlier should now
-be fine as the original race condition is closed (subject to a few
-drivers that still have that race condition)
+Thank you for reviewing and sorry for the mistakes! I'll be more careful
+next time with all those details.
 
+I've submitted the updated patch: [PATCH v4 1/1] dmaengine: owl: Use
+correct lock in owl_dma_get_pchan()
+
+Kind regards,
+Cristi
 
 > > 
-> > if this patch is a valid proposal, it could fix this case as well;
-> > well, it might break others, so applying it [now] would need some general
-> > review
-> > of all pre/post enable/disable hooks
-> >   
+> > [    2.496939] INFO: trying to register non-static key.
+> > [    2.501889] the code is fine but needs lockdep annotation.
+> > [    2.507357] turning off the locking correctness validator.
+> > [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
+> > [    2.519084] Hardware name: Generic DT based system
+> > [    2.523878] Workqueue: events_freezable mmc_rescan
+> > [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
+> > [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
+> > [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
+> > [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
+> > [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
+> > [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
+> > [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
+> > [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
+> > [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
+> > [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
+> > [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
+> > [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
+> > [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
+> > [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
+> > [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
+> > [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
+> > [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
+> > [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
+> > [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
+> > [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
+> > [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
+> > [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > 
+> > The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
+> > before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+> > 
+> > However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
+> > to only protect 'pchan->vchan' while 'od->lock' does a similar job in
+> > 'owl_dma_terminate_pchan'.
+> > 
+> > Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
+> > and removes the 'lock' attribute in 'owl_dma_pchan' struct.
+> > 
+> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> > Changes in v3:
+> > * Get rid of the kerneldoc comment for the removed struct attribute
+> > * Add the Reviewed-by tag in the commit message
+> > 
+> > Changes in v2:
+> > * Improve the fix as suggested by Manivannan Sadhasivam: substitute
+> >   'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
+> >   'owl_dma_pchan' struct
+> > * Update the commit message to reflect the changes
+> > 
+> >  drivers/dma/owl-dma.c | 8 +++-----
+> >  1 file changed, 3 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> > index c683051257fd..66ef70b00ec0 100644
+> > --- a/drivers/dma/owl-dma.c
+> > +++ b/drivers/dma/owl-dma.c
+> > @@ -175,13 +175,11 @@ struct owl_dma_txd {
+> >   * @id: physical index to this channel
+> >   * @base: virtual memory base for the dma channel
+> >   * @vchan: the virtual channel currently being served by this physical channel
+> > - * @lock: a lock to use when altering an instance of this struct
+> >   */
+> >  struct owl_dma_pchan {
+> >  	u32			id;
+> >  	void __iomem		*base;
+> >  	struct owl_dma_vchan	*vchan;
+> > -	spinlock_t		lock;
+> >  };
+> >  
+> >  /**
+> > @@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
+> >  	for (i = 0; i < od->nr_pchans; i++) {
+> >  		pchan = &od->pchans[i];
+> >  
+> > -		spin_lock_irqsave(&pchan->lock, flags);
+> > +		spin_lock_irqsave(&od->lock, flags);
+> >  		if (!pchan->vchan) {
+> >  			pchan->vchan = vchan;
+> > -			spin_unlock_irqrestore(&pchan->lock, flags);
+> > +			spin_unlock_irqrestore(&od->lock, flags);
+> >  			break;
+> >  		}
+> >  
+> > -		spin_unlock_irqrestore(&pchan->lock, flags);
+> > +		spin_unlock_irqrestore(&od->lock, flags);
+> >  	}
+> >  
+> >  	return pchan;
+> > -- 
+> > 2.26.2
 > 
-> So, apologies if this will start to seem like spamming.
-> I decided to do a bit of shell magic for this:
-> 
-> get_files() {
-> git grep -w iio_buffer_setup_ops  | grep drivers | cut -d: -f1 | sort | uniq
-> }
-> 
-> for file in $(get_files) ; do
->     if grep -q currentmode $file ; then
->         echo $file
->     fi
-> done
-> 
-> It finds 4 drivers.
-> Though, `get_files()` will return 56 files.
-> 
-> drivers/iio/accel/bmc150-accel-core.c
-> drivers/iio/adc/at91-sama5d2_adc.c
-> drivers/iio/adc/stm32-dfsdm-adc.c
-> drivers/iio/magnetometer/rm3100-core.c
-> 
-> The rm3100 driver doesn't do any checks in the setup_ops for 'currentmode' as
-> far as I could see.
-> 
-> So, Lars' patch could work nicely to fix this current case and not break others.
-> 
-> Semantically though, it would sound nicer to have a 'nextmode' parameter
-> somewhere; maybe on the setup_ops(indio_dev, nextmode)?
-> Though, only those 3 drivers would really ever use it; so doing it like that
-> sounds like overkill.
-> 
-> So, we're left with Lars' patch or we could add an 'indio_dev->nextmode' field,
-> that may be used in just these 3 drivers [which again: sounds overkill at this
-> point in time].
-> 
-> Alternatively, this 'indio_dev->currentmode' could be removed from all these 3
-> drivers somehow. But that needs testing and a thorough understanding of all 3
-> drivers and what they're doing, to do properly.
-> 
-> @Jonathan: what do you think?
-
-I think we are 'now' fine to apply what Lars originally suggested to solve
-this issue.  There are still some difference between pre and post functions
-but for many usecases they no longer matter (if curious just look at what
-remains being called between them).
-
-> 
-> In any case, pending a reply, I'll send Lars' patch.
-> Even if we come to a different conclusion we have something to start with.
-> But, if the conclusion is that Lars' patch is a good solution now, it can be
-> applied.
-> 
-> 
-> > > Apologies for the breakage.
-> > > 
-> > > For the touch-part I don't see that code being executed.
-> > > 
-> > > But a question is: does the driver need to check for the currentmode?
-> > > Or is that something that the IIO core should do?
-> > >   
-> > > > And with this , the preenable fails on my side, because the current mode 
-> > > > is not yet switched to triggered.
-> > > > 
-> > > > I do remember adding this line with a specific reason. It may be related 
-> > > > to touchscreen operations, but I have to retest the touch with and 
-> > > > without this line and your patch.
-> > > > 
-> > > > Meanwhile, maybe you have any suggestions on how to fix the buffer ?   
-> > > 
-> > > Well, there was the question of whether iio_triggered_buffer_postenable()
-> > > [to
-> > > attach the pollfunc] makes sense to be called first/last in the old
-> > > at91_adc_buffer_postenable(), and the answer was 'last'; so then one
-> > > solution
-> > > was to move things to preenable().
-> > > 
-> > > Going back to the old patch isn't ideal, as the idea was to make the
-> > > position
-> > > of
-> > > iio_triggered_buffer_postenable() consistent across all drivers, so that it
-> > > can
-> > > be removed [and moved to the IIO core].
-> > > 
-> > > But if we need revert the patch, then I guess it's fine.
-> > > The only solution I see right now [for going forward], is to remove that
-> > > check
-> > > for 'currrentmode'
-> > >   
-> > > > This check here makes any sense to you ?  
-> > > 
-> > > I think Jonathan may have to add some input here, but I think that in this
-> > > current situation, checking 'currentmode' looks like is re-validating how
-> > > the
-> > > device was configured via the IIO framework.
-> > > I am not sure if it's needed or not.
-> > >   
-> > > > Thanks,
-> > > > Eugen
-> > > >   
-> > > > > > > I will try to test it , if I manage to apply it.
-> > > > > > > I can only test the ADC though because at this moment I do not have
-> > > > > > > a
-> > > > > > > touchscreen at disposal.
-> > > > > > > 
-> > > > > > > Meanwhile, the code looks good for me,
-> > > > > > > 
-> > > > > > > Reviewed-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > > > > > > 
-> > > > > > > By the way, I do not know if my two pending patches on this driver
-> > > > > > > will
-> > > > > > > conflict or not.  
-> > > > > > 
-> > > > > > As this is a long term rework patch at heart, there isn't any
-> > > > > > particular
-> > > > > > rush as long as we don't loose it forever!
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > 
-> > > > > > Jonathan
-> > > > > >   
-> > > > > > > Eugen
-> > > > > > >   
-> > > > > > > > Thanks,
-> > > > > > > > 
-> > > > > > > > Jonathan
-> > > > > > > >   
-> > > > > > > > > ---
-> > > > > > > > > 
-> > > > > > > > > This patchset continues discussion:
-> > > > > > > > > 
-> > > > > > > > > https://urldefense.com/v3/__https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/__;!!A3Ni8CS0y2Y!ql1bYiNMPFlz1twnCCAQpiEBvpzxR_VHAPL712rWFfwy2TSKjZ2UhGBoV7-29Syny6z0yg$
-> > > > > > > > > 
-> > > > > > > > > Apologies for the delay.
-> > > > > > > > > 
-> > > > > > > > > Changelog v1 -> v2:
-> > > > > > > > > * added patch 'iio: at91-sama5d2_adc: split
-> > > > > > > > > at91_adc_current_chan_is_touch()
-> > > > > > > > >     helper'
-> > > > > > > > > * renamed at91_adc_buffer_postenable() ->
-> > > > > > > > > at91_adc_buffer_preenable()
-> > > > > > > > >     - at91_adc_buffer_postenable() - now just calls
-> > > > > > > > >       iio_triggered_buffer_postenable() if the channel isn't the
-> > > > > > > > > touchscreen
-> > > > > > > > >       channel
-> > > > > > > > > * renamed at91_adc_buffer_predisable() ->
-> > > > > > > > > at91_adc_buffer_postdisable()
-> > > > > > > > >     - at91_adc_buffer_predisable() - now just calls
-> > > > > > > > >       iio_triggered_buffer_predisable() if the channel isn't the
-> > > > > > > > > touchscreen
-> > > > > > > > >       channel
-> > > > > > > > > 
-> > > > > > > > >    drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++----
-> > > > > > > > > ----
-> > > > > > > > > -------
-> > > > > > > > >    1 file changed, 15 insertions(+), 16 deletions(-)
-> > > > > > > > > 
-> > > > > > > > > diff --git a/drivers/iio/adc/at91-sama5d2_adc.c
-> > > > > > > > > b/drivers/iio/adc/at91-
-> > > > > > > > > sama5d2_adc.c
-> > > > > > > > > index a5c7771227d5..f2a74c47c768 100644
-> > > > > > > > > --- a/drivers/iio/adc/at91-sama5d2_adc.c
-> > > > > > > > > +++ b/drivers/iio/adc/at91-sama5d2_adc.c
-> > > > > > > > > @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct
-> > > > > > > > > iio_dev
-> > > > > > > > > *indio_dev)
-> > > > > > > > >         return 0;
-> > > > > > > > >    }
-> > > > > > > > > 
-> > > > > > > > > +static bool at91_adc_current_chan_is_touch(struct iio_dev
-> > > > > > > > > *indio_dev)
-> > > > > > > > > +{
-> > > > > > > > > +     struct at91_adc_state *st = iio_priv(indio_dev);
-> > > > > > > > > +
-> > > > > > > > > +     return !!bitmap_subset(indio_dev->active_scan_mask,
-> > > > > > > > > +                            &st->touch_st.channels_bitmask,
-> > > > > > > > > +                            AT91_SAMA5D2_MAX_CHAN_IDX + 1);
-> > > > > > > > > +}
-> > > > > > > > > +
-> > > > > > > > >    static int at91_adc_buffer_postenable(struct iio_dev
-> > > > > > > > > *indio_dev)
-> > > > > > > > >    {
-> > > > > > > > >         int ret;
-> > > > > > > > >         struct at91_adc_state *st = iio_priv(indio_dev);
-> > > > > > > > > 
-> > > > > > > > >         /* check if we are enabling triggered buffer or the
-> > > > > > > > > touchscreen
-> > > > > > > > > */
-> > > > > > > > > -     if (bitmap_subset(indio_dev->active_scan_mask,
-> > > > > > > > > -                       &st->touch_st.channels_bitmask,
-> > > > > > > > > -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
-> > > > > > > > > -             /* touchscreen enabling */
-> > > > > > > > > +     if (at91_adc_current_chan_is_touch(indio_dev))
-> > > > > > > > >                 return at91_adc_configure_touch(st, true);
-> > > > > > > > > -     }
-> > > > > > > > > +
-> > > > > > > > >         /* if we are not in triggered mode, we cannot enable the
-> > > > > > > > > buffer.
-> > > > > > > > > */
-> > > > > > > > >         if (!(indio_dev->currentmode &
-> > > > > > > > > INDIO_ALL_TRIGGERED_MODES))
-> > > > > > > > >                 return -EINVAL;
-> > > > > > > > > @@ -906,12 +912,9 @@ static int
-> > > > > > > > > at91_adc_buffer_predisable(struct
-> > > > > > > > > iio_dev *indio_dev)
-> > > > > > > > >         u8 bit;
-> > > > > > > > > 
-> > > > > > > > >         /* check if we are disabling triggered buffer or the
-> > > > > > > > > touchscreen
-> > > > > > > > > */
-> > > > > > > > > -     if (bitmap_subset(indio_dev->active_scan_mask,
-> > > > > > > > > -                       &st->touch_st.channels_bitmask,
-> > > > > > > > > -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
-> > > > > > > > > -             /* touchscreen disable */
-> > > > > > > > > +     if (at91_adc_current_chan_is_touch(indio_dev))
-> > > > > > > > >                 return at91_adc_configure_touch(st, false);
-> > > > > > > > > -     }
-> > > > > > > > > +
-> > > > > > > > >         /* if we are not in triggered mode, nothing to do here
-> > > > > > > > > */
-> > > > > > > > >         if (!(indio_dev->currentmode &
-> > > > > > > > > INDIO_ALL_TRIGGERED_MODES))
-> > > > > > > > >                 return -EINVAL;
-> > > > > > > > > @@ -1886,14 +1889,10 @@ static __maybe_unused int
-> > > > > > > > > at91_adc_resume(struct
-> > > > > > > > > device *dev)
-> > > > > > > > >                 return 0;
-> > > > > > > > > 
-> > > > > > > > >         /* check if we are enabling triggered buffer or the
-> > > > > > > > > touchscreen
-> > > > > > > > > */
-> > > > > > > > > -     if (bitmap_subset(indio_dev->active_scan_mask,
-> > > > > > > > > -                       &st->touch_st.channels_bitmask,
-> > > > > > > > > -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
-> > > > > > > > > -             /* touchscreen enabling */
-> > > > > > > > > +     if (at91_adc_current_chan_is_touch(indio_dev))
-> > > > > > > > >                 return at91_adc_configure_touch(st, true);
-> > > > > > > > > -     } else {
-> > > > > > > > > +     else
-> > > > > > > > >                 return at91_adc_configure_trigger(st->trig,
-> > > > > > > > > true);
-> > > > > > > > > -     }
-> > > > > > > > > 
-> > > > > > > > >         /* not needed but more explicit */
-> > > > > > > > >         return 0;  
-
+> -- 
+> ~Vinod
