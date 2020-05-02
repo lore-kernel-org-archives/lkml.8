@@ -2,519 +2,168 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A5BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 05:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA35C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 05:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F55C2184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 05:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588397229;
-	bh=aFcnlctYD0xrwwmwjffXbSK/y9RQbDkbf/L0wrf0wNI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GmOP8ohTvfeRZP7hiupj3+UP1YNTb6pPY+g1EEFaMyIYJ2svOu47Vah+QVi32Z74I
-	 HCZ9EMoRMxLTuWS1SESIHEPsRwJKgSCN/kQ3EKDtsI6JAwabcpQRmuOVAzk8ft3s5H
-	 k3WwtiyFYRQ3CTSx7E5rfOdmHU0tK2l4I1+W1ZGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 539AC21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 05:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jJbUjZIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgEBF1I (ORCPT
+        id S1726759AbgEBFrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 01:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgEBF1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 01:27:08 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E75F20836;
-        Sat,  2 May 2020 05:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588397226;
-        bh=aFcnlctYD0xrwwmwjffXbSK/y9RQbDkbf/L0wrf0wNI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Mhu+qPUYJJVwgGggd5tgWx2Sh1OsLCQvW4UANUEYMxTk42mTaWtAhOvUmJ7MyReLk
-         6VF5T0jw6j/W3wWQ9NNRv/MLy9OaIh/FGcL9vJFkcqcxFU/VL1GlMiw0UBghXGBJBF
-         h/L7E9WZcsOLuZ8HaeobjbqWaPDOVa+4D0+sXkQA=
-Date:   Sat, 2 May 2020 07:27:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     sean@mess.org, kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC, WIP, v4 02/11] media: vidtv: implement a tuner driver
-Message-ID: <20200502072701.502716b1@coco.lan>
-In-Reply-To: <20200502032216.197977-3-dwlsalmeida@gmail.com>
-References: <20200502032216.197977-1-dwlsalmeida@gmail.com>
-        <20200502032216.197977-3-dwlsalmeida@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 2 May 2020 01:47:40 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6530 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgEBFrj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 01:47:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ead09360000>; Fri, 01 May 2020 22:46:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 01 May 2020 22:47:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 01 May 2020 22:47:39 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May
+ 2020 05:47:38 +0000
+Received: from [10.2.59.220] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May 2020
+ 05:47:37 +0000
+Subject: Re: [PATCH hmm v2 1/5] mm/hmm: make CONFIG_DEVICE_PRIVATE into a
+ select
+To:     Jason Gunthorpe <jgg@ziepe.ca>, <linux-mm@kvack.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+CC:     Alex Deucher <alexander.deucher@amd.com>,
+        <amd-gfx@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        <dri-devel@lists.freedesktop.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Christoph Hellwig <hch@lst.de>,
+        <intel-gfx@lists.freedesktop.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        <nouveau@lists.freedesktop.org>,
+        "Yang, Philip" <Philip.Yang@amd.com>
+References: <1-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <17b40a00-658a-1bf4-c14a-7543dd0d2f8c@nvidia.com>
+Date:   Fri, 1 May 2020 22:47:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1-v2-b4e84f444c7d+24f57-hmm_no_flags_jgg@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588398391; bh=9WVhNWEwbrdSv0IZ+XjrYrQTjZYFLJxQOn+wzBze+IE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jJbUjZIFpsl+z/WpjRf+dQtCXmX45b2domJ6ui2m0qQLXPCNWeAK2d+Lt4SbMdTHW
+         g6h3pk5CkJS4IW8FgDWLONNamvZn4bouhO81p+K/1DKwCbicz1zs5jlW7h5lYehaw/
+         clXb1ncut+A5uh78Ae8RCl1Pxjlxo56PG1PTgpCitHzCJSjToSTeViTPgNwElLgtfg
+         qk2aJkzLeiGCZUHBkqurTPk4fTAp+5LR5mZhDn33zl2pf7bJhWSK1TYnaIbhFSoqYr
+         /cE70NsFQkUcb0lx6FJJ0mKaFJCNfqcecIhbKwZbc17bnzzdzQMurqGa0/qeJJkiSP
+         Uti4fpB1h8oTA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat,  2 May 2020 00:22:07 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
+On 2020-05-01 11:20, Jason Gunthorpe wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> There is no reason for a user to select this or not directly - it should
+> be selected by drivers that are going to use the feature, similar to how
+> CONFIG_HMM_MIRROR works.
 
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Yes, this is a nice touch.
+
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
 > 
-> The virtual DVB test driver serves as a reference DVB driver and helps
-> validate the existing APIs in the media subsystem. It can also aid developers
-> working on userspace applications.
+> Currently all drivers provide a feature kconfig that will disable use of
+> DEVICE_PRIVATE in that driver, allowing users to avoid enabling this if
+> they don't want the overhead.
 > 
-> This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
-> ISDB-T and ATSC when completed.
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 > ---
->  drivers/media/test-drivers/vidtv/Makefile     |   1 +
->  .../media/test-drivers/vidtv/vidtv_tuner.c    | 411 ++++++++++++++++++
->  2 files changed, 412 insertions(+)
->  create mode 100644 drivers/media/test-drivers/vidtv/vidtv_tuner.c
+>   arch/powerpc/Kconfig            | 2 +-
+>   drivers/gpu/drm/nouveau/Kconfig | 2 +-
+>   mm/Kconfig                      | 7 +------
+>   3 files changed, 3 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/media/test-drivers/vidtv/Makefile b/drivers/media/test-drivers/vidtv/Makefile
-> index d1558d84eeaed..e625810a82603 100644
-> --- a/drivers/media/test-drivers/vidtv/Makefile
-> +++ b/drivers/media/test-drivers/vidtv/Makefile
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
-> +obj-$(CONFIG_DVB_VIDTV)	+= vidtv_tuner.o
-> diff --git a/drivers/media/test-drivers/vidtv/vidtv_tuner.c b/drivers/media/test-drivers/vidtv/vidtv_tuner.c
-> new file mode 100644
-> index 0000000000000..a790508f935b3
-> --- /dev/null
-> +++ b/drivers/media/test-drivers/vidtv/vidtv_tuner.c
-> @@ -0,0 +1,411 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * The Virtual DVB test driver serves as a reference DVB driver and helps
-> + * validate the existing APIs in the media subsystem. It can also aid
-> + * developers working on userspace applications.
-> + *
-> + * The vidtv tuner should support common TV standards such as
-> + * DVB-T/T2/S/S2, ISDB-T and ATSC when completed.
-> + *
-> + * Written by Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <media/dvb_frontend.h>
-> +
-> +MODULE_DESCRIPTION("Virtual DTV Tuner");
-> +MODULE_AUTHOR("Daniel W. S. Almeida");
-> +MODULE_LICENSE("GPL");
-> +
-> +struct vidtv_tuner_config {
-> +	struct dvb_frontend *fe;
-> +	u32 mock_power_up_delay_msec;
-> +	u32 mock_tune_delay_msec;
-> +	u32 vidtv_valid_dvb_t_freqs[8];
-> +	u32 vidtv_valid_dvb_c_freqs[8];
-> +	u32 vidtv_valid_dvb_s_freqs[8];
-> +	u8  max_frequency_shift_hz;
-> +};
-> +
-> +struct vidtv_tuner_cnr_to_qual_s {
-> +	/* attempt to use the same values as libdvbv5 */
-> +	u32 modulation;
-> +	u32 fec;
-> +	u32 cnr_ok, cnr_good;
-> +};
-> +
-> +struct vidtv_tuner_cnr_to_qual_s vidtv_tuner_c_cnr_2_qual[] = {
-> +	/* from libdvbv5 source code, in milli db */
-> +	{ QAM_256, FEC_NONE,  34000, 38000},
-> +	{ QAM_64,  FEC_NONE,  30000, 34000},
-> +};
-> +
-> +struct vidtv_tuner_cnr_to_qual_s vidtv_tuner_s_cnr_2_qual[] = {
-> +	/* from libdvbv5 source code, in milli db */
-> +	{ QPSK, FEC_1_2,  7000, 10000},
-> +
-> +	{ QPSK, FEC_2_3,  9000, 12000},
-> +	{ QPSK, FEC_3_4, 10000, 13000},
-> +	{ QPSK, FEC_5_6, 11000, 14000},
-> +
-> +	{ QPSK, FEC_7_8, 12000, 15000},
-> +};
-> +
-> +struct vidtv_tuner_cnr_to_qual_s vidtv_tuner_s2_cnr_2_qual[] = {
-> +	/* from libdvbv5 source code, in milli db */
-> +	{ QPSK,  FEC_1_2,   9000,  12000},
-> +	{ QPSK,  FEC_2_3,  11000,  14000},
-> +	{ QPSK,  FEC_3_4,  12000,  15000},
-> +	{ QPSK,  FEC_5_6,  12000,  15000},
-> +	{ QPSK,  FEC_8_9,  13000,  16000},
-> +	{ QPSK,  FEC_9_10, 13500,  16500},
-> +	{ PSK_8, FEC_2_3,  14500,  17500},
-> +	{ PSK_8, FEC_3_4,  16000,  19000},
-> +	{ PSK_8, FEC_5_6,  17500,  20500},
-> +	{ PSK_8, FEC_8_9,  19000,  22000},
-> +};
-> +
-> +static struct vidtv_tuner_cnr_to_qual_s vidtv_tuner_t_cnr_2_qual[] = {
-> +	/* from libdvbv5 source code, in milli db*/
-> +	{   QPSK, FEC_1_2,  4100,  5900},
-> +	{   QPSK, FEC_2_3,  6100,  9600},
-> +	{   QPSK, FEC_3_4,  7200, 12400},
-> +	{   QPSK, FEC_5_6,  8500, 15600},
-> +	{   QPSK, FEC_7_8,  9200, 17500},
-> +
-> +	{ QAM_16, FEC_1_2,  9800, 11800},
-> +	{ QAM_16, FEC_2_3, 12100, 15300},
-> +	{ QAM_16, FEC_3_4, 13400, 18100},
-> +	{ QAM_16, FEC_5_6, 14800, 21300},
-> +	{ QAM_16, FEC_7_8, 15700, 23600},
-> +
-> +	{ QAM_64, FEC_1_2, 14000, 16000},
-> +	{ QAM_64, FEC_2_3, 19900, 25400},
-> +	{ QAM_64, FEC_3_4, 24900, 27900},
-> +	{ QAM_64, FEC_5_6, 21300, 23300},
-> +	{ QAM_64, FEC_7_8, 22000, 24000},
-> +};
-> +
-> +struct vidtv_tuner_hardware_state {
-> +	bool asleep;
-> +	u32 lock_status;
-> +	u32 if_frequency;
-> +	u32 tuned_frequency;
-> +	u32 bandwidth;
-> +};
-> +
-> +struct vidtv_tuner_dev {
-> +	struct dvb_frontend *fe;
-> +	struct vidtv_tuner_hardware_state hw_state;
-> +	struct vidtv_tuner_config config;
-> +};
-> +
-> +static struct vidtv_tuner_dev*
-> +vidtv_tuner_get_dev(struct dvb_frontend *fe)
-> +{
-> +	struct i2c_client *client = fe->tuner_priv;
-> +
-> +	return i2c_get_clientdata(client);
-> +}
-> +
-> +static s32 vidtv_tuner_check_frequency_shift(struct dvb_frontend *fe)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
-> +	struct vidtv_tuner_config config  = tuner_dev->config;
-> +	u32    *valid_freqs               = NULL;
-> +	u32    array_sz                   = 0;
-> +	u32 i;
-> +	u32 shift;
-> +
-> +	switch (c->delivery_system) {
-> +	case SYS_DVBT:
-> +	case SYS_DVBT2:
-> +		valid_freqs = config.vidtv_valid_dvb_t_freqs;
-> +		array_sz    = ARRAY_SIZE(config.vidtv_valid_dvb_t_freqs);
-> +		break;
-> +	case SYS_DVBS:
-> +	case SYS_DVBS2:
-> +		valid_freqs = config.vidtv_valid_dvb_s_freqs;
-> +		array_sz    = ARRAY_SIZE(config.vidtv_valid_dvb_s_freqs);
-> +		break;
-> +	case SYS_DVBC_ANNEX_A:
-> +		valid_freqs = config.vidtv_valid_dvb_c_freqs;
-> +		array_sz    = ARRAY_SIZE(config.vidtv_valid_dvb_c_freqs);
-> +		break;
-> +
-> +	default:
-> +		pr_warn("%s: unsupported delivery system: %u\n",
-> +			__func__,
-> +			c->delivery_system);
-> +		break;
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 924c541a926008..8de52aefdc74cc 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -455,7 +455,7 @@ config PPC_TRANSACTIONAL_MEM
+>   config PPC_UV
+>   	bool "Ultravisor support"
+>   	depends on KVM_BOOK3S_HV_POSSIBLE
+> -	depends on DEVICE_PRIVATE
+> +	select DEVICE_PRIVATE
+>   	default n
+>   	help
+>   	  This option paravirtualizes the kernel to run in POWER platforms that
+> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+> index d6e4ae1ef7053a..af5793f3e7c2cf 100644
+> --- a/drivers/gpu/drm/nouveau/Kconfig
+> +++ b/drivers/gpu/drm/nouveau/Kconfig
+> @@ -86,10 +86,10 @@ config DRM_NOUVEAU_BACKLIGHT
+>   
+>   config DRM_NOUVEAU_SVM
+>   	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+> -	depends on DEVICE_PRIVATE
+>   	depends on DRM_NOUVEAU
+>   	depends on MMU
+>   	depends on STAGING
+> +	select DEVICE_PRIVATE
+>   	select HMM_MIRROR
+>   	select MMU_NOTIFIER
+>   	default n
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index c1acc34c1c358c..7ca36bf5f5058e 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -805,15 +805,10 @@ config HMM_MIRROR
+>   	depends on MMU
+>   
+>   config DEVICE_PRIVATE
+> -	bool "Unaddressable device memory (GPU memory, ...)"
+> +	bool
+>   	depends on ZONE_DEVICE
+>   	select DEV_PAGEMAP_OPS
+>   
+> -	help
+> -	  Allows creation of struct pages to represent unaddressable device
+> -	  memory; i.e., memory that is only accessible from the device (or
+> -	  group of devices). You likely also want to select HMM_MIRROR.
+> -
+>   config FRAME_VECTOR
+>   	bool
+>   
+> 
 
-It should instead return -EINVAL here. Ok, it will end using array_sz = 0,
-and return an error, but the best would be to just replace "break"
-with "return -EINVAL", as it makes the code more readable.
-
-> +	}
-> +
-> +	for (i = 0; i < array_sz; i++) {
-> +		shift = abs(c->frequency - valid_freqs[i]);
-> +
-> +		if (!shift)
-> +			return 0;
-> +
-> +		/*
-> +		 * This will provide a value from 0 to 100 that would
-> +		 * indicate how far is the tuned frequency from the
-> +		 * right one.
-> +		 */
-> +		if (shift < config.max_frequency_shift_hz)
-> +			return shift * 100 / config.max_frequency_shift_hz;
-> +	}
-> +
-> +	return -1;
-
-use return -EINVAL;
-
-> +}
-> +
-> +static int
-> +vidtv_tuner_get_signal_strength(struct dvb_frontend *fe, u16 *strength)
-> +{
-> +	struct dtv_frontend_properties *c          = &fe->dtv_property_cache;
-> +	struct vidtv_tuner_cnr_to_qual_s *cnr2qual = NULL;
-> +	u32    array_size                          = 0;
-> +	s32 shift;
-> +	u32 i;
-> +
-> +	shift = vidtv_tuner_check_frequency_shift(fe);
-> +
-> +	switch (c->delivery_system) {
-> +	case SYS_DVBT:
-> +	case SYS_DVBT2:
-> +		cnr2qual   = vidtv_tuner_t_cnr_2_qual;
-> +		array_size = ARRAY_SIZE(vidtv_tuner_t_cnr_2_qual);
-> +		break;
-> +
-> +	case SYS_DVBS:
-> +		cnr2qual   = vidtv_tuner_s_cnr_2_qual;
-> +		array_size = ARRAY_SIZE(vidtv_tuner_s_cnr_2_qual);
-> +		break;
-> +
-> +	case SYS_DVBS2:
-> +		cnr2qual   = vidtv_tuner_s2_cnr_2_qual;
-> +		array_size = ARRAY_SIZE(vidtv_tuner_s2_cnr_2_qual);
-> +		break;
-> +
-> +	case SYS_DVBC_ANNEX_A:
-> +		cnr2qual   = vidtv_tuner_c_cnr_2_qual;
-> +		array_size = ARRAY_SIZE(vidtv_tuner_c_cnr_2_qual);
-> +		break;
-> +
-> +	default:
-> +		pr_warn("%s: unsupported delivery system: %u\n",
-> +			__func__,
-> +			c->delivery_system);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 0; i <= array_size; i++) {
-> +		if (cnr2qual[i].modulation != c->modulation ||
-> +		    cnr2qual[i].fec != c->fec_inner)
-> +			continue;
-> +
-> +		if (!shift) {
-> +			*strength = cnr2qual[i].cnr_good;
-> +			return 0;
-> +		}
-> +		if (shift < 0) {	/* Channel not tuned */
-> +			*strength = 0;
-> +			return 0;
-> +		}
-> +		/*
-> +		 * Channel tuned at wrong frequency. Simulate that the
-> +		 * Carrier S/N ratio is not too good.
-> +		 */
-> +
-> +		*strength = cnr2qual[i].cnr_ok -
-> +			    (cnr2qual[i].cnr_good - cnr2qual[i].cnr_ok);
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * do a linear interpolation between 34dB and 10dB if we can't
-> +	 * match against the table
-> +	 */
-> +	*strength = 34 - 24 * shift / 100;
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_init(struct dvb_frontend *fe)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +	struct vidtv_tuner_config config  = tuner_dev->config;
-> +
-> +	msleep_interruptible(config.mock_power_up_delay_msec);
-> +
-> +	tuner_dev->hw_state.asleep       = false;
-> +	tuner_dev->hw_state.if_frequency = 5000;
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_sleep(struct dvb_frontend *fe)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	tuner_dev->hw_state.asleep = true;
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_suspend(struct dvb_frontend *fe)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	tuner_dev->hw_state.asleep = true;
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_resume(struct dvb_frontend *fe)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	tuner_dev->hw_state.asleep = false;
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_set_params(struct dvb_frontend *fe)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +	struct vidtv_tuner_config config  = tuner_dev->config;
-> +	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
-> +	u32    min_freq               = fe->ops.tuner_ops.info.frequency_min_hz;
-> +	u32    max_freq               = fe->ops.tuner_ops.info.frequency_max_hz;
-> +	u32    min_bw                 = fe->ops.tuner_ops.info.bandwidth_min;
-> +	u32    max_bw                 = fe->ops.tuner_ops.info.bandwidth_max;
-> +
-> +	if (c->frequency < min_freq  || c->frequency > max_freq  ||
-> +	    c->bandwidth_hz < min_bw || c->bandwidth_hz > max_bw) {
-> +		tuner_dev->hw_state.lock_status = 0;
-> +		return -EINVAL;
-> +	}
-> +
-> +	tuner_dev->hw_state.tuned_frequency = c->frequency;
-> +	tuner_dev->hw_state.bandwidth       = c->bandwidth_hz;
-> +	tuner_dev->hw_state.lock_status     = TUNER_STATUS_LOCKED;
-> +
-> +	msleep_interruptible(config.mock_tune_delay_msec);
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_set_config(struct dvb_frontend *fe,
-> +				  void *priv_cfg)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	memcpy(&tuner_dev->config, priv_cfg, sizeof(tuner_dev->config));
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_get_frequency(struct dvb_frontend *fe,
-> +				     u32 *frequency)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	*frequency = tuner_dev->hw_state.tuned_frequency;
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_get_bandwidth(struct dvb_frontend *fe,
-> +				     u32 *bandwidth)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	*bandwidth = tuner_dev->hw_state.bandwidth;
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_get_if_frequency(struct dvb_frontend *fe,
-> +					u32 *frequency)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	*frequency = tuner_dev->hw_state.if_frequency;
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_get_status(struct dvb_frontend *fe, u32 *status)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = vidtv_tuner_get_dev(fe);
-> +
-> +	*status = tuner_dev->hw_state.lock_status;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dvb_tuner_ops vidtv_tuner_ops = {
-> +	.init             = vidtv_tuner_init,
-> +	.sleep            = vidtv_tuner_sleep,
-> +	.suspend          = vidtv_tuner_suspend,
-> +	.resume           = vidtv_tuner_resume,
-> +	.set_params       = vidtv_tuner_set_params,
-> +	.set_config       = vidtv_tuner_set_config,
-> +	.get_bandwidth    = vidtv_tuner_get_bandwidth,
-> +	.get_frequency    = vidtv_tuner_get_frequency,
-> +	.get_if_frequency = vidtv_tuner_get_if_frequency,
-> +	.get_status       = vidtv_tuner_get_status,
-> +	.get_rf_strength  = vidtv_tuner_get_signal_strength
-> +};
-> +
-> +static const struct i2c_device_id vidtv_tuner_i2c_id_table[] = {
-> +	{"vidtv_tuner", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, vidtv_tuner_i2c_id_table);
-> +
-> +static int vidtv_tuner_i2c_probe(struct i2c_client *client,
-> +				 const struct i2c_device_id *id)
-> +{
-> +	struct vidtv_tuner_config *config = client->dev.platform_data;
-> +	struct dvb_frontend *fe           = config->fe;
-> +	struct vidtv_tuner_dev *tuner_dev = NULL;
-> +
-> +	tuner_dev = kzalloc(sizeof(*tuner_dev), GFP_KERNEL);
-> +	if (!tuner_dev)
-> +		return -ENOMEM;
-> +
-> +	tuner_dev->fe = config->fe;
-> +	i2c_set_clientdata(client, tuner_dev);
-> +
-> +	memcpy(&fe->ops.tuner_ops,
-> +	       &vidtv_tuner_ops,
-> +	       sizeof(struct dvb_tuner_ops));
-> +
-> +	fe->tuner_priv = client;
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidtv_tuner_i2c_remove(struct i2c_client *client)
-> +{
-> +	struct vidtv_tuner_dev *tuner_dev = i2c_get_clientdata(client);
-> +	struct dvb_frontend *fe           = tuner_dev->fe;
-> +
-> +	memset(&fe->ops.tuner_ops, 0, sizeof(struct dvb_tuner_ops));
-> +	fe->tuner_priv = NULL;
-> +	kfree(tuner_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct i2c_driver vidtv_tuner_i2c_driver = {
-> +	.driver = {
-> +		.name                = "vidtv_tuner",
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe    = vidtv_tuner_i2c_probe,
-> +	.remove   = vidtv_tuner_i2c_remove,
-> +	.id_table = vidtv_tuner_i2c_id_table,
-> +};
-> +module_i2c_driver(vidtv_tuner_i2c_driver);
-
-
-
-Thanks,
-Mauro
