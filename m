@@ -2,78 +2,56 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA9FC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8723C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAF962192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588400249;
-	bh=//nlECgryOelNdzOoFPqzRTJSfSuHWAatQp8ys5mRaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xXYeld507oG5ShdQ866mNdI+1amkcgDzvpUKJFUIH9M5Yben9bbwp22w0qaefIcxe
-	 mpATRoGV0k6ccsKvbpfxD6IOUIXQhlWPFmZQIvAVqJ3b4KJjWfYgC+qqHS24dvhc5K
-	 dJxoHYt8tB74bKQQSqWJvyZYBk0Sd9GkizjX/pWc=
+	by mail.kernel.org (Postfix) with ESMTP id C20A82184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEBGR3 (ORCPT
+        id S1726787AbgEBGXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 02:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
+        Sat, 2 May 2020 02:23:53 -0400
+Received: from verein.lst.de ([213.95.11.211]:50177 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgEBGR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 02:17:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F1A21775;
-        Sat,  2 May 2020 06:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588400248;
-        bh=//nlECgryOelNdzOoFPqzRTJSfSuHWAatQp8ys5mRaI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rDwxi5CbMZb6/AsUVW66xu0cv5yN9flOBBCcbixdLaHmUmM+q2jFPcMK/TgcOvNS6
-         4XrqItx7ZzKjnkakzRnDj8N6nAqpB/JJKKYmTeBazOHpMC6zPGyMBt2j+AJDe9lEKv
-         Rdu2vJBpLX4F+YsTUYjpCzDTbm8ZKfc7VamEdD1o=
-Date:   Sat, 2 May 2020 08:17:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 000/106] 5.6.9-rc1 review
-Message-ID: <20200502061726.GA2531911@kroah.com>
-References: <20200501131543.421333643@linuxfoundation.org>
- <20200501221831.GF44185@roeck-us.net>
+        id S1726273AbgEBGXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 02:23:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 52DDE68C4E; Sat,  2 May 2020 08:23:51 +0200 (CEST)
+Date:   Sat, 2 May 2020 08:23:51 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] exec: open code copy_string_kernel
+Message-ID: <20200502062351.GA2158@lst.de>
+References: <20200501104105.2621149-1-hch@lst.de> <20200501104105.2621149-3-hch@lst.de> <20200501141903.5f7b1f81fdd38ae372d91f0e@linux-foundation.org> <20200501213048.GO23230@ZenIV.linux.org.uk> <20200501144013.be5bf036ab7f2d2303676bce@linux-foundation.org> <20200501220449.GQ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501221831.GF44185@roeck-us.net>
+In-Reply-To: <20200501220449.GQ23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:18:31PM -0700, Guenter Roeck wrote:
-> On Fri, May 01, 2020 at 03:22:33PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.6.9 release.
-> > There are 106 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
-> > Anything received after that time might be too late.
-> > 
+On Fri, May 01, 2020 at 11:04:49PM +0100, Al Viro wrote:
+> Long story - basically, it's been a source of massive headache too many times.
+> No formal project, but there are several people (me, Arnd, Christoph) who'd
+> been reducing its use.  For more than a decade now, I think...
 > 
-> Build results:
-> 	total: 155 pass: 155 fail: 0
-> Qemu test results:
-> 	total: 428 pass: 428 fail: 0
+> FWIW, I doubt that it will be entirely killable; Christoph appears to be
+> more optimistic.  In any case, its use has been greatly reduced and having
+> it narrowed down to even fewer places would be a good thing.
+> 
+> In the same direction: use_mm()/unuse_mm() regularization wrt set_fs(), getting
+> rid of it in coredump code, some movements towards killing ioctl_by_bdev();
+> not sure if I've spotted everything - Christoph?
 
-Thanks for testing all of these and letting me know.
-
-greg k-h
+That's the big current projects out in the wild.  I have a few more
+growing.
