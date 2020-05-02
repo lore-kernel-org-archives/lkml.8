@@ -2,112 +2,160 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F31C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70191C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4108E21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vIbsxBNf"
+	by mail.kernel.org (Postfix) with ESMTP id 514232073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgEBCdQ (ORCPT
+        id S1727951AbgEBCeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:33:16 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11939 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726752AbgEBCdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:33:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588386795; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=iYIEoJGNhbKPN9zz/zszC6WL+W7rj9KlSLhmhiyLu+0=;
- b=vIbsxBNfH0vVAtaxN7vDocTQN1hNmYij4Cc6Z+D5NR9my5KWjPVfnVA6Vx+3I7W9KdOaIz+2
- S5mXXpU/QtIoPx8NIeDQ2mR2kSsok6uYRkEOp3z7FTQZRG+cSU5p/Mx/PN9AxumbBcqh0isZ
- QmLU6u8hSdtoqay2cLp97II3Lo0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eacdbe0.7f7d8d8fd378-smtp-out-n02;
- Sat, 02 May 2020 02:33:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 88C5DC43637; Sat,  2 May 2020 02:33:03 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C80AC433CB;
-        Sat,  2 May 2020 02:33:03 +0000 (UTC)
+        Fri, 1 May 2020 22:34:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51886 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbgEBCeE (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:34:04 -0400
+IronPort-SDR: 9+p19p9ZVpTObSwemzvG5I3duPX6taHZ+9+lmOW5pQmb+wPl4k3wpNa5tqBSKcHil3RsA7v7Gg
+ qe/2ZBiN0b0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:34:03 -0700
+IronPort-SDR: zYreQnD2oby990K0tTL8YxOo9qOa6YDLE6dLYNe0meZliS8VUY1DaLC8Ek1GKpuIRu4oQ3Cje4
+ 3AW1fPifOjQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
+   d="scan'208";a="368598988"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.249.169.62]) ([10.249.169.62])
+  by fmsmga001.fm.intel.com with ESMTP; 01 May 2020 19:34:00 -0700
+Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200430013451.17196-1-yao.jin@linux.intel.com>
+ <20200501102337.GA1761222@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
+Date:   Sat, 2 May 2020 10:33:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200501102337.GA1761222@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 01 May 2020 19:33:03 -0700
-From:   bbhatt@codeaurora.org
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     mani@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hemantk@codeaurora.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v3 9/9] bus: mhi: core: Ensure non-zero session or
- sequence ID values
-In-Reply-To: <e609031b-33a1-2db6-21b9-8ebadafba509@codeaurora.org>
-References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
- <1588193551-31439-10-git-send-email-bbhatt@codeaurora.org>
- <e609031b-33a1-2db6-21b9-8ebadafba509@codeaurora.org>
-Message-ID: <612b805e217eebbafeaa080655af2fba@codeaurora.org>
-X-Sender: bbhatt@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-30 08:12, Jeffrey Hugo wrote:
-> On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
->> While writing any sequence or session identifiers, it is possible that
->> the host could write a zero value, whereas only non-zero values are
->> supported writes to those registers. Ensure that host does not write a
->> non-zero value for those cases.
->> 
->> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Hi Jiri,
+
+On 5/1/2020 6:23 PM, Jiri Olsa wrote:
+> On Thu, Apr 30, 2020 at 09:34:51AM +0800, Jin Yao wrote:
+>> A metric may consist of system wide event and non system-wide event.
+>> The event group leader may be the system wide event.
+>>
+>> For example, the metric "C2_Pkg_Residency" consists of
+>> "cstate_pkg/c2-residency" and "msr/tsc". The former counts on the first
+>> CPU of socket (tagged system-wide) and the latter is per CPU.
+>>
+>> But "C2_Pkg_Residency" hits assertion failure on cascadelakex.
+>>
+>>   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+>>   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
+>>   Aborted
+>>
+>> get_group_fd(evsel, cpu, thread)
+>> {
+>> 	leader = evsel->leader;
+>> 	fd = FD(leader, cpu, thread);
+>> 	BUG_ON(fd == -1);
+>> }
+>>
+>> Considering this case, leader is "cstate_pkg/c2-residency", evsel is
+>> "msr/tsc" and cpu is 1. Because "cstate_pkg/c2-residency" is a system-wide
+>> event and it's processed on CPU0, so FD(leader, 1, thread) must return an
+>> invalid fd, then BUG_ON() may be triggered.
+>>
+>> This patch gets group fd from CPU0 for system wide event if
+>> FD(leader, cpu, thread) returns invalid fd.
+>>
+>> With this patch,
+>>
+>>   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>          1000850802      cstate_pkg/c2-residency/  #      0.5 C2_Pkg_Residency
+>>        201446161592      msr/tsc/
+>>
+>>         1.010637051 seconds time elapsed
+>>
+>> Fixes: 6a4bb04caacc ("perf tools: Enable grouping logic for parsed events")
+>> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 >> ---
->>   drivers/bus/mhi/core/boot.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->> 
->> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
->> index 0bc9c50..c9971d4 100644
->> --- a/drivers/bus/mhi/core/boot.c
->> +++ b/drivers/bus/mhi/core/boot.c
->> @@ -199,6 +199,9 @@ static int mhi_fw_load_amss(struct mhi_controller 
->> *mhi_cntrl,
->>   	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
->>     	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
->> +	if (unlikely(!sequence_id))
->> +		sequence_id = 1;
+>>   tools/perf/util/evsel.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index 6a571d322bb2..cd6470f63d6f 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -1461,6 +1461,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
+>>   	BUG_ON(!leader->core.fd);
+>>   
+>>   	fd = FD(leader, cpu, thread);
+>> +	if (fd == -1 && leader->core.system_wide)
 > 
-> Seems like you could use prandom_u32_max(), and add 1 to the result to
-> eliminate the conditional.  What do you think?
+> fd does not need to be -1 in here.. in my setup cstate_pkg/c2-residency/
+> has cpumask 0, so other cpus never get open and are 0, and the whole thing
+> ends up with:
+> 
+> 	sys_perf_event_open: pid -1  cpu 1  group_fd 0  flags 0
+> 	sys_perf_event_open failed, error -9
+> 
+> I actualy thought we put -1 to fd array but couldn't find it.. perhaps we should od that
+> 
 > 
 
-Agreed. Done using an internal macro in those places.
+I have tested on two platforms. On KBL desktop fd is 0 for this case, but on 
+oncascadelakex server, fd is -1, so the BUG_ON(fd == -1) is triggered.
 
+>> +		fd = FD(leader, 0, thread);
 >> +
->>   	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
->>   			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
->>   			    sequence_id);
->> @@ -254,6 +257,9 @@ static int mhi_fw_load_sbl(struct mhi_controller 
->> *mhi_cntrl,
->>   		      lower_32_bits(dma_addr));
->>   	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
->>   	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
->> +	if (unlikely(!session_id))
->> +		session_id = 1;
->> +
->>   	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
->>   	read_unlock_bh(pm_lock);
->> 
+> 
+> so how do we group following events?
+> 
+>    cstate_pkg/c2-residency/ - cpumask 0
+>    msr/tsc/                 - all cpus
+>
+
+Not sure if it's enough to only use cpumask 0 because cstate_pkg/c2-residency/ 
+should be per-socket.
+
+> cpu 0 is fine.. the rest I have no idea ;-)
+> 
+
+Perhaps we directly remove the BUG_ON(fd == -1) assertion?
+
+Thanks
+Jin Yao
+
+> that's why metrics use the :W, that disables grouping on failure
+> 
+> jirka
+> 
+>>   	BUG_ON(fd == -1);
+>>   
+>>   	return fd;
+>> -- 
+>> 2.17.1
+>>
+> 
