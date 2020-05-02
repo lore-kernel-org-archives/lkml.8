@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40102C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A38AC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B52E2192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2613821974
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:00:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtRW2QBQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DaInghGA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbgEBNAX (ORCPT
+        id S1728007AbgEBNAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 09:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44580 "EHLO
+        Sat, 2 May 2020 09:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgEBNAW (ORCPT
+        with ESMTP id S1727867AbgEBNAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 09:00:22 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D1D7C061A0C;
-        Sat,  2 May 2020 06:00:22 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e17so10084997qtp.7;
-        Sat, 02 May 2020 06:00:22 -0700 (PDT)
+        Sat, 2 May 2020 09:00:25 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5A5C061A0C;
+        Sat,  2 May 2020 06:00:24 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id fb4so6052261qvb.7;
+        Sat, 02 May 2020 06:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vp9pFOaNAK/bZV4TMm15vSAV9KoRuRCBgnB4GbG7eV8=;
-        b=AtRW2QBQjVZqK4pu80aXjEqAkuT5MVq+zFiE6w7FSMt0EUlfKfYXquyiZYb5tfk1rf
-         I/4ao3SQbD6713xSca+TcVym9yryLZchj7tk8of/e7FLMc1MQPG2wzPMR5tt8MznBrYt
-         Cn//hT9jPNw5R1ijqSSRIojZBVN4oCf3v++vvh2wqMDTPANaH46iNEpe5xlg6VTC7hJp
-         4VDRiOeUs1N3mdfPFC848qrejNltWvlCfWQ/IumE4pCBWCAM3FmAkJorhY3ac88e8Guc
-         EoO83lTB5FfhDtHdSeD7Dpkmtb0hNyJaXobvjFIUzfYCf9rvNL/90ShhorZPvP+zoPnK
-         uBZw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4kwbMlfQSR1Pqoy/79RUUNFt2eixa1c08qMSZ+873Tc=;
+        b=DaInghGAsXiWWEbtudR3PREl/QYaGVlhziolqAO1iy/gQ6mSCCVWm4MJ9ScAojhPjd
+         Yy7j3lphdH2oXJWz7aoSX107Ijs27xU/021K48++GJM83VWePR4ZcYIK1M/Z/YZaQQgG
+         hLNhgUcIVTz/3BeT8v5Djfm3XBBJlASWAYbY1znowQWVvyroLJTR/F/pAmeRV7yOmPXT
+         yydMj3JuOToRL5JqXM8o+wUCgoVUjPsleK2pTpgHxfnXDmAmuT22S7nwPtkUG9lpq5rD
+         3XCYKtNtExYX0zp+AwfgKPV6zFp2dB5h+XP+fTiB/qPGdu1Qfpfuw6229c8+t44fcj8b
+         osnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vp9pFOaNAK/bZV4TMm15vSAV9KoRuRCBgnB4GbG7eV8=;
-        b=VzCrGMHl1Xjnx2T0saPaRWze6KUbxe6ryT1wC3beRrTkVvMv+5mDoAOG9+Y74+0pxX
-         RXVOsG4ZYyeP3bObS+ozIEWOhdre3FGnMobdJRv1wvf/ZcURgPh2MVARGVF69KbudrTJ
-         hYBTJBfMIeZKPweRyZhFFKMrInVD1ohvByfNnbYY+ytkQb1SDtvD76/3qMMgjY1soQ/f
-         jLgQgl/si++CXa/k09tsL6ZIale+BmtZN9UDj6USYYTTE+bfY6xAWcV7l1mQeyCm8zFq
-         8WC0SOi8tfMgoYxxTXygzLYA8ds0FYRZqvxwCdT5ljxFjgpo5MjfVcFMav0nSusxbKHa
-         QBqg==
-X-Gm-Message-State: AGi0PuZAzQ5O4L3EwsHUmgse7nAxthyz1wLbTRrPds3gDdEW6ZZEXE+B
-        5mYqlFMlZHZNHi5r/9x0FyZwoqQLqus=
-X-Google-Smtp-Source: APiQypKm5d8ePdZUSklGoPtSOJFY7y2SdZZOsOKx6ignPtFrthW7vx97HLGQX5+5ikbY5bql7RBiwQ==
-X-Received: by 2002:ac8:3713:: with SMTP id o19mr8049899qtb.371.1588424421301;
-        Sat, 02 May 2020 06:00:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4kwbMlfQSR1Pqoy/79RUUNFt2eixa1c08qMSZ+873Tc=;
+        b=YBO6w+Y0NYzqJwQZzStyQXdX5rCfDjrpSm0W65Q+wWvrpFvidDz1su9I/J/ukY30Y2
+         1PqXj/Ugr8epbLoyS6+VteLJ0l8AS2HPGkF5lTWmP7Y94rh9Me7SU7af342cpWPOssS8
+         S9Ph1LJidxod3mowvPsV8T85pXZUHu8g4tiBmM6ipIa/N+XIQsxJ158NwqHEzHAieJ0D
+         X/wu8YcIIsz2gXwvd0QilTQMG/RnD9o2YACoLomaLukdevs2DeYcvqQLNCMXntlMZOoz
+         VqO9iZv8fX59VIg2oHQJfmI7ka8wEb3V+wfws1sPXkR0WqI2U66hFLp1Ih9/RQfazrfp
+         F0jw==
+X-Gm-Message-State: AGi0Pubru39d3ar4exUa9zKOqj/ZrdfgOiiWRqaiS05NwePrVu5xVZzj
+        zG92tPGpcgcb9q5nzuEBkIA=
+X-Google-Smtp-Source: APiQypL4ud5AXEGsm2wV1m5m08s8m7db7FSm5j+s/gbf4l05ArLHzm0zLuQ6R/RKitsjmOrjCivCgg==
+X-Received: by 2002:a0c:9002:: with SMTP id o2mr6012949qvo.3.1588424423450;
+        Sat, 02 May 2020 06:00:23 -0700 (PDT)
 Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id l24sm5067668qtp.8.2020.05.02.06.00.19
+        by smtp.gmail.com with ESMTPSA id l24sm5067668qtp.8.2020.05.02.06.00.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 06:00:20 -0700 (PDT)
+        Sat, 02 May 2020 06:00:22 -0700 (PDT)
 From:   Adam Ford <aford173@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     aford@beaconemedded.com, Adam Ford <aford173@gmail.com>,
@@ -72,10 +72,12 @@ Cc:     aford@beaconemedded.com, Adam Ford <aford173@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: defconfig: Enable some audio drivers on i.MX8M Mini
-Date:   Sat,  2 May 2020 07:59:47 -0500
-Message-Id: <20200502125949.194032-1-aford173@gmail.com>
+Subject: [PATCH] arm64: dts: imx8mm: Add support for micfil
+Date:   Sat,  2 May 2020 07:59:48 -0500
+Message-Id: <20200502125949.194032-2-aford173@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200502125949.194032-1-aford173@gmail.com>
+References: <20200502125949.194032-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,28 +85,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX8M Mini has SAI and micfil support but the drivers
-are not being loaded.
+The i.MX8M Mini has supports the MICFIL digital interface.
+It's a 16-bit audio signal from a PDM microphone bitstream.
+The driver is already in the kernel, but the node is missing.
 
-This patch updates the defconfig to add support
-CONFIG_SND_SOC_FSL_SAI and CONFIG_SND_SOC_FSL_MICFIL to support
-these drivers.
+This patch adds the micfil node.
 
 Signed-off-by: Adam Ford <aford173@gmail.com>
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 366857dfa9de..4e60e8a98b83 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -638,6 +638,8 @@ CONFIG_SND_HDA_TEGRA=m
- CONFIG_SND_HDA_CODEC_HDMI=m
- CONFIG_SND_SOC=y
- CONFIG_SND_BCM2835_SOC_I2S=m
-+CONFIG_SND_SOC_FSL_SAI=y
-+CONFIG_SND_SOC_FSL_MICFIL=y
- CONFIG_SND_MESON_AXG_SOUND_CARD=m
- CONFIG_SND_SOC_SDM845=m
- CONFIG_SND_SOC_ROCKCHIP=m
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index c63685ae80ee..d46e727fc362 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -339,6 +339,25 @@ sai6: sai@30060000 {
+ 				status = "disabled";
+ 			};
+ 
++			micfil: micfil@30080000 {
++				compatible = "fsl,imx8mm-micfil";
++				reg = <0x30080000 0x10000>;
++				interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk IMX8MM_CLK_PDM_IPG>,
++					 <&clk IMX8MM_CLK_PDM_ROOT>,
++					 <&clk IMX8MM_AUDIO_PLL1_OUT>,
++					 <&clk IMX8MM_AUDIO_PLL2_OUT>,
++					 <&clk IMX8MM_CLK_EXT3>;
++				clock-names = "ipg_clk", "ipg_clk_app",
++					      "pll8k", "pll11k", "clkext3";
++				dmas = <&sdma2 24 25 0x80000000>;
++				dma-names = "rx";
++				status = "disabled";
++			};
++
+ 			gpio1: gpio@30200000 {
+ 				compatible = "fsl,imx8mm-gpio", "fsl,imx35-gpio";
+ 				reg = <0x30200000 0x10000>;
 -- 
 2.25.1
 
