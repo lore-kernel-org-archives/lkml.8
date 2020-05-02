@@ -2,161 +2,154 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EBAC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC49C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CB020731
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7362071E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kiho-fi.20150623.gappssmtp.com header.i=@kiho-fi.20150623.gappssmtp.com header.b="bvb/ukky"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vd346jdi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEBRWr (ORCPT
+        id S1728420AbgEBR1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 13:22:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728373AbgEBRWq (ORCPT
+        Sat, 2 May 2020 13:27:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60847 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726400AbgEBR1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 13:22:46 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C86C061A0E
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 10:22:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so5555856ljd.3
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 10:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kiho-fi.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=SQVKZYyDlpOHs6iMr+1/4kxXWmP2kmVeVd0xRrV7hng=;
-        b=bvb/ukky9X41WtzQFHp9/Dyrs2Z6532E5++DYK8Y+jD9I8JPSyR3d70TLFH/0qJDBD
-         YR367kJ9DuheeOwxFSmH7QJYsMNfs+eBr63gsKfXg7c4Rv8ewhk1hRlB5SkjQAFsT81+
-         Zy9uYnfo1bHBojpK8wDxPhxVtMkgMFQmAPRRlHydoN8//ntvaHF5ARx1eZ2NjIGuujF/
-         4RytCj/632AyHiYLyTBHIwb/uJwuop6vdCC2eipNbSTwj7eQ7m8W+GtJuyVU5LjMMduh
-         ZN0UBGcqkOj3VoxFtIayIIM4Fej+BExaU+AhHQPS9eBMHllf0SjyLqJI+JMtdM8uomta
-         aj6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=SQVKZYyDlpOHs6iMr+1/4kxXWmP2kmVeVd0xRrV7hng=;
-        b=WF8QfPn9micVfoBSnwNAKOPlEGVOlqTqEZlfqgCMakMLZtDJDx+uuHLD41MqOmaw3S
-         dj6fP60Pqo36nKi/W7w0aDOf+w505CFFu595vu8gGalqp24F20ZGGjj23Yf93wKqbO3P
-         7reQ1H003zPxN4g4XKfLVIi4ato+hCjK3gAKeYLccCskHNfzYTwVjay3Q/og9BS9uMvH
-         ZxDvKpdQ3z0Er/Lw7rQkxAJm+5DINmJh1Q0Em+MCDqB7fRkunXBD49xAJU9ZikHMgwnP
-         YzutNGZT5dCt0LF7P4V/h9Zu9urO7UYug4a7qhEpCC1fLm+PpwwxvGP9BlfBioDguDGq
-         DL/w==
-X-Gm-Message-State: AGi0PubqwCVCi/2uQfJzBFr9djVONCBky6L3fEOOkIw6HF7SLfEeZB0a
-        eTo4fLlvOkkTJVPeTEjQGoO3LfTe99aqvg==
-X-Google-Smtp-Source: APiQypL6anjjjWSN6V+XYxJy+PFkZKLOCHjH2Gs85AOPKUSIbrkf713J120ogeIEH7Bp6v0YgaCNNw==
-X-Received: by 2002:a2e:80d2:: with SMTP id r18mr5539992ljg.269.1588440161810;
-        Sat, 02 May 2020 10:22:41 -0700 (PDT)
-Received: from [192.168.100.210] (dsl-kpobng12-58c361-73.dhcp.inet.fi. [88.195.97.73])
-        by smtp.gmail.com with ESMTPSA id c20sm4328925ljk.59.2020.05.02.10.22.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 May 2020 10:22:41 -0700 (PDT)
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Petteri Jokinen <petteri@kiho.fi>
-Subject: [PATCH] gpio-f7188x: Add GPIO support for F81865
-Message-ID: <4340a212-89f5-8c62-db61-f061e494d6b1@kiho.fi>
-Date:   Sat, 2 May 2020 20:22:39 +0300
+        Sat, 2 May 2020 13:27:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588440464;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=ErRNiGhQm0hFq8J3JJ99IOHq4K81WyfWobAhJnyPTNI=;
+        b=Vd346jdiZQ4AQZCvcqddZDTk/Fj2XTGazgJ1rkKmEc705sU40Fdrn+UptzCd47+wO7kxHT
+        tJrx3VPRMkF7sv9N2VQ+wpSMb/YrGI4cnJwzL0sl7kIJgmgEJj/3dh4q3aEA4Q8+0/WBgL
+        R57eWTLI+2yuOHTNBs2OcQ8yOfa8ecA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-V6EPeOVZP06AgzMxIB1uZw-1; Sat, 02 May 2020 13:27:36 -0400
+X-MC-Unique: V6EPeOVZP06AgzMxIB1uZw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02477464;
+        Sat,  2 May 2020 17:27:35 +0000 (UTC)
+Received: from [10.36.112.72] (ovpn-112-72.ams2.redhat.com [10.36.112.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4625C1001281;
+        Sat,  2 May 2020 17:27:31 +0000 (UTC)
+Subject: Re: KVM: s390/mm: Clarification for two return value checks in
+ gmap_shadow()
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org,
+        =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+References: <7f0b7ac0-d061-9484-bc5e-bdd9e32aa42b@web.de>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <993d6b88-1f8f-745e-90b6-6ab0917a57a6@redhat.com>
+Date:   Sat, 2 May 2020 19:27:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <7f0b7ac0-d061-9484-bc5e-bdd9e32aa42b@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add GPIO support for Fintek F81865 chip.
+On 02.05.20 17:43, Markus Elfring wrote:
+> Hello,
+>=20
+> I have tried another small script out for the semantic patch language.
+> This source code analysis approach points out that the function =E2=80=9C=
+gmap_find_shadow=E2=80=9D
+> is called two times by the function =E2=80=9Cgmap_shadow=E2=80=9D.
+> https://elixir.bootlin.com/linux/v5.7-rc3/source/arch/s390/mm/gmap.c#L1=
+628
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log=
+/arch/s390/mm/gmap.c
+>=20
+> Null pointer checks are performed at these places.
 
-Datasheet: http://www.hardwaresecrets.com/datasheets/F81865_V028P.pdf
+Right, in case we have already a shadow, we return it. In case we are
+just concurrently creating/initializing another one, we return -EINVAL
+so the caller will retry (and find the fully initialized one). In case
+we get NULL, we have to create a new one.
 
-Signed-off-by: Petteri Jokinen <petteri@kiho.fi>
----
- drivers/gpio/gpio-f7188x.c | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+> The function =E2=80=9Cgmap_find_shadow=E2=80=9D is documented in the sa=
+me source file
+> that the pointer =E2=80=9CERR_PTR(-EAGAIN)=E2=80=9D can eventually be r=
+eturned.
+> Are the referenced gmap data structures always initialised here?
 
-diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
-index cadd02993539..18a3147f5a42 100644
---- a/drivers/gpio/gpio-f7188x.c
-+++ b/drivers/gpio/gpio-f7188x.c
-@@ -36,9 +36,19 @@
- #define SIO_F71889A_ID		0x1005	/* F71889A chipset ID */
- #define SIO_F81866_ID		0x1010	/* F81866 chipset ID */
- #define SIO_F81804_ID		0x1502  /* F81804 chipset ID, same for f81966 */
--
--
--enum chips { f71869, f71869a, f71882fg, f71889a, f71889f, f81866, f81804 };
-+#define SIO_F81865_ID		0x0704	/* F81865 chipset ID */
-+
-+
-+enum chips {
-+	f71869,
-+	f71869a,
-+	f71882fg,
-+	f71889a,
-+	f71889f,
-+	f81866,
-+	f81804,
-+	f81865,
-+};
+-EAGAIN makes sure that we are not touching partially initialized one.
+In case we find a valid gmap shadow, it is fully initialized. That's
+what we have the ->initialized field for.
 
- static const char * const f7188x_names[] = {
- 	"f71869",
-@@ -48,6 +58,7 @@ static const char * const f7188x_names[] = {
- 	"f71889f",
- 	"f81866",
- 	"f81804",
-+	"f81865",
- };
+Hope that answers your question.
 
- struct f7188x_sio {
-@@ -233,6 +244,15 @@ static struct f7188x_gpio_bank f81804_gpio_bank[] = {
- 	F7188X_GPIO_BANK(90, 8, 0x98),
- };
+--=20
+Thanks,
 
-+static struct f7188x_gpio_bank f81865_gpio_bank[] = {
-+	F7188X_GPIO_BANK(0, 8, 0xF0),
-+	F7188X_GPIO_BANK(10, 8, 0xE0),
-+	F7188X_GPIO_BANK(20, 8, 0xD0),
-+	F7188X_GPIO_BANK(30, 8, 0xC0),
-+	F7188X_GPIO_BANK(40, 8, 0xB0),
-+	F7188X_GPIO_BANK(50, 8, 0xA0),
-+	F7188X_GPIO_BANK(60, 5, 0x90),
-+};
-
- static int f7188x_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
- {
-@@ -425,6 +445,10 @@ static int f7188x_gpio_probe(struct platform_device *pdev)
- 		data->nr_bank = ARRAY_SIZE(f81804_gpio_bank);
- 		data->bank = f81804_gpio_bank;
- 		break;
-+	case f81865:
-+		data->nr_bank = ARRAY_SIZE(f81865_gpio_bank);
-+		data->bank = f81865_gpio_bank;
-+		break;
- 	default:
- 		return -ENODEV;
- 	}
-@@ -490,6 +514,9 @@ static int __init f7188x_find(int addr, struct f7188x_sio *sio)
- 	case SIO_F81804_ID:
- 		sio->type = f81804;
- 		break;
-+	case SIO_F81865_ID:
-+		sio->type = f81865;
-+		break;
- 	default:
- 		pr_info(DRVNAME ": Unsupported Fintek device 0x%04x\n", devid);
- 		goto err;
---
-2.26.2
+David / dhildenb
 
