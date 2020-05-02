@@ -2,146 +2,185 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E14C47258
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CB5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFE0524957
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Lz1n5Fgd"
+	by mail.kernel.org (Postfix) with ESMTP id 43E4C24957
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgEBNfJ (ORCPT
+        id S1728182AbgEBNfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 2 May 2020 09:35:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:52334 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728143AbgEBNfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 2 May 2020 09:35:09 -0400
-Received: from mail-bn8nam11on2095.outbound.protection.outlook.com ([40.107.236.95]:51169
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728128AbgEBNfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 09:35:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N92PpPTieuhuHwmsnKQR5STROa3II0h+8nGwlQ7nx7Dgcp1i4WymaAlEo0ckRWphpEmxVVvdgQXj4utLXmKvE10v9itFhLicO+tKOxkLcjudIWrvpggaP62ARflerp5okqGnsLuWlkVQ1lKj88KkrU90VtueqNQJGHFAoR/iLZXOy/wjUGoKNiTFt0Y8gJeagexTWCi+gsBk/1eM1iwUl1qVOUxRunxHyPSC9pnSRTMsy/qfMhDeifO4yEZAbqg6WbEE9xA1y8gOo3ShfOXf146TWhVToC2ge2DyR1A9CyW/VPdrqfvD9/gAazoVKqIgJNb8HQ+BKzLkGM9wmj9ldg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZjE9ZNJxcWx17eXgA/xDzGb3e/hzwL3ZJJBovi8f39I=;
- b=Peu0d9fXu2RPEBLyJaz4wXVbFmJLVE1WhVCUz24hajgH4FVWQ6FUocXha3tGT7pDz099wF8F3jLPr4b03AgesIjPn7gTmtELFRgxoMA9Q/al0fapL+EWA5tXknSel05vFPzCgYJRYNu1CQwj4vrRLVLhYttFdjOCPivH3SQzCJwb0DtAE3IzZlT3JsE5x8XCKe15erfmKFTtAkzQkPZr3/LjBfXWUMdFi+x1rQpEiTMyUDEgKvWvMnqv58ObR02l7NcPL8mDDg3Hyj8RTQKyg35roA51pA0irWXj+EYNZp01NyFufDcGkxYvsu8tJOUjzWunUl53J1XDEuTcMZmy0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZjE9ZNJxcWx17eXgA/xDzGb3e/hzwL3ZJJBovi8f39I=;
- b=Lz1n5FgdfN94kWyyNEkPKZdZD7QER3mR68z8aiChLRdiPCneV93pN9xFe54fw5pgHBIZ0dcydX9wNeecAhbonQMS5A0g70l2mtk+hUsGm8ocmsP90LooZ/5H/ZT2VvTcnwb3e/D+1pNpI5QpJWE7hHcgMU7+y0qVX5xbov0o/0Y=
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com (2603:10b6:610:2a::33)
- by CH2PR13MB3830.namprd13.prod.outlook.com (2603:10b6:610:9e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.14; Sat, 2 May
- 2020 13:35:03 +0000
-Received: from CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493]) by CH2PR13MB3398.namprd13.prod.outlook.com
- ([fe80::49f6:ce9b:9803:2493%6]) with mapi id 15.20.2958.029; Sat, 2 May 2020
- 13:35:03 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS client bugfixes
-Thread-Topic: [GIT PULL] Please pull NFS client bugfixes
-Thread-Index: AQHWIIZ7HW2JFWZpdUq+M5Vh5X+tMQ==
-Date:   Sat, 2 May 2020 13:35:02 +0000
-Message-ID: <c19d10e89cda7061d6aa41c1c6ad7e75affd4051.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-foundation.org; dkim=none (message not signed)
- header.d=none;linux-foundation.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-originating-ip: [68.36.133.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af477aeb-2a3f-4201-8d40-08d7ee9d9e67
-x-ms-traffictypediagnostic: CH2PR13MB3830:
-x-microsoft-antispam-prvs: <CH2PR13MB383061C11052F73994C2EFCFB8A80@CH2PR13MB3830.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-forefront-prvs: 039178EF4A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: csvwtOUHBJifYTsSSP6Dg/UMUGPCFW7Gq4MjOKf7ukYcffi7uccmw9Ex3PCic1kWm0xFM3jvEFxapVuEcCKUICAxs1i35CxsDJo8mtoFK4sdPwAp/oNt9bZ+g/6oRYY6T6GzMhOqwl6FwSqdKfSs+5JCPOVhpT17Ss0zvaPawmn39DwsrujEu6kzgh0nxH6i1pyh7kM+pf/VkGCT2RT0pIpnEnKdUR11Z6ciV3zsWBYsXwTtSzK11eWdP68g4TeQNn6/bTLeqle+AALd3nMY8en3ef8lgiAiWrJDs6ULtScOQ1y1oGrVnz2MWmDUbUzsdQUy7DqhAzpIULU3luSz0uQKzmbcpuNb/TZKug8uU2VU+qOfJWHBd/RVJxZhoZCTaUzTwQg7lPHKIsTel+VfyGrJErbiC93ev74FIvuojZk4guYxxm9yZ6FOXSWOUGzN
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR13MB3398.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(396003)(366004)(39830400003)(5660300002)(6512007)(6486002)(26005)(36756003)(6506007)(2906002)(86362001)(6916009)(71200400001)(4326008)(54906003)(8676002)(2616005)(66476007)(91956017)(76116006)(186003)(66446008)(478600001)(316002)(8936002)(66946007)(66556008)(64756008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: n3Znw6CsFVZO2Mnob1CUK62Yle94Ty2DUpqBXEKskdkCaAs6rp/pYy1tCXoQ75mczaE5aF4dZZNA/OiLP4P9J9tYG4Fzkh32RvPcbvrmKKLS2Qq6a+4oQr4btw0DYEvfApJoN9ILqjxL0UQEDpIHH8u4z2glOKeEtttRmsmm6uvb5tPbalxSCyHyCCF7qQj1ypt4JjLvYKEDZwFOAHH9LQt1EQoHQYGnvMTdDaVhX+DnTxnwl1vL+B5S/0uwP58Cykf9T3vH6OY3Hp4+QPM0pZwCziMQOre4f0p2txGjPe9xUaJ6Ni0PVYmJiiYFfVGsGzWhJ7WwFE1qNwRyRPeFtBTUtqd47/u0zdyY8fIfnMTFY+jjHjLS035HmnN0wzLiZbcrli6xXOVJvEo+KNCkl36OcBCLPQhitMfGe1eFWMeVhXpHof81DK8RCk9erdpH2b5m6QbGoMOb5JonkJJEk79iZM01CWFCoP6gz6WOolaalzw2enZrz5CE38/rY0j6PW14NlKR7jxm5Y/SvFNnsTyJ9jznvI1BChdzmfc5t2WG4/gDd7czXxJJegBq61CdY+jKr6K3BPQ1TpEUNM3wqx58iYyoPGqrkImFq6EbMc4F7M66QOQ7asJOE3AiVggNbZIS3Swvy3mRLEUyr9ISxp1hSD0wQSp1tIAktwdijFPiV3xxyJkV0Zv0u6GU1fNs1umPrAC978RdfNPcM2igmi/JXQso3ZjxjiK2Ugm0kREmUxNmISciiNKV/Rs0Lj10TN2w0c2oUzx+PlEWwb2PcdObabiRgTZsdIyDljwdbGU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E737769FC400E94C9DC710A43A5BE38B@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af477aeb-2a3f-4201-8d40-08d7ee9d9e67
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2020 13:35:03.0287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iGgEHxzzEax+XpzGlh1kDx+OffvkepI7G3XW1avqdr3eldNIKvotnOM2TTPYSOiK1t8bGHSifqYLWbpR1E2nwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3830
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BA8230E;
+        Sat,  2 May 2020 06:35:08 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.71.130])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 177B73F68F;
+        Sat,  2 May 2020 06:35:04 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: [PATCH V3 04/16] arm64/cpufeature: Introduce ID_PFR2 CPU register
+Date:   Sat,  2 May 2020 19:03:53 +0530
+Message-Id: <1588426445-24344-5-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgYWU4M2QwYjQx
-NmRiMDAyZmU5NTYwMWU3Zjk3ZjY0YjU5NTE0ZDkzNjoNCg0KICBMaW51eCA1LjctcmMyICgyMDIw
-LTA0LTE5IDE0OjM1OjMwIC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xp
-bnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNy00DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
-cyB1cCB0byA5YzA3Yjc1YjgwZWVmZjcxNDQyMGZiNmE0Yzg4MGIyODRlNTI5ZDBmOg0KDQogIE5G
-UzogRml4IGEgcmFjZSBpbiBfX25mc19saXN0X2Zvcl9lYWNoX3NlcnZlcigpICgyMDIwLTA0LTMw
-IDE1OjA4OjI2IC0wNDAwKQ0KDQpUaGFua3MNCiAgVHJvbmQNCg0KLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KTkZTIGNsaWVu
-dCBidWdmaXhlcyBmb3IgTGludXggNS43DQoNCkhpZ2hsaWdodHMgaW5jbHVkZToNCg0KU3RhYmxl
-IGZpeGVzDQotIGZpeCBoYW5kbGluZyBvZiBiYWNrY2hhbm5lbCBiaW5kaW5nIGluIEJJTkRfQ09O
-Tl9UT19TRVNTSU9ODQoNCkJ1Z2ZpeGVzDQotIEZpeCBhIGNyZWRlbnRpYWwgdXNlLWFmdGVyLWZy
-ZWUgaXNzdWUgaW4gcG5mc19yb2MoKQ0KLSBGaXggcG90ZW50aWFsIHBvc2l4X2FjbCByZWZjbnQg
-bGVhayBpbiBuZnMzX3NldF9hY2wNCi0gZGVmZXIgc2xvdyBwYXJ0cyBvZiBycGNfZnJlZV9jbGll
-bnQoKSB0byBhIHdvcmtxdWV1ZQ0KLSBGaXggYW4gT29wc2FibGUgcmFjZSBpbiBfX25mc19saXN0
-X2Zvcl9lYWNoX3NlcnZlcigpDQotIEZpeCB0cmFjZSBwb2ludCB1c2UtYWZ0ZXItZnJlZSByYWNl
-DQotIFJlZ3Jlc3Npb246IHRoZSBSRE1BIGNsaWVudCBubyBsb25nZXIgcmVzcG9uZHMgdG8gc2Vy
-dmVyIGRpc2Nvbm5lY3QgcmVxdWVzdHMNCi0gRml4IHJldHVybiB2YWx1ZXMgb2YgeGRyX3N0cmVh
-bV9lbmNvZGVfaXRlbV97cHJlc2VudCwgYWJzZW50fQ0KLSBfcG5mc19yZXR1cm5fbGF5b3V0KCkg
-bXVzdCBhbHdheXMgd2FpdCBmb3IgbGF5b3V0cmV0dXJuIGNvbXBsZXRpb24NCg0KQ2xlYW51cHMN
-Ci0gUmVtb3ZlIHVucmVhY2hhYmxlIGVycm9yIGNvbmRpdGlvbnMNCg0KLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KQW5kcmVh
-cyBHcnVlbmJhY2hlciAoMSk6DQogICAgICBuZnM6IEZpeCBwb3RlbnRpYWwgcG9zaXhfYWNsIHJl
-ZmNudCBsZWFrIGluIG5mczNfc2V0X2FjbA0KDQpDaHVjayBMZXZlciAoMyk6DQogICAgICB4cHJ0
-cmRtYTogUmVzdG9yZSB3YWtlLXVwLWFsbCB0byBycGNyZG1hX2NtX2V2ZW50X2hhbmRsZXIoKQ0K
-ICAgICAgeHBydHJkbWE6IEZpeCB0cmFjZSBwb2ludCB1c2UtYWZ0ZXItZnJlZSByYWNlDQogICAg
-ICB4cHJ0cmRtYTogRml4IHVzZSBvZiB4ZHJfc3RyZWFtX2VuY29kZV9pdGVtX3twcmVzZW50LCBh
-YnNlbnR9DQoNCk5laWxCcm93biAoMSk6DQogICAgICBTVU5SUEM6IGRlZmVyIHNsb3cgcGFydHMg
-b2YgcnBjX2ZyZWVfY2xpZW50KCkgdG8gYSB3b3JrcXVldWUuDQoNCk9sZ2EgS29ybmlldnNrYWlh
-ICgxKToNCiAgICAgIE5GU3Y0LjE6IGZpeCBoYW5kbGluZyBvZiBiYWNrY2hhbm5lbCBiaW5kaW5n
-IGluIEJJTkRfQ09OTl9UT19TRVNTSU9ODQoNClRyb25kIE15a2xlYnVzdCAoNCk6DQogICAgICBO
-RlMvcG5mczogRW5zdXJlIHRoYXQgX3BuZnNfcmV0dXJuX2xheW91dCgpIHdhaXRzIGZvciBsYXlv
-dXRyZXR1cm4gY29tcGxldGlvbg0KICAgICAgTkZTL3BuZnM6IEZpeCBhIGNyZWRlbnRpYWwgdXNl
-LWFmdGVyLWZyZWUgaXNzdWUgaW4gcG5mc19yb2MoKQ0KICAgICAgTWVyZ2UgdGFnICduZnMtcmRt
-YS1mb3ItNS43LTInIG9mIGdpdDovL2dpdC5saW51eC1uZnMub3JnL3Byb2plY3RzL2FubmEvbGlu
-dXgtbmZzDQogICAgICBORlM6IEZpeCBhIHJhY2UgaW4gX19uZnNfbGlzdF9mb3JfZWFjaF9zZXJ2
-ZXIoKQ0KDQpYaXl1IFlhbmcgKDIpOg0KICAgICAgU1VOUlBDOiBSZW1vdmUgdW5yZWFjaGFibGUg
-ZXJyb3IgY29uZGl0aW9uDQogICAgICBORlN2NDogUmVtb3ZlIHVucmVhY2hhYmxlIGVycm9yIGNv
-bmRpdGlvbiBkdWUgdG8gcnBjX3J1bl90YXNrKCkNCg0KIGZzL25mcy9uZnMzYWNsLmMgICAgICAg
-ICAgICAgICB8IDIyICsrKysrKysrKysrKysrKy0tLS0tLS0NCiBmcy9uZnMvbmZzNHByb2MuYyAg
-ICAgICAgICAgICAgfCAxMSArKysrKysrKystLQ0KIGZzL25mcy9wbmZzLmMgICAgICAgICAgICAg
-ICAgICB8IDExICsrKysrLS0tLS0tDQogZnMvbmZzL3N1cGVyLmMgICAgICAgICAgICAgICAgIHwg
-IDIgKy0NCiBpbmNsdWRlL2xpbnV4L25mc194ZHIuaCAgICAgICAgfCAgMiArKw0KIGluY2x1ZGUv
-bGludXgvc3VucnBjL2NsbnQuaCAgICB8IDEzICsrKysrKysrKysrKy0NCiBpbmNsdWRlL3RyYWNl
-L2V2ZW50cy9ycGNyZG1hLmggfCAxMiArKysrLS0tLS0tLS0NCiBuZXQvc3VucnBjL2NsbnQuYyAg
-ICAgICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysrKystLS0tLS0NCiBuZXQvc3VucnBjL3hw
-cnRyZG1hL3JwY19yZG1hLmMgfCAxNSArKysrKysrKysrKy0tLS0NCiBuZXQvc3VucnBjL3hwcnRy
-ZG1hL3ZlcmJzLmMgICAgfCAgMyArKy0NCiAxMCBmaWxlcyBjaGFuZ2VkLCA3OSBpbnNlcnRpb25z
-KCspLCAzNiBkZWxldGlvbnMoLSkNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBj
-bGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFj
-ZS5jb20NCg0KDQo=
+This adds basic building blocks required for ID_PFR2 CPU register which
+provides information about the AArch32 programmers model which must be
+interpreted along with ID_PFR0 and ID_PFR1 CPU registers. This is added
+per ARM DDI 0487F.a specification.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: kvmarm@lists.cs.columbia.edu
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ arch/arm64/include/asm/cpu.h    |  1 +
+ arch/arm64/include/asm/sysreg.h |  4 ++++
+ arch/arm64/kernel/cpufeature.c  | 11 +++++++++++
+ arch/arm64/kernel/cpuinfo.c     |  1 +
+ arch/arm64/kvm/sys_regs.c       |  2 +-
+ 5 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/cpu.h b/arch/arm64/include/asm/cpu.h
+index b4a40535a3d8..464e828a994d 100644
+--- a/arch/arm64/include/asm/cpu.h
++++ b/arch/arm64/include/asm/cpu.h
+@@ -46,6 +46,7 @@ struct cpuinfo_arm64 {
+ 	u32		reg_id_mmfr3;
+ 	u32		reg_id_pfr0;
+ 	u32		reg_id_pfr1;
++	u32		reg_id_pfr2;
+ 
+ 	u32		reg_mvfr0;
+ 	u32		reg_mvfr1;
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index e5317a6367b6..c977449e02db 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -153,6 +153,7 @@
+ #define SYS_MVFR0_EL1			sys_reg(3, 0, 0, 3, 0)
+ #define SYS_MVFR1_EL1			sys_reg(3, 0, 0, 3, 1)
+ #define SYS_MVFR2_EL1			sys_reg(3, 0, 0, 3, 2)
++#define SYS_ID_PFR2_EL1			sys_reg(3, 0, 0, 3, 4)
+ 
+ #define SYS_ID_AA64PFR0_EL1		sys_reg(3, 0, 0, 4, 0)
+ #define SYS_ID_AA64PFR1_EL1		sys_reg(3, 0, 0, 4, 1)
+@@ -785,6 +786,9 @@
+ #define ID_ISAR6_DP_SHIFT		4
+ #define ID_ISAR6_JSCVT_SHIFT		0
+ 
++#define ID_PFR2_SSBS_SHIFT		4
++#define ID_PFR2_CSV3_SHIFT		0
++
+ #define MVFR0_FPROUND_SHIFT		28
+ #define MVFR0_FPSHVEC_SHIFT		24
+ #define MVFR0_FPSQRT_SHIFT		20
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index cba43e4a5c79..a8247bf92959 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -434,6 +434,12 @@ static const struct arm64_ftr_bits ftr_id_pfr1[] = {
+ 	ARM64_FTR_END,
+ };
+ 
++static const struct arm64_ftr_bits ftr_id_pfr2[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR2_SSBS_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_PFR2_CSV3_SHIFT, 4, 0),
++	ARM64_FTR_END,
++};
++
+ static const struct arm64_ftr_bits ftr_id_dfr0[] = {
+ 	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 24, 4, 0xf),	/* PerfMon */
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 20, 4, 0),
+@@ -514,6 +520,7 @@ static const struct __ftr_reg_entry {
+ 	ARM64_FTR_REG(SYS_MVFR0_EL1, ftr_generic_32bits),
+ 	ARM64_FTR_REG(SYS_MVFR1_EL1, ftr_generic_32bits),
+ 	ARM64_FTR_REG(SYS_MVFR2_EL1, ftr_mvfr2),
++	ARM64_FTR_REG(SYS_ID_PFR2_EL1, ftr_id_pfr2),
+ 
+ 	/* Op1 = 0, CRn = 0, CRm = 4 */
+ 	ARM64_FTR_REG(SYS_ID_AA64PFR0_EL1, ftr_id_aa64pfr0),
+@@ -720,6 +727,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
+ 		init_cpu_ftr_reg(SYS_ID_MMFR3_EL1, info->reg_id_mmfr3);
+ 		init_cpu_ftr_reg(SYS_ID_PFR0_EL1, info->reg_id_pfr0);
+ 		init_cpu_ftr_reg(SYS_ID_PFR1_EL1, info->reg_id_pfr1);
++		init_cpu_ftr_reg(SYS_ID_PFR2_EL1, info->reg_id_pfr2);
+ 		init_cpu_ftr_reg(SYS_MVFR0_EL1, info->reg_mvfr0);
+ 		init_cpu_ftr_reg(SYS_MVFR1_EL1, info->reg_mvfr1);
+ 		init_cpu_ftr_reg(SYS_MVFR2_EL1, info->reg_mvfr2);
+@@ -853,6 +861,8 @@ static int update_32bit_cpu_features(int cpu, struct cpuinfo_arm64 *info,
+ 				      info->reg_id_pfr0, boot->reg_id_pfr0);
+ 	taint |= check_update_ftr_reg(SYS_ID_PFR1_EL1, cpu,
+ 				      info->reg_id_pfr1, boot->reg_id_pfr1);
++	taint |= check_update_ftr_reg(SYS_ID_PFR2_EL1, cpu,
++				      info->reg_id_pfr2, boot->reg_id_pfr2);
+ 	taint |= check_update_ftr_reg(SYS_MVFR0_EL1, cpu,
+ 				      info->reg_mvfr0, boot->reg_mvfr0);
+ 	taint |= check_update_ftr_reg(SYS_MVFR1_EL1, cpu,
+@@ -980,6 +990,7 @@ static u64 __read_sysreg_by_encoding(u32 sys_id)
+ 	switch (sys_id) {
+ 	read_sysreg_case(SYS_ID_PFR0_EL1);
+ 	read_sysreg_case(SYS_ID_PFR1_EL1);
++	read_sysreg_case(SYS_ID_PFR2_EL1);
+ 	read_sysreg_case(SYS_ID_DFR0_EL1);
+ 	read_sysreg_case(SYS_ID_MMFR0_EL1);
+ 	read_sysreg_case(SYS_ID_MMFR1_EL1);
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index 86136075ae41..cb79b083f97f 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -375,6 +375,7 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ 		info->reg_id_mmfr3 = read_cpuid(ID_MMFR3_EL1);
+ 		info->reg_id_pfr0 = read_cpuid(ID_PFR0_EL1);
+ 		info->reg_id_pfr1 = read_cpuid(ID_PFR1_EL1);
++		info->reg_id_pfr2 = read_cpuid(ID_PFR2_EL1);
+ 
+ 		info->reg_mvfr0 = read_cpuid(MVFR0_EL1);
+ 		info->reg_mvfr1 = read_cpuid(MVFR1_EL1);
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 51db934702b6..b784b156edb3 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1456,7 +1456,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 	ID_SANITISED(MVFR1_EL1),
+ 	ID_SANITISED(MVFR2_EL1),
+ 	ID_UNALLOCATED(3,3),
+-	ID_UNALLOCATED(3,4),
++	ID_SANITISED(ID_PFR2_EL1),
+ 	ID_UNALLOCATED(3,5),
+ 	ID_UNALLOCATED(3,6),
+ 	ID_UNALLOCATED(3,7),
+-- 
+2.20.1
+
