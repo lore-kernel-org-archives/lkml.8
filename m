@@ -2,537 +2,254 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AE4C47258
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A776EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DD520775
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584B0206F1
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HFXsrD9+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRNPt3kr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgEBTPc (ORCPT
+        id S1728468AbgEBTVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 15:15:32 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2759 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgEBTPb (ORCPT
+        Sat, 2 May 2020 15:21:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54314 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727974AbgEBTVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 15:15:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eadc6c60000>; Sat, 02 May 2020 12:15:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 02 May 2020 12:15:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 02 May 2020 12:15:30 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May
- 2020 19:15:30 +0000
-Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May 2020
- 19:15:29 +0000
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
- <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
- <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
- <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
- <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
- <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
- <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
- <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
- <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
- <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
- <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
- <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
- <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
- <1767e50f-efb7-5e89-22f6-0917821b660d@nvidia.com>
- <235a4cd4-4d4a-04b8-6c65-43a4dba48a0b@nvidia.com>
- <f8103170-7879-8597-3e3c-da9a3b6a40b3@nvidia.com>
- <5d847770-dad9-8f18-67b5-c1ba79084957@nvidia.com>
- <605fc688-7712-cdfd-9d12-5741b984bb68@nvidia.com>
-Message-ID: <4022a7a7-2ea0-dc1d-4dbc-29985ca3f315@nvidia.com>
-Date:   Sat, 2 May 2020 12:14:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 15:21:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588447280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=y2N0/7L/seOua7FnU1iVc+jQRmQ0Fv8OF3YcHDeW7UY=;
+        b=MRNPt3krS1CYJT4E8XmQHeEt6tgBDJroNQS78W/BlHBippeOb7usMWREG16MYsJryCGzEs
+        e5o5ZqzsrHgye0OIMZiYRvWtyQnu0ohqny7iAGwObMWj4X3h77blcZqf1WlABV3o8if82J
+        x4K/5eHqMDR0RrFLd6f8/eFyoPNfNoI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-6-r8jhzePPK0rDIxFl7YoQ-1; Sat, 02 May 2020 15:21:11 -0400
+X-MC-Unique: 6-r8jhzePPK0rDIxFl7YoQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6432B18CA26B;
+        Sat,  2 May 2020 19:21:09 +0000 (UTC)
+Received: from treble (ovpn-112-188.rdu2.redhat.com [10.10.112.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA07D2B4CB;
+        Sat,  2 May 2020 19:21:07 +0000 (UTC)
+Date:   Sat, 2 May 2020 14:21:05 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
+ compatibility
+Message-ID: <20200502192105.xp2osi5z354rh4sm@treble>
+References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
+ <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
+ <20200501192204.cepwymj3fln2ngpi@treble>
+ <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
+ <20200501195617.czrnfqqcxfnliz3k@treble>
+ <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <605fc688-7712-cdfd-9d12-5741b984bb68@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588446918; bh=6QMensao6Koqw72YIeCXIWAtbzQE5Vm+JRUDIGqB/s4=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=HFXsrD9+R5JCf2YfBrhbuILdK8xp/TyqBzyEFtIsp0sl+fN73aOqF2yKfmiT/NZHk
-         wmrXUL4imj5APs6LGbHefqGMmI5jUNzFY/y3Wc3pPX8cBmYcyPpoJjnt+CfAeYE+Nq
-         v0+Xgpc3D+Drf+1usjsJW/xnUAMK72nJdiC7YJ/NzzJRvu2xQCa6p7XbCPoSmZAxVV
-         gzY7PhIXWx2H+ab/CkAuyyalt2/TUOiKj/xEjZ34qKnjT1rurSqtzfq7H2NTML4ACz
-         gAAIVjsJ16hwO1yKskf4scxUBXig41OhEeondbEY7Tsm7u2U26UReI0f5cLmuCHxnD
-         dRvQjA98c9Hjg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 01, 2020 at 08:06:22PM -0700, Alexei Starovoitov wrote:
+> On Fri, May 01, 2020 at 02:56:17PM -0500, Josh Poimboeuf wrote:
+> > On Fri, May 01, 2020 at 12:40:53PM -0700, Alexei Starovoitov wrote:
+> > > On Fri, May 01, 2020 at 02:22:04PM -0500, Josh Poimboeuf wrote:
+> > > > On Fri, May 01, 2020 at 12:09:30PM -0700, Alexei Starovoitov wrote:
+> > > > > On Thu, Apr 30, 2020 at 02:07:43PM -0500, Josh Poimboeuf wrote:
+> > > > > > Objtool decodes instructions and follows all potential code branches
+> > > > > > within a function.  But it's not an emulator, so it doesn't track
+> > > > > > register values.  For that reason, it usually can't follow
+> > > > > > intra-function indirect branches, unless they're using a jump table
+> > > > > > which follows a certain format (e.g., GCC switch statement jump tables).
+> > > > > > 
+> > > > > > In most cases, the generated code for the BPF jump table looks a lot
+> > > > > > like a GCC jump table, so objtool can follow it.  However, with
+> > > > > > RETPOLINE=n, GCC keeps the jump table address in a register, and then
+> > > > > > does 160+ indirect jumps with it.  When objtool encounters the indirect
+> > > > > > jumps, it can't tell which jump table is being used (or even whether
+> > > > > > they might be sibling calls instead).
+> > > > > > 
+> > > > > > This was fixed before by disabling an optimization in ___bpf_prog_run(),
+> > > > > > using the "optimize" function attribute.  However, that attribute is bad
+> > > > > > news.  It doesn't append options to the command-line arguments.  Instead
+> > > > > > it starts from a blank slate.  And according to recent GCC documentation
+> > > > > > it's not recommended for production use.  So revert the previous fix:
+> > > > > > 
+> > > > > >   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
+> > > > > > 
+> > > > > > With that reverted, solve the original problem in a different way by
+> > > > > > getting rid of the "goto select_insn" indirection, and instead just goto
+> > > > > > the jump table directly.  This simplifies the code a bit and helps GCC
+> > > > > > generate saner code for the jump table branches, at least in the
+> > > > > > RETPOLINE=n case.
+> > > > > > 
+> > > > > > But, in the RETPOLINE=y case, this simpler code actually causes GCC to
+> > > > > > generate far worse code, ballooning the function text size by +40%.  So
+> > > > > > leave that code the way it was.  In fact Alexei prefers to leave *all*
+> > > > > > the code the way it was, except where needed by objtool.  So even
+> > > > > > non-x86 RETPOLINE=n code will continue to have "goto select_insn".
+> > > > > > 
+> > > > > > This stuff is crazy voodoo, and far from ideal.  But it works for now.
+> > > > > > Eventually, there's a plan to create a compiler plugin for annotating
+> > > > > > jump tables.  That will make this a lot less fragile.
+> > > > > 
+> > > > > I don't like this commit log.
+> > > > > Here you're saying that the code recognized by objtool is sane and good
+> > > > > whereas well optimized gcc code is somehow voodoo and bad.
+> > > > > That is just wrong.
+> > > > 
+> > > > I have no idea what you're talking about.
+> > > > 
+> > > > Are you saying that ballooning the function text size by 40% is well
+> > > > optimized GCC code?  It seems like a bug to me.  That's the only place I
+> > > > said anything bad about GCC code.
+> > > 
+> > > It could be a bug, but did you benchmark the speed of interpreter ?
+> > > Is it faster or slower with 40% more code ?
+> > > Did you benchmark it on other archs ?
+> > 
+> > I thought we were in agreement that 40% text growth is bad.  Isn't that
+> > why you wanted to keep 'goto select_insn' for the retpoline case?
+> 
+> Let me see whether I got this right.
+> In first the sentence above you're claiming that I've agreed that 
+> 'goto select_insn' is bad for retpoline case and in the second sentence
+> you're saying that I wanted to keep it because it's bad?
+> In other words you're saying I wanted bad code for retpoline case for
+> some mischievous purpose?
+> Do you really think so or just trolling?
 
-On 5/2/20 10:04 AM, Sowjanya Komatineni wrote:
+I *never* said anything about 'goto select_insn' being bad for the
+retpoline case.
+
+GETTING RID OF IT is bad for the retpoline case, i.e. text explosion.
+
+That's why (I thought) you wanted to keep it for the retpoline case.
+
+Go back and read the words I've written instead of accusing me of
+trolling... WTF.
+
+> Let's look at the facts.
+> I've applied your patch and the kernel crashed on the very first test in
+> selftests/bpf which makes me believe that you only compile tested it.
+
+Yes, that was a dumb mistake.  But to be fair, I asked you about that
+change, and you said it was ok:
+
+  https://lkml.kernel.org/r/20200430042400.45vvqx4ocwwogp3j@ast-mbp.dhcp.thefacebook.com
+
+Now I see it's obviously a bug.
+
+> Taking the question "is 40% text growth is bad?" out of context... Ohh yes.
+> but if 40% extra code gives 10% speedup to interpreter it's suddenly good, right?
+> Since you didn't run basic tests I don't think you've tested performance either.
+> So this direct->indirect patch might cause performance degradation to
+> architectures that don't have JIT.
+> On x86-64 JIT=y is the default, so I'm fine taking that performance risk
+> only for the case where that risk has to be taken. In other words to help
+> objtool understand the code and only for the case where objtool cannot do
+> it with existing code.
+> The 40% potential text decrease after direct->indirect transiton is
+> irrelevant here. It must be a separate patch after corresponding
+> performance benchmarking is done.
+> Just claiming in commit log that current code is obviously bad
+> is misleading to folks who will be reading it later.
+
+No.  I didn't say the current code is obviously bad.  You seem to be
+confused about what the problem is.
+
+> Also as I explained earlier direct->indirect in C is not a contract
+> for the compiler. Currently there is single C line:
+> goto *jumptable[insn->code];
+> but gcc/clang may generate arbitrary number of indirect jumps
+> for this function.
+> Changing the macro from "goto select_insn" to "goto *jumptable"
+> messes with compiler optimizations and there is no guarantee
+> that the code is going to be better or worse.
+> Why do you think there are two identical macros there?
+> #define CONT     ({ insn++; goto select_insn; })
+> #define CONT_JMP ({ insn++; goto select_insn; })
+> Why not one?
+> The answer is in old patch from 2014:
+> https://patchwork.ozlabs.org/project/netdev/patch/1393910304-4004-2-git-send-email-ast@plumgrid.com/
+> +#define CONT ({insn++; LOAD_IMM; goto select_insn; })
+> +#define CONT_JMP ({insn++; LOAD_IMM; goto select_insn; })
+> +/* some compilers may need help:
+> + * #define CONT_JMP ({insn++; LOAD_IMM; goto *jumptable[insn->code]; })
+> + */
 >
-> On 5/2/20 9:55 AM, Sowjanya Komatineni wrote:
->>
->> On 5/2/20 9:14 AM, Sowjanya Komatineni wrote:
->>>
->>> On 5/2/20 9:03 AM, Sowjanya Komatineni wrote:
->>>>
->>>> On 5/2/20 8:38 AM, Sowjanya Komatineni wrote:
->>>>>
->>>>> On 5/2/20 8:16 AM, Dmitry Osipenko wrote:
->>>>>> 02.05.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> On 5/1/20 8:39 PM, Sowjanya Komatineni wrote:
->>>>>>>>
->>>>>>>> On 5/1/20 2:05 PM, Sowjanya Komatineni wrote:
->>>>>>>>>
->>>>>>>>> On 5/1/20 1:58 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>
->>>>>>>>>> On 5/1/20 1:44 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>
->>>>>>>>>>> On 5/1/20 11:03 AM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>
->>>>>>>>>>>> On 4/30/20 4:33 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>
->>>>>>>>>>>>> On 4/30/20 4:14 PM, Sowjanya Komatineni wrote:
->>>>>>>>>>>>>>>>>>>> And in this case synchronization between start/finish
->>>>>>>>>>>>>>>>>>>> threads should be
->>>>>>>>>>>>>>>>>>>> needed in regards to freezing.
->>>>>>>>>>>>>>>>>>> Was thinking to have counter to track outstanding frame
->>>>>>>>>>>>>>>>>>> w.r.t single shot issue b/w start and finish and=20
->>>>>>>>>>>>>>>>>>> allow to
->>>>>>>>>>>>>>>>>>> freeze only when no outstanding frames in process.
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>> This will make sure freeze will not happen when any=20
->>>>>>>>>>>>>>>>>>> buffers
->>>>>>>>>>>>>>>>>>> are in progress
->>>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>>>> Note that this could be a wrong assumption, I'm not
->>>>>>>>>>>>>>>>>>>> closely familiar
->>>>>>>>>>>>>>>>>>>> with how freezer works.
->>>>>>>>>>>>>>>>>> kthread_start can unconditionally allow try_to_freeze=20
->>>>>>>>>>>>>>>>>> before
->>>>>>>>>>>>>>>>>> start of frame capture
->>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> We can compute captures inflight w.r.t single shot=20
->>>>>>>>>>>>>>>>>> issued
->>>>>>>>>>>>>>>>>> during capture start and finished frames by=20
->>>>>>>>>>>>>>>>>> kthread_finish
->>>>>>>>>>>>>>>>>> and allow kthread_finish to freeze only when captures
->>>>>>>>>>>>>>>>>> inflight is 0.
->>>>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>>>> This allows freeze to happen b/w frames but not in=20
->>>>>>>>>>>>>>>>>> middle of
->>>>>>>>>>>>>>>>>> frame
->>>>>>>>>>>>>>> will have caps inflight check in v12 to allow freeze finish
->>>>>>>>>>>>>>> thread only when no captures are in progress
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> try_to_freeze() returns thread frozen state and looks=20
->>>>>>>>>>>>>> like we
->>>>>>>>>>>>>> can use this in kthread finish to allow finish thread to=20
->>>>>>>>>>>>>> freeze
->>>>>>>>>>>>>> only when kthread_start is already frozen and no buffers in
->>>>>>>>>>>>>> progress/initiated for capture.
->>>>>>>>>>>>>>
->>>>>>>>>>>>> chan->capture_frozen holds frozen state returned from
->>>>>>>>>>>>> try_to_freeze() in start kthread
->>>>>>>>>>>>>
->>>>>>>>>>>>> chan->capture_reqs increments after every single shot issued.
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> static int chan_capture_kthread_finish(void *data)
->>>>>>>>>>>>>
->>>>>>>>>>>>> {
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D da=
-ta;
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 int caps_inflight;
->>>>>>>>>>>>>
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 set_freezable();
->>>>>>>>>>>>>
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 while (1) {
->>>>>>>>>>>>> wait_event_interruptible(chan->done_wait,
->>>>>>>>>>>>> =C2=A0!list_empty(&chan->done) ||
->>>>>>>>>>>>> =C2=A0kthread_should_stop());
->>>>>>>>>>>>>
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffer=
-s and finish capture */
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 buf =3D dequeue_b=
-uf_done(chan);
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 while (buf) {
->>>>>>>>>>>>> tegra_channel_capture_done(chan, buf);
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 buf =3D dequeue_buf_done(chan);
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_shoul=
-d_stop())
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 break;
->>>>>>>>>>>>>
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D=
- chan->capture_reqs - chan->sequence;
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (chan->capture=
-_frozen && !caps_inflight)
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 try_to_freeze();
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>>>>>>>
->>>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>>>>> }
->>>>>>>>>>>>
->>>>>>>>>>>> Freezing happens prior to suspend() during suspend entry=20
->>>>>>>>>>>> and when
->>>>>>>>>>>> we implement suspend/resume during suspend we stop=20
->>>>>>>>>>>> streaming where
->>>>>>>>>>>> we stop threads anyway.
->>>>>>>>>>>>
->>>>>>>>>>>> So, was thinking why we need these threads freezable here?
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>> Hi Dmitry,
->>>>>>>>>>>
->>>>>>>>>>> Did some testing and below are latest observation and fix I=20
->>>>>>>>>>> tested.
->>>>>>>>>>>
->>>>>>>>>>> wait_event_interruptible() uses schedule() which blocks the=20
->>>>>>>>>>> freezer.
->>>>>>>>>>> When I do suspend while keeping streaming active in=20
->>>>>>>>>>> background, I
->>>>>>>>>>> see freezing of these threads fail and call trace shows=20
->>>>>>>>>>> __schedule
->>>>>>>>>>> -> __switch_to from these kthreads.
->>>>>>>>>>>
->>>>>>>>>>> wait_event_freezable() uses freezable_schedule() which=20
->>>>>>>>>>> should not
->>>>>>>>>>> block the freezer but we can't use this here as we need=20
->>>>>>>>>>> conditional
->>>>>>>>>>> try_to_freeze().
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> So, doing below sequence works where we set PF_FREEZER_SKIP=20
->>>>>>>>>>> flag
->>>>>>>>>>> thru freezer_not_count() before wait_event which calls=20
->>>>>>>>>>> schedule()
->>>>>>>>>>> and remove PF_FREEZER_SKIP after schedule allows=20
->>>>>>>>>>> try_to_freeze to
->>>>>>>>>>> work and also conditional try_to_freeze below prevents freezing
->>>>>>>>>>> thread in middle of capture.
->>>>>>>>>>>
->>>>>>>>>>> while (1) {
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 freezer_not_count()
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 wait_event_interruptible()
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 freezer_count()
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 ...
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 ...
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 if (chan->capture_frozen && !caps_infl=
-ight)
->>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 try_to_freeze()
->>>>>>>>>>> }
->>>>>>>>>>>
->>>>>>>>>>> Please comment if you agree with above sequence. Will=20
->>>>>>>>>>> include this
->>>>>>>>>>> in v12.
->>>>>>>>>>>
->>>>>>>>> sorry, freezer_count() does try_to_freeze after clearing skip=20
->>>>>>>>> flag.
->>>>>>>>> So, dont think we can use this as we need conditional=20
->>>>>>>>> try_to_freeze.
->>>>>>>>> Please ignore above sequence.
->>>>>>>>>> Or probably we can take closer look on this later when we add
->>>>>>>>>> suspend/resume support as it need more testing as well.
->>>>>>>>>>
->>>>>>>>>> As this is initial series which has TPG only I think we=20
->>>>>>>>>> shouldn't
->>>>>>>>>> get blocked on this now. Series-2 and 3 will be for sensor=20
->>>>>>>>>> support
->>>>>>>>>> and on next series when we add suspend/resume will look into=20
->>>>>>>>>> this.
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>> When freeze activity starts and in case if finish thread=20
->>>>>>>> freezes prior
->>>>>>>> to start thread issuing capture, its the VI hardware writes=20
->>>>>>>> data to
->>>>>>>> the allocated buffer address.
->>>>>>>>
->>>>>>>> finish thread just checks for the event from the hardware and=20
->>>>>>>> we don't
->>>>>>>> handle/process directly on memory in this driver.
->>>>>>>>
->>>>>>>> So even we freeze done thread when single shot is issued frame=20
->>>>>>>> buffer
->>>>>>>> gets updated.
->>>>>>>>
->>>>>>>> In case if capture thread is frozen there will not buffers=20
->>>>>>>> queued to
->>>>>>>> process by finish thread. So, this will not be an issue.
->>>>>>>>
->>>>>>>> So, probably we don't need to do conditional try_to_freeze and=20
->>>>>>>> what we
->>>>>>>> have should work good in this corner case.
->>>>>>>>
->>>>>>> I still need to change wait_event_interruptible() to
->>>>>>> wait_event_freezable() but no need to synchronize finish thread=20
->>>>>>> freeze
->>>>>>> with start thread as even on issuing capture start its vi=20
->>>>>>> hardware that
->>>>>>> does frame buffer update and finish thread just checks for=20
->>>>>>> mw_ack event
->>>>>>> and returns buffer to application.
->>>>>> The problem we are primarily trying to avoid is to have=20
->>>>>> suspending being
->>>>>> done in the middle of IO.
->>>>>>
->>>>>> IIUC, even if system will be suspended in the middle of VI IO, it=20
->>>>>> won't
->>>>>> be fatal. In worst case the buffer capture should fail on resume=20
->>>>>> from
->>>>>> suspend. Could you please try to simulate this potential issue=20
->>>>>> and see
->>>>>> what result will be on suspending in the middle of VI IO?
->>>>>>
->>>>>> We don't want to suspend system / stop streaming in the middle of=20
->>>>>> IO, so
->>>>>> this problem of a proper threads tear-down still exists. It should
->>>>>> become easier to resolve the problem in a case of a proper=20
->>>>>> suspending
->>>>>> callback because the "start" thread could be turned down at any=20
->>>>>> time, so
->>>>>> it should be easier to maintain a proper tear-down order when=20
->>>>>> threads
->>>>>> are fully controlled by the driver, i.e. the "start" thread goes=20
->>>>>> down
->>>>>> first and the "finish" is second, blocking until the capture is=20
->>>>>> completed.
->>>>
->>>> I don't see issue of tear-down threads in case of suspend as we do=20
->>>> stop streaming where thread stop happens on both threads and are=20
->>>> stopped only after processing all outstanding buffers.
->>>>
->>>> Regarding freezing activity during suspend, If done thread freezes=20
->>>> prior to processing buffers for finish, vi hardware is still active=20
->>>> by this time which will update the frame buffer for initiated=20
->>>> capture. Driver is not directly involved in this frame buffer update.
->>>>
->>>> Finish thread only checks for completion to return buffers back to=20
->>>> the application when done.
->>>
->>> when done thread freeze happens after start thread initiated=20
->>> capture, vi hardware continues to update frame buffer for ongoing=20
->>> capture till it hits driver suspend callback. Yes worst case this=20
->>> frame data may not be valid data if invoking of this driver suspend=20
->>> happens immediate after this thread freeze during system suspend.
->>>
->>> But driver will still hold buffers to return which will be returned=20
->>> back on resume when threads are out from frozen state.
->>
->>
->> Also stop stream ioctl request happens during suspend where both=20
->> threads will be stopped properly. done thread stop happens only after=20
->> finishing all outstanding buffers.
->>
->> Stop stream request happens from streaming applications so even=20
->> without driver suspend/resume implementation currently, streaming=20
->> will be stopped prior to system=C2=A0 suspend where both threads will be=
-=20
->> stopped properly (after finishing out standing buffers) and will be=20
->> resumed by application on system resume
->>
->> Also tested suspending while streaming with this unconditional=20
->> freeze, I don't see any issue as application stops stream where=20
->> v4l_streamoff gets executed during suspend and on resume streaming=20
->> starts where v4l_streamon happens.
->>
->> So, I don't see any issue with existing implementation of=20
->> unconditional freeze.
->
-> To be more clear,
->
-> suspend while streaming use case...
->
-> - start thread initiating capture
-> - done thread frozen (with outstanding buffers in process but vi=20
-> hardware still continues to update frame buffer)
-> - start thread frozen
->
-> application holding video device will issue stream off ioctl
-> - stop_streaming does kthread_stop
->
-> - threads wake up and start thread breaks and finish thread breaks=20
-> after checking outstanding buffers and returning to application
->
-> - vi/csi power/clocks off
->
->
-> on resume, application starts streaming again where fresh start stream=20
-> happens.
->
->>
->>>
->>>>
->>>>
->>>>>> I think yours suggestion about dropping the freezing from the=20
->>>>>> threads
->>>>>> for now and returning back to it later on (once a proper=20
->>>>>> suspend/resume
->>>>>> support will be added) sounds reasonable.
->>>>>>
->>>>>> But if you'd want to keep the freezing, then the easy solution=20
->>>>>> could be
->>>>>> like that:
->>>>>>
->>>>>> =C2=A0=C2=A0 1. "start" thread could freeze at any time
->>>>>> =C2=A0=C2=A0 2. "finish" thread could freeze only when the "start" t=
-hread=20
->>>>>> is frozen
->>>>>> and capture isn't in-progress. Use frozen(kthread_start_capture) to
->>>>>> check the freezing state.
->>>>>>
->>>>>> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/linux/freez=
-er.h#L25=20
->>>>>>
->>>>>
->>>>> That's exactly what I tried, below is the snippet.
->>>>>
->>>>> But as mentioned I am seeing freezing fail when I=20
->>>>> wait_event_interruptible() in either of the threads.
->>>>>
->>>>> =C2=A0=C2=A0 60.368709] Call trace:
->>>>> [=C2=A0=C2=A0 60.371216] __switch_to+0xec/0x140
->>>>> [=C2=A0=C2=A0 60.374768] __schedule+0x32c/0x668
->>>>> [=C2=A0=C2=A0 60.378315] schedule+0x78/0x118
->>>>> [=C2=A0=C2=A0 60.381606]=C2=A0 chan_capture_kthread_finish+0x244/0x2a=
-0 [tegra_video]
->>>>> [=C2=A0=C2=A0 60.387865] kthread+0x124/0x150
->>>>> [=C2=A0=C2=A0 60.391150] ret_from_fork+0x10/0x1c
->>>>>
->>>>> wait_event_interruptible() API uses schedule() which blocks=20
->>>>> freezer while wait_event_freezable APIs uses freezable_schedule()=20
->>>>> which allows to skip freezer during schedule and then clears skip=20
->>>>> and calls try_to_freeze()
->>>>>
->>>>> But we can't use wait_event_freezable() here as we need=20
->>>>> conditional freeze.
->>>>>
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0 while (1) {
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D chan->capture=
-_reqs - chan->sequence;
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (frozen(chan->kthread_start_=
-capture) && !caps_inflight)
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_f=
-reezable(chan->done_wait,
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
-=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 !list_empty(&chan->done)=
- ||
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
-=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 kthread_should_stop());
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 else
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_i=
-nterruptible(chan->done_wait,
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
-=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0!list_empty(&chan->done)=
- ||
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
-=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0kthread_should_stop());
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffers and finish c=
-apture */
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
->>>>>
->>>>>
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_should_stop())
->>>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 break;
->>>>> =C2=A0=C2=A0=C2=A0 }
->>>>>
->>
-Below works if I skip freezer during wait_event_interruptible as we=20
-can't use wait_event_freezable when we need conditional try_to_freeze()
+> That was the patch after dozens of performance experiments
+> with different gcc versions on different cpus.
+> Six years ago the interpreter performance could be improved
+> if _one_ of these macros replaced direct with indirect
+> for certain versions of gcc. But not both macros.
 
-But I am not sure if this is allowed to do this explicit PF_FREEZER_SKIP=20
-clear.
+I'm not sure why you're explaining this to me again.  Obviously the
+compiler is free to do whatever optimizations it wants.
 
-Also, as explained above I don't even think we need conditional=20
-try_to_freeze() as v4l2 ioctl stream off gets called during closing of=20
-device node when suspend happens and before stopping threads outstanding=20
-buffers are returned properly. So, I don't see any issue with=20
-unconditional try_to_freeze()
+> To be honest I don't think you're interested in doing performance
+> analysis here. You just want to shut up that objtool warning and
+> move on, right? So please do so without making misleading statements
+> about goodness or badness of generated code.
 
- =C2=A0=C2=A0=C2=A0 while (1) {
+Based on several of your comments above it sounds like you have a
+fundamental misunderstanding of the problem.  It's a little complicated,
+but I tried to explain it as clearly as I could in the patch
+description.  Let me try again:
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* allow to freeze only when no capt=
-ures in progress */
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D chan->capture_reqs=
- - chan->sequence;
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (frozen(chan->kthread_start_captu=
-re) && !caps_inflight) {
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_freeza=
-ble(chan->done_wait,
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 !list_empty(&chan->done) ||
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 kthread_should_stop());
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 } else {
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /*
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0* Skip free=
-ze during wait_event_interruptible as
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0* schedule(=
-) blocks freezer.
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0*/
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (freezing(curr=
-ent))
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 freezer_do_not_count();
+The existing 'goto select_insn' + RETPOLINE=n produces code which
+objtool can't understand.  (Though it can handle RETPOLINE=y just fine.)
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_interr=
-uptible(chan->done_wait,
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0!list_empty(&chan->done) ||
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0kthread_should_stop());
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (freezing(curr=
-ent))
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
-=A0 current->flags &=3D ~PF_FREEZER_SKIP;
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }
+Ideally we would get rid of that label and just change all the 'goto
+select_insn' to 'goto *jumptable[insn->code]'.  That allows objtool to
+follow the code in both retpoline and non-retpoline cases.  It also
+simplifies the code flow and (IMO) makes it easier for GCC to find
+optimizations.
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffers and finish captur=
-e */
+However, for the RETPOLINE=y case, that simplification actually would
+cause GCC to grow the function text size by 40%.  I thought we were in
+agreement that significant text growth would be universally bad,
+presumably because of i-cache locality/pressure issues.  However I can
+leave out any such judgements in the patch description, if that's what
+you prefer.  But then I'd still need to give a justification for the
+#ifdef.
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
+If you're not worried about the possibility of the text growth being
+bad, because as you mentioned there's no guarantee the code is going to
+be better or worse, I'm fine with that.  Then the patch can become a lot
+simpler (no weird #ifdefs) and we can just do 'goto *jumptable[insn->code]'
+everywhere.
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
+Or, if you want to minimize the patch's impact on other arches, and keep
+the current patch the way it is (with bug fixed and changed patch
+description), that's fine too.  I can change the patch description
+accordingly.
 
+Or if you want me to measure the performance impact of the +40% code
+growth, and *then* decide what to do, that's also fine.  But you'd need
+to tell me what tests to run.
 
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_should_stop())
- =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 break;
- =C2=A0=C2=A0=C2=A0 }
+-- 
+Josh
 
