@@ -2,258 +2,128 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FADDC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F176C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B29C24957
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6121421924
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GoAOXqYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEBCJK (ORCPT
+        id S1727092AbgEBCL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:09:10 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30459 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgEBCJI (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:09:08 -0400
-IronPort-SDR: /gh/cnUJcoXMcGIOiyT2rYjzpJh0mPNbIbKC9f74DPqEBj2tyLubYRYq+Z+4RQYFYEMwn1muPr
- 4OjE6BsYcqNg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:09:08 -0700
-IronPort-SDR: 2sOHvxdHBKuNRTAGg2idbBC8+X/4D9m7bh7GMRRI4AFJ635Vn9pmyoRohptDWVDA+o80bpeA5K
- a3W6LgAYlc7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="283348217"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga004.fm.intel.com with ESMTP; 01 May 2020 19:09:06 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 2/2] perf stat: Report summary for interval mode
-Date:   Sat,  2 May 2020 10:07:05 +0800
-Message-Id: <20200502020705.19295-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200502020705.19295-1-yao.jin@linux.intel.com>
-References: <20200502020705.19295-1-yao.jin@linux.intel.com>
+        Fri, 1 May 2020 22:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgEBCL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:11:28 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C15AC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 19:11:28 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id v8so10954617wma.0
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 19:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DxgeZ4dWQbsgxzC3vr4Uf0z6ga9GPtUvmnQ6rfH9mnw=;
+        b=GoAOXqYvnqNaHnqw0sl6wxaUTEEROMaaJ5wtFkTK5JBEL5n2G2yvGvhs3s05djne9u
+         Z0Nm572hdR8ZAqHgELOeTbhCxmoiHUC726/03InwwU0piYRV48UG/j+BM16uSqBf7VFT
+         3/4Bks7Dn7b3YYiGicAkJq043PppsvbGx0CWk1jV7TbiQ2eZ698CTHttNGU9GMA+gSlD
+         yy5AuwsFaLV1/DF+ulL0gMVwg0fBWYh58QliUQqii9fRHedY1IHl5AtDR8kM7dLRpvvV
+         Geu2ui5FWXP3BSoTCYRcP8EFX/JKjNL7AXTEBtblQXJ+7oX2W9r8tZjBd+6ylNmZDSNY
+         yEWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DxgeZ4dWQbsgxzC3vr4Uf0z6ga9GPtUvmnQ6rfH9mnw=;
+        b=jDWi5WaJ3OIWZx9aRruCpPgNd5kNJmg3rLr7Xe2b2azZs+n8DgTB/X7DpEonCmNMmB
+         hqGSbg94QPMThz0ZqUz1B1bv7e8+WoIl4unB6zjoBzDarVIJKS1wPGgfMqn14R4kPAUP
+         0do0rMQJh8vjnrx+C7uHs0p4NWN3uo/S/LbxlhMbC7a7TztSaKSOEzIee4pXVHcLr3gH
+         d4OmpSw6bVFbwkkVVvRHSMLEok1qxZ2+HJIEBATw09onQaJDuQu5+bhAOHUyzJOOhH33
+         l+M6MPwvKO+XAFDcUiCcdkDcmOzhrmQvYLvUw/p8YDWk+yF4kyWbujdB+RnY3VFjFcCC
+         0K2A==
+X-Gm-Message-State: AGi0PuadvW7ZHDmBaTV4KxVMOFoKVZA31Tg+8OHXbmJ6G4mYyPqNHcSD
+        htT3tpCqYKNQKjrhw0/6cSKxq36T5DU4evl+zDMWFw==
+X-Google-Smtp-Source: APiQypLDIvRbUKevZsGcEO30n6w7WQseNzEj38FrNcXYHjaeCNVPqKzvEB/q8lL2AFg/XGQTwq2/IwPCqTdYBakWPhw=
+X-Received: by 2002:a1c:dd8a:: with SMTP id u132mr2195716wmg.87.1588385486740;
+ Fri, 01 May 2020 19:11:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200501083510.1413-1-anders.roxell@linaro.org> <CAFd5g45C98_70Utp=QBWg_tKxaUMJ-ArQvjWbG9q6=dixfHBxw@mail.gmail.com>
+In-Reply-To: <CAFd5g45C98_70Utp=QBWg_tKxaUMJ-ArQvjWbG9q6=dixfHBxw@mail.gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Sat, 2 May 2020 10:11:15 +0800
+Message-ID: <CABVgOSkAAb7tyjhdqFZmyKyknaxz_sM_o3=bK6cL6Ld4wFxkRQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
+        Marco Elver <elver@google.com>,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently perf-stat supports to print counts at regular interval (-I),
-but it's not very easy for user to get the overall statistics.
+On Sat, May 2, 2020 at 4:31 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Fri, May 1, 2020 at 1:35 AM Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > Make it easier to enable all KUnit fragments.  This is needed for kernel
+> > test-systems, so its easy to get all KUnit tests enabled and if new gets
+> > added they will be enabled as well.  Fragments that has to be builtin
+> > will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
+> >
+> > Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
+> > someone wants that even though KUNIT_RUN_ALL is enabled.
+>
+> I would LOVE IT, if you could make this work! I have been trying to
+> figure out the best way to run all KUnit tests for a long time now.
+>
+> That being said, I am a bit skeptical that this approach will be much
+> more successful than just using allyesconfig. Either way, there are
+> tests coming down the pipeline that are incompatible with each other
+> (the KASAN test and the KCSAN test will be incompatible). Even so,
+> tests like the apparmor test require a lot of non-default
+> configuration to compile. In the end, I am not sure how many tests we
+> will really be able to turn on this way.
+>
+> Thoughts?
 
-The patch uses 'evsel->summary_counts' to sum up the per interval counts
-and copy the counts to 'evsel->counts' after printing the interval results.
-Next, we just follow the non-interval processing.
+I think there's still some value in this which the allyesconfig option
+doesn't provide. As you point out, it's not possible to have a generic
+"run all tests" option due to potential conflicting dependencies, but
+this does provide a way to run all tests for things enabled in the
+current config. This could be really useful for downstream developers
+who want a way of running all tests relevant to their config without
+the overhead of running irrelevant tests (e.g., for drivers they don't
+build). Using allyesconfig doesn't make that distinction.
 
-Let's see some examples,
+Ultimately, we'll probably still want something which enables a
+broader set of tests for upstream development: whether that's based on
+this, allyesconfig, or something else entirely remains to be seen, I
+think. I suspect we're going to end up with something
+subsystem-specific (having a kunitconfig per subsystem, or a testing
+line in MAINTAINERS or similar are ideas which have been brought up in
+the past).
 
- root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
- #           time             counts unit events
-      1.000412064          2,281,114      cycles
-      2.001383658          2,547,880      cycles
+This is a great looking tool to have in the toolbox, though.
 
-  Performance counter stats for 'system wide':
-
-          4,828,994      cycles
-
-        2.002860349 seconds time elapsed
-
- root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
- #           time             counts unit events
-      1.000389902          1,536,093      cycles
-      1.000389902            420,226      instructions              #    0.27  insn per cycle
-      2.001433453          2,213,952      cycles
-      2.001433453            735,465      instructions              #    0.33  insn per cycle
-
-  Performance counter stats for 'system wide':
-
-          3,750,045      cycles
-          1,155,691      instructions              #    0.31  insn per cycle
-
-        2.003023361 seconds time elapsed
-
- root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
- #           time             counts unit events
-      1.000435121            905,303      inst_retired.any          #      2.9 CPI
-      1.000435121          2,663,333      cycles
-      1.000435121            914,702      inst_retired.any          #      0.3 IPC
-      1.000435121          2,676,559      cpu_clk_unhalted.thread
-      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
-      2.001615941          3,551,357      cycles
-      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
-      2.001615941          3,551,044      cpu_clk_unhalted.thread
-
-  Performance counter stats for 'system wide':
-
-          2,856,395      inst_retired.any          #      2.2 CPI
-          6,214,690      cycles
-          2,865,539      inst_retired.any          #      0.5 IPC
-          6,227,603      cpu_clk_unhalted.thread
-
-        2.003403078 seconds time elapsed
-
- v2:
- ---
- Rebase to perf/core branch
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-stat.c | 14 ++++++++--
- tools/perf/util/stat.c    | 57 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/stat.h    |  5 ++++
- 3 files changed, 74 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 92a59f08db71..8f3441f794d5 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -355,6 +355,7 @@ static void read_counters(struct timespec *rs)
- static void process_interval(void)
- {
- 	struct timespec ts, rs;
-+	struct stats walltime_nsecs_stats_bak;
- 
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
-@@ -367,9 +368,11 @@ static void process_interval(void)
- 			pr_err("failed to write stat round event\n");
- 	}
- 
-+	walltime_nsecs_stats_bak = walltime_nsecs_stats;
- 	init_stats(&walltime_nsecs_stats);
- 	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
- 	print_counters(&rs, 0, NULL);
-+	walltime_nsecs_stats = walltime_nsecs_stats_bak;
- }
- 
- static void enable_counters(void)
-@@ -732,7 +735,14 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * avoid arbitrary skew, we must read all counters before closing any
- 	 * group leaders.
- 	 */
--	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
-+	if (!interval)
-+		read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
-+	else {
-+		stat_config.interval = 0;
-+		stat_config.summary = true;
-+		perf_evlist__copy_summary_counts(evsel_list);
-+		perf_evlist__process_summary_counts(&stat_config, evsel_list);
-+	}
- 
- 	/*
- 	 * We need to keep evsel_list alive, because it's processed
-@@ -2149,7 +2159,7 @@ int cmd_stat(int argc, const char **argv)
- 		}
- 	}
- 
--	if (!forever && status != -1 && !interval)
-+	if (!forever && status != -1 && (!interval || stat_config.summary))
- 		print_counters(NULL, argc, argv);
- 
- 	if (STAT_RECORD) {
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index c3fd008b4e84..fdd1930c219c 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -249,6 +249,63 @@ void perf_evlist__reset_prev_raw_counts(struct evlist *evlist)
- 		perf_evsel__reset_prev_raw_counts(evsel);
- }
- 
-+static void perf_evsel__copy_summary_counts(struct evsel *evsel)
-+{
-+	int ncpus = evsel__nr_cpus(evsel);
-+	int nthreads = perf_thread_map__nr(evsel->core.threads);
-+
-+	for (int thread = 0; thread < nthreads; thread++) {
-+		for (int cpu = 0; cpu < ncpus; cpu++) {
-+			*perf_counts(evsel->counts, cpu, thread) =
-+				*perf_counts(evsel->summary_counts, cpu, thread);
-+		}
-+	}
-+
-+	evsel->prev_raw_counts->aggr = evsel->summary_counts->aggr;
-+}
-+
-+void perf_evlist__copy_summary_counts(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__copy_summary_counts(evsel);
-+}
-+
-+static void perf_stat_process_summary_counts(struct perf_stat_config *config,
-+					     struct evsel *evsel)
-+{
-+	struct perf_counts_values *summary = &evsel->summary_counts->aggr;
-+	struct perf_stat_evsel *ps = evsel->stats;
-+	u64 *count = evsel->summary_counts->aggr.values;
-+	int i;
-+
-+	if (!config->summary || config->aggr_mode != AGGR_GLOBAL)
-+		return;
-+
-+	for (i = 0; i < 3; i++)
-+		init_stats(&ps->res_stats[i]);
-+
-+	perf_counts_values__scale(summary, config->scale,
-+				  &evsel->summary_counts->scaled);
-+
-+	for (i = 0; i < 3; i++)
-+		update_stats(&ps->res_stats[i], count[i]);
-+
-+	perf_stat__update_shadow_stats(evsel, *count, 0, &rt_stat);
-+}
-+
-+void perf_evlist__process_summary_counts(struct perf_stat_config *config,
-+					 struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	perf_stat__reset_shadow_per_stat(&rt_stat);
-+
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_stat_process_summary_counts(config, evsel);
-+}
-+
- static void zero_per_pkg(struct evsel *counter)
- {
- 	if (counter->per_pkg_mask)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..bad7d7678148 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -110,6 +110,7 @@ struct perf_stat_config {
- 	bool			 all_kernel;
- 	bool			 all_user;
- 	bool			 percore_show_thread;
-+	bool			 summary;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
-@@ -199,6 +200,10 @@ void perf_evlist__free_stats(struct evlist *evlist);
- void perf_evlist__reset_stats(struct evlist *evlist);
- void perf_evlist__reset_prev_raw_counts(struct evlist *evlist);
- 
-+void perf_evlist__copy_summary_counts(struct evlist *evlist);
-+void perf_evlist__process_summary_counts(struct perf_stat_config *config,
-+					 struct evlist *evlist);
-+
- int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
- struct perf_tool;
--- 
-2.17.1
-
+-- David
