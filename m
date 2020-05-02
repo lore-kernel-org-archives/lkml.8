@@ -2,42 +2,40 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF39BC47258
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5B0C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B386824957
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A828824957
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgEBNfR (ORCPT
+        id S1728251AbgEBNfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 09:35:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:52364 "EHLO foss.arm.com"
+        Sat, 2 May 2020 09:35:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:52380 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728052AbgEBNfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 09:35:15 -0400
+        id S1728052AbgEBNfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 09:35:18 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F09530E;
-        Sat,  2 May 2020 06:35:15 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F398DC14;
+        Sat,  2 May 2020 06:35:17 -0700 (PDT)
 Received: from p8cg001049571a15.arm.com (unknown [10.163.71.130])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 38E793F68F;
-        Sat,  2 May 2020 06:35:11 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B64803F68F;
+        Sat,  2 May 2020 06:35:15 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 06/16] arm64/cpufeature: Introduce ID_MMFR5 CPU register
-Date:   Sat,  2 May 2020 19:03:55 +0530
-Message-Id: <1588426445-24344-7-git-send-email-anshuman.khandual@arm.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3 07/16] arm64/cpufeature: Add remaining feature bits in ID_PFR0 register
+Date:   Sat,  2 May 2020 19:03:56 +0530
+Message-Id: <1588426445-24344-8-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
 References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
@@ -46,138 +44,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds basic building blocks required for ID_MMFR5 CPU register which
-provides information about the implemented memory model and memory
-management support in AArch32 state. This is added per ARM DDI 0487F.a
-specification.
+Enable DIT and CSV2 feature bits in ID_PFR0 register as per ARM DDI 0487F.a
+specification. Except RAS and AMU, all other feature bits are now enabled.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: kvmarm@lists.cs.columbia.edu
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 
-Suggested-by: Will Deacon <will@kernel.org>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- arch/arm64/include/asm/cpu.h    |  1 +
- arch/arm64/include/asm/sysreg.h |  3 +++
- arch/arm64/kernel/cpufeature.c  | 10 ++++++++++
- arch/arm64/kernel/cpuinfo.c     |  1 +
- arch/arm64/kvm/sys_regs.c       |  2 +-
- 5 files changed, 16 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/sysreg.h | 3 +++
+ arch/arm64/kernel/cpufeature.c  | 2 ++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/arm64/include/asm/cpu.h b/arch/arm64/include/asm/cpu.h
-index d9a78bdec409..e1f5ef437671 100644
---- a/arch/arm64/include/asm/cpu.h
-+++ b/arch/arm64/include/asm/cpu.h
-@@ -45,6 +45,7 @@ struct cpuinfo_arm64 {
- 	u32		reg_id_mmfr1;
- 	u32		reg_id_mmfr2;
- 	u32		reg_id_mmfr3;
-+	u32		reg_id_mmfr5;
- 	u32		reg_id_pfr0;
- 	u32		reg_id_pfr1;
- 	u32		reg_id_pfr2;
 diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index 2e1e922e1409..fe1725bbc4bb 100644
+index fe1725bbc4bb..f9e3b9350540 100644
 --- a/arch/arm64/include/asm/sysreg.h
 +++ b/arch/arm64/include/asm/sysreg.h
-@@ -155,6 +155,7 @@
- #define SYS_MVFR2_EL1			sys_reg(3, 0, 0, 3, 2)
- #define SYS_ID_PFR2_EL1			sys_reg(3, 0, 0, 3, 4)
- #define SYS_ID_DFR1_EL1			sys_reg(3, 0, 0, 3, 5)
-+#define SYS_ID_MMFR5_EL1		sys_reg(3, 0, 0, 3, 6)
+@@ -792,6 +792,9 @@
  
- #define SYS_ID_AA64PFR0_EL1		sys_reg(3, 0, 0, 4, 0)
- #define SYS_ID_AA64PFR1_EL1		sys_reg(3, 0, 0, 4, 1)
-@@ -789,6 +790,8 @@
- #define ID_ISAR6_DP_SHIFT		4
- #define ID_ISAR6_JSCVT_SHIFT		0
+ #define ID_MMFR5_ETS_SHIFT		0
  
-+#define ID_MMFR5_ETS_SHIFT		0
++#define ID_PFR0_DIT_SHIFT		24
++#define ID_PFR0_CSV2_SHIFT		16
 +
  #define ID_PFR2_SSBS_SHIFT		4
  #define ID_PFR2_CSV3_SHIFT		0
  
 diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 2ce952d9668d..c790cc200bb1 100644
+index c790cc200bb1..4fd05a07b7a3 100644
 --- a/arch/arm64/kernel/cpufeature.c
 +++ b/arch/arm64/kernel/cpufeature.c
-@@ -403,6 +403,11 @@ static const struct arm64_ftr_bits ftr_id_isar4[] = {
- 	ARM64_FTR_END,
+@@ -420,6 +420,8 @@ static const struct arm64_ftr_bits ftr_id_isar6[] = {
  };
  
-+static const struct arm64_ftr_bits ftr_id_mmfr5[] = {
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_MMFR5_ETS_SHIFT, 4, 0),
-+	ARM64_FTR_END,
-+};
-+
- static const struct arm64_ftr_bits ftr_id_isar6[] = {
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR6_I8MM_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_ISAR6_BF16_SHIFT, 4, 0),
-@@ -527,6 +532,7 @@ static const struct __ftr_reg_entry {
- 	ARM64_FTR_REG(SYS_MVFR2_EL1, ftr_mvfr2),
- 	ARM64_FTR_REG(SYS_ID_PFR2_EL1, ftr_id_pfr2),
- 	ARM64_FTR_REG(SYS_ID_DFR1_EL1, ftr_id_dfr1),
-+	ARM64_FTR_REG(SYS_ID_MMFR5_EL1, ftr_id_mmfr5),
- 
- 	/* Op1 = 0, CRn = 0, CRm = 4 */
- 	ARM64_FTR_REG(SYS_ID_AA64PFR0_EL1, ftr_id_aa64pfr0),
-@@ -732,6 +738,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
- 		init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
- 		init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
- 		init_cpu_ftr_reg(SYS_ID_MMFR3_EL1, info->reg_id_mmfr3);
-+		init_cpu_ftr_reg(SYS_ID_MMFR5_EL1, info->reg_id_mmfr5);
- 		init_cpu_ftr_reg(SYS_ID_PFR0_EL1, info->reg_id_pfr0);
- 		init_cpu_ftr_reg(SYS_ID_PFR1_EL1, info->reg_id_pfr1);
- 		init_cpu_ftr_reg(SYS_ID_PFR2_EL1, info->reg_id_pfr2);
-@@ -866,6 +873,8 @@ static int update_32bit_cpu_features(int cpu, struct cpuinfo_arm64 *info,
- 				      info->reg_id_mmfr2, boot->reg_id_mmfr2);
- 	taint |= check_update_ftr_reg(SYS_ID_MMFR3_EL1, cpu,
- 				      info->reg_id_mmfr3, boot->reg_id_mmfr3);
-+	taint |= check_update_ftr_reg(SYS_ID_MMFR5_EL1, cpu,
-+				      info->reg_id_mmfr5, boot->reg_id_mmfr5);
- 	taint |= check_update_ftr_reg(SYS_ID_PFR0_EL1, cpu,
- 				      info->reg_id_pfr0, boot->reg_id_pfr0);
- 	taint |= check_update_ftr_reg(SYS_ID_PFR1_EL1, cpu,
-@@ -1006,6 +1015,7 @@ static u64 __read_sysreg_by_encoding(u32 sys_id)
- 	read_sysreg_case(SYS_ID_MMFR1_EL1);
- 	read_sysreg_case(SYS_ID_MMFR2_EL1);
- 	read_sysreg_case(SYS_ID_MMFR3_EL1);
-+	read_sysreg_case(SYS_ID_MMFR5_EL1);
- 	read_sysreg_case(SYS_ID_ISAR0_EL1);
- 	read_sysreg_case(SYS_ID_ISAR1_EL1);
- 	read_sysreg_case(SYS_ID_ISAR2_EL1);
-diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-index 50a281703d9d..54579bf08f74 100644
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -374,6 +374,7 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
- 		info->reg_id_mmfr1 = read_cpuid(ID_MMFR1_EL1);
- 		info->reg_id_mmfr2 = read_cpuid(ID_MMFR2_EL1);
- 		info->reg_id_mmfr3 = read_cpuid(ID_MMFR3_EL1);
-+		info->reg_id_mmfr5 = read_cpuid(ID_MMFR5_EL1);
- 		info->reg_id_pfr0 = read_cpuid(ID_PFR0_EL1);
- 		info->reg_id_pfr1 = read_cpuid(ID_PFR1_EL1);
- 		info->reg_id_pfr2 = read_cpuid(ID_PFR2_EL1);
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index c78aa15aaac8..63b8c7534d26 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1458,7 +1458,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	ID_UNALLOCATED(3,3),
- 	ID_SANITISED(ID_PFR2_EL1),
- 	ID_SANITISED(ID_DFR1_EL1),
--	ID_UNALLOCATED(3,6),
-+	ID_SANITISED(ID_MMFR5_EL1),
- 	ID_UNALLOCATED(3,7),
- 
- 	/* AArch64 ID registers */
+ static const struct arm64_ftr_bits ftr_id_pfr0[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_PFR0_DIT_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_PFR0_CSV2_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 12, 4, 0),		/* State3 */
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 8, 4, 0),		/* State2 */
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 4, 4, 0),		/* State1 */
 -- 
 2.20.1
 
