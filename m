@@ -2,208 +2,151 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AE2C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 01:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D6EC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5E9208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 01:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588384470;
-	bh=uY8fEHgTBnpO8fsoxZlDnMux6T26lJUIhugrBr31N6o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Kbu4f4UmTHGql9FMhp+I5HrTNLw4emqQLHchOJE6yZxdal/vHH+Y1IDK+xpY/t3pH
-	 Vs04H9BizM9iOOhvnKmwIZTKAxM3OxQwHl/jp+272EGZdJTyzcAI3CLlfrMaBW57gd
-	 mNBlmXunztQzA25s0kx+qSkqI8iaR2Wa/nUmCwQQ=
+	by mail.kernel.org (Postfix) with ESMTP id B5BDA208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tmCaMLGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgEBBy3 (ORCPT
+        id S1726741AbgEBCAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 21:54:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgEBBy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 21:54:29 -0400
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 1 May 2020 22:00:06 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44272 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726323AbgEBCAG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:00:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588384805; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Y7zHbm62D06FuknuUOyxfzY9RDfUfaFg2lavUE/GVKc=;
+ b=tmCaMLGdcsdBVziotMaT2396UiQxPQIQSDUrBLFs24v61dnziJ+LPc8dWDV4lzSK295vDIE0
+ +FDayAyRqG6d8g+6W39XChnYTUAsC1pvyoNxYBQZOc3YPCZniBV4hRQ8zWJK0g1joRLTK4Ou
+ YYdhnX0CsDZtCaKQflCbUZ4tdLE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eacd40b.7f82d4197880-smtp-out-n05;
+ Sat, 02 May 2020 01:59:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 05744C4478F; Sat,  2 May 2020 01:59:38 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C3D2495B
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 01:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588384468;
-        bh=uY8fEHgTBnpO8fsoxZlDnMux6T26lJUIhugrBr31N6o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lJ5ds4TttwcpUROIM02Abch8q9cYzIApIjH5H7FzrkOfsEFG+JygEY2PuwABm6cvn
-         FJaYdq0EAVE6omje0vk8O3jjQr9jdMUBg8yfzhPe1JMcpXtpzquRSldL3dESw8AGsp
-         r5Ce54XMyml1bB9Wcvs0d/naEeSfmZngKFQqOSkg=
-Received: by mail-ed1-f53.google.com with SMTP id g16so8687715eds.1
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 18:54:28 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZbI5IFVmkVlCDkgBG15kqedRTS+dBhIP5csgZtMmWP82jufFjf
-        jWxewriSVYxQhaobhBD1BqxFZY6MjsVOayaScQ==
-X-Google-Smtp-Source: APiQypIS+1NERldYNzLF5tD3POttq+/wUdUvXB9NBGGdtW+fUkc/vmloe1jVIGuZx6UIhOyurmUOKZuUiQtKW1FC/Nk=
-X-Received: by 2002:a50:ea87:: with SMTP id d7mr5761934edo.48.1588384466454;
- Fri, 01 May 2020 18:54:26 -0700 (PDT)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 06328C433D2;
+        Sat,  2 May 2020 01:59:38 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200417150614.2631786-1-enric.balletbo@collabora.com>
- <20200417150614.2631786-8-enric.balletbo@collabora.com> <CAAOTY_8uWP80ZMO5ZQGLJ5YLFZcmGjZwc33Hi_oXsCPj5Yr89A@mail.gmail.com>
- <0584a198-02f2-a8a3-676e-74365a697bd4@collabora.com>
-In-Reply-To: <0584a198-02f2-a8a3-676e-74365a697bd4@collabora.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 2 May 2020 09:54:15 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__UWdXMYxeYNLOEiTX+-wWuRU_xuXy9SkPToerH+=mveA@mail.gmail.com>
-Message-ID: <CAAOTY__UWdXMYxeYNLOEiTX+-wWuRU_xuXy9SkPToerH+=mveA@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] drm/mediatek: mtk_dsi: Create connector for bridges
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 02 May 2020 09:59:37 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
+        beanhuo@micron.com, Avri.Altman@wdc.com,
+        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
+ during system resume
+In-Reply-To: <2356ab42-bbdd-d214-30f5-a533fe978dcb@acm.org>
+References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
+ <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
+ <1ef85ee212bee679f7b2927cbbc79cba@codeaurora.org>
+ <ef23a815-118a-52fe-4880-19e7fc4fcd10@acm.org>
+ <1e2a2e39dbb3a0f06fe95bbfd66e1648@codeaurora.org>
+ <226048f7-6ad3-a625-c2ed-d9d13e096803@acm.org>
+ <3bfa692ce706c5c198f565e674afb56f@codeaurora.org>
+ <2356ab42-bbdd-d214-30f5-a533fe978dcb@acm.org>
+Message-ID: <5196eb909699044771fe58905c543626@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Enric:
+On 2020-05-02 01:56, Bart Van Assche wrote:
+> On 2020-04-30 22:12, Can Guo wrote:
+>> diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
+>> index 3717eea..d18271d 100644
+>> --- a/drivers/scsi/scsi_pm.c
+>> +++ b/drivers/scsi/scsi_pm.c
+>> @@ -74,12 +74,15 @@ static int scsi_dev_type_resume(struct device 
+>> *dev,
+>>  {
+>>         const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : 
+>> NULL;
+>>         int err = 0;
+>> +       bool was_rpm_suspended = false;
+>> 
+>>         err = cb(dev, pm);
+>>         scsi_device_resume(to_scsi_device(dev));
+>>         dev_dbg(dev, "scsi resume: %d\n", err);
+>> 
+>>         if (err == 0) {
+>> +               was_rpm_suspended = pm_runtime_suspended(dev);
+>> +
+> 
+> How about renaming this variable into "was_runtime_suspended"? How 
+> about
+> moving the declaration of that variable inside the if-statement?
+> 
 
-Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
-=B45=E6=9C=881=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:59=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> Hi Chun-Kuang,
->
-> Thank you for your review.
->
-> On 1/5/20 16:26, Chun-Kuang Hu wrote:
-> > Hi, Enric:
-> >
-> > Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=
-=B9=B44=E6=9C=8817=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8811:06=E5=
-=AF=AB=E9=81=93=EF=BC=9A
-> >>
-> >> Use the drm_bridge_connector helper to create a connector for pipeline=
-s
-> >> that use drm_bridge. This allows splitting connector operations across
-> >> multiple bridges when necessary, instead of having the last bridge in
-> >> the chain creating the connector and handling all connector operations
-> >> internally.
-> >>
-> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >> ---
-> >>
-> >> Changes in v3:
-> >> - Move the bridge.type line to the patch that adds drm_bridge support.=
- (Laurent Pinchart)
-> >>
-> >> Changes in v2: None
-> >>
-> >>  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
-> >>  1 file changed, 12 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/medi=
-atek/mtk_dsi.c
-> >> index 157097c63b23..85f76b01ae4d 100644
-> >> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> >> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> >> @@ -17,6 +17,7 @@
-> >>
-> >>  #include <drm/drm_atomic_helper.h>
-> >>  #include <drm/drm_bridge.h>
-> >> +#include <drm/drm_bridge_connector.h>
-> >>  #include <drm/drm_mipi_dsi.h>
-> >>  #include <drm/drm_of.h>
-> >>  #include <drm/drm_panel.h>
-> >> @@ -183,6 +184,7 @@ struct mtk_dsi {
-> >>         struct drm_encoder encoder;
-> >>         struct drm_bridge bridge;
-> >>         struct drm_bridge *next_bridge;
-> >> +       struct drm_connector *connector;
-> >>         struct phy *phy;
-> >>
-> >>         void __iomem *regs;
-> >> @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_devic=
-e *drm, struct mtk_dsi *dsi)
-> >>          */
-> >>         dsi->encoder.possible_crtcs =3D 1;
-> >>
-> >> -       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0=
-);
-> >> +       ret =3D drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
-> >> +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-> >>         if (ret)
-> >>                 goto err_cleanup_encoder;
-> >>
-> >> +       dsi->connector =3D drm_bridge_connector_init(drm, &dsi->encode=
-r);
-> >> +       if (IS_ERR(dsi->connector)) {
-> >> +               DRM_ERROR("Unable to create bridge connector\n");
-> >> +               ret =3D PTR_ERR(dsi->connector);
-> >> +               goto err_cleanup_encoder;
-> >> +       }
-> >> +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
-> >> +
-> >
-> > I'm not very clear about how brige-connector works, but why connector
-> > does not attach to panel?
-> >
->
-> Laurent or other drm maintainers might have more details than me, but, AF=
-AIK the
-> drm_bridge_connector_init initializes a connector for a chain of bridges =
-that
-> starts at the @encoder. At this point you don't know which bridge is conn=
-ected
-> to the panel physically but doesn't really matter as what you know is tha=
-t will
-> be only one connector in the  chain.
+Sure, shall do, this patch was just a prototype which I made for 
+testing.
+If you are OK with this idea, I will send it as the next version.
 
-I think the panel is wrapped into next_bridge here,
-
-if (panel) {
-    dsi->next_bridge =3D devm_drm_panel_bridge_add(dev, panel);
-
-so the next_bridge is a panel_bridge, in its attach function
-panel_bridge_attach(),
-according to the flag DRM_BRIDGE_ATTACH_NO_CONNECTOR, if not exist,
-it would create connector and attach connector to panel.
-
-I'm not sure this flag would exist or not, but for both case, it's strange.
-If exist, you create connector in this patch but no where to attach
-connector to panel.
-If not exist, the next_brige would create one connector and this brige
-would create another connector.
-
-I think in your case, mtk_dsi does not directly connect to a panel, so
-I need a exact explain. Or someone could test this on a
-directly-connect-panel platform.
-
-Regards,
-Chun-Kuang.
-
->
+>>                 pm_runtime_disable(dev);
+>>                 err = pm_runtime_set_active(dev);
+>>                 pm_runtime_enable(dev);
+>> @@ -93,8 +96,10 @@ static int scsi_dev_type_resume(struct device *dev,
+>>                  */
+>>                 if (!err && scsi_is_sdev_device(dev)) {
+>>                         struct scsi_device *sdev = 
+>> to_scsi_device(dev);
+>> -
+>> -                       blk_set_runtime_active(sdev->request_queue);
+>> +                       if (was_rpm_suspended)
+>> +                              
+>> blk_post_runtime_resume(sdev->request_queue, 0);
+>> +                       else
+>> +                              
+>> blk_set_runtime_active(sdev->request_queue);
+>>                 }
+>>         }
+> 
+> Does other code always call both blk_pre_runtime_resume() and
+> blk_post_runtime_resume() upon runtime resume? How about adding a
+> blk_pre_runtime_resume() call before the blk_post_runtime_resume() 
+> call?
+> 
 > Thanks,
->  Enric
->
-> > Regards,
-> > Chun-Kuang.
-> >
-> >>         return 0;
-> >>
-> >>  err_cleanup_encoder:
-> >> --
-> >> 2.25.1
-> >>
+> 
+> Bart.
+
+Yes, but adding a blk_pre_runtime_resume() here is meaningless, it only
+sets the q->rpm_status to RPM_RESUMING, blk_post_runtime_resume() 
+overrides
+it to RPM_ACTIVE for sure. Besides, this place comes after the call of
+pm_runtime_set_active(), meaning sdev is already runtime active, in 
+contrast
+with the real runtime resume routine, we can think it as the sdev's 
+runtime
+resume ops has returned 0, so we can just call 
+blk_post_runtime_resume(err=0).
+
+Thanks,
+
+Can Guo.
