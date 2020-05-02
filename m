@@ -2,321 +2,173 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638A6C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A59C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35CCB2137B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCF0fvZI"
+	by mail.kernel.org (Postfix) with ESMTP id 8215E2137B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588422227;
+	bh=VFZRfbxaSvB4UZ1zviOZTlVRbHiO20UoTo/B+qSaaG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kz+DN+nYzTCJrUWX6vm5++yTlNF7O+2WITMCHfw+aYku/BitRjh2+qEShfGhVSln8
+	 p78kVC6yCRlDD3dX1mlMU7E0K6/mwRMyzQcCJNuL05ycGWqVm6p6VrlVxtjTwNLajQ
+	 mzA15gxwv/8dPxk5wS9X0XUNaGs05LywKfK0PJcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgEBMVu (ORCPT
+        id S1728007AbgEBMXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727815AbgEBMVr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:21:47 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13856C061A0C;
-        Sat,  2 May 2020 05:21:47 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q7so11872508qkf.3;
-        Sat, 02 May 2020 05:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xc+J3gtEQ6bPEPTp0sgpXqx6Tn93A+XqoBLEHYkXhKM=;
-        b=jCF0fvZIPTawUCjHOM7V09c/e61xyhbmprSvjmt5CNWIj1nAVGMPsw9kbKD51QFdWm
-         03uJGvvUfvsu1dTlTd5/5nN0JnqoTO6CO7EkDY0Hwpn+Vh3+o2qdd+d0QZlUcccxePUr
-         kD9c56Z6Q20pTHpQ4LpUWaehjXgZx7gc3YZoVk4G1aj/9NM1vRxklXIGn7kHXiD+qug3
-         0hBljFsRm5q1fvpd+Xc4+6Y6bw0VzledqZ7+fna1KmLqDxg8kDwQJa5PaeEax6cMKepS
-         zJ5baYMhXyghH50gxaAGOUP4iHXZZWBd5lxXrd7KeHVTPxiqvTt+O/Rx7sETyK6rXSfW
-         DVXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xc+J3gtEQ6bPEPTp0sgpXqx6Tn93A+XqoBLEHYkXhKM=;
-        b=jH769tSljB2sFSVhzRJ2IXHLs4AS5Io7KScXEbMYELdaGrA7lQPl/aj2Aj3eYw2kAd
-         gkqDfszpmidmBhKnWy/1WoMqbf+xSRf4neBFVgwdDdfcFZPtxS46fvwU957hbR2F37Kg
-         NfIgHMoz9ARE1TfIQA8pUvoX5E5+fm2KGDeXPU1bzyAv6Ccw6sGWyO1I/O/YZMaU5apX
-         PuNytKRcAT1j7y56O2htpWe4NBLF59oHeHnOhS5qAXvpn063Ex8sgUt2//x7ddIP/qKQ
-         +yroOtZ/6oBROeHYBo94pIsuo/S/NgtQBI/ZohWtZYPxToaEBM0ntW02D0L8nXjEkNXV
-         8E8w==
-X-Gm-Message-State: AGi0PuY4nrE5zX0jbJjnHW+KJwaerqx2zgpOp5c1EJF4YSJsTFjj2LHw
-        bUU6qljntcdYLe+MzqBcIDYuLulqOOQ=
-X-Google-Smtp-Source: APiQypKenyB99S4TSSF7qhbgp0pDpPJx8fMkndmgo9aJiw8nzsHsQJPKUOuBihrBg1nimDH4HwY6Vw==
-X-Received: by 2002:a37:d8e:: with SMTP id 136mr7804191qkn.260.1588422105817;
-        Sat, 02 May 2020 05:21:45 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id p47sm5256413qta.44.2020.05.02.05.21.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 05:21:45 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-clk@vger.kernel.org
-Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
-        Adam Ford <aford173@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 2/3] clk: vc5: Enable addition output configurations of the Versaclock
-Date:   Sat,  2 May 2020 07:21:25 -0500
-Message-Id: <20200502122126.188001-2-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200502122126.188001-1-aford173@gmail.com>
-References: <20200502122126.188001-1-aford173@gmail.com>
+        Sat, 2 May 2020 08:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727113AbgEBMXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 08:23:46 -0400
+Received: from localhost (unknown [117.99.89.89])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B612072E;
+        Sat,  2 May 2020 12:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588422225;
+        bh=VFZRfbxaSvB4UZ1zviOZTlVRbHiO20UoTo/B+qSaaG4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JpJkJ9V2yIOYst2+CnADV6vZYbBSsji5p95E18XUDniryQPcpKFxZB5djNDn5HRTZ
+         Q8T87KG0xlmNwr+jnKYaX+rWSjBxosCZnJVea4ZTG0FVprle9Ef/q0v+aarIWkqcuf
+         aqSex9O5rdCoke0a5TWf4vvQkTreuuttfb06KRh0=
+Date:   Sat, 2 May 2020 17:53:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
+Message-ID: <20200502122333.GA1375924@vkoul-mobl>
+References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The existing driver is expecting the Versaclock to be pre-programmed,
-and only sets the output frequency.  Unfortunately, not all devices
-are pre-programmed, and the Versaclock chip has more options beyond
-just the frequency.
+Hi Cristian,
 
-This patch enables the following additional features:
+On 29-04-20, 18:28, Cristian Ciocaltea wrote:
+> When the kernel is built with lockdep support and the owl-dma driver is
+> used, the following message is shown:
 
-   - Programmable voltage: 1.8V, 2.5V, or 3.3V​
-   - Slew Percentage of normal: 85%, 90%, or 100%
-   - Output Type: LVPECL, CMOS, HCSL, or LVDS
+First the patch title needs upate, we describe the patch in the title
+and not the cause. So use correct lock, or use od lock might be better
+titles, pls revise.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Second, the susbsystem is named dmaengine:... not dma:.. You can always
+check that by using git log on the respective file
 
-diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-index 81255d923f00..ad99d50b7b16 100644
---- a/drivers/clk/clk-versaclock5.c
-+++ b/drivers/clk/clk-versaclock5.c
-@@ -24,6 +24,8 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- 
-+#include <dt-bindings/clk/versaclock.h>
-+
- /* VersaClock5 registers */
- #define VC5_OTP_CONTROL				0x00
- 
-@@ -89,6 +91,28 @@
- 
- /* Clock control register for clock 1,2 */
- #define VC5_CLK_OUTPUT_CFG(idx, n)	(0x60 + ((idx) * 0x2) + (n))
-+#define VC5_CLK_OUTPUT_CFG0_CFG_SHIFT	5
-+#define VC5_CLK_OUTPUT_CFG0_CFG_MASK GENMASK(7, VC5_CLK_OUTPUT_CFG0_CFG_SHIFT)
-+
-+#define VC5_CLK_OUTPUT_CFG0_CFG_LVPECL	(VC5_LVPECL)
-+#define VC5_CLK_OUTPUT_CFG0_CFG_CMOS		(VC5_CMOS)
-+#define VC5_CLK_OUTPUT_CFG0_CFG_HCSL33	(VC5_HCSL33)
-+#define VC5_CLK_OUTPUT_CFG0_CFG_LVDS		(VC5_LVDS)
-+#define VC5_CLK_OUTPUT_CFG0_CFG_CMOS2		(VC5_CMOS2)
-+#define VC5_CLK_OUTPUT_CFG0_CFG_CMOSD		(VC5_CMOSD)
-+#define VC5_CLK_OUTPUT_CFG0_CFG_HCSL25	(VC5_HCSL25)
-+
-+#define VC5_CLK_OUTPUT_CFG0_PWR_SHIFT	3
-+#define VC5_CLK_OUTPUT_CFG0_PWR_MASK GENMASK(4, VC5_CLK_OUTPUT_CFG0_PWR_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_PWR_18	(0<<VC5_CLK_OUTPUT_CFG0_PWR_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_PWR_25	(2<<VC5_CLK_OUTPUT_CFG0_PWR_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_PWR_33	(3<<VC5_CLK_OUTPUT_CFG0_PWR_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_SLEW_SHIFT	0
-+#define VC5_CLK_OUTPUT_CFG0_SLEW_MASK GENMASK(1, VC5_CLK_OUTPUT_CFG0_SLEW_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_SLEW_80	(0<<VC5_CLK_OUTPUT_CFG0_SLEW_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_SLEW_85	(1<<VC5_CLK_OUTPUT_CFG0_SLEW_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_SLEW_90	(2<<VC5_CLK_OUTPUT_CFG0_SLEW_SHIFT)
-+#define VC5_CLK_OUTPUT_CFG0_SLEW_100	(3<<VC5_CLK_OUTPUT_CFG0_SLEW_SHIFT)
- #define VC5_CLK_OUTPUT_CFG1_EN_CLKBUF	BIT(0)
- 
- #define VC5_CLK_OE_SHDN				0x68
-@@ -143,6 +167,8 @@ struct vc5_hw_data {
- 	u32			div_int;
- 	u32			div_frc;
- 	unsigned int		num;
-+	unsigned int		clk_output_cfg0;
-+	unsigned int		clk_output_cfg0_mask;
- };
- 
- struct vc5_driver_data {
-@@ -567,6 +593,17 @@ static int vc5_clk_out_prepare(struct clk_hw *hw)
- 	regmap_update_bits(vc5->regmap, VC5_CLK_OUTPUT_CFG(hwdata->num, 1),
- 			   VC5_CLK_OUTPUT_CFG1_EN_CLKBUF,
- 			   VC5_CLK_OUTPUT_CFG1_EN_CLKBUF);
-+	if (hwdata->clk_output_cfg0_mask) {
-+		dev_dbg(&vc5->client->dev, "Update output %d mask 0x%0X val 0x%0X\n",
-+			hwdata->num, hwdata->clk_output_cfg0_mask,
-+			hwdata->clk_output_cfg0);
-+
-+		regmap_update_bits(vc5->regmap,
-+			VC5_CLK_OUTPUT_CFG(hwdata->num, 0),
-+			hwdata->clk_output_cfg0_mask,
-+			hwdata->clk_output_cfg0);
-+	}
-+
- 	return 0;
- }
- 
-@@ -666,6 +703,120 @@ static int vc5_map_index_to_output(const enum vc5_model model,
- 	}
- }
- 
-+static int vc5_update_mode(struct device_node *np_output,
-+			   struct vc5_hw_data *clk_out)
-+{
-+	u32 value;
-+
-+	if (!of_property_read_u32(np_output, "idt,mode", &value)) {
-+		clk_out->clk_output_cfg0_mask |= VC5_CLK_OUTPUT_CFG0_CFG_MASK;
-+		switch (value) {
-+		case VC5_CLK_OUTPUT_CFG0_CFG_LVPECL:
-+		case VC5_CLK_OUTPUT_CFG0_CFG_CMOS:
-+		case VC5_CLK_OUTPUT_CFG0_CFG_HCSL33:
-+		case VC5_CLK_OUTPUT_CFG0_CFG_LVDS:
-+		case VC5_CLK_OUTPUT_CFG0_CFG_CMOS2:
-+		case VC5_CLK_OUTPUT_CFG0_CFG_CMOSD:
-+		case VC5_CLK_OUTPUT_CFG0_CFG_HCSL25:
-+			clk_out->clk_output_cfg0 |=
-+			    value << VC5_CLK_OUTPUT_CFG0_CFG_SHIFT;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int vc5_update_power(struct device_node *np_output,
-+			    struct vc5_hw_data *clk_out)
-+{
-+	u32 value;
-+
-+	if (!of_property_read_u32(np_output,
-+				  "idt,voltage-microvolts", &value)) {
-+		clk_out->clk_output_cfg0_mask |= VC5_CLK_OUTPUT_CFG0_PWR_MASK;
-+		switch (value) {
-+		case 1800000:
-+			clk_out->clk_output_cfg0 |= VC5_CLK_OUTPUT_CFG0_PWR_18;
-+			break;
-+		case 2500000:
-+			clk_out->clk_output_cfg0 |= VC5_CLK_OUTPUT_CFG0_PWR_25;
-+			break;
-+		case 3300000:
-+			clk_out->clk_output_cfg0 |= VC5_CLK_OUTPUT_CFG0_PWR_33;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int vc5_update_slew(struct device_node *np_output,
-+			   struct vc5_hw_data *clk_out)
-+{
-+	u32 value;
-+
-+	if (!of_property_read_u32(np_output, "idt,slew-percent", &value)) {
-+		clk_out->clk_output_cfg0_mask |= VC5_CLK_OUTPUT_CFG0_SLEW_MASK;
-+		switch (value) {
-+		case 80:
-+			clk_out->clk_output_cfg0 |= VC5_CLK_OUTPUT_CFG0_SLEW_80;
-+			break;
-+		case 85:
-+			clk_out->clk_output_cfg0 |= VC5_CLK_OUTPUT_CFG0_SLEW_85;
-+			break;
-+		case 90:
-+			clk_out->clk_output_cfg0 |= VC5_CLK_OUTPUT_CFG0_SLEW_90;
-+			break;
-+		case 100:
-+			clk_out->clk_output_cfg0 |=
-+			    VC5_CLK_OUTPUT_CFG0_SLEW_100;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int vc5_get_output_config(struct i2c_client *client,
-+				 struct vc5_hw_data *clk_out)
-+{
-+	struct device_node *np_output;
-+	char *child_name;
-+	int ret = 0;
-+
-+	child_name = kasprintf(GFP_KERNEL, "OUT%d", clk_out->num + 1);
-+	np_output = of_get_child_by_name(client->dev.of_node, child_name);
-+	kfree(child_name);
-+	if (!np_output)
-+		goto output_done;
-+
-+	ret = vc5_update_mode(np_output, clk_out);
-+	if (ret)
-+		goto output_error;
-+
-+	ret = vc5_update_power(np_output, clk_out);
-+	if (ret)
-+		goto output_error;
-+
-+	ret = vc5_update_slew(np_output, clk_out);
-+
-+output_error:
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"Invalid clock output configuration OUT%d\n",
-+			clk_out->num + 1);
-+	}
-+
-+	of_node_put(np_output);
-+
-+output_done:
-+	return ret;
-+}
-+
- static const struct of_device_id clk_vc5_of_match[];
- 
- static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
-@@ -863,6 +1014,11 @@ static int vc5_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 				init.name);
- 			goto err_clk;
- 		}
-+
-+		/* Fetch Clock Output configuration from DT (if specified) */
-+		ret = vc5_get_output_config(client, &vc5->clk_out[n]);
-+		if (ret)
-+			goto err_clk;
- 	}
- 
- 	ret = of_clk_add_hw_provider(client->dev.of_node, vc5_of_clk_get, vc5);
-diff --git a/include/dt-bindings/clk/versaclock.h b/include/dt-bindings/clk/versaclock.h
-new file mode 100644
-index 000000000000..c6a6a0946564
---- /dev/null
-+++ b/include/dt-bindings/clk/versaclock.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* This file defines field values used by the versaclock 6 family
-+ * for defining output type
-+ */
-+
-+#define VC5_LVPECL	0
-+#define VC5_CMOS	1
-+#define VC5_HCSL33	2
-+#define VC5_LVDS	3
-+#define VC5_CMOS2	4
-+#define VC5_CMOSD	5
-+#define VC5_HCSL25	6
+Pls do add fixes and further acks received on next iteration.
+
+> 
+> [    2.496939] INFO: trying to register non-static key.
+> [    2.501889] the code is fine but needs lockdep annotation.
+> [    2.507357] turning off the locking correctness validator.
+> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
+> [    2.519084] Hardware name: Generic DT based system
+> [    2.523878] Workqueue: events_freezable mmc_rescan
+> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
+> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
+> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
+> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
+> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
+> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
+> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
+> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
+> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
+> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
+> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
+> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
+> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
+> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
+> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
+> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
+> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
+> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
+> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
+> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
+> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
+> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> 
+> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
+> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+> 
+> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
+> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
+> 'owl_dma_terminate_pchan'.
+> 
+> Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
+> and removes the 'lock' attribute in 'owl_dma_pchan' struct.
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Changes in v3:
+> * Get rid of the kerneldoc comment for the removed struct attribute
+> * Add the Reviewed-by tag in the commit message
+> 
+> Changes in v2:
+> * Improve the fix as suggested by Manivannan Sadhasivam: substitute
+>   'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
+>   'owl_dma_pchan' struct
+> * Update the commit message to reflect the changes
+> 
+>  drivers/dma/owl-dma.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> index c683051257fd..66ef70b00ec0 100644
+> --- a/drivers/dma/owl-dma.c
+> +++ b/drivers/dma/owl-dma.c
+> @@ -175,13 +175,11 @@ struct owl_dma_txd {
+>   * @id: physical index to this channel
+>   * @base: virtual memory base for the dma channel
+>   * @vchan: the virtual channel currently being served by this physical channel
+> - * @lock: a lock to use when altering an instance of this struct
+>   */
+>  struct owl_dma_pchan {
+>  	u32			id;
+>  	void __iomem		*base;
+>  	struct owl_dma_vchan	*vchan;
+> -	spinlock_t		lock;
+>  };
+>  
+>  /**
+> @@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
+>  	for (i = 0; i < od->nr_pchans; i++) {
+>  		pchan = &od->pchans[i];
+>  
+> -		spin_lock_irqsave(&pchan->lock, flags);
+> +		spin_lock_irqsave(&od->lock, flags);
+>  		if (!pchan->vchan) {
+>  			pchan->vchan = vchan;
+> -			spin_unlock_irqrestore(&pchan->lock, flags);
+> +			spin_unlock_irqrestore(&od->lock, flags);
+>  			break;
+>  		}
+>  
+> -		spin_unlock_irqrestore(&pchan->lock, flags);
+> +		spin_unlock_irqrestore(&od->lock, flags);
+>  	}
+>  
+>  	return pchan;
+> -- 
+> 2.26.2
+
 -- 
-2.25.1
-
+~Vinod
