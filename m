@@ -2,112 +2,106 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA76C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D9DC47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1AA20787
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6550521775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="PKTnIp3P"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="VHhx0GNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgEBWnM (ORCPT
+        id S1728607AbgEBWpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 18:43:12 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:48662 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbgEBWnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 18:43:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49F3zy4Bwbz9vBqp
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 22:43:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id O2EwmzTDkIMd for <linux-kernel@vger.kernel.org>;
-        Sat,  2 May 2020 17:43:10 -0500 (CDT)
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49F3zy36JXz9vFJ3
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 17:43:10 -0500 (CDT)
-Received: by mail-qt1-f200.google.com with SMTP id q57so15946228qte.3
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 15:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KR1J6K/N/jgMtmPG7Tj5KjyDT0kXwPVMrBemGwfcPxM=;
-        b=PKTnIp3Pp+s6IVQhP198ve09phFiYcts74X67JMi3qpMhxginR5r/ZHjyWetLSWgpn
-         GRLkmBXBageZfi/3I4BiDAnqAxm2oKXTfqKpypSPfPhy3oDEXEqIa57TfDvHoSUqZFyF
-         TdSEMr68j6SydX9Ct12JCG3rXxClXGMeK4oAKmbIJbAKCRm1nes812WBiLwaDTB98JDg
-         fdlvPZsF7Ke1PZC+6JH/oOBkWi56+Bn3nOQqcw/Ko3emhpsKRMFhud9upozve7BbgCGo
-         triXpGg7S7Q8WXp072G5ZHOjkiYvh0r5ALUPQwh9zifi8wWXcNKJm4rwLmxPHra6StJx
-         nTpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KR1J6K/N/jgMtmPG7Tj5KjyDT0kXwPVMrBemGwfcPxM=;
-        b=DyR+dBr2kvdfCQgmYd8Z7aqYh2U4t7U1EJyZKdJAjxwtYLED8D68iAssVQLAaOVIcs
-         7M95ABN0W4Z+rgFwQdCaeYdMJaUbjveEOGVrZ2TpfFJelyLdrVO4z8sYS9PY5C20NY3i
-         hst5kceviX4B+8Kw0slQU/HFwt3CNr1udHG4MtzVXhV7Bm0snLAxSWKDXSzZUjZizomP
-         WRIt36/kqATCO2uAsLcz2Q8TQJa9llK6wnnc6lDlsngJechusk+wOAuEyEuMC3FG8IFI
-         NxSlvekJiLjAstJKxu9aJ56okwQTLGq0+r43ehYuN79HikqkxvOQl//aJQRRcu70MtFr
-         63WQ==
-X-Gm-Message-State: AGi0PubYiYQCGHAoZwKLdi5J5zJZqZ0aIXtARXfVYQJ2J5b2YkhfqY/d
-        Z7mmN3quhCmCmJmGjSIfG6WjHwkS2g79/D/aDeKFpEF3s+Hk8MXyysOOupjeKV8jL7I58o6wrQF
-        ZeKkLqWy01nxLwTeMVvAvlI8jZ7TV
-X-Received: by 2002:ac8:39a7:: with SMTP id v36mr10349295qte.387.1588459389749;
-        Sat, 02 May 2020 15:43:09 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJVoXz32Eihyqk5u9MNYq2tHVXWisKM8exVuCyk24JqmZEeXkVmiFsvZFVPDfijC7XmCArdfw==
-X-Received: by 2002:ac8:39a7:: with SMTP id v36mr10349272qte.387.1588459389296;
-        Sat, 02 May 2020 15:43:09 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id u24sm5896172qkk.84.2020.05.02.15.43.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 15:43:08 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kuba@kernel.org
-Cc:     davem@davemloft.net, oss-drivers@netronome.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kjlu@umn.edu,
-        wu000273@umn.edu
-Subject: [PATCH] nfp: abm: fix a memory leak bug
-Date:   Sat,  2 May 2020 17:42:59 -0500
-Message-Id: <20200502224259.1477-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sat, 2 May 2020 18:45:30 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:62888 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728565AbgEBWpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 18:45:30 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49F42b5VNMz39;
+        Sun,  3 May 2020 00:45:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588459527; bh=CHJShVi3XY0BbhLa65FPayKa3UNmPaRfnp/54qLpPKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VHhx0GNXIyuT2BCU7dFUuVUEEB3FIrCDKDVfIE12gZxd+eu2SPLn8YOhyU2S5IPpy
+         FgLuLCetken040elkf6SAPn7JBarf6ZxBlUjeg35LSmRJZnULDb/XDbnLUe2sjz9NR
+         sarrrJLq6a6oEiT3LK+QrACrMG2lW97lZ2PUAeKWrsm+IEA9RDd80wfIHyEz40Nh/6
+         pyIgleQHvsyB1w8O9i/6R6j5j31e8+P1mOTV24ne40f6h++IYxEahM7ZosJmCbTlY2
+         vFTmVx3y3VQl3mb6tMohW9RNuAOH/Add54UwS7wvLRCk2kRCWEIsp3q3cgoJKwh+Y6
+         jpFl2c6bWdOGg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 3 May 2020 00:45:26 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] power: supply: core: add input voltage/current
+ measurements
+Message-ID: <20200502224526.GA25127@qmqm.qmqm.pl>
+References: <cover.1588345420.git.mirq-linux@rere.qmqm.pl>
+ <249d7ad42b02bfeb8c31c49a64ee92b3e745086d.1588345420.git.mirq-linux@rere.qmqm.pl>
+ <20200502222349.tfa72nr5zunybpla@earth.universe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200502222349.tfa72nr5zunybpla@earth.universe>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Sun, May 03, 2020 at 12:23:49AM +0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Fri, May 01, 2020 at 05:11:18PM +0200, Micha³ Miros³aw wrote:
+> > Introduce input voltage and current limits and measurements.
+> > This makes room for e.g. VBUS measurements in USB chargers.
+> We already have properties for charger input voltage/current.
+> Unfortunately the naming is not as straight forward, as it
+> could be. Basically the properties have been added over time
+> and are ABI now. Things are documented in
+> 
+> Documentation/ABI/testing/sysfs-class-power
+> 
+> I provided the relevant properties below.
 
-In function nfp_abm_vnic_set_mac, pointer nsp is allocated by nfp_nsp_open.
-But when nfp_nsp_has_hwinfo_lookup fail, the pointer is not released,
-which can lead to a memory leak bug. Fix this issue by adding
-nfp_nsp_close(nsp) in the error path.
+Hmm. Looks like there is no battery current/voltage properties then?
+This is different from IBUS (input current), as IBUS = charging
+current + system load. Documentation/power/power_supply_class.rst is
+missing descriptions for the properties you mention.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/net/ethernet/netronome/nfp/abm/main.c | 1 +
- 1 file changed, 1 insertion(+)
+[...]
+> > --- a/include/linux/power_supply.h
+> > +++ b/include/linux/power_supply.h
+> > @@ -127,7 +127,9 @@ enum power_supply_property {
+> >  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+> >  	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
+> >  	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
+> > +	POWER_SUPPLY_PROP_INPUT_CURRENT_NOW,
+> 
+> What:           /sys/class/power_supply/<supply_name>/current_avg    
+> Date:           May 2007
+> Contact:        linux-pm@vger.kernel.org                          
+> Description:                  
+>                 Reports an average IBUS current reading over a fixed period.   
+>                 Normally devices will provide a fixed interval in which they   
+>                 average readings to smooth out the reported value.             
+>                                                                                 
+>                 Access: Read    
+>                 Valid values: Represented in microamps
+> 
 
-diff --git a/drivers/net/ethernet/netronome/nfp/abm/main.c b/drivers/net/ethernet/netronome/nfp/abm/main.c
-index 9183b3e85d21..354efffac0f9 100644
---- a/drivers/net/ethernet/netronome/nfp/abm/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
-@@ -283,6 +283,7 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_abm *abm, struct nfp_net *nn,
- 	if (!nfp_nsp_has_hwinfo_lookup(nsp)) {
- 		nfp_warn(pf->cpp, "NSP doesn't support PF MAC generation\n");
- 		eth_hw_addr_random(nn->dp.netdev);
-+		nfp_nsp_close(nsp);
- 		return;
- 	}
- 
--- 
-2.17.1
+There are two entries for /sys/class/power_supply/<supply_name>/current_avg
+in the file, the other one mentions IBAT instead. "voltage_now" has the
+same problem. There seems to be a split-personality disorder present in
+the kernel ABI. ;-)
 
+Best Regards,
+Micha³ Miros³aw
