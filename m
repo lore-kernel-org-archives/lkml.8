@@ -2,209 +2,106 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16C1C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8F9C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAA3120775
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:35:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyxzkjJX"
+	by mail.kernel.org (Postfix) with ESMTP id 045EE20836
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588442150;
+	bh=y6AytE7dr/RyFoctZ/9QYQjsnxyU49JgeNfyVZE/xx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=13CpK2YYEUDNG/qakuW/Br27Mc7j+wgRgYlHm9NKX8wvfRJA43Kzw1+iey364fiNv
+	 KmbSt2c2ORi+r4ssPTM0fqVbKhhLEfE6T5aslB9kVVo0i9LShqK9XPGjaLRfcyHssT
+	 hGrhjnbBKBMNu42qbu0IRbCdzOa4zWEn0+aV7t+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgEBRfG (ORCPT
+        id S1728263AbgEBRzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 13:35:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728382AbgEBRfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 13:35:05 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6CCC061A0C;
-        Sat,  2 May 2020 10:35:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id g13so15708351wrb.8;
-        Sat, 02 May 2020 10:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gKb7iyknzWu1WCRpWVs4myLLU2HoGPdepjCNgtl1lVk=;
-        b=kyxzkjJXONeJir9EunNEAivfkNjtnLOFCyryMDDzRWMUY/pelv1VrTrtDvFuxYLhw2
-         +pbWXofrgXJ5fJescMyKPQVAZOcoCJBS7MS5ygdXStp9EqOFE4GpSlWZhZfzW4psVYXp
-         a2ODxt8YzvlGDY2IxFzZbvQyUkRF0X4dPcMZ0BbUO/TrhcqNUuo3K3/2E/nQMmiVW81Q
-         REdm4ZuwcUHag89eJlQMuCGlLSzDbakWomGU3AoGiF1Zwx7Qh8+8XqKTtUMYtUk9/q4+
-         zhyCfdRRHUBxor/3PEMjDnqUMtNsQD3y3ygYvMkIB8dWrKWqdgui2U54HJszlhOlcjcj
-         qmpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gKb7iyknzWu1WCRpWVs4myLLU2HoGPdepjCNgtl1lVk=;
-        b=tSSAtxwMBFykstVkptZ1iL2ZSQgxFXXJlyAATBh2zU8hkoGm6b/867afsvPQFvW4+8
-         TZmdgO6QYKlYeMgNEjwZ8A+JorwoOw69qrdEpDv3CPmY6tZVnetf6SCrzgQNt0XrNlWf
-         oocr74UZDegIUUI6QDWH8+SxqD/glRK+jrXCWMkgvnMu9HwiV+CfFl9y6ADq3LD/wOA2
-         exR4rySbJy+iyB8UebOIoC9FfMdaKCIP54ZjI+3mZg/t+JfTS9ouIB9TngXOcW6W+ZZl
-         Al7pdosMXMP5Ga1YqA+NntEz1cMoZSUQMs8iGfoPvThp6s8eihAL+8j+zBnQU+8hzDPA
-         bIKw==
-X-Gm-Message-State: AGi0PuYgofscxrJnt5l8QdTaZEnZQLscEFANQZswe6NZ0MW+ojvi1QOC
-        YPxolb5wvFgCYctcJcteFUc=
-X-Google-Smtp-Source: APiQypLRaFs3MmL+TMU7Ef0N2tOYOr02tMqqYzHwApC/hpx/j/Kj+pLIpsyCgAZpTETm+K2fB77IZQ==
-X-Received: by 2002:a5d:6305:: with SMTP id i5mr11440815wru.60.1588440903631;
-        Sat, 02 May 2020 10:35:03 -0700 (PDT)
-Received: from BV030612LT ([188.24.130.199])
-        by smtp.gmail.com with ESMTPSA id y31sm2175991wrd.83.2020.05.02.10.35.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 02 May 2020 10:35:03 -0700 (PDT)
-Date:   Sat, 2 May 2020 20:35:00 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
-Message-ID: <20200502173500.GA7621@BV030612LT>
-References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
- <20200502122333.GA1375924@vkoul-mobl>
+        Sat, 2 May 2020 13:55:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727880AbgEBRzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 13:55:48 -0400
+Received: from localhost (p5486C608.dip0.t-ipconnect.de [84.134.198.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC3772075B;
+        Sat,  2 May 2020 17:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588442147;
+        bh=y6AytE7dr/RyFoctZ/9QYQjsnxyU49JgeNfyVZE/xx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lQ1MKSH0zDQOKkPE90TNycFGQi9RJ9MedGUDDoR0hg/ekqymH1BauTgxLlmbwVoOZ
+         f17tMocC9MmWKnOp4EddRqhnPoKG3HwnXKg5GihHEm6Lmdnsy3zBV1VIz9esH+yH7i
+         ht95hz1S9sattE2olW6OnK3L8OfkUNqe3GWVCWTM=
+Date:   Sat, 2 May 2020 19:55:44 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-mmc@vger.kernel.org
+Subject: Re: [PATCH] mmc: sdhci-esdhc: update contact email
+Message-ID: <20200502175544.GA25220@ninjato>
+References: <20200502142840.19418-1-wsa@kernel.org>
+ <7298908d2397b2e753b844b690ef522c728d90a6.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
 Content-Disposition: inline
-In-Reply-To: <20200502122333.GA1375924@vkoul-mobl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7298908d2397b2e753b844b690ef522c728d90a6.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 05:53:33PM +0530, Vinod Koul wrote:
-> Hi Cristian,
-> 
-> On 29-04-20, 18:28, Cristian Ciocaltea wrote:
-> > When the kernel is built with lockdep support and the owl-dma driver is
-> > used, the following message is shown:
-> 
-> First the patch title needs upate, we describe the patch in the title
-> and not the cause. So use correct lock, or use od lock might be better
-> titles, pls revise.
-> 
-> Second, the susbsystem is named dmaengine:... not dma:.. You can always
-> check that by using git log on the respective file
-> 
-> Pls do add fixes and further acks received on next iteration.
->
 
-Hi Vinod,
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for reviewing and sorry for the mistakes! I'll be more careful
-next time with all those details.
+On Sat, May 02, 2020 at 08:39:16AM -0700, Joe Perches wrote:
+> On Sat, 2020-05-02 at 16:28 +0200, Wolfram Sang wrote:
+> > The 'pengutronix' address is defunct for years. Use the proper contact
+> > address.
+>=20
+> Maybe add a .mailmap entry?
 
-I've submitted the updated patch: [PATCH v4 1/1] dmaengine: owl: Use
-correct lock in owl_dma_get_pchan()
+Yes, it is in another patch:
 
-Kind regards,
-Cristi
+http://patchwork.ozlabs.org/project/linux-i2c/patch/20200502121840.9544-1-w=
+sa@kernel.org/
 
-> > 
-> > [    2.496939] INFO: trying to register non-static key.
-> > [    2.501889] the code is fine but needs lockdep annotation.
-> > [    2.507357] turning off the locking correctness validator.
-> > [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-> > [    2.519084] Hardware name: Generic DT based system
-> > [    2.523878] Workqueue: events_freezable mmc_rescan
-> > [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-> > [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-> > [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-> > [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-> > [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-> > [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-> > [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-> > [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-> > [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-> > [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-> > [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-> > [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-> > [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-> > [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-> > [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-> > [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-> > [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-> > [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-> > [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-> > [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-> > [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-> > [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > 
-> > The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-> > before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
-> > 
-> > However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-> > to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-> > 'owl_dma_terminate_pchan'.
-> > 
-> > Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
-> > and removes the 'lock' attribute in 'owl_dma_pchan' struct.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> > Changes in v3:
-> > * Get rid of the kerneldoc comment for the removed struct attribute
-> > * Add the Reviewed-by tag in the commit message
-> > 
-> > Changes in v2:
-> > * Improve the fix as suggested by Manivannan Sadhasivam: substitute
-> >   'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
-> >   'owl_dma_pchan' struct
-> > * Update the commit message to reflect the changes
-> > 
-> >  drivers/dma/owl-dma.c | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-> > index c683051257fd..66ef70b00ec0 100644
-> > --- a/drivers/dma/owl-dma.c
-> > +++ b/drivers/dma/owl-dma.c
-> > @@ -175,13 +175,11 @@ struct owl_dma_txd {
-> >   * @id: physical index to this channel
-> >   * @base: virtual memory base for the dma channel
-> >   * @vchan: the virtual channel currently being served by this physical channel
-> > - * @lock: a lock to use when altering an instance of this struct
-> >   */
-> >  struct owl_dma_pchan {
-> >  	u32			id;
-> >  	void __iomem		*base;
-> >  	struct owl_dma_vchan	*vchan;
-> > -	spinlock_t		lock;
-> >  };
-> >  
-> >  /**
-> > @@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
-> >  	for (i = 0; i < od->nr_pchans; i++) {
-> >  		pchan = &od->pchans[i];
-> >  
-> > -		spin_lock_irqsave(&pchan->lock, flags);
-> > +		spin_lock_irqsave(&od->lock, flags);
-> >  		if (!pchan->vchan) {
-> >  			pchan->vchan = vchan;
-> > -			spin_unlock_irqrestore(&pchan->lock, flags);
-> > +			spin_unlock_irqrestore(&od->lock, flags);
-> >  			break;
-> >  		}
-> >  
-> > -		spin_unlock_irqrestore(&pchan->lock, flags);
-> > +		spin_unlock_irqrestore(&od->lock, flags);
-> >  	}
-> >  
-> >  	return pchan;
-> > -- 
-> > 2.26.2
-> 
-> -- 
-> ~Vinod
+Thanks!
+
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6ttBwACgkQFA3kzBSg
+KbYaZA/+IZBPeOIhOe3VVZh3ZNuHdu4YRX4gZo17UktGpIWzgkP6taLHJc51DRMW
+q7J+oHE4+UH1mVbSOkufxYQPxb2cq+ImbtCab9mWkcOcSCwOclqUDWLir//i79jJ
+dgJ/PJ3l7/OvKBk9bUdo1+EA3k8LDmEqkBfuQ5r6Ck8CZtBNbBMjpDyIcTtnZ6kF
+qOGr8L39YBiuVbIanWFkVqUlzucj9F2ajpDit5uifmRprimOsjWKUNdgH+yg45ql
+78hxIA3O7HRD7y0Y5KyDDc+impiD2k3ic4F5+ul3Pqg6UxosgqNaDRi82lytK2ME
+dQYTo3gkLRZ0p19+CZ/kXLCnSQh+fZNDb5gsSVwUvsNalKhS2AM1HJm4tofJDCxI
+xr6fEJZJAcFG+kDkGuNaghkPGb1tY2k6TXEEh6dvdvdX41F33qFu8iDLjiWIxcnW
+A31REPBgMTBOKYbiyQEY+a93ykRnCf4PImIdZnfutY0oKOOKmUA3g6xUSUBH4nGP
+i1eMhHIX5Gk0UnmA74Kbk8VzHRjQpOsRdiDAXHiXjX6XjgKrmlrgyrcAzdPLJMS3
+dwz4mei4kgHWg9BTM7xO81O562nGk7fDJJXMwW6cNw1PGMxb6qf8OhBB+gFVLJ8d
+Zx2KHLqTSa3Y+YEGXwJX8cqax1V0uAGVmBPRAi8xCBthvgdDN0Q=
+=XYSF
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
