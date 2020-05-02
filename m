@@ -2,698 +2,345 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E69C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A73C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F52221835
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884C821835
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMfGTWVa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aJtvOclB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgEBPir (ORCPT
+        id S1728332AbgEBPjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 11:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728222AbgEBPiq (ORCPT
+        Sat, 2 May 2020 11:39:16 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16203 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728222AbgEBPjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 11:38:46 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE46C061A0C;
-        Sat,  2 May 2020 08:38:46 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id 19so7727873ioz.10;
-        Sat, 02 May 2020 08:38:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K33IZXSJWswi8Ds/yD6+rsycl91MHbpswBRBz+U2Io0=;
-        b=vMfGTWVakGonubzG51584RZk9klh2RfB0NyV/0y7seVhQ2cSPJdo2g4cHCv5MBU40I
-         XhxxSzEIrSOy8fz07CXR4aRbVT1lNZcjrf9ZSgsgGZYUYg/bOCOEqsvVEho4kM+HElEm
-         G28Y5pANZxE+RsWFKyhYQu6CVfJwNbsRmHzGEi2+yKfR5XUhEa8Ys1SW+Tg1GsnpEZ4I
-         h8pLMxSvKwwPZh6facSImuc1Vns1RMjhOQtrZAIymAInecVd8q0wPQ6uH+Ls9a0ziiIb
-         bRFBi9blqVWv4AYkQlVSNpzZtSnBlHPRXFTbunKkTVz6Wy7hAjec6bJ3KMHgrervti89
-         6hDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K33IZXSJWswi8Ds/yD6+rsycl91MHbpswBRBz+U2Io0=;
-        b=Jjov69NEteA5IzRJQclSURsWN9HTT4ZAKjJ9LF8At1VSsJvOKhOcc+pL/ILnLiUbve
-         meeClsTpg6OcmI3X4dMUrqqoKcKeLkql2SIbzwXVckH8BcR8b07o9ny81e0YDs8VcqOL
-         fSYhdka0ISzCU4WWT4dwtEbDF89dsmLcUpA0Jmpxuun79vrU9MhBAfF/SKnJY/36vX7W
-         fqjomPyQ/droaI9t/rnBNUgFuiTQz/66flEYXtNb68GXCpSTIV1yBN7/vyv7OG9dSztZ
-         LL3e9O2vLqmHIx7+pn7HzZMZSfC6e/TAOMkphhhZswHSAeUvJ01V7PIyLWT1FMwztLTW
-         faXw==
-X-Gm-Message-State: AGi0Puba6C3q3YNq30QYBP5d/ZYFWNdiX+tW/Qrfhk/bjX0Q23C9WuFX
-        iYoyZX15ersWEohy7+dBzsi6io0rlxh5bDekpek=
-X-Google-Smtp-Source: APiQypJX/eV7kJ+cJd9BMGToUWat2Jr7juiA0cI3LusNucxqRxA1D+4j+xMbYiCeAweKAx2PUfZo4cEXhVS7Y2LO0+o=
-X-Received: by 2002:a02:6243:: with SMTP id d64mr7653133jac.135.1588433925217;
- Sat, 02 May 2020 08:38:45 -0700 (PDT)
+        Sat, 2 May 2020 11:39:16 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ead94160000>; Sat, 02 May 2020 08:39:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 02 May 2020 08:39:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sat, 02 May 2020 08:39:15 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May
+ 2020 15:39:14 +0000
+Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May 2020
+ 15:39:13 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <b3238987-5e8a-32f2-7ce7-924e86bc6e9e@nvidia.com>
+ <298187f6-2425-4813-1ae1-f256c179623e@nvidia.com>
+ <9c942bc9-703e-3bbb-eeab-f37e69dc1ded@nvidia.com>
+ <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
+ <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
+ <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
+ <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+ <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+ <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
+ <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
+ <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
+ <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
+ <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
+ <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
+ <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
+ <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
+ <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <1767e50f-efb7-5e89-22f6-0917821b660d@nvidia.com>
+Date:   Sat, 2 May 2020 08:38:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200429215402.18125-1-tony@atomide.com> <20200429215402.18125-12-tony@atomide.com>
-In-Reply-To: <20200429215402.18125-12-tony@atomide.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 2 May 2020 10:38:33 -0500
-Message-ID: <CAHCN7x+GU+X7UsWqz53sBjMUxH8XEFkymdLdD-2EJ5RRyR7EJQ@mail.gmail.com>
-Subject: Re: [PATCH 11/15] ARM: dts: Configure system timers for omap3
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588433942; bh=pxcgxWnOms0JNCGY0beIKmduC/mRp9XnIN7OhVSyJcM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=aJtvOclBmhT+mJgqzKWTyuTP/Vlpb71oE1FlnnmXlKb+PRftx7g4K6nemwx9b92Pe
+         duOdp9JVdinqKnpylIL1SHg12NBo3vta1Lvd1X6ShJ4gc0kxmz/6nN1Kf+klOhF6w/
+         twp4HgMJemxtPmcVj9b8qa2LBkS2x29lZB5Hz05/Z6TwySOgOMo2MBCE2eUWVWXE5o
+         nLkhVyoxCcLC8of7ZZq2V2vOf+Z9t2ImCVsDcoDcjaxbX54kx5oHJ4wF7nP0uxFD7h
+         Wmot91uezjNKk0vPilPFJwa7ZajlwVoYG2vQ/Fsirqr6WPYTUbwhk5Y71rdPrijMQd
+         /11ALUebQx0BA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 4:54 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> We can now init system timers using the dmtimer and 32k counter
-> based on only devicetree data and drivers/clocksource timers.
-> Let's configure the clocksource and clockevent, and drop the old
-> unused platform data.
->
-> As we're just dropping platform data, and the early platform data
-> init is based on the custom ti,hwmods property, we want to drop
-> both the platform data and ti,hwmods property in a single patch.
->
-> Since the dmtimer can use both 32k clock and system clock as the
-> source, let's also configure the SoC specific default values. The
-> board specific dts files can reconfigure these with assigned-clocks
-> and assigned-clock-parents as needed.
->
-> Let's also update the dts file to use #include while at it.
->
-> Cc: devicetree@vger.kernel.org
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: Andreas Kemnade <andreas@kemnade.info>
-> Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-> Cc: Keerthy <j-keerthy@ti.com>
-> Cc: Lokesh Vutla <lokeshvutla@ti.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  arch/arm/boot/dts/am3517.dtsi              |  28 +++-
 
-For the series on the am3517-evm,
+On 5/2/20 8:16 AM, Dmitry Osipenko wrote:
+> 02.05.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 5/1/20 8:39 PM, Sowjanya Komatineni wrote:
+>>>
+>>> On 5/1/20 2:05 PM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 5/1/20 1:58 PM, Sowjanya Komatineni wrote:
+>>>>>
+>>>>> On 5/1/20 1:44 PM, Sowjanya Komatineni wrote:
+>>>>>>
+>>>>>> On 5/1/20 11:03 AM, Sowjanya Komatineni wrote:
+>>>>>>>
+>>>>>>> On 4/30/20 4:33 PM, Sowjanya Komatineni wrote:
+>>>>>>>>
+>>>>>>>> On 4/30/20 4:14 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>> And in this case synchronization between start/finish
+>>>>>>>>>>>>>>> threads should be
+>>>>>>>>>>>>>>> needed in regards to freezing.
+>>>>>>>>>>>>>> Was thinking to have counter to track outstanding frame
+>>>>>>>>>>>>>> w.r.t single shot issue b/w start and finish and allow to
+>>>>>>>>>>>>>> freeze only when no outstanding frames in process.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> This will make sure freeze will not happen when any buffers
+>>>>>>>>>>>>>> are in progress
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Note that this could be a wrong assumption, I'm not
+>>>>>>>>>>>>>>> closely familiar
+>>>>>>>>>>>>>>> with how freezer works.
+>>>>>>>>>>>>> kthread_start can unconditionally allow try_to_freeze before
+>>>>>>>>>>>>> start of frame capture
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> We can compute captures inflight w.r.t single shot issued
+>>>>>>>>>>>>> during capture start and finished frames by kthread_finish
+>>>>>>>>>>>>> and allow kthread_finish to freeze only when captures
+>>>>>>>>>>>>> inflight is 0.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> This allows freeze to happen b/w frames but not in middle of
+>>>>>>>>>>>>> frame
+>>>>>>>>>> will have caps inflight check in v12 to allow freeze finish
+>>>>>>>>>> thread only when no captures are in progress
+>>>>>>>>>
+>>>>>>>>> try_to_freeze() returns thread frozen state and looks like we
+>>>>>>>>> can use this in kthread finish to allow finish thread to freeze
+>>>>>>>>> only when kthread_start is already frozen and no buffers in
+>>>>>>>>> progress/initiated for capture.
+>>>>>>>>>
+>>>>>>>> chan->capture_frozen holds frozen state returned from
+>>>>>>>> try_to_freeze() in start kthread
+>>>>>>>>
+>>>>>>>> chan->capture_reqs increments after every single shot issued.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> static int chan_capture_kthread_finish(void *data)
+>>>>>>>>
+>>>>>>>> {
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 int caps_inflight;
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 while (1) {
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_interruptible(ch=
+an->done_wait,
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=
+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0!list_empty(&chan->done) ||
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=
+=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0kthread_should_stop());
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffers and fini=
+sh capture */
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 buf =3D dequeue_buf_done(ch=
+an);
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 while (buf) {
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 tegra_ch=
+annel_capture_done(chan, buf);
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 buf =3D =
+dequeue_buf_done(chan);
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_should_stop())
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 break;
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D chan->cap=
+ture_reqs - chan->sequence;
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (chan->capture_frozen &&=
+ !caps_inflight)
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 try_to_f=
+reeze();
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 }
+>>>>>>>>
+>>>>>>>>  =C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>> }
+>>>>>>>
+>>>>>>> Freezing happens prior to suspend() during suspend entry and when
+>>>>>>> we implement suspend/resume during suspend we stop streaming where
+>>>>>>> we stop threads anyway.
+>>>>>>>
+>>>>>>> So, was thinking why we need these threads freezable here?
+>>>>>>>
+>>>>>>>
+>>>>>> Hi Dmitry,
+>>>>>>
+>>>>>> Did some testing and below are latest observation and fix I tested.
+>>>>>>
+>>>>>> wait_event_interruptible() uses schedule() which blocks the freezer.
+>>>>>> When I do suspend while keeping streaming active in background, I
+>>>>>> see freezing of these threads fail and call trace shows __schedule
+>>>>>> -> __switch_to from these kthreads.
+>>>>>>
+>>>>>> wait_event_freezable() uses freezable_schedule() which should not
+>>>>>> block the freezer but we can't use this here as we need conditional
+>>>>>> try_to_freeze().
+>>>>>>
+>>>>>>
+>>>>>> So, doing below sequence works where we set PF_FREEZER_SKIP flag
+>>>>>> thru freezer_not_count() before wait_event which calls schedule()
+>>>>>> and remove PF_FREEZER_SKIP after schedule allows try_to_freeze to
+>>>>>> work and also conditional try_to_freeze below prevents freezing
+>>>>>> thread in middle of capture.
+>>>>>>
+>>>>>> while (1) {
+>>>>>>  =C2=A0=C2=A0=C2=A0 freezer_not_count()
+>>>>>>  =C2=A0=C2=A0=C2=A0 wait_event_interruptible()
+>>>>>>  =C2=A0=C2=A0=C2=A0 freezer_count()
+>>>>>>  =C2=A0=C2=A0=C2=A0 ...
+>>>>>>  =C2=A0=C2=A0=C2=A0 ...
+>>>>>>  =C2=A0=C2=A0=C2=A0 if (chan->capture_frozen && !caps_inflight)
+>>>>>>  =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 try_to_freeze()
+>>>>>> }
+>>>>>>
+>>>>>> Please comment if you agree with above sequence. Will include this
+>>>>>> in v12.
+>>>>>>
+>>>> sorry, freezer_count() does try_to_freeze after clearing skip flag.
+>>>> So, dont think we can use this as we need conditional try_to_freeze.
+>>>> Please ignore above sequence.
+>>>>> Or probably we can take closer look on this later when we add
+>>>>> suspend/resume support as it need more testing as well.
+>>>>>
+>>>>> As this is initial series which has TPG only I think we shouldn't
+>>>>> get blocked on this now. Series-2 and 3 will be for sensor support
+>>>>> and on next series when we add suspend/resume will look into this.
+>>>>>
+>>>>>
+>>> When freeze activity starts and in case if finish thread freezes prior
+>>> to start thread issuing capture, its the VI hardware writes data to
+>>> the allocated buffer address.
+>>>
+>>> finish thread just checks for the event from the hardware and we don't
+>>> handle/process directly on memory in this driver.
+>>>
+>>> So even we freeze done thread when single shot is issued frame buffer
+>>> gets updated.
+>>>
+>>> In case if capture thread is frozen there will not buffers queued to
+>>> process by finish thread. So, this will not be an issue.
+>>>
+>>> So, probably we don't need to do conditional try_to_freeze and what we
+>>> have should work good in this corner case.
+>>>
+>> I still need to change wait_event_interruptible() to
+>> wait_event_freezable() but no need to synchronize finish thread freeze
+>> with start thread as even on issuing capture start its vi hardware that
+>> does frame buffer update and finish thread just checks for mw_ack event
+>> and returns buffer to application.
+> The problem we are primarily trying to avoid is to have suspending being
+> done in the middle of IO.
+>
+> IIUC, even if system will be suspended in the middle of VI IO, it won't
+> be fatal. In worst case the buffer capture should fail on resume from
+> suspend. Could you please try to simulate this potential issue and see
+> what result will be on suspending in the middle of VI IO?
+>
+> We don't want to suspend system / stop streaming in the middle of IO, so
+> this problem of a proper threads tear-down still exists. It should
+> become easier to resolve the problem in a case of a proper suspending
+> callback because the "start" thread could be turned down at any time, so
+> it should be easier to maintain a proper tear-down order when threads
+> are fully controlled by the driver, i.e. the "start" thread goes down
+> first and the "finish" is second, blocking until the capture is completed=
+.
+>
+> I think yours suggestion about dropping the freezing from the threads
+> for now and returning back to it later on (once a proper suspend/resume
+> support will be added) sounds reasonable.
+>
+> But if you'd want to keep the freezing, then the easy solution could be
+> like that:
+>
+>    1. "start" thread could freeze at any time
+>    2. "finish" thread could freeze only when the "start" thread is frozen
+> and capture isn't in-progress. Use frozen(kthread_start_capture) to
+> check the freezing state.
+>
+> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/linux/freezer.h#=
+L25
 
-Tested-by: Adam Ford <aford173@gmail.com>
+That's exactly what I tried, below is the snippet.
 
->  arch/arm/boot/dts/omap3-beagle.dts         |  33 +++++
->  arch/arm/boot/dts/omap3-devkit8000.dts     |  33 +++++
->  arch/arm/boot/dts/omap3.dtsi               | 135 +++++++++++++++----
->  arch/arm/mach-omap2/board-generic.c        |  10 +-
->  arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 146 +--------------------
->  6 files changed, 210 insertions(+), 175 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/am3517.dtsi b/arch/arm/boot/dts/am3517.dtsi
-> --- a/arch/arm/boot/dts/am3517.dtsi
-> +++ b/arch/arm/boot/dts/am3517.dtsi
-> @@ -169,5 +169,29 @@ &mmu_isp {
->         status = "disabled";
->  };
->
-> -/include/ "am35xx-clocks.dtsi"
-> -/include/ "omap36xx-am35xx-omap3430es2plus-clocks.dtsi"
-> +#include "am35xx-clocks.dtsi"
-> +#include "omap36xx-am35xx-omap3430es2plus-clocks.dtsi"
-> +
-> +/* Timer for clocksource, configured without interrupts */
-> +&timer1_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               /delete-property/interrupts;
-> +               /delete-property/interrupts-extended;
-> +               assigned-clocks = <&gpt1_fck>;
-> +               assigned-clock-parents = <&sys_ck>;
-> +       };
-> +};
-> +
-> +/* Timer for clockevent */
-> +&timer2_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               assigned-clocks = <&gpt2_fck>;
-> +               assigned-clock-parents = <&sys_ck>;
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> --- a/arch/arm/boot/dts/omap3-beagle.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle.dts
-> @@ -304,6 +304,39 @@ &usbhsehci {
->         phys = <0 &hsusb2_phy>;
->  };
->
-> +/* Unusable as clockevent, allow to idle */
-> +&timer1_target {
-> +       /delete-property/ti,no-reset-on-init;
-> +       /delete-property/ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,omap3430-timer";
-> +               interrupts = <37>;
-> +       };
-> +};
-> +
-> +/* Timer for clocksource, configured without interrupts */
-> +&timer12_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               /delete-property/interrupts;
-> +               /delete-property/interrupts-extended;
-> +               /* Always clocked by secure_32k_fck */
-> +       };
-> +};
-> +
-> +/* Timer for clockevent */
-> +&timer2_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               assigned-clocks = <&gpt2_fck>;
-> +               assigned-clock-parents = <&sys_ck>;
-> +       };
-> +};
-> +
->  &twl_gpio {
->         ti,use-leds;
->         /* pullups: BIT(1) */
-> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-> --- a/arch/arm/boot/dts/omap3-devkit8000.dts
-> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-> @@ -14,3 +14,36 @@ aliases {
->                 display2 = &tv0;
->         };
->  };
-> +
-> +/* Unusable as clockevent, allow to idle */
-> +&timer1_target {
-> +       /delete-property/ti,no-reset-on-init;
-> +       /delete-property/ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,omap3430-timer";
-> +               interrupts = <37>;
-> +       };
-> +};
-> +
-> +/* Timer for clocksource, configured without interrupts */
-> +&timer12_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               /delete-property/interrupts;
-> +               /delete-property/interrupts-extended;
-> +               /* Always clocked by secure_32k_fck */
-> +       };
-> +};
-> +
-> +/* Timer for clockevent */
-> +&timer2_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               assigned-clocks = <&gpt2_fck>;
-> +               assigned-clock-parents = <&sys_ck>;
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -193,10 +193,23 @@ cm_clockdomains: clockdomains {
->                         };
->                 };
->
-> -               counter32k: counter@48320000 {
-> -                       compatible = "ti,omap-counter32k";
-> -                       reg = <0x48320000 0x20>;
-> -                       ti,hwmods = "counter_32k";
-> +               target-module@48320000 {
-> +                       compatible = "ti,sysc-omap2", "ti,sysc";
-> +                       reg = <0x48320000 0x4>,
-> +                             <0x48320004 0x4>;
-> +                       reg-names = "rev", "sysc";
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>;
-> +                       clocks = <&wkup_32k_fck>, <&omap_32ksync_ick>;
-> +                       clock-names = "fck", "ick";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0x0 0x48320000 0x1000>;
-> +
-> +                       counter32k: counter@0 {
-> +                               compatible = "ti,omap-counter32k";
-> +                               reg = <0x0 0x20>;
-> +                       };
->                 };
->
->                 intc: interrupt-controller@48200000 {
-> @@ -637,19 +650,63 @@ sham: sham@480c3000 {
->                         dma-names = "rx";
->                 };
->
-> -               timer1: timer@48318000 {
-> -                       compatible = "ti,omap3430-timer";
-> -                       reg = <0x48318000 0x400>;
-> -                       interrupts = <37>;
-> -                       ti,hwmods = "timer1";
-> -                       ti,timer-alwon;
-> +               timer1_target: target-module@48318000 {
-> +                       compatible = "ti,sysc-omap2-timer", "ti,sysc";
-> +                       reg = <0x48318000 0x4>,
-> +                             <0x48318010 0x4>,
-> +                             <0x48318014 0x4>;
-> +                       reg-names = "rev", "sysc", "syss";
-> +                       ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-> +                                        SYSC_OMAP2_EMUFREE |
-> +                                        SYSC_OMAP2_ENAWAKEUP |
-> +                                        SYSC_OMAP2_SOFTRESET |
-> +                                        SYSC_OMAP2_AUTOIDLE)>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       ti,syss-mask = <1>;
-> +                       clocks = <&gpt1_fck>, <&gpt1_ick>;
-> +                       clock-names = "fck", "ick";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0x0 0x48318000 0x1000>;
-> +
-> +                       timer1: timer@0 {
-> +                               compatible = "ti,omap3430-timer";
-> +                               reg = <0x0 0x80>;
-> +                               clocks = <&gpt1_fck>;
-> +                               clock-names = "fck";
-> +                               interrupts = <37>;
-> +                               ti,timer-alwon;
-> +                       };
->                 };
->
-> -               timer2: timer@49032000 {
-> -                       compatible = "ti,omap3430-timer";
-> -                       reg = <0x49032000 0x400>;
-> -                       interrupts = <38>;
-> -                       ti,hwmods = "timer2";
-> +               timer2_target: target-module@49032000 {
-> +                       compatible = "ti,sysc-omap2-timer", "ti,sysc";
-> +                       reg = <0x49032000 0x4>,
-> +                             <0x49032010 0x4>,
-> +                             <0x49032014 0x4>;
-> +                       reg-names = "rev", "sysc", "syss";
-> +                       ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-> +                                        SYSC_OMAP2_EMUFREE |
-> +                                        SYSC_OMAP2_ENAWAKEUP |
-> +                                        SYSC_OMAP2_SOFTRESET |
-> +                                        SYSC_OMAP2_AUTOIDLE)>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       ti,syss-mask = <1>;
-> +                       clocks = <&gpt2_fck>, <&gpt2_ick>;
-> +                       clock-names = "fck", "ick";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0x0 0x49032000 0x1000>;
-> +
-> +                       timer2: timer@0 {
-> +                               compatible = "ti,omap3430-timer";
-> +                               reg = <0 0x400>;
-> +                               interrupts = <38>;
-> +                       };
->                 };
->
->                 timer3: timer@49034000 {
-> @@ -723,13 +780,34 @@ timer11: timer@48088000 {
->                         ti,timer-pwm;
->                 };
->
-> -               timer12: timer@48304000 {
-> -                       compatible = "ti,omap3430-timer";
-> -                       reg = <0x48304000 0x400>;
-> -                       interrupts = <95>;
-> -                       ti,hwmods = "timer12";
-> -                       ti,timer-alwon;
-> -                       ti,timer-secure;
-> +               timer12_target: target-module@48304000 {
-> +                       compatible = "ti,sysc-omap2-timer", "ti,sysc";
-> +                       reg = <0x48304000 0x4>,
-> +                             <0x48304010 0x4>,
-> +                             <0x48304014 0x4>;
-> +                       reg-names = "rev", "sysc", "syss";
-> +                       ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-> +                                        SYSC_OMAP2_EMUFREE |
-> +                                        SYSC_OMAP2_ENAWAKEUP |
-> +                                        SYSC_OMAP2_SOFTRESET |
-> +                                        SYSC_OMAP2_AUTOIDLE)>;
-> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +                                       <SYSC_IDLE_NO>,
-> +                                       <SYSC_IDLE_SMART>;
-> +                       ti,syss-mask = <1>;
-> +                       clocks = <&gpt12_fck>, <&gpt12_ick>;
-> +                       clock-names = "fck", "ick";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges = <0x0 0x48304000 0x1000>;
-> +
-> +                       timer12: timer@0 {
-> +                               compatible = "ti,omap3430-timer";
-> +                               reg = <0 0x400>;
-> +                               interrupts = <95>;
-> +                               ti,timer-alwon;
-> +                               ti,timer-secure;
-> +                       };
->                 };
->
->                 usbhstll: usbhstll@48062000 {
-> @@ -886,4 +964,15 @@ ssi_port2: ssi-port@4805b000 {
->         };
->  };
->
-> -/include/ "omap3xxx-clocks.dtsi"
-> +#include "omap3xxx-clocks.dtsi"
-> +
-> +/* Timer for clockevent */
-> +&timer1_target {
-> +       ti,no-reset-on-init;
-> +       ti,no-idle;
-> +       timer@0 {
-> +               compatible = "ti,dmtimer";
-> +               assigned-clocks = <&gpt1_fck>;
-> +               assigned-clock-parents = <&omap_32k_fck>;
-> +       };
-> +};
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -114,7 +114,7 @@ DT_MACHINE_START(OMAP3_N900_DT, "Nokia RX-51 board")
->         .init_early     = omap3430_init_early,
->         .init_machine   = omap_generic_init,
->         .init_late      = omap3_init_late,
-> -       .init_time      = omap_init_time,
-> +       .init_time      = omap_init_time_of,
->         .dt_compat      = n900_boards_compat,
->         .restart        = omap3xxx_restart,
->  MACHINE_END
-> @@ -132,7 +132,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
->         .init_early     = omap3430_init_early,
->         .init_machine   = omap_generic_init,
->         .init_late      = omap3_init_late,
-> -       .init_time      = omap_init_time,
-> +       .init_time      = omap_init_time_of,
->         .dt_compat      = omap3_boards_compat,
->         .restart        = omap3xxx_restart,
->  MACHINE_END
-> @@ -149,7 +149,7 @@ DT_MACHINE_START(OMAP36XX_DT, "Generic OMAP36xx (Flattened Device Tree)")
->         .init_early     = omap3630_init_early,
->         .init_machine   = omap_generic_init,
->         .init_late      = omap3_init_late,
-> -       .init_time      = omap_init_time,
-> +       .init_time      = omap_init_time_of,
->         .dt_compat      = omap36xx_boards_compat,
->         .restart        = omap3xxx_restart,
->  MACHINE_END
-> @@ -166,7 +166,7 @@ DT_MACHINE_START(OMAP3_GP_DT, "Generic OMAP3-GP (Flattened Device Tree)")
->         .init_early     = omap3430_init_early,
->         .init_machine   = omap_generic_init,
->         .init_late      = omap3_init_late,
-> -       .init_time      = omap3_secure_sync32k_timer_init,
-> +       .init_time      = omap_init_time_of,
->         .dt_compat      = omap3_gp_boards_compat,
->         .restart        = omap3xxx_restart,
->  MACHINE_END
-> @@ -182,7 +182,7 @@ DT_MACHINE_START(AM3517_DT, "Generic AM3517 (Flattened Device Tree)")
->         .init_early     = am35xx_init_early,
->         .init_machine   = omap_generic_init,
->         .init_late      = omap3_init_late,
-> -       .init_time      = omap3_gptimer_timer_init,
-> +       .init_time      = omap_init_time_of,
->         .dt_compat      = am3517_boards_compat,
->         .restart        = omap3xxx_restart,
->  MACHINE_END
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-> --- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-> @@ -147,36 +147,6 @@ static struct omap_hwmod_class omap3xxx_timer_hwmod_class = {
->         .sysc = &omap3xxx_timer_sysc,
->  };
->
-> -/* timer1 */
-> -static struct omap_hwmod omap3xxx_timer1_hwmod = {
-> -       .name           = "timer1",
-> -       .main_clk       = "gpt1_fck",
-> -       .prcm           = {
-> -               .omap2 = {
-> -                       .module_offs = WKUP_MOD,
-> -                       .idlest_reg_id = 1,
-> -                       .idlest_idle_bit = OMAP3430_ST_GPT1_SHIFT,
-> -               },
-> -       },
-> -       .class          = &omap3xxx_timer_hwmod_class,
-> -       .flags          = HWMOD_SET_DEFAULT_CLOCKACT,
-> -};
-> -
-> -/* timer2 */
-> -static struct omap_hwmod omap3xxx_timer2_hwmod = {
-> -       .name           = "timer2",
-> -       .main_clk       = "gpt2_fck",
-> -       .prcm           = {
-> -               .omap2 = {
-> -                       .module_offs = OMAP3430_PER_MOD,
-> -                       .idlest_reg_id = 1,
-> -                       .idlest_idle_bit = OMAP3430_ST_GPT2_SHIFT,
-> -               },
-> -       },
-> -       .class          = &omap3xxx_timer_hwmod_class,
-> -       .flags          = HWMOD_SET_DEFAULT_CLOCKACT,
-> -};
-> -
->  /* timer3 */
->  static struct omap_hwmod omap3xxx_timer3_hwmod = {
->         .name           = "timer3",
-> @@ -312,21 +282,6 @@ static struct omap_hwmod omap3xxx_timer11_hwmod = {
->         .flags          = HWMOD_SET_DEFAULT_CLOCKACT,
->  };
->
-> -/* timer12 */
-> -static struct omap_hwmod omap3xxx_timer12_hwmod = {
-> -       .name           = "timer12",
-> -       .main_clk       = "gpt12_fck",
-> -       .prcm           = {
-> -               .omap2 = {
-> -                       .module_offs = WKUP_MOD,
-> -                       .idlest_reg_id = 1,
-> -                       .idlest_idle_bit = OMAP3430_ST_GPT12_SHIFT,
-> -               },
-> -       },
-> -       .class          = &omap3xxx_timer_hwmod_class,
-> -       .flags          = HWMOD_SET_DEFAULT_CLOCKACT,
-> -};
-> -
->  /*
->   * 'wd_timer' class
->   * 32-bit watchdog upward counter that generates a pulse on the reset pin on
-> @@ -1524,38 +1479,6 @@ static struct omap_hwmod omap3xxx_sad2d_hwmod = {
->         .class          = &omap3xxx_sad2d_class,
->  };
->
-> -/*
-> - * '32K sync counter' class
-> - * 32-bit ordinary counter, clocked by the falling edge of the 32 khz clock
-> - */
-> -static struct omap_hwmod_class_sysconfig omap3xxx_counter_sysc = {
-> -       .rev_offs       = 0x0000,
-> -       .sysc_offs      = 0x0004,
-> -       .sysc_flags     = SYSC_HAS_SIDLEMODE,
-> -       .idlemodes      = (SIDLE_FORCE | SIDLE_NO),
-> -       .sysc_fields    = &omap_hwmod_sysc_type1,
-> -};
-> -
-> -static struct omap_hwmod_class omap3xxx_counter_hwmod_class = {
-> -       .name   = "counter",
-> -       .sysc   = &omap3xxx_counter_sysc,
-> -};
-> -
-> -static struct omap_hwmod omap3xxx_counter_32k_hwmod = {
-> -       .name           = "counter_32k",
-> -       .class          = &omap3xxx_counter_hwmod_class,
-> -       .clkdm_name     = "wkup_clkdm",
-> -       .flags          = HWMOD_SWSUP_SIDLE,
-> -       .main_clk       = "wkup_32k_fck",
-> -       .prcm           = {
-> -               .omap2  = {
-> -                       .module_offs = WKUP_MOD,
-> -                       .idlest_reg_id = 1,
-> -                       .idlest_idle_bit = OMAP3430_ST_32KSYNC_SHIFT,
-> -               },
-> -       },
-> -};
-> -
->  /*
->   * 'gpmc' class
->   * general purpose memory controller
-> @@ -1868,25 +1791,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l3__iva = {
->         .user           = OCP_USER_MPU | OCP_USER_SDMA,
->  };
->
-> -
-> -/* l4_wkup -> timer1 */
-> -static struct omap_hwmod_ocp_if omap3xxx_l4_wkup__timer1 = {
-> -       .master         = &omap3xxx_l4_wkup_hwmod,
-> -       .slave          = &omap3xxx_timer1_hwmod,
-> -       .clk            = "gpt1_ick",
-> -       .user           = OCP_USER_MPU | OCP_USER_SDMA,
-> -};
-> -
-> -
-> -/* l4_per -> timer2 */
-> -static struct omap_hwmod_ocp_if omap3xxx_l4_per__timer2 = {
-> -       .master         = &omap3xxx_l4_per_hwmod,
-> -       .slave          = &omap3xxx_timer2_hwmod,
-> -       .clk            = "gpt2_ick",
-> -       .user           = OCP_USER_MPU | OCP_USER_SDMA,
-> -};
-> -
-> -
->  /* l4_per -> timer3 */
->  static struct omap_hwmod_ocp_if omap3xxx_l4_per__timer3 = {
->         .master         = &omap3xxx_l4_per_hwmod,
-> @@ -1965,15 +1869,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__timer11 = {
->         .user           = OCP_USER_MPU | OCP_USER_SDMA,
->  };
->
-> -
-> -/* l4_core -> timer12 */
-> -static struct omap_hwmod_ocp_if omap3xxx_l4_sec__timer12 = {
-> -       .master         = &omap3xxx_l4_sec_hwmod,
-> -       .slave          = &omap3xxx_timer12_hwmod,
-> -       .clk            = "gpt12_ick",
-> -       .user           = OCP_USER_MPU | OCP_USER_SDMA,
-> -};
-> -
->  /* l4_wkup -> wd_timer2 */
->
->  static struct omap_hwmod_ocp_if omap3xxx_l4_wkup__wd_timer2 = {
-> @@ -2325,16 +2220,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__hdq1w = {
->         .flags          = OMAP_FIREWALL_L4 | OCPIF_SWSUP_IDLE,
->  };
->
-> -/* l4_wkup -> 32ksync_counter */
-> -
-> -
-> -static struct omap_hwmod_ocp_if omap3xxx_l4_wkup__counter_32k = {
-> -       .master         = &omap3xxx_l4_wkup_hwmod,
-> -       .slave          = &omap3xxx_counter_32k_hwmod,
-> -       .clk            = "omap_32ksync_ick",
-> -       .user           = OCP_USER_MPU | OCP_USER_SDMA,
-> -};
-> -
->  /* am35xx has Davinci MDIO & EMAC */
->  static struct omap_hwmod_class am35xx_mdio_class = {
->         .name = "davinci_mdio",
-> @@ -2551,8 +2436,6 @@ static struct omap_hwmod_ocp_if *omap3xxx_hwmod_ocp_ifs[] __initdata = {
->         &omap3_l4_core__i2c2,
->         &omap3_l4_core__i2c3,
->         &omap3xxx_l4_wkup__l4_sec,
-> -       &omap3xxx_l4_wkup__timer1,
-> -       &omap3xxx_l4_per__timer2,
->         &omap3xxx_l4_per__timer3,
->         &omap3xxx_l4_per__timer4,
->         &omap3xxx_l4_per__timer5,
-> @@ -2580,27 +2463,10 @@ static struct omap_hwmod_ocp_if *omap3xxx_hwmod_ocp_ifs[] __initdata = {
->         &omap34xx_l4_core__mcspi2,
->         &omap34xx_l4_core__mcspi3,
->         &omap34xx_l4_core__mcspi4,
-> -       &omap3xxx_l4_wkup__counter_32k,
->         &omap3xxx_l3_main__gpmc,
->         NULL,
->  };
->
-> -/* GP-only hwmod links */
-> -static struct omap_hwmod_ocp_if *omap34xx_gp_hwmod_ocp_ifs[] __initdata = {
-> -       &omap3xxx_l4_sec__timer12,
-> -       NULL,
-> -};
-> -
-> -static struct omap_hwmod_ocp_if *omap36xx_gp_hwmod_ocp_ifs[] __initdata = {
-> -       &omap3xxx_l4_sec__timer12,
-> -       NULL,
-> -};
-> -
-> -static struct omap_hwmod_ocp_if *am35xx_gp_hwmod_ocp_ifs[] __initdata = {
-> -       &omap3xxx_l4_sec__timer12,
-> -       NULL,
-> -};
-> -
->  /* crypto hwmod links */
->  static struct omap_hwmod_ocp_if *omap34xx_sham_hwmod_ocp_ifs[] __initdata = {
->         &omap3xxx_l4_core__sham,
-> @@ -2774,7 +2640,7 @@ static bool __init omap3xxx_hwmod_is_hs_ip_block_usable(struct device_node *bus,
->  int __init omap3xxx_hwmod_init(void)
->  {
->         int r;
-> -       struct omap_hwmod_ocp_if **h = NULL, **h_gp = NULL, **h_sham = NULL;
-> +       struct omap_hwmod_ocp_if **h = NULL, **h_sham = NULL;
->         struct omap_hwmod_ocp_if **h_aes = NULL;
->         struct device_node *bus;
->         unsigned int rev;
-> @@ -2797,18 +2663,15 @@ int __init omap3xxx_hwmod_init(void)
->             rev == OMAP3430_REV_ES2_1 || rev == OMAP3430_REV_ES3_0 ||
->             rev == OMAP3430_REV_ES3_1 || rev == OMAP3430_REV_ES3_1_2) {
->                 h = omap34xx_hwmod_ocp_ifs;
-> -               h_gp = omap34xx_gp_hwmod_ocp_ifs;
->                 h_sham = omap34xx_sham_hwmod_ocp_ifs;
->                 h_aes = omap34xx_aes_hwmod_ocp_ifs;
->         } else if (rev == AM35XX_REV_ES1_0 || rev == AM35XX_REV_ES1_1) {
->                 h = am35xx_hwmod_ocp_ifs;
-> -               h_gp = am35xx_gp_hwmod_ocp_ifs;
->                 h_sham = am35xx_sham_hwmod_ocp_ifs;
->                 h_aes = am35xx_aes_hwmod_ocp_ifs;
->         } else if (rev == OMAP3630_REV_ES1_0 || rev == OMAP3630_REV_ES1_1 ||
->                    rev == OMAP3630_REV_ES1_2) {
->                 h = omap36xx_hwmod_ocp_ifs;
-> -               h_gp = omap36xx_gp_hwmod_ocp_ifs;
->                 h_sham = omap36xx_sham_hwmod_ocp_ifs;
->                 h_aes = omap36xx_aes_hwmod_ocp_ifs;
->         } else {
-> @@ -2820,13 +2683,6 @@ int __init omap3xxx_hwmod_init(void)
->         if (r < 0)
->                 return r;
->
-> -       /* Register GP-only hwmod links. */
-> -       if (h_gp && omap_type() == OMAP2_DEVICE_TYPE_GP) {
-> -               r = omap_hwmod_register_links(h_gp);
-> -               if (r < 0)
-> -                       return r;
-> -       }
-> -
->         /*
->          * Register crypto hwmod links only if they are not disabled in DT.
->          * If DT information is missing, enable them only for GP devices.
-> --
-> 2.26.2
+But as mentioned I am seeing freezing fail when I=20
+wait_event_interruptible() in either of the threads.
+
+ =C2=A0=C2=A0 60.368709] Call trace:
+[=C2=A0=C2=A0 60.371216] __switch_to+0xec/0x140
+[=C2=A0=C2=A0 60.374768] __schedule+0x32c/0x668
+[=C2=A0=C2=A0 60.378315] schedule+0x78/0x118
+[=C2=A0=C2=A0 60.381606]=C2=A0 chan_capture_kthread_finish+0x244/0x2a0 [teg=
+ra_video]
+[=C2=A0=C2=A0 60.387865] kthread+0x124/0x150
+[=C2=A0=C2=A0 60.391150] ret_from_fork+0x10/0x1c
+
+wait_event_interruptible() API uses schedule() which blocks freezer=20
+while wait_event_freezable APIs uses freezable_schedule() which allows=20
+to skip freezer during schedule and then clears skip and calls=20
+try_to_freeze()
+
+But we can't use wait_event_freezable() here as we need conditional freeze.
+
+
+ =C2=A0=C2=A0=C2=A0 while (1) {
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D chan->capture_reqs=
+ - chan->sequence;
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (frozen(chan->kthread_start_captu=
+re) && !caps_inflight)
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_freeza=
+ble(chan->done_wait,
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 !list_empty(&chan->done) ||
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 kthread_should_stop());
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 else
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_interr=
+uptible(chan->done_wait,
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0!list_empty(&chan->done) ||
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=
+=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0kthread_should_stop());
+
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffers and finish captur=
+e */
+
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
+
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
+
+
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_should_stop())
+ =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 break;
+ =C2=A0=C2=A0=C2=A0 }
+
