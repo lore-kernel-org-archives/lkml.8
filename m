@@ -2,154 +2,390 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC49C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571FAC47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF7362071E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vd346jdi"
+	by mail.kernel.org (Postfix) with ESMTP id 3AEF1206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:31:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588440668;
+	bh=Un4jyA+lzOxIUevxBXaZkTNsi2B49jZeVzIglPjaOWg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Qa+hqeUWONSRG+8SeIJTQ5zh/E5LPYh9tvtdSh1H+MA8Li5xy806GVpyrT/cNU8Jf
+	 Wq8pOmh0d+dBy+eWCC7CHkOWRLZzlfFy3wU8vN7esRRYitGkpk7dHk86h6AAuGRqUy
+	 vEk3IdzxYZgZsxasyTbYOOakwu3j5OKt1B8vTZlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEBR1q (ORCPT
+        id S1728424AbgEBRbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 13:27:46 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60847 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726400AbgEBR1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 13:27:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588440464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ErRNiGhQm0hFq8J3JJ99IOHq4K81WyfWobAhJnyPTNI=;
-        b=Vd346jdiZQ4AQZCvcqddZDTk/Fj2XTGazgJ1rkKmEc705sU40Fdrn+UptzCd47+wO7kxHT
-        tJrx3VPRMkF7sv9N2VQ+wpSMb/YrGI4cnJwzL0sl7kIJgmgEJj/3dh4q3aEA4Q8+0/WBgL
-        R57eWTLI+2yuOHTNBs2OcQ8yOfa8ecA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-V6EPeOVZP06AgzMxIB1uZw-1; Sat, 02 May 2020 13:27:36 -0400
-X-MC-Unique: V6EPeOVZP06AgzMxIB1uZw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 2 May 2020 13:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbgEBRbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 13:31:07 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02477464;
-        Sat,  2 May 2020 17:27:35 +0000 (UTC)
-Received: from [10.36.112.72] (ovpn-112-72.ams2.redhat.com [10.36.112.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4625C1001281;
-        Sat,  2 May 2020 17:27:31 +0000 (UTC)
-Subject: Re: KVM: s390/mm: Clarification for two return value checks in
- gmap_shadow()
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org,
-        =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-References: <7f0b7ac0-d061-9484-bc5e-bdd9e32aa42b@web.de>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <993d6b88-1f8f-745e-90b6-6ab0917a57a6@redhat.com>
-Date:   Sat, 2 May 2020 19:27:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 44DF6206B8;
+        Sat,  2 May 2020 17:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588440666;
+        bh=Un4jyA+lzOxIUevxBXaZkTNsi2B49jZeVzIglPjaOWg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=F5bje+/Vvao4S/KkOUBoaHA9PzSDhufrYZ7x2m4yEy2BP7QDg51ETS7WZOi4EBD0E
+         FDEgm6tS/FJ3Lkm9zqxNeOTjCMhm3Pkhjm2P7MM9Hs/PvvKoJHxerNc05et3yFunJd
+         gdTBAOpufbtC1k6JS6tr1sFQmVzevaS6xB7dSSps=
+Date:   Sat, 2 May 2020 18:31:02 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] iio: at91-sama5d2_adc: split
+ at91_adc_current_chan_is_touch() helper
+Message-ID: <20200502183102.4e916203@archlinux>
+In-Reply-To: <b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com>
+References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+        <20200413180556.20638f3b@archlinux>
+        <9315e9a7-0703-b119-ca32-69f0c2fcc7de@microchip.com>
+        <20200414184505.0cd39249@archlinux>
+        <f13b4286c5f133e7461d59965d7f84af059c8e89.camel@analog.com>
+        <208699ad-1302-aac1-c2e7-4f469e39a7eb@microchip.com>
+        <b50961e86a536223be7e3df0f276e572a435f644.camel@analog.com>
+        <be31bfcde7dc35b07855302d5cbf6db42bc7f634.camel@analog.com>
+        <b9ab676489de3575984dac5610fcf05fd8742a38.camel@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <7f0b7ac0-d061-9484-bc5e-bdd9e32aa42b@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.05.20 17:43, Markus Elfring wrote:
-> Hello,
->=20
-> I have tried another small script out for the semantic patch language.
-> This source code analysis approach points out that the function =E2=80=9C=
-gmap_find_shadow=E2=80=9D
-> is called two times by the function =E2=80=9Cgmap_shadow=E2=80=9D.
-> https://elixir.bootlin.com/linux/v5.7-rc3/source/arch/s390/mm/gmap.c#L1=
-628
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log=
-/arch/s390/mm/gmap.c
->=20
-> Null pointer checks are performed at these places.
+On Thu, 30 Apr 2020 08:10:29 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Right, in case we have already a shadow, we return it. In case we are
-just concurrently creating/initializing another one, we return -EINVAL
-so the caller will retry (and find the fully initialized one). In case
-we get NULL, we have to create a new one.
+> On Thu, 2020-04-30 at 07:30 +0000, Ardelean, Alexandru wrote:
+> > On Mon, 2020-04-27 at 13:00 +0000, Ardelean, Alexandru wrote:  
+> > > [External]
+> > > 
+> > > On Mon, 2020-04-27 at 12:20 +0000, Eugen.Hristev@microchip.com wrote:  
+> > > > [External]
+> > > > 
+> > > > On 15.04.2020 09:33, Ardelean, Alexandru wrote:
+> > > >   
+> > > > > On Tue, 2020-04-14 at 18:45 +0100, Jonathan Cameron wrote:  
+> > > > > > On Tue, 14 Apr 2020 12:22:45 +0000
+> > > > > > <Eugen.Hristev@microchip.com> wrote:
+> > > > > >   
+> > > > > > > On 13.04.2020 20:05, Jonathan Cameron wrote:  
+> > > > > > > > On Wed, 4 Mar 2020 10:42:18 +0200
+> > > > > > > > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> > > > > > > >   
+> > > > > > > > > This change moves the logic to check if the current channel is
+> > > > > > > > > the
+> > > > > > > > > touchscreen channel to a separate helper.
+> > > > > > > > > This reduces some code duplication, but the main intent is to
+> > > > > > > > > re-
+> > > > > > > > > use
+> > > > > > > > > this
+> > > > > > > > > in the next patches.
+> > > > > > > > > 
+> > > > > > > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com  
+> > > > > > > > > >  
+> > > > > > > > Eugen / Ludovic,
+> > > > > > > > 
+> > > > > > > > Have you had a chance to look at this series?  
+> > > > > > > 
+> > > > > > > Hi Jonathan,
+> > > > > > > 
+> > > > > > > Does the patch apply correctly for you ?  
+> > > > > > 
+> > > > > > I haven't tried yet :)
+> > > > > >   
+> > > > > 
+> > > > > I've rebased this patchset on top of current iio/testing and it still
+> > > > > applies.
+> > > > >   
+> > > > 
+> > > > Hi Alex,
+> > > > 
+> > > > I tried this patch on top of my tree (however I am testing with an older 
+> > > > kernel 5.4) , and I have issues starting the buffer after you moved my 
+> > > > code to the preenable callback.
+> > > > 
+> > > > Namely, on the line:
+> > > > 
+> > > > if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
+> > > >                 return -EINVAL;  
+> > 
+> > In the meantime I found this patch:
+> > https://urldefense.com/v3/__https://lore.kernel.org/linux-iio/1431525891-19285-5-git-send-email-lars@metafoo.de/__;!!A3Ni8CS0y2Y!ocQuNvFF_8rd-cCvMNXU0cTk9mLezpCPyzelQyhbxMGdKgFo0_JTgTD1q1VU-kj10aqxxA$ 
+> > 
+> > from about ~5 years ago;
 
-> The function =E2=80=9Cgmap_find_shadow=E2=80=9D is documented in the sa=
-me source file
-> that the pointer =E2=80=9CERR_PTR(-EAGAIN)=E2=80=9D can eventually be r=
-eturned.
-> Are the referenced gmap data structures always initialised here?
+Yup.  That started the transition to claim_direct_mode to avoid the locking
+issues.   There are probably a few drivers that never got there but 
+in theory moving the setting of this parameter earlier should now
+be fine as the original race condition is closed (subject to a few
+drivers that still have that race condition)
 
--EAGAIN makes sure that we are not touching partially initialized one.
-In case we find a valid gmap shadow, it is fully initialized. That's
-what we have the ->initialized field for.
 
-Hope that answers your question.
+> > 
+> > if this patch is a valid proposal, it could fix this case as well;
+> > well, it might break others, so applying it [now] would need some general
+> > review
+> > of all pre/post enable/disable hooks
+> >   
+> 
+> So, apologies if this will start to seem like spamming.
+> I decided to do a bit of shell magic for this:
+> 
+> get_files() {
+> git grep -w iio_buffer_setup_ops  | grep drivers | cut -d: -f1 | sort | uniq
+> }
+> 
+> for file in $(get_files) ; do
+>     if grep -q currentmode $file ; then
+>         echo $file
+>     fi
+> done
+> 
+> It finds 4 drivers.
+> Though, `get_files()` will return 56 files.
+> 
+> drivers/iio/accel/bmc150-accel-core.c
+> drivers/iio/adc/at91-sama5d2_adc.c
+> drivers/iio/adc/stm32-dfsdm-adc.c
+> drivers/iio/magnetometer/rm3100-core.c
+> 
+> The rm3100 driver doesn't do any checks in the setup_ops for 'currentmode' as
+> far as I could see.
+> 
+> So, Lars' patch could work nicely to fix this current case and not break others.
+> 
+> Semantically though, it would sound nicer to have a 'nextmode' parameter
+> somewhere; maybe on the setup_ops(indio_dev, nextmode)?
+> Though, only those 3 drivers would really ever use it; so doing it like that
+> sounds like overkill.
+> 
+> So, we're left with Lars' patch or we could add an 'indio_dev->nextmode' field,
+> that may be used in just these 3 drivers [which again: sounds overkill at this
+> point in time].
+> 
+> Alternatively, this 'indio_dev->currentmode' could be removed from all these 3
+> drivers somehow. But that needs testing and a thorough understanding of all 3
+> drivers and what they're doing, to do properly.
+> 
+> @Jonathan: what do you think?
 
---=20
-Thanks,
+I think we are 'now' fine to apply what Lars originally suggested to solve
+this issue.  There are still some difference between pre and post functions
+but for many usecases they no longer matter (if curious just look at what
+remains being called between them).
 
-David / dhildenb
+> 
+> In any case, pending a reply, I'll send Lars' patch.
+> Even if we come to a different conclusion we have something to start with.
+> But, if the conclusion is that Lars' patch is a good solution now, it can be
+> applied.
+> 
+> 
+> > > Apologies for the breakage.
+> > > 
+> > > For the touch-part I don't see that code being executed.
+> > > 
+> > > But a question is: does the driver need to check for the currentmode?
+> > > Or is that something that the IIO core should do?
+> > >   
+> > > > And with this , the preenable fails on my side, because the current mode 
+> > > > is not yet switched to triggered.
+> > > > 
+> > > > I do remember adding this line with a specific reason. It may be related 
+> > > > to touchscreen operations, but I have to retest the touch with and 
+> > > > without this line and your patch.
+> > > > 
+> > > > Meanwhile, maybe you have any suggestions on how to fix the buffer ?   
+> > > 
+> > > Well, there was the question of whether iio_triggered_buffer_postenable()
+> > > [to
+> > > attach the pollfunc] makes sense to be called first/last in the old
+> > > at91_adc_buffer_postenable(), and the answer was 'last'; so then one
+> > > solution
+> > > was to move things to preenable().
+> > > 
+> > > Going back to the old patch isn't ideal, as the idea was to make the
+> > > position
+> > > of
+> > > iio_triggered_buffer_postenable() consistent across all drivers, so that it
+> > > can
+> > > be removed [and moved to the IIO core].
+> > > 
+> > > But if we need revert the patch, then I guess it's fine.
+> > > The only solution I see right now [for going forward], is to remove that
+> > > check
+> > > for 'currrentmode'
+> > >   
+> > > > This check here makes any sense to you ?  
+> > > 
+> > > I think Jonathan may have to add some input here, but I think that in this
+> > > current situation, checking 'currentmode' looks like is re-validating how
+> > > the
+> > > device was configured via the IIO framework.
+> > > I am not sure if it's needed or not.
+> > >   
+> > > > Thanks,
+> > > > Eugen
+> > > >   
+> > > > > > > I will try to test it , if I manage to apply it.
+> > > > > > > I can only test the ADC though because at this moment I do not have
+> > > > > > > a
+> > > > > > > touchscreen at disposal.
+> > > > > > > 
+> > > > > > > Meanwhile, the code looks good for me,
+> > > > > > > 
+> > > > > > > Reviewed-by: Eugen Hristev <eugen.hristev@microchip.com>
+> > > > > > > 
+> > > > > > > By the way, I do not know if my two pending patches on this driver
+> > > > > > > will
+> > > > > > > conflict or not.  
+> > > > > > 
+> > > > > > As this is a long term rework patch at heart, there isn't any
+> > > > > > particular
+> > > > > > rush as long as we don't loose it forever!
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > 
+> > > > > > Jonathan
+> > > > > >   
+> > > > > > > Eugen
+> > > > > > >   
+> > > > > > > > Thanks,
+> > > > > > > > 
+> > > > > > > > Jonathan
+> > > > > > > >   
+> > > > > > > > > ---
+> > > > > > > > > 
+> > > > > > > > > This patchset continues discussion:
+> > > > > > > > > 
+> > > > > > > > > https://urldefense.com/v3/__https://lore.kernel.org/linux-iio/20191023082508.17583-1-alexandru.ardelean@analog.com/__;!!A3Ni8CS0y2Y!ql1bYiNMPFlz1twnCCAQpiEBvpzxR_VHAPL712rWFfwy2TSKjZ2UhGBoV7-29Syny6z0yg$
+> > > > > > > > > 
+> > > > > > > > > Apologies for the delay.
+> > > > > > > > > 
+> > > > > > > > > Changelog v1 -> v2:
+> > > > > > > > > * added patch 'iio: at91-sama5d2_adc: split
+> > > > > > > > > at91_adc_current_chan_is_touch()
+> > > > > > > > >     helper'
+> > > > > > > > > * renamed at91_adc_buffer_postenable() ->
+> > > > > > > > > at91_adc_buffer_preenable()
+> > > > > > > > >     - at91_adc_buffer_postenable() - now just calls
+> > > > > > > > >       iio_triggered_buffer_postenable() if the channel isn't the
+> > > > > > > > > touchscreen
+> > > > > > > > >       channel
+> > > > > > > > > * renamed at91_adc_buffer_predisable() ->
+> > > > > > > > > at91_adc_buffer_postdisable()
+> > > > > > > > >     - at91_adc_buffer_predisable() - now just calls
+> > > > > > > > >       iio_triggered_buffer_predisable() if the channel isn't the
+> > > > > > > > > touchscreen
+> > > > > > > > >       channel
+> > > > > > > > > 
+> > > > > > > > >    drivers/iio/adc/at91-sama5d2_adc.c | 31 +++++++++++++++----
+> > > > > > > > > ----
+> > > > > > > > > -------
+> > > > > > > > >    1 file changed, 15 insertions(+), 16 deletions(-)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/drivers/iio/adc/at91-sama5d2_adc.c
+> > > > > > > > > b/drivers/iio/adc/at91-
+> > > > > > > > > sama5d2_adc.c
+> > > > > > > > > index a5c7771227d5..f2a74c47c768 100644
+> > > > > > > > > --- a/drivers/iio/adc/at91-sama5d2_adc.c
+> > > > > > > > > +++ b/drivers/iio/adc/at91-sama5d2_adc.c
+> > > > > > > > > @@ -873,18 +873,24 @@ static int at91_adc_dma_start(struct
+> > > > > > > > > iio_dev
+> > > > > > > > > *indio_dev)
+> > > > > > > > >         return 0;
+> > > > > > > > >    }
+> > > > > > > > > 
+> > > > > > > > > +static bool at91_adc_current_chan_is_touch(struct iio_dev
+> > > > > > > > > *indio_dev)
+> > > > > > > > > +{
+> > > > > > > > > +     struct at91_adc_state *st = iio_priv(indio_dev);
+> > > > > > > > > +
+> > > > > > > > > +     return !!bitmap_subset(indio_dev->active_scan_mask,
+> > > > > > > > > +                            &st->touch_st.channels_bitmask,
+> > > > > > > > > +                            AT91_SAMA5D2_MAX_CHAN_IDX + 1);
+> > > > > > > > > +}
+> > > > > > > > > +
+> > > > > > > > >    static int at91_adc_buffer_postenable(struct iio_dev
+> > > > > > > > > *indio_dev)
+> > > > > > > > >    {
+> > > > > > > > >         int ret;
+> > > > > > > > >         struct at91_adc_state *st = iio_priv(indio_dev);
+> > > > > > > > > 
+> > > > > > > > >         /* check if we are enabling triggered buffer or the
+> > > > > > > > > touchscreen
+> > > > > > > > > */
+> > > > > > > > > -     if (bitmap_subset(indio_dev->active_scan_mask,
+> > > > > > > > > -                       &st->touch_st.channels_bitmask,
+> > > > > > > > > -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> > > > > > > > > -             /* touchscreen enabling */
+> > > > > > > > > +     if (at91_adc_current_chan_is_touch(indio_dev))
+> > > > > > > > >                 return at91_adc_configure_touch(st, true);
+> > > > > > > > > -     }
+> > > > > > > > > +
+> > > > > > > > >         /* if we are not in triggered mode, we cannot enable the
+> > > > > > > > > buffer.
+> > > > > > > > > */
+> > > > > > > > >         if (!(indio_dev->currentmode &
+> > > > > > > > > INDIO_ALL_TRIGGERED_MODES))
+> > > > > > > > >                 return -EINVAL;
+> > > > > > > > > @@ -906,12 +912,9 @@ static int
+> > > > > > > > > at91_adc_buffer_predisable(struct
+> > > > > > > > > iio_dev *indio_dev)
+> > > > > > > > >         u8 bit;
+> > > > > > > > > 
+> > > > > > > > >         /* check if we are disabling triggered buffer or the
+> > > > > > > > > touchscreen
+> > > > > > > > > */
+> > > > > > > > > -     if (bitmap_subset(indio_dev->active_scan_mask,
+> > > > > > > > > -                       &st->touch_st.channels_bitmask,
+> > > > > > > > > -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> > > > > > > > > -             /* touchscreen disable */
+> > > > > > > > > +     if (at91_adc_current_chan_is_touch(indio_dev))
+> > > > > > > > >                 return at91_adc_configure_touch(st, false);
+> > > > > > > > > -     }
+> > > > > > > > > +
+> > > > > > > > >         /* if we are not in triggered mode, nothing to do here
+> > > > > > > > > */
+> > > > > > > > >         if (!(indio_dev->currentmode &
+> > > > > > > > > INDIO_ALL_TRIGGERED_MODES))
+> > > > > > > > >                 return -EINVAL;
+> > > > > > > > > @@ -1886,14 +1889,10 @@ static __maybe_unused int
+> > > > > > > > > at91_adc_resume(struct
+> > > > > > > > > device *dev)
+> > > > > > > > >                 return 0;
+> > > > > > > > > 
+> > > > > > > > >         /* check if we are enabling triggered buffer or the
+> > > > > > > > > touchscreen
+> > > > > > > > > */
+> > > > > > > > > -     if (bitmap_subset(indio_dev->active_scan_mask,
+> > > > > > > > > -                       &st->touch_st.channels_bitmask,
+> > > > > > > > > -                       AT91_SAMA5D2_MAX_CHAN_IDX + 1)) {
+> > > > > > > > > -             /* touchscreen enabling */
+> > > > > > > > > +     if (at91_adc_current_chan_is_touch(indio_dev))
+> > > > > > > > >                 return at91_adc_configure_touch(st, true);
+> > > > > > > > > -     } else {
+> > > > > > > > > +     else
+> > > > > > > > >                 return at91_adc_configure_trigger(st->trig,
+> > > > > > > > > true);
+> > > > > > > > > -     }
+> > > > > > > > > 
+> > > > > > > > >         /* not needed but more explicit */
+> > > > > > > > >         return 0;  
 
