@@ -2,101 +2,112 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8617C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F31C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 849A621924
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4108E21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Wa6k9CBz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vIbsxBNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgEBCcr (ORCPT
+        id S1727945AbgEBCdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:32:47 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:20702 "EHLO
+        Fri, 1 May 2020 22:33:16 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:11939 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727776AbgEBCcc (ORCPT
+        by vger.kernel.org with ESMTP id S1726752AbgEBCdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:32:32 -0400
+        Fri, 1 May 2020 22:33:16 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588386752; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=UvCDBWrEGKkmtWr5qBaiBlnFRBajtHqWTVX6zTNReEU=; b=Wa6k9CBzmLytOQt2o1vxJNbdrTA+yPV4O8Tzwk1IjvCa5A2okUaiGnB5wzSkKbZBe+6uv0z6
- Kn/rhfCVjogRFmxaQI+4gJcsmxS8zwfM2ztfW8tUVDeVG77LZIZ3cRaBiSUNIAY+v+T+dsDC
- E2f0Zi0ePFONlOPPxh2HZ4p95jQ=
+ s=smtp; t=1588386795; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=iYIEoJGNhbKPN9zz/zszC6WL+W7rj9KlSLhmhiyLu+0=;
+ b=vIbsxBNfH0vVAtaxN7vDocTQN1hNmYij4Cc6Z+D5NR9my5KWjPVfnVA6Vx+3I7W9KdOaIz+2
+ S5mXXpU/QtIoPx8NIeDQ2mR2kSsok6uYRkEOp3z7FTQZRG+cSU5p/Mx/PN9AxumbBcqh0isZ
+ QmLU6u8hSdtoqay2cLp97II3Lo0=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eacdbae.7f0f9416b490-smtp-out-n01;
- Sat, 02 May 2020 02:32:14 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eacdbe0.7f7d8d8fd378-smtp-out-n02;
+ Sat, 02 May 2020 02:33:04 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 63FA9C433BA; Sat,  2 May 2020 02:32:13 +0000 (UTC)
-Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id 88C5DC43637; Sat,  2 May 2020 02:33:03 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DA25C433CB;
-        Sat,  2 May 2020 02:32:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DA25C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     mani@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hemantk@codeaurora.org, jhugo@codeaurora.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 0/8] Bug fixes and improved logging in MHI
-Date:   Fri,  1 May 2020 19:31:57 -0700
-Message-Id: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C80AC433CB;
+        Sat,  2 May 2020 02:33:03 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 01 May 2020 19:33:03 -0700
+From:   bbhatt@codeaurora.org
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mani@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hemantk@codeaurora.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v3 9/9] bus: mhi: core: Ensure non-zero session or
+ sequence ID values
+In-Reply-To: <e609031b-33a1-2db6-21b9-8ebadafba509@codeaurora.org>
+References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
+ <1588193551-31439-10-git-send-email-bbhatt@codeaurora.org>
+ <e609031b-33a1-2db6-21b9-8ebadafba509@codeaurora.org>
+Message-ID: <612b805e217eebbafeaa080655af2fba@codeaurora.org>
+X-Sender: bbhatt@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A set of patches for bug fixes and improved logging in mhi/core/boot.c.
-Verified on x86 and arm64 platforms.
+On 2020-04-30 08:12, Jeffrey Hugo wrote:
+> On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
+>> While writing any sequence or session identifiers, it is possible that
+>> the host could write a zero value, whereas only non-zero values are
+>> supported writes to those registers. Ensure that host does not write a
+>> non-zero value for those cases.
+>> 
+>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+>> ---
+>>   drivers/bus/mhi/core/boot.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+>> index 0bc9c50..c9971d4 100644
+>> --- a/drivers/bus/mhi/core/boot.c
+>> +++ b/drivers/bus/mhi/core/boot.c
+>> @@ -199,6 +199,9 @@ static int mhi_fw_load_amss(struct mhi_controller 
+>> *mhi_cntrl,
+>>   	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
+>>     	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
+>> +	if (unlikely(!sequence_id))
+>> +		sequence_id = 1;
+> 
+> Seems like you could use prandom_u32_max(), and add 1 to the result to
+> eliminate the conditional.  What do you think?
+> 
 
-v4:
--Dropped the change: bus: mhi: core: WARN_ON for malformed vector table
--Updated bus: mhi: core: Read transfer length from an event properly to include
-parse rsc events
--Use prandom_u32_max() instead of prandom_u32 to avoid if check in
-bus: mhi: core: Ensure non-zero session or sequence ID values are used
+Agreed. Done using an internal macro in those places.
 
-v3:
--Fixed signed-off-by tags
--Add a refactor patch for MHI queue APIs
--Commit text fix in bus: mhi: core: Read transfer length from an event properly
--Fix channel ID range check for ctrl and data event rings processing
-
-v2:
--Fix channel ID range check potential infinite loop
--Add appropriate signed-off-by tags
-
-Bhaumik Bhatt (4):
-  bus: mhi: core: Handle firmware load using state worker
-  bus: mhi: core: Return appropriate error codes for AMSS load failure
-  bus: mhi: core: Improve debug logs for loading firmware
-  bus: mhi: core: Ensure non-zero session or sequence ID values are used
-
-Hemant Kumar (4):
-  bus: mhi: core: Refactor mhi queue APIs
-  bus: mhi: core: Cache intmod from mhi event to mhi channel
-  bus: mhi: core: Add range check for channel id received in event ring
-  bus: mhi: core: Read transfer length from an event properly
-
- drivers/bus/mhi/core/boot.c     |  75 ++++++++++++------------
- drivers/bus/mhi/core/init.c     |   5 +-
- drivers/bus/mhi/core/internal.h |   5 +-
- drivers/bus/mhi/core/main.c     | 124 ++++++++++++++++++++--------------------
- drivers/bus/mhi/core/pm.c       |   6 +-
- include/linux/mhi.h             |   2 -
- 6 files changed, 108 insertions(+), 109 deletions(-)
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> +
+>>   	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
+>>   			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
+>>   			    sequence_id);
+>> @@ -254,6 +257,9 @@ static int mhi_fw_load_sbl(struct mhi_controller 
+>> *mhi_cntrl,
+>>   		      lower_32_bits(dma_addr));
+>>   	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
+>>   	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
+>> +	if (unlikely(!session_id))
+>> +		session_id = 1;
+>> +
+>>   	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
+>>   	read_unlock_bh(pm_lock);
+>> 
