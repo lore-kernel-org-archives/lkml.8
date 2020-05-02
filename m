@@ -2,183 +2,428 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E47AC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E6C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C4D24953
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588438549;
-	bh=EN0jC8jtMpvS3MIG3TGZ6/L5gRNmXrVn1U3RMM0Hd6o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iuHfaN9D+HL/SW+lZmnXTheI1ov8KI8TszSr6EWRU2RYwlY7xltP+csCaMtB42mk3
-	 DKSXuH6ZbyByUt5Mvfh41K2gHquLqHrj93KNHZqsRjWB1yD9ok1vKrtOmqMLwTjrR9
-	 fhih5dw4UpVJ1VRkAB3tQ0xTyE4v6n8oFL90VWH4=
+	by mail.kernel.org (Postfix) with ESMTP id 5845724953
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gSINDPJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgEBQzn (ORCPT
+        id S1728408AbgEBQ4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 12:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgEBQzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 12:55:43 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8C26206B8;
-        Sat,  2 May 2020 16:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588438542;
-        bh=EN0jC8jtMpvS3MIG3TGZ6/L5gRNmXrVn1U3RMM0Hd6o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=K219v3P1Or+rBvMErrWH54Sa9dn/94QgsBGtbnvOq/l6WQL6DSKVVVPH4UYy5+Nfh
-         oUK/mAgInHqqjSZ8LQWpRCt121xKo+Ab+/Rgxgri5xr8mT2uMH4pCl3wP6cS6kFbht
-         6z95s2UWcvSXBSY/KTkyFYClUSNHbg43q60dddFs=
-Date:   Sat, 2 May 2020 17:55:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        david@lechnology.com, felipe.balbi@linux.intel.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
-Message-ID: <20200502175536.1e9ac944@archlinux>
-In-Reply-To: <20200501154519.GA4581@icarus>
-References: <cover.1588176662.git.vilhelm.gray@gmail.com>
-        <20200430201345.GX51277@piout.net>
-        <20200501154519.GA4581@icarus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 2 May 2020 12:56:12 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15413 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbgEBQ4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 12:56:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eada5ad0000>; Sat, 02 May 2020 09:54:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sat, 02 May 2020 09:56:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sat, 02 May 2020 09:56:10 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May
+ 2020 16:56:10 +0000
+Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 2 May 2020
+ 16:56:09 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <b72b9d5c-7d02-1b58-20f7-30f94e230d58@gmail.com>
+ <668d9b65-9590-cc97-41c3-2c1a5cfbbe61@nvidia.com>
+ <289d9c92-383f-3257-de7b-46179724285a@nvidia.com>
+ <9aa64f21-7b23-7228-b5eb-d2ff092682ad@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+ <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+ <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
+ <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
+ <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
+ <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
+ <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
+ <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
+ <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
+ <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
+ <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
+ <1767e50f-efb7-5e89-22f6-0917821b660d@nvidia.com>
+ <235a4cd4-4d4a-04b8-6c65-43a4dba48a0b@nvidia.com>
+ <f8103170-7879-8597-3e3c-da9a3b6a40b3@nvidia.com>
+Message-ID: <5d847770-dad9-8f18-67b5-c1ba79084957@nvidia.com>
+Date:   Sat, 2 May 2020 09:55:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <f8103170-7879-8597-3e3c-da9a3b6a40b3@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588438445; bh=LRDvfOuwDnzQpxVfGeuBCDMK95XjyKuWDsakb0MRcng=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=gSINDPJta4pz1rZadjniiN1Tn+FAJc0B+RauGz9bJ7VGGBr5eHRsrQkZNHipWRtKN
+         hrCIShT8xnK35oPwhnj1C7jYww8Uww3nxoSkA59fBk8r1IbenEaCy/LSuNZqZ6Cuan
+         irXpqY2rZcVG1tznKnkBfKTVQg1J6vpl9BbFMwnwLZ3Gq1lhyjfKPKKT3fHMYHGeZL
+         WVjFHnyGA0btgZfRPUkFq2bsVOlbHMjvZLl6i/LDKjAAniD5h6gh51iuz92OHcVHDV
+         AQIjOiCQUqHldaRuAatbmCcyXdWum+wlUIKyMA3nA3o5Su5MZgp4PrrjXFUHARAmYV
+         e4NQrnKtwDSFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 11:46:10 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-> On Thu, Apr 30, 2020 at 10:13:45PM +0200, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:  
-> > > Over the past couple years we have noticed some shortcomings with the
-> > > Counter sysfs interface. Although useful in the majority of situations,
-> > > there are certain use-cases where interacting through sysfs attributes
-> > > can become cumbersome and inefficient. A desire to support more advanced
-> > > functionality such as timestamps, multi-axis positioning tables, and
-> > > other such latency-sensitive applications, has motivated a reevaluation
-> > > of the Counter subsystem. I believe a character device interface will be
-> > > helpful for this more niche area of counter device use.
-> > > 
-> > > To quell any concerns from the offset: this patchset makes no changes to
-> > > the existing Counter sysfs userspace interface -- existing userspace
-> > > applications will continue to work with no modifications necessary. I
-> > > request that driver maintainers please test their applications to verify
-> > > that this is true, and report any discrepancies if they arise.
-> > >   
-> > 
-> > On that topic, I'm wondering why the counter subsystem uses /sys/bus
-> > instead of /sys/class that would be more natural for a class of devices.
-> > I can't see how counters would be considered busses. I think you should
-> > consider moving it over to /sys/class (even if deprecating
-> > /sys/bus/counter will be long).  
-> 
-> At the time I wasn't quite familiar with sysfs development so I was
-> following the iio sysfs code rather closely. However, I see now that
-> you're probably right: this isn't really a bus but rather a collection
-> of various types of counters -- i.e. a class of devices.
-> 
-> Perhaps I should migrate this then to /sys/class/counter. Of course, the
-> /sys/bus/counter location will have to remain for compatibility with
-> existing applications, but I think a simple symlink to the new
-> /sys/class/counter location should suffice for that.
-> 
-> If anyone sees an issue with this give me a heads up.
-To just address this point as I've not read the rest of the thread yet...
+On 5/2/20 9:14 AM, Sowjanya Komatineni wrote:
+>
+> On 5/2/20 9:03 AM, Sowjanya Komatineni wrote:
+>>
+>> On 5/2/20 8:38 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 5/2/20 8:16 AM, Dmitry Osipenko wrote:
+>>>> 02.05.2020 06:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On 5/1/20 8:39 PM, Sowjanya Komatineni wrote:
+>>>>>>
+>>>>>> On 5/1/20 2:05 PM, Sowjanya Komatineni wrote:
+>>>>>>>
+>>>>>>> On 5/1/20 1:58 PM, Sowjanya Komatineni wrote:
+>>>>>>>>
+>>>>>>>> On 5/1/20 1:44 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>
+>>>>>>>>> On 5/1/20 11:03 AM, Sowjanya Komatineni wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 4/30/20 4:33 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> On 4/30/20 4:14 PM, Sowjanya Komatineni wrote:
+>>>>>>>>>>>>>>>>>> And in this case synchronization between start/finish
+>>>>>>>>>>>>>>>>>> threads should be
+>>>>>>>>>>>>>>>>>> needed in regards to freezing.
+>>>>>>>>>>>>>>>>> Was thinking to have counter to track outstanding frame
+>>>>>>>>>>>>>>>>> w.r.t single shot issue b/w start and finish and allow to
+>>>>>>>>>>>>>>>>> freeze only when no outstanding frames in process.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> This will make sure freeze will not happen when any=20
+>>>>>>>>>>>>>>>>> buffers
+>>>>>>>>>>>>>>>>> are in progress
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>> Note that this could be a wrong assumption, I'm not
+>>>>>>>>>>>>>>>>>> closely familiar
+>>>>>>>>>>>>>>>>>> with how freezer works.
+>>>>>>>>>>>>>>>> kthread_start can unconditionally allow try_to_freeze=20
+>>>>>>>>>>>>>>>> before
+>>>>>>>>>>>>>>>> start of frame capture
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> We can compute captures inflight w.r.t single shot issued
+>>>>>>>>>>>>>>>> during capture start and finished frames by kthread_finish
+>>>>>>>>>>>>>>>> and allow kthread_finish to freeze only when captures
+>>>>>>>>>>>>>>>> inflight is 0.
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> This allows freeze to happen b/w frames but not in=20
+>>>>>>>>>>>>>>>> middle of
+>>>>>>>>>>>>>>>> frame
+>>>>>>>>>>>>> will have caps inflight check in v12 to allow freeze finish
+>>>>>>>>>>>>> thread only when no captures are in progress
+>>>>>>>>>>>>
+>>>>>>>>>>>> try_to_freeze() returns thread frozen state and looks like we
+>>>>>>>>>>>> can use this in kthread finish to allow finish thread to=20
+>>>>>>>>>>>> freeze
+>>>>>>>>>>>> only when kthread_start is already frozen and no buffers in
+>>>>>>>>>>>> progress/initiated for capture.
+>>>>>>>>>>>>
+>>>>>>>>>>> chan->capture_frozen holds frozen state returned from
+>>>>>>>>>>> try_to_freeze() in start kthread
+>>>>>>>>>>>
+>>>>>>>>>>> chan->capture_reqs increments after every single shot issued.
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> static int chan_capture_kthread_finish(void *data)
+>>>>>>>>>>>
+>>>>>>>>>>> {
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_vi_channel *chan =3D data=
+;
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_channel_buffer *buf;
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 int caps_inflight;
+>>>>>>>>>>>
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 set_freezable();
+>>>>>>>>>>>
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 while (1) {
+>>>>>>>>>>> wait_event_interruptible(chan->done_wait,
+>>>>>>>>>>> =C2=A0!list_empty(&chan->done) ||
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0kthread_should_stop());
+>>>>>>>>>>>
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffers =
+and finish capture */
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 buf =3D dequeue_buf=
+_done(chan);
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 while (buf) {
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+tegra_channel_capture_done(chan, buf);
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+buf =3D dequeue_buf_done(chan);
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>>
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_should_=
+stop())
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+break;
+>>>>>>>>>>>
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D c=
+han->capture_reqs - chan->sequence;
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (chan->capture_f=
+rozen && !caps_inflight)
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =
+try_to_freeze();
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>>>>>>>>
+>>>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> Freezing happens prior to suspend() during suspend entry and=20
+>>>>>>>>>> when
+>>>>>>>>>> we implement suspend/resume during suspend we stop streaming=20
+>>>>>>>>>> where
+>>>>>>>>>> we stop threads anyway.
+>>>>>>>>>>
+>>>>>>>>>> So, was thinking why we need these threads freezable here?
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>> Hi Dmitry,
+>>>>>>>>>
+>>>>>>>>> Did some testing and below are latest observation and fix I=20
+>>>>>>>>> tested.
+>>>>>>>>>
+>>>>>>>>> wait_event_interruptible() uses schedule() which blocks the=20
+>>>>>>>>> freezer.
+>>>>>>>>> When I do suspend while keeping streaming active in background, I
+>>>>>>>>> see freezing of these threads fail and call trace shows=20
+>>>>>>>>> __schedule
+>>>>>>>>> -> __switch_to from these kthreads.
+>>>>>>>>>
+>>>>>>>>> wait_event_freezable() uses freezable_schedule() which should not
+>>>>>>>>> block the freezer but we can't use this here as we need=20
+>>>>>>>>> conditional
+>>>>>>>>> try_to_freeze().
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> So, doing below sequence works where we set PF_FREEZER_SKIP flag
+>>>>>>>>> thru freezer_not_count() before wait_event which calls schedule()
+>>>>>>>>> and remove PF_FREEZER_SKIP after schedule allows try_to_freeze to
+>>>>>>>>> work and also conditional try_to_freeze below prevents freezing
+>>>>>>>>> thread in middle of capture.
+>>>>>>>>>
+>>>>>>>>> while (1) {
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 freezer_not_count()
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 wait_event_interruptible()
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 freezer_count()
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 ...
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 ...
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 if (chan->capture_frozen && !caps_inflig=
+ht)
+>>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 try_to_freeze()
+>>>>>>>>> }
+>>>>>>>>>
+>>>>>>>>> Please comment if you agree with above sequence. Will include=20
+>>>>>>>>> this
+>>>>>>>>> in v12.
+>>>>>>>>>
+>>>>>>> sorry, freezer_count() does try_to_freeze after clearing skip flag.
+>>>>>>> So, dont think we can use this as we need conditional=20
+>>>>>>> try_to_freeze.
+>>>>>>> Please ignore above sequence.
+>>>>>>>> Or probably we can take closer look on this later when we add
+>>>>>>>> suspend/resume support as it need more testing as well.
+>>>>>>>>
+>>>>>>>> As this is initial series which has TPG only I think we shouldn't
+>>>>>>>> get blocked on this now. Series-2 and 3 will be for sensor support
+>>>>>>>> and on next series when we add suspend/resume will look into this.
+>>>>>>>>
+>>>>>>>>
+>>>>>> When freeze activity starts and in case if finish thread freezes=20
+>>>>>> prior
+>>>>>> to start thread issuing capture, its the VI hardware writes data to
+>>>>>> the allocated buffer address.
+>>>>>>
+>>>>>> finish thread just checks for the event from the hardware and we=20
+>>>>>> don't
+>>>>>> handle/process directly on memory in this driver.
+>>>>>>
+>>>>>> So even we freeze done thread when single shot is issued frame=20
+>>>>>> buffer
+>>>>>> gets updated.
+>>>>>>
+>>>>>> In case if capture thread is frozen there will not buffers queued to
+>>>>>> process by finish thread. So, this will not be an issue.
+>>>>>>
+>>>>>> So, probably we don't need to do conditional try_to_freeze and=20
+>>>>>> what we
+>>>>>> have should work good in this corner case.
+>>>>>>
+>>>>> I still need to change wait_event_interruptible() to
+>>>>> wait_event_freezable() but no need to synchronize finish thread=20
+>>>>> freeze
+>>>>> with start thread as even on issuing capture start its vi hardware=20
+>>>>> that
+>>>>> does frame buffer update and finish thread just checks for mw_ack=20
+>>>>> event
+>>>>> and returns buffer to application.
+>>>> The problem we are primarily trying to avoid is to have suspending=20
+>>>> being
+>>>> done in the middle of IO.
+>>>>
+>>>> IIUC, even if system will be suspended in the middle of VI IO, it=20
+>>>> won't
+>>>> be fatal. In worst case the buffer capture should fail on resume from
+>>>> suspend. Could you please try to simulate this potential issue and see
+>>>> what result will be on suspending in the middle of VI IO?
+>>>>
+>>>> We don't want to suspend system / stop streaming in the middle of=20
+>>>> IO, so
+>>>> this problem of a proper threads tear-down still exists. It should
+>>>> become easier to resolve the problem in a case of a proper suspending
+>>>> callback because the "start" thread could be turned down at any=20
+>>>> time, so
+>>>> it should be easier to maintain a proper tear-down order when threads
+>>>> are fully controlled by the driver, i.e. the "start" thread goes down
+>>>> first and the "finish" is second, blocking until the capture is=20
+>>>> completed.
+>>
+>> I don't see issue of tear-down threads in case of suspend as we do=20
+>> stop streaming where thread stop happens on both threads and are=20
+>> stopped only after processing all outstanding buffers.
+>>
+>> Regarding freezing activity during suspend, If done thread freezes=20
+>> prior to processing buffers for finish, vi hardware is still active=20
+>> by this time which will update the frame buffer for initiated=20
+>> capture. Driver is not directly involved in this frame buffer update.
+>>
+>> Finish thread only checks for completion to return buffers back to=20
+>> the application when done.
+>
+> when done thread freeze happens after start thread initiated capture,=20
+> vi hardware continues to update frame buffer for ongoing capture till=20
+> it hits driver suspend callback. Yes worst case this frame data may=20
+> not be valid data if invoking of this driver suspend happens immediate=20
+> after this thread freeze during system suspend.
+>
+> But driver will still hold buffers to return which will be returned=20
+> back on resume when threads are out from frozen state.
 
-I would resist moving it.  This one is an old argument. 
 
-Some info in https://lwn.net/Articles/645810/
-As that puts it a "bus" is better known as a "subsystem".
+Also stop stream ioctl request happens during suspend where both threads=20
+will be stopped properly. done thread stop happens only after finishing=20
+all outstanding buffers.
 
-When we originally considered class vs bus for IIO, the view expressed
-at the times was that the whole separation of the two didn't mean anything
-and for non trivial cases bus was always preferred.  It's nothing to do
-with with whether the thing is a bus or not.  Now I suppose it's possible
-opinion has moved on this topic...    However, I'd say there
-is really 0 advantage in moving an existing subsystem even if opinion
-has changed.
+Stop stream request happens from streaming applications so even without=20
+driver suspend/resume implementation currently, streaming will be=20
+stopped prior to system=C2=A0 suspend where both threads will be stopped=20
+properly (after finishing out standing buffers) and will be resumed by=20
+application on system resume
 
-+CC Greg in case he wants to add anything.
+Also tested suspending while streaming with this unconditional freeze, I=20
+don't see any issue as application stops stream where v4l_streamoff gets=20
+executed during suspend and on resume streaming starts where=20
+v4l_streamon happens.
 
-> 
-> > > Interaction with Counter character devices occurs via ioctl commands.
-> > > This allows userspace applications to access and set counter data using
-> > > native C datatypes rather than working through string translations.
-> > >   
-> > 
-> > I agree with David that you should consider using read to retrieve the
-> > counter data as this will simplify interrupt handling/polling and
-> > blocking/non-blocking reads can be used by an application. ABI wise,
-> > this can also be a good move as you could always consider having an
-> > ioctl requesting a specific format when reading the device so you are
-> > not stuck with the initial format you are going to choose.  
-> 
-> My hesitation to implement support for read/write calls is due to a
-> concern that we will end up with various incompatible formats between
-> counter drivers (thus requiring users to have intimate knowledge of the
-> drivers and therefore defeating the purpose of a subsystem). However, if
-> we can standardize on a format that is flexible enough to work for all
-> counter drivers, then read/write calls should not be a problem.
-> 
-> I think a general format could be possible. For example, the counter
-> character device can return a standard header data at the start which
-> provides general information about the counter device: number of
-> counters, number or signals, number of extensions, etc. From this
-> information, offsets can be computed (or perhaps provided by the device)
-> to where the binary data for the count, extension, etc., can be read or
-> written. Interrupts can then be handled as blocking reads, as could
-> other types of events we implement.
-> 
-> Would something like this work well?
-> 
-> William Breathitt Gray
-> 
-> > > 2. Should device driver callbacks return int or long? I sometimes see
-> > >    error values returned as long (e.g. PTR_ERR(), the file_operations
-> > >    structure's ioctl callbacks, etc.); when is it necessary to return
-> > >    long as opposed to int?
-> > >   
-> > 
-> > You should use a long if you ever have to return a point as it is
-> > guaranteed to have the correct size. Else, just stick to an int if you
-> > are not going to overflow it.
-> >   
-> > > 3. I only implemented the unlocked_ioctl callback. Should I implement a
-> > >    compat_ioctl callback as well?
-> > >   
-> > 
-> > The compat_ioctl is to handle 32bit userspace running on a 64bit kernel.
-> > If your structures have the same size in both cases, then you don't have
-> > to implement compat_ioctl.
-> > 
-> > Have a look at Documentation/driver-api/ioctl.rst
-> > 
-> > 
-> > -- 
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com  
+So, I don't see any issue with existing implementation of unconditional=20
+freeze.
+
+>
+>>
+>>
+>>>> I think yours suggestion about dropping the freezing from the threads
+>>>> for now and returning back to it later on (once a proper=20
+>>>> suspend/resume
+>>>> support will be added) sounds reasonable.
+>>>>
+>>>> But if you'd want to keep the freezing, then the easy solution=20
+>>>> could be
+>>>> like that:
+>>>>
+>>>> =C2=A0=C2=A0 1. "start" thread could freeze at any time
+>>>> =C2=A0=C2=A0 2. "finish" thread could freeze only when the "start" thr=
+ead is=20
+>>>> frozen
+>>>> and capture isn't in-progress. Use frozen(kthread_start_capture) to
+>>>> check the freezing state.
+>>>>
+>>>> https://elixir.bootlin.com/linux/v5.7-rc3/source/include/linux/freezer=
+.h#L25=20
+>>>>
+>>>
+>>> That's exactly what I tried, below is the snippet.
+>>>
+>>> But as mentioned I am seeing freezing fail when I=20
+>>> wait_event_interruptible() in either of the threads.
+>>>
+>>> =C2=A0=C2=A0 60.368709] Call trace:
+>>> [=C2=A0=C2=A0 60.371216] __switch_to+0xec/0x140
+>>> [=C2=A0=C2=A0 60.374768] __schedule+0x32c/0x668
+>>> [=C2=A0=C2=A0 60.378315] schedule+0x78/0x118
+>>> [=C2=A0=C2=A0 60.381606]=C2=A0 chan_capture_kthread_finish+0x244/0x2a0 =
+[tegra_video]
+>>> [=C2=A0=C2=A0 60.387865] kthread+0x124/0x150
+>>> [=C2=A0=C2=A0 60.391150] ret_from_fork+0x10/0x1c
+>>>
+>>> wait_event_interruptible() API uses schedule() which blocks freezer=20
+>>> while wait_event_freezable APIs uses freezable_schedule() which=20
+>>> allows to skip freezer during schedule and then clears skip and=20
+>>> calls try_to_freeze()
+>>>
+>>> But we can't use wait_event_freezable() here as we need conditional=20
+>>> freeze.
+>>>
+>>>
+>>> =C2=A0=C2=A0=C2=A0 while (1) {
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 caps_inflight =3D chan->capture_r=
+eqs - chan->sequence;
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (frozen(chan->kthread_start_ca=
+pture) && !caps_inflight)
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_fre=
+ezable(chan->done_wait,
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
+=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 !list_empty(&chan->done)=
+ ||
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
+=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0 kthread_should_stop());
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 else
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 wait_event_int=
+erruptible(chan->done_wait,
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
+=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0!list_empty(&chan->done)=
+ ||
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=
+=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0kthread_should_stop());
+>>>
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 /* dequeue buffers and finish cap=
+ture */
+>>>
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
+>>>
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 ...
+>>>
+>>>
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 if (kthread_should_stop())
+>>> =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 break;
+>>> =C2=A0=C2=A0=C2=A0 }
+>>>
 
