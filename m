@@ -2,124 +2,104 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A8EC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93809C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EFC208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 648A4208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:30:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Li0uakGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgEBAaW (ORCPT
+        id S1727095AbgEBAa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:30:22 -0400
-Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:49068 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726352AbgEBAaW (ORCPT
+        Fri, 1 May 2020 20:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgEBAaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:30:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6EF71837F24A;
-        Sat,  2 May 2020 00:30:21 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: mark00_3d34e379d4912
-X-Filterd-Recvd-Size: 3347
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  2 May 2020 00:30:20 +0000 (UTC)
-Message-ID: <1c86e75bb56693bc2343d30e5baba09c783b02a2.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: add NL_SET_ERR_MSG to 80 column exceptions
-From:   Joe Perches <joe@perches.com>
-To:     Jacob Keller <jacob.e.keller@intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>
-Date:   Fri, 01 May 2020 17:30:19 -0700
-In-Reply-To: <5a1da586-0cc0-1900-477f-6fef61af7f95@intel.com>
-References: <20200501231131.2389319-1-jacob.e.keller@intel.com>
-         <e1e12e3f6992c00c005ba2b3bcf671c033a1dccc.camel@perches.com>
-         <5a1da586-0cc0-1900-477f-6fef61af7f95@intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Fri, 1 May 2020 20:30:24 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE986C061A0C;
+        Fri,  1 May 2020 17:30:23 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49DVQ44S6Kz9sRY;
+        Sat,  2 May 2020 10:30:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588379420;
+        bh=fYxS9M3q6OMWjxgrlaKJf0bhnQHnnvVCJ96++Kf9K3o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Li0uakGM1x+Oz2k9uqY2JBrPbk0a3pCluAHpeEQtD8aDZWZSW42aXQYxNzk4rzQR/
+         R3moIUr06CidltZMSl2Wwng9fIawbiRW9PRHtWBgWWlUTsoe0trhIaqjdQZxey26VK
+         SoFWLN+yUSBG4Na0X6JFZkg9iPGfWhNbR6Wqz6/gAithZkdEKvuKjj7kyxgobTr6ju
+         MvlZgldpFyd+T6LNMD3/EY6QaHm0RY76Xc+avCRm/ZgZeVd1FJwsn89XHw/XZCpGOx
+         p3qwr5iZsAIQOK/+i1L1CUlMnRFjcp0TYKbUkOZUtmLYAHoMqvlODzQNATabYgIcW2
+         ghVfDkNTYnmtg==
+Date:   Sat, 2 May 2020 10:30:18 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the vhost tree
+Message-ID: <20200502103018.07774059@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/cFdCRGvZF2BYZ5Gr31EMEcd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-05-01 at 17:19 -0700, Jacob Keller wrote:
-> 
-> On 5/1/2020 4:42 PM, Joe Perches wrote:
-> > On Fri, 2020-05-01 at 16:11 -0700, Jacob Keller wrote:
-> > > NL_SET_ERR_MSG and NL_SET_ERR_MSG_MOD are used to report extended error
-> > > responses about failure of a netlink command. These strings often end up
-> > > going over the 80-column limit. Just like logging messages, it is
-> > > preferred to leave the message all on a single line.
-> > > 
-> > > Add these to the exception list so that checkpatch.pl will no longer
-> > > complain about the long lines due to use of these macros.
-> > > 
-> > > Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-> > > Cc: Jakub Kicinski <kuba@kernel.org>
-> > > Cc: Andy Whitcroft <apw@canonical.com>
-> > > Cc: Joe Perches <joe@perches.com>
-> > > ---
-> > >  scripts/checkpatch.pl | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > index eac40f0abd56..5da3b06fbeaa 100755
-> > > --- a/scripts/checkpatch.pl
-> > > +++ b/scripts/checkpatch.pl
-> > > @@ -471,7 +471,8 @@ our $logFunctions = qr{(?x:
-> > >  	WARN(?:_RATELIMIT|_ONCE|)|
-> > >  	panic|
-> > >  	MODULE_[A-Z_]+|
-> > > -	seq_vprintf|seq_printf|seq_puts
-> > > +	seq_vprintf|seq_printf|seq_puts|
-> > > +	NL_SET_ERR_MSG(?:_MOD)?
-> > >  )};
-> > >  
-> > >  our $allocFunctions = qr{(?x:
-> > 
-> > <shrug>  OK I guess.
-> > 
-> > What about GENL_SET_ERR_MSG ?
-> > 
-> 
-> This appears in far fewer locations, but it does seem reasonable to add
-> it to this list as well.
-> 
-> > btw:
-> > 
-> > There are some uses with what appear to be unnecessary newlines.
-> > Maybe these newlines should be removed.
-> 
-> Yea, there's a number of places which seem to have put a newline break
-> after the extack pointer.
-> 
-> A quick search shows that there are about 970 or so uses where we don't
-> put a newline, and around 220 where we do.
-> 
-> I suppose I can make a series that cleans all of those up along with
-> this patch.
+--Sig_/cFdCRGvZF2BYZ5Gr31EMEcd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That's not what I meant.
-I don't care if there are multiple source lines used.
-In fact, I think it's mostly nicer with multiple lines.
+Hi all,
 
-The ones I specified previously use:
+In commit
 
-	NL_SET_ERR_MSG_MOD(extack, "message\n");
+  ab8be610c87d ("virtio-blk: handle block_device_operations callbacks after=
+ hot unplug")
 
-where all the others uses are:
+Fixes tag
 
-	NL_SET_ERR_MSG_MOD(extack, "message");
+  Fixes: 48e4043d4529523cbc7fa8dd745bd8e2c45ce1d3
 
-without the \n termination of the message.
+has these problem(s):
 
+  - missing subject
 
+Should be
+
+Fixes: 48e4043d4529 ("virtio: add virtio disk geometry feature")
+
+Please don't split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cFdCRGvZF2BYZ5Gr31EMEcd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6svxoACgkQAVBC80lX
+0GypJQf5AVeTqJ/E937Sk6kaOgBSLGfztmr+PjeCLdXvMoFcJhypdFFkfVCtuwWf
+y/1CoWFCO+i1NYbOk9vzhtHkadhXYwh8mf+UkasBk33q6cLV9Bra0xLyyRLivoff
+Qg3VCdUygyjApeUd88Rldbd/MsUQISbZ/b/ERpdc5CTCvqRfWXj+TVZTPpKHtsQd
+W0qzYLdRyz4V07/N3lpahBo9Pg0P7XAY29/75O4fzBP2n/Ybdm6nvYza2vDHMbka
+n0KQ4b9Uox4z8eUM/qF7hYW5/dG5AbcJkd16+ZwLfo1PBbwP/hFGblGnGlu3lBxq
+RDel1WiYzRjP00BaEU9AtDaEM/98Fg==
+=byE5
+-----END PGP SIGNATURE-----
+
+--Sig_/cFdCRGvZF2BYZ5Gr31EMEcd--
