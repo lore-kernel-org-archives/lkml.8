@@ -2,274 +2,277 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173D4C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A71C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA112173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3870216FD
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:47:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cKP1d/CC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgEBHo7 (ORCPT
+        id S1727121AbgEBHrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 03:44:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbgEBHo7 (ORCPT
+        Sat, 2 May 2020 03:47:46 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44859 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726468AbgEBHrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 03:44:59 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0427cVh5078521;
-        Sat, 2 May 2020 03:43:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30r84n7rx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 02 May 2020 03:43:56 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0427hkFd089425;
-        Sat, 2 May 2020 03:43:55 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30r84n7rwq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 02 May 2020 03:43:55 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0427eCnX017574;
-        Sat, 2 May 2020 07:43:53 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 30s0g585ds-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 02 May 2020 07:43:53 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0427hpCW8061248
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 2 May 2020 07:43:51 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30C4DA4040;
-        Sat,  2 May 2020 07:43:51 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33F6FA404D;
-        Sat,  2 May 2020 07:43:48 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.204.17])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  2 May 2020 07:43:48 +0000 (GMT)
-Date:   Sat, 2 May 2020 10:43:46 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Collingbourne <pcc@google.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
-Subject: Re: [PATCH 11/14] docs: move other kAPI documents to core-api
-Message-ID: <20200502074346.GD342687@linux.ibm.com>
-References: <cover.1588345503.git.mchehab+huawei@kernel.org>
- <70cca102282ccd36b107487c60346f414011c684.1588345503.git.mchehab+huawei@kernel.org>
+        Sat, 2 May 2020 03:47:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588405665; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=P+Pvp39gn+Bpe9NwwIoHKwbE66BqpUQZbbB9u3baf8E=;
+ b=cKP1d/CC+7+rJCIR6dgMoMNgpbPng1LboDUOKCqpGvpHaEw4924Qq2Up4blnBiC9ILuwAfzA
+ T0/kyBKEloIHyqY8DbpLYiQQcNG7vfD9OdR1sqLYIDL05j9rcDXfrKRzOV98z+sc3e1E3euV
+ OfUF6FVtNmudPa+jU5C1mN/0zX4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ead259a.7f7767357570-smtp-out-n02;
+ Sat, 02 May 2020 07:47:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6B9F4C44788; Sat,  2 May 2020 07:47:38 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F629C433D2;
+        Sat,  2 May 2020 07:47:36 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70cca102282ccd36b107487c60346f414011c684.1588345503.git.mchehab+huawei@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-02_03:2020-05-01,2020-05-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 bulkscore=0 impostorscore=0 clxscore=1011 suspectscore=1
- spamscore=0 priorityscore=1501 phishscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005020061
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 02 May 2020 15:47:36 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        asutoshd@codeaurora.org, beanhuo@micron.com,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v3 1/5] scsi: ufs: enable WriteBooster on some pre-3.1 UFS
+ devices
+In-Reply-To: <20200501143835.26032-2-stanley.chu@mediatek.com>
+References: <20200501143835.26032-1-stanley.chu@mediatek.com>
+ <20200501143835.26032-2-stanley.chu@mediatek.com>
+Message-ID: <1d471d07084d7323f0ef021e2c1b9d4e@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mauro,
+Hi Stanley,
 
-On Fri, May 01, 2020 at 05:37:55PM +0200, Mauro Carvalho Chehab wrote:
-> There are a number of random documents that seem to be
-> describing some aspects of the core-api. Move them to such
-> directory, adding them at the core-api/index.rst file.
+On 2020-05-01 22:38, Stanley Chu wrote:
+> WriteBooster feature can be supported by some pre-3.1 UFS devices
+> by upgrading firmware.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> To enable WriteBooster feature in such devices, introduce a device
+> quirk to relax the entrance condition of ufshcd_wb_probe() to allow
+> host driver to check those devices' WriteBooster capability.
+> 
+> WriteBooster feature can be available if below all conditions are
+> satisfied,
+> 
+> 1. Host enables WriteBooster capability
+> 2. UFS 3.1 device or UFS pre-3.1 device with quirk
+>    UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES enabled
+> 3. Device descriptor has dExtendedUFSFeaturesSupport field
+> 4. WriteBooster support is specified in above field
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
 > ---
->  Documentation/admin-guide/sysctl/vm.rst                     | 2 +-
->  Documentation/core-api/index.rst                            | 6 ++++++
->  Documentation/{mailbox.txt => core-api/mailbox.rst}         | 0
->  Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst}   | 0
-
-The nommu-mmap mostly provides description of user visible behaviuour. I
-think it's bettter to have it in admin-guide/mm/.
-
->  .../{this_cpu_ops.txt => core-api/this_cpu_ops.rst}         | 0
->  .../unaligned-memory-access.rst}                            | 0
->  Documentation/gpu/drm-mm.rst                                | 2 +-
->  arch/Kconfig                                                | 2 +-
->  init/Kconfig                                                | 2 +-
->  mm/Kconfig                                                  | 2 +-
->  mm/nommu.c                                                  | 2 +-
->  11 files changed, 12 insertions(+), 6 deletions(-)
->  rename Documentation/{mailbox.txt => core-api/mailbox.rst} (100%)
->  rename Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst} (100%)
->  rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
->  rename Documentation/{unaligned-memory-access.txt => core-api/unaligned-memory-access.rst} (100%)
+>  drivers/scsi/ufs/ufs_quirks.h |  7 ++++
+>  drivers/scsi/ufs/ufshcd.c     | 66 ++++++++++++++++++++++-------------
+>  2 files changed, 48 insertions(+), 25 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
-> index 0329a4d3fa9e..0bf2f2a84a9f 100644
-> --- a/Documentation/admin-guide/sysctl/vm.rst
-> +++ b/Documentation/admin-guide/sysctl/vm.rst
-> @@ -583,7 +583,7 @@ trimming of allocations is initiated.
->  
->  The default value is 1.
->  
-> -See Documentation/nommu-mmap.txt for more information.
-> +See Documentation/core-api/nommu-mmap.rst for more information.
->  
->  
->  numa_zonelist_order
-> diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-> index eeac63ba17c3..fe03a639a91a 100644
-> --- a/Documentation/core-api/index.rst
-> +++ b/Documentation/core-api/index.rst
-> @@ -38,10 +38,14 @@ Library functionality that is used throughout the kernel.
->     circular-buffers
->     rbtree
->     generic-radix-tree
-> +   mailbox
->     packing
-> +   rbtree
-> +   this_cpu_ops
->     timekeeping
->     errseq
->  
+> diff --git a/drivers/scsi/ufs/ufs_quirks.h 
+> b/drivers/scsi/ufs/ufs_quirks.h
+> index df7a1e6805a3..e3175a63c676 100644
+> --- a/drivers/scsi/ufs/ufs_quirks.h
+> +++ b/drivers/scsi/ufs/ufs_quirks.h
+> @@ -101,4 +101,11 @@ struct ufs_dev_fix {
+>   */
+>  #define UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME	(1 << 9)
+> 
+> +/*
+> + * Some pre-3.1 UFS devices can support extended features by upgrading
+> + * the firmware. Enable this quirk to make UFS core driver probe and 
+> enable
+> + * supported features on such devices.
+> + */
+> +#define UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES (1 << 10)
 > +
->  Concurrency primitives
->  ======================
->  
-> @@ -82,11 +86,13 @@ more memory-management documentation in :doc:`/vm/index`.
->     :maxdepth: 1
->  
->     memory-allocation
-> +   unaligned-memory-access
->     dma-api
->     dma-api-howto
->     dma-attributes
->     dma-isa-lpc
->     bus-virt-phys-mapping
-> +   nommu-mmap
->     mm-api
->     genalloc
->     pin_user_pages
-> diff --git a/Documentation/mailbox.txt b/Documentation/core-api/mailbox.rst
-> similarity index 100%
-> rename from Documentation/mailbox.txt
-> rename to Documentation/core-api/mailbox.rst
-> diff --git a/Documentation/nommu-mmap.txt b/Documentation/core-api/nommu-mmap.rst
-> similarity index 100%
-> rename from Documentation/nommu-mmap.txt
-> rename to Documentation/core-api/nommu-mmap.rst
-> diff --git a/Documentation/this_cpu_ops.txt b/Documentation/core-api/this_cpu_ops.rst
-> similarity index 100%
-> rename from Documentation/this_cpu_ops.txt
-> rename to Documentation/core-api/this_cpu_ops.rst
-> diff --git a/Documentation/unaligned-memory-access.txt b/Documentation/core-api/unaligned-memory-access.rst
-> similarity index 100%
-> rename from Documentation/unaligned-memory-access.txt
-> rename to Documentation/core-api/unaligned-memory-access.rst
-> diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
-> index 1839762044be..e0bbcbb6f512 100644
-> --- a/Documentation/gpu/drm-mm.rst
-> +++ b/Documentation/gpu/drm-mm.rst
-> @@ -314,7 +314,7 @@ To use drm_gem_cma_get_unmapped_area(), drivers must fill the struct
->  a pointer on drm_gem_cma_get_unmapped_area().
->  
->  More detailed information about get_unmapped_area can be found in
-> -Documentation/nommu-mmap.txt
-> +Documentation/core-api/nommu-mmap.rst
->  
->  Memory Coherency
->  ----------------
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 786a85d4ad40..b0b4046c9d13 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -147,7 +147,7 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
->  	  problems with received packets if doing so would not help
->  	  much.
->  
-> -	  See Documentation/unaligned-memory-access.txt for more
-> +	  See Documentation/core-api/unaligned-memory-access.rst for more
->  	  information on the topic of unaligned memory accesses.
->  
->  config ARCH_USE_BUILTIN_BSWAP
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 492bb7000aa4..61ccfd9243e3 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1950,7 +1950,7 @@ config MMAP_ALLOW_UNINITIALIZED
->  	  userspace.  Since that isn't generally a problem on no-MMU systems,
->  	  it is normally safe to say Y here.
->  
-> -	  See Documentation/nommu-mmap.txt for more information.
-> +	  See Documentation/core-api/nommu-mmap.rst for more information.
->  
->  config SYSTEM_DATA_VERIFICATION
->  	def_bool n
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index db626b8d4fdb..2a133c40a4b7 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -382,7 +382,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
->  	  This option specifies the initial value of this option.  The default
->  	  of 1 says that all excess pages should be trimmed.
->  
-> -	  See Documentation/nommu-mmap.txt for more information.
-> +	  See Documentation/core-api/nommu-mmap.rst for more information.
->  
->  config TRANSPARENT_HUGEPAGE
->  	bool "Transparent Hugepage Support"
-> diff --git a/mm/nommu.c b/mm/nommu.c
-> index 371697bf372d..e3e707d6f124 100644
-> --- a/mm/nommu.c
-> +++ b/mm/nommu.c
-> @@ -5,7 +5,7 @@
->   *  Replacement code for mm functions to support CPU's that don't
->   *  have any form of memory management unit (thus no virtual memory).
->   *
-> - *  See Documentation/nommu-mmap.txt
-> + *  See Documentation/core-api/nommu-mmap.rst
->   *
->   *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
->   *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
-> -- 
-> 2.25.4
+>  #endif /* UFS_QUIRKS_H_ */
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 915e963398c4..c6668799d956 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -229,6 +229,8 @@ static struct ufs_dev_fix ufs_fixups[] = {
+>  		UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME),
+>  	UFS_FIX(UFS_VENDOR_SKHYNIX, "hB8aL1" /*H28U62301AMR*/,
+>  		UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME),
+> +	UFS_FIX(UFS_VENDOR_SKHYNIX, "H9HQ21AFAMZDAR",
+> +		UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES),
 > 
+>  	END_FIX
+>  };
+> @@ -6800,9 +6802,19 @@ static int ufshcd_scsi_add_wlus(struct ufs_hba 
+> *hba)
+> 
+>  static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+>  {
+> +	if (!ufshcd_is_wb_allowed(hba))
+> +		return;
+> +
+> +	if (hba->desc_size.dev_desc <= DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP)
+> +		goto wb_disabled;
+> +
+>  	hba->dev_info.d_ext_ufs_feature_sup =
+>  		get_unaligned_be32(desc_buf +
+>  				   DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
+> +
+> +	if (!(hba->dev_info.d_ext_ufs_feature_sup & 
+> UFS_DEV_WRITE_BOOSTER_SUP))
+> +		goto wb_disabled;
+> +
+>  	/*
+>  	 * WB may be supported but not configured while provisioning.
+>  	 * The spec says, in dedicated wb buffer mode,
+> @@ -6818,11 +6830,29 @@ static void ufshcd_wb_probe(struct ufs_hba
+> *hba, u8 *desc_buf)
+>  	hba->dev_info.b_presrv_uspc_en =
+>  		desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
+> 
+> -	if (!((hba->dev_info.d_ext_ufs_feature_sup &
+> -		 UFS_DEV_WRITE_BOOSTER_SUP) &&
+> -		hba->dev_info.b_wb_buffer_type &&
+> +	if (!(hba->dev_info.b_wb_buffer_type &&
+>  	      hba->dev_info.d_wb_alloc_units))
+> -		hba->caps &= ~UFSHCD_CAP_WB_EN;
+> +		goto wb_disabled;
+> +
+> +	return;
+> +
+> +wb_disabled:
+> +	hba->caps &= ~UFSHCD_CAP_WB_EN;
+> +}
+> +
+> +static void ufs_fixup_device_setup(struct ufs_hba *hba)
+> +{
+> +	struct ufs_dev_fix *f;
+> +	struct ufs_dev_info *dev_info = &hba->dev_info;
+> +
+> +	for (f = ufs_fixups; f->quirk; f++) {
+> +		if ((f->wmanufacturerid == dev_info->wmanufacturerid ||
+> +		     f->wmanufacturerid == UFS_ANY_VENDOR) &&
+> +		     ((dev_info->model &&
+> +		       STR_PRFX_EQUAL(f->model, dev_info->model)) ||
+> +		      !strcmp(f->model, UFS_ANY_MODEL)))
+> +			hba->dev_quirks |= f->quirk;
+> +	}
+>  }
+> 
+>  static int ufs_get_device_desc(struct ufs_hba *hba)
+> @@ -6862,10 +6892,6 @@ static int ufs_get_device_desc(struct ufs_hba 
+> *hba)
+> 
+>  	model_index = desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
+> 
+> -	/* Enable WB only for UFS-3.1 */
+> -	if (dev_info->wspecversion >= 0x310)
+> -		ufshcd_wb_probe(hba, desc_buf);
+> -
+>  	err = ufshcd_read_string_desc(hba, model_index,
+>  				      &dev_info->model, SD_ASCII_STD);
+>  	if (err < 0) {
+> @@ -6874,6 +6900,13 @@ static int ufs_get_device_desc(struct ufs_hba 
+> *hba)
+>  		goto out;
+>  	}
+> 
+> +	ufs_fixup_device_setup(hba);
+> +
+> +	/* Enable WB only for UFS-3.1 */
 
--- 
-Sincerely yours,
-Mike.
+Also update this comment to reflect your change?
+
+> +	if (dev_info->wspecversion >= 0x310 ||
+> +	    (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES))
+> +		ufshcd_wb_probe(hba, desc_buf);
+> +
+
+Can we somehow move this after ufshcd_tune_unipro_params() or come up 
+with
+a better way to leverage ufshcd_vops_apply_dev_quirks()? I am asking 
+this
+because if we only rely on adding quirks to ufs_fixups in ufshcd.c, the
+table will keep growing and I am sure it will - as flash vendors are 
+trying
+to make their UFS2.1 products to be capable of WB (different densities 
+and
+different NAND processes from different vendors, the combos can be quite 
+a
+few). Meanwhile, some models are specifically made for some customers to
+support WB, meaning having them in the table may not help in a 
+generalized
+way, and it is not like some hot fixes that we have to take, it is just 
+for
+a non-standard feature. If we can leverage 
+ufshcd_vops_apply_dev_quirks(),
+SoC vendors can freely add the quirk without touching ufs_fixups table,
+which means you don't need to update ufs_fixups every time just for 
+adding
+a new model (GKI rules), you can have your own WB white list in vendor
+driver. What do you think?
+
+Thanks,
+
+Can Guo.
+
+>  	/*
+>  	 * ufshcd_read_string_desc returns size of the string
+>  	 * reset the error value
+> @@ -6893,21 +6926,6 @@ static void ufs_put_device_desc(struct ufs_hba 
+> *hba)
+>  	dev_info->model = NULL;
+>  }
+> 
+> -static void ufs_fixup_device_setup(struct ufs_hba *hba)
+> -{
+> -	struct ufs_dev_fix *f;
+> -	struct ufs_dev_info *dev_info = &hba->dev_info;
+> -
+> -	for (f = ufs_fixups; f->quirk; f++) {
+> -		if ((f->wmanufacturerid == dev_info->wmanufacturerid ||
+> -		     f->wmanufacturerid == UFS_ANY_VENDOR) &&
+> -		     ((dev_info->model &&
+> -		       STR_PRFX_EQUAL(f->model, dev_info->model)) ||
+> -		      !strcmp(f->model, UFS_ANY_MODEL)))
+> -			hba->dev_quirks |= f->quirk;
+> -	}
+> -}
+> -
+>  /**
+>   * ufshcd_tune_pa_tactivate - Tunes PA_TActivate of local UniPro
+>   * @hba: per-adapter instance
+> @@ -7244,8 +7262,6 @@ static int ufshcd_device_params_init(struct 
+> ufs_hba *hba)
+> 
+>  	ufshcd_get_ref_clk_gating_wait(hba);
+> 
+> -	ufs_fixup_device_setup(hba);
+> -
+>  	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+>  			QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+>  		hba->dev_info.f_power_on_wp_en = flag;
