@@ -2,180 +2,103 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E45AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 08:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E12EC47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 08:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5341421775
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 08:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40BD21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 08:57:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="Oi3p35hR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9Hg1kzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEBI44 (ORCPT
+        id S1727815AbgEBI5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 04:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35060 "EHLO
+        Sat, 2 May 2020 04:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726741AbgEBI4z (ORCPT
+        by vger.kernel.org with ESMTP id S1726741AbgEBI5y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 04:56:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D3BAC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 01:56:55 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i10so14589587wrv.10
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 01:56:55 -0700 (PDT)
+        Sat, 2 May 2020 04:57:54 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8BFC061A0C;
+        Sat,  2 May 2020 01:57:54 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n11so5761489pgl.9;
+        Sat, 02 May 2020 01:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=cWUrhtBOQPhFHdJtWzGRrwgjHQevNUoIVdoMuVU6lG4=;
-        b=Oi3p35hRAPZ/9x5okgKKF+rzEJ0k4NVnQcL5o8zVWmyvFff1FH0nLxq+PilKhUSVAx
-         TabSMKGYuKHPDwIUIFDQ6mpIXOO33K8MRbuShb1KqPnI/7YGIgfCgYMEbA8Bv6dR+N/C
-         Lz3cTZTnKGuEKc82beI/8hMgAhOquzUTGlekS6a6yf1+rmesrR3Yl2JZYac2/NQwqMcy
-         f63eLL5rFio6Y+OwlbJuJCRzBFTJxEkSlw1cqwWh11nbH6g+E0L7hdcaIDlJ07KWgNkK
-         lHeLeiS0/q5JJ9iE/6W0qdtdZ4FGtYuVbiaY6sbeNxLgwO1YD1LMbu6u8kjlxVzRLStb
-         IoIw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CxqauPPQOmctuxrVdiCLcsfetiYJdmmz2EMMFCRLInI=;
+        b=c9Hg1kzmLnzzKJy7eATuX+ZL6gaW6XtQtcYcZIYc2+m5k565bjupKMQ67+GmwgC9N3
+         NZX96SMUOrxTYGKIHEok5jlMMeQzrFQYdRzRW17z6Z0pK15mp0sBO6lrcoD+roj74sha
+         ycTFmXu/GoOPC7aUCOHzF1oDF+XyP6r6wr/CTkQFILEJC3mtwJUQHBariGOnmNoeXPyo
+         EOyAlnE9o6WMlfhEX4hgU4du1634PSsnnFCCsJGwdlHi2T59zL1WsUtqq6s9p42PuNPW
+         iQ5zoc20zUPKpVGCbcbkygRjeaoE39INCXv2HFWcmENxfr+tKrhUp87YVYvohg+qcTwS
+         T90w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=cWUrhtBOQPhFHdJtWzGRrwgjHQevNUoIVdoMuVU6lG4=;
-        b=VYVJFkdG+cdV0mu8ETX236+wMPbGRw9NA/fgBiwn1gZiAt2xyu78w43rox4dDFCy9L
-         /b8IKEjTozO8zW0ekDBmpEPc2khzYLb0JnwvaTG8SNBuL4jcb7p7w3Np30ZDKuR+Mgfk
-         YWHPbq6Aq5jdgG2jzmiFohCcdPJVJDEWgYeeaQ3/L5bUwCsld8r+SYiw45BHnf/sYMcw
-         /ff6D8NmJRihx3X7G2CjVem5yWEmEHF4uQVG7R/o3Zmz4JLE1slSkvimdGr0RmU1b+lQ
-         DZcmtgF1LMhoM1hcuDy2u1cL+gBL7HSnQhqMs9yx6MHAF68qpn5LeLinZEp5SmzQpkX0
-         AwNA==
-X-Gm-Message-State: AGi0PuYKyob4fRP4+siIqGhWtnikb7c0iqYpk1603UpbYxdTjC92nB1b
-        wRwnwSrn4uYTzZ+xG8cfBRhELA==
-X-Google-Smtp-Source: APiQypKDMZLDoMmUhch880vqn0lUpntebEsdFyCBeYqF2KDIZoyMBsFUe0BxMB4juMNuVtJhvB8ibA==
-X-Received: by 2002:a05:6000:14c:: with SMTP id r12mr8082018wrx.62.1588409813753;
-        Sat, 02 May 2020 01:56:53 -0700 (PDT)
-Received: from ?IPv6:2001:16b8:48f0:a800:e80e:f5df:f780:7d57? ([2001:16b8:48f0:a800:e80e:f5df:f780:7d57])
-        by smtp.gmail.com with ESMTPSA id 91sm762421wrj.57.2020.05.02.01.56.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 May 2020 01:56:52 -0700 (PDT)
-Subject: Re: [RFC PATCH V2 0/9] Introduce attach/clear_page_private to cleanup
- code
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org, david@fromorbit.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        cl@linux.com, mike.kravetz@oracle.com
-References: <20200430214450.10662-1-guoqing.jiang@cloud.ionos.com>
- <20200501221626.GC29705@bombadil.infradead.org>
- <889f9f82-64ba-50b3-147b-459303617aeb@cloud.ionos.com>
- <20200502004158.GD29705@bombadil.infradead.org>
-From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Message-ID: <e4d5ddc0-877f-6499-f697-2b7c0ddbf386@cloud.ionos.com>
-Date:   Sat, 2 May 2020 10:56:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CxqauPPQOmctuxrVdiCLcsfetiYJdmmz2EMMFCRLInI=;
+        b=MbNyX+gHG2NDQ652rKtexLUKT648by1mn5uDUlZO3xlANVYie/aYNTNyq39V23BuIh
+         MT+CvRfeECq2eCk8JedoLBeEJSm3jlStUjx9G/AZ7UbwvbDQoHkgQFHO0r40rJ3XuzGn
+         tm4mdO0V6eenH4g00oZvSd+NcPhsbrAt0p5CADXjsP/PXWIo11/gB7zN+9KbRfnP1lfl
+         nZGAgG5KLgFy2iEMExiTCtgu3Cvu7SkDafZiTYtQh4bPkOtmuFkVR93DI0b80H8TNTMF
+         MI7orQffQC0Nuu1IxiLeUGL4dtF7cS7YYWio16TkFP3HFaDXx764/i+/fa27bx6Usgck
+         Clrw==
+X-Gm-Message-State: AGi0PuZ/YZ87en8fGQogc0XgqmWO0IPziyYmYH3dQFJ6I/ImBKYEwT2R
+        DPezqDhYxGGDyiZJIGqOd+c=
+X-Google-Smtp-Source: APiQypLdymm8Tc66/Ky0UlyOG+4GPnuVllad082xTUrejNIYOwcCBOi1BxsPBsbmhqxhPdL7ijK7eg==
+X-Received: by 2002:a62:81c1:: with SMTP id t184mr8007784pfd.236.1588409874264;
+        Sat, 02 May 2020 01:57:54 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id f99sm1713269pjg.22.2020.05.02.01.57.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 02 May 2020 01:57:53 -0700 (PDT)
+Date:   Sat, 2 May 2020 14:27:47 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Chiristoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200502085745.GA17862@nishad>
+References: <20200425133504.GA11354@nishad>
+ <20200427072527.GA3019@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200502004158.GD29705@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427072527.GA3019@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/20 2:41 AM, Matthew Wilcox wrote:
-> On Sat, May 02, 2020 at 12:42:15AM +0200, Guoqing Jiang wrote:
->> On 5/2/20 12:16 AM, Matthew Wilcox wrote:
->>> On Thu, Apr 30, 2020 at 11:44:41PM +0200, Guoqing Jiang wrote:
->>>>     include/linux/pagemap.h: introduce attach/clear_page_private
->>>>     md: remove __clear_page_buffers and use attach/clear_page_private
->>>>     btrfs: use attach/clear_page_private
->>>>     fs/buffer.c: use attach/clear_page_private
->>>>     f2fs: use attach/clear_page_private
->>>>     iomap: use attach/clear_page_private
->>>>     ntfs: replace attach_page_buffers with attach_page_private
->>>>     orangefs: use attach/clear_page_private
->>>>     buffer_head.h: remove attach_page_buffers
->>> I think mm/migrate.c could also use this:
->>>
->>>           ClearPagePrivate(page);
->>>           set_page_private(newpage, page_private(page));
->>>           set_page_private(page, 0);
->>>           put_page(page);
->>>           get_page(newpage);
->>>
->> Thanks for checking!  Assume the below change is appropriate.
->>
->> diff --git a/mm/migrate.c b/mm/migrate.c
->> index 7160c1556f79..f214adfb3fa4 100644
->> --- a/mm/migrate.c
->> +++ b/mm/migrate.c
->> @@ -797,10 +797,7 @@ static int __buffer_migrate_page(struct address_space
->> *mapping,
->>          if (rc != MIGRATEPAGE_SUCCESS)
->>                  goto unlock_buffers;
->>
->> -       ClearPagePrivate(page);
->> -       set_page_private(newpage, page_private(page));
->> -       set_page_private(page, 0);
->> -       put_page(page);
->> +       set_page_private(newpage, detach_page_private(page));
->>          get_page(newpage);
-> I think you can do:
->
-> @@ -797,11 +797,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
->          if (rc != MIGRATEPAGE_SUCCESS)
->                  goto unlock_buffers;
->   
-> -       ClearPagePrivate(page);
-> -       set_page_private(newpage, page_private(page));
-> -       set_page_private(page, 0);
-> -       put_page(page);
-> -       get_page(newpage);
-> +       attach_page_private(newpage, detach_page_private(page));
->   
->          bh = head;
->          do {
-> @@ -810,8 +806,6 @@ static int __buffer_migrate_page(struct address_space *mapping,
->   
->          } while (bh != head);
->   
-> -       SetPagePrivate(newpage);
-> -
->          if (mode != MIGRATE_SYNC_NO_COPY)
->
-> ... but maybe there's a subtlety to the ordering of the setup of the bh
-> and setting PagePrivate that means what you have there is a better patch.
+On Mon, Apr 27, 2020 at 12:25:27AM -0700, Christoph Hellwig wrote:
+> On Sat, Apr 25, 2020 at 07:05:09PM +0530, Nishad Kamdar wrote:
+> > This patch corrects the SPDX License Identifier style in
+> > header files related to XFS File System support.
+> > For C header files Documentation/process/license-rules.rst
+> > mandates C-like comments (opposed to C source files where
+> > C++ style should be used).
+> > 
+> > Changes made by using a script provided by Joe Perches here:
+> > https://lkml.org/lkml/2019/2/7/46.
+> 
+> Please use up all 73 chars in your commit logs.
 
-Yes, it is better but not sure if the order can be changed here. And seems
-the original commit is this one.
+Ok, I'll do that.
 
-commit e965f9630c651fa4249039fd4b80c9392d07a856
-Author: Christoph Lameter <clameter@sgi.com>
-Date:   Wed Feb 1 03:05:41 2006 -0800
+Thanks for the review.
 
-     [PATCH] Direct Migration V9: Avoid writeback / page_migrate() method
-
-     Migrate a page with buffers without requiring writeback
-
-     This introduces a new address space operation migratepage() that 
-may be used
-     by a filesystem to implement its own version of page migration.
-
-     A version is provided that migrates buffers attached to pages. Some
-     filesystems (ext2, ext3, xfs) are modified to utilize this feature.
-
-     The swapper address space operation are modified so that a regular
-     migrate_page() will occur for anonymous pages without writeback 
-(migrate_pages
-     forces every anonymous page to have a swap entry).
-
-Hope mm experts could take a look, so CC more people and mm list. And
-the question is that if we can setting PagePrivate before setup bh in the
-__buffer_migrate_page, thanks for your any further input.
-
-Thanks,
-Guoqing
+Regards,
+Nishad
