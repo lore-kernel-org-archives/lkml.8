@@ -2,125 +2,82 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DDFC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0696C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80DA206F0
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E258206F0
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwCDY31u"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="l/4IdG6h";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="cIPIC0Vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgEBOkl (ORCPT
+        id S1728234AbgEBOmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 10:40:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgEBOkk (ORCPT
+        Sat, 2 May 2020 10:42:02 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:60585 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbgEBOmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 10:40:40 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0588C061A0C;
-        Sat,  2 May 2020 07:40:39 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z22so5852287lfd.0;
-        Sat, 02 May 2020 07:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jF079cO7Jq/3nThqQzbP5w55X0eSfqlpg5uSL6fU9Jw=;
-        b=WwCDY31unfVfXCynpQMFGt8MVkUQJ3CsNANMXHEPEj/1PG4hEn+ovXfOaNKdXm/2Bt
-         EnHmmELBoj+ZSD8Kd4neeHdw70aUvh8GuagIvJhf451JblBUEEiMW/ZZ6Y1lAiOYxOh8
-         l4q5zxPpewV0YviJRg4xlYxQLb477Lki+KV7K+zr0DJpTKW6eIMvUnWiS67FiU/j2Nok
-         CanstU9HnBB1N2q7alH938QS7lQ4Fw70RFmHREc2CWCweKKPk+02XOqEGORwHY4KzyQc
-         sNw/uCMRZqdBW5oODOrkafbcD+vFPqsO0gjVITsmhLPkOcluKKsXg8QCGekM3bmQ18st
-         mhmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jF079cO7Jq/3nThqQzbP5w55X0eSfqlpg5uSL6fU9Jw=;
-        b=fdiOre3oHMPkgItuFmY491KATjPJk9xR8JsgSRsHmL6SgYiLsFH3oj0832HJA/LD6D
-         VpqysojC+D0OtltFYWB+L8w/Nr2b6NZJn9kA4FiObSgxg4oHCdkK7RsTclkoON041eTn
-         hzRoUF2XYUCorxxZVQctJO7HhIpZ92uYrq5MZgRFs12GsVsTlnM/TLYLOf0Da6F+73RZ
-         g0KPLPjvGqDHpEqddZxaOzqqYfLxwU4x7I0s45jrCuxaOceZO2KgiSmUWM09ZgT/gQwL
-         PfMDHVEg5IWKZVcayanXASMtnVmrIBdR/2hDZNzUrGB9SIDtq0fOX7pIWG5K+WyQIWyQ
-         iiXw==
-X-Gm-Message-State: AGi0PuYPNGgeXEu5gmqpliMIbgjS7NcMFfGrnlKXmTUU6ObSYIgpt4vp
-        wTb0d3bRDpGAeXq8FCGI0xagJSwT
-X-Google-Smtp-Source: APiQypJPjn3k3xOMWu/0rPIimvR9U97xYWUlJ77FeciBHb450OkCQAxR3iC1/aMzfDoxan8C4pJ53Q==
-X-Received: by 2002:a05:6512:31ca:: with SMTP id j10mr5450160lfe.74.1588430437970;
-        Sat, 02 May 2020 07:40:37 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id k22sm3964210ljj.85.2020.05.02.07.40.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 May 2020 07:40:36 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <a5198024-7273-74c4-b4f4-3a29d042bc36@nvidia.com>
- <f8fb1f7f-2497-033e-ff2c-c86c6caa9706@gmail.com>
- <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo>
- <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
- <20200427103851.GB24446@kunai>
- <dc2de966-81d6-6ad5-0c51-16dd28ca4165@gmail.com>
- <20200427141922.GD3464906@ulmo> <20200427153106.GA8113@kunai>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e5a3dd07-97f5-29f1-974e-3037a01cc89c@gmail.com>
-Date:   Sat, 2 May 2020 17:40:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 10:42:02 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 0B394CA3E1;
+        Sat,  2 May 2020 10:42:00 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=Qr889P1uhpX3OQgFsz/gSRurnuw=; b=l/4IdG
+        6hlJZR9GFni+bTCY8ELrNMy7WDrOQUhdHY4wrQWdPw2qTCvR4yv5z+Qn1m9thKq3
+        MtRDCjRiWg6MyA9ZtZl09zARMUsKKURrCu0po/8ZTRDPUx1qacCnIG+yMRjtgsNP
+        IgOfkvXKGjN759AKDh4L2Q9lDdHgOSwwjyDeQ=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 02677CA3E0;
+        Sat,  2 May 2020 10:42:00 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=+xyRM65cQrk2nopkGYugk8MJo4ePfBLL3e4k5xIZ4c0=; b=cIPIC0VlSBV2RW6Yx3gbvPfoP2pYS60OUTrIzC/fMwsXk0q3nz/lDH/tNuQVksQwFkHfkju5pxuMawjznzk+tsiHj7TkwrpqoyGtqXpkJLRcG4yGeLchoDiIM7M4q12m2BD/N+H6pUA8Dv2QJAN1VZHJ/dz0APiMJJ54gOHWaPQ=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id E7FD1CA3DF;
+        Sat,  2 May 2020 10:41:56 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 166C72DA016E;
+        Sat,  2 May 2020 10:41:55 -0400 (EDT)
+Date:   Sat, 2 May 2020 10:41:54 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Jiri Slaby <jslaby@suse.com>
+cc:     syzbot <syzbot+0bfda3ade1ee9288a1be@syzkaller.appspotmail.com>,
+        daniel.vetter@ffwll.ch, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, sam@ravnborg.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: kernel BUG at arch/x86/mm/physaddr.c:LINE! (5)
+In-Reply-To: <0c39d350-846a-eeda-f202-e36a53d495b2@suse.com>
+Message-ID: <nycvar.YSQ.7.76.2005021040150.2671@knanqh.ubzr>
+References: <000000000000479d8d05a49221b1@google.com> <0c39d350-846a-eeda-f202-e36a53d495b2@suse.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20200427153106.GA8113@kunai>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 12A52F54-8C83-11EA-B9CF-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.04.2020 18:31, Wolfram Sang пишет:
-> 
->> Yes, that bug should be fixed anyway. But that doesn't justify breaking
->> suspend/resume completely, which *is* a regression.
->>
->> Look, I'm not saying that we should drop this patch altogether. All I'm
->> saying is that we should postpone it so that we can: a) get suspend and
->> resume working again (and by doing so make sure no other suspend/resume
->> regressions silently creep in, because that always seems to happen when
->> you're not looking) and b) fix any preexisting issues without possibly
->> scrambling the result with this perhaps unrelated fix.
->>
->> So, again, I think the safest road forward is to back this one out for
->> now, fix whatever this other bug is and once suspend/resume is working
->> properly again we can revisit this patch based on a known-good baseline.
-> 
-> I am with you here. I want to add that the proper fix should be
-> developed without thinking too much about stable in the first place.
-> *When* we have a proper working fix, then we can think about making it
-> "more" suitable for backporting. Yet, it may also be a result that older
-> kernels need a different solution. Or have no solution at all, in case
-> they can't do atomic_transfers and this is needed.
-> 
-> D'accord?
-> 
+On Sat, 2 May 2020, Jiri Slaby wrote:
 
-I saw that you submitted the revert of the patches for 5.7, hopefully it
-won't result in putting the PCIe driver problem into the back burner.
-I'll try not to forget about these patches to resubmit them later on,
-once the problem will be resolved :)
+> > Call Trace:
+> >  virt_to_head_page include/linux/mm.h:833 [inline]
+> >  virt_to_cache mm/slab.h:474 [inline]
+> >  kfree+0x60/0x220 mm/slab.c:3749
+> >  vc_do_resize+0x738/0x1ce0 drivers/tty/vt/vt.c:1233
+> Of course, s/kfree/vfree/ there. NIcolas, could you fix this?
+
+Damn...  Will do.
+
+
+Nicolas
