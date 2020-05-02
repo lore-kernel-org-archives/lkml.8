@@ -2,140 +2,79 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30845C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9918EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A74321582
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F98F2137B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:31:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gM6Q6PvU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gly6yMOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgEBJ3P (ORCPT
+        id S1727798AbgEBJbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 05:29:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
+        Sat, 2 May 2020 05:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgEBJ3O (ORCPT
+        with ESMTP id S1726548AbgEBJbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 05:29:14 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AD1C061A0C;
-        Sat,  2 May 2020 02:29:12 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id b24so5648775lfp.7;
-        Sat, 02 May 2020 02:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=aPHQopP3uegPMTxg+Aep4CZznGAz3JZTwpCPsbRISYs=;
-        b=gM6Q6PvUrEvO82aPMtbJuHrfNzsTg09BxUWKI/JiPu6G0zBVAHvTJTSz0whunNhKQ8
-         abcPxt6jNnlhY9197MMff0ZDDyDdadnQpmWWw6tGgbaGzy8H2sCJ1rCGPmlBUawpDyTz
-         LRfBAwkUPlC+izp1B64NlrkZkPvD6ztv+X1XMMisFeqHdFA7xOWYNQu6hdVdd9M8gKcj
-         9lYolSnjXITaC8c7hdlD8s+5hPw/5YLK6UuAnC8HbTovyBLje5+F9GztKjH9kKM80HAE
-         bMmkYARu5/f2n9ZqFmBl02PSmyoeYdA/buCKfh8gerYKRrfHzhmkwos4ebyP2Zypb0Kh
-         +jPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=aPHQopP3uegPMTxg+Aep4CZznGAz3JZTwpCPsbRISYs=;
-        b=Tw1c9prbCTHEWiW7/PJhrZ8Ai83Gy7wJLleddgrf2J597WFyRSlbMKXVgW5bh947WW
-         gRhtEpilAZO56LPevw2iN7CWeAn7Oc4BtcKERL1USB0PLf0H2Fp+K1uYxvsstISDh3aG
-         RQTrNMJwDPrTcP4u76jFQ3Tf5E8zDmdRQFj1FT6Y5pLMUiP2fCHT+BJKYM8m0uMgIYyD
-         uzkJSzTdMMJiReWQfwMBat745dd/AO6Q6iY+R7cAMdiJ7kVZrBbup3+EKDTwJOEmdkKd
-         4EmpgkYJ4vP2aXJQ0Vb9cpBhZ0tZgr/LxIoPVCYw1qMZWVbwTPKyV6DmlxHPkffX+Fcb
-         e5nA==
-X-Gm-Message-State: AGi0Pub8FOmaXf7sKIaJGkWlkqH42+Y07z41+BMMG1vT87WHPkj4xJ5Y
-        ZWSouSU7TZBzRij5vmMKWutHmr9kZLbrDw==
-X-Google-Smtp-Source: APiQypL+rhFpvo0J8V5u9+Cqdvz0B4kvC0FdO359+CLV3LOLLGTbItJ1GIKLE2DurgiTERn0y3ng6g==
-X-Received: by 2002:ac2:5482:: with SMTP id t2mr4204303lfk.202.1588411750792;
-        Sat, 02 May 2020 02:29:10 -0700 (PDT)
-Received: from maxim-hplinux ([89.179.187.17])
-        by smtp.gmail.com with ESMTPSA id f26sm3988555lfc.84.2020.05.02.02.29.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 02 May 2020 02:29:10 -0700 (PDT)
-Date:   Sat, 2 May 2020 12:29:08 +0300
-From:   Maxim Petrov <mmrmaximuzz@gmail.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     mmrmaximuzz@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] stmmac: fix pointer check after utilization in
- stmmac_interrupt
-Message-ID: <20200502092906.GA9883@maxim-hplinux>
+        Sat, 2 May 2020 05:31:19 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A019C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 02:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=L5IU7gLDofU3mBI/dmON/IMvflnwzIVfMkww7fo2aHE=; b=Gly6yMOZa52CzInVASHDubUAAY
+        WdAk+238+rlWHsbrbqhzDnWLMRlK9I5QqfimqlvI0CYyulDvRnJ6qBQ/reGqUxIdjXlvCrhd3tLU9
+        XRFj1F+K1aaWl6iAj1Gahc3uXz8uu3TDPg93CELlS4hDuqNct2Pmo8j7stk1AeFDbtMAq7X2p0uIe
+        fzQIfG2mviyR5FjYQjD3bh/U7e49wE0y8V1Xjx9MBcM18qvgF6dM3KqQez4Y8p6AOXJ5/Ov18zO+K
+        Z863d+ayxqNxqSGPado40BbYyJAUReqYhI44F5K5NHiTF6vu93hbu4Nqyk+gnURXL0lGp9CrPES4L
+        8umgopbw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUoUG-0004Ky-UN; Sat, 02 May 2020 09:31:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E3B4A300130;
+        Sat,  2 May 2020 11:31:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CA3CD20AED123; Sat,  2 May 2020 11:31:05 +0200 (CEST)
+Date:   Sat, 2 May 2020 11:31:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     akpm@linux-foundation.org, tglx@linutronix.de, mingo@kernel.org,
+        mgorman@techsingularity.net, bp@suse.de,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] kernel/sys: do not use tasklist_lock to set/get
+ scheduling priorities
+Message-ID: <20200502093105.GJ3762@hirez.programming.kicks-ass.net>
+References: <20200502030539.32581-1-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200502030539.32581-1-dave@stgolabs.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The paranoidal pointer check in IRQ handler looks very strange - it
-really protects us only against bogus drivers which request IRQ line
-with null pointer dev_id. However, the code fragment is incorrect
-because the dev pointer is used before the actual check. That leads
-to undefined behavior thus compilers are free to remove the pointer
-check at all.
+On Fri, May 01, 2020 at 08:05:39PM -0700, Davidlohr Bueso wrote:
+> For both setpriority(2) and getpriority(2) there's really no need
+> to be taking the tasklist_lock at all - for which both share it
+> for the entirety of the syscall. The tasklist_lock does not protect
+> reading/writing the p->static_prio and task lookups are already rcu
+> safe, providing a stable pointer.
 
-Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
----
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 20 +++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+RCU-safe, as in, it will not crash.. However, without tasklist_lock the
+thread iterations (for PRIO_PGRP/PRIO_USER) now race against fork().
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 565da6498c84..ca08699f5565 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4070,24 +4070,28 @@ static int stmmac_set_features(struct net_device *netdev,
-  */
- static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
- {
--	struct net_device *dev = (struct net_device *)dev_id;
--	struct stmmac_priv *priv = netdev_priv(dev);
--	u32 rx_cnt = priv->plat->rx_queues_to_use;
--	u32 tx_cnt = priv->plat->tx_queues_to_use;
-+	u32 rx_cnt;
-+	u32 tx_cnt;
- 	u32 queues_count;
- 	u32 queue;
- 	bool xmac;
-+	struct stmmac_priv *priv;
-+	struct net_device *dev = (struct net_device *)dev_id;
- 
-+	if (unlikely(!dev)) {
-+		netdev_err(NULL, "%s: invalid dev pointer\n", __func__);
-+		return IRQ_NONE;
-+	}
-+
-+	priv = netdev_priv(dev);
-+	rx_cnt = priv->plat->rx_queues_to_use;
-+	tx_cnt = priv->plat->tx_queues_to_use;
- 	xmac = priv->plat->has_gmac4 || priv->plat->has_xgmac;
- 	queues_count = (rx_cnt > tx_cnt) ? rx_cnt : tx_cnt;
- 
- 	if (priv->irq_wake)
- 		pm_wakeup_event(priv->device, 0);
- 
--	if (unlikely(!dev)) {
--		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
--		return IRQ_NONE;
--	}
- 
- 	/* Check if adapter is up */
- 	if (test_bit(STMMAC_DOWN, &priv->state))
+That is a user observable change in behaviour.
 
-base-commit: 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c
--- 
-2.17.1
-
+Do we care about it? No idea, and your Changelog also doesn't provide
+clue.
