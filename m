@@ -2,100 +2,238 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5885AC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43222C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 285E8208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154E62137B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:22:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="YvbktAIT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cppCNrre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgEBWQu (ORCPT
+        id S1728580AbgEBWWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 18:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
+        Sat, 2 May 2020 18:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728530AbgEBWQt (ORCPT
+        by vger.kernel.org with ESMTP id S1728530AbgEBWWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 18:16:49 -0400
-Received: from mail.kocurkovo.cz (unknown [IPv6:2a02:2b88:2:1::5b29:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFA9C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 15:16:49 -0700 (PDT)
-Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
-        id 660E218CB; Sun,  3 May 2020 00:16:47 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 660E218CB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
-        s=mail; t=1588457807;
-        bh=2+ok7hSFqmJ9p6NZRS3iB+ks9qy0qquKr2HJfKft10E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YvbktAIT615fXGeU1BszZYJYUx4uMSlrhuWIN4yTspPjZTsvW+S3VFfV85HYU1uCU
-         7XLB3Z46YKQLOvZjPdpjk3cUwUnXJdj6B+Z723//7idA3sx8rmqSnM35pXgoB+w7wK
-         1n+5FzRYzOarZYQFYdWcWiTM/Foe+vmQwwER6vhc=
-From:   Matej Dujava <mdujava@kocurkovo.cz>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>,
-        Briana Oursler <briana.oursler@gmail.com>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Matej Dujava <mdujava@kocurkovo.cz>
-Subject: [PATCH 2/2] staging: vt6655: fix LONG_LINE warning
-Date:   Sun,  3 May 2020 00:16:34 +0200
-Message-Id: <1588457794-31438-2-git-send-email-mdujava@kocurkovo.cz>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1588457794-31438-1-git-send-email-mdujava@kocurkovo.cz>
-References: <1588457794-31438-1-git-send-email-mdujava@kocurkovo.cz>
+        Sat, 2 May 2020 18:22:15 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8F4C061A0E;
+        Sat,  2 May 2020 15:22:14 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id f83so5483735qke.13;
+        Sat, 02 May 2020 15:22:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9fR1xjvWV4IM5l6CDx6CaIGRS9rKxnG2GxWOgEdzvQs=;
+        b=cppCNrreH/DpN1wsjmKOqNfWJGQRx8xUsNCRu0/oMKasKK7I/+EvufC+BLHXq2QGh8
+         HeibKoHVXX1Xud4Nk/vwrSDMJPoMUPwSj0+JV2elaQA01L5qdh+ZMeF2WA8zVO1nW9Bt
+         BdqMg/ZCiP99p0Wp5BE9Ja499volTuvDfkihxeTN17mJehh0+KVXf+y244OORBpo0wt6
+         8a4Z/Pf3T7uchpVKYgtRs8ZT5m3LnL0PhS2aPQlPUlZJEhVR9u9SeecIPQ0udNNzeJU6
+         svbTnp9FizLGabUQLa1tIyvRnU89xfSxbxQOPKWMWu6UT0LRG5FHN7gm3CcqyesiANmw
+         Djsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9fR1xjvWV4IM5l6CDx6CaIGRS9rKxnG2GxWOgEdzvQs=;
+        b=QNzKiiCpCztHumeB8imbWc9CW+b/A/TD6leQdqPi6lMc8jQ8m7jxX1oIAwHRUg9Q58
+         7rZYjuE7Z6bmV8V0KSPfXFkGFT2d+DK/Ib/lmYdU1lQdYSYprpvf3r5w5xqGyBCEq6dl
+         wMkoYHFQQ1SDSlCCX3AySCtTkhp66zA6A9s7kZJyTV2b6ZtOGjkqjMw6xMCiE1M8k/zE
+         J0BrbS37+LLY2FmPQZouFr0qtIyf9+XbFmbArNsvL2wCaT/NUPyfKpeYlBUFz8Z4uDVb
+         eSBodoT9248Es6MhhG5MIZig4Si4Zl3BHAycNg/rc56XByeW6xH7byincV0Sa2pLfwUl
+         ABVA==
+X-Gm-Message-State: AGi0PuZoXj0dlKJqztMfEdweDHWvy1mZkuRB108E/X7S5BsR9HklKuo/
+        l6A6fMoCSHoLYjFFFcrOLMnKaRVt7sQ=
+X-Google-Smtp-Source: APiQypLP4CKg7ugDjfJSwNoBC3po3Jl+RH/1WiYVQg5l4meRKQqK+7qUg+fOUbp6G1GrHwzwFWK/jw==
+X-Received: by 2002:a05:620a:1405:: with SMTP id d5mr10404746qkj.329.1588458132880;
+        Sat, 02 May 2020 15:22:12 -0700 (PDT)
+Received: from ?IPv6:2804:18:700c:ffc5:f528:88fe:f276:acfe? ([2804:18:700c:ffc5:f528:88fe:f276:acfe])
+        by smtp.gmail.com with ESMTPSA id t1sm6298244qtd.65.2020.05.02.15.22.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 May 2020 15:22:12 -0700 (PDT)
+Subject: Re: [RFC, WIP, v4 07/11] media: vidtv: add MPEG TS common code
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     sean@mess.org, kstewart@linuxfoundation.org, allison@lohutok.net,
+        tglx@linutronix.de, linux-media@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+References: <20200502032216.197977-1-dwlsalmeida@gmail.com>
+ <20200502032216.197977-8-dwlsalmeida@gmail.com>
+ <20200502090933.171aa862@coco.lan>
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Message-ID: <de298533-e002-99f0-0db0-0418a284fa9e@gmail.com>
+Date:   Sat, 2 May 2020 19:22:06 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200502090933.171aa862@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will fix LONG_LINE error from checkpatch, by createing temporary
-variable so call to the function is not in if/else block.
+Hi Mauro, thanks for reviewing this!
 
-Signed-off-by: Matej Dujava <mdujava@kocurkovo.cz>
----
- drivers/staging/vt6655/rxtx.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ > Em Sat,  2 May 2020 00:22:12 -0300
+ > "Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
+ >
+ >> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+ >>
+ >> Add code to work with MPEG TS packets, such as TS headers, adaptation
+ >> fields, PCR packets and NULL packets.
+ >>
+ >> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+ >> ---
+ >>   drivers/media/test-drivers/vidtv/Makefile   |   2 +-
+ >>   drivers/media/test-drivers/vidtv/vidtv_ts.c | 130 ++++++++++++++++++++
+ >>   drivers/media/test-drivers/vidtv/vidtv_ts.h | 103 ++++++++++++++++
+ >>   3 files changed, 234 insertions(+), 1 deletion(-)
+ >>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.c
+ >>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.h
+ >>
+ >> diff --git a/drivers/media/test-drivers/vidtv/Makefile 
+b/drivers/media/test-drivers/vidtv/Makefile
+ >> index 9ea9485d42189..92001bc348615 100644
+ >> --- a/drivers/media/test-drivers/vidtv/Makefile
+ >> +++ b/drivers/media/test-drivers/vidtv/Makefile
+ >> @@ -1,6 +1,6 @@
+ >>   # SPDX-License-Identifier: GPL-2.0
+ >>
+ >>   vidtv_demod-objs := vidtv_common.o
+ >> -vidtv_bridge-objs := vidtv_common.o
+ >> +vidtv_bridge-objs := vidtv_common.o vidtv_ts.o
+ >>
+ >>   obj-$(CONFIG_DVB_VIDTV)	+= vidtv_tuner.o vidtv_demod.o vidtv_bridge.o
+ >> diff --git a/drivers/media/test-drivers/vidtv/vidtv_ts.c 
+b/drivers/media/test-drivers/vidtv/vidtv_ts.c
+ >> new file mode 100644
+ >> index 0000000000000..f545c45c0fe7c
+ >> --- /dev/null
+ >> +++ b/drivers/media/test-drivers/vidtv/vidtv_ts.c
+ >> @@ -0,0 +1,130 @@
+ >> +// SPDX-License-Identifier: GPL-2.0
+ >> +/*
+ >> + * The Virtual DVB test driver serves as a reference DVB driver and 
+helps
+ >> + * validate the existing APIs in the media subsystem. It can also aid
+ >> + * developers working on userspace applications.
+ >> + *
+ >> + * Written by Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+ >> + */
+ >> +
+ >> +#include <linux/types.h>
+ >> +#include <asm/byteorder.h>
+ >> +#include "vidtv_ts.h"
+ >> +#include "vidtv_common.h"
+ >> +
+ >> +static u32 vidtv_ts_write_pcr_bits(u8 *buf, u64 pcr)
+ >> +{
+ >> +	/* Exact same from ffmpeg. PCR is a counter driven by a 27Mhz clock */
+ >> +	u64 pcr_low = pcr % 300, pcr_high = pcr / 300;
+ >> +
+ >> +	*buf++ = pcr_high >> 25;
+ >> +	*buf++ = pcr_high >> 17;
+ >> +	*buf++ = pcr_high >>  9;
+ >> +	*buf++ = pcr_high >>  1;
+ >> +	*buf++ = pcr_high <<  7 | pcr_low >> 8 | 0x7e;
+ >> +	*buf++ = pcr_low;
+ >> +
+ >> +	return 6;
+ >> +}
+ >> +
+ >> +void vidtv_ts_inc_cc(u8 *continuity_counter)
+ >> +{
+ >> +	++*continuity_counter;
+ >> +	if (*continuity_counter > TS_CC_MAX_VAL)
+ >> +		*continuity_counter = 0;
+ >> +}
+ >> +
+ >> +u32 vidtv_ts_null_write_into(struct null_packet_write_args args)
+ >> +{
+ >> +	u32    nbytes                  = 0;
+ >> +	struct vidtv_mpeg_ts ts_header = {0};
+ >> +
+ >> +	ts_header.sync_byte          = TS_SYNC_BYTE;
+ >> +	ts_header.pid                = TS_NULL_PACKET_PID;
+ >> +	ts_header.payload            = 1;
+ >> +	ts_header.continuity_counter = *args.continuity_counter;
+ >> +
+ >> +	cpu_to_be16s(&ts_header.bitfield);
+ >> +
+ >> +	/* copy TS header */
+ >> +	nbytes += vidtv_memcpy(args.dest_buf + args.dest_offset + nbytes,
+ >> +			       &ts_header,
+ >> +			       sizeof(ts_header),
+ >> +			       args.dest_offset + nbytes,
+ >> +			       args.buf_sz);
+ >
+ > Hmm... now I see why you're returning 0 to vidtv_memcpy().
+ >
+ > Yet, if the buffer is full, you should just drop the entire package,
+ > as otherwise you may end copying things that aren't multiple of 188 
+bytes,
+ > causing sync issues at the client.
 
-diff --git a/drivers/staging/vt6655/rxtx.c b/drivers/staging/vt6655/rxtx.c
-index dda578436e64..782177dfd67e 100644
---- a/drivers/staging/vt6655/rxtx.c
-+++ b/drivers/staging/vt6655/rxtx.c
-@@ -164,16 +164,24 @@ s_uGetTxRsvTime(
- )
- {
- 	unsigned int uDataTime, uAckTime;
-+	unsigned short basic_rate;
- 
- 	uDataTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, cbFrameLength, wRate);
- 
- 	if (!bNeedAck)
- 		return uDataTime;
- 
--	if (byPktType == PK_TYPE_11B) /* llb,CCK mode */
--		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, (unsigned short)pDevice->byTopCCKBasicRate);
--	else /* 11g 2.4G OFDM mode & 11a 5G OFDM mode */
--		uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14, (unsigned short)pDevice->byTopOFDMBasicRate);
-+	/*
-+	 * CCK mode  - 11b
-+	 * OFDM mode - 11g 2.4G & 11a 5G
-+	 */
-+	if (byPktType == PK_TYPE_11B)
-+		basic_rate = (unsigned short)pDevice->byTopCCKBasicRate;
-+	else
-+		basic_rate = (unsigned short)pDevice->byTopOFDMBasicRate;
-+
-+	uAckTime = bb_get_frame_time(pDevice->byPreambleType, byPktType, 14,
-+				     basic_rate);
- 
- 	return uDataTime + pDevice->uSIFS + uAckTime;
- }
--- 
-2.26.2
+I'd like to provide a counterargument for this.
 
+The way I am dealing with errors throughout vidtv so far is:
+If we hit any of these WARN_ON macros, pr_err and the like, then all 
+bets are off. This means that the resulting stream will likely be 
+invalid and that something needs to be rewritten in the source code and 
+my main concern is then preventing the whole driver from crashing.
+
+This is exactly the behavior that you see in vidtv_memcpy and 
+vidtv_memset: nothing gets written so we don't end up with an overflow, 
+a diagnostic message is printed and there are no attempts at recovery.
+
+In this particular example, I compromised by allowing the size of the 
+buffer to be a module param, i.e.
+
+ >> +static unsigned int ts_buf_sz = 20 * 188;
+ >> +module_param(ts_buf_sz, uint, 0644);
+ >> +MODULE_PARM_DESC(ts_buf_sz, "Optional size for the TS buffer");
+
+I think that what I am trying to say is better seen in the last patch 
+for this series: [RFC, WIP, v4 11/11] media: vidtv: Add a MPEG Transport 
+Stream Multiplexer.
+
+The following takes place in vidtv_mux.c:
+
+	1. We wake up from sleep, take note of how long we slept for and store 
+it into "elapsed_time". This is usually between 10ms and 20ms.
+	2. We encode "elapsed_time" miliseconds worth of data into a buffer
+	3. We call dvb_dmx_swfilter(), passing a pointer to the buffer
+	4. We clear the buffer, sleep for a bit and then go back to 1.
+
+If the buffer is somehow full then it means that we are trying to 
+simulate too many fake channels while allocating too little memory, so 
+either we scale down on the amount of fake channels or we choose another 
+value for the "ts_buf_sz" module_param.
+
+I feel that this is better than adding more logic in an attempt to 
+circumvent the issue, specially since I can add more logic and still 
+fail due to my limited experience. The result is more bloat on the 
+source code for little gain.
+
+ > A WARN_ON() seems too severe here. Also, if something bad happens, it
+ > will end causing lots of problems that can make the machine very slow,
+ > ad this will flood dmesg.
+ >
+ > So, the best would be to use, instead, dev_warn_ratelimited().
+
+You're right, I did not consider this. I will use dev_warn_ratelimited() 
+in place of WARN_ON in the next revisions.
