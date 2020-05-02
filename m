@@ -2,44 +2,70 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B8AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD36AC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13F820731
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C7A2063A
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:08:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzSAYeaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgEBMAG (ORCPT
+        id S1727798AbgEBMId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:00:06 -0400
-Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:49869 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgEBMAF (ORCPT
+        Sat, 2 May 2020 08:08:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726654AbgEBMId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:00:05 -0400
-Received: from localhost.localdomain ([92.140.215.114])
-        by mwinf5d67 with ME
-        id Znzt220022Ug2Sc03nztS6; Sat, 02 May 2020 14:00:01 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 02 May 2020 14:00:01 +0200
-X-ME-IP: 92.140.215.114
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        npiggin@gmail.com, tglx@linutronix.de, maddy@linux.vnet.ibm.com,
-        cclaudio@linux.ibm.com, zhangshaokun@hisilicon.com,
-        atrajeev@linux.vnet.ibm.com, akshay.adiga@linux.vnet.ibm.com,
-        ego@linux.vnet.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] powerpc/powernv: Fix a warning message
-Date:   Sat,  2 May 2020 13:59:49 +0200
-Message-Id: <20200502115949.139000-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Sat, 2 May 2020 08:08:33 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0626C061A0C;
+        Sat,  2 May 2020 05:08:32 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id d15so15037598wrx.3;
+        Sat, 02 May 2020 05:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xLoYbLTnKic1BXSAcGBS2j7bqM5wAxeaIEpr5BTrJ68=;
+        b=qzSAYeaDikOs4JK41t0XEb7jYc6Rftfg0AvTJ0SKOKEGZCe3uqBsGMVRzV0HO1XVTh
+         8BI8EczU0hpWDuy0bL5qYG/sAWs9O7FtQ0CaRA9pC/7+hl1urmZRATolyZ7fFgkMvKtO
+         XrpbpOXwiDEWDgS6PtZA+Oxne3oEqn5GDSLD7A//4yjUGC8AN6S9itvca6WkPirsRxZ/
+         ajWXsleAZnfr5Tg5xpvFAnRIfXlRY/xVH5iTAqP9YS18JXpaINaIDZ1vvgiWFRVdKKnS
+         FJmLgCIkETm5RfraUORPMh+UQCt/ksTaDJxFQ/kLvk6FCeCvyMr6sfxPRrpgkDR+zetB
+         ew+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xLoYbLTnKic1BXSAcGBS2j7bqM5wAxeaIEpr5BTrJ68=;
+        b=VxFjaA0kbLSswIvu8VkEVQZrjiQLCj70GmImOC5tp6W5JFgo6Xm7nXlzkmEabyz1gL
+         JoShQbjsliChzryJl3N/jDz7z8yDssLboSLoAhn9uQgN2EUn9DbhUYwdPLOlNUQrpGpQ
+         WUHLa6ixOAjBaquxrqFJRzkpLHd+hf/SnGrtXRwTdh/wDcdIL3HIE0DJN9g+NvqHqwcy
+         NIZE44Oj9WloTIT7nmdevp3JfDF3wBVIYYhEzoJLiVtp2JEgn2p5IIc/Z3++e1P8Hobf
+         ElNYkPo2ct0EcidlEBMQO08D2HgEVYfeDRTIgW+QS7taS6rl7PXxbtS08POdqNGrlI0P
+         6z3w==
+X-Gm-Message-State: AGi0PuZXtNycjxCVw7xojxiVXRnbPKFBFtqv8eKp/8Y2k8OYY3rQz0h3
+        SzTQTKhAfH+7kFear1bDmMFDtrUq
+X-Google-Smtp-Source: APiQypKseLIEMJJ19rJeHvjGT47NBz1kQhBX5lHoESMOWiFxzv87vehThEGryOowlupK6/8JxvNNAw==
+X-Received: by 2002:a5d:68ca:: with SMTP id p10mr9202841wrw.154.1588421311134;
+        Sat, 02 May 2020 05:08:31 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.133.135])
+        by smtp.gmail.com with ESMTPSA id j13sm8930716wrx.5.2020.05.02.05.08.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 05:08:30 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] timeout fixes
+Date:   Sat,  2 May 2020 15:07:12 +0300
+Message-Id: <cover.1588420906.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,29 +73,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a cut'n'paste error in a warning message. This should be
-'cpu-idle-state-residency-ns' to match the property searched in the
-previous 'of_property_read_u32_array()'
+Nothing changed from the last time, just resending.
 
-Fixes: 9c7b185ab2fe ("powernv/cpuidle: Parse dt idle properties into global structure")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- arch/powerpc/platforms/powernv/idle.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1,2] CQ vs SQ for timeout offset accounting
+[3] fixes timeout flushing with batched commits
 
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index 78599bca66c2..2dd467383a88 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -1270,7 +1270,7 @@ static int pnv_parse_cpuidle_dt(void)
- 	/* Read residencies */
- 	if (of_property_read_u32_array(np, "ibm,cpu-idle-state-residency-ns",
- 				       temp_u32, nr_idle_states)) {
--		pr_warn("cpuidle-powernv: missing ibm,cpu-idle-state-latencies-ns in DT\n");
-+		pr_warn("cpuidle-powernv: missing ibm,cpu-idle-state-residency-ns in DT\n");
- 		rc = -EINVAL;
- 		goto out;
- 	}
+Pavel Begunkov (3):
+  io_uring: trigger timeout after any sqe->off CQEs
+  io_uring: don't trigger timeout with another t-out
+  io_uring: fix timeout offset with batch CQ commit
+
+ fs/io_uring.c | 126 +++++++++++++++++++++-----------------------------
+ 1 file changed, 52 insertions(+), 74 deletions(-)
+
 -- 
-2.25.1
+2.24.0
 
