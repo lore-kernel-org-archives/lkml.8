@@ -2,95 +2,112 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6F3C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08713C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A74121835
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BEE21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 14:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X61Jjyyk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwUbEm8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgEBO4u (ORCPT
+        id S1728308AbgEBO5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 10:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
+        Sat, 2 May 2020 10:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgEBO4s (ORCPT
+        with ESMTP id S1728035AbgEBO53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 10:56:48 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A50C061A0C;
-        Sat,  2 May 2020 07:56:48 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x15so3075045pfa.1;
-        Sat, 02 May 2020 07:56:48 -0700 (PDT)
+        Sat, 2 May 2020 10:57:29 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F1E5C061A0C;
+        Sat,  2 May 2020 07:57:29 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x6so131515plv.8;
+        Sat, 02 May 2020 07:57:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=RcBQxL7OPCcW96H9lJXi2triKVwXh3GmzyE91OaNwW4=;
-        b=X61JjyykazDtmW9Ti2d6bb3szOH1yUTSbBk5iEIlOp9pCC68GJSJ+BpYe+zjd26BgY
-         2gavkiyi+k/3CLp3iwLd3l5UIR8kCjefqIYk5JjqQ/Jo7OnY9HG/FATlbY+qU0+cDwyL
-         sY/SSFDPXnpkBp0EiXCUJclwWKbkJV+XqlLvA4U4iNfYVrm29jYjdVCULD3KX1P2p/Up
-         NOMaLjvTJ6sDIO+RHVCBVyNiGiaBBqxaie7nUPgBr25lSWtpSdIuvNz763AjDz2QTllW
-         AN4M2J5984bANJm+OyUBjds58frUsM5M0gS24Ix6xt+YefsOb7/joiO/ngpSJEPsuLuH
-         3+Uw==
+        bh=QrYGAubEqwzwquEx2Edm3lavoI+/qX4M+pQUcvGXV3k=;
+        b=rwUbEm8fJxYa7XPiUO1hiUeffwIxNZeLcFogdB3FKp/ZKfQi4oj2O30BKaysbmJlIS
+         JGYhw6tErSrCNfF48haZ3cdJZogupZ0zVdACzUYz2zN8aLVz0ApDi8furMwpLbcl3kPh
+         6m74rJ9q/KuF7SoAQH2Y8fI3pjjfzMgy5FENDASYtX9tmW6XUGrDZfpgWciAfcSuNP7F
+         fLBMsGoAoN3lfS6C5UeERbXsDeobfrBaxjqSRq17Xc2K54yBSCDXkO9dSb5lQFkFDKsl
+         PMFlVzK21TkFszxatPdOZT4Y3JfTTEWCRGsBb3zkR3cS7F/FLKAxk/GU1UNiNnMCKnM5
+         t22A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RcBQxL7OPCcW96H9lJXi2triKVwXh3GmzyE91OaNwW4=;
-        b=EV4v54dwbrm4rys00Afk2Z2WBmWjMGgwJgdwmj5SUj8n1AdfneLgVxrQBrN4vss6I7
-         ZyfviEC5rflNYWjMt8so93TUGNItWUz9scBCmxeyBhOix9X3YyrkuLxAvK+oqStHN/b+
-         ZFEGsefdxiuF4ZtbnVjnOhQrmekEfRPI7dE2IC4ExQ7AO+Hoq6Fqu9qoV1MuJPvZg/8L
-         JEe6HDDwE1qmS8V4nzd+eBrtePWjbi6WXT0LNIqpzE8PVRlA/wrX5xvWEZyTHzS78ZRX
-         Ip81IBaPttVDNxpveG5ZN6zWxem3h3scNxAJXGlvAdvdlQRjl6CrjZ095sh/w0FMH4Af
-         yAKA==
-X-Gm-Message-State: AGi0PuYndstKtej7InKSkjOHH1dzE2xi5u+TE5dDxR77Q3uWGc2D0/LA
-        oAYLELHs8spG76iCeYB0tgU=
-X-Google-Smtp-Source: APiQypJBcuBVqh0hB4VCHc6FtIx3cg+i27okWGXQQ+BLqSynwg7ECk1OT6w3BeTUAedXp/6PBn3N4g==
-X-Received: by 2002:a63:fc0a:: with SMTP id j10mr8146328pgi.54.1588431407766;
-        Sat, 02 May 2020 07:56:47 -0700 (PDT)
+        bh=QrYGAubEqwzwquEx2Edm3lavoI+/qX4M+pQUcvGXV3k=;
+        b=gjFbKMdHTp5O1nMvyJAEvYHhVls9S81AsaHTjI+HremoHSwSM7Vz8bFMdYsA/MUG2d
+         3uVCbkAAiwgtjxrYiE2SFy8Ph5L20Fs9pWZ6NIsINuf02/SZQTFy6js+xiDvasMpqlOC
+         jLgW6WcTP865rOnrSE80jT34TEw/r+kGlNODNKVXB8wBpCZni5fU+msH5P/TZjYU/4QS
+         LpJlt2WvBqR0G8/tQZSA3Zwtm6PdsuLfkvA3DjgyIrQ1Atv1me3QUnswhckINwpGLF62
+         PuyYtLVhSlFqJTbFBgUc6CImzzzM2UQiZifqPStfRR/H93OLH11XNLNLt5BiEYecpTeS
+         PN8Q==
+X-Gm-Message-State: AGi0Puae4qBiVDyllBQ+/t9Xk43lWdmkbpnP2m/fBqi7KpF7HrQ7zWiS
+        hdfpM/ny68/VaxEMeTlXtWI=
+X-Google-Smtp-Source: APiQypJRcYlpEamSKIPjDruICLkC9LSfCv1GeaaAxuLu2XII+vnw7iOyL6HjBPzp3bDfruTknAyqdQ==
+X-Received: by 2002:a17:902:8643:: with SMTP id y3mr9469004plt.149.1588431448743;
+        Sat, 02 May 2020 07:57:28 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k12sm4298747pgj.33.2020.05.02.07.56.47
+        by smtp.gmail.com with ESMTPSA id u3sm4693033pfb.105.2020.05.02.07.57.28
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 02 May 2020 07:56:47 -0700 (PDT)
-Date:   Sat, 2 May 2020 07:56:46 -0700
+        Sat, 02 May 2020 07:57:28 -0700 (PDT)
+Date:   Sat, 2 May 2020 07:57:27 -0700
 From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/47] 4.19.120-rc2 review
-Message-ID: <20200502145646.GD189389@roeck-us.net>
-References: <20200502064235.767298413@linuxfoundation.org>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] watchdog: imx2_wdt: update contact email
+Message-ID: <20200502145727.GE189389@roeck-us.net>
+References: <20200502142653.19144-1-wsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200502064235.767298413@linuxfoundation.org>
+In-Reply-To: <20200502142653.19144-1-wsa@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 08:48:14AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.120 release.
-> There are 47 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Sat, May 02, 2020 at 04:26:53PM +0200, Wolfram Sang wrote:
+> The 'pengutronix' address is defunct for years. Use the proper contact
+> address.
 > 
-> Responses should be made by Mon, 04 May 2020 06:40:34 +0000.
-> Anything received after that time might be too late.
+> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/imx2_wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 418 pass: 418 fail: 0
-
-Guenter
+> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> index 1fe472f56cb3..b84f80f7d342 100644
+> --- a/drivers/watchdog/imx2_wdt.c
+> +++ b/drivers/watchdog/imx2_wdt.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Watchdog driver for IMX2 and later processors
+>   *
+> - *  Copyright (C) 2010 Wolfram Sang, Pengutronix e.K. <w.sang@pengutronix.de>
+> + *  Copyright (C) 2010 Wolfram Sang, Pengutronix e.K. <kernel@pengutronix.de>
+>   *  Copyright (C) 2014 Freescale Semiconductor, Inc.
+>   *
+>   * some parts adapted by similar drivers from Darius Augulis and Vladimir
+> -- 
+> 2.20.1
+> 
