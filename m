@@ -4,64 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163D2C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1B9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3B920757
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F169F206CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:45:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588445104;
-	bh=xJu73S7yUwIeO4v/1EQT0CT496CYeg06VFrENkb0aUc=;
+	s=default; t=1588445106;
+	bh=s0z1+Ustle/5LPDXfg8sKPJ5kKTcNvfSNnMWHuEwuuU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=hMUA304rAUUSl+M+IUBSCZCiNQ6MOCBIVkVtrrANJVkuCFCGJ+SeIu6xdsb9o8TQN
-	 udim3kVvpGLzG3kcYOrEscALSsnh1HWXogoA4DEvCHW5SMAawBkYJzgpPf+aq6GUu8
-	 +nIn/E07CD9U8e56qTmxvOyHjCOLT1YGSWimfKYU=
+	b=JjwgxBLylb/AXQbpeSsa6KnRd2ZgYvPKOHAKxP4R9//bsJhg9amtW+TvRzx4mEzYn
+	 IWw7EwOMMbR9AlcUNLmpzWoFw4fXMkkA3/j9zs5Mua0EiVhVhVWM9sz7r1IF2NGVKY
+	 YRonDszphuqDHVqi1pzxUlz2MgjNtpybz9FCZoRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgEBSpD (ORCPT
+        id S1728501AbgEBSpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 14:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59926 "EHLO mail.kernel.org"
+        Sat, 2 May 2020 14:45:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbgEBSpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728411AbgEBSpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 2 May 2020 14:45:02 -0400
-Subject: Re: [GIT PULL] Please pull NFS client bugfixes
+Subject: Re: [GIT PULL] iomap: bug fix for 5.7-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1588445102;
-        bh=xJu73S7yUwIeO4v/1EQT0CT496CYeg06VFrENkb0aUc=;
+        bh=s0z1+Ustle/5LPDXfg8sKPJ5kKTcNvfSNnMWHuEwuuU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Pmzjtogc7AhNIeUszAdm7yzY2kQt14asZZBMFMRz1JLl8MDTm8SCz5jLLG4wMHEmb
-         ZO0nNCs64rqpBO43PSHJmX+AvwRut5fdWwd9VgTV9Zj1N+vntIBx9nJqMlDu/ImKau
-         R3BuUKUxpwbPyk7F5/J7TvE1xPVNaTyv6C8pGaC8=
+        b=i0mBLSUMC3B9vy3S+iQqaYTjH6CEA1GVLEXSCN8WSiGxKKzM8TJCIOwz+7jKmS08S
+         hpQoRNGDFZ1CY4poq2blHx5GPpxzWf2UAlbFZxdnjzLFomL3LmZY08J8p43RRts2iY
+         w9wWrXzXlRYjJge2H7wK2OQtcStXNbx3o3PctmbQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <c19d10e89cda7061d6aa41c1c6ad7e75affd4051.camel@hammerspace.com>
-References: <c19d10e89cda7061d6aa41c1c6ad7e75affd4051.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <c19d10e89cda7061d6aa41c1c6ad7e75affd4051.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git
- tags/nfs-for-5.7-4
-X-PR-Tracked-Commit-Id: 9c07b75b80eeff714420fb6a4c880b284e529d0f
+In-Reply-To: <20200502170801.GB6742@magnolia>
+References: <20200502170801.GB6742@magnolia>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200502170801.GB6742@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+ tags/iomap-5.7-fixes-1
+X-PR-Tracked-Commit-Id: b75dfde1212991b24b220c3995101c60a7b8ae74
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 29a47f456d6213a3173722a098a3a18865ea4db3
-Message-Id: <158844510197.26966.15998962202695718378.pr-tracker-bot@kernel.org>
-Date:   Sat, 02 May 2020 18:45:01 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: f66ed1ebbfde37631fba289f7c399eaa70632abf
+Message-Id: <158844510226.26966.830662685597317444.pr-tracker-bot@kernel.org>
+Date:   Sat, 02 May 2020 18:45:02 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, riteshh@linux.ibm.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 2 May 2020 13:35:02 +0000:
+The pull request you sent on Sat, 2 May 2020 10:08:01 -0700:
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-5.7-4
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.7-fixes-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/29a47f456d6213a3173722a098a3a18865ea4db3
+https://git.kernel.org/torvalds/c/f66ed1ebbfde37631fba289f7c399eaa70632abf
 
 Thank you!
 
