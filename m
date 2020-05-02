@@ -2,203 +2,138 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA0C47258
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FDCC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A515721582
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C633F208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:35:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZBTP92mI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgEBAeS (ORCPT
+        id S1726951AbgEBAfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:34:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38820 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgEBAeR (ORCPT
+        Fri, 1 May 2020 20:35:33 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51018 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726352AbgEBAfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:34:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id C9BC32A1FD0
-Received: by earth.universe (Postfix, from userid 1000)
-        id C8A803C08C7; Sat,  2 May 2020 02:34:12 +0200 (CEST)
-Date:   Sat, 2 May 2020 02:34:12 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Mathew King <mathewk@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/4] power_supply: Use designated initializer for
- property text arrays
-Message-ID: <20200502003412.gfyeu4g6acfp6ml7@earth.universe>
-References: <20200424173533.48572-1-mathewk@chromium.org>
- <20200424173533.48572-3-mathewk@chromium.org>
+        Fri, 1 May 2020 20:35:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588379730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ujwsyw/O/+AeBjWrVJ65oHPAkvklfR2fQlh0BfXvrl8=;
+        b=ZBTP92mIRRydB5tWbYn4+BYzcU5GpxAbkeCFx62DxaoijGCiD2UuyQJJyO8SlyW1Dic+Nx
+        6Cspe7o6Ecy8GJTg6vF56U1UbvMmkBaw9xsfR5aE1sBGmWw2dfldCyF2NTOUrnhOBEWwQp
+        MeggRtiFSQGQr0nScidNp7DjNhuYs7g=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-9zCLmeDGOR2A_AFPmm_4Ew-1; Fri, 01 May 2020 20:35:27 -0400
+X-MC-Unique: 9zCLmeDGOR2A_AFPmm_4Ew-1
+Received: by mail-qk1-f198.google.com with SMTP id h186so11931690qkc.22
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 17:35:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ujwsyw/O/+AeBjWrVJ65oHPAkvklfR2fQlh0BfXvrl8=;
+        b=SakNbwwGtm4Zvv4RyOIxdZcd/hQeGg7h0O5jA5AiRUaW+e7tAZHdEnkIhSl+PVz3cy
+         NWIkYs0eZ8OQ5j6zgfOvZuFkYwcXbz3cbFcPObED6/+VcpYy22Kx3mCkf5Akxs9mbbqK
+         NRBnq3FZ0+/LHYExZcClrhf16IKPxWH/ncuszIL0aO0HDW+PsJiQP6s2yZJUC0CxQrqf
+         C+DigCFwL05VzlkJ87+WdObufUQEhsa3l++imquDaYbaABPVkFEi++yz4vOHuMM5js7k
+         nTr2hSV54uMjZpWay+cplXpOx7ee+wtbQ2Cxw9MKF83U0GpT0JPgGVY1xi6po1AFgOBG
+         DBRA==
+X-Gm-Message-State: AGi0PuYNt/Ru0+UwexixbUfMr7LE+L0W3o87dRATuccLwASWPy6Kf7di
+        yMxut/yM9tUePlcUSZFae5ZLmZq5VhIxJYPaaK2fsdPcJn7LTtrj9SFHpWfaQBCjL23deVevWW8
+        7G1q3hLIdFkRJLEsLyZazn43Q
+X-Received: by 2002:a0c:e305:: with SMTP id s5mr6695560qvl.234.1588379726269;
+        Fri, 01 May 2020 17:35:26 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIKjxGjbQD1Flb1NGYaaAesLEVchYYS9XDerFgmnbjkuTL/GCEnpwLpmoav+xBLnP8sNFxrUw==
+X-Received: by 2002:a0c:e305:: with SMTP id s5mr6695538qvl.234.1588379725927;
+        Fri, 01 May 2020 17:35:25 -0700 (PDT)
+Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id g123sm4044892qkd.95.2020.05.01.17.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 01 May 2020 17:35:24 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     peterx@redhat.com, Alex Williamson <alex.williamson@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] mm/gup: Fix fixup_user_fault() on multiple retries
+Date:   Fri,  1 May 2020 20:35:23 -0400
+Message-Id: <20200502003523.8204-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rfgnklgnjintgnx4"
-Content-Disposition: inline
-In-Reply-To: <20200424173533.48572-3-mathewk@chromium.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This part is overlooked when reworking the gup code on multiple retries.  When
+we get the 2nd+ retry, we'll be with TRIED flag set.  Current code will bail
+out on the 2nd retry because the !TRIED check will fail so the retry logic will
+be skipped.  What's worse is that, it will also return zero which errornously
+hints the caller that the page is faulted in while it's not.
 
---rfgnklgnjintgnx4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The !TRIED flag check seems to not be needed even before the mutliple retries
+change because if we get a VM_FAULT_RETRY, it must be the 1st retry, and we
+should not have TRIED set for that.
 
-Hi,
+Fix it by removing the !TRIED check, at the meantime check against fatal
+signals properly before the page fault so we can still properly respond to the
+user killing the process during retries.
 
-On Fri, Apr 24, 2020 at 11:35:31AM -0600, Mathew King wrote:
-> Use designated initializers for the sysfs power supply text values. This
-> will help ensure that the text values are kept in sync with the enum
-> values from power_supply.h.
->=20
-> Signed-off-by: Mathew King <mathewk@chromium.org>
-> ---
+CC: Alex Williamson <alex.williamson@redhat.com>
+Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
 
-Thanks, looks good to me, but does not apply without the first patch
-(or due to other changes in power-supply's for-next branch).
+I don't have a case to trigger the problem, so I only smoke tested the patch.
+However I think this should be the right thing to do...  Please have a look,
+thanks.
+---
+ mm/gup.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
--- Sebastian
+diff --git a/mm/gup.c b/mm/gup.c
+index 50681f0286de..87a6a59fe667 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1218,6 +1218,10 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
+ 	if (!vma_permits_fault(vma, fault_flags))
+ 		return -EFAULT;
+ 
++	if ((fault_flags & FAULT_FLAG_KILLABLE) &&
++	    fatal_signal_pending(current))
++		return -EINTR;
++
+ 	ret = handle_mm_fault(vma, address, fault_flags);
+ 	major |= ret & VM_FAULT_MAJOR;
+ 	if (ret & VM_FAULT_ERROR) {
+@@ -1230,11 +1234,9 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
+ 
+ 	if (ret & VM_FAULT_RETRY) {
+ 		down_read(&mm->mmap_sem);
+-		if (!(fault_flags & FAULT_FLAG_TRIED)) {
+-			*unlocked = true;
+-			fault_flags |= FAULT_FLAG_TRIED;
+-			goto retry;
+-		}
++		*unlocked = true;
++		fault_flags |= FAULT_FLAG_TRIED;
++		goto retry;
+ 	}
+ 
+ 	if (tsk) {
+-- 
+2.26.2
 
->  drivers/power/supply/power_supply_sysfs.c | 76 ++++++++++++++++++-----
->  1 file changed, 61 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index b579081599d7..328107589770 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -35,41 +35,87 @@ struct power_supply_attr {
->  }
-> =20
->  static const char * const power_supply_type_text[] =3D {
-> -	"Unknown", "Battery", "UPS", "Mains", "USB",
-> -	"USB_DCP", "USB_CDP", "USB_ACA", "USB_C",
-> -	"USB_PD", "USB_PD_DRP", "BrickID"
-> +	[POWER_SUPPLY_TYPE_UNKNOWN]		=3D "Unknown",
-> +	[POWER_SUPPLY_TYPE_BATTERY]		=3D "Battery",
-> +	[POWER_SUPPLY_TYPE_UPS]			=3D "UPS",
-> +	[POWER_SUPPLY_TYPE_MAINS]		=3D "Mains",
-> +	[POWER_SUPPLY_TYPE_USB]			=3D "USB",
-> +	[POWER_SUPPLY_TYPE_USB_DCP]		=3D "USB_DCP",
-> +	[POWER_SUPPLY_TYPE_USB_CDP]		=3D "USB_CDP",
-> +	[POWER_SUPPLY_TYPE_USB_ACA]		=3D "USB_ACA",
-> +	[POWER_SUPPLY_TYPE_USB_TYPE_C]		=3D "USB_C",
-> +	[POWER_SUPPLY_TYPE_USB_PD]		=3D "USB_PD",
-> +	[POWER_SUPPLY_TYPE_USB_PD_DRP]		=3D "USB_PD_DRP",
-> +	[POWER_SUPPLY_TYPE_APPLE_BRICK_ID]	=3D "BrickID",
->  };
-> =20
-> -static const char * const power_supply_usb_type_text[] =3D {
-> -	"Unknown", "SDP", "DCP", "CDP", "ACA", "C",
-> -	"PD", "PD_DRP", "PD_PPS", "BrickID"
-> +static const char * const POWER_SUPPLY_USB_TYPE_TEXT[] =3D {
-> +	[POWER_SUPPLY_USB_TYPE_UNKNOWN]		=3D "Unknown",
-> +	[POWER_SUPPLY_USB_TYPE_SDP]		=3D "SDP",
-> +	[POWER_SUPPLY_USB_TYPE_DCP]		=3D "DCP",
-> +	[POWER_SUPPLY_USB_TYPE_CDP]		=3D "CDP",
-> +	[POWER_SUPPLY_USB_TYPE_ACA]		=3D "ACA",
-> +	[POWER_SUPPLY_USB_TYPE_C]		=3D "C",
-> +	[POWER_SUPPLY_USB_TYPE_PD]		=3D "PD",
-> +	[POWER_SUPPLY_USB_TYPE_PD_DRP]		=3D "PD_DRP",
-> +	[POWER_SUPPLY_USB_TYPE_PD_PPS]		=3D "PD_PPS",
-> +	[POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID]	=3D "BrickID",
->  };
-> =20
->  static const char * const power_supply_status_text[] =3D {
-> -	"Unknown", "Charging", "Discharging", "Not charging", "Full"
-> +	[POWER_SUPPLY_STATUS_UNKNOWN]		=3D "Unknown",
-> +	[POWER_SUPPLY_STATUS_CHARGING]		=3D "Charging",
-> +	[POWER_SUPPLY_STATUS_DISCHARGING]	=3D "Discharging",
-> +	[POWER_SUPPLY_STATUS_NOT_CHARGING]	=3D "Not charging",
-> +	[POWER_SUPPLY_STATUS_FULL]		=3D "Full",
->  };
-> =20
->  static const char * const power_supply_charge_type_text[] =3D {
-> -	"Unknown", "N/A", "Trickle", "Fast", "Standard", "Adaptive", "Custom"
-> +	[POWER_SUPPLY_CHARGE_TYPE_UNKNOWN]	=3D "Unknown",
-> +	[POWER_SUPPLY_CHARGE_TYPE_NONE]		=3D "N/A",
-> +	[POWER_SUPPLY_CHARGE_TYPE_TRICKLE]	=3D "Trickle",
-> +	[POWER_SUPPLY_CHARGE_TYPE_FAST]		=3D "Fast",
-> +	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	=3D "Standard",
-> +	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	=3D "Adaptive",
-> +	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	=3D "Custom",
->  };
-> =20
->  static const char * const power_supply_health_text[] =3D {
-> -	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
-> -	"Unspecified failure", "Cold", "Watchdog timer expire",
-> -	"Safety timer expire", "Over current"
-> +	[POWER_SUPPLY_HEALTH_UNKNOWN]		    =3D "Unknown",
-> +	[POWER_SUPPLY_HEALTH_GOOD]		    =3D "Good",
-> +	[POWER_SUPPLY_HEALTH_OVERHEAT]		    =3D "Overheat",
-> +	[POWER_SUPPLY_HEALTH_DEAD]		    =3D "Dead",
-> +	[POWER_SUPPLY_HEALTH_OVERVOLTAGE]	    =3D "Over voltage",
-> +	[POWER_SUPPLY_HEALTH_UNSPEC_FAILURE]	    =3D "Unspecified failure",
-> +	[POWER_SUPPLY_HEALTH_COLD]		    =3D "Cold",
-> +	[POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE] =3D "Watchdog timer expire",
-> +	[POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE]   =3D "Safety timer expire",
-> +	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    =3D "Over current",
->  };
-> =20
->  static const char * const power_supply_technology_text[] =3D {
-> -	"Unknown", "NiMH", "Li-ion", "Li-poly", "LiFe", "NiCd",
-> -	"LiMn"
-> +	[POWER_SUPPLY_TECHNOLOGY_UNKNOWN]	=3D "Unknown",
-> +	[POWER_SUPPLY_TECHNOLOGY_NiMH]		=3D "NiMH",
-> +	[POWER_SUPPLY_TECHNOLOGY_LION]		=3D "Li-ion",
-> +	[POWER_SUPPLY_TECHNOLOGY_LIPO]		=3D "Li-poly",
-> +	[POWER_SUPPLY_TECHNOLOGY_LiFe]		=3D "LiFe",
-> +	[POWER_SUPPLY_TECHNOLOGY_NiCd]		=3D "NiCd",
-> +	[POWER_SUPPLY_TECHNOLOGY_LiMn]		=3D "LiMn",
->  };
-> =20
->  static const char * const power_supply_capacity_level_text[] =3D {
-> -	"Unknown", "Critical", "Low", "Normal", "High", "Full"
-> +	[POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN]	=3D "Unknown",
-> +	[POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL]	=3D "Critical",
-> +	[POWER_SUPPLY_CAPACITY_LEVEL_LOW]	=3D "Low",
-> +	[POWER_SUPPLY_CAPACITY_LEVEL_NORMAL]	=3D "Normal",
-> +	[POWER_SUPPLY_CAPACITY_LEVEL_HIGH]	=3D "High",
-> +	[POWER_SUPPLY_CAPACITY_LEVEL_FULL]	=3D "Full",
->  };
-> =20
->  static const char * const power_supply_scope_text[] =3D {
-> -	"Unknown", "System", "Device"
-> +	[POWER_SUPPLY_SCOPE_UNKNOWN]	=3D "Unknown",
-> +	[POWER_SUPPLY_SCOPE_SYSTEM]	=3D "System",
-> +	[POWER_SUPPLY_SCOPE_DEVICE]	=3D "Device",
->  };
-> =20
->  static struct power_supply_attr power_supply_attrs[] =3D {
-> --=20
-> 2.26.2.303.gf8c07b1a785-goog
->=20
-
---rfgnklgnjintgnx4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6swAQACgkQ2O7X88g7
-+poA7BAAoAYgVtLJEK4TuQIcPgYikzbN/ODvqAVJc124KXcyFbHhf8jFNx0fj0aN
-chw336oN7ZTpm8cCaJLZoaCwXi7002D/szoQLNqWgJIRkAc6Bf+kxUllPZqgmkMw
-ArFpNyen/iKHkHTPOS1bIJSjytG1ZR/WDGdiT6ISwTE7sU2Z0LjiWelOoKVN7oFS
-/U6LKyPxjXqh9kkDKP6HFRioqHfvye7t4Fa3iPZJVrktryGNQA4idLoDMGSnGx20
-3QSZs/BDwUcETEUQS0xgmHlaSRm7Ov8TghsMkQ2ohu4OSoK/VttbrUl+iRxdA6E4
-ivc947hwfr5vyXAyvXVagmK83CUVg3EG+egMhMdAnriXVYv3uUpB3Q4T5UtuJG0j
-8yYwyDzYg4jvcPi2B5ymlNejPe4mjvIEyDg1toYNClMMxG92UWTzuGkMksgp4aTD
-Grgl/+V3QUXW0t/VGkz0w6NDV49Ex4qCYBUtiN2tBKbC/HWiYm3L43xhIPlR7fxW
-oRAsOsCRNkoN6BbSGDk7O7qo0Ft31J/qYnhwsyinqiN7auaGJlYM4bk/1WL9DwCX
-Ype0Sp6EYfN/UX+DOltWNI3k2sx3bt7ztyf/JsCYI4CPgcxJ5Znx+oDAbcAu7VHw
-xMCNlROHuxFUyk9Sj0/xTa4VbvQJq4weGEDToB4Adg0DT2g2gek=
-=UdVL
------END PGP SIGNATURE-----
-
---rfgnklgnjintgnx4--
