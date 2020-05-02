@@ -2,268 +2,254 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7137EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD933C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAD121582
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E1721582
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Tb4++faH"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aOeUD+aQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgEBJEV (ORCPT
+        id S1727095AbgEBJFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 05:04:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726654AbgEBJEU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 05:04:20 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD32C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 02:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+xxsMuayT6OUTVNwJbUrq8ypk6Bmy0pMtrNWYkktz70=; b=Tb4++faHvult4X2/06OQObBz5
-        5u8GjzZV4gsbVJvjBhn7bCA/2n9x30csVeoIheOU8iFowttFolAjL8Hj08RllYgSGFtK7mTHzKyS/
-        LG9gArFaXHmZyJUbKgi1zZ9gjPulIvC6egtTLVA6wBdyBk5m1wyedgndoO1MmHdbYmMhHjpbPFU+P
-        5Fd5MnFmrq+yw3VZE/2RQOs+dLC6kemV06cfRmMGOqPUX6nti0KKRhDjh607UV4PILsZc46OS5aGn
-        4EkWe3W6e3/4LmojTWgwUSg8XwZloXS13bvqWuEQ0SnpcWDfibOohsw0qmTUSz9Y3CjYgKdUbsL2b
-        8Z2u9yTHw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:52710)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jUo4C-0000id-CG; Sat, 02 May 2020 10:04:12 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jUo40-0003zd-Vi; Sat, 02 May 2020 10:04:01 +0100
-Date:   Sat, 2 May 2020 10:04:00 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Bin Meng <bmeng.cn@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bin Meng <bin.meng@windriver.com>
-Subject: Re: [PATCH] arm: Drop CONFIG_MTD_M25P80 in various defconfig files
-Message-ID: <20200502090400.GT1551@shell.armlinux.org.uk>
-References: <1588393408-31225-1-git-send-email-bmeng.cn@gmail.com>
+        Sat, 2 May 2020 05:05:34 -0400
+Received: from mout.gmx.net ([212.227.17.22]:42917 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbgEBJFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 05:05:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1588410317;
+        bh=q9VJyCnFY+/O21OZN8bVN/A8qThXFaSA5sJxzEm7oeI=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=aOeUD+aQCk+gcQCM0GFQzBa2oFcpCZ53QkQTN8ymUeAZs7Ta8AA9ipfjC3JgdZ1m6
+         pD1HN+VirGZ0LJu3LZBWBuFho1Du5QaZKH6qmnbBq8u3vpBEfSFn2uZdyT30LQvbkz
+         hTCyiifr4mojlhBisLlV1YyN9bmidcbuYbiBPatI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.164] ([37.4.249.134]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N63VY-1j6lrZ1K6y-016NEe; Sat, 02
+ May 2020 11:05:17 +0200
+Subject: Re: [PATCH v7 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org
+References: <20200429164734.21506-1-nsaenzjulienne@suse.de>
+ <20200429164734.21506-3-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <5fce05ca-5d7e-f4cc-be34-0764fbe4edff@gmx.net>
+Date:   Sat, 2 May 2020 11:05:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588393408-31225-1-git-send-email-bmeng.cn@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200429164734.21506-3-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Provags-ID: V03:K1:QA/aSLOy+cPlvO18nEM/MicqwS747XxEXAG4GyaaHnDfSZ4Tmtk
+ PVcVoCLuH1g/fLaI+QAorJKQs+/yGXo+BeCehPvf79n+ALJv+1n29kftcUmC+bOBBRFLf4i
+ k02zj8VEOarH08P1FI3V2bmFG/JFF5fmLFDaU8+/SbVGitbryg1gRaOHJMtECq7XfKPBArS
+ gUzl/xGwaNB1He1/zQu7Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:b27J4oTjFnA=:k0TtacXgZeH36zxXHNZPGs
+ TleOnzvFCN3iCKhE2i8sdtvI0FiBx7Ia22XXttoaCtWN/1Gkahl9vsihmfNcUB45kGutY+pwR
+ U8m3n7Npx8ETCstRraHr452FmRE/cTA544O4lFbOLwRh9uq0dxn0ODXcuQamYaBFiuoOGm8M7
+ 0z0qNoYZ0rJXI5Oe4IxV/MBZprac9xoBUg8NZP7vyBvnLv9LI/nSciaKBkrkUS4df5rlAN/M1
+ Enxo4EcMht9ADR+IIRiRkd+HXy0wSv/PHgIkligGrZ9GGUn+hnl2zDUJpnqE1sM6fvI5X/dH5
+ Xy+O8bzZ1S2MsT4zPZSWxuUNBBjVVLFJqdQKKgiwpBTA5qClEIle6M0vo3L+zjzdbTK6QJZBb
+ Ya9YMU0R+Rp0GTkzvBEIiBXjOGcyENNjZGWnBYsgKpFS14W73bwH18mpEYBA4XwJZybxjfZJz
+ fnC84yulfUOs+Ra/MUxFRmqikbRaAeLu89bYbQ1UmJZwf/jMgHsJCzxmcncaPilUgPPWbLwCO
+ 4fhVZRilboJG5bfI7DxWmB35Oex2rWunLO44NBv5XUyeYkYp6lxhZofN8Toitkc5kIuxhRUY1
+ RLkFRmIn1PKTWDpWrLIvrFomus7meNiOimZDH6cBFUaX8lRHBTmO6Ulkaev81vwkLoAkN7Juh
+ 0APXUwRoRLhutGvBLqpib7CBi3/MvJ1MFV+9cUlnPJo6LDCzfDhCdu9t5tPcdpFateIPQd0Py
+ HiFNQUbT5dZLsxPwjDF8E0V89mIKapPo+/5fxylHUmdWC3Y0xprurkLDmeANxnJZeCIPAHai2
+ +1WDW0nB2Xi3HqSsnhuY49d6uooNq26ESuvXq4pnvdQv/PYyjfPNlQziar6aimF7+QnLcUVkb
+ O/R+FVKHDeNWrsOUwhKWaFaIalEFpPi3U83jq0hPkFlge7klg+jT3KeFkymVz/YCTxonFJ1dY
+ PjBg16uj7KyjNtnE0V15kkCWeG35yvJ9KlnpOgXzdadmLCobmE5OB1kYQXqFu+1Y5xVaIlOPQ
+ oBGYe9QKDjxi+4THEGbXS3RU2tor7kF9mSBSilaf2eu51RXOWFpbqfvvgMDXKmaaoi/GGo1Xj
+ 7auD/5AJsg9J5jNSAi/Yw4IOJrvry4rUcTcRRTcRIBO2Frjddgf+URmRbujAyONrjQhIJm6Qb
+ vY1CWwCCVlmK2lzp/GgQehtfdcjN8dV5M9yIY4IESn177MuWft5ImhNkg0UPeTde5cFkiT/b5
+ 4/a1ovijJfdmtRj8l
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 09:23:28PM -0700, Bin Meng wrote:
-> From: Bin Meng <bin.meng@windriver.com>
-> 
-> Drop CONFIG_MTD_M25P80 that was removed in
-> commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
+Hi Nicolas,
 
-Have you checked whether these defconfigs contain the new symbol?
-It seems at least one does not.
-
-$ grep -rl CONFIG_MTD_M25P80 arch/arm/configs | \
-  xargs grep -L CONFIG_MTD_SPI_NOR
-arch/arm/configs/axm55xx_defconfig
-
-Plesae fix.
-
-> 
-> Signed-off-by: Bin Meng <bin.meng@windriver.com>
+Am 29.04.20 um 18:47 schrieb Nicolas Saenz Julienne:
+> The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
+> that implements xHCI. After a PCI reset, VL805's firmware may either be
+> loaded directly from an EEPROM or, if not present, by the SoC's
+> co-processor, VideoCore. RPi4's VideoCore OS contains both the non publi=
+c
+> firmware load logic and the VL805 firmware blob. The function this patch
+> introduces triggers the aforementioned process.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
 > ---
-> 
->  arch/arm/configs/axm55xx_defconfig     | 1 -
->  arch/arm/configs/davinci_all_defconfig | 1 -
->  arch/arm/configs/dove_defconfig        | 1 -
->  arch/arm/configs/imx_v6_v7_defconfig   | 1 -
->  arch/arm/configs/keystone_defconfig    | 1 -
->  arch/arm/configs/mvebu_v5_defconfig    | 1 -
->  arch/arm/configs/mvebu_v7_defconfig    | 1 -
->  arch/arm/configs/mxs_defconfig         | 1 -
->  arch/arm/configs/pxa_defconfig         | 1 -
->  arch/arm/configs/qcom_defconfig        | 1 -
->  arch/arm/configs/sama5_defconfig       | 1 -
->  arch/arm/configs/socfpga_defconfig     | 1 -
->  arch/arm/configs/tegra_defconfig       | 1 -
->  13 files changed, 13 deletions(-)
-> 
-> diff --git a/arch/arm/configs/axm55xx_defconfig b/arch/arm/configs/axm55xx_defconfig
-> index 4607521..c731d4a 100644
-> --- a/arch/arm/configs/axm55xx_defconfig
-> +++ b/arch/arm/configs/axm55xx_defconfig
-> @@ -88,7 +88,6 @@ CONFIG_MTD_CFI_AMDSTD=y
->  CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP=y
->  CONFIG_MTD_PHYSMAP_OF=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_PROC_DEVICETREE=y
->  CONFIG_BLK_DEV_LOOP=y
->  CONFIG_BLK_DEV_RAM=y
-> diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-> index e849367..4d8f6f6 100644
-> --- a/arch/arm/configs/davinci_all_defconfig
-> +++ b/arch/arm/configs/davinci_all_defconfig
-> @@ -75,7 +75,6 @@ CONFIG_MTD_CFI=m
->  CONFIG_MTD_CFI_INTELEXT=m
->  CONFIG_MTD_CFI_AMDSTD=m
->  CONFIG_MTD_PHYSMAP=m
-> -CONFIG_MTD_M25P80=m
->  CONFIG_MTD_RAW_NAND=m
->  CONFIG_MTD_NAND_DAVINCI=m
->  CONFIG_MTD_SPI_NOR=m
-> diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
-> index e70c997..546afaf 100644
-> --- a/arch/arm/configs/dove_defconfig
-> +++ b/arch/arm/configs/dove_defconfig
-> @@ -44,7 +44,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
->  CONFIG_MTD_CFI_INTELEXT=y
->  CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_SPI_NOR=y
->  CONFIG_BLK_DEV_LOOP=y
->  CONFIG_BLK_DEV_RAM=y
-> diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-> index 5a20d12..308de35 100644
-> --- a/arch/arm/configs/imx_v6_v7_defconfig
-> +++ b/arch/arm/configs/imx_v6_v7_defconfig
-> @@ -110,7 +110,6 @@ CONFIG_MTD_CFI_AMDSTD=y
->  CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP_OF=y
->  CONFIG_MTD_DATAFLASH=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_SST25L=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_GPMI_NAND=y
-> diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-> index 11e2211..eeaa140 100644
-> --- a/arch/arm/configs/keystone_defconfig
-> +++ b/arch/arm/configs/keystone_defconfig
-> @@ -121,7 +121,6 @@ CONFIG_MTD=y
->  CONFIG_MTD_CMDLINE_PARTS=y
->  CONFIG_MTD_BLOCK=y
->  CONFIG_MTD_PLATRAM=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_DAVINCI=y
->  CONFIG_MTD_SPI_NOR=y
-> diff --git a/arch/arm/configs/mvebu_v5_defconfig b/arch/arm/configs/mvebu_v5_defconfig
-> index 226f2e9..1859097 100644
-> --- a/arch/arm/configs/mvebu_v5_defconfig
-> +++ b/arch/arm/configs/mvebu_v5_defconfig
-> @@ -75,7 +75,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
->  CONFIG_MTD_CFI_INTELEXT=y
->  CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_ORION=y
->  CONFIG_MTD_SPI_NOR=y
-> diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
-> index cddce57..c8f4723 100644
-> --- a/arch/arm/configs/mvebu_v7_defconfig
-> +++ b/arch/arm/configs/mvebu_v7_defconfig
-> @@ -50,7 +50,6 @@ CONFIG_MTD_CFI_INTELEXT=y
->  CONFIG_MTD_CFI_AMDSTD=y
->  CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP_OF=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_MARVELL=y
->  CONFIG_MTD_SPI_NOR=y
-> diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-> index a9c6f32..1322ebd 100644
-> --- a/arch/arm/configs/mxs_defconfig
-> +++ b/arch/arm/configs/mxs_defconfig
-> @@ -46,7 +46,6 @@ CONFIG_MTD=y
->  CONFIG_MTD_CMDLINE_PARTS=y
->  CONFIG_MTD_BLOCK=y
->  CONFIG_MTD_DATAFLASH=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_SST25L=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_GPMI_NAND=y
-> diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-> index b817c57..50bbfdd 100644
-> --- a/arch/arm/configs/pxa_defconfig
-> +++ b/arch/arm/configs/pxa_defconfig
-> @@ -181,7 +181,6 @@ CONFIG_MTD_RAM=m
->  CONFIG_MTD_ROM=m
->  CONFIG_MTD_COMPLEX_MAPPINGS=y
->  CONFIG_MTD_PXA2XX=m
-> -CONFIG_MTD_M25P80=m
->  CONFIG_MTD_BLOCK2MTD=y
->  CONFIG_MTD_DOCG3=m
->  CONFIG_MTD_RAW_NAND=m
-> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-> index c882167..0a90c8d 100644
-> --- a/arch/arm/configs/qcom_defconfig
-> +++ b/arch/arm/configs/qcom_defconfig
-> @@ -62,7 +62,6 @@ CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_MTD=y
->  CONFIG_MTD_BLOCK=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_QCOM=y
->  CONFIG_MTD_SPI_NOR=y
-> diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
-> index bab7861..7e9ec6f 100644
-> --- a/arch/arm/configs/sama5_defconfig
-> +++ b/arch/arm/configs/sama5_defconfig
-> @@ -63,7 +63,6 @@ CONFIG_MTD=y
->  CONFIG_MTD_CMDLINE_PARTS=y
->  CONFIG_MTD_BLOCK=y
->  CONFIG_MTD_CFI=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_ATMEL=y
->  CONFIG_MTD_SPI_NOR=y
-> diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
-> index e73c97b..04c8bd3 100644
-> --- a/arch/arm/configs/socfpga_defconfig
-> +++ b/arch/arm/configs/socfpga_defconfig
-> @@ -48,7 +48,6 @@ CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_MTD=y
->  CONFIG_MTD_BLOCK=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_RAW_NAND=y
->  CONFIG_MTD_NAND_DENALI_DT=y
->  CONFIG_MTD_SPI_NOR=y
-> diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-> index aa94369..6a7988a 100644
-> --- a/arch/arm/configs/tegra_defconfig
-> +++ b/arch/arm/configs/tegra_defconfig
-> @@ -76,7 +76,6 @@ CONFIG_DEVTMPFS=y
->  CONFIG_DEVTMPFS_MOUNT=y
->  CONFIG_TEGRA_GMI=y
->  CONFIG_MTD=y
-> -CONFIG_MTD_M25P80=y
->  CONFIG_MTD_SPI_NOR=y
->  CONFIG_BLK_DEV_LOOP=y
->  CONFIG_AD525X_DPOT=y
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+>
+> Change since v6:
+> - Add test to avoid loading the firmware when not needed
+> - Since we have it around, print VL805's firmware version, it'll make
+> debugging easier in the future
+> - Correct typos
+> - Add a clearer view of HW topology in patch description
+>
+> Changes since v4:
+> - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
+>
+> Changes since v1:
+> - Move include into .c file and add forward declaration to .h
+>
+>  drivers/firmware/raspberrypi.c             | 52 ++++++++++++++++++++++
+>  include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
+>  2 files changed, 59 insertions(+)
+>
+> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberry=
+pi.c
+> index da26a584dca0..230c05e53403 100644
+> --- a/drivers/firmware/raspberrypi.c
+> +++ b/drivers/firmware/raspberrypi.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> +#include <linux/pci.h>
+> +#include <linux/delay.h>
+>  #include <soc/bcm2835/raspberrypi-firmware.h>
+>
+>  #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
+> @@ -19,6 +21,8 @@
+>  #define MBOX_DATA28(msg)		((msg) & ~0xf)
+>  #define MBOX_CHAN_PROPERTY		8
+>
+> +#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
+> +
+>  static struct platform_device *rpi_hwmon;
+>  static struct platform_device *rpi_clk;
+>
+> @@ -286,6 +290,54 @@ struct rpi_firmware *rpi_firmware_get(struct device=
+_node *firmware_node)
+>  }
+>  EXPORT_SYMBOL_GPL(rpi_firmware_get);
+>
+> +/*
+> + * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chi=
+p that
+> + * implements xHCI. After a PCI reset, VL805's firmware may either be l=
+oaded
+> + * directly from an EEPROM or, if not present, by the SoC's co-processo=
+r,
+> + * VideoCore. RPi4's VideoCore OS contains both the non public firmware=
+ load
+> + * logic and the VL805 firmware blob. This function triggers the aforem=
+entioned
+> + * process.
+> + */
+> +int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> +{
+> +	struct device_node *fw_np;
+> +	struct rpi_firmware *fw;
+> +	u32 dev_addr, version;
+> +	int ret =3D 0;
+> +
+> +	fw_np =3D of_find_compatible_node(NULL, NULL,
+> +					"raspberrypi,bcm2835-firmware");
+> +	if (!fw_np)
+> +		return 0;
+> +
+> +	fw =3D rpi_firmware_get(fw_np);
+> +	of_node_put(fw_np);
+> +	if (!fw)
+> +		return -ENODEV;
+> +
+> +	/* Make sure we don't trigger a firmware load unnecesarely *
+s/unnecesarely/unnecessarily/
+> +	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version)=
+;
+pci_read_config_dword() can fail, we might want to store the return value?
+> +	if (version)
+> +		goto exit;
+> +
+> +	dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
+> +		   PCI_FUNC(pdev->devfn) << 12;
+> +
+> +	ret =3D rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
+> +				    &dev_addr, sizeof(dev_addr));
+> +	/* Wait for vl805 to startup */
+> +	udelay(200);
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+I know, it makes it harder to read but do we really want to wait
+unnecessarily if rpi_firmware_property failed?
+
+Btw i assume we are in non-atomic context, so maybe it's worth to use
+usleep_range() here?
+
+> +
+> +exit:
+> +	if (!version)
+> +		pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
+> +				      &version);
+> +	pci_info(pdev, "VL805 firmware version %08x\n", version);
+
+In case pci_read_config_dword() fails the return code would be more helpfu=
+l.
+
+Best regards
+
+> +	return ret;
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
+> +
+>  static const struct of_device_id rpi_firmware_of_match[] =3D {
+>  	{ .compatible =3D "raspberrypi,bcm2835-firmware", },
+>  	{},
+> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bc=
+m2835/raspberrypi-firmware.h
+> index cc9cdbc66403..3025aca3c358 100644
+> --- a/include/soc/bcm2835/raspberrypi-firmware.h
+> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
+> @@ -10,6 +10,7 @@
+>  #include <linux/of_device.h>
+>
+>  struct rpi_firmware;
+> +struct pci_dev;
+>
+>  enum rpi_firmware_property_status {
+>  	RPI_FIRMWARE_STATUS_REQUEST =3D 0,
+> @@ -141,6 +142,7 @@ int rpi_firmware_property(struct rpi_firmware *fw,
+>  int rpi_firmware_property_list(struct rpi_firmware *fw,
+>  			       void *data, size_t tag_size);
+>  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node=
+);
+> +int rpi_firmware_init_vl805(struct pci_dev *pdev);
+>  #else
+>  static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 ta=
+g,
+>  					void *data, size_t len)
+> @@ -158,6 +160,11 @@ static inline struct rpi_firmware *rpi_firmware_get=
+(struct device_node *firmware
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>
+>  #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
