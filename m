@@ -2,142 +2,268 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0065FC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 08:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7137EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB76F20787
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 08:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAD121582
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:04:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Tb4++faH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgEBI7U (ORCPT
+        id S1727118AbgEBJEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 04:59:20 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34540 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgEBI7U (ORCPT
+        Sat, 2 May 2020 05:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726654AbgEBJEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 04:59:20 -0400
-Received: by mail-io1-f69.google.com with SMTP id v12so7389438iol.1
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 01:59:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Ywzji6QDZvXk0ZcBde6pSZ6jql6pppVQlFIwSdzVTS4=;
-        b=VDd7gB2ctagDJBBhFxMdV7deujEmp9E+gnjMrRoHmDpOP0gcgQhLR9EEt8Apr8oZ2s
-         4AxXJSqIUouqwiB5+aPyTaiQnJsG9AoXlsCuZLBFTUB0g/NmfefHrmiDn4ch9nFZrvja
-         xE97h6W2M2EqV7aI/mgv/W5E6um3VvRY8s8iMESpZk/2ACamqkoYvXDJmOtWkpn6otEL
-         MHUkbXBoDxfMag6HDDJHsLIwqqx+mtEUEM5VLsgPQ6zM06pogaQnNrRkC0ykhJ1Z0x5E
-         M7IuqBjc3E8VOIRGNOJMfaogE6EjiyZ9UzDne5m8qEbJdr0Jsb5GOr21muPsec6AsdfG
-         f+JA==
-X-Gm-Message-State: AGi0PubAnJ2DwIrHhd6Q4irQCXwFNe/G16CiTdcPAtxt1S82m9M4YwLL
-        2p1s5YZArye+Kqm/1n8EWjXB09CXy91HLMKWtnmbEWELzqsA
-X-Google-Smtp-Source: APiQypJwe/QtiAdOMw0gg7Juii1+8c/8AdO98fvxzwSQCgaqOMbSqCF+kNPf6lF5yJ9UeT1YoICCgRp5DDiXxJnxxf/u5miIWFK9
+        Sat, 2 May 2020 05:04:20 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD32C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 02:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+xxsMuayT6OUTVNwJbUrq8ypk6Bmy0pMtrNWYkktz70=; b=Tb4++faHvult4X2/06OQObBz5
+        5u8GjzZV4gsbVJvjBhn7bCA/2n9x30csVeoIheOU8iFowttFolAjL8Hj08RllYgSGFtK7mTHzKyS/
+        LG9gArFaXHmZyJUbKgi1zZ9gjPulIvC6egtTLVA6wBdyBk5m1wyedgndoO1MmHdbYmMhHjpbPFU+P
+        5Fd5MnFmrq+yw3VZE/2RQOs+dLC6kemV06cfRmMGOqPUX6nti0KKRhDjh607UV4PILsZc46OS5aGn
+        4EkWe3W6e3/4LmojTWgwUSg8XwZloXS13bvqWuEQ0SnpcWDfibOohsw0qmTUSz9Y3CjYgKdUbsL2b
+        8Z2u9yTHw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:52710)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jUo4C-0000id-CG; Sat, 02 May 2020 10:04:12 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jUo40-0003zd-Vi; Sat, 02 May 2020 10:04:01 +0100
+Date:   Sat, 2 May 2020 10:04:00 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Bin Meng <bmeng.cn@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bin Meng <bin.meng@windriver.com>
+Subject: Re: [PATCH] arm: Drop CONFIG_MTD_M25P80 in various defconfig files
+Message-ID: <20200502090400.GT1551@shell.armlinux.org.uk>
+References: <1588393408-31225-1-git-send-email-bmeng.cn@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d8ca:: with SMTP id l10mr7408148ilo.118.1588409959328;
- Sat, 02 May 2020 01:59:19 -0700 (PDT)
-Date:   Sat, 02 May 2020 01:59:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000622fdd05a4a6831d@google.com>
-Subject: KASAN: global-out-of-bounds Read in inet_diag_bc_sk
-From:   syzbot <syzbot+3f4c9f04a6740870299e@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net,
-        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
-        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588393408-31225-1-git-send-email-bmeng.cn@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, May 01, 2020 at 09:23:28PM -0700, Bin Meng wrote:
+> From: Bin Meng <bin.meng@windriver.com>
+> 
+> Drop CONFIG_MTD_M25P80 that was removed in
+> commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
 
-syzbot found the following crash on:
+Have you checked whether these defconfigs contain the new symbol?
+It seems at least one does not.
 
-HEAD commit:    4b4976a6 Merge branch 'net-ReST-part-three'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e3824c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b1494ce3fbc02154
-dashboard link: https://syzkaller.appspot.com/bug?extid=3f4c9f04a6740870299e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+$ grep -rl CONFIG_MTD_M25P80 arch/arm/configs | \
+  xargs grep -L CONFIG_MTD_SPI_NOR
+arch/arm/configs/axm55xx_defconfig
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Plesae fix.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3f4c9f04a6740870299e@syzkaller.appspotmail.com
+> 
+> Signed-off-by: Bin Meng <bin.meng@windriver.com>
+> ---
+> 
+>  arch/arm/configs/axm55xx_defconfig     | 1 -
+>  arch/arm/configs/davinci_all_defconfig | 1 -
+>  arch/arm/configs/dove_defconfig        | 1 -
+>  arch/arm/configs/imx_v6_v7_defconfig   | 1 -
+>  arch/arm/configs/keystone_defconfig    | 1 -
+>  arch/arm/configs/mvebu_v5_defconfig    | 1 -
+>  arch/arm/configs/mvebu_v7_defconfig    | 1 -
+>  arch/arm/configs/mxs_defconfig         | 1 -
+>  arch/arm/configs/pxa_defconfig         | 1 -
+>  arch/arm/configs/qcom_defconfig        | 1 -
+>  arch/arm/configs/sama5_defconfig       | 1 -
+>  arch/arm/configs/socfpga_defconfig     | 1 -
+>  arch/arm/configs/tegra_defconfig       | 1 -
+>  13 files changed, 13 deletions(-)
+> 
+> diff --git a/arch/arm/configs/axm55xx_defconfig b/arch/arm/configs/axm55xx_defconfig
+> index 4607521..c731d4a 100644
+> --- a/arch/arm/configs/axm55xx_defconfig
+> +++ b/arch/arm/configs/axm55xx_defconfig
+> @@ -88,7 +88,6 @@ CONFIG_MTD_CFI_AMDSTD=y
+>  CONFIG_MTD_CFI_STAA=y
+>  CONFIG_MTD_PHYSMAP=y
+>  CONFIG_MTD_PHYSMAP_OF=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_PROC_DEVICETREE=y
+>  CONFIG_BLK_DEV_LOOP=y
+>  CONFIG_BLK_DEV_RAM=y
+> diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+> index e849367..4d8f6f6 100644
+> --- a/arch/arm/configs/davinci_all_defconfig
+> +++ b/arch/arm/configs/davinci_all_defconfig
+> @@ -75,7 +75,6 @@ CONFIG_MTD_CFI=m
+>  CONFIG_MTD_CFI_INTELEXT=m
+>  CONFIG_MTD_CFI_AMDSTD=m
+>  CONFIG_MTD_PHYSMAP=m
+> -CONFIG_MTD_M25P80=m
+>  CONFIG_MTD_RAW_NAND=m
+>  CONFIG_MTD_NAND_DAVINCI=m
+>  CONFIG_MTD_SPI_NOR=m
+> diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
+> index e70c997..546afaf 100644
+> --- a/arch/arm/configs/dove_defconfig
+> +++ b/arch/arm/configs/dove_defconfig
+> @@ -44,7 +44,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
+>  CONFIG_MTD_CFI_INTELEXT=y
+>  CONFIG_MTD_CFI_STAA=y
+>  CONFIG_MTD_PHYSMAP=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_SPI_NOR=y
+>  CONFIG_BLK_DEV_LOOP=y
+>  CONFIG_BLK_DEV_RAM=y
+> diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+> index 5a20d12..308de35 100644
+> --- a/arch/arm/configs/imx_v6_v7_defconfig
+> +++ b/arch/arm/configs/imx_v6_v7_defconfig
+> @@ -110,7 +110,6 @@ CONFIG_MTD_CFI_AMDSTD=y
+>  CONFIG_MTD_CFI_STAA=y
+>  CONFIG_MTD_PHYSMAP_OF=y
+>  CONFIG_MTD_DATAFLASH=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_SST25L=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_GPMI_NAND=y
+> diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+> index 11e2211..eeaa140 100644
+> --- a/arch/arm/configs/keystone_defconfig
+> +++ b/arch/arm/configs/keystone_defconfig
+> @@ -121,7 +121,6 @@ CONFIG_MTD=y
+>  CONFIG_MTD_CMDLINE_PARTS=y
+>  CONFIG_MTD_BLOCK=y
+>  CONFIG_MTD_PLATRAM=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_DAVINCI=y
+>  CONFIG_MTD_SPI_NOR=y
+> diff --git a/arch/arm/configs/mvebu_v5_defconfig b/arch/arm/configs/mvebu_v5_defconfig
+> index 226f2e9..1859097 100644
+> --- a/arch/arm/configs/mvebu_v5_defconfig
+> +++ b/arch/arm/configs/mvebu_v5_defconfig
+> @@ -75,7 +75,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
+>  CONFIG_MTD_CFI_INTELEXT=y
+>  CONFIG_MTD_CFI_STAA=y
+>  CONFIG_MTD_PHYSMAP=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_ORION=y
+>  CONFIG_MTD_SPI_NOR=y
+> diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
+> index cddce57..c8f4723 100644
+> --- a/arch/arm/configs/mvebu_v7_defconfig
+> +++ b/arch/arm/configs/mvebu_v7_defconfig
+> @@ -50,7 +50,6 @@ CONFIG_MTD_CFI_INTELEXT=y
+>  CONFIG_MTD_CFI_AMDSTD=y
+>  CONFIG_MTD_CFI_STAA=y
+>  CONFIG_MTD_PHYSMAP_OF=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_MARVELL=y
+>  CONFIG_MTD_SPI_NOR=y
+> diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
+> index a9c6f32..1322ebd 100644
+> --- a/arch/arm/configs/mxs_defconfig
+> +++ b/arch/arm/configs/mxs_defconfig
+> @@ -46,7 +46,6 @@ CONFIG_MTD=y
+>  CONFIG_MTD_CMDLINE_PARTS=y
+>  CONFIG_MTD_BLOCK=y
+>  CONFIG_MTD_DATAFLASH=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_SST25L=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_GPMI_NAND=y
+> diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+> index b817c57..50bbfdd 100644
+> --- a/arch/arm/configs/pxa_defconfig
+> +++ b/arch/arm/configs/pxa_defconfig
+> @@ -181,7 +181,6 @@ CONFIG_MTD_RAM=m
+>  CONFIG_MTD_ROM=m
+>  CONFIG_MTD_COMPLEX_MAPPINGS=y
+>  CONFIG_MTD_PXA2XX=m
+> -CONFIG_MTD_M25P80=m
+>  CONFIG_MTD_BLOCK2MTD=y
+>  CONFIG_MTD_DOCG3=m
+>  CONFIG_MTD_RAW_NAND=m
+> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+> index c882167..0a90c8d 100644
+> --- a/arch/arm/configs/qcom_defconfig
+> +++ b/arch/arm/configs/qcom_defconfig
+> @@ -62,7 +62,6 @@ CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  CONFIG_MTD=y
+>  CONFIG_MTD_BLOCK=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_QCOM=y
+>  CONFIG_MTD_SPI_NOR=y
+> diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
+> index bab7861..7e9ec6f 100644
+> --- a/arch/arm/configs/sama5_defconfig
+> +++ b/arch/arm/configs/sama5_defconfig
+> @@ -63,7 +63,6 @@ CONFIG_MTD=y
+>  CONFIG_MTD_CMDLINE_PARTS=y
+>  CONFIG_MTD_BLOCK=y
+>  CONFIG_MTD_CFI=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_ATMEL=y
+>  CONFIG_MTD_SPI_NOR=y
+> diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
+> index e73c97b..04c8bd3 100644
+> --- a/arch/arm/configs/socfpga_defconfig
+> +++ b/arch/arm/configs/socfpga_defconfig
+> @@ -48,7 +48,6 @@ CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  CONFIG_MTD=y
+>  CONFIG_MTD_BLOCK=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_RAW_NAND=y
+>  CONFIG_MTD_NAND_DENALI_DT=y
+>  CONFIG_MTD_SPI_NOR=y
+> diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+> index aa94369..6a7988a 100644
+> --- a/arch/arm/configs/tegra_defconfig
+> +++ b/arch/arm/configs/tegra_defconfig
+> @@ -76,7 +76,6 @@ CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+>  CONFIG_TEGRA_GMI=y
+>  CONFIG_MTD=y
+> -CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_SPI_NOR=y
+>  CONFIG_BLK_DEV_LOOP=y
+>  CONFIG_AD525X_DPOT=y
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-==================================================================
-BUG: KASAN: global-out-of-bounds in cgroup_id include/linux/cgroup.h:312 [inline]
-BUG: KASAN: global-out-of-bounds in inet_diag_bc_sk+0xb6e/0xc70 net/ipv4/inet_diag.c:749
-Read of size 8 at addr ffffffff8d22eed0 by task syz-executor.2/16922
-
-CPU: 1 PID: 16922 Comm: syz-executor.2 Not tainted 5.7.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x315 mm/kasan/report.c:382
- __kasan_report.cold+0x35/0x4d mm/kasan/report.c:511
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- cgroup_id include/linux/cgroup.h:312 [inline]
- inet_diag_bc_sk+0xb6e/0xc70 net/ipv4/inet_diag.c:749
- inet_diag_dump_icsk+0xbe4/0x1306 net/ipv4/inet_diag.c:1061
- __inet_diag_dump+0x8d/0x240 net/ipv4/inet_diag.c:1113
- netlink_dump+0x50b/0xf50 net/netlink/af_netlink.c:2245
- __netlink_dump_start+0x63f/0x910 net/netlink/af_netlink.c:2353
- netlink_dump_start include/linux/netlink.h:246 [inline]
- inet_diag_handler_cmd+0x263/0x2c0 net/ipv4/inet_diag.c:1278
- __sock_diag_cmd net/core/sock_diag.c:233 [inline]
- sock_diag_rcv_msg+0x2fe/0x3e0 net/core/sock_diag.c:264
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- sock_diag_rcv+0x26/0x40 net/core/sock_diag.c:275
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- sock_write_iter+0x289/0x3c0 net/socket.c:1004
- call_write_iter include/linux/fs.h:1907 [inline]
- do_iter_readv_writev+0x5a8/0x850 fs/read_write.c:694
- do_iter_write fs/read_write.c:999 [inline]
- do_iter_write+0x18b/0x600 fs/read_write.c:980
- vfs_writev+0x1b3/0x2f0 fs/read_write.c:1072
- do_writev+0x27f/0x300 fs/read_write.c:1115
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45c829
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6839177c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 000000000050d140 RCX: 000000000045c829
-RDX: 0000000000000001 RSI: 00000000200000c0 RDI: 0000000000000007
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000d18 R14: 00000000004cb1f4 R15: 00007f68391786d4
-
-The buggy address belongs to the variable:
- __key.82892+0x30/0x40
-
-Memory state around the buggy address:
- ffffffff8d22ed80: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 fa fa
- ffffffff8d22ee00: fa fa fa fa 00 fa fa fa fa fa fa fa 00 00 fa fa
->ffffffff8d22ee80: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 fa fa
-                                                 ^
- ffffffff8d22ef00: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 fa fa
- ffffffff8d22ef80: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 fa fa
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
