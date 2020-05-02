@@ -2,36 +2,36 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BCC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11830C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4747520787
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F662184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgEBEcg (ORCPT
+        id S1727864AbgEBEck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 00:32:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:55783 "EHLO mga09.intel.com"
+        Sat, 2 May 2020 00:32:40 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55787 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgEBEcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 00:32:36 -0400
-IronPort-SDR: dPOrQT68hPzbRpu4BLjy1w42EalcLWmDr0uGylPQ9ptmWRHkKpwUkVPMh7ttfj7f9sSOQuthHw
- 8JxfQaGRTwrw==
+        id S1727121AbgEBEch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 00:32:37 -0400
+IronPort-SDR: +sVfs6VTwv1tO/sa1wdOBk6a99rjaplP5E2gXgxE68SqPJ53Qefm17d2kWsLg9IokMH/kYpRyS
+ owf/HSs3feeg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:35 -0700
-IronPort-SDR: WSlDYZJPxF5NPd5/RIFQn10i2FBPG5MhLGuRPGyGB23uEj7G3/hwSgRpmNSE65kVC+redTE8XE
- AIi9MovEM9nA==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:37 -0700
+IronPort-SDR: ttUEoi4qvg4UT85uXLGbzQGb6lp6qCUYm1CAP1RECZ8qXBpnHhyd32smMMI5yXsG8BOKLSA2dI
+ pSW8iUL7MPPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="433516107"
+   d="scan'208";a="433516117"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 21:32:35 -0700
+  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 21:32:37 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -40,10 +40,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/10] KVM: x86: Misc anti-retpoline optimizations
-Date:   Fri,  1 May 2020 21:32:24 -0700
-Message-Id: <20200502043234.12481-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 02/10] KVM: nVMX: Unconditionally validate CR3 during nested transitions
+Date:   Fri,  1 May 2020 21:32:26 -0700
+Message-Id: <20200502043234.12481-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200502043234.12481-1-sean.j.christopherson@intel.com>
+References: <20200502043234.12481-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,61 +53,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A smattering of optimizations geared toward avoiding retpolines, though
-IMO most of the patches are worthwhile changes irrespective of retpolines.
-I can split this up into separate patches if desired, outside of the
-obvious combos there are no dependencies.
+Unconditionally check the validity of the incoming CR3 during nested
+VM-Enter/VM-Exit to avoid invoking kvm_read_cr3() in the common case
+where the guest isn't using PAE paging.  If vmcs.GUEST_CR3 hasn't yet
+been cached (common case), kvm_read_cr3() will trigger a VMREAD.  The
+VMREAD (~30 cycles) alone is likely slower than nested_cr3_valid()
+(~5 cycles if vcpu->arch.maxphyaddr gets a cache hit), and the poor
+exchange only gets worse when retpolines are enabled as the call to
+kvm_x86_ops.cache_reg() will incur a retpoline (60+ cycles).
 
-I was mainly coming at this from a nVMX angle.  On a Haswell, this reduces
-the best case latency for a nested VMX roundtrip by ~750 cycles, though I
-doubt that much benefit will be realized in practice.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-
-The CR0 and CR4 caching changes in particular are keepers, if only because
-they get rid of the awful cache vs. decache naming.  And the CR4 change
-can eliminate multiple of VMREADs in the nested VMX paths.
-
-Ditto for the CR3 validation patch; it's arguably more readable and can
-avoid a VMREAD.
-
-I like the L1 TSC offset patch because VMX and SVM have inverted logic for
-how they track the L1 offset, and because math is hard.
-
-I think I like the TDP level change even if retpolines didn't exist?  The
-nested EPT behavior is a bit scary, but it was already scary, this just
-makes it more obvious.
-
-The RIP/RSP accessors are definitely obsoleted by static calls, but IMO
-the noise is worth the benefit unless static calls are imminent.
-
-The DR6 change is gratuitous, though I do like not having to dive into the
-VMX code when I inevitably forget the VMX implementations are nops.
-
-Sean Christopherson (10):
-  KVM: x86: Save L1 TSC offset in 'struct kvm_vcpu_arch'
-  KVM: nVMX: Unconditionally validate CR3 during nested transitions
-  KVM: x86: Make kvm_x86_ops' {g,s}et_dr6() hooks optional
-  KVM: x86: Split guts of kvm_update_dr7() to separate helper
-  KVM: nVMX: Avoid retpoline when writing DR7 during nested transitions
-  KVM: VMX: Add proper cache tracking for CR4
-  KVM: VMX: Add proper cache tracking for CR0
-  KVM: VMX: Add anti-retpoline accessors for RIP and RSP
-  KVM: VMX: Move nested EPT out of kvm_x86_ops.get_tdp_level() hook
-  KVM: x86/mmu: Capture TDP level when updating CPUID
-
- arch/x86/include/asm/kvm_host.h |  7 +--
- arch/x86/kvm/cpuid.c            |  3 +-
- arch/x86/kvm/kvm_cache_regs.h   | 10 +++--
- arch/x86/kvm/mmu/mmu.c          |  6 +--
- arch/x86/kvm/svm/nested.c       |  2 +-
- arch/x86/kvm/svm/svm.c          | 21 ---------
- arch/x86/kvm/vmx/nested.c       | 49 +++++++++++----------
- arch/x86/kvm/vmx/vmx.c          | 77 +++++++++++++--------------------
- arch/x86/kvm/vmx/vmx.h          | 30 +++++++++++++
- arch/x86/kvm/x86.c              | 26 ++++-------
- arch/x86/kvm/x86.h              | 14 ++++++
- 11 files changed, 125 insertions(+), 120 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index b57420f3dd8f..1f2f41e821f9 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -1120,21 +1120,20 @@ static bool nested_vmx_transition_mmu_sync(struct kvm_vcpu *vcpu)
+ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
+ 			       u32 *entry_failure_code)
+ {
+-	if (cr3 != kvm_read_cr3(vcpu) || (!nested_ept && pdptrs_changed(vcpu))) {
+-		if (CC(!nested_cr3_valid(vcpu, cr3))) {
+-			*entry_failure_code = ENTRY_FAIL_DEFAULT;
+-			return -EINVAL;
+-		}
++	if (CC(!nested_cr3_valid(vcpu, cr3))) {
++		*entry_failure_code = ENTRY_FAIL_DEFAULT;
++		return -EINVAL;
++	}
+ 
+-		/*
+-		 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
+-		 * must not be dereferenced.
+-		 */
+-		if (is_pae_paging(vcpu) && !nested_ept) {
+-			if (CC(!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))) {
+-				*entry_failure_code = ENTRY_FAIL_PDPTE;
+-				return -EINVAL;
+-			}
++	/*
++	 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
++	 * must not be dereferenced.
++	 */
++	if (!nested_ept && is_pae_paging(vcpu) &&
++	    (cr3 != kvm_read_cr3(vcpu) || pdptrs_changed(vcpu))) {
++		if (CC(!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))) {
++			*entry_failure_code = ENTRY_FAIL_PDPTE;
++			return -EINVAL;
+ 		}
+ 	}
+ 
 -- 
 2.26.0
 
