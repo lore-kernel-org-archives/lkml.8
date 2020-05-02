@@ -2,151 +2,119 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D6EC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92774C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5BDA208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:00:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tmCaMLGd"
+	by mail.kernel.org (Postfix) with ESMTP id 7581A208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgEBCAG (ORCPT
+        id S1726752AbgEBCJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:00:06 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44272 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726323AbgEBCAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:00:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588384805; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Y7zHbm62D06FuknuUOyxfzY9RDfUfaFg2lavUE/GVKc=;
- b=tmCaMLGdcsdBVziotMaT2396UiQxPQIQSDUrBLFs24v61dnziJ+LPc8dWDV4lzSK295vDIE0
- +FDayAyRqG6d8g+6W39XChnYTUAsC1pvyoNxYBQZOc3YPCZniBV4hRQ8zWJK0g1joRLTK4Ou
- YYdhnX0CsDZtCaKQflCbUZ4tdLE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eacd40b.7f82d4197880-smtp-out-n05;
- Sat, 02 May 2020 01:59:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 05744C4478F; Sat,  2 May 2020 01:59:38 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 06328C433D2;
-        Sat,  2 May 2020 01:59:38 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Sat, 02 May 2020 09:59:37 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        stanley.chu@mediatek.com, alim.akhtar@samsung.com,
-        beanhuo@micron.com, Avri.Altman@wdc.com,
-        bjorn.andersson@linaro.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] scsi: pm: Balance pm_only counter of request queue
- during system resume
-In-Reply-To: <2356ab42-bbdd-d214-30f5-a533fe978dcb@acm.org>
-References: <1588219805-25794-1-git-send-email-cang@codeaurora.org>
- <9e15123e-4315-15cd-3d23-2df6144bd376@acm.org>
- <1ef85ee212bee679f7b2927cbbc79cba@codeaurora.org>
- <ef23a815-118a-52fe-4880-19e7fc4fcd10@acm.org>
- <1e2a2e39dbb3a0f06fe95bbfd66e1648@codeaurora.org>
- <226048f7-6ad3-a625-c2ed-d9d13e096803@acm.org>
- <3bfa692ce706c5c198f565e674afb56f@codeaurora.org>
- <2356ab42-bbdd-d214-30f5-a533fe978dcb@acm.org>
-Message-ID: <5196eb909699044771fe58905c543626@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Fri, 1 May 2020 22:09:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30459 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgEBCJD (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:09:03 -0400
+IronPort-SDR: SQjDdxC+NdguVE7POl+jqGSbxj8r29pNDvLBiFE/bw4kOkQfN75/rVZxJCfDezFx82xZ19et33
+ E05KAiNkXZaw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:09:03 -0700
+IronPort-SDR: m9F+HImyFtQViKo59Bw5bZKswYhiV7lG/khJaR9cFAhHHDWH+C7Tz0pkmbAaFImQytwU70IM7I
+ zoquMbnGwMgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
+   d="scan'208";a="283348203"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
+  by fmsmga004.fm.intel.com with ESMTP; 01 May 2020 19:09:00 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v2 0/2] perf stat: Support overall statistics for interval mode
+Date:   Sat,  2 May 2020 10:07:03 +0800
+Message-Id: <20200502020705.19295-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-02 01:56, Bart Van Assche wrote:
-> On 2020-04-30 22:12, Can Guo wrote:
->> diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
->> index 3717eea..d18271d 100644
->> --- a/drivers/scsi/scsi_pm.c
->> +++ b/drivers/scsi/scsi_pm.c
->> @@ -74,12 +74,15 @@ static int scsi_dev_type_resume(struct device 
->> *dev,
->>  {
->>         const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : 
->> NULL;
->>         int err = 0;
->> +       bool was_rpm_suspended = false;
->> 
->>         err = cb(dev, pm);
->>         scsi_device_resume(to_scsi_device(dev));
->>         dev_dbg(dev, "scsi resume: %d\n", err);
->> 
->>         if (err == 0) {
->> +               was_rpm_suspended = pm_runtime_suspended(dev);
->> +
-> 
-> How about renaming this variable into "was_runtime_suspended"? How 
-> about
-> moving the declaration of that variable inside the if-statement?
-> 
+Currently perf-stat supports to print counts at regular interval (-I),
+but it's not very easy for user to get the overall statistics.
 
-Sure, shall do, this patch was just a prototype which I made for 
-testing.
-If you are OK with this idea, I will send it as the next version.
+With this patchset, it supports to report the summary at the end of
+interval output.
 
->>                 pm_runtime_disable(dev);
->>                 err = pm_runtime_set_active(dev);
->>                 pm_runtime_enable(dev);
->> @@ -93,8 +96,10 @@ static int scsi_dev_type_resume(struct device *dev,
->>                  */
->>                 if (!err && scsi_is_sdev_device(dev)) {
->>                         struct scsi_device *sdev = 
->> to_scsi_device(dev);
->> -
->> -                       blk_set_runtime_active(sdev->request_queue);
->> +                       if (was_rpm_suspended)
->> +                              
->> blk_post_runtime_resume(sdev->request_queue, 0);
->> +                       else
->> +                              
->> blk_set_runtime_active(sdev->request_queue);
->>                 }
->>         }
-> 
-> Does other code always call both blk_pre_runtime_resume() and
-> blk_post_runtime_resume() upon runtime resume? How about adding a
-> blk_pre_runtime_resume() call before the blk_post_runtime_resume() 
-> call?
-> 
-> Thanks,
-> 
-> Bart.
+For example,
 
-Yes, but adding a blk_pre_runtime_resume() here is meaningless, it only
-sets the q->rpm_status to RPM_RESUMING, blk_post_runtime_resume() 
-overrides
-it to RPM_ACTIVE for sure. Besides, this place comes after the call of
-pm_runtime_set_active(), meaning sdev is already runtime active, in 
-contrast
-with the real runtime resume routine, we can think it as the sdev's 
-runtime
-resume ops has returned 0, so we can just call 
-blk_post_runtime_resume(err=0).
+ root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000412064          2,281,114      cycles
+      2.001383658          2,547,880      cycles
 
-Thanks,
+  Performance counter stats for 'system wide':
 
-Can Guo.
+          4,828,994      cycles
+
+        2.002860349 seconds time elapsed
+
+ root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000389902          1,536,093      cycles
+      1.000389902            420,226      instructions              #    0.27  insn per cycle
+      2.001433453          2,213,952      cycles
+      2.001433453            735,465      instructions              #    0.33  insn per cycle
+
+  Performance counter stats for 'system wide':
+
+          3,750,045      cycles
+          1,155,691      instructions              #    0.31  insn per cycle
+
+        2.003023361 seconds time elapsed
+
+ root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
+ #           time             counts unit events
+      1.000435121            905,303      inst_retired.any          #      2.9 CPI
+      1.000435121          2,663,333      cycles
+      1.000435121            914,702      inst_retired.any          #      0.3 IPC
+      1.000435121          2,676,559      cpu_clk_unhalted.thread
+      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
+      2.001615941          3,551,357      cycles
+      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
+      2.001615941          3,551,044      cpu_clk_unhalted.thread
+
+  Performance counter stats for 'system wide':
+
+          2,856,395      inst_retired.any          #      2.2 CPI
+          6,214,690      cycles
+          2,865,539      inst_retired.any          #      0.5 IPC
+          6,227,603      cpu_clk_unhalted.thread
+
+        2.003403078 seconds time elapsed
+
+ v2:
+ ---
+ Rebase to perf/core branch
+
+Jin Yao (2):
+  perf evsel: Create counts for collecting summary data
+  perf stat: Report summary for interval mode
+
+ tools/perf/builtin-stat.c | 14 ++++++-
+ tools/perf/util/evsel.c   | 10 ++++-
+ tools/perf/util/evsel.h   |  1 +
+ tools/perf/util/stat.c    | 77 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/stat.h    |  5 +++
+ 5 files changed, 103 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
+
