@@ -2,220 +2,136 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A19C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0585C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 991E7218AC
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:10:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+QdoZKQ"
+	by mail.kernel.org (Postfix) with ESMTP id AD0FC2064C
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588421940;
+	bh=iIMxmKSfhwt9Y6WBsiFbb6OU8iD5jqB42Z04kdSzJG0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TpssLE8Vnwh7H2yto6z8SjU4btIG3gf6mPXVj3O4JExG810VrICtamwYv7OPfH0m3
+	 H5Dy1nKOBosMpY2dWbACSTcBHng+z33cXhCF4YKQpCYk8YhU3ybf9W71SYPwj/Ory+
+	 U+DhXJEFmLj0yy4tyZHBwour0165H2FUtNegVkBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgEBMKo (ORCPT
+        id S1727853AbgEBMSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727951AbgEBMKm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:10:42 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9189C061A0C;
-        Sat,  2 May 2020 05:10:41 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e26so2912613wmk.5;
-        Sat, 02 May 2020 05:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=KpfvJecLL3a77wRaEiE1iD1YWA6MRqbUFAwQ0V5rD8U=;
-        b=r+QdoZKQ3oV2+/dqyF9Q3ZPu7/x2VEIRUn2uWg0aEpfVMc975LtdWxKusSEWm+zFnh
-         3MJdfLLu/K/AhjZBr9w4ynM5LF3mQFxi/+qWORR/+IZQ5CdYgzzYXWzuKRFYTnkolhY/
-         DAfrnxESyd3hdYujeJEifJvIjQZE+BUemuu1HJXKKDhJRmQDT8cjA4+n4aXDBJCm0lxz
-         Vm0k8dI9R0hNt91uBMnuyf7ked/Q1SEz/n2Uf72fJa6YYdw5zSpPKy6yXzU7euytKnLN
-         FEjCPXW+RQx8X2vTrcxIsmc5dEct+Ks+09BkPWWaSCfrKZ3SQCHUTyFx0ksgVdids4XY
-         uvOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KpfvJecLL3a77wRaEiE1iD1YWA6MRqbUFAwQ0V5rD8U=;
-        b=FDhzR692EHcOqnUDUXmhwR+vFdz4U7mvHa3fpD8tCcOnU4DVnqSDYZDyFFxJ/XMHyJ
-         EmFKkBTTBNBb/3meSIB+tDyw8Sp02bxLD9zUuEFGNNip6WsoAHvsEtHVgSJoHqP3gbDW
-         bXniBZj/AhQUP1F0qRRP3Ynowfa5ST0mQsA+eiJN5ZC9PXzsm3pTklcteOfo0EvbM3V7
-         yyZvAYYirf7f7fU/DkP+5l67+e+fTfpmrXX+HhjssmZGbOtTWIi3IGiAUcyfQ3lMk7o6
-         qq7Jf5N8PrgQAUN1JZi20fImCUUBhPUXQNNumc3lhSrc1RftWgHdTtV9zi8sWAdoXn2L
-         +iiQ==
-X-Gm-Message-State: AGi0PuYUnXWWBDlGPd4ZuGV1gJtvyOqW3tPOhXYtW2YjX3Ninxlj5vio
-        PIVaVak24Qd/YPd3Or5Vffk=
-X-Google-Smtp-Source: APiQypLiYFkxgSfD8yXv1FY3q2MHs/3gjyCgFdoNZjDplObNqqNEJw95OsTWpXJWZc4pgGxlvVtfTQ==
-X-Received: by 2002:a1c:1c8:: with SMTP id 191mr4178633wmb.37.1588421440464;
-        Sat, 02 May 2020 05:10:40 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id m15sm3858297wmc.35.2020.05.02.05.10.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 05:10:40 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Clay Harris <bugs@claycon.org>
-Subject: [PATCH 2/2] io_uring: add tee(2) support
-Date:   Sat,  2 May 2020 15:09:26 +0300
-Message-Id: <ea033201ae4e8359420ab1b50bce95ed47c8cd90.1588421219.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1588421219.git.asml.silence@gmail.com>
-References: <cover.1588421219.git.asml.silence@gmail.com>
+        Sat, 2 May 2020 08:18:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbgEBMSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 08:18:53 -0400
+Received: from localhost (p5486C608.dip0.t-ipconnect.de [84.134.198.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EE2C2064C;
+        Sat,  2 May 2020 12:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588421932;
+        bh=iIMxmKSfhwt9Y6WBsiFbb6OU8iD5jqB42Z04kdSzJG0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Jf5QJEKFAF9qRkTYpsdkEocVaUAt1PasLUrUUArEVzlSONdl31rDeP5hrDwOFJNA/
+         /xns3DCnNoOBuM2otzCp8X4r6BBCQoKAdOEktzEVbdDHEDIlgRcxKdQeC+OWfeqNM2
+         Ix4zcoC+7JiBN4P/23YxeUg3m1f09VwyRzQcHzhc=
+From:   Wolfram Sang <wsa@kernel.org>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: use my kernel.org address from now on
+Date:   Sat,  2 May 2020 14:18:35 +0200
+Message-Id: <20200502121840.9544-1-wsa@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add IORING_OP_TEE implementing tee(2) support. Almost identical to
-splice bits, but without offsets.
+The old email is still active, but for easier handling, I am going to
+use my kernel.org address from now on. Also, add a mailmap for the now
+defunct Pengutronix address.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 ---
- fs/io_uring.c                 | 64 +++++++++++++++++++++++++++++++++--
- include/uapi/linux/io_uring.h |  1 +
- 2 files changed, 62 insertions(+), 3 deletions(-)
+ .mailmap                    | 2 ++
+ MAINTAINERS                 | 2 +-
+ drivers/i2c/i2c-core-base.c | 2 +-
+ drivers/i2c/i2c-core-of.c   | 2 +-
+ include/linux/i2c.h         | 2 +-
+ 5 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 4ed82d39540b..dc314f66fbc9 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -855,6 +855,11 @@ static const struct io_op_def io_op_defs[] = {
- 	},
- 	[IORING_OP_PROVIDE_BUFFERS] = {},
- 	[IORING_OP_REMOVE_BUFFERS] = {},
-+	[IORING_OP_TEE] = {
-+		.needs_file		= 1,
-+		.hash_reg_file		= 1,
-+		.unbound_nonreg_file	= 1,
-+	},
- };
+diff --git a/.mailmap b/.mailmap
+index db3754a41018..4f906b4e9785 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -288,6 +288,8 @@ Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@virtuozzo.com>
+ Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@parallels.com>
+ Takashi YOSHII <takashi.yoshii.zj@renesas.com>
+ Will Deacon <will@kernel.org> <will.deacon@arm.com>
++Wolfram Sang <wsa@kernel.org> <wsa@the-dreams.de>
++Wolfram Sang <wsa@kernel.org> <w.sang@pengutronix.de>
+ Yakir Yang <kuankuan.y@gmail.com> <ykk@rock-chips.com>
+ Yusuke Goda <goda.yusuke@renesas.com>
+ Gustavo Padovan <gustavo@las.ic.unicamp.br>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 26f281d9f32a..46049787d27e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7949,7 +7949,7 @@ F:	Documentation/i2c/busses/i2c-parport.rst
+ F:	drivers/i2c/busses/i2c-parport.c
  
- static void io_wq_submit_work(struct io_wq_work **workptr);
-@@ -2754,7 +2759,8 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
- 	return ret;
- }
+ I2C SUBSYSTEM
+-M:	Wolfram Sang <wsa@the-dreams.de>
++M:	Wolfram Sang <wsa@kernel.org>
+ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ W:	https://i2c.wiki.kernel.org/
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index a66912782064..ee013313b727 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -7,7 +7,7 @@
+  *   Mux support by Rodolfo Giometti <giometti@enneenne.com> and
+  *   Michael Lawnick <michael.lawnick.ext@nsn.com>
+  *
+- * Copyright (C) 2013-2017 Wolfram Sang <wsa@the-dreams.de>
++ * Copyright (C) 2013-2017 Wolfram Sang <wsa@kernel.org>
+  */
  
--static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+static int __io_splice_prep(struct io_kiocb *req,
-+			    const struct io_uring_sqe *sqe)
- {
- 	struct io_splice* sp = &req->splice;
- 	unsigned int valid_flags = SPLICE_F_FD_IN_FIXED | SPLICE_F_ALL;
-@@ -2764,8 +2770,6 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		return 0;
+ #define pr_fmt(fmt) "i2c-core: " fmt
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index 6787c1f71483..3ed74aa4b44b 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -5,7 +5,7 @@
+  * Copyright (C) 2008 Jochen Friedrich <jochen@scram.de>
+  * based on a previous patch from Jon Smirl <jonsmirl@gmail.com>
+  *
+- * Copyright (C) 2013, 2018 Wolfram Sang <wsa@the-dreams.de>
++ * Copyright (C) 2013, 2018 Wolfram Sang <wsa@kernel.org>
+  */
  
- 	sp->file_in = NULL;
--	sp->off_in = READ_ONCE(sqe->splice_off_in);
--	sp->off_out = READ_ONCE(sqe->off);
- 	sp->len = READ_ONCE(sqe->len);
- 	sp->flags = READ_ONCE(sqe->splice_flags);
- 
-@@ -2784,6 +2788,48 @@ static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	return 0;
- }
- 
-+static int io_tee_prep(struct io_kiocb *req,
-+		       const struct io_uring_sqe *sqe)
-+{
-+	if (READ_ONCE(sqe->splice_off_in) || READ_ONCE(sqe->off))
-+		return -EINVAL;
-+	return __io_splice_prep(req, sqe);
-+}
-+
-+static int io_tee(struct io_kiocb *req, bool force_nonblock)
-+{
-+	struct io_splice *sp = &req->splice;
-+	struct file *in = sp->file_in;
-+	struct file *out = sp->file_out;
-+	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
-+	long ret;
-+
-+	if (force_nonblock)
-+		return -EAGAIN;
-+
-+	ret = do_tee(in, out, sp->len, flags);
-+	if (force_nonblock && ret == -EAGAIN)
-+		return -EAGAIN;
-+
-+	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
-+	req->flags &= ~REQ_F_NEED_CLEANUP;
-+
-+	io_cqring_add_event(req, ret);
-+	if (ret != sp->len)
-+		req_set_fail_links(req);
-+	io_put_req(req);
-+	return 0;
-+}
-+
-+static int io_splice_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
-+{
-+	struct io_splice* sp = &req->splice;
-+
-+	sp->off_in = READ_ONCE(sqe->splice_off_in);
-+	sp->off_out = READ_ONCE(sqe->off);
-+	return __io_splice_prep(req, sqe);
-+}
-+
- static int io_splice(struct io_kiocb *req, bool force_nonblock)
- {
- 	struct io_splice *sp = &req->splice;
-@@ -4978,6 +5024,9 @@ static int io_req_defer_prep(struct io_kiocb *req,
- 	case IORING_OP_REMOVE_BUFFERS:
- 		ret = io_remove_buffers_prep(req, sqe);
- 		break;
-+	case IORING_OP_TEE:
-+		ret = io_tee_prep(req, sqe);
-+		break;
- 	default:
- 		printk_once(KERN_WARNING "io_uring: unhandled opcode %d\n",
- 				req->opcode);
-@@ -5051,6 +5100,7 @@ static void io_cleanup_req(struct io_kiocb *req)
- 		putname(req->open.filename);
- 		break;
- 	case IORING_OP_SPLICE:
-+	case IORING_OP_TEE:
- 		io_put_file(req, req->splice.file_in,
- 			    (req->splice.flags & SPLICE_F_FD_IN_FIXED));
- 		break;
-@@ -5281,6 +5331,14 @@ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 		}
- 		ret = io_remove_buffers(req, force_nonblock);
- 		break;
-+	case IORING_OP_TEE:
-+		if (sqe) {
-+			ret = io_tee_prep(req, sqe);
-+			if (ret < 0)
-+				break;
-+		}
-+		ret = io_tee(req, force_nonblock);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index e48d746b8e2a..a279151437fc 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -129,6 +129,7 @@ enum {
- 	IORING_OP_SPLICE,
- 	IORING_OP_PROVIDE_BUFFERS,
- 	IORING_OP_REMOVE_BUFFERS,
-+	IORING_OP_TEE,
- 
- 	/* this goes last, obviously */
- 	IORING_OP_LAST,
+ #include <dt-bindings/i2c/i2c.h>
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 45d36ba4826b..49d29054e657 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -2,7 +2,7 @@
+ /*
+  * i2c.h - definitions for the Linux i2c bus interface
+  * Copyright (C) 1995-2000 Simon G. Vogl
+- * Copyright (C) 2013-2019 Wolfram Sang <wsa@the-dreams.de>
++ * Copyright (C) 2013-2019 Wolfram Sang <wsa@kernel.org>
+  *
+  * With some changes from Kyösti Mälkki <kmalkki@cc.hut.fi> and
+  * Frodo Looijaard <frodol@dds.nl>
 -- 
-2.24.0
+2.20.1
 
