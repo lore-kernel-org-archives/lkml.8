@@ -2,121 +2,143 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A04C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80099C47259
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7322075B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588442181;
-	bh=Pyti/oXfxkkEpTlk5s7TE6yHsZRFMYA9AHGC30Lb498=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sh7jkeYS09pUDgCxRKUOncso8B4iqRU2gC3qDNaGDqfDgH5wvEjU+lzi+lTkEuKdN
-	 fQTQ2seGPaFx8/vzqX7OqIQYGaym/4o6N9yczjTxxCZ4AFZvibLK4H48+EpeyAx3LU
-	 hIBJvGjPjRuQi14vWi8uiHuNsV6IfvnUgQh0nfuk=
+	by mail.kernel.org (Postfix) with ESMTP id 601C220731
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aSBw5wCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgEBR4U (ORCPT
+        id S1728274AbgEBSDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 13:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbgEBR4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 13:56:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC5DB2075B;
-        Sat,  2 May 2020 17:56:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588442179;
-        bh=Pyti/oXfxkkEpTlk5s7TE6yHsZRFMYA9AHGC30Lb498=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MiEddyPCAtLTlxuDcubVgInzAEFFsHVAHPZPu/p+l56T1dNxwRmAHYtbBmCYfu9Gf
-         3YxZRiagCdB8m1kCD/GgnuHiqWzq/RlwOFw+2bcF+cHC6EOcUGFoY5SEwq9ysTaHk3
-         im/59ryejSfqE5hmVOADG140OyukQDJuCEAgKtaE=
-Date:   Sat, 2 May 2020 18:56:15 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gwendal Grignou <gwendal@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 2/2] iio: cros_ec_light: Add support for RGB sensor
-Message-ID: <20200502185615.74db5af1@archlinux>
-In-Reply-To: <CAPUE2us=1=RvJ1aQNYQSU1rnMkwjVfM_EdS7QpO8u0NPPtgsfg@mail.gmail.com>
-References: <20200423000230.82750-1-gwendal@chromium.org>
-        <20200423000230.82750-3-gwendal@chromium.org>
-        <20200425183101.531b49be@archlinux>
-        <CAPUE2us=1=RvJ1aQNYQSU1rnMkwjVfM_EdS7QpO8u0NPPtgsfg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 2 May 2020 14:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728118AbgEBSDO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 14:03:14 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF566C061A10
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 11:03:13 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id p16so9851170edm.10
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 11:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gzsuxDlItzKXIUBK7WGNpTkOsm9nq+BDdgFK8X2BWvo=;
+        b=aSBw5wCDConKD/IcaaHbp4Mo0CTJ0pgKRvNWRkiIWGE3lCN/oPbrEa9/oKAglpfRn1
+         ybYK1kBJxRVbPzvApGi7N1gI88wlw4xjREME4zX7kVXKZH3FDgSbie3ks5shBRY8TZ6q
+         DMFWhZRW7RkjeJCSKPKh/8pZ2QWGSZw/Nyq/zAlnOngdfv/+o/QV9wf4QVQZ5gXVDkzN
+         XNN+MYW95/ejtNi3wUzQ6oJ8i+BfB05eb9CwAbUAIbruiYbVwz5lfsdGnAXaouOdPAgk
+         c8v1YIbx6b+WQ999NPSKnSrIN3qI9oKtRGvdPYhTcKRXMBwc/GxItvO5XlgyBCaOSzcl
+         2H2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gzsuxDlItzKXIUBK7WGNpTkOsm9nq+BDdgFK8X2BWvo=;
+        b=lgm/fMN5sMvgGzQEAZT2YueU36KRw0KwgH9KHLGmDdhN25GA+vusrr07A1dnOdf40x
+         OcTk0bAtAF50D1IyUD4/aSNcwHM0wFQ2aVlDyqZqEHFDYNFJMrKUasVcgLFTXosoymW1
+         la0rlcxQT/7D6ytP6fBIciI5k+3y3g6en3T8yzYyICDMWYOQ7Sph9sDucZJ1hUf5wVdb
+         5w7C8yz+NkPXK73lp07uWyryKxH5ZOKUZywwrQov4s1e809kDiz2Lca6A3amIEusnqh6
+         9ldGJgMk8gkvCeeb3pz9c0rGv6K9KZLKuu8xyg+OI3sjkvMNqQCLQuSiQy47lQB/h57f
+         iuQQ==
+X-Gm-Message-State: AGi0PuZL0X4Vb6c6ISrPnZysreTKUoG9sqRqESknKLHnnfO9HRqBUYCX
+        Zq06FK1twhuH5ApO+fFpBaupR37DlO44UtIzGW0zNg==
+X-Google-Smtp-Source: APiQypJrbz2VzfjebhxcGzu52aKY5ET0/26CFym5+FOkkSLJ9Vu46v3NJUgCYAVe4ZsgBJWlfsgCXWWgDBxtIIIlF1U=
+X-Received: by 2002:a05:6402:3136:: with SMTP id dd22mr8275680edb.165.1588442592251;
+ Sat, 02 May 2020 11:03:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200430102908.10107-1-david@redhat.com> <875zdg26hp.fsf@x220.int.ebiederm.org>
+ <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com> <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
+ <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com> <CAPcyv4j=YKnr1HW4OhAmpzbuKjtfP7FdAn4-V7uA=b-Tcpfu+A@mail.gmail.com>
+ <2d019c11-a478-9d70-abd5-4fd2ebf4bc1d@redhat.com> <CAPcyv4iOqS0Wbfa2KPfE1axQFGXoRB4mmPRP__Lmqpw6Qpr_ig@mail.gmail.com>
+ <62dd4ce2-86cc-5b85-734f-ec8766528a1b@redhat.com> <0169e822-a6cc-1543-88ed-2a85d95ffb93@redhat.com>
+ <CAPcyv4jGnR_fPtpKBC1rD2KRcT88bTkhqnTMmuwuc+f9Dwrz1g@mail.gmail.com>
+ <9f3a813e-dc1d-b675-6e69-85beed3057a4@redhat.com> <CAPcyv4jjrxQ27rsfmz6wYPgmedevU=KG+wZ0GOm=qiE6tqa+VA@mail.gmail.com>
+ <04242d48-5fa9-6da4-3e4a-991e401eb580@redhat.com> <CAPcyv4iXyOUDZgqhWH1KCObvATL=gP55xEr64rsRfUuJg5B+eQ@mail.gmail.com>
+ <8242c0c5-2df2-fc0c-079a-3be62c113a11@redhat.com> <CAPcyv4h1nWjszkVJQgeXkUc=-nPv5=Me25BOGFQCpihUyFsD6w@mail.gmail.com>
+ <467ccba3-80ac-085c-3127-d5618d77d3e0@redhat.com>
+In-Reply-To: <467ccba3-80ac-085c-3127-d5618d77d3e0@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 2 May 2020 11:03:01 -0700
+Message-ID: <CAPcyv4iqwh6k40DUy-Pwi2h5pJm9vu7+JU1ghELy=3MGM1naNg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 14:07:03 -0700
-Gwendal Grignou <gwendal@chromium.org> wrote:
-
-> On Sat, Apr 25, 2020 at 10:31 AM Jonathan Cameron <jic23@kernel.org> wrote:
+On Sat, May 2, 2020 at 2:27 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> >> Now, let's clarify what I want regarding virtio-mem:
+> >>
+> >> 1. kexec should not add virtio-mem memory to the initial firmware
+> >>    memmap. The driver has to be in charge as discussed.
+> >> 2. kexec should not place kexec images onto virtio-mem memory. That
+> >>    would end badly.
+> >> 3. kexec should still dump virtio-mem memory via kdump.
 > >
-> > On Wed, 22 Apr 2020 17:02:30 -0700
-> > Gwendal Grignou <gwendal@chromium.org> wrote:
-> >  
-> > > Add support for color sensors behind EC like TCS3400.
-> > > The color data can be presented in Red Green Blue color space (RGB) or
-> > > the CIE 1931 XYZ color space (XYZ).
-> > > In XYZ mode, the sensor is configured for auto calibrating its channels
-> > > and is the "normal" mode.
-> > > The driver tells the EC to switch between the 2 modes by using the
-> > > calibration command.
-> > > When the sensor is in calibration mode, only clear and RGB channels are
-> > > available. In normal mode, only clear and XYZ are.
-> > > When RGB channels are enabled, the sensor switches to calibration mode
-> > > when the buffer is enabled.
-> > >
-> > > When reading trhough sysfs command, set calibration mode and then read
-> > > the channel(s). A command will be issue for each read, so the channels
-> > > may come from different sensor sample.
-> > > When using the buffer, after setting the mask, when the buffer is
-> > > enabled, the calibration will be set based on the channel mask.
-> > >
-> > > libiio tools can be used to gather sensor information:
-> > > iio_readdev -s 10 cros-ec-light \
-> > > illuminance_clear illuminance_x illuminance_y illuminance_z  
-> > Illuminance is not defined for color channels.  It's units are LUX which
-> > is only defined wrt to a model of the human eye's response to
-> > 'brightness' (kind of).  
-> Looking at "Calculating Color Temperature and Illuminance " from AMS
-> [https://ams.com/documents/20143/80162/TCS34xx_AN000517_1-00.pdf/1efe49f7-4f92-ba88-ca7c-5121691daff7]
-> page 5, equation 2, the illuminance (Y) is a derived from the vector
-> (X, Y, Z) with coefficient applied. Doesn't it mean
-> in_illumincance_[X,Y,Z,R,G,B,clear ...]_raw have all the same unit,
-> lux?
+> > Ok, but then seems to say to me that dax/kmem is a different type of
+> > (driver managed) than virtio-mem and it's confusing to try to apply
+> > the same meaning. Why not just call your type for the distinct type it
+> > is "System RAM (virtio-mem)" and let any other driver managed memory
+> > follow the same "System RAM ($driver)" format if it wants?
+>
+> I had the same idea but discarded it because it seemed to uglify the
+> add_memory() interface (passing yet another parameter only relevant for
+> driver managed memory). Maybe we really want a new one, because I like
+> that idea:
+>
+> /*
+>  * Add special, driver-managed memory to the system as system ram.
+>  * The resource_name is expected to have the name format "System RAM
+>  * ($DRIVER)", so user space (esp. kexec-tools)" can special-case it.
+>  *
+>  * For this memory, no entries in /sys/firmware/memmap are created,
+>  * as this memory won't be part of the raw firmware-provided memory map
+>  * e.g., after a reboot. Also, the created memory resource is flagged
+>  * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-
+>  * case this memory (e.g., not place kexec images onto it).
+>  */
+> int add_memory_driver_managed(int nid, u64 start, u64 size,
+>                               const char *resource_name);
+>
+>
+> If we'd ever have to special case it even more in the kernel, we could
+> allow to specify further resource flags. While passing the driver name
+> instead of the resource_name would be an option, this way we don't have
+> to hand craft new resource strings for added memory resources.
+>
+> Thoughts?
 
-Unfortunately not.   Lux is only defined as brightness as measured
-with a very specific sensitivity profile across the bands. It has no
-meaning as a unit for the various elements added up to get to it.
-(somewhere good old dimensional analysis breaks down)
-
-Fun corner case of units :)
-
-I have seen data sheets that get this wrong btw.
-It's a complex mess because RGB channels are not separable
-either.  They all have overlapping frequency sensitivities.
-Generally the sensors are designed to have some linear combination
-of curves that is close to the curve used for illuminance as they
-want to match human eye view of what bright is.
-
-If you can provide enough info to the driver to do the calculation
-that would be ideal as then we could provide a standard measure of
-brightness to userspace.
-
-Jonathan
+Looks useful to me and simplifies walking /proc/iomem. I personally
+like the safety of the string just being the $driver component of the
+name, but I won't lose sleep if the interface stays freeform like you
+propose.
