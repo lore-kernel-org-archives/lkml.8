@@ -2,128 +2,142 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F176C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1225BC47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6121421924
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:11:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GoAOXqYv"
+	by mail.kernel.org (Postfix) with ESMTP id ED7B320857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgEBCL3 (ORCPT
+        id S1726654AbgEBCSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:11:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgEBCL2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:11:28 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C15AC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 19:11:28 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id v8so10954617wma.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 19:11:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DxgeZ4dWQbsgxzC3vr4Uf0z6ga9GPtUvmnQ6rfH9mnw=;
-        b=GoAOXqYvnqNaHnqw0sl6wxaUTEEROMaaJ5wtFkTK5JBEL5n2G2yvGvhs3s05djne9u
-         Z0Nm572hdR8ZAqHgELOeTbhCxmoiHUC726/03InwwU0piYRV48UG/j+BM16uSqBf7VFT
-         3/4Bks7Dn7b3YYiGicAkJq043PppsvbGx0CWk1jV7TbiQ2eZ698CTHttNGU9GMA+gSlD
-         yy5AuwsFaLV1/DF+ulL0gMVwg0fBWYh58QliUQqii9fRHedY1IHl5AtDR8kM7dLRpvvV
-         Geu2ui5FWXP3BSoTCYRcP8EFX/JKjNL7AXTEBtblQXJ+7oX2W9r8tZjBd+6ylNmZDSNY
-         yEWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DxgeZ4dWQbsgxzC3vr4Uf0z6ga9GPtUvmnQ6rfH9mnw=;
-        b=jDWi5WaJ3OIWZx9aRruCpPgNd5kNJmg3rLr7Xe2b2azZs+n8DgTB/X7DpEonCmNMmB
-         hqGSbg94QPMThz0ZqUz1B1bv7e8+WoIl4unB6zjoBzDarVIJKS1wPGgfMqn14R4kPAUP
-         0do0rMQJh8vjnrx+C7uHs0p4NWN3uo/S/LbxlhMbC7a7TztSaKSOEzIee4pXVHcLr3gH
-         d4OmpSw6bVFbwkkVVvRHSMLEok1qxZ2+HJIEBATw09onQaJDuQu5+bhAOHUyzJOOhH33
-         l+M6MPwvKO+XAFDcUiCcdkDcmOzhrmQvYLvUw/p8YDWk+yF4kyWbujdB+RnY3VFjFcCC
-         0K2A==
-X-Gm-Message-State: AGi0PuadvW7ZHDmBaTV4KxVMOFoKVZA31Tg+8OHXbmJ6G4mYyPqNHcSD
-        htT3tpCqYKNQKjrhw0/6cSKxq36T5DU4evl+zDMWFw==
-X-Google-Smtp-Source: APiQypLDIvRbUKevZsGcEO30n6w7WQseNzEj38FrNcXYHjaeCNVPqKzvEB/q8lL2AFg/XGQTwq2/IwPCqTdYBakWPhw=
-X-Received: by 2002:a1c:dd8a:: with SMTP id u132mr2195716wmg.87.1588385486740;
- Fri, 01 May 2020 19:11:26 -0700 (PDT)
+        Fri, 1 May 2020 22:18:07 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30978 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726387AbgEBCSG (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:18:06 -0400
+IronPort-SDR: cC3pPELAUWJUuMnspo/uwnvK0gIpzooZQ9DBOOldvjHzPy/0rsyxhBcpadSMrMumVP22G322Ja
+ 03XYwytRwqvQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:18:06 -0700
+IronPort-SDR: fN2CRbuBRh/U5fUSvxhC8uROTf2Vu9xEBy0trIsH/rJtjQFT1Yawk4RkT+2wOQ+07KGXAAEmbw
+ gspluRxPinFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
+   d="scan'208";a="368596037"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.249.169.62]) ([10.249.169.62])
+  by fmsmga001.fm.intel.com with ESMTP; 01 May 2020 19:18:03 -0700
+Subject: Re: [PATCH 0/2] perf stat: Support overall statistics for interval
+ mode
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200430030740.27156-1-yao.jin@linux.intel.com>
+ <20200501113641.GA1808514@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <b82b6e09-0e28-4799-564f-25689b778ea1@linux.intel.com>
+Date:   Sat, 2 May 2020 10:18:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200501083510.1413-1-anders.roxell@linaro.org> <CAFd5g45C98_70Utp=QBWg_tKxaUMJ-ArQvjWbG9q6=dixfHBxw@mail.gmail.com>
-In-Reply-To: <CAFd5g45C98_70Utp=QBWg_tKxaUMJ-ArQvjWbG9q6=dixfHBxw@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Sat, 2 May 2020 10:11:15 +0800
-Message-ID: <CABVgOSkAAb7tyjhdqFZmyKyknaxz_sM_o3=bK6cL6Ld4wFxkRQ@mail.gmail.com>
-Subject: Re: [PATCH] kunit: Kconfig: enable a KUNIT_RUN_ALL fragment
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
-        Marco Elver <elver@google.com>,
-        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
-        serge@hallyn.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200501113641.GA1808514@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 2, 2020 at 4:31 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Fri, May 1, 2020 at 1:35 AM Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > Make it easier to enable all KUnit fragments.  This is needed for kernel
-> > test-systems, so its easy to get all KUnit tests enabled and if new gets
-> > added they will be enabled as well.  Fragments that has to be builtin
-> > will be missed if CONFIG_KUNIT_RUN_ALL is set as a module.
-> >
-> > Adding 'if !KUNIT_RUN_ALL' so individual test can be turned of if
-> > someone wants that even though KUNIT_RUN_ALL is enabled.
->
-> I would LOVE IT, if you could make this work! I have been trying to
-> figure out the best way to run all KUnit tests for a long time now.
->
-> That being said, I am a bit skeptical that this approach will be much
-> more successful than just using allyesconfig. Either way, there are
-> tests coming down the pipeline that are incompatible with each other
-> (the KASAN test and the KCSAN test will be incompatible). Even so,
-> tests like the apparmor test require a lot of non-default
-> configuration to compile. In the end, I am not sure how many tests we
-> will really be able to turn on this way.
->
-> Thoughts?
 
-I think there's still some value in this which the allyesconfig option
-doesn't provide. As you point out, it's not possible to have a generic
-"run all tests" option due to potential conflicting dependencies, but
-this does provide a way to run all tests for things enabled in the
-current config. This could be really useful for downstream developers
-who want a way of running all tests relevant to their config without
-the overhead of running irrelevant tests (e.g., for drivers they don't
-build). Using allyesconfig doesn't make that distinction.
 
-Ultimately, we'll probably still want something which enables a
-broader set of tests for upstream development: whether that's based on
-this, allyesconfig, or something else entirely remains to be seen, I
-think. I suspect we're going to end up with something
-subsystem-specific (having a kunitconfig per subsystem, or a testing
-line in MAINTAINERS or similar are ideas which have been brought up in
-the past).
+On 5/1/2020 7:36 PM, Jiri Olsa wrote:
+> On Thu, Apr 30, 2020 at 11:07:38AM +0800, Jin Yao wrote:
+>> Currently perf-stat supports to print counts at regular interval (-I),
+>> but it's not very easy for user to get the overall statistics.
+>>
+>> With this patchset, it supports to report the summary at the end of
+>> interval output.
+>>
+>> For example,
+>>
+>>   root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000412064          2,281,114      cycles
+>>        2.001383658          2,547,880      cycles
+>>
+>>    Performance counter stats for 'system wide':
+>>
+>>            4,828,994      cycles
+>>
+>>          2.002860349 seconds time elapsed
+>>
+>>   root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000389902          1,536,093      cycles
+>>        1.000389902            420,226      instructions              #    0.27  insn per cycle
+>>        2.001433453          2,213,952      cycles
+>>        2.001433453            735,465      instructions              #    0.33  insn per cycle
+>>
+>>    Performance counter stats for 'system wide':
+>>
+>>            3,750,045      cycles
+>>            1,155,691      instructions              #    0.31  insn per cycle
+>>
+>>          2.003023361 seconds time elapsed
+>>
+>>   root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
+>>   #           time             counts unit events
+>>        1.000435121            905,303      inst_retired.any          #      2.9 CPI
+>>        1.000435121          2,663,333      cycles
+>>        1.000435121            914,702      inst_retired.any          #      0.3 IPC
+>>        1.000435121          2,676,559      cpu_clk_unhalted.thread
+>>        2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
+>>        2.001615941          3,551,357      cycles
+>>        2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
+>>        2.001615941          3,551,044      cpu_clk_unhalted.thread
+>>
+>>    Performance counter stats for 'system wide':
+>>
+>>            2,856,395      inst_retired.any          #      2.2 CPI
+>>            6,214,690      cycles
+>>            2,865,539      inst_retired.any          #      0.5 IPC
+>>            6,227,603      cpu_clk_unhalted.thread
+>>
+>>          2.003403078 seconds time elapsed
+>>
+>> Jin Yao (2):
+>>    perf evsel: Create counts for collecting summary data
+>>    perf stat: Report summary for interval mode
+> 
+> good idea, but I can't apply this on latest Arnaldo's perf/core,
+> could you please rebase?
+> 
+> thanks,
+> jirka
+> 
 
-This is a great looking tool to have in the toolbox, though.
+Oh, yes, it couldn't be applied on perf/core. I've rebased it.
 
--- David
+Thanks
+Jin Yao
+
+>>
+>>   tools/perf/builtin-stat.c | 14 ++++++-
+>>   tools/perf/util/evsel.c   | 10 ++++-
+>>   tools/perf/util/evsel.h   |  1 +
+>>   tools/perf/util/stat.c    | 77 +++++++++++++++++++++++++++++++++++++++
+>>   tools/perf/util/stat.h    |  5 +++
+>>   5 files changed, 103 insertions(+), 4 deletions(-)
+>>
+>> -- 
+>> 2.17.1
+>>
+> 
