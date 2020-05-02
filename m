@@ -2,101 +2,148 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9985C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF66C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77DF4208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:45:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWcCGLEN"
+	by mail.kernel.org (Postfix) with ESMTP id 85D3C2184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588395490;
+	bh=Z+otAQneYfqHhtTr/kcWGv2dvBqsPgkDZ6RhF2u47sk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KyUQGPyx1HXdhMlap0TdsLQz6OxJba2gGosylCePITTkKEWtqREPgqz7bQVVC+wYT
+	 45WPTC3W3oK1AXPHqlPd6D63DrIo5MbRRs3IV2/t1gFK6eqwAH8EfmJUYV0WHJ0Krt
+	 LZ+O9PjlEFOjf5ZFO22yNuzl07pfnuecIP9kfpO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgEBEpc (ORCPT
+        id S1726846AbgEBE6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 00:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726435AbgEBEpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 00:45:32 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1B4C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 21:45:31 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d17so5554871pgo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 21:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xWUbV1bTknAW0Bm6cae3+Htidg6+0EEEOJS3c1Nz340=;
-        b=CWcCGLENPQImkqqGQQ1S3R76NcIM4HXNAblks/uAoiD0EsKHrTPWYcSCIAH1I5maxB
-         B3Oa8XQ9oZB/dumamkUN3bEmubcAY6KNQdlCTkaqdJA40SVLP2dEGUTP3etHX2x+3fMB
-         OJWaB0nPuu+7WtKcPZy8hbYfu12AZjI5mfHuAcBY5wcC9buFzOv37AF3r3ksa2zpW7Mv
-         JrDxRhYwggk6BNq0CdXOcJZBraj6DUbUAi4dewt6CTc7XAckeDK4ziGimZAtFx0EEHLQ
-         OtgIqxIovzWuoa+RsGEIEO9g14UjzJPlgmz5VegYRD1WtR0i88wbxRWV0hl4PSkZgxe3
-         q2MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xWUbV1bTknAW0Bm6cae3+Htidg6+0EEEOJS3c1Nz340=;
-        b=EtitJEZSn/GHplJ8ZaNAQrzexQq43WUqDQzGa3JmeucGQQ6YT0CTgfTw4TGnpP5Prx
-         tnV6a2mKjkLMFBmirrPwWQaZJsvWpX5ZY4egIPtyBgGu2aPNhevKbCKuPOuJljEgcmcg
-         zx5KbhdTRm3P1l4UpDMHy0RzCXuCtB6PmARu4a4Ao7KUhL+KlAHcb6nXYij9CHC1Gqy/
-         i++mjvhCRpFxGHIyWbTfQvLloVlqdk6wZGiTm6A9VEZV8qSNXONlV4aVVZgWBzRJb1TQ
-         FLZhDKTg4HxWbW+99bDa/qtTC5a6qIB/Y2P9SYHoy3AFHtEccIffJY2dVX7zL7V+ID/J
-         AFdw==
-X-Gm-Message-State: AGi0PuYqlQ7zs4fFdhyDTFzT8fz0IH8MKZqEzFABLQHmkQYr68+mgnG5
-        Urtbn5UshycCezVppPNzs2A=
-X-Google-Smtp-Source: APiQypItOayLSQuLFl90m701CNyQEVV584jm0Or9VVtbPtHhNAOkNrr6bvIQ/BKwQeOZGFwlS1UbJQ==
-X-Received: by 2002:a63:1e22:: with SMTP id e34mr7546320pge.427.1588394731375;
-        Fri, 01 May 2020 21:45:31 -0700 (PDT)
-Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id z28sm3597373pfr.3.2020.05.01.21.45.30
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 01 May 2020 21:45:30 -0700 (PDT)
-From:   Bin Meng <bmeng.cn@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Bin Meng <bin.meng@windriver.com>
-Subject: [PATCH v2] powerpc: Drop CONFIG_MTD_M25P80 in 85xx-hw.config
-Date:   Fri,  1 May 2020 21:44:54 -0700
-Message-Id: <1588394694-517-1-git-send-email-bmeng.cn@gmail.com>
-X-Mailer: git-send-email 1.7.1
+        Sat, 2 May 2020 00:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgEBE6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 00:58:09 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B207A208DB;
+        Sat,  2 May 2020 04:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588395488;
+        bh=Z+otAQneYfqHhtTr/kcWGv2dvBqsPgkDZ6RhF2u47sk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fZ5iGBxYMQtFy2pi/3pWB6Gftl+GybrebqQ+MXe7RPq3FiyZbU0njTCEMmhBpUJSl
+         CdZRi0kiZyvDez7u8LtIJU4PW+2Q3S1SES492RdLxsw1Hi3xIcukpGU8MbhDwV1Q/c
+         wNsKhOZaTi+/+ssuS6x8ITq1bIqCFXGbgfDA5B9Q=
+Date:   Sat, 2 May 2020 06:58:03 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     sean@mess.org, kstewart@linuxfoundation.org, allison@lohutok.net,
+        tglx@linutronix.de, linux-media@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC, WIP, v4 01/11] media: vidtv: add Kconfig entry
+Message-ID: <20200502065803.37d40feb@coco.lan>
+In-Reply-To: <20200502032216.197977-2-dwlsalmeida@gmail.com>
+References: <20200502032216.197977-1-dwlsalmeida@gmail.com>
+        <20200502032216.197977-2-dwlsalmeida@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Meng <bin.meng@windriver.com>
+Em Sat,  2 May 2020 00:22:06 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
 
-Drop CONFIG_MTD_M25P80 that was removed in
-commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> Add the necessary Kconfig entries and a dummy Makefile to compile the new
+> virtual DVB test driver (vidtv).
 
-Signed-off-by: Bin Meng <bin.meng@windriver.com>
+Patch looks good. Please notice that this should be the last patch at the 
+series, as otherwise it would break git bisect.
 
----
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> ---
+>  drivers/media/test-drivers/Kconfig        | 10 ++++++++++
+>  drivers/media/test-drivers/Makefile       |  1 +
+>  drivers/media/test-drivers/vidtv/Kconfig  | 11 +++++++++++
+>  drivers/media/test-drivers/vidtv/Makefile |  2 ++
+>  4 files changed, 24 insertions(+)
+>  create mode 100644 drivers/media/test-drivers/vidtv/Kconfig
+>  create mode 100644 drivers/media/test-drivers/vidtv/Makefile
+> 
+> diff --git a/drivers/media/test-drivers/Kconfig b/drivers/media/test-drivers/Kconfig
+> index 188381c855939..7d273a8a7acc2 100644
+> --- a/drivers/media/test-drivers/Kconfig
+> +++ b/drivers/media/test-drivers/Kconfig
+> @@ -4,6 +4,10 @@ menuconfig V4L_TEST_DRIVERS
+>  	bool "V4L test drivers"
+>  	depends on VIDEO_DEV
+>  
+> +menuconfig DVB_TEST_DRIVERS
+> +	bool "DVB test drivers"
+> +	depends on DVB_CORE && MEDIA_SUPPORT && I2C
+> +
+>  if V4L_TEST_DRIVERS
+>  
+>  source "drivers/media/test-drivers/vimc/Kconfig"
+> @@ -24,3 +28,9 @@ config VIDEO_VIM2M
+>  source "drivers/media/test-drivers/vicodec/Kconfig"
+>  
+>  endif #V4L_TEST_DRIVERS
+> +
+> +if DVB_TEST_DRIVERS
+> +
+> +source "drivers/media/test-drivers/vidtv/Kconfig"
+> +
+> +endif #DVB_TEST_DRIVERS
+> diff --git a/drivers/media/test-drivers/Makefile b/drivers/media/test-drivers/Makefile
+> index 74410d3a9f2d2..9f0e4ebb2efe7 100644
+> --- a/drivers/media/test-drivers/Makefile
+> +++ b/drivers/media/test-drivers/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_VIDEO_VIMC)		+= vimc/
+>  obj-$(CONFIG_VIDEO_VIVID)		+= vivid/
+>  obj-$(CONFIG_VIDEO_VIM2M)		+= vim2m.o
+>  obj-$(CONFIG_VIDEO_VICODEC)		+= vicodec/
+> +obj-$(CONFIG_DVB_VIDTV)			+= vidtv/
+> diff --git a/drivers/media/test-drivers/vidtv/Kconfig b/drivers/media/test-drivers/vidtv/Kconfig
+> new file mode 100644
+> index 0000000000000..22c4fd39461f1
+> --- /dev/null
+> +++ b/drivers/media/test-drivers/vidtv/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config DVB_VIDTV
+> +	tristate "Virtual DVB Driver (vidtv)"
+> +	depends on DVB_CORE && MEDIA_SUPPORT && I2C
+> +	help
+> +	  The virtual DVB test driver serves as a reference DVB driver and helps
+> +	  validate the existing APIs in the media subsystem. It can also aid developers
+> +	  working on userspace applications.
+> +
+> +
+> +	  When in doubt, say N.
+> diff --git a/drivers/media/test-drivers/vidtv/Makefile b/drivers/media/test-drivers/vidtv/Makefile
+> new file mode 100644
+> index 0000000000000..d1558d84eeaed
+> --- /dev/null
+> +++ b/drivers/media/test-drivers/vidtv/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
 
-Changes in v2:
-- correct the typo (5xx => 85xx) in the commit title
 
- arch/powerpc/configs/85xx-hw.config | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/powerpc/configs/85xx-hw.config b/arch/powerpc/configs/85xx-hw.config
-index b507df6..524db76 100644
---- a/arch/powerpc/configs/85xx-hw.config
-+++ b/arch/powerpc/configs/85xx-hw.config
-@@ -67,7 +67,6 @@ CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_CFI_INTELEXT=y
- CONFIG_MTD_CFI=y
- CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_NAND_FSL_ELBC=y
- CONFIG_MTD_NAND_FSL_IFC=y
- CONFIG_MTD_RAW_NAND=y
--- 
-2.7.4
-
+Thanks,
+Mauro
