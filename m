@@ -2,104 +2,99 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E485C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1C7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACDD32072E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588431858;
-	bh=kCtnSdHwkAp2lOklp+z0M+hBKzuMdIcNMircwOeNkCY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aj3Iu/AhlYW1qscnlJ27WaBBTGDnsBNXRHqu1v+C0KysI8N14+NCQcRAqlFZgrJBF
-	 Mmg8cPjh6jdOXm9ynb475X5GvKFhZJdJWPbHhouE8hV1QwipoF9l8ucDM5vNW0AOKt
-	 zUHqUqz0YdOZCXCMy/vosu4XG/VS5xOMZMdb9794=
+	by mail.kernel.org (Postfix) with ESMTP id DAAA02072E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=footclan-ninja.20150623.gappssmtp.com header.i=@footclan-ninja.20150623.gappssmtp.com header.b="mSaUCHoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgEBPER (ORCPT
+        id S1728241AbgEBPFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 11:04:17 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:48645 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727968AbgEBPER (ORCPT
+        Sat, 2 May 2020 11:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727968AbgEBPFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 11:04:17 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 042F43bi028934
-        for <linux-kernel@vger.kernel.org>; Sun, 3 May 2020 00:04:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 042F43bi028934
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1588431844;
-        bh=DMFnL4Ja0ytXLUSslY0x5/p22BzQ4UAUV+62ACuyysQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Aaef2tA5bhM68oFBSPc3aAjVXTHBzg4wvC5CM69KmQjAWqqYZkbBDZ2h7zoOKiMve
-         xKHTsM9HnJhQattM9rgn18389ernwpwz2h9P8yAKLVYu9/zNqH9ByXdYD/VAURfaw0
-         lmdUr6fUn0KBiFrQxFl5BK3sE5vB3rl9lHgEHjhngqo/fOFSlV8yY2tfTaHEaDx5NV
-         Nmz+B0qmDGUh+YFOFl3qzeuH7wo7YRwO6e82tRlsZgN5IF/jwQfSG9020K+ysi9+s3
-         PEZBKugnWxiIQrGFw6V7kvN2o6P4S4z0ddj49ANfcXE2ef+U2ayRu5g6PbBjpeeFX5
-         zH8uSkt8iYeig==
-X-Nifty-SrcIP: [209.85.222.50]
-Received: by mail-ua1-f50.google.com with SMTP id m9so4778584uaq.12
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 08:04:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PubLnPaP/07i1ohjkjUu5Lndk/5hlC6BEIqJ0rwH5q76AatG4H+x
-        ELnPa7Th51pZXoyX4UgQTGleRuMatOkOHAyikqs=
-X-Google-Smtp-Source: APiQypKYU379ZG2zUNV9c+3y8UZrlzOKgE4riQVGDpCQP+GZinRb3+Z4tsJ4iySUD93U14eljHqVMjapOYXtMJXn6zc=
-X-Received: by 2002:a9f:28c5:: with SMTP id d63mr6212285uad.25.1588431842760;
- Sat, 02 May 2020 08:04:02 -0700 (PDT)
+        Sat, 2 May 2020 11:05:42 -0400
+Received: from mail-ot1-x361.google.com (mail-ot1-x361.google.com [IPv6:2607:f8b0:4864:20::361])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E887BC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 08:05:40 -0700 (PDT)
+Received: by mail-ot1-x361.google.com with SMTP id z17so5011992oto.4
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 08:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=footclan-ninja.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kQORw5TEfimEXpNhMvXlHoOfqoU2wjV/uOY185Kq3UI=;
+        b=mSaUCHoGYShDMb+Lf5CRxCzDzCJ+1zT+RtqmWGintrHCC4l8VxoUbiJhNkF0wz/3g1
+         5wtd3TaFJNEUY/aq2+7Uh26oXxEHc67i5vnTQY8/BSZiBCFvLXH6jP+F5T5EzwJFxPEV
+         aHEvqPsyltSRk5D9QZHpolAeCF+x4MqhlHHp8yFuWWfgzqOl62/Bu1pmmwLzF7sNPrIg
+         VzpOIVobqS4E9CSFGcUOfThgdInTWUbSdJXUeQc8g1aLp5jIONinVceU0RH9hGTG9WZ3
+         /PBOUaxLsruGed/zsYExgu4+wKhrBeNfMnl42LhBPNQODKJtgd2C8vlLvLA/tNEq5VxE
+         mpDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kQORw5TEfimEXpNhMvXlHoOfqoU2wjV/uOY185Kq3UI=;
+        b=ta/VeIBcVF1bi/8tYQftTl3UrihL0htQirOVxcEWksf7TqMQaUfHMAKP88MuXE8LgF
+         U/4HhD4bh7G7lBvD8V6mPXtre5bWGeUkUhXbM9xRxEfZh0T/YmJ6YQm6b7Z7Nmmjk0wc
+         7AUtumvEgH6/zYdVRrh/EOV3z28eFJ6GP87+xt+Kox5gcNDOnUXJh2M742wATKQ+i2Sl
+         /9t/0P1cl96R0yseYGUsaLuuWI03P5vuMleqznb0vIhfMkosH9iYNWYxJu6phJbey0nk
+         Eo5iLeyORu66WK8SYbZ+T4qTvq/lFE3XE369rtl51+DNNao7o4G5R8SgDAU0FD1/cdKh
+         JsDA==
+X-Gm-Message-State: AGi0PuZm4BDsMd40ttdvgHEr0WBZYEM3rezYohzDmqXcTk698En2Jcsa
+        976gopA7WZr1J9FkArQrlep4QCQkmaAZey2sKFHObbJnQ8ShSg==
+X-Google-Smtp-Source: APiQypImB47WNrzjBq8n0eBafDQwxnQVTWzVZCbQnY2dWgUYapbGZhsaNgKF0XU7ph4MzC6W100PR7r33Rnb
+X-Received: by 2002:a05:6830:4db:: with SMTP id s27mr602241otd.301.1588431940365;
+        Sat, 02 May 2020 08:05:40 -0700 (PDT)
+Received: from localhost.localdomain (pa49-195-101-57.pa.nsw.optusnet.com.au. [49.195.101.57])
+        by smtp-relay.gmail.com with ESMTPS id i6sm791456oos.16.2020.05.02.08.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 08:05:40 -0700 (PDT)
+X-Relaying-Domain: footclan.ninja
+From:   Matt Jolly <Kangie@footclan.ninja>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Matt Jolly <Kangie@footclan.ninja>
+Subject: [PATCH] USB: serial: qcserial: Add DW5816e support
+Date:   Sun,  3 May 2020 01:03:47 +1000
+Message-Id: <20200502150347.10186-1-Kangie@footclan.ninja>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1588370065-30312-1-git-send-email-sidgup@codeaurora.org>
-In-Reply-To: <1588370065-30312-1-git-send-email-sidgup@codeaurora.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 3 May 2020 00:03:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARPH+hZdo-0_pmOzZNqTHj7rJTMQq9Nd_F-oyqK2zJrtQ@mail.gmail.com>
-Message-ID: <CAK7LNARPH+hZdo-0_pmOzZNqTHj7rJTMQq9Nd_F-oyqK2zJrtQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts: headers_install: Exit with error on config leak
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 2, 2020 at 6:55 AM Siddharth Gupta <sidgup@codeaurora.org> wrote:
->
-> Misuse of CONFIG_* in UAPI headers should result in an error as it exposes
-> configuration of different targets to userspace.
->
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> ---
->  scripts/headers_install.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
-> index a07668a..bd6c93a 100755
-> --- a/scripts/headers_install.sh
-> +++ b/scripts/headers_install.sh
-> @@ -109,7 +109,8 @@ do
->         done
->
->         if [ "$warn" = 1 ]; then
-> -               echo "warning: $INFILE: leak $c to user-space" >&2
-> +               echo "error: $INFILE: leak $c to user-space" >&2
-> +               exit 1
->         fi
->  done
+Add support for Dell Wireless 5816e to drivers/usb/serial/qcserial.c
 
+Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+---
+ drivers/usb/serial/qcserial.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you want to change this,
-please update the comment at line 67.
-
-Also, rename the variable $warn to
-something else, $error or $leak_error, etc. ?
-
-
-
+diff --git a/drivers/usb/serial/qcserial.c b/drivers/usb/serial/qcserial.c
+index 613f91add03d..ce0401d3137f 100644
+--- a/drivers/usb/serial/qcserial.c
++++ b/drivers/usb/serial/qcserial.c
+@@ -173,6 +173,7 @@ static const struct usb_device_id id_table[] = {
+ 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
+ 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
+ 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
++	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
+ 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
+ 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
+ 	{DEVICE_SWI(0x413c, 0x81d1)},   /* Dell Wireless 5818 */
 -- 
-Best Regards
-Masahiro Yamada
+2.26.2
+
