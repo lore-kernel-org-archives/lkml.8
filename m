@@ -2,80 +2,100 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B63AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94361C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8ABE208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D32208DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEBKHF (ORCPT
+        id S1727118AbgEBKJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 06:07:05 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:54806 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgEBKHE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 06:07:04 -0400
-Received: by mail-il1-f197.google.com with SMTP id e68so7568965ilg.21
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 03:07:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=m1hRXR9BMt4ToPnusTADtXKnayxV/ZH6J13/KcH/RN8=;
-        b=REPm+Roope7TGcwbn9vhUTuU+AtZhsvP4152jOemukDRjewIk4s7rQUeomRwNSgNbo
-         K/Rgk0wqj2FvLtOdwmQJKphrR6/xvEJashd+AgEqHx9ATNqd2uRU/rH5S2OCVbp7kDAK
-         Qzmu8shaGeCvaDVZOIH/6UgXutx9zjPYZDB4+W9UFrkI2rEXAbVf3mUHJGYvSf9sBKaB
-         QtJ6t+1vXsflXkr8I+55ijvEFdMyrU2nt+FsPYDLsWc9dP6tjfelXWBzNW1V1U0lNmHi
-         jS5ca7aWvKhDM3S4J8uKYaRM41sfc6aEahXA89lo5O6vBLFyhQUyj8Povi4FbInZuLj9
-         IgWQ==
-X-Gm-Message-State: AGi0PubxapdlIDjhLOgZ1CINLZdRI7y/n8VSTiyQgM98JEElkrENYt6j
-        apE9skCjU5tfI6Xr3Quzhb/cwwnYoS8V85PM60CtLmUeKRkG
-X-Google-Smtp-Source: APiQypLKoorYfxGAxfQDfwHAhcqeI9HJWjEq5A0H7WxkYG55YC8uqJYuqoZzZKQbbAF6862mCDXEKO9b6SOkLeJkNTcni5YPyrpl
-MIME-Version: 1.0
-X-Received: by 2002:a6b:f20f:: with SMTP id q15mr7704601ioh.48.1588414023349;
- Sat, 02 May 2020 03:07:03 -0700 (PDT)
-Date:   Sat, 02 May 2020 03:07:03 -0700
-In-Reply-To: <0000000000002ef1120597b1bc92@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009e3eb505a4a7759e@google.com>
-Subject: Re: possible deadlock in lock_trace (3)
-From:   syzbot <syzbot+985c8a3c7f3668d31a49@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, casey@schaufler-ca.com,
-        christian@brauner.io, ebiederm@xmission.com, guro@fb.com,
-        kent.overstreet@gmail.com, khlebnikov@yandex-team.ru,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhocko@suse.com, shakeelb@google.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 2 May 2020 06:09:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45670 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgEBKJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 06:09:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A957AAED6;
+        Sat,  2 May 2020 10:09:14 +0000 (UTC)
+Date:   Sat, 02 May 2020 12:09:13 +0200
+Message-ID: <s5hpnbmhcmu.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <s5h368iiyos.wl-tiwai@suse.de>
+References: <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+        <s5h1ro6jn0v.wl-tiwai@suse.de>
+        <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+        <s5hwo5xj98v.wl-tiwai@suse.de>
+        <PSXP216MB0438FE3E1CA577805BEC23C880AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5hh7x0kiwb.wl-tiwai@suse.de>
+        <PSXP216MB04381A30909F66867E6B6BCC80AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5h1ro4kgog.wl-tiwai@suse.de>
+        <s5h7dxuizep.wl-tiwai@suse.de>
+        <20200502071728.fn2fcqvt6aies3zu@wunner.de>
+        <s5h368iiyos.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On Sat, 02 May 2020 09:27:31 +0200,
+Takashi Iwai wrote:
+> 
+> On Sat, 02 May 2020 09:17:28 +0200,
+> Lukas Wunner wrote:
+> > 
+> > On Sat, May 02, 2020 at 09:11:58AM +0200, Takashi Iwai wrote:
+> > > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > @@ -673,6 +673,12 @@ static int amdgpu_dm_audio_component_bind(struct device *kdev,
+> > >  	struct amdgpu_device *adev = dev->dev_private;
+> > >  	struct drm_audio_component *acomp = data;
+> > >  
+> > > +	if (!device_link_add(hda_kdev, kdev, DL_FLAG_STATELESS |
+> > > +			     DL_FLAG_PM_RUNTIME)) {
+> > > +		DRM_ERROR("DM: cannot add device link to audio device\n");
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > 
+> > Doesn't this duplicate drivers/pci/quirks.c:quirk_gpu_hda() ?
+> 
+> Gah, you're right, that was the place I overlooked.
+> It was a typical "false Eureka right-after-wakeup" phenomenon :)
+> Need a vaccine aka coffee...
+> 
+> So the runtime PM dependency must be already placed there, and the
+> problem is not the lack of the dependency tree but the really other
+> timing issue.  Back to square.
 
-commit 2db9dbf71bf98d02a0bf33e798e5bfd2a9944696
-Author: Bernd Edlinger <bernd.edlinger@hotmail.de>
-Date:   Fri Mar 20 20:27:24 2020 +0000
+One interesting test is to open the stream while the mode isn't set
+yet and see whether the same problem appears.
+Namely, after the monitor is connected but no mode is set, run
+directly like
+   aplay -Dhdmi:1,0 foo.wav
+You might need to wrap the command with pasuspender if PA is active.
 
-    proc: Use new infrastructure to fix deadlocks in execve
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17222ec4100000
-start commit:   a42a7bb6 Merge tag 'irq-urgent-2020-03-15' of git://git.ke..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c2e311dba9a02ba9
-dashboard link: https://syzkaller.appspot.com/bug?extid=985c8a3c7f3668d31a49
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1185f753e00000
-
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: proc: Use new infrastructure to fix deadlocks in execve
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Takashi
