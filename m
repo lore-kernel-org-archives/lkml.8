@@ -2,254 +2,249 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD933C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDC9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E1721582
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B4121582
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="aOeUD+aQ"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="qQNwtR0+";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="qQNwtR0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgEBJFe (ORCPT
+        id S1727121AbgEBJJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 05:05:34 -0400
-Received: from mout.gmx.net ([212.227.17.22]:42917 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgEBJFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 05:05:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1588410317;
-        bh=q9VJyCnFY+/O21OZN8bVN/A8qThXFaSA5sJxzEm7oeI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=aOeUD+aQCk+gcQCM0GFQzBa2oFcpCZ53QkQTN8ymUeAZs7Ta8AA9ipfjC3JgdZ1m6
-         pD1HN+VirGZ0LJu3LZBWBuFho1Du5QaZKH6qmnbBq8u3vpBEfSFn2uZdyT30LQvbkz
-         hTCyiifr4mojlhBisLlV1YyN9bmidcbuYbiBPatI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.164] ([37.4.249.134]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N63VY-1j6lrZ1K6y-016NEe; Sat, 02
- May 2020 11:05:17 +0200
-Subject: Re: [PATCH v7 2/4] firmware: raspberrypi: Introduce vl805 init
- routine
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        f.fainelli@gmail.com, gregkh@linuxfoundation.org,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org
-References: <20200429164734.21506-1-nsaenzjulienne@suse.de>
- <20200429164734.21506-3-nsaenzjulienne@suse.de>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <5fce05ca-5d7e-f4cc-be34-0764fbe4edff@gmx.net>
-Date:   Sat, 2 May 2020 11:05:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200429164734.21506-3-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Sat, 2 May 2020 05:09:31 -0400
+Received: from mail-eopbgr20049.outbound.protection.outlook.com ([40.107.2.49]:13700
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726488AbgEBJJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 05:09:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/NBpM4vLQkQdo2i+JbrFsNSNQK5wnxZIzHw2suzRC6M=;
+ b=qQNwtR0+GK/25ABzttbhMMF7SqvErPTsT3H3Lity9nmUWXlzTGaSYRKJq1SsUxG/2SeoI8Xk9vhM63UDnVwTvxLeQfs4cm9K6q5Un39hdFvio3pVNRpi5k1rOFvNglHNeY4IHjAw+NbDPBnKhfEbBYIAfW0A1hJRadq6zF6JQA8=
+Received: from DB8PR06CA0061.eurprd06.prod.outlook.com (2603:10a6:10:120::35)
+ by AM0PR08MB3233.eurprd08.prod.outlook.com (2603:10a6:208:60::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Sat, 2 May
+ 2020 09:09:23 +0000
+Received: from DB5EUR03FT062.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:120:cafe::f3) by DB8PR06CA0061.outlook.office365.com
+ (2603:10a6:10:120::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
+ Transport; Sat, 2 May 2020 09:09:23 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT062.mail.protection.outlook.com (10.152.20.197) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20 via Frontend Transport; Sat, 2 May 2020 09:09:23 +0000
+Received: ("Tessian outbound 5abcb386707e:v54"); Sat, 02 May 2020 09:09:22 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: d7090e413c09c1e9
+X-CR-MTA-TID: 64aa7808
+Received: from 1392149b8590.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id CC8A66DC-EAD2-4B9C-9508-0A1780F8D052.1;
+        Sat, 02 May 2020 09:09:17 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 1392149b8590.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Sat, 02 May 2020 09:09:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f4o2EFsKMHNl9KDNuoQb9asyS9YVgmXJX/MACuWylimpnkUMrE+45ye2qFfiypTEu5+62Y0w5KBj4rcesSkDzoPAGc4UjYUEgcBPT2sBWowKk0UBjJ9SbX4F142E2tYgk7LFRBrxAC9UW/kUXpwve0K61horbQVulFOPHMJTU4K+jGgeAlf1ZXjQIwwdCFhVc9Lb3bE/6Yn+YqKAe6FCBDgW1WGA3yB2ZWWyUm3QyoAFUCDa5DDKKtbNoV/cbO0KXfk2vlfiBw+YD7Aa8a3HEf31lLrYMt1Y9gKy4+p/wWDymUzdtausglN+slDOb02XtvxbIk19n2sPRTeVZoG+Ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/NBpM4vLQkQdo2i+JbrFsNSNQK5wnxZIzHw2suzRC6M=;
+ b=ngwX+O7DSBCfYKwUYtjZBuEBxDl5/nUIMf3OICnnnL2pGD+zJnfk7WFHvWswy/kXNLJI1t8fvQeCxXgIa60tNFiMC0iqu0Lscan6QdwjwDFLvxSs60x+K/2MHKYp23NP+f5xEV1mo7zMKvaiTQaA7c1dhbdBYbVog+o16bM2vqkwpNUrOwFXU8Hfjjwm7uI5KcYsDJQ2sX/VOq9Q3VfWsDwuL3P95bbak1Au6dIjgQkeiu92iggOK1+2JuXJAb4KvnQaXvsAn+hVUizveCMQ4yg9w+Qy2TZJX+hk9dLQFUnXQtIqWo6NFeIYIKFZd6swISSVY0svtIB+024UUhSKpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/NBpM4vLQkQdo2i+JbrFsNSNQK5wnxZIzHw2suzRC6M=;
+ b=qQNwtR0+GK/25ABzttbhMMF7SqvErPTsT3H3Lity9nmUWXlzTGaSYRKJq1SsUxG/2SeoI8Xk9vhM63UDnVwTvxLeQfs4cm9K6q5Un39hdFvio3pVNRpi5k1rOFvNglHNeY4IHjAw+NbDPBnKhfEbBYIAfW0A1hJRadq6zF6JQA8=
+Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7)
+ by HE1PR0802MB2348.eurprd08.prod.outlook.com (2603:10a6:3:c5::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Sat, 2 May
+ 2020 09:09:14 +0000
+Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com
+ ([fe80::b1eb:9515:4851:8be]) by HE1PR0802MB2555.eurprd08.prod.outlook.com
+ ([fe80::b1eb:9515:4851:8be%6]) with mapi id 15.20.2958.027; Sat, 2 May 2020
+ 09:09:14 +0000
+From:   Jianyong Wu <Jianyong.Wu@arm.com>
+To:     Mark Rutland <Mark.Rutland@arm.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        nd <nd@arm.com>, Haibo Xu <Haibo.Xu@arm.com>
+Subject: Re: [RFC PATCH v11 5/9] psci: Add hypercall service for ptp_kvm.
+Thread-Topic: [RFC PATCH v11 5/9] psci: Add hypercall service for ptp_kvm.
+Thread-Index: AQHWF4xRpK0ubTCCx0eiqM1JOH1VE6iDV3gAgAQ/ngCAAIMxgIAF/0YAgANt2ACAAwwzAA==
+Date:   Sat, 2 May 2020 09:09:13 +0000
+Message-ID: <1d418fdc-1a5c-7723-3d30-448a22faac53@arm.com>
+References: <20200421032304.26300-1-jianyong.wu@arm.com>
+ <20200421032304.26300-6-jianyong.wu@arm.com>
+ <20200421095736.GB16306@C02TD0UTHF1T.local>
+ <ab629714-c08c-2155-dd13-ad25e7f60b39@arm.com>
+ <20200424103953.GD1167@C02TD0UTHF1T.local>
+ <b53b0a47-1fe6-ad92-05f4-80d50980c587@arm.com>
+ <20200430103646.GB39784@C02TD0UTHF1T.local>
+In-Reply-To: <20200430103646.GB39784@C02TD0UTHF1T.local>
+Accept-Language: en-US
 Content-Language: en-US
-X-Provags-ID: V03:K1:QA/aSLOy+cPlvO18nEM/MicqwS747XxEXAG4GyaaHnDfSZ4Tmtk
- PVcVoCLuH1g/fLaI+QAorJKQs+/yGXo+BeCehPvf79n+ALJv+1n29kftcUmC+bOBBRFLf4i
- k02zj8VEOarH08P1FI3V2bmFG/JFF5fmLFDaU8+/SbVGitbryg1gRaOHJMtECq7XfKPBArS
- gUzl/xGwaNB1He1/zQu7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:b27J4oTjFnA=:k0TtacXgZeH36zxXHNZPGs
- TleOnzvFCN3iCKhE2i8sdtvI0FiBx7Ia22XXttoaCtWN/1Gkahl9vsihmfNcUB45kGutY+pwR
- U8m3n7Npx8ETCstRraHr452FmRE/cTA544O4lFbOLwRh9uq0dxn0ODXcuQamYaBFiuoOGm8M7
- 0z0qNoYZ0rJXI5Oe4IxV/MBZprac9xoBUg8NZP7vyBvnLv9LI/nSciaKBkrkUS4df5rlAN/M1
- Enxo4EcMht9ADR+IIRiRkd+HXy0wSv/PHgIkligGrZ9GGUn+hnl2zDUJpnqE1sM6fvI5X/dH5
- Xy+O8bzZ1S2MsT4zPZSWxuUNBBjVVLFJqdQKKgiwpBTA5qClEIle6M0vo3L+zjzdbTK6QJZBb
- Ya9YMU0R+Rp0GTkzvBEIiBXjOGcyENNjZGWnBYsgKpFS14W73bwH18mpEYBA4XwJZybxjfZJz
- fnC84yulfUOs+Ra/MUxFRmqikbRaAeLu89bYbQ1UmJZwf/jMgHsJCzxmcncaPilUgPPWbLwCO
- 4fhVZRilboJG5bfI7DxWmB35Oex2rWunLO44NBv5XUyeYkYp6lxhZofN8Toitkc5kIuxhRUY1
- RLkFRmIn1PKTWDpWrLIvrFomus7meNiOimZDH6cBFUaX8lRHBTmO6Ulkaev81vwkLoAkN7Juh
- 0APXUwRoRLhutGvBLqpib7CBi3/MvJ1MFV+9cUlnPJo6LDCzfDhCdu9t5tPcdpFateIPQd0Py
- HiFNQUbT5dZLsxPwjDF8E0V89mIKapPo+/5fxylHUmdWC3Y0xprurkLDmeANxnJZeCIPAHai2
- +1WDW0nB2Xi3HqSsnhuY49d6uooNq26ESuvXq4pnvdQv/PYyjfPNlQziar6aimF7+QnLcUVkb
- O/R+FVKHDeNWrsOUwhKWaFaIalEFpPi3U83jq0hPkFlge7klg+jT3KeFkymVz/YCTxonFJ1dY
- PjBg16uj7KyjNtnE0V15kkCWeG35yvJ9KlnpOgXzdadmLCobmE5OB1kYQXqFu+1Y5xVaIlOPQ
- oBGYe9QKDjxi+4THEGbXS3RU2tor7kF9mSBSilaf2eu51RXOWFpbqfvvgMDXKmaaoi/GGo1Xj
- 7auD/5AJsg9J5jNSAi/Yw4IOJrvry4rUcTcRRTcRIBO2Frjddgf+URmRbujAyONrjQhIJm6Qb
- vY1CWwCCVlmK2lzp/GgQehtfdcjN8dV5M9yIY4IESn177MuWft5ImhNkg0UPeTde5cFkiT/b5
- 4/a1ovijJfdmtRj8l
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5c219a22-eea4-4375-8ded-08d7ee788171
+x-ms-traffictypediagnostic: HE1PR0802MB2348:|HE1PR0802MB2348:|AM0PR08MB3233:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB3233AF0F63A79CF879344874F4A80@AM0PR08MB3233.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-forefront-prvs: 039178EF4A
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0802MB2555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(6636002)(6512007)(4326008)(6862004)(31696002)(966005)(31686004)(478600001)(36756003)(66946007)(5660300002)(76116006)(86362001)(91956017)(186003)(66476007)(66556008)(64756008)(66446008)(55236004)(71200400001)(37006003)(2616005)(8676002)(54906003)(53546011)(6506007)(2906002)(6486002)(8936002)(26005)(7416002)(316002)(21314003);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: itaKgl9Od6qN5wKW4TU4wmqJvA4B/GNOxCzo3IOUxMc12rbOdQY+yNacCl6zXkvCHz6IybxCQBrhzmFk/5X5yvI8BlQSmoSMRR0Ag2j7U8x+cZvPim/c5FbE/IXlxGhakTPFOTANVVXrKKqdHZDevupEcN1Cq9Z15ZeTKwBnNGGyLsZueuhnztApC0lHxtrqr29VdGdSuKHfB6phj426Q5jy9kzbsnOrxFviD/MLCRbkdMFOg/5pskpmNMs8adddgqFAwahVzgyQB9AOWSdLOHDYOL+z4BU2dhnJml/wpXqhnUc9uvsd2B7L2kqwtu27N5FGFk1kEiOhreEojK9yoBHkvn0BpjrK+Evn7YP80mUdN60U9Z9MY++JaYToWuSbDY5rFDuAQsCqzGtouR47Tz7Zxg6vaQP1329ubphA2JfZvwozbUohU3QpJNPu4LdcBXpg0dJU51TWSulKbQfRmsBDpSkc8FpNjwn4DLT+dxXkTSwy5ZNHd+MKCFcVBnlkcYSvHih8kStxLRr+Juw95b820a8xSYNeWeXGhcfCe0e6hscFm7Y3ywbhqzotWRdm
+x-ms-exchange-antispam-messagedata: Pzarievv2D2ov8nTlNNtin5xrV4qSO4QQCrg94omFBluCnKREVG/Vu0EdqqGVCb0esfx8Daq/J+LaDIXoawAJRUlUb/i1CWRguLrPIQSROUgpBl+YjF3x5C/7mgg8jl3jRtJOAN8vQheogTHwtV2DFPRqg3Yk4iLf05hAahDfiWvJNsERB0cnFvJpMq1wk4x+YZ0DDSvC+L8cSp/XjFW1jbeAfP2n8eGO5ZAXPmgAYul3EeESDybjHuVFCK5qYGWyxxNQZDzGinAOb/yWEJTqZwcCJBv1ccJzsRFOjdgzAlgbtmWbJ2qaKcWqH0qBqkjAmNjIkPcPd2JGlbPcOxcYrsOWq1Hq5Z/4/8LUk8FBvaiVPceIDKpaJ0gnU1oZ75qaIQ9iwmC+oLjlIZX3cunURSPkJe/eiY1O+K2OIVzGImfK4ZH9oWn3gMU0B8BlAI4YBJA11kTZUBkB63c0a+KzieVUxLV7f6LNI1LejenX0HFySdbKaN3I//mltbMCoo+NpfyZ1TY1r8UqwoNFoNZK56ltPofJKAdQOsJXKKa5VtV4wmbs9n3beLLdmBxsoThFpohTvKY/iwd4+rnvH21AslSuIL6Gy/+FRZpw+IHa0mACvsefXjy7kNDQ12LG2m0uKK+XpsMJr6ST4pdQU8nu+fDSfnOEfbxTgvTxnPYA+TfAxqDxAoBqOO6pPrq80jrYKlnbqvySnXpsrkn9XTzcaUWh1rcg3e8lEin0PrjScPBPU9qo78c3D4xBbJCV3IvOvBzyx9kiQ81kgRIVrhhUhMKoJAHGZFU5+4TOq2hSaQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <24C5D66CA26DA04ABEB7817FA2CB77FE@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2348
+Original-Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT062.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(136003)(396003)(46966005)(81166007)(6486002)(356005)(82310400002)(86362001)(336012)(2616005)(186003)(966005)(53546011)(31686004)(26005)(8936002)(8676002)(70206006)(70586007)(36756003)(31696002)(5660300002)(82740400003)(47076004)(316002)(54906003)(6636002)(450100002)(2906002)(6862004)(4326008)(37006003)(6506007)(478600001)(6512007)(21314003);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 1a0d667d-2875-4fe6-8a87-08d7ee787c5d
+X-Forefront-PRVS: 039178EF4A
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 02/GL5kUpBYcxgXSccINjqV8ZImI+TirWfAmugJjG1v5CNETG6F5/K7mv3/pOssW9+xZOMyfbdlSAdUaVzJe74axihGsR6lyZSlq9dhvZ8hgJHKKV8KbidC5BJh78FC3CPma9AA8cz3QiMTbjAH42vvIX2rByoN7b5jGDDWYl541K7JroEw4N9LyJ7SSULEAA/vHpDWspi9nTPuPMpqyboRKRLr4O7MPo+tzhF2cpLIJUlKSddFHSpRRTa8kCIidyIf4qVyl6dTmppoUQxZu/X/MKdDNWHd4z1X0VP7mkjwIzlra7QXzlVAUV4VsuPWYrSpmlUUB/WFhYBgyNxgBeW/NAnMwsIQlxUvoZDl4g708/Xw0T0uchl+bhU7FUQFERJRjoloMPAbTAO2+325T5xc3DQKzPneT6pChu7pR20WkIFP0MTyrCI+CZflYOWgwXA94dsZ8lgR/3CS/u1q2njvQd8mkeeMi9pYbb0jk6Fl9pd9G4/T/L+YE4LONze6U4h0JKvbbJve1U0ZdAi29812AjkmW2CSgI/94mj8A0iu3BloE4Y2wDvmhFlFxS6CDWc+h3ilFBJ9Lx6kZc+8dpZeyv7YBNj8IhSV5ew27a2xqUmix+Pcc5562X/pTKw0Y
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2020 09:09:23.1213
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c219a22-eea4-4375-8ded-08d7ee788171
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3233
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
-
-Am 29.04.20 um 18:47 schrieb Nicolas Saenz Julienne:
-> The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip
-> that implements xHCI. After a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> co-processor, VideoCore. RPi4's VideoCore OS contains both the non publi=
-c
-> firmware load logic and the VL805 firmware blob. The function this patch
-> introduces triggers the aforementioned process.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->
-> ---
->
-> Change since v6:
-> - Add test to avoid loading the firmware when not needed
-> - Since we have it around, print VL805's firmware version, it'll make
-> debugging easier in the future
-> - Correct typos
-> - Add a clearer view of HW topology in patch description
->
-> Changes since v4:
-> - Inline function definition when RASPBERRYPI_FIRMWARE is not defined
->
-> Changes since v1:
-> - Move include into .c file and add forward declaration to .h
->
->  drivers/firmware/raspberrypi.c             | 52 ++++++++++++++++++++++
->  include/soc/bcm2835/raspberrypi-firmware.h |  7 +++
->  2 files changed, 59 insertions(+)
->
-> diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberry=
-pi.c
-> index da26a584dca0..230c05e53403 100644
-> --- a/drivers/firmware/raspberrypi.c
-> +++ b/drivers/firmware/raspberrypi.c
-> @@ -12,6 +12,8 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +#include <linux/pci.h>
-> +#include <linux/delay.h>
->  #include <soc/bcm2835/raspberrypi-firmware.h>
->
->  #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
-> @@ -19,6 +21,8 @@
->  #define MBOX_DATA28(msg)		((msg) & ~0xf)
->  #define MBOX_CHAN_PROPERTY		8
->
-> +#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
-> +
->  static struct platform_device *rpi_hwmon;
->  static struct platform_device *rpi_clk;
->
-> @@ -286,6 +290,54 @@ struct rpi_firmware *rpi_firmware_get(struct device=
-_node *firmware_node)
->  }
->  EXPORT_SYMBOL_GPL(rpi_firmware_get);
->
-> +/*
-> + * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chi=
-p that
-> + * implements xHCI. After a PCI reset, VL805's firmware may either be l=
-oaded
-> + * directly from an EEPROM or, if not present, by the SoC's co-processo=
-r,
-> + * VideoCore. RPi4's VideoCore OS contains both the non public firmware=
- load
-> + * logic and the VL805 firmware blob. This function triggers the aforem=
-entioned
-> + * process.
-> + */
-> +int rpi_firmware_init_vl805(struct pci_dev *pdev)
-> +{
-> +	struct device_node *fw_np;
-> +	struct rpi_firmware *fw;
-> +	u32 dev_addr, version;
-> +	int ret =3D 0;
-> +
-> +	fw_np =3D of_find_compatible_node(NULL, NULL,
-> +					"raspberrypi,bcm2835-firmware");
-> +	if (!fw_np)
-> +		return 0;
-> +
-> +	fw =3D rpi_firmware_get(fw_np);
-> +	of_node_put(fw_np);
-> +	if (!fw)
-> +		return -ENODEV;
-> +
-> +	/* Make sure we don't trigger a firmware load unnecesarely *
-s/unnecesarely/unnecessarily/
-> +	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version)=
-;
-pci_read_config_dword() can fail, we might want to store the return value?
-> +	if (version)
-> +		goto exit;
-> +
-> +	dev_addr =3D pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
-> +		   PCI_FUNC(pdev->devfn) << 12;
-> +
-> +	ret =3D rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-> +				    &dev_addr, sizeof(dev_addr));
-> +	/* Wait for vl805 to startup */
-> +	udelay(200);
-
-I know, it makes it harder to read but do we really want to wait
-unnecessarily if rpi_firmware_property failed?
-
-Btw i assume we are in non-atomic context, so maybe it's worth to use
-usleep_range() here?
-
-> +
-> +exit:
-> +	if (!version)
-> +		pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
-> +				      &version);
-> +	pci_info(pdev, "VL805 firmware version %08x\n", version);
-
-In case pci_read_config_dword() fails the return code would be more helpfu=
-l.
-
-Best regards
-
-> +	return ret;
-> +
-> +}
-> +EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
-> +
->  static const struct of_device_id rpi_firmware_of_match[] =3D {
->  	{ .compatible =3D "raspberrypi,bcm2835-firmware", },
->  	{},
-> diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bc=
-m2835/raspberrypi-firmware.h
-> index cc9cdbc66403..3025aca3c358 100644
-> --- a/include/soc/bcm2835/raspberrypi-firmware.h
-> +++ b/include/soc/bcm2835/raspberrypi-firmware.h
-> @@ -10,6 +10,7 @@
->  #include <linux/of_device.h>
->
->  struct rpi_firmware;
-> +struct pci_dev;
->
->  enum rpi_firmware_property_status {
->  	RPI_FIRMWARE_STATUS_REQUEST =3D 0,
-> @@ -141,6 +142,7 @@ int rpi_firmware_property(struct rpi_firmware *fw,
->  int rpi_firmware_property_list(struct rpi_firmware *fw,
->  			       void *data, size_t tag_size);
->  struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node=
-);
-> +int rpi_firmware_init_vl805(struct pci_dev *pdev);
->  #else
->  static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 ta=
-g,
->  					void *data, size_t len)
-> @@ -158,6 +160,11 @@ static inline struct rpi_firmware *rpi_firmware_get=
-(struct device_node *firmware
->  {
->  	return NULL;
->  }
-> +
-> +static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
-> +{
-> +	return 0;
-> +}
->  #endif
->
->  #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
+T24gMjAyMC80LzMwIDY6MzYgUE0sIE1hcmsgUnV0bGFuZCB3cm90ZToNCj4gT24gVHVlLCBBcHIg
+MjgsIDIwMjAgYXQgMDc6MTQ6NTJBTSArMDEwMCwgSmlhbnlvbmcgV3Ugd3JvdGU6DQo+PiBPbiAy
+MDIwLzQvMjQgNjozOSBQTSwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPj4+IE9uIEZyaSwgQXByIDI0
+LCAyMDIwIGF0IDAzOjUwOjIyQU0gKzAxMDAsIEppYW55b25nIFd1IHdyb3RlOg0KPj4+PiBPbiAy
+MDIwLzQvMjEgNTo1NyBQTSwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPj4+Pj4gT24gVHVlLCBBcHIg
+MjEsIDIwMjAgYXQgMTE6MjM6MDBBTSArMDgwMCwgSmlhbnlvbmcgV3Ugd3JvdGU6DQo+Pj4+Pj4g
+ZGlmZiAtLWdpdCBhL3ZpcnQva3ZtL2FybS9oeXBlcmNhbGxzLmMgYi92aXJ0L2t2bS9hcm0vaHlw
+ZXJjYWxscy5jDQo+Pj4+Pj4gaW5kZXggNTUwZGZhM2U1M2NkLi5hNTMwOWMyOGQ0ZGMgMTAwNjQ0
+DQo+Pj4+Pj4gLS0tIGEvdmlydC9rdm0vYXJtL2h5cGVyY2FsbHMuYw0KPj4+Pj4+ICsrKyBiL3Zp
+cnQva3ZtL2FybS9oeXBlcmNhbGxzLmMNCj4+Pj4+PiBAQCAtNjIsNiArNjYsNDQgQEAgaW50IGt2
+bV9odmNfY2FsbF9oYW5kbGVyKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkNCj4+Pj4+PiAgICAgaWYg
+KGdwYSAhPSBHUEFfSU5WQUxJRCkNCj4+Pj4+PiAgICAgdmFsID0gZ3BhOw0KPj4+Pj4+ICAgICBi
+cmVhazsNCj4+Pj4+PiArLyoNCj4+Pj4+PiArICogVGhpcyBzZXJ2ZXMgdmlydHVhbCBrdm1fcHRw
+Lg0KPj4+Pj4+ICsgKiBGb3VyIHZhbHVlcyB3aWxsIGJlIHBhc3NlZCBiYWNrLg0KPj4+Pj4+ICsg
+KiByZWcwIHN0b3JlcyBoaWdoIDMyLWJpdCBob3N0IGt0aW1lOw0KPj4+Pj4+ICsgKiByZWcxIHN0
+b3JlcyBsb3cgMzItYml0IGhvc3Qga3RpbWU7DQo+Pj4+Pj4gKyAqIHJlZzIgc3RvcmVzIGhpZ2gg
+MzItYml0IGRpZmZlcmVuY2Ugb2YgaG9zdCBjeWNsZXMgYW5kIGNudHZvZmY7DQo+Pj4+Pj4gKyAq
+IHJlZzMgc3RvcmVzIGxvdyAzMi1iaXQgZGlmZmVyZW5jZSBvZiBob3N0IGN5Y2xlcyBhbmQgY250
+dm9mZi4NCj4+Pj4+PiArICovDQo+Pj4+Pj4gK2Nhc2UgQVJNX1NNQ0NDX0hZUF9LVk1fUFRQX0ZV
+TkNfSUQ6DQo+Pj4+PiBTaG91bGRuJ3QgdGhlIGhvc3Qgb3B0LWluIHRvIHByb3ZpZGluZyB0aGlz
+IHRvIHRoZSBndWVzdCwgYXMgd2l0aCBvdGhlcg0KPj4+Pj4gZmVhdHVyZXM/DQo+Pj4+IGVyLCBk
+byB5b3UgbWVhbiB0aGF0ICJBUk1fU01DQ0NfSFZfUFZfVElNRV9YWFgiIGFzICJvcHQtaW4iPyBp
+ZiBzbywgSQ0KPj4+PiB0aGluayB0aGlzDQo+Pj4+DQo+Pj4+IGt2bV9wdHAgZG9lc24ndCBuZWVk
+IGEgYnVkZHkuIHRoZSBkcml2ZXIgaW4gZ3Vlc3Qgd2lsbCBjYWxsIHRoaXMgc2VydmljZQ0KPj4+
+PiBpbiBhIGRlZmluaXRlIHdheS4NCj4+PiBJIG1lYW4gdGhhdCB3aGVuIGNyZWF0aW5nIHRoZSBW
+TSwgdXNlcnNwYWNlIHNob3VsZCBiZSBhYmxlIHRvIGNob29zZQ0KPj4+IHdoZXRoZXIgdGhlIFBU
+UCBzZXJ2aWNlIGlzIHByb3ZpZGVkIHRvIHRoZSBndWVzdC4gVGhlIGhvc3Qgc2hvdWxkbid0DQo+
+Pj4gYWx3YXlzIHByb3ZpZGUgaXQgYXMgdGhlcmUgbWF5IGJlIGNhc2VzIHdoZXJlIGRvaW5nIHNv
+IGlzIHVuZGVzaXJlYWJsZS4NCj4+Pg0KPj4gSSB0aGluayBJIGhhdmUgaW1wbGVtZW50ZWQgaW4g
+cGF0Y2ggOS85IHRoYXQgdXNlcnNwYWNlIGNhbiBnZXQgdGhlIGluZm8NCj4+IHRoYXQgaWYgdGhl
+IGhvc3Qgb2ZmZXJzIHRoZSBrdm1fcHRwIHNlcnZpY2UuIEJ1dCBmb3Igbm93LCB0aGUgaG9zdA0K
+Pj4ga2VybmVsIHdpbGwgYWx3YXlzIG9mZmVyIHRoZSBrdm1fcHRwIGNhcGFiaWxpdHkgaW4gdGhl
+IGN1cnJlbnQNCj4+IGltcGxlbWVudGF0aW9uLiBJIHRoaW5rIHg4NiBmb2xsb3cgdGhlIHNhbWUg
+YmVoYXZpb3IgKHNlZSBbMV0pLiBzbyBJDQo+PiBoYXZlIG5vdCBjb25zaWRlcmVkIHdoZW4gYW5k
+IGhvdyB0byBkaXNhYmxlIHRoaXMga3ZtX3B0cCBzZXJ2aWNlIGluDQo+PiBob3N0LiBEbyB5b3Ug
+dGhpbmsgd2Ugc2hvdWxkIG9mZmVyIHRoaXMgb3B0LWluPw0KPiANCj4gSSB0aGluayB0YWh0IHNo
+b3VsZCBiZSBvcHQtaW4sIHllcy4NCg0Kb2ssIHdoYXQgYWJvdXQgYWRkaW5nICJDT05GSUdfQVJN
+NjRfS1ZNX1BUUF9IT1NUIiBpbiBrdm1fcHRwIGhvc3QgDQpzZXJ2aWNlIHRvIGltcGxlbWVudCB0
+aGlzICJvcHQtaW4iPw0KPiANCj4gWy4uLl0NCj4gDQo+Pj4gSXQncyBhbHNvIG5vdCBjbGVhciB0
+byBtZSB3aGF0IG5vdGlvbiBvZiBob3N0IHRpbWUgaXMgYmVpbmcgZXhwb3NlZCB0bw0KPj4+IHRo
+ZSBndWVzdCAoYW5kIGNvbnNlcXVlbnRseSBob3cgdGhpcyB3b3VsZCBpbnRlcmFjdCB3aXRoIHRp
+bWUgY2hhbmdlcyBvbg0KPj4+IHRoZSBob3N0LCB0aW1lIG5hbWVzcGFjZXMsIGV0YykuIEhhdmlu
+ZyBzb21lIGRlc2NyaXB0aW9uIG9mIHRoYXQgd291bGQNCj4+PiBiZSB2ZXJ5IGhlbHBmdWwuDQo+
+Pg0KPj4gc29ycnkgdG8gaGF2ZSBub3QgbWFkZSBpdCBjbGVhci4NCj4+DQo+PiBUaW1lIHdpbGwg
+bm90IGNoYW5nZSBpbiBob3N0IGFuZCBvbmx5IHRpbWUgaW4gZ3Vlc3Qgd2lsbCBjaGFuZ2UgdG8g
+c3luYw0KPj4gd2l0aCBob3N0LiBob3N0IHRpbWUgaXMgdGhlIHRhcmdldCB0aGF0IHRpbWUgaW4g
+Z3Vlc3Qgd2FudCB0byBhZGp1c3QgdG8uDQo+PiBndWVzdCBuZWVkIHRvIGdldCB0aGUgaG9zdCB0
+aW1lIHRoZW4gY29tcHV0ZSB0aGUgZGlmZmVyZW50IG9mIHRoZSB0aW1lDQo+PiBpbiBndWVzdCBh
+bmQgaG9zdCwgc28gdGhlIGd1ZXN0IGNhbiBhZGp1c3QgdGhlIHRpbWUgYmFzZSBvbiB0aGUgZGlm
+ZmVyZW5jZS4NCj4gDQo+IEkgdW5kZXJzdG9vZCB0aGF0IGhvc3QgdGltZSB3b3VsZG4ndCBjaGFu
+Z2UgaGVyZSwgYnV0IHdoYXQgd2FzIG5vdCBjbGVhcg0KPiBpcyB3aGljaCBub3Rpb24gb2YgaG9z
+dCB0aW1lIGlzIGJlaW5nIGV4cG9zZWQgdG8gdGhlIGd1ZXN0Lg0KPiANCj4gZS5nLiBpcyB0aGF0
+IGEgcmF3IG1vbm90b25pYyBjbG9jaywgb3Igb25lIHN1YmplY3QgdG8gcGVyaW9kaWMgYWRqdW1l
+bnQsDQo+IG9yIHdhbGwgdGltZSBpbiB0aGUgaG9zdD8gV2hhdCBpcyB0aGUgZXBvY2ggb2YgdGhl
+IGhvc3QgdGltZT8NCg0Kc29ycnksIEkgbWlzdW5kZXJzdG9vZCB5b3VyIGxhc3QgY29tbWVudC4N
+CkkgdGhpbmsgaXQgaXMgb25lIG9mIHRoZSBrZXkgcGFydCBvZiBrdm1fcHRwLiBJIGhhdmUgY29u
+ZnVzZWQgd2l0aCB0aGVzZSANCmNsb2NrIHRpbWUgYW5kIGV4cGVjdCB0byBoZWFyIHRoZSBjb21t
+ZW50cyBmcm9tIGV4cGVydHMgb2Yga2VybmVsIHRpbWUgDQpzdWJzeXN0ZW0gbGlrZSB5b3UuDQpJ
+TU8sa3ZtX3B0cCB0YXJnZXRzIHRvIHN5bmMgdGltZSBpbiBWTSB3aXRoIGhvc3QgYW5kIGlmIGFs
+bCB0aGUgVk1zIGluIA0KdGhlIHNhbWUgaG9zdCBkbyBzbywgdGhleSBjYW4gZ2V0IHRpbWUgc3lu
+YyBmcm9tIGVhY2ggb3RoZXIuIHdpdGggbm8gDQprdm1fcHRwLCBib3RoIGhvc3QgYW5kIGd1ZXN0
+IG1heSBhZmZlY3RlZCBieSBOVFAsIHRoZSB0aW1lIHdpbGwgZGl2ZXJnZSANCmJldHdlZW4gdGhl
+bS4ga3ZtX3B0cCBjYW4gYXZvaWQgdGhpcyBpc3N1ZS4gaWYgdGhlIGhvc3QgdGltZSB2YXJ5IHdp
+dGggDQpzb21ldGhpbmcgbGlrZSBOVFAgYWRqdXN0bWVudCwgZ3Vlc3Qgd2lsbCB0cmFjayB0aGlz
+IHZhcmlhdGlvbiB3aXRoIHRoZSANCmhlbHAgb2Yga3ZtX3B0cC4gSSBhY3F1aXJlIHRoZXNlIGtu
+b3dsZWRnZSBvcmlnaW5hbGx5IGZyb20gWzJdLiBhbHNvIHB0cCANCmRyaXZlciB3aWxsIGNvbXBh
+cmUgdGhlIHdhbGwgdGltZShzZWUgWzNdKS4gc28gSSB0aGluayB3YWxsIHRpbWUgY2xvY2sgDQp3
+aGljaCBzdWJqZWN0IHRvIE5UUCBhZGp1c3RtZW50IGlzIGEgZ29vZCBjaG9pY2UgZm9yIGt2bV9w
+dHAuIGluIHRoZSANCmN1cnJlbnQgaW1wbGVtZW50YXRpb24gSSBnZXQgdGhlIHdhbGwgdGltZSBj
+bG9jayBmcm9tIGt0aW1lX2dldF9zbmFwc2hvdC4NCg0KSSdtIG5vdCBzdXJlIGlmIEkgZ2l2ZSB0
+aGUgY29ycmVjdCBrbm93bGVkZ2Ugb2Yga3ZtX3B0cCBhbmQgbWFrZSBhIHJpZ2h0IA0KY2hvaWNl
+IG9mIGhvc3QgY2xvY2sgdGltZS4gU28gV0RZVD8NCg0KWzJdaHR0cHM6Ly9vcGVuc291cmNlLmNv
+bS9hcnRpY2xlLzE3LzYvdGltZWtlZXBpbmctbGludXgtdm1zDQpbM10gc2VlIFBUUF9TWVNfT0ZG
+U0VUMiBpbiBwdHBfaW9jdGwgaW4gDQpodHRwczovL2dpdGh1Yi5jb20vdG9ydmFsZHMvbGludXgv
+YmxvYi9tYXN0ZXIvZHJpdmVycy9wdHAvcHRwX2NoYXJkZXYuYywgDQppdCB1c2VzIGt0aW1lX2dl
+dF9yZWFsX3RzNjQgYXMgdGhlIGhvc3QgdGltZSB0byBjYWxjdWxhdGUgdGhlIGRpZmZlcmVuY2Ug
+DQpiZXR3ZWVuIHB0cCB0aW1lIGFuZCBob3N0IHRpbWUuDQoNClRoYW5rcw0KSmlhbnlvbmcNCg0K
+PiANCj4+IEkgd2lsbCBhZGQgdGhlIGJhc2UgcHJpbmNpcGxlIG9mIHRpbWUgc3luYyBzZXJ2aWNl
+IGluIGd1ZXN0IHVzaW5nDQo+PiBrdm1fcHRwIGluIGNvbW1pdCBtZXNzYWdlLg0KPiANCj4gVGhh
+dCB3b3VsZCBiZSBncmVhdDsgdGhhbmtzIQ0KPiANCj4gTWFyay4NCj4gDQoNCg==
