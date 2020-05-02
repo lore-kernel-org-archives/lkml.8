@@ -2,68 +2,124 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AF3C47258
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2744DC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 701C12192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588380015;
-	bh=keiy/L2cGLzzlwDBTazDNGSfDCaVDrLUlQ2vG+acV0c=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=nzHG1ehFT2in+c2vy6qszzzqTen91WrsTuemOzohr+kvqvM3iF59Pl/jt0hkRPG1E
-	 UuquWT7oPfh3WbJv5ab2AvH9XoPCwfAhRqPMvxj+CEjN2HY9alBfWPoVwn2POZBvug
-	 QEpe4eKfpqzMuZZnWYmNMs0BZcoPpcVl0uPDJqZw=
+	by mail.kernel.org (Postfix) with ESMTP id 06113208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:42:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FFzOdU2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgEBAkJ (ORCPT
+        id S1727843AbgEBAmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726430AbgEBAkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:40:07 -0400
-Subject: Re: [GIT PULL] arm64 fixes for 5.7-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588380006;
-        bh=keiy/L2cGLzzlwDBTazDNGSfDCaVDrLUlQ2vG+acV0c=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QfZnvR33eTYsf+dmDKsjFVaW/HI1gWc6sxEcxpgO3ZSaDQZvkD8wia8ZuGrtZAxCF
-         I3cX/6/j7w86yMuE5K9ASwjPHDf0EsHK0aH1jbF+5tjVySxJdsbaZmLEQ5YpgECF0R
-         3135Pz9LV1EzHxx1SZ+lw7YHsLq+50IIB30UnvnQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200501192950.GA25365@gaia>
-References: <20200501192950.GA25365@gaia>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200501192950.GA25365@gaia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-X-PR-Tracked-Commit-Id: 1578e5d03112e3e9d37e1c4d95b6dfb734c73955
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 42eb62d417e5cf22d6e305cb895fb54299862a53
-Message-Id: <158838000685.10067.7730740235724641289.pr-tracker-bot@kernel.org>
-Date:   Sat, 02 May 2020 00:40:06 +0000
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Fri, 1 May 2020 20:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726787AbgEBAmD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 20:42:03 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED6CC061A0C;
+        Fri,  1 May 2020 17:42:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=wCroxG0qo4d90wbE2ZO3cJm2P6ZeLXZvihIg8REOcgs=; b=FFzOdU2u101Y4v8/bow0YrVHOq
+        Yq2ZkgZ5WywkZPzpDw1cTKINrvLjkorYmOrrcKeOZkB0S7+ueftGEtP19MgpNU5Ih+5VAXg/CYbfE
+        gnPyWIYBYsjLaeTODQMJ/GXXTCLdLBRmH0o2JhvTrSUhX6tWTpy0WfR30mJzDVy3npb3j5FSXMAmo
+        3tERt9YP3Yi9VFa8MZde/Y9t7NoErTGSgWjW01+MZp8zzXyrtb7rHKi6iNRChzCaZwQJZbwRO02sN
+        bgbo0ygKrxz7jmavzDTXd4mtAR/OucbITlBB9Hmo9GVpVxFFExZKYzLmPsvi+/zXFC0+fhSBHWeWg
+        PGmGj6mA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jUgEA-0002yp-JR; Sat, 02 May 2020 00:41:58 +0000
+Date:   Fri, 1 May 2020 17:41:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Subject: Re: [RFC PATCH V2 0/9] Introduce attach/clear_page_private to
+ cleanup code
+Message-ID: <20200502004158.GD29705@bombadil.infradead.org>
+References: <20200430214450.10662-1-guoqing.jiang@cloud.ionos.com>
+ <20200501221626.GC29705@bombadil.infradead.org>
+ <889f9f82-64ba-50b3-147b-459303617aeb@cloud.ionos.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <889f9f82-64ba-50b3-147b-459303617aeb@cloud.ionos.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 1 May 2020 20:29:52 +0100:
+On Sat, May 02, 2020 at 12:42:15AM +0200, Guoqing Jiang wrote:
+> On 5/2/20 12:16 AM, Matthew Wilcox wrote:
+> > On Thu, Apr 30, 2020 at 11:44:41PM +0200, Guoqing Jiang wrote:
+> > >    include/linux/pagemap.h: introduce attach/clear_page_private
+> > >    md: remove __clear_page_buffers and use attach/clear_page_private
+> > >    btrfs: use attach/clear_page_private
+> > >    fs/buffer.c: use attach/clear_page_private
+> > >    f2fs: use attach/clear_page_private
+> > >    iomap: use attach/clear_page_private
+> > >    ntfs: replace attach_page_buffers with attach_page_private
+> > >    orangefs: use attach/clear_page_private
+> > >    buffer_head.h: remove attach_page_buffers
+> > I think mm/migrate.c could also use this:
+> > 
+> >          ClearPagePrivate(page);
+> >          set_page_private(newpage, page_private(page));
+> >          set_page_private(page, 0);
+> >          put_page(page);
+> >          get_page(newpage);
+> > 
+> 
+> Thanks for checking!  Assume the below change is appropriate.
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 7160c1556f79..f214adfb3fa4 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -797,10 +797,7 @@ static int __buffer_migrate_page(struct address_space
+> *mapping,
+>         if (rc != MIGRATEPAGE_SUCCESS)
+>                 goto unlock_buffers;
+> 
+> -       ClearPagePrivate(page);
+> -       set_page_private(newpage, page_private(page));
+> -       set_page_private(page, 0);
+> -       put_page(page);
+> +       set_page_private(newpage, detach_page_private(page));
+>         get_page(newpage);
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+I think you can do:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/42eb62d417e5cf22d6e305cb895fb54299862a53
+@@ -797,11 +797,7 @@ static int __buffer_migrate_page(struct address_space *mapping,
+        if (rc != MIGRATEPAGE_SUCCESS)
+                goto unlock_buffers;
+ 
+-       ClearPagePrivate(page);
+-       set_page_private(newpage, page_private(page));
+-       set_page_private(page, 0);
+-       put_page(page);
+-       get_page(newpage);
++       attach_page_private(newpage, detach_page_private(page));
+ 
+        bh = head;
+        do {
+@@ -810,8 +806,6 @@ static int __buffer_migrate_page(struct address_space *mapping,
+ 
+        } while (bh != head);
+ 
+-       SetPagePrivate(newpage);
+-
+        if (mode != MIGRATE_SYNC_NO_COPY)
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+... but maybe there's a subtlety to the ordering of the setup of the bh
+and setting PagePrivate that means what you have there is a better patch.
+Anybody know?
