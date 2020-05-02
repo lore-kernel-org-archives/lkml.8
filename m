@@ -2,142 +2,108 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1225BC47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663D1C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7B320857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 472032184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="puxq24A8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgEBCSH (ORCPT
+        id S1726745AbgEBCcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:18:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30978 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726387AbgEBCSG (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:18:06 -0400
-IronPort-SDR: cC3pPELAUWJUuMnspo/uwnvK0gIpzooZQ9DBOOldvjHzPy/0rsyxhBcpadSMrMumVP22G322Ja
- 03XYwytRwqvQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:18:06 -0700
-IronPort-SDR: fN2CRbuBRh/U5fUSvxhC8uROTf2Vu9xEBy0trIsH/rJtjQFT1Yawk4RkT+2wOQ+07KGXAAEmbw
- gspluRxPinFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="368596037"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.249.169.62]) ([10.249.169.62])
-  by fmsmga001.fm.intel.com with ESMTP; 01 May 2020 19:18:03 -0700
-Subject: Re: [PATCH 0/2] perf stat: Support overall statistics for interval
- mode
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200430030740.27156-1-yao.jin@linux.intel.com>
- <20200501113641.GA1808514@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <b82b6e09-0e28-4799-564f-25689b778ea1@linux.intel.com>
-Date:   Sat, 2 May 2020 10:18:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200501113641.GA1808514@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 1 May 2020 22:32:17 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:11939 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726439AbgEBCcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:32:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588386736; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=uwn3sf1R+WinNwzxuo81Cpfw/F/0rxWpPsO/s/OplK4=; b=puxq24A8wxBsqdRWHnJqod/D6+RN6emR1XeVKKeAVF5nkyKp3oe3q3giGhuBleQE11IHh6IQ
+ Ky7m8n9XgkM6luMjnsdb+n+lRITkMqNXuaFCD/iTEDQfigjff9OdAv28oHpihWRvXWXitL5E
+ gvxq6IdpyjbQ66s1gjMRp4AftE4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eacdbb0.7fc837925c38-smtp-out-n03;
+ Sat, 02 May 2020 02:32:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1CE59C433BA; Sat,  2 May 2020 02:32:15 +0000 (UTC)
+Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 520ABC44791;
+        Sat,  2 May 2020 02:32:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 520ABC44791
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     mani@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org, jhugo@codeaurora.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v4 4/8] bus: mhi: core: Read transfer length from an event properly
+Date:   Fri,  1 May 2020 19:32:01 -0700
+Message-Id: <1588386725-1165-5-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
+References: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Hemant Kumar <hemantk@codeaurora.org>
 
+When MHI Driver receives an EOT event, it reads xfer_len from the
+event in the last TRE. The value is under control of the MHI device
+and never validated by Host MHI driver. The value should never be
+larger than the real size of the buffer but a malicious device can
+set the value 0xFFFF as maximum. This causes driver to memory
+overflow (both read or write). Fix this issue by reading minimum of
+transfer length from event and the buffer length provided.
 
-On 5/1/2020 7:36 PM, Jiri Olsa wrote:
-> On Thu, Apr 30, 2020 at 11:07:38AM +0800, Jin Yao wrote:
->> Currently perf-stat supports to print counts at regular interval (-I),
->> but it's not very easy for user to get the overall statistics.
->>
->> With this patchset, it supports to report the summary at the end of
->> interval output.
->>
->> For example,
->>
->>   root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000412064          2,281,114      cycles
->>        2.001383658          2,547,880      cycles
->>
->>    Performance counter stats for 'system wide':
->>
->>            4,828,994      cycles
->>
->>          2.002860349 seconds time elapsed
->>
->>   root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000389902          1,536,093      cycles
->>        1.000389902            420,226      instructions              #    0.27  insn per cycle
->>        2.001433453          2,213,952      cycles
->>        2.001433453            735,465      instructions              #    0.33  insn per cycle
->>
->>    Performance counter stats for 'system wide':
->>
->>            3,750,045      cycles
->>            1,155,691      instructions              #    0.31  insn per cycle
->>
->>          2.003023361 seconds time elapsed
->>
->>   root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
->>   #           time             counts unit events
->>        1.000435121            905,303      inst_retired.any          #      2.9 CPI
->>        1.000435121          2,663,333      cycles
->>        1.000435121            914,702      inst_retired.any          #      0.3 IPC
->>        1.000435121          2,676,559      cpu_clk_unhalted.thread
->>        2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
->>        2.001615941          3,551,357      cycles
->>        2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
->>        2.001615941          3,551,044      cpu_clk_unhalted.thread
->>
->>    Performance counter stats for 'system wide':
->>
->>            2,856,395      inst_retired.any          #      2.2 CPI
->>            6,214,690      cycles
->>            2,865,539      inst_retired.any          #      0.5 IPC
->>            6,227,603      cpu_clk_unhalted.thread
->>
->>          2.003403078 seconds time elapsed
->>
->> Jin Yao (2):
->>    perf evsel: Create counts for collecting summary data
->>    perf stat: Report summary for interval mode
-> 
-> good idea, but I can't apply this on latest Arnaldo's perf/core,
-> could you please rebase?
-> 
-> thanks,
-> jirka
-> 
+Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+---
+ drivers/bus/mhi/core/main.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Oh, yes, it couldn't be applied on perf/core. I've rebased it.
-
-Thanks
-Jin Yao
-
->>
->>   tools/perf/builtin-stat.c | 14 ++++++-
->>   tools/perf/util/evsel.c   | 10 ++++-
->>   tools/perf/util/evsel.h   |  1 +
->>   tools/perf/util/stat.c    | 77 +++++++++++++++++++++++++++++++++++++++
->>   tools/perf/util/stat.h    |  5 +++
->>   5 files changed, 103 insertions(+), 4 deletions(-)
->>
->> -- 
->> 2.17.1
->>
-> 
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index e60ab21..159732e 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -514,7 +514,10 @@ static int parse_xfer_event(struct mhi_controller *mhi_cntrl,
+ 				mhi_cntrl->unmap_single(mhi_cntrl, buf_info);
+ 
+ 			result.buf_addr = buf_info->cb_buf;
+-			result.bytes_xferd = xfer_len;
++
++			/* truncate to buf len if xfer_len is larger */
++			result.bytes_xferd =
++				min_t(u16, xfer_len, buf_info->len);
+ 			mhi_del_ring_element(mhi_cntrl, buf_ring);
+ 			mhi_del_ring_element(mhi_cntrl, tre_ring);
+ 			local_rp = tre_ring->rp;
+@@ -598,7 +601,9 @@ static int parse_rsc_event(struct mhi_controller *mhi_cntrl,
+ 
+ 	result.transaction_status = (ev_code == MHI_EV_CC_OVERFLOW) ?
+ 		-EOVERFLOW : 0;
+-	result.bytes_xferd = xfer_len;
++
++	/* truncate to buf len if xfer_len is larger */
++	result.bytes_xferd = min_t(u16, xfer_len, buf_info->len);
+ 	result.buf_addr = buf_info->cb_buf;
+ 	result.dir = mhi_chan->dir;
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
