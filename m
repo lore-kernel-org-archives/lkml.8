@@ -2,357 +2,223 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21211C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF904C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1E6F2173E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588403380;
-	bh=wpohAt1R/38lcPWwqw8Do1FRmBAZ9PTDAgFAhK5mktc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tT5IlZZOzGCaqXYUDIqXhP9l2FiNPILCUs0B7f8lh5Jl10TRUf1PfgnOWd4xMcTQ5
-	 FROxPAV2X0grWrgY9Azch7OXo54WU2mn6xQNKStYeAQJ8MshMhdDhnGbF+K7RS5lPH
-	 hzDGk8cJ2yExXjKMuK7SLYe+P89xJ8UxNj4LK0Ok=
+	by mail.kernel.org (Postfix) with ESMTP id C0957216FD
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEBHJk (ORCPT
+        id S1727121AbgEBHMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 03:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
+        Sat, 2 May 2020 03:12:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41352 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgEBHJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 03:09:39 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41B9E216FD;
-        Sat,  2 May 2020 07:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588403378;
-        bh=wpohAt1R/38lcPWwqw8Do1FRmBAZ9PTDAgFAhK5mktc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=t5MpKA1fNUqo2kkHAR/Flp3j0h0A/C46z3or+10Sc+FNFlKYJuq8e3cWl4ObP4rZn
-         vYsd1JQ4+09BI4aoRXADs006FoECK9yIEnW6Z5yIUh3M1Lh5QQyV+eJ2H8wTq6kYXC
-         fgHVLAg3PNTk4aAsZxQ1dbTv/EKlQ+0tmwDv5IlM=
-Date:   Sat, 2 May 2020 09:09:33 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     sean@mess.org, kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC, WIP, v4 07/11] media: vidtv: add MPEG TS common code
-Message-ID: <20200502090933.171aa862@coco.lan>
-In-Reply-To: <20200502032216.197977-8-dwlsalmeida@gmail.com>
-References: <20200502032216.197977-1-dwlsalmeida@gmail.com>
-        <20200502032216.197977-8-dwlsalmeida@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
+        id S1726473AbgEBHMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 03:12:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 54861AF2B;
+        Sat,  2 May 2020 07:11:59 +0000 (UTC)
+Date:   Sat, 02 May 2020 09:11:58 +0200
+Message-ID: <s5h7dxuizep.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Takashi Iwai <tiwai@suse.com>, Lukas Wunner <lukas@wunner.de>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: [PATCH 0/1] Fiji GPU audio register timeout when in BACO state
+In-Reply-To: <s5h1ro4kgog.wl-tiwai@suse.de>
+References: <s5hv9lkm49n.wl-tiwai@suse.de>
+        <PSXP216MB043899DC52E6C6BF728D77CD80AC0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5ha72ulp2y.wl-tiwai@suse.de>
+        <PSXP216MB043822350CDE9E7EEA37730880AD0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <CADnq5_MCQ7xHY=yhNtRW=ze0LRPzxuu-Mm7pD4kFa5R52UrGSw@mail.gmail.com>
+        <s5h1ro6jn0v.wl-tiwai@suse.de>
+        <CADnq5_Mjb_FnNOzjUfJZ7GSDzi-+Cfc1ZTuqm7UWCWVvY6DU_w@mail.gmail.com>
+        <s5hwo5xj98v.wl-tiwai@suse.de>
+        <PSXP216MB0438FE3E1CA577805BEC23C880AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5hh7x0kiwb.wl-tiwai@suse.de>
+        <PSXP216MB04381A30909F66867E6B6BCC80AA0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        <s5h1ro4kgog.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat,  2 May 2020 00:22:12 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
-
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On Thu, 30 Apr 2020 19:49:03 +0200,
+Takashi Iwai wrote:
 > 
-> Add code to work with MPEG TS packets, such as TS headers, adaptation
-> fields, PCR packets and NULL packets.
+> On Thu, 30 Apr 2020 19:38:16 +0200,
+> Nicholas Johnson wrote:
+> > 
+> > On Thu, Apr 30, 2020 at 07:01:08PM +0200, Takashi Iwai wrote:
+> > > On Thu, 30 Apr 2020 18:52:20 +0200,
+> > > Nicholas Johnson wrote:
+> > > > 
+> > > > On Thu, Apr 30, 2020 at 05:14:56PM +0200, Takashi Iwai wrote:
+> > > > > On Wed, 29 Apr 2020 18:19:57 +0200,
+> > > > > Alex Deucher wrote:
+> > > > > > 
+> > > > > > On Wed, Apr 29, 2020 at 12:05 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > > > > > Well, but the code path there is the runtime PM resume of the audio
+> > > > > > > device and it means that GPU must have been runtime-resumed again
+> > > > > > > beforehand via the device link.  So, it should have worked from the
+> > > > > > > beginning but in reality not -- that is, apparently some inconsistency
+> > > > > > > is found in the initial attempt of the runtime resume...
+> > > > > > 
+> > > > > > Yeah, it should be covered, but I wonder if there is something in the
+> > > > > > ELD update sequence that needs to call pm_runtime_get_sync()?  The ELD
+> > > > > > sequence on AMD GPUs doesn't work the same as on other vendors.  The
+> > > > > > GPU driver has a backdoor into the HDA device's verbs to set update
+> > > > > > the audio state rather than doing it via an ELD buffer update.  We
+> > > > > > still update the ELD buffer for consistency.  Maybe when the GPU
+> > > > > > driver sets the audio state at monitor detection time that triggers an
+> > > > > > interrupt or something on the HDA side which races with the CPU and
+> > > > > > the power down of the GPU.  That still seems unlikely though since the
+> > > > > > runtime pm on the GPU side defaults to a 5 second suspend timer.
+> > > > > 
+> > > > > I'm not sure whether it's the race between runtime suspend of GPU vs
+> > > > > runtime resume of audio.  My wild guess is rather that it's the timing
+> > > > > GPU notifies to the audio; then the audio driver notifies to
+> > > > > user-space and user-space opens the stream, which in turn invokes the
+> > > > > runtime resume of GPU. But in GPU side, it's still under processing,
+> > > > > so it proceeds before the GPU finishes its initialization job.
+> > > > > 
+> > > > > Nicholas, could you try the patch below and see whether the problem
+> > > > > still appears?  The patch artificially delays the notification and ELD
+> > > > > update for 300msec.  If this works, it means the timing problem.
+> > > > The bug still occurred after applying the patch.
+> > > > 
+> > > > But you were absolutely correct - it just needed to be increased to 
+> > > > 3000ms - then the bug stopped.
+> > > 
+> > > Interesting.  3 seconds are too long, but I guess 1 second would work
+> > > as well?
+> > 1000ms indeed worked as well.
+> > 
+> > > 
+> > > In anyway, the success with a long delay means that the sound setup
+> > > after the full runtime resume of GPU seems working.
+> > > 
+> > > > Now the question is, what do we do now that we know this?
+> > > > 
+> > > > Also, are you still interested in the contents of the ELD# files? I can 
+> > > > dump them all into a file at some specific moment in time which you 
+> > > > request, if needed.
+> > > 
+> > > Yes, please take the snapshot before plugging, right after plugging
+> > > and right after enabling.  I'm not sure whether your monitor supports
+> > > the audio, and ELD contents should show that, at least.
+> > The monitor supports the audio. There is 3.5mm audio out jack. No 
+> > inbuilt speakers, although Samsung did sell a sound bar to suit it. The 
+> > sound bar, which I do not own, presumably attaches via 3.5mm jack.
+> > 
+> > I am not sure if by plugging, you mean hot-adding Thunderbolt GPU or 
+> > plugging the monitor to the GPU, so I have covered extra cases to be 
+> > sure. I have taken the eld# files with the 1000ms patch applied, so the 
+> > error is not triggered.
 > 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> ---
->  drivers/media/test-drivers/vidtv/Makefile   |   2 +-
->  drivers/media/test-drivers/vidtv/vidtv_ts.c | 130 ++++++++++++++++++++
->  drivers/media/test-drivers/vidtv/vidtv_ts.h | 103 ++++++++++++++++
->  3 files changed, 234 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.c
->  create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.h
+> OK, thanks.  If I understand correctly...
 > 
-> diff --git a/drivers/media/test-drivers/vidtv/Makefile b/drivers/media/test-drivers/vidtv/Makefile
-> index 9ea9485d42189..92001bc348615 100644
-> --- a/drivers/media/test-drivers/vidtv/Makefile
-> +++ b/drivers/media/test-drivers/vidtv/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  vidtv_demod-objs := vidtv_common.o
-> -vidtv_bridge-objs := vidtv_common.o
-> +vidtv_bridge-objs := vidtv_common.o vidtv_ts.o
->  
->  obj-$(CONFIG_DVB_VIDTV)	+= vidtv_tuner.o vidtv_demod.o vidtv_bridge.o
-> diff --git a/drivers/media/test-drivers/vidtv/vidtv_ts.c b/drivers/media/test-drivers/vidtv/vidtv_ts.c
-> new file mode 100644
-> index 0000000000000..f545c45c0fe7c
-> --- /dev/null
-> +++ b/drivers/media/test-drivers/vidtv/vidtv_ts.c
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * The Virtual DVB test driver serves as a reference DVB driver and helps
-> + * validate the existing APIs in the media subsystem. It can also aid
-> + * developers working on userspace applications.
-> + *
-> + * Written by Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <asm/byteorder.h>
-> +#include "vidtv_ts.h"
-> +#include "vidtv_common.h"
-> +
-> +static u32 vidtv_ts_write_pcr_bits(u8 *buf, u64 pcr)
-> +{
-> +	/* Exact same from ffmpeg. PCR is a counter driven by a 27Mhz clock */
-> +	u64 pcr_low = pcr % 300, pcr_high = pcr / 300;
-> +
-> +	*buf++ = pcr_high >> 25;
-> +	*buf++ = pcr_high >> 17;
-> +	*buf++ = pcr_high >>  9;
-> +	*buf++ = pcr_high >>  1;
-> +	*buf++ = pcr_high <<  7 | pcr_low >> 8 | 0x7e;
-> +	*buf++ = pcr_low;
-> +
-> +	return 6;
-> +}
-> +
-> +void vidtv_ts_inc_cc(u8 *continuity_counter)
-> +{
-> +	++*continuity_counter;
-> +	if (*continuity_counter > TS_CC_MAX_VAL)
-> +		*continuity_counter = 0;
-> +}
-> +
-> +u32 vidtv_ts_null_write_into(struct null_packet_write_args args)
-> +{
-> +	u32    nbytes                  = 0;
-> +	struct vidtv_mpeg_ts ts_header = {0};
-> +
-> +	ts_header.sync_byte          = TS_SYNC_BYTE;
-> +	ts_header.pid                = TS_NULL_PACKET_PID;
-> +	ts_header.payload            = 1;
-> +	ts_header.continuity_counter = *args.continuity_counter;
-> +
-> +	cpu_to_be16s(&ts_header.bitfield);
-> +
-> +	/* copy TS header */
-> +	nbytes += vidtv_memcpy(args.dest_buf + args.dest_offset + nbytes,
-> +			       &ts_header,
-> +			       sizeof(ts_header),
-> +			       args.dest_offset + nbytes,
-> +			       args.buf_sz);
+> > ####
+> > Before hot-adding the Thunderbolt GPU:
+> > /proc/asound/card1 not present
+> > ####
+> > ####
+> > After hot-adding the GPU with no monitor attached:
+> > 
+> > /proc/asound/card1 contains:
+> > eld#0.0  eld#0.1  eld#0.2  eld#0.3  eld#0.4  eld#0.5
+> > 
+> > All of the above have the same contents:
+> > 
+> > monitor_present         0
+> > eld_valid               0
+> > ####
+> > ####
+> > Monitor attached to Fiji GPU but not enabled:
+> > 
+> > Same as above
+> > ####
+> > ####
+> > Monitor enabled:
+> 
+> ... the error is triggered at this moment, right?
+> 
+> 
+> > All files with same contents except for eld#0.1 which looks like:
+> > 
+> > monitor_present         1
+> > eld_valid               1
+> > monitor_name            U32E850
+> > connection_type         DisplayPort
+> > eld_version             [0x2] CEA-861D or below
+> > edid_version            [0x3] CEA-861-B, C or D
+> > manufacture_id          0x2d4c
+> > product_id              0xce3
+> > port_id                 0x0
+> > support_hdcp            0
+> > support_ai              0
+> > audio_sync_delay        0
+> > speakers                [0x1] FL/FR
+> > sad_count               1
+> > sad0_coding_type        [0x1] LPCM
+> > sad0_channels           2
+> > sad0_rates              [0xe0] 32000 44100 48000
+> > sad0_bits               [0xe0000] 16 20 24
+> 
+> So your monitor supports the audio :)
 
-Hmm... now I see why you're returning 0 to vidtv_memcpy().
+Now I took a look at the actual code again, and I found that I
+remembered wrongly.  Namely, the device link isn't created in the
+audio component framework but only in the graphics side, so currently
+only i915 has it.
 
-Yet, if the buffer is full, you should just drop the entire package,
-as otherwise you may end copying things that aren't multiple of 188 bytes,
-causing sync issues at the client.
+Could you try the patch below?
 
-> +
-> +	be16_to_cpus(&ts_header.bitfield);
-> +
-> +	vidtv_ts_inc_cc(args.continuity_counter);
-> +
-> +	/* fill the rest with empty data */
-> +	nbytes += vidtv_memset(args.dest_buf + args.dest_offset + nbytes,
-> +			       0xff,
-> +			       TS_PACKET_LEN - nbytes,
-> +			       args.dest_offset + nbytes,
-> +			       args.buf_sz);
-> +
-> +	/* we should have written exactly _one_ 188byte packet */
-> +	WARN_ON(nbytes != TS_PACKET_LEN);
-
-A WARN_ON() seems too severe here. Also, if something bad happens, it
-will end causing lots of problems that can make the machine very slow,
-ad this will flood dmesg.
-
-So, the best would be to use, instead, dev_warn_ratelimited().
-
-PS.: same notes here apply to the function below (and on next patches).
-
-> +
-> +	return nbytes;
-> +}
-> +
-> +u32 vidtv_ts_pcr_write_into(struct pcr_write_args args)
-> +{
-> +	u32    nbytes                         = 0;
-> +	struct vidtv_mpeg_ts ts_header        = {0};
-> +	struct vidtv_mpeg_ts_adaption ts_adap = {0};
-> +
-> +	ts_header.sync_byte     = TS_SYNC_BYTE;
-> +	ts_header.tei           = 0;
-> +	ts_header.payload_start = 0;
-> +	ts_header.pid           = args.pid;
-> +	ts_header.priority      = 0;
-> +	ts_header.scrambling    = 0;
-> +	/* cc is not incremented, see 13818-1 clause 2.4.3.3 */
-> +	ts_header.continuity_counter = *args.continuity_counter;
-> +	ts_header.payload            = 0;
-> +	ts_header.adaptation_field   = 1;
-> +
-> +	/* 13818-1 clause 2.4.3.5 */
-> +	ts_adap.length = 183;
-> +	ts_adap.PCR    = 1;
-> +
-> +	cpu_to_be16s(&ts_header.bitfield);
-> +
-> +	/* copy TS header */
-> +	nbytes += vidtv_memcpy(args.dest_buf + args.dest_offset + nbytes,
-> +			       &ts_header,
-> +			       sizeof(ts_header),
-> +			       args.dest_offset + nbytes,
-> +			       args.buf_sz);
-> +
-> +	be16_to_cpus(&ts_header.bitfield);
-> +
-> +	/* write the adap after the TS header */
-> +	nbytes += vidtv_memcpy(args.dest_buf + args.dest_offset + nbytes,
-> +			       &ts_adap,
-> +			       sizeof(ts_adap),
-> +			       args.dest_offset + nbytes,
-> +			       args.buf_sz);
-> +
-> +	/* write the PCR optional */
-> +	cpu_to_be64s(&args.pcr);
-> +	nbytes += vidtv_ts_write_pcr_bits(args.dest_buf +
-> +					  args.dest_offset +
-> +					  nbytes,
-> +					  args.pcr);
-> +	be64_to_cpus(&args.pcr);
-> +
-> +	nbytes += vidtv_memset(args.dest_buf + args.dest_offset + nbytes,
-> +			       0xff,
-> +			       TS_PACKET_LEN - nbytes,
-> +			       args.dest_offset + nbytes,
-> +			       args.buf_sz);
-> +
-> +	/* we should have written exactly _one_ 188byte packet */
-> +	WARN_ON(nbytes != TS_PACKET_LEN);
-> +
-> +	return nbytes;
-> +}
-> diff --git a/drivers/media/test-drivers/vidtv/vidtv_ts.h b/drivers/media/test-drivers/vidtv/vidtv_ts.h
-> new file mode 100644
-> index 0000000000000..2c07bddc46119
-> --- /dev/null
-> +++ b/drivers/media/test-drivers/vidtv/vidtv_ts.h
-> @@ -0,0 +1,103 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * The Virtual DVB test driver serves as a reference DVB driver and helps
-> + * validate the existing APIs in the media subsystem. It can also aid
-> + * developers working on userspace applications.
-> + *
-> + * Written by Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> + */
-> +
-> +#ifndef VIDTV_TS_H
-> +#define VIDTV_TS_H
-> +
-> +#include <linux/types.h>
-> +#include <asm/byteorder.h>
-> +
-> +#define TS_SYNC_BYTE 0x47
-> +#define TS_PACKET_LEN 188
-> +#define TS_PAYLOAD_LEN 184
-> +#define TS_NULL_PACKET_PID 0x1fff
-> +#define TS_CC_MAX_VAL 0x0f /* 4 bits */
-> +#define TS_LAST_VALID_PID 8191
-> +
-> +struct vidtv_mpeg_ts_adaption {
-> +	u8 length;
-> +	struct {
-> +#if defined(__LITTLE_ENDIAN_BITFIELD)
-> +		u8 extension:1;
-> +		u8 private_data:1;
-> +		u8 splicing_point:1;
-> +		u8 OPCR:1;
-> +		u8 PCR:1;
-> +		u8 priority:1;
-> +		u8 random_access:1;
-> +		u8 discontinued:1;
-> +#elif defined(__BIG_ENDIAN_BITFIELD)
-> +		u8 discontinued:1;
-> +		u8 random_access:1;
-> +		u8 priority:1;
-> +		u8 PCR:1;
-> +		u8 OPCR:1;
-> +		u8 splicing_point:1;
-> +		u8 private_data:1;
-> +		u8 extension:1;
-> +#else
-> +#error  "Please fix <asm/byteorder.h>"
-> +#endif
-> +	} __packed;
-> +	u8 data[];
-> +} __packed;
-> +
-> +struct vidtv_mpeg_ts {
-> +	u8 sync_byte;
-> +	union {
-> +		u16 bitfield;
-> +		struct {
-> +			u16 pid:13;
-> +			u16 priority:1;
-> +			u16 payload_start:1;
-> +			u16 tei:1;
-> +		} __packed;
-> +	} __packed;
-> +	struct {
-> +#if defined(__LITTLE_ENDIAN_BITFIELD)
-> +		u8 continuity_counter:4;
-> +		u8 payload:1;
-> +		u8 adaptation_field:1;
-> +		u8 scrambling:2;
-> +#elif defined(__BIG_ENDIAN_BITFIELD)
-> +		u8 scrambling:2;
-> +		u8 adaptation_field:1;
-> +		u8 payload:1;
-> +		u8 continuity_counter:4;
-> +#else
-> +#error  "Please fix <asm/byteorder.h>"
-> +#endif
-> +	} __packed;
-> +	struct vidtv_mpeg_ts_adaption adaption[];
-> +} __packed;
-> +
-> +struct pcr_write_args {
-> +	void *dest_buf; /* The buffer to write into */
-> +	u32 dest_offset; /* The byte offset into the buffer */
-> +	u16 pid; /* the TS PID for the PCR packets */
-> +	u32 buf_sz; /* protect against overflow when this field is not zero */
-> +	u8 *continuity_counter;
-> +	u64 pcr; /* A sample from the system clock */
-> +};
-> +
-> +struct null_packet_write_args {
-> +	void *dest_buf;/* The buffer to write into */
-> +	u32 dest_offset;/* The byte offset into the buffer */
-> +	u32 buf_sz; /* protect against overflow when this field is not zero */
-> +	u8 *continuity_counter;
-> +};
-> +
-> +/* Increment the continuity counter */
-> +void vidtv_ts_inc_cc(u8 *continuity_counter);
-> +
-> +u32 vidtv_ts_null_write_into(struct null_packet_write_args args);
-> +
-> +u32 vidtv_ts_pcr_write_into(struct pcr_write_args args);
-> +
-> +#endif //VIDTV_TS_H
+Note that i915 binding has no DL_FLAG_PM_RUNTIME as it manages the
+power via get_power/put_power ops pair.
 
 
+thanks,
 
-Thanks,
-Mauro
+Takashi
+
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -673,6 +673,12 @@ static int amdgpu_dm_audio_component_bind(struct device *kdev,
+ 	struct amdgpu_device *adev = dev->dev_private;
+ 	struct drm_audio_component *acomp = data;
+ 
++	if (!device_link_add(hda_kdev, kdev, DL_FLAG_STATELESS |
++			     DL_FLAG_PM_RUNTIME)) {
++		DRM_ERROR("DM: cannot add device link to audio device\n");
++		return -ENOMEM;
++	}
++
+ 	acomp->ops = &amdgpu_dm_audio_component_ops;
+ 	acomp->dev = kdev;
+ 	adev->dm.audio_component = acomp;
+@@ -690,6 +696,8 @@ static void amdgpu_dm_audio_component_unbind(struct device *kdev,
+ 	acomp->ops = NULL;
+ 	acomp->dev = NULL;
+ 	adev->dm.audio_component = NULL;
++
++	device_link_remove(hda_kdev, kdev);
+ }
+ 
+ static const struct component_ops amdgpu_dm_audio_component_bind_ops = {
