@@ -2,143 +2,183 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E55C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E47AC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379F621775
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="nOFABXuS"
+	by mail.kernel.org (Postfix) with ESMTP id 76C4D24953
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 16:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588438549;
+	bh=EN0jC8jtMpvS3MIG3TGZ6/L5gRNmXrVn1U3RMM0Hd6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iuHfaN9D+HL/SW+lZmnXTheI1ov8KI8TszSr6EWRU2RYwlY7xltP+csCaMtB42mk3
+	 DKSXuH6ZbyByUt5Mvfh41K2gHquLqHrj93KNHZqsRjWB1yD9ok1vKrtOmqMLwTjrR9
+	 fhih5dw4UpVJ1VRkAB3tQ0xTyE4v6n8oFL90VWH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgEBQsY (ORCPT
+        id S1728375AbgEBQzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 12:48:24 -0400
-Received: from mout.web.de ([212.227.15.14]:43397 "EHLO mout.web.de"
+        Sat, 2 May 2020 12:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgEBQsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 12:48:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588438097;
-        bh=ot8MtR3g0Z4VK5ZaLgJ9qEWbi/FOrBq+R39dL1Ss9j4=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=nOFABXuSEyJfQ+HzeMlkSDSfMFh4dxpNxJx3/66SkKUGGsT+1M95NbI3Mmh5oIBJp
-         IWIlZyMr5pEQiy9NlofxuuN1LjkTVPhWqe1sCdAGBpcWw1r9K+lCL6s3S0xH6WVBOK
-         Wbh9q2JUKhSr0EN9QsEg5wPbpj8iFeEQA7rU233o=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.93.244]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnX5F-1ilNQa27RF-00jcf8; Sat, 02
- May 2020 18:48:17 +0200
-To:     linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: clk: keystone: Clarification for a return value check in
- _of_pll_clk_init()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <f1a2a717-f89b-d4c4-02aa-dd106eaed0a9@web.de>
-Date:   Sat, 2 May 2020 18:48:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1728312AbgEBQzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 12:55:43 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C26206B8;
+        Sat,  2 May 2020 16:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588438542;
+        bh=EN0jC8jtMpvS3MIG3TGZ6/L5gRNmXrVn1U3RMM0Hd6o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K219v3P1Or+rBvMErrWH54Sa9dn/94QgsBGtbnvOq/l6WQL6DSKVVVPH4UYy5+Nfh
+         oUK/mAgInHqqjSZ8LQWpRCt121xKo+Ab+/Rgxgri5xr8mT2uMH4pCl3wP6cS6kFbht
+         6z95s2UWcvSXBSY/KTkyFYClUSNHbg43q60dddFs=
+Date:   Sat, 2 May 2020 17:55:36 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        david@lechnology.com, felipe.balbi@linux.intel.com,
+        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
+Message-ID: <20200502175536.1e9ac944@archlinux>
+In-Reply-To: <20200501154519.GA4581@icarus>
+References: <cover.1588176662.git.vilhelm.gray@gmail.com>
+        <20200430201345.GX51277@piout.net>
+        <20200501154519.GA4581@icarus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1bLnWoWMwoNjavQBlX0SyTNle5P9ix8u7LcAPnhwclEW9W3V7Up
- Qm5sHKhl4rN/xCflW81nOpbargyg5lexzMWueSmd7ztk1kbL7tA+zcTt4q5GI1kE5CfOSU0
- M9xPqEIB9Yrtg0h5BATrF2FzyL7CsS25kycB3LUxth8TVyNrqnOYo9CUgozYLIi/QCeLXCQ
- IvUmp2xRRnn2hKsYBSGXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:C0x3Fw4bwP0=:MVSPYv4LeQmiBhmCBfapZh
- TwkLGXCvAwFqbndVQUs0Exqn6Uo903lAf2YkSYicEMw1LGBEbiLAD76geeiIpkx37sL735+MY
- 5cBnqQeqLhHVOGAqCRN0dScn/9+Y54PVTbgHWNDh+ZkV33k7qZp8z/WrWCVJTYuHY6vPjOjw0
- XNhnOArg67vwL8L0YhyYrSIqT65TUvnj8k3vTEPIOhW5Q/TDUnbc3eAersGfRIFxTEqyEdre2
- eelHpp3zEigHG7j1ZxR78uHtTUOvKY9lLdq0nF9ATyQXJ+3g3bv0uavuE9NgRlOpIdX6WaWiE
- Z6mZukblhmXq/mRAI2eoIGKKYIbGW1icnGwy7Hf9m/grw0IALghS6ZyZBsaCb2PjF84PMjcrL
- mdIdTloB6iu66f0bxZhQYgqBGwJNt4/n8h5WAnYAxBJOWWcwmMS3x2f+MvsCrCbNDGv6ErQzH
- DDHDPjrXpswE9z60C6KwYYu5yb7339WuKrN8hR+BvzylgHov+WHXvaGJqt9Vq+WZ8TT0nOaXN
- IISyyP5aDF/r4PO33zkUStyoib/3JTzUCcT3tikx54OhgBl66bqMktPYsbWf4AYPKXbiX+hW3
- 2hD7+mc83r4Or4CijehCYHuI3AgjwlsgSZqWo1BYavAd+3aFZp7HW+JtKCwNxh6iGOU1Shm3x
- 68FgXcnb3u3FPpf5oM07hCxx+9L0PNPZIK/KHym/phJMqsTLjx6lL7Aeew54aqg28volz3kXf
- UALx/3cq0ngPtAC0a4ebpzAX3VB0BgxibTi1CQDC3CPIIW+fTkLpq4ZX6WesGGGsT7L0Cz1iN
- MwCeCBMXO6CH/OfkcGetIN1dZHslqmg03AHBFmbyjR8YRKQC4mDmOpT3qxPUpWalwsAjhQJoo
- U8FMjBReTh3qbmPJi8/KAinQPS0SNgzBKLtz2LbQcXPaa6D3ERquBgqsUR1xQMBKqquGQ9l/Z
- T/JYJXZ71QBGBnrRnpvCmIp/ztL6QXRn9D0n/tbCmvVAEcfY1cwpiW9MCRNe4C7KWu0eYpRbb
- ctBUD89c/TunyL9DLUU8Q9vC4ujBFQppbl/PZSZ/eaC27K67OakvAh/BxjhSV4RpQVSNxl20u
- zjjb9PGIdpHTvSeug6jyWdEiUFF+FpjnqvWjK4M488Zgtjv+ZIYM6oFAlqU+iMrlDjupN0lxk
- d7acrlcZ0ylKe2I8VFphiakkD8NheAp7tjrliYXspcXofm6rxMrNh9RGPEmvbYkenRgagUxme
- ZI900XuSEQ8flHEVn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, 1 May 2020 11:46:10 -0400
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
 
-I have tried another small script out for the semantic patch language.
-This source code analysis approach points out that the function =E2=80=9Cc=
-lk_register_pll=E2=80=9D
-is called by the function =E2=80=9C_of_pll_clk_init=E2=80=9D.
-https://elixir.bootlin.com/linux/v5.7-rc3/source/drivers/clk/keystone/pll.=
-c#L153
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
-ivers/clk/keystone/pll.c?id=3D690e2aba7beb1ef06352803bea41a68a3c695015#n15=
-3
+> On Thu, Apr 30, 2020 at 10:13:45PM +0200, Alexandre Belloni wrote:
+> > Hi,
+> > 
+> > On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:  
+> > > Over the past couple years we have noticed some shortcomings with the
+> > > Counter sysfs interface. Although useful in the majority of situations,
+> > > there are certain use-cases where interacting through sysfs attributes
+> > > can become cumbersome and inefficient. A desire to support more advanced
+> > > functionality such as timestamps, multi-axis positioning tables, and
+> > > other such latency-sensitive applications, has motivated a reevaluation
+> > > of the Counter subsystem. I believe a character device interface will be
+> > > helpful for this more niche area of counter device use.
+> > > 
+> > > To quell any concerns from the offset: this patchset makes no changes to
+> > > the existing Counter sysfs userspace interface -- existing userspace
+> > > applications will continue to work with no modifications necessary. I
+> > > request that driver maintainers please test their applications to verify
+> > > that this is true, and report any discrepancies if they arise.
+> > >   
+> > 
+> > On that topic, I'm wondering why the counter subsystem uses /sys/bus
+> > instead of /sys/class that would be more natural for a class of devices.
+> > I can't see how counters would be considered busses. I think you should
+> > consider moving it over to /sys/class (even if deprecating
+> > /sys/bus/counter will be long).  
+> 
+> At the time I wasn't quite familiar with sysfs development so I was
+> following the iio sysfs code rather closely. However, I see now that
+> you're probably right: this isn't really a bus but rather a collection
+> of various types of counters -- i.e. a class of devices.
+> 
+> Perhaps I should migrate this then to /sys/class/counter. Of course, the
+> /sys/bus/counter location will have to remain for compatibility with
+> existing applications, but I think a simple symlink to the new
+> /sys/class/counter location should suffice for that.
+> 
+> If anyone sees an issue with this give me a heads up.
+To just address this point as I've not read the rest of the thread yet...
 
-A null pointer check is performed at this place.
-The function =E2=80=9Cclk_register_pll=E2=80=9D (from the same source file=
-) can eventually
-return the pointer =E2=80=9CERR_PTR(-ENOMEM)=E2=80=9D.
-Is there a need to take this special case also into account?
+I would resist moving it.  This one is an old argument. 
 
-Regards,
-Markus
+Some info in https://lwn.net/Articles/645810/
+As that puts it a "bus" is better known as a "subsystem".
+
+When we originally considered class vs bus for IIO, the view expressed
+at the times was that the whole separation of the two didn't mean anything
+and for non trivial cases bus was always preferred.  It's nothing to do
+with with whether the thing is a bus or not.  Now I suppose it's possible
+opinion has moved on this topic...    However, I'd say there
+is really 0 advantage in moving an existing subsystem even if opinion
+has changed.
+
++CC Greg in case he wants to add anything.
+
+> 
+> > > Interaction with Counter character devices occurs via ioctl commands.
+> > > This allows userspace applications to access and set counter data using
+> > > native C datatypes rather than working through string translations.
+> > >   
+> > 
+> > I agree with David that you should consider using read to retrieve the
+> > counter data as this will simplify interrupt handling/polling and
+> > blocking/non-blocking reads can be used by an application. ABI wise,
+> > this can also be a good move as you could always consider having an
+> > ioctl requesting a specific format when reading the device so you are
+> > not stuck with the initial format you are going to choose.  
+> 
+> My hesitation to implement support for read/write calls is due to a
+> concern that we will end up with various incompatible formats between
+> counter drivers (thus requiring users to have intimate knowledge of the
+> drivers and therefore defeating the purpose of a subsystem). However, if
+> we can standardize on a format that is flexible enough to work for all
+> counter drivers, then read/write calls should not be a problem.
+> 
+> I think a general format could be possible. For example, the counter
+> character device can return a standard header data at the start which
+> provides general information about the counter device: number of
+> counters, number or signals, number of extensions, etc. From this
+> information, offsets can be computed (or perhaps provided by the device)
+> to where the binary data for the count, extension, etc., can be read or
+> written. Interrupts can then be handled as blocking reads, as could
+> other types of events we implement.
+> 
+> Would something like this work well?
+> 
+> William Breathitt Gray
+> 
+> > > 2. Should device driver callbacks return int or long? I sometimes see
+> > >    error values returned as long (e.g. PTR_ERR(), the file_operations
+> > >    structure's ioctl callbacks, etc.); when is it necessary to return
+> > >    long as opposed to int?
+> > >   
+> > 
+> > You should use a long if you ever have to return a point as it is
+> > guaranteed to have the correct size. Else, just stick to an int if you
+> > are not going to overflow it.
+> >   
+> > > 3. I only implemented the unlocked_ioctl callback. Should I implement a
+> > >    compat_ioctl callback as well?
+> > >   
+> > 
+> > The compat_ioctl is to handle 32bit userspace running on a 64bit kernel.
+> > If your structures have the same size in both cases, then you don't have
+> > to implement compat_ioctl.
+> > 
+> > Have a look at Documentation/driver-api/ioctl.rst
+> > 
+> > 
+> > -- 
+> > Alexandre Belloni, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com  
+
