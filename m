@@ -2,114 +2,118 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF57C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC59DC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19BAD2072E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 993592072E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="N2D4Ommx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgEBAT2 (ORCPT
+        id S1726787AbgEBAUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:19:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:54848 "EHLO mga07.intel.com"
+        Fri, 1 May 2020 20:20:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:53233 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgEBAT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:19:27 -0400
-IronPort-SDR: dKKBNFiCDm6s8Lhdn1ds9RotSYV8k0lnzvuiopihXgEkCPshlV8SCHmkLt+LSI657MwsSsam/l
- vT5ymYNRvjEw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 17:19:27 -0700
-IronPort-SDR: IWRKiypnfiZ1brXr2iWiV/cItxdv6XAeADrZvcSACy32EvtDaslUBzBOeGc4BJNRKzzI+IkBM8
- cS8IGbnZ5S7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="258759279"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.209.101.237]) ([10.209.101.237])
-  by orsmga003.jf.intel.com with ESMTP; 01 May 2020 17:19:27 -0700
-Subject: Re: [PATCH] checkpatch: add NL_SET_ERR_MSG to 80 column exceptions
-To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>
-References: <20200501231131.2389319-1-jacob.e.keller@intel.com>
- <e1e12e3f6992c00c005ba2b3bcf671c033a1dccc.camel@perches.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <5a1da586-0cc0-1900-477f-6fef61af7f95@intel.com>
-Date:   Fri, 1 May 2020 17:19:27 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726352AbgEBAUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 20:20:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49DVBz6vJ2z9sRY;
+        Sat,  2 May 2020 10:20:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588378844;
+        bh=9YErByhKPrytItynkZzJMzhAkZvTm63zaS8rqTUVJlU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=N2D4OmmxkLM2FJH7KTwJ4AZXkDfd1ANc6TL2cs6C9YBehaRtodwA6rl2K/JcGbjvq
+         ZclMJ6bv7TvqBOR8ep7mgZtrl22Hwv2WerB92F2EQ1A6yG2Z9ztBNOYtsbMzjsMkf4
+         K7Hm+rfrbaPAXQGzqrS0c4d/4cFuNH5dym3vNpnpOHz8igoOseGiomUKTridka2DjR
+         9AaR2/qlozbY0EI6oqZhCIUDj8kgOO0IycPJJNlWvtJFYxfRDUfH4gNhmIkoGQF3iX
+         SC7LG0pIkCo1aEbwNGPXCfdRgS1I5qwoUkts7DK7atbFN3dZmKwisgVaEPz34Yx6GS
+         k2lslI+uGkkXA==
+Date:   Sat, 2 May 2020 10:20:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: linux-next: Fixes tags needs some work in the net tree
+Message-ID: <20200502102041.5c76e3a5@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <e1e12e3f6992c00c005ba2b3bcf671c033a1dccc.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/5IE3ZirrH/3Ctoo8WFLtGRh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/5IE3ZirrH/3Ctoo8WFLtGRh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/1/2020 4:42 PM, Joe Perches wrote:
-> On Fri, 2020-05-01 at 16:11 -0700, Jacob Keller wrote:
->> NL_SET_ERR_MSG and NL_SET_ERR_MSG_MOD are used to report extended error
->> responses about failure of a netlink command. These strings often end up
->> going over the 80-column limit. Just like logging messages, it is
->> preferred to leave the message all on a single line.
->>
->> Add these to the exception list so that checkpatch.pl will no longer
->> complain about the long lines due to use of these macros.
->>
->> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
->> Cc: Jakub Kicinski <kuba@kernel.org>
->> Cc: Andy Whitcroft <apw@canonical.com>
->> Cc: Joe Perches <joe@perches.com>
->> ---
->>  scripts/checkpatch.pl | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
->> index eac40f0abd56..5da3b06fbeaa 100755
->> --- a/scripts/checkpatch.pl
->> +++ b/scripts/checkpatch.pl
->> @@ -471,7 +471,8 @@ our $logFunctions = qr{(?x:
->>  	WARN(?:_RATELIMIT|_ONCE|)|
->>  	panic|
->>  	MODULE_[A-Z_]+|
->> -	seq_vprintf|seq_printf|seq_puts
->> +	seq_vprintf|seq_printf|seq_puts|
->> +	NL_SET_ERR_MSG(?:_MOD)?
->>  )};
->>  
->>  our $allocFunctions = qr{(?x:
-> 
-> <shrug>  OK I guess.
-> 
-> What about GENL_SET_ERR_MSG ?
->
+In commit
 
-This appears in far fewer locations, but it does seem reasonable to add
-it to this list as well.
+  6c599044b0c1 ("net: phy: DP83TC811: Fix WoL in config init to be disabled=
+")
 
-> btw:
-> 
-> There are some uses with what appear to be unnecessary newlines.
-> Maybe these newlines should be removed.
+Fixes tag
 
-Yea, there's a number of places which seem to have put a newline break
-after the extack pointer.
+  Fixes: 6d749428788b ("net: phy: DP83TC811: Introduce support for the
 
-A quick search shows that there are about 970 or so uses where we don't
-put a newline, and around 220 where we do.
+has these problem(s):
 
-I suppose I can make a series that cleans all of those up along with
-this patch.
+  - Target SHA1 does not exist
 
-Thanks,
-Jake
+Maybe you meant
+
+Fixes: b753a9faaf9a ("net: phy: DP83TC811: Introduce support for the DP83TC=
+811 phy")
+
+Also, please do not split Fixes tags over more than one line.
+
+In commit
+
+  600ac36b5327 ("net: phy: DP83822: Fix WoL in config init to be disabled")
+
+Fixes tag
+
+  Fixes: 3b427751a9d0 ("net: phy: DP83822 initial driver submission")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: 87461f7a58ab ("net: phy: DP83822 initial driver submission")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/5IE3ZirrH/3Ctoo8WFLtGRh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6svNkACgkQAVBC80lX
+0GxEDggAnhuw7RPJ/jd3wZZubhLEYHcW7yci+gDYl7e8hNsYW8F73f3utfWL91pI
+GsYhe9ndUua+SJOMyuy2oFB3y0wL0Dhnli6IpOHL3CvGSQaxD3aCtG4YOhxj1K2l
+r2vJq7FhZaeffuZgSow/1VQtNYwzktEnqrz5bRClXzEbnAb26fTG28r9Ni+kExhM
+Il+NWz4llZHuzA3zlz5d35tX/8ol2zfY/oMkGJTARITCBfpRAZ7Cm9UoZNmYY1+y
+1vidvxEy0vedw1e1f5+OIEi0W6ApZNXEUM5NdyWSpznm/IwSGKYVcg0+KxKXPowm
+GJ13TNUAEMYYVtdGMxX4eWOQiCYHig==
+=Lia3
+-----END PGP SIGNATURE-----
+
+--Sig_/5IE3ZirrH/3Ctoo8WFLtGRh--
