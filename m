@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD8FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA73AC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE2A52184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA792184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbgEBEdS (ORCPT
+        id S1728106AbgEBEdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 00:33:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:44408 "EHLO mga02.intel.com"
+        Sat, 2 May 2020 00:33:19 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55789 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727776AbgEBEci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727791AbgEBEci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 2 May 2020 00:32:38 -0400
-IronPort-SDR: djKHMF+fgWLvDTYGv/tWDw3ppY0V075L01j4FJ5eBxlihjFY/ZE7JJUdmO35wR5l9k3xu2oiQk
- 99H9BDZtF7Sg==
+IronPort-SDR: 2dSyjpuev4NHOnYfXYwzlj942eApvlbQMYoWcDH9QJFQ68+VPuK+s00EHWVNawkiUVjHjI1S0x
+ kK2PLW7vSHGQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:37 -0700
-IronPort-SDR: uLieiuDmvkOOa2qIqraIfiqhVDFAZD6YzUXOhw2yVmbeVaedCrtZThNv7hXw7Lg02F6BdYg06+
- 4NHonDARlKZA==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:37 -0700
+IronPort-SDR: lWUA5Fb1CHqS/CzeMRdFFjJat7n8GOmxhUXWKDuJsoql4LOYgSDp2pxIpEeMldZ0Fa0ZV0tqyy
+ vv59G8X1XOHg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="433516144"
+   d="scan'208";a="433516123"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga005.jf.intel.com with ESMTP; 01 May 2020 21:32:37 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,9 +40,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/10] KVM: x86/mmu: Capture TDP level when updating CPUID
-Date:   Fri,  1 May 2020 21:32:34 -0700
-Message-Id: <20200502043234.12481-11-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/10] KVM: x86: Split guts of kvm_update_dr7() to separate helper
+Date:   Fri,  1 May 2020 21:32:28 -0700
+Message-Id: <20200502043234.12481-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200502043234.12481-1-sean.j.christopherson@intel.com>
 References: <20200502043234.12481-1-sean.j.christopherson@intel.com>
@@ -53,109 +53,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Snapshot the TDP level now that it's invariant (SVM) or dependent only
-on host capabilities and guest CPUID (VMX).  This avoids having to call
-kvm_x86_ops.get_tdp_level() when initializing a TDP MMU and/or
-calculating the page role, and thus avoids the associated retpoline.
-
-Drop the WARN in vmx_get_tdp_level() as updating CPUID while L2 is
-active is legal, if dodgy.
+Move the calculation of the effective DR7 into a separate helper,
+__kvm_update_dr7(), and make the helper visible to vendor code.  It will
+be used in a future patch to avoid the retpoline associated with
+kvm_x86_ops.set_dr7() when stuffing DR7 during nested VMX transitions.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/cpuid.c            | 3 ++-
- arch/x86/kvm/mmu/mmu.c          | 6 +++---
- arch/x86/kvm/svm/nested.c       | 2 +-
- arch/x86/kvm/vmx/vmx.c          | 2 --
- 5 files changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kvm/x86.c | 11 +----------
+ arch/x86/kvm/x86.h | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 55c8f78bc9e8..90840593cd6c 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -686,6 +686,7 @@ struct kvm_vcpu_arch {
- 	struct kvm_cpuid_entry2 cpuid_entries[KVM_MAX_CPUID_ENTRIES];
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index eccbfcb6a4e5..8893c42eac9e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1076,16 +1076,7 @@ static void kvm_update_dr6(struct kvm_vcpu *vcpu)
  
- 	int maxphyaddr;
-+	int tdp_level;
- 
- 	/* emulate context */
- 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 6828be99b908..44dfaefdad0e 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -124,8 +124,9 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
- 					   MSR_IA32_MISC_ENABLE_MWAIT);
- 	}
- 
--	/* Update physical-address width */
-+	/* Note, maxphyaddr must be updated before tdp_level. */
- 	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
-+	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
- 	kvm_mmu_reset_context(vcpu);
- 
- 	kvm_pmu_refresh(vcpu);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e618472c572b..10cb8db54cd0 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4894,7 +4894,7 @@ kvm_calc_tdp_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
- 	union kvm_mmu_role role = kvm_calc_mmu_role_common(vcpu, base_only);
- 
- 	role.base.ad_disabled = (shadow_accessed_mask == 0);
--	role.base.level = kvm_x86_ops.get_tdp_level(vcpu);
-+	role.base.level = vcpu->arch.tdp_level;
- 	role.base.direct = true;
- 	role.base.gpte_is_8_bytes = true;
- 
-@@ -4915,7 +4915,7 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
- 	context->sync_page = nonpaging_sync_page;
- 	context->invlpg = NULL;
- 	context->update_pte = nonpaging_update_pte;
--	context->shadow_root_level = kvm_x86_ops.get_tdp_level(vcpu);
-+	context->shadow_root_level = vcpu->arch.tdp_level;
- 	context->direct_map = true;
- 	context->get_guest_pgd = get_cr3;
- 	context->get_pdptr = kvm_pdptr_read;
-@@ -5680,7 +5680,7 @@ static int alloc_mmu_pages(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu)
- 	 * SVM's 32-bit NPT support, TDP paging doesn't use PAE paging and can
- 	 * skip allocating the PDP table.
- 	 */
--	if (tdp_enabled && kvm_x86_ops.get_tdp_level(vcpu) > PT32E_ROOT_LEVEL)
-+	if (tdp_enabled && vcpu->arch.tdp_level > PT32E_ROOT_LEVEL)
- 		return 0;
- 
- 	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_DMA32);
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 7c86ccb0e939..1afff0b6f30e 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -85,7 +85,7 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
- 	vcpu->arch.mmu->get_guest_pgd     = nested_svm_get_tdp_cr3;
- 	vcpu->arch.mmu->get_pdptr         = nested_svm_get_tdp_pdptr;
- 	vcpu->arch.mmu->inject_page_fault = nested_svm_inject_npf_exit;
--	vcpu->arch.mmu->shadow_root_level = kvm_x86_ops.get_tdp_level(vcpu);
-+	vcpu->arch.mmu->shadow_root_level = vcpu->arch.tdp_level;
- 	reset_shadow_zero_bits_mask(vcpu, vcpu->arch.mmu);
- 	vcpu->arch.walk_mmu              = &vcpu->arch.nested_mmu;
- }
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c9c6e72e9660..f1bde5c41eee 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3008,8 +3008,6 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
- 
- static int vmx_get_tdp_level(struct kvm_vcpu *vcpu)
+ static void kvm_update_dr7(struct kvm_vcpu *vcpu)
  {
--	WARN_ON(is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)));
+-	unsigned long dr7;
 -
- 	if (cpu_has_vmx_ept_5levels() && (cpuid_maxphyaddr(vcpu) > 48))
- 		return 5;
- 	return 4;
+-	if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
+-		dr7 = vcpu->arch.guest_debug_dr7;
+-	else
+-		dr7 = vcpu->arch.dr7;
+-	kvm_x86_ops.set_dr7(vcpu, dr7);
+-	vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_BP_ENABLED;
+-	if (dr7 & DR7_BP_EN_MASK)
+-		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_BP_ENABLED;
++	kvm_x86_ops.set_dr7(vcpu, __kvm_update_dr7(vcpu));
+ }
+ 
+ static u64 kvm_dr6_fixed(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 7b5ed8ed628e..75010b22e379 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -236,6 +236,20 @@ static inline void kvm_register_writel(struct kvm_vcpu *vcpu,
+ 	return kvm_register_write(vcpu, reg, val);
+ }
+ 
++static inline unsigned long __kvm_update_dr7(struct kvm_vcpu *vcpu)
++{
++	unsigned long dr7;
++
++	if (vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP)
++		dr7 = vcpu->arch.guest_debug_dr7;
++	else
++		dr7 = vcpu->arch.dr7;
++	vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_BP_ENABLED;
++	if (dr7 & DR7_BP_EN_MASK)
++		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_BP_ENABLED;
++	return dr7;
++}
++
+ static inline bool kvm_check_has_quirk(struct kvm *kvm, u64 quirk)
+ {
+ 	return !(kvm->arch.disabled_quirks & quirk);
 -- 
 2.26.0
 
