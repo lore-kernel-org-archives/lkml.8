@@ -2,238 +2,157 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43222C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434B8C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 154E62137B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cppCNrre"
+	by mail.kernel.org (Postfix) with ESMTP id 29C1E24954
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgEBWWQ (ORCPT
+        id S1728592AbgEBWXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 18:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
+        Sat, 2 May 2020 18:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728530AbgEBWWP (ORCPT
+        by vger.kernel.org with ESMTP id S1728530AbgEBWXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 18:22:15 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8F4C061A0E;
-        Sat,  2 May 2020 15:22:14 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f83so5483735qke.13;
-        Sat, 02 May 2020 15:22:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9fR1xjvWV4IM5l6CDx6CaIGRS9rKxnG2GxWOgEdzvQs=;
-        b=cppCNrreH/DpN1wsjmKOqNfWJGQRx8xUsNCRu0/oMKasKK7I/+EvufC+BLHXq2QGh8
-         HeibKoHVXX1Xud4Nk/vwrSDMJPoMUPwSj0+JV2elaQA01L5qdh+ZMeF2WA8zVO1nW9Bt
-         BdqMg/ZCiP99p0Wp5BE9Ja499volTuvDfkihxeTN17mJehh0+KVXf+y244OORBpo0wt6
-         8a4Z/Pf3T7uchpVKYgtRs8ZT5m3LnL0PhS2aPQlPUlZJEhVR9u9SeecIPQ0udNNzeJU6
-         svbTnp9FizLGabUQLa1tIyvRnU89xfSxbxQOPKWMWu6UT0LRG5FHN7gm3CcqyesiANmw
-         Djsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9fR1xjvWV4IM5l6CDx6CaIGRS9rKxnG2GxWOgEdzvQs=;
-        b=QNzKiiCpCztHumeB8imbWc9CW+b/A/TD6leQdqPi6lMc8jQ8m7jxX1oIAwHRUg9Q58
-         7rZYjuE7Z6bmV8V0KSPfXFkGFT2d+DK/Ib/lmYdU1lQdYSYprpvf3r5w5xqGyBCEq6dl
-         wMkoYHFQQ1SDSlCCX3AySCtTkhp66zA6A9s7kZJyTV2b6ZtOGjkqjMw6xMCiE1M8k/zE
-         J0BrbS37+LLY2FmPQZouFr0qtIyf9+XbFmbArNsvL2wCaT/NUPyfKpeYlBUFz8Z4uDVb
-         eSBodoT9248Es6MhhG5MIZig4Si4Zl3BHAycNg/rc56XByeW6xH7byincV0Sa2pLfwUl
-         ABVA==
-X-Gm-Message-State: AGi0PuZoXj0dlKJqztMfEdweDHWvy1mZkuRB108E/X7S5BsR9HklKuo/
-        l6A6fMoCSHoLYjFFFcrOLMnKaRVt7sQ=
-X-Google-Smtp-Source: APiQypLP4CKg7ugDjfJSwNoBC3po3Jl+RH/1WiYVQg5l4meRKQqK+7qUg+fOUbp6G1GrHwzwFWK/jw==
-X-Received: by 2002:a05:620a:1405:: with SMTP id d5mr10404746qkj.329.1588458132880;
-        Sat, 02 May 2020 15:22:12 -0700 (PDT)
-Received: from ?IPv6:2804:18:700c:ffc5:f528:88fe:f276:acfe? ([2804:18:700c:ffc5:f528:88fe:f276:acfe])
-        by smtp.gmail.com with ESMTPSA id t1sm6298244qtd.65.2020.05.02.15.22.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 May 2020 15:22:12 -0700 (PDT)
-Subject: Re: [RFC, WIP, v4 07/11] media: vidtv: add MPEG TS common code
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     sean@mess.org, kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200502032216.197977-1-dwlsalmeida@gmail.com>
- <20200502032216.197977-8-dwlsalmeida@gmail.com>
- <20200502090933.171aa862@coco.lan>
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Message-ID: <de298533-e002-99f0-0db0-0418a284fa9e@gmail.com>
-Date:   Sat, 2 May 2020 19:22:06 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 18:23:53 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AB3C061A0C;
+        Sat,  2 May 2020 15:23:53 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 35F9B260157
+Received: by earth.universe (Postfix, from userid 1000)
+        id 0F1993C08C7; Sun,  3 May 2020 00:23:49 +0200 (CEST)
+Date:   Sun, 3 May 2020 00:23:49 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] power: supply: core: add input voltage/current
+ measurements
+Message-ID: <20200502222349.tfa72nr5zunybpla@earth.universe>
+References: <cover.1588345420.git.mirq-linux@rere.qmqm.pl>
+ <249d7ad42b02bfeb8c31c49a64ee92b3e745086d.1588345420.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-In-Reply-To: <20200502090933.171aa862@coco.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="g3ivjy5uiv4t2q7t"
+Content-Disposition: inline
+In-Reply-To: <249d7ad42b02bfeb8c31c49a64ee92b3e745086d.1588345420.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro, thanks for reviewing this!
 
- > Em Sat,  2 May 2020 00:22:12 -0300
- > "Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
- >
- >> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
- >>
- >> Add code to work with MPEG TS packets, such as TS headers, adaptation
- >> fields, PCR packets and NULL packets.
- >>
- >> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
- >> ---
- >>   drivers/media/test-drivers/vidtv/Makefile   |   2 +-
- >>   drivers/media/test-drivers/vidtv/vidtv_ts.c | 130 ++++++++++++++++++++
- >>   drivers/media/test-drivers/vidtv/vidtv_ts.h | 103 ++++++++++++++++
- >>   3 files changed, 234 insertions(+), 1 deletion(-)
- >>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.c
- >>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.h
- >>
- >> diff --git a/drivers/media/test-drivers/vidtv/Makefile 
-b/drivers/media/test-drivers/vidtv/Makefile
- >> index 9ea9485d42189..92001bc348615 100644
- >> --- a/drivers/media/test-drivers/vidtv/Makefile
- >> +++ b/drivers/media/test-drivers/vidtv/Makefile
- >> @@ -1,6 +1,6 @@
- >>   # SPDX-License-Identifier: GPL-2.0
- >>
- >>   vidtv_demod-objs := vidtv_common.o
- >> -vidtv_bridge-objs := vidtv_common.o
- >> +vidtv_bridge-objs := vidtv_common.o vidtv_ts.o
- >>
- >>   obj-$(CONFIG_DVB_VIDTV)	+= vidtv_tuner.o vidtv_demod.o vidtv_bridge.o
- >> diff --git a/drivers/media/test-drivers/vidtv/vidtv_ts.c 
-b/drivers/media/test-drivers/vidtv/vidtv_ts.c
- >> new file mode 100644
- >> index 0000000000000..f545c45c0fe7c
- >> --- /dev/null
- >> +++ b/drivers/media/test-drivers/vidtv/vidtv_ts.c
- >> @@ -0,0 +1,130 @@
- >> +// SPDX-License-Identifier: GPL-2.0
- >> +/*
- >> + * The Virtual DVB test driver serves as a reference DVB driver and 
-helps
- >> + * validate the existing APIs in the media subsystem. It can also aid
- >> + * developers working on userspace applications.
- >> + *
- >> + * Written by Daniel W. S. Almeida <dwlsalmeida@gmail.com>
- >> + */
- >> +
- >> +#include <linux/types.h>
- >> +#include <asm/byteorder.h>
- >> +#include "vidtv_ts.h"
- >> +#include "vidtv_common.h"
- >> +
- >> +static u32 vidtv_ts_write_pcr_bits(u8 *buf, u64 pcr)
- >> +{
- >> +	/* Exact same from ffmpeg. PCR is a counter driven by a 27Mhz clock */
- >> +	u64 pcr_low = pcr % 300, pcr_high = pcr / 300;
- >> +
- >> +	*buf++ = pcr_high >> 25;
- >> +	*buf++ = pcr_high >> 17;
- >> +	*buf++ = pcr_high >>  9;
- >> +	*buf++ = pcr_high >>  1;
- >> +	*buf++ = pcr_high <<  7 | pcr_low >> 8 | 0x7e;
- >> +	*buf++ = pcr_low;
- >> +
- >> +	return 6;
- >> +}
- >> +
- >> +void vidtv_ts_inc_cc(u8 *continuity_counter)
- >> +{
- >> +	++*continuity_counter;
- >> +	if (*continuity_counter > TS_CC_MAX_VAL)
- >> +		*continuity_counter = 0;
- >> +}
- >> +
- >> +u32 vidtv_ts_null_write_into(struct null_packet_write_args args)
- >> +{
- >> +	u32    nbytes                  = 0;
- >> +	struct vidtv_mpeg_ts ts_header = {0};
- >> +
- >> +	ts_header.sync_byte          = TS_SYNC_BYTE;
- >> +	ts_header.pid                = TS_NULL_PACKET_PID;
- >> +	ts_header.payload            = 1;
- >> +	ts_header.continuity_counter = *args.continuity_counter;
- >> +
- >> +	cpu_to_be16s(&ts_header.bitfield);
- >> +
- >> +	/* copy TS header */
- >> +	nbytes += vidtv_memcpy(args.dest_buf + args.dest_offset + nbytes,
- >> +			       &ts_header,
- >> +			       sizeof(ts_header),
- >> +			       args.dest_offset + nbytes,
- >> +			       args.buf_sz);
- >
- > Hmm... now I see why you're returning 0 to vidtv_memcpy().
- >
- > Yet, if the buffer is full, you should just drop the entire package,
- > as otherwise you may end copying things that aren't multiple of 188 
-bytes,
- > causing sync issues at the client.
+--g3ivjy5uiv4t2q7t
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'd like to provide a counterargument for this.
+Hi,
 
-The way I am dealing with errors throughout vidtv so far is:
-If we hit any of these WARN_ON macros, pr_err and the like, then all 
-bets are off. This means that the resulting stream will likely be 
-invalid and that something needs to be rewritten in the source code and 
-my main concern is then preventing the whole driver from crashing.
+On Fri, May 01, 2020 at 05:11:18PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
+> Introduce input voltage and current limits and measurements.
+> This makes room for e.g. VBUS measurements in USB chargers.
 
-This is exactly the behavior that you see in vidtv_memcpy and 
-vidtv_memset: nothing gets written so we don't end up with an overflow, 
-a diagnostic message is printed and there are no attempts at recovery.
+We already have properties for charger input voltage/current.
+Unfortunately the naming is not as straight forward, as it
+could be. Basically the properties have been added over time
+and are ABI now. Things are documented in
 
-In this particular example, I compromised by allowing the size of the 
-buffer to be a module param, i.e.
+Documentation/ABI/testing/sysfs-class-power
 
- >> +static unsigned int ts_buf_sz = 20 * 188;
- >> +module_param(ts_buf_sz, uint, 0644);
- >> +MODULE_PARM_DESC(ts_buf_sz, "Optional size for the TS buffer");
+I provided the relevant properties below.
 
-I think that what I am trying to say is better seen in the last patch 
-for this series: [RFC, WIP, v4 11/11] media: vidtv: Add a MPEG Transport 
-Stream Multiplexer.
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
 
-The following takes place in vidtv_mux.c:
+[...]
 
-	1. We wake up from sleep, take note of how long we slept for and store 
-it into "elapsed_time". This is usually between 10ms and 20ms.
-	2. We encode "elapsed_time" miliseconds worth of data into a buffer
-	3. We call dvb_dmx_swfilter(), passing a pointer to the buffer
-	4. We clear the buffer, sleep for a bit and then go back to 1.
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -273,7 +273,9 @@ static struct device_attribute power_supply_attrs[] =
+=3D {
+>  	POWER_SUPPLY_ATTR(charge_control_limit_max),
+>  	POWER_SUPPLY_ATTR(charge_control_start_threshold),
+>  	POWER_SUPPLY_ATTR(charge_control_end_threshold),
+> +	POWER_SUPPLY_ATTR(input_current_now),
+>  	POWER_SUPPLY_ATTR(input_current_limit),
+> +	POWER_SUPPLY_ATTR(input_voltage_now),
+>  	POWER_SUPPLY_ATTR(input_voltage_limit),
+>  	POWER_SUPPLY_ATTR(input_power_limit),
+>  	POWER_SUPPLY_ATTR(energy_full_design),
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 6a34df65d4d1..5313d1284aad 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -127,7 +127,9 @@ enum power_supply_property {
+>  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
+>  	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents! */
+>  	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
+> +	POWER_SUPPLY_PROP_INPUT_CURRENT_NOW,
 
-If the buffer is somehow full then it means that we are trying to 
-simulate too many fake channels while allocating too little memory, so 
-either we scale down on the amount of fake channels or we choose another 
-value for the "ts_buf_sz" module_param.
+What:           /sys/class/power_supply/<supply_name>/current_avg   =20
+Date:           May 2007
+Contact:        linux-pm@vger.kernel.org                         =20
+Description:                 =20
+                Reports an average IBUS current reading over a fixed period=
+=2E  =20
+                Normally devices will provide a fixed interval in which the=
+y  =20
+                average readings to smooth out the reported value.         =
+   =20
+                                                                           =
+    =20
+                Access: Read   =20
+                Valid values: Represented in microamps
 
-I feel that this is better than adding more logic in an attempt to 
-circumvent the issue, specially since I can add more logic and still 
-fail due to my limited experience. The result is more bloat on the 
-source code for little gain.
+>  	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
+> +	POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW,
 
- > A WARN_ON() seems too severe here. Also, if something bad happens, it
- > will end causing lots of problems that can make the machine very slow,
- > ad this will flood dmesg.
- >
- > So, the best would be to use, instead, dev_warn_ratelimited().
+What:           /sys/class/power_supply/<supply_name>/voltage_now   =20
+Date:           May 2007   =20
+Contact:        linux-pm@vger.kernel.org   =20
+Description:   =20
+                Reports the VBUS voltage supplied now. This value is genera=
+lly   =20
+                read-only reporting, unless the 'online' state of the suppl=
+y   =20
+                is set to be programmable, in which case this value can be =
+set   =20
+                within the reported min/max range.   =20
+   =20
+                Access: Read, Write   =20
+                Valid values: Represented in microvolts   =20
 
-You're right, I did not consider this. I will use dev_warn_ratelimited() 
-in place of WARN_ON in the next revisions.
+>  	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
+>  	POWER_SUPPLY_PROP_INPUT_POWER_LIMIT,
+>  	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
+
+-- Sebastian
+
+--g3ivjy5uiv4t2q7t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6t8u0ACgkQ2O7X88g7
++ppPhg//Zc1WwfEDVYa11+sBTdEsTb4FGzPsFixlXe4GE6kNmXK/uFzUmwH+8Jbe
+YLtwTb7Disi0ub04w6ZAc3gwGLmRU6hRj/ybkFAcBh3WNli5AtY6K/hFU3mSZc9f
+i2mNHKP/15VTswHgoteCx1LFvNsIhuH2D3CuR85zZneiX3vT8rT9MFItAvr+mNTK
+pegtIIhaGEgg44ab6k5PmSvrS3L/KhEM3ditb4mrWNCxt5yPDrB8oaYV9cRjKdPo
+y7UGF6kM80fp5ggI9IWgysi7egLa49gb+3VNWOhgNUclEAgbQuRnM78nxQpPHtG0
+xQO5h9jz5xrIEp7O8WKaDmtPz/lAZm62ofD15dGh+sZju4h8tWh8bbW0vAIekpXS
+a+JjS5qeZVW1EvmDSC7wrVkUl5RGzZYvNoqftKxSVYCXVIPKOrDPmCFKiMGYe1+P
+t7PsOwfmMvrEXH8dDAw1AOd9xIBAUx5PFAjN6T8Tmir0I81JDGeAN37gzCigoIJb
+eeB+9vedR7PskCG0JzU+//Jx5mFKjZP6Ltk8PapowpT/TOca6LKrX24pCnYVzv+0
+V27N/38P4bCnUSc0yFj2k2BSsFhISXCmUMjZv49pmoA4rqTC7bATIlRJX+2o5RpU
+/J6Es9QaNPmtVSWwcLStnGtS6jKQZc4pQoKMHfG9SvZHovTb4JQ=
+=Y7im
+-----END PGP SIGNATURE-----
+
+--g3ivjy5uiv4t2q7t--
