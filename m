@@ -2,98 +2,108 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83822C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173D4C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613D82072E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA112173E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 07:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgEBHm1 (ORCPT
+        id S1727804AbgEBHo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 03:42:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbgEBHm1 (ORCPT
+        Sat, 2 May 2020 03:44:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726486AbgEBHo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 03:42:27 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0427WhUk029695;
-        Sat, 2 May 2020 03:41:43 -0400
+        Sat, 2 May 2020 03:44:59 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0427cVh5078521;
+        Sat, 2 May 2020 03:43:56 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s38n9ncv-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30r84n7rx7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 02 May 2020 03:41:42 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0427YiZt033464;
-        Sat, 2 May 2020 03:41:42 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s38n9nce-1
+        Sat, 02 May 2020 03:43:56 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0427hkFd089425;
+        Sat, 2 May 2020 03:43:55 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30r84n7rwq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 02 May 2020 03:41:42 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0427eHrf019578;
-        Sat, 2 May 2020 07:41:39 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5gd34-1
+        Sat, 02 May 2020 03:43:55 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0427eCnX017574;
+        Sat, 2 May 2020 07:43:53 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma01fra.de.ibm.com with ESMTP id 30s0g585ds-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 02 May 2020 07:41:39 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0427eSsQ59965934
+        Sat, 02 May 2020 07:43:53 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0427hpCW8061248
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 2 May 2020 07:40:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E744A4054;
-        Sat,  2 May 2020 07:41:37 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EADCA405F;
-        Sat,  2 May 2020 07:41:35 +0000 (GMT)
+        Sat, 2 May 2020 07:43:51 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30C4DA4040;
+        Sat,  2 May 2020 07:43:51 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33F6FA404D;
+        Sat,  2 May 2020 07:43:48 +0000 (GMT)
 Received: from linux.ibm.com (unknown [9.148.204.17])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  2 May 2020 07:41:35 +0000 (GMT)
-Date:   Sat, 2 May 2020 10:41:33 +0300
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  2 May 2020 07:43:48 +0000 (GMT)
+Date:   Sat, 2 May 2020 10:43:46 +0300
 From:   Mike Rapoport <rppt@linux.ibm.com>
 To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Tejun Heo <tj@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-ia64@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 07/14] docs: add IRQ documentation at the core-api book
-Message-ID: <20200502074133.GC342687@linux.ibm.com>
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Collingbourne <pcc@google.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
+Subject: Re: [PATCH 11/14] docs: move other kAPI documents to core-api
+Message-ID: <20200502074346.GD342687@linux.ibm.com>
 References: <cover.1588345503.git.mchehab+huawei@kernel.org>
- <2da7485c3718e1442e6b4c2dd66857b776e8899b.1588345503.git.mchehab+huawei@kernel.org>
+ <70cca102282ccd36b107487c60346f414011c684.1588345503.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2da7485c3718e1442e6b4c2dd66857b776e8899b.1588345503.git.mchehab+huawei@kernel.org>
+In-Reply-To: <70cca102282ccd36b107487c60346f414011c684.1588345503.git.mchehab+huawei@kernel.org>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-02_04:2020-05-01,2020-05-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 clxscore=1011 adultscore=0 mlxlogscore=999 suspectscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005020066
+ definitions=2020-05-02_03:2020-05-01,2020-05-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 impostorscore=0 clxscore=1011 suspectscore=1
+ spamscore=0 priorityscore=1501 phishscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005020061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -101,189 +111,161 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello Mauro,
 
-On Fri, May 01, 2020 at 05:37:51PM +0200, Mauro Carvalho Chehab wrote:
-> There are 4 IRQ documentation files under Documentation/*.txt.
-> 
-> Move them into a new directory (core-api/irq) and add a new
-> index file for it.
-
-Just curious, why IRQ docs got their subdirectory and DMA didn't :)
-
-> While here, use a title markup for the Debugging section of the
-> irq-domain.rst file.
+On Fri, May 01, 2020 at 05:37:55PM +0200, Mauro Carvalho Chehab wrote:
+> There are a number of random documents that seem to be
+> describing some aspects of the core-api. Move them to such
+> directory, adding them at the core-api/index.rst file.
 > 
 > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  Documentation/admin-guide/hw-vuln/l1tf.rst            |  2 +-
->  Documentation/admin-guide/kernel-per-CPU-kthreads.rst |  2 +-
->  Documentation/core-api/index.rst                      |  1 +
->  Documentation/{IRQ.txt => core-api/irq/concepts.rst}  |  0
->  Documentation/core-api/irq/index.rst                  | 11 +++++++++++
->  .../irq/irq-affinity.rst}                             |  0
->  .../{IRQ-domain.txt => core-api/irq/irq-domain.rst}   |  3 ++-
->  .../irq/irqflags-tracing.rst}                         |  0
->  Documentation/ia64/irq-redir.rst                      |  2 +-
->  Documentation/networking/scaling.rst                  |  4 ++--
->  Documentation/translations/zh_CN/IRQ.txt              |  4 ++--
->  MAINTAINERS                                           |  2 +-
->  12 files changed, 22 insertions(+), 9 deletions(-)
->  rename Documentation/{IRQ.txt => core-api/irq/concepts.rst} (100%)
->  create mode 100644 Documentation/core-api/irq/index.rst
->  rename Documentation/{IRQ-affinity.txt => core-api/irq/irq-affinity.rst} (100%)
->  rename Documentation/{IRQ-domain.txt => core-api/irq/irq-domain.rst} (99%)
->  rename Documentation/{irqflags-tracing.txt => core-api/irq/irqflags-tracing.rst} (100%)
+>  Documentation/admin-guide/sysctl/vm.rst                     | 2 +-
+>  Documentation/core-api/index.rst                            | 6 ++++++
+>  Documentation/{mailbox.txt => core-api/mailbox.rst}         | 0
+>  Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst}   | 0
+
+The nommu-mmap mostly provides description of user visible behaviuour. I
+think it's bettter to have it in admin-guide/mm/.
+
+>  .../{this_cpu_ops.txt => core-api/this_cpu_ops.rst}         | 0
+>  .../unaligned-memory-access.rst}                            | 0
+>  Documentation/gpu/drm-mm.rst                                | 2 +-
+>  arch/Kconfig                                                | 2 +-
+>  init/Kconfig                                                | 2 +-
+>  mm/Kconfig                                                  | 2 +-
+>  mm/nommu.c                                                  | 2 +-
+>  11 files changed, 12 insertions(+), 6 deletions(-)
+>  rename Documentation/{mailbox.txt => core-api/mailbox.rst} (100%)
+>  rename Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst} (100%)
+>  rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
+>  rename Documentation/{unaligned-memory-access.txt => core-api/unaligned-memory-access.rst} (100%)
 > 
-> diff --git a/Documentation/admin-guide/hw-vuln/l1tf.rst b/Documentation/admin-guide/hw-vuln/l1tf.rst
-> index f83212fae4d5..3eeeb488d955 100644
-> --- a/Documentation/admin-guide/hw-vuln/l1tf.rst
-> +++ b/Documentation/admin-guide/hw-vuln/l1tf.rst
-> @@ -268,7 +268,7 @@ Guest mitigation mechanisms
->     /proc/irq/$NR/smp_affinity[_list] files. Limited documentation is
->     available at:
+> diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+> index 0329a4d3fa9e..0bf2f2a84a9f 100644
+> --- a/Documentation/admin-guide/sysctl/vm.rst
+> +++ b/Documentation/admin-guide/sysctl/vm.rst
+> @@ -583,7 +583,7 @@ trimming of allocations is initiated.
 >  
-> -   https://www.kernel.org/doc/Documentation/IRQ-affinity.txt
-> +   https://www.kernel.org/doc/Documentation/core-api/irq/irq-affinity.rst
+>  The default value is 1.
 >  
->  .. _smt_control:
+> -See Documentation/nommu-mmap.txt for more information.
+> +See Documentation/core-api/nommu-mmap.rst for more information.
 >  
-> diff --git a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-> index 21818aca4708..dc36aeb65d0a 100644
-> --- a/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-> +++ b/Documentation/admin-guide/kernel-per-CPU-kthreads.rst
-> @@ -10,7 +10,7 @@ them to a "housekeeping" CPU dedicated to such work.
->  References
->  ==========
 >  
-> --	Documentation/IRQ-affinity.txt:  Binding interrupts to sets of CPUs.
-> +-	Documentation/core-api/irq/irq-affinity.rst:  Binding interrupts to sets of CPUs.
->  
->  -	Documentation/admin-guide/cgroup-v1:  Using cgroups to bind tasks to sets of CPUs.
->  
+>  numa_zonelist_order
 > diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-> index ab056b3626f4..49a885e83a55 100644
+> index eeac63ba17c3..fe03a639a91a 100644
 > --- a/Documentation/core-api/index.rst
 > +++ b/Documentation/core-api/index.rst
-> @@ -52,6 +52,7 @@ How Linux keeps everything from happening at the same time.  See
+> @@ -38,10 +38,14 @@ Library functionality that is used throughout the kernel.
+>     circular-buffers
+>     rbtree
+>     generic-radix-tree
+> +   mailbox
+>     packing
+> +   rbtree
+> +   this_cpu_ops
+>     timekeeping
+>     errseq
 >  
->     atomic_ops
->     refcount-vs-atomic
-> +   irq/index
->     local_ops
->     padata
->     ../RCU/index
-> diff --git a/Documentation/IRQ.txt b/Documentation/core-api/irq/concepts.rst
-> similarity index 100%
-> rename from Documentation/IRQ.txt
-> rename to Documentation/core-api/irq/concepts.rst
-> diff --git a/Documentation/core-api/irq/index.rst b/Documentation/core-api/irq/index.rst
-> new file mode 100644
-> index 000000000000..0d65d11e5420
-> --- /dev/null
-> +++ b/Documentation/core-api/irq/index.rst
-> @@ -0,0 +1,11 @@
-> +====
-> +IRQs
-> +====
 > +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   concepts
-> +   irq-affinity
-> +   irq-domain
-> +   irqflags-tracing
-> diff --git a/Documentation/IRQ-affinity.txt b/Documentation/core-api/irq/irq-affinity.rst
+>  Concurrency primitives
+>  ======================
+>  
+> @@ -82,11 +86,13 @@ more memory-management documentation in :doc:`/vm/index`.
+>     :maxdepth: 1
+>  
+>     memory-allocation
+> +   unaligned-memory-access
+>     dma-api
+>     dma-api-howto
+>     dma-attributes
+>     dma-isa-lpc
+>     bus-virt-phys-mapping
+> +   nommu-mmap
+>     mm-api
+>     genalloc
+>     pin_user_pages
+> diff --git a/Documentation/mailbox.txt b/Documentation/core-api/mailbox.rst
 > similarity index 100%
-> rename from Documentation/IRQ-affinity.txt
-> rename to Documentation/core-api/irq/irq-affinity.rst
-> diff --git a/Documentation/IRQ-domain.txt b/Documentation/core-api/irq/irq-domain.rst
-> similarity index 99%
-> rename from Documentation/IRQ-domain.txt
-> rename to Documentation/core-api/irq/irq-domain.rst
-> index 507775cce753..096db12f32d5 100644
-> --- a/Documentation/IRQ-domain.txt
-> +++ b/Documentation/core-api/irq/irq-domain.rst
-> @@ -263,7 +263,8 @@ needs to:
->  Hierarchy irq_domain is in no way x86 specific, and is heavily used to
->  support other architectures, such as ARM, ARM64 etc.
->  
-> -=== Debugging ===
-> +Debugging
-> +=========
->  
->  Most of the internals of the IRQ subsystem are exposed in debugfs by
->  turning CONFIG_GENERIC_IRQ_DEBUGFS on.
-> diff --git a/Documentation/irqflags-tracing.txt b/Documentation/core-api/irq/irqflags-tracing.rst
+> rename from Documentation/mailbox.txt
+> rename to Documentation/core-api/mailbox.rst
+> diff --git a/Documentation/nommu-mmap.txt b/Documentation/core-api/nommu-mmap.rst
 > similarity index 100%
-> rename from Documentation/irqflags-tracing.txt
-> rename to Documentation/core-api/irq/irqflags-tracing.rst
-> diff --git a/Documentation/ia64/irq-redir.rst b/Documentation/ia64/irq-redir.rst
-> index 39bf94484a15..6bbbbe4f73ef 100644
-> --- a/Documentation/ia64/irq-redir.rst
-> +++ b/Documentation/ia64/irq-redir.rst
-> @@ -7,7 +7,7 @@ IRQ affinity on IA64 platforms
+> rename from Documentation/nommu-mmap.txt
+> rename to Documentation/core-api/nommu-mmap.rst
+> diff --git a/Documentation/this_cpu_ops.txt b/Documentation/core-api/this_cpu_ops.rst
+> similarity index 100%
+> rename from Documentation/this_cpu_ops.txt
+> rename to Documentation/core-api/this_cpu_ops.rst
+> diff --git a/Documentation/unaligned-memory-access.txt b/Documentation/core-api/unaligned-memory-access.rst
+> similarity index 100%
+> rename from Documentation/unaligned-memory-access.txt
+> rename to Documentation/core-api/unaligned-memory-access.rst
+> diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
+> index 1839762044be..e0bbcbb6f512 100644
+> --- a/Documentation/gpu/drm-mm.rst
+> +++ b/Documentation/gpu/drm-mm.rst
+> @@ -314,7 +314,7 @@ To use drm_gem_cma_get_unmapped_area(), drivers must fill the struct
+>  a pointer on drm_gem_cma_get_unmapped_area().
 >  
->  By writing to /proc/irq/IRQ#/smp_affinity the interrupt routing can be
->  controlled. The behavior on IA64 platforms is slightly different from
-> -that described in Documentation/IRQ-affinity.txt for i386 systems.
-> +that described in Documentation/core-api/irq/irq-affinity.rst for i386 systems.
+>  More detailed information about get_unmapped_area can be found in
+> -Documentation/nommu-mmap.txt
+> +Documentation/core-api/nommu-mmap.rst
 >  
->  Because of the usage of SAPIC mode and physical destination mode the
->  IRQ target is one particular CPU and cannot be a mask of several
-> diff --git a/Documentation/networking/scaling.rst b/Documentation/networking/scaling.rst
-> index f78d7bf27ff5..8f0347b9fb3d 100644
-> --- a/Documentation/networking/scaling.rst
-> +++ b/Documentation/networking/scaling.rst
-> @@ -81,7 +81,7 @@ of queues to IRQs can be determined from /proc/interrupts. By default,
->  an IRQ may be handled on any CPU. Because a non-negligible part of packet
->  processing takes place in receive interrupt handling, it is advantageous
->  to spread receive interrupts between CPUs. To manually adjust the IRQ
-> -affinity of each interrupt see Documentation/IRQ-affinity.txt. Some systems
-> +affinity of each interrupt see Documentation/core-api/irq/irq-affinity.rst. Some systems
->  will be running irqbalance, a daemon that dynamically optimizes IRQ
->  assignments and as a result may override any manual settings.
+>  Memory Coherency
+>  ----------------
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 786a85d4ad40..b0b4046c9d13 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -147,7 +147,7 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
+>  	  problems with received packets if doing so would not help
+>  	  much.
 >  
-> @@ -160,7 +160,7 @@ can be configured for each receive queue using a sysfs file entry::
+> -	  See Documentation/unaligned-memory-access.txt for more
+> +	  See Documentation/core-api/unaligned-memory-access.rst for more
+>  	  information on the topic of unaligned memory accesses.
 >  
->  This file implements a bitmap of CPUs. RPS is disabled when it is zero
->  (the default), in which case packets are processed on the interrupting
-> -CPU. Documentation/IRQ-affinity.txt explains how CPUs are assigned to
-> +CPU. Documentation/core-api/irq/irq-affinity.rst explains how CPUs are assigned to
->  the bitmap.
+>  config ARCH_USE_BUILTIN_BSWAP
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 492bb7000aa4..61ccfd9243e3 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1950,7 +1950,7 @@ config MMAP_ALLOW_UNINITIALIZED
+>  	  userspace.  Since that isn't generally a problem on no-MMU systems,
+>  	  it is normally safe to say Y here.
 >  
+> -	  See Documentation/nommu-mmap.txt for more information.
+> +	  See Documentation/core-api/nommu-mmap.rst for more information.
 >  
-> diff --git a/Documentation/translations/zh_CN/IRQ.txt b/Documentation/translations/zh_CN/IRQ.txt
-> index 956026d5cf82..9aec8dca4fcf 100644
-> --- a/Documentation/translations/zh_CN/IRQ.txt
-> +++ b/Documentation/translations/zh_CN/IRQ.txt
-> @@ -1,4 +1,4 @@
-> -Chinese translated version of Documentation/IRQ.txt
-> +Chinese translated version of Documentation/core-api/irq/index.rst
+>  config SYSTEM_DATA_VERIFICATION
+>  	def_bool n
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index db626b8d4fdb..2a133c40a4b7 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -382,7 +382,7 @@ config NOMMU_INITIAL_TRIM_EXCESS
+>  	  This option specifies the initial value of this option.  The default
+>  	  of 1 says that all excess pages should be trimmed.
 >  
->  If you have any comment or update to the content, please contact the
->  original document maintainer directly.  However, if you have a problem
-> @@ -9,7 +9,7 @@ or if there is a problem with the translation.
->  Maintainer: Eric W. Biederman <ebiederman@xmission.com>
->  Chinese maintainer: Fu Wei <tekkamanninja@gmail.com>
->  ---------------------------------------------------------------------
-> -Documentation/IRQ.txt 的中文翻译
-> +Documentation/core-api/irq/index.rst 的中文翻译
+> -	  See Documentation/nommu-mmap.txt for more information.
+> +	  See Documentation/core-api/nommu-mmap.rst for more information.
 >  
->  如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
->  交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a1d7af532950..6eb3d85a646f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8974,7 +8974,7 @@ IRQ DOMAINS (IRQ NUMBER MAPPING LIBRARY)
->  M:	Marc Zyngier <maz@kernel.org>
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-> -F:	Documentation/IRQ-domain.txt
-> +F:	Documentation/core-api/irq/irq-domain.rst
->  F:	include/linux/irqdomain.h
->  F:	kernel/irq/irqdomain.c
->  F:	kernel/irq/msi.c
+>  config TRANSPARENT_HUGEPAGE
+>  	bool "Transparent Hugepage Support"
+> diff --git a/mm/nommu.c b/mm/nommu.c
+> index 371697bf372d..e3e707d6f124 100644
+> --- a/mm/nommu.c
+> +++ b/mm/nommu.c
+> @@ -5,7 +5,7 @@
+>   *  Replacement code for mm functions to support CPU's that don't
+>   *  have any form of memory management unit (thus no virtual memory).
+>   *
+> - *  See Documentation/nommu-mmap.txt
+> + *  See Documentation/core-api/nommu-mmap.rst
+>   *
+>   *  Copyright (c) 2004-2008 David Howells <dhowells@redhat.com>
+>   *  Copyright (c) 2000-2003 David McCullough <davidm@snapgear.com>
 > -- 
 > 2.25.4
 > 
