@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1382C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511B4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1DA524961
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4C621775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iav88mJy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RApLloiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgEBEZz (ORCPT
+        id S1726896AbgEBE13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 00:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
+        Sat, 2 May 2020 00:27:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726058AbgEBEZy (ORCPT
+        by vger.kernel.org with ESMTP id S1726058AbgEBE12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 00:25:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08E5C061A0C;
-        Fri,  1 May 2020 21:25:54 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r14so2544962pfg.2;
-        Fri, 01 May 2020 21:25:54 -0700 (PDT)
+        Sat, 2 May 2020 00:27:28 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C4BC061A0C;
+        Fri,  1 May 2020 21:27:28 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v2so4406273plp.9;
+        Fri, 01 May 2020 21:27:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=kiUp2VuxecaGnL/1oYSuzHIIFHuTpPDWSWLWMhnipIs=;
-        b=iav88mJyD4okdvdlrlfIEySidY5usjuh3bgPsJWa7+0nKaQ0q0C7mkHJcK8M2WyjCN
-         eZ7TfNwZc7Dsw8UsCsNIcJ+8J3TmgeEHAFmXuhew4uPIS5hf3a/EqOLI4mlodmvoTF5F
-         X6KxCi/UR5e2lMWNwr5fe3k592cULvXzQCBgA+A0actihCsfmCsZfE4JKNQ6QNznOmf7
-         KIUFqOYJYzesac/VlkBlj25GsPmbIst+E9yEdgXhkYuVB3w+GC4RlAF7mLTBAMZWs6Nh
-         Zvk/mNJxPpDt5xTmVVrRAtcazBAh/TQRQW8JIKJ44JhoBEAPsG30cJAjNja29A6km96T
-         dXqA==
+        bh=+IOXl2jed4M505/IbPFpJG7XBeW1Tzf7RxiMicNF8/I=;
+        b=RApLloiAJdVFejIqkp5H8CAgghDiPFSZ4YFJoQjcCPFipTXfw/efoeQ1McWWu2sKIe
+         m3bJ7AzDsIepoIn2H0xGa71ram0oTKM0rwFRHH7rDJ2z92sDXP/WUD2W5c3/e8jJvGw9
+         zXTO2IqWqBQuPsHoUZTHTYky5gvzplN6u4VpYYYkpvewx90PPscgXYE5eIhHdIkBmrno
+         f74SFfGalFEhvskFIg73z6aasqWDwzoFGECKsXZbRcD8mo7Ky54aPxELmIyMoqfRXGKa
+         SeyqgBdoSMtWM8YeNFf2nxpEGB5AeugEqIli9us1fON96EkUbFM/3qxluqiUO0Jad7Mb
+         moJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kiUp2VuxecaGnL/1oYSuzHIIFHuTpPDWSWLWMhnipIs=;
-        b=QT8fE/vR3N/AmK6UFciZIWy9MdsD/EjATJKderEnTOfRDTjESvA1Uft8KZW3bQf2bI
-         v/EZiF3wTKq+OhWGg2257GTgWWKd2Rxyp992l++ERUuFZBsQKjZPJlWGVuvM01iKM8dV
-         rD/QvrA3Nu+sF6tv7u0nXiQ23ioFMekeg/xwhjEnhgGbFH7IjVb3TYPEJ6xk2hAHRLEt
-         Idi4nR3GPZi5UDP3I3cfivTSCXLYLOJdj3SYZrXLPpXch1YKHwODK811NHEt+GJN7EX3
-         oGaJkV9DzfuxYyYRK+TCQd83a8HA8BCLxHnIJn/0FO460+DRdiUb0+yvllDGm/gkihsM
-         mi5w==
-X-Gm-Message-State: AGi0PuZx7y32N8A5KrZoqnyUq0JtuiDkeJ4PcBkOnFMClMyQ6xmruDx8
-        D7tiFJi+IAUlLlHgL6+uO7+vSFAL
-X-Google-Smtp-Source: APiQypLiFLElTqhkKYwGNcLAdbFzHMCcnD37IX+04dzbqo/uyPZkqZrq1s+SwZIkvCXCr+mHKQiGYw==
-X-Received: by 2002:aa7:95b2:: with SMTP id a18mr7616796pfk.91.1588393554216;
-        Fri, 01 May 2020 21:25:54 -0700 (PDT)
+        bh=+IOXl2jed4M505/IbPFpJG7XBeW1Tzf7RxiMicNF8/I=;
+        b=WW3JKTbaxv2kxNbUbJFapfyhMoWAnxrPUae8V0Gl7FxMcIwqYVXoUfuYM3UTXSxVSS
+         VZojU11AqYh83kIg4ZwkHTKYPWUvxQb+dH7ENcC9v2t/yEXWMhbp06bEKt//CfX8yimn
+         l4mJ2RfEDYWZNQwd6rMz7RIHjXa7/vo/XouURn3B+VT4qJNb/sTicUK2N3UEvzPdHTjp
+         qbQhohWTxTAaH8SnD9D3SAgO3b3V8nrYBM2zaQKSBUPT9HjCabcUsaI8VTm/M8KZmfOP
+         lG6EFgqO1ejj5TFLFLjHUSBrk8M9leoPUycOk9wHZ9Yh7oXzpWFw8Q7OtuJeV8I2cNDt
+         b9Ww==
+X-Gm-Message-State: AGi0Pub8j3IcWRI4WJlgon8mfnVXmjgoMEdBzg+Mgis4H2iXgngi1+KH
+        tXFD7mQRtwDUkKQBnRwGaV4QKm1a
+X-Google-Smtp-Source: APiQypJ8OgkFKATcOXHSRvm9m+ssuT2nkzK4cAFDpb0nnsKEDr/rivHlz3RU3tN/tjTVfhzGYFVUyA==
+X-Received: by 2002:a17:90a:d78e:: with SMTP id z14mr3731402pju.125.1588393648159;
+        Fri, 01 May 2020 21:27:28 -0700 (PDT)
 Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id x13sm3163431pgh.63.2020.05.01.21.25.53
+        by smtp.gmail.com with ESMTPSA id l30sm980021pje.34.2020.05.01.21.27.27
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 01 May 2020 21:25:53 -0700 (PDT)
+        Fri, 01 May 2020 21:27:27 -0700 (PDT)
 From:   Bin Meng <bmeng.cn@gmail.com>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Bin Meng <bin.meng@windriver.com>
-Subject: [PATCH] mips: Drop CONFIG_MTD_M25P80 in various defconfig files
-Date:   Fri,  1 May 2020 21:25:49 -0700
-Message-Id: <1588393549-31371-1-git-send-email-bmeng.cn@gmail.com>
+Subject: [PATCH] sh: Drop CONFIG_MTD_M25P80 in sh7757lcr_defconfig
+Date:   Fri,  1 May 2020 21:27:23 -0700
+Message-Id: <1588393643-31499-1-git-send-email-bmeng.cn@gmail.com>
 X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -78,73 +78,21 @@ commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
 Signed-off-by: Bin Meng <bin.meng@windriver.com>
 ---
 
- arch/mips/configs/ath79_defconfig             | 1 -
- arch/mips/configs/db1xxx_defconfig            | 1 -
- arch/mips/configs/generic/board-ocelot.config | 1 -
- arch/mips/configs/pistachio_defconfig         | 1 -
- arch/mips/configs/rt305x_defconfig            | 1 -
- 5 files changed, 5 deletions(-)
+ arch/sh/configs/sh7757lcr_defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/mips/configs/ath79_defconfig b/arch/mips/configs/ath79_defconfig
-index 3d14d67..96622a2 100644
---- a/arch/mips/configs/ath79_defconfig
-+++ b/arch/mips/configs/ath79_defconfig
-@@ -46,7 +46,6 @@ CONFIG_MTD_JEDECPROBE=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_COMPLEX_MAPPINGS=y
- CONFIG_MTD_PHYSMAP=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SPI_NOR=y
- CONFIG_NETDEVICES=y
- CONFIG_ATH9K=m
-diff --git a/arch/mips/configs/db1xxx_defconfig b/arch/mips/configs/db1xxx_defconfig
-index e6f3e8e..b8bd663 100644
---- a/arch/mips/configs/db1xxx_defconfig
-+++ b/arch/mips/configs/db1xxx_defconfig
-@@ -92,7 +92,6 @@ CONFIG_MTD_CFI=y
- CONFIG_MTD_CFI_ADV_OPTIONS=y
- CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_PHYSMAP=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SST25L=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_ECC_SW_BCH=y
-diff --git a/arch/mips/configs/generic/board-ocelot.config b/arch/mips/configs/generic/board-ocelot.config
-index 7626f2a..5107095 100644
---- a/arch/mips/configs/generic/board-ocelot.config
-+++ b/arch/mips/configs/generic/board-ocelot.config
-@@ -9,7 +9,6 @@ CONFIG_GENERIC_PHY=y
- CONFIG_MTD=y
- CONFIG_MTD_CMDLINE_PARTS=y
- CONFIG_MTD_BLOCK=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_RAW_NAND=y
- CONFIG_MTD_NAND_PLATFORM=y
- CONFIG_MTD_SPI_NOR=y
-diff --git a/arch/mips/configs/pistachio_defconfig b/arch/mips/configs/pistachio_defconfig
-index 24e0718..b9adf15 100644
---- a/arch/mips/configs/pistachio_defconfig
-+++ b/arch/mips/configs/pistachio_defconfig
-@@ -127,7 +127,6 @@ CONFIG_DEBUG_DEVRES=y
- CONFIG_CONNECTOR=y
+diff --git a/arch/sh/configs/sh7757lcr_defconfig b/arch/sh/configs/sh7757lcr_defconfig
+index 9f2aed0..1e41a04 100644
+--- a/arch/sh/configs/sh7757lcr_defconfig
++++ b/arch/sh/configs/sh7757lcr_defconfig
+@@ -36,7 +36,6 @@ CONFIG_IPV6=y
+ # CONFIG_FW_LOADER is not set
  CONFIG_MTD=y
  CONFIG_MTD_BLOCK=y
 -CONFIG_MTD_M25P80=y
- CONFIG_MTD_SPI_NOR=y
- CONFIG_MTD_UBI=y
- CONFIG_MTD_UBI_BLOCK=y
-diff --git a/arch/mips/configs/rt305x_defconfig b/arch/mips/configs/rt305x_defconfig
-index 8c2ead5..fec5851 100644
---- a/arch/mips/configs/rt305x_defconfig
-+++ b/arch/mips/configs/rt305x_defconfig
-@@ -76,7 +76,6 @@ CONFIG_MTD_CFI_AMDSTD=y
- CONFIG_MTD_COMPLEX_MAPPINGS=y
- CONFIG_MTD_PHYSMAP=y
- CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SPI_NOR=y
- CONFIG_EEPROM_93CX6=m
+ CONFIG_BLK_DEV_RAM=y
  CONFIG_SCSI=y
+ CONFIG_BLK_DEV_SD=y
 -- 
 2.7.4
 
