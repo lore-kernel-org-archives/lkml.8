@@ -2,133 +2,258 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93E6C47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE98C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D26FD2137B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FD020787
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CR3eRBM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgEBK1g (ORCPT
+        id S1727029AbgEBKpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 06:27:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41548 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726574AbgEBK1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 06:27:35 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 26E951F4C475056ECB60;
-        Sat,  2 May 2020 18:27:30 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.99) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sat, 2 May 2020
- 18:27:22 +0800
-To:     <tj@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
-        <netdev@vger.kernel.org>,
-        "Libin (Huawei)" <huawei.libin@huawei.com>,
-        <yangyingliang@huawei.com>, <guofan5@huawei.com>,
-        <wangkefeng.wang@huawei.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Subject: cgroup pointed by sock is leaked on mode switch
-Message-ID: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
-Date:   Sat, 2 May 2020 18:27:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.166.215.99]
-X-CFilter-Loop: Reflected
+        Sat, 2 May 2020 06:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726654AbgEBKpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 06:45:54 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E404C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 03:45:54 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 207so227864pgc.6
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 03:45:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/mr7Ffa+L3f2qDc6iFPpXCwdaYNWdfHaCGafzkJl+HY=;
+        b=CR3eRBM/9Up3tE43xLs9pJKD2faQJ0j0SQZO6zOUQv7uwUvtuIGyow0aICUGRYKLI9
+         ZkgNZzeWdk6IH5gJRsoeYBZgCmdvr9T8xoH1VRmzCm6tEqTZ0S2ITkFlXJZACi3ISbVo
+         67wc+g8qdmkJgCUHJ8YiKv9bJe6q4kQ31PH39p3t1CecosCl0/rloxpvdzIcG4jSdX+i
+         BhLjIROzZmrmRJFu3KDvv3ekWP1fKNGlYzfxfSi66X80v2Uakha2N/FnviUb6ExsAp/M
+         MtRYHlCWoKHf0TmwNMgEacq6s1exkeeecBo1P9M2jZgqpWnkgtwoG2TJhcOXsbv7mzG3
+         068Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/mr7Ffa+L3f2qDc6iFPpXCwdaYNWdfHaCGafzkJl+HY=;
+        b=cqN9Hac//STuoP7noBZeo3jScItZgOVnN0UoTuJjdGxTNz6BCwDdL2WXKVfO+GHzJz
+         hBc7bxX2TUTNZqgACoqhb6VpTSumu5AZf++qfC0Qv3QeHi8AVBcB4Cnskpj1/WSAGGBj
+         GVZtmXWlFSBzeCZGOeubBJqgQJ0RLRiCpzMgBqcQFiK24PnNoAsMYYNxqj0bunyAUznC
+         DZwW9qvWwM9zKRp9uNSDuZwNA8PIJh5JbSDBqJLJ5wjdz751IWFLshanZ7/3/1mhqS2k
+         7DpbsZEpjgMimofy891UNJv+K2cNEYOFdDR+J9+2iNcP4h/qjIourJlfUr7GnGZtQJiU
+         iTxQ==
+X-Gm-Message-State: AGi0PuajubbHQxpB5EIxmmhwi1KvGRfmKMxY2y6b5f7iR6qFfqAbxMEr
+        TefNhm+YSNqMXOY9qMGvjyM=
+X-Google-Smtp-Source: APiQypLbrHiEEMUdFeLbTnaUHmlRIO1dnbF20vmXFp7YATEqr8WYEyNAGD1Y+yACVDSb8J2OLKrHuw==
+X-Received: by 2002:a63:ad08:: with SMTP id g8mr8688888pgf.40.1588416353777;
+        Sat, 02 May 2020 03:45:53 -0700 (PDT)
+Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
+        by smtp.gmail.com with ESMTPSA id 202sm3854029pgf.41.2020.05.02.03.45.52
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sat, 02 May 2020 03:45:53 -0700 (PDT)
+From:   Bin Meng <bmeng.cn@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Bin Meng <bin.meng@windriver.com>
+Subject: [PATCH v2] arm: Drop CONFIG_MTD_M25P80 in various defconfig files
+Date:   Sat,  2 May 2020 03:45:47 -0700
+Message-Id: <1588416347-30217-1-git-send-email-bmeng.cn@gmail.com>
+X-Mailer: git-send-email 1.7.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Bin Meng <bin.meng@windriver.com>
 
-I got an oom panic because cgroup is leaked.
+Drop CONFIG_MTD_M25P80 that was removed in
+commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
 
-Here is the steps :
-   - run a docker with --cap-add sys_admin parameter and the systemd 
-process in the docker uses both cgroupv1 and cgroupv2
-   - ssh/exit from host to docker repeately
+Signed-off-by: Bin Meng <bin.meng@windriver.com>
 
-I find the number nr_dying_descendants is increasing:
-linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep 
-'^nr_dying_descendants [^0]'  {} +
-/sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
-/sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
-/sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants 
-1
-/sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
-/sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants 
-78
-/sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants 
-78
+---
 
+Changes in v2:
+- add CONFIG_MTD_SPI_NOR=y in axm55xx_defconfig
 
-The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add 
-sock->sk_cgroup") describes.
-"On mode switch, cgroup references which are already being pointed to by 
-socks may be leaked."
+ arch/arm/configs/axm55xx_defconfig     | 2 +-
+ arch/arm/configs/davinci_all_defconfig | 1 -
+ arch/arm/configs/dove_defconfig        | 1 -
+ arch/arm/configs/imx_v6_v7_defconfig   | 1 -
+ arch/arm/configs/keystone_defconfig    | 1 -
+ arch/arm/configs/mvebu_v5_defconfig    | 1 -
+ arch/arm/configs/mvebu_v7_defconfig    | 1 -
+ arch/arm/configs/mxs_defconfig         | 1 -
+ arch/arm/configs/pxa_defconfig         | 1 -
+ arch/arm/configs/qcom_defconfig        | 1 -
+ arch/arm/configs/sama5_defconfig       | 1 -
+ arch/arm/configs/socfpga_defconfig     | 1 -
+ arch/arm/configs/tegra_defconfig       | 1 -
+ 13 files changed, 1 insertion(+), 13 deletions(-)
 
-Do we have a fix for this leak now ?
-
-Or how  about fix this by record the cgrp2 pointer, then put it when sk 
-is freeing like this:
-
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index d9bd671105e2..cbb1e76ea305 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -770,6 +770,7 @@ struct sock_cgroup_data {
-  #endif
-          u64        val;
-      };
-+    struct cgroup *cgrpv2;
-  };
-
-  /*
-@@ -802,6 +803,7 @@ static inline void sock_cgroup_set_prioidx(struct 
-sock_cgroup_data *skcd,
-          return;
-
-      if (!(skcd_buf.is_data & 1)) {
-+        WRITE_ONCE(skcd->cgrpv2, skcd_buf.val);
-          skcd_buf.val = 0;
-          skcd_buf.is_data = 1;
-      }
-@@ -819,6 +821,7 @@ static inline void sock_cgroup_set_classid(struct 
-sock_cgroup_data *skcd,
-          return;
-
-      if (!(skcd_buf.is_data & 1)) {
-+        WRITE_ONCE(skcd->cgrpv2, skcd_buf.val);
-          skcd_buf.val = 0;
-          skcd_buf.is_data = 1;
-      }
-diff --git a/net/core/sock.c b/net/core/sock.c
-index a0dda2bf9d7c..7c761ef2d32e 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1520,6 +1520,10 @@ static void sk_prot_free(struct proto *prot, 
-struct sock *sk)
-      slab = prot->slab;
-
-      cgroup_sk_free(&sk->sk_cgrp_data);
-+    if (sk->sk_cgrp_data.cgrpv2) {
-+        cgroup_put(sk->sk_cgrp_data.cgrpv2);
-+        sk->sk_cgrp_data.cgrpv2 = NULL;
-+    }
-      mem_cgroup_sk_free(sk);
-      security_sk_free(sk);
-      if (slab != NULL)
-
-
-Thanks,
-Yang
+diff --git a/arch/arm/configs/axm55xx_defconfig b/arch/arm/configs/axm55xx_defconfig
+index 4607521..a7a0635 100644
+--- a/arch/arm/configs/axm55xx_defconfig
++++ b/arch/arm/configs/axm55xx_defconfig
+@@ -88,7 +88,7 @@ CONFIG_MTD_CFI_AMDSTD=y
+ CONFIG_MTD_CFI_STAA=y
+ CONFIG_MTD_PHYSMAP=y
+ CONFIG_MTD_PHYSMAP_OF=y
+-CONFIG_MTD_M25P80=y
++CONFIG_MTD_SPI_NOR=y
+ CONFIG_PROC_DEVICETREE=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
+index e849367..4d8f6f6 100644
+--- a/arch/arm/configs/davinci_all_defconfig
++++ b/arch/arm/configs/davinci_all_defconfig
+@@ -75,7 +75,6 @@ CONFIG_MTD_CFI=m
+ CONFIG_MTD_CFI_INTELEXT=m
+ CONFIG_MTD_CFI_AMDSTD=m
+ CONFIG_MTD_PHYSMAP=m
+-CONFIG_MTD_M25P80=m
+ CONFIG_MTD_RAW_NAND=m
+ CONFIG_MTD_NAND_DAVINCI=m
+ CONFIG_MTD_SPI_NOR=m
+diff --git a/arch/arm/configs/dove_defconfig b/arch/arm/configs/dove_defconfig
+index e70c997..546afaf 100644
+--- a/arch/arm/configs/dove_defconfig
++++ b/arch/arm/configs/dove_defconfig
+@@ -44,7 +44,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
+ CONFIG_MTD_CFI_INTELEXT=y
+ CONFIG_MTD_CFI_STAA=y
+ CONFIG_MTD_PHYSMAP=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_SPI_NOR=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 5a20d12..308de35 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -110,7 +110,6 @@ CONFIG_MTD_CFI_AMDSTD=y
+ CONFIG_MTD_CFI_STAA=y
+ CONFIG_MTD_PHYSMAP_OF=y
+ CONFIG_MTD_DATAFLASH=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_SST25L=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_GPMI_NAND=y
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index 11e2211..eeaa140 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -121,7 +121,6 @@ CONFIG_MTD=y
+ CONFIG_MTD_CMDLINE_PARTS=y
+ CONFIG_MTD_BLOCK=y
+ CONFIG_MTD_PLATRAM=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_DAVINCI=y
+ CONFIG_MTD_SPI_NOR=y
+diff --git a/arch/arm/configs/mvebu_v5_defconfig b/arch/arm/configs/mvebu_v5_defconfig
+index 226f2e9..1859097 100644
+--- a/arch/arm/configs/mvebu_v5_defconfig
++++ b/arch/arm/configs/mvebu_v5_defconfig
+@@ -75,7 +75,6 @@ CONFIG_MTD_CFI_GEOMETRY=y
+ CONFIG_MTD_CFI_INTELEXT=y
+ CONFIG_MTD_CFI_STAA=y
+ CONFIG_MTD_PHYSMAP=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_ORION=y
+ CONFIG_MTD_SPI_NOR=y
+diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
+index cddce57..c8f4723 100644
+--- a/arch/arm/configs/mvebu_v7_defconfig
++++ b/arch/arm/configs/mvebu_v7_defconfig
+@@ -50,7 +50,6 @@ CONFIG_MTD_CFI_INTELEXT=y
+ CONFIG_MTD_CFI_AMDSTD=y
+ CONFIG_MTD_CFI_STAA=y
+ CONFIG_MTD_PHYSMAP_OF=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_MARVELL=y
+ CONFIG_MTD_SPI_NOR=y
+diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
+index a9c6f32..1322ebd 100644
+--- a/arch/arm/configs/mxs_defconfig
++++ b/arch/arm/configs/mxs_defconfig
+@@ -46,7 +46,6 @@ CONFIG_MTD=y
+ CONFIG_MTD_CMDLINE_PARTS=y
+ CONFIG_MTD_BLOCK=y
+ CONFIG_MTD_DATAFLASH=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_SST25L=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_GPMI_NAND=y
+diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+index b817c57..50bbfdd 100644
+--- a/arch/arm/configs/pxa_defconfig
++++ b/arch/arm/configs/pxa_defconfig
+@@ -181,7 +181,6 @@ CONFIG_MTD_RAM=m
+ CONFIG_MTD_ROM=m
+ CONFIG_MTD_COMPLEX_MAPPINGS=y
+ CONFIG_MTD_PXA2XX=m
+-CONFIG_MTD_M25P80=m
+ CONFIG_MTD_BLOCK2MTD=y
+ CONFIG_MTD_DOCG3=m
+ CONFIG_MTD_RAW_NAND=m
+diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+index c882167..0a90c8d 100644
+--- a/arch/arm/configs/qcom_defconfig
++++ b/arch/arm/configs/qcom_defconfig
+@@ -62,7 +62,6 @@ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_MTD=y
+ CONFIG_MTD_BLOCK=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_QCOM=y
+ CONFIG_MTD_SPI_NOR=y
+diff --git a/arch/arm/configs/sama5_defconfig b/arch/arm/configs/sama5_defconfig
+index bab7861..7e9ec6f 100644
+--- a/arch/arm/configs/sama5_defconfig
++++ b/arch/arm/configs/sama5_defconfig
+@@ -63,7 +63,6 @@ CONFIG_MTD=y
+ CONFIG_MTD_CMDLINE_PARTS=y
+ CONFIG_MTD_BLOCK=y
+ CONFIG_MTD_CFI=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_ATMEL=y
+ CONFIG_MTD_SPI_NOR=y
+diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
+index e73c97b..04c8bd3 100644
+--- a/arch/arm/configs/socfpga_defconfig
++++ b/arch/arm/configs/socfpga_defconfig
+@@ -48,7 +48,6 @@ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_MTD=y
+ CONFIG_MTD_BLOCK=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_RAW_NAND=y
+ CONFIG_MTD_NAND_DENALI_DT=y
+ CONFIG_MTD_SPI_NOR=y
+diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+index aa94369..6a7988a 100644
+--- a/arch/arm/configs/tegra_defconfig
++++ b/arch/arm/configs/tegra_defconfig
+@@ -76,7 +76,6 @@ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_TEGRA_GMI=y
+ CONFIG_MTD=y
+-CONFIG_MTD_M25P80=y
+ CONFIG_MTD_SPI_NOR=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_AD525X_DPOT=y
+-- 
+2.7.4
 
