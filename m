@@ -2,289 +2,124 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033D6C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A8EC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8A621835
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:29:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Iw9jkJxw"
+	by mail.kernel.org (Postfix) with ESMTP id 81EFC208C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgEBA3Z (ORCPT
+        id S1726790AbgEBAaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgEBA3Y (ORCPT
+        Fri, 1 May 2020 20:30:22 -0400
+Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:49068 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726352AbgEBAaW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:29:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6755FC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 17:29:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b6so931289plz.13
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 17:29:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0gEckujgYO5yEgZCIWnLgeYgKfcc2TLCCkDUoH39Yyk=;
-        b=Iw9jkJxwdpW8o7T3GhJeC2RS98jno3xBpIyuVU3DTq5SZ4c2+A+pUpk+CdFvgjObZY
-         igMkXyRu4Qg9jR3GpjcBJ+btxk93gBsLxwR6GQ0KkyYlvYFNY48hgrf5Pkmf7WHCrMp7
-         hLTXbnh/4wm/MjRlXsVBydzkswSdPZeSlkVP+j/aOZiUbRIWItaSk+/At8gd/ecWTd8x
-         A3WuqYXYT9hsFTQ8nn7nI3vs1beW2NWk3w0nwTic98VhHK8Wz4I7hrav1Pi0gqvIYbHd
-         IZagS9+Pd3+kEOi5WaevvGjnm6pJLgxR12NjKSfKnPwEefTtc3fLObiX4aDbCN6Pop73
-         H13A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0gEckujgYO5yEgZCIWnLgeYgKfcc2TLCCkDUoH39Yyk=;
-        b=mgCKMgtwv7OE+fqfMJfTORbHwXJwBEPIT5t0DnBI64it4aHPNvLNEN0Ddw3Pv3wGMQ
-         YCdyadepCmWJ1dAxO7r4HJeqqkfAEZdwxqL2AiYvWpUnigl35IewPHsyAtsMmW64PFVw
-         4OskrcoskAe+w9TmsJxiuAu/pHBeny5D0t+ieZRM303ro7u8LC6HIIafmWNzUfC/YbGe
-         rVReRzwHwvukwA0Vncli9uJoj8K59kMcKkSsIVOWNoxc+N9AwOEPkpp5MONB2vxtn4rU
-         rirpYjVgrj6CjAGQ5ueucs6ErR1ZAdmr0W8RWP+ZXjND1EJ5HQsMPNW23R4vs08QaoQ+
-         HXCg==
-X-Gm-Message-State: AGi0PuY42rLN1vMROwaTOcO1zHcbqwL8APkYfkBKQge9EVbcwPvbY3pS
-        vaZXSKDuz6tz9gwFH45eHRWYIg==
-X-Google-Smtp-Source: APiQypLOLqV0XKekjW6KMWr52IZeMs+tDmi2j90i1b0ur90p7W77rGfVXzy357A55biEWRxB+URsEQ==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr6829624plb.153.1588379363760;
-        Fri, 01 May 2020 17:29:23 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id u188sm3143644pfu.33.2020.05.01.17.29.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 01 May 2020 17:29:23 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        efremov@linux.com, b.zolnierkie@samsung.com, vidyas@nvidia.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH] PCI: endpoint: functions/pci-epf-test: Support slave DMA transfer
-Date:   Fri,  1 May 2020 17:29:12 -0700
-Message-Id: <1588379352-22550-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 1 May 2020 20:30:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6EF71837F24A;
+        Sat,  2 May 2020 00:30:21 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: mark00_3d34e379d4912
+X-Filterd-Recvd-Size: 3347
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  2 May 2020 00:30:20 +0000 (UTC)
+Message-ID: <1c86e75bb56693bc2343d30e5baba09c783b02a2.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: add NL_SET_ERR_MSG to 80 column exceptions
+From:   Joe Perches <joe@perches.com>
+To:     Jacob Keller <jacob.e.keller@intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Andy Whitcroft <apw@canonical.com>
+Date:   Fri, 01 May 2020 17:30:19 -0700
+In-Reply-To: <5a1da586-0cc0-1900-477f-6fef61af7f95@intel.com>
+References: <20200501231131.2389319-1-jacob.e.keller@intel.com>
+         <e1e12e3f6992c00c005ba2b3bcf671c033a1dccc.camel@perches.com>
+         <5a1da586-0cc0-1900-477f-6fef61af7f95@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On Fri, 2020-05-01 at 17:19 -0700, Jacob Keller wrote:
+> 
+> On 5/1/2020 4:42 PM, Joe Perches wrote:
+> > On Fri, 2020-05-01 at 16:11 -0700, Jacob Keller wrote:
+> > > NL_SET_ERR_MSG and NL_SET_ERR_MSG_MOD are used to report extended error
+> > > responses about failure of a netlink command. These strings often end up
+> > > going over the 80-column limit. Just like logging messages, it is
+> > > preferred to leave the message all on a single line.
+> > > 
+> > > Add these to the exception list so that checkpatch.pl will no longer
+> > > complain about the long lines due to use of these macros.
+> > > 
+> > > Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+> > > Cc: Jakub Kicinski <kuba@kernel.org>
+> > > Cc: Andy Whitcroft <apw@canonical.com>
+> > > Cc: Joe Perches <joe@perches.com>
+> > > ---
+> > >  scripts/checkpatch.pl | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > index eac40f0abd56..5da3b06fbeaa 100755
+> > > --- a/scripts/checkpatch.pl
+> > > +++ b/scripts/checkpatch.pl
+> > > @@ -471,7 +471,8 @@ our $logFunctions = qr{(?x:
+> > >  	WARN(?:_RATELIMIT|_ONCE|)|
+> > >  	panic|
+> > >  	MODULE_[A-Z_]+|
+> > > -	seq_vprintf|seq_printf|seq_puts
+> > > +	seq_vprintf|seq_printf|seq_puts|
+> > > +	NL_SET_ERR_MSG(?:_MOD)?
+> > >  )};
+> > >  
+> > >  our $allocFunctions = qr{(?x:
+> > 
+> > <shrug>  OK I guess.
+> > 
+> > What about GENL_SET_ERR_MSG ?
+> > 
+> 
+> This appears in far fewer locations, but it does seem reasonable to add
+> it to this list as well.
+> 
+> > btw:
+> > 
+> > There are some uses with what appear to be unnecessary newlines.
+> > Maybe these newlines should be removed.
+> 
+> Yea, there's a number of places which seem to have put a newline break
+> after the extack pointer.
+> 
+> A quick search shows that there are about 970 or so uses where we don't
+> put a newline, and around 220 where we do.
+> 
+> I suppose I can make a series that cleans all of those up along with
+> this patch.
 
-Modify pci_epf_test_data_transfer() to also support slave DMA transfers.
-Adds a direction parameter so caller can specify one of the supported DMA
-transfer directions: DMA_MEM_TO_MEM, DMA_MEM_TO_DEV, and DMA_DEV_TO_MEM.
-For DMA_MEM_TO_MEM, the function calls dmaengine_prep_dma_memcpy() as it
-did before. For DMA_MEM_TO_DEV or DMA_DEV_TO_MEM direction, the function
-calls dmaengine_slave_config() to configure the slave channel before it
-calls dmaengine_prep_slave_single().
+That's not what I meant.
+I don't care if there are multiple source lines used.
+In fact, I think it's mostly nicer with multiple lines.
 
-Modify existing callers to specify DMA_MEM_TO_MEM since that is the only
-possible option so far. Rename the phys_addr local variable in some of the
-callers for more readability. Tighten some of the timing function calls to
-avoid counting error print time in case of error.
+The ones I specified previously use:
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/pci/endpoint/functions/pci-epf-test.c | 67 ++++++++++++++++++---------
- 1 file changed, 44 insertions(+), 23 deletions(-)
+	NL_SET_ERR_MSG_MOD(extack, "message\n");
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 60330f3e3751..1d026682febb 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -104,25 +104,41 @@ static void pci_epf_test_dma_callback(void *param)
-  * The function returns '0' on success and negative value on failure.
-  */
- static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
--				      dma_addr_t dma_dst, dma_addr_t dma_src,
--				      size_t len)
-+				      dma_addr_t dma_dst,
-+				      dma_addr_t dma_src,
-+				      size_t len,
-+				      enum dma_transfer_direction dir)
- {
- 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
- 	struct dma_chan *chan = epf_test->dma_chan;
- 	struct pci_epf *epf = epf_test->epf;
-+	struct dma_slave_config sconf;
- 	struct dma_async_tx_descriptor *tx;
- 	struct device *dev = &epf->dev;
- 	dma_cookie_t cookie;
-+	dma_addr_t buf;
- 	int ret;
- 
- 	if (IS_ERR_OR_NULL(chan)) {
--		dev_err(dev, "Invalid DMA memcpy channel\n");
-+		dev_err(dev, "Invalid DMA channel\n");
- 		return -EINVAL;
- 	}
- 
--	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	if (dir == DMA_MEM_TO_MEM) {
-+		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src,
-+					       len, flags);
-+	} else {
-+		memset(&sconf, 0, sizeof(sconf));
-+		sconf.direction = dir;
-+		sconf.dst_addr = dma_dst;
-+		sconf.src_addr = dma_src;
-+		dmaengine_slave_config(chan, &sconf);
-+
-+		buf = (dir == DMA_MEM_TO_DEV) ? dma_dst : dma_src;
-+		tx = dmaengine_prep_slave_single(chan, buf, len, dir, flags);
-+	}
- 	if (!tx) {
--		dev_err(dev, "Failed to prepare DMA memcpy\n");
-+		dev_err(dev, "Failed to prepare DMA transfer\n");
- 		return -EIO;
- 	}
- 
-@@ -268,7 +284,6 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 		goto err_dst_addr;
- 	}
- 
--	ktime_get_ts64(&start);
- 	use_dma = !!(reg->flags & FLAG_USE_DMA);
- 	if (use_dma) {
- 		if (!epf_test->dma_supported) {
-@@ -277,14 +292,18 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
- 
-+		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size,
-+						 DMA_MEM_TO_MEM);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 	} else {
-+		ktime_get_ts64(&start);
- 		memcpy(dst_addr, src_addr, reg->size);
-+		ktime_get_ts64(&end);
- 	}
--	ktime_get_ts64(&end);
- 	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
- 
- err_map_addr:
-@@ -310,7 +329,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 	void *buf;
- 	u32 crc32;
- 	bool use_dma;
--	phys_addr_t phys_addr;
-+	phys_addr_t src_phys_addr;
- 	phys_addr_t dst_phys_addr;
- 	struct timespec64 start, end;
- 	struct pci_epf *epf = epf_test->epf;
-@@ -319,8 +338,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 	struct device *dma_dev = epf->epc->dev.parent;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-+	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
- 
--	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
-+	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
- 	if (!src_addr) {
- 		dev_err(dev, "Failed to allocate address\n");
- 		reg->status = STATUS_SRC_ADDR_INVALID;
-@@ -328,7 +348,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		goto err;
- 	}
- 
--	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
-+	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
- 			       reg->size);
- 	if (ret) {
- 		dev_err(dev, "Failed to map address\n");
-@@ -360,10 +380,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 
- 		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 phys_addr, reg->size);
-+						 src_phys_addr, reg->size, dir);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
--		ktime_get_ts64(&end);
- 
- 		dma_unmap_single(dma_dev, dst_phys_addr, reg->size,
- 				 DMA_FROM_DEVICE);
-@@ -383,10 +403,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 	kfree(buf);
- 
- err_map_addr:
--	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
-+	pci_epc_unmap_addr(epc, epf->func_no, src_phys_addr);
- 
- err_addr:
--	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
-+	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
- 
- err:
- 	return ret;
-@@ -398,7 +418,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	void __iomem *dst_addr;
- 	void *buf;
- 	bool use_dma;
--	phys_addr_t phys_addr;
-+	phys_addr_t dst_phys_addr;
- 	phys_addr_t src_phys_addr;
- 	struct timespec64 start, end;
- 	struct pci_epf *epf = epf_test->epf;
-@@ -407,8 +427,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	struct device *dma_dev = epf->epc->dev.parent;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
- 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-+	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
- 
--	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
-+	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
- 	if (!dst_addr) {
- 		dev_err(dev, "Failed to allocate address\n");
- 		reg->status = STATUS_DST_ADDR_INVALID;
-@@ -416,7 +437,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		goto err;
- 	}
- 
--	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
-+	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
- 			       reg->size);
- 	if (ret) {
- 		dev_err(dev, "Failed to map address\n");
-@@ -450,11 +471,11 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		}
- 
- 		ktime_get_ts64(&start);
--		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
--						 src_phys_addr, reg->size);
-+		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-+						 src_phys_addr,	reg->size, dir);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
--		ktime_get_ts64(&end);
- 
- 		dma_unmap_single(dma_dev, src_phys_addr, reg->size,
- 				 DMA_TO_DEVICE);
-@@ -476,10 +497,10 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 	kfree(buf);
- 
- err_map_addr:
--	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
-+	pci_epc_unmap_addr(epc, epf->func_no, dst_phys_addr);
- 
- err_addr:
--	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
-+	pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
- 
- err:
- 	return ret;
--- 
-2.7.4
+where all the others uses are:
+
+	NL_SET_ERR_MSG_MOD(extack, "message");
+
+without the \n termination of the message.
+
 
