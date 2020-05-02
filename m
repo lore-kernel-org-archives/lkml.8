@@ -2,97 +2,70 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DCCC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FE6C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80BE92192A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE1E21835
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgEBNfw (ORCPT
+        id S1728023AbgEBNk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 09:35:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:52426 "EHLO foss.arm.com"
+        Sat, 2 May 2020 09:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbgEBNf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 09:35:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FA0030E;
-        Sat,  2 May 2020 06:35:29 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.71.130])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D172A3F68F;
-        Sat,  2 May 2020 06:35:26 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V3 11/16] arm64/cpufeature: Add remaining feature bits in ID_AA64PFR1 register
-Date:   Sat,  2 May 2020 19:04:00 +0530
-Message-Id: <1588426445-24344-12-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
-References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+        id S1727862AbgEBNk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 09:40:27 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE6621835;
+        Sat,  2 May 2020 13:40:26 +0000 (UTC)
+Date:   Sat, 2 May 2020 09:40:24 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] streamline_config.pl: add LOCALMODCONFIG_PRESERVE to
+ preserve some kconfigs
+Message-ID: <20200502094024.6142a04e@oasis.local.home>
+In-Reply-To: <20200502133054.gx77eoas7u7gnxxm@mail.google.com>
+References: <20200501023708.108830-1-changbin.du@gmail.com>
+        <20200501130729.3a3e4994@gandalf.local.home>
+        <20200502133054.gx77eoas7u7gnxxm@mail.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the following features bits in ID_AA64PFR1 register as per ARM DDI
-0487F.a specification.
+On Sat, 2 May 2020 21:30:54 +0800
+Changbin Du <changbin.du@gmail.com> wrote:
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+> > > Sometimes it is useful to preserve batches of configs when making
+> > > localmodconfig. For example, I usually don't want any usb and fs
+> > > modules to be disabled. Now we can do it by:
+> > > 
+> > >  $ make LOCALMODCONFIG_PRESERVE="drivers/usb;fs" localmodconfig  
+> > 
+> > That's too much typing ;-) What about just "KEEP='drivers/usb;fs'"?
+> >  
+> I think we'd better use a long name since it will be passed to the entire kbuild.
+> And we alreay have one named LOCALMODCONFIG_DEBUG. The prefix LOCALMODCONFIG_
+> can help to avoid namespace pollution.
 
-Suggested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/sysreg.h | 4 ++++
- arch/arm64/kernel/cpufeature.c  | 4 ++++
- 2 files changed, 8 insertions(+)
+I politely disagree. Build options is not common. The
+LOCALMODCONFIG_DEBUG is an environment variable, which I couldn't just
+use DEBUG.
 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index c93ea6613f51..f1c0d874220a 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -666,7 +666,11 @@
- #define ID_AA64PFR0_EL0_32BIT_64BIT	0x2
- 
- /* id_aa64pfr1 */
-+#define ID_AA64PFR1_MPAMFRAC_SHIFT	16
-+#define ID_AA64PFR1_RASFRAC_SHIFT	12
-+#define ID_AA64PFR1_MTE_SHIFT		8
- #define ID_AA64PFR1_SSBS_SHIFT		4
-+#define ID_AA64PFR1_BT_SHIFT		0
- 
- #define ID_AA64PFR1_SSBS_PSTATE_NI	0
- #define ID_AA64PFR1_SSBS_PSTATE_ONLY	1
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index f5a39e040804..181e09d62147 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -233,7 +233,11 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MPAMFRAC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_RASFRAC_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_MTE_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_SSBS_SHIFT, 4, ID_AA64PFR1_SSBS_PSTATE_NI),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR1_BT_SHIFT, 4, 0),
- 	ARM64_FTR_END,
- };
- 
--- 
-2.20.1
+If you absolutely require a prefix, shorten it to LMC_ or something. I
+already hate typing 'localmodconfig' once ;-)
 
+-- Steve
