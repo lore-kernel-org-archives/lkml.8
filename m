@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9256C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0F3C47258
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA3E02073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8602073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XtOhZSGV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y4KO5HMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEBCcT (ORCPT
+        id S1727831AbgEBCcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:32:19 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13168 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726762AbgEBCcT (ORCPT
+        Fri, 1 May 2020 22:32:31 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21008 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727115AbgEBCca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:32:19 -0400
+        Fri, 1 May 2020 22:32:30 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588386738; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1588386750; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=7hzUwGmWRl05YfEuRakRYnz0izFE+MkI9+t81/uGOUo=; b=XtOhZSGV8I/cuIeCvn5toOcq1Xwb57civ1RrAcNcPqaeLvbrWpbHtIS5RVqJ1kn5jnEmC3Ac
- cFwEhihsKuzO5GBFABXEmTz7GYO6c+gzvGLSODxRplhy78SdXSWHgpkH+2/M003xE7iKsdmg
- tceikx9Yjw4O+AYt9He883XSlDM=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=Xtuv4CgCRN8wpsXdtFnR2XNlux4zL8O5dNl6MAWTx2U=; b=Y4KO5HMa0BY+1HJlFPbORUc9waWaOYfF8bjEJzOnapqToT67SKoBnKAN9OMklbBqxfvAe46Q
+ Hw5XwSfLRHW/NlE7w1D5gUFzotaTFE2bkBEyhYMC327vHv2ZLttShBGetShKJMFe+IZPCp9D
+ MlVu/Cu0Ptb8iruoxlQg3zhNEe8=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eacdbb1.7f2b80940928-smtp-out-n04;
+ by mxa.mailgun.org with ESMTP id 5eacdbb1.7f7d540d8308-smtp-out-n01;
  Sat, 02 May 2020 02:32:17 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E99CDC433D2; Sat,  2 May 2020 02:32:16 +0000 (UTC)
+        id E1D34C433BA; Sat,  2 May 2020 02:32:16 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D954C43637;
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08AC4C433F2;
         Sat,  2 May 2020 02:32:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D954C43637
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08AC4C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 6/8] bus: mhi: core: Return appropriate error codes for AMSS load failure
-Date:   Fri,  1 May 2020 19:32:03 -0700
-Message-Id: <1588386725-1165-7-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v4 8/8] bus: mhi: core: Ensure non-zero session or sequence ID values are used
+Date:   Fri,  1 May 2020 19:32:05 -0700
+Message-Id: <1588386725-1165-9-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
@@ -61,59 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When loading AMSS firmware using BHIe protocol, return -ETIMEDOUT if no
-response is received within the timeout or return -EIO in case of a
-protocol returned failure or an MHI error state.
+While writing any sequence or session identifiers, it is possible that
+the host could write a zero value, whereas only non-zero values should
+be supported writes to those registers. Ensure that the host does not
+write a non-zero value for them and also log them in debug messages.
 
+Suggested-by: Jeffrey Hugo <jhugo@codeaurora.org>
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/bus/mhi/core/boot.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/bus/mhi/core/boot.c     | 15 +++++++--------
+ drivers/bus/mhi/core/internal.h |  1 +
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index 17c636b..05627fe 100644
+index e5fcde1..9fe9c59 100644
 --- a/drivers/bus/mhi/core/boot.c
 +++ b/drivers/bus/mhi/core/boot.c
-@@ -176,6 +176,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 	void __iomem *base = mhi_cntrl->bhie;
- 	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
- 	u32 tx_status, sequence_id;
-+	int ret;
+@@ -43,10 +43,7 @@ void mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
+ 		      lower_32_bits(mhi_buf->dma_addr));
  
- 	read_lock_bh(pm_lock);
- 	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-@@ -198,19 +199,19 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 	mhi_write_reg(mhi_cntrl, base, BHIE_RXVECSIZE_OFFS, mhi_buf->len);
+-	sequence_id = prandom_u32() & BHIE_RXVECSTATUS_SEQNUM_BMSK;
+-
+-	if (unlikely(!sequence_id))
+-		sequence_id = 1;
++	sequence_id = (MHI_RANDOM_U32_NONZERO & BHIE_RXVECSTATUS_SEQNUM_BMSK);
+ 
+ 	mhi_write_reg_field(mhi_cntrl, base, BHIE_RXVECDB_OFFS,
+ 			    BHIE_RXVECDB_SEQNUM_BMSK, BHIE_RXVECDB_SEQNUM_SHFT,
+@@ -189,7 +186,9 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 		return -EIO;
+ 	}
+ 
+-	dev_dbg(dev, "Starting AMSS download via BHIe\n");
++	sequence_id = (MHI_RANDOM_U32_NONZERO & BHIE_TXVECSTATUS_SEQNUM_BMSK);
++	dev_dbg(dev, "Starting AMSS download via BHIe. Sequence ID:%u\n",
++		sequence_id);
+ 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECADDR_HIGH_OFFS,
+ 		      upper_32_bits(mhi_buf->dma_addr));
+ 
+@@ -198,7 +197,6 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 
+ 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECSIZE_OFFS, mhi_buf->len);
+ 
+-	sequence_id = prandom_u32() & BHIE_TXVECSTATUS_SEQNUM_BMSK;
+ 	mhi_write_reg_field(mhi_cntrl, base, BHIE_TXVECDB_OFFS,
+ 			    BHIE_TXVECDB_SEQNUM_BMSK, BHIE_TXVECDB_SEQNUM_SHFT,
+ 			    sequence_id);
+@@ -246,14 +244,15 @@ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
+ 		goto invalid_pm_state;
+ 	}
+ 
+-	dev_dbg(dev, "Starting SBL download via BHI\n");
++	session_id = (MHI_RANDOM_U32_NONZERO & BHI_TXDB_SEQNUM_BMSK);
++	dev_dbg(dev, "Starting SBL download via BHI. Session ID:%u\n",
++		session_id);
+ 	mhi_write_reg(mhi_cntrl, base, BHI_STATUS, 0);
+ 	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_HIGH,
+ 		      upper_32_bits(dma_addr));
+ 	mhi_write_reg(mhi_cntrl, base, BHI_IMGADDR_LOW,
+ 		      lower_32_bits(dma_addr));
+ 	mhi_write_reg(mhi_cntrl, base, BHI_IMGSIZE, size);
+-	session_id = prandom_u32() & BHI_TXDB_SEQNUM_BMSK;
+ 	mhi_write_reg(mhi_cntrl, base, BHI_IMGTXDB, session_id);
  	read_unlock_bh(pm_lock);
  
- 	/* Wait for the image download to complete */
--	wait_event_timeout(mhi_cntrl->state_event,
--			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
--			   mhi_read_reg_field(mhi_cntrl, base,
--					      BHIE_TXVECSTATUS_OFFS,
--					      BHIE_TXVECSTATUS_STATUS_BMSK,
--					      BHIE_TXVECSTATUS_STATUS_SHFT,
--					      &tx_status) || tx_status,
--			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
--
--	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
-+	ret = wait_event_timeout(mhi_cntrl->state_event,
-+				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-+				 mhi_read_reg_field(mhi_cntrl, base,
-+						    BHIE_TXVECSTATUS_OFFS,
-+						   BHIE_TXVECSTATUS_STATUS_BMSK,
-+						   BHIE_TXVECSTATUS_STATUS_SHFT,
-+						    &tx_status) || tx_status,
-+				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
-+	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
-+	    tx_status != BHIE_TXVECSTATUS_STATUS_XFER_COMPL)
- 		return -EIO;
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index 0965ca3..e4e6ea2 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -452,6 +452,7 @@ enum mhi_pm_state {
+ #define PRIMARY_CMD_RING		0
+ #define MHI_DEV_WAKE_DB			127
+ #define MHI_MAX_MTU			0xffff
++#define MHI_RANDOM_U32_NONZERO		(prandom_u32_max(U32_MAX - 1) + 1)
  
--	return (tx_status == BHIE_TXVECSTATUS_STATUS_XFER_COMPL) ? 0 : -EIO;
-+	return (!ret) ? -ETIMEDOUT : 0;
- }
- 
- static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
+ enum mhi_er_type {
+ 	MHI_ER_TYPE_INVALID = 0x0,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
