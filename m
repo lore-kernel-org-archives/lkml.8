@@ -5,69 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8385C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5D0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF734206CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DBD206CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHRqdpNu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XrDZyUUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgEBSsH (ORCPT
+        id S1728484AbgEBStl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 14:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41964 "EHLO
+        Sat, 2 May 2020 14:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726306AbgEBSsG (ORCPT
+        by vger.kernel.org with ESMTP id S1728426AbgEBStk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 14:48:06 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D73C061A0C;
-        Sat,  2 May 2020 11:48:05 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s8so6352880pgq.1;
-        Sat, 02 May 2020 11:48:05 -0700 (PDT)
+        Sat, 2 May 2020 14:49:40 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B960CC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 11:49:40 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v2so5008831plp.9
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 11:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=mfOLDE6UUMU5OcBvJn1mHU5j28JB9edMl3msANDc27Y=;
-        b=UHRqdpNu6KyLBD354s9wcv0zArsyXuxJRJzCXGcugmFX1zF5gwF1AkbxVrqOzj0R8r
-         tybFyQs8ce466404iA12hBA7QW0zcEI+Mc1DpVfIy9Nf/wwWM0wA9OZOiKQnmRr2x5i3
-         HGNK25Ee75IPA2pO3ElBq6XdR6Rf7kwXsMWh77G7QSdzdjAfIwvJy6dpO45rjscFr+DM
-         ykslQnIrno6OBSlCGLsSQoVEViJLs/EypMjwX/DcQDG7DxZHw0ZeXnfSw+vEPplXhjgf
-         Wh6C/CaRHEXswUqzZPfKy4O2wpBBHc9q08Ov4SAQr0tDoecakFcfVJdykOy2AQvXgQdn
-         /mmw==
+        bh=2rZHb0gLCOUzwtwIusEMK1vjTRbWVNQVBZAQphFrTIg=;
+        b=XrDZyUURmIGaCLcMHT1aW+6kRxVjIwRrgCjgv6/3ixuiAKbWGT629SyAZxjVk0m011
+         6LmEvmefqL2uWPgmL14xK+5+1HVP3zQyT6uLv//iwqNUNBtsmRkZ1izf/tTb/pUUjTgn
+         167uRaRmubPkv5r5UIDKDsPdq4Blacs+9spsPyogPqzDY1cxDxpr+W+XVlNYV95IbNZu
+         yjoOiLfOlNiZ1avOf7af1Cxy1H/VFw8ZIs5NkniFFkNeWQYrewgzX0Euv7GdHbsxjC/4
+         ZOpGfq7JN/NjBPOq+M/AysTFSVfx1FSimZf3kk6QtRe2DBytEid0nXQxTf0DObHcSuT3
+         FP/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mfOLDE6UUMU5OcBvJn1mHU5j28JB9edMl3msANDc27Y=;
-        b=pSJetlYSKaAmFVUq1H+++92ONTtf6ZL+QIeLij4TRo7OECZBZxgPPh3dDyMe3x12RY
-         hd5CKEPq6gwY87ow/SyXfENUvBYK/fwhXs5etmpmWlIYWYsNNXAlfi7Ld5xjT2oC7Tll
-         0ayYwpamcXq+k5iRuIETaEDoldGbuyLv3dfSteWJuE6GhCNqtmkVwxzDhOvAaVhtci/v
-         qFAgXpliRkhzGnk4yk7ysoS3/W3S+XS9prVIyaTP/rQuzGw1ozu+w5ZQPX8NAIxo/yxg
-         EWWaW3vwT0ARHVf5QQqQid2pWi+kkmcqPiMETJpRIRUPFgL3gJuxGce3itj39CJEho3a
-         aiQw==
-X-Gm-Message-State: AGi0PuaZiOiManUkQRUA5An+MjBDBTPutL26jAL/S++hLFBVqp6nm5zm
-        WWqor9NOI0BDvxB4EeKBcpQ=
-X-Google-Smtp-Source: APiQypJFlejTyUYrvBFtRM6MzYTDxULVjTS6qEJ7ois0QT2GIgek4ip6V2VcZLhloPF9k4G4s1ZN/Q==
-X-Received: by 2002:a63:585a:: with SMTP id i26mr9827217pgm.39.1588445284359;
-        Sat, 02 May 2020 11:48:04 -0700 (PDT)
+        bh=2rZHb0gLCOUzwtwIusEMK1vjTRbWVNQVBZAQphFrTIg=;
+        b=hIYJ8vhS7DnruFgglET00azJA4PTNYFdhWObs7eNvZKMRz7UFZmKRrGYvcvnGS2HZq
+         DMHTlRUzDZDUaNlTeHm24wdhiYXBwZ29Iw97Gq8VkSRKhC6it693nLSt/VwNK1G/Rbul
+         pfXHAXgtmmlqA5tdU0sI0AmlF12uKMpfZb3kkjcEQVat/hl6AMqv4vhO0AtpRq1gFsmZ
+         IU1uvnHxxfNnsWUnfNW8Q6p2hZYn0yjTWGrPDfLw2kQXNYLOnBY6NSon/aNBSggF6sFV
+         MvW1e3rG1RtVEqgBXxfIEHeN3Is4n7fDYEsVo/FEVqF0jdYKtoirfa141Z6XKqram+FO
+         1Gow==
+X-Gm-Message-State: AGi0Puajl6qLXfYca4EnRQawMqJLw1+SLbaKmqecON+sZ388lIBnKgHh
+        Zf7ROFKU5Rg7s0fvvVa8WFM=
+X-Google-Smtp-Source: APiQypIHMPwkJs3+5gh8Y5Jq95GiAfY0QuTT347JADz+2rMfMWR2BEcg+PG4eQDLj4+IyfnL/nhnpg==
+X-Received: by 2002:a17:90a:8c85:: with SMTP id b5mr6956016pjo.187.1588445380204;
+        Sat, 02 May 2020 11:49:40 -0700 (PDT)
 Received: from syed ([106.210.101.167])
-        by smtp.gmail.com with ESMTPSA id k4sm4541266pgg.88.2020.05.02.11.48.01
+        by smtp.gmail.com with ESMTPSA id s136sm5068660pfc.29.2020.05.02.11.49.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 May 2020 11:48:04 -0700 (PDT)
-Date:   Sun, 3 May 2020 00:17:48 +0530
+        Sat, 02 May 2020 11:49:39 -0700 (PDT)
+Date:   Sun, 3 May 2020 00:19:19 +0530
 From:   Syed Nayyar Waris <syednwaris@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        arnd@arndb.de, linus.walleij@linaro.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] bitops: Introduce the the for_each_set_clump macro
-Message-ID: <2334ac49d10856db92cb1ca791641fd3200f18af.1588443578.git.syednwaris@gmail.com>
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
+Message-ID: <3eeb13d101db69be8eca739522bbf303527339bd.1588443578.git.syednwaris@gmail.com>
 References: <cover.1588443578.git.syednwaris@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -79,199 +78,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This macro iterates for each group of bits (clump) with set bits,
-within a bitmap memory region. For each iteration, "start" is set to
-the bit offset of the found clump, while the respective clump value is
-stored to the location pointed by "clump". Additionally, the
-bitmap_get_value and bitmap_set_value functions are introduced to
-respectively get and set a value of n-bits in a bitmap memory region.
-The n-bits can have any size less than or equal to BITS_PER_LONG.
-Moreover, during setting value of n-bit in bitmap, if a situation arise
-that the width of next n-bit is exceeding the word boundary, then it
-will divide itself such that some portion of it is stored in that word,
-while the remaining portion is stored in the next higher word. Similar
-situation occurs while retrieving value of n-bits from bitmap.
+The introduction of the generic for_each_set_clump macro need test
+cases to verify the implementation. This patch adds test cases for
+scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+The cases contain situations where clump is getting split at the word
+boundary and also when zeroes are present in the start and middle of
+bitmap.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
 Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
 Changes in v4:
- - No change
+ - Use 'for' loop in test function of 'for_each_set_clump'.
 
 Changes in v3:
- - No change
+ - No Change.
 
 Changes in v2:
- - No change
+ - Unify different tests for 'for_each_set_clump'. Pass test data as
+   function parameters.
+ - Remove unnecessary bitmap_zero calls.
 
- include/asm-generic/bitops/find.h | 19 ++++++++++
- include/linux/bitmap.h            | 61 +++++++++++++++++++++++++++++++
- include/linux/bitops.h            | 13 +++++++
- lib/find_bit.c                    | 14 +++++++
- 4 files changed, 107 insertions(+)
+ lib/test_bitmap.c | 141 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 141 insertions(+)
 
-diff --git a/include/asm-generic/bitops/find.h b/include/asm-generic/bitops/find.h
-index 9fdf21302fdf..4e6600759455 100644
---- a/include/asm-generic/bitops/find.h
-+++ b/include/asm-generic/bitops/find.h
-@@ -97,4 +97,23 @@ extern unsigned long find_next_clump8(unsigned long *clump,
- #define find_first_clump8(clump, bits, size) \
- 	find_next_clump8((clump), (bits), (size), 0)
- 
-+/**
-+ * find_next_clump - find next clump with set bits in a memory region
-+ * @clump: location to store copy of found clump
-+ * @addr: address to base the search on
-+ * @size: bitmap size in number of bits
-+ * @offset: bit offset at which to start searching
-+ * @clump_size: clump size in bits
-+ *
-+ * Returns the bit offset for the next set clump; the found clump value is
-+ * copied to the location pointed by @clump. If no bits are set, returns @size.
-+ */
-+extern unsigned long find_next_clump(unsigned long *clump,
-+				      const unsigned long *addr,
-+				      unsigned long size, unsigned long offset,
-+				      unsigned long clump_size);
-+
-+#define find_first_clump(clump, bits, size, clump_size) \
-+	find_next_clump((clump), (bits), (size), 0, (clump_size))
-+
- #endif /*_ASM_GENERIC_BITOPS_FIND_H_ */
-diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
-index 99058eb81042..7ab2c65fc964 100644
---- a/include/linux/bitmap.h
-+++ b/include/linux/bitmap.h
-@@ -75,7 +75,11 @@
-  *  bitmap_from_arr32(dst, buf, nbits)          Copy nbits from u32[] buf to dst
-  *  bitmap_to_arr32(buf, src, nbits)            Copy nbits from buf to u32[] dst
-  *  bitmap_get_value8(map, start)               Get 8bit value from map at start
-+ *  bitmap_get_value(map, start, nbits)		Get bit value of size
-+ *						'nbits' from map at start
-  *  bitmap_set_value8(map, value, start)        Set 8bit value to map at start
-+ *  bitmap_set_value(map, value, start, nbits)	Set bit value of size 'nbits'
-+ *						of map at start
-  *
-  * Note, bitmap_zero() and bitmap_fill() operate over the region of
-  * unsigned longs, that is, bits behind bitmap till the unsigned long
-@@ -563,6 +567,34 @@ static inline unsigned long bitmap_get_value8(const unsigned long *map,
- 	return (map[index] >> offset) & 0xFF;
+diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
+index 6b13150667f5..a2a1c411dd62 100644
+--- a/lib/test_bitmap.c
++++ b/lib/test_bitmap.c
+@@ -155,6 +155,38 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
+ 	return true;
  }
  
-+/**
-+ * bitmap_get_value - get a value of n-bits from the memory region
-+ * @map: address to the bitmap memory region
-+ * @start: bit offset of the n-bit value
-+ * @nbits: size of value in bits
-+ *
-+ * Returns value of nbits located at the @start bit offset within the @map
-+ * memory region.
-+ */
-+static inline unsigned long bitmap_get_value(const unsigned long *map,
-+					      unsigned long start,
-+					      unsigned long nbits)
++static bool __init __check_eq_clump(const char *srcfile, unsigned int line,
++				    const unsigned int offset,
++				    const unsigned int size,
++				    const unsigned long *const clump_exp,
++				    const unsigned long *const clump,
++				    const unsigned long clump_size)
 +{
-+	const size_t index = BIT_WORD(start);
-+	const unsigned long offset = start % BITS_PER_LONG;
-+	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
-+	const unsigned long space = ceiling - start;
-+	unsigned long value_low, value_high;
++	unsigned long exp;
 +
-+	if (space >= nbits)
-+		return (map[index] >> offset) & GENMASK(nbits - 1, 0);
-+	else {
-+		value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
-+		value_high = map[index + 1] & BITMAP_LAST_WORD_MASK(start + nbits);
-+		return (value_low >> offset) | (value_high << space);
++	if (offset >= size) {
++		pr_warn("[%s:%u] bit offset for clump out-of-bounds: expected less than %u, got %u\n",
++			srcfile, line, size, offset);
++		return false;
 +	}
++
++	exp = clump_exp[offset / clump_size];
++	if (!exp) {
++		pr_warn("[%s:%u] bit offset for zero clump: expected nonzero clump, got bit offset %u with clump value 0",
++			srcfile, line, offset);
++		return false;
++	}
++
++	if (*clump != exp) {
++		pr_warn("[%s:%u] expected clump value of 0x%lX, got clump value of 0x%lX",
++			srcfile, line, exp, *clump);
++		return false;
++	}
++
++	return true;
 +}
 +
- /**
-  * bitmap_set_value8 - set an 8-bit value within a memory region
-  * @map: address to the bitmap memory region
-@@ -579,6 +611,35 @@ static inline void bitmap_set_value8(unsigned long *map, unsigned long value,
- 	map[index] |= value << offset;
- }
++
+ #define __expect_eq(suffix, ...)					\
+ 	({								\
+ 		int result = 0;						\
+@@ -172,6 +204,7 @@ static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
+ #define expect_eq_pbl(...)		__expect_eq(pbl, ##__VA_ARGS__)
+ #define expect_eq_u32_array(...)	__expect_eq(u32_array, ##__VA_ARGS__)
+ #define expect_eq_clump8(...)		__expect_eq(clump8, ##__VA_ARGS__)
++#define expect_eq_clump(...)		__expect_eq(clump, ##__VA_ARGS__)
  
-+/**
-+ * bitmap_set_value - set n-bit value within a memory region
-+ * @map: address to the bitmap memory region
-+ * @value: value of nbits
-+ * @start: bit offset of the n-bit value
-+ * @nbits: size of value in bits
-+ */
-+static inline void bitmap_set_value(unsigned long *map,
-+				    unsigned long value,
-+				    unsigned long start, unsigned long nbits)
-+{
-+	const size_t index = BIT_WORD(start);
-+	const unsigned long offset = start % BITS_PER_LONG;
-+	const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
-+	const unsigned long space = ceiling - start;
-+
-+	value &= GENMASK(nbits - 1, 0);
-+
-+	if (space >= nbits) {
-+		map[index] &= ~(GENMASK(nbits + offset - 1, offset));
-+		map[index] |= value << offset;
-+	} else {
-+		map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
-+		map[index] |= value << offset;
-+		map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
-+		map[index + 1] |= (value >> space);
-+	}
-+}
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* __LINUX_BITMAP_H */
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 9acf654f0b19..41c2d9ce63e7 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -62,6 +62,19 @@ extern unsigned long __sw_hweight64(__u64 w);
- 	     (start) < (size); \
- 	     (start) = find_next_clump8(&(clump), (bits), (size), (start) + 8))
- 
-+/**
-+ * for_each_set_clump - iterate over bitmap for each clump with set bits
-+ * @start: bit offset to start search and to store the current iteration offset
-+ * @clump: location to store copy of current 8-bit clump
-+ * @bits: bitmap address to base the search on
-+ * @size: bitmap size in number of bits
-+ * @clump_size: clump size in bits
-+ */
-+#define for_each_set_clump(start, clump, bits, size, clump_size) \
-+	for ((start) = find_first_clump(&(clump), (bits), (size), (clump_size)); \
-+	     (start) < (size); \
-+	     (start) = find_next_clump(&(clump), (bits), (size), (start) + (clump_size), (clump_size)))
-+
- static inline int get_bitmask_order(unsigned int count)
+ static void __init test_zero_clear(void)
  {
- 	int order;
-diff --git a/lib/find_bit.c b/lib/find_bit.c
-index 49f875f1baf7..1341bd39b32a 100644
---- a/lib/find_bit.c
-+++ b/lib/find_bit.c
-@@ -190,3 +190,17 @@ unsigned long find_next_clump8(unsigned long *clump, const unsigned long *addr,
- 	return offset;
+@@ -588,6 +621,71 @@ static const unsigned char clump_exp[] __initconst = {
+ 	0x05,	/* non-adjacent 2 bits set */
+ };
+ 
++static const unsigned long bitmap_test_data[] __initconst = {
++	0x38000201,
++	0x05ff0f38,
++	0xeffedcba,
++	0xbbbbabcd,
++	0x000000aa,
++	0x000000aa,
++	0x00ff0000,
++	0xaaaaaa00,
++	0xff000000,
++	0x00aa0000,
++	0x00000000,
++	0x00000000,
++	0x00000000,
++	0x0f000000,
++	0x00000ac0,
++};
++
++static const unsigned long clump_exp1[] __initconst = {
++	0x01,	/* 1 bit set */
++	0x02,	/* non-edge 1 bit set */
++	0x00,	/* zero bits set */
++	0x38,	/* 3 bits set across 4-bit boundary */
++	0x38,	/* Repeated clump */
++	0x0F,	/* 4 bits set */
++	0xFF,	/* all bits set */
++	0x05,	/* non-adjacent 2 bits set */
++};
++
++static const unsigned long clump_exp2[] __initconst = {
++	0xfedcba,	/* 24 bits */
++	0xabcdef,
++	0xaabbbb,	/* Clump split between 2 words */
++	0x000000,	/* zeroes in between */
++	0x0000aa,
++	0x000000,
++	0x0000ff,
++	0xaaaaaa,
++	0x000000,
++	0x0000ff,
++};
++
++static const unsigned long clump_exp3[] __initconst = {
++	0x00000000,	/* starting with 0s*/
++	0x00000000,	/* All 0s */
++	0x00000000,
++	0x00000000,
++	0x3f00000f,     /* Non zero set */
++	0x2aa80003,
++	0x00000aaa,
++	0x00003fc0,
++};
++
++static const unsigned long clump_exp4[] __initconst = {
++	0x00,
++	0x2b,
++};
++
++static const unsigned long * const clump_data[] __initconst = {
++	clump_exp1,
++	clump_exp2,
++	clump_exp3,
++	clump_exp4,
++};
++
+ static void __init test_for_each_set_clump8(void)
+ {
+ #define CLUMP_EXP_NUMBITS 64
+@@ -610,6 +708,48 @@ static void __init test_for_each_set_clump8(void)
+ 		expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
  }
- EXPORT_SYMBOL(find_next_clump8);
-+
-+unsigned long find_next_clump(unsigned long *clump, const unsigned long *addr,
-+			       unsigned long size, unsigned long offset,
-+			       unsigned long clump_size)
+ 
++static void __init execute_for_each_set_clump_test(unsigned long *bits,
++				unsigned long size,
++				unsigned long clump_size,
++				const unsigned long *clump_exp)
 +{
-+	offset = find_next_bit(addr, size, offset);
-+	if (offset == size)
-+		return size;
++	unsigned long start, clump;
 +
-+	offset = rounddown(offset, clump_size);
-+	*clump = bitmap_get_value(addr, offset, clump_size);
-+	return offset;
++	for_each_set_clump(start, clump, bits, size, clump_size)
++		expect_eq_clump(start, size, clump_exp, &clump, clump_size);
 +}
-+EXPORT_SYMBOL(find_next_clump);
++
++static void __init prepare_test_data(unsigned long * bits,
++				const unsigned long * test_data,
++				int start, int count)
++{
++	int i;
++	unsigned long position = 0;
++
++	for(i = 0; i < count; i++)
++	{
++		bitmap_set_value(bits, test_data[start++], position, 32);
++		position += 32;
++	}
++}
++
++static void __init test_for_each_set_clump(void)
++{
++	int i;
++	int count[] = {2, 8, 4, 1};
++	int offset[] = {0, 2, 10, 14};
++	unsigned long limit[] = {64, 240, 240, 18};
++	unsigned long clump_size[] = {8, 24, 30, 6};
++	DECLARE_BITMAP(bits, 256);
++
++	for(i = 0; i < 4; i++)
++	{
++		prepare_test_data(bits, bitmap_test_data, offset[i], count[i]);
++		execute_for_each_set_clump_test(bits, limit[i],
++					clump_size[i], clump_data[i]);
++	}
++}
++
+ static void __init selftest(void)
+ {
+ 	test_zero_clear();
+@@ -623,6 +763,7 @@ static void __init selftest(void)
+ 	test_bitmap_parselist_user();
+ 	test_mem_optimisations();
+ 	test_for_each_set_clump8();
++	test_for_each_set_clump();
+ }
+ 
+ KSTM_MODULE_LOADERS(test_bitmap);
 -- 
 2.26.2
 
