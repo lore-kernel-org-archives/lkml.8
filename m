@@ -6,91 +6,74 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED76C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA9FC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E202184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF962192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 06:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588400141;
-	bh=P1G9XTk6/zTFJDfUeyPIvBiffh6K8okBFUBHJ5TkZvY=;
+	s=default; t=1588400249;
+	bh=//nlECgryOelNdzOoFPqzRTJSfSuHWAatQp8ys5mRaI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZxCEzoQYI2quh2yYy6KgzKHn4YYoNOmOj+bWKhttm84Nv58h8SdswBjoesDkRDpRz
-	 SsVP89EBqAKzd/hEv+geUAFNe0X4gcp2Q+V6F31muVf6rdrnHF5PNIDzEQuTUXK3Q6
-	 izFY/gzXhinXnu+X5XbBSwfkVIrXqfEVenoV6bwY=
+	b=xXYeld507oG5ShdQ866mNdI+1amkcgDzvpUKJFUIH9M5Yben9bbwp22w0qaefIcxe
+	 mpATRoGV0k6ccsKvbpfxD6IOUIXQhlWPFmZQIvAVqJ3b4KJjWfYgC+qqHS24dvhc5K
+	 dJxoHYt8tB74bKQQSqWJvyZYBk0Sd9GkizjX/pWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgEBGPk (ORCPT
+        id S1727029AbgEBGR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 02:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
+        Sat, 2 May 2020 02:17:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgEBGPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 02:15:40 -0400
+        id S1726058AbgEBGR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 02:17:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B5821775;
-        Sat,  2 May 2020 06:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4F1A21775;
+        Sat,  2 May 2020 06:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588400139;
-        bh=P1G9XTk6/zTFJDfUeyPIvBiffh6K8okBFUBHJ5TkZvY=;
+        s=default; t=1588400248;
+        bh=//nlECgryOelNdzOoFPqzRTJSfSuHWAatQp8ys5mRaI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eDu3tcE8yBlXCT4EEkbq6EGPGsc+QaWK+l5JsE7CT1KqGrux/+91GpomWgneZBDGI
-         TlaMW6qgHqlCY8eFJaFoc5Z/1nIYSkSgSfYKSV/HqWK1hrlMWyLY9KuEXslxnW4NgZ
-         s/BaJy30d8q5L0xLnyVKnmAgWfboXCsNp7jqkUAY=
-Date:   Sat, 2 May 2020 08:15:37 +0200
+        b=rDwxi5CbMZb6/AsUVW66xu0cv5yN9flOBBCcbixdLaHmUmM+q2jFPcMK/TgcOvNS6
+         4XrqItx7ZzKjnkakzRnDj8N6nAqpB/JJKKYmTeBazOHpMC6zPGyMBt2j+AJDe9lEKv
+         Rdu2vJBpLX4F+YsTUYjpCzDTbm8ZKfc7VamEdD1o=
+Date:   Sat, 2 May 2020 08:17:26 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Aman Sharma <amanharitsh123@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
- invalid
-Message-ID: <20200502061537.GA2527384@kroah.com>
-References: <20200501224042.141366-1-helgaas@kernel.org>
- <20200501224042.141366-2-helgaas@kernel.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/106] 5.6.9-rc1 review
+Message-ID: <20200502061726.GA2531911@kroah.com>
+References: <20200501131543.421333643@linuxfoundation.org>
+ <20200501221831.GF44185@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501224042.141366-2-helgaas@kernel.org>
+In-Reply-To: <20200501221831.GF44185@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, May 01, 2020 at 03:18:31PM -0700, Guenter Roeck wrote:
+> On Fri, May 01, 2020 at 03:22:33PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.9 release.
+> > There are 106 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Sun, 03 May 2020 13:12:02 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> These interfaces return a negative error number or an IRQ:
-> 
->   platform_get_irq()
->   platform_get_irq_optional()
->   platform_get_irq_byname()
->   platform_get_irq_byname_optional()
-> 
-> The function comments suggest checking for error like this:
-> 
->   irq = platform_get_irq(...);
->   if (irq < 0)
->     return irq;
-> 
-> which is what most callers (~900 of 1400) do, so it's implicit that IRQ 0
-> is invalid.  But some callers check for "irq <= 0", and it's not obvious
-> from the source that we never return an IRQ 0.
-> 
-> Make this more explicit by updating the comments to say that an IRQ number
-> is always non-zero and adding a WARN() if we ever do return zero.  If we do
-> return IRQ 0, it likely indicates a bug in the arch-specific parts of
-> platform_get_irq().
+> Build results:
+> 	total: 155 pass: 155 fail: 0
+> Qemu test results:
+> 	total: 428 pass: 428 fail: 0
 
-I worry about adding WARN() as there are systems that do panic_on_warn()
-and syzbot trips over this as well.  I don't think that for this issue
-it would be a problem, but what really is this warning about that
-someone could do anything with?
-
-Other than that minor thing, this looks good to me, thanks for finally
-clearing this up.
+Thanks for testing all of these and letting me know.
 
 greg k-h
