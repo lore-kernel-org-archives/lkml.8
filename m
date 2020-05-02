@@ -2,170 +2,101 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966C8C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2B6C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B57206F1
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CRyf9Idt"
+	by mail.kernel.org (Postfix) with ESMTP id E6F7D20731
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgEBSaU (ORCPT
+        id S1728423AbgEBShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 14:30:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728605AbgEBSaM (ORCPT
+        Sat, 2 May 2020 14:37:13 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42978 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgEBShM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 14:30:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588444211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vWzxMqNlOC6t+ssQJeLOK12H0pCtC6V2Mp/yIbRouko=;
-        b=CRyf9IdtVz+TkhkXBeTjFjb5KLfSRugySfiYygX+9DHBaL/hMPPYyntB+cqLIyz36o9BMr
-        F2ygGYk9/uazShcCwRfGos0HsK7mzpAPcQZz4hgwHoJZDOnu6MI6TZKnTX8XG4MV9Yh4Ij
-        yo/ozFp39hpUsUFU1kSRmUnGIEAuVDQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-zhv_AHgHNl2pfLVhwXdKNQ-1; Sat, 02 May 2020 14:30:02 -0400
-X-MC-Unique: zhv_AHgHNl2pfLVhwXdKNQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 2 May 2020 14:37:12 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65CB380B714;
-        Sat,  2 May 2020 18:30:01 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-4.ams2.redhat.com [10.36.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 00911600E5;
-        Sat,  2 May 2020 18:29:59 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] platform/x86: intel-vbtn: Do not advertise switches to userspace if they are not there
-Date:   Sat,  2 May 2020 20:29:49 +0200
-Message-Id: <20200502182951.114231-4-hdegoede@redhat.com>
-In-Reply-To: <20200502182951.114231-1-hdegoede@redhat.com>
-References: <20200502182951.114231-1-hdegoede@redhat.com>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CD91C2683D0;
+        Sat,  2 May 2020 19:37:10 +0100 (BST)
+Date:   Sat, 2 May 2020 20:37:07 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>
+Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
+Message-ID: <20200502203707.402ea3cd@collabora.com>
+In-Reply-To: <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
+References: <20200410115113.31728-1-ezequiel@collabora.com>
+        <20200410115113.31728-3-ezequiel@collabora.com>
+        <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
+        <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-reporting SW_TABLET_MODE =3D 1 to userspace on laptops (specifically on t=
-he
-Dell XPS 9360), to avoid e.g. userspace ignoring touchpad events because
-userspace thought the device was in tablet-mode.
+On Fri, 01 May 2020 13:57:49 -0300
+Ezequiel Garcia <ezequiel@collabora.com> wrote:
 
-But if we are not getting the initial status of the switch because the
-device does not have a tablet mode, then we really should not advertise
-the presence of a tablet-mode switch to userspace at all, as userspace ma=
-y
-use the mere presence of this switch for certain heuristics.
+> > > +
+> > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> > > +
+> > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
+> > > +    :header-rows:  0
+> > > +    :stub-columns: 0
+> > > +    :widths:       1 2
+> > > +
+> > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
+> > > +      - Do not reset any frame context.
+> > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
+> > > +      - Do not reset any frame context. This is an alternative value for
+> > > +        V4L2_VP9_RESET_FRAME_CTX_NONE.  
+> > 
+> > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
+> >   
+> 
+> Hm, now that I look closer, what's the point
+> of having the NONE_ALT in our uAPI if it
+> has same meaning as NONE?
+> 
+> I think it can be removed.
 
-Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode=
- switch on 2-in-1's")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel-vbtn.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+The intent was to match the spec so that one can pass the value
+extracted from the bitstream directly.
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/int=
-el-vbtn.c
-index 634096cef21a..500fae82e12c 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -55,6 +55,7 @@ static const struct key_entry intel_vbtn_switchmap[] =3D=
- {
- struct intel_vbtn_priv {
- 	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
-+	bool has_switches;
- 	bool wakeup_mode;
- };
-=20
-@@ -70,7 +71,7 @@ static int intel_vbtn_input_setup(struct platform_devic=
-e *device)
- 		keymap_len +=3D ARRAY_SIZE(intel_vbtn_keymap);
- 	}
-=20
--	if (true) {
-+	if (priv->has_switches) {
- 		memcpy(&priv->keymap[keymap_len], intel_vbtn_switchmap,
- 		       ARRAY_SIZE(intel_vbtn_switchmap) *
- 		       sizeof(struct key_entry));
-@@ -138,16 +139,12 @@ static void notify_handler(acpi_handle handle, u32 =
-event, void *context)
-=20
- static void detect_tablet_mode(struct platform_device *device)
- {
--	const char *chassis_type =3D dmi_get_system_info(DMI_CHASSIS_TYPE);
- 	struct intel_vbtn_priv *priv =3D dev_get_drvdata(&device->dev);
- 	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
- 	unsigned long long vgbs;
- 	acpi_status status;
- 	int m;
-=20
--	if (!(chassis_type && strcmp(chassis_type, "31") =3D=3D 0))
--		return;
--
- 	status =3D acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
- 	if (ACPI_FAILURE(status))
- 		return;
-@@ -158,6 +155,19 @@ static void detect_tablet_mode(struct platform_devic=
-e *device)
- 	input_report_switch(priv->input_dev, SW_DOCK, m);
- }
-=20
-+static bool intel_vbtn_has_switches(acpi_handle handle)
-+{
-+	const char *chassis_type =3D dmi_get_system_info(DMI_CHASSIS_TYPE);
-+	unsigned long long vgbs;
-+	acpi_status status;
-+
-+	if (!(chassis_type && strcmp(chassis_type, "31") =3D=3D 0))
-+		return false;
-+
-+	status =3D acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
-+	return ACPI_SUCCESS(status);
-+}
-+
- static int intel_vbtn_probe(struct platform_device *device)
- {
- 	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
-@@ -176,13 +186,16 @@ static int intel_vbtn_probe(struct platform_device =
-*device)
- 		return -ENOMEM;
- 	dev_set_drvdata(&device->dev, priv);
-=20
-+	priv->has_switches =3D intel_vbtn_has_switches(handle);
-+
- 	err =3D intel_vbtn_input_setup(device);
- 	if (err) {
- 		pr_err("Failed to setup Intel Virtual Button\n");
- 		return err;
- 	}
-=20
--	detect_tablet_mode(device);
-+	if (priv->has_switches)
-+		detect_tablet_mode(device);
-=20
- 	status =3D acpi_install_notify_handler(handle,
- 					     ACPI_DEVICE_NOTIFY,
---=20
-2.26.0
+> > 
+> > I got several smatch warnings:
+> > 
+> > smatch: ERRORS
+> > drivers/media/v4l2-core/v4l2-ctrls.c:1880 validate_vp9_frame_decode_params() warn: was && intended here instead of ||?
+> > 
+> > (Commented on this ^^^ one above)
+> > 
+> > drivers/staging/media/rkvdec/rkvdec-vp9.c:426 init_intra_only_probs() error: buffer overflow 'ptr' 9 <= 69
+> > drivers/staging/media/rkvdec/rkvdec-vp9.c:1478 rkvdec_vp9_done() error: potentially dereferencing uninitialized 'ctrl'.
+> > drivers/staging/media/rkvdec/rkvdec-vp9.c:1483 rkvdec_vp9_done() error: uninitialized symbol 'dec_dst_buf'.
+> > drivers/staging/media/rkvdec/rkvdec-vp9.c:941:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+> > drivers/staging/media/rkvdec/rkvdec-vp9.c:1466:40: warning: variable 'fctx' set but not used [-Wunused-but-set-variable]
+> >   
+> 
+> Oh, I'll run smatch and fix them all.
 
+Oops!
