@@ -2,190 +2,401 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F8DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F7EC47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5004F24969
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01AE24965
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 09:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dJ+3ixDi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOGbgFPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgEBJ07 (ORCPT
+        id S1727831AbgEBJ10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 05:26:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26621 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726488AbgEBJ06 (ORCPT
+        Sat, 2 May 2020 05:27:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgEBJ1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 05:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588411616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=7BlBxvbDuA+9KvE9CDetQLMcWvsctxQWUvlkpoisi9Y=;
-        b=dJ+3ixDi1lTGbT7IbJh8puhuXzy54eombXibMx69XdpWziNf2zD7kWcPcv+Y+Q9r4Y7GiD
-        1P/luydqFlqaRd9AIGoxuvDj55SReUYVPJpRf4SMWhCGR5GFiiose+k5RJsjzV2AN7CsDB
-        XcrCcuQl0kaVnktJhgzmWwKew9Du7I4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-IYiQA9KcOLe61Ujso1qrMw-1; Sat, 02 May 2020 05:26:51 -0400
-X-MC-Unique: IYiQA9KcOLe61Ujso1qrMw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 409B51005510;
-        Sat,  2 May 2020 09:26:49 +0000 (UTC)
-Received: from [10.36.112.72] (ovpn-112-72.ams2.redhat.com [10.36.112.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E16B1001281;
-        Sat,  2 May 2020 09:26:41 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
- MHP_NO_FIRMWARE_MEMMAP
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20200430102908.10107-1-david@redhat.com>
- <875zdg26hp.fsf@x220.int.ebiederm.org>
- <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
- <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
- <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
- <CAPcyv4j=YKnr1HW4OhAmpzbuKjtfP7FdAn4-V7uA=b-Tcpfu+A@mail.gmail.com>
- <2d019c11-a478-9d70-abd5-4fd2ebf4bc1d@redhat.com>
- <CAPcyv4iOqS0Wbfa2KPfE1axQFGXoRB4mmPRP__Lmqpw6Qpr_ig@mail.gmail.com>
- <62dd4ce2-86cc-5b85-734f-ec8766528a1b@redhat.com>
- <0169e822-a6cc-1543-88ed-2a85d95ffb93@redhat.com>
- <CAPcyv4jGnR_fPtpKBC1rD2KRcT88bTkhqnTMmuwuc+f9Dwrz1g@mail.gmail.com>
- <9f3a813e-dc1d-b675-6e69-85beed3057a4@redhat.com>
- <CAPcyv4jjrxQ27rsfmz6wYPgmedevU=KG+wZ0GOm=qiE6tqa+VA@mail.gmail.com>
- <04242d48-5fa9-6da4-3e4a-991e401eb580@redhat.com>
- <CAPcyv4iXyOUDZgqhWH1KCObvATL=gP55xEr64rsRfUuJg5B+eQ@mail.gmail.com>
- <8242c0c5-2df2-fc0c-079a-3be62c113a11@redhat.com>
- <CAPcyv4h1nWjszkVJQgeXkUc=-nPv5=Me25BOGFQCpihUyFsD6w@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <467ccba3-80ac-085c-3127-d5618d77d3e0@redhat.com>
-Date:   Sat, 2 May 2020 11:26:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 2 May 2020 05:27:25 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9003C061A0C;
+        Sat,  2 May 2020 02:27:23 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 18so2800846pfv.8;
+        Sat, 02 May 2020 02:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=F/rjQ8OynBOGNpFlahQ89x4ZV8FjqstjPc2OpAmwWaY=;
+        b=gOGbgFPXM2K5z5nI/Xn32wBxt7GqPpmjIS+rCFESay854EjTqTL9RXTPHry+WhCGk2
+         rg5Z5Okiz1E02c3VIlY8HISoy+I2Pmx4Po0OAVQwuEDuQ7hCB9tV+7VKadbEDnnj/S/3
+         JDB379pwqAyH5KGZmAV+RXYng3buODXMLzb1ztUGAcETdEjGyIMLfhSTY4szNJA08G0e
+         AtwD+FktSsUpXiwBa4wkeogSPBchIxMLwx2cUmvvH9cwKdZAgxLaDrueuhywnviaEcQf
+         Vh4/FfL543HkGzVy05Rjyt6vM/+6GI3nc3/IQfY6rQHDzQFCNVK7/msicxd7Ijflglkl
+         faLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=F/rjQ8OynBOGNpFlahQ89x4ZV8FjqstjPc2OpAmwWaY=;
+        b=PMDjaBJnR2iQMDuqdq1M8u1bq3rg/YPJ+m/aoshSib1gCFUPVqpQc/RWTj3Ci0w6w+
+         wtmCPIABcwLZT22wo52OfqtjR/gs7HJ0FwEEkxnyq+maYqMILlkT7Un05yqsraK1nSX5
+         jXTatMbJSdNd3qmJDuZz9Kb3PnW+SbRo8HtilLm28SPdu680B0U5m49bQF6F52lFjUp5
+         8/rWDzX98aUdmuz5TBMn9Qabe8VQtMwhxdHQn42fsjEmkvbKsmnsYMj/UFLXAfjNLhRQ
+         YiErsMO0Qeav6A5GuDs0FvWLmPQpEHRR7E0HHRi905jBiz7hbJdIQvWIY2a4AAzQdZM2
+         L7nA==
+X-Gm-Message-State: AGi0PuY2D5/MqWtou5zSYBxBQSrU5rPn4tKKl8iQVEjsqs1Xz5COU4EG
+        rw3SPEhDXWqErgUQSJKPk4M=
+X-Google-Smtp-Source: APiQypIfNw/JVJRZVlavV6GUm4sVXll7sE31CLIBgwLEcQBoHc7ayl9Ns/on4ULYMEAiHXYyT9LlQQ==
+X-Received: by 2002:a63:d16:: with SMTP id c22mr7885855pgl.34.1588411642142;
+        Sat, 02 May 2020 02:27:22 -0700 (PDT)
+Received: from nishad ([106.51.232.103])
+        by smtp.gmail.com with ESMTPSA id u188sm4040064pfu.33.2020.05.02.02.27.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 02 May 2020 02:27:21 -0700 (PDT)
+Date:   Sat, 2 May 2020 14:57:14 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Chiristoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] xfs: Use the correct style for SPDX License Identifier
+Message-ID: <20200502092709.GA20328@nishad>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4h1nWjszkVJQgeXkUc=-nPv5=Me25BOGFQCpihUyFsD6w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Now, let's clarify what I want regarding virtio-mem:
->>
->> 1. kexec should not add virtio-mem memory to the initial firmware
->>    memmap. The driver has to be in charge as discussed.
->> 2. kexec should not place kexec images onto virtio-mem memory. That
->>    would end badly.
->> 3. kexec should still dump virtio-mem memory via kdump.
->=20
-> Ok, but then seems to say to me that dax/kmem is a different type of
-> (driver managed) than virtio-mem and it's confusing to try to apply
-> the same meaning. Why not just call your type for the distinct type it
-> is "System RAM (virtio-mem)" and let any other driver managed memory
-> follow the same "System RAM ($driver)" format if it wants?
+This patch corrects the SPDX License Identifier style in header files
+related to XFS File System support. For C header files
+Documentation/process/license-rules.rst mandates C-like comments.
+(opposed to C source files where C++ style should be used).
 
-I had the same idea but discarded it because it seemed to uglify the
-add_memory() interface (passing yet another parameter only relevant for
-driver managed memory). Maybe we really want a new one, because I like
-that idea:
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-/*
- * Add special, driver-managed memory to the system as system ram.
- * The resource_name is expected to have the name format "System RAM
- * ($DRIVER)", so user space (esp. kexec-tools)" can special-case it.
- *
- * For this memory, no entries in /sys/firmware/memmap are created,
- * as this memory won't be part of the raw firmware-provided memory map
- * e.g., after a reboot. Also, the created memory resource is flagged
- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-
- * case this memory (e.g., not place kexec images onto it).
- */
-int add_memory_driver_managed(int nid, u64 start, u64 size,
-			      const char *resource_name);
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+Changes in v2:
+ - use up all 73 chars in commit description
+---
+ fs/xfs/kmem.h                      | 2 +-
+ fs/xfs/libxfs/xfs_ag_resv.h        | 2 +-
+ fs/xfs/libxfs/xfs_alloc.h          | 2 +-
+ fs/xfs/libxfs/xfs_alloc_btree.h    | 2 +-
+ fs/xfs/libxfs/xfs_attr.h           | 2 +-
+ fs/xfs/libxfs/xfs_attr_leaf.h      | 2 +-
+ fs/xfs/libxfs/xfs_attr_remote.h    | 2 +-
+ fs/xfs/libxfs/xfs_attr_sf.h        | 2 +-
+ fs/xfs/libxfs/xfs_bit.h            | 2 +-
+ fs/xfs/libxfs/xfs_bmap.h           | 2 +-
+ fs/xfs/libxfs/xfs_bmap_btree.h     | 2 +-
+ fs/xfs/libxfs/xfs_btree.h          | 2 +-
+ fs/xfs/libxfs/xfs_da_btree.h       | 2 +-
+ fs/xfs/libxfs/xfs_da_format.h      | 2 +-
+ fs/xfs/libxfs/xfs_defer.h          | 2 +-
+ fs/xfs/libxfs/xfs_dir2.h           | 2 +-
+ fs/xfs/libxfs/xfs_dir2_priv.h      | 2 +-
+ fs/xfs/libxfs/xfs_errortag.h       | 2 +-
+ fs/xfs/libxfs/xfs_format.h         | 2 +-
+ fs/xfs/libxfs/xfs_fs.h             | 2 +-
+ fs/xfs/libxfs/xfs_health.h         | 2 +-
+ fs/xfs/libxfs/xfs_ialloc.h         | 2 +-
+ fs/xfs/libxfs/xfs_ialloc_btree.h   | 2 +-
+ fs/xfs/libxfs/xfs_inode_buf.h      | 2 +-
+ fs/xfs/libxfs/xfs_inode_fork.h     | 2 +-
+ fs/xfs/libxfs/xfs_log_format.h     | 2 +-
+ fs/xfs/libxfs/xfs_log_recover.h    | 2 +-
+ fs/xfs/libxfs/xfs_quota_defs.h     | 2 +-
+ fs/xfs/libxfs/xfs_refcount.h       | 2 +-
+ fs/xfs/libxfs/xfs_refcount_btree.h | 2 +-
+ fs/xfs/libxfs/xfs_rmap.h           | 2 +-
+ fs/xfs/libxfs/xfs_rmap_btree.h     | 2 +-
+ fs/xfs/libxfs/xfs_sb.h             | 2 +-
+ fs/xfs/libxfs/xfs_shared.h         | 2 +-
+ fs/xfs/libxfs/xfs_trans_resv.h     | 2 +-
+ fs/xfs/libxfs/xfs_trans_space.h    | 2 +-
+ fs/xfs/libxfs/xfs_types.h          | 2 +-
+ fs/xfs/mrlock.h                    | 2 +-
+ fs/xfs/scrub/bitmap.h              | 2 +-
+ fs/xfs/scrub/btree.h               | 2 +-
+ fs/xfs/scrub/common.h              | 2 +-
+ fs/xfs/scrub/dabtree.h             | 2 +-
+ fs/xfs/scrub/health.h              | 2 +-
+ fs/xfs/scrub/repair.h              | 2 +-
+ fs/xfs/scrub/scrub.h               | 2 +-
+ fs/xfs/scrub/trace.h               | 2 +-
+ fs/xfs/scrub/xfs_scrub.h           | 2 +-
+ fs/xfs/xfs.h                       | 2 +-
+ fs/xfs/xfs_acl.h                   | 2 +-
+ fs/xfs/xfs_aops.h                  | 2 +-
+ fs/xfs/xfs_bmap_item.h             | 2 +-
+ fs/xfs/xfs_bmap_util.h             | 2 +-
+ fs/xfs/xfs_buf.h                   | 2 +-
+ fs/xfs/xfs_buf_item.h              | 2 +-
+ fs/xfs/xfs_dquot.h                 | 2 +-
+ fs/xfs/xfs_dquot_item.h            | 2 +-
+ fs/xfs/xfs_error.h                 | 2 +-
+ fs/xfs/xfs_export.h                | 2 +-
+ fs/xfs/xfs_extent_busy.h           | 2 +-
+ fs/xfs/xfs_extfree_item.h          | 2 +-
+ fs/xfs/xfs_filestream.h            | 2 +-
+ fs/xfs/xfs_fsmap.h                 | 2 +-
+ fs/xfs/xfs_fsops.h                 | 2 +-
+ fs/xfs/xfs_icache.h                | 2 +-
+ fs/xfs/xfs_icreate_item.h          | 2 +-
+ fs/xfs/xfs_inode.h                 | 2 +-
+ fs/xfs/xfs_inode_item.h            | 2 +-
+ fs/xfs/xfs_ioctl.h                 | 2 +-
+ fs/xfs/xfs_ioctl32.h               | 2 +-
+ fs/xfs/xfs_iomap.h                 | 2 +-
+ fs/xfs/xfs_iops.h                  | 2 +-
+ fs/xfs/xfs_itable.h                | 2 +-
+ fs/xfs/xfs_linux.h                 | 2 +-
+ fs/xfs/xfs_log.h                   | 2 +-
+ fs/xfs/xfs_log_priv.h              | 2 +-
+ fs/xfs/xfs_mount.h                 | 2 +-
+ fs/xfs/xfs_mru_cache.h             | 2 +-
+ fs/xfs/xfs_ondisk.h                | 2 +-
+ fs/xfs/xfs_qm.h                    | 2 +-
+ fs/xfs/xfs_quota.h                 | 2 +-
+ fs/xfs/xfs_refcount_item.h         | 2 +-
+ fs/xfs/xfs_reflink.h               | 2 +-
+ fs/xfs/xfs_rmap_item.h             | 2 +-
+ fs/xfs/xfs_rtalloc.h               | 2 +-
+ fs/xfs/xfs_stats.h                 | 2 +-
+ fs/xfs/xfs_super.h                 | 2 +-
+ fs/xfs/xfs_symlink.h               | 2 +-
+ fs/xfs/xfs_sysctl.h                | 2 +-
+ fs/xfs/xfs_sysfs.h                 | 2 +-
+ fs/xfs/xfs_trace.h                 | 2 +-
+ fs/xfs/xfs_trans.h                 | 2 +-
+ fs/xfs/xfs_trans_priv.h            | 2 +-
+ 92 files changed, 92 insertions(+), 92 deletions(-)
 
-
-If we'd ever have to special case it even more in the kernel, we could
-allow to specify further resource flags. While passing the driver name
-instead of the resource_name would be an option, this way we don't have
-to hand craft new resource strings for added memory resources.
-
-Thoughts?
-
---=20
-Thanks,
-
-David / dhildenb
-
+diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+index 6143117770e9..fc87ea9f6843 100644
+--- a/fs/xfs/kmem.h
++++ b/fs/xfs/kmem.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_ag_resv.h b/fs/xfs/libxfs/xfs_ag_resv.h
+index c0352edc8e41..f3fd0ee9a7f7 100644
+--- a/fs/xfs/libxfs/xfs_ag_resv.h
++++ b/fs/xfs/libxfs/xfs_ag_resv.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 Oracle.  All Rights Reserved.
+  * Author: Darrick J. Wong <darrick.wong@oracle.com>
+diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
+index a851bf77f17b..6c22b12176b8 100644
+--- a/fs/xfs/libxfs/xfs_alloc.h
++++ b/fs/xfs/libxfs/xfs_alloc.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_alloc_btree.h b/fs/xfs/libxfs/xfs_alloc_btree.h
+index 047f09f0be3c..a5b998e950fe 100644
+--- a/fs/xfs/libxfs/xfs_alloc_btree.h
++++ b/fs/xfs/libxfs/xfs_alloc_btree.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
+index 0d2d05908537..db4717657ca1 100644
+--- a/fs/xfs/libxfs/xfs_attr.h
++++ b/fs/xfs/libxfs/xfs_attr.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2002-2003,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.h b/fs/xfs/libxfs/xfs_attr_leaf.h
+index 6dd2d937a42a..5be6be309302 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.h
++++ b/fs/xfs/libxfs/xfs_attr_leaf.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2002-2003,2005 Silicon Graphics, Inc.
+  * Copyright (c) 2013 Red Hat, Inc.
+diff --git a/fs/xfs/libxfs/xfs_attr_remote.h b/fs/xfs/libxfs/xfs_attr_remote.h
+index 6fb4572845ce..e1144f22b005 100644
+--- a/fs/xfs/libxfs/xfs_attr_remote.h
++++ b/fs/xfs/libxfs/xfs_attr_remote.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2013 Red Hat, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_attr_sf.h b/fs/xfs/libxfs/xfs_attr_sf.h
+index aafa4fe70624..bb004fb7944a 100644
+--- a/fs/xfs/libxfs/xfs_attr_sf.h
++++ b/fs/xfs/libxfs/xfs_attr_sf.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_bit.h b/fs/xfs/libxfs/xfs_bit.h
+index 99017b8df292..a04f266ae644 100644
+--- a/fs/xfs/libxfs/xfs_bit.h
++++ b/fs/xfs/libxfs/xfs_bit.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+index f3259ad5c22c..6028a3c825ba 100644
+--- a/fs/xfs/libxfs/xfs_bmap.h
++++ b/fs/xfs/libxfs/xfs_bmap.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2006 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_bmap_btree.h b/fs/xfs/libxfs/xfs_bmap_btree.h
+index 29b407d053b4..72bf74c79fb9 100644
+--- a/fs/xfs/libxfs/xfs_bmap_btree.h
++++ b/fs/xfs/libxfs/xfs_bmap_btree.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2002-2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+index 8626c5a81aad..10e50cbacacf 100644
+--- a/fs/xfs/libxfs/xfs_btree.h
++++ b/fs/xfs/libxfs/xfs_btree.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
+index 53e503b6f186..6e25de6621e4 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.h
++++ b/fs/xfs/libxfs/xfs_da_btree.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+  * Copyright (c) 2013 Red Hat, Inc.
+diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+index 08c0a4d98b89..059ac108b1b3 100644
+--- a/fs/xfs/libxfs/xfs_da_format.h
++++ b/fs/xfs/libxfs/xfs_da_format.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+  * Copyright (c) 2013 Red Hat, Inc.
+diff --git a/fs/xfs/libxfs/xfs_defer.h b/fs/xfs/libxfs/xfs_defer.h
+index 7c28d7608ac6..d119f0fda166 100644
+--- a/fs/xfs/libxfs/xfs_defer.h
++++ b/fs/xfs/libxfs/xfs_defer.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2016 Oracle.  All Rights Reserved.
+  * Author: Darrick J. Wong <darrick.wong@oracle.com>
+diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+index 033777e282f2..e55378640b05 100644
+--- a/fs/xfs/libxfs/xfs_dir2.h
++++ b/fs/xfs/libxfs/xfs_dir2.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_dir2_priv.h b/fs/xfs/libxfs/xfs_dir2_priv.h
+index 01ee0b926572..44c6a77cba05 100644
+--- a/fs/xfs/libxfs/xfs_dir2_priv.h
++++ b/fs/xfs/libxfs/xfs_dir2_priv.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2001,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
+index 79e6c4fb1d8a..9c58ab8648f5 100644
+--- a/fs/xfs/libxfs/xfs_errortag.h
++++ b/fs/xfs/libxfs/xfs_errortag.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (c) 2000-2002,2005 Silicon Graphics, Inc.
+  * Copyright (C) 2017 Oracle.
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 592f1c12ad36..f2228d9e317a 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2000-2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index 245188e4f6d3..84bcffa87753 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: LGPL-2.1
++/* SPDX-License-Identifier: LGPL-2.1 */
+ /*
+  * Copyright (c) 1995-2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
+index 272005ac8c88..99e796256c5d 100644
+--- a/fs/xfs/libxfs/xfs_health.h
++++ b/fs/xfs/libxfs/xfs_health.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0+
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * Copyright (C) 2019 Oracle.  All Rights Reserved.
+  * Author: Darrick J. Wong <darrick.wong@oracle.com>
+diff --git a/fs/xfs/l
