@@ -2,73 +2,74 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C89C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 11:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B8AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A18721775
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 11:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588420589;
-	bh=1yEsKoU0oUSVvOLYtVrEg1plY1Addk/1bazSbloP00c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KJr+x3BGc/aUtdJ4PzpsPFVCrHZJN0j125UfQsNzblt09EkYUnMKh+4PMXOG6+2hY
-	 WKiOEoX2GTKLju0ISiMPD2XuC4SklJPPqrcM/ZfpyAFlH8CXQ4w4y4wIQiU5/U9424
-	 d5SNVcqW0qPNO7c2kRqWU+YrL9EcP6fCemkiZgPY=
+	by mail.kernel.org (Postfix) with ESMTP id F13F820731
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgEBL41 (ORCPT
+        id S1727791AbgEBMAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 07:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgEBL41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 07:56:27 -0400
-Received: from localhost (unknown [117.99.89.89])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 229292137B;
-        Sat,  2 May 2020 11:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588420587;
-        bh=1yEsKoU0oUSVvOLYtVrEg1plY1Addk/1bazSbloP00c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pKaTQpT73raZfKKWJXWPxWtNmxWPm+a18Wdh5WRmTe2QX+EhMC8PV25R0y20AJE/n
-         tBWi37pQnaRl3hyl1JzL+hV1JP3VXLRXGZFjv8A6XLoHSYoHtrG3fe2NC7VH/QXv24
-         1lElS1Cpbce2EvnfcOc/1P0dXErb1lioXWWCNJR8=
-Date:   Sat, 2 May 2020 17:26:14 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
-        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 1/4] Documentation: SoundWire: clarify TDM mode support
-Message-ID: <20200502115614.GR948789@vkoul-mobl.Dlink>
-References: <20200419185117.4233-1-yung-chuan.liao@linux.intel.com>
+        Sat, 2 May 2020 08:00:06 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:49869 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgEBMAF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 08:00:05 -0400
+Received: from localhost.localdomain ([92.140.215.114])
+        by mwinf5d67 with ME
+        id Znzt220022Ug2Sc03nztS6; Sat, 02 May 2020 14:00:01 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 02 May 2020 14:00:01 +0200
+X-ME-IP: 92.140.215.114
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        npiggin@gmail.com, tglx@linutronix.de, maddy@linux.vnet.ibm.com,
+        cclaudio@linux.ibm.com, zhangshaokun@hisilicon.com,
+        atrajeev@linux.vnet.ibm.com, akshay.adiga@linux.vnet.ibm.com,
+        ego@linux.vnet.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] powerpc/powernv: Fix a warning message
+Date:   Sat,  2 May 2020 13:59:49 +0200
+Message-Id: <20200502115949.139000-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200419185117.4233-1-yung-chuan.liao@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-04-20, 02:51, Bard Liao wrote:
-> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> 
-> The current description of stream topologies does not explicitly
-> mention 'mirror' topologies used for audio amplifiers, where all
-> amplifiers see the same data and generate a different output based on
-> configuration or dynamic information. Add examples and notes to
-> explain how channels can be transmitted and mapped.
+Fix a cut'n'paste error in a warning message. This should be
+'cpu-idle-state-residency-ns' to match the property searched in the
+previous 'of_property_read_u32_array()'
 
-Applied all, thanks
+Fixes: 9c7b185ab2fe ("powernv/cpuidle: Parse dt idle properties into global structure")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ arch/powerpc/platforms/powernv/idle.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 78599bca66c2..2dd467383a88 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -1270,7 +1270,7 @@ static int pnv_parse_cpuidle_dt(void)
+ 	/* Read residencies */
+ 	if (of_property_read_u32_array(np, "ibm,cpu-idle-state-residency-ns",
+ 				       temp_u32, nr_idle_states)) {
+-		pr_warn("cpuidle-powernv: missing ibm,cpu-idle-state-latencies-ns in DT\n");
++		pr_warn("cpuidle-powernv: missing ibm,cpu-idle-state-residency-ns in DT\n");
+ 		rc = -EINVAL;
+ 		goto out;
+ 	}
 -- 
-~Vinod
+2.25.1
+
