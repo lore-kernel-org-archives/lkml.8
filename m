@@ -2,122 +2,93 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37401C47247
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE530C47247
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05454208C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T14eaIz6"
+	by mail.kernel.org (Postfix) with ESMTP id D9ECB20757
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgEBDnK (ORCPT
+        id S1726562AbgEBDzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 23:43:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgEBDnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 23:43:10 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10C89C061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 20:43:10 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id i13so1600675oie.9
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 20:43:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R5gKcAhtGMy8Ketx1mS4p/ONHNY9/H41NnazeLBqjX0=;
-        b=T14eaIz6l5Sw2CzC8t5t34Q0gf+5KG+tJDPxVBq0eJQP9PEIhijlBDQP1ktR1+Uklz
-         A4XkDfvY0ByeViP6Qk7MaasB3fIASD3NL4vF7i3of/ttceW/jBhuWw1QgTNIx3bGR6T0
-         ezDWK1fdSMJ1oZLTvUj6Py41gJcKs8fq0oY1GCVTQDIKJjXBteaxTz5ZnZBT7prkxuF5
-         ncVh5QbG8Qy2R7wbbwnH23NsEXFIwu9f0DOTy+XBRoEp7RvuE7m7s6GTqDz/2sWlEDqa
-         M4RBVlFFfb+qhBVxc2ow8PtzDVVhZ5WE/q/E/9RPInCNzFIAABlhN4buahJLOoFUVBH2
-         7JGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R5gKcAhtGMy8Ketx1mS4p/ONHNY9/H41NnazeLBqjX0=;
-        b=RZpGTv2+cAvZmTxrKAVa+3CjvLcED+eKVe+nbGNZx9squjn06J6VOiCF0+h9nwZGI1
-         Yp6cZ6CmOP2LSmGRcuSORA46wGO5fn3Bfvo7J62CrNWK+zm7XLhmAO/8FWCFQ2mtoU9T
-         u89fnYVV3yeyN4FcauLz1n81DlgFoIPaxFFtYJKpbLlU1cfFIoU0BCzpQV+n042UZQIo
-         gWlkwa6IZdM2xAHg1SmewqtYRRfYMCqkB/FmXDvC5st+dHqXN4+MVkHQRXxygNaJDUJk
-         qF0BMcKmdJSFj1mDyydFR5+lSRk33CDeoMXW1IyZlKApCK+rgZi5gmcD9vXoOKLJjJ1+
-         tk+g==
-X-Gm-Message-State: AGi0PuZToQfkqiFmi2vF9Pj2bs8zQF6A8f5CiDKTs5ieeKzL/W0VBsV0
-        5mlW0krXZMx1a7jKrDixcHI=
-X-Google-Smtp-Source: APiQypKwk41ikGZT+95iCDtykzwgAamfKs3go2D6gCZ5Tt9YPj9Kq3R+Td+FaylwaQfPvWlBXFhwKg==
-X-Received: by 2002:aca:f2d5:: with SMTP id q204mr1981188oih.98.1588390989226;
-        Fri, 01 May 2020 20:43:09 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id e91sm1362262otb.40.2020.05.01.20.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 20:43:08 -0700 (PDT)
-Date:   Fri, 1 May 2020 20:43:07 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Dmitry Golovin <dima@golovin.in>
-Cc:     clang-built-linux@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: allow a relocatable kernel to be linked with
- lld
-Message-ID: <20200502034307.GA2971661@ubuntu-s3-xlarge-x86>
-References: <20200501084215.242-1-dima@golovin.in>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501084215.242-1-dima@golovin.in>
+        Fri, 1 May 2020 23:55:37 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:38836 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726307AbgEBDzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 23:55:36 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL2gW76xepTMvAA--.8S2;
+        Sat, 02 May 2020 11:55:02 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] MIPS: tools: Show result for loongson3-llsc-check
+Date:   Sat,  2 May 2020 11:55:01 +0800
+Message-Id: <1588391701-5588-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxL2gW76xepTMvAA--.8S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZryxKw4kAw17Kw48Xr43ZFb_yoWkArc_Ja
+        s2g348GryrXrW2k3ykury8XFZ7WFyxZ3W7ua17Zr17W3WYyF13XFW0yrZ8KF17Aw1jyF4f
+        AF48ur1xAr4I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbc8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+        Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+        1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8GwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0UDGUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 08:42:13AM +0000, Dmitry Golovin wrote:
-> LLD by default disallows relocations in read-only segments. For a
-> relocatable kernel, we pass -z notext to the linker to explicitly
-> allow relocations. This behavior is the default for BFD.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/579
-> Signed-off-by: Dmitry Golovin <dima@golovin.in>
+It is better to show the result before loongson3-llsc-check exit,
+otherwise we can see nothing if the return status is EXIT_SUCCESS,
+it seems confusing.
 
-I was able to link a Clang built i386_defconfig kernel with ld.lld and
-boot it in QEMU 5.0 after this change. A GCC built kernel links still
-with ld.bfd and also boots in QEMU successfully. x86_64_defconfig with
-both compilers and their respective linkers did not regress.
+E.g. without this patch:
 
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+[loongson@localhost tools]$ ./loongson3-llsc-check ../../../vmlinux
+[loongson@localhost tools]$
 
-> ---
->  arch/x86/boot/compressed/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 5f7c262bcc99..7214751e1671 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -57,6 +57,9 @@ else
->  KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
->  	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
->  endif
-> +ifeq ($(CONFIG_RELOCATABLE), y)
-> +KBUILD_LDFLAGS += -z notext
-> +endif
->  LDFLAGS_vmlinux := -T
->  
->  hostprogs	:= mkpiggy
-> -- 
-> 2.25.1
-> 
+With this patch:
+
+[loongson@localhost tools]$ ./loongson3-llsc-check ../../../vmlinux
+loongson3-llsc-check returns success
+[loongson@localhost tools]$
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v2:
+  - move "returns" after "loongson3-llsc-check" suggested by Sergei
+
+ arch/mips/tools/loongson3-llsc-check.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/mips/tools/loongson3-llsc-check.c b/arch/mips/tools/loongson3-llsc-check.c
+index 0ebddd0..bdbc7b4 100644
+--- a/arch/mips/tools/loongson3-llsc-check.c
++++ b/arch/mips/tools/loongson3-llsc-check.c
+@@ -303,5 +303,7 @@ int main(int argc, char *argv[])
+ out_close:
+ 	close(vmlinux_fd);
+ out_ret:
++	fprintf(stdout, "loongson3-llsc-check returns %s\n",
++		status ? "failure" : "success");
+ 	return status;
+ }
+-- 
+2.1.0
+
