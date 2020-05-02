@@ -5,182 +5,141 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3491DC47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C5EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1489A206CD
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6C4B206CD
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UA6XrV7k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iE9qi38I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgEBSwR (ORCPT
+        id S1728496AbgEBSyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 14:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42612 "EHLO
+        Sat, 2 May 2020 14:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726306AbgEBSwP (ORCPT
+        by vger.kernel.org with ESMTP id S1728343AbgEBSyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 14:52:15 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A1BC061A0C;
-        Sat,  2 May 2020 11:52:15 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t11so6355492pgg.2;
-        Sat, 02 May 2020 11:52:15 -0700 (PDT)
+        Sat, 2 May 2020 14:54:11 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB650C061A0C;
+        Sat,  2 May 2020 11:54:09 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id h12so5445767pjz.1;
+        Sat, 02 May 2020 11:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6y3f1iXR5yiiqAlOPqKiSQLFocKm9SaOEUukgjJZ5oE=;
-        b=UA6XrV7kzwqdAm+iEfXiR968ldFj5IymkjpgdGv8QLEJn1FHjLKNkCFmfQpXFAa8WO
-         QtNaz6tAiSiEczWEy/cVlPyFjq+hTRaCEwfh01JL+DsnP5zdIB2Fhz19Km/7lP0J0IOP
-         0Ji+nLMBHjZtbyLjMLqi924mi/KFx39ZpJ8Hqn2sO8HJ2hAoCTLxY7h2DN+x6luchvh5
-         eILsUKsj8ArkyhxC2rXQuyH03+Bk+XmR0DeX2X/yoeDWPhC6krd7Y/3DjM6Izu3WUvTt
-         2jf0rjYMc06VRZorzbaMCzCUcn9h7elTSJfX0DpY6qipobUB6l42pnUbsyWFCvDcJ+os
-         P5nw==
+        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
+         :content-disposition:user-agent;
+        bh=2r+1yVPOglt4gj5XLUdHS7cxi4oqb67JRmvdg4JUpMs=;
+        b=iE9qi38Iu6GH1F7xZ9HHUiU/kJXeyzOqk+2gyFZg2F+GkePgCBKPIcmnYfhYqrgWiv
+         9dcrrkrP+kneqozsqiEu7UDNFm1Vcr4qCSG5tdQK11QMGeGHB7A/GQ87qkWeolCePbyd
+         pg6LMDmOO3KUXdzmDhTB80BNetDwX5TEatu8gczuCKWLLuPv16e0wPGRhsQ+ws2OaQGl
+         kQiR6ToxoSL0tEZCgFfY0sLhjW+mu6ZWSjNQ4ExFuPspYvcwPLQAgeU33EWwKJ9Aedj6
+         SMpOt9yQVEYKGYaXstv8oYjZZTEq6hgBCcFq9uWUX0d27IqXKrrLj52l4BY6itw3iptV
+         WycQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6y3f1iXR5yiiqAlOPqKiSQLFocKm9SaOEUukgjJZ5oE=;
-        b=Qhs249cAPmkEviW26/4lLaMCdm7Z6nVftSdEgVeTKsF1gl2UTMWOnoKeodqb+77fs5
-         usRvGLA24fUN29m/X8dNEZtxBzcCsFVjZ6FLsekpBrgDsYMlZBwN5BKLhMWdWWcSCV/+
-         LmOdb6aMBTPL9sH724XydlBZQ1i8jv5IT5gosUac97A+wcFOA+v4oMtv1M0/XdCf+tAy
-         t3F9at+dzw1Aa8JwQPIrqfElGN6BDb3zHQHA+usmKlTYdc0I5dA9+bIcnPlgFxhvvGbl
-         6PGJ7zb/RZABEnZz0+ZD3LDU9tJ8sJLaPK8kKI81pY45AbR+XG90/V5zDEcDbDxGy/X4
-         52mg==
-X-Gm-Message-State: AGi0PuYiUoFIda2QUC1a7lbXAu54A7ovs6GWeGHfgt7PU7rkwvw4/A42
-        aaasB7uAcXJj5ev8HH3R93c=
-X-Google-Smtp-Source: APiQypJn55cCwUXOFCouPv9af0rzgTb6bSvh3csy57pzpvKdSoe007N9Dxu5tV18PJqf8EEFQSMgpw==
-X-Received: by 2002:a63:8d4b:: with SMTP id z72mr9573375pgd.376.1588445535538;
-        Sat, 02 May 2020 11:52:15 -0700 (PDT)
-Received: from syed ([106.210.101.167])
-        by smtp.gmail.com with ESMTPSA id d203sm4973636pfd.79.2020.05.02.11.52.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition:user-agent;
+        bh=2r+1yVPOglt4gj5XLUdHS7cxi4oqb67JRmvdg4JUpMs=;
+        b=UKJaQh5cQ350MHkbMlXxYjtG9fUBBCJIXxjZySrCQR9kqVMlDx1Awy9JA33kuz7Swi
+         IUE/mp/HsmkG9V66Qlar2FC1H+PU+UIDDLaPCG43XDQuPTxFCWdTGCEgYAmpdN2VP8J/
+         77sN+tb2hCyGT27dAuBdoVlg4GlFbEsDytgd06YmXe//bBRQG+w/7PUmPHdNAEWb++Ww
+         3uBZCUgET0Ezmq5VvwE76WaHVCHzLy3kUr9ZCCEDaLwbjZPZN6VfGEzbBDXWjYxImw68
+         UUcovb/TOB/LV3Alb4MXHN9ElgXqhHabzaaIRtlTfkapaqvztG5xse3Dvy9Hc3W+w8W6
+         q4xA==
+X-Gm-Message-State: AGi0PubSOtFFXFyWEmPf3pgIiqiMEKkQS3ZGFViUclBnlaFVOss0z2Kk
+        kMgTiT3qOVUpRicsyxzNrPLUTrcd
+X-Google-Smtp-Source: APiQypIs4e+TkMq35dY62ktGP/u5qteJzEQbZIICyeh7FwBPWfse3gYTpcN+mJXkdgMk413Ugr9NYQ==
+X-Received: by 2002:a17:90a:1464:: with SMTP id j91mr7121807pja.87.1588445649250;
+        Sat, 02 May 2020 11:54:09 -0700 (PDT)
+Received: from udknight.localhost ([59.57.158.27])
+        by smtp.gmail.com with ESMTPSA id bo19sm2694712pjb.26.2020.05.02.11.54.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 02 May 2020 11:52:15 -0700 (PDT)
-Date:   Sun, 3 May 2020 00:21:54 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] gpio: xilinx: Utilize for_each_set_clump macro
-Message-ID: <366a64f80ee9fe1c644ea038ac112ead9766d5c8.1588443578.git.syednwaris@gmail.com>
-References: <cover.1588443578.git.syednwaris@gmail.com>
+        Sat, 02 May 2020 11:54:08 -0700 (PDT)
+Received: from udknight.localhost (localhost [127.0.0.1])
+        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 042IontN009203;
+        Sun, 3 May 2020 02:50:49 +0800
+Received: (from root@localhost)
+        by udknight.localhost (8.14.9/8.14.9/Submit) id 042IofgZ009202;
+        Sun, 3 May 2020 02:50:41 +0800
+Date:   Sun, 3 May 2020 02:50:41 +0800
+From:   Wang YanQing <udknight@gmail.com>
+To:     joe@perches.com
+Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] checkpatch: fix can't check for too long invalid commit id
+Message-ID: <20200502185041.GA9082@udknight>
+Mail-Followup-To: Wang YanQing <udknight@gmail.com>, joe@perches.com,
+        Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
+        kernel-janitors@vger.kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1588443578.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch reimplements the xgpio_set_multiple function in
-drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
-Instead of looping for each bit in xgpio_set_multiple
-function, now we can check each channel at a time and save cycles.
+The current UNKNOWN_COMMIT_ID doesn't check for 41+ length commit id,
+and although GIT_COMMIT_ID will check for 41+ length commit id, but
+it willn't warn anything about it due to 41+ length commit will never
+be defined.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+This patch moves the unknown commit id check for normal commit description
+to GIT_COMMIT_ID, and uses ERROR instead of WARN, because unknown commit
+id is total useless to track change history in changelog, it deserves the
+ERROR.
+
+Signed-off-by: Wang YanQing <udknight@gmail.com>
 ---
-Changes in v4:
- - Minor change: Hardcode value for better code readability.
+ After this patch, in another patch 'checkpatch: add support to check 'Fixes:' tag format',
+ I will delete UNKNOWN_COMMIT_ID, because we don't need it anymore after GIT_COMMIT_ID could
+ do the same check as UNKNOWN_COMMIT_ID for 'Fixes:' tag.
 
-Changes in v3:
- - No change.
+ scripts/checkpatch.pl | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-Changes in v2:
- - No change.
-
- drivers/gpio/gpio-xilinx.c | 64 ++++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 67f9f82e0db0..67c5eeaf1bb9 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -136,39 +136,43 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 			       unsigned long *bits)
- {
--	unsigned long flags;
-+	unsigned long flags[2];
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int index = xgpio_index(chip, 0);
--	int offset, i;
--
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
--
--	/* Write to GPIO signals */
--	for (i = 0; i < gc->ngpio; i++) {
--		if (*mask == 0)
--			break;
--		/* Once finished with an index write it out to the register */
--		if (index !=  xgpio_index(chip, i)) {
--			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--				       index * XGPIO_CHANNEL_OFFSET,
--				       chip->gpio_state[index]);
--			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
--			index =  xgpio_index(chip, i);
--			spin_lock_irqsave(&chip->gpio_lock[index], flags);
--		}
--		if (__test_and_clear_bit(i, mask)) {
--			offset =  xgpio_offset(chip, i);
--			if (test_bit(i, bits))
--				chip->gpio_state[index] |= BIT(offset);
--			else
--				chip->gpio_state[index] &= ~BIT(offset);
--		}
-+	u32 *const state = chip->gpio_state;
-+	unsigned int *const width = chip->gpio_width;
-+	const unsigned long state_size = 32;
-+	const unsigned long total_state_bits = state_size * 2;
-+	unsigned long offset, clump;
-+	size_t index;
-+
-+	DECLARE_BITMAP(old, 64);
-+	DECLARE_BITMAP(new, 64);
-+	DECLARE_BITMAP(changed, 64);
-+
-+	spin_lock_irqsave(&chip->gpio_lock[0], flags[0]);
-+	spin_lock_irqsave(&chip->gpio_lock[1], flags[1]);
-+
-+	bitmap_set_value(old, state[0], 0, width[0]);
-+	bitmap_set_value(old, state[1], width[0], width[1]);
-+	bitmap_replace(new, old, bits, mask, gc->ngpio);
-+
-+	bitmap_set_value(old, state[0], 0, state_size);
-+	bitmap_set_value(old, state[1], state_size, state_size);
-+	state[0] = bitmap_get_value(new, 0, width[0]);
-+	state[1] = bitmap_get_value(new, width[0], width[1]);
-+	bitmap_set_value(new, state[0], 0, state_size);
-+	bitmap_set_value(new, state[1], state_size, state_size);
-+	bitmap_xor(changed, old, new, total_state_bits);
-+
-+	for_each_set_clump(offset, clump, changed, total_state_bits, state_size) {
-+		index = offset / state_size;
-+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-+				index * XGPIO_CHANNEL_OFFSET,
-+				state[index]);
- 	}
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 23a001a..143bb43 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2865,8 +2865,18 @@ sub process {
+ 			($id, $description) = git_commit_info($orig_commit,
+ 							      $id, $orig_desc);
  
--	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
--
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	spin_unlock_irqrestore(&chip->gpio_lock[1], flags[1]);
-+	spin_unlock_irqrestore(&chip->gpio_lock[0], flags[0]);
- }
++			if (!defined($id)) {
++			    if ($long) {
++				ERROR("GIT_COMMIT_ID",
++				      "Unknown commit id '$orig_commit' is too long, maybe misspelled?\n" . $herecurr);
++			    } else {
++				ERROR("GIT_COMMIT_ID",
++				      "Unknown commit id '$orig_commit', maybe rebased or not pulled?\n" . $herecurr);
++			    }
++			}
++
+ 			if (defined($id) &&
+-			   ($short || $long || $space || $case || ($orig_desc ne $description) || !$hasparens)) {
++			   ($short || $space || $case || ($orig_desc ne $description) || !$hasparens)) {
+ 				ERROR("GIT_COMMIT_ID",
+ 				      "Please use git commit description style 'commit <12+ chars of sha1> (\"<title line>\")' - ie: '${init_char}ommit $id (\"$description\")'\n" . $herecurr);
+ 			}
+@@ -2969,7 +2979,7 @@ sub process {
+ 		}
  
- /**
+ # check for invalid commit id
+-		if ($in_commit_log && $line =~ /(^fixes:|\bcommit)\s+([0-9a-f]{6,40})\b/i) {
++		if ($in_commit_log && $line =~ /(^fixes:)\s+([0-9a-f]{6,40})\b/i) {
+ 			my $id;
+ 			my $description;
+ 			($id, $description) = git_commit_info($2, undef, undef);
 -- 
-2.26.2
-
+1.8.5.6.2.g3d8a54e.dirty
