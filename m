@@ -2,240 +2,169 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B97C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6816CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C521C216FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29199216FD
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="JYTqwl9H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="goWwM/fn";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ZstvIr/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgEBPVG (ORCPT
+        id S1728296AbgEBPXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 11:21:06 -0400
-Received: from mail-eopbgr00090.outbound.protection.outlook.com ([40.107.0.90]:6406
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728134AbgEBPVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 11:21:05 -0400
+        Sat, 2 May 2020 11:23:14 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:8914 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727897AbgEBPXN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 11:23:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1588432992; x=1619968992;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wU6Hn1QoFqxgocchw3TXAxm8RfIqCWu7dsHmcejUx0s=;
+  b=goWwM/fnJm5tHm/RmYepzkHeP/rzbwEeYRKu6s5i2V320JBdbbF5/mts
+   DTGRkcvuJccXQlxbFJsHeOmJPdcSBOMnuUhT54fiNwZm7n3iyJXU+ixJu
+   N4oEnsLlFqnX6HicomAyP5WzbKZlbDVxhtJlBf8oQJ93oJodF5o7s6+2J
+   vOZjY1ZuXE+9j0n5q+z/Wa/dpN9KgYGvw8QFjpCNwXhPTU3IA3OuQcMX8
+   Lbu6HdRXyKp3nJxZxSS3B8AqnWhCPceGvhFdLK5tPDci0F9fjfUmR++dk
+   wZZf4jcVZ+WaOhEjRpskk/Fm8kyzUYOGvkCrubXXiXoV0TsLIfcD+KU+9
+   Q==;
+IronPort-SDR: hWd2HlsXFCzxszpy1PxyEVnKMhdsIc1BJwnZNW1ByD2j6ALevmQHmS6ONEGzV+hbPsdjDNatVa
+ XngdzQMt93UYAVGnr9DjuozZo8TJpUYc/1NegPBrXmU/qbbJQrt2YQ1vTLb4dsLjglVs3pkg+4
+ gsFHDRjVKe1YmTL/7jh03htwpJeisMq42NMNlYbgb9HtxxtHuVslzrG0/fnhV/GGblxSWfkvTy
+ WWH6i1TAfUizwTNI6h/YyPbXdo5QJawtfWPWHsggRRZPpmu8Eu+1pDEk5OrXVOXXORjhqIN4Eo
+ SY4=
+X-IronPort-AV: E=Sophos;i="5.73,343,1583164800"; 
+   d="scan'208";a="136747771"
+Received: from mail-bn7nam10lp2105.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.105])
+  by ob1.hgst.iphmx.com with ESMTP; 02 May 2020 23:23:10 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vjyvqu2MWlIQgvNnuwVJO5eCvbLd3/9IygmkwM9o2BB1h+9axZV+5E68hcHJp1DOk4KMJwEoqsom9W65Lzma8rcVUWLkyWKTgmhwTlTzQBJ7dZqh0K/OdoVP3O55YFlep5fzSH/DPHyPuqSfZDpBtoLkKGKGx3DeY3WUulzHW2h7jJyobU6QchJToNegVoJwZyPdmZRrJR859FlneCYIqAfb6R8vvcUfp/07nLZhTI6gnUsLiu9vUpjEG82pD83lKeHhTTstGb2SVG9+/Jk0NY8vRzMKxRxdy98HTO4tlnqxYCPDmD1H3FMJRLmrUPU8dD3ZG7/Q9RpLQrOkloVKnA==
+ b=LbAbIqgTE+41KaZr1EQqDl15qoQxn6UhrozuEVcweJP2lqU9sfcCRrXcXqqKDzxAQJnAzn+Z4FQ6xJdyrx52Ng7/3CmVDMHVMJH3s0tTBRrmYL/ga5ekeYRzkbpDfDNLX9ryZDPWYbj7j+754T+Bu0+lqKqZK147LgUJaMfAaZUQFmYcRjtAwd3TT7KlI42xJpsvhyPPQPvnn0KD3tcZAOvoeVYvzKo/4htTBA3f6bKAq5cHEUBQyJ59Ugxspdxa5hxcPkQpAZ/wlD6ocsNnSUgG/OOlIiO5BoKnpgpOJvh5TM0KsZoGaZIB+vLj+tQpkG6Ami4nOnwjQvb4CZbwRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mSslYt5PAaBYEr24Gssti0TxlOPFQ47ACcbUO2o1Ocs=;
- b=kAQ7e+Bs5d4EO9YLXMTSnlxsx3WTZc3ZHF8MQ3mt1G41rcFJLd+49nfWwmbBiPB6n7nlILGLF9YWSdsw1BsGCQ3yljKtXwMdba/vq9AY+7dyNg1jFXLRYFF7TbGJUh7rSebCAEh1oXLW/TDx2qGNHTurjSO+8S6Ox1hZz2hX8an3uPIWuc5mzHaLYTB54TyaguL0TxLw+hMGEtfhr/LRHqEQwcdiKo/L5aINQpd2gyKE7ml4B08S9XqiLG8nOOWcLMcBlTxRzwBnb928SwutyUoFjVBBljZUW52IBWw4ViHKxtXsEcoaYWLi2GHYsUSQmyAMVI205qWEZXOEPkdD6w==
+ bh=eAarNdY0LRF1NAAYIxwK0+9OV6ZHf4MkhZuZv1qDILw=;
+ b=LMZr8o8JURkp9B74MqOaUv6M7sc+Y0W9YefY0ONW3bxXUdzts7VGefCvDMDCXw9g93XOZeafjKUInA5cLlUiDiwaI5MD1KZhn+CrqZNTSbJUR0oQu3w3i0NGP64AMXBqMQsOlV804rbwXtiOjeIDaucMDZUntLaB0EDsjX0dWO+ClR9voHmVXa/S+zyZagP/guDYV2tGrOh6dqJVRpOyzWhqrgjud59pIwwhlvCp1KQTnm0DSjN1gehRztHHYDvT/4FwF6LtK3C8jeqzxwOEDfeC6+A8KcZp9/qwYawoCnUbN1KrSXDFhoNa54HwSbTL1NlR71k8B4zv4jVur5KL+A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mSslYt5PAaBYEr24Gssti0TxlOPFQ47ACcbUO2o1Ocs=;
- b=JYTqwl9HyDsAmyiiG012PXJP48cQtYR61yA6aoYtAEJx63KfvBO9hI4gAlmyPfqa83gXslbZGoVh9gIYjeedQz33QNTj8Zi51ZJj/wuxUFMoeabZJKOP9/OF6yA0c2UspLxipif4Jpt5Zaf/41qlx+88o9F+sJTdu6dL/ZzwgOs=
-Authentication-Results: idosch.org; dkim=none (message not signed)
- header.d=none;idosch.org; dmarc=none action=none header.from=plvision.eu;
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10)
- by VI1P190MB0527.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:2e::30) with
+ bh=eAarNdY0LRF1NAAYIxwK0+9OV6ZHf4MkhZuZv1qDILw=;
+ b=ZstvIr/HBSwheHYneY4i6oDDMwHC2NVgWiFQ/clfS0ZYs1hnH0bAzoXA/9gb5VowbotDrs8OQpShPeJEeVJbTMckVhsx3t+O1rFtR6RNQ5bEduels2gkx9wPNaox4AnFZNhdTbllV2Ck6pXNljuCggx+SvYsutnrW28CzCSpIq0=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4591.namprd04.prod.outlook.com (2603:10b6:805:ae::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Sat, 2 May
- 2020 15:20:59 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::f983:c9a8:573a:751c]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::f983:c9a8:573a:751c%7]) with mapi id 15.20.2958.027; Sat, 2 May 2020
- 15:20:59 +0000
-Date:   Sat, 2 May 2020 18:20:49 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>
-Subject: Re: [RFC net-next 1/3] net: marvell: prestera: Add Switchdev driver
- for Prestera family ASIC device 98DX325x (AC3x)
-Message-ID: <20200502152049.GA8513@plvision.eu>
-References: <20200225163025.9430-1-vadym.kochan@plvision.eu>
- <20200225163025.9430-2-vadym.kochan@plvision.eu>
- <20200305144937.GA132852@splinter>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305144937.GA132852@splinter>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM5PR0502CA0009.eurprd05.prod.outlook.com
- (2603:10a6:203:91::19) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sat, 2 May
+ 2020 15:23:08 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.2958.027; Sat, 2 May 2020
+ 15:23:08 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v3 2/5] scsi: ufs: add "index" in parameter list of
+ ufshcd_query_flag()
+Thread-Topic: [PATCH v3 2/5] scsi: ufs: add "index" in parameter list of
+ ufshcd_query_flag()
+Thread-Index: AQHWH8Y7hGL68hem0US2UiZWqmAQY6iU6yiA
+Date:   Sat, 2 May 2020 15:23:07 +0000
+Message-ID: <SN6PR04MB4640D032215F66ED46B4D069FCA80@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200501143835.26032-1-stanley.chu@mediatek.com>
+ <20200501143835.26032-3-stanley.chu@mediatek.com>
+In-Reply-To: <20200501143835.26032-3-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: mediatek.com; dkim=none (message not signed)
+ header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 85aceabc-e0ba-4b62-98fe-08d7eeacb7b9
+x-ms-traffictypediagnostic: SN6PR04MB4591:
+x-microsoft-antispam-prvs: <SN6PR04MB4591BB3F3423DD3D2741AAD4FCA80@SN6PR04MB4591.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 039178EF4A
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(478600001)(7696005)(54906003)(110136005)(8676002)(8936002)(26005)(6506007)(33656002)(64756008)(66556008)(66476007)(76116006)(66446008)(66946007)(86362001)(52536014)(186003)(4326008)(71200400001)(9686003)(316002)(55016002)(4744005)(5660300002)(7416002)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ty+uPANuoFZwLewJ8H5POl3AW0QU2KKb/HT/3OS8tH6ae5fAT0seYhiyUjOD87gVKoEYzJLkUR0a81/V08Ht4FA+5IunCGMm/1akN6O/sHpAZ01TXtdu5G+TQu1reE0EFP8n72lVua5Mrv05xV87LRKL5Oc7dh6xLYmfhp66Ei+LpUS25W7LRSaycWg/gx2Nf/oTWL7uansI2Lsx7mt/mP1YRmeYf7w2yZTXEkVnN94YYWyi9goCMZWsZIp943FzxAntxd+N2EuaYzpiXes5tb0Kp2LwWh0BKgzuYWk02YwQCm+tu16BvR68rywf6WMYfIj1Ts3SGiJPd8SzlN5Dgk4VL3z8bxs/Ul0eA/jMj0uatY2SnsGp8cSlWEOL5zIOBkNPdpM7h7YgHKk9Me6iVytYq7fHhJHvMkWS97UOEn3HkZXXCxjOVbg9YiTBKDph
+x-ms-exchange-antispam-messagedata: cyFnXUQQ3eeU7DTCVHmnb0zdNIhO03zLmsRYbzttbiz/hFr7bDh9VWTlrQBk2BCOCptaDkHiGRLigQlcFQLZG94N5DFA6OLrfBV43o7hVSFeckuWWcS1id7+hmdb0mdW4eA3YUC3R1lkgbO4cvWSV3zw6/xcwaplJ++lB+oDQ2giQ4wXyY3z/a56Y6CmoQ++CB9nkyfUO5vIrMERSubfapqYE03qGGU53GugVM2g6jzLNKFum4AMwJww0FDkm927k/i/grYryGAbpPglKdfkXwdRnpBe6aItUyJ0YhWbaN8rc0a3E8gq2YxX7w0szKQoczEr3Ts3f6XutkJtNXQswwQ2dw4v5R7dg7IpaWzRNbtajIZlwSrw0UyJMIAU13khwcJoMgJEQYDScQHBb2B5ouNmvudM7+xXmml2LwxAAKed0QBKmvGQAgzZ2eqeCXF3fcA++gIy0ic7yWn7fIeq4sjHuKRAOyNjkUSccC4Qc16+D1b2sSFNOY22surmQjG4AswAiwc2HUIhXAbFBOAm20Mo+6AG2rQ2u7yzwv5zPY8NBv9Mn1nm+cgITLGNUYHLzKeUJhtyGoB6JuawN5YjuyyjnGlH1q9YBuhWaE8lB4aF/h0Xag4Lpw07/0NVoJzFBR3FglyaA7LXFwjBcyY9LBXgZbXZWsRs2ZwGhihYFA8QBrFWQeLQxlCmBokFrtj1hjAPt7kMUByp7sNrBkgSH03hlS4GpyWywOHg/Gs30Kyab635Xz6kutD4ZGKzCGotC/w8G2559v8d9I95FAzzYiqxBZxGdCFxnGjhb1+XREo=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM5PR0502CA0009.eurprd05.prod.outlook.com (2603:10a6:203:91::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Sat, 2 May 2020 15:20:56 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5923cd46-1d45-4318-a9d8-08d7eeac69cd
-X-MS-TrafficTypeDiagnostic: VI1P190MB0527:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1P190MB052744B8FF59ECC76407E26E95A80@VI1P190MB0527.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 039178EF4A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZkmnTCiXv4ZpyrQ9WLip4ZZ7I+Nif8mYMf//nQuWyzL83m6/bOUx00pi39EAA9FNICWd42f8nfFFaYos9FUO/0VmZNf9Yc51+0J2/I/RQAY3NNQRRPz7daQx4QYIjCd0r6DMpkL+U0nvShI4e4et/jOpuwG1Twp2ZPkbOs9tBWhl9nRIwx/fN0YnAte1PnvCXOtPFM29RjQoVinnHFRqKR7I5D97Oyam8i4q9hCV7kLg/SGbw8fHv7ZexSgmKzN19tagY2W3YXfIegk6wOZXk8Z5W8h510aLh6xJq0S8fesLJCaAqSTFWewXXOxWy7Fqxuj4NOTirWqNu2Zt9xe1LVLkR9ovAuPK9UwBs5lQ8ZsVX7ajHSKS6RQ6gdPXEWechPGGeckb1YKm3avGz+WfrUiUF9b2lWNM/llnUEVKilUhGJsx/GdhEoqGp18u3IAs
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(366004)(136003)(346002)(396003)(376002)(39830400003)(26005)(6916009)(186003)(54906003)(66946007)(66476007)(16526019)(4326008)(107886003)(7696005)(52116002)(55016002)(316002)(36756003)(6666004)(8886007)(66556008)(1076003)(508600001)(86362001)(44832011)(33656002)(2616005)(2906002)(956004)(5660300002)(8936002)(8676002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: +CLS0h1vZRdYjsa9WFwltmVahZ5oTAJVL/DMGXWomo12nOPnJri91ZPh+lhwTJws3xo92t+SaSDoB1Yi3vC+g45mBs2Ch1Mci2EOs6zzR0WVcVe3u5BW8z50ymI65rkT7ZFmvuaL6+BsqGZFw1E96G7v5vETSNhTLMI83AxhehDryLn4MiRZn6/3iPbuXJCjdtIImLyFnPfqqpA+lvKCTRINUFina+jBrSu10SO3Dhd/V+QSRvQtg3AZFkvZhNCs68Cgia7E3CcEmZPyIbQc/sW/XBsbgs8F3IS05TrGuzr/xwmXLAQj0HaK3HiMEgyCZF6dRO8rusz8izYtE90FGf+XNjGuwSrglh3/p2WCPtfnFZDpRmBEPAiJ3jM2p/lybkpI2G+uNU34jJb1mQ1jRR7p+1Qpou4UqobnSWVL2SgPt+q23OWePqjZkUFb+DCvA1lYuC9b5xUXkfDWG19R30bLFC3UgNEBu2p1SUhWXPrucSdAePx+vy4mFSma7fExeiO4I4L0tx5ETPHVhNrgkYG1agCYvlHhE0dO37j7HdroDmTVTtBzK6QgFhCl9qUz/qpZE52LXRE7cRImJbwd5I4ykNsJtffIjp7EnKhQxwyJJg1Gm3/Ynxm93x92Pp66jTszbInuOJ2pLKxkWgv8ygicc1AY0mt+jHJ8T0mwnqQXJ6ZUrtc0oar4Jomnw7vTl4Kw0eHq1drQDMQ1yYDc4pNh65KexIfkuF8lnYg4gIrZHJ+Hc4EAyYNEZx5hjuLTwePiFdSIMj3pHvH3QTuCL9NNdzvVX7P9b6p3cnul35s=
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5923cd46-1d45-4318-a9d8-08d7eeac69cd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2020 15:20:58.7787
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85aceabc-e0ba-4b62-98fe-08d7eeacb7b9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2020 15:23:07.8545
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gwhQXvQCLejn5K1+6YP9pNl7xMOHIrdDkgpbrgbqJn7hnhCHIDf3D6KytYp7/MpmHEWV5S6BoC/RFavxthrxAnaaxp1WK3Pj4+T87z7ul6g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0527
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JY+WJWnFDrK2bZFiYKgcyL+Mq2DPTytrQZg/AvGaVtsYb1l8C/A6b5/4b8z+i/d9BchyCbsgn0nlqyNRADjfBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4591
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ido,
+=20
+>=20
+> For preparation of LU Dedicated buffer mode support on WriteBooster
+> feature, "index" parameter shall be added and allowed to be specified
+> by callers.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 
-On Thu, Mar 05, 2020 at 04:49:37PM +0200, Ido Schimmel wrote:
-> On Tue, Feb 25, 2020 at 04:30:54PM +0000, Vadym Kochan wrote:
-> > +int mvsw_pr_port_learning_set(struct mvsw_pr_port *port, bool learn)
-> > +{
-> > +	return mvsw_pr_hw_port_learning_set(port, learn);
-> > +}
-> > +
-> > +int mvsw_pr_port_flood_set(struct mvsw_pr_port *port, bool flood)
-> > +{
-> > +	return mvsw_pr_hw_port_flood_set(port, flood);
-> > +}
-> 
-> Flooding and learning are per-port attributes? Not per-{port, VLAN} ?
-> If so, you need to have various restrictions in the driver in case
-> someone configures multiple vlan devices on top of a port and enslaves
-> them to different bridges.
-> 
-> > +
-> > +
-> > +	INIT_LIST_HEAD(&port->vlans_list);
-> > +	port->pvid = MVSW_PR_DEFAULT_VID;
-> 
-> If you're using VID 1, then you need to make sure that user cannot
-> configure a VLAN device with with this VID. If possible, I suggest that
-> you use VID 4095, as it cannot be configured from user space.
-> 
-> I'm actually not entirely sure why you need a default VID.
-> 
- 
-> > +mvsw_pr_port_vlan_bridge_join(struct mvsw_pr_port_vlan *port_vlan,
-> > +			      struct mvsw_pr_bridge_port *br_port,
-> > +			      struct netlink_ext_ack *extack)
-> > +{
-> > +	struct mvsw_pr_port *port = port_vlan->mvsw_pr_port;
-> > +	struct mvsw_pr_bridge_vlan *br_vlan;
-> > +	u16 vid = port_vlan->vid;
-> > +	int err;
-> > +
-> > +	if (port_vlan->bridge_port)
-> > +		return 0;
-> > +
-> > +	err = mvsw_pr_port_flood_set(port, br_port->flags & BR_FLOOD);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err = mvsw_pr_port_learning_set(port, br_port->flags & BR_LEARNING);
-> > +	if (err)
-> > +		goto err_port_learning_set;
-> 
-> It seems that learning and flooding are not per-{port, VLAN} attributes,
-> so I'm not sure why you have this here.
-> 
-> The fact that you don't undo this in mvsw_pr_port_vlan_bridge_leave()
-> tells me it should not be here.
-> 
-
- > +
-> > +void
-> > +mvsw_pr_port_vlan_bridge_leave(struct mvsw_pr_port_vlan *port_vlan)
-> > +{
-> > +	struct mvsw_pr_port *port = port_vlan->mvsw_pr_port;
-> > +	struct mvsw_pr_bridge_vlan *br_vlan;
-> > +	struct mvsw_pr_bridge_port *br_port;
-> > +	int port_count;
-> > +	u16 vid = port_vlan->vid;
-> > +	bool last_port, last_vlan;
-> > +
-> > +	br_port = port_vlan->bridge_port;
-> > +	last_vlan = list_is_singular(&br_port->vlan_list);
-> > +	port_count =
-> > +	    mvsw_pr_bridge_vlan_port_count_get(br_port->bridge_device, vid);
-> > +	br_vlan = mvsw_pr_bridge_vlan_find(br_port, vid);
-> > +	last_port = port_count == 1;
-> > +	if (last_vlan) {
-> > +		mvsw_pr_fdb_flush_port(port, MVSW_PR_FDB_FLUSH_MODE_DYNAMIC);
-> > +	} else if (last_port) {
-> > +		mvsw_pr_fdb_flush_vlan(port->sw, vid,
-> > +				       MVSW_PR_FDB_FLUSH_MODE_DYNAMIC);
-> > +	} else {
-> > +		mvsw_pr_fdb_flush_port_vlan(port, vid,
-> > +					    MVSW_PR_FDB_FLUSH_MODE_DYNAMIC);
-> 
-> If you always flush based on {port, VID}, then why do you need the other
-> two?
-> 
-
- > +
-> > +static int mvsw_pr_port_obj_attr_set(struct net_device *dev,
-> > +				     const struct switchdev_attr *attr,
-> > +				     struct switchdev_trans *trans)
-> > +{
-> > +	int err = 0;
-> > +	struct mvsw_pr_port *port = netdev_priv(dev);
-> > +
-> > +	switch (attr->id) {
-> > +	case SWITCHDEV_ATTR_ID_PORT_STP_STATE:
-> > +		err = -EOPNOTSUPP;
-> 
-> You don't support STP?
-
-Not, yet. But it will be in the next submission or official patch.
-> 
-> > +		break;
- 
-> > +	default:
-> > +		kfree(switchdev_work);
-> > +		return NOTIFY_DONE;
-> > +	}
-> > +
-> > +	queue_work(mvsw_owq, &switchdev_work->work);
-> 
-> Once you defer the operation you cannot return an error, which is
-> problematic. Do you have a way to know if the operation will succeed or
-> not? That is, if the hardware has enough space for this new FDB entry?
-> 
-Right, fdb configuration on via fw is blocking operation I still need to
-think on it if it is possible by current design.
-
-
-> 
-> Why do you need both 'struct mvsw_pr_switchdev' and 'struct
-> mvsw_pr_bridge'? I think the second is enough. Also, I assume
-> 'switchdev' naming is inspired by mlxsw, but 'bridge' is better.
-> 
-I changed to use bridge for bridge object, because having bridge_device
-may confuse.
-
-Thank you for your comments they were very useful, sorry for so late
-answer, I decided to re-implement this version a bit. Regarding flooding
-and default vid I still need to check it.
-
-Regards,
-Vadym Kochan
+> ---
+>  drivers/scsi/ufs/ufs-sysfs.c |  2 +-
+>  drivers/scsi/ufs/ufshcd.c    | 28 +++++++++++++++-------------
+>  drivers/scsi/ufs/ufshcd.h    |  2 +-
+>  3 files changed, 17 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
+> index 93484408bc40..b86b6a40d7e6 100644
+> --- a/drivers/scsi/ufs/ufs-sysfs.c
+> +++ b/drivers/scsi/ufs/ufs-sysfs.c
+> @@ -631,7 +631,7 @@ static ssize_t _name##_show(struct device *dev,
+> \
+>         struct ufs_hba *hba =3D dev_get_drvdata(dev);                    =
+ \
+>         pm_runtime_get_sync(hba->dev);                                  \
+>         ret =3D ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,      =
+ \
+> -               QUERY_FLAG_IDN##_uname, &flag);                         \
+> +               QUERY_FLAG_IDN##_uname, 0, &flag);                      \
+Noticed that you are handling this in patch #3 - that's fine!
