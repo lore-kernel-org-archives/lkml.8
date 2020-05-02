@@ -2,95 +2,107 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCAEC47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63255C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2209E24956
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588427244;
-	bh=73TIjw9O6dK2fAlfdODYkB/VFm8uvKuFeW5svJp5uFA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rV+am5t80F2vtw35nzqb1FhNwnr5XqtHUocnOVfNJHRqBesVICQK25RgvcJA7UPBc
-	 8isxHc6O9r2C5UcReIP5bF+9BkA84JSj7UdV0vWpzpnwC2TxKIVDHpPCiNB71uCyeI
-	 uZwsRcrgphLlYEA5ad4xcDB+J0oKvSXPeyNxXo54=
+	by mail.kernel.org (Postfix) with ESMTP id 4C17924954
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgEBNrX (ORCPT
+        id S1728079AbgEBNtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 09:47:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbgEBNrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 09:47:23 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        Sat, 2 May 2020 09:49:33 -0400
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:60693 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbgEBNtd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 09:49:33 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A95112071E;
-        Sat,  2 May 2020 13:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588427242;
-        bh=73TIjw9O6dK2fAlfdODYkB/VFm8uvKuFeW5svJp5uFA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MC4T9yrNMAJ94kM2+SXcWdp6i2eKFYOzXDawiBEHaYHb2biJ9zHC2GbFujl40NAYf
-         5pVS6ClrEJRxbfN+WfsKaVEAKrj99uQ/bXcD/zBYaQ+LgxWhVQXqpH/5w2f9MxyKOB
-         EhdNt8MV9yshaw+3oRvYnAyj42Wi+lS4OFNVH0EU=
-Date:   Sat, 2 May 2020 09:47:21 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernelci@groups.io, Kevin Hilman <khilman@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, stable@vger.kernel.org
-Subject: Re: stable-rc/linux-5.4.y bisection: baseline.dmesg.alert on
- meson-g12a-x96-max
-Message-ID: <20200502134721.GH13035@sasha-vm>
-References: <5eabecbf.1c69fb81.2c617.628f@mx.google.com>
- <cc10812b-19bd-6bd1-75da-32082241640a@collabora.com>
- <20200501122536.GA38314@sirena.org.uk>
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 047A62800B48B;
+        Sat,  2 May 2020 15:49:28 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D0F212781E5; Sat,  2 May 2020 15:49:27 +0200 (CEST)
+Date:   Sat, 2 May 2020 15:49:27 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        andriy.shevchenko@linux.intel.com, matwey.kornilov@gmail.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        giulio.benetti@micronovasrl.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having
+ TEMT interrupt using em485
+Message-ID: <20200502134927.6sb7f3na3ff3rpoa@wunner.de>
+References: <20200325231422.1502366-1-heiko@sntech.de>
+ <20200325231422.1502366-5-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200501122536.GA38314@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200325231422.1502366-5-heiko@sntech.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 01:25:36PM +0100, Mark Brown wrote:
->On Fri, May 01, 2020 at 12:57:27PM +0100, Guillaume Tucker wrote:
->
->> The call stack is not the same as in the commit message found by
->> the bisection, so maybe it only fixed part of the problem:
->
->No, it is a backport which was fixing an issue that wasn't present in
->v5.4.
->
->> >   Result:     09f4294793bd3 ASoC: meson: axg-card: fix codec-to-codec link setup
->
->As I said in reply to the AUTOSEL mail:
->
->| > Since the addition of commit 9b5db059366a ("ASoC: soc-pcm: dpcm: Only allow
->| > playback/capture if supported"), meson-axg cards which have codec-to-codec
->| > links fail to init and Oops:
->
->| This clearly describes the issue as only being present after the above
->| commit which is not in v5.6.
->
->Probably best that this not be backported.
+On Thu, Mar 26, 2020 at 12:14:19AM +0100, Heiko Stuebner wrote:
+> Some 8250 ports have a TEMT interrupt but it's not a part of the 8250
+> standard, instead only available on some implementations.
+> 
+> The current em485 implementation does not work on ports without it.
+> The only chance to make it work is to loop-read on LSR register.
+> 
+> So add UART_CAP_TEMT to mark 8250 uarts having this interrupt,
+> update all current em485 users with that capability and make
+> the stop_tx function loop-read on uarts not having it.
 
-Hrm... But I never queued that commit... I wonder what's up.
+Just to get a better understanding:  According to the Dw_apb_uart_db.pdf
+databook I've found, the UART does have a "THR empty" interrupt.  So you
+get an interrupt once the Transmit Holding Register (and by consequence
+the FIFO) has been drained.  Then what do you need a TEMT interrupt for?
+Why is the THR interrupt not sufficient?
 
--- 
+
+> @@ -1529,11 +1535,22 @@ static inline void __stop_tx(struct uart_8250_port *p)
+>  		/*
+>  		 * To provide required timeing and allow FIFO transfer,
+>  		 * __stop_tx_rs485() must be called only when both FIFO and
+> -		 * shift register are empty. It is for device driver to enable
+> -		 * interrupt on TEMT.
+> +		 * shift register are empty. If 8250 port supports it,
+> +		 * it is for device driver to enable interrupt on TEMT.
+> +		 * Otherwise must loop-read until TEMT and THRE flags are set.
+>  		 */
+> -		if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
+> -			return;
+> +		if (p->capabilities & UART_CAP_TEMT) {
+> +			if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
+> +				return;
+> +		} else {
+> +			int lsr;
+> +
+> +			if (readx_poll_timeout(__get_lsr, p, lsr,
+> +					(lsr & BOTH_EMPTY) == BOTH_EMPTY,
+> +					0, 10000) < 0)
+> +				pr_warn("%s: timeout waiting for fifos to empty\n",
+> +					p->port.name);
+> +		}
+
+Do you actually need to check for the timeout?  How could this happen?
+Only if some other part of the driver would disable the transmitter
+I guess, which would be a bug.
+
+Also, note that __stop_tx() may be called from hardirq context via
+serial8250_tx_chars().  If the baudrate is low, you may spin for a
+fairly long time in IRQ context.  E.g. with 9600 8N1, it takes about
+1 msec for one char to transmit.
+
 Thanks,
-Sasha
+
+Lukas
