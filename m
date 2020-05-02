@@ -2,125 +2,169 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCB5C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E17C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9684620757
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE7420757
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4TQAU3l"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Tw+Y4T/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgEBTbv (ORCPT
+        id S1728493AbgEBTke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 15:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728488AbgEBTbr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 15:31:47 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9366DC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 12:31:47 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ms17so1693316pjb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 12:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TIL2KbMxRtnATvJqUzPTFDCNwLrdBpSmmIc1wV1dEHA=;
-        b=b4TQAU3lmiD8PQG+dwxpbXSHwlgPMje9VEnlG+Q/yWnaPXzbs0+oWvYmWyh9wIevPh
-         hkznabwuMxJkrTsq0vpbyApI+jsejbYLhfj4JnIG/l7FH5aS1bn+B0ypxAIZ+LZs4IP/
-         sh0wlwEQJ67L/Jp7OFw4xghqClyuUOd6sGPKj1SIAinSKZaANfpHRS1eELWe/DZ3iTWk
-         nnC6CNSBJ2Le/CYvy1FQPX/Dp3eudXxq1UqepnRbMvp5e/9MjDPJOlACjGrBZ3nT/rvi
-         u58TJt7z1vBVnh1wXZAHG8wI7Xij5SfUCBzKeP9XDiMkYE1vduykLcjPOu0L6DDTZO6p
-         GARg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TIL2KbMxRtnATvJqUzPTFDCNwLrdBpSmmIc1wV1dEHA=;
-        b=YE4bYthN5yBez3CSBB/8FVMrY/UfH3XnnRzTivzLddJb1VxEgQYgsqVFOnt0SjcQ5/
-         80NZIkfYVC79QExDOSIETZ0dxxZiJqKR0wOyFYrmIZgBXaYOjI8amT8CICZ/hSvpaZMz
-         dA7kKfCgMx8YEvHt/rqc7ZmPZ3US3uWc8DgglviERWaviaNm8GBlDbHsOghxMarXJjBh
-         jW5rESzSxah25I7QoeyXz7GHkQXJ1eyASOFIZV21vgLJyPWyQKJvz9COgto2ibwwMy2A
-         6hN1W4Uz3jpf0YVLjixGqRZ8vC5QEag7EIId/vh5Si/ILX2X5EN5xX5fTudsiLV+UE7N
-         2YnQ==
-X-Gm-Message-State: AGi0PuaNHOYY0V8tR+jXBNMr9C4YeBufMaBm+TOsxiSZ9m5cMz0LJkq1
-        FLBRqmiVjwV1tNTti1RZgrA=
-X-Google-Smtp-Source: APiQypLfNhHJHoTSTVVXkhevMfz86rU1oxpinZmTVTbPaayaoFIvld11z1VAQAQw+UFyVHFSEcorpw==
-X-Received: by 2002:a17:90b:8c4:: with SMTP id ds4mr7545166pjb.133.1588447907181;
-        Sat, 02 May 2020 12:31:47 -0700 (PDT)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id 138sm5034358pfz.31.2020.05.02.12.31.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 12:31:46 -0700 (PDT)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Machek <pavel@denx.de>,
-        Allison Randal <allison@lohutok.net>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 2/2] ALSA: line6: Add poll callback for hwdep
-Date:   Sat,  2 May 2020 12:31:20 -0700
-Message-Id: <20200502193120.79115-3-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200502193120.79115-1-anarsoul@gmail.com>
-References: <20200502193120.79115-1-anarsoul@gmail.com>
+        Sat, 2 May 2020 15:40:34 -0400
+Received: from mout.web.de ([212.227.15.3]:60677 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728178AbgEBTkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 15:40:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588448425;
+        bh=YOcanYR+jElNG6VYugS28YtSJKtjxXpS93yz0Becd20=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
+        b=Tw+Y4T/sZ/m57svUJ6z7g/VpeZ5nTImIJYFkt+G2KQKCiCYujYdHcgQtSI/tJ5sku
+         gJCOkldXbCfbbvKwIPvM/hmr8H/34n9ti1DywHjGMZuHvGxKsIoIFOA/vcMCjIQGoo
+         kVOwD3wqd6bFDcZdFTSgSvvB9ow8iVlNiJyJWza0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.93.244]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LzVMw-1j9Mhn2O6k-014oXm; Sat, 02
+ May 2020 21:40:25 +0200
+Subject: Re: [PATCH v4] checkpatch: add support to check 'Fixes:' tag format
+To:     Wang YanQing <udknight@gmail.com>, Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200502185421.GB9082@udknight>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+Message-ID: <6a3a6f8d-e8be-0002-780d-1991f6152c8f@web.de>
+Date:   Sat, 2 May 2020 21:40:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200502185421.GB9082@udknight>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:H8BepbZKMKuqgCv2jEt7g1B/6SnQs6Ai/yPdqYK94+zwQROz/3W
+ /zeqLP82rZ8bhSdXpxN7cgyCXkK820KrLlkAXnZOPIqvkze0sXU8BJXPEEG61BcHYkOvXhk
+ kXAa1TMrK0lA6ZutOSxNh477GStcI33820rRBL2LrVdHftbJqprgDKKI26KK9eubVSc9/LZ
+ AL/Os5EX0HnL96arRiyUg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UMwvEC3FWhM=:KKr2Wg7MiCmKS/D4eBSrze
+ ZBiA4EE1xW204QH62PK0zQg3E3Jw4naHUaM0rrDD5l96UgzUaGgc3dOUVZgmWKt1okjJeW8Z7
+ OiEAEEuFW/KArUoOk+iA9bYAr4jZZZcrPOYCI+Fbue0maVnrBFupGs9DmKxp0SU977EmbqztX
+ o/8Lq1Ood9+7q50tLyiAMNkrSu+1Qau5+cJXKkipFrKFS/YlezMcGhduIawalhQSpvLyi3caj
+ 8Ux5Jwbctl8t5SsOlG1j6WO8s6RIfezBS3X80P7WVeFmX7mIvWGZ3MJARBfkgBb7nXo6vkWme
+ sh0LatYVjyjtJWMcctS4rDjRRbljazGYApcDypC8KwRvidVhSsLJmv9jbQEFB4XEK0UA+wPuh
+ WZ7Su+6AU8BZGqDMvwNKp3FF2Eq60hn4oSqBK58CzIDTw/PXwiVGCg3omomxYe2kv1vFPbKba
+ QL+sNbj2xox/mSWxAyC7Uyk7j7s9wIpYKJMu9f2mCunW+Ia0s2v7YgjSqQOeI02KyWH19dR4z
+ tJz8/FG5cGEjKhrUkPLBdddefhQcIi8tnArABz9PO7FE8U0HaLmBZvok1LtotK3IZ6TO8IVO5
+ 23tg67RIYeiUbLTip+ya1ss+xQsZIf+FQjd5ELL8bRpPqdPfWKuGJJZBLS8pJFUKwZ6xVIzRQ
+ d4k3dzWSc7tF80ABC6CxFzTVOr8ghxAVCtKZqTNvdt5eC96kLVd6FfKsX2Ljn9kgLLwKY/ZKI
+ 7G5B1JkoMbl4IH1UVc3lOZnxwS/GcyFMZEhcF82e7Uwnxi+xMCQhsHSlbrTiRpaBkZ6ekU22a
+ kCa19ijgbvgozXbtX3hgZzFrGJyJMf/5yW6suwOrehRCDqCPL+QYbhyjD4Z3IiHAOy8lFc/CZ
+ le1nID8Do8/ZWawXgy7bgqATM4G6IQOLb3LQ48hSWwz7GcnrwdSFiW9VUl4NZoSbRdZBFoBi4
+ g1qT/0t4uyIAGBOOUFW0E33g9qBKGYCF4MRCDyDn9kHEF/S2v0whuv22FukkpeTEj7Ge/h5qR
+ zdJgTOK4If1nS3hSq7cluKhJ02x3Xf69Rv1MeoaZWUdR7b0lGu1yYOSXlb6sUsOIAkFToaRy7
+ /3lnG+HIXy+AuPGZeda4jmHaRq+syw8pHMi9b7WNzB2Sw5utz9zGbE6SYSWHeHPFKMxJQcfZ4
+ 1PQnnUmD8POvP1URc65Fj7rwRdvZ73YDEYUmrwvrpO4HIEqY7wUmH8SJWPWY4fGBa10KBYXUM
+ SauE68y15kBQXMs5C
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least POD HD500 uses message-based communication, both sides can
-send messages. Add poll callback so application can wait for device
-messages without using busy loop.
+> The check doesn't support below formats and it will emit diagnostics inf=
+o for them:
+=E2=80=A6
+> Fixes: ba35f8588f47 (=E2=80=9Cipvlan: Defer multicast / broadcast proces=
+sing to a work-queue=E2=80=9D)
+=E2=80=A6
+> Fixes: 03f6fc6de919 ('ASoC: rt5682: Add the soundwire support')
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- sound/usb/line6/driver.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Will the tolerance (and support) grow for such quotation character alterna=
+tives?
 
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index 86adf87d57f0..7629116f570e 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -630,11 +630,27 @@ line6_hwdep_write(struct snd_hwdep *hwdep, const char __user *data, long count,
- 	return rv;
- }
- 
-+static __poll_t
-+line6_hwdep_poll(struct snd_hwdep *hwdep, struct file *file, poll_table *wait)
-+{
-+	__poll_t rv;
-+	struct usb_line6 *line6 = hwdep->private_data;
-+
-+	poll_wait(file, &line6->messages.wait_queue, wait);
-+
-+	mutex_lock(&line6->messages.read_lock);
-+	rv = kfifo_len(&line6->messages.fifo) == 0 ? 0 : EPOLLIN | EPOLLRDNORM;
-+	mutex_unlock(&line6->messages.read_lock);
-+
-+	return rv;
-+}
-+
- static const struct snd_hwdep_ops hwdep_ops = {
- 	.open    = line6_hwdep_open,
- 	.release = line6_hwdep_release,
- 	.read    = line6_hwdep_read,
- 	.write   = line6_hwdep_write,
-+	.poll    = line6_hwdep_poll,
- };
- 
- /* Insert into circular buffer */
--- 
-2.26.2
 
+> Note: this patch also fixes double quotation mark issue for normal git
+>       commit description, and now it supports double quotation mark in
+>       title line, for example:
+>       Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by defa=
+ult
+>       when checking usable channels"")
+
+Do you care to achieve a safe data format description also for this use ca=
+se?
+
+
+> Note: this patch also adds diagnostics info support for normal git commi=
+t
+>       description format check.
+
+Does this information indicate a need to split possible changes into
+separate update steps?
+
+
+> +				$diagnostics .=3D "Missing a pair of parentheses '()' or a pair of =
+double quotation marks (\"\").\n";
+
+Can such a message trigger any more thoughts and development ideas?
+
+
+> +					$diagnostics .=3D "The title is too abbreviated, at least half of =
+orignial commit title is necessary.\n";
+
+* Please avoid a typo in this message.
+
+* Which formula do you propose for the length calculation?
+
+Regards,
+Markus
