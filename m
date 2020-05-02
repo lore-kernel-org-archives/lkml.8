@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6CEC4725A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9256C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A982184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3E02073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MTDLkBRW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XtOhZSGV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgEBCcT (ORCPT
+        id S1727113AbgEBCcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 1 May 2020 22:32:19 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:11939 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726439AbgEBCcS (ORCPT
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13168 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726762AbgEBCcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:32:18 -0400
+        Fri, 1 May 2020 22:32:19 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
  s=smtp; t=1588386738; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=XRUBzTkZMzt3B80yri5EKdFwcdzexhuzoTj3qdX2z3s=; b=MTDLkBRWnZWa104kWJZQegXXCOo/RA9fQ5nw0SU/TKmGT1yyISqbplb5V+pVGrFQAZsIjdg4
- k9COP1yr3UwuAti/teI+CiUi/kpG7MMi4d6v/OmJ7CdTPz9bm2mLEVsULo8U09z9pj/YoeTL
- cwVebjLDjVQQSgoI+CYlPpIFNv8=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=7hzUwGmWRl05YfEuRakRYnz0izFE+MkI9+t81/uGOUo=; b=XtOhZSGV8I/cuIeCvn5toOcq1Xwb57civ1RrAcNcPqaeLvbrWpbHtIS5RVqJ1kn5jnEmC3Ac
+ cFwEhihsKuzO5GBFABXEmTz7GYO6c+gzvGLSODxRplhy78SdXSWHgpkH+2/M003xE7iKsdmg
+ tceikx9Yjw4O+AYt9He883XSlDM=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eacdbb0.7f0f31604298-smtp-out-n01;
- Sat, 02 May 2020 02:32:16 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eacdbb1.7f2b80940928-smtp-out-n04;
+ Sat, 02 May 2020 02:32:17 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 026EBC4478C; Sat,  2 May 2020 02:32:16 +0000 (UTC)
+        id E99CDC433D2; Sat,  2 May 2020 02:32:16 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA895C44788;
-        Sat,  2 May 2020 02:32:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA895C44788
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D954C43637;
+        Sat,  2 May 2020 02:32:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D954C43637
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,9 +50,9 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 3/8] bus: mhi: core: Add range check for channel id received in event ring
-Date:   Fri,  1 May 2020 19:32:00 -0700
-Message-Id: <1588386725-1165-4-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v4 6/8] bus: mhi: core: Return appropriate error codes for AMSS load failure
+Date:   Fri,  1 May 2020 19:32:03 -0700
+Message-Id: <1588386725-1165-7-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
 References: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
@@ -61,61 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hemant Kumar <hemantk@codeaurora.org>
+When loading AMSS firmware using BHIe protocol, return -ETIMEDOUT if no
+response is received within the timeout or return -EIO in case of a
+protocol returned failure or an MHI error state.
 
-MHI data completion handler function reads channel id from event
-ring element. Value is under the control of MHI devices and can be
-any value between 0 and 255. In order to prevent out of bound access
-add a bound check against the max channel supported by controller
-and skip processing of that event ring element.
-
-Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
 Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/bus/mhi/core/main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/bus/mhi/core/boot.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 605640c..e60ab21 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -776,6 +776,9 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
- 		case MHI_PKT_TYPE_TX_EVENT:
- 			chan = MHI_TRE_GET_EV_CHID(local_rp);
- 			mhi_chan = &mhi_cntrl->mhi_chan[chan];
-+			if (WARN_ON(chan >= mhi_cntrl->max_chan))
-+				goto next_event;
-+
- 			parse_xfer_event(mhi_cntrl, local_rp, mhi_chan);
- 			event_quota--;
- 			break;
-@@ -784,6 +787,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
- 			break;
- 		}
+diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+index 17c636b..05627fe 100644
+--- a/drivers/bus/mhi/core/boot.c
++++ b/drivers/bus/mhi/core/boot.c
+@@ -176,6 +176,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 	void __iomem *base = mhi_cntrl->bhie;
+ 	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
+ 	u32 tx_status, sequence_id;
++	int ret;
  
-+next_event:
- 		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
- 		local_rp = ev_ring->rp;
- 		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
-@@ -820,6 +824,9 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
- 		enum mhi_pkt_type type = MHI_TRE_GET_EV_TYPE(local_rp);
+ 	read_lock_bh(pm_lock);
+ 	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+@@ -198,19 +199,19 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
+ 	read_unlock_bh(pm_lock);
  
- 		chan = MHI_TRE_GET_EV_CHID(local_rp);
-+		if (WARN_ON(chan >= mhi_cntrl->max_chan))
-+			goto next_event;
-+
- 		mhi_chan = &mhi_cntrl->mhi_chan[chan];
+ 	/* Wait for the image download to complete */
+-	wait_event_timeout(mhi_cntrl->state_event,
+-			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
+-			   mhi_read_reg_field(mhi_cntrl, base,
+-					      BHIE_TXVECSTATUS_OFFS,
+-					      BHIE_TXVECSTATUS_STATUS_BMSK,
+-					      BHIE_TXVECSTATUS_STATUS_SHFT,
+-					      &tx_status) || tx_status,
+-			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
+-
+-	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))
++	ret = wait_event_timeout(mhi_cntrl->state_event,
++				 MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
++				 mhi_read_reg_field(mhi_cntrl, base,
++						    BHIE_TXVECSTATUS_OFFS,
++						   BHIE_TXVECSTATUS_STATUS_BMSK,
++						   BHIE_TXVECSTATUS_STATUS_SHFT,
++						    &tx_status) || tx_status,
++				 msecs_to_jiffies(mhi_cntrl->timeout_ms));
++	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) ||
++	    tx_status != BHIE_TXVECSTATUS_STATUS_XFER_COMPL)
+ 		return -EIO;
  
- 		if (likely(type == MHI_PKT_TYPE_TX_EVENT)) {
-@@ -830,6 +837,7 @@ int mhi_process_data_event_ring(struct mhi_controller *mhi_cntrl,
- 			event_quota--;
- 		}
+-	return (tx_status == BHIE_TXVECSTATUS_STATUS_XFER_COMPL) ? 0 : -EIO;
++	return (!ret) ? -ETIMEDOUT : 0;
+ }
  
-+next_event:
- 		mhi_recycle_ev_ring_element(mhi_cntrl, ev_ring);
- 		local_rp = ev_ring->rp;
- 		dev_rp = mhi_to_virtual(ev_ring, er_ctxt->rp);
+ static int mhi_fw_load_sbl(struct mhi_controller *mhi_cntrl,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
