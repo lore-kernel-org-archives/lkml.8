@@ -2,97 +2,110 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E92C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663BCC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A133420787
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:30:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oyeay6rF"
+	by mail.kernel.org (Postfix) with ESMTP id 4747520787
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgEBEa1 (ORCPT
+        id S1727118AbgEBEcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 00:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726058AbgEBEa0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 00:30:26 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9BCC061A0C
-        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 21:30:26 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 7so5085694pjo.0
-        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 21:30:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vpS36TylFqj6jrIVdVIL/ErFQYh/QXV+DFzSdPvVBVM=;
-        b=Oyeay6rF7tCBpvYi5NEt0i6XoQ7t1bedF7CA6WfGvYWUoFTcsrp+AV+rukIb7c8Cje
-         ao3ivCHvbqHi5/vxU1bROw6z39ep/3pX3xZH/eL8f4VzQGeBpEfWE4ctxP9LuuR+nRDR
-         03wtSUNe4E6/0TJ+7MM0jhzf9m9oog9UIDOIdSxUaAnLatvaPIcyBkFF1K27jRY26CtW
-         mrnm0oPga8GpvstXIcFmySfu9+TfVMNeeiYpCQjjbCD4uUXWReL2NrMEkMLozRWWdb0C
-         tkwWSLko2jGEOpqfiv9KVF8IKgMcg8XfNrzFCCkbfzhoToLwTiRRTo27vVqDOUBWFbo4
-         2afQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vpS36TylFqj6jrIVdVIL/ErFQYh/QXV+DFzSdPvVBVM=;
-        b=dbEgSsEmrMZVLRX+WUNUlUYBOXBuk54TH83/qsyiAbyWsqF4kMj7XYcphkNFT2FPEY
-         ZMs29qdaiUiv7jaYUKC7IXd8cC7JrfJGiFHG7krEQKdYasjRn54xJFNi9aJk4NusOwE1
-         kQVrU3AOigaTvYUmg2G/uw6RaIuBTV7voP8JdmrhrZxtHa4mHuTYzun6LYiXmb0y87th
-         EPzsaszpgmwgjvNusPMhX9ReDwyS7hyT/DZurBCnVuDNa/m6T2ng4hLTvUt3p9Y3wW79
-         g9ViwNtiAigElZLQqYuTqKL+IypIGpUG35YCZg8tillB+MZ5ZWMAUon2FoL38/GVtsGq
-         2vrg==
-X-Gm-Message-State: AGi0PuY4QXBLh9GkyW1WqeL5tV65iMTKbulRW8sLoOEzRbrdAWDSWL6t
-        V9ppt8PR1Np895ikAqNA1YIk3ylR
-X-Google-Smtp-Source: APiQypJ50mZfXiS8jB3Qg9LIKuQ8dbDrDNeN6Gl5atEhQk55bCHfpPsCa4MaWDcabTHVIEtu3if/qw==
-X-Received: by 2002:a17:90a:1b67:: with SMTP id q94mr3666899pjq.84.1588393826471;
-        Fri, 01 May 2020 21:30:26 -0700 (PDT)
-Received: from localhost.localdomain (unknown-224-80.windriver.com. [147.11.224.80])
-        by smtp.gmail.com with ESMTPSA id i128sm3516363pfc.149.2020.05.01.21.30.25
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 01 May 2020 21:30:26 -0700 (PDT)
-From:   Bin Meng <bmeng.cn@gmail.com>
-To:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Cc:     Bin Meng <bin.meng@windriver.com>
-Subject: [PATCH] m68k: Drop CONFIG_MTD_M25P80 in stmark2_defconfig
-Date:   Fri,  1 May 2020 21:30:21 -0700
-Message-Id: <1588393821-31886-1-git-send-email-bmeng.cn@gmail.com>
-X-Mailer: git-send-email 1.7.1
+        Sat, 2 May 2020 00:32:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55783 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgEBEcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 00:32:36 -0400
+IronPort-SDR: dPOrQT68hPzbRpu4BLjy1w42EalcLWmDr0uGylPQ9ptmWRHkKpwUkVPMh7ttfj7f9sSOQuthHw
+ 8JxfQaGRTwrw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:35 -0700
+IronPort-SDR: WSlDYZJPxF5NPd5/RIFQn10i2FBPG5MhLGuRPGyGB23uEj7G3/hwSgRpmNSE65kVC+redTE8XE
+ AIi9MovEM9nA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
+   d="scan'208";a="433516107"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga005.jf.intel.com with ESMTP; 01 May 2020 21:32:35 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] KVM: x86: Misc anti-retpoline optimizations
+Date:   Fri,  1 May 2020 21:32:24 -0700
+Message-Id: <20200502043234.12481-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bin Meng <bin.meng@windriver.com>
+A smattering of optimizations geared toward avoiding retpolines, though
+IMO most of the patches are worthwhile changes irrespective of retpolines.
+I can split this up into separate patches if desired, outside of the
+obvious combos there are no dependencies.
 
-Drop CONFIG_MTD_M25P80 that was removed in
-commit b35b9a10362d ("mtd: spi-nor: Move m25p80 code in spi-nor.c")
+I was mainly coming at this from a nVMX angle.  On a Haswell, this reduces
+the best case latency for a nested VMX roundtrip by ~750 cycles, though I
+doubt that much benefit will be realized in practice.
 
-Signed-off-by: Bin Meng <bin.meng@windriver.com>
----
 
- arch/m68k/configs/stmark2_defconfig | 1 -
- 1 file changed, 1 deletion(-)
+The CR0 and CR4 caching changes in particular are keepers, if only because
+they get rid of the awful cache vs. decache naming.  And the CR4 change
+can eliminate multiple of VMREADs in the nested VMX paths.
 
-diff --git a/arch/m68k/configs/stmark2_defconfig b/arch/m68k/configs/stmark2_defconfig
-index 27fa946..2b746f5 100644
---- a/arch/m68k/configs/stmark2_defconfig
-+++ b/arch/m68k/configs/stmark2_defconfig
-@@ -48,7 +48,6 @@ CONFIG_MTD_CFI_STAA=y
- CONFIG_MTD_ROM=y
- CONFIG_MTD_COMPLEX_MAPPINGS=y
- CONFIG_MTD_PLATRAM=y
--CONFIG_MTD_M25P80=y
- CONFIG_MTD_SPI_NOR=y
- # CONFIG_INPUT_KEYBOARD is not set
- # CONFIG_INPUT_MOUSE is not set
+Ditto for the CR3 validation patch; it's arguably more readable and can
+avoid a VMREAD.
+
+I like the L1 TSC offset patch because VMX and SVM have inverted logic for
+how they track the L1 offset, and because math is hard.
+
+I think I like the TDP level change even if retpolines didn't exist?  The
+nested EPT behavior is a bit scary, but it was already scary, this just
+makes it more obvious.
+
+The RIP/RSP accessors are definitely obsoleted by static calls, but IMO
+the noise is worth the benefit unless static calls are imminent.
+
+The DR6 change is gratuitous, though I do like not having to dive into the
+VMX code when I inevitably forget the VMX implementations are nops.
+
+Sean Christopherson (10):
+  KVM: x86: Save L1 TSC offset in 'struct kvm_vcpu_arch'
+  KVM: nVMX: Unconditionally validate CR3 during nested transitions
+  KVM: x86: Make kvm_x86_ops' {g,s}et_dr6() hooks optional
+  KVM: x86: Split guts of kvm_update_dr7() to separate helper
+  KVM: nVMX: Avoid retpoline when writing DR7 during nested transitions
+  KVM: VMX: Add proper cache tracking for CR4
+  KVM: VMX: Add proper cache tracking for CR0
+  KVM: VMX: Add anti-retpoline accessors for RIP and RSP
+  KVM: VMX: Move nested EPT out of kvm_x86_ops.get_tdp_level() hook
+  KVM: x86/mmu: Capture TDP level when updating CPUID
+
+ arch/x86/include/asm/kvm_host.h |  7 +--
+ arch/x86/kvm/cpuid.c            |  3 +-
+ arch/x86/kvm/kvm_cache_regs.h   | 10 +++--
+ arch/x86/kvm/mmu/mmu.c          |  6 +--
+ arch/x86/kvm/svm/nested.c       |  2 +-
+ arch/x86/kvm/svm/svm.c          | 21 ---------
+ arch/x86/kvm/vmx/nested.c       | 49 +++++++++++----------
+ arch/x86/kvm/vmx/vmx.c          | 77 +++++++++++++--------------------
+ arch/x86/kvm/vmx/vmx.h          | 30 +++++++++++++
+ arch/x86/kvm/x86.c              | 26 ++++-------
+ arch/x86/kvm/x86.h              | 14 ++++++
+ 11 files changed, 125 insertions(+), 120 deletions(-)
+
 -- 
-2.7.4
+2.26.0
 
