@@ -2,160 +2,122 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70191C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68902C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514232073E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A29B2073E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XrbYVo39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgEBCeE (ORCPT
+        id S1726759AbgEBCjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:34:04 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51886 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgEBCeE (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:34:04 -0400
-IronPort-SDR: 9+p19p9ZVpTObSwemzvG5I3duPX6taHZ+9+lmOW5pQmb+wPl4k3wpNa5tqBSKcHil3RsA7v7Gg
- qe/2ZBiN0b0g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 19:34:03 -0700
-IronPort-SDR: zYreQnD2oby990K0tTL8YxOo9qOa6YDLE6dLYNe0meZliS8VUY1DaLC8Ek1GKpuIRu4oQ3Cje4
- 3AW1fPifOjQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="368598988"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.249.169.62]) ([10.249.169.62])
-  by fmsmga001.fm.intel.com with ESMTP; 01 May 2020 19:34:00 -0700
-Subject: Re: [PATCH] perf evsel: Get group fd from CPU0 for system wide event
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200430013451.17196-1-yao.jin@linux.intel.com>
- <20200501102337.GA1761222@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <b799b66a-42aa-6c55-647e-7b718473632a@linux.intel.com>
-Date:   Sat, 2 May 2020 10:33:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Fri, 1 May 2020 22:39:16 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:19348 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726437AbgEBCjP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 22:39:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588387155; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=yg4vNvD6TR74+JEaI5qINyXnJgDOYi1EBUxzQjIX5ug=;
+ b=XrbYVo39aV/4okRThOBzzG14C6E1qpEy+wHCyeG6u7A3oAOtd/g0cc1TMadxxxmP3mUlm0QG
+ 2x1JxFRsacuSYwphnlt6qEjLNkwobVGQUeRELe8L9Pii94nFC3x+LEcBjqEtVr75dqvoz/Dw
+ KDMSz6+0PIzIKUr8MyfeDJF7sGw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eacdd3e.7f0d22a59768-smtp-out-n03;
+ Sat, 02 May 2020 02:38:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 66F67C433CB; Sat,  2 May 2020 02:38:53 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9A3BC433F2;
+        Sat,  2 May 2020 02:38:52 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200501102337.GA1761222@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Fri, 01 May 2020 19:38:52 -0700
+From:   bbhatt@codeaurora.org
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mani@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hemantk@codeaurora.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v3 6/9] bus: mhi: core: WARN_ON for malformed vector table
+In-Reply-To: <15f88b7a-a3cb-ac19-bffe-247f2e99d894@codeaurora.org>
+References: <1588193551-31439-1-git-send-email-bbhatt@codeaurora.org>
+ <1588193551-31439-7-git-send-email-bbhatt@codeaurora.org>
+ <15f88b7a-a3cb-ac19-bffe-247f2e99d894@codeaurora.org>
+Message-ID: <4d26ba11678e0302a0e6199b2b393cc2@codeaurora.org>
+X-Sender: bbhatt@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
-
-On 5/1/2020 6:23 PM, Jiri Olsa wrote:
-> On Thu, Apr 30, 2020 at 09:34:51AM +0800, Jin Yao wrote:
->> A metric may consist of system wide event and non system-wide event.
->> The event group leader may be the system wide event.
->>
->> For example, the metric "C2_Pkg_Residency" consists of
->> "cstate_pkg/c2-residency" and "msr/tsc". The former counts on the first
->> CPU of socket (tagged system-wide) and the latter is per CPU.
->>
->> But "C2_Pkg_Residency" hits assertion failure on cascadelakex.
->>
->>   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
->>   perf: util/evsel.c:1464: get_group_fd: Assertion `!(fd == -1)' failed.
->>   Aborted
->>
->> get_group_fd(evsel, cpu, thread)
->> {
->> 	leader = evsel->leader;
->> 	fd = FD(leader, cpu, thread);
->> 	BUG_ON(fd == -1);
->> }
->>
->> Considering this case, leader is "cstate_pkg/c2-residency", evsel is
->> "msr/tsc" and cpu is 1. Because "cstate_pkg/c2-residency" is a system-wide
->> event and it's processed on CPU0, so FD(leader, 1, thread) must return an
->> invalid fd, then BUG_ON() may be triggered.
->>
->> This patch gets group fd from CPU0 for system wide event if
->> FD(leader, cpu, thread) returns invalid fd.
->>
->> With this patch,
->>
->>   # perf stat -M "C2_Pkg_Residency" -a -- sleep 1
->>
->>   Performance counter stats for 'system wide':
->>
->>          1000850802      cstate_pkg/c2-residency/  #      0.5 C2_Pkg_Residency
->>        201446161592      msr/tsc/
->>
->>         1.010637051 seconds time elapsed
->>
->> Fixes: 6a4bb04caacc ("perf tools: Enable grouping logic for parsed events")
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+On 2020-04-30 08:02, Jeffrey Hugo wrote:
+> On 4/29/2020 2:52 PM, Bhaumik Bhatt wrote:
+>> Add a bounds check in the firmware copy routine to exit if a malformed
+>> vector table is found while attempting to load the firmware in to the
+>> BHIe vector table.
+>> 
+>> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 >> ---
->>   tools/perf/util/evsel.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 6a571d322bb2..cd6470f63d6f 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -1461,6 +1461,9 @@ static int get_group_fd(struct evsel *evsel, int cpu, int thread)
->>   	BUG_ON(!leader->core.fd);
->>   
->>   	fd = FD(leader, cpu, thread);
->> +	if (fd == -1 && leader->core.system_wide)
+>>   drivers/bus/mhi/core/boot.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+>> index 17c636b..bc70edc 100644
+>> --- a/drivers/bus/mhi/core/boot.c
+>> +++ b/drivers/bus/mhi/core/boot.c
+>> @@ -362,8 +362,14 @@ static void mhi_firmware_copy(struct 
+>> mhi_controller *mhi_cntrl,
+>>   	int i = 0;
+>>   	struct mhi_buf *mhi_buf = img_info->mhi_buf;
+>>   	struct bhi_vec_entry *bhi_vec = img_info->bhi_vec;
+>> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>>     	while (remainder) {
+>> +		if (WARN_ON(i >= img_info->entries)) {
+>> +			dev_err(dev, "Malformed vector table\n");
 > 
-> fd does not need to be -1 in here.. in my setup cstate_pkg/c2-residency/
-> has cpumask 0, so other cpus never get open and are 0, and the whole thing
-> ends up with:
+> I feel like this message needs more detail.  At a minimum, I think it
+> should indicate what vector table (BHIe).  I think if you can identify
+> what file, etc the the glitch is in, that would be better.  Maybe some
+> detail about i and img_info->entries.
 > 
-> 	sys_perf_event_open: pid -1  cpu 1  group_fd 0  flags 0
-> 	sys_perf_event_open failed, error -9
-> 
-> I actualy thought we put -1 to fd array but couldn't find it.. perhaps we should od that
-> 
+> If I see this error message, I should have enough information to
+> immediately debug the issue.  If it tells enough to go directly into
+> the firmware file and have a look at entry X to see what might be
+> corrupt about it, that makes my debugging very efficient.  If I have
+> to go back to the code to figure out what "Malformed vector table"
+> means, and then maybe apply a patch to get more data about the error -
+> the error message is not as useful as it should be.
 > 
 
-I have tested on two platforms. On KBL desktop fd is 0 for this case, but on 
-oncascadelakex server, fd is -1, so the BUG_ON(fd == -1) is triggered.
+I plan on dropping this patch as it looks like an unnecessary check 
+since we
+will always rely on the firmware->size from the request_firmware() API 
+in order
+to calculate the img_info->entries (or we can call it the number of 
+segments, in
+our case). And we will never fail in the if loop as values will already 
+be
+bounded.
 
->> +		fd = FD(leader, 0, thread);
+>> +			return;
+>> +		}
 >> +
-> 
-> so how do we group following events?
-> 
->    cstate_pkg/c2-residency/ - cpumask 0
->    msr/tsc/                 - all cpus
->
-
-Not sure if it's enough to only use cpumask 0 because cstate_pkg/c2-residency/ 
-should be per-socket.
-
-> cpu 0 is fine.. the rest I have no idea ;-)
-> 
-
-Perhaps we directly remove the BUG_ON(fd == -1) assertion?
-
-Thanks
-Jin Yao
-
-> that's why metrics use the :W, that disables grouping on failure
-> 
-> jirka
-> 
->>   	BUG_ON(fd == -1);
->>   
->>   	return fd;
->> -- 
->> 2.17.1
->>
-> 
+>>   		to_cpy = min(remainder, mhi_buf->len);
+>>   		memcpy(mhi_buf->buf, buf, to_cpy);
+>>   		bhi_vec->dma_addr = mhi_buf->dma_addr;
+>> 
