@@ -2,47 +2,45 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC0AC47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8617C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE2321924
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849A621924
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 02:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cMwILZBW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Wa6k9CBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbgEBCcm (ORCPT
+        id S1727922AbgEBCcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 22:32:42 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39466 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727823AbgEBCce (ORCPT
+        Fri, 1 May 2020 22:32:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:20702 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727776AbgEBCcc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 22:32:34 -0400
+        Fri, 1 May 2020 22:32:32 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588386754; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=zuCj6VUZ7Z4nbGSBWN4B5AAwjSE2c+3zdW4v57uN9Uw=; b=cMwILZBWnqmqZrRVeR6i0wt8baouZU/GfXC4RP5nRbT8m/LQt+PxQjbFF6WndKm9hOVCVU8z
- JCvHTewUhs/DuaG9XfdsHzRlY0BmOzanwmPkvY/hJ7p6L5gaPpL8/Yty6P66ktb9YXAVvjOm
- TIdV5/TUKr7gyWQGfJneVyav80I=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1588386752; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=UvCDBWrEGKkmtWr5qBaiBlnFRBajtHqWTVX6zTNReEU=; b=Wa6k9CBzmLytOQt2o1vxJNbdrTA+yPV4O8Tzwk1IjvCa5A2okUaiGnB5wzSkKbZBe+6uv0z6
+ Kn/rhfCVjogRFmxaQI+4gJcsmxS8zwfM2ztfW8tUVDeVG77LZIZ3cRaBiSUNIAY+v+T+dsDC
+ E2f0Zi0ePFONlOPPxh2HZ4p95jQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eacdbb2.7f1b72ce0ae8-smtp-out-n04;
- Sat, 02 May 2020 02:32:18 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eacdbae.7f0f9416b490-smtp-out-n01;
+ Sat, 02 May 2020 02:32:14 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BF91C433CB; Sat,  2 May 2020 02:32:17 +0000 (UTC)
+        id 63FA9C433BA; Sat,  2 May 2020 02:32:13 +0000 (UTC)
 Received: from bbhatt-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92F13C4478F;
-        Sat,  2 May 2020 02:32:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92F13C4478F
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8DA25C433CB;
+        Sat,  2 May 2020 02:32:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8DA25C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
 From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
@@ -50,106 +48,55 @@ To:     mani@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         hemantk@codeaurora.org, jhugo@codeaurora.org,
         Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 7/8] bus: mhi: core: Improve debug logs for loading firmware
-Date:   Fri,  1 May 2020 19:32:04 -0700
-Message-Id: <1588386725-1165-8-git-send-email-bbhatt@codeaurora.org>
+Subject: [PATCH v4 0/8] Bug fixes and improved logging in MHI
+Date:   Fri,  1 May 2020 19:31:57 -0700
+Message-Id: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
-References: <1588386725-1165-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add log messages to track boot flow errors and timeouts in SBL or AMSS
-firmware loading to aid in debug.
+A set of patches for bug fixes and improved logging in mhi/core/boot.c.
+Verified on x86 and arm64 platforms.
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- drivers/bus/mhi/core/boot.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+v4:
+-Dropped the change: bus: mhi: core: WARN_ON for malformed vector table
+-Updated bus: mhi: core: Read transfer length from an event properly to include
+parse rsc events
+-Use prandom_u32_max() instead of prandom_u32 to avoid if check in
+bus: mhi: core: Ensure non-zero session or sequence ID values are used
 
-diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
-index 05627fe..e5fcde1 100644
---- a/drivers/bus/mhi/core/boot.c
-+++ b/drivers/bus/mhi/core/boot.c
-@@ -121,7 +121,8 @@ static int __mhi_download_rddm_in_panic(struct mhi_controller *mhi_cntrl)
- 		ee = mhi_get_exec_env(mhi_cntrl);
- 	}
- 
--	dev_dbg(dev, "Waiting for image download completion, current EE: %s\n",
-+	dev_dbg(dev,
-+		"Waiting for RDDM image download via BHIe, current EE:%s\n",
- 		TO_MHI_EXEC_STR(ee));
- 
- 	while (retry--) {
-@@ -152,11 +153,14 @@ static int __mhi_download_rddm_in_panic(struct mhi_controller *mhi_cntrl)
- int mhi_download_rddm_img(struct mhi_controller *mhi_cntrl, bool in_panic)
- {
- 	void __iomem *base = mhi_cntrl->bhie;
-+	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 	u32 rx_status;
- 
- 	if (in_panic)
- 		return __mhi_download_rddm_in_panic(mhi_cntrl);
- 
-+	dev_dbg(dev, "Waiting for RDDM image download via BHIe\n");
-+
- 	/* Wait for the image download to complete */
- 	wait_event_timeout(mhi_cntrl->state_event,
- 			   mhi_read_reg_field(mhi_cntrl, base,
-@@ -174,6 +178,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 			    const struct mhi_buf *mhi_buf)
- {
- 	void __iomem *base = mhi_cntrl->bhie;
-+	struct device *dev = &mhi_cntrl->mhi_dev->dev;
- 	rwlock_t *pm_lock = &mhi_cntrl->pm_lock;
- 	u32 tx_status, sequence_id;
- 	int ret;
-@@ -184,6 +189,7 @@ static int mhi_fw_load_amss(struct mhi_controller *mhi_cntrl,
- 		return -EIO;
- 	}
- 
-+	dev_dbg(dev, "Starting AMSS download via BHIe\n");
- 	mhi_write_reg(mhi_cntrl, base, BHIE_TXVECADDR_HIGH_OFFS,
- 		      upper_32_bits(mhi_buf->dma_addr));
- 
-@@ -435,7 +441,12 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 		release_firmware(firmware);
- 
- 	/* Error or in EDL mode, we're done */
--	if (ret || mhi_cntrl->ee == MHI_EE_EDL)
-+	if (ret) {
-+		dev_err(dev, "MHI did not load SBL, ret:%d\n", ret);
-+		return;
-+	}
-+
-+	if (mhi_cntrl->ee == MHI_EE_EDL)
- 		return;
- 
- 	write_lock_irq(&mhi_cntrl->pm_lock);
-@@ -463,8 +474,10 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	if (!mhi_cntrl->fbc_download)
- 		return;
- 
--	if (ret)
-+	if (ret) {
-+		dev_err(dev, "MHI did not enter READY state\n");
- 		goto error_read;
-+	}
- 
- 	/* Wait for the SBL event */
- 	ret = wait_event_timeout(mhi_cntrl->state_event,
-@@ -482,6 +495,8 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	ret = mhi_fw_load_amss(mhi_cntrl,
- 			       /* Vector table is the last entry */
- 			       &image_info->mhi_buf[image_info->entries - 1]);
-+	if (ret)
-+		dev_err(dev, "MHI did not load AMSS, ret:%d\n", ret);
- 
- 	release_firmware(firmware);
- 
+v3:
+-Fixed signed-off-by tags
+-Add a refactor patch for MHI queue APIs
+-Commit text fix in bus: mhi: core: Read transfer length from an event properly
+-Fix channel ID range check for ctrl and data event rings processing
+
+v2:
+-Fix channel ID range check potential infinite loop
+-Add appropriate signed-off-by tags
+
+Bhaumik Bhatt (4):
+  bus: mhi: core: Handle firmware load using state worker
+  bus: mhi: core: Return appropriate error codes for AMSS load failure
+  bus: mhi: core: Improve debug logs for loading firmware
+  bus: mhi: core: Ensure non-zero session or sequence ID values are used
+
+Hemant Kumar (4):
+  bus: mhi: core: Refactor mhi queue APIs
+  bus: mhi: core: Cache intmod from mhi event to mhi channel
+  bus: mhi: core: Add range check for channel id received in event ring
+  bus: mhi: core: Read transfer length from an event properly
+
+ drivers/bus/mhi/core/boot.c     |  75 ++++++++++++------------
+ drivers/bus/mhi/core/init.c     |   5 +-
+ drivers/bus/mhi/core/internal.h |   5 +-
+ drivers/bus/mhi/core/main.c     | 124 ++++++++++++++++++++--------------------
+ drivers/bus/mhi/core/pm.c       |   6 +-
+ include/linux/mhi.h             |   2 -
+ 6 files changed, 108 insertions(+), 109 deletions(-)
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
