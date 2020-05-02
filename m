@@ -2,219 +2,94 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF294C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8CEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F17216FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1A02495E
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgEBMjP (ORCPT
+        id S1727917AbgEBM6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:39:15 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:55786 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgEBMjO (ORCPT
+        Sat, 2 May 2020 08:58:05 -0400
+Received: from lilium.sigma-star.at ([109.75.188.150]:48134 "EHLO
+        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbgEBM6F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:39:14 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUrQG-0003IM-R1; Sat, 02 May 2020 06:39:12 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jUrQF-0005eW-Tj; Sat, 02 May 2020 06:39:12 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Jann Horn <jannh@google.com>, linux-api@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-References: <20200430165717.1001605-1-christian.brauner@ubuntu.com>
-        <87y2qczvz9.fsf@x220.int.ebiederm.org>
-        <20200501154251.j4iuz42tntnjcvaa@wittgenstein>
-Date:   Sat, 02 May 2020 07:35:53 -0500
-In-Reply-To: <20200501154251.j4iuz42tntnjcvaa@wittgenstein> (Christian
-        Brauner's message of "Fri, 1 May 2020 17:42:51 +0200")
-Message-ID: <874ksytsye.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jUrQF-0005eW-Tj;;;mid=<874ksytsye.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+MhK6vSjjYVw+ctWqOmUDjgX/rCXEUM5o=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 1/4] capability: add ns_capable_cred()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Sat, 2 May 2020 08:58:05 -0400
+X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 May 2020 08:58:04 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by lilium.sigma-star.at (Postfix) with ESMTP id AE2C31816FAAB;
+        Sat,  2 May 2020 14:48:14 +0200 (CEST)
+Received: from lilium.sigma-star.at ([127.0.0.1])
+        by localhost (lilium.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id QL42c_S2pARi; Sat,  2 May 2020 14:48:14 +0200 (CEST)
+Received: from lilium.sigma-star.at ([127.0.0.1])
+        by localhost (lilium.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id cHviY_6gy_rL; Sat,  2 May 2020 14:48:14 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-mtd@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, ben.shelton@ni.com,
+        zach.brown@ni.com, Richard Weinberger <richard@nod.at>
+Subject: [PATCH] ubi: Fix seq_file usage in detailed_erase_block_info debugfs file
+Date:   Sat,  2 May 2020 14:48:02 +0200
+Message-Id: <20200502124802.9758-1-richard@nod.at>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
+3bfa7e141b0b ("fs/seq_file.c: seq_read(): add info message about buggy .next functions")
+showed that we don't use seq_file correctly.
+So make sure that our ->next function always updates the position.
 
-> On Thu, Apr 30, 2020 at 01:09:30PM -0500, Eric W. Biederman wrote:
->> Christian Brauner <christian.brauner@ubuntu.com> writes:
->> 
->> > Add a simple capability helper which makes it possible to determine
->> > whether a set of creds is ns capable wrt to the passed in credentials.
->> > This is not something exciting it's just a more pleasant wrapper around
->> > security_capable() by allowing ns_capable_common() to ake a const struct
->> > cred argument. In ptrace_has_cap() for example, we're using
->> > security_capable() directly. ns_capable_cred() will be used in the next
->> > patch to check against the target credentials the caller is going to
->> > switch to.
->> 
->> Given that this is to suppot setns.  I don't understand the
->> justification for this.
->> 
->> Is it your intention to use the reduced permissions that you get
->> when you install a user namespace?
->
-> Indeed.
->
->> 
->> Why do you want to use the reduced permissions when installing multiple
->> namespaces at once?
->
-> The intention is to use the target credentials we are going to install
-> when setns() hits the point of no return. The target permissions are
-> either the permissions of the caller or the reduced permissions if
-> CLONE_NEWUSER has been requested. This has multiple reasons.
->
-> The most obvious reason imho is that all other namespaces have an owning
-> user namespace. Attaching to any other namespace requires the attacher
-> to be privileged over the owning user namespace of that namespace.
-> Consequently, all our current install handlers for every namespace we
-> have check whether we are privileged in the owning user namespace of
-> that user namespace. So in order to attach to any of those namespaces -
-> especially when attaching as an unprivileged user - requires that we are
-> attached to the user namespace first.
+Fixes: 7bccd12d27b7 ("ubi: Add debugfs file for tracking PEB state")
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ drivers/mtd/ubi/debug.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-No actually it doesn't.  As if you have privileges to attach to the user
-namespace you have the privileges to attach to anything it owns.  Or you
-should I think I am missing some subtle detail at the moment.
+diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
+index 54646c2c2744..ac2bdba8bb1a 100644
+--- a/drivers/mtd/ubi/debug.c
++++ b/drivers/mtd/ubi/debug.c
+@@ -393,9 +393,6 @@ static void *eraseblk_count_seq_start(struct seq_file *s, loff_t *pos)
+ {
+ 	struct ubi_device *ubi = s->private;
+ 
+-	if (*pos == 0)
+-		return SEQ_START_TOKEN;
+-
+ 	if (*pos < ubi->peb_count)
+ 		return pos;
+ 
+@@ -409,8 +406,6 @@ static void *eraseblk_count_seq_next(struct seq_file *s, void *v, loff_t *pos)
+ {
+ 	struct ubi_device *ubi = s->private;
+ 
+-	if (v == SEQ_START_TOKEN)
+-		return pos;
+ 	(*pos)++;
+ 
+ 	if (*pos < ubi->peb_count)
+@@ -432,11 +427,8 @@ static int eraseblk_count_seq_show(struct seq_file *s, void *iter)
+ 	int err;
+ 
+ 	/* If this is the start, print a header */
+-	if (iter == SEQ_START_TOKEN) {
+-		seq_puts(s,
+-			 "physical_block_number\terase_count\tblock_status\tread_status\n");
+-		return 0;
+-	}
++	if (*block_number == 0)
++		seq_puts(s, "physical_block_number\terase_count\n");
+ 
+ 	err = ubi_io_is_bad(ubi, *block_number);
+ 	if (err)
+-- 
+2.16.4
 
-
-> (That's especially useful given
-> that most users especially container runtimes will unshare all
-> namespaces. Doing it this way we can not just have attach privileged
-> users attach to their containers but also unprivileged users to their
-> containers in one shot.)
-
-That is a wonderful reason for doing things, and it is the reason
-why I am asking about it because I think you have it backwards.
-
-Especially in the context of some container runtimes like Kubernetes
-that I have been told will do things like share a network namespace
-across all containers in a POD.
-
-> A few other points about this. If one looks at clone(CLONE_NEW*) or
-> unshare(CLONE_NEW*) then the ordering and permissions checking is the
-> same way. All permissions checks are performed against the reduced
-> permissions, i.e. if CLONE_NEWUSER is specified you check privilege
-> against the reduced permissions too otherwise you wouldn't be able to
-> spawn into a complete set of new namespaces as an unprivileged user.
-
-That is a good catch and definitely a reason for looking at doing
-things in this order.
-
-For unshare and clone putting things in a user namespace means you can
-create namespaces you could not create otherwise.
-
-
-> This logic is also expressed in how setns() is already used in
-> userspace. Any container runtime will attach to the user namespace first,
-> so all subsequent calls to attach to other namespaces perform the checks
-> against the reduced permissions. It also has to be that way because of
-> fully unprivileged containers.
-
-So I sat and looked.  For nsetner it winds up trying to enter
-the namespaces in either order.
-
-        /*
-         * Now that we know which namespaces we want to enter, enter
-         * them.  Do this in two passes, not entering the user
-         * namespace on the first pass.  So if we're deprivileging the
-         * container we'll enter the user namespace last and if we're
-         * privileging it then we enter the user namespace first
-         * (because the initial setns will fail).
-         */
-        for (pass = 0; pass < 2; pass ++) {
-                for (nsfile = namespace_files + 1 - pass; nsfile->nstype; nsfile++) {
-                        if (nsfile->fd < 0)
-                                continue;
-                        if (nsfile->nstype == CLONE_NEWPID && do_fork == -1)
-                                do_fork = 1;
-                        if (setns(nsfile->fd, nsfile->nstype)) {
-                                if (pass != 0)
-                                        err(EXIT_FAILURE,
-                                            _("reassociate to namespace '%s' failed"),
-                                            nsfile->name);
-                                else
-                                        continue;
-                        }
-
-                        close(nsfile->fd);
-                        nsfile->fd = -1;
-                }
-        }
-
-
-Looking a little close we have at least for entering the mntns the
-following checks:
-
-	if (!ns_capable(mnt_ns->user_ns, CAP_SYS_ADMIN) ||
-	    !ns_capable(current_user_ns(), CAP_SYS_CHROOT) ||
-	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
-		return -EPERM;
-
-Which require CAP_SYS_CHROOT and CAP_SYS_ADMIN in the current user namespace.
-
-So there is defintiely an issue there.
-
-I suspect the clean approach is to simply require CAP_SYS_CHROOT in
-the new user namespace, when we are setting several of them at once.
-
-> To put it another way, if we were to always perform the permission checks
-> against the current permissions (i.e. no matter if CLONE_NEWUSER is
-> specified or not) then we'd never be able to attach to a set of
-> namespaces at once as an unprivileged user.
-> We also really want to be able to express both semantics:
-> 1. setns(flags & ~CLONE_NEWUSER) --> attach to all namespaces with my
->    current permission level
-> 2. setns(flags | CLONE_NEWUSER) attach to all namespaces with the target
->    permission level
-> It feels weird if both 1 and 2 would mean the exact same thing given
-> that the user namespace has an owernship relation with all the other
-> namespaces.
-
-It feels weird to me to disallow anything that we have permissions for.
-
-Can you dig up the actual install permissions checks and see if there is
-anything other than the mount namespace that needs permissions in the
-current user namespace?
-
-Please let's walk this through.  I think there should be a way to
-carefully phrase the permission checks that we don't need
-ns_capable_cred that will allow goofy cases like setns into Kuberneties
-PODs that share network namespaces.
-
-I believe that will be a way to phrase the permission checks so that
-with or without CLONE_NEWUSER they make sense, and give very similar
-results.
-
-Certainly attaching to a mount namespace is going to need either being
-root or attaching to a user namespace at the same time.  Because
-attaching to a mount namespace needs functionality that the user
-namespace provides.
-
-Eric
