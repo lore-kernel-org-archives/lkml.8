@@ -2,150 +2,166 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90158C47254
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0863FC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 11:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634AA205C9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:53:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTs/6dNb"
+	by mail.kernel.org (Postfix) with ESMTP id DE0EA21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 11:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588417443;
+	bh=Pg5WQCD32iVLP/ezBlUn7r2Q1U1atV4LE5nchd33Huk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=NKaVlF0reJlnJT58x8t8zNYIA4RLCtipiL3wvkKxeYasM2YbFreHjhmSllzbwxFyE
+	 8PnoGH4Rpmi7eWkn5VLQOX5Nf6B4uGIp4JRiBaz5IeKScpmOMtVLHv/iWMiC0xxkP+
+	 nkb8ad6M0C0iaMVgaSvhq5hvj1Q9c8cRtly/e50Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgEBKxg (ORCPT
+        id S1727829AbgEBLED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 06:53:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726654AbgEBKxf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 06:53:35 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FA8C061A0C;
-        Sat,  2 May 2020 03:53:35 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id r2so6704778ilo.6;
-        Sat, 02 May 2020 03:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m9LZ8ST+6LzjBGdaEIV2c8yn5dkQzPADS108pGHml1w=;
-        b=PTs/6dNbidwTJZIuSOvkN3VnCcJkyoKXyCzjrsOB1mAFUi0LpNXsxG4gW2mbcI/pik
-         CydNAU8z+t0IfESfNvQOBLhUmCJJVhdFzqBVFlXd/Zn3JthWpHFdD4pr8Mt4TlUznip3
-         U/WiPUJFoCTualQQW3ESl0ZJxpFBKGQZjnKZkA6RL6+YkjtndgJem6S8BWMjWP5MiQfn
-         rgI0dSLWwh8kW5bDRi1Jrda1ump3s5oJkEILM08E0MArVJL5U8v7oc6K6VATSYbttmjd
-         4LtrPfaYIROee4lV8XwomJf0kUBmTtBpr4Yy9BtK4EaagU48REe9+S4mvoQqmhVdmRBt
-         QuIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m9LZ8ST+6LzjBGdaEIV2c8yn5dkQzPADS108pGHml1w=;
-        b=ChQRYVb0RdB8URhIVXnSFjOKWjMilxQebtv7K1eNfsUUNcjj+htJZPvpPpvPpnkaP/
-         8jDOpGySHWw9Zgq5h2XVCyHzJu9ffUDcp1SOk9XICVAMwGpBQqEimXQNMZ/ZIGpoAEL0
-         9YNdt7GFA4AtG36lN+EEU4ynN/pByI+4K84mIbqPNoT2nYieTXC9xaWLqfhizDaibXwB
-         4c4nOT0omRETXc/lCEPG3GcE9C/V+SIZrTz9mS9FXrmNMM5PKGZGQOpdRMOgPD2lr1Tk
-         riJRIuji94xIsgJghIZBok48YKkGrYa5RTVRdsuj4GDVa24QBTf6AqMcWzTPFwEgHUqA
-         jHNQ==
-X-Gm-Message-State: AGi0Puam0keT2yapnV6cdXCQ0TknIc1MCdqy4Q0QyOA7PfRfGB5DBLgA
-        iGdqe0A3UjflS67vWXpqjk8R5YvDxSIYtLd1A1mWLedQ
-X-Google-Smtp-Source: APiQypIHiSluSp8zltLiHWhXVtICtbgab42gEUfjztSVhleg/ky/1r1/Ss6C7gJM4qs0WFi5ehg92uoORRSH1sEc+F4=
-X-Received: by 2002:a92:c144:: with SMTP id b4mr7597001ilh.89.1588416813921;
- Sat, 02 May 2020 03:53:33 -0700 (PDT)
+        Sat, 2 May 2020 07:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbgEBLEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 07:04:01 -0400
+Received: from localhost (unknown [117.99.89.89])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF9D216FD;
+        Sat,  2 May 2020 11:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588417440;
+        bh=Pg5WQCD32iVLP/ezBlUn7r2Q1U1atV4LE5nchd33Huk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WWvPzYScb1Lp93W/bugKq64qeNjtJWcZBf/HRhBPdHmNNyf28/uSRDDPX/UnD49FJ
+         8mAn9gxHLhTftbFEvG6tRbUV20wRAeYmkI76Nss7oyzsGk5HWdf/bggBzHoVhuhvsw
+         BY7gUuU9mkS50ejPQBeTA/D26JXvlV8HCGWRM4hU=
+Date:   Sat, 2 May 2020 16:33:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.7-rc4
+Message-ID: <20200502110348.GM948789@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-References: <20200404161537.2312297-1-aford173@gmail.com>
-In-Reply-To: <20200404161537.2312297-1-aford173@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 2 May 2020 05:53:22 -0500
-Message-ID: <CAHCN7xJBxaS-7e=PY8BXVyit-Ye22JKmfOk3=oUTv1BZurE4oA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] clk: vc5: Add support for IDT VersaClock 5P49V6965
-To:     linux-clk <linux-clk@vger.kernel.org>
-Cc:     Adam Ford-BE <aford@beaconembedded.com>,
-        Charles Stevens <charles.stevens@logicpd.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 11:15 AM Adam Ford <aford173@gmail.com> wrote:
->
-> Update IDT VersaClock 5 driver to support 5P49V6965.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->
 
-Gentle ping.   Rob H has given the 2nd which adds the bindings his
-'signed-of-by'
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Once this has been approved, I'll be issuing an update to an another
-patch series for this same clock, and once those have been approved,
-I'll be introducing a new board, but I need this patch approved before
-I can do that.
+Hello Linus,
 
-thanks,
+Please pull to recived few fixes for dmaengine. A core fix, with
+documentation fixes as well as driver fixes:
 
-adam
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
->
-> index 24fef51fbcb5..fa96659f8023
-> --- a/drivers/clk/clk-versaclock5.c
-> +++ b/drivers/clk/clk-versaclock5.c
-> @@ -124,6 +124,7 @@ enum vc5_model {
->         IDT_VC5_5P49V5933,
->         IDT_VC5_5P49V5935,
->         IDT_VC6_5P49V6901,
-> +       IDT_VC6_5P49V6965,
->  };
->
->  /* Structure to describe features of a particular VC5 model */
-> @@ -683,6 +684,7 @@ static int vc5_map_index_to_output(const enum vc5_model model,
->         case IDT_VC5_5P49V5925:
->         case IDT_VC5_5P49V5935:
->         case IDT_VC6_5P49V6901:
-> +       case IDT_VC6_5P49V6965:
->         default:
->                 return n;
->         }
-> @@ -956,12 +958,20 @@ static const struct vc5_chip_info idt_5p49v6901_info = {
->         .flags = VC5_HAS_PFD_FREQ_DBL,
->  };
->
-> +static const struct vc5_chip_info idt_5p49v6965_info = {
-> +       .model = IDT_VC6_5P49V6965,
-> +       .clk_fod_cnt = 4,
-> +       .clk_out_cnt = 5,
-> +       .flags = 0,
-> +};
-> +
->  static const struct i2c_device_id vc5_id[] = {
->         { "5p49v5923", .driver_data = IDT_VC5_5P49V5923 },
->         { "5p49v5925", .driver_data = IDT_VC5_5P49V5925 },
->         { "5p49v5933", .driver_data = IDT_VC5_5P49V5933 },
->         { "5p49v5935", .driver_data = IDT_VC5_5P49V5935 },
->         { "5p49v6901", .driver_data = IDT_VC6_5P49V6901 },
-> +       { "5p49v6965", .driver_data = IDT_VC6_5P49V6965 },
->         { }
->  };
->  MODULE_DEVICE_TABLE(i2c, vc5_id);
-> @@ -972,6 +982,7 @@ static const struct of_device_id clk_vc5_of_match[] = {
->         { .compatible = "idt,5p49v5933", .data = &idt_5p49v5933_info },
->         { .compatible = "idt,5p49v5935", .data = &idt_5p49v5935_info },
->         { .compatible = "idt,5p49v6901", .data = &idt_5p49v6901_info },
-> +       { .compatible = "idt,5p49v6965", .data = &idt_5p49v6965_info },
->         { },
->  };
->  MODULE_DEVICE_TABLE(of, clk_vc5_of_match);
-> --
-> 2.25.1
->
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.7-=
+rc4
+
+for you to fetch changes up to aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca:
+
+  dmaengine: dmatest: Fix process hang when reading 'wait' parameter (2020-=
+04-28 21:46:35 +0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v5.7-rc4
+
+Core:
+ - Documentation typo fixes
+ - fix the channel indexes
+ - Dmatest: fixes for process hang and iterations
+Drivers:
+ - hisilicon: build error fix without PCI_MSI
+ - ti-k3: deadlock fix
+ - uniphier-xdmac: fix for reg region
+ - pch: fix data race
+ - tegra: fix clock state
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      dmaengine: dmatest: Fix iteration non-stop logic
+      dmaengine: dmatest: Fix process hang when reading 'wait' parameter
+
+Dave Jiang (1):
+      dmaengine: fix channel index enumeration
+
+Dmitry Osipenko (1):
+      dmaengine: tegra-apb: Ensure that clock is enabled during of DMA sync=
+hronization
+
+Grygorii Strashko (1):
+      dmaengine: ti: k3-psil: fix deadlock on error path
+
+Lubomir Rintel (2):
+      dmaengine: mmp_tdma: Do not ignore slave config validation errors
+      dmaengine: mmp_tdma: Reset channel error on release
+
+Maciej Grochowski (1):
+      include/linux/dmaengine: Typos fixes in API documentation
+
+Madhuparna Bhowmik (1):
+      dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+
+Masahiro Yamada (1):
+      dt-bindings: dma: uniphier-xdmac: switch to single reg region
+
+Sebastian von Ohr (1):
+      dmaengine: xilinx_dma: Add missing check for empty list
+
+YueHaibing (1):
+      dmaengine: hisilicon: Fix build error without PCI_MSI
+
+ .../bindings/dma/socionext,uniphier-xdmac.yaml     |  7 ++-
+ drivers/dma/Kconfig                                |  3 +-
+ drivers/dma/dmaengine.c                            | 60 ++++++++++--------=
+----
+ drivers/dma/dmatest.c                              |  6 +--
+ drivers/dma/mmp_tdma.c                             |  5 +-
+ drivers/dma/pch_dma.c                              |  2 +-
+ drivers/dma/tegra20-apb-dma.c                      |  9 ++++
+ drivers/dma/ti/k3-psil.c                           |  1 +
+ drivers/dma/xilinx/xilinx_dma.c                    | 20 ++++----
+ include/linux/dmaengine.h                          | 12 ++---
+ 10 files changed, 65 insertions(+), 60 deletions(-)
+
+--=20
+~Vinod
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl6tU5QACgkQfBQHDyUj
+g0dPQRAAsR4mNVNv1eCt4LScsDT16pXID511hiFa1VIbsmA02SZBK5+RsKjGJ3bh
+pAgIvPYjbg1ijbxeE8xWlXVOgYb4jtbd4B/tbmkwT53VRhgYNiWuxC+3NtGTmobN
+XijkOpt2c0ulb8derWp4VOjcjdEzMoqVvfUE/2ENq3b7XE3ZN//JXiT9VIFGwsJv
+SjkTu4e9WDnQ+WT3kHpl+vxJmCLSxKnZ3xYE+dHFCg2decw29VT67C5MMddMEbQu
+SUI4ed20BfKF4d1R3aneHr7Hj40fa2r1Vyu+0jKDs2fNDuMIwxcVDI6V9anDDOA6
+1OnjYtnIOub4ZalVgpTvh5q5wsmnmn/KZFECcytbtgIjRYZlAtcN9JGmbuxe5tx1
+kqTsDqjqkI0pVY6B39VOMvQk52GZezXv+kJhiy88UjXjUqto1gOd3KGKGAYlCAo/
+5VlDbRWOkli6es8EgspwvHWElKS4quhNOzhkkggZb2LX7A2a55lI1YDsUVtsbFcd
+jW4Y7Gi//VEefPwcWwmGGfvHbBOQ3w54kZw5SF6g2e8nstUP2FeWSASPBCtEHgrI
+v0tguCMOYnWnX4MFgCLE9z4bmafGlye1priIQmpQ1lf8r6vQlxE4dAEHAj1Zld1E
+Ah/EUyFwQQyPihlAWTNt6QiXz10hgRSgGkp8Wbb8g29iI7qzU5E=
+=9jS/
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
