@@ -2,61 +2,62 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D38EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A6CC47258
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7137A21655
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F5520757
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 18:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588444091;
-	bh=JRoG0qslFOI3mcr5Da2hc+OQhThpWXW+mf2gi5+RQ1Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=02dbeSNKBVmaGyYAfyFORVeQtKG//WiqpIPLObRZTDXUrNsu7244pz7gyYEwIwIg3
-	 R4SYmIn5DzuL+qiGsvqkWgWNKfAzxKwpq8xfZbFf2kA//qEyfPcJKuzTWLpUoaiiT8
-	 ZypWhdtdlZ18g64/Fmkcb8cxgqZwnJHf1P/5v53g=
+	s=default; t=1588444093;
+	bh=e+wnz32L1T+aJDLUEG4h6lQPRmUrnVsjSdSVgx/0vvM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jDB8yyQ1GIquuXY7npwehVrG6y/LRkcWiplAYm3qHH8zQuZ4j8RTGoovNYzg/frrp
+	 HUmYMye0Owma4To8eVK6Qt8ShRjxfKaZYUMW9nqzI/lq6LW9IMR5vFx6VINiL+Pzjb
+	 f6hHbdGf/EyLJj1eMj8EnOoMMsm+IrkygrXP0vss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEBS2K (ORCPT
+        id S1728481AbgEBS2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 14:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
+        Sat, 2 May 2020 14:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgEBS2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 14:28:08 -0400
+        id S1728463AbgEBS2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 14:28:10 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2225C2072E;
-        Sat,  2 May 2020 18:28:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C807B2084D;
+        Sat,  2 May 2020 18:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588444087;
-        bh=JRoG0qslFOI3mcr5Da2hc+OQhThpWXW+mf2gi5+RQ1Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2NCiBwIETXytI2yuuNBdaRvpn+9UdKrMsTpl/KzWXbyjquRsOWuzxhHz77RKrA7FG
-         49EwdoaQwBnUYC3bXbdQPUF05XVgyFD9+zoY+Y/wYzM+BjP4lhOI18zUcCIXY8/qFS
-         nwTdTKxWSOwRlmZV3Buky12S6cZA30Gpc+w3hiI4=
+        s=default; t=1588444089;
+        bh=e+wnz32L1T+aJDLUEG4h6lQPRmUrnVsjSdSVgx/0vvM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=salAGzU72/KDFeIWbWO7NLaP2IHe7Wz2cvkTKG56biXWD7DEbJIiypPaKYR26i099
+         Col+HieA9gP1SaU2LqEdk6Jw+TzGoHfYCfywVVEVsC7ZAjqOV7KrdrEy5m9VXoy26v
+         jFWs9FoJun5msiNbH/WSaT6j4rA+4G4CQR5i5meY=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-crypto@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
         "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Theodore Ts'o <tytso@mit.edu>, Paolo Abeni <pabeni@redhat.com>,
-        mptcp@lists.01.org, linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org
-Subject: [PATCH 0/7] sha1 library cleanup
-Date:   Sat,  2 May 2020 11:24:20 -0700
-Message-Id: <20200502182427.104383-1-ebiggers@kernel.org>
+        Theodore Ts'o <tytso@mit.edu>
+Subject: [PATCH 7/7] crypto: lib/sha1 - fold linux/cryptohash.h into crypto/sha.h
+Date:   Sat,  2 May 2020 11:24:27 -0700
+Message-Id: <20200502182427.104383-8-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200502182427.104383-1-ebiggers@kernel.org>
+References: <20200502182427.104383-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+
+From: Eric Biggers <ebiggers@google.com>
 
 <linux/cryptohash.h> sounds very generic and important, like it's the
 header to include if you're doing cryptographic hashing in the kernel.
@@ -65,74 +66,127 @@ compression function (not even the full SHA-1).  This should basically
 never be used anymore; SHA-1 is no longer considered secure, and there
 are much better ways to do cryptographic hashing in the kernel.
 
-Also the function is named just "sha_transform()", which makes it
-unclear which version of SHA is meant.
+Remove this header and fold it into <crypto/sha.h> which already
+contains constants and functions for SHA-1 (along with SHA-2).
 
-Therefore, this series cleans things up by moving these SHA-1
-declarations into <crypto/sha.h> where they better belong, and changing
-the names to say SHA-1 rather than just SHA.
-
-As future work, we should split sha.h into sha1.h and sha2.h and try to
-remove the remaining uses of SHA-1.  For example, the remaining use in
-drivers/char/random.c is probably one that can be gotten rid of.
-
-This patch series applies to cryptodev/master.
-
-Eric Biggers (7):
-  mptcp: use SHA256_BLOCK_SIZE, not SHA_MESSAGE_BYTES
-  crypto: powerpc/sha1 - remove unused temporary workspace
-  crypto: powerpc/sha1 - prefix the "sha1_" functions
-  crypto: s390/sha1 - prefix the "sha1_" functions
-  crypto: lib/sha1 - rename "sha" to "sha1"
-  crypto: lib/sha1 - remove unnecessary includes of linux/cryptohash.h
-  crypto: lib/sha1 - fold linux/cryptohash.h into crypto/sha.h
-
- Documentation/security/siphash.rst          |  2 +-
- arch/arm/crypto/sha1_glue.c                 |  1 -
- arch/arm/crypto/sha1_neon_glue.c            |  1 -
- arch/arm/crypto/sha256_glue.c               |  1 -
- arch/arm/crypto/sha256_neon_glue.c          |  1 -
- arch/arm/kernel/armksyms.c                  |  1 -
- arch/arm64/crypto/sha256-glue.c             |  1 -
- arch/arm64/crypto/sha512-glue.c             |  1 -
- arch/microblaze/kernel/microblaze_ksyms.c   |  1 -
- arch/mips/cavium-octeon/crypto/octeon-md5.c |  1 -
- arch/powerpc/crypto/md5-glue.c              |  1 -
- arch/powerpc/crypto/sha1-spe-glue.c         |  1 -
- arch/powerpc/crypto/sha1.c                  | 33 ++++++++++-----------
- arch/powerpc/crypto/sha256-spe-glue.c       |  1 -
- arch/s390/crypto/sha1_s390.c                | 12 ++++----
- arch/sparc/crypto/md5_glue.c                |  1 -
- arch/sparc/crypto/sha1_glue.c               |  1 -
- arch/sparc/crypto/sha256_glue.c             |  1 -
- arch/sparc/crypto/sha512_glue.c             |  1 -
- arch/unicore32/kernel/ksyms.c               |  1 -
- arch/x86/crypto/sha1_ssse3_glue.c           |  1 -
- arch/x86/crypto/sha256_ssse3_glue.c         |  1 -
- arch/x86/crypto/sha512_ssse3_glue.c         |  1 -
- crypto/sha1_generic.c                       |  5 ++--
- drivers/char/random.c                       |  8 ++---
- drivers/crypto/atmel-sha.c                  |  1 -
- drivers/crypto/chelsio/chcr_algo.c          |  1 -
- drivers/crypto/chelsio/chcr_ipsec.c         |  1 -
- drivers/crypto/omap-sham.c                  |  1 -
- fs/f2fs/hash.c                              |  1 -
- include/crypto/sha.h                        | 10 +++++++
- include/linux/cryptohash.h                  | 14 ---------
- include/linux/filter.h                      |  4 +--
- include/net/tcp.h                           |  1 -
- kernel/bpf/core.c                           | 18 +++++------
- lib/crypto/chacha.c                         |  1 -
- lib/sha1.c                                  | 24 ++++++++-------
- net/core/secure_seq.c                       |  1 -
- net/ipv6/addrconf.c                         | 10 +++----
- net/ipv6/seg6_hmac.c                        |  1 -
- net/mptcp/crypto.c                          |  4 +--
- 41 files changed, 69 insertions(+), 104 deletions(-)
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ crypto/sha1_generic.c      |  1 -
+ drivers/char/random.c      |  2 +-
+ include/crypto/sha.h       | 10 ++++++++++
+ include/linux/cryptohash.h | 18 ------------------
+ include/linux/filter.h     |  2 +-
+ lib/sha1.c                 |  2 +-
+ 6 files changed, 13 insertions(+), 22 deletions(-)
  delete mode 100644 include/linux/cryptohash.h
 
-
-base-commit: 12b3cf9093542d9f752a4968815ece836159013f
+diff --git a/crypto/sha1_generic.c b/crypto/sha1_generic.c
+index a16d9787dcd2c1..1d43472fecbde1 100644
+--- a/crypto/sha1_generic.c
++++ b/crypto/sha1_generic.c
+@@ -15,7 +15,6 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/mm.h>
+-#include <linux/cryptohash.h>
+ #include <linux/types.h>
+ #include <crypto/sha.h>
+ #include <crypto/sha1_base.h>
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index a19a8984741b60..cae02b2a871c32 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -327,7 +327,6 @@
+ #include <linux/spinlock.h>
+ #include <linux/kthread.h>
+ #include <linux/percpu.h>
+-#include <linux/cryptohash.h>
+ #include <linux/fips.h>
+ #include <linux/ptrace.h>
+ #include <linux/workqueue.h>
+@@ -337,6 +336,7 @@
+ #include <linux/completion.h>
+ #include <linux/uuid.h>
+ #include <crypto/chacha.h>
++#include <crypto/sha.h>
+ 
+ #include <asm/processor.h>
+ #include <linux/uaccess.h>
+diff --git a/include/crypto/sha.h b/include/crypto/sha.h
+index 5c2132c7190095..405dd20419165c 100644
+--- a/include/crypto/sha.h
++++ b/include/crypto/sha.h
+@@ -113,6 +113,16 @@ extern int crypto_sha512_update(struct shash_desc *desc, const u8 *data,
+ extern int crypto_sha512_finup(struct shash_desc *desc, const u8 *data,
+ 			       unsigned int len, u8 *hash);
+ 
++/*
++ * An implementation of SHA-1's compression function.  Don't use in new code!
++ * You shouldn't be using SHA-1, and even if you *have* to use SHA-1, this isn't
++ * the correct way to hash something with SHA-1 (use crypto_shash instead).
++ */
++#define SHA1_DIGEST_WORDS	(SHA1_DIGEST_SIZE / 4)
++#define SHA1_WORKSPACE_WORDS	16
++void sha1_init(__u32 *buf);
++void sha1_transform(__u32 *digest, const char *data, __u32 *W);
++
+ /*
+  * Stand-alone implementation of the SHA256 algorithm. It is designed to
+  * have as little dependencies as possible so it can be used in the
+diff --git a/include/linux/cryptohash.h b/include/linux/cryptohash.h
+deleted file mode 100644
+index c324ffca96e0d5..00000000000000
+--- a/include/linux/cryptohash.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __CRYPTOHASH_H
+-#define __CRYPTOHASH_H
+-
+-#include <uapi/linux/types.h>
+-
+-/*
+- * An implementation of SHA-1's compression function.  Don't use in new code!
+- * You shouldn't be using SHA-1, and even if you *have* to use SHA-1, this isn't
+- * the correct way to hash something with SHA-1 (use crypto_shash instead).
+- */
+-#define SHA1_DIGEST_WORDS 5
+-#define SHA1_BLOCK_SIZE 64
+-#define SHA1_WORKSPACE_WORDS 16
+-void sha1_init(__u32 *buf);
+-void sha1_transform(__u32 *digest, const char *data, __u32 *W);
+-
+-#endif
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index f42662adffe47f..ec45fd7992c957 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -16,11 +16,11 @@
+ #include <linux/workqueue.h>
+ #include <linux/sched.h>
+ #include <linux/capability.h>
+-#include <linux/cryptohash.h>
+ #include <linux/set_memory.h>
+ #include <linux/kallsyms.h>
+ #include <linux/if_vlan.h>
+ #include <linux/vmalloc.h>
++#include <crypto/sha.h>
+ 
+ #include <net/sch_generic.h>
+ 
+diff --git a/lib/sha1.c b/lib/sha1.c
+index b381e8cd4fe447..49257a915bb604 100644
+--- a/lib/sha1.c
++++ b/lib/sha1.c
+@@ -9,7 +9,7 @@
+ #include <linux/kernel.h>
+ #include <linux/export.h>
+ #include <linux/bitops.h>
+-#include <linux/cryptohash.h>
++#include <crypto/sha.h>
+ #include <asm/unaligned.h>
+ 
+ /*
 -- 
 2.26.2
 
