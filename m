@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D0DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A975EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D47F2495F
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8717A24960
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDQZRCub"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVj1+G8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgEBMbJ (ORCPT
+        id S1727887AbgEBMbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:31:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
+        Sat, 2 May 2020 08:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727029AbgEBMbI (ORCPT
+        by vger.kernel.org with ESMTP id S1727029AbgEBMby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:31:08 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606E7C061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 05:31:08 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d7so2545175ioq.5
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 05:31:08 -0700 (PDT)
+        Sat, 2 May 2020 08:31:54 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC52C061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 05:31:53 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t12so6819929ile.9
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 05:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Sqj5OwuLQEiWexB38E560Tjsw1EblC4/Va2EqzU4zWU=;
-        b=TDQZRCub/ffrM2W4i8QJOuhIY+QH+daszsb1JtU2K1qx68balRapnI/NPBGF3rx+0k
-         9+fT7x5KhGLiXSZlABWZAN8+G7oPLjRIS6o+sGKU5g6dDcLc1XbSGaZtOy/kwXWWDdgi
-         EA+Qr24M2AWf8vtQrYUIITqUhyYcUdON3jdrg3YIlgiDChIKAuKIYBONAajUi5Y3eMkG
-         IqvHBs/bCOi3d67GUs7y81AzXERtMJ5v5QlOrn4uwJqxzEAPBGIrOKcIIKq1orflrxNg
-         dA5rMjh6CQec4qmjX6sO9PExSF9TZzgYDWxUrX/UqFalmZGdgN2BjMe2YEOIVfEJxCNA
-         EW3g==
+        bh=fgoH8rWRDI/PbUnxgxiFsD6XVhiop1SpajRlUIN+Oco=;
+        b=AVj1+G8Up1VQJVrTlIQpNLvPVV9Wkqudp5nqxmAikkUlcsWJdsnNs/FIZ9AtlkZkFx
+         /czLyFq5gPcrlRiAVGTvE/lqErkikswZ2FXy1ncn8DpDyKF0mV9TR2mr8a3xy6ESJ/nM
+         XWg5Eam9Uio1at5SIsA5PtnSagaQzwx8OopK1BpW7oi3WRGYchbEMvJ3q8+bf13WufVA
+         ZDsa0wIA5FMi7PjmGgm/+bMKg4zKqd3vVuPm0H5G1RpGoeQGuE3eezikFaH3mLN9vwmh
+         gL+CXUSkbLnSbdshtZh5vlO09AOJOfLeg/yHCEFOI02GsfjuGVAv15zrU/D/lf/LJjRJ
+         Jzmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Sqj5OwuLQEiWexB38E560Tjsw1EblC4/Va2EqzU4zWU=;
-        b=l0fhsOHiufLimGS/QL91tkYhrRRczWyotw2H9hOzNQmBuHu69Du8KnX5EH4eCgqSsK
-         sXTEoSCqZpP+8IGhafyv/5DxSWvHmggVdmNY17EON6s9TiEBRiaLOEcyuZbF/pNdd7FW
-         R9Lsnak+uWon0Ih41IxeohWlewCcHFJy+JNBRf6T/ejQb74BePXFYohCyVuvOda1R6X0
-         r/vEidp97H1CtnMHEI6yRX5/hwW5HhbaMtENJT2LUxA7xlaPjYx++VrncZIFrOzDPcPb
-         XzvtEjs2TtV4tfeWd7yyJ4c7chKJuQrCCAcp0EvLWYhOaromxjOA/zJa708MSd8YsjmE
-         bkmQ==
-X-Gm-Message-State: AGi0PuaiXf/b/0Ah3yj0IrFNsZvcbJJP/w5Y87b+AIQqLrk5e7JJtB/+
-        3AITeJaqEq0Liglxw6l6WcdmyGQwzWqzoaKRIRmC/W0E0cw=
-X-Google-Smtp-Source: APiQypLCKDX6+VT+B8oaq1wJy/OgIWsAdpELwqgIIb/i0Sgf4Zq30t2c9jYp25yvXVW+C9OZQ58ht4N448yyjimkCWo=
-X-Received: by 2002:a02:a60b:: with SMTP id c11mr6944237jam.45.1588422667696;
- Sat, 02 May 2020 05:31:07 -0700 (PDT)
+        bh=fgoH8rWRDI/PbUnxgxiFsD6XVhiop1SpajRlUIN+Oco=;
+        b=lAXf38CyMHRJbYqI4SGm2L48KTH07P414GRC+sd8RScZLFPclaHNgspDELj8Dt+nKr
+         OBxZdj1IJrWukC2v9ueaCp0U03FDv2a8KWG1hvGKVf0V4hpDJCf+JzGTM29M8mhrb7pQ
+         tPzpBvag9bo8+9OVpKwroE8UdAQbvGz9bRoFhJlGzXxWl9n1UQR/Yoy3CJ1L3m/3POLe
+         wjQNy/NSuv8QldrJ0K1CAYWTJI2Yo0koSo/bVgsa3JNgKzUIBWi6rtTwY2UToilvRtbP
+         5opaYWq6fidgQs0ivPfIt29rzj2DZFEHV7+Ot1ebEOyBC+b7zXP2A0eBG+JuZEDXqqZZ
+         n07g==
+X-Gm-Message-State: AGi0Pua5pCCcv8KSK1O8Pk1l+JSyCIqXxd3mrJL/83haw+/tKmbTwhON
+        z/OaA5uYc19OusxVQg7WuKW3DOmkqTuEVkOXpBY=
+X-Google-Smtp-Source: APiQypJHTVygTlm3uyDu7YafDrHABrINeBqBAiUQVWG7p7zY1ObzStEJ3q3g7DjLjaDfPw4PGNZTm8uUfwW+ANSBL0A=
+X-Received: by 2002:a92:c144:: with SMTP id b4mr7893681ilh.89.1588422712733;
+ Sat, 02 May 2020 05:31:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306103839.1231057-1-aford173@gmail.com> <20200306103839.1231057-2-aford173@gmail.com>
-In-Reply-To: <20200306103839.1231057-2-aford173@gmail.com>
+References: <20200306105939.1233360-1-aford173@gmail.com>
+In-Reply-To: <20200306105939.1233360-1-aford173@gmail.com>
 From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 2 May 2020 07:30:56 -0500
-Message-ID: <CAHCN7x+cG873bhDkGPjq9u2bn=b0QRpdYgh_yvWkfyLBde_mxw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: defconfig: Enable IMX/FSL Audio Support for WM8962
+Date:   Sat, 2 May 2020 07:31:41 -0500
+Message-ID: <CAHCN7x+ZGgs__ZOg5qxz0yoZBsMN6Ps_btG9smi8C-gL0jAN4A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: defconfig: Enable AT24 EEPROM as module
 To:     arm-soc <linux-arm-kernel@lists.infradead.org>
 Cc:     Adam Ford-BE <aford@beaconembedded.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -73,39 +73,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 4:38 AM Adam Ford <aford173@gmail.com> wrote:
+On Fri, Mar 6, 2020 at 4:59 AM Adam Ford <aford173@gmail.com> wrote:
 >
-> The Beacon EmbeddedWorks i.MX8M Mini kit has a WM8962 audio codec.
-> This patch enables the required drivers as modules to enable sound.
+> The Beacon EmbeddedWorks Kit based on i.MX8M Mini uses an AT24
+> EEPROM on one of its I2C buses.
+>
+> This patch enables the AT24 as a module.
 >
 > Signed-off-by: Adam Ford <aford173@gmail.com>
 >
 
 Gentle ping.  I don't know who the right person is to ask for this.
 
-adam
 > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index d19ca82b3c40..ab71a407288f 100644
+> index ab71a407288f..8018a52f6792 100644
 > --- a/arch/arm64/configs/defconfig
 > +++ b/arch/arm64/configs/defconfig
-> @@ -601,6 +601,9 @@ CONFIG_SND_HDA_TEGRA=m
->  CONFIG_SND_HDA_CODEC_HDMI=m
->  CONFIG_SND_SOC=y
->  CONFIG_SND_BCM2835_SOC_I2S=m
-> +CONFIG_SND_IMX_SOC=m
-> +CONFIG_SND_SOC_FSL_ASOC_CARD=m
-> +CONFIG_SND_SOC_IMX_AUDMIX=m
->  CONFIG_SND_MESON_AXG_SOUND_CARD=m
->  CONFIG_SND_SOC_ROCKCHIP=m
->  CONFIG_SND_SOC_ROCKCHIP_SPDIF=m
-> @@ -614,6 +617,7 @@ CONFIG_SND_SOC_ES7134=m
->  CONFIG_SND_SOC_ES7241=m
->  CONFIG_SND_SOC_PCM3168A_I2C=m
->  CONFIG_SND_SOC_TAS571X=m
-> +CONFIG_SND_SOC_WM8962=m
->  CONFIG_SND_SIMPLE_CARD=m
->  CONFIG_SND_AUDIO_GRAPH_CARD=m
->  CONFIG_I2C_HID=m
+> @@ -224,6 +224,7 @@ CONFIG_BLK_DEV_NBD=m
+>  CONFIG_VIRTIO_BLK=y
+>  CONFIG_BLK_DEV_NVME=m
+>  CONFIG_SRAM=y
+> +CONFIG_EEPROM_AT24=m
+>  CONFIG_EEPROM_AT25=m
+>  # CONFIG_SCSI_PROC_FS is not set
+>  CONFIG_BLK_DEV_SD=y
 > --
 > 2.25.0
 >
