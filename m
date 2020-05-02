@@ -2,147 +2,112 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EBDC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA76C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 781E220787
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1AA20787
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 22:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="PKTnIp3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbgEBWjr (ORCPT
+        id S1728597AbgEBWnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 18:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728550AbgEBWjq (ORCPT
+        Sat, 2 May 2020 18:43:12 -0400
+Received: from mta-p5.oit.umn.edu ([134.84.196.205]:48662 "EHLO
+        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbgEBWnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 18:39:46 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569CFC061A0C;
-        Sat,  2 May 2020 15:39:46 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 14DEB2A05BC
-Received: by earth.universe (Postfix, from userid 1000)
-        id 771C93C08C7; Sun,  3 May 2020 00:39:42 +0200 (CEST)
-Date:   Sun, 3 May 2020 00:39:42 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     wu000273@umn.edu
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kjlu@umn.edu, Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH] power: supply: fix memory leaks
-Message-ID: <20200502223942.fksizdglrw5zdpw6@earth.universe>
-References: <20200502211056.20975-1-wu000273@umn.edu>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bfnyv6h55yl2uve7"
-Content-Disposition: inline
-In-Reply-To: <20200502211056.20975-1-wu000273@umn.edu>
+        Sat, 2 May 2020 18:43:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49F3zy4Bwbz9vBqp
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 22:43:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p5.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id O2EwmzTDkIMd for <linux-kernel@vger.kernel.org>;
+        Sat,  2 May 2020 17:43:10 -0500 (CDT)
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49F3zy36JXz9vFJ3
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 17:43:10 -0500 (CDT)
+Received: by mail-qt1-f200.google.com with SMTP id q57so15946228qte.3
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 15:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=KR1J6K/N/jgMtmPG7Tj5KjyDT0kXwPVMrBemGwfcPxM=;
+        b=PKTnIp3Pp+s6IVQhP198ve09phFiYcts74X67JMi3qpMhxginR5r/ZHjyWetLSWgpn
+         GRLkmBXBageZfi/3I4BiDAnqAxm2oKXTfqKpypSPfPhy3oDEXEqIa57TfDvHoSUqZFyF
+         TdSEMr68j6SydX9Ct12JCG3rXxClXGMeK4oAKmbIJbAKCRm1nes812WBiLwaDTB98JDg
+         fdlvPZsF7Ke1PZC+6JH/oOBkWi56+Bn3nOQqcw/Ko3emhpsKRMFhud9upozve7BbgCGo
+         triXpGg7S7Q8WXp072G5ZHOjkiYvh0r5ALUPQwh9zifi8wWXcNKJm4rwLmxPHra6StJx
+         nTpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KR1J6K/N/jgMtmPG7Tj5KjyDT0kXwPVMrBemGwfcPxM=;
+        b=DyR+dBr2kvdfCQgmYd8Z7aqYh2U4t7U1EJyZKdJAjxwtYLED8D68iAssVQLAaOVIcs
+         7M95ABN0W4Z+rgFwQdCaeYdMJaUbjveEOGVrZ2TpfFJelyLdrVO4z8sYS9PY5C20NY3i
+         hst5kceviX4B+8Kw0slQU/HFwt3CNr1udHG4MtzVXhV7Bm0snLAxSWKDXSzZUjZizomP
+         WRIt36/kqATCO2uAsLcz2Q8TQJa9llK6wnnc6lDlsngJechusk+wOAuEyEuMC3FG8IFI
+         NxSlvekJiLjAstJKxu9aJ56okwQTLGq0+r43ehYuN79HikqkxvOQl//aJQRRcu70MtFr
+         63WQ==
+X-Gm-Message-State: AGi0PubYiYQCGHAoZwKLdi5J5zJZqZ0aIXtARXfVYQJ2J5b2YkhfqY/d
+        Z7mmN3quhCmCmJmGjSIfG6WjHwkS2g79/D/aDeKFpEF3s+Hk8MXyysOOupjeKV8jL7I58o6wrQF
+        ZeKkLqWy01nxLwTeMVvAvlI8jZ7TV
+X-Received: by 2002:ac8:39a7:: with SMTP id v36mr10349295qte.387.1588459389749;
+        Sat, 02 May 2020 15:43:09 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJVoXz32Eihyqk5u9MNYq2tHVXWisKM8exVuCyk24JqmZEeXkVmiFsvZFVPDfijC7XmCArdfw==
+X-Received: by 2002:ac8:39a7:: with SMTP id v36mr10349272qte.387.1588459389296;
+        Sat, 02 May 2020 15:43:09 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id u24sm5896172qkk.84.2020.05.02.15.43.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 15:43:08 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kuba@kernel.org
+Cc:     davem@davemloft.net, oss-drivers@netronome.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kjlu@umn.edu,
+        wu000273@umn.edu
+Subject: [PATCH] nfp: abm: fix a memory leak bug
+Date:   Sat,  2 May 2020 17:42:59 -0500
+Message-Id: <20200502224259.1477-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Qiushi Wu <wu000273@umn.edu>
 
---bfnyv6h55yl2uve7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In function nfp_abm_vnic_set_mac, pointer nsp is allocated by nfp_nsp_open.
+But when nfp_nsp_has_hwinfo_lookup fail, the pointer is not released,
+which can lead to a memory leak bug. Fix this issue by adding
+nfp_nsp_close(nsp) in the error path.
 
-Hi,
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/net/ethernet/netronome/nfp/abm/main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Sat, May 02, 2020 at 04:10:56PM -0500, wu000273@umn.edu wrote:
-> From: Qiushi Wu <wu000273@umn.edu>
->=20
-> In function power_supply_add_hwmon_sysfs(), psyhw->props is
-> allocated by bitmap_zalloc(). But this pointer is not deallocated
-> in several error paths, which lead to memory leak bugs. To fix
-> this, we can call bitmap_free() to free this pointer.
->=20
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-> ---
+diff --git a/drivers/net/ethernet/netronome/nfp/abm/main.c b/drivers/net/ethernet/netronome/nfp/abm/main.c
+index 9183b3e85d21..354efffac0f9 100644
+--- a/drivers/net/ethernet/netronome/nfp/abm/main.c
++++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
+@@ -283,6 +283,7 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_abm *abm, struct nfp_net *nn,
+ 	if (!nfp_nsp_has_hwinfo_lookup(nsp)) {
+ 		nfp_warn(pf->cpp, "NSP doesn't support PF MAC generation\n");
+ 		eth_hw_addr_random(nn->dp.netdev);
++		nfp_nsp_close(nsp);
+ 		return;
+ 	}
+ 
+-- 
+2.17.1
 
-You are correct, that there is a problem in the first instance, but
-the other changes are incorrect and introduce a new double free. Please
-read documentation for devm_add_action(). The proper fix is to just
-replace the call to devm_add_action() with devm_add_action_or_reset().
-Please send a new version for this. Also please add the following
-tag:
-
-Fixes: e67d4dfc9ff19 ("power: supply: Add HWMON compatibility layer")
-
-Thanks,
-
--- Sebastian
-
->  drivers/power/supply/power_supply_hwmon.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/su=
-pply/power_supply_hwmon.c
-> index 75cf861ba492..7453390ab7a4 100644
-> --- a/drivers/power/supply/power_supply_hwmon.c
-> +++ b/drivers/power/supply/power_supply_hwmon.c
-> @@ -307,7 +307,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply =
-*psy)
->  	ret =3D devm_add_action(dev, power_supply_hwmon_bitmap_free,
->  			      psyhw->props);
->  	if (ret)
-> -		goto error;
-> +		goto out_free;
-> =20
->  	for (i =3D 0; i < desc->num_properties; i++) {
->  		const enum power_supply_property prop =3D desc->properties[i];
-> @@ -342,7 +342,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply =
-*psy)
->  		new_name =3D devm_kstrdup(dev, name, GFP_KERNEL);
->  		if (!new_name) {
->  			ret =3D -ENOMEM;
-> -			goto error;
-> +			goto out_free;
->  		}
->  		strreplace(new_name, '-', '_');
->  		name =3D new_name;
-> @@ -353,10 +353,12 @@ int power_supply_add_hwmon_sysfs(struct power_suppl=
-y *psy)
->  						NULL);
->  	ret =3D PTR_ERR_OR_ZERO(hwmon);
->  	if (ret)
-> -		goto error;
-> +		goto out_free;
-> =20
->  	devres_close_group(dev, power_supply_add_hwmon_sysfs);
->  	return 0;
-> +out_free:
-> +	bitmap_free(psyhw->props);
->  error:
->  	devres_release_group(dev, NULL);
->  	return ret;
-> --=20
-> 2.17.1
->=20
-
---bfnyv6h55yl2uve7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6t9qYACgkQ2O7X88g7
-+poW4Q/+MRp2UMwvH182vYfEZaPV4oUWAdkWo8EBzRsTvINvOBDvFx39aCip7JS+
-xHj42Enw5U/JoZqLdJ7gFnXOfqHJAn5P74u2mY9ttGqS2uFKhVWdgtwOUIo14A/3
-qywQuGep91TW+h8i3QoBDw9aBecbol/wOLR+6Mm3CfOlAn69yBxYB6FVmYqNbZMD
-Tq2O/HK9gyaAnowz7vmmC09xRLoOufzeLlqxCH05VtjbRiawuYl+fpFIW/7VUsHj
-molq0ltvvaU4fNonMcGeyQSqjcDx/Ri8O7IjblIq4lFRbewHoBaf1zSBtrPCCp2L
-t4FSrXb85VAaDzF9mZz2ubBkSfpFffvz3M+4xkG7GJcaMU68MtPXjb2K2BkgSfOl
-kDWqzGZkixNeKoaza3H6uf8QYWWDtOYzC1S+JaYGIcwusR/fiofKiBGRjshkWauH
-3BYP2j8T3isIpfu0N4EQjkLMfx0gNlwccPz+TUJWAkOe3N/8tPL1usTPh9W/qHwb
-Hs+2q4iv8JKiYb4MvATKtCAz8fDu5KlvYJjnHPLtkwSc/95PDDZBAw8yTp3Rp1uj
-/B56K1HVa8Qx8j45G2hu2pZIjq60J2Qv0//qgWhFrZO4BY2h35HZNcfvuD4SszaE
-I5FZgDREdbceGYGnWeh+NoAsUUYYayD4tISIpvFFO7sWWTrIamg=
-=XGdH
------END PGP SIGNATURE-----
-
---bfnyv6h55yl2uve7--
