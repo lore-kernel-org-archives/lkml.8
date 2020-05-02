@@ -5,70 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FEFC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E3BC47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF6EC2063A
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99F12063A
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 12:10:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5QRuowU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIQmRP1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgEBMJA (ORCPT
+        id S1727924AbgEBMKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 08:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36574 "EHLO
+        Sat, 2 May 2020 08:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726654AbgEBMI6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726654AbgEBMKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 08:08:58 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1C4C061A0E;
-        Sat,  2 May 2020 05:08:56 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s8so4708048wrt.9;
-        Sat, 02 May 2020 05:08:56 -0700 (PDT)
+        Sat, 2 May 2020 08:10:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D2FC061A0C;
+        Sat,  2 May 2020 05:10:40 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z6so3130998wml.2;
+        Sat, 02 May 2020 05:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=yMQ9IOKo1KnSPaT8dJBt+GNOkq+ATkfGATkYQUM0uaY=;
-        b=a5QRuowUXnxFNad0UjHTUZXtLb3VVnuV64ZA+BeZMSDGbPhvKc2fkfyCqKeaPIwJcG
-         phNz/NSHjt4+Bio46m1JEWVFfwcUB7fndky1p5kKvcqe95uu4y6c14mQkkWaVQ6rIpIP
-         qpLBZvw9W6lsxmXt9V0eAVJnKQLL3SSyq7R/K0ozC6QNe4/nDgWRbu3kY0G1/Vq8VlKp
-         +7ae0zzBow6HrC5ma/I5c0ZsJ3a5HySXJ+zHXT/L0e5pXQMnYqa5IRFeF7ZRZQcbeQ4k
-         +y5v+ZZyfSBY5BihqZc2hSG6f7VKw+wP9rIEKPRoSZgaJhv8gMDt+JFwI06cl072h6ae
-         9m8A==
+        bh=lPr29k9RhQr589P04yAVrhsNnJ7exYeB4/uJNuFLT88=;
+        b=OIQmRP1HYjiNVA2bdyAXq1GRdtCdlmQJsbBZo+O3U1gRDxl8Y0DdiFf74DnJmmHmUV
+         VYG/y5z046E7yHhxBdkCFgS8Hrg2NwUaMfgRpJARtVpFlaB77ohYDpyeYhmdUX8ZC6Sh
+         xA9uu8t2sZHlo6uDCGiHVQ2iDsHB2256VRjPQOk94pdx2DV8CtLcBn4UwNVrD4ylcqoJ
+         ocQpOuQ2LLYiVgwSjfKIWtz6DZTVdHFvY9S//hoGqxXcudijLflSIBHl3axYIYONRoKy
+         vZbaVxnnpgHUZ7S163W4hTqyA685sKO+9XlpAQaOxObCPnQRzxZ/HNsP2dWt/kcXccaB
+         wJeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yMQ9IOKo1KnSPaT8dJBt+GNOkq+ATkfGATkYQUM0uaY=;
-        b=JSnI6fxJb3cKyXprHn/zmIwx4KqTWhOeqcvsXT3jJRIh7TASm6o4fdf87ol1YK8n4H
-         5BC6bkz8ZFimAMnrOPH8aavlQJug2B9KOXbl6+ESZz4HyAUoorvu5tMxM7zEIYjE/vi/
-         cl8TK6LL6Pkv4sWKc0kE90DkOlGjLYFvwZUlLEsfHET7OdhR7GoUpqvJI+U9OVzC0Cgx
-         zi5ibaAPRZnanj3SBjmKtBGCuPqYW9oGPhxwh4HVwxGlNMDHydxU9p9ijPx/UPwd5oTZ
-         77Eq/BJ3VZWKaRObOokWAHyo5Dg8kp3iSSs4lh4qFGlskCipwjUdRasYY6lXcfXYbaKI
-         zGVw==
-X-Gm-Message-State: AGi0Pua6v1D+4hvMmMh1MUKqE/sTGh4ZkE24qKExXZZCIPUUEYaL9b1W
-        7gIGFYNY6JVB8M0IIOk3TarUYAFI
-X-Google-Smtp-Source: APiQypIsCUqxVo8E9fM1Awgjzo/Iy+N+WbYGovM4VNoESyZCmE3+0VRYXQJnLdQhW1I4JQjd19xW4w==
-X-Received: by 2002:adf:e702:: with SMTP id c2mr9332522wrm.252.1588421335279;
-        Sat, 02 May 2020 05:08:55 -0700 (PDT)
+        bh=lPr29k9RhQr589P04yAVrhsNnJ7exYeB4/uJNuFLT88=;
+        b=E2ypGGBChQcoqF8ZrPRKIQqwfdi1nLt/DHvyzRJSI1mwkN04QA4IcARNQkwgAY1vv6
+         B/ADc2V50c83SLALANLMz9aQU1qSBkCHJGu8jm/BVgFF38Lxqfc7BHjw2W9m/Dq9E9Wg
+         37HLPhYtiCL2xUbx1NLAWm0TtWKCiCBVps1tVNcEO1p1eWwvnknHHlsRx89Y3c6BPE1R
+         ukT/WH2NcsSmwjymgTCn2dfOSc5w5fp0e6UUlm+8og4F4uNPWfqApV/AV6BWnn4pfvOo
+         OSXRaUfMFV+bp/XQF5FsGJ6USH78uCH1Ifs+KWfKLKRebHar0YyAadTZIo6QxTKSWA57
+         s37Q==
+X-Gm-Message-State: AGi0PuYxum8Gk6WPq8p6AeLf4QRXMKiZSdyBqDV9JQGy60wdNNvjU/e9
+        XcwhN85LeC0ILCMwG061juA=
+X-Google-Smtp-Source: APiQypLme8PeyVVqSQ3rxJG5vPC9t3mry1ihG64kNeIYwbi69bukbrNUXcGW3ex8o8Mx4aJ1N1x5MQ==
+X-Received: by 2002:a1c:4346:: with SMTP id q67mr4319532wma.162.1588421438812;
+        Sat, 02 May 2020 05:10:38 -0700 (PDT)
 Received: from localhost.localdomain ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id j13sm8930716wrx.5.2020.05.02.05.08.53
+        by smtp.gmail.com with ESMTPSA id m15sm3858297wmc.35.2020.05.02.05.10.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 05:08:54 -0700 (PDT)
+        Sat, 02 May 2020 05:10:38 -0700 (PDT)
 From:   Pavel Begunkov <asml.silence@gmail.com>
 To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] io_uring: fix timeout offset with batch CQ commit
-Date:   Sat,  2 May 2020 15:07:15 +0300
-Message-Id: <bb2c05f271ceda09fc69327440905d87a6d796fa.1588420906.git.asml.silence@gmail.com>
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Clay Harris <bugs@claycon.org>
+Subject: [PATCH 1/2] splice: export do_tee()
+Date:   Sat,  2 May 2020 15:09:25 +0300
+Message-Id: <56e9c3c84e5dbf0be8272b520a7f26b039724175.1588421219.git.asml.silence@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1588420906.git.asml.silence@gmail.com>
-References: <cover.1588420906.git.asml.silence@gmail.com>
+In-Reply-To: <cover.1588421219.git.asml.silence@gmail.com>
+References: <cover.1588421219.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,133 +78,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Completions may be done in batches, where io_commit_cqring() is called
-only once at the end. It means, that timeout sequence checks are done
-only once and don't consider events in between, so potentially failing
-to trigger some timeouts.
-
-Do a separate CQ sequence accounting in u64. On timeout sequence
-checking look up to UINT_MAX sequence behind, which it could have
-missed. It's safe to do, because sqe->off is u32 and so can't wrap
-around to used [seq - UINT_MAX, seq] window.
-
-It's also necessary to decouple CQ timeout sequences from
-ctx->cq_cached_tail for implementing "single CQE per link" feature and
-others.
+export do_tee() for use in io_uring
 
 Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
- fs/io_uring.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+ fs/splice.c            | 3 +--
+ include/linux/splice.h | 3 +++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 827b0b967dc7..4ed82d39540b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -298,6 +298,7 @@ struct io_ring_ctx {
- 		unsigned		cq_entries;
- 		unsigned		cq_mask;
- 		atomic_t		cq_timeouts;
-+		u64			cq_seq;
- 		unsigned long		cq_check_overflow;
- 		struct wait_queue_head	cq_wait;
- 		struct fasync_struct	*cq_fasync;
-@@ -385,7 +386,7 @@ struct io_timeout {
- 	u64				addr;
- 	int				flags;
- 	u32				off;
--	u32				target_seq;
-+	u64				target_seq;
- };
- 
- struct io_rw {
-@@ -1085,6 +1086,7 @@ static void io_kill_timeout(struct io_kiocb *req)
- 	ret = hrtimer_try_to_cancel(&req->io->timeout.timer);
- 	if (ret != -1) {
- 		atomic_inc(&req->ctx->cq_timeouts);
-+		req->ctx->cq_seq--;
- 		list_del_init(&req->list);
- 		req->flags |= REQ_F_COMP_LOCKED;
- 		io_cqring_fill_event(req, 0);
-@@ -1102,16 +1104,31 @@ static void io_kill_timeouts(struct io_ring_ctx *ctx)
- 	spin_unlock_irq(&ctx->completion_lock);
- }
- 
-+static inline bool io_check_in_range(u64 pos, u64 start, u64 end)
-+{
-+	/* if @end < @start, check for [end, MAX_U64] + [MAX_U64, start] */
-+	return (pos - start) <= (end - start);
-+}
-+
- static void __io_flush_timeouts(struct io_ring_ctx *ctx)
+diff --git a/fs/splice.c b/fs/splice.c
+index 4735defc46ee..000be62c5146 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -1763,8 +1763,7 @@ static int link_pipe(struct pipe_inode_info *ipipe,
+  * The 'flags' used are the SPLICE_F_* variants, currently the only
+  * applicable one is SPLICE_F_NONBLOCK.
+  */
+-static long do_tee(struct file *in, struct file *out, size_t len,
+-		   unsigned int flags)
++long do_tee(struct file *in, struct file *out, size_t len, unsigned int flags)
  {
-+	u64 start_seq = ctx->cq_seq;
+ 	struct pipe_inode_info *ipipe = get_pipe_info(in);
+ 	struct pipe_inode_info *opipe = get_pipe_info(out);
+diff --git a/include/linux/splice.h b/include/linux/splice.h
+index ebbbfea48aa0..5c47013f708e 100644
+--- a/include/linux/splice.h
++++ b/include/linux/splice.h
+@@ -82,6 +82,9 @@ extern long do_splice(struct file *in, loff_t __user *off_in,
+ 		      struct file *out, loff_t __user *off_out,
+ 		      size_t len, unsigned int flags);
+ 
++extern long do_tee(struct file *in, struct file *out, size_t len,
++		   unsigned int flags);
 +
-+
-+	/*
-+	 * Batched CQ commit may have left some pending timeouts sequences
-+	 * behind @cq_sqe. Look back to find them. Note, that sqe->off is u32,
-+	 * and it uses u64 to not falsely trigger timeouts with large off.
-+	 */
-+	start_seq -= UINT_MAX;
- 	do {
- 		struct io_kiocb *req = list_first_entry(&ctx->timeout_list,
- 							struct io_kiocb, list);
- 
- 		if (req->flags & REQ_F_TIMEOUT_NOSEQ)
- 			break;
--		if (req->timeout.target_seq != ctx->cached_cq_tail
--					- atomic_read(&ctx->cq_timeouts))
-+		if (!io_check_in_range(req->timeout.target_seq, start_seq,
-+					ctx->cq_seq))
- 			break;
- 
- 		list_del_init(&req->list);
-@@ -1147,6 +1164,7 @@ static struct io_uring_cqe *io_get_cqring(struct io_ring_ctx *ctx)
- 		return NULL;
- 
- 	ctx->cached_cq_tail++;
-+	ctx->cq_seq++;
- 	return &rings->cqes[tail & ctx->cq_mask];
- }
- 
-@@ -4579,6 +4597,8 @@ static enum hrtimer_restart io_timeout_fn(struct hrtimer *timer)
- 	atomic_inc(&ctx->cq_timeouts);
- 
- 	spin_lock_irqsave(&ctx->completion_lock, flags);
-+	ctx->cq_seq--;
-+
- 	/*
- 	 * We could be racing with timeout deletion. If the list is empty,
- 	 * then timeout lookup already found it and will be handling it.
-@@ -4702,7 +4722,7 @@ static int io_timeout(struct io_kiocb *req)
- 	struct io_ring_ctx *ctx = req->ctx;
- 	struct io_timeout_data *data = &req->io->timeout;
- 	struct list_head *entry;
--	u32 tail, off = req->timeout.off;
-+	u32 off = req->timeout.off;
- 
- 	spin_lock_irq(&ctx->completion_lock);
- 
-@@ -4717,8 +4737,7 @@ static int io_timeout(struct io_kiocb *req)
- 		goto add;
- 	}
- 
--	tail = ctx->cached_cq_tail - atomic_read(&ctx->cq_timeouts);
--	req->timeout.target_seq = tail + off;
-+	req->timeout.target_seq = ctx->cq_seq + off;
- 
- 	/*
- 	 * Insertion sort, ensuring the first entry in the list is always
-@@ -4726,7 +4745,7 @@ static int io_timeout(struct io_kiocb *req)
- 	 */
- 	list_for_each_prev(entry, &ctx->timeout_list) {
- 		struct io_kiocb *nxt = list_entry(entry, struct io_kiocb, list);
--		u32 nxt_off = nxt->timeout.target_seq - tail;
-+		u32 nxt_off = (u32)(nxt->timeout.target_seq - ctx->cq_seq);
- 
- 		if (!(nxt->flags & REQ_F_TIMEOUT_NOSEQ) && (off >= nxt_off))
- 			break;
+ /*
+  * for dynamic pipe sizing
+  */
 -- 
 2.24.0
 
