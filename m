@@ -2,174 +2,120 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E3FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E630BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036E82072E
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:33:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjNHsOJU"
+	by mail.kernel.org (Postfix) with ESMTP id C94722192A
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 13:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgEBNdg (ORCPT
+        id S1728079AbgEBNe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 09:33:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgEBNdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 09:33:35 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8619DC061A0C;
-        Sat,  2 May 2020 06:33:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s8so5982700pgq.1;
-        Sat, 02 May 2020 06:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hMm84SPSByLw3R4Nf70xivWbzJKX1oEFGozqAzehKXg=;
-        b=mjNHsOJUEUWPW3GgTRq95PGLI6elZ0XdP1BMc+zkOnGGYEBUd0+OpGOdEQ/SQ8pbL0
-         k4rs74dxjgKetFkSOBojXxvZCFfnC/ByMnZVkwCYpwXYJybRrGWbolRdPzDx8f5ptC6S
-         YYLotds7BfcD7lvrX3ydpuTo//8ddomidvLaJdXqZ7ZQcbxp4CSqDvg2FIA7SuWWmMpW
-         E/XDIrj472swi+ICO2GLWT+D5QQTYcdhM7acoEnrXYARnqd1HSLj7P0oknXq+ttj/MI5
-         P3KSGL5wkYQ1CpTTfD71eG5vLXCiDVdXTA0pGEPdLuecbActwUN9cLoYNOVITmBCBEXV
-         SMrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hMm84SPSByLw3R4Nf70xivWbzJKX1oEFGozqAzehKXg=;
-        b=qSlQHJP0Nhkeq4sOM5fCMKTuQnC+yQhgH1NhQRhaTDawaBwYta3mnwx0XpORTWHwY9
-         RgCYvA3M4Jl+7C3SLs62GabaU70iWxAF54Ec6Ud/oPashN6nF0OxaWCfTGccHNm4OagZ
-         kRXt/GHj2qvGJYFfhXV+Fk6EeHCfv41N8dHjM9qtaaA9hybubDzuiGQQiNEbE6y0Bcvm
-         Zb38DySE+Ng6LE4flXM8K5mtqbwJfS0va7GvPzfajJHRI81LVBrcaN/YLaxbwkZBQs8c
-         W9uBdOAc2+swRx8BpeVp4ZvsGYhWYZ+MKKpznhjfEHJVQIQQUu9LTvBw/M4WdF7FmPB0
-         NHpA==
-X-Gm-Message-State: AGi0Pua9xvCQ86zZJZ8vkfYeQ/jwB1LRDcUrs9BemEzR2eI4GYp8SU4o
-        T43RIs4NqzZ7NbFEksxw618=
-X-Google-Smtp-Source: APiQypKPWnVZfeYKNhWKjQgRyY9VmayqlniMEaIF2zh94MODEBuFUuxzcp1MO5WEQCPSfCPnJRNjiA==
-X-Received: by 2002:aa7:8ad6:: with SMTP id b22mr8207259pfd.251.1588426414709;
-        Sat, 02 May 2020 06:33:34 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id w125sm4200116pgw.22.2020.05.02.06.33.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 06:33:33 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v2] streamline_config.pl: add LOCALMODCONFIG_PRESERVE to preserve some kconfigs
-Date:   Sat,  2 May 2020 21:33:20 +0800
-Message-Id: <20200502133320.4473-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 2 May 2020 09:34:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:52290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728025AbgEBNez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 09:34:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAED330E;
+        Sat,  2 May 2020 06:34:54 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.71.130])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A17F73F68F;
+        Sat,  2 May 2020 06:34:51 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: [PATCH V3 00/16] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1, ID_MMFR5 and other changes
+Date:   Sat,  2 May 2020 19:03:49 +0530
+Message-Id: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it is useful to preserve batches of configs when making
-localmodconfig. For example, I usually don't want any usb and fs
-modules to be disabled. Now we can do it by:
+This series is primarily motivated from an adhoc list from Mark Rutland
+during our previous ID_ISAR6 discussion [1]. The current proposal also
+accommodates some more suggestions from Will and Suzuki.
 
- $ make LOCALMODCONFIG_PRESERVE="drivers/usb;fs" localmodconfig
+This series adds missing 32 bit system registers (ID_PFR2, ID_DFR1 and
+ID_MMFR5), adds missing features bits on all existing system registers
+(32 and 64 bit) and some other miscellaneous changes. While here it also
+includes a patch which does macro replacement for various open bits shift
+encodings for various CPU ID registers. There is a slight re-order of the
+patches here as compared to the previous version (V1).
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+This series is based on arm64 tree (for-next/cpufeature). All feature bits
+enabled here can be referred in ARM DDI 0487F.a specification. Though I
+have tried to select appropriate values for each new feature being added
+here, there might be some inconsistencies (or mistakes). In which case,
+please do let me know if anything needs to change. Thank you.
 
----
-v2: fix typo in documentation. (Randy Dunlap)
----
- Documentation/admin-guide/README.rst |  8 +++++++-
- scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 1 deletion(-)
+[1] https://patchwork.kernel.org/patch/11287805/
 
-diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-index cc6151fc0845..2fff55834085 100644
---- a/Documentation/admin-guide/README.rst
-+++ b/Documentation/admin-guide/README.rst
-@@ -209,10 +209,16 @@ Configuring the kernel
-                            store the lsmod of that machine into a file
-                            and pass it in as a LSMOD parameter.
- 
-+                           Also, you can preserve modules in certain folders
-+                           or kconfig files by spcifying their paths in
-+                           parameter LOCALMODCONFIG_PRESERVE.
-+
-                    target$ lsmod > /tmp/mylsmod
-                    target$ scp /tmp/mylsmod host:/tmp
- 
--                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-+                   host$ make LSMOD=/tmp/mylsmod \
-+                           LOCALMODCONFIG_PRESERVE="drivers/usb;drivers/gpu;fs" \
-+                           localmodconfig
- 
-                            The above also works when cross compiling.
- 
-diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-index e2f8504f5a2d..ab5d1e10a5d0 100755
---- a/scripts/kconfig/streamline_config.pl
-+++ b/scripts/kconfig/streamline_config.pl
-@@ -143,6 +143,7 @@ my %depends;
- my %selects;
- my %prompts;
- my %objects;
-+my %config2kfile;
- my $var;
- my $iflevel = 0;
- my @ifdeps;
-@@ -201,6 +202,7 @@ sub read_kconfig {
- 	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
- 	    $state = "NEW";
- 	    $config = $2;
-+	    $config2kfile{"CONFIG_$config"} = $kconfig;
- 
- 	    # Add depends for 'if' nesting
- 	    for (my $i = 0; $i < $iflevel; $i++) {
-@@ -592,6 +594,22 @@ while ($repeat) {
- 
- my %setconfigs;
- 
-+my @presevered_kconfigs;
-+@presevered_kconfigs = split(/;/,$ENV{LOCALMODCONFIG_PRESERVE}) if (defined($ENV{LOCALMODCONFIG_PRESERVE}));
-+
-+sub in_presevered_kconfigs {
-+    my $kconfig = $config2kfile{$_[0]};
-+    if (!defined($kconfig)) {
-+        return 0;
-+    }
-+    foreach my $excl (@presevered_kconfigs) {
-+        if($kconfig =~ /^$excl/) {
-+            return 1;
-+        }
-+    }
-+    return 0;
-+}
-+
- # Finally, read the .config file and turn off any module enabled that
- # we could not find a reason to keep enabled.
- foreach my $line (@config_file) {
-@@ -644,6 +662,11 @@ foreach my $line (@config_file) {
-     }
- 
-     if (/^(CONFIG.*)=(m|y)/) {
-+        if (in_presevered_kconfigs($1)) {
-+            dprint "Preserve config $1";
-+            print;
-+            next;
-+        }
- 	if (defined($configs{$1})) {
- 	    if ($localyesconfig) {
- 	        $setconfigs{$1} = 'y';
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com> 
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: kvmarm@lists.cs.columbia.edu
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Changes in V3:
+
+- Rebased on git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git (for-next/cpufeature)
+
+Changes in V2: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=270605)
+
+- Added Suggested-by tag from Mark Rutland for all changes he had proposed
+- Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
+- Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
+- Added ID_DFR1 and ID_MMFR5 system register definitions per Will
+- Added remaining features bits for relevant 64 bit system registers per Will
+- Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
+- Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
+- Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
+- Changed some commit messages
+
+Changes in V1: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=234093)
+
+Anshuman Khandual (16):
+  arm64/cpufeature: Add explicit ftr_id_isar0[] for ID_ISAR0 register
+  arm64/cpufeature: Drop TraceFilt feature exposure from ID_DFR0 register
+  arm64/cpufeature: Make doublelock a signed feature in ID_AA64DFR0
+  arm64/cpufeature: Introduce ID_PFR2 CPU register
+  arm64/cpufeature: Introduce ID_DFR1 CPU register
+  arm64/cpufeature: Introduce ID_MMFR5 CPU register
+  arm64/cpufeature: Add remaining feature bits in ID_PFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_MMFR4 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64ISAR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64PFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64PFR1 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR1 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR2 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64DFR0 register
+  arm64/cpufeature: Replace all open bits shift encodings with macros
+
+ arch/arm64/include/asm/cpu.h    |   3 +
+ arch/arm64/include/asm/sysreg.h |  90 ++++++++++++++++++++
+ arch/arm64/kernel/cpufeature.c  | 141 +++++++++++++++++++++++++-------
+ arch/arm64/kernel/cpuinfo.c     |   3 +
+ arch/arm64/kvm/sys_regs.c       |   6 +-
+ 5 files changed, 211 insertions(+), 32 deletions(-)
+
 -- 
-2.25.1
+2.20.1
 
