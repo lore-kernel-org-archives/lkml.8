@@ -2,107 +2,103 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461F7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC116C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B9A20757
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:41:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfM1ArAe"
+	by mail.kernel.org (Postfix) with ESMTP id 9F7D820731
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 19:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588449418;
+	bh=6khIIjEMbm1Tuwemg9wmWGvqJsIsSm9Lt5n/s/+i/r4=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=E9rjDXJ34PE7dKXFePvWSAnqdw0UFQrdjM2O+1LX2bhDtak1liRr7mCVPs1ByOuAJ
+	 OY4Qy78QcfJ23k7WluRivC7dkvlI+YLD+4BcF0nalvFuSFUxYL+TKgXsy09p96YrRB
+	 7iN/Sd4+2yMwbkGazXzVHRd9vTpWMo9CrtOlyTPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgEBTll (ORCPT
+        id S1728498AbgEBT46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 15:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728472AbgEBTlk (ORCPT
+        Sat, 2 May 2020 15:56:58 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:34424 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728107AbgEBT45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 15:41:40 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8ABC061A0C;
-        Sat,  2 May 2020 12:41:40 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id i68so10709950qtb.5;
-        Sat, 02 May 2020 12:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CzAS92/gIVDVCtU/nlrZcCoacFpXKrv+S/G4vPnPz9w=;
-        b=CfM1ArAe0XOdhzIArrqdoBorCjqX6EzLXt79Vqaeh5dKDaPsb91Z2WaTRHTiTmL+hc
-         Swae4YXaminVHGTtXUxTOQXtRGw4sWaQHo/uUhHiY3dfbg1lUcoVTBKTqH0HlcXdXh4A
-         8kUUgmGmkKzZu5Faq+hh7TWGsWaD4rbyX+FdFuyUHTKlFcFyQhZtFCQKJxAqwGsuLaOa
-         YGNHQ/1Xbez/YjfywqiP3vfYVPk7mxq9wQhLAj9o5GlA/IwsYfBZSCpF0coqu+EWOrsj
-         o09t8YSGSu3rGo29z5AMC7Hmwmmsc07DRm1/+wtYFhPtTVaLVw0scV5jrGWD6qMwEI5H
-         w9Lw==
+        Sat, 2 May 2020 15:56:57 -0400
+Received: by mail-ot1-f42.google.com with SMTP id 72so5454610otu.1;
+        Sat, 02 May 2020 12:56:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CzAS92/gIVDVCtU/nlrZcCoacFpXKrv+S/G4vPnPz9w=;
-        b=YOtjSrd1OT+6JS1Ihqo4O6uUcEVhcSv0jM4dqafCySGOu6tCmPPHkS5n7O7S5eysrL
-         Vhl85QqBSQj16aVjFW1XuJno8qiH8/MQ/jyOhkSJCa7dkvURsdYpbPwXqkN9Of9Hc4hk
-         YXOkuAhSJ7mnO5uniIkrGea4X81tG2YuVQnd+rC3A/Y6YxkHekNYtbndHedUZ5Mw9EIo
-         hisfjMuGnytvvBNcErSxOyRiI/6aaSsNY8ugKW+MVPCiHQ32iCFXt7CPoVlsD3sAqYK8
-         o1q0P3dzsNmkEkKiZ85OpY1L0/mfWi+L8/Yg/8649IWO5+ta8HSUlfhcNEN+vvRtE2C8
-         JALQ==
-X-Gm-Message-State: AGi0PubH0pSSPRdld2d4SF7xjDggA8DimDn1/Rr0hrIkaPD7l96mGESQ
-        WcN7GYQx12x43Uh0+gwnF7w=
-X-Google-Smtp-Source: APiQypKxSb6SUd0UvEqHA79llP/qMV+I+83MWiw8H0TQNOnCJmO+OPknSlUySU7fxJmCrZwHiJLCIA==
-X-Received: by 2002:aed:2142:: with SMTP id 60mr10038261qtc.177.1588448499648;
-        Sat, 02 May 2020 12:41:39 -0700 (PDT)
-Received: from localhost.localdomain (c-71-232-27-28.hsd1.ma.comcast.net. [71.232.27.28])
-        by smtp.gmail.com with ESMTPSA id t6sm5696709qkf.27.2020.05.02.12.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 12:41:39 -0700 (PDT)
-From:   Andriy Gelman <andriy.gelman@gmail.com>
-X-Google-Original-From: Andriy Gelman
-Cc:     Andriy Gelman <andriy.gelman@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: s5p-mfc: set V4L2_BUF_FLAG_LAST flag on final buffer
-Date:   Sat,  2 May 2020 15:40:52 -0400
-Message-Id: <20200502194052.485-1-andriy.gelman@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Ku7FT7H/qujkTpfndppU/5D0Q3HreZKL0CE63+jkaGE=;
+        b=C9KuUp2jQKVlt00/MfqggsyuEh2lma18QJUeiBA8/VyP/ybUc+MW0WmDasZMp7U5aS
+         AP4VNa1KowaJzlkeR7AldWzaF3ejEBD52vEZ7ubFfJBgEmGbFalt2GfMLVjSQFkOJrKP
+         XGr4WZpS7tHzWlDXM0+YttPszbJU5aIloh+GMOQCjwff712Dof45VPJMozUMdYmVn+yk
+         iPPMKlErrW5fuAbbZtfmHCANPLZlXjkOgjQGrhDLFp8JdfM9Mrt+Zh1E421/N/9j/LWQ
+         0WeqKZGLGk5cdrJsy4TgwMmI63/d1Gssh4Qz2N1fkpZH9//E6xZzqnB9PeUSTFXGorVS
+         bLXg==
+X-Gm-Message-State: AGi0PuYjSOI2S/F1rJbNs5qZVevfNRCVpq8Z5oCw/USibZfQKK/lEx+Q
+        ycOcPSadf6f/49gByI0FJ9ayveHumo1SZUFzVtKXgi8C
+X-Google-Smtp-Source: APiQypJDMfsCYoxZLVpdfFCTqyN+78U8CyqwHxduOqRrk0pa7UvzuIcoyttl7/Fwd66VN6AF8QRPAV5Orra9qj/xcKg=
+X-Received: by 2002:a05:6830:18d0:: with SMTP id v16mr8217505ote.118.1588449416859;
+ Sat, 02 May 2020 12:56:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 2 May 2020 21:56:46 +0200
+Message-ID: <CAJZ5v0huWpQa3NgmmJ_OWGB_ngQvA4V3YCX1i3-QutqSxZOzdw@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.7-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andriy Gelman <andriy.gelman@gmail.com>
+Hi Linus,
 
-As per V4L2 api, the final buffer should set V4L2_BUF_FLAG_LAST flag.
+Please pull from the tag
 
-Signed-off-by: Andriy Gelman <andriy.gelman@gmail.com>
----
- drivers/media/platform/s5p-mfc/s5p_mfc.c | 1 +
- 1 file changed, 1 insertion(+)
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.7-rc4
 
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-index 5c2a23b953a4..b3d9b3a523fe 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-@@ -614,6 +614,7 @@ static void s5p_mfc_handle_stream_complete(struct s5p_mfc_ctx *ctx)
- 		list_del(&mb_entry->list);
- 		ctx->dst_queue_cnt--;
- 		vb2_set_plane_payload(&mb_entry->b->vb2_buf, 0, 0);
-+		mb_entry->b->flags |= V4L2_BUF_FLAG_LAST;
- 		vb2_buffer_done(&mb_entry->b->vb2_buf, VB2_BUF_STATE_DONE);
- 	}
- 
--- 
-2.25.1
+with top-most commit a53839963ee22470a716de665bca39d2dae63c27
 
+ Merge branches 'pm-cpufreq' and 'pm-sleep'
+
+on top of commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c
+
+ Linux 5.7-rc3
+
+to receive power management fixes for 5.7-rc4.
+
+These prevent the intel_pstate driver from printing excessive
+diagnostic messages in some cases (Chris Wilson), make the
+hibernation restore kernel freeze kernel threads as well as user
+space tasks (Dexuan Cui) and fix the ACPI device PM disagnostic
+messages to include the correct power state name (Kai-Heng Feng).
+
+Thanks!
+
+
+---------------
+
+Chris Wilson (1):
+      cpufreq: intel_pstate: Only mention the BIOS disabling turbo mode once
+
+Dexuan Cui (1):
+      PM: hibernate: Freeze kernel threads in software_resume()
+
+Kai-Heng Feng (1):
+      PM: ACPI: Output correct message on target power state
+
+---------------
+
+ drivers/acpi/device_pm.c       | 4 ++--
+ drivers/cpufreq/intel_pstate.c | 2 +-
+ kernel/power/hibernate.c       | 7 +++++++
+ 3 files changed, 10 insertions(+), 3 deletions(-)
