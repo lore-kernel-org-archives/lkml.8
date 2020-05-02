@@ -4,104 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8F9C47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A04C47254
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 045EE20836
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7322075B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 17:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588442150;
-	bh=y6AytE7dr/RyFoctZ/9QYQjsnxyU49JgeNfyVZE/xx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=13CpK2YYEUDNG/qakuW/Br27Mc7j+wgRgYlHm9NKX8wvfRJA43Kzw1+iey364fiNv
-	 KmbSt2c2ORi+r4ssPTM0fqVbKhhLEfE6T5aslB9kVVo0i9LShqK9XPGjaLRfcyHssT
-	 hGrhjnbBKBMNu42qbu0IRbCdzOa4zWEn0+aV7t+I=
+	s=default; t=1588442181;
+	bh=Pyti/oXfxkkEpTlk5s7TE6yHsZRFMYA9AHGC30Lb498=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sh7jkeYS09pUDgCxRKUOncso8B4iqRU2gC3qDNaGDqfDgH5wvEjU+lzi+lTkEuKdN
+	 fQTQ2seGPaFx8/vzqX7OqIQYGaym/4o6N9yczjTxxCZ4AFZvibLK4H48+EpeyAx3LU
+	 hIBJvGjPjRuQi14vWi8uiHuNsV6IfvnUgQh0nfuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgEBRzs (ORCPT
+        id S1728399AbgEBR4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 13:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46742 "EHLO mail.kernel.org"
+        Sat, 2 May 2020 13:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbgEBRzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 13:55:48 -0400
-Received: from localhost (p5486C608.dip0.t-ipconnect.de [84.134.198.8])
+        id S1728266AbgEBR4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 13:56:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC3772075B;
-        Sat,  2 May 2020 17:55:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC5DB2075B;
+        Sat,  2 May 2020 17:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588442147;
-        bh=y6AytE7dr/RyFoctZ/9QYQjsnxyU49JgeNfyVZE/xx8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lQ1MKSH0zDQOKkPE90TNycFGQi9RJ9MedGUDDoR0hg/ekqymH1BauTgxLlmbwVoOZ
-         f17tMocC9MmWKnOp4EddRqhnPoKG3HwnXKg5GihHEm6Lmdnsy3zBV1VIz9esH+yH7i
-         ht95hz1S9sattE2olW6OnK3L8OfkUNqe3GWVCWTM=
-Date:   Sat, 2 May 2020 19:55:44 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-mmc@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci-esdhc: update contact email
-Message-ID: <20200502175544.GA25220@ninjato>
-References: <20200502142840.19418-1-wsa@kernel.org>
- <7298908d2397b2e753b844b690ef522c728d90a6.camel@perches.com>
+        s=default; t=1588442179;
+        bh=Pyti/oXfxkkEpTlk5s7TE6yHsZRFMYA9AHGC30Lb498=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MiEddyPCAtLTlxuDcubVgInzAEFFsHVAHPZPu/p+l56T1dNxwRmAHYtbBmCYfu9Gf
+         3YxZRiagCdB8m1kCD/GgnuHiqWzq/RlwOFw+2bcF+cHC6EOcUGFoY5SEwq9ysTaHk3
+         im/59ryejSfqE5hmVOADG140OyukQDJuCEAgKtaE=
+Date:   Sat, 2 May 2020 18:56:15 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 2/2] iio: cros_ec_light: Add support for RGB sensor
+Message-ID: <20200502185615.74db5af1@archlinux>
+In-Reply-To: <CAPUE2us=1=RvJ1aQNYQSU1rnMkwjVfM_EdS7QpO8u0NPPtgsfg@mail.gmail.com>
+References: <20200423000230.82750-1-gwendal@chromium.org>
+        <20200423000230.82750-3-gwendal@chromium.org>
+        <20200425183101.531b49be@archlinux>
+        <CAPUE2us=1=RvJ1aQNYQSU1rnMkwjVfM_EdS7QpO8u0NPPtgsfg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
-In-Reply-To: <7298908d2397b2e753b844b690ef522c728d90a6.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 30 Apr 2020 14:07:03 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Sat, Apr 25, 2020 at 10:31 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Wed, 22 Apr 2020 17:02:30 -0700
+> > Gwendal Grignou <gwendal@chromium.org> wrote:
+> >  
+> > > Add support for color sensors behind EC like TCS3400.
+> > > The color data can be presented in Red Green Blue color space (RGB) or
+> > > the CIE 1931 XYZ color space (XYZ).
+> > > In XYZ mode, the sensor is configured for auto calibrating its channels
+> > > and is the "normal" mode.
+> > > The driver tells the EC to switch between the 2 modes by using the
+> > > calibration command.
+> > > When the sensor is in calibration mode, only clear and RGB channels are
+> > > available. In normal mode, only clear and XYZ are.
+> > > When RGB channels are enabled, the sensor switches to calibration mode
+> > > when the buffer is enabled.
+> > >
+> > > When reading trhough sysfs command, set calibration mode and then read
+> > > the channel(s). A command will be issue for each read, so the channels
+> > > may come from different sensor sample.
+> > > When using the buffer, after setting the mask, when the buffer is
+> > > enabled, the calibration will be set based on the channel mask.
+> > >
+> > > libiio tools can be used to gather sensor information:
+> > > iio_readdev -s 10 cros-ec-light \
+> > > illuminance_clear illuminance_x illuminance_y illuminance_z  
+> > Illuminance is not defined for color channels.  It's units are LUX which
+> > is only defined wrt to a model of the human eye's response to
+> > 'brightness' (kind of).  
+> Looking at "Calculating Color Temperature and Illuminance " from AMS
+> [https://ams.com/documents/20143/80162/TCS34xx_AN000517_1-00.pdf/1efe49f7-4f92-ba88-ca7c-5121691daff7]
+> page 5, equation 2, the illuminance (Y) is a derived from the vector
+> (X, Y, Z) with coefficient applied. Doesn't it mean
+> in_illumincance_[X,Y,Z,R,G,B,clear ...]_raw have all the same unit,
+> lux?
 
-On Sat, May 02, 2020 at 08:39:16AM -0700, Joe Perches wrote:
-> On Sat, 2020-05-02 at 16:28 +0200, Wolfram Sang wrote:
-> > The 'pengutronix' address is defunct for years. Use the proper contact
-> > address.
->=20
-> Maybe add a .mailmap entry?
+Unfortunately not.   Lux is only defined as brightness as measured
+with a very specific sensitivity profile across the bands. It has no
+meaning as a unit for the various elements added up to get to it.
+(somewhere good old dimensional analysis breaks down)
 
-Yes, it is in another patch:
+Fun corner case of units :)
 
-http://patchwork.ozlabs.org/project/linux-i2c/patch/20200502121840.9544-1-w=
-sa@kernel.org/
+I have seen data sheets that get this wrong btw.
+It's a complex mess because RGB channels are not separable
+either.  They all have overlapping frequency sensitivities.
+Generally the sensors are designed to have some linear combination
+of curves that is close to the curve used for illuminance as they
+want to match human eye view of what bright is.
 
-Thanks!
+If you can provide enough info to the driver to do the calculation
+that would be ideal as then we could provide a standard measure of
+brightness to userspace.
 
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6ttBwACgkQFA3kzBSg
-KbYaZA/+IZBPeOIhOe3VVZh3ZNuHdu4YRX4gZo17UktGpIWzgkP6taLHJc51DRMW
-q7J+oHE4+UH1mVbSOkufxYQPxb2cq+ImbtCab9mWkcOcSCwOclqUDWLir//i79jJ
-dgJ/PJ3l7/OvKBk9bUdo1+EA3k8LDmEqkBfuQ5r6Ck8CZtBNbBMjpDyIcTtnZ6kF
-qOGr8L39YBiuVbIanWFkVqUlzucj9F2ajpDit5uifmRprimOsjWKUNdgH+yg45ql
-78hxIA3O7HRD7y0Y5KyDDc+impiD2k3ic4F5+ul3Pqg6UxosgqNaDRi82lytK2ME
-dQYTo3gkLRZ0p19+CZ/kXLCnSQh+fZNDb5gsSVwUvsNalKhS2AM1HJm4tofJDCxI
-xr6fEJZJAcFG+kDkGuNaghkPGb1tY2k6TXEEh6dvdvdX41F33qFu8iDLjiWIxcnW
-A31REPBgMTBOKYbiyQEY+a93ykRnCf4PImIdZnfutY0oKOOKmUA3g6xUSUBH4nGP
-i1eMhHIX5Gk0UnmA74Kbk8VzHRjQpOsRdiDAXHiXjX6XjgKrmlrgyrcAzdPLJMS3
-dwz4mei4kgHWg9BTM7xO81O562nGk7fDJJXMwW6cNw1PGMxb6qf8OhBB+gFVLJ8d
-Zx2KHLqTSa3Y+YEGXwJX8cqax1V0uAGVmBPRAi8xCBthvgdDN0Q=
-=XYSF
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+Jonathan
