@@ -2,180 +2,289 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF6BC47256
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033D6C47256
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3372184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8A621835
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 00:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fWeXntUR"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Iw9jkJxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgEBAZg (ORCPT
+        id S1726672AbgEBA3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 20:25:36 -0400
-Received: from mail-bn8nam11on2058.outbound.protection.outlook.com ([40.107.236.58]:6260
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727113AbgEBAZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 20:25:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mMnGop6OdwN4Y0DPc9SDhpV1VmNWR/BaCOMG7ngV8Iy1SQaQhiw4/qBZnQ6y3AjGrrpFK5ivEVkqGCH3VP5+A7JAyTjiunQ2OI6lWoUCfIh9tBYGWGFKoil6/oliYRG6xLFfbJJTPgmbDTyrlftSje8Lj7X6O6C/dYsxYCBHdOsnENG5qPKeReJo/9bktTGIdX4AOnFyGg0L/NOoVslfuO8KiMiN338N9bN3xsTljvcNbYlQPRYgujdDUTiKppfQ1kXj60e9CWLQnKnm4a2U9iInw2Fg0gcPZlM3kd8BonVTFdmIQJw2v3spI4F9+HcJXngxUEp4rcoBZJGbtZBzWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vZ+0Yya6Zh3QNFdgQ32NxswT2FmGYZJlfGAnmOhYjC0=;
- b=Q4M/ZcEIsRvnFSHB8if8B2sJxT5cJGS4+yMAkHZqru8Y9I9RLQ9Jju+e5EHAlW7q/UKv2jSXz3ZFfAaDJdDdRD6YtQusdjjpmU7mhzHQ4uT86MNuCbjMxxeTLeL9evJosQSe9mjXAsf6yXj0GYRyRIc6HDrqtyt7MyB3I26AqPvXqhq33egYPtfgPKJIo+kSc5YWMKJrHXCNxWQWl9ESlJpnCE6DmPr/DfsGDybmuSYP5HQ16XXaJwN/Iyn1N9nwkmexnA/gB6kOSNFH8SVv68UzR43v1rEScJZwo+0w5ZEoLrDOOCUm+TFlRqIppVnPdT3YqY57n5sfXkSU5yurBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 1 May 2020 20:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgEBA3Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 20:29:24 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6755FC061A0C
+        for <linux-kernel@vger.kernel.org>; Fri,  1 May 2020 17:29:24 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b6so931289plz.13
+        for <linux-kernel@vger.kernel.org>; Fri, 01 May 2020 17:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vZ+0Yya6Zh3QNFdgQ32NxswT2FmGYZJlfGAnmOhYjC0=;
- b=fWeXntUR9N1Ha3wE+oQz0xeZonAbolycOt8FfQHy6KOjoVTFEJvxNZ45BdNV5S2M2VKb+rCWqYLUkg3DKqXp5PDyoMdHQZ6QWrant0/0zG0CaXk8JqY3AQipg3UCVb+7ETcxzDqn4Lo+zCBUjg5PKbn23YMpvfDlJHjHEVOaObw=
-Received: from MN2PR15CA0018.namprd15.prod.outlook.com (2603:10b6:208:1b4::31)
- by SN6PR02MB4176.namprd02.prod.outlook.com (2603:10b6:805:2e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Sat, 2 May
- 2020 00:25:26 +0000
-Received: from BL2NAM02FT057.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:1b4:cafe::1) by MN2PR15CA0018.outlook.office365.com
- (2603:10b6:208:1b4::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
- Transport; Sat, 2 May 2020 00:25:26 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT057.mail.protection.outlook.com (10.152.77.36) with Microsoft SMTP
- Server id 15.20.2958.27 via Frontend Transport; Sat, 2 May 2020 00:25:26
- +0000
-Received: from [149.199.38.66] (port=38220 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jUfy7-0006Qj-C1; Fri, 01 May 2020 17:25:23 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jUfy9-0004NS-Ka; Fri, 01 May 2020 17:25:25 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 0420PI69027415;
-        Fri, 1 May 2020 17:25:18 -0700
-Received: from [172.19.3.8] (helo=xsjamitsuni50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <amit.sunil.dhamne@xilinx.com>)
-        id 1jUfy2-0004Mq-2A; Fri, 01 May 2020 17:25:18 -0700
-From:   Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
-        mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc:     rajanv@xilinx.com, jollys@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
-Subject: [RESEND PATCH v2 1/2] drivers: clk: zynqmp: Add support for custom type flags
-Date:   Fri,  1 May 2020 17:25:16 -0700
-Message-Id: <1588379117-254190-2-git-send-email-amit.sunil.dhamne@xilinx.com>
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=0gEckujgYO5yEgZCIWnLgeYgKfcc2TLCCkDUoH39Yyk=;
+        b=Iw9jkJxwdpW8o7T3GhJeC2RS98jno3xBpIyuVU3DTq5SZ4c2+A+pUpk+CdFvgjObZY
+         igMkXyRu4Qg9jR3GpjcBJ+btxk93gBsLxwR6GQ0KkyYlvYFNY48hgrf5Pkmf7WHCrMp7
+         hLTXbnh/4wm/MjRlXsVBydzkswSdPZeSlkVP+j/aOZiUbRIWItaSk+/At8gd/ecWTd8x
+         A3WuqYXYT9hsFTQ8nn7nI3vs1beW2NWk3w0nwTic98VhHK8Wz4I7hrav1Pi0gqvIYbHd
+         IZagS9+Pd3+kEOi5WaevvGjnm6pJLgxR12NjKSfKnPwEefTtc3fLObiX4aDbCN6Pop73
+         H13A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0gEckujgYO5yEgZCIWnLgeYgKfcc2TLCCkDUoH39Yyk=;
+        b=mgCKMgtwv7OE+fqfMJfTORbHwXJwBEPIT5t0DnBI64it4aHPNvLNEN0Ddw3Pv3wGMQ
+         YCdyadepCmWJ1dAxO7r4HJeqqkfAEZdwxqL2AiYvWpUnigl35IewPHsyAtsMmW64PFVw
+         4OskrcoskAe+w9TmsJxiuAu/pHBeny5D0t+ieZRM303ro7u8LC6HIIafmWNzUfC/YbGe
+         rVReRzwHwvukwA0Vncli9uJoj8K59kMcKkSsIVOWNoxc+N9AwOEPkpp5MONB2vxtn4rU
+         rirpYjVgrj6CjAGQ5ueucs6ErR1ZAdmr0W8RWP+ZXjND1EJ5HQsMPNW23R4vs08QaoQ+
+         HXCg==
+X-Gm-Message-State: AGi0PuY42rLN1vMROwaTOcO1zHcbqwL8APkYfkBKQge9EVbcwPvbY3pS
+        vaZXSKDuz6tz9gwFH45eHRWYIg==
+X-Google-Smtp-Source: APiQypLOLqV0XKekjW6KMWr52IZeMs+tDmi2j90i1b0ur90p7W77rGfVXzy357A55biEWRxB+URsEQ==
+X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr6829624plb.153.1588379363760;
+        Fri, 01 May 2020 17:29:23 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id u188sm3143644pfu.33.2020.05.01.17.29.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 01 May 2020 17:29:23 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        efremov@linux.com, b.zolnierkie@samsung.com, vidyas@nvidia.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH] PCI: endpoint: functions/pci-epf-test: Support slave DMA transfer
+Date:   Fri,  1 May 2020 17:29:12 -0700
+Message-Id: <1588379352-22550-1-git-send-email-alan.mikhak@sifive.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588379117-254190-1-git-send-email-amit.sunil.dhamne@xilinx.com>
-References: <1588379117-254190-1-git-send-email-amit.sunil.dhamne@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(396003)(39860400002)(46966005)(9786002)(4326008)(107886003)(81166007)(316002)(7696005)(426003)(26005)(54906003)(336012)(2906002)(356005)(70586007)(82310400002)(70206006)(8676002)(47076004)(5660300002)(186003)(82740400003)(478600001)(36756003)(8936002)(2616005);DIR:OUT;SFP:1101;
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2ad18674-00bd-4545-3687-08d7ee2f4f79
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4176:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB41768D6F0B8B5433BE547901A7A80@SN6PR02MB4176.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:172;
-X-Forefront-PRVS: 039178EF4A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fj3XhqG1ClH9Sk9MaWHQ354FjwFpSxIiBaISvrR+XODVxk117JPLrDExfz4KtGw0z5wFhC3W1tPXHHO7ke41zMUN62BXMgX3BXA6sgbShogYXcPFn7FQ7QgtRy7Xdm81plLBdZddy3B5lWGEI1hJw63aJy1aJDbM93xijw+6y8qQbQl5DxnoIiJDg7Ou1yIFouQ08o5qnfVYE6+NAQUpHdg2qKWIMtMCG50uTb1AeGYAI8TDIXKSJ2bM2SVUizMVH0Tpt1WzZZw+g2ZzVuL08NQmLo704VnpupeeePQkE+GG4VM1PjaSQw507q3BEBbsoV0KKklXJJetUm/NpzCHxTkC3iR5GQ/K6M9hl2H0h9rNcZwmtUJzElRaX5CvjpgQT3vfTUUU33KXHLyFaMBdyxLePSJ/Egu6mBNSyY0uf6UQ0ZKw0ie+Mq9L7fYGPldtbAEWVD0obgUtuKTqpTIs0hE4CeebE3U8OtIx4L8BRxoUQt5JhqgIjQvOly0wV6jKU8aKZdxZuiRj6xuCXZrYgA==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2020 00:25:26.0342
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad18674-00bd-4545-3687-08d7ee2f4f79
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-Store extra custom type flags received from firmware.
+Modify pci_epf_test_data_transfer() to also support slave DMA transfers.
+Adds a direction parameter so caller can specify one of the supported DMA
+transfer directions: DMA_MEM_TO_MEM, DMA_MEM_TO_DEV, and DMA_DEV_TO_MEM.
+For DMA_MEM_TO_MEM, the function calls dmaengine_prep_dma_memcpy() as it
+did before. For DMA_MEM_TO_DEV or DMA_DEV_TO_MEM direction, the function
+calls dmaengine_slave_config() to configure the slave channel before it
+calls dmaengine_prep_slave_single().
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-Signed-off-by: Amit Sunil Dhamne <amit.sunil.dhamne@xilinx.com>
+Modify existing callers to specify DMA_MEM_TO_MEM since that is the only
+possible option so far. Rename the phys_addr local variable in some of the
+callers for more readability. Tighten some of the timing function calls to
+avoid counting error print time in case of error.
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
 ---
- drivers/clk/zynqmp/clk-zynqmp.h | 1 +
- drivers/clk/zynqmp/clkc.c       | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 67 ++++++++++++++++++---------
+ 1 file changed, 44 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqm=
-p.h
-index fec9a15..5beeb41 100644
---- a/drivers/clk/zynqmp/clk-zynqmp.h
-+++ b/drivers/clk/zynqmp/clk-zynqmp.h
-@@ -30,6 +30,7 @@ struct clock_topology {
-        u32 type;
-        u32 flag;
-        u32 type_flag;
-+       u8 custom_type_flag;
- };
-
- struct clk_hw *zynqmp_clk_register_pll(const char *name, u32 clk_id,
-diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
-index 10e89f2..4dd8413 100644
---- a/drivers/clk/zynqmp/clkc.c
-+++ b/drivers/clk/zynqmp/clkc.c
-@@ -84,6 +84,7 @@ struct name_resp {
-
- struct topology_resp {
- #define CLK_TOPOLOGY_TYPE              GENMASK(3, 0)
-+#define CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS GENMASK(7, 4)
- #define CLK_TOPOLOGY_FLAGS             GENMASK(23, 8)
- #define CLK_TOPOLOGY_TYPE_FLAGS                GENMASK(31, 24)
-        u32 topology[CLK_GET_TOPOLOGY_RESP_WORDS];
-@@ -396,6 +397,9 @@ static int __zynqmp_clock_get_topology(struct clock_top=
-ology *topology,
-                topology[*nnodes].type_flag =3D
-                                FIELD_GET(CLK_TOPOLOGY_TYPE_FLAGS,
-                                          response->topology[i]);
-+               topology[*nnodes].custom_type_flag =3D
-+                       FIELD_GET(CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS,
-+                                 response->topology[i]);
-                (*nnodes)++;
-        }
-
---
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 60330f3e3751..1d026682febb 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -104,25 +104,41 @@ static void pci_epf_test_dma_callback(void *param)
+  * The function returns '0' on success and negative value on failure.
+  */
+ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+-				      dma_addr_t dma_dst, dma_addr_t dma_src,
+-				      size_t len)
++				      dma_addr_t dma_dst,
++				      dma_addr_t dma_src,
++				      size_t len,
++				      enum dma_transfer_direction dir)
+ {
+ 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+ 	struct dma_chan *chan = epf_test->dma_chan;
+ 	struct pci_epf *epf = epf_test->epf;
++	struct dma_slave_config sconf;
+ 	struct dma_async_tx_descriptor *tx;
+ 	struct device *dev = &epf->dev;
+ 	dma_cookie_t cookie;
++	dma_addr_t buf;
+ 	int ret;
+ 
+ 	if (IS_ERR_OR_NULL(chan)) {
+-		dev_err(dev, "Invalid DMA memcpy channel\n");
++		dev_err(dev, "Invalid DMA channel\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
++	if (dir == DMA_MEM_TO_MEM) {
++		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src,
++					       len, flags);
++	} else {
++		memset(&sconf, 0, sizeof(sconf));
++		sconf.direction = dir;
++		sconf.dst_addr = dma_dst;
++		sconf.src_addr = dma_src;
++		dmaengine_slave_config(chan, &sconf);
++
++		buf = (dir == DMA_MEM_TO_DEV) ? dma_dst : dma_src;
++		tx = dmaengine_prep_slave_single(chan, buf, len, dir, flags);
++	}
+ 	if (!tx) {
+-		dev_err(dev, "Failed to prepare DMA memcpy\n");
++		dev_err(dev, "Failed to prepare DMA transfer\n");
+ 		return -EIO;
+ 	}
+ 
+@@ -268,7 +284,6 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+ 		goto err_dst_addr;
+ 	}
+ 
+-	ktime_get_ts64(&start);
+ 	use_dma = !!(reg->flags & FLAG_USE_DMA);
+ 	if (use_dma) {
+ 		if (!epf_test->dma_supported) {
+@@ -277,14 +292,18 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
+ 			goto err_map_addr;
+ 		}
+ 
++		ktime_get_ts64(&start);
+ 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+-						 src_phys_addr, reg->size);
++						 src_phys_addr, reg->size,
++						 DMA_MEM_TO_MEM);
++		ktime_get_ts64(&end);
+ 		if (ret)
+ 			dev_err(dev, "Data transfer failed\n");
+ 	} else {
++		ktime_get_ts64(&start);
+ 		memcpy(dst_addr, src_addr, reg->size);
++		ktime_get_ts64(&end);
+ 	}
+-	ktime_get_ts64(&end);
+ 	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
+ 
+ err_map_addr:
+@@ -310,7 +329,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 	void *buf;
+ 	u32 crc32;
+ 	bool use_dma;
+-	phys_addr_t phys_addr;
++	phys_addr_t src_phys_addr;
+ 	phys_addr_t dst_phys_addr;
+ 	struct timespec64 start, end;
+ 	struct pci_epf *epf = epf_test->epf;
+@@ -319,8 +338,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 	struct device *dma_dev = epf->epc->dev.parent;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
++	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
+ 
+-	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
++	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+ 	if (!src_addr) {
+ 		dev_err(dev, "Failed to allocate address\n");
+ 		reg->status = STATUS_SRC_ADDR_INVALID;
+@@ -328,7 +348,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 		goto err;
+ 	}
+ 
+-	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->src_addr,
++	ret = pci_epc_map_addr(epc, epf->func_no, src_phys_addr, reg->src_addr,
+ 			       reg->size);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to map address\n");
+@@ -360,10 +380,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 
+ 		ktime_get_ts64(&start);
+ 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
+-						 phys_addr, reg->size);
++						 src_phys_addr, reg->size, dir);
++		ktime_get_ts64(&end);
+ 		if (ret)
+ 			dev_err(dev, "Data transfer failed\n");
+-		ktime_get_ts64(&end);
+ 
+ 		dma_unmap_single(dma_dev, dst_phys_addr, reg->size,
+ 				 DMA_FROM_DEVICE);
+@@ -383,10 +403,10 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
+ 	kfree(buf);
+ 
+ err_map_addr:
+-	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
++	pci_epc_unmap_addr(epc, epf->func_no, src_phys_addr);
+ 
+ err_addr:
+-	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
++	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
+ 
+ err:
+ 	return ret;
+@@ -398,7 +418,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	void __iomem *dst_addr;
+ 	void *buf;
+ 	bool use_dma;
+-	phys_addr_t phys_addr;
++	phys_addr_t dst_phys_addr;
+ 	phys_addr_t src_phys_addr;
+ 	struct timespec64 start, end;
+ 	struct pci_epf *epf = epf_test->epf;
+@@ -407,8 +427,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	struct device *dma_dev = epf->epc->dev.parent;
+ 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
+ 	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
++	enum dma_transfer_direction dir = DMA_MEM_TO_MEM;
+ 
+-	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
++	dst_addr = pci_epc_mem_alloc_addr(epc, &dst_phys_addr, reg->size);
+ 	if (!dst_addr) {
+ 		dev_err(dev, "Failed to allocate address\n");
+ 		reg->status = STATUS_DST_ADDR_INVALID;
+@@ -416,7 +437,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 		goto err;
+ 	}
+ 
+-	ret = pci_epc_map_addr(epc, epf->func_no, phys_addr, reg->dst_addr,
++	ret = pci_epc_map_addr(epc, epf->func_no, dst_phys_addr, reg->dst_addr,
+ 			       reg->size);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to map address\n");
+@@ -450,11 +471,11 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 		}
+ 
+ 		ktime_get_ts64(&start);
+-		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
+-						 src_phys_addr, reg->size);
++		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
++						 src_phys_addr,	reg->size, dir);
++		ktime_get_ts64(&end);
+ 		if (ret)
+ 			dev_err(dev, "Data transfer failed\n");
+-		ktime_get_ts64(&end);
+ 
+ 		dma_unmap_single(dma_dev, src_phys_addr, reg->size,
+ 				 DMA_TO_DEVICE);
+@@ -476,10 +497,10 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
+ 	kfree(buf);
+ 
+ err_map_addr:
+-	pci_epc_unmap_addr(epc, epf->func_no, phys_addr);
++	pci_epc_unmap_addr(epc, epf->func_no, dst_phys_addr);
+ 
+ err_addr:
+-	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
++	pci_epc_mem_free_addr(epc, dst_phys_addr, dst_addr, reg->size);
+ 
+ err:
+ 	return ret;
+-- 
 2.7.4
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
