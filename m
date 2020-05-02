@@ -2,169 +2,188 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6816CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5A1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29199216FD
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22D524956
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 15:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="goWwM/fn";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ZstvIr/H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCZ7jWki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgEBPXO (ORCPT
+        id S1728296AbgEBPbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 11:23:14 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:8914 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgEBPXN (ORCPT
+        Sat, 2 May 2020 11:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbgEBPbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 11:23:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1588432992; x=1619968992;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=wU6Hn1QoFqxgocchw3TXAxm8RfIqCWu7dsHmcejUx0s=;
-  b=goWwM/fnJm5tHm/RmYepzkHeP/rzbwEeYRKu6s5i2V320JBdbbF5/mts
-   DTGRkcvuJccXQlxbFJsHeOmJPdcSBOMnuUhT54fiNwZm7n3iyJXU+ixJu
-   N4oEnsLlFqnX6HicomAyP5WzbKZlbDVxhtJlBf8oQJ93oJodF5o7s6+2J
-   vOZjY1ZuXE+9j0n5q+z/Wa/dpN9KgYGvw8QFjpCNwXhPTU3IA3OuQcMX8
-   Lbu6HdRXyKp3nJxZxSS3B8AqnWhCPceGvhFdLK5tPDci0F9fjfUmR++dk
-   wZZf4jcVZ+WaOhEjRpskk/Fm8kyzUYOGvkCrubXXiXoV0TsLIfcD+KU+9
-   Q==;
-IronPort-SDR: hWd2HlsXFCzxszpy1PxyEVnKMhdsIc1BJwnZNW1ByD2j6ALevmQHmS6ONEGzV+hbPsdjDNatVa
- XngdzQMt93UYAVGnr9DjuozZo8TJpUYc/1NegPBrXmU/qbbJQrt2YQ1vTLb4dsLjglVs3pkg+4
- gsFHDRjVKe1YmTL/7jh03htwpJeisMq42NMNlYbgb9HtxxtHuVslzrG0/fnhV/GGblxSWfkvTy
- WWH6i1TAfUizwTNI6h/YyPbXdo5QJawtfWPWHsggRRZPpmu8Eu+1pDEk5OrXVOXXORjhqIN4Eo
- SY4=
-X-IronPort-AV: E=Sophos;i="5.73,343,1583164800"; 
-   d="scan'208";a="136747771"
-Received: from mail-bn7nam10lp2105.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.105])
-  by ob1.hgst.iphmx.com with ESMTP; 02 May 2020 23:23:10 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LbAbIqgTE+41KaZr1EQqDl15qoQxn6UhrozuEVcweJP2lqU9sfcCRrXcXqqKDzxAQJnAzn+Z4FQ6xJdyrx52Ng7/3CmVDMHVMJH3s0tTBRrmYL/ga5ekeYRzkbpDfDNLX9ryZDPWYbj7j+754T+Bu0+lqKqZK147LgUJaMfAaZUQFmYcRjtAwd3TT7KlI42xJpsvhyPPQPvnn0KD3tcZAOvoeVYvzKo/4htTBA3f6bKAq5cHEUBQyJ59Ugxspdxa5hxcPkQpAZ/wlD6ocsNnSUgG/OOlIiO5BoKnpgpOJvh5TM0KsZoGaZIB+vLj+tQpkG6Ami4nOnwjQvb4CZbwRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eAarNdY0LRF1NAAYIxwK0+9OV6ZHf4MkhZuZv1qDILw=;
- b=LMZr8o8JURkp9B74MqOaUv6M7sc+Y0W9YefY0ONW3bxXUdzts7VGefCvDMDCXw9g93XOZeafjKUInA5cLlUiDiwaI5MD1KZhn+CrqZNTSbJUR0oQu3w3i0NGP64AMXBqMQsOlV804rbwXtiOjeIDaucMDZUntLaB0EDsjX0dWO+ClR9voHmVXa/S+zyZagP/guDYV2tGrOh6dqJVRpOyzWhqrgjud59pIwwhlvCp1KQTnm0DSjN1gehRztHHYDvT/4FwF6LtK3C8jeqzxwOEDfeC6+A8KcZp9/qwYawoCnUbN1KrSXDFhoNa54HwSbTL1NlR71k8B4zv4jVur5KL+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Sat, 2 May 2020 11:31:07 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928FAC061A0C;
+        Sat,  2 May 2020 08:31:07 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 18so3089736pfv.8;
+        Sat, 02 May 2020 08:31:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eAarNdY0LRF1NAAYIxwK0+9OV6ZHf4MkhZuZv1qDILw=;
- b=ZstvIr/HBSwheHYneY4i6oDDMwHC2NVgWiFQ/clfS0ZYs1hnH0bAzoXA/9gb5VowbotDrs8OQpShPeJEeVJbTMckVhsx3t+O1rFtR6RNQ5bEduels2gkx9wPNaox4AnFZNhdTbllV2Ck6pXNljuCggx+SvYsutnrW28CzCSpIq0=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4591.namprd04.prod.outlook.com (2603:10b6:805:ae::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Sat, 2 May
- 2020 15:23:08 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.2958.027; Sat, 2 May 2020
- 15:23:08 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
-CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [PATCH v3 2/5] scsi: ufs: add "index" in parameter list of
- ufshcd_query_flag()
-Thread-Topic: [PATCH v3 2/5] scsi: ufs: add "index" in parameter list of
- ufshcd_query_flag()
-Thread-Index: AQHWH8Y7hGL68hem0US2UiZWqmAQY6iU6yiA
-Date:   Sat, 2 May 2020 15:23:07 +0000
-Message-ID: <SN6PR04MB4640D032215F66ED46B4D069FCA80@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200501143835.26032-1-stanley.chu@mediatek.com>
- <20200501143835.26032-3-stanley.chu@mediatek.com>
-In-Reply-To: <20200501143835.26032-3-stanley.chu@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [77.138.4.172]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 85aceabc-e0ba-4b62-98fe-08d7eeacb7b9
-x-ms-traffictypediagnostic: SN6PR04MB4591:
-x-microsoft-antispam-prvs: <SN6PR04MB4591BB3F3423DD3D2741AAD4FCA80@SN6PR04MB4591.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 039178EF4A
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(478600001)(7696005)(54906003)(110136005)(8676002)(8936002)(26005)(6506007)(33656002)(64756008)(66556008)(66476007)(76116006)(66446008)(66946007)(86362001)(52536014)(186003)(4326008)(71200400001)(9686003)(316002)(55016002)(4744005)(5660300002)(7416002)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ty+uPANuoFZwLewJ8H5POl3AW0QU2KKb/HT/3OS8tH6ae5fAT0seYhiyUjOD87gVKoEYzJLkUR0a81/V08Ht4FA+5IunCGMm/1akN6O/sHpAZ01TXtdu5G+TQu1reE0EFP8n72lVua5Mrv05xV87LRKL5Oc7dh6xLYmfhp66Ei+LpUS25W7LRSaycWg/gx2Nf/oTWL7uansI2Lsx7mt/mP1YRmeYf7w2yZTXEkVnN94YYWyi9goCMZWsZIp943FzxAntxd+N2EuaYzpiXes5tb0Kp2LwWh0BKgzuYWk02YwQCm+tu16BvR68rywf6WMYfIj1Ts3SGiJPd8SzlN5Dgk4VL3z8bxs/Ul0eA/jMj0uatY2SnsGp8cSlWEOL5zIOBkNPdpM7h7YgHKk9Me6iVytYq7fHhJHvMkWS97UOEn3HkZXXCxjOVbg9YiTBKDph
-x-ms-exchange-antispam-messagedata: cyFnXUQQ3eeU7DTCVHmnb0zdNIhO03zLmsRYbzttbiz/hFr7bDh9VWTlrQBk2BCOCptaDkHiGRLigQlcFQLZG94N5DFA6OLrfBV43o7hVSFeckuWWcS1id7+hmdb0mdW4eA3YUC3R1lkgbO4cvWSV3zw6/xcwaplJ++lB+oDQ2giQ4wXyY3z/a56Y6CmoQ++CB9nkyfUO5vIrMERSubfapqYE03qGGU53GugVM2g6jzLNKFum4AMwJww0FDkm927k/i/grYryGAbpPglKdfkXwdRnpBe6aItUyJ0YhWbaN8rc0a3E8gq2YxX7w0szKQoczEr3Ts3f6XutkJtNXQswwQ2dw4v5R7dg7IpaWzRNbtajIZlwSrw0UyJMIAU13khwcJoMgJEQYDScQHBb2B5ouNmvudM7+xXmml2LwxAAKed0QBKmvGQAgzZ2eqeCXF3fcA++gIy0ic7yWn7fIeq4sjHuKRAOyNjkUSccC4Qc16+D1b2sSFNOY22surmQjG4AswAiwc2HUIhXAbFBOAm20Mo+6AG2rQ2u7yzwv5zPY8NBv9Mn1nm+cgITLGNUYHLzKeUJhtyGoB6JuawN5YjuyyjnGlH1q9YBuhWaE8lB4aF/h0Xag4Lpw07/0NVoJzFBR3FglyaA7LXFwjBcyY9LBXgZbXZWsRs2ZwGhihYFA8QBrFWQeLQxlCmBokFrtj1hjAPt7kMUByp7sNrBkgSH03hlS4GpyWywOHg/Gs30Kyab635Xz6kutD4ZGKzCGotC/w8G2559v8d9I95FAzzYiqxBZxGdCFxnGjhb1+XREo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jTctI81ocl9yyJ3hc+58IO/PKZQms10MAqbFo7+Ph+0=;
+        b=HCZ7jWkiH6hXUylSxqNlJ3stWylbGHz48YGtuWblTa9qS9TjqnQ1g6y/GRfg6jVX+F
+         iGNVjC23mTpf1b4FC1IIkx+pIPH96WZiLBO+SXQIWsiU+Y+a/lNAtxMWmCszVYQMI9Yn
+         HUiCKo3DFUFM3maWAIFK23JoX0YWg290iZnUze+VC+6ffDEwj3/QAoBYvq3y1vCNsyMZ
+         8QgTl9T+AJgK97KLipRUyMahn4ZS+3W0ojvIfynW8tepT4/rB7MMPjKxRpZ6z18yYVDd
+         AisLCPVLvXraRT+KTW9MV9G8gPK/TojT1CeoKK3O9gaepxQujgNtLCCjlQgpNi4rabNv
+         0LJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jTctI81ocl9yyJ3hc+58IO/PKZQms10MAqbFo7+Ph+0=;
+        b=Y4SZnXQSAooMyZdjNiSEtAemFKly+WZ+N8vyZqXM4xkqv589rmAMWehnstCnuXUTkr
+         GoaZR0s/oC+wLFBzH+qoIiPXMe/EMuLW3Z/lFWi2tu44d7mfBAVZ+8wz/wqpVos8gKuc
+         kqCBNljGSmdD0L0Y4smlXD18SjGA4UGfKrSThc+Au3VbZ165h9Tip3qLWSzNfBskEy+V
+         5QuX9KSV6jUdCBmHG6cWEO7PBXX6h59Hy+1EqU11PssgvFXsnI8x/7Jei4dChz6r4g4J
+         3CnPWDa8CHqxV/Tpqcrr9GQCRyvfc9YdQpDH73zQwY680HzEI/Fi6jq5eZaSYZZReiof
+         KX7A==
+X-Gm-Message-State: AGi0PuZmtf5rzD5rM6o4HJBdjPfQiN1HQ7y2P1NEvU0sjyMt3IZHRZBF
+        pKFApitjV9t1aiCD6gEvwgY=
+X-Google-Smtp-Source: APiQypLa0te1ilMixTx50JsQYjzzt9BOT+E1oz8iS2QUD9Ou7X+qQqkS32UTf35j+M/mtJPKOBffqw==
+X-Received: by 2002:a63:4e0c:: with SMTP id c12mr9799761pgb.161.1588433467041;
+        Sat, 02 May 2020 08:31:07 -0700 (PDT)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id j2sm4863174pfb.73.2020.05.02.08.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 08:31:06 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v3] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
+Date:   Sat,  2 May 2020 23:30:52 +0800
+Message-Id: <20200502153052.5461-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85aceabc-e0ba-4b62-98fe-08d7eeacb7b9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2020 15:23:07.8545
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JY+WJWnFDrK2bZFiYKgcyL+Mq2DPTytrQZg/AvGaVtsYb1l8C/A6b5/4b8z+i/d9BchyCbsgn0nlqyNRADjfBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4591
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
->=20
-> For preparation of LU Dedicated buffer mode support on WriteBooster
-> feature, "index" parameter shall be added and allowed to be specified
-> by callers.
->=20
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Sometimes it is useful to preserve batches of configs when making
+localmodconfig. For example, I usually don't want any usb and fs
+modules to be disabled. Now we can do it by:
 
-> ---
->  drivers/scsi/ufs/ufs-sysfs.c |  2 +-
->  drivers/scsi/ufs/ufshcd.c    | 28 +++++++++++++++-------------
->  drivers/scsi/ufs/ufshcd.h    |  2 +-
->  3 files changed, 17 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
-> index 93484408bc40..b86b6a40d7e6 100644
-> --- a/drivers/scsi/ufs/ufs-sysfs.c
-> +++ b/drivers/scsi/ufs/ufs-sysfs.c
-> @@ -631,7 +631,7 @@ static ssize_t _name##_show(struct device *dev,
-> \
->         struct ufs_hba *hba =3D dev_get_drvdata(dev);                    =
- \
->         pm_runtime_get_sync(hba->dev);                                  \
->         ret =3D ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,      =
- \
-> -               QUERY_FLAG_IDN##_uname, &flag);                         \
-> +               QUERY_FLAG_IDN##_uname, 0, &flag);                      \
-Noticed that you are handling this in patch #3 - that's fine!
+ $ make LMC_KEEP="drivers/usb;fs" localmodconfig
+
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+
+---
+v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
+v2: fix typo in documentation. (Randy Dunlap)
+---
+ Documentation/admin-guide/README.rst |  8 +++++++-
+ scripts/kconfig/Makefile             |  1 +
+ scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
+ 3 files changed, 31 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+index cc6151fc0845..f7b02ce61ea7 100644
+--- a/Documentation/admin-guide/README.rst
++++ b/Documentation/admin-guide/README.rst
+@@ -209,10 +209,16 @@ Configuring the kernel
+                            store the lsmod of that machine into a file
+                            and pass it in as a LSMOD parameter.
+ 
++                           Also, you can preserve modules in certain folders
++                           or kconfig files by spcifying their paths in
++                           parameter LMC_KEEP.
++
+                    target$ lsmod > /tmp/mylsmod
+                    target$ scp /tmp/mylsmod host:/tmp
+ 
+-                   host$ make LSMOD=/tmp/mylsmod localmodconfig
++                   host$ make LSMOD=/tmp/mylsmod \
++                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \
++                           localmodconfig
+ 
+                            The above also works when cross compiling.
+ 
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index c9d0a4a8efb3..e0abbf5805f5 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -123,6 +123,7 @@ help:
+ 	@echo  '  gconfig	  - Update current config utilising a GTK+ based front-end'
+ 	@echo  '  oldconfig	  - Update current config utilising a provided .config as base'
+ 	@echo  '  localmodconfig  - Update current config disabling modules not loaded'
++	@echo  '                    except those preserved by LMC_KEEP environment variable'
+ 	@echo  '  localyesconfig  - Update current config converting local mods to core'
+ 	@echo  '  defconfig	  - New config with default from ARCH supplied defconfig'
+ 	@echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
+diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+index e2f8504f5a2d..f3a2ceed1e82 100755
+--- a/scripts/kconfig/streamline_config.pl
++++ b/scripts/kconfig/streamline_config.pl
+@@ -143,6 +143,7 @@ my %depends;
+ my %selects;
+ my %prompts;
+ my %objects;
++my %config2kfile;
+ my $var;
+ my $iflevel = 0;
+ my @ifdeps;
+@@ -201,6 +202,7 @@ sub read_kconfig {
+ 	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
+ 	    $state = "NEW";
+ 	    $config = $2;
++	    $config2kfile{"CONFIG_$config"} = $kconfig;
+ 
+ 	    # Add depends for 'if' nesting
+ 	    for (my $i = 0; $i < $iflevel; $i++) {
+@@ -592,6 +594,22 @@ while ($repeat) {
+ 
+ my %setconfigs;
+ 
++my @presevered_kconfigs;
++@presevered_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));
++
++sub in_presevered_kconfigs {
++    my $kconfig = $config2kfile{$_[0]};
++    if (!defined($kconfig)) {
++        return 0;
++    }
++    foreach my $excl (@presevered_kconfigs) {
++        if($kconfig =~ /^$excl/) {
++            return 1;
++        }
++    }
++    return 0;
++}
++
+ # Finally, read the .config file and turn off any module enabled that
+ # we could not find a reason to keep enabled.
+ foreach my $line (@config_file) {
+@@ -644,6 +662,11 @@ foreach my $line (@config_file) {
+     }
+ 
+     if (/^(CONFIG.*)=(m|y)/) {
++        if (in_presevered_kconfigs($1)) {
++            dprint "Preserve config $1";
++            print;
++            next;
++        }
+ 	if (defined($configs{$1})) {
+ 	    if ($localyesconfig) {
+ 	        $setconfigs{$1} = 'y';
+-- 
+2.25.1
+
