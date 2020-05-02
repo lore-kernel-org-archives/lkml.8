@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE63C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD8FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACA02184D
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2A52184D
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 04:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgEBEdA (ORCPT
+        id S1728101AbgEBEdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 00:33:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:55787 "EHLO mga09.intel.com"
+        Sat, 2 May 2020 00:33:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44408 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727818AbgEBEcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 00:32:39 -0400
-IronPort-SDR: OOfs137t8Hq4U/bUYFLUjR9vZQ9qqbRANxG/IDfbVzCAhhdoOEjUHKsu0ueG/dVdQZhQefy2Ft
- ndiMz2KUpIOg==
+        id S1727776AbgEBEci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 00:32:38 -0400
+IronPort-SDR: djKHMF+fgWLvDTYGv/tWDw3ppY0V075L01j4FJ5eBxlihjFY/ZE7JJUdmO35wR5l9k3xu2oiQk
+ 99H9BDZtF7Sg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:37 -0700
-IronPort-SDR: orXBMWpAMww+scwUjtZn9GeWpvtZzBizQ0wen0KjdYyh7FGskRKV21xZyhfai+QfAofqFhNsqa
- 890fbkddcoPg==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 21:32:37 -0700
+IronPort-SDR: uLieiuDmvkOOa2qIqraIfiqhVDFAZD6YzUXOhw2yVmbeVaedCrtZThNv7hXw7Lg02F6BdYg06+
+ 4NHonDARlKZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,342,1583222400"; 
-   d="scan'208";a="433516129"
+   d="scan'208";a="433516144"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
   by orsmga005.jf.intel.com with ESMTP; 01 May 2020 21:32:37 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -40,9 +40,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/10] KVM: VMX: Add proper cache tracking for CR4
-Date:   Fri,  1 May 2020 21:32:30 -0700
-Message-Id: <20200502043234.12481-7-sean.j.christopherson@intel.com>
+Subject: [PATCH 10/10] KVM: x86/mmu: Capture TDP level when updating CPUID
+Date:   Fri,  1 May 2020 21:32:34 -0700
+Message-Id: <20200502043234.12481-11-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200502043234.12481-1-sean.j.christopherson@intel.com>
 References: <20200502043234.12481-1-sean.j.christopherson@intel.com>
@@ -53,155 +53,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move CR4 caching into the standard register caching mechanism in order
-to take advantage of the availability checks provided by regs_avail.
-This avoids multiple VMREADs and retpolines (when configured) during
-nested VMX transitions as kvm_read_cr4_bits() is invoked multiple times
-on each transition, e.g. when stuffing CR0 and CR3.
+Snapshot the TDP level now that it's invariant (SVM) or dependent only
+on host capabilities and guest CPUID (VMX).  This avoids having to call
+kvm_x86_ops.get_tdp_level() when initializing a TDP MMU and/or
+calculating the page role, and thus avoids the associated retpoline.
 
-As an added bonus, this eliminates a kvm_x86_ops hook, saves a retpoline
-on SVM when reading CR4, and squashes the confusing naming discrepancy
-of "cache_reg" vs. "decache_cr4_guest_bits".
+Drop the WARN in vmx_get_tdp_level() as updating CPUID while L2 is
+active is legal, if dodgy.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  2 +-
- arch/x86/kvm/kvm_cache_regs.h   |  5 +++--
- arch/x86/kvm/svm/svm.c          |  5 -----
- arch/x86/kvm/vmx/vmx.c          | 18 +++++++++---------
- arch/x86/kvm/vmx/vmx.h          |  1 +
- 5 files changed, 14 insertions(+), 17 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 +
+ arch/x86/kvm/cpuid.c            | 3 ++-
+ arch/x86/kvm/mmu/mmu.c          | 6 +++---
+ arch/x86/kvm/svm/nested.c       | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 2 --
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d71d1f38b7a0..dbf7d3f2edbc 100644
+index 55c8f78bc9e8..90840593cd6c 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -168,6 +168,7 @@ enum kvm_reg {
+@@ -686,6 +686,7 @@ struct kvm_vcpu_arch {
+ 	struct kvm_cpuid_entry2 cpuid_entries[KVM_MAX_CPUID_ENTRIES];
  
- 	VCPU_EXREG_PDPTR = NR_VCPU_REGS,
- 	VCPU_EXREG_CR3,
-+	VCPU_EXREG_CR4,
- 	VCPU_EXREG_RFLAGS,
- 	VCPU_EXREG_SEGMENTS,
- 	VCPU_EXREG_EXIT_INFO_1,
-@@ -1091,7 +1092,6 @@ struct kvm_x86_ops {
- 			    struct kvm_segment *var, int seg);
- 	void (*get_cs_db_l_bits)(struct kvm_vcpu *vcpu, int *db, int *l);
- 	void (*decache_cr0_guest_bits)(struct kvm_vcpu *vcpu);
--	void (*decache_cr4_guest_bits)(struct kvm_vcpu *vcpu);
- 	void (*set_cr0)(struct kvm_vcpu *vcpu, unsigned long cr0);
- 	int (*set_cr4)(struct kvm_vcpu *vcpu, unsigned long cr4);
- 	void (*set_efer)(struct kvm_vcpu *vcpu, u64 efer);
-diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
-index 62558b9bdda7..921a539bcb96 100644
---- a/arch/x86/kvm/kvm_cache_regs.h
-+++ b/arch/x86/kvm/kvm_cache_regs.h
-@@ -129,8 +129,9 @@ static inline ulong kvm_read_cr0(struct kvm_vcpu *vcpu)
- static inline ulong kvm_read_cr4_bits(struct kvm_vcpu *vcpu, ulong mask)
- {
- 	ulong tmask = mask & KVM_POSSIBLE_CR4_GUEST_BITS;
--	if (tmask & vcpu->arch.cr4_guest_owned_bits)
--		kvm_x86_ops.decache_cr4_guest_bits(vcpu);
-+	if ((tmask & vcpu->arch.cr4_guest_owned_bits) &&
-+	    !kvm_register_is_available(vcpu, VCPU_EXREG_CR4))
-+		kvm_x86_ops.cache_reg(vcpu, VCPU_EXREG_CR4);
- 	return vcpu->arch.cr4 & mask;
+ 	int maxphyaddr;
++	int tdp_level;
+ 
+ 	/* emulate context */
+ 
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 6828be99b908..44dfaefdad0e 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -124,8 +124,9 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 					   MSR_IA32_MISC_ENABLE_MWAIT);
+ 	}
+ 
+-	/* Update physical-address width */
++	/* Note, maxphyaddr must be updated before tdp_level. */
+ 	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
++	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+ 	kvm_mmu_reset_context(vcpu);
+ 
+ 	kvm_pmu_refresh(vcpu);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index e618472c572b..10cb8db54cd0 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4894,7 +4894,7 @@ kvm_calc_tdp_mmu_root_page_role(struct kvm_vcpu *vcpu, bool base_only)
+ 	union kvm_mmu_role role = kvm_calc_mmu_role_common(vcpu, base_only);
+ 
+ 	role.base.ad_disabled = (shadow_accessed_mask == 0);
+-	role.base.level = kvm_x86_ops.get_tdp_level(vcpu);
++	role.base.level = vcpu->arch.tdp_level;
+ 	role.base.direct = true;
+ 	role.base.gpte_is_8_bytes = true;
+ 
+@@ -4915,7 +4915,7 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+ 	context->sync_page = nonpaging_sync_page;
+ 	context->invlpg = NULL;
+ 	context->update_pte = nonpaging_update_pte;
+-	context->shadow_root_level = kvm_x86_ops.get_tdp_level(vcpu);
++	context->shadow_root_level = vcpu->arch.tdp_level;
+ 	context->direct_map = true;
+ 	context->get_guest_pgd = get_cr3;
+ 	context->get_pdptr = kvm_pdptr_read;
+@@ -5680,7 +5680,7 @@ static int alloc_mmu_pages(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu)
+ 	 * SVM's 32-bit NPT support, TDP paging doesn't use PAE paging and can
+ 	 * skip allocating the PDP table.
+ 	 */
+-	if (tdp_enabled && kvm_x86_ops.get_tdp_level(vcpu) > PT32E_ROOT_LEVEL)
++	if (tdp_enabled && vcpu->arch.tdp_level > PT32E_ROOT_LEVEL)
+ 		return 0;
+ 
+ 	page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_DMA32);
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 7c86ccb0e939..1afff0b6f30e 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -85,7 +85,7 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.mmu->get_guest_pgd     = nested_svm_get_tdp_cr3;
+ 	vcpu->arch.mmu->get_pdptr         = nested_svm_get_tdp_pdptr;
+ 	vcpu->arch.mmu->inject_page_fault = nested_svm_inject_npf_exit;
+-	vcpu->arch.mmu->shadow_root_level = kvm_x86_ops.get_tdp_level(vcpu);
++	vcpu->arch.mmu->shadow_root_level = vcpu->arch.tdp_level;
+ 	reset_shadow_zero_bits_mask(vcpu, vcpu->arch.mmu);
+ 	vcpu->arch.walk_mmu              = &vcpu->arch.nested_mmu;
  }
- 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index f40a43a288b9..e09f7e8b961f 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1528,10 +1528,6 @@ static void svm_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
- {
- }
- 
--static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
--{
--}
--
- static void update_cr0_intercept(struct vcpu_svm *svm)
- {
- 	ulong gcr0 = svm->vcpu.arch.cr0;
-@@ -3998,7 +3994,6 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.get_cpl = svm_get_cpl,
- 	.get_cs_db_l_bits = kvm_get_cs_db_l_bits,
- 	.decache_cr0_guest_bits = svm_decache_cr0_guest_bits,
--	.decache_cr4_guest_bits = svm_decache_cr4_guest_bits,
- 	.set_cr0 = svm_set_cr0,
- 	.set_cr4 = svm_set_cr4,
- 	.set_efer = svm_set_efer,
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e157bdc218ea..31316cffb427 100644
+index c9c6e72e9660..f1bde5c41eee 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2187,6 +2187,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+@@ -3008,8 +3008,6 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
  
- static void vmx_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
+ static int vmx_get_tdp_level(struct kvm_vcpu *vcpu)
  {
-+	unsigned long guest_owned_bits;
-+
- 	kvm_register_mark_available(vcpu, reg);
- 
- 	switch (reg) {
-@@ -2204,6 +2206,12 @@ static void vmx_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
- 		if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
- 			vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
- 		break;
-+	case VCPU_EXREG_CR4:
-+		guest_owned_bits = vcpu->arch.cr4_guest_owned_bits;
-+
-+		vcpu->arch.cr4 &= ~guest_owned_bits;
-+		vcpu->arch.cr4 |= vmcs_readl(GUEST_CR4) & guest_owned_bits;
-+		break;
- 	default:
- 		WARN_ON_ONCE(1);
- 		break;
-@@ -2905,14 +2913,6 @@ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
- 	vcpu->arch.cr0 |= vmcs_readl(GUEST_CR0) & cr0_guest_owned_bits;
- }
- 
--static void vmx_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
--{
--	ulong cr4_guest_owned_bits = vcpu->arch.cr4_guest_owned_bits;
+-	WARN_ON(is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)));
 -
--	vcpu->arch.cr4 &= ~cr4_guest_owned_bits;
--	vcpu->arch.cr4 |= vmcs_readl(GUEST_CR4) & cr4_guest_owned_bits;
--}
--
- static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
-@@ -3111,6 +3111,7 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 		return 1;
- 
- 	vcpu->arch.cr4 = cr4;
-+	kvm_register_mark_available(vcpu, VCPU_EXREG_CR4);
- 
- 	if (!enable_unrestricted_guest) {
- 		if (enable_ept) {
-@@ -7782,7 +7783,6 @@ static struct kvm_x86_ops vmx_x86_ops __initdata = {
- 	.get_cpl = vmx_get_cpl,
- 	.get_cs_db_l_bits = vmx_get_cs_db_l_bits,
- 	.decache_cr0_guest_bits = vmx_decache_cr0_guest_bits,
--	.decache_cr4_guest_bits = vmx_decache_cr4_guest_bits,
- 	.set_cr0 = vmx_set_cr0,
- 	.set_cr4 = vmx_set_cr4,
- 	.set_efer = vmx_set_efer,
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index fa61dc802183..39d0f32372e7 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -453,6 +453,7 @@ static inline void vmx_register_cache_reset(struct kvm_vcpu *vcpu)
- 				  | (1 << VCPU_EXREG_PDPTR)
- 				  | (1 << VCPU_EXREG_SEGMENTS)
- 				  | (1 << VCPU_EXREG_CR3)
-+				  | (1 << VCPU_EXREG_CR4)
- 				  | (1 << VCPU_EXREG_EXIT_INFO_1)
- 				  | (1 << VCPU_EXREG_EXIT_INFO_2));
- 	vcpu->arch.regs_dirty = 0;
+ 	if (cpu_has_vmx_ept_5levels() && (cpuid_maxphyaddr(vcpu) > 48))
+ 		return 5;
+ 	return 4;
 -- 
 2.26.0
 
