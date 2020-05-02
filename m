@@ -2,99 +2,133 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4774C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93E6C47257
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A632137B
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588415256;
-	bh=meuNEm4QtlNCEOLrnXFslBa0+yQ+8Q4cBxs2ezZnL/Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CSC0E7VCfiq5nPS+P17DTT/4RCIpeN6St8nWOjFsUM+xhogSzIroG4gjvwCMATzTs
-	 LnqEgyDla2uTdZKjTDqFePqVD8xVTiYR7SBk3sPQ/+jn4vFsvtOfppJ5K10/42y14+
-	 EriLOGgPVH2Ha+QVKHaNT7HiMFDxwZZFas5YbhRo=
+	by mail.kernel.org (Postfix) with ESMTP id D26FD2137B
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 10:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgEBK1d (ORCPT
+        id S1727818AbgEBK1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 06:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgEBK1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 06:27:32 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B542137B;
-        Sat,  2 May 2020 10:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588415251;
-        bh=meuNEm4QtlNCEOLrnXFslBa0+yQ+8Q4cBxs2ezZnL/Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JkKzpdbeJDz1UlMXttpOk48NjTdtFgiaaUwJF8eteIL3RbCgmdqnTj5jOQ4nCIfAD
-         4ujWBrU0pGb7Ds3rBuG+KhBpoB5cGg2dPpiibtxp0uyx2562z5xjOGVn7vnSxoPZeZ
-         U+qk34pgdmDZyZFjiWV3fyb5SezTxhpY0j2BrsLs=
-Date:   Sat, 2 May 2020 12:27:28 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 14/14] docs: staging: use small font for literal
- includes
-Message-ID: <20200502122728.36eb231b@coco.lan>
-In-Reply-To: <3aac8d7e3f11d7df5b8155c93beee447cf8f064b.camel@perches.com>
-References: <cover.1588345503.git.mchehab+huawei@kernel.org>
-        <f0dd118559a49c1a8c1e248382f48d5a07c0751d.1588345503.git.mchehab+huawei@kernel.org>
-        <3aac8d7e3f11d7df5b8155c93beee447cf8f064b.camel@perches.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sat, 2 May 2020 06:27:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41548 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726574AbgEBK1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 06:27:35 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 26E951F4C475056ECB60;
+        Sat,  2 May 2020 18:27:30 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.99) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Sat, 2 May 2020
+ 18:27:22 +0800
+To:     <tj@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <cgroups@vger.kernel.org>,
+        <netdev@vger.kernel.org>,
+        "Libin (Huawei)" <huawei.libin@huawei.com>,
+        <yangyingliang@huawei.com>, <guofan5@huawei.com>,
+        <wangkefeng.wang@huawei.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Subject: cgroup pointed by sock is leaked on mode switch
+Message-ID: <03dab6ab-0ffe-3cae-193f-a7f84e9b14c5@huawei.com>
+Date:   Sat, 2 May 2020 18:27:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.166.215.99]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 01 May 2020 17:10:00 -0700
-Joe Perches <joe@perches.com> escreveu:
+Hi,
 
-> On Fri, 2020-05-01 at 17:37 +0200, Mauro Carvalho Chehab wrote:
-> > The normal font is too big to display 80 columns, causing extra
-> > breaks to be added at weird places.
-> > 
-> > change to the footnotesize, as this would fit a little bit
-> > better.  
-> []
-> > diff --git a/Documentation/staging/index.rst b/Documentation/staging/index.rst  
-> []
-> > @@ -19,17 +19,41 @@ Unsorted Documentation
-> >  Atomic Types
-> >  ============
-> >  
-> > +.. raw:: latex
-> > +
-> > +    \footnotesize  
-> 
-> Please don't make the markup too invasive.
+I got an oom panic because cgroup is leaked.
 
-With the current status, this is unavoidable.
+Here is the steps :
+   - run a docker with --cap-add sys_admin parameter and the systemd 
+process in the docker uses both cgroupv1 and cgroupv2
+   - ssh/exit from host to docker repeately
 
-The only way to avoid those would be to convert the document itself
-to ReST, but the document writer was not convinced yet to even minimal
-ReST markups on 3 files.
+I find the number nr_dying_descendants is increasing:
+linux-dVpNUK:~ # find /sys/fs/cgroup/ -name cgroup.stat -exec grep 
+'^nr_dying_descendants [^0]'  {} +
+/sys/fs/cgroup/unified/cgroup.stat:nr_dying_descendants 80
+/sys/fs/cgroup/unified/system.slice/cgroup.stat:nr_dying_descendants 1
+/sys/fs/cgroup/unified/system.slice/system-hostos.slice/cgroup.stat:nr_dying_descendants 
+1
+/sys/fs/cgroup/unified/lxc/cgroup.stat:nr_dying_descendants 79
+/sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/cgroup.stat:nr_dying_descendants 
+78
+/sys/fs/cgroup/unified/lxc/5f1fdb8c54fa40c3e599613dab6e4815058b76ebada8a27bc1fe80c0d4801764/system.slice/cgroup.stat:nr_dying_descendants 
+78
 
-The problem with a text file is that the lines produced at the PDF output 
-with a mono-spaced font, on LaTeX have lot less than 80 colums. So, 
-some markups should tell Sphinx to use a reduced font for those includes.
 
-However, there's no "fontsize" directive (nor any other directive that 
-would allow adjusting font parameters on an included file) on Sphinx. 
-So, we need to use the above.
+The situation is as same as the commit bd1060a1d671 ("sock, cgroup: add 
+sock->sk_cgroup") describes.
+"On mode switch, cgroup references which are already being pointed to by 
+socks may be leaked."
+
+Do we have a fix for this leak now ?
+
+Or how  about fix this by record the cgrp2 pointer, then put it when sk 
+is freeing like this:
+
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index d9bd671105e2..cbb1e76ea305 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -770,6 +770,7 @@ struct sock_cgroup_data {
+  #endif
+          u64        val;
+      };
++    struct cgroup *cgrpv2;
+  };
+
+  /*
+@@ -802,6 +803,7 @@ static inline void sock_cgroup_set_prioidx(struct 
+sock_cgroup_data *skcd,
+          return;
+
+      if (!(skcd_buf.is_data & 1)) {
++        WRITE_ONCE(skcd->cgrpv2, skcd_buf.val);
+          skcd_buf.val = 0;
+          skcd_buf.is_data = 1;
+      }
+@@ -819,6 +821,7 @@ static inline void sock_cgroup_set_classid(struct 
+sock_cgroup_data *skcd,
+          return;
+
+      if (!(skcd_buf.is_data & 1)) {
++        WRITE_ONCE(skcd->cgrpv2, skcd_buf.val);
+          skcd_buf.val = 0;
+          skcd_buf.is_data = 1;
+      }
+diff --git a/net/core/sock.c b/net/core/sock.c
+index a0dda2bf9d7c..7c761ef2d32e 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1520,6 +1520,10 @@ static void sk_prot_free(struct proto *prot, 
+struct sock *sk)
+      slab = prot->slab;
+
+      cgroup_sk_free(&sk->sk_cgrp_data);
++    if (sk->sk_cgrp_data.cgrpv2) {
++        cgroup_put(sk->sk_cgrp_data.cgrpv2);
++        sk->sk_cgrp_data.cgrpv2 = NULL;
++    }
+      mem_cgroup_sk_free(sk);
+      security_sk_free(sk);
+      if (slab != NULL)
+
 
 Thanks,
-Mauro
+Yang
+
