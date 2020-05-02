@@ -2,204 +2,162 @@ Return-Path: <SRS0=7DLR=6Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2842FC47257
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF58C4724C
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0263F20857
-	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:06:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMAsEtV5"
+	by mail.kernel.org (Postfix) with ESMTP id EB81320857
+	for <linux-kernel@archiver.kernel.org>; Sat,  2 May 2020 03:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588388928;
+	bh=CVVzZMedAe8PdBduhRusdDDg5TkLXYOBqIOrAi/OAWY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jb593SAfviOajGZJYsuEzfFK+0FopeqK9I78VdisW9P8Swf/vm2RxYlDR3LrLazps
+	 fsKQTZN3/pRRK31fQNoCnvt1BAZfaC5RSJ8wQJelprpK9zfIarza6yGD6+JWeW6p5e
+	 sHn11iKSEN3weTQipZOmrpt6638A9dt3AyMb/J9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgEBDG2 (ORCPT
+        id S1727030AbgEBDIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 1 May 2020 23:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgEBDG1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 1 May 2020 23:06:27 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F8AC061A0C;
-        Fri,  1 May 2020 20:06:27 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id b6so1066257plz.13;
-        Fri, 01 May 2020 20:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rcS4SXJymg0omkgwuj5pE9mFl3v8Rk4xC5SV4SXTbU0=;
-        b=FMAsEtV5IC6Ybl5Ntwwx86lb1DzFrAMQ2gtpD8nyX8PCtc3I/FUR85pC2zXHLb66J3
-         J20hi2yunHAsctwl/0p/iKytjxq5++8rUzzWVCFXS424OVFqLsz7l/nU/WUfzbSbkLhE
-         mxz4nj7FgxIhPratVYkRp3v1siGSmjIa/fft136HCC6qOKsy5jQtGOVezmftwwCioAL4
-         vCBPzDGrlBDcRkJcxWAzpvXyWNlE9tKNyDu76bH2TMTN3HD62QTmpbf2x2N3hWtvZ3jr
-         jr4dNLGZNDUU56dmOj4Iqz70xQ3z0U+wYKe0JgPxSzJ/SnE44C2uS8gid9XKSDi9W6x3
-         1ntg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rcS4SXJymg0omkgwuj5pE9mFl3v8Rk4xC5SV4SXTbU0=;
-        b=txaYyKwcEROKp6gJTYkLPSBt5YJnd1e3m3vjDM5z/dzBrEb8p5vwtEpozqQs7vPGC7
-         fO/2bHwG0yQbYSPCr2ZxY74+uNGL2PwgXIsE/fVbEA3ysophlajhDrvud23lskymuQII
-         7l0BngFaj9+90EGb3BLa0NyU658SdFx3OBdLY78A5BoQ4nLqJ/VxUUA8sXujnMQJYp53
-         PibcZ40txYJ/5ymwUQqsRez0d/WEVU+Dj/lXCudHXo0uIpBUZjTAZVR7qwv6zE6uC+BU
-         SNJpjYzJgdSE4cFHpLiSUcKUi/TurkTsEXgR56FPL/FDASdqlNJQD4hTAJvQV0320sPp
-         a20g==
-X-Gm-Message-State: AGi0PuZ0Tmo0uL9VFHIy3HMGINrH8huXFEjU+SWN4b9wNEekNl7UVJL2
-        XQiHK8bgTRs2/LOxF7QVTgAs9n67
-X-Google-Smtp-Source: APiQypJwSi7uyKe7pfSh23iLnlJVy8UfrL8U1ha0uzoV2a2qUI6uw4LeDDm1wK3FfaHtSscbIsKJAg==
-X-Received: by 2002:a17:90a:3509:: with SMTP id q9mr3152343pjb.121.1588388786336;
-        Fri, 01 May 2020 20:06:26 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e9ae])
-        by smtp.gmail.com with ESMTPSA id a26sm3041659pgd.68.2020.05.01.20.06.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 20:06:25 -0700 (PDT)
-Date:   Fri, 1 May 2020 20:06:22 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] bpf: Tweak BPF jump table optimizations for objtool
- compatibility
-Message-ID: <20200502030622.yrszsm54r6s6k6gq@ast-mbp.dhcp.thefacebook.com>
-References: <b581438a16e78559b4cea28cf8bc74158791a9b3.1588273491.git.jpoimboe@redhat.com>
- <20200501190930.ptxyml5o4rviyo26@ast-mbp.dhcp.thefacebook.com>
- <20200501192204.cepwymj3fln2ngpi@treble>
- <20200501194053.xyahhknjjdu3gqix@ast-mbp.dhcp.thefacebook.com>
- <20200501195617.czrnfqqcxfnliz3k@treble>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501195617.czrnfqqcxfnliz3k@treble>
+        Fri, 1 May 2020 23:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgEBDIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 1 May 2020 23:08:46 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CDEC20643;
+        Sat,  2 May 2020 03:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588388926;
+        bh=CVVzZMedAe8PdBduhRusdDDg5TkLXYOBqIOrAi/OAWY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EBHU+MfU3W/1OIbC5IeO5DS/aUfTleTjzlVdYqwiU2A56qhLp6gxrAHjEi1GqCe1D
+         g1+ws0Yh3rJdba9K4bcy/y56KZ6ExbsYS5IAWcAJL5hjQ2hI5QVjbUZfFjPgkugdwk
+         zYtonEgOJaXs5NfBCM/M3Y8BPd/Iw0qbIe7Tdy/o=
+Date:   Sat, 2 May 2020 12:08:42 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Li Philip <philip.li@intel.com>,
+        Liu Yiding <yidingx.liu@intel.com>
+Subject: Re: [PATCH 3/3] selftests/ftrace: Use /bin/echo instead of built-in
+ echo
+Message-Id: <20200502120842.9d93352083fb854295150235@kernel.org>
+In-Reply-To: <20200501101942.5c0da986@gandalf.local.home>
+References: <158834025077.28357.15141584656220094821.stgit@devnote2>
+        <158834028054.28357.398159034694277189.stgit@devnote2>
+        <20200501101942.5c0da986@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 02:56:17PM -0500, Josh Poimboeuf wrote:
-> On Fri, May 01, 2020 at 12:40:53PM -0700, Alexei Starovoitov wrote:
-> > On Fri, May 01, 2020 at 02:22:04PM -0500, Josh Poimboeuf wrote:
-> > > On Fri, May 01, 2020 at 12:09:30PM -0700, Alexei Starovoitov wrote:
-> > > > On Thu, Apr 30, 2020 at 02:07:43PM -0500, Josh Poimboeuf wrote:
-> > > > > Objtool decodes instructions and follows all potential code branches
-> > > > > within a function.  But it's not an emulator, so it doesn't track
-> > > > > register values.  For that reason, it usually can't follow
-> > > > > intra-function indirect branches, unless they're using a jump table
-> > > > > which follows a certain format (e.g., GCC switch statement jump tables).
-> > > > > 
-> > > > > In most cases, the generated code for the BPF jump table looks a lot
-> > > > > like a GCC jump table, so objtool can follow it.  However, with
-> > > > > RETPOLINE=n, GCC keeps the jump table address in a register, and then
-> > > > > does 160+ indirect jumps with it.  When objtool encounters the indirect
-> > > > > jumps, it can't tell which jump table is being used (or even whether
-> > > > > they might be sibling calls instead).
-> > > > > 
-> > > > > This was fixed before by disabling an optimization in ___bpf_prog_run(),
-> > > > > using the "optimize" function attribute.  However, that attribute is bad
-> > > > > news.  It doesn't append options to the command-line arguments.  Instead
-> > > > > it starts from a blank slate.  And according to recent GCC documentation
-> > > > > it's not recommended for production use.  So revert the previous fix:
-> > > > > 
-> > > > >   3193c0836f20 ("bpf: Disable GCC -fgcse optimization for ___bpf_prog_run()")
-> > > > > 
-> > > > > With that reverted, solve the original problem in a different way by
-> > > > > getting rid of the "goto select_insn" indirection, and instead just goto
-> > > > > the jump table directly.  This simplifies the code a bit and helps GCC
-> > > > > generate saner code for the jump table branches, at least in the
-> > > > > RETPOLINE=n case.
-> > > > > 
-> > > > > But, in the RETPOLINE=y case, this simpler code actually causes GCC to
-> > > > > generate far worse code, ballooning the function text size by +40%.  So
-> > > > > leave that code the way it was.  In fact Alexei prefers to leave *all*
-> > > > > the code the way it was, except where needed by objtool.  So even
-> > > > > non-x86 RETPOLINE=n code will continue to have "goto select_insn".
-> > > > > 
-> > > > > This stuff is crazy voodoo, and far from ideal.  But it works for now.
-> > > > > Eventually, there's a plan to create a compiler plugin for annotating
-> > > > > jump tables.  That will make this a lot less fragile.
-> > > > 
-> > > > I don't like this commit log.
-> > > > Here you're saying that the code recognized by objtool is sane and good
-> > > > whereas well optimized gcc code is somehow voodoo and bad.
-> > > > That is just wrong.
-> > > 
-> > > I have no idea what you're talking about.
-> > > 
-> > > Are you saying that ballooning the function text size by 40% is well
-> > > optimized GCC code?  It seems like a bug to me.  That's the only place I
-> > > said anything bad about GCC code.
-> > 
-> > It could be a bug, but did you benchmark the speed of interpreter ?
-> > Is it faster or slower with 40% more code ?
-> > Did you benchmark it on other archs ?
+On Fri, 1 May 2020 10:19:42 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Fri,  1 May 2020 22:38:00 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
 > 
-> I thought we were in agreement that 40% text growth is bad.  Isn't that
-> why you wanted to keep 'goto select_insn' for the retpoline case?
+> > Since the built-in echo has different behavior in POSIX shell
+> > (dash) and bash, we forcibly use /bin/echo -E (not interpret
+> > backslash escapes) by default.
+> > 
+> > This also fixes some test cases which expects built-in
+> > echo command.
+> > 
+> > Reported-by: Liu Yiding <yidingx.liu@intel.com>
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  tools/testing/selftests/ftrace/test.d/functions    |    3 +++
+> >  .../test.d/trigger/trigger-trace-marker-hist.tc    |    2 +-
+> >  .../trigger-trace-marker-synthetic-kernel.tc       |    4 ++++
+> >  .../trigger/trigger-trace-marker-synthetic.tc      |    4 ++--
+> >  4 files changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
+> > index 5d4550591ff9..ea59b6ea2c3e 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/functions
+> > +++ b/tools/testing/selftests/ftrace/test.d/functions
+> > @@ -1,3 +1,6 @@
+> > +# Since the built-in echo has different behavior in POSIX shell (dash) and
+> > +# bash, we forcibly use /bin/echo -E (not interpret backslash escapes).
+> > +alias echo="/bin/echo -E"
+> >  
+> >  clear_trace() { # reset trace output
+> >      echo > trace
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
+> > index ab6bedb25736..b3f70f53ee69 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-hist.tc
+> > @@ -30,7 +30,7 @@ fi
+> >  
+> >  echo "Test histogram trace_marker tigger"
+> >  
+> > -echo 'hist:keys=common_pid' > events/ftrace/print/trigger
+> > +echo 'hist:keys=ip' > events/ftrace/print/trigger
+> 
+> This is doing more than just changing the echo being used. It's changing
+> the test being done.
 
-Let me see whether I got this right.
-In first the sentence above you're claiming that I've agreed that 
-'goto select_insn' is bad for retpoline case and in the second sentence
-you're saying that I wanted to keep it because it's bad?
-In other words you're saying I wanted bad code for retpoline case for
-some mischievous purpose?
-Do you really think so or just trolling?
+Yes, I need Tom's review for this change. As far as I can test, this
+fixes the test failure. If this isn't acceptable, we can use "alias echo=echo"
+for this test case.
 
-Let's look at the facts.
-I've applied your patch and the kernel crashed on the very first test in
-selftests/bpf which makes me believe that you only compile tested it.
-Taking the question "is 40% text growth is bad?" out of context... Ohh yes.
-but if 40% extra code gives 10% speedup to interpreter it's suddenly good, right?
-Since you didn't run basic tests I don't think you've tested performance either.
-So this direct->indirect patch might cause performance degradation to
-architectures that don't have JIT.
-On x86-64 JIT=y is the default, so I'm fine taking that performance risk
-only for the case where that risk has to be taken. In other words to help
-objtool understand the code and only for the case where objtool cannot do
-it with existing code.
-The 40% potential text decrease after direct->indirect transiton is
-irrelevant here. It must be a separate patch after corresponding
-performance benchmarking is done.
-Just claiming in commit log that current code is obviously bad
-is misleading to folks who will be reading it later.
+Thank you,
 
-Also as I explained earlier direct->indirect in C is not a contract
-for the compiler. Currently there is single C line:
-goto *jumptable[insn->code];
-but gcc/clang may generate arbitrary number of indirect jumps
-for this function.
-Changing the macro from "goto select_insn" to "goto *jumptable"
-messes with compiler optimizations and there is no guarantee
-that the code is going to be better or worse.
-Why do you think there are two identical macros there?
-#define CONT     ({ insn++; goto select_insn; })
-#define CONT_JMP ({ insn++; goto select_insn; })
-Why not one?
-The answer is in old patch from 2014:
-https://patchwork.ozlabs.org/project/netdev/patch/1393910304-4004-2-git-send-email-ast@plumgrid.com/
-+#define CONT ({insn++; LOAD_IMM; goto select_insn; })
-+#define CONT_JMP ({insn++; LOAD_IMM; goto select_insn; })
-+/* some compilers may need help:
-+ * #define CONT_JMP ({insn++; LOAD_IMM; goto *jumptable[insn->code]; })
-+ */
+> 
+> >  for i in `seq 1 10` ; do echo "hello" > trace_marker; done
+> >  grep 'hitcount: *10$' events/ftrace/print/hist > /dev/null || \
+> >      fail "hist trigger did not trigger correct times on trace_marker"
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
+> > index 18b4d1c2807e..c1625d945f4d 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic-kernel.tc
+> > @@ -44,6 +44,10 @@ echo 'latency u64 lat' > synthetic_events
+> >  echo 'hist:keys=pid:ts0=common_timestamp.usecs' > events/sched/sched_waking/trigger
+> >  echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_waking).latency($lat)' > events/ftrace/print/trigger
+> >  echo 'hist:keys=common_pid,lat:sort=lat' > events/synthetic/latency/trigger
+> > +
+> > +# We have to use the built-in echo here because waking up pid must be same
+> > +# as echoing pid.
+> > +alias echo=echo
+> >  sleep 1
+> >  echo "hello" > trace_marker
+> >  
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
+> > index dd262d6d0db6..23e52c8d71de 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-trace-marker-synthetic.tc
+> > @@ -36,8 +36,8 @@ fi
+> >  echo "Test histogram trace_marker to trace_marker latency histogram trigger"
+> >  
+> >  echo 'latency u64 lat' > synthetic_events
+> > -echo 'hist:keys=common_pid:ts0=common_timestamp.usecs if buf == "start"' > events/ftrace/print/trigger
+> > -echo 'hist:keys=common_pid:lat=common_timestamp.usecs-$ts0:onmatch(ftrace.print).latency($lat) if buf == "end"' >> events/ftrace/print/trigger
+> > +echo 'hist:keys=ip:ts0=common_timestamp.usecs if buf == "start"' > events/ftrace/print/trigger
+> > +echo 'hist:keys=ip:lat=common_timestamp.usecs-$ts0:onmatch(ftrace.print).latency($lat) if buf == "end"' >> events/ftrace/print/trigger
+> 
+> This too. And it's not explained in the change log why. In fact, these
+> changes look like they belong in a separate patch.
+> 
+> -- Steve
+> 
+> >  echo 'hist:keys=common_pid,lat:sort=lat' > events/synthetic/latency/trigger
+> >  echo -n "start" > trace_marker
+> >  echo -n "end" > trace_marker
+> 
 
-That was the patch after dozens of performance experiments
-with different gcc versions on different cpus.
-Six years ago the interpreter performance could be improved
-if _one_ of these macros replaced direct with indirect
-for certain versions of gcc. But not both macros.
 
-To be honest I don't think you're interested in doing performance
-analysis here. You just want to shut up that objtool warning and
-move on, right? So please do so without making misleading statements
-about goodness or badness of generated code.
-
-Thanks
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
