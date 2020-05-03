@@ -2,222 +2,202 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE05C47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC217C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E56CA206A5
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pLQkLJM5"
+	by mail.kernel.org (Postfix) with ESMTP id C13F420721
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgECKKH (ORCPT
+        id S1728077AbgECKYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 06:10:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43786 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgECKKG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 06:10:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 043A3XbN179569;
-        Sun, 3 May 2020 10:09:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=+3cvJANHAAeU4d22dlyULTuCEPl9tYfeqegQxmVM3JU=;
- b=pLQkLJM5wQOlBgB8xdx38a/BkDzOYcAzpnRvUXIMtcd2lScAjnye/aPeADLj5/VRl8dd
- dYRb7o9j+/vdK55hoxKqv/wuAoIFfJ7o+9jzq5jIdmczj6X0WOUsAFUere4xZCxBtejF
- kCJdUKV8+ajwls9ieN9jpKW+Pgodeg7qPWC0YZJjRyEMkqc/Kgj8GmWsqd5h1RJrXnCb
- 8HSddZvuBGgJb+MGhvjZXfBxug3fpCLP0FpWL9vboY+LLc7qkMdW9A/a2DBAXVmb0lFX
- PZhmT9EpEaOEyqZ8BgqIKX0lyDThP85UJR/v7nidK53yBbfB4Au5CFcGbMOHld1WjOV7 4Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 30s09qu5e0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 03 May 2020 10:09:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 043A7XNR129168;
-        Sun, 3 May 2020 10:09:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30sjbane2a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 03 May 2020 10:09:47 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 043A9d6c015487;
-        Sun, 3 May 2020 10:09:45 GMT
-Received: from dhcp-10-175-179-100.vpn.oracle.com (/10.175.179.100)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 03 May 2020 10:09:38 +0000
-Date:   Sun, 3 May 2020 11:09:30 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     David Gow <davidgow@google.com>
-cc:     trishalfonso@google.com, brendanhiggins@google.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] KUnit-KASAN Integration
-In-Reply-To: <20200424061342.212535-1-davidgow@google.com>
-Message-ID: <alpine.LRH.2.21.2005031101130.20090@localhost>
-References: <20200424061342.212535-1-davidgow@google.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Sun, 3 May 2020 06:24:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46950 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727051AbgECKYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 06:24:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DBEB1ABBE;
+        Sun,  3 May 2020 10:24:32 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9609 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 phishscore=0
- malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005030091
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9609 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005030090
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 03 May 2020 12:24:30 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>, stable@vger.kernel.org
+Subject: Re: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+In-Reply-To: <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
+References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+ <930c565705249d2b6264a31f1be6529e@suse.de>
+ <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
+Message-ID: <f3c2e63ec34a611ec256785ebfd39270@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020, David Gow wrote:
+On 2020-05-02 00:09, Jason Baron wrote:
+> On 5/1/20 5:02 PM, Roman Penyaev wrote:
+>> Hi Jason,
+>> 
+>> That is indeed a nice catch.
+>> Seems we need smp_rmb() pair between list_empty_careful(&rp->rdllist) 
+>> and
+>> READ_ONCE(ep->ovflist) for ep_events_available(), do we?
+>> 
+> 
+> Hi Roman,
+> 
+> Good point, even if we order those reads its still racy, since the
+> read of the ready list could come after its been cleared and the
+> read of the overflow could again come after its been cleared.
 
-> This patchset contains everything needed to integrate KASAN and KUnit.
-> 
-> KUnit will be able to:
-> (1) Fail tests when an unexpected KASAN error occurs
-> (2) Pass tests when an expected KASAN error occurs
-> 
-> Convert KASAN tests to KUnit with the exception of copy_user_test
-> because KUnit is unable to test those.
-> 
-> Add documentation on how to run the KASAN tests with KUnit and what to
-> expect when running these tests.
-> 
-> This patchset depends on:
-> - "[PATCH v3 kunit-next 0/2] kunit: extend kunit resources API" [1]
-> - "[PATCH v3 0/3] Fix some incompatibilites between KASAN and
->   FORTIFY_SOURCE" [2]
-> 
-> Changes from v6:
->  - Rebased on top of kselftest/kunit
->  - Rebased on top of Daniel Axtens' fix for FORTIFY_SOURCE
->    incompatibilites [2]
->  - Removed a redundant report_enabled() check.
->  - Fixed some places with out of date Kconfig names in the
->    documentation.
->
+You mean the second chunk? True. Sigh.
 
-Sorry for the delay in getting to this; I retested the
-series with the above patchsets pre-applied; all looks
-good now, thanks!  Looks like Daniel's patchset has a v4
-so I'm not sure if that will have implications for applying
-your changes on top of it (haven't tested it yet myself).
+> So I'm afraid we might need instead something like this to make
+> sure they are read together:
 
-For the series feel free to add
+No, impossible, I can't believe in that :) We can't give up.
 
-Tested-by: Alan Maguire <alan.maguire@oracle.com>
+All we need is to keep a mark, that ep->rdllist is not empty,
+even we've just spliced it.  ep_poll_callback() always takes
+the ->ovflist path, if ->ovflist is not EP_UNACTIVE_PTR, but
+ep_events_available() does not need to observe ->ovflist at
+all, just a ->rdllist.
 
-I'll try and take some time to review v7 shortly, but I wanted
-to confirm the issues I saw went away first in case you're
-blocked.  The only remaining issue I see is that we'd need the
-named resource patchset to land first; it would be good
-to ensure the API it provides is solid so you won't need to
-respin.
+Take a look at that, do I miss something? :
 
-Thanks!
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index aba03ee749f8..a8770f9a917e 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -376,8 +376,7 @@ static void ep_nested_calls_init(struct nested_calls 
+*ncalls)
+   */
+  static inline int ep_events_available(struct eventpoll *ep)
+  {
+-       return !list_empty_careful(&ep->rdllist) ||
+-               READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
++       return !list_empty_careful(&ep->rdllist);
+  }
 
-Alan
- 
-> Changes from v5:
->  - Split out the panic_on_warn changes to a separate patch.
->  - Fix documentation to fewer to the new Kconfig names.
->  - Fix some changes which were in the wrong patch.
->  - Rebase on top of kselftest/kunit (currently identical to 5.7-rc1)
-> 
-> Changes from v4:
->  - KASAN no longer will panic on errors if both panic_on_warn and
->    kasan_multishot are enabled.
->  - As a result, the KASAN tests will no-longer disable panic_on_warn.
->  - This also means panic_on_warn no-longer needs to be exported.
->  - The use of temporary "kasan_data" variables has been cleaned up
->    somewhat.
->  - A potential refcount/resource leak should multiple KASAN errors
->    appear during an assertion was fixed.
->  - Some wording changes to the KASAN test Kconfig entries.
-> 
-> Changes from v3:
->  - KUNIT_SET_KASAN_DATA and KUNIT_DO_EXPECT_KASAN_FAIL have been
->  combined and included in KUNIT_DO_EXPECT_KASAN_FAIL() instead.
->  - Reordered logic in kasan_update_kunit_status() in report.c to be
->  easier to read.
->  - Added comment to not use the name "kasan_data" for any kunit tests
->  outside of KUNIT_EXPECT_KASAN_FAIL().
-> 
-> Changes since v2:
->  - Due to Alan's changes in [1], KUnit can be built as a module.
->  - The name of the tests that could not be run with KUnit has been
->  changed to be more generic: test_kasan_module.
->  - Documentation on how to run the new KASAN tests and what to expect
->  when running them has been added.
->  - Some variables and functions are now static.
->  - Now save/restore panic_on_warn in a similar way to kasan_multi_shot
->  and renamed the init/exit functions to be more generic to accommodate.
->  - Due to [3] in kasan_strings, kasan_memchr, and
->  kasan_memcmp will fail if CONFIG_AMD_MEM_ENCRYPT is enabled so return
->  early and print message explaining this circumstance.
->  - Changed preprocessor checks to C checks where applicable.
-> 
-> Changes since v1:
->  - Make use of Alan Maguire's suggestion to use his patch that allows
->    static resources for integration instead of adding a new attribute to
->    the kunit struct
->  - All KUNIT_EXPECT_KASAN_FAIL statements are local to each test
->  - The definition of KUNIT_EXPECT_KASAN_FAIL is local to the
->    test_kasan.c file since it seems this is the only place this will
->    be used.
->  - Integration relies on KUnit being builtin
->  - copy_user_test has been separated into its own file since KUnit
->    is unable to test these. This can be run as a module just as before,
->    using CONFIG_TEST_KASAN_USER
->  - The addition to the current task has been separated into its own
->    patch as this is a significant enough change to be on its own.
-> 
-> 
-> [1] https://lore.kernel.org/linux-kselftest/1585313122-26441-1-git-send-email-alan.maguire@oracle.com/T/#t
-> [2] https://lkml.org/lkml/2020/4/23/708
-> [3] https://bugzilla.kernel.org/show_bug.cgi?id=206337
-> 
-> 
-> 
-> David Gow (1):
->   mm: kasan: Do not panic if both panic_on_warn and kasan_multishot set
-> 
-> Patricia Alfonso (4):
->   Add KUnit Struct to Current Task
->   KUnit: KASAN Integration
->   KASAN: Port KASAN Tests to KUnit
->   KASAN: Testing Documentation
-> 
->  Documentation/dev-tools/kasan.rst |  70 +++
->  include/kunit/test.h              |   5 +
->  include/linux/kasan.h             |   6 +
->  include/linux/sched.h             |   4 +
->  lib/Kconfig.kasan                 |  18 +-
->  lib/Makefile                      |   3 +-
->  lib/kunit/test.c                  |  13 +-
->  lib/test_kasan.c                  | 688 +++++++++++++-----------------
->  lib/test_kasan_module.c           |  76 ++++
->  mm/kasan/report.c                 |  34 +-
->  10 files changed, 514 insertions(+), 403 deletions(-)
->  create mode 100644 lib/test_kasan_module.c
-> 
-> -- 
-> 2.26.2.303.gf8c07b1a785-goog
-> 
-> 
+  #ifdef CONFIG_NET_RX_BUSY_POLL
+@@ -683,7 +682,8 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
+*ep,
+  {
+         __poll_t res;
+         struct epitem *epi, *nepi;
+-       LIST_HEAD(txlist);
++       LIST_HEAD(rdllist);
++       LIST_HEAD(ovflist);
+
+         lockdep_assert_irqs_enabled();
+
+@@ -704,14 +704,22 @@ static __poll_t ep_scan_ready_list(struct 
+eventpoll *ep,
+          * in a lockless way.
+          */
+         write_lock_irq(&ep->lock);
+-       list_splice_init(&ep->rdllist, &txlist);
++       /*
++        * We do not call list_splice_init() because for lockless
++        * ep_events_available() ->rdllist is still "not empty".
++        * Otherwise the feature that there is something left in
++        * the list can be lost which causes missed wakeup.
++        */
++       list_splice(&ep->rdllist, &rdllist);
++       /*
++        * If ->rdllist was empty we should pretend it was not,
++        * because after the unlock ->ovflist comes into play,
++        * which is invisible for lockless ep_events_available().
++        */
++       ep->rdllist.next = LIST_POISON1;
+         WRITE_ONCE(ep->ovflist, NULL);
+         write_unlock_irq(&ep->lock);
+
+         /*
+          * Now call the callback function.
+          */
+-       res = (*sproc)(ep, &txlist, priv);
++       res = (*sproc)(ep, &rdllist, priv);
+
+         write_lock_irq(&ep->lock);
+         /*
+@@ -724,7 +732,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
+*ep,
+                 /*
+                  * We need to check if the item is already in the list.
+                  * During the "sproc" callback execution time, items are
+-                * queued into ->ovflist but the "txlist" might already
++                * queued into ->ovflist but the "rdllist" might already
+                  * contain them, and the list_splice() below takes care 
+of them.
+                  */
+                 if (!ep_is_linked(epi)) {
+@@ -732,7 +740,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
+*ep,
+                          * ->ovflist is LIFO, so we have to reverse it 
+in order
+                          * to keep in FIFO.
+                          */
+-                       list_add(&epi->rdllink, &ep->rdllist);
++                       list_add(&epi->rdllink, &ovflist);
+                         ep_pm_stay_awake(epi);
+                 }
+         }
+@@ -743,10 +751,11 @@ static __poll_t ep_scan_ready_list(struct 
+eventpoll *ep,
+          */
+         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+
+-       /*
+-        * Quickly re-inject items left on "txlist".
+-        */
+-       list_splice(&txlist, &ep->rdllist);
++       /* Events from ->ovflist happened later, thus splice to the tail 
+*/
++       list_splice_tail(&ovflist, &rdllist);
++       /* Just replace list */
++       list_replace(&rdllist, &ep->rdllist);
++
+         __pm_relax(ep->ws);
+         write_unlock_irq(&ep->lock);
+
+@@ -1763,13 +1772,13 @@ static __poll_t ep_send_events_proc(struct 
+eventpoll *ep, struct list_head *head
+                          * Trigger mode, we need to insert back inside
+                          * the ready list, so that the next call to
+                          * epoll_wait() will check again the events
+-                        * availability. At this point, no one can 
+insert
+-                        * into ep->rdllist besides us. The epoll_ctl()
+-                        * callers are locked out by
+-                        * ep_scan_ready_list() holding "mtx" and the
+-                        * poll callback will queue them in ep->ovflist.
++                        * availability. What we do here is simply
++                        * return the epi to the same position where
++                        * it was, the ep_scan_ready_list() will
++                        * re-inject the leftovers to the ->rdllist
++                        * under the proper lock.
+                          */
+-                       list_add_tail(&epi->rdllink, &ep->rdllist);
++                       list_add_tail(&epi->rdllink, &tmp->rdllink);
+                         ep_pm_stay_awake(epi);
+                 }
+         }
+
+
+--
+Roman
+
