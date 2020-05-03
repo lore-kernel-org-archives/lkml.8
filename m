@@ -2,126 +2,192 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA404C47259
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862F4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30E020707
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F952068E
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:31:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GYaWtaJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgECRWn (ORCPT
+        id S1728929AbgECRbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 13:22:43 -0400
-Received: from mail-bn8nam11olkn2042.outbound.protection.outlook.com ([40.92.20.42]:57057
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729017AbgECRWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 13:22:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HVZp4ZIUCj1+vREFuzWK+AH4j+sx9awQ0ytv6Nkd58yMMQuwQns1BeYKB84OSZQ5H9z5xuvujKj0d8c4rPV8M7/2sNXjgQ0qnQApAAScUifaPENNjaOGHDBBZd5LRu3pLXi+/12jzGlXAoPZes7O9uJKgZ4nAIWiomONKoFAShPs2vU+/psTsROgRSoaSRPTdwkf4bUgYLzG+SWUZL8r+edDCDnnCUEF5tcRcqMmKO6XV1JhfGUFwC5i9oiZZ1hUBGAKQEIE8l1I33O8D2pDJBqJUMwcxfLLto2yCrBmNCS13uGS6slNpXclJfgZwK4NXL5s0iToL4urhfLuJimF+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IPNZ3Ud7Np307HILwUMB3QGtjDwJj2u3qprKFyJumjw=;
- b=LPtruzXjpqqlvNPVYle53ayYZXHebKtgcqEJkjkn7PH1VC6ZoHeg9ms3CwZdxHMeUVEvhws6n2rVQ1Z6l+PKoqxvnsr+jcdvAkxfdKQ4DzxbeyEFO2VhGSBXHZFS30r1ZI+YmTUopHAN/8oH6fRFDJs6J63yxC8JkMrQ+FwfUlapdOaC45QqDlayCj1MFIDHgUS68/yMDyw+VqpzLQBVbdkX6wZAsYbaphcQUpM8/YnQYsPwTUmw3V+tPL8XmenfWykqKGrA0DuOGFiM0G0qsrtKWpV6EzJtuma4McRUhATwHCwLWZ0sb59WrAH9xi/fONxVe0aGTR91K0PKFuPWrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
- header.d=live.ca; arc=none
-Received: from BN8NAM11FT054.eop-nam11.prod.protection.outlook.com
- (2a01:111:e400:fc4b::50) by
- BN8NAM11HT043.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4b::380)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Sun, 3 May
- 2020 17:22:36 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:fc4b::42) by BN8NAM11FT054.mail.protection.outlook.com
- (2a01:111:e400:fc4b::358) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
- Transport; Sun, 3 May 2020 17:22:36 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:A477503DADCB2B6AA6B3C54AC9DBBB8BE6710F418E899DC9358484ADDF276CF5;UpperCasedChecksum:2508AAB308A08505E9D1FB16F4E4008AFFB1BCCED208FCC599BB489E632C5F8D;SizeAsReceived:8014;Count:50
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.029; Sun, 3 May 2020
- 17:22:36 +0000
-From:   Jonathan Bakker <xc-racer2@live.ca>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, linus.walleij@linaro.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
-        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, linux-input@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [PATCH 3/5] dt-bindings: iio: accel: Add bma023 compatible to bma180
-Date:   Sun,  3 May 2020 10:22:04 -0700
-Message-ID: <BN6PR04MB0660DA2A47787A56A2FC7290A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200503172206.13782-1-xc-racer2@live.ca>
-References: <20200503172206.13782-1-xc-racer2@live.ca>
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MWHPR14CA0047.namprd14.prod.outlook.com
- (2603:10b6:300:12b::33) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <20200503172206.13782-4-xc-racer2@live.ca>
+        Sun, 3 May 2020 13:31:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728831AbgECRbu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 13:31:50 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A03C061A0F
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 10:31:50 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id e16so5725874ybn.7
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 10:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KH08NvE4HhhbynEpLq4c2wHhLG6hjJ/tAPnzoWQyZUU=;
+        b=GYaWtaJFqqe4DTbChDekN9wLtXvsFqkVL2B/Gk7OJlgB5vg6OJcWsgCTXs33/7cqwv
+         qLek8Xg4ObFv8j8SDLm4MFySZixfxwSuKOPTLMAArK3y6NCEgTpFIiJpUU+GYyONtHhZ
+         qG8hxhFMRUABiLganCxqvfTX7ABnAPkDlg3tN9FsBsSghaLPO7ZqxQo1sKDCVxDW+l/j
+         DblasEWJJSFK6bcbfvnoGg4tvK3JzDNlsoz3/VJZsy6AeOD9ABYGxJZ7cy92+t0mZEzG
+         Yc4U3qQ9w24uomai/ZGdzfPYr3mN3PdNP15ZdxeQhwapU6o5z5P7pae3WEB3ThNww+qg
+         vYgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KH08NvE4HhhbynEpLq4c2wHhLG6hjJ/tAPnzoWQyZUU=;
+        b=NbCv/084iANE+v4al/hPuwBYPyRQ3oVlwdDf7Z4AL451g43iFMmESPaSz1TYDrA29o
+         +XEEuuxgj8VlFKVTsMst6oAvNEmMZExRm4gindOx/zAdQ/K87zjLP9WL0o/MgrXltLYq
+         nD3rYKjMUaZatJnlSJiXkZeAgAzXFI875r1euejZBQGq1gFhZi5M66rf9oSWUP+tFAoA
+         lTy6NuhdtskLM4X6n7j7pzCAufi4wEWdgJ5N3fQ1qyHyanANMuHTjD/sbpQMFk6d1Uq5
+         1R7IEHVbFF1tgagrLCvI4pFItWx9CgLxjvcUn+MHhLUVrHpNzUht+e3trMuWhRWV829t
+         eptg==
+X-Gm-Message-State: AGi0PuZLwLJrakpKgkZ4YrIdakZ/bfXZqRnbcpZmgC+RymRzqPdMwwZr
+        iuUdo8S1muWyzOCCH5RhLnf3bd1n3Mvldci+NAsD5g==
+X-Google-Smtp-Source: APiQypKnnIUC2GqfJIc2KRZH9M9N9tR3rqq5iQSGw9IJzrUSSqDrYocJA2uP72+iU0HF//UkjSEScLPsexqjJrriv5U=
+X-Received: by 2002:a25:c08b:: with SMTP id c133mr10218465ybf.286.1588527108775;
+ Sun, 03 May 2020 10:31:48 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR14CA0047.namprd14.prod.outlook.com (2603:10b6:300:12b::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Sun, 3 May 2020 17:22:34 +0000
-X-Mailer: git-send-email 2.20.1
-X-Microsoft-Original-Message-ID: <20200503172206.13782-4-xc-racer2@live.ca>
-X-TMN:  [wm7OSSp0tZOupPR5H66RTs7aVsMHOIxc+h6rkamvy6mMX4E5TOVYLrvBYK22+2gr]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: a28f686b-0ba6-4f76-b101-08d7ef869259
-X-MS-TrafficTypeDiagnostic: BN8NAM11HT043:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fkI0Hukk9Ilff+k8ahHzUV/RIEd/wtBlTSWJSe11HUC4jWZVgydfx8Ntsr3nAlVW1J0/+UuA9PZVhfdYAyy+nxJBUqI7dz7jAye71hB9A7kXKGwVrr+49AsEVJd7BPscOdWYo0xAQIt6Iw66R82fWL7x6Bo2tzKvW+df4MAy+WehqfqAfwaBFgSubsd9e25nMbQdDKARB0cfwnp8aYN2fQPjrvYQKUwxnAiruB482Yiyg7Y+N9R3zpRHkMY31jEs
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: /burLea5ria6AOkUY0Ct6bh3d+KHgVl/KEn+QvXiJHxBNmYfQ2N1LttcmbZDhb/Mlt/odSBi7dOwUE/mgL32d0J9N7ZSmLfc1OcIUu3oKvhhxrumFU9Qkqb2EoH3CpIaAR7i5dI+rU9dXVDjHZwfb+bMbHgDGc15Rz56anja7KQOZ5eyGgfcZhJGln0KVsDcvT8fJakYmBF5/qRLlinVHw==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a28f686b-0ba6-4f76-b101-08d7ef869259
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 17:22:36.1409
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM11HT043
+References: <20200501173333.227162-1-irogers@google.com> <20200501173333.227162-13-irogers@google.com>
+ <20200503145553.GA1865281@krava> <CAP-5=fXrwcz+MMF0Dqd_UnoXoTo1iO7T3-ENX0fzytPmJWmtoA@mail.gmail.com>
+ <20200503170608.GA1915271@krava>
+In-Reply-To: <20200503170608.GA1915271@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Sun, 3 May 2020 10:31:37 -0700
+Message-ID: <CAP-5=fVaLWVyxweesWYCj1=FFubM3t6OsF1Jd46d=FtsQUQVmQ@mail.gmail.com>
+Subject: Re: [PATCH v4 12/12] perf test: improve pmu event metric testing
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kajoljain <kjain@linux.ibm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: multipart/mixed; boundary="0000000000000a441305a4c1ca85"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bma023 is in the same family as the bma180 and support is
-being added to the bma180 IIO driver for it.
+--0000000000000a441305a4c1ca85
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
----
- Documentation/devicetree/bindings/iio/accel/bma180.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Sun, May 3, 2020 at 10:06 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Sun, May 03, 2020 at 08:26:22AM -0700, Ian Rogers wrote:
+> > On Sun, May 3, 2020 at 7:56 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > >
+> > > On Fri, May 01, 2020 at 10:33:33AM -0700, Ian Rogers wrote:
+> > > > Add a basic floating point number test to expr.
+> > > > Break pmu-events test into 2 and add a test to verify that all pmu metric
+> > > > expressions simply parse. Try to parse all metric ids/events, failing if
+> > > > metrics for the current architecture fail to parse.
+> > > >
+> > > > Tested on skylakex with the patch set in place. May fail on other
+> > > > architectures if metrics are invalid.
+> > >
+> > > yep, failing for me (-vvv output below).. could you plz
+> > > detect that and skip the test ?
+> >
+> > Thanks, filtering the verbose output we have just 1 parse event failure:
+> >
+> > Parse event failed: id 'arb/event=0x80,umask=0x2,thresh=1/' metric
+> > 'DRAM_Parallel_Reads' expr 'arb@event\=0x80\,umask\=0x2@ /
+> > arb@event\=0x80\,umask\=0x2\,thresh\=1@'
+> > Error string 'unknown term 'thresh' for pmu 'uncore_arb'' help 'valid
+> > terms: event,edge,inv,umask,cmask,config,config1,config2,name,period,freq,branch_type,time,call-graph,stack-size,no-inherit,inherit,max-stack,nr,no-overwrite,overwrite,driver-config,percore,aux-output,aux-sample-size'
+> >
+> > This looks like a bug in skl-metrics.json:
+> >
+> >    {
+> >         "BriefDescription": "Average number of parallel data read
+> > requests to external memory. Accounts for demand loads and L1/L2
+> > prefetches",
+> >         "MetricExpr": "arb@event\\=0x80\\,umask\\=0x2@ /
+> > arb@event\\=0x80\\,umask\\=0x2\\,thresh\\=1@",
+> >         "MetricGroup": "Memory_BW",
+> >         "MetricName": "DRAM_Parallel_Reads"
+> >     },
+> >
+> > which can be fixed by removing "\\,thresh\\=1" but looking at the
+> > expression this will just make the expression yield a value of 1. As
+> > this is an Intel json file could they comment? Jiri, could you be
+> > missing a patch on the kernel side? We could lower this failure to
+> > just a diagnostic message to land this set of patches, let me know
+> > what you'd like me to do.
+>
+> I applied this on current Arnaldo's perf/core.. not sure there's
+> more pending changes out there
+>
+> I'd like not to delay this patchset too long.. could we push the
+> first 10 patches and solve the rest in separate change?
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-index f53237270b32..48bec35f452a 100644
---- a/Documentation/devicetree/bindings/iio/accel/bma180.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
-@@ -1,4 +1,4 @@
--* Bosch BMA180 / BMA25x triaxial acceleration sensor
-+* Bosch BMA023 / BMA180 / BMA25x triaxial acceleration sensor
- 
- http://omapworld.com/BMA180_111_1002839.pdf
- http://ae-bst.resource.bosch.com/media/products/dokumente/bma250/bst-bma250-ds002-05.pdf
-@@ -6,6 +6,7 @@ http://ae-bst.resource.bosch.com/media/products/dokumente/bma250/bst-bma250-ds00
- Required properties:
- 
-   - compatible : should be one of:
-+    "bosch,bma023"
-     "bosch,bma180"
-     "bosch,bma250"
-     "bosch,bma254"
--- 
-2.20.1
+Thanks, I've attached a patch that can be squashed into 12 to make the
+error non-fatal. Patch 11 is trying to make the diagnostics around
+adding a PMU event clearer and aside warning messages, and removal of,
+has no functional effect. I don't mind the first 10 being merged and
+these coming later. I don't mind just patch 11 coming later as it'd be
+nice to have the test so metrics can get fixed.
 
+Thanks,
+Ian
+
+> thanks,
+> jirka
+>
+
+--0000000000000a441305a4c1ca85
+Content-Type: text/x-patch; charset="US-ASCII"; name="jiri.patch"
+Content-Disposition: attachment; filename="jiri.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k9rbtbov0>
+X-Attachment-Id: f_k9rbtbov0
+
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdGVzdHMvcG11LWV2ZW50cy5jIGIvdG9vbHMvcGVyZi90
+ZXN0cy9wbXUtZXZlbnRzLmMKaW5kZXggNWFiMTgwOWI3NDFiLi5jMThiOWNlOGNhY2UgMTAwNjQ0
+Ci0tLSBhL3Rvb2xzL3BlcmYvdGVzdHMvcG11LWV2ZW50cy5jCisrKyBiL3Rvb2xzL3BlcmYvdGVz
+dHMvcG11LWV2ZW50cy5jCkBAIC00MDQsMTIgKzQwNCwxMyBAQCBzdGF0aWMgaW50IGNoZWNrX3Bh
+cnNlX2lkKGNvbnN0IGNoYXIgKmlkLCBib29sIHNhbWVfY3B1LCBzdHJ1Y3QgcG11X2V2ZW50ICpw
+ZSkKIAltZW1zZXQoJmVycm9yLCAwLCBzaXplb2YoZXJyb3IpKTsKIAlyZXQgPSBwYXJzZV9ldmVu
+dHMoZXZsaXN0LCBpZCwgJmVycm9yKTsKIAlpZiAocmV0ICYmIHNhbWVfY3B1KSB7Ci0JCXByX2Rl
+YnVnKCJQYXJzZSBldmVudCBmYWlsZWQ6IGlkICclcycgbWV0cmljICclcycgZXhwciAnJXMnXG4i
+LAotCQkJaWQsIHBlLT5tZXRyaWNfbmFtZSwgcGUtPm1ldHJpY19leHByKTsKLQkJcHJfZGVidWco
+IkVycm9yIHN0cmluZyAnJXMnIGhlbHAgJyVzJ1xuIiwKKwkJZnByaW50ZihzdGRlcnIsCisJCQki
+XG5XQVJOSU5HOiBQYXJzZSBldmVudCBmYWlsZWQgbWV0cmljICclcycgaWQgJyVzJyBleHByICcl
+cydcbiIsCisJCQlwZS0+bWV0cmljX25hbWUsIGlkLCBwZS0+bWV0cmljX2V4cHIpOworCQlmcHJp
+bnRmKHN0ZGVyciwgIkVycm9yIHN0cmluZyAnJXMnIGhlbHAgJyVzJ1xuIiwKIAkJCWVycm9yLnN0
+ciwgZXJyb3IuaGVscCk7CiAJfSBlbHNlIGlmIChyZXQpIHsKLQkJcHJfZGVidWcoIlBhcnNlIGV2
+ZW50IGZhaWxlZCwgYnV0IGZvciBhbiBldmVudCB0aGF0IG1heSBub3QgYmUgc3VwcG9ydGVkIGJ5
+IHRoaXMgQ1BVLlxuaWQgJyVzJyBtZXRyaWMgJyVzJyBleHByICclcydcbiIsCisJCXByX2RlYnVn
+MygiUGFyc2UgZXZlbnQgZmFpbGVkLCBidXQgZm9yIGFuIGV2ZW50IHRoYXQgbWF5IG5vdCBiZSBz
+dXBwb3J0ZWQgYnkgdGhpcyBDUFUuXG5pZCAnJXMnIG1ldHJpYyAnJXMnIGV4cHIgJyVzJ1xuIiwK
+IAkJCWlkLCBwZS0+bWV0cmljX25hbWUsIHBlLT5tZXRyaWNfZXhwcik7CiAJfQogCWV2bGlzdF9f
+ZGVsZXRlKGV2bGlzdCk7CkBAIC00MTcsNyArNDE4LDggQEAgc3RhdGljIGludCBjaGVja19wYXJz
+ZV9pZChjb25zdCBjaGFyICppZCwgYm9vbCBzYW1lX2NwdSwgc3RydWN0IHBtdV9ldmVudCAqcGUp
+CiAJZnJlZShlcnJvci5oZWxwKTsKIAlmcmVlKGVycm9yLmZpcnN0X3N0cik7CiAJZnJlZShlcnJv
+ci5maXJzdF9oZWxwKTsKLQlyZXR1cm4gc2FtZV9jcHUgPyByZXQgOiAwOworCS8qIFRPRE86IHRv
+byBtYW55IG1ldHJpY3MgYXJlIGJyb2tlbiB0byBmYWlsIG9uIHRoaXMgdGVzdCBjdXJyZW50bHku
+ICovCisJcmV0dXJuIDA7CiB9CiAKIHN0YXRpYyBpbnQgdGVzdF9wYXJzaW5nKHZvaWQpCg==
+--0000000000000a441305a4c1ca85--
