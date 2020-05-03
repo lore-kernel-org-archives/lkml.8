@@ -2,352 +2,141 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930D5C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED2DC47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E08F20757
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B3820757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:54:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vMLvvQ26"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ECmljAsi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgECMwY (ORCPT
+        id S1728579AbgECMyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:52:24 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41080 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728378AbgECMwY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:52:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588510339; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2ko4Xwt96nyrG2ofYwcaiQ3kO8FQgN99Oau+oASza+Y=;
-        b=vMLvvQ26mbkRB5ssq4TJnK7+m022JmcEKlGByK0qEt0wZ/cWuoZ2C+xRTochuMQahsnETO
-        ABOQBnQJ2/HLIwG+CvdEP4jyvQxShAa+HOezOJtmovqAdOYegmCHPgKTS4wd0UiUZCwl/5
-        56vda+SO7iF/CxZEL8qChIccueuMpcE=
-Date:   Sun, 03 May 2020 14:52:05 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v7 01/12] dt-bindings: add img,pvrsgx.yaml for Imagination
- GPUs
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?iso-8859-1?q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Philipp Rossak <embed3d@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Message-Id: <TEAR9Q.6HI5DFRO5U0I3@crapouillou.net>
-In-Reply-To: <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com>
-References: <cover.1587760454.git.hns@goldelico.com>
-        <3a451e360fed84bc40287678b4d6be13821cfbc0.1587760454.git.hns@goldelico.com>
-        <NMCE9Q.LWG45P20NBVJ@crapouillou.net>
-        <28138EC0-0FA5-4F97-B528-3442BF087C7A@goldelico.com>
+        Sun, 3 May 2020 08:54:40 -0400
+Received: from mout.web.de ([212.227.15.14]:59513 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728230AbgECMyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 08:54:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588510472;
+        bh=9FumUi+lt8UvbeMMdDLgKgHsvnkbteiv5PoK4ODKbiQ=;
+        h=X-UI-Sender-Class:Subject:To:References:Cc:From:Date:In-Reply-To;
+        b=ECmljAsiF9ailistrD1x5v0nSbBSs3122egn/2iy5eA6ti/Kz6SZBdH2CSKMjuIi+
+         ZfrWqDc62BwwtaHlXWRoadwuGP5mI2B3KNc9Pzvyr4a7eYM3+u1vCQRpiJy7qYi7i9
+         cACfKu3wt+/9h3sebDenBprLXWEHT9vBSO1mfNDA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.26.31]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Le4js-1io82831mm-00pxTM; Sun, 03
+ May 2020 14:54:32 +0200
+Subject: Re: [PATCH v2] checkpatch: fix can't check for too long invalid
+ commit id
+To:     Wang YanQing <udknight@gmail.com>, Joe Perches <joe@perches.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org
+References: <20200503115406.GB10332@udknight>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e108fe75-440e-8349-eda1-c28814997a5c@web.de>
+Date:   Sun, 3 May 2020 14:54:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200503115406.GB10332@udknight>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+X-Provags-ID: V03:K1:3TPm0eIkeVSP7dRWQrgq7zKLyD35opWOVw8fknKm/rKwAAXw107
+ IcYXO4NltXZ7Vy5N66VZfvfB0fqTXv77nOSR1eNBKTSzqQkxgvJwYWQ7+fV0fH8vzecuGAj
+ 1Czbs554iQ8jluxY9zEL4QA8H9Iiyf/DQrLufR493MTP2n0sPF+aWl8wEwoJd/ROOFQAvmn
+ gDjUiVwzoP494K6s5wH0A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SSLLQOKGIPk=:emCK3WkfREfYyqRnjYPcAB
+ D8gGp25bPbdZjWBtu+eBWVc1pXFEGCIEMLHcIOofT4QX+0w6mGItnRV6pGIuJLThlWhUlpxzn
+ tkeCtQEumGB8LKD4ZTXSF8vlnnkd0TE0KEBSOYPkRKwIFr71j/54qkzpQosUe/oiJnsAlxWmB
+ WbnI2bBZZNgQOrQ6yLiZc1n6GrI4eq8kQ7TNmxtrQBsQQTkHDETfho4g5S1LCbzRUQ7MpTlJm
+ NktIdgqNHbIumJ/voI7LcxWh1D/cE6Gwkjyp5cc3h0c2WXFJ9H3PLKFosxfxDUdiJWMwKTbtI
+ 1yfBm3pfdJYkjIF5524adXiD6RD/X3q47AZHD+VUe6GLC+NNWlTyoy2mb05ifb5q+OflHni9a
+ R6zf7x2fa3XH2Zsz6deuXX88Mm7rK3xp5xaVuUpdHffAt0ezHXLZGlhOEKil11FsvhLb7cg6Y
+ ge4p75d5NaTvikISRtcImnSNaX3vlSplOQT5MnqupEd4HInxjNJyX3TUgv45LHbkehGG/B+Wr
+ HxrrZZuL7UzffSBXN75GUKqFyPZ2o19HUw7Ij5xkmBhSatQH8S+Amlt4ok3IG8uijFrwAkjKp
+ bFo+qLgFayZay6RYC0ijqDKFsh08IZJiFcOWKc4xJm2tFPfmwH18Z0iPIV4PdkejJbmpTq2eJ
+ eIs8yBnW/sLCdClNRUnWDIBTRRSwWycSnUt8Q3h+AG1q6WDR1fx0Jpv0DgE9UqEHshC4N9bc8
+ 9e6cjC5LbC6eevCHam/6r8ZWT8sE3nJvR2qS0XRZCuSChkvamo3kzX0F8sLk2dCz2yxwHsDt3
+ D0drA/SDUlFU4JJFtGrV4mCB9Zbb+bYorCSwkVrzyPhriDcQ48iUb83ZI6KX2x/7DFvj7DSqf
+ QhaZ/RSOJvTPNah+Wu2O367L2J8a7+ogFO2amrJU/lLkulL6aBJFFnX+R5wb/W1yy3ES5rsQg
+ o3PJ4JeP+JNzB/MG9xIPzRNf4RBi2GKVcFkPz5ZL9G0oZj8CewjdvJBdmHy8fj8taerg82/TV
+ JMu+g9ke27hUoHIPJmamBGBDARiey/p2eajIBmtaosIEXFCaSFa0U9ifTi98vsx3Ilu0N4AN0
+ 81+pvkoroclzG7N7VqJVQEd/sPjk9noVYh9wUsmhZrM3/dtzT76fAvrq2LtrEnGAoCneap+Vx
+ +Nf1j9uwwxXezzde8YFKNm4ue2XdogXGpCWgF4tDSNUQfXl2V4gObFJ8DNyGHpRnmdZr9CZSG
+ X+bMyT4SAMn9QVUFG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+> it willn't warn anything about it due to 41+ length commit will never
 
-Le sam. 2 mai 2020 =E0 22:26, H. Nikolaus Schaller <hns@goldelico.com> a=20
-=E9crit :
-> Hi Paul,
->=20
->>  Am 26.04.2020 um 15:11 schrieb Paul Cercueil <paul@crapouillou.net>:
->>=20
->>  Hi Nikolaus,
->>=20
->>  Le ven. 24 avril 2020 =E0 22:34, H. Nikolaus Schaller=20
->> <hns@goldelico.com> a =E9crit :
->>>  The Imagination PVR/SGX GPU is part of several SoC from
->>>  multiple vendors, e.g. TI OMAP, Ingenic JZ4780, Intel Poulsbo,
->>>  Allwinner A83 and others.
->>>  With this binding, we describe how the SGX processor is
->>>  interfaced to the SoC (registers and interrupt).
->>>  The interface also consists of clocks, reset, power but
->>>  information from data sheets is vague and some SoC integrators
->>>  (TI) deciced to use a PRCM wrapper (ti,sysc) which does
->>>  all clock, reset and power-management through registers
->>>  outside of the sgx register block.
->>>  Therefore all these properties are optional.
->>>  Tested by make dt_binding_check
->>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>  ---
->>>  .../devicetree/bindings/gpu/img,pvrsgx.yaml   | 150=20
->>> ++++++++++++++++++
->>>  1 file changed, 150 insertions(+)
->>>  create mode 100644=20
->>> Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->>>  diff --git a/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml=20
->>> b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->>>  new file mode 100644
->>>  index 000000000000..33a9c4c6e784
->>>  --- /dev/null
->>>  +++ b/Documentation/devicetree/bindings/gpu/img,pvrsgx.yaml
->>>  @@ -0,0 +1,150 @@
->>>  +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>>  +%YAML 1.2
->>>  +---
->>>  +$id: http://devicetree.org/schemas/gpu/img,pvrsgx.yaml#
->>>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>  +
->>>  +title: Imagination PVR/SGX GPU
->>>  +
->>>  +maintainers:
->>>  +  - H. Nikolaus Schaller <hns@goldelico.com>
->>>  +
->>>  +description: |+
->>>  +  This binding describes the Imagination SGX5 series of 3D=20
->>> accelerators which
->>>  +  are found in several different SoC like TI OMAP, Sitara,=20
->>> Ingenic JZ4780,
->>>  +  Allwinner A83, and Intel Poulsbo and CedarView and more.
->>>  +
->>>  +  For an extensive list see:=20
->>> https://en.wikipedia.org/wiki/PowerVR#Implementations
->>>  +
->>>  +  The SGX node is usually a child node of some DT node belonging=20
->>> to the SoC
->>>  +  which handles clocks, reset and general address space mapping=20
->>> of the SGX
->>>  +  register area. If not, an optional clock can be specified here.
->>>  +
->>>  +properties:
->>>  +  $nodename:
->>>  +    pattern: '^gpu@[a-f0-9]+$'
->>>  +  compatible:
->>>  +    oneOf:
->>>  +      - description: SGX530-121 based SoC
->>>  +        items:
->>>  +          - enum:
->>>  +            - ti,omap3-sgx530-121 # BeagleBoard A/B/C,=20
->>> OpenPandora 600MHz and similar
->>>  +          - const: img,sgx530-121
->>>  +          - const: img,sgx530
->>>  +
->>>  +      - description: SGX530-125 based SoC
->>>  +        items:
->>>  +          - enum:
->>>  +            - ti,am3352-sgx530-125 # BeagleBone Black
->>>  +            - ti,am3517-sgx530-125
->>>  +            - ti,am4-sgx530-125
->>>  +            - ti,omap3-sgx530-125 # BeagleBoard XM, GTA04,=20
->>> OpenPandora 1GHz and similar
->>>  +            - ti,ti81xx-sgx530-125
->>>  +          - const: ti,omap3-sgx530-125
->>>  +          - const: img,sgx530-125
->>>  +          - const: img,sgx530
->>>  +
->>>  +      - description: SGX535-116 based SoC
->>>  +        items:
->>>  +          - const: intel,poulsbo-gma500-sgx535 # Atom Z5xx
->>>  +          - const: img,sgx535-116
->>>  +          - const: img,sgx535
->>>  +
->>>  +      - description: SGX540-116 based SoC
->>>  +        items:
->>>  +          - const: intel,medfield-gma-sgx540 # Atom Z24xx
->>>  +          - const: img,sgx540-116
->>>  +          - const: img,sgx540
->>>  +
->>>  +      - description: SGX540-120 based SoC
->>>  +        items:
->>>  +          - enum:
->>>  +            - samsung,s5pv210-sgx540-120
->>>  +            - ti,omap4-sgx540-120 # Pandaboard, Pandaboard ES and=20
->>> similar
->>>  +          - const: img,sgx540-120
->>>  +          - const: img,sgx540
->>>  +
->>>  +      - description: SGX540-130 based SoC
->>>  +        items:
->>>  +          - enum:
->>>  +            - ingenic,jz4780-sgx540-130 # CI20
->>>  +          - const: img,sgx540-130
->>>  +          - const: img,sgx540
->>>  +
->>>  +      - description: SGX544-112 based SoC
->>>  +        items:
->>>  +          - const: ti,omap4470-sgx544-112
->>>  +          - const: img,sgx544-112
->>>  +          - const: img,sgx544
->>>  +
->>>  +      - description: SGX544-115 based SoC
->>>  +        items:
->>>  +          - enum:
->>>  +            - allwinner,sun8i-a31-sgx544-115
->>>  +            - allwinner,sun8i-a31s-sgx544-115
->>>  +            - allwinner,sun8i-a83t-sgx544-115 # Banana-Pi-M3=20
->>> (Allwinner A83T) and similar
->>>  +          - const: img,sgx544-115
->>>  +          - const: img,sgx544
->>>  +
->>>  +      - description: SGX544-116 based SoC
->>>  +        items:
->>>  +          - enum:
->>>  +            - ti,dra7-sgx544-116 # DRA7
->>>  +            - ti,omap5-sgx544-116 # OMAP5 UEVM, Pyra Handheld and=20
->>> similar
->>>  +          - const: img,sgx544-116
->>>  +          - const: img,sgx544
->>>  +
->>>  +      - description: SGX545 based SoC
->>>  +        items:
->>>  +          - const: intel,cedarview-gma3600-sgx545 # Atom N2600,=20
->>> D2500
->>>  +          - const: img,sgx545-116
->>>  +          - const: img,sgx545
->>>  +
->>>  +  reg:
->>>  +    maxItems: 1
->>>  +
->>>  +  interrupts:
->>>  +    maxItems: 1
->>>  +
->>>  +  interrupt-names:
->>>  +    maxItems: 1
->>>  +    items:
->>>  +      - const: sgx
->>>  +
->>>  +  clocks:
->>>  +    maxItems: 4
->>>  +
->>>  +  clock-names:
->>>  +    maxItems: 4
->>>  +    items:
->>>  +      - const: core
->>>  +      - const: sys
->>>  +      - const: mem
->>>  +      - const: hyd
->>>  +
->>>  +  sgx-supply: true
->>>  +
->>>  +  power-domains:
->>>  +    maxItems: 1
->>>  +
->>>  +  resets:
->>>  +    maxItems: 1
->>>  +
->>>  +required:
->>>  +  - compatible
->>>  +  - reg
->>>  +  - interrupts
->>=20
->>  By not making 'clocks' required you make it possible to create=20
->> broken bindings; according to your schema, a GPU node without a=20
->> 'clocks' for the JZ4780 would be perfectly valid.
->=20
-> Yes. But it will never pass a test with real hardware. So it can't be=20
-> omitted anyways.
->=20
-> On a more general thought, this argument holds for any optional=20
-> property. So it is not specific to clocks. Since the reg address=20
-> values are also never specified you can still create broken bindings.=20
-> Or by connecting the wrong clock. So the ways to create broken=20
-> bindings are numerous.
->=20
-> I also assume that SGX integrators are not beginners and do you think=20
-> they need to find out through a make dt_binding_check dtbs_check that=20
-> they should define a clock? based on *assumptions* we do without=20
-> having access to all systems?
->=20
-> IMHO the bindings documentation is a documentation. So it needs to be=20
-> helpful but not perfect. Formalizing all corner cases in a bindings=20
-> document (just because we can since .yaml was introduced) is IMHO=20
-> overkill.
->=20
-> In times before the introduction of more formal .yaml I think we=20
-> would not even have considered this for a comment in the bindings.txt.
->=20
->>  It's possible to forbid the presence of the 'clocks' property on=20
->> some implementations, and require it on others.
->=20
-> To be precise we have to specify the exact number of clocks (between=20
-> 0 and 4) for every architecture.
->=20
-> This also contradicts my dream to get rid of the architecture=20
-> specific components in the long run. My dream (because I can't tell=20
-> how it can be done) is that we can one day develop something which=20
-> just needs compatible =3D img,530 or imp,540 or img,544. Then we can't=20
-> make the number clocks depend on the implementation any more.
+I suggest to reconsider also this wording.
 
-As we said before, the number of clocks is a property of the GPU and=20
-*not* its integration into the SoC.
-
-So you would *not* have a number of clocks between 0 and 4. You get=20
-either 0, or 4, depending on whether or not you have a wrapper.
+Alternatives:
+* will not
+* won't
 
 
->>  See how it's done for instance on=20
->> Documentation/devicetree/bindings/serial/samsung_uart.yaml.
->=20
-> Yes I know the design pattern, but I wonder if such a move makes the=20
-> whole thing even less maintainable.
->=20
-> Assume we have finished DTS for some SoC. Then these DTS have been=20
-> tested on real hardware and are working. Clocks are there where=20
-> needed and missing where not. We may now forbid or not forbid them=20
-> for some implementations in the bindings.yaml but the result of=20
-> dtbs_check won't change! Because they are tested and working and the=20
-> bindings.yaml has been adapted to the result. So we have just=20
-> duplicated something for no practical benefit.
->=20
-> Next, assume there is coming support for more and more new SoC. Then,=20
-> developers not only have to figure out which clocks they need in the=20
-> DTS but they also have to add a patch to the implementation specific=20
-> part of the bindings.yaml to clearly define exactly the same what=20
-> they already have written into their .dts (the clocks are either=20
-> there for the of_node or they are not). So again the rules are for no=20
-> benefit, since a new SoC is introduced exactly once. And tested if it=20
-> works. And if it is there, it will stay as it is. It is just work for=20
-> maintainers to review that patch as well.
+> This patch moves the unknown commit id check for normal commit description
+> to GIT_COMMIT_ID, and uses ERROR instead of WARN, because unknown commit
+> id is total useless to track change history in changelog, it deserves the
+> ERROR.
 
-If you add support for a new SoC, you'd still need to modify the=20
-binding to add the compatible string. So the argument of "more work" is=20
-moot.
+Can such a software adjustment trigger any more improvements?
 
--Paul
-
-> It boils down to the question if we need to formalize the rule how a=20
-> working DTS was derived. Or just have a working DTS and not formalize=20
-> everything.
->=20
-> So IMHO carrying along such a detail (forbid clocks on some=20
-> architectures) is nice to have (and fun to learn the .yaml thing) but=20
-> not of benefit for anyone. Not for the DTS developer nor for the=20
-> maintainers nor for the users of a Linux kernel. "Keep it simple" is=20
-> always a good rule for maintainability.
->=20
-> In summary I don't see a good reason to follow this in v8. But you=20
-> could add it by a separate patch later if the DTS have been reviewed=20
-> and agreed.
->=20
-> BR and thanks,
-> Nikolaus
->=20
-
-
+Regards,
+Markus
