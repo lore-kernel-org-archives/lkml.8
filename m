@@ -2,351 +2,130 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AF6C47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52304C47256
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082D5206D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:19:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="aVDtSn6E"
+	by mail.kernel.org (Postfix) with ESMTP id 3B82D206EB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgECRTb (ORCPT
+        id S1729007AbgECRW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 13:19:31 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:29332 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728875AbgECRT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 13:19:28 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FXly1fpfzKc;
-        Sun,  3 May 2020 19:19:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588526366; bh=qeW+XwbS7bi3+mwVfBZUNSvc/cz03Zs7dROJVcXWe4I=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=aVDtSn6EKppQR09TqxsLQR1dl0/BEGdrW+z/cfDhTANElamT102Vn6Y3xZOGaGPGM
-         r+h9nZ92JAMHvtc1JJddUXp5aMVsK9eU8iwXXp/8US9dbohDZzehZppheMD0k/mXXs
-         X6UrV8RI/cnTR2wRKMEGVcw9k56B6XPGdgQed8jzIa5BDn9mvnLxtpOd5O7iifQNU+
-         IGDeEPPWd6dgOTBQ7tpYCAwc2ffeJkuCahp6Gb1LpgqTdda5JViQh+fvnZmvDybFPz
-         929IXn2iZ700IU/PoKJTN0U1c1MWd+XPeLiopoxhRFRAYxUt8IZt1ZllxiFtXJqRn/
-         KQLpF6klbnzvQ==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 03 May 2020 19:19:26 +0200
-Message-Id: <ae0c612ce6bc53ea726ddcb25eb36bca78055e33.1588526049.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v4 3/3] clk: at91: allow setting all PMC clock parents via DT
+        Sun, 3 May 2020 13:22:28 -0400
+Received: from mail-co1nam11olkn2043.outbound.protection.outlook.com ([40.92.18.43]:10184
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728859AbgECRW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 13:22:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZwJrMpv7fo9rtjyS/Q9zc+tQUOFRil+DxTzFglwurfdveIxzc/+H29f7JBtAmLqXoW40lc60d6C6CTzkyibahaYARR0Rlg/Eji1CDX04i7l0by6J/nwEVc+j7AwUo+/ev8e926ND49NTQouRNXGHz42vEvajoGA8oeHmUZmOqvCj3LlaP5o45jZ5yWD7iG8vGzND/4GY2tRF6plWSwcsOA0PtOu8Ybif8joiTuVkJUYMNwzcZGVWz97Q4jfOyzkVBozpab1hgoxPVilS2ElwFnsYBVPaXCufrVxd/mzt7dCJll7oHUOewfhN/xDlKHJdjlaGYFVuzIOV2kkknznIJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QSR/dwvt++l2Oi733usiHVK2Wnj++y0bEjxSjwaF94Y=;
+ b=XkpIiOn6hEKO9Xpt3UBae7Xj9Fb98NG8YoxufuIgbb0khjBdD906q0TBcM77RJr6btkv7L90bWbjIwl9aaMysC7WLeiwr8n9EAfkUnYhd8jdpfJVBKpBOr0i3YjaTebkY5WD2uWFLxu8y5UIxOeIyqjcA3DRcTvqqC0SOe/c2rjwufmHjNJF5vRtvwLefuJowrYQoFzWO+geyOugBPQWHuDSYvMSSg3bxNyCFNzwHJPdm/e3pvmVTA/JFa55VVVk7M1nEzoMGayKs5YlBRAEJUja7q8lJ6OFLRBZVDfbmYPH8JfRNSDOfwZChmPOflcmqkGvLrHeQfNxDz3pYu765g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN8NAM11FT054.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:fc4b::52) by
+ BN8NAM11HT065.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4b::76)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Sun, 3 May
+ 2020 17:22:24 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc4b::42) by BN8NAM11FT054.mail.protection.outlook.com
+ (2a01:111:e400:fc4b::358) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
+ Transport; Sun, 3 May 2020 17:22:24 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:B6EE349BD92D333ECC97541A81CD710523ECD37DDD0DCF701383AFCBB6EFCE12;UpperCasedChecksum:397A0D960BB03C25E65094B9F5F3B67BBD0C23249853D2BDF6FEF1FEBC407BEB;SizeAsReceived:7902;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.029; Sun, 3 May 2020
+ 17:22:24 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, linus.walleij@linaro.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
+        kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, linux-input@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH 0/5] iio: accel: Add bma023 support to bma180
+Date:   Sun,  3 May 2020 10:22:01 -0700
+Message-ID: <BN6PR04MB0660046ABD79433EA94A85A9A3A90@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR14CA0047.namprd14.prod.outlook.com
+ (2603:10b6:300:12b::33) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200503172206.13782-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR14CA0047.namprd14.prod.outlook.com (2603:10b6:300:12b::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Sun, 3 May 2020 17:22:22 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200503172206.13782-1-xc-racer2@live.ca>
+X-TMN:  [EdMbrvaaOG+gsyVIbiZXMTT8s+9h73WbHNM15p+Fd7a/N7OevFswW7Bq0MqA1HBj]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 4f2964f8-777d-4534-18f9-08d7ef868b37
+X-MS-TrafficTypeDiagnostic: BN8NAM11HT065:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4GXgfNIJMzs8tUAmV36GGEjHlYqVOBsg7V90IFjVbHeZGRsqsETlCaNF/GfDMcA57XpxfcVd3uG/KAiKhEIXjlw1qWTUyn05Qi1e5W4J7jWipccMVO0O+b7sf+fIFtgOYN5Apf8h1JyvnZMnrpw96aS4Y5ljoQHSYkAOLFu31qNYmZ+T4PkYGzm5mU/y/+bYz0ud1meOlBxPHDBEQnPP9A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: rz2n1nsLByM8AFdRhGML+9OsB3dLX+IuN8NcciOFbZsOd+pd6kppRmH6zOm9Ix2mNQV997aw+Yc6Fg3MyOGMGhrGnjkcgRLR2KYl3/z+ODColLXIAzFO6RdJGbjvSh8mSsaOzshpOGXpRdLgg8I/U7LO9dt/FiX+0JYBad/hxwPUnKsfqwdEr2ivtU9npcnMw8SqoW9CxaR3Q8nbvovEXQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f2964f8-777d-4534-18f9-08d7ef868b37
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 17:22:24.5930
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM11HT065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to have clocks accessible via phandle to select them
-as peripheral clock parent using assigned-clock-parents in DT.
-Add support for PLLACK/PLLBCK/AUDIOPLLCK clocks where available.
+This patchset adds support for the bma023 three axis accelerometer
+to the bma180 IIO driver.  The bma023 is found on several ~2010
+phones, including the first-gen Galaxy S series.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
-v2: rebase to clk/clk-at91 branch
-v3: no changes
-v4: extend to whole family
----
- drivers/clk/at91/at91rm9200.c    | 6 +++++-
- drivers/clk/at91/at91sam9260.c   | 6 +++++-
- drivers/clk/at91/at91sam9g45.c   | 4 +++-
- drivers/clk/at91/at91sam9n12.c   | 6 +++++-
- drivers/clk/at91/at91sam9rl.c    | 4 +++-
- drivers/clk/at91/at91sam9x5.c    | 4 +++-
- drivers/clk/at91/sam9x60.c       | 4 +++-
- drivers/clk/at91/sama5d2.c       | 6 +++++-
- drivers/clk/at91/sama5d3.c       | 4 +++-
- drivers/clk/at91/sama5d4.c       | 4 +++-
- include/dt-bindings/clock/at91.h | 3 +++
- 11 files changed, 41 insertions(+), 10 deletions(-)
+The bma023 differs from later chips (bma180, bma25x) in that it
+has no low power but still working mode and no temperature
+channel.
 
-diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-index 8da88e9a95d8..38bdb4981315 100644
---- a/drivers/clk/at91/at91rm9200.c
-+++ b/drivers/clk/at91/at91rm9200.c
-@@ -98,7 +98,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91rm9200_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					    nck(at91rm9200_systemck),
- 					    nck(at91rm9200_periphck), 0, 4);
- 	if (!at91rm9200_pmc)
-@@ -123,12 +123,16 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91rm9200_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   &at91rm9200_pll_layout,
- 				   &rm9200_pll_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91rm9200_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slowxtal_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "pllack";
-diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-index 7e5ff252fffc..6d0723aa8b13 100644
---- a/drivers/clk/at91/at91sam9260.c
-+++ b/drivers/clk/at91/at91sam9260.c
-@@ -352,7 +352,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9260_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					    ndck(data->sck, data->num_sck),
- 					    ndck(data->pck, data->num_pck),
- 					    0, data->num_progck);
-@@ -399,12 +399,16 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9260_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   data->pllb_layout,
- 				   data->pllb_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9260_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slck_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "pllack";
-diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-index 5d18eb04c218..9873b583c260 100644
---- a/drivers/clk/at91/at91sam9g45.c
-+++ b/drivers/clk/at91/at91sam9g45.c
-@@ -115,7 +115,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9g45_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					    nck(at91sam9g45_systemck),
- 					    nck(at91sam9g45_periphck), 0, 2);
- 	if (!at91sam9g45_pmc)
-@@ -143,6 +143,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9g45_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-index 3a2564c2f724..630dc5d87171 100644
---- a/drivers/clk/at91/at91sam9n12.c
-+++ b/drivers/clk/at91/at91sam9n12.c
-@@ -128,7 +128,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9n12_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					   nck(at91sam9n12_systemck), 31, 0, 2);
- 	if (!at91sam9n12_pmc)
- 		return;
-@@ -162,11 +162,15 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9n12_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   &at91rm9200_pll_layout, &pllb_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9n12_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slck_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
-diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-index bcf07f6a0e0e..0d1cc44b056f 100644
---- a/drivers/clk/at91/at91sam9rl.c
-+++ b/drivers/clk/at91/at91sam9rl.c
-@@ -87,7 +87,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9rl_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					   nck(at91sam9rl_systemck),
- 					   nck(at91sam9rl_periphck), 0, 2);
- 	if (!at91sam9rl_pmc)
-@@ -105,6 +105,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9rl_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-index f13756b407e2..0ce3da080287 100644
---- a/drivers/clk/at91/at91sam9x5.c
-+++ b/drivers/clk/at91/at91sam9x5.c
-@@ -150,7 +150,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	if (IS_ERR(regmap))
- 		return;
- 
--	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9x5_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					   nck(at91sam9x5_systemck), 31, 0, 2);
- 	if (!at91sam9x5_pmc)
- 		return;
-@@ -184,6 +184,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9x5_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index db14e0427c7f..3e20aa68259f 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -182,7 +182,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	sam9x60_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sam9x60_systemck),
- 					nck(sam9x60_periphck),
- 					nck(sam9x60_gck), 8);
-@@ -214,6 +214,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sam9x60_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
- 				      "main_osc", 1, &upll_characteristics);
- 	if (IS_ERR(hw))
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index ae5e83cadb3d..b3fa2291ccd8 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -166,7 +166,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
-+	sama5d2_pmc = pmc_data_allocate(PMC_AUDIOPLLCK + 1,
- 					nck(sama5d2_systemck),
- 					nck(sama5d2_periph32ck),
- 					nck(sama5d2_gck), 3);
-@@ -202,6 +202,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_audio_pll_frac(regmap, "audiopll_fracck",
- 					      "mainck");
- 	if (IS_ERR(hw))
-@@ -217,6 +219,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_AUDIOPLLCK] = hw;
-+
- 	regmap_sfr = syscon_regmap_lookup_by_compatible("atmel,sama5d2-sfr");
- 	if (IS_ERR(regmap_sfr))
- 		regmap_sfr = NULL;
-diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-index 507eef6797f1..eef7cf964600 100644
---- a/drivers/clk/at91/sama5d3.c
-+++ b/drivers/clk/at91/sama5d3.c
-@@ -125,7 +125,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	sama5d3_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sama5d3_systemck),
- 					nck(sama5d3_periphck), 0, 3);
- 	if (!sama5d3_pmc)
-@@ -158,6 +158,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-index 80692902b4e4..3c3f83870456 100644
---- a/drivers/clk/at91/sama5d4.c
-+++ b/drivers/clk/at91/sama5d4.c
-@@ -140,7 +140,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
-+	sama5d4_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sama5d4_systemck),
- 					nck(sama5d4_periph32ck), 0, 3);
- 	if (!sama5d4_pmc)
-@@ -173,6 +173,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
-+
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
-diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-index c3f4aa6a2d29..adcf608b41fa 100644
---- a/include/dt-bindings/clock/at91.h
-+++ b/include/dt-bindings/clock/at91.h
-@@ -21,6 +21,9 @@
- #define PMC_MCK2		4
- #define PMC_I2S0_MUX		5
- #define PMC_I2S1_MUX		6
-+#define PMC_PLLACK		7
-+#define PMC_PLLBCK		8
-+#define PMC_AUDIOPLLCK		8		/* SAMA5D2-only, no PLLB there */
- 
- #ifndef AT91_PMC_MOSCS
- #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
+The bma023 is already supported by a misc input driver (bma150), so
+when both are enabled, the iio driver is preferred.  The bma150
+is very similar to the bma023, but has a temperature channel.
+Support for the bma150 is not added in this patchset.
+
+While I was at it, I noticed that the dt binding doc was missing
+the regulators, so I've added those in.
+
+The patches have been tested on a GT-i9000.  The interrupt pin
+is not connected on this board so the trigger was not tested.
+
+Jonathan Bakker (5):
+  iio: accel: bma180: Prepare for different reset values
+  input: misc: bma150: Conditionally disable bma023 support
+  dt-bindings: iio: accel: Add bma023 compatible to bma180
+  dt-bindings: iio: accel: Add required regulators to bma180
+  iio: accel: bma180: Add support for bma023
+
+ .../devicetree/bindings/iio/accel/bma180.txt  |   5 +-
+ drivers/iio/accel/Kconfig                     |   6 +-
+ drivers/iio/accel/bma180.c                    | 131 +++++++++++++++++-
+ drivers/input/misc/bma150.c                   |   3 +
+ 4 files changed, 135 insertions(+), 10 deletions(-)
+
 -- 
 2.20.1
 
