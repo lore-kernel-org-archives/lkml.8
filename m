@@ -2,67 +2,70 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78120C47259
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 18:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38A4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 18:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55EDB206D9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 18:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588530910;
-	bh=BTwl0Y8+VKc741Os+C0DSxED2lISWaGLB8OF40Emuyk=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=CBG0XtYYxbRD/T88CbGzTN0Z15bnFzRMJPPyPMg1EzgnHuesIDltbBhS0ren81Brn
-	 Hj9ywtymsNEWjI31t5ODaT8M2RK5MYW/lo+murxTcugZIMvt4tFUmqTvU6v9B9ltZT
-	 AwWRvRlZvE2J1oPHdxFX5PNKjCBkM6EYbPeJDW/Q=
+	by mail.kernel.org (Postfix) with ESMTP id 7DCA7206F0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 18:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgECSfJ (ORCPT
+        id S1728982AbgECSjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 14:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728863AbgECSfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 14:35:09 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.7-rc4, part 2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588530908;
-        bh=BTwl0Y8+VKc741Os+C0DSxED2lISWaGLB8OF40Emuyk=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bAz9YIgKwxqsv+DkbqKSh6NV6Z3Pqyd8H8LnLCSxnpaXPc3ZspkNjX/acsLIkdIzL
-         /5IKxsK0GRng52R/aXTDAi4Yoc77CdyV70KR1JDeQo9rIMBbfxKk0QPBr55yRxWdxY
-         ZbrK+fSL1OfV9CZc67FWUcRC1PXtEQDsnmnW26rk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1588522631.git.dsterba@suse.com>
-References: <cover.1588522631.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1588522631.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc3-tag
-X-PR-Tracked-Commit-Id: eb91db63a90d8f8e8768b82fcb2cae5f7198cf6b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 262f7a6b8317a06e7d51befb690f0bca06a473ea
-Message-Id: <158853090878.15713.16382357327351730130.pr-tracker-bot@kernel.org>
-Date:   Sun, 03 May 2020 18:35:08 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+        Sun, 3 May 2020 14:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728863AbgECSjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 14:39:31 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04734C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 11:39:30 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 191A2452; Sun,  3 May 2020 20:39:29 +0200 (CEST)
+Date:   Sun, 3 May 2020 20:39:27 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
+Message-ID: <20200503183927.GA18353@8bytes.org>
+References: <20200418121022.GA6113@8bytes.org>
+ <57CBF6B2-4745-4E36-9AA5-7E0876E3DA8F@lca.pw>
+ <20200418183429.GH21900@8bytes.org>
+ <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
+ <20200429112014.GN21900@8bytes.org>
+ <E351FE35-3130-48B0-90ED-BC55469C73F7@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E351FE35-3130-48B0-90ED-BC55469C73F7@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun,  3 May 2020 18:25:37 +0200:
+Hi Qian,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc3-tag
+On Sun, May 03, 2020 at 09:04:03AM -0400, Qian Cai wrote:
+> > On Apr 29, 2020, at 7:20 AM, Joerg Roedel <joro@8bytes.org> wrote:
+> > Can you please test this branch:
+> > 
+> > 	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=amd-iommu-fixes
+> > 
+> > It has the previous fix in it and a couple more to make sure the
+> > device-table is updated and flushed before increase_address_space()
+> > updates domain->pt_root.
+> 
+> I believe this closed the existing races as it had survived for many
+> days. Great work!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/262f7a6b8317a06e7d51befb690f0bca06a473ea
+Thanks a lot for testing these changes! Can I add your Tested-by when I
+send them to the mailing list tomorrow?
 
-Thank you!
+Regards,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+	Joerg
+
