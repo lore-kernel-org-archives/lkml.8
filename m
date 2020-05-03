@@ -4,202 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434A0C47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 09:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAE9C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 09:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D4C24963
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 09:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5D920787
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 09:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588496662;
-	bh=joQmbCHiX4MsrLvWUn3TCqGJil+H1POp5Wj9MvFemrw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xqUnxcVArH4Jx4nE86ZNFOORoQgUr6eYv1Jlcx543dn3ER6ZH7tmB7hCShLoA/C7G
-	 9yyNJANBGbfQzmPkDibsum3dUBaYArDCfZER542dVrkUcdc8ONcygI45P7QDGAoUK0
-	 yx3SRHvFTnPdcVp4O5VIxVzVmfLS4pAPCv7jvfmE=
+	s=default; t=1588496967;
+	bh=kxtHFfYEuwMXOhI8Am9W2ACuZqr+iqZ7DGprxsKv56g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OV77NPCT+CFhW1X2q8hMGMXjg6Ih6oJZ7z54zT8CXXku1gY3OWINADfKQqVQuHOta
+	 Yk8d6b7SvPKxbaTfeCq8yE/JStMUDKd5ZlFkm6HU4ObMyO0nJwYMwUYdHKh1QU6S1e
+	 CTd1n36pcZMwJd7Oug40P70CcCQGbJ9oV008DjAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgECJEV (ORCPT
+        id S1727911AbgECJJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 05:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbgECJEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 05:04:20 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CD8620721;
-        Sun,  3 May 2020 09:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588496660;
-        bh=joQmbCHiX4MsrLvWUn3TCqGJil+H1POp5Wj9MvFemrw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qNCfQ6rpgX7z2rhV1f1A6x13Wl/egMCdnTFcR5zByONc+eV8e+5YcceGJ69ZpiCaT
-         OfmANZm7294flumn7dMwyjkse8CImPMxg9LXhCYhLhoOIfQzXMeCjVqIIoQAoAbb/d
-         rezLoZtq7GUddnoF2teEWIGHf6x7K7ALrdy4RGis=
-Date:   Sun, 3 May 2020 10:04:14 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH V3 4/4] iio: adc: Update error checks and debug prints
-Message-ID: <20200503100414.6e5602e7@archlinux>
-In-Reply-To: <1587993846-30773-5-git-send-email-jprakash@codeaurora.org>
-References: <1587993846-30773-1-git-send-email-jprakash@codeaurora.org>
-        <1587993846-30773-5-git-send-email-jprakash@codeaurora.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 May 2020 05:09:26 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44519 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgECJJ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 05:09:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l20so7035684pgb.11;
+        Sun, 03 May 2020 02:09:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pz+7fmmOLiHvlX4Oa/JOFFvJP8vnA71Hx7aLAhOtAu4=;
+        b=SUmNDkSQ0A3u0BOYvFBjYHivpe1MFTFZMMyzm/M6IiSrrWfiP+nRA12eUuO7jAZ770
+         F62VBNynJeHA+WG4ABqmsTfPzYjH/1Tff1DL1RLeqdEA3xrRXPk1wzmbPQYMfMSnfb63
+         OutwncfcWAuePPSk8XjzmUT7hkILB+FeMRLip+aib2Qz9ENDoSJW4VZUjTAPEJjOt9hS
+         ijbqPt+hnOUOHo8+ZSf6rDmJ8LYYZFr3dBX6T27YSp/lzVOKhLXrvCQFs4O0E0tc5hLU
+         bwaQpOnAVqNu/d+dM3I1cOYTEDaK2zJ7D7VScaAxXlWrc6mZWQh6i8DxmAozFv7XZ9Dx
+         ZQsw==
+X-Gm-Message-State: AGi0PuZvph7MqHHPR7jfhfbtnQLuY2lQsGSE9Gqmj/Z+FeeIfYvfpuZ0
+        Kqe5nUICBmgq2ug0xSH16P0=
+X-Google-Smtp-Source: APiQypIdYUfg+5dhTvIoYTyrqqWdYIDeNhDSPlvSkIws0w55SQ7aMbgV4xFiIfN1Yg3LnHw9AHMQzw==
+X-Received: by 2002:a62:7c16:: with SMTP id x22mr12008122pfc.267.1588496965480;
+        Sun, 03 May 2020 02:09:25 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o99sm3886559pjo.8.2020.05.03.02.09.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 02:09:24 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id AD1C640256; Sun,  3 May 2020 09:09:23 +0000 (UTC)
+Date:   Sun, 3 May 2020 09:09:23 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bvanassche@acm.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] loop: be paranoid on exit and prevent new
+ additions / removals
+Message-ID: <20200503090923.GP11244@42.do-not-panic.com>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-7-mcgrof@kernel.org>
+ <20200429095034.GC2081185@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429095034.GC2081185@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 18:54:05 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
-
-> Change pr_err/pr_debug statements to dev_err/dev_dbg for
-> increased clarity. Also clean up some return value checks.
+On Wed, Apr 29, 2020 at 11:50:34AM +0200, Greg KH wrote:
+> On Wed, Apr 29, 2020 at 07:46:27AM +0000, Luis Chamberlain wrote:
+> > Be pedantic on removal as well and hold the mutex.
+> > This should prevent uses of addition while we exit.
+> > 
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > ---
+> >  drivers/block/loop.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > index da693e6a834e..6dccba22c9b5 100644
+> > --- a/drivers/block/loop.c
+> > +++ b/drivers/block/loop.c
+> > @@ -2333,6 +2333,8 @@ static void __exit loop_exit(void)
+> >  
+> >  	range = max_loop ? max_loop << part_shift : 1UL << MINORBITS;
+> >  
+> > +	mutex_lock(&loop_ctl_mutex);
+> > +
+> >  	idr_for_each(&loop_index_idr, &loop_exit_cb, NULL);
+> >  	idr_destroy(&loop_index_idr);
+> >  
+> > @@ -2340,6 +2342,8 @@ static void __exit loop_exit(void)
+> >  	unregister_blkdev(LOOP_MAJOR, "loop");
+> >  
+> >  	misc_deregister(&loop_misc);
+> > +
+> > +	mutex_unlock(&loop_ctl_mutex);
+> >  }
+> >  
+> >  module_init(loop_init);
 > 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-I'm happy with the whole series.  Just need a devicetree review before
-applying. 
+> What type of issue is this helping with?  Can it be triggered today?  if
+> so, shouldn't it be backported to stable kernels?
 
-Thanks,
+Just code inspection. I can't trigger a userspace test script to crash
+the kernel yet, but suspect a race still does exist.
 
-Jonathan
-
-> ---
->  drivers/iio/adc/qcom-spmi-adc5.c | 30 +++++++++++++++---------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/qcom-spmi-adc5.c b/drivers/iio/adc/qcom-spmi-adc5.c
-> index a66eeb7..7e951a0 100644
-> --- a/drivers/iio/adc/qcom-spmi-adc5.c
-> +++ b/drivers/iio/adc/qcom-spmi-adc5.c
-> @@ -249,11 +249,11 @@ static int adc5_read_voltage_data(struct adc5_chip *adc, u16 *data)
->  	*data = (rslt_msb << 8) | rslt_lsb;
->  
->  	if (*data == ADC5_USR_DATA_CHECK) {
-> -		pr_err("Invalid data:0x%x\n", *data);
-> +		dev_err(adc->dev, "Invalid data:0x%x\n", *data);
->  		return -EINVAL;
->  	}
->  
-> -	pr_debug("voltage raw code:0x%x\n", *data);
-> +	dev_dbg(adc->dev, "voltage raw code:0x%x\n", *data);
->  
->  	return 0;
->  }
-> @@ -304,7 +304,7 @@ static int adc5_configure(struct adc5_chip *adc,
->  
->  	/* Read registers 0x42 through 0x46 */
->  	ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
-> -	if (ret < 0)
-> +	if (ret)
->  		return ret;
->  
->  	/* Digital param selection */
-> @@ -344,7 +344,7 @@ static int adc7_configure(struct adc5_chip *adc,
->  		return ret;
->  
->  	ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
-> -	if (ret < 0)
-> +	if (ret)
->  		return ret;
->  
->  	/* Digital param selection */
-> @@ -385,24 +385,24 @@ static int adc5_do_conversion(struct adc5_chip *adc,
->  
->  	ret = adc5_configure(adc, prop);
->  	if (ret) {
-> -		pr_err("ADC configure failed with %d\n", ret);
-> +		dev_err(adc->dev, "ADC configure failed with %d\n", ret);
->  		goto unlock;
->  	}
->  
->  	if (adc->poll_eoc) {
->  		ret = adc5_poll_wait_eoc(adc);
->  		if (ret < 0) {
-> -			pr_err("EOC bit not set\n");
-> +			dev_err(adc->dev, "EOC bit not set\n");
->  			goto unlock;
->  		}
->  	} else {
->  		ret = wait_for_completion_timeout(&adc->complete,
->  							ADC5_CONV_TIMEOUT);
->  		if (!ret) {
-> -			pr_debug("Did not get completion timeout.\n");
-> +			dev_dbg(adc->dev, "Did not get completion timeout.\n");
->  			ret = adc5_poll_wait_eoc(adc);
->  			if (ret < 0) {
-> -				pr_err("EOC bit not set\n");
-> +				dev_err(adc->dev, "EOC bit not set\n");
->  				goto unlock;
->  			}
->  		}
-> @@ -435,7 +435,7 @@ static int adc7_do_conversion(struct adc5_chip *adc,
->  	wait_for_completion_timeout(&adc->complete, ADC7_CONV_TIMEOUT);
->  
->  	ret = adc5_read(adc, ADC5_USR_STATUS1, &status, 1);
-> -	if (ret < 0)
-> +	if (ret)
->  		goto unlock;
->  
->  	if (status & ADC5_USR_STATUS1_CONV_FAULT) {
-> @@ -481,8 +481,8 @@ static int adc7_of_xlate(struct iio_dev *indio_dev,
->  	int i, v_channel;
->  
->  	for (i = 0; i < adc->nchannels; i++) {
-> -		v_channel = (adc->chan_props[i].sid << ADC_CHANNEL_OFFSET |
-> -			adc->chan_props[i].channel);
-> +		v_channel = (adc->chan_props[i].sid << ADC_CHANNEL_OFFSET) |
-> +			adc->chan_props[i].channel;
->  		if (v_channel == iiospec->args[0])
->  			return i;
->  	}
-> @@ -728,7 +728,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  	channel_name = of_get_property(node,
->  				"label", NULL) ? : node->name;
->  	if (!channel_name) {
-> -		pr_err("Invalid channel name\n");
-> +		dev_err(dev, "Invalid channel name\n");
->  		return -EINVAL;
->  	}
->  	prop->datasheet_name = channel_name;
-> @@ -766,12 +766,12 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
->  
->  		ret = adc5_read(adc, ADC5_USR_REVISION1, dig_version,
->  							sizeof(dig_version));
-> -		if (ret < 0) {
-> +		if (ret) {
->  			dev_err(dev, "Invalid dig version read %d\n", ret);
->  			return ret;
->  		}
->  
-> -		pr_debug("dig_ver:minor:%d, major:%d\n", dig_version[0],
-> +		dev_dbg(dev, "dig_ver:minor:%d, major:%d\n", dig_version[0],
->  						dig_version[1]);
->  		/* Digital controller >= 5.3 have hw_settle_2 option */
->  		if ((dig_version[0] >= ADC5_HW_SETTLE_DIFF_MINOR &&
-> @@ -975,7 +975,7 @@ static int adc5_probe(struct platform_device *pdev)
->  
->  	ret = adc5_get_dt_data(adc, node);
->  	if (ret) {
-> -		pr_err("adc get dt data failed\n");
-> +		dev_err(dev, "adc get dt data failed\n");
->  		return ret;
->  	}
->  
-
+  Luis
