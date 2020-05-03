@@ -2,108 +2,109 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7803BC47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FACFC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6AC206B9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10528206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:50:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgECTlg (ORCPT
+        id S1729034AbgECTue convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 15:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46800 "EHLO
+        Sun, 3 May 2020 15:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgECTlg (ORCPT
+        with ESMTP id S1728956AbgECTud (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 15:41:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A95C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 12:41:35 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jVKUR-0006UJ-9b; Sun, 03 May 2020 21:41:27 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jVKUQ-0005cK-AR; Sun, 03 May 2020 21:41:26 +0200
-Date:   Sun, 3 May 2020 21:41:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200503194126.wlwuide5q2oxzlwt@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
- <CAHp75Vcg9kdgr=AXxwmXO-rmL5z9nq=zJvCww8wG7i1B3BQNYg@mail.gmail.com>
+        Sun, 3 May 2020 15:50:33 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80126C061A0E;
+        Sun,  3 May 2020 12:50:33 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jVKdC-0008ER-Gq; Sun, 03 May 2020 21:50:30 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DF50B1C0051;
+        Sun,  3 May 2020 21:50:29 +0200 (CEST)
+Date:   Sun, 03 May 2020 19:50:29 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/tlb/uv: Add a forward declaration for struct flush_tlb_info
+Cc:     Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200503103107.3419-1-bp@alien8.de>
+References: <20200503103107.3419-1-bp@alien8.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vcg9kdgr=AXxwmXO-rmL5z9nq=zJvCww8wG7i1B3BQNYg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Message-ID: <158853542978.8414.4215113723973557504.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andy, hello Miquel,
+The following commit has been merged into the x86/mm branch of tip:
 
-On Sun, May 03, 2020 at 10:20:23PM +0300, Andy Shevchenko wrote:
-> On Sun, May 3, 2020 at 1:54 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >
-> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > functions but can also manage the intensity on each of its ports with
-> > PWM. Each output is independent and may be tuned with 16 values (4
-> > bits per output). The period is always 32kHz, only the duty-cycle may
-> > be changed. One can use any output as GPIO or PWM.
-> 
-> Besides the messing with parameter types (int vs. bool) it should be
-> rebased on top of Bartosz's tree.
-> 
-> Also, it might be that we can instantiate a kind of device (MFD?) that
-> will share same regmap between two and have naturally different
-> drivers for GPIO and PWM.
-> 
-> Side note: I still think this should be a function of the pin when
-> driver will be converted to pin control. Now this change delays the
-> conversion and better approach. But as I said before, if GPIO
-> maintainers consider this good enough to go like this, I won't object.
-> 
-> Some background. It's known that some pin control devices may have PWM
-> function (limited, like blinking led or so, or full) and it would be
-> nice to have a pin mux option which enables PWM on a requested pin. Or
-> PWM tries to enable proper pin muxing (this sounds even better in
-> order of sharing same API from pin control, like "pin is available for
-> GPIO").
+Commit-ID:     bd1de2a7aace4d1d312fb1be264b8fafdb706208
+Gitweb:        https://git.kernel.org/tip/bd1de2a7aace4d1d312fb1be264b8fafdb706208
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Sun, 03 May 2020 12:27:29 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Sun, 03 May 2020 21:43:47 +02:00
 
-There is one thing I see as a pre-condition to the abstraction of
-pin-controller + GPIO + PWM: If I configure the PWM with certain
-parameters while the pin is still configured as GPIO there must be no
-visible effect on the pin. The setting must then be active when the pin
-is changed to PWM mode. (And vice versa: The GPIO setting must not
-influence the PWM output ...) I didn't check the hardware manual (or the
-patch), but if this needs caching of pwm and gpio parameters I would
-take that as a strong hint that the abstraction is wrong.
+x86/tlb/uv: Add a forward declaration for struct flush_tlb_info
 
-Best regards
-Uwe
+... to fix these build warnings:
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+  In file included from ./arch/x86/include/asm/uv/uv_hub.h:22,
+                   from drivers/misc/sgi-gru/grukdump.c:16:
+  ./arch/x86/include/asm/uv/uv.h:39:21: warning: ‘struct flush_tlb_info’ declared \
+     inside parameter list will not be visible outside of this definition or declaration
+     39 |        const struct flush_tlb_info *info);
+        |                     ^~~~~~~~~~~~~~
+  In file included from ./arch/x86/include/asm/uv/uv_hub.h:22,
+                   from drivers/misc/sgi-gru/grutlbpurge.c:28:
+  ./arch/x86/include/asm/uv/uv.h:39:21: warning: ‘struct flush_tlb_info’ declared \
+    inside parameter list will not be visible outside of this definition or declaration
+     39 |        const struct flush_tlb_info *info);
+        |                     ^~~~~~~~~~~~~~
+
+  ...
+
+after
+
+  bfe3d8f6313d ("x86/tlb: Restrict access to tlbstate")
+
+restricted access to tlbstate.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200503103107.3419-1-bp@alien8.de
+---
+ arch/x86/include/asm/uv/uv.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
+index 45ea95c..91e088a 100644
+--- a/arch/x86/include/asm/uv/uv.h
++++ b/arch/x86/include/asm/uv/uv.h
+@@ -8,6 +8,7 @@ enum uv_system_type {UV_NONE, UV_LEGACY_APIC, UV_X2APIC, UV_NON_UNIQUE_APIC};
+ 
+ struct cpumask;
+ struct mm_struct;
++struct flush_tlb_info;
+ 
+ #ifdef CONFIG_X86_UV
+ #include <linux/efi.h>
