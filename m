@@ -2,181 +2,89 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7DEC47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29877C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 18:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3FE6206D7
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 17:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE014206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 18:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFKYlZaA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ekta0op2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgECRp2 (ORCPT
+        id S1728949AbgECSEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 13:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57144 "EHLO
+        Sun, 3 May 2020 14:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728831AbgECRp1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728859AbgECSEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 13:45:27 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C7BC061A0E;
-        Sun,  3 May 2020 10:45:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r26so6180363wmh.0;
-        Sun, 03 May 2020 10:45:27 -0700 (PDT)
+        Sun, 3 May 2020 14:04:40 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60526C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 11:04:40 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v2so5869166plp.9
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 11:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:references:user-agent:to:cc:subject:in-reply-to:message-id
-         :date:mime-version;
-        bh=36HKN1eX4QBns91xZLt6xASIlJevon5QYZl/z69RQPY=;
-        b=IFKYlZaAl5gUxMO/QtqSSywZxS6lD+AgVXy+xzlRLxHdeBgA/txUK9BYpJ4JoU9mun
-         jkGNZcLO0CVI/rrTABIFD2J+8b014tDPpqLSpCquxxUKgN7JaAXKIxMwRdu+TbEyRk01
-         vNpjeTMJNixvmec06tMF8Hb/NHTm8YTs9xaOKVOCuc/pEJ00OfX00/T4sPeSkn5M91mZ
-         /pdvRCXWikS2lcshwbG6QNkb0pla4Xf56VsA17vAAAusjX0F106HyGS5TWMeW0SLeRUr
-         6G2b/5x9kGQQZsaeLpB5l+SRRoweVHTyh7Q9JEUP7QFQPZX+qfYrfrZ+CxysavHVMMWk
-         ARmw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=M1DEISu9MYGPZYesmfl21tqYzrqxGvDQQ/p1wwOg6xI=;
+        b=ekta0op2sREg6d8RHUkBhI176t9mMJmbCpsFiWaY2hl47DUtOP+N7HirULms78rK+U
+         o4vlI5EYt6kDWBtoPHm6D+3ygxh/TR3RcTKbuCnCsVvBSOm//VjOAz6+uMMPjBw15JKz
+         txm33J/efjkpOocmLtRM1WCwOMkFGxR2NNY8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:user-agent:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=36HKN1eX4QBns91xZLt6xASIlJevon5QYZl/z69RQPY=;
-        b=QQ35df3ljUMnbodKeiczoNLEbf1QCuPlicn5zO8kkza7IsQvpoFne0IL8WmdA9u+LI
-         GEGer+AsVubigwF7/q9U/m4NH9ZZsp60XhdcyQdGY+fwd4M2fzYmlslhe47uajWsbEjL
-         HY5g6dDuGhdC2+476nVNzMFhN0vWZxgLrkex+JmiKgVxK3wxscUfp/Aa+AK7/04by7q3
-         PQ5WE+DUHZkpQa70x3ShmISxyvboBaMwQ98WwrRxJG4Q0uMflrGfn+5jcQFjxSCytFOM
-         SLUMY0Jf3Gr5sjvL6eWIgr4ksihoxa51CaSwzlMe4h+c2oiTPm1W5M5bm+pw6AgqjVJP
-         vAlA==
-X-Gm-Message-State: AGi0PubpFbIBr15yQdJrFjNHJy1mUxvtpnq4/iMMOMyk1DCWaEbq642Z
-        ZsdB39+fKUEI5GekZvdZNFe/Ai7ILOMXMQ==
-X-Google-Smtp-Source: APiQypJ8GHBJCPVtV4oX3y0cF0j3lcOVXn4fsurFj3AiGUzOs2jmMDZFzaLb+ksbyBFQ5ks+ag4q5Q==
-X-Received: by 2002:a1c:f012:: with SMTP id a18mr9990234wmb.41.1588527925282;
-        Sun, 03 May 2020 10:45:25 -0700 (PDT)
-Received: from darkstar ([51.154.17.58])
-        by smtp.gmail.com with ESMTPSA id f7sm13946189wrt.10.2020.05.03.10.45.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 May 2020 10:45:24 -0700 (PDT)
-From:   Patrick Bellasi <derkling@gmail.com>
-X-Google-Original-From: Patrick Bellasi <patrick.bellasi@matbug.com>
-References: <20200501114927.15248-1-qais.yousef@arm.com> <20200501114927.15248-2-qais.yousef@arm.com>
-User-agent: mu4e 1.4.3; emacs 26.3
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] Documentation/sysctl: Document uclamp sysctl knobs
-In-reply-to: <20200501114927.15248-2-qais.yousef@arm.com>
-Message-ID: <87d07krjyk.derkling@matbug.com>
-Date:   Sun, 03 May 2020 19:45:23 +0200
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=M1DEISu9MYGPZYesmfl21tqYzrqxGvDQQ/p1wwOg6xI=;
+        b=uTXnEw9Eqlq/yUXE23RApUPVgYCstIaGIZNJP+5pVBR9+Jqk7Atu5R1Gf6bFphZTED
+         IzNYlayKUYoJ0YcIJiYv57qeqBj5z0TO+ed1BEIry+hkYN/AxLdN3QDlXaSknPr/E87U
+         ByamolSUIz6hvAiTaXlvmSSf+3IG8b8rYawACBX/RkC/mQLErUz4KvtboSZ0F7bc1/vB
+         /FH0XnWjWkMfTL/W2YXsl0nMUlF6INk6ZgSFY3S1/CvpD+EnJkg4u9Dhf81+9awu8iaT
+         mKlPIHnqgxd2I2gp18MyFiBxRg8IPj5unzeQ1S+o36q/JvTffwLgyM3Yt+a7XEAp9TNI
+         8GoQ==
+X-Gm-Message-State: AGi0Puafrqnka7rMsnMEctLL3KMETonFZshh9HaUA0lvFXegxDS52rGa
+        IoZRAu7Ea3O000iUXHgUB7Mwsh1kSSI=
+X-Google-Smtp-Source: APiQypK5TBe+UxWnIJGFGcL3mcTwKmQTxYKm07FhCeO3z6x6ax9DhvQKX826bQQm+UZPzX5r9J38sg==
+X-Received: by 2002:a17:90a:3767:: with SMTP id u94mr13084184pjb.23.1588529079415;
+        Sun, 03 May 2020 11:04:39 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id o190sm6903190pfb.178.2020.05.03.11.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 11:04:38 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANLsYkzkq=EuKx_=W2jv2TeWpM3P=Pd9NYS18VfG9KCey=2--g@mail.gmail.com>
+References: <20200428181010.170568-1-swboyd@chromium.org> <20200428181010.170568-2-swboyd@chromium.org> <20200429180818.GA3062@xps15> <158818506575.117437.11635372928426076937@swboyd.mtv.corp.google.com> <CANLsYkzkq=EuKx_=W2jv2TeWpM3P=Pd9NYS18VfG9KCey=2--g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] coresight: Include required headers in C files
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Sun, 03 May 2020 11:04:37 -0700
+Message-ID: <158852907765.11125.7786353455300506998@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Mathieu Poirier (2020-04-29 12:24:42)
+>=20
+> >
+> > So please remove slab.h from the two files (but not the other one) when
+> > applying. Thanks.
+>=20
+> You got it.
 
-Hi Qais,
-
-On Fri, May 01, 2020 at 13:49:27 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
-
-[...]
-
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index 0d427fd10941..521c18ce3d92 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -940,6 +940,54 @@ Enables/disables scheduler statistics. Enabling this feature
->  incurs a small amount of overhead in the scheduler but is
->  useful for debugging and performance tuning.
->  
-> +sched_util_clamp_min:
-> +=====================
-> +
-> +Max allowed *minimum* utilization.
-> +
-> +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Mmm... I feel one of the two is an implementation detail which should
-probably not be exposed?
-
-The user perhaps needs to know the value (1024) but we don't need to
-expose the internal representation.
-
-
-> +value.
-> +
-> +It means that any requested uclamp.min value cannot be greater than
-> +sched_util_clamp_min, i.e., it is restricted to the range
-> +[0:sched_util_clamp_min].
-> +
-> +sched_util_clamp_max:
-> +=====================
-> +
-> +Max allowed *maximum* utilization.
-> +
-> +Default value is SCHED_CAPACITY_SCALE (1024), which is the maximum possible
-> +value.
-> +
-> +It means that any requested uclamp.max value cannot be greater than
-> +sched_util_clamp_max, i.e., it is restricted to the range
-> +[0:sched_util_clamp_max].
-> +
-> +sched_util_clamp_min_rt_default:
-> +================================
-> +
-> +By default Linux is tuned for performance. Which means that RT tasks always run
-> +at the highest frequency and most capable (highest capacity) CPU (in
-> +heterogeneous systems).
-> +
-> +Uclamp achieves this by setting the requested uclamp.min of all RT tasks to
-> +SCHED_CAPACITY_SCALE (1024) by default, which effectively boosts the tasks to
-> +run at the highest frequency and biases them to run on the biggest CPU.
-> +
-> +This knob allows admins to change the default behavior when uclamp is being
-> +used. In battery powered devices particularly, running at the maximum
-> +capacity and frequency will increase energy consumption and shorten the battery
-> +life.
-> +
-> +This knob is only effective for RT tasks which the user hasn't modified their
-> +requested uclamp.min value via sched_setattr() syscall.
-> +
-> +This knob will not escape the constraint imposed by sched_util_clamp_min
-> +defined above.
-
-Perhaps it's worth to specify that this value is going to be clamped by
-the values above? Otherwise it's a bit ambiguous to know what happen
-when it's bigger than schedu_util_clamp_min.
-
-> +Any modification is applied lazily on the next opportunity the scheduler needs
-> +to calculate the effective value of uclamp.min of the task.
-                    ^^^^^^^^^
-
-This is also an implementation detail, I would remove it.
-
->  
->  seccomp
->  =======
-
-
-Best,
-Patrick
-
+I looked in next but coresight-cti-platform.c is missing slab.h even
+though I included it in my patch. There's a bare kcalloc() call in that
+file, so slab.h is required.
