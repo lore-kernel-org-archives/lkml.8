@@ -2,171 +2,94 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2962CC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AC0C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079A021582
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588511853;
-	bh=c41wwaPkMaPx/AbXYXAvHUbp8vk80alaoAI0zA7NCnc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0RCepOunhUoii0wADqV+D4tInT07ukSJHoDjPuZcLroXyJbQoETd0zFvYEg6xxnoL
-	 V+bVUk8pl/sNnVNCcAxJ6mXaJygs4YP0uoofOgpAOYV789PhMIckb/LZwPfaeFlTpl
-	 1jTjcpLuOrj2Rf79f6vG218eK4Vk1iLu+ygGf+KQ=
+	by mail.kernel.org (Postfix) with ESMTP id 32E932068E
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkgRwto9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgECNRc (ORCPT
+        id S1728542AbgECNXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:17:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbgECNRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:17:32 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB112084D;
-        Sun,  3 May 2020 13:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588511851;
-        bh=c41wwaPkMaPx/AbXYXAvHUbp8vk80alaoAI0zA7NCnc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Lp9ZTBlCE+wgj799vIc0GTuXkNxuIRSOL5IdIK2d+0gt4Ekgk7z8vrOWCIlxqyPSG
-         QwOxMYR+YGl0Fg1MuRgRFvGjmf45V982vxk/Ye96NHuz2VsDn3iQjCmRKWIaHioSKN
-         ZPhyr1ub+1OSTRFeiQEIcEcutXxUSqdLEQqSLE0c=
-Date:   Sun, 3 May 2020 14:17:27 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH] iio: adc: stm32-dfsdm: fix device used to request dma
-Message-ID: <20200503141727.13269ac2@archlinux>
-In-Reply-To: <1588238926-23964-2-git-send-email-fabrice.gasnier@st.com>
-References: <1588238926-23964-1-git-send-email-fabrice.gasnier@st.com>
-        <1588238926-23964-2-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 3 May 2020 09:23:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728378AbgECNXg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 09:23:36 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121BAC061A0C
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 06:23:35 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k1so17653631wrx.4
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 06:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XO180w3Gyt92NXqJ8MWXDYCkhwcnEwcS3GLjFPvLeyQ=;
+        b=TkgRwto9LeHwZqEescpLjbmPcNXR6ZqMQ6oFJd31QHctyxedVzzFpIfQfmEZwXtPCa
+         e94RGi0uD2XG9dOfA4uEJgs6l/FepcxPDmRkUjX75OQWTspPGDXE4mDv1I/K6uR2gqj0
+         1liKR0PXX6sewDORV2kOahqUjHh57XMhcin5PIt2atuXMH0+XmnECJ931j9ugUsH5OPE
+         SI6XAvJOGb5HQESVUzFFEFR2kDguNqyWDKV05T3HhHB43t4IndcSnDD3wmvyMN1QOHzt
+         115ek6T9kocsGGhX+R6YH89Bwm8Nl6zkJl+BnW6+j/cOBHXIrZKQFqSnXRAspJgYeEzh
+         kknA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XO180w3Gyt92NXqJ8MWXDYCkhwcnEwcS3GLjFPvLeyQ=;
+        b=OPlCtWaxwSPWOp/CqNaXE7pZXh51RqmRalfn+oWgecgCry59MiuF/KyokgkIurU6yt
+         zsPXHnDGlk/rm3WK/GR/K9xdpW9ZXvnBzJgYBBDV2/eMb0pbUgGJUUPZUbnZrdEREzTb
+         AZW1IDdyTZ2obn8hWQs1w0wV0gI8+qFy2IQe6j7rCIJ5jMLtSlJH7m9bPXAYEmoseq3v
+         azReNVsTHeAc/szZu7RTHujMR1cDnHj2RUzOiv/Qus2FvslywQGHG+Frnw8UR68D73E5
+         QQRfxhxR1CmMytJ4iDWBnEY8hStk8WDxOE8hBK8eJ7EqranEfi50f+XYHhvq/9uwoLgx
+         dgkQ==
+X-Gm-Message-State: AGi0PuafgCEmb4BfKtZOY0mq73UcWzHVGvqpzeFnSyciR8QP8x9lNEk7
+        X0QABrPo+8w2KZge7sMHw0yhCm/P
+X-Google-Smtp-Source: APiQypIN5kEoyJRhf3LoJRNomYGnlSGdDowwfllqXDF38RWnmatQwgRoLZLCsUjJiSeJMd0TCIfDFA==
+X-Received: by 2002:adf:ce0a:: with SMTP id p10mr13517816wrn.89.1588512213265;
+        Sun, 03 May 2020 06:23:33 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id r23sm7627188wra.74.2020.05.03.06.23.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 06:23:32 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH] habanalabs: add missing MODULE_DEVICE_TABLE
+Date:   Sun,  3 May 2020 17:29:19 +0300
+Message-Id: <20200503142919.14863-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 11:28:46 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+PCI drivers should use this define to declare their PCI ID table.
 
-> DMA channel request should use device struct from platform device struct.
-> Currently it's using iio device struct. But at this stage when probing,
-> device struct isn't yet registered (e.g. device_register is done in
-> iio_device_register). Since commit 71723a96b8b1 ("dmaengine: Create
-> symlinks between DMA channels and slaves"), a warning message is printed
-> as the links in sysfs can't be created, due to device isn't yet registered:
-> - Cannot create DMA slave symlink
-> - Cannot create DMA dma:rx symlink
-> 
-> Fix this by using device struct from platform device to request dma chan.
-> 
-> Fixes: eca949800d2d ("IIO: ADC: add stm32 DFSDM support for PDM microphone")
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/habanalabs_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Both applied to the fixes-togreg branch of iio.git and marked for stable.
-
-THanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 21 +++++++++++----------
->  1 file changed, 11 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 76a60d9..506bf51 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -62,7 +62,7 @@ enum sd_converter_type {
->  
->  struct stm32_dfsdm_dev_data {
->  	int type;
-> -	int (*init)(struct iio_dev *indio_dev);
-> +	int (*init)(struct device *dev, struct iio_dev *indio_dev);
->  	unsigned int num_channels;
->  	const struct regmap_config *regmap_cfg;
->  };
-> @@ -1365,11 +1365,12 @@ static void stm32_dfsdm_dma_release(struct iio_dev *indio_dev)
->  	}
->  }
->  
-> -static int stm32_dfsdm_dma_request(struct iio_dev *indio_dev)
-> +static int stm32_dfsdm_dma_request(struct device *dev,
-> +				   struct iio_dev *indio_dev)
->  {
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
->  
-> -	adc->dma_chan = dma_request_chan(&indio_dev->dev, "rx");
-> +	adc->dma_chan = dma_request_chan(dev, "rx");
->  	if (IS_ERR(adc->dma_chan)) {
->  		int ret = PTR_ERR(adc->dma_chan);
->  
-> @@ -1425,7 +1426,7 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
->  					  &adc->dfsdm->ch_list[ch->channel]);
->  }
->  
-> -static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
-> +static int stm32_dfsdm_audio_init(struct device *dev, struct iio_dev *indio_dev)
->  {
->  	struct iio_chan_spec *ch;
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> @@ -1452,10 +1453,10 @@ static int stm32_dfsdm_audio_init(struct iio_dev *indio_dev)
->  	indio_dev->num_channels = 1;
->  	indio_dev->channels = ch;
->  
-> -	return stm32_dfsdm_dma_request(indio_dev);
-> +	return stm32_dfsdm_dma_request(dev, indio_dev);
->  }
->  
-> -static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
-> +static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
->  {
->  	struct iio_chan_spec *ch;
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> @@ -1499,17 +1500,17 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->  	init_completion(&adc->completion);
->  
->  	/* Optionally request DMA */
-> -	ret = stm32_dfsdm_dma_request(indio_dev);
-> +	ret = stm32_dfsdm_dma_request(dev, indio_dev);
->  	if (ret) {
->  		if (ret != -ENODEV) {
->  			if (ret != -EPROBE_DEFER)
-> -				dev_err(&indio_dev->dev,
-> +				dev_err(dev,
->  					"DMA channel request failed with %d\n",
->  					ret);
->  			return ret;
->  		}
->  
-> -		dev_dbg(&indio_dev->dev, "No DMA support\n");
-> +		dev_dbg(dev, "No DMA support\n");
->  		return 0;
->  	}
->  
-> @@ -1622,7 +1623,7 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
->  		adc->dfsdm->fl_list[adc->fl_id].sync_mode = val;
->  
->  	adc->dev_data = dev_data;
-> -	ret = dev_data->init(iio);
-> +	ret = dev_data->init(dev, iio);
->  	if (ret < 0)
->  		return ret;
->  
+diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
+index b670859c677a..5e73b456facd 100644
+--- a/drivers/misc/habanalabs/habanalabs_drv.c
++++ b/drivers/misc/habanalabs/habanalabs_drv.c
+@@ -47,6 +47,7 @@ static const struct pci_device_id ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_HABANALABS, PCI_IDS_GAUDI), },
+ 	{ 0, }
+ };
++MODULE_DEVICE_TABLE(pci, ids);
+ 
+ /*
+  * get_asic_type - translate device id to asic type
+-- 
+2.17.1
 
