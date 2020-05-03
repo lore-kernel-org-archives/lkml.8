@@ -2,101 +2,91 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E90C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931ABC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871402073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Dq4xmUY0"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5342073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgECNEG (ORCPT
+        id S1728612AbgECNF3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:04:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbgECNEG (ORCPT
+        Sun, 3 May 2020 09:05:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:20475 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728579AbgECNF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:04:06 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD8EC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 06:04:05 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id z1so167662qva.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 06:04:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lgDLstrxQHhDxzWYd9/HS8YbBd/gpsI1gpTdprUS3Jg=;
-        b=Dq4xmUY0lO9O9aVqYMQW5AsSTJeAnnfNOWuxdYL/g2r28y6kJLGyYc1PX7+z0JukAq
-         wyAcVZSwZkjc8VRCxLRJn26bGkxezGegSNuTNUn6w67H5qd3dkSA77rAL50b9yC404V4
-         st+f6Z9L6/MaGb5U7JV0MHQEbLyEFw68ozLmhtw0LfDgKYWFJEl+/M0sjOi+SGMPNiuJ
-         1PYT0sh2oERfJPQEuk2g3WZDGC2RoC37Z5PSNIZz7FSpBei+eYjhf2wy61mmLeqyF9AD
-         ir673fIn5utfDxhEE2iD26R3vkKcGUE67v1Tjt05ErNGuWkt57eXT7Ah9rfKVFuIQ2A/
-         96QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lgDLstrxQHhDxzWYd9/HS8YbBd/gpsI1gpTdprUS3Jg=;
-        b=hE1fAgeRYYPiCuWN1snWNPW0oIL8S3/mLyr5r4F3rr0rMFxXbmBlqpfkOO3sJmeqz8
-         FxOKiIaKB/6KTz5YsbxjgU0XTx3fXkuu+YWCNqtLgssSlRYbrzjrUsp4UCcthpIbTi+9
-         2TI3wObssT6Q3hkT9i27xExxbIC1+XJfYmUrXTzZLA+mGSwTaffLYTHywLcEOuPQC1hm
-         fvj+vfdRHonk91pNviDUeMI7LKEPkOlG0xG2kgLlZfw5zCdkyE5p50v4IbHAvFHN7VKO
-         c2HBm7oMDxoIMKacCiEj5u+FNSkCzgoyX+syFEP7cxTvgxozLDaQmdjmSopNUweuneJm
-         AACg==
-X-Gm-Message-State: AGi0PuZK0vjXv7yLq/JtJpL66CbInzbYu0wL8PPF4UQyWdpbLVYHwWPL
-        ZaRopsht5jjwhC0Unqxenlz91A==
-X-Google-Smtp-Source: APiQypLj7z+/+acBcByAY2J0cQ1YHYr/bMN4osB4axBDCIP2jxqqkeKhAAc+D3was7U+m5tQweO+wg==
-X-Received: by 2002:a0c:e992:: with SMTP id z18mr12711287qvn.25.1588511044636;
-        Sun, 03 May 2020 06:04:04 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i5sm7689441qtw.97.2020.05.03.06.04.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 May 2020 06:04:04 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200429112014.GN21900@8bytes.org>
-Date:   Sun, 3 May 2020 09:04:03 -0400
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E351FE35-3130-48B0-90ED-BC55469C73F7@lca.pw>
-References: <20200418121022.GA6113@8bytes.org>
- <57CBF6B2-4745-4E36-9AA5-7E0876E3DA8F@lca.pw>
- <20200418183429.GH21900@8bytes.org>
- <7D03A3E2-647B-4FAD-886D-EE2764EC1EDB@lca.pw>
- <20200429112014.GN21900@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Sun, 3 May 2020 09:05:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mtapsc-1-PiwzYAMxPhqDKD10rKMWKg-1; Sun, 03 May 2020 14:05:25 +0100
+X-MC-Unique: PiwzYAMxPhqDKD10rKMWKg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 3 May 2020 14:05:24 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 3 May 2020 14:05:24 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Jason Baron' <jbaron@akamai.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+Thread-Topic: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+Thread-Index: AQHWH+3GezEky6u5mk6GywAVvMmIMKiWVkJw
+Date:   Sun, 3 May 2020 13:05:24 +0000
+Message-ID: <c2921e66bf3a4edfaa667c32abbefebf@AcuMS.aculab.com>
+References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+In-Reply-To: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jason Baron
+> Sent: 01 May 2020 20:16
+>
+> Now that the ep_events_available() check is done in a lockless way, and
+> we no longer perform wakeups from ep_scan_ready_list(), we need to ensure
+> that either ep->rdllist has items or the overflow list is active. Prior to:
+> commit 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested
+> epoll"), we did wake_up(&ep->wq) after manipulating the ep->rdllist and the
+> overflow list. Thus, any waiters would observe the correct state. However,
+> with that wake_up() now removed we need to be more careful to ensure that
+> condition.
 
+I'm wondering how much all this affects the (probably) more common
+case of a process reading events from a lot of sockets in 'level'
+mode.
 
-> On Apr 29, 2020, at 7:20 AM, Joerg Roedel <joro@8bytes.org> wrote:
->=20
-> On Mon, Apr 20, 2020 at 09:26:12AM -0400, Qian Cai wrote:
->> No dice. There could be some other races. For example,
->=20
-> Can you please test this branch:
->=20
-> 	=
-https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=3Dam=
-d-iommu-fixes
->=20
-> It has the previous fix in it and a couple more to make sure the
-> device-table is updated and flushed before increase_address_space()
-> updates domain->pt_root.
+Even the change to a rwlock() may have had an adverse effect
+on such programs.
 
-I believe this closed the existing races as it had survived for many =
-days. Great work!=
+In 'level' mode it doesn't make any sense to have multiple
+readers of the event queue.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
