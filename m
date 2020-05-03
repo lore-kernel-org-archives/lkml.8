@@ -2,139 +2,116 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D15C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806A9C4724C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A41E2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588507274;
-	bh=HC1KNrA/raxGpfyGWqskbIFiSi8/fj6Mk4pXn4ra93Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=swSJaUHzdNLjw7IhQsV3nr4c3Yq0bn3WQx2McH/9wY6g7FAewQddukTY5AyaSAObE
-	 9fXKO4giu4u3GA+9PHBqGlfxmmDCwiu+KS8k7uaDUW+8AK9zoodfkOXBtB4CQgnbO/
-	 qMYfG+TrPuOGnUeJe2b9LMtBeneGJhQSDaTI2/ek=
+	by mail.kernel.org (Postfix) with ESMTP id 5DF8F20757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y7zMR6vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgECMBJ (ORCPT
+        id S1728187AbgECME4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbgECMBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:01:09 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sun, 3 May 2020 08:04:56 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:11013 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727112AbgECME4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 08:04:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588507495; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=e7EM43IT6tvYkadNNFAaUsP0t6Yjce0tptPQePwt9II=; b=Y7zMR6vEu9UH0EBCMK0Co4STmzU3/NZGeha0jHyZ0GJf8uZYnXGwSUMncVTFLjGhUO3DeRPR
+ RTPg5feszPNOOK8qm5vqh5/Yjde0lC407pRgvS80gzSaZhpJpIGhhoMx/BzwzgrFzKvyjpp2
+ AUWiUPL4rzPwvM0Qm3tiZCB6lYI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eaeb367.7fb782f61810-smtp-out-n05;
+ Sun, 03 May 2020 12:04:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 575E8C43637; Sun,  3 May 2020 12:04:54 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83C8D20757;
-        Sun,  3 May 2020 12:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588507268;
-        bh=HC1KNrA/raxGpfyGWqskbIFiSi8/fj6Mk4pXn4ra93Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ve1K2UW1Ty6onsP55MtI+FiZYllxDPzWzAM83Nk3qrq6qneiBUusjs7v/UL3CLNnc
-         JXcuhzj7iZYWNHrX0/065Sw8iyfLIQWRDOTPq7E4Rf469vZ5Yytr83lzKNbQXAAoVb
-         8o80Jifm6kRumXSgt7shAqStdX9yHpciA6QU+eB4=
-Date:   Sun, 3 May 2020 13:01:03 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <saravanan@linumiz.com>
-Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, broonie@kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
-Message-ID: <20200503130103.16a92131@archlinux>
-In-Reply-To: <20200429133943.18298-4-saravanan@linumiz.com>
-References: <20200429133943.18298-1-saravanan@linumiz.com>
-        <20200429133943.18298-4-saravanan@linumiz.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14F39C433CB;
+        Sun,  3 May 2020 12:04:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14F39C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v4 0/6] DVFS for IO devices on sdm845 and sc7180
+Date:   Sun,  3 May 2020 17:34:23 +0530
+Message-Id: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 15:39:42 +0200
-Saravanan Sekar <saravanan@linumiz.com> wrote:
+Changes in v4:
+1. Fixed all review feedback on v3
+2. Dropped the dts patches, will post as a seperate series once
+driver changes are reviewed and merged.
+The driver changes without DT updates to include OPP tables will
+have zero functional change.
+3. Dropped the mmc/sdhc patch, which is a standalone patch. will
+repost if needed seperately.
 
-> Add documentation about device operating mode and output data range
-> supported according to operating mode
-> 
-> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
-> ---
->  .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> new file mode 100644
-> index 000000000000..5979f2b8aa1a
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
-> @@ -0,0 +1,23 @@
-> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Reading gives range of sample frequencies available for current operating mode
-> +		after one data has generated.
+Changes in v3:
+1. Added better error handling for dev_pm_opp_of_add_table()
+2. Some minor changes and fixes in 'PATCH 12/17' as compared to v2
+3. Dropped the mmc patch picked up by Ulf [2]
 
-This is standard ABI so should be the main docs, not here.
-It also takes absolute precedence over the power modes (as mentioned below, no
-standard userspace will be able to use those).  So if the frequency is
-only available in high perf mode, then we change to high perf mode.
+Changes in v2:
+1. Added error handling for dev_pm_opp_set_clkname()
+and dev_pm_opp_of_add_table()
+2. Used dev_pm_opp_put_clkname() in the cleanup path
+3. Dropped the OPP patch pulled in by Viresh [1]
+4. Dropped the UFS patches since they had some major rework
+needed because of changes that were merged in the merge window
+and I don't have a UFS device currently to validate the changes.
 
-> +
-> +		Access: Read
-> +		Valid values: represented in Hz
-> +		- range [12.5, 1600] for high permormance mode
-> +		- range [1.6, 200] for normal/low power mode
-> +
-> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
-> +KernelVersion:	5.7
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Represents the device operating mode. High performance mode gives high output
-> +		data rate and low noise compared to normal mode. Normal mode consumes less
-> +		current.  In single shot device enters to lowpower after one data has
-> +		generated.
-> +
-> +		Access: Read, Write
-> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"
+We have had support added in the OPP core for a while now to support
+DVFS for IO devices, and this series uses that infrastructure to
+add DVFS support for various IO devices in sdm845 and sc7180 SoCs.
 
-The issue with these sort of 'mode' interface is almost no userspace will ever use them.
-They are too unpredictable across different types of devices.
+[1] https://lkml.org/lkml/2020/4/14/98
+[2] https://lore.kernel.org/patchwork/patch/1226381/
 
-Some of these should also not be exposed to userspace anyway as they are about 'how'
-you are using the driver.  For example, if you aren't doing triggered capture then
-single_shot is almost always the correct option. Annoyingly I see high performance
-mode gives lower noise...
+Rajendra Nayak (6):
+  tty: serial: qcom_geni_serial: Use OPP API to set clk/perf state
+  spi: spi-geni-qcom: Use OPP API to set clk/perf state
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  media: venus: core: Add support for opp tables/perf voting
+  spi: spi-qcom-qspi: Use OPP API to set clk/perf state
 
-So no need to expose single_shot to userspace.
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.c    | 33 ---------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_io_util.h    |  1 -
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c        | 25 ++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h        |  4 ++
+ drivers/gpu/drm/msm/dsi/dsi.h                  |  2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c              |  4 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c             | 58 ++++++++++++++++++++++++++
+ drivers/media/platform/qcom/venus/core.c       | 28 +++++++++++++
+ drivers/media/platform/qcom/venus/core.h       |  5 +++
+ drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++--
+ drivers/spi/spi-geni-qcom.c                    | 26 ++++++++++--
+ drivers/spi/spi-qcom-qspi.c                    | 29 ++++++++++++-
+ drivers/tty/serial/qcom_geni_serial.c          | 34 ++++++++++++---
+ include/linux/qcom-geni-se.h                   |  4 ++
+ 15 files changed, 259 insertions(+), 51 deletions(-)
 
-For the others we are just looking at different power vs speed and accuracy trade offs.
-Those are better exposed by what they effect.  Here the big control for that is
-sampling frequency.
-
-So if we assume the user is never going to touch this control (if it's even there)
-then we probably want to assume they want the best possible accuracy for whatever
-frequency they are running at.  So transition across the modes to provide that.
-
-Should we ever support low power mode?  It sounds nice on paper, but in reality
-userspace won't use so I suspect we should just drop it - certainly in an initial
-patch submission (as it will hold up acceptance).  Even if we did support
-it, as mentioned above ABI controls will take precedence so we are looking
-at a 'hint' not a control of mode.
-
-ABI is a pain, and we will put a lot of effort into not expanding it unless
-there is a good usecase plus no way of mapping to existing ABI.
-
-Jonathan
-
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
