@@ -2,263 +2,123 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53E5C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9919C47258
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87FEC2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588504965;
-	bh=wnnsyL0o/zvjpdE6ZpNhT9ztjGznPAWcIyoxAbZkloY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nLdKQhFYu7O7txoRBX4cg+k4ywpGM1IaYv1u32Jyif9cANS6/YU3d88icmiKntRuS
-	 zwamRsVOdGI+pArpNP1VqoSEyrkS234Zw1NdulXHK+wdpX8An2bTh1HAMT/3kAjZcd
-	 0xGDvyXwwO6rugRE/r81NToRyBj/RNwKevNFLsZA=
+	by mail.kernel.org (Postfix) with ESMTP id C06F221582
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgECLWo (ORCPT
+        id S1727825AbgECL3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 07:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbgECLWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 07:22:44 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3269220787;
-        Sun,  3 May 2020 11:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588504963;
-        bh=wnnsyL0o/zvjpdE6ZpNhT9ztjGznPAWcIyoxAbZkloY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EINw1NC6pLdiy1wCEQYEt7aBhornNpv71ZND5ao4YQ1UALG5+MN97spIL+179S1Qe
-         fREl4OMFZFFaATq9BOcqQZk5DnslkroiUN3670TkQ3cGBSrBtv+TfTXUYAqr8tmQWi
-         UWOA9OSPSSUxfUiavPsxV/DJxdkVnzA8REZbycuI=
-Date:   Sun, 3 May 2020 12:22:37 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 10/11] iio: light: cm32181: Add support for parsing
- CPM0 and CPM1 ACPI tables
-Message-ID: <20200503122237.4af34181@archlinux>
-In-Reply-To: <20200428172923.567806-10-hdegoede@redhat.com>
-References: <20200428172923.567806-1-hdegoede@redhat.com>
-        <20200428172923.567806-10-hdegoede@redhat.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 May 2020 07:29:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726948AbgECL3x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 07:29:53 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B0FC061A0C;
+        Sun,  3 May 2020 04:29:53 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jVCoT-0002eh-My; Sun, 03 May 2020 13:29:37 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D976A1C0051;
+        Sun,  3 May 2020 13:29:36 +0200 (CEST)
+Date:   Sun, 03 May 2020 11:29:36 -0000
+From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/unwind/orc: Move ORC sorting variables under
+ !CONFIG_MODULES
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200428071640.psn5m7eh3zt2in4v@treble>
+References: <20200428071640.psn5m7eh3zt2in4v@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <158850537679.8414.4225325348852609624.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 19:29:22 +0200
-Hans de Goede <hdegoede@redhat.com> wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> On ACPI based systems the CPLM3218 ACPI device node describing the
-> CM3218[1] sensor typically will have some extra tables with register
-> init values for initializing the sensor and calibration info.
-> 
-> This is based on a newer version of cm32181.c, with a copyright of:
-> 
->  * Copyright (C) 2014 Capella Microsystems Inc.
->  * Author: Kevin Tsai <ktsai@capellamicro.com>
->  *
->  * This program is free software; you can redistribute it and/or modify it
->  * under the terms of the GNU General Public License version 2, as published
->  * by the Free Software Foundation.
-> 
-> Which is floating around on the net in various places, but the changes
-> from this newer version never made it upstream.
-> 
-> This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
-> Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).
+Commit-ID:     fb9cbbc895eb6e986dc90c928a35c793d75f435a
+Gitweb:        https://git.kernel.org/tip/fb9cbbc895eb6e986dc90c928a35c793d75f435a
+Author:        Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate:    Tue, 28 Apr 2020 02:16:40 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 03 May 2020 13:23:28 +02:00
 
-I assume it's far too much to hope this CPM0 / CPM1 stuff is actually defined
-in a spec anywhere?  
+x86/unwind/orc: Move ORC sorting variables under !CONFIG_MODULES
 
-There are standard way of adding vendor specific data blobs to ACPI and this
-isn't one of them (unless I'm missing something).  People need to beat
-up vendors earlier about this stuff.
+Fix the following warnings seen with !CONFIG_MODULES:
 
-Grumble over...
+  arch/x86/kernel/unwind_orc.c:29:26: warning: 'cur_orc_table' defined but not used [-Wunused-variable]
+     29 | static struct orc_entry *cur_orc_table = __start_orc_unwind;
+        |                          ^~~~~~~~~~~~~
+  arch/x86/kernel/unwind_orc.c:28:13: warning: 'cur_orc_ip_table' defined but not used [-Wunused-variable]
+     28 | static int *cur_orc_ip_table = __start_orc_unwind_ip;
+        |             ^~~~~~~~~~~~~~~~
 
-Code looks fine to me, but I'd like an ACPI review ideally.
+Fixes: 153eb2223c79 ("x86/unwind/orc: Convert global variables to static")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200428071640.psn5m7eh3zt2in4v@treble
+---
+ arch/x86/kernel/unwind_orc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-
-Jonathan
-
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Factor out the parsing into a separate helper function
-> ---
->  drivers/iio/light/cm32181.c | 101 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
-> 
-> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
-> index cae2264e4336..d8b128286527 100644
-> --- a/drivers/iio/light/cm32181.c
-> +++ b/drivers/iio/light/cm32181.c
-> @@ -4,6 +4,7 @@
->   * Author: Kevin Tsai <ktsai@capellamicro.com>
->   */
->  
-> +#include <linux/acpi.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/i2c.h>
-> @@ -53,6 +54,15 @@
->  
->  #define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
->  
-> +/* CPM0 Index 0: device-id (3218 or 32181), 1: Unknown, 2: init_regs_bitmap */
-> +#define CPM0_REGS_BITMAP		2
-> +#define CPM0_HEADER_SIZE		3
-> +
-> +/* CPM1 Index 0: lux_per_bit, 1: calibscale, 2: resolution (100000) */
-> +#define CPM1_LUX_PER_BIT		0
-> +#define CPM1_CALIBSCALE			1
-> +#define CPM1_SIZE			3
-> +
->  /* CM3218 Family */
->  static const int cm3218_als_it_bits[] = { 0, 1, 2, 3 };
->  static const int cm3218_als_it_values[] = { 100000, 200000, 400000, 800000 };
-> @@ -65,6 +75,7 @@ static const int cm32181_als_it_values[] = {
->  
->  struct cm32181_chip {
->  	struct i2c_client *client;
-> +	struct device *dev;
->  	struct mutex lock;
->  	u16 conf_regs[CM32181_CONF_REG_NUM];
->  	unsigned long init_regs_bitmap;
-> @@ -76,6 +87,92 @@ struct cm32181_chip {
->  	const int *als_it_values;
->  };
->  
-> +static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2);
-> +
-> +#ifdef CONFIG_ACPI
-> +/**
-> + * cm32181_acpi_get_cpm() - Get CPM object from ACPI
-> + * @client	pointer of struct i2c_client.
-> + * @obj_name	pointer of ACPI object name.
-> + * @count	maximum size of return array.
-> + * @vals	pointer of array for return elements.
-> + *
-> + * Convert ACPI CPM table to array.
-> + *
-> + * Return: -ENODEV for fail.  Otherwise is number of elements.
-> + */
-> +static int cm32181_acpi_get_cpm(struct device *dev, char *obj_name,
-> +				u64 *values, int count)
-> +{
-> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *cpm, *elem;
-> +	acpi_handle handle;
-> +	acpi_status status;
-> +	int i;
-> +
-> +	handle = ACPI_HANDLE(dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(dev, "object %s not found\n", obj_name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	cpm = buffer.pointer;
-> +	if (cpm->package.count > count)
-> +		dev_warn(dev, "%s table contains %d values, only using first %d values\n",
-> +			 obj_name, cpm->package.count, count);
-> +
-> +	count = min_t(int, cpm->package.count, count);
-> +	for (i = 0; i < count; i++) {
-> +		elem = &(cpm->package.elements[i]);
-> +		values[i] = elem->integer.value;
-> +	}
-> +
-> +	kfree(buffer.pointer);
-> +
-> +	return count;
-> +}
-> +
-> +static void cm32181_acpi_parse_cpm_tables(struct cm32181_chip *cm32181)
-> +{
-> +	u64 vals[CPM0_HEADER_SIZE + CM32181_CONF_REG_NUM];
-> +	struct device *dev = cm32181->dev;
-> +	int i, count;
-> +
-> +	count = cm32181_acpi_get_cpm(dev, "CPM0", vals, ARRAY_SIZE(vals));
-> +	if (count <= CPM0_HEADER_SIZE)
-> +		return;
-> +
-> +	count -= CPM0_HEADER_SIZE;
-> +
-> +	cm32181->init_regs_bitmap = vals[CPM0_REGS_BITMAP];
-> +	cm32181->init_regs_bitmap &= GENMASK(count - 1, 0);
-> +	for_each_set_bit(i, &cm32181->init_regs_bitmap, count)
-> +		cm32181->conf_regs[i] =	vals[CPM0_HEADER_SIZE + i];
-> +
-> +	count = cm32181_acpi_get_cpm(dev, "CPM1", vals, ARRAY_SIZE(vals));
-> +	if (count != CPM1_SIZE)
-> +		return;
-> +
-> +	cm32181->lux_per_bit = vals[CPM1_LUX_PER_BIT];
-> +
-> +	/* Check for uncalibrated devices */
-> +	if (vals[CPM1_CALIBSCALE] == CM32181_CALIBSCALE_DEFAULT)
-> +		return;
-> +
-> +	cm32181->calibscale = vals[CPM1_CALIBSCALE];
-> +	/* CPM1 lux_per_bit is for the current it value */
-> +	cm32181_read_als_it(cm32181, &cm32181->lux_per_bit_base_it);
-> +}
-> +#else
-> +static void cm32181_acpi_parse_cpm_tables(struct cm32181_chip *cm32181)
-> +{
-> +}
-> +#endif /* CONFIG_ACPI */
-> +
->  /**
->   * cm32181_reg_init() - Initialize CM32181 registers
->   * @cm32181:	pointer of struct cm32181.
-> @@ -119,6 +216,9 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
->  	cm32181->lux_per_bit = CM32181_LUX_PER_BIT;
->  	cm32181->lux_per_bit_base_it = CM32181_LUX_PER_BIT_BASE_IT;
->  
-> +	if (ACPI_HANDLE(cm32181->dev))
-> +		cm32181_acpi_parse_cpm_tables(cm32181);
-> +
->  	/* Initialize registers*/
->  	for_each_set_bit(i, &cm32181->init_regs_bitmap, CM32181_CONF_REG_NUM) {
->  		ret = i2c_smbus_write_word_data(client, i,
-> @@ -361,6 +461,7 @@ static int cm32181_probe(struct i2c_client *client)
->  
->  	cm32181 = iio_priv(indio_dev);
->  	cm32181->client = client;
-> +	cm32181->dev = dev;
->  
->  	mutex_init(&cm32181->lock);
->  	indio_dev->dev.parent = dev;
-
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 0ebc11a..5b0bd85 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -24,10 +24,6 @@ extern struct orc_entry __stop_orc_unwind[];
+ static bool orc_init __ro_after_init;
+ static unsigned int lookup_num_blocks __ro_after_init;
+ 
+-static DEFINE_MUTEX(sort_mutex);
+-static int *cur_orc_ip_table = __start_orc_unwind_ip;
+-static struct orc_entry *cur_orc_table = __start_orc_unwind;
+-
+ static inline unsigned long orc_ip(const int *ip)
+ {
+ 	return (unsigned long)ip + *ip;
+@@ -192,6 +188,10 @@ static struct orc_entry *orc_find(unsigned long ip)
+ 
+ #ifdef CONFIG_MODULES
+ 
++static DEFINE_MUTEX(sort_mutex);
++static int *cur_orc_ip_table = __start_orc_unwind_ip;
++static struct orc_entry *cur_orc_table = __start_orc_unwind;
++
+ static void orc_sort_swap(void *_a, void *_b, int size)
+ {
+ 	struct orc_entry *orc_a, *orc_b;
