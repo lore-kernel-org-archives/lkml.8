@@ -2,147 +2,89 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4BCC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F40C47259
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 965F6208DB
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502EE207DD
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHxCS3h0"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="iJkQy5Wj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgECPJK (ORCPT
+        id S1728779AbgECPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 11:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728706AbgECPJJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 11:09:09 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05A5C061A0E;
-        Sun,  3 May 2020 08:09:08 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t9so2571199pjw.0;
-        Sun, 03 May 2020 08:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RQ4xQUOUYU1ceGWYZbAOlK79wRaKTSufpi1Gmn5srvE=;
-        b=HHxCS3h0tCUtMIpNqidypzzKNVbIg4HTknvVTUhXOOFToBYuJjy5fuaKgJytnyXvhw
-         wPPFOdwwDTAHPb9hlfGaVte38apN/7r0EwGrPL94UZ5iAvdiqpMvHE1ESqdP6mEK05i1
-         L4smFhld6gwL7d1Dx3Ylc8D0PcTJXGjD1xME5y8C0IZIhyU2SF8ijK72e9mK4u5CYHMV
-         nDu0CEAqK/7Zckq/eMIv5Az7t1V40SZ0b+zWO5wl8hEQhrzPlSq3qM4ZprVjsZql22FN
-         lsZWJ3Rcz4frSEKjcJLqlXxGbcT2bomS7og1SNcnJwCtOQmrDotUOKABM/hqWCVavDGA
-         QGpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RQ4xQUOUYU1ceGWYZbAOlK79wRaKTSufpi1Gmn5srvE=;
-        b=B9o+QHs1uCjtgzhQouZGIZ5mt6ZArlB+89S2sKpH5WMufqns7kXypvd+u2JHq1GGtl
-         s+cRgeaUAqr/VstFqtn4pCaF/HHqAfVfRY+3hF79B636XkI8/axCeZgvw7ASfvIhfPU2
-         2lmcX0SSZr3FpympxxuwFIIfHKnpWdyUFtTwEh5pj7dwq3weBakadk0AqjK3ZvYRzV1f
-         wNr8qY5aUVxos1Q2akl1tEGTqEklWXaAM/IlNggt5s33dVJPDsBmflTbzpzBXTpjY299
-         UAA9CA5peftDuwQ564m/DKs4zdCKQhSvx1nNBmquG1xDsN7pKRrp7ZtykEqURRkg0aSH
-         ClxQ==
-X-Gm-Message-State: AGi0PuajpLRFgcRxWWxQD4VL40seN/bhP+W5g2VlOblNp6YdqpjMD+tW
-        K671ZTFDDI57whVJt1rTgAs=
-X-Google-Smtp-Source: APiQypJGZ93YHeSypddIUZP/4UQ1paeTkCVIcHTsPPrd0xrTLyo3Bk+T4hlWFt7ruAIhypS4ZsMYhg==
-X-Received: by 2002:a17:90a:1912:: with SMTP id 18mr12211496pjg.115.1588518548356;
-        Sun, 03 May 2020 08:09:08 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id cv21sm4584481pjb.23.2020.05.03.08.09.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 May 2020 08:09:07 -0700 (PDT)
-Date:   Sun, 3 May 2020 08:09:06 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Zou Wei <zou_wei@huawei.com>
-Subject: Re: [PATCH 03/33] efi/libstub: Unify EFI call wrappers for non-x86
-Message-ID: <20200503150906.GA57805@roeck-us.net>
-References: <20200424130531.30518-1-ardb@kernel.org>
- <20200424130531.30518-4-ardb@kernel.org>
+        Sun, 3 May 2020 11:21:16 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:34101 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728699AbgECPVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 11:21:15 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7X31HqzfV;
+        Sun,  3 May 2020 17:21:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1588519272; bh=X6di/kZ9JXtfx1MiBhjtRiHxgwlcVR2sOcyLvmd+Kuk=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=iJkQy5WjomYB9rOwyo93wOUgoSQnHTuwg9EeOBxUThjQ3uVn45QuVMor/q2XrucnT
+         TrQuLdTHTLC5nIO1NkMou8t48udmThxM3KQSz877MrKCBOKTZdLA4tj8+fGTFF2JFq
+         b17jmceveqZZT03PfPz2xYNvvQJiIY5S8JaMrZLSeDKXVip31hiNiDJftB63LsqebX
+         GCh2hNtKEWTYeP8jPsbJ7pCAkqFMd45MzY7bH5MpSkADff0N9UfKOFp5PJIfQ2QBrK
+         NN28r18PEa/iCOxy7/0+pbHebZ36O62qFaeJN3EqWlTu4dHU9DnYXBO1tjDQTyHrXy
+         As/FvQxWBabQQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Sun, 03 May 2020 17:21:12 +0200
+Message-Id: <5c8e8f4c5a7fc2cecb62342f9a964f69f3fde7ae.1588517058.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 06/11] power: bq25890: update state on property read
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424130531.30518-4-ardb@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Edge interrupts from the charger may be lost or stuck in fault mode
+since probe(). Check if something changed everytime userspace wants
+some data.
 
-On Fri, Apr 24, 2020 at 03:05:01PM +0200, Ard Biesheuvel wrote:
-> We have wrappers around EFI calls so that x86 can define special
-> versions for mixed mode, while all other architectures can use the
-> same simple definition that just issues the call directly.
-> In preparation for the arrival of yet another architecture that doesn't
-> need anything special here (RISC-V), let's move the default definition
-> into a shared header.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-
-This patch causes an immediate reboot in linux-next when booting
-in qemu with an efi32 bios. Bisect log attached.
-
-Qemu command line:
-
-qemu-system-x86_64 -kernel arch/x86/boot/bzImage -m 1G \
-	-no-reboot -snapshot \
-	-bios OVMF-pure-efi-32.fd \
-	-drive file=rootfs.ext2,format=raw \
-	--append 'earlycon=uart8250,io,0x3f8,9600n8 panic=-1 root=/dev/sda console=ttyS0' \
-	-nographic
-
-The same command succeeds with OVMF-pure-efi-64.fd.
-
-Bisect log attached.
-
-File locations:
-	https://github.com/groeck/linux-build-test/blob/master/rootfs/firmware/OVMF-pure-efi-32.fd
-	https://github.com/groeck/linux-build-test/blob/master/rootfs/x86_64/rootfs.ext2.gz
-
-Guenter
-
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
-# bad: [fb9d670f57e3f6478602328bbbf71138be06ca4f] Add linux-next specific files for 20200501
-# good: [6a8b55ed4056ea5559ebe4f6a4b247f627870d4c] Linux 5.7-rc3
-git bisect start 'HEAD' 'v5.7-rc3'
-# good: [068b80b68a670f0b17288c8a3d1ee751f35162ab] Merge remote-tracking branch 'drm/drm-next'
-git bisect good 068b80b68a670f0b17288c8a3d1ee751f35162ab
-# bad: [46c70fc6a3ac35cd72ddad248dcbe4eee716d2a5] Merge remote-tracking branch 'drivers-x86/for-next'
-git bisect bad 46c70fc6a3ac35cd72ddad248dcbe4eee716d2a5
-# good: [3fc893798e1ca8276eaf2b0e3210f2ff927f0c80] Merge remote-tracking branch 'integrity/next-integrity'
-git bisect good 3fc893798e1ca8276eaf2b0e3210f2ff927f0c80
-# bad: [88188475d4d3fd10edabb172a7dc71e4bf997c19] Merge remote-tracking branch 'tip/auto-latest'
-git bisect bad 88188475d4d3fd10edabb172a7dc71e4bf997c19
-# good: [a51a8decbc07a511d9a05b2aff93bd8b10bfe812] Merge branch 'objtool/core'
-git bisect good a51a8decbc07a511d9a05b2aff93bd8b10bfe812
-# good: [12414a49ebe9d6584f4942a4bfd98ce5c34e034b] Merge remote-tracking branch 'spi/for-next'
-git bisect good 12414a49ebe9d6584f4942a4bfd98ce5c34e034b
-# good: [703b321501c95c658275fd76775282fe45989641] kcsan: Introduce ASSERT_EXCLUSIVE_BITS(var, mask)
-git bisect good 703b321501c95c658275fd76775282fe45989641
-# bad: [e71356fe29e7bd5cd5e07800d4940a7481fb0854] efi/libstub/arm64: Switch to ordinary page allocator for kernel image
-git bisect bad e71356fe29e7bd5cd5e07800d4940a7481fb0854
-# bad: [9867fc9de6a6a7a54edb2c43540c6db226e84a14] efi/gop: Use helper macros for find_bits
-git bisect bad 9867fc9de6a6a7a54edb2c43540c6db226e84a14
-# bad: [8cd207973c37175bf44727e28aa9c74fcf18de5e] efi/gop: Move check for framebuffer before con_out
-git bisect bad 8cd207973c37175bf44727e28aa9c74fcf18de5e
-# bad: [22090f84bc3f8081e0ec180ccaedc85820085376] efi/libstub: unify EFI call wrappers for non-x86
-git bisect bad 22090f84bc3f8081e0ec180ccaedc85820085376
-# good: [cf6b83664895a5c7e97710df282e220bd047f0f5] efi/libstub: Make initrd file loader configurable
-git bisect good cf6b83664895a5c7e97710df282e220bd047f0f5
-# first bad commit: [22090f84bc3f8081e0ec180ccaedc85820085376] efi/libstub: unify EFI call wrappers for non-x86
+ drivers/power/supply/bq25890_charger.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
+index 3b02fa80aedd..e4368d01396a 100644
+--- a/drivers/power/supply/bq25890_charger.c
++++ b/drivers/power/supply/bq25890_charger.c
+@@ -389,6 +389,8 @@ static bool bq25890_is_adc_property(enum power_supply_property psp)
+ 	}
+ }
+ 
++static irqreturn_t __bq25890_handle_irq(struct bq25890_device *bq);
++
+ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 					     enum power_supply_property psp,
+ 					     union power_supply_propval *val)
+@@ -399,6 +401,8 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
+ 	int ret;
+ 
+ 	mutex_lock(&bq->lock);
++	/* update state in case we lost an interrupt */
++	__bq25890_handle_irq(bq);
+ 	state = bq->state;
+ 	do_adc_conv = !state.online && bq25890_is_adc_property(psp);
+ 	if (do_adc_conv)
+-- 
+2.20.1
+
