@@ -2,37 +2,75 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76ED8C47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87012C47256
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B40A20752
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56968206F1
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="OmPEUSR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbgECURu (ORCPT
+        id S1729116AbgECUSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 16:17:50 -0400
-Received: from v6.sk ([167.172.42.174]:36012 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbgECURt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 16:17:49 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 7DA4B610CA;
-        Sun,  3 May 2020 20:17:17 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/2] Input: add driver for power button on Dell Wyse 3020
-Date:   Sun,  3 May 2020 22:12:37 +0200
-Message-Id: <20200503201237.413864-3-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200503201237.413864-1-lkundrak@v3.sk>
-References: <20200503201237.413864-1-lkundrak@v3.sk>
+        Sun, 3 May 2020 16:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729075AbgECUSp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 16:18:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6F5C061A10
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 13:18:43 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i10so18427242wrv.10
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 13:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pZbT+0Oo6gju/el56kGkKejtrVoHm+BJeWgEyTMdD/U=;
+        b=OmPEUSR/qkLCaf/PW5Tun+H76mbrD5211OIGssp0z4pgPntDvsAVWr6anhTZAoN0mt
+         4LaxsMrDcXnHzRLhPn1nPcqE9NvQauxbqPuVOQoYEDpes8+8OdAcWrxT48EiZ86rwBw5
+         ZYzxXrx3QaZ/L1XK/D4FbBpxRe6GtDYKOrA6zGzh1OxUWxlkH3XVvXz99r52OmYiH9Za
+         N5bUidfH9TyzlASs2jdol6ohIbRlbqO3ycwg6oj/jQvMij/eSHe7Pkg8UOnQhU48FwTj
+         agia9P7LTmw7dLnv85kdJS6HPPdxpJJ03YmROV/eq8Cag05IG+wurCFAnboDRLY1ly8w
+         rTgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pZbT+0Oo6gju/el56kGkKejtrVoHm+BJeWgEyTMdD/U=;
+        b=Pr7V4eRFUkJ2e0HBXk+aHZK40Vd1tzmKHvpQxw8wYP5e3CQndqbBGy9DfNiuL6zKx4
+         EjGdisq/uqa5RfeQ5LuBs9q+qgioUrzjaHYJaNizqR/fWb2vuGTdYsCrDluZXsze9VMj
+         MMEPu0l0nUCbXf5RiEOaHKOeeaiY2oIn3UWFoEYBOELRq3Z/hiM5CRBTZZaKAi9+gPGW
+         EM8u6LasX2MaAbrw7bju/cDTl+odC7lyF6SckXLnvkvAHhOw1yzP8IvXYR1PGHKFAZaJ
+         HMo6Yz3XFWgrllBbFrwv/75lPnxzUex7lYwLonCLGOEaYzJ9rBLIr9mA0nZFT3jW8TV9
+         d1Sw==
+X-Gm-Message-State: AGi0PuYA5uIvdgddUhhSWbQM/EqOCaN/fXH3eS2CiO9j4CvMajFKuVQf
+        /fuqnxP9/4o72MpRXFSGe3dLVQ==
+X-Google-Smtp-Source: APiQypK+XbE1NSpxwnTrxbNWg9DeBQFObrkw4sunojynARheacuhqjpF9C30xcMuD9/gd4t0L7tViA==
+X-Received: by 2002:adf:ec07:: with SMTP id x7mr9958050wrn.416.1588537122008;
+        Sun, 03 May 2020 13:18:42 -0700 (PDT)
+Received: from localhost.localdomain ([2a0e:b107:830:0:47e5:c676:4796:5818])
+        by smtp.googlemail.com with ESMTPSA id 19sm9891624wmo.3.2020.05.03.13.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 13:18:41 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, vkoul@kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH v7 1/3] phy: add driver for Qualcomm IPQ40xx USB PHY
+Date:   Sun,  3 May 2020 22:18:22 +0200
+Message-Id: <20200503201823.531757-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,236 +78,211 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for the power button attached to the Embedded Controller
-on a Dell Wyse 3020 "Ariel" board.
+Add a driver to setup the USB PHY-s on Qualcom m IPQ40xx series SoCs.
+The driver sets up HS and SS phys.
 
-The Embedded Controller's SPI interface is actually capable sending and
-receiving the PS/2 keyboard and mouse protocol data, which looks like
-a good fit for a serio driver. Howerver, I don't know of any machines where
-this is actually used.
-
-My board only has a single power button and no way to connect an actual
-keyboard or a mouse. Using the atkbd driver with serio would be an overkill
-and would be inconvenient for the userspace. Therefore this driver
-registers an input device that is only capable of reporting the power
-button presses and releases.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
 ---
- drivers/input/misc/Kconfig           |  11 ++
- drivers/input/misc/Makefile          |   1 +
- drivers/input/misc/ariel-pwrbutton.c | 168 +++++++++++++++++++++++++++
- 3 files changed, 180 insertions(+)
- create mode 100644 drivers/input/misc/ariel-pwrbutton.c
+Changes from v6 to v7:
+* Use of_device_get_match_data() instead of of_match_device()
+and then passing that to devm_phy_create()
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 7e2e658d551c..0b60f7fed627 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -73,6 +73,17 @@ config INPUT_AD714X_SPI
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ad714x-spi.
+Changes from v2 to v3:
+* Remove magic writes as they are not needed
+* Correct commit message
+
+ drivers/phy/qualcomm/Kconfig                |   7 +
+ drivers/phy/qualcomm/Makefile               |   1 +
+ drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c | 148 ++++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index 98674ed094d9..b86f9556df85 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -18,6 +18,13 @@ config PHY_QCOM_APQ8064_SATA
+ 	depends on OF
+ 	select GENERIC_PHY
  
-+config INPUT_ARIEL_PWRBUTTON
-+	tristate "Dell Wyse 3020 Power Button Driver"
-+	depends on SPI
-+	depends on MACH_MMP3_DT || COMPILE_TEST
++config PHY_QCOM_IPQ4019_USB
++	tristate "Qualcomm IPQ4019 USB PHY driver"
++	depends on OF && (ARCH_QCOM || COMPILE_TEST)
++	select GENERIC_PHY
 +	help
-+	  Say Y to enable support for reporting power button status on
-+	  on Dell Wyse 3020 ("Ariel") thin client.
++	  Support for the USB PHY-s on Qualcomm IPQ40xx SoC-s.
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called ariel-pwrbutton.
-+
- config INPUT_ARIZONA_HAPTICS
- 	tristate "Arizona haptics support"
- 	depends on MFD_ARIZONA && SND_SOC
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 8fd187f314bd..412d09c79e24 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_INPUT_ADXL34X)		+= adxl34x.o
- obj-$(CONFIG_INPUT_ADXL34X_I2C)		+= adxl34x-i2c.o
- obj-$(CONFIG_INPUT_ADXL34X_SPI)		+= adxl34x-spi.o
- obj-$(CONFIG_INPUT_APANEL)		+= apanel.o
-+obj-$(CONFIG_INPUT_ARIEL_PWRBUTTON)	+= ariel-pwrbutton.o
- obj-$(CONFIG_INPUT_ARIZONA_HAPTICS)	+= arizona-haptics.o
- obj-$(CONFIG_INPUT_ATI_REMOTE2)		+= ati_remote2.o
- obj-$(CONFIG_INPUT_ATLAS_BTNS)		+= atlas_btns.o
-diff --git a/drivers/input/misc/ariel-pwrbutton.c b/drivers/input/misc/ariel-pwrbutton.c
+ config PHY_QCOM_IPQ806X_SATA
+ 	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
+ 	depends on ARCH_QCOM
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 1f14aeacbd70..41746781de73 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PHY_ATH79_USB)		+= phy-ath79-usb.o
+ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
++obj-$(CONFIG_PHY_QCOM_IPQ4019_USB)	+= phy-qcom-ipq4019-usb.o
+ obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+ obj-$(CONFIG_PHY_QCOM_PCIE2)		+= phy-qcom-pcie2.o
+ obj-$(CONFIG_PHY_QCOM_QMP)		+= phy-qcom-qmp.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
 new file mode 100644
-index 000000000000..02b8c53d32b6
+index 000000000000..b8ef331e1545
 --- /dev/null
-+++ b/drivers/input/misc/ariel-pwrbutton.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
++++ b/drivers/phy/qualcomm/phy-qcom-ipq4019-usb.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Dell Wyse 3020 a.k.a. "Ariel" Power Button Driver
++ * Copyright (C) 2018 John Crispin <john@phrozen.org>
 + *
-+ * Copyright (C) 2020 Lubomir Rintel
++ * Based on code from
++ * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
++ *
 + */
 +
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/spi/spi.h>
-+#include <linux/interrupt.h>
-+#include <linux/input.h>
++#include <linux/mutex.h>
++#include <linux/of_platform.h>
++#include <linux/of_device.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
 +
-+struct ec_input_response {
-+	u8 reserved;
-+	u8 msg_counter:2;
-+	u8 count:2;
-+	u8 type:4;
-+	u8 data[3];
-+} __packed;
-+
-+struct ariel_pwrbutton {
-+	struct spi_device *client;
-+	struct input_dev *input;
-+	u8 msg_counter:2;
++struct ipq4019_usb_phy {
++	struct device		*dev;
++	struct phy		*phy;
++	void __iomem		*base;
++	struct reset_control	*por_rst;
++	struct reset_control	*srif_rst;
 +};
 +
-+static int ec_input_read(struct ariel_pwrbutton *priv,
-+		      struct ec_input_response *response)
++static int ipq4019_ss_phy_power_off(struct phy *_phy)
 +{
-+	u8 read_request[] = { 0x00, 0x5a, 0xa5, 0x00, 0x00 };
-+	struct spi_device *spi = priv->client;
-+	struct spi_transfer t = {
-+		.tx_buf = read_request,
-+		.rx_buf = response,
-+		.len = sizeof(read_request),
-+	};
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
 +
-+	compiletime_assert(sizeof(read_request) == sizeof(*response),
-+			   "SPI xfer request/response size mismatch");
++	reset_control_assert(phy->por_rst);
++	msleep(10);
 +
-+	return spi_sync_transfer(spi, &t, 1);
-+}
-+
-+static irqreturn_t ec_input_interrupt(int irq, void *dev_id)
-+{
-+	struct ariel_pwrbutton *priv = dev_id;
-+	struct spi_device *spi = priv->client;
-+	struct ec_input_response response;
-+	int i;
-+
-+	if (ec_input_read(priv, &response) < 0) {
-+		dev_err(&spi->dev, "EC read failed.\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (priv->msg_counter == response.msg_counter) {
-+		dev_warn(&spi->dev, "No new data to read?\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	priv->msg_counter = response.msg_counter;
-+
-+	if (response.type != 0x03 && response.type != 0x0c) {
-+		dev_dbg(&spi->dev, "Ignoring message that's not kbd data\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (response.count > ARRAY_SIZE(response.data)) {
-+		response.count = ARRAY_SIZE(response.data);
-+		dev_warn(&spi->dev, "Truncating a long response\n");
-+	}
-+
-+	for (i = 0; i < response.count; i++) {
-+		dev_err(&spi->dev, "scan code %02x\n", response.data[i]);
-+		switch (response.data[i]) {
-+		case 0x74:
-+			input_report_key(priv->input, KEY_POWER, 1);
-+			input_sync(priv->input);
-+			break;
-+		case 0xf4:
-+			input_report_key(priv->input, KEY_POWER, 0);
-+			input_sync(priv->input);
-+			break;
-+		default:
-+			dev_dbg(&spi->dev, "Unknown scan code: %02x\n",
-+				response.data[i]);
-+		}
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ariel_pwrbutton_probe(struct spi_device *spi)
-+{
-+	struct ec_input_response response;
-+	struct ariel_pwrbutton *priv;
-+	int ret;
-+
-+	if (!spi->irq) {
-+		dev_err(&spi->dev, "Missing IRQ.\n");
-+		return -ENXIO;
-+	}
-+
-+	priv = devm_kzalloc(&spi->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->client = spi;
-+	spi_set_drvdata(spi, priv);
-+
-+	priv->input = devm_input_allocate_device(&spi->dev);
-+	if (!priv->input)
-+		return -ENOMEM;
-+	priv->input->name = "Power Button";
-+	priv->input->dev.parent = &spi->dev;
-+	input_set_capability(priv->input, EV_KEY, KEY_POWER);
-+	ret = input_register_device(priv->input);
-+	if (ret) {
-+		dev_err(&spi->dev, "error registering input device: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = ec_input_read(priv, &response);
-+	if (ret < 0) {
-+		dev_err(&spi->dev, "EC read failed: %d\n", ret);
-+		return ret;
-+	}
-+	priv->msg_counter = response.msg_counter;
-+
-+	ret = devm_request_threaded_irq(&spi->dev, spi->irq, NULL,
-+					ec_input_interrupt,
-+					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					"Ariel EC Input", priv);
-+
-+	if (ret) {
-+		dev_err(&spi->dev, "Failed to request IRQ %d: %d\n",
-+			spi->irq, ret);
-+		return ret;
-+	}
-+
-+	dev_info(&spi->dev, "Dell Wyse 3020 Power Button\n");
 +	return 0;
 +}
 +
-+static const struct of_device_id ariel_pwrbutton_of_match[] = {
-+	{ .compatible = "dell,wyse-ariel-ec-input" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ariel_pwrbutton_of_match);
++static int ipq4019_ss_phy_power_on(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
 +
-+static const struct spi_device_id ariel_pwrbutton_id_table[] = {
-+	{ "wyse-ariel-ec-input", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, ariel_pwrbutton_id_table);
++	ipq4019_ss_phy_power_off(_phy);
 +
-+static struct spi_driver ariel_pwrbutton_driver = {
++	reset_control_deassert(phy->por_rst);
++
++	return 0;
++}
++
++static struct phy_ops ipq4019_usb_ss_phy_ops = {
++	.power_on	= ipq4019_ss_phy_power_on,
++	.power_off	= ipq4019_ss_phy_power_off,
++};
++
++static int ipq4019_hs_phy_power_off(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	reset_control_assert(phy->por_rst);
++	msleep(10);
++
++	reset_control_assert(phy->srif_rst);
++	msleep(10);
++
++	return 0;
++}
++
++static int ipq4019_hs_phy_power_on(struct phy *_phy)
++{
++	struct ipq4019_usb_phy *phy = phy_get_drvdata(_phy);
++
++	ipq4019_hs_phy_power_off(_phy);
++
++	reset_control_deassert(phy->srif_rst);
++	msleep(10);
++
++	reset_control_deassert(phy->por_rst);
++
++	return 0;
++}
++
++static struct phy_ops ipq4019_usb_hs_phy_ops = {
++	.power_on	= ipq4019_hs_phy_power_on,
++	.power_off	= ipq4019_hs_phy_power_off,
++};
++
++static const struct of_device_id ipq4019_usb_phy_of_match[] = {
++	{ .compatible = "qcom,usb-hs-ipq4019-phy", .data = &ipq4019_usb_hs_phy_ops},
++	{ .compatible = "qcom,usb-ss-ipq4019-phy", .data = &ipq4019_usb_ss_phy_ops},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ipq4019_usb_phy_of_match);
++
++static int ipq4019_usb_phy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct phy_provider *phy_provider;
++	struct ipq4019_usb_phy *phy;
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy)
++		return -ENOMEM;
++
++	phy->dev = &pdev->dev;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	phy->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(phy->base)) {
++		dev_err(dev, "failed to remap register memory\n");
++		return PTR_ERR(phy->base);
++	}
++
++	phy->por_rst = devm_reset_control_get(phy->dev, "por_rst");
++	if (IS_ERR(phy->por_rst)) {
++		if (PTR_ERR(phy->por_rst) != -EPROBE_DEFER)
++			dev_err(dev, "POR reset is missing\n");
++		return PTR_ERR(phy->por_rst);
++	}
++
++	phy->srif_rst = devm_reset_control_get_optional(phy->dev, "srif_rst");
++	if (IS_ERR(phy->srif_rst))
++		return PTR_ERR(phy->srif_rst);
++
++	phy->phy = devm_phy_create(dev, NULL, of_device_get_match_data(dev));
++	if (IS_ERR(phy->phy)) {
++		dev_err(dev, "failed to create PHY\n");
++		return PTR_ERR(phy->phy);
++	}
++	phy_set_drvdata(phy->phy, phy);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static struct platform_driver ipq4019_usb_phy_driver = {
++	.probe	= ipq4019_usb_phy_probe,
 +	.driver = {
-+		.name = "dell-wyse-ariel-ec-input",
-+		.of_match_table = ariel_pwrbutton_of_match,
-+	},
-+	.probe = ariel_pwrbutton_probe,
++		.of_match_table	= ipq4019_usb_phy_of_match,
++		.name  = "ipq4019-usb-phy",
++	}
 +};
-+module_spi_driver(ariel_pwrbutton_driver);
++module_platform_driver(ipq4019_usb_phy_driver);
 +
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("Dell Wyse 3020 Power Button Input Driver");
-+MODULE_LICENSE("Dual BSD/GPL");
++MODULE_DESCRIPTION("QCOM/IPQ4019 USB phy driver");
++MODULE_AUTHOR("John Crispin <john@phrozen.org>");
++MODULE_LICENSE("GPL v2");
 -- 
-2.26.0
+2.26.2
 
