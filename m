@@ -2,141 +2,128 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3584C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3183C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B2D2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB142071C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROSqKV+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgECMTk (ORCPT
+        id S1728257AbgECMce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727807AbgECMTk (ORCPT
+        Sun, 3 May 2020 08:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728067AbgECMcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:19:40 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B13C061A0C
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 05:19:40 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E13FF3A2; Sun,  3 May 2020 14:19:35 +0200 (CEST)
-Date:   Sun, 3 May 2020 14:19:34 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.7-rc3
-Message-ID: <20200503121929.GA10425@8bytes.org>
+        Sun, 3 May 2020 08:32:33 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3738C061A0C;
+        Sun,  3 May 2020 05:32:32 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id q124so7171193pgq.13;
+        Sun, 03 May 2020 05:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OjKNsWuIlNWqOK8ZTfhDbmoOKJ5lMhGgdYyR3P+yrPs=;
+        b=ROSqKV+TRSB/gN3uXuCuk55t9hWftXZdrFL+65lO6rz7wY/CWQAQacEmEpatwFLMJw
+         LVLLkwT0K2DG9p7hjGtPM3hrYO2Go0ULqgaVohy3Ec7WmfizN08PMfhx7sqtIGdQP5SW
+         MABDmweWRpHFK3TY47EdA3ValTXg7f7sEdrpJaa8ASjtjm5/CiiRiEjBdJ03STsV6j8E
+         EqZLUW2DrYu9VThXk7A+L3sbm3MN7MsEECMFht0UtN7o5z3mE3f9+Kyxtx5QjtxkCE2O
+         SmyAFZuXVKtYEGWcfaSUExg4XhjI5Qc3VYYtbsYwvSxm1mO4IScjdQBpefMa3+v1m+bJ
+         lNTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OjKNsWuIlNWqOK8ZTfhDbmoOKJ5lMhGgdYyR3P+yrPs=;
+        b=VN1SP+YuFKIZXM7QBmp7H9PpHW9SSoo7rp3kQq3jk1FBGASN4IIc+PraEEQUD99sNq
+         Mr2kI2WZuxSK7HtFjqSsjwm2VeazGr2cP3ojQylboJdsJ376VM2c7q0/nNUxieRoUfGE
+         7KZPucxhwIfizrA1H70HAfF00vXX3GtRMoRYCAp14CiJ50m6eSdLvBMNQ7EKAEpRc+hH
+         sppVSJcZEkqAV3PRHN4wnneDExTB7xSKgjm3ErsG8vuOo5zzPNJPiYdBHYj2OCRt7Ehp
+         0wim37aXUgwQAShDSC0qmXMDRgfRAlK17E3U9jehUQ9+K8Iaz8zgt0elmwS/Cc5AnXFy
+         y3lw==
+X-Gm-Message-State: AGi0PuZmN/3tZDe4myy+yUXM71IsRe7pzkUAQfZ+nB5K1tXXg1qtUetr
+        PMhHqgpkKkdx59onF5ZzIXU=
+X-Google-Smtp-Source: APiQypJb994dlbUr1k5iWSh9AbhTGKGKo5AP/hP7Juwv642dHfO6NJAVOM2+pS3z5nSs0K2zQLX5NA==
+X-Received: by 2002:a63:da02:: with SMTP id c2mr12284369pgh.22.1588509152596;
+        Sun, 03 May 2020 05:32:32 -0700 (PDT)
+Received: from localhost ([89.208.244.169])
+        by smtp.gmail.com with ESMTPSA id x132sm6476464pfc.57.2020.05.03.05.32.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 May 2020 05:32:32 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, yash.shah@sifive.com,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH net v3] net: macb: fix an issue about leak related system resources
+Date:   Sun,  3 May 2020 20:32:26 +0800
+Message-Id: <20200503123226.7092-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A call of the function macb_init() can fail in the function
+fu540_c000_init. The related system resources were not released
+then. use devm_platform_ioremap_resource() to replace ioremap()
+to fix it.
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Yash Shah <yash.shah@sifive.com>
+Suggested-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+v2 -> v3:
+	- use IS_ERR() and PTR_ERR() for error handling by Nicolas's
+	  suggestion. Thanks Nicolas!
+v1 -> v2:
+	- Nicolas and Andy suggest use devm_platform_ioremap_resource()
+	  to repalce devm_ioremap() to fix this issue. Thanks Nicolas
+	  and Andy.
+	- Yash help me to review this patch, Thanks Yash!
 
-Hi Linus,
+ drivers/net/ethernet/cadence/macb_main.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-The following changes since commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index a0e8c5bbabc0..f040a36d6e54 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4172,15 +4172,9 @@ static int fu540_c000_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 
+ static int fu540_c000_init(struct platform_device *pdev)
+ {
+-	struct resource *res;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!res)
+-		return -ENODEV;
+-
+-	mgmt->reg = ioremap(res->start, resource_size(res));
+-	if (!mgmt->reg)
+-		return -ENOMEM;
++	mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(mgmt->reg))
++		return PTR_ERR(mgmt->reg);
+ 
+ 	return macb_init(pdev);
+ }
+-- 
+2.25.0
 
-  Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.7-rc3
-
-for you to fetch changes up to b52649aee6243ea661905bdc5fbe28cc5f6dec76:
-
-  iommu/qcom: Fix local_base status check (2020-05-01 13:37:23 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.7-rc3
-
-Including:
-
-	- Fix for a memory leak when dev_iommu gets freed and a
-	  sub-pointer does not.
-
-	- Build dependency fixes for Mediatek, spapr_tce, and
-	  Intel IOMMU driver.
-
-	- Export iommu_group_get_for_dev() only for GPLed modules
-
-	- Fix for AMD IOMMU interrupt remapping when x2apic is
-	  enabled
-
-	- Fix for error path in the QCOM IOMMU driver probe function
-
-----------------------------------------------------------------
-Geert Uytterhoeven (1):
-      iommu/mediatek: Fix MTK_IOMMU dependencies
-
-Greg Kroah-Hartman (1):
-      iommu: Properly export iommu_group_get_for_dev()
-
-Kevin Hao (1):
-      iommu: Fix the memory leak in dev_iommu_free()
-
-Krzysztof Kozlowski (1):
-      iommu: spapr_tce: Disable compile testing to fix build on book3s_32 config
-
-Lu Baolu (1):
-      iommu/vt-d: Use right Kconfig option name
-
-Suravee Suthikulpanit (1):
-      iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-
-Tang Bin (1):
-      iommu/qcom: Fix local_base status check
-
- drivers/iommu/Kconfig          | 4 ++--
- drivers/iommu/amd_iommu_init.c | 2 +-
- drivers/iommu/intel-iommu.c    | 4 ++--
- drivers/iommu/iommu.c          | 3 ++-
- drivers/iommu/qcom_iommu.c     | 5 ++++-
- 5 files changed, 11 insertions(+), 7 deletions(-)
-
-Please pull.
-
-There are also some race condition fixes for the AMD IOMMU driver
-pending, but I wait for more testing feedback from Qian before sending
-them your way, so they are not included here.
-
-Thanks,
-
-	Joerg
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl6uttAACgkQK/BELZcB
-GuNcNg/9EEptDzjNdWIh4GD+okAC+zWIMeWezt2Te8ytNx/r7zOS1Ye3VqgYq8GS
-TavgT+a5hIeaxo2qTLRj7ZNrxVGcB7vshQBwXqBpFg2rYOeo3O+7lhmBeWpGUgBy
-6IjyF0WctoUYCkxZPVYjAjoUrSI2ZMzYBpjNKto2EpLFj1f8FAR+Wujcx9l3qWFb
-J8G49VIqPhjtHLOGHT1ijmfWaF2MvQmZVpYRsGkRqlaWc//iOrHKc+ONLTApmatP
-ZqnqDTqeQNBSEbP0K4G2WZ4N8D3vdBjVrDRb4jQaPpmunK2WHXnSgv/VJy1IyqUT
-P4jicSh0vr5YKbkrAeGEj11RLKyji8jrHV2yWBIH8TtHNLagJeyIK5KkNqk+Qz02
-g+fUjjiS0Whvxc4zT2r+I+j3MvARZbY2sXRG/3WOUOna6D9HGKLVdQs/7ezDQKES
-2LrYSx3G9omTIdwCugJ2jvItokXuryN6wLL87EpnK5iipKWtYnXKoG8Quq/VgJ3+
-VI2mvqx4nspJ/ENj22DU++bbNO9KhTKgzrOeOgO8eE8QyUK382MGn5/ehBddK0yD
-xnBbTtjEvQPFbAA2rEUrTyZszBE0BhHxQxwNEhmFBVE5CR10BHUseeWdW8HVUI7r
-ZdTpE2CMZxR6tM3+hswWH6d5Vg5IeQbz8Amc4CN8DLYU8xQb8wo=
-=cYaI
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
