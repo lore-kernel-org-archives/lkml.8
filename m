@@ -2,136 +2,106 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693DDC4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AB3C47259
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43A81206EB
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588542391;
-	bh=GBGCkhxLK9ereAx0GcQnVpnlPY3m3AUtgAJvWygV8lE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=trDvhJ/syB4/zhzmMGV5h3D7hdUU3WX20TtuYNnuO3yyhd0Qpmdy8f96OrM+hoPmc
-	 aH2XXJHBP1zv1J9r0YuMxQ9bLkwY6aVghCmQbhPB2qGrGQORQaoquRqetdY3SQvaKE
-	 wYlv3oPCTiZthWV6BzvnaCXEuekT2ZZGgOVgm2hE=
+	by mail.kernel.org (Postfix) with ESMTP id 8A295206B9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgECVqa (ORCPT
+        id S1729174AbgECVrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 17:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729135AbgECVqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 17:46:30 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61519206B9;
-        Sun,  3 May 2020 21:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588542389;
-        bh=GBGCkhxLK9ereAx0GcQnVpnlPY3m3AUtgAJvWygV8lE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sfNDkH2osiIRVWaHRKquVVacc40DjLOz6VoO/VHWZN5xxrAYRnnr/Iq+j4Xpd56QQ
-         QQXWwxuHCD4jtPSeWrVRfkCGIkqtUKtnNkT3Z9x0y5sVDEG5prW2/Mj7IY5RZpHioD
-         okDQebXI8EwXI4bn/MIuGGT460B1LmXp0Tqm8S1w=
-Received: by pali.im (Postfix)
-        id 6A5E7F28; Sun,  3 May 2020 23:46:27 +0200 (CEST)
-Date:   Sun, 3 May 2020 23:46:27 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, kernel@pengutronix.de
-Subject: Re: [PATCH v2] libata: Fix retrieving of active qcs
-Message-ID: <20200503214627.gerb3ipcwek2h3h7@pali>
-References: <20191213080408.27032-1-s.hauer@pengutronix.de>
- <20191225181840.ooo6mw5rffghbmu2@pali>
- <20200106081605.ffjz7xy6e24rfcgx@pengutronix.de>
- <20200127111630.bqqzhj57tzt7geds@pali>
- <20200127112428.sdfxvlqdox5efzcb@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200127112428.sdfxvlqdox5efzcb@pengutronix.de>
-User-Agent: NeoMutt/20180716
+        Sun, 3 May 2020 17:47:12 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:8668 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729104AbgECVrL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 17:47:11 -0400
+X-IronPort-AV: E=Sophos;i="5.73,349,1583161200"; 
+   d="scan'208";a="46019240"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 04 May 2020 06:47:09 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 39AB94006DF9;
+        Mon,  4 May 2020 06:47:06 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 00/10] Add initial support for R8A7742/RZG1H SoC and iW-RainboW-G21D-Qseven development board support
+Date:   Sun,  3 May 2020 22:46:44 +0100
+Message-Id: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 27 January 2020 12:24:28 Sascha Hauer wrote:
-> On Mon, Jan 27, 2020 at 12:16:30PM +0100, Pali Rohár wrote:
-> > On Monday 06 January 2020 09:16:05 Sascha Hauer wrote:
-> > > On Wed, Dec 25, 2019 at 07:18:40PM +0100, Pali Rohár wrote:
-> > > > Hello Sascha!
-> > > > 
-> > > > On Friday 13 December 2019 09:04:08 Sascha Hauer wrote:
-> > > > > ata_qc_complete_multiple() is called with a mask of the still active
-> > > > > tags.
-> > > > > 
-> > > > > mv_sata doesn't have this information directly and instead calculates
-> > > > > the still active tags from the started tags (ap->qc_active) and the
-> > > > > finished tags as (ap->qc_active ^ done_mask)
-> > > > > 
-> > > > > Since 28361c40368 the hw_tag and tag are no longer the same and the
-> > > > > equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
-> > > > > initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
-> > > > > started and this will be in done_mask on completion. ap->qc_active ^
-> > > > > done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
-> > > > > the internal tag will never be reported as completed.
-> > > > > 
-> > > > > This is fixed by introducing ata_qc_get_active() which returns the
-> > > > > active hardware tags and calling it where appropriate.
-> > > > > 
-> > > > > This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
-> > > > > problem. There is another case in sata_nv that most likely needs fixing
-> > > > > as well, but this looks a little different, so I wasn't confident enough
-> > > > > to change that.
-> > > > 
-> > > > I can confirm that sata_nv.ko does not work in 4.18 (and new) kernel
-> > > > version correctly. More details are in email:
-> > > > 
-> > > > https://lore.kernel.org/linux-ide/20191225180824.bql2o5whougii4ch@pali/T/
-> > > > 
-> > > > I tried this patch and it fixed above problems with sata_nv.ko. It just
-> > > > needs small modification (see below).
-> > > > 
-> > > > So you can add my:
-> > > > 
-> > > > Tested-by: Pali Rohár <pali.rohar@gmail.com>
-> > > > 
-> > > > And I hope that patch would be backported to 4.18 and 4.19 stable
-> > > > branches soon as distributions kernels are broken for machines with
-> > > > these nvidia sata controllers.
-> > > > 
-> > > > Anyway, what is that another case in sata_nv which needs to be fixed
-> > > > too?
-> > > 
-> > > It's in nv_swncq_sdbfis(). Here we have:
-> > > 
-> > > 	sactive = readl(pp->sactive_block);
-> > > 	done_mask = pp->qc_active ^ sactive;
-> > > 
-> > > 	pp->qc_active &= ~done_mask;
-> > > 	pp->dhfis_bits &= ~done_mask;
-> > > 	pp->dmafis_bits &= ~done_mask;
-> > > 	pp->sdbfis_bits |= done_mask;
-> > > 	ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> > > 
-> > > Sascha
-> > 
-> > Ok. Are you going to fix also this case?
-> 
-> As said, this one looks slightly different than the others and I would
-> prefer if somebody could fix it who actually has a hardware and can test
-> it.
+Hi All,
 
-Well, I have hardware and could test changes. But I'm not really sure
-that I understand this part of code. So it would be better if somebody
-else with better knowledge prepares patches I could test them. But
-currently during coronavirus I have only remote ssh access, so boot,
-modify/compile/reboot process is quite slower.
+This patch set adds initial support for R8A7742 SoC and 
+iW-RainboW-G21D-Qseven development board.
+
+Cheers,
+--Prabhakar
+
+Changes for v2:
+* Dropped patches 1-5 from v1[1] as they have been already queued.
+* Split up the pfc for r8a7790 as common and automotive.
+* Enabled dmac and scifa2 as part of initial SoC dtsi so that by default
+  board can be booted from eMMC.
+* New patches 4, 7-10
+* Dropped patches 12, 14-18 from v1[1] and will be posted after acceptance
+  of this series.
+
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=279727
+
+Lad Prabhakar (10):
+  dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+  pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+  dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+  dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
+  dt-bindings: renesas,rcar-dmac: Document r8a7742 support
+  ARM: dts: r8a7742: Initial SoC device tree
+  dt-bindings: arm: Document iW-RainboW-G21M-Qseven-RZG1H system on
+    module
+  dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H board
+  ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H Qseven SOM
+  ARM: dts: r8a7742-iwg21d-q7: Add support for iWave G21D-Q7 board based
+    on RZ/G1H
+
+ .../devicetree/bindings/arm/renesas.yaml      |  10 +
+ .../bindings/dma/renesas,rcar-dmac.yaml       |   1 +
+ .../devicetree/bindings/mmc/renesas,mmcif.txt |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |   1 +
+ .../bindings/serial/renesas,scifa.yaml        |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts       |  37 +
+ arch/arm/boot/dts/r8a7742-iwg21m.dtsi         |  53 ++
+ arch/arm/boot/dts/r8a7742.dtsi                | 389 +++++++++
+ drivers/pinctrl/sh-pfc/Kconfig                |   4 +
+ drivers/pinctrl/sh-pfc/Makefile               |   1 +
+ drivers/pinctrl/sh-pfc/core.c                 |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c          | 744 +++++++++---------
+ drivers/pinctrl/sh-pfc/sh_pfc.h               |   1 +
+ 14 files changed, 898 insertions(+), 352 deletions(-)
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+ create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
+
+-- 
+2.17.1
+
