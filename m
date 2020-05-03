@@ -2,154 +2,132 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC55CC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619AEC47256
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC57B206B8
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:14:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588522484;
-	bh=v/GdpUiwhUEgyLIQs4iqBWqCrRSiBXU6uSbDJ7XGPiA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UB7sbRIMw1tlqpV3E4HTx5+4IoVPqIiC6teqYUItcOFn1eqTDgrwf0oC6quRT3zpk
-	 0FKATxl9nKM8zQdZqu8J2wFKeDs0F6sraKU5x6JEBAsOHS7g2zuHuU0nDnco2XX87H
-	 90ikh6d5WZJ47RVkfdojas39aKpP/5mQfntbdrbw=
+	by mail.kernel.org (Postfix) with ESMTP id 405D620757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uHgi4jck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgECQOo (ORCPT
+        id S1728815AbgECQZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 12:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgECQOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 12:14:43 -0400
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB96924953;
-        Sun,  3 May 2020 16:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588522482;
-        bh=v/GdpUiwhUEgyLIQs4iqBWqCrRSiBXU6uSbDJ7XGPiA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HUw64GcCuh4QEKVQzd19hfQ6MuE85JT+aL8V+5myvA/ocJchkFZO3QDIbIZkKgTiO
-         hUv4qdIVYpzKt8SY2tlrQA8nwQeSaSYT3HE3luy30EkCF2F7DEU1acSq3puJMyy/fU
-         KMX6Ot8zwqoePdKP+366XeRo3Oqq7OXgONx8WNNA=
-Received: by mail-il1-f176.google.com with SMTP id b18so9034538ilf.2;
-        Sun, 03 May 2020 09:14:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYxeO46cs51BazEAU9BHCmXxslW0OuBxT4kKBQHCAkaMLFoZzLZ
-        bOAhNW5jTf4qh7ifUXKC1iKVJy1xe83v5YwqidI=
-X-Google-Smtp-Source: APiQypK7cKz3TGzrgiEEmohb3IEejW1GKi071ccK4M2qSXz7GkH9GOLTsLT+pVxFg8EWfCmzjA1ERwmumjj/PshL39U=
-X-Received: by 2002:a92:39dd:: with SMTP id h90mr12778366ilf.80.1588522482062;
- Sun, 03 May 2020 09:14:42 -0700 (PDT)
+        Sun, 3 May 2020 12:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728002AbgECQZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 12:25:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF13C061A0E;
+        Sun,  3 May 2020 09:25:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z1so4346920pfn.3;
+        Sun, 03 May 2020 09:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N3PY0NJ7YL1BNARD0oetT7jynu4pCokp1u8ZAvx5dx4=;
+        b=uHgi4jckBb1RaPiRnyys/tkc39VdwZl7c3o+IQlNjugZL8FZYQn75n77dVAU+bCjLs
+         9eq7vhb99S00JA58zhzo13ohJMlwEbJdqDhuTNmc5DU689eE2JcVK+RF0JiWICCLhu0A
+         GBe6DRYG28uXIsb1t/ZrAvcbvJl3sIECsWP8CQl+yhrMfPsWqemHwMPB5zCnyQ0nwK/C
+         WCifDlVGNcjT5mugw7i1kzvwXWF7hVJt5rkIiplYpFSCYtMKxC+qxXUUgbioH3kuJz7D
+         M6yqH+t3dFiLUWQjFrbF/2/464jS+nZBjqD+pa0QWNy2bomD6btiMSyLt0X6kuEkYcrV
+         Sx+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N3PY0NJ7YL1BNARD0oetT7jynu4pCokp1u8ZAvx5dx4=;
+        b=Zxqoe0thq5IvgKsDln3YVt1hmDG+YmqsiMUgKXQy5dW89gn9VjT5Q3wZPInZw44oRC
+         Sy7onZBaSXu0FF1F1HKtUoT3ygOuRuUS99vxEl6eiIAQbUk2CLst0rPgd2JhMQA2lRyV
+         Ry9W472ySzCqqThCcgbDa/uncVSpLNJC7XgjnMOlDYA7v3chRByZWQh+5jelSAbqqQMT
+         E4PqTpaXsQcyrOW+Id9nQFUnSljPEswPC13SRfqWTN3yfE6++U/YcPilCJYD5gZdqR7a
+         2vWjtBYsUC+CDQu44KDn/d3/2S0qg2lfRpAGY2yYSoTP5/U77q2XYvG/SdE+YYSFdb+v
+         DOYA==
+X-Gm-Message-State: AGi0PuYDHjnM98xf4V8rrBJ1FJ6nCh3EzHf3OIxb4T2bpvf3fi/go+Ln
+        Mn+pglBtX/yoJRNfqE0kCvTb5bpg4Pj+DSYo+3I=
+X-Google-Smtp-Source: APiQypIdkxCKDQcOl5esMtYineYHmnfKgOTXof+YtrxX0N/0Q0zcOtHVkEZH2obVS8ilArA2woICWcXUSh4qFjhVf9I=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr13829522pgb.203.1588523132175;
+ Sun, 03 May 2020 09:25:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200502182427.104383-1-ebiggers@kernel.org>
-In-Reply-To: <20200502182427.104383-1-ebiggers@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 3 May 2020 18:14:31 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEBR1FUHOfCo1G2tGVgZDdSsUx8ZrNdLqHbKP6Hw7LfMw@mail.gmail.com>
-Message-ID: <CAMj1kXEBR1FUHOfCo1G2tGVgZDdSsUx8ZrNdLqHbKP6Hw7LfMw@mail.gmail.com>
-Subject: Re: [PATCH 0/7] sha1 library cleanup
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+References: <20200428172923.567806-1-hdegoede@redhat.com> <20200428172923.567806-10-hdegoede@redhat.com>
+ <20200503122237.4af34181@archlinux>
+In-Reply-To: <20200503122237.4af34181@archlinux>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 3 May 2020 19:25:20 +0300
+Message-ID: <CAHp75Vdt+shL3yXHfct17DUHdRBBrCzC4vBjQL8YHbimFefV7A@mail.gmail.com>
+Subject: Re: [PATCH v3 10/11] iio: light: cm32181: Add support for parsing
+ CPM0 and CPM1 ACPI tables
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Paolo Abeni <pabeni@redhat.com>,
-        mptcp@lists.01.org, linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2 May 2020 at 20:28, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> <linux/cryptohash.h> sounds very generic and important, like it's the
-> header to include if you're doing cryptographic hashing in the kernel.
-> But actually it only includes the library implementation of the SHA-1
-> compression function (not even the full SHA-1).  This should basically
-> never be used anymore; SHA-1 is no longer considered secure, and there
-> are much better ways to do cryptographic hashing in the kernel.
->
-> Also the function is named just "sha_transform()", which makes it
-> unclear which version of SHA is meant.
->
-> Therefore, this series cleans things up by moving these SHA-1
-> declarations into <crypto/sha.h> where they better belong, and changing
-> the names to say SHA-1 rather than just SHA.
->
-> As future work, we should split sha.h into sha1.h and sha2.h and try to
-> remove the remaining uses of SHA-1.  For example, the remaining use in
-> drivers/char/random.c is probably one that can be gotten rid of.
->
-> This patch series applies to cryptodev/master.
->
-> Eric Biggers (7):
->   mptcp: use SHA256_BLOCK_SIZE, not SHA_MESSAGE_BYTES
->   crypto: powerpc/sha1 - remove unused temporary workspace
->   crypto: powerpc/sha1 - prefix the "sha1_" functions
->   crypto: s390/sha1 - prefix the "sha1_" functions
->   crypto: lib/sha1 - rename "sha" to "sha1"
->   crypto: lib/sha1 - remove unnecessary includes of linux/cryptohash.h
->   crypto: lib/sha1 - fold linux/cryptohash.h into crypto/sha.h
->
+On Sun, May 3, 2020 at 2:22 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> On Tue, 28 Apr 2020 19:29:22 +0200
+> Hans de Goede <hdegoede@redhat.com> wrote:
 
-For the series,
+...
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> > This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
+> > Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).
+>
+> I assume it's far too much to hope this CPM0 / CPM1 stuff is actually defined
+> in a spec anywhere?
+>
+> There are standard way of adding vendor specific data blobs to ACPI and this
+> isn't one of them (unless I'm missing something).  People need to beat
+> up vendors earlier about this stuff.
+>
+> Grumble over...
+>
+> Code looks fine to me, but I'd like an ACPI review ideally.
 
->  Documentation/security/siphash.rst          |  2 +-
->  arch/arm/crypto/sha1_glue.c                 |  1 -
->  arch/arm/crypto/sha1_neon_glue.c            |  1 -
->  arch/arm/crypto/sha256_glue.c               |  1 -
->  arch/arm/crypto/sha256_neon_glue.c          |  1 -
->  arch/arm/kernel/armksyms.c                  |  1 -
->  arch/arm64/crypto/sha256-glue.c             |  1 -
->  arch/arm64/crypto/sha512-glue.c             |  1 -
->  arch/microblaze/kernel/microblaze_ksyms.c   |  1 -
->  arch/mips/cavium-octeon/crypto/octeon-md5.c |  1 -
->  arch/powerpc/crypto/md5-glue.c              |  1 -
->  arch/powerpc/crypto/sha1-spe-glue.c         |  1 -
->  arch/powerpc/crypto/sha1.c                  | 33 ++++++++++-----------
->  arch/powerpc/crypto/sha256-spe-glue.c       |  1 -
->  arch/s390/crypto/sha1_s390.c                | 12 ++++----
->  arch/sparc/crypto/md5_glue.c                |  1 -
->  arch/sparc/crypto/sha1_glue.c               |  1 -
->  arch/sparc/crypto/sha256_glue.c             |  1 -
->  arch/sparc/crypto/sha512_glue.c             |  1 -
->  arch/unicore32/kernel/ksyms.c               |  1 -
->  arch/x86/crypto/sha1_ssse3_glue.c           |  1 -
->  arch/x86/crypto/sha256_ssse3_glue.c         |  1 -
->  arch/x86/crypto/sha512_ssse3_glue.c         |  1 -
->  crypto/sha1_generic.c                       |  5 ++--
->  drivers/char/random.c                       |  8 ++---
->  drivers/crypto/atmel-sha.c                  |  1 -
->  drivers/crypto/chelsio/chcr_algo.c          |  1 -
->  drivers/crypto/chelsio/chcr_ipsec.c         |  1 -
->  drivers/crypto/omap-sham.c                  |  1 -
->  fs/f2fs/hash.c                              |  1 -
->  include/crypto/sha.h                        | 10 +++++++
->  include/linux/cryptohash.h                  | 14 ---------
->  include/linux/filter.h                      |  4 +--
->  include/net/tcp.h                           |  1 -
->  kernel/bpf/core.c                           | 18 +++++------
->  lib/crypto/chacha.c                         |  1 -
->  lib/sha1.c                                  | 24 ++++++++-------
->  net/core/secure_seq.c                       |  1 -
->  net/ipv6/addrconf.c                         | 10 +++----
->  net/ipv6/seg6_hmac.c                        |  1 -
->  net/mptcp/crypto.c                          |  4 +--
->  41 files changed, 69 insertions(+), 104 deletions(-)
->  delete mode 100644 include/linux/cryptohash.h
->
->
-> base-commit: 12b3cf9093542d9f752a4968815ece836159013f
-> --
-> 2.26.2
->
+ACPI didn't cover embedded world and has the following issues
+a) where it should be strict (like how many I2CSerialBus() resources
+can be given and for what type of devices, etc), it doesn't
+b) they need to provides better validation tools, but they didn't
+c) it's still windows oriented :-(
+
+Above is custom extension on how to add device properties (and note,
+we have now _DSD() and still we have some M$ way of thinking how to
+use them).
+
+Since the above approach is in the wild, I'm afraid we have not many
+possibilities here (each of them with own problems):
+1/ shout at vendors to use ACPI properly and simple don't by broken
+hardware (rather firmware)
+2/ try to support custom changes (may lead to several approaches for
+the same thing)
+3/ create a lot of board files (something in between 1/ and 2/)
+
+As a result:
+1/ is obviously a best one, but I think it's an utopia.
+2/ in practice we don't have many deviations (luckily OEMs are quite
+lazy to modify reference BIOSes and often reuse existing approaches)
+3/ may not work, because on cheap laptops the means of distinguishing
+them (like DMI strings) may also been broken.
+
+-- 
+With Best Regards,
+Andy Shevchenko
