@@ -2,226 +2,143 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9E7C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47B8C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1EE2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588502293;
-	bh=eMxME0+Eg46hELjOnYbsaxHgLKs+NXA38J0XX9hpq/o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yBCgNy15U9cXRq6xJkDb0IlNGyQuRs1Pchx+/+HZDCQpnwgdXLw7bQJMeammo1R5D
-	 Mi9JbcZP6WGa/BKXo6n2RZIaNL2fX66GcHoLwutZHnn9nxkbjmrofs2H1+fc8+PN8+
-	 8/bRDUmx3k5QRF5zYVFYiLng2CgrcejJwv1i/KU0=
+	by mail.kernel.org (Postfix) with ESMTP id 595E920757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qegX4C+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgECKiM (ORCPT
+        id S1728187AbgECKjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 06:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgECKiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 06:38:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1975A20757;
-        Sun,  3 May 2020 10:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588502291;
-        bh=eMxME0+Eg46hELjOnYbsaxHgLKs+NXA38J0XX9hpq/o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i4DKc0Hbip0XlgKqqKBe+kxGCpPuDxjngVTgqteHl5EN74mqSO98s6HvSu9y0vmWi
-         BWttfHLlyJT/6+CqQXAbZcAHbKLf+OJkhxMoAKtMSw+/Yl3xkIofRGAX7+shmQX3KR
-         qQmtHEaFCjagRLd6E6ftePGT5ZLfWF1zjQ56A0P8=
-Date:   Sun, 3 May 2020 11:38:07 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rachna@ti.com>, <mugunthanvnm@ti.com>, <vigneshr@ti.com>,
-        <afd@ti.com>
-Subject: Re: [PATCH 3/3] iio: adc: ti_am335x_adc: convert rest of probe to
- devm_ functions
-Message-ID: <20200503113807.07c5237e@archlinux>
-In-Reply-To: <20200428111430.71723-3-alexandru.ardelean@analog.com>
-References: <20200428111430.71723-1-alexandru.ardelean@analog.com>
-        <20200428111430.71723-3-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 May 2020 06:39:54 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27763 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727916AbgECKjx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 06:39:53 -0400
+X-UUID: e864c9c81fc743a59c032f8699df0984-20200503
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5A6fTMTWOdOt9hL3z4b4ndRhgV2eSquiME190vL1b78=;
+        b=qegX4C+8LkkgZJDfNwZnkkXT+oCv6OeITF89Z2Yt8wxp7m7kR2Uz/sdN7q8XenpOUHxp6gycXEU2eWam0Vb6ohDmr4sWNZ3cL9FSaKhuEaX9HezELA3Z5ir3zmUuElWaEhm+a3ScIHA+OcRNcZ5/8CoT4yPH9lI9sE3YZ33ziUg=;
+X-UUID: e864c9c81fc743a59c032f8699df0984-20200503
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 210862379; Sun, 03 May 2020 18:39:50 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sun, 3 May 2020 18:39:46 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 3 May 2020 18:39:49 +0800
+Message-ID: <1588502389.3197.19.camel@mtkswgap22>
+Subject: RE: [PATCH v4 6/8] scsi: ufs: add LU Dedicated buffer mode support
+ for WriteBooster
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Avri Altman <Avri.Altman@wdc.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>
+Date:   Sun, 3 May 2020 18:39:49 +0800
+In-Reply-To: <SN6PR04MB4640977062BF81B6DE7CBE51FCA90@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200503060351.10572-1-stanley.chu@mediatek.com>
+         <20200503060351.10572-7-stanley.chu@mediatek.com>
+         <SN6PR04MB4640977062BF81B6DE7CBE51FCA90@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 28 Apr 2020 14:14:30 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-
-> This change converts the rest of the probe to use devm_ functions.
-> Consequently this allows us to remove the remove hook.
->=20
-> It tries to preserve the initial order or probe & remove.
-> The devm_add_action() call hooks the cleanup routine (what's needed still
-> for the remove part).
-> If that doesn't work the DMA channel is cleaned up manually inside the
-> probe hook. This done (like this) because the remove hook has a peculiar
-> cleanup that tries to restore a step-mask, and that only seems to happen =
-on
-> the remove hook, and not in any probe error-cleanup paths.
->=20
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-First two patches are fine, but this last one is (as you've noted) more
-complex.  I'd like to cleanup the complexity rather than papering over
-it.
-
-So the real question is why we need to restore the step-mask on exit, but
-not in other paths in the code.
-
-=46rom what I recall (and it's been quite a lot of years) the step mask
-is controlling the 'scan' so that we capture the set of enabled channels
-and no others (there is a mux that is being controlled).
-
-The current optimization is to not bother resetting that to empty when
-we read individual channels, or come out of buffered mode because we
-will set it anyway when moving to some new mode.
-
-What I can't understand is why we need to set it in the exit path?
-This is a complex corner given the involvement of the touchscreen
-driver and mfd.  My first inclination is we may be better off leaving
-it alone unless we have a test setup to make sure we fully understand
-what is going on.
-
-Given your stated reason for tidying this up was to deal with the
-buffer stuff and this has no impact on that, I'll take patches 1 and 2 for
-now and leave this one out.
-
-However, I'd like to leave more time for comments on those two as well
-(though they seem 'obviously' correct to me).
-
-Thanks,
-
-Jonathan
-
-
-> ---
->  drivers/iio/adc/ti_am335x_adc.c | 63 +++++++++++++++++----------------
->  1 file changed, 32 insertions(+), 31 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_=
-adc.c
-> index 03b2ab649cc3..9fac83e036c1 100644
-> --- a/drivers/iio/adc/ti_am335x_adc.c
-> +++ b/drivers/iio/adc/ti_am335x_adc.c
-> @@ -562,6 +562,18 @@ static int tiadc_request_dma(struct platform_device =
-*pdev,
->  	return -ENOMEM;
->  }
-> =20
-> +static void tiadc_cleanup_dma(struct tiadc_device *adc_dev)
-> +{
-> +	struct tiadc_dma *dma =3D &adc_dev->dma;
-> +
-> +	if (!dma->chan)
-> +		return;
-> +
-> +	dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
-> +			  dma->buf, dma->addr);
-> +	dma_release_channel(dma->chan);
-> +}
-> +
->  static int tiadc_parse_dt(struct platform_device *pdev,
->  			  struct tiadc_device *adc_dev)
->  {
-> @@ -593,6 +605,17 @@ static int tiadc_parse_dt(struct platform_device *pd=
-ev,
->  	return 0;
->  }
-> =20
-> +static void tiadc_cleanup(void *data)
-> +{
-> +	struct tiadc_device *adc_dev =3D data;
-> +	u32 step_en;
-> +
-> +	tiadc_cleanup_dma(adc_dev);
-> +
-> +	step_en =3D get_adc_step_mask(adc_dev);
-> +	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
-> +}
-> +
->  static int tiadc_probe(struct platform_device *pdev)
->  {
->  	struct iio_dev		*indio_dev;
-> @@ -635,48 +658,27 @@ static int tiadc_probe(struct platform_device *pdev)
->  		IRQF_SHARED,
->  		&tiadc_buffer_setup_ops);
-> =20
-> +	err =3D devm_iio_device_register(&pdev->dev, indio_dev);
->  	if (err)
-> -		goto err_free_channels;
-> -
-> -	err =3D iio_device_register(indio_dev);
-> -	if (err)
-> -		goto err_buffer_unregister;
-> +		return err;
-> =20
->  	platform_set_drvdata(pdev, indio_dev);
-> =20
->  	err =3D tiadc_request_dma(pdev, adc_dev);
->  	if (err && err =3D=3D -EPROBE_DEFER)
-> -		goto err_dma;
-> +		return err;
-> +
-> +	err =3D devm_add_action(&pdev->dev, tiadc_cleanup, adc_dev);
-> +	if (err)
-> +		goto err_free_dma;
-> =20
->  	return 0;
-> =20
-> -err_dma:
-> -	iio_device_unregister(indio_dev);
-> -err_buffer_unregister:
-> -err_free_channels:
-> +err_free_dma:
-> +	tiadc_cleanup_dma(adc_dev);
->  	return err;
->  }
-> =20
-> -static int tiadc_remove(struct platform_device *pdev)
-> -{
-> -	struct iio_dev *indio_dev =3D platform_get_drvdata(pdev);
-> -	struct tiadc_device *adc_dev =3D iio_priv(indio_dev);
-> -	struct tiadc_dma *dma =3D &adc_dev->dma;
-> -	u32 step_en;
-> -
-> -	if (dma->chan) {
-> -		dma_free_coherent(dma->chan->device->dev, DMA_BUFFER_SIZE,
-> -				  dma->buf, dma->addr);
-> -		dma_release_channel(dma->chan);
-> -	}
-> -	iio_device_unregister(indio_dev);
-> -
-> -	step_en =3D get_adc_step_mask(adc_dev);
-> -	am335x_tsc_se_clr(adc_dev->mfd_tscadc, step_en);
-> -
-> -	return 0;
-> -}
-> -
->  static int __maybe_unused tiadc_suspend(struct device *dev)
->  {
->  	struct iio_dev *indio_dev =3D dev_get_drvdata(dev);
-> @@ -723,7 +725,6 @@ static struct platform_driver tiadc_driver =3D {
->  		.of_match_table =3D ti_adc_dt_ids,
->  	},
->  	.probe	=3D tiadc_probe,
-> -	.remove	=3D tiadc_remove,
->  };
->  module_platform_driver(tiadc_driver);
-> =20
+SGkgQXZyaSwNCg0KT24gU3VuLCAyMDIwLTA1LTAzIGF0IDA4OjAwICswMDAwLCBBdnJpIEFsdG1h
+biB3cm90ZToNCj4gDQo+ID4gLSAgICAgICBpZiAoIShoYmEtPmRldl9pbmZvLmJfd2JfYnVmZmVy
+X3R5cGUgJiYNCj4gPiAtICAgICAgICAgICAgIGhiYS0+ZGV2X2luZm8uZF93Yl9hbGxvY191bml0
+cykpDQo+ID4gLSAgICAgICAgICAgICAgIGdvdG8gd2JfZGlzYWJsZWQ7DQo+ID4gKyAgICAgICBp
+ZiAoaGJhLT5kZXZfaW5mby5iX3diX2J1ZmZlcl90eXBlID09IFdCX0JVRl9NT0RFX1NIQVJFRCkg
+ew0KPiA+ICsgICAgICAgICAgICAgICBoYmEtPmRldl9pbmZvLmRfd2JfYWxsb2NfdW5pdHMgPQ0K
+PiA+ICsgICAgICAgICAgICAgICBnZXRfdW5hbGlnbmVkX2JlMzIoZGVzY19idWYgKw0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgREVWSUNFX0RFU0NfUEFSQU1fV0JfU0hB
+UkVEX0FMTE9DX1VOSVRTKTsNCj4gPiArICAgICAgICAgICAgICAgaWYgKCFoYmEtPmRldl9pbmZv
+LmRfd2JfYWxsb2NfdW5pdHMpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ290byB3Yl9k
+aXNhYmxlZDsNCj4gPiArICAgICAgIH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgIGZvciAo
+bHVuID0gMDsgbHVuIDwgaGJhLT5kZXZfaW5mby5tYXhfbHVfc3VwcG9ydGVkOyBsdW4rKykgew0K
+PiBtYXhfbHVfc3VwcG9ydGVkIGlzIGRldGVybWluZWQgYWNjb3JkaW5nIHRvIGJNYXhOdW1iZXJM
+VSBpbiB0aGUgZ2VvbWV0cnkgZGVzY3JpcHRvciwNCj4gd2hpY2ggY2FuIGJlIDMyLiBXQiBidWZm
+ZXIgaG93ZXZlciwgaXMgb25seSB2YWxpZCBvbmx5IGZvciBMVSAwLCAuLi4sIExVNy4NCj4gQmV0
+dGVyIHRvIGFkZCB0aGlzIG5ldyBsaW1pdCB0byB1ZnMuaC4NCg0KVGhhbmtzIGZvciBub3RpY2lu
+ZyB0aGlzLiBJIHdpbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICByZXQgPSB1ZnNoY2RfcmVhZF91bml0X2Rlc2NfcGFyYW0oaGJhLA0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdW4sDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFVOSVRfREVTQ19QQVJBTV9XQl9C
+VUZfQUxMT0NfVU5JVFMsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICh1OCAqKSZkX2x1X3diX2J1Zl9hbGxvYywNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgc2l6ZW9mKGRfbHVfd2JfYnVmX2FsbG9jKSk7DQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGdvdG8gd2JfZGlzYWJsZWQ7DQo+IEkgdGhpbmsgeW91IHNob3VsZCBqdXN0IGNvbnRp
+bnVlIGhlcmUsIGFzIGl0IGlzIG9rIGZvciB0aGUgcXVlcnkgdG8gZmFpbC4NCj4gVGhlIHNwZWMg
+c2F5czoNCj4gVGhlIFdyaXRlQm9vc3RlciBCdWZmZXIgaXMgYXZhaWxhYmxlIG9ubHkgZm9yIHRo
+ZSBsb2dpY2FsIHVuaXRzIGZyb20gMCB0byA3IHdoaWNoIGFyZSBjb25maWd1cmVkIGFzDQo+ICJu
+b3JtYWwgbWVtb3J5IHR5cGUiIChiTWVtb3J5VHlwZSA9IDAwaCkgYW5kICJub3QgQm9vdCB3ZWxs
+IGtub3duIGxvZ2ljYWwgdW5pdCIgKGJCb290THVuSUQgPQ0KPiAwMGgpLCBvdGhlcndpc2UgdGhl
+IFF1ZXJ5IFJlcXVlc3Qgc2hhbGwgZmFpbCBhbmQgdGhlIFF1ZXJ5IFJlc3BvbnNlIGZpZWxkIHNo
+YWxsIGJlIHNldCB0byAiR2VuZXJhbA0KPiBGYWlsdXJlIi4NCj4gDQo+IFNvcnJ5IGZvciBub3Qg
+bm90aWNpbmcgdGhpcyBlYXJsaWVyLg0KDQpBbHdheXMgYXBwcmVjaWF0ZSB5b3VyIHJldmlldyBh
+bmQgYWx3YXlzIG5vdCBiZWluZyB0b28gbGF0ZSA6ICkNCg0KVGhlIHNwZWMgZG9lcyBub3QgbWVu
+dGlvbiBjbGVhcmx5IHRoYXQgdGhlIFF1ZXJ5IFJlcXVlc3Qgc2hhbGwgZmFpbCBmb3INClJlYWQg
+b3IgV3JpdGUuIEFsdGhvdWdoIEkgdGhpbmsgaXQgc2hhbGwgZmFpbCBmb3IgV3JpdGUgb25seSwg
+aS5lLiwgZmFpbA0KZHVyaW5nIGNvbmZpZ3VyYXRpb24gb25seSwgaXQgaXMgYmV0dGVyIHRvIGxl
+dCBmYWlsIGJlaW5nIHNraXBwZWQgYW5kDQpjaGVjayBkX2x1X3diX2J1Zl9hbGxvYyBvbmx5IGFu
+eXdheS4NCg0KSSB3aWxsIGZpeCB0aGlzIGFzIHdlbGwgaW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFu
+a3MsDQpTdGFubGV5IENodQ0KDQo+IA0KPiBUaGFua3MsDQo+IEF2cmkNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICBpZiAoZF9sdV93Yl9idWZfYWxsb2MpIHsNCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGhiYS0+ZGV2X2luZm8ud2JfZGVkaWNhdGVkX2x1ID0gbHVuOw0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAgICAgICB9DQo+ID4gDQo+ID4gKyAgICAg
+ICAgICAgICAgIGlmICghZF9sdV93Yl9idWZfYWxsb2MpDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgZ290byB3Yl9kaXNhYmxlZDsNCj4gPiArICAgICAgIH0NCj4gPiAgICAgICAgIHJldHVy
+bjsNCj4gPiANCj4gPiAgd2JfZGlzYWJsZWQ6DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2Nz
+aS91ZnMvdWZzaGNkLmggYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5oDQo+ID4gaW5kZXggODk4
+ODgzMDU4ZTNhLi5mMjMyYTY3ZmQ5YjMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zY3NpL3Vm
+cy91ZnNoY2QuaA0KPiA+ICsrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgNCj4gPiBAQCAt
+ODYxLDYgKzg2MSwxMyBAQCBzdGF0aWMgaW5saW5lIGJvb2wNCj4gPiB1ZnNoY2Rfa2VlcF9hdXRv
+YmtvcHNfZW5hYmxlZF9leGNlcHRfc3VzcGVuZCgNCj4gPiAgICAgICAgIHJldHVybiBoYmEtPmNh
+cHMgJg0KPiA+IFVGU0hDRF9DQVBfS0VFUF9BVVRPX0JLT1BTX0VOQUJMRURfRVhDRVBUX1NVU1BF
+TkQ7DQo+ID4gIH0NCj4gPiANCj4gPiArc3RhdGljIGlubGluZSB1OCB1ZnNoY2Rfd2JfZ2V0X2Zs
+YWdfaW5kZXgoc3RydWN0IHVmc19oYmEgKmhiYSkNCj4gPiArew0KPiA+ICsgICAgICAgaWYgKGhi
+YS0+ZGV2X2luZm8uYl93Yl9idWZmZXJfdHlwZSA9PQ0KPiA+IFdCX0JVRl9NT0RFX0xVX0RFRElD
+QVRFRCkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIGhiYS0+ZGV2X2luZm8ud2JfZGVkaWNh
+dGVkX2x1Ow0KPiA+ICsgICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIGV4dGVy
+biBpbnQgdWZzaGNkX3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgdWZzX2hiYSAqaGJhKTsNCj4gPiAg
+ZXh0ZXJuIGludCB1ZnNoY2RfcnVudGltZV9yZXN1bWUoc3RydWN0IHVmc19oYmEgKmhiYSk7DQo+
+ID4gIGV4dGVybiBpbnQgdWZzaGNkX3J1bnRpbWVfaWRsZShzdHJ1Y3QgdWZzX2hiYSAqaGJhKTsN
+Cj4gPiAtLQ0KPiA+IDIuMTguMA0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18NCj4gTGludXgtbWVkaWF0ZWsgbWFpbGluZyBsaXN0DQo+IExpbnV4
+LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tZWRpYXRlaw0KDQo=
 
