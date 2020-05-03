@@ -2,189 +2,119 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA829C47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A34C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D992137B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uaU5kMpx"
+	by mail.kernel.org (Postfix) with ESMTP id 426B224953
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgECALv (ORCPT
+        id S1726517AbgECAVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 20:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgECALv (ORCPT
+        Sat, 2 May 2020 20:21:06 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44438 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgECAVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 20:11:51 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1006DC061A0C;
-        Sat,  2 May 2020 17:11:51 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x2so3616927pfx.7;
-        Sat, 02 May 2020 17:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F4dVWGdnJBudjfmV4kfu0JQaNGF0uFmvyJsPlpjHVKo=;
-        b=uaU5kMpxU48VehdcgyqcP4jfbmZVVKXuSEnOoCuTyvuYRu9yh2211xVtTmwSlB0veL
-         W9pM+h8jUZ91aN7Cm89BJVt9aIukEoYToZtBVTW0EnM0+QW2B3JgDT0r+t2fZduk8Psp
-         hg3PPYgyjdJV67Ir3ykxOWNwOWdmq3DJAKRoyrYk9F5fJSLc7tbMLMarpuXRPaAPw7La
-         ROQ9FKN0H1jPcGPONH8KbGsmbB9WXU3Zh8bsjm0KzqK3WPcz07yznzdplmPmde4XPxZd
-         INb+VQuOAgv5nQqBCaAYHz0gmcebde9GJqN0BIGsm3bNi1NIqE6F60jQnE6YJ89qiWlj
-         V3FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F4dVWGdnJBudjfmV4kfu0JQaNGF0uFmvyJsPlpjHVKo=;
-        b=JKS/cnA90GCBmvSukGlxkn/BTOTPJ4fj1AYijqSVYGuWahGgQIGdGuWT/PI3u2Nnjp
-         W2jG2upRSU7Xv8G6eNG90V4Wf1zGpErbhm+DlyZ2gstf+FnToCUQseEBkF2R2sdNw3gW
-         Ghs8WthWpUT+BIw9rVzZWmRu0/UYzYPWEIemt2oDrdL1v8WXnYbS6zh3eJogKR82t0tl
-         ttuWn7cIatQMZbVYdz+kkrhftQUSKqF00RYvYHAtNW3W+EXfsHzoDUZQP6DmLzxZlsHM
-         WcOECYutE+7cAYTnQNrG0apqEn6XdSgqspAa9UNClX7jRMuaqlrrvZF37F89e38DOKQA
-         d82g==
-X-Gm-Message-State: AGi0PuZlZzdFQMWR7I+rlz9aPexnGwsvBVQtlr1efw5dEeX2FMs5wRg7
-        u23J64d5pXABrr+gsp/h/EExCc76x1A=
-X-Google-Smtp-Source: APiQypKZUTUw+ADnWg9faIwbTT3MXFxXy1wTD3p1ZXBHFe25jtKfBRErFo8xtxT8FlN2bOOmLH6M/A==
-X-Received: by 2002:a63:3206:: with SMTP id y6mr10650635pgy.68.1588464710539;
-        Sat, 02 May 2020 17:11:50 -0700 (PDT)
-Received: from vultr.guest ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id b15sm5368692pfd.139.2020.05.02.17.11.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 17:11:49 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
-Date:   Sun,  3 May 2020 08:11:41 +0800
-Message-Id: <20200503001141.9647-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 2 May 2020 20:21:05 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 583D52A0BBA
+Received: by earth.universe (Postfix, from userid 1000)
+        id B6DCE3C08C7; Sun,  3 May 2020 02:21:02 +0200 (CEST)
+Date:   Sun, 3 May 2020 02:21:02 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     wu000273@umn.edu
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kjlu@umn.edu
+Subject: Re: [PATCH] power: supply: fix memory leaks (v2)
+Message-ID: <20200503002102.jteq7y6rmef75qkb@earth.universe>
+References: <20200502233338.9188-1-wu000273@umn.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cswde2y6pcl7zblq"
+Content-Disposition: inline
+In-Reply-To: <20200502233338.9188-1-wu000273@umn.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it is useful to preserve batches of configs when making
-localmodconfig. For example, I usually don't want any usb and fs
-modules to be disabled. Now we can do it by:
 
- $ make LMC_KEEP="drivers/usb;fs" localmodconfig
+--cswde2y6pcl7zblq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Hi,
 
----
-v4: fix typo.
-v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
-v2: fix typo in documentation. (Randy Dunlap)
----
- Documentation/admin-guide/README.rst |  8 +++++++-
- scripts/kconfig/Makefile             |  1 +
- scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
- 3 files changed, 31 insertions(+), 1 deletion(-)
+On Sat, May 02, 2020 at 06:33:38PM -0500, wu000273@umn.edu wrote:
+> From: Qiushi Wu <wu000273@umn.edu>
+>=20
+> In function power_supply_add_hwmon_sysfs(), psyhw->props is
+> allocated by bitmap_zalloc(). But this pointer is not deallocated
+> when devm_add_action fail,  which lead to a memory leak bug. To fix
+> this, we replace devm_add_action with devm_add_action_or_reset.
+>=20
+> v2:
+>   - Prevent introducing double-free.
+>   - Added fixes tag
+>=20
+> Fixes: e67d4dfc9ff19 ("power: supply: Add HWMON compatibility layer")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
 
-diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
-index cc6151fc0845..1371deab8bc7 100644
---- a/Documentation/admin-guide/README.rst
-+++ b/Documentation/admin-guide/README.rst
-@@ -209,10 +209,16 @@ Configuring the kernel
-                            store the lsmod of that machine into a file
-                            and pass it in as a LSMOD parameter.
- 
-+                           Also, you can preserve modules in certain folders
-+                           or kconfig files by specifying their paths in
-+                           parameter LMC_KEEP.
-+
-                    target$ lsmod > /tmp/mylsmod
-                    target$ scp /tmp/mylsmod host:/tmp
- 
--                   host$ make LSMOD=/tmp/mylsmod localmodconfig
-+                   host$ make LSMOD=/tmp/mylsmod \
-+                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \
-+                           localmodconfig
- 
-                            The above also works when cross compiling.
- 
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index c9d0a4a8efb3..e0abbf5805f5 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -123,6 +123,7 @@ help:
- 	@echo  '  gconfig	  - Update current config utilising a GTK+ based front-end'
- 	@echo  '  oldconfig	  - Update current config utilising a provided .config as base'
- 	@echo  '  localmodconfig  - Update current config disabling modules not loaded'
-+	@echo  '                    except those preserved by LMC_KEEP environment variable'
- 	@echo  '  localyesconfig  - Update current config converting local mods to core'
- 	@echo  '  defconfig	  - New config with default from ARCH supplied defconfig'
- 	@echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
-diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
-index e2f8504f5a2d..d26543a807c9 100755
---- a/scripts/kconfig/streamline_config.pl
-+++ b/scripts/kconfig/streamline_config.pl
-@@ -143,6 +143,7 @@ my %depends;
- my %selects;
- my %prompts;
- my %objects;
-+my %config2kfile;
- my $var;
- my $iflevel = 0;
- my @ifdeps;
-@@ -201,6 +202,7 @@ sub read_kconfig {
- 	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
- 	    $state = "NEW";
- 	    $config = $2;
-+	    $config2kfile{"CONFIG_$config"} = $kconfig;
- 
- 	    # Add depends for 'if' nesting
- 	    for (my $i = 0; $i < $iflevel; $i++) {
-@@ -592,6 +594,22 @@ while ($repeat) {
- 
- my %setconfigs;
- 
-+my @preserved_kconfigs;
-+@preserved_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));
-+
-+sub in_preserved_kconfigs {
-+    my $kconfig = $config2kfile{$_[0]};
-+    if (!defined($kconfig)) {
-+        return 0;
-+    }
-+    foreach my $excl (@preserved_kconfigs) {
-+        if($kconfig =~ /^$excl/) {
-+            return 1;
-+        }
-+    }
-+    return 0;
-+}
-+
- # Finally, read the .config file and turn off any module enabled that
- # we could not find a reason to keep enabled.
- foreach my $line (@config_file) {
-@@ -644,6 +662,11 @@ foreach my $line (@config_file) {
-     }
- 
-     if (/^(CONFIG.*)=(m|y)/) {
-+        if (in_preserved_kconfigs($1)) {
-+            dprint "Preserve config $1";
-+            print;
-+            next;
-+        }
- 	if (defined($configs{$1})) {
- 	    if ($localyesconfig) {
- 	        $setconfigs{$1} = 'y';
--- 
-2.25.1
+Thanks, queued to power-supply's for-next branch.
+Notes for next time:
 
+* I fixed up the subject, please read how to properly send a v2
+* I removed the changelog, it should be below the ---
+
+-- Sebastian
+
+>  drivers/power/supply/power_supply_hwmon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/su=
+pply/power_supply_hwmon.c
+> index 75cf861ba492..7c8296ea0c34 100644
+> --- a/drivers/power/supply/power_supply_hwmon.c
+> +++ b/drivers/power/supply/power_supply_hwmon.c
+> @@ -304,7 +304,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply =
+*psy)
+>  		goto error;
+>  	}
+> =20
+> -	ret =3D devm_add_action(dev, power_supply_hwmon_bitmap_free,
+> +	ret =3D devm_add_action_or_reset(dev, power_supply_hwmon_bitmap_free,
+>  			      psyhw->props);
+>  	if (ret)
+>  		goto error;
+> --=20
+> 2.17.1
+>=20
+
+--cswde2y6pcl7zblq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6uDmkACgkQ2O7X88g7
++ppkHA//YWfS/dcQxDTdeLSxzvmfeQKZ8m2eQILk6sO2I9+KKiBsKC1qzPC3p+Mv
+1CfKX6sxy8AxzuRVzl3znW/GV7NLXAliOTT9c8v7P5PEiVE6QXlbvzbkZeyvJoHx
+fkwI3bV0P9dMp5IBYIijYt8TwR84+E6XKyFGhhsW2MbK6vPgseRO6VY20P6UffdI
+R0U5iVu30rrXhAL98D1W4sttJ97of0woXqskXw2vLx6I4qLUA5AC2ojJ+zMjFiYh
+N1QzP94p27/C6KC5DzJLW0/5jn9kyG4c61Tvcn0PMt8Eb0KaRZv33fasB7p6At3G
+JHgDcqgdVhqz8RImlrEHqrsCLxrv+bRD7JaC+P/nZdHSIPPSi/5axBCga+CGM4Fy
+oEZddy/naU8IziCWAmPsjVun69j9zkkpJvyG+GIY4H4j1P7P7vjJq6n20cyj3rxA
+vba4DrebfrJMScAN2ErA90k6GagAuA48IUkCMurp2hVx/Sgx0SqW6IUcGi55iqVj
+kHnvjr2+3B58Gp34z1udqle2rqjCFQfbwGDJ3UR44n3OVihcaPE6OFMsVWlRoluW
+DDlpcLPDJ1yXqSrdSA1A/7FoFciAqFX6Z3AbcWqt1ifwqwsbjYJlUrTLLzb3Enua
+zd34nWOJaCipUKrEnjfJqw0Riy7IZ3ySiuzptirkkQAjFrQENpE=
+=EINy
+-----END PGP SIGNATURE-----
+
+--cswde2y6pcl7zblq--
