@@ -2,166 +2,170 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F5BC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD21C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA2A8206EB
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF592208DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588521071;
+	bh=MoYkt8nJNSYHxeNV4ctvv8LFowIxDvxKKgf3MIzhfcA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fr3txSrwDZ0j/YGfSULowVbn941zgnrUfAY/AiwhUZZvKsj9HLKA2oKPDMS1uJADi
+	 rscUB2yEsd/g98vG2eXj3xClNXULSsdRiK/blqKEwbgWNRP4DgClSReLMLAKNuhCPy
+	 ij58ZgJrHDk3NJr2PQmyjVBkrDq4wvQlz0a55Zd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgECPs7 (ORCPT
+        id S1728824AbgECPvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 11:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgECPs6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 11:48:58 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CB6C061A0E;
-        Sun,  3 May 2020 08:48:58 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id B4F282A04E0
-Received: by earth.universe (Postfix, from userid 1000)
-        id 258293C08C7; Sun,  3 May 2020 17:48:55 +0200 (CEST)
-Date:   Sun, 3 May 2020 17:48:55 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v6 0/3] Add support for CellWise cw2015 fuel gauge
-Message-ID: <20200503154855.duwj2djgqfiyleq5@earth.universe>
-References: <20200414125208.1091989-1-t.schramm@manjaro.org>
+        Sun, 3 May 2020 11:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728207AbgECPvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 11:51:11 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 584EF206EB;
+        Sun,  3 May 2020 15:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588521070;
+        bh=MoYkt8nJNSYHxeNV4ctvv8LFowIxDvxKKgf3MIzhfcA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hiDzOyLI23KoKwV6kZszpJJDvJURTVrqGvMNbf4WeHS9st6i18dVI0EmLTcd7qFMN
+         lrSXhUvBnf1DfoNUqWa9SubjBBBoc0eHDY0Sg6eJnfL76eudfLBhuwfBi6Wa+fh/FI
+         1aMoaOElwL6H9giB6XBPqUh9U6Cluvorc7Dp9QJU=
+Date:   Sun, 3 May 2020 16:51:05 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v6 0/6] iio: core,buffer: re-organize chardev creation
+Message-ID: <20200503165105.74047af8@archlinux>
+In-Reply-To: <20200427131100.50845-1-alexandru.ardelean@analog.com>
+References: <20200427131100.50845-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="h4n2rz53hnvcjnho"
-Content-Disposition: inline
-In-Reply-To: <20200414125208.1091989-1-t.schramm@manjaro.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 27 Apr 2020 16:10:54 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
---h4n2rz53hnvcjnho
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The main intent is to be able to add more chardevs per IIO device, one
+> for each buffer. To get there, some rework is needed.
+> This tries to re-organize the init of the chardev.
 
-Hi,
+Hmm. I'd like this set to sit and ideally gather a few acks before
+I move ahead with it.
 
-On Tue, Apr 14, 2020 at 02:52:05PM +0200, Tobias Schramm wrote:
-> This patchset adds support for the CellWise cw2015 fuel gauge.
->=20
-> The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
-> gauge. It is used in the pine64 Pinebook Pro laptop.
->=20
-> This is just a resend of v6 to the linux-pm maintainers for merging.
->=20
-> I've kept the cellwise,battery-profile property in the device tree. Its
-> content describes characteristics of the battery built into a device. The
-> exact format is unknown and not publicly documented. It is likely
-> comprised of some key parameters of the battery (chemistry, voltages,
-> design capacity) and parameters for tuning the internal state of charge
-> approximation function.
-> Since v2 CellWise has confirmed to me that the only way to obtain the
-> profile blob is to mail them batteries for testing. Thus we will need to
-> keep that property.
+The protections against problems around remove have always been
+somewhat fiddly and I suspect don't cover everything.
 
-Thanks, queued.
+I'm fairly sure taking the exist lock is 'sufficient' but I'm not
+actually sure it's necessary.   We only otherwise take it for
+place where the inkern interface is in use so we can race
+against removal of a provider driver.
 
-> In general I'm not 100 % sure about my json-schema binding for the gauge.
-> It is my first time ever writing a json-schema binding and I'm not sure
-> whether properties like power-supplies or monitored-battery need to be
-> added to a separate, common schema for power supplies or not.
+We don't have such heavy weight protections in the buffer code
+and I'll be honest I can't remember why. Original patch mentions
+that it was about avoiding taking additional new references to the
+struct iio_dev.  We aren't doing that as such here so perhaps
+we don't need to take the lock..
 
-Yes, they should be referenced, but at the time of your patch the
-common power-supply properties and the battery bindings have not
-yet been converted to YAML. The power-supplies property is now
-described in Documentation/devicetree/bindings/power/supply/power-supply.ya=
-ml
-and conversion of the simple-battery binding will hopefully happen
-soon. Afterwards we can update the cw2015 binding accordingly.
+Lars, I suspect you may have been involved in that stuff originally
+so I'd appreciate you taking a quick look at this if you have
+time!
 
--- Sebastian
+Thanks,
 
-> Best Regards,
->=20
-> Tobias Schramm
->=20
-> Changelog:
->  v2:
->   * Change subject to "Add support for CellWise cw2015 fuel gauge"
->   * Rewrite bindings as json-schema
->   * Use default power-supplies handling
->   * Use regmap for register access
->   * Use standard simple-battery node
->   * Replace printk/pr_* by dev_{dbg,info,warn,err}
->   * Use cancel_delayed_work_sync in remove
->   * General code cleanup
->  v3:
->   * Incorporate review by Andy
->   * Add cellwise vendor prefix
->   * Rename cellwise,bat-config-info property to cellwise,battery-profile
->   * Remove most state of charge post-processing
->   * Use fwnode interface
->   * General code cleanup
->   * Lots of code style fixes
->  v4:
->   * Implement additional changes requested by Andy
->   * Use fwnode inline wrappers
->   * Clean up waiting for gauge
->   * Minor code style fixes
->  v5:
->   * Clean up includes
->   * Handle errors during device property parsing
->   * Refactor device property parsing
->   * Replace i2c->probe by i2c->probe_new=20
->   * More code style fixes
->  v6:
->   * Fix bindings according to review by Rob
->=20
-> Tobias Schramm (3):
->   dt-bindings: Document cellwise vendor-prefix
->   dt-bindings: power: supply: add cw2015_battery bindings
->   power: supply: add CellWise cw2015 fuel gauge driver
->=20
->  .../bindings/power/supply/cw2015_battery.yaml |  82 ++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  MAINTAINERS                                   |   6 +
->  drivers/power/supply/Kconfig                  |  11 +
->  drivers/power/supply/Makefile                 |   1 +
->  drivers/power/supply/cw2015_battery.c         | 749 ++++++++++++++++++
->  6 files changed, 851 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015=
-_battery.yaml
->  create mode 100644 drivers/power/supply/cw2015_battery.c
->=20
-> --=20
-> 2.26.0
->=20
+Jonathan
 
---h4n2rz53hnvcjnho
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+>  
+> Changelog v5 -> v6:
+> - patch 'iio: core: register chardev only if needed'
+>   - sort file_operations fields for iio_event_fileops
+> - patch 'iio: buffer,event: duplicate chardev creation for buffers & events'
+>   - fixed-up '**/' -> '*/' for 2 block comments
+>   - sorted file_operations for iio_buffer_fileops, after move
+>   - removed 'indio_dev->chrdev = NULL' on IIO device unregister
+>   - added comment about 'indio_dev->info' NULL check in
+>     iio_device_event_ioctl()
+> - patch 'iio: core: add simple centralized mechanism for ioctl() handlers'
+>   - re-using lock 'indio_dev->info_exist_lock' for new ioctl register
+>     mechanism in iio_device_ioctl()
+>   - simplified exit condition from the loop; only need to check
+>     `ret != IIO_IOCTL_UNHANDLED` to continue looping;
+>     everything else is just return/break
+> - patch 'iio: core: use new common ioctl() mechanism'
+>   - the comment for 'indio_dev->info' NULL check is being moved here to
+>     highlight why the null-check is being removed; or where it's being
+>     moved
+> 
+> Changelog v4 -> v5:
+> - dropped patch 'iio: Use an early return in iio_device_alloc to simplify code.'
+>   is applied upstream
+> 
+> Changelog v3 -> v4:
+> - added patch [1] 'iio: Use an early return in iio_device_alloc to simplify code.'
+>   it's main purpose is so that this patch applies:
+>      [2]'iio: core: add simple centralized mechanism for ioctl() handlers'
+>   depending on the final version of patch [1], patch [2] needs some
+>   minor fixup
+> - added patch 'iio: core,buffer: wrap iio_buffer_put() call into iio_buffers_put()'
+> - patch 'iio: core: register buffer fileops only if buffer present'
+>   is now: 'iio: core: register chardev only if needed'
+> - dropped 'iio: buffer: move sysfs alloc/free in industrialio-buffer.c'
+>   it's likely we won't be doing this patch anymore
+> - patches:
+>     'iio: buffer: move iio buffer chrdev in industrialio-buffer.c'
+>     'iio: event: move event-only chardev in industrialio-event.c'
+>   have been merged into 'iio: buffer,event: duplicate chardev creation for buffers & events'
+>   since now, the logic is a bit different, and 'indio_dev->chrdev' is
+>   now a reference to either the buffer's chrdev & or the events-only
+>   chrdev
+> - added simple mechanism to register ioctl() handlers for IIO device
+>   which is currently used only by events mechanism
+> 
+> Changelog v2 -> v3:
+> * removed double init in
+>   'iio: event: move event-only chardev in industrialio-event.c'
+> 
+> Changelog v1 -> v2:
+> * re-reviewed some exit-paths and cleanup some potential leaks on those
+>   exit paths:
+>   - for 'iio: buffer: move iio buffer chrdev in industrialio-buffer.c'
+>     add iio_device_buffers_put() helper and calling iio_buffers_uninit()
+>     on device un-regsiter
+>   - for 'move sysfs alloc/free in industrialio-buffer.c'
+>     call 'iio_buffer_free_sysfs_and_mask()' on exit path if
+>     cdev_device_add() fails
+>   - for 'move event-only chardev in industrialio-event.c'
+>     check if event_interface is NULL in
+>     iio_device_unregister_event_chrdev()
+> 
+> Alexandru Ardelean (6):
+>   iio: buffer: add back-ref from iio_buffer to iio_dev
+>   iio: core,buffer: wrap iio_buffer_put() call into iio_buffers_put()
+>   iio: core: register chardev only if needed
+>   iio: buffer,event: duplicate chardev creation for buffers & events
+>   iio: core: add simple centralized mechanism for ioctl() handlers
+>   iio: core: use new common ioctl() mechanism
+> 
+>  drivers/iio/iio_core.h            |  29 +++++---
+>  drivers/iio/industrialio-buffer.c | 102 ++++++++++++++++++++++++--
+>  drivers/iio/industrialio-core.c   | 116 +++++++++++++-----------------
+>  drivers/iio/industrialio-event.c  | 100 +++++++++++++++++++++++++-
+>  include/linux/iio/buffer_impl.h   |  10 +++
+>  include/linux/iio/iio.h           |   8 +--
+>  6 files changed, 276 insertions(+), 89 deletions(-)
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6u5+EACgkQ2O7X88g7
-+pomrg/5ASAQXZsM9KBxE7il9Jg64/S3HPh+iaT1r5CNDWH/Z1fnThOI1Zc9cyw0
-ReCDGNSuILQEfR7qCypuP60/V6hTDad/BU3ZGCIvZiifuOg3HBSGVjSyYNZA7Nfn
-PYvqJBgw8WsUYTd/XFTfqjI8y5CJcbWOtP2umaIb6AX2zRCDeUMjjfW0EBWM4m1m
-0uZ5HYRCQbTvs3sqc6XkXcJzrOmmn11TWGtWcwNu4U/YoR3i4qLLF0bNyFkAlxd/
-EYRb1KR5/oot5pngsD5E2CFrJTy/0+/vlEsHk6TMIRqAb8nVD4xWaFfhSlukcRP2
-vyYa7aynDMgll+L1ErKXdYpUXW4ACN3GVs0tkPuQm/KIqhLtT5vdBRsbAPoSqUJ8
-XqMp+0Cs1qA/9ysCrRQeXTZOA7ZAu7FQ25pGgBTwF8P1RqLHkqX2JNPspZtbRgXn
-jS55DclRebIJtl3KNWiiTnajaSUfh83SAPali5SS8IfTjFVX2/NJarmaZaKPdkHf
-BiEGE8OJjSSQpn33mRo5tSjpFSptI7mwB2uSuVeuD4R104vv+5ZQNHAvlDa0aOKm
-rLdffwRoNLdDLsjq7fTKJrv/oAU0k1H6jkNc1dRBM9FE0g/k90qeSxXypSHFB+7C
-hWOwNdi7sPfPm0lqTqcJy8tjSQuvsrW4aMjUD60R58sXUO0Ua1c=
-=6qYg
------END PGP SIGNATURE-----
-
---h4n2rz53hnvcjnho--
