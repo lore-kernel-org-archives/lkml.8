@@ -2,100 +2,68 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E761BC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85CBC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE10321582
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588512554;
-	bh=4JWSkq2cpw2BiP+K3FyaxSJGQXjScmAftWrqg7rnk0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Yb18xmot/KEwWko5rypTC5gtkRoG9gt8n5wCfPM/xi23jE9vSp/yHanKHjjj2zkOq
-	 A5AnuVU0tuscTWkSRaPF3+133QQkdEGhdAP5ozUy5/NxdcI5EXDsH1yTVbpnpg4Oc1
-	 EWlc8WAFrmGjeGRxhB1paI5GRh8HIKgf9YhjBNNw=
+	by mail.kernel.org (Postfix) with ESMTP id 5EB0620752
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:29:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=kocurkovo.cz header.i=@kocurkovo.cz header.b="J5YZ98QN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgECN3N (ORCPT
+        id S1728630AbgECN3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728378AbgECN3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:29:13 -0400
-Received: from localhost (p54B33FBF.dip0.t-ipconnect.de [84.179.63.191])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B538020752;
-        Sun,  3 May 2020 13:29:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588512552;
-        bh=4JWSkq2cpw2BiP+K3FyaxSJGQXjScmAftWrqg7rnk0U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ncI0ibVX7g2+5ycsBniA1qkCTQNyqh8iKYA5g9e/xNfr4HnaUpBD099vKdhn7pGME
-         6IdSJSIQegG79efK+SFITq4Defjn+ABBATGj37/P8H7mxcUIfUtydEI4OxLXP31CRP
-         uCvDzwn2TkjePdkmMFF9UPEogPrdtgZj9te6QmPE=
-Date:   Sun, 3 May 2020 15:29:06 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: uniphier: Remove superfluous error message in
- uniphier_i2c_probe()
-Message-ID: <20200503132906.GA32207@ninjato>
-References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Content-Disposition: inline
-In-Reply-To: <20200503120847.13528-1-aishwaryarj100@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 3 May 2020 09:29:24 -0400
+Received: from mail.kocurkovo.cz ([185.8.236.170]:59310 "EHLO
+        mail.kocurkovo.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728378AbgECN3Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 09:29:24 -0400
+Received: by mail.kocurkovo.cz (Postfix, from userid 1000)
+        id 2F14618CB; Sun,  3 May 2020 15:29:21 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.kocurkovo.cz 2F14618CB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kocurkovo.cz;
+        s=mail; t=1588512561;
+        bh=sFGicPa3iLNjtjg478e1D/ADKIbqHmDGGrFqDiMuM28=;
+        h=From:To:Cc:Subject:Date:From;
+        b=J5YZ98QNwPOE7zMGAJcdy0+zJ+4wM6lDHfap69Pv1uE9FX9ZYPKebsXY9AQykWEPx
+         +TcX4PicRyyxpAw+3ADw/MXgeXtuD1qgzvWRHIvR22EZ+AzNM6sp3KTcBnPjzmgAG5
+         E8OSxswCPgpKi9w4I3csq09kV6Iz9rS9mUwc9c9s=
+From:   Matej Dujava <mdujava@kocurkovo.cz>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        Briana Oursler <briana.oursler@gmail.com>,
+        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        Matej Dujava <mdujava@kocurkovo.cz>
+Subject: [PATCH 0/5] Cleaning s_uGetDataDuration function
+Date:   Sun,  3 May 2020 15:29:07 +0200
+Message-Id: <1588512552-12297-1-git-send-email-mdujava@kocurkovo.cz>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set will eliminate few checkpatch LONG_LINE errors.
+Simplify code paths by:
+  - returning at the end of case body
+  - removing unnecessary else branches
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Matej Dujava (5):
+  staging: vt6655: merge two switch cases in s_uGetDataDuration
+  staging: vt6655: do calculation of uAckTime first
+  staging: vt6655: remove else after return and invert condition
+  staging: vt6655: return at the ond of case body
+  staging: vt6655: extract index manupulation out of function call
 
-On Sun, May 03, 2020 at 05:38:47PM +0530, Aishwarya Ramakrishnan wrote:
-> The function platform_get_irq can log an error by itself.
-> This omit a redundant message for exception handling in the
-> calling function.
->=20
-> Suggested by Coccinelle.
->=20
-> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+ drivers/staging/vt6655/rxtx.c | 140 ++++++++++++----------------------
+ 1 file changed, 48 insertions(+), 92 deletions(-)
 
-Please send only one patch for the whole I2C subsystem.
+--
+2.26.2
 
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6uxx4ACgkQFA3kzBSg
-KbZdtA//Y6lCK360CUvB9MxuvS/hhnxeaVtnqwL+5QEFQjabnOTw1EFXji4ihhAX
-IBvWE6pLYag6SHHC3GN224jR6b5AS+8wLBGmy052fFCn5/DrphXupF7+wCgjZZVG
-q5/i1XUlJeqwxLBGfQ8JuyBkfQhmSp1K0xUpcPZfT7eso/mE0L3ZJ3TskesoubWi
-VKpelcUTuCJ3QgP9llXlwhMnbn4GQARDzThv4mdogCbfkh8t+YKUVMy9t9vo/BZ0
-X7xRjBlFq7slq4Ua+Y/QWeTmyo7sj6IgG4KB23fUvouGqYzPXJnD/pAl/IOf8Q8b
-/YLQSKD3lEs1V0zn/WaI1q+H+bd5qwJSk0wOVeL3UoCPJACVtWzJhTM8PJrm5i1+
-Gt6YFZ9KFdRDB8rCR6J0bcuGYw85QZ+egAnrRz/0jy1dbx3NcYSlrEpgt9+jC5uN
-reJTbrCKoG1EeWGqY6klbE67C8Fg+4uHLf4ipAMc/74BV3+YD4fXu/hYjERdjhWp
-jADtF4tpkFw8mKQdv+r8auhVR8Gu2mcR6MFkZDbwStXpTAlvKZkfPUU6Ue/n//De
-aASsTid88R9o5INCqIHNyisKSOwdlJlnX/WU5wTXYbvAeIoGa/Ay4ZETy2eBcFMM
-9Fi81whNJNI6g9w1hgcT0MquELnDHiY3tiizj1yHeOn7o5MYQkA=
-=gWoi
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
