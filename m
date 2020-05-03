@@ -2,165 +2,118 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0073CC4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B616C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3B121775
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588510505;
-	bh=KCKCMBkmmw/LbQq3L2XpZoFryPWfOj1OfuZUm2ZaWCU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yLL1tEXxS/iUBaBo3to/MlR8iDbkbSPmCnOKzceHWyhQCnHrww0g2rGYW47lWSDka
-	 RZI1UweE0YP/K9TadZVn9eaDFHa6NFq24wferyQxk0+349LI6RIV57VZ1Bt90EaZn7
-	 vj7ORT0t02Im/CrYydPMb+BG//KCHh9b3EhpIgb0=
+	by mail.kernel.org (Postfix) with ESMTP id F13102192A
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:57:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgECMzF (ORCPT
+        id S1728571AbgECM5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728142AbgECMzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:55:04 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5892520757;
-        Sun,  3 May 2020 12:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588510504;
-        bh=KCKCMBkmmw/LbQq3L2XpZoFryPWfOj1OfuZUm2ZaWCU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hycPYQGJzzVyhw5GYLqZgCXHX4CCIyndZPoG8wquHh55na8UueM4SiWJwUWT7NzLz
-         EKqKQ1VYircPbGtfyCQj3GGrdFRph1dx2PHqsUBq2vbM/MiskrQxar+A6Pv4wP0TXi
-         huamDBl6CPTwQarigW8Wrs21jMZUZJgdZ80z4zl0=
-Date:   Sun, 3 May 2020 13:54:58 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        david@lechnology.com, felipe.balbi@linux.intel.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
-Message-ID: <20200503135458.38debbbf@archlinux>
-In-Reply-To: <20200503092316.GA570888@kroah.com>
-References: <cover.1588176662.git.vilhelm.gray@gmail.com>
-        <20200430201345.GX51277@piout.net>
-        <20200501154519.GA4581@icarus>
-        <20200502175536.1e9ac944@archlinux>
-        <20200503092316.GA570888@kroah.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 May 2020 08:57:36 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:51379 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728387AbgECM5g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 08:57:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-181-BT3qH9VsMz-dk4PkoNseiQ-1; Sun, 03 May 2020 13:57:31 +0100
+X-MC-Unique: BT3qH9VsMz-dk4PkoNseiQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 3 May 2020 13:57:30 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 3 May 2020 13:57:30 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Thread-Topic: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Thread-Index: AQHWH+ZTSK33XHL44ESHjM2jwgOtw6iWT55g
+Date:   Sun, 3 May 2020 12:57:30 +0000
+Message-ID: <a4aabe6f2ca649779a772a5f0365af6f@AcuMS.aculab.com>
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+ <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com>
+ <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
+ <CAPcyv4g0a406X9-=NATJZ9QqObim9Phdkb_WmmhsT9zvXsGSpw@mail.gmail.com>
+ <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+ <CAPcyv4jvgCGU700x_U6EKyGsHwQBoPkJUF+6gP4YDPupjdViyQ@mail.gmail.com>
+ <CAHk-=wiPkwF2+y6wZd=VD9BooKxHRWhSVW8dr+WSeeSPkJk7kQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiPkwF2+y6wZd=VD9BooKxHRWhSVW8dr+WSeeSPkJk7kQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 3 May 2020 11:23:16 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> On Sat, May 02, 2020 at 05:55:36PM +0100, Jonathan Cameron wrote:
-> > On Fri, 1 May 2020 11:46:10 -0400
-> > William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
-> >   
-> > > On Thu, Apr 30, 2020 at 10:13:45PM +0200, Alexandre Belloni wrote:  
-> > > > Hi,
-> > > > 
-> > > > On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:    
-> > > > > Over the past couple years we have noticed some shortcomings with the
-> > > > > Counter sysfs interface. Although useful in the majority of situations,
-> > > > > there are certain use-cases where interacting through sysfs attributes
-> > > > > can become cumbersome and inefficient. A desire to support more advanced
-> > > > > functionality such as timestamps, multi-axis positioning tables, and
-> > > > > other such latency-sensitive applications, has motivated a reevaluation
-> > > > > of the Counter subsystem. I believe a character device interface will be
-> > > > > helpful for this more niche area of counter device use.
-> > > > > 
-> > > > > To quell any concerns from the offset: this patchset makes no changes to
-> > > > > the existing Counter sysfs userspace interface -- existing userspace
-> > > > > applications will continue to work with no modifications necessary. I
-> > > > > request that driver maintainers please test their applications to verify
-> > > > > that this is true, and report any discrepancies if they arise.
-> > > > >     
-> > > > 
-> > > > On that topic, I'm wondering why the counter subsystem uses /sys/bus
-> > > > instead of /sys/class that would be more natural for a class of devices.
-> > > > I can't see how counters would be considered busses. I think you should
-> > > > consider moving it over to /sys/class (even if deprecating
-> > > > /sys/bus/counter will be long).    
-> > > 
-> > > At the time I wasn't quite familiar with sysfs development so I was
-> > > following the iio sysfs code rather closely. However, I see now that
-> > > you're probably right: this isn't really a bus but rather a collection
-> > > of various types of counters -- i.e. a class of devices.
-> > > 
-> > > Perhaps I should migrate this then to /sys/class/counter. Of course, the
-> > > /sys/bus/counter location will have to remain for compatibility with
-> > > existing applications, but I think a simple symlink to the new
-> > > /sys/class/counter location should suffice for that.
-> > > 
-> > > If anyone sees an issue with this give me a heads up.  
-> > To just address this point as I've not read the rest of the thread yet...
-> > 
-> > I would resist moving it.  This one is an old argument. 
-> > 
-> > Some info in https://lwn.net/Articles/645810/
-> > As that puts it a "bus" is better known as a "subsystem".
-> > 
-> > When we originally considered class vs bus for IIO, the view expressed
-> > at the times was that the whole separation of the two didn't mean anything
-> > and for non trivial cases bus was always preferred.  It's nothing to do
-> > with with whether the thing is a bus or not.  Now I suppose it's possible
-> > opinion has moved on this topic...    However, I'd say there
-> > is really 0 advantage in moving an existing subsystem even if opinion
-> > has changed.
-> > 
-> > +CC Greg in case he wants to add anything.  
-> 
-> Traditionally classes are a unified way of representing data to
-> userspace, independant of the physical transport that the data came to
-> userspace on (i.e. input devices are a class, it doesn't matter if they
-> came on serial, USB, PS/2, or virtual busses.)
-> 
-> A bus is traditionally a collection of drivers that all talk on a same
-> physical transport, that then expose data from that transport to a
-> specific userspace class.  Again, think USB mice drivers, serial mice
-> drivers, PS/2 mice drivers.
-> 
-> Busses bind a driver to a device it creates based on that "bus".
-> Classes create virtual devices that export data to userspace for a
-> specific common protocol.
-> 
-> Does that help?
-> 
-> One can argue (and have properly in the past), that classes and busses
-> really are not all that different, and there used to be code floating
-> around that made them the same exact thing in the kernel, with loads of
-> userspace sysfs symlinks to preserve things, but those are well out of
-> date and I don't think anyone feels like reviving them.  However I think
-> systemd might still have code in it to work properly if that ever
-> happens, haven't looked in a few years...
-> 
-> thanks,
-> 
-> greg k-h
-
-Thanks for the explanation. Here key thing to my mind is counters went
-in as a bus and should stay so because there is limited benefit in a move
-and it would be ABI breaking.  Maybe it 'should' have been a class, but
-too late now.
-
-Jonathan
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMDEgTWF5IDIwMjAgMTk6MjkNCi4uLg0KPiBB
+bmQgYXMgRGF2aWRMIHBvaW50ZWQgb3V0IC0gaWYgeW91IGV2ZXIgaGF2ZSAiaW9tZW0iIGFzIGEg
+c291cmNlIG9yDQo+IGRlc3RpbmF0aW9uLCB5b3UgbmVlZCB5ZXQgYW5vdGhlciBjYXNlLiBOb3Qg
+YmVjYXVzZSB0aGV5IGNhbiB0YWtlDQo+IGFub3RoZXIga2luZCBvZiBmYXVsdCAoYWx0aG91Z2gg
+b24gc29tZSBwbGF0Zm9ybXMgeW91IGhhdmUgdGhlIG1hY2hpbmUNCj4gY2hlY2tzIGZvciB0aGF0
+IHRvbyksIGJ1dCBiZWNhdXNlIHRoZXkgaGF2ZSAqdmVyeSogZGlmZmVyZW50DQo+IHBlcmZvcm1h
+bmNlIHByb2ZpbGVzIChhbmQgdGhlIEVSTVMgInJlcCBtb3ZzYiIgc3Vja3MgYmFieSBkb25rZXlz
+DQo+IHRocm91Z2ggYSBzdHJhdykuDQoNCg0KSSB3YXMgYWN0dWFsbHkgdGhpbmtpbmcgdGhhdCB0
+aGUgbnZkaW1tIGFjY2Vzc2VzIG5lZWQgdG8gYmUgdHJlYXRlZA0KbXVjaCBtb3JlIGxpa2UgKGNh
+Y2hlZCkgbWVtb3J5IG1hcHBlZCBpbyBzcGFjZSB0aGFuIG5vcm1hbCBzeXN0ZW0NCm1lbW9yeS4N
+ClNvIHRyZWF0aW5nIHRoZW0gdGhlIHNhbWUgYXMgImlvbWVtIiBhbmQgdGhlbiBoYXZpbmcgYWNj
+ZXNzIGZ1bmN0aW9ucw0KdGhhdCByZXBvcnQgYWNjZXNzIGZhaWx1cmVzICh3aGljaCB0aGUgY3Vy
+cmVudCByZWFkcSgpIGRvZXNuJ3QpDQptaWdodCBtYWtlIHNlbnNlLg0KDQpJZiB5b3UgYXJlIHVz
+aW5nIG1lbW9yeSB0aGF0ICdtaWdodCBmYWlsJyBmb3Iga2VybmVsIGNvZGUgb3IgZGF0YQ0KeW91
+IHJlYWxseSBnZXQgd2hhdCB5b3UgZGVzZXJ2ZS4NCg0KT1RPSCBzeXN0ZW0gcmVzcG9uc2UgdG8g
+UENJZSBlcnJvcnMgaXMgY3VycmVudGx5IHJhdGhlciBwcm9ibGVtYXRpYy4NCk1vc3RseSByZWFk
+cyB0aW1lIG91dCBhbmQgcmV0dXJuIH4wdS4NClRoaXMgY2FuIGJlIGNoZWNrZWQgZm9yIGFuZCwg
+aWYgcG9zc2libHkgdmFsaWQsIGEgc2Vjb25kIGxvY2F0aW9uIHJlYWQuDQoNCkhvd2V2ZXIgd2Ug
+aGF2ZSBhIHg4NiBzZXJ2ZXIgYm94IChJJ3ZlIGZvcmdvdHRlbiB3aGV0aGVyIGl0IGlzIEhQIG9y
+DQpEZWxsKSB0aGF0IGdlbmVyYXRlcyBhbiBOTUkgd2hlbmV2ZXIgYSBQQ0llIGxpbmsgZ29lcyBk
+b3duLg0KKFRoZSAncGxhdGZvcm0nIHRha2VzIHRoZSBBRVIgaW50ZXJydXB0IGFuZCB1c2VzIGFu
+IE5NSSB0byBwYXNzDQppdCB0byB0aGUga2VybmVsIC0gd2hvc2UgYnJpZ2h0IGlkZWEgd2FzIGl0
+IHRvIHVzZSBhbiBOTUk/Pz8pDQpUaGlzIGhhcHBlbnMgZXZlbiBhZnRlciB3ZSd2ZSBkb25lIGFu
+ICdlY2hvIDEgPnJlbW92ZScuDQpUaGUgc3lzdGVtIGlzIHN1cHBvc2VkIHRvIGJlIE5FQlMgKEkg
+dGhpbmsgdGhhdCBpcyB0aGUgdGVybSkgY29tcGxpYW50DQp3aGljaCBpcyBzdXBwb3NlZCB0byBi
+ZSBzdWl0YWJsZSBmb3IgdGVsZXBob255IHdvcmsgKGluY2x1ZGluZw0KZW1lcmdlbmN5IGNhbGxz
+KSwgYnV0IGFueSBQQ0llIGZhaWx1cmUgY3Jhc2hlcyB0aGUgYm94IQ0KDQpJJ3ZlIGFub3RoZXIg
+c3lzdGVtIGhlcmUgdGhhdCBzb21ldGltZXMgZmFpbHMgdG8gYnJpbmcgdGhlIFBDSWUNCmxpbmsg
+YmFjayB1cC4NCkkgZ3Vlc3MgdGhlc2UgY29kZSBwYXRocyBkb24ndCBnZXQgcmVndWxhciB0ZXN0
+aW5nLg0KSW4gbXkgY2FzZSB0aGUgUENJZSBzbGF2ZSBpcyBhbiBmcGdhLCByZWxvYWRpbmcgdGhl
+IGZwZ2EgaW1hZ2UNCihlaXRoZXIgb3ZlciBKVEFHIG9yIGFmdGVyIHJld3JpdGluZyBlZXByb20p
+IGRvZXNuJ3QgYWx3YXlzIHdvcmsuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
+TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
+VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
