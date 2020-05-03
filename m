@@ -2,181 +2,90 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2E2C47258
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4579C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 989DB206F0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BF02071C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NWIuX6Kp"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZQgh9CNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgECWrC (ORCPT
+        id S1727094AbgECWsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 18:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726796AbgECWrB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 18:47:01 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3093CC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 15:47:01 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n14so6843739qke.8
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 15:47:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=AVHGVh69i6tLRfdF4dM3020pnajApRts28JWh/00Y0k=;
-        b=NWIuX6KpAG9IY19sRWEc6BhA9Y4MLZ5DPOGegagAsq5R43aRQjMXKL4tmxLu1r2GKi
-         otOLbjoE6ROxgr5rq4JhGqvx02bnhdllTD1olN7hlulAvC2w5esCiu/Nc0EFkAgysv59
-         LSzU/3I8wdNeTdLimHaCTGCaXZabIr8ADmw7zeHQZEsUWDOdEaufzK/U/arK50e3OWE+
-         srb7/5YTcB7Egis1dZTuxvNqnbiyy82mTVRXIonASE8b8SMUBMTeLr8lh7HgToRlLROr
-         FazV4ZBqBHfzUc3OvDnARG1CsEXxs1d0F5qIFzAYUh+etOpBtGZ6zTircBJNB7VujejL
-         eO/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=AVHGVh69i6tLRfdF4dM3020pnajApRts28JWh/00Y0k=;
-        b=YQmvDL68uLg8JlBzDbXWaKm5tgkLxyRR1WI+lPBl1cMVBUT5MIg5BFgdb8Aovr3o7o
-         jc+rTdrPD+YJPxpk3isd71K+hkeJnpuGFjt+PQiMWLdxry/suuV6522zyV+bSvmVmW2/
-         ehaBP2gSDWD4/dNOM5DrXHn+ojUkJELWpzlPEdbIa4OO+kdKX9MHbMECUZs33NbsMWQi
-         H7vnmP4gUSm1HWja1CDRc/95SyorI7b9PtGENyRYpSf0fNqHhaH36KmxnF7vQEOhLTaQ
-         uF+AOo8cozVgW61/tZ0KHh+9tkfTALHZAnWEC02k+wEpgsgrdG66txQ716H+5Wz6GLJN
-         o1Dw==
-X-Gm-Message-State: AGi0PuYqkvn93LK7fG8o09whPeVyb1u1OPJ3OsAikLllAaas/55FmbNq
-        Nc/f2fhjAGDwwY1eR4L45eX8Tw==
-X-Google-Smtp-Source: APiQypJiNXikqIIAx78OUQrqJwD/x2jcvOAM2ZU+xYQBxu5bXw3fn14m4nh5cR5RHVS5IPWE+HNkBA==
-X-Received: by 2002:a37:7ec3:: with SMTP id z186mr14155258qkc.108.1588546020315;
-        Sun, 03 May 2020 15:47:00 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n124sm8344085qkn.136.2020.05.03.15.46.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 May 2020 15:46:59 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jVNNz-0002s8-C3; Sun, 03 May 2020 19:46:59 -0300
-Date:   Sun, 3 May 2020 19:46:59 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Dey, Megha" <megha.dey@linux.intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-Message-ID: <20200503224659.GU26002@ziepe.ca>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
- <20200423201118.GA29567@ziepe.ca>
- <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
- <20200503222513.GS26002@ziepe.ca>
- <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
+        Sun, 3 May 2020 18:48:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60747 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbgECWsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 18:48:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Fh3p45gLz9sRf;
+        Mon,  4 May 2020 08:48:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588546118;
+        bh=+DTZ7vGvV+Z9WnCAwIgghVv2D16ad9AvWeMeyiyct/c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZQgh9CNCoQh43SQo87DWxmXo/SHna5uJQJ6IFPhqx07sCwlD5PPd4lPlUGUk4Us/x
+         db3JVG0CJLIDyJ/dkxKZ5kY5xtQoThj8tATNgDLg1ZfrC/pCTYGOVsPsrSPX7IVWMt
+         NhL3pWz6yd8bmzFm3Ok7bvBaNxBFdh7TQ0UdCtd5q5yYIxOStTSMxzJJ7Aq8xSsnSa
+         QMh1G9RBqABpbCIkBon4JW0C/jid5ZUgP45te4UjMPUANVxp+54/lXJ+mSbw0VXVEw
+         oVu3DRbRwoN91PFsBdVc2b3MlIOVZ2JcXsLpPPP28u4S138RCF+y1gDZ9dCV64viyL
+         gvsruV/T55JBg==
+Date:   Mon, 4 May 2020 08:48:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: error when fetching the clk-samsung tree
+Message-ID: <20200504084835.5814c682@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/2KTLp1KJSP/wG18RPW=BZYS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 03:40:44PM -0700, Dey, Megha wrote:
-> On 5/3/2020 3:25 PM, Jason Gunthorpe wrote:
-> > On Fri, May 01, 2020 at 03:30:02PM -0700, Dey, Megha wrote:
-> > > Hi Jason,
-> > > 
-> > > On 4/23/2020 1:11 PM, Jason Gunthorpe wrote:
-> > > > On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
-> > > > > diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..738f6d153155
-> > > > > +++ b/drivers/base/ims-msi.c
-> > > > > @@ -0,0 +1,100 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > +/*
-> > > > > + * Support for Device Specific IMS interrupts.
-> > > > > + *
-> > > > > + * Copyright © 2019 Intel Corporation.
-> > > > > + *
-> > > > > + * Author: Megha Dey <megha.dey@intel.com>
-> > > > > + */
-> > > > > +
-> > > > > +#include <linux/dmar.h>
-> > > > > +#include <linux/irq.h>
-> > > > > +#include <linux/mdev.h>
-> > > > > +#include <linux/pci.h>
-> > > > > +
-> > > > > +/*
-> > > > > + * Determine if a dev is mdev or not. Return NULL if not mdev device.
-> > > > > + * Return mdev's parent dev if success.
-> > > > > + */
-> > > > > +static inline struct device *mdev_to_parent(struct device *dev)
-> > > > > +{
-> > > > > +	struct device *ret = NULL;
-> > > > > +	struct device *(*fn)(struct device *dev);
-> > > > > +	struct bus_type *bus = symbol_get(mdev_bus_type);
-> > > > > +
-> > > > > +	if (bus && dev->bus == bus) {
-> > > > > +		fn = symbol_get(mdev_dev_to_parent_dev);
-> > > > > +		ret = fn(dev);
-> > > > > +		symbol_put(mdev_dev_to_parent_dev);
-> > > > > +		symbol_put(mdev_bus_type);
-> > > > 
-> > > > No, things like this are not OK in the drivers/base
-> > > > 
-> > > > Whatever this is doing needs to be properly architected in some
-> > > > generic way.
-> > > 
-> > > Basically what I am trying to do here is to determine if the device is an
-> > > mdev device or not.
-> > 
-> > Why? mdev devices are virtual they don't have HW elements.
-> 
-> Hmm yeah exactly, since they are virtual, they do not have an associated IRQ
-> domain right? So they use the irq domain of the parent device..
-> 
-> > 
-> > The caller should use the concrete pci_device to allocate
-> > platform_msi? What is preventing this?
-> 
-> hmmm do you mean to say all platform-msi adhere to the rules of a PCI
-> device? 
+--Sig_/2KTLp1KJSP/wG18RPW=BZYS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I mean where a platform-msi can work should be defined by the arch,
-and probably is related to things like having an irq_domain attached
+Hi all,
 
-So, like pci, drivers must only try to do platfor_msi stuff on
-particular devices. eg on pci_device and platform_device types.
+Fetching the clk-samsung tree
+(git://git.kernel.org/pub/scm/linux/kernel/git/snawrocki/clk.git#for-next)
+produces the following error:
 
-Even so it may not even work, but I can't think of any reason why it
-should be made to work on a virtual device like mdev.
+fatal: couldn't find remote ref refs/heads/for-next
 
-> The use case if when we have a device assigned to a guest and we
-> want to allocate IMS(platform-msi) interrupts for that
-> guest-assigned device. Currently, this is abstracted through a mdev
-> interface.
+I am using the last version I fetched (which is empty relative to Linus'
+tree).
 
-And the mdev has the pci_device internally, so it should simply pass
-that pci_device to the platform_msi machinery.
+--=20
+Cheers,
+Stephen Rothwell
 
-This is no different from something like pci_iomap() which must be
-used with the pci_device.
+--Sig_/2KTLp1KJSP/wG18RPW=BZYS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Jason
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6vSkMACgkQAVBC80lX
+0GwqmQgAnMW/63HMFdc/uPtvIMCUmaotAXhB/s5uXUl1b8vAG30WR11heCnJMaTV
+xnPN3WGfzhaBc2Kbr86fyYr7VhzZQump4BE/jsaSiblBoCgoZ8MkTriBy4zUKu7s
+2PX3s2ama2NB6wkcN6R8mJb5TD5eBfIRt2Zj3QX7kFP6zTI5AZtyKYWuewvjE7y9
+6f7P1AGw6UUAIsWWadLEzDq8SaE9ZOseuHKHfa1EcV9nJh5KxGS4U97Idz60r2Se
+lcP8YyhGSia2Z/7T5Sllu3P1Dg5ZU9xT1bXF1O0uoZOjzgOeVv31p1LNoFav1ONG
+O4jYoXHTMfMoFtnsnguut6D7Ebr5FA==
+=Nto5
+-----END PGP SIGNATURE-----
+
+--Sig_/2KTLp1KJSP/wG18RPW=BZYS--
