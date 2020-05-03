@@ -2,96 +2,106 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69F2C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E8CC4724C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C13320757
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:42:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588506136;
-	bh=cJV6+Ip85K8eZlfSHfw7Jg5xJtOOcTfm2AIj0IoaByo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KBfKxGTBM2YZpHgL1hTN9pDLBBSOwM6b1J2xRc8aBK0CcHTDh6hsPJrBKuFkJdzLU
-	 Afj5VGZ+fbD0zSv2qwaJ2kebBC+/L8ueUe8v8QzKE4pYhex+5Anc2etyKim425Hv5v
-	 fUU0n/tmG3+nXOZbEn1nYrt7xToh5tMuoeyf7nKI=
+	by mail.kernel.org (Postfix) with ESMTP id 35CC1205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:42:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/VeyKDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgECLmQ (ORCPT
+        id S1728037AbgECLmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 07:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgECLmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 07:42:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C8FB205ED;
-        Sun,  3 May 2020 11:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588506135;
-        bh=cJV6+Ip85K8eZlfSHfw7Jg5xJtOOcTfm2AIj0IoaByo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NmRh3zxCTBSlXzH2Wve48cUWyleTnCms9h/zOVYJRbGeIOaH+UziEkUBrn9qZzBJW
-         786adg9qmXPRSJpZWw2hsjJWSYSh8RwBdZS9IaQ5sdlG/N4nx9r3mrzKu5jIz5dwLU
-         pHT7YO4/iclXvBuKXYMtC19wije0c4azj9FBaUlM=
-Date:   Sun, 3 May 2020 12:42:11 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <knaack.h@gmx.de>, <Michael.Hennerich@analog.com>
-Subject: Re: [PATCH] iio: adc: ad7768-1: Fix channel endian spec
-Message-ID: <20200503124211.41933e29@archlinux>
-In-Reply-To: <20200429104535.82988-1-sergiu.cuciurean@analog.com>
-References: <20200429104535.82988-1-sergiu.cuciurean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 3 May 2020 07:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727023AbgECLmr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 07:42:47 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AD5C061A0C;
+        Sun,  3 May 2020 04:42:45 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id z2so9378273iol.11;
+        Sun, 03 May 2020 04:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CswbDbzRoY7hOaMpKGQ7lTgkmEKRA2Ia8858GzcpRyQ=;
+        b=B/VeyKDZ4SLuIY7xHuxpXOzOskfvZKU+A5FK81ESN3wNpQDFeg5YMMn10lN8K1HlzU
+         ucNQI44nZ0RuaN9V467tsqNfMHZxbuNPptiUAsaVg3KYYzH75VV4unRSTt+NsACNb4lc
+         dmcvbKyaOxB31ly2JwulyTgFbdifyHm56KvXnfOHErfj5UVE7YK2+skEdePVFu+BR44B
+         uhVpDPvmnRDtBvfnAqrbUU5KLt9w1767QhJPPXsDn7tZknjhE++fAPu4TrDilwXBU/d1
+         P2CRaRavJOqCiQE5DwlZs5i9VhlFSnNBdt72/1BGc2EAlaYKKm0a8lAz8UeYwOT07Ide
+         HpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CswbDbzRoY7hOaMpKGQ7lTgkmEKRA2Ia8858GzcpRyQ=;
+        b=K/uw8rUY+N83SIkT07MPONYaQwtZBj+85zUdcQdEsRI5L2awo8bjdfDfzwdh7hB6cW
+         hXmW88s3Gq2nmnGPOXbXkUZmxsb6esBR1j9M7VSNZRyL2XUboQ8LM4S2HX/jpj/yHXcO
+         pKqJp8IkjDpbGWZ3D51RQ7vQMhuFYJ3FlLNFxaka6VHCYwLl8IbT+Rdxswyb1+08FRtf
+         zJNVgM+0FHXm1xWNGZhumc+9XBsg5I1ICeG6+gNihofRPuXCwGavFAEcp2Nrw5Gbeumr
+         jdAiibmx7HrkKo9RP3LJmnPSZox/BdZGRpbC8vPcny3HqhzutUEhh2kOz8vjcuZ2Kn/b
+         FQhQ==
+X-Gm-Message-State: AGi0PuZr9BtjY1vHab9rxEH8uicuFjXCNx3jmv0hJm3goQsEL/upDYIp
+        fPZtshDjHp6sn7cFY3KwArtqOAvRMWKu13OJpnc=
+X-Google-Smtp-Source: APiQypK7bQYFFm90yVaM++6A1mWUH1dHV3MQb0qbIp+ohH4OaxgHO6pX+nd1tdial7Rn5XJUxQbfqsSdn1DrT9htlVU=
+X-Received: by 2002:a02:3f44:: with SMTP id c4mr10593844jaf.144.1588506164909;
+ Sun, 03 May 2020 04:42:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-7-peron.clem@gmail.com>
+ <CAGb2v66TFzpEmzdqxmjqGvVONkPEhaDMHNA4tRUvrX_Mg8w=tA@mail.gmail.com>
+In-Reply-To: <CAGb2v66TFzpEmzdqxmjqGvVONkPEhaDMHNA4tRUvrX_Mg8w=tA@mail.gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sun, 3 May 2020 13:42:33 +0200
+Message-ID: <CAJiuCcfpk=9E2dQnE+QeZrDHG7EqCBWqbEbnpBvhn-uvWuRV2w@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] ASoC: sun4i-i2s: Adjust regmap settings
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marcus Cooper <codekipper@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 13:45:35 +0300
-Sergiu Cuciurean <sergiu.cuciurean@analog.com> wrote:
+Hi,
 
-> This change removes the endian description from the iio channel spec.
-> In this way, the default (IIO_CPU) endian will be used, matching the
-> be32_to_cpu() conversion from ad7768_spi_reg_read().
-> 
-> Fixes: 8a15c73a9bcfe ("iio: adc: Add AD7768-1 ADC basic support")
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+On Mon, 27 Apr 2020 at 13:03, Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Sun, Apr 26, 2020 at 6:41 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
+.com> wrote:
+> >
+> > From: Marcus Cooper <codekipper@gmail.com>
+> >
+> > Bypass the regmap cache when flushing or reading the i2s FIFOs.
+> >
+> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-Hi Sergiu,
+The  SUN4I_I2S_FIFO_CTRL_REG is also missing.
+As some bits can self-clear by themselves.
 
-The endian marking only applies to the push_to_buffers data.  That
-is read from the hardware using spi_read, not the ad7768_spi_reg_read
-function.  So logic above doesn't hold.
+I will fix this in v4.
 
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7768-1.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-> index a0027797a7fe..99da13c3511a 100644
-> --- a/drivers/iio/adc/ad7768-1.c
-> +++ b/drivers/iio/adc/ad7768-1.c
-> @@ -144,7 +144,6 @@ static const struct iio_chan_spec ad7768_channels[] = {
->  			.realbits = 24,
->  			.storagebits = 32,
->  			.shift = 8,
-> -			.endianness = IIO_BE,
->  		},
->  	},
->  };
-
+Regards,
+Clement
