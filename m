@@ -2,87 +2,99 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69809C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E689C47256
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEAA206F1
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588524343;
-	bh=7PClR6UZXHPQPfYuJ166N35yzuxIOy+NZ3sB+Vh7Rfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LzF/oQ6lzUhkKxNoBSN5ZHZSKzzwDTBtQLb0z9V2sSHLz/bKvcpwIZ+6qux/TTQkq
-	 GwqCXckqNHnAbBc7Dsl5rk0srvWi1U/2FefMYTZXI4r6+kH+eBu3KQXGFJz215dpPC
-	 0YObOfWySdmYJl8z7daeMplFsS90z4l/kSlVG3hY=
+	by mail.kernel.org (Postfix) with ESMTP id D951D206D7
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:45:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AXQDWN/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgECQpm (ORCPT
+        id S1728902AbgECQp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 12:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgECQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 12:45:42 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7537E206CD;
-        Sun,  3 May 2020 16:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588524341;
-        bh=7PClR6UZXHPQPfYuJ166N35yzuxIOy+NZ3sB+Vh7Rfw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i+8l0oCzFsTY1t3+uPU3nkzTtCkiU/MxjHqLUXA3N70W/8bJuSaFu9F3d/hA/J0vU
-         6khe+X8qiipaQtVRrkunI3BcQWvx+1VCPM2W33U8gzGBGXMSMunL1/VOOpVpLjxNx0
-         QX8e96H4ItbI2a55lOhhle/oE/YXyGHkAtU/1XqU=
-Date:   Sun, 3 May 2020 09:45:39 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Paolo Abeni <pabeni@redhat.com>,
-        mptcp@lists.01.org, linuxppc-dev@lists.ozlabs.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 0/7] sha1 library cleanup
-Message-ID: <20200503164539.GA938@sol.localdomain>
-References: <20200502182427.104383-1-ebiggers@kernel.org>
- <CAHmME9oPqWfTwTtawM-29Lqck-N-kYo4nGr1-4hCW975DhB0Uw@mail.gmail.com>
+        Sun, 3 May 2020 12:45:56 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:57366 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728783AbgECQpz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 12:45:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1588524353; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=Nhog8Xykrxx5yzjacYpj9MUuwiqwMw3Yyy5MMiDcsjY=;
+        b=AXQDWN/ygi3g/SbExXFq7AWcd0xxz07yH7DK3znUyFA0rD8GuMRs89nDa4q6/3meN06bon
+        s+V9/Q3oUFji2wOXyihJIwpOli1l06YyCSjVB7fnDQ7/53OPd2VDSPMcSVyD2n/KwR6iGG
+        QaGnhEwPH2zez67rDFwu4uxuSR/C96A=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Add irq_{request,release}_resources callbacks
+Date:   Sun,  3 May 2020 18:45:49 +0200
+Message-Id: <20200503164549.163884-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9oPqWfTwTtawM-29Lqck-N-kYo4nGr1-4hCW975DhB0Uw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 03:05:46PM -0600, Jason A. Donenfeld wrote:
-> Thanks for this series. I like the general idea. I think it might make
-> sense, though, to separate things out into sha1.h and sha256.h. That
-> will be nice preparation work for when we eventually move obsolete
-> primitives into some <crypto/dangerous/> subdirectory.
+These are called when a GPIO is to be used as IRQ.
 
-That's basically what I suggested in the cover letter:
+Without these custom callbacks, when an interrupt is requested directly
+and not through gpiod_to_irq(), the request fails because the GPIO is
+not necesarily in input mode. These callbacks simply enforce that the
+requested GPIO is in input mode.
 
-"As future work, we should split sha.h into sha1.h and sha2.h and try to
-remove the remaining uses of SHA-1.  For example, the remaining use in
-drivers/char/random.c is probably one that can be gotten rid of."
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-("sha2.h" rather than "sha256.h", since it would include SHA-512 too.
-Also, we already have sha3.h, so having sha{1,2,3}.h would be logical.)
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 96f04d121ebd..f2b95ee31ffe 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1933,6 +1933,25 @@ static const struct pinctrl_ops ingenic_pctlops = {
+ 	.dt_free_map = pinconf_generic_dt_free_map,
+ };
+ 
++static int ingenic_gpio_irq_request(struct irq_data *data)
++{
++	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
++	int ret;
++
++	ret = ingenic_gpio_direction_input(gpio_chip, data->hwirq);
++	if (ret)
++		return ret;
++
++	return gpiochip_reqres_irq(gpio_chip, data->hwirq);
++}
++
++static void ingenic_gpio_irq_release(struct irq_data *data)
++{
++	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
++
++	return gpiochip_relres_irq(gpio_chip, data->hwirq);
++}
++
+ static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
+ 		int pin, int func)
+ {
+@@ -2296,6 +2315,8 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
+ 	jzgc->irq_chip.irq_ack = ingenic_gpio_irq_ack;
+ 	jzgc->irq_chip.irq_set_type = ingenic_gpio_irq_set_type;
+ 	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
++	jzgc->irq_chip.irq_request_resources = ingenic_gpio_irq_request;
++	jzgc->irq_chip.irq_release_resources = ingenic_gpio_irq_release;
+ 	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
+ 
+ 	girq = &jzgc->gc.irq;
+-- 
+2.26.2
 
-But there are 108 files that include <crypto/sha.h>, all of which would need to
-be updated, which risks merge conflicts.  So this series seemed like a good
-stopping point to get these initial changes in for 5.8.  Then in the next
-release we can split up sha.h (and debate whether sha1.h should really be
-"<crypto/dangerous/sha1.h>" or whatever).
-
-There are 3 files where I added an include of sha.h, where we could go directly
-to sha1.h if we did it now.  But that's not much compared to the 108 files.
-
-- Eric
