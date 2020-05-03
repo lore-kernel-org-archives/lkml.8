@@ -2,130 +2,92 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F4DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 07:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C57C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 07:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1932073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 07:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3307A2075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 07:27:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYYUwR6Y"
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="oNNeOQl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgECHXv (ORCPT
+        id S1727812AbgECH1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 03:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45772 "EHLO
+        Sun, 3 May 2020 03:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726962AbgECHXu (ORCPT
+        by vger.kernel.org with ESMTP id S1727067AbgECH1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 03:23:50 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADAFC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 00:23:50 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id w4so9047192ioc.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 00:23:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=b4mG499CkMqZjFhS8bYtPVw3fyP4aI1ovdFZN6rNyPk=;
-        b=JYYUwR6YCiGSJ79XpBwNe1deCLuCPWkhcZDttDeo7xCElu3sEF0crkon3i/YoXxd4h
-         P5eve46cmE+G3vAiqhsQ/5rMixqJfdgjkXCaV10scwb/XW2EQI/Zq1IpGtf9QLGUdUif
-         bZaT/9E81YDrVMBRnUlF7rZX0QCYQxEwIkGmZS9NeuNaH8PAh9A0VLmBn0cmoLyGlvsX
-         NjSh3rFAZ9yL3EQ5jZHsIYzDLtXJaWPdeGdL7fAAKdnfBKJtmVYu90+VdoLo8kkV9CY0
-         nXLHmaBOWFskfTRMwrmdYkB9Oy1ZUyZd6s66Op/+mFEgpWDixNA7OhWFuoSrGdFNGVbm
-         3awg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=b4mG499CkMqZjFhS8bYtPVw3fyP4aI1ovdFZN6rNyPk=;
-        b=brQ03peR/6TMZHwfMNC6S7COxZcZfP1KGkmTuPG3PK2WsUlvpjsdvAMDqSIQmWCT9y
-         T9KuzH1RPgV/+zY+agmbICiqRXPEBdbeoaKIQ5ZRQm7NZGbSOOIFoVPK0mFGfK1t7DCS
-         1aTeujExN7lG+Pe245x9wIHedoPBhjvbNU9ib8DG6zdoX+BV4vU09OpVIyK9EUphMeRX
-         YoCyo/QP5LyA91LnlBN847Fi2IwadUH5yrrriE/I2BBkkN+9ywf6FSkdbYp9bcdx3AWQ
-         G8rFe10IIM1auROa+c2MPbzAjXHamQkc7dnV5xPHTGqJlIaaLQnGb/neCTdR8p6S3UjI
-         SKUw==
-X-Gm-Message-State: AGi0PuaFlsgfXooPsj1OuCc9Gz9y1MHRHa9IWKC56NnqxHrRXgmdoeQo
-        MMXt6IjD1Mr8/IwtsxbuajE1iNbsapHo4l5TofH13ra0wds=
-X-Google-Smtp-Source: APiQypJ9J1yBHTNvuOAa1/O+BR2seoGwG3iwhM1PD7YyHzC25jlgFvl70IWCqzhl2l3fkZh4HKcpCPwtpULsrvc+QB0=
-X-Received: by 2002:a5d:9c09:: with SMTP id 9mr10954250ioe.26.1588490629077;
- Sun, 03 May 2020 00:23:49 -0700 (PDT)
+        Sun, 3 May 2020 03:27:36 -0400
+X-Greylist: delayed 804 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 03 May 2020 00:27:36 PDT
+Received: from canardo.mork.no (canardo.mork.no [IPv6:2001:4641::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B21C061A0C;
+        Sun,  3 May 2020 00:27:36 -0700 (PDT)
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 0437DwHZ022534
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 3 May 2020 09:13:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1588490040; bh=TZDbNan2WwMW7qqj6Vfc61R0Z8dFpNE2zQBNw2PBk8A=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=oNNeOQl5ZRxh0mPbUrx6iYN3x1bNTAAgv2GwW83UtMSnYP94dhspo5Z9at75q2Cml
+         67eGrm2pBa4gMqhbBAImCNGvY7alv8pTrMGiW8apCtBfgWrKtmukSwsxHbs1jjeWTl
+         Oz8+kXsi/74KXUHQK5/wexh3l8b00tUSxckac50M=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1jV8p4-00070Y-Hh; Sun, 03 May 2020 09:13:58 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Matt Jolly <Kangie@footclan.ninja>
+Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: add support for DW5816e
+Organization: m
+References: <20200502155228.11535-1-Kangie@footclan.ninja>
+Date:   Sun, 03 May 2020 09:13:58 +0200
+In-Reply-To: <20200502155228.11535-1-Kangie@footclan.ninja> (Matt Jolly's
+        message of "Sun, 3 May 2020 01:52:28 +1000")
+Message-ID: <87v9ldlccp.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-From:   Dongyang Zhan <zdyzztq@gmail.com>
-Date:   Sun, 3 May 2020 15:23:37 +0800
-Message-ID: <CAFSR4csKYu95qak02h_sAH6Rpa13PUtHUZ+7Z7Vd7tmBQCNaqg@mail.gmail.com>
-Subject: Possible memory leak in unxz()
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.1 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Matt Jolly <Kangie@footclan.ninja> writes:
 
-I am a security researcher, my name is Dongyang Zhan. I found a potential bug.
+> Add support for Dell Wireless 5816e to drivers/net/usb/qmi_wwan.c
+>
+> Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+> ---
+>  drivers/net/usb/qmi_wwan.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+> index 6c738a271257..4bb8552a00d3 100644
+> --- a/drivers/net/usb/qmi_wwan.c
+> +++ b/drivers/net/usb/qmi_wwan.c
+> @@ -1359,6 +1359,7 @@ static const struct usb_device_id products[] =3D {
+>  	{QMI_FIXED_INTF(0x413c, 0x81b3, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G=
+ LTE Mobile Broadband Card (rev3) */
+>  	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+>  	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
+> +	{QMI_FIXED_INTF(0x413c, 0x81cc, 8)},	/* Dell Wireless 5816e */
+>  	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
+>  	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproducti=
+on config */
+>  	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM s=
+upport*/
 
-I hope you can help me to confirm it.
+Looks fine to me.  Please add to the stable queue as well,  Thanks.
 
-Thank you.
-
-Possible memory leak in Linux 4.10.17. The function unxz() in
-/lib/decompress_unxz.c forgets to free the pointer 'in', when  the
-statement if (fill == NULL && flush == NULL) is true.
-
-Source code and comments:
-
-if (in == NULL) {
-must_free_in = true;
-in = malloc(XZ_IOBUF_SIZE);
-if (in == NULL)
-goto error_alloc_in;
-}
-
-b.in = in;
-b.in_pos = 0;
-b.in_size = in_size;
-b.out_pos = 0;
-
-if (fill == NULL && flush == NULL) {
-ret = xz_dec_run(s, &b); // When this statement is true, it will jumps
-to the switch statement. But the allocated 'in' is not freed before
-return.
-} else {
-.....
-}
-.....
-switch (ret) {
-case XZ_STREAM_END:
-return 0;
-
-case XZ_MEM_ERROR:
-/* This can occur only in multi-call mode. */
-error("XZ decompressor ran out of memory");
-break;
-
-case XZ_FORMAT_ERROR:
-error("Input is not in the XZ format (wrong magic bytes)");
-break;
-
-case XZ_OPTIONS_ERROR:
-error("Input was encoded with settings that are not "
-"supported by this XZ decoder");
-break;
-
-case XZ_DATA_ERROR:
-case XZ_BUF_ERROR:
-error("XZ-compressed data is corrupt");
-break;
-
-default:
-error("Bug in the XZ decompressor");
-break;
-}
-
-return -1;
-....
+Acked-by: Bj=C3=B8rn Mork <bjorn@mork.no>
