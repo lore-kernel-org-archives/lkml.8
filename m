@@ -2,179 +2,436 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7D5C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 23:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF644C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 23:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78442206F0
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 23:52:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oMly1sWk"
+	by mail.kernel.org (Postfix) with ESMTP id 7D63020757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 23:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588550066;
+	bh=2wlbb020kzh7LeAaIyonk+Q1fq5HL82MvP8nzjQsglg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lQrqIhmnFGxF6LftV+4rg3nASDIuvzq86GgAgo8IjkR26XBtcpGGFoCJmWl15kwPY
+	 MwCCMcRQ7sEer0k+FeryMLMmXw9c593rThMPk1Q0HZcX49/ArvRIsuXvp7LNphdKlH
+	 HbZj2FCwH1/5JCnSNKKV/hojVq3vk8EO64gRxUY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbgECXwP (ORCPT
+        id S1726558AbgECXyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 19:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726181AbgECXwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 19:52:14 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25BFC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 16:52:14 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id z1so699484qva.6
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 16:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wLtvOjbp5oM3XIiriCbgUN8dLM1UjPuREO0mz9REyAM=;
-        b=oMly1sWksvLY67lLX6WANZYdRCyK9oJLRGKoQUyVbuHrwiSIy+xuJVQiT8/5Pq0bog
-         h1n4Gfo7STgKRLD0hmNQAHRqAF5lE16rzbQgJuNSWkOSKDTLF6i3b6EEgTAORICo6DZq
-         rw7if/9TaBubZFzuAfUwPl383xLx7nYIab2oA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wLtvOjbp5oM3XIiriCbgUN8dLM1UjPuREO0mz9REyAM=;
-        b=NxDHzAwlDLOSfQ5P6PqzhKP4Qq9DwblEIg5IFpATK3895dHDTJYo+qT9V6htRkYoh8
-         vJgjvUqifuoG801xwlGxkslmAj++QErSK4tU96vMJLudDmwjf/O8n20NBiuoCBN6JxtR
-         MocV9/4OFMgifBctTnpLLEyict28bzOhhyJL42xbcQEXBzFae0iCyRG93B+vpjqG7Mav
-         zr3P1IQZzttp3HyLjmjjl9OkSYz58dYeUFw+TgfZy+lNcuhYTqNY8B6THNrb3KBXcIIo
-         6PvPCCnHlFhc95XX8to8jZh+vch77OwrvYg2K/mvItsrDSTs44HRFGsCnTY4CEpKsRp8
-         wbOw==
-X-Gm-Message-State: AGi0PubodHGtrpUejuDgPNm0n42qOCkL91bcu84Q2P6nlmjl2wFNkfsO
-        9HdWPuGQvFMTPz9ti9aAf33igA==
-X-Google-Smtp-Source: APiQypKV4ODc8F/i/nduDwca6QbGelZSJ2JPTAgzxDOJPt2H9HLUN4BQwARzCd3RiyT5KTKSpgFanQ==
-X-Received: by 2002:a0c:e052:: with SMTP id y18mr316571qvk.175.1588549934020;
-        Sun, 03 May 2020 16:52:14 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x55sm9443730qtk.3.2020.05.03.16.52.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 16:52:13 -0700 (PDT)
-Date:   Sun, 3 May 2020 19:52:13 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 03/24] rcu/tree: Use consistent style for comments
-Message-ID: <20200503235213.GC197097@google.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-4-urezki@gmail.com>
- <20200501190555.GB7560@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501190555.GB7560@paulmck-ThinkPad-P72>
+        Sun, 3 May 2020 19:54:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbgECXyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 19:54:25 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C546F206E6;
+        Sun,  3 May 2020 23:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588550064;
+        bh=2wlbb020kzh7LeAaIyonk+Q1fq5HL82MvP8nzjQsglg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sx5VHOZWc2l8U4GXwIY/+P6zmEXM2C01dX7IjKHC7AFWVlXDIHWmdCRAfOVnQPP59
+         aiFW7CUM2K86j7cjy1c5PxVMN5EYIAXTnV5WJNfr+GsnQlAqQMhDZDx0Pz7AJa2+GD
+         tY+pX8urO9BQslMu1aB/8VS8hUHiC4/JKPhqHFzw=
+Date:   Mon, 4 May 2020 08:54:15 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Sameer Rahmani <lxsameer@gnu.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-remoteproc@vger.kernel.org, tee-dev@lists.linaro.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 12/14] docs: move remaining stuff under
+ Documentation/*.txt to Documentation/staging
+Message-Id: <20200504085415.db8e0e3b40e795f2fb4af009@kernel.org>
+In-Reply-To: <28687056965ff46c0e6c81663a419bc59cfb94b4.1588345503.git.mchehab+huawei@kernel.org>
+References: <cover.1588345503.git.mchehab+huawei@kernel.org>
+        <28687056965ff46c0e6c81663a419bc59cfb94b4.1588345503.git.mchehab+huawei@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 12:05:55PM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 28, 2020 at 10:58:42PM +0200, Uladzislau Rezki (Sony) wrote:
-> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > 
-> > Simple clean up of comments in kfree_rcu() code to keep it consistent
-> > with majority of commenting styles.
-> > 
-> > Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> 
-> Hmmm...
-> 
-> Exactly why is three additional characters per line preferable?  Or in
-> the case of block comments, either one or two additional lines, depending
-> on /* */ style?
+On Fri,  1 May 2020 17:37:56 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-I prefer to keep the code consistent and then bulk convert it later. Its a
-bit ugly to read when its mixed up with "//" and "/* */" right now. We can
-convert it to // all at once later but until then it'll be good to keep it
-consistent in this file IMO. When I checked the kfree_rcu() code, it had more
-"/* */" than not, so this small change is less churn for now.
-
-thanks,
-
- - Joel
-
+> There are several files that I was unable to find a proper place
+> for them, and 3 ones that are still in plain old text format.
 > 
-> I am (slowly) moving RCU to "//" for those reasons.  ;-)
+> Let's place those stuff behind the carpet, as we'd like to keep the
+> root directory clean.
 > 
-> 							Thanx, Paul
+> We can later discuss and move those into better places.
+
+Hi Mauro,
+
+Thanks for cleaning it up! Tentatively moving kprobes.txt under
+staging/ is good to me.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+BTW, I think kprobes.txt is under trace/ or we may be better
+making a new core-api/events/ directory and prepare other event
+systems (PMU, uprobes, and hw_breakpoint.) 
+
+Thank you,
 > 
-> > ---
-> >  kernel/rcu/tree.c | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index cd61649e1b00..1487af8e11e8 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -3043,15 +3043,15 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
-> >  static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
-> >  					  unsigned long flags)
-> >  {
-> > -	// Attempt to start a new batch.
-> > +	/* Attempt to start a new batch. */
-> >  	krcp->monitor_todo = false;
-> >  	if (queue_kfree_rcu_work(krcp)) {
-> > -		// Success! Our job is done here.
-> > +		/* Success! Our job is done here. */
-> >  		raw_spin_unlock_irqrestore(&krcp->lock, flags);
-> >  		return;
-> >  	}
-> >  
-> > -	// Previous RCU batch still in progress, try again later.
-> > +	/* Previous RCU batch still in progress, try again later. */
-> >  	krcp->monitor_todo = true;
-> >  	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
-> >  	raw_spin_unlock_irqrestore(&krcp->lock, flags);
-> > @@ -3151,14 +3151,14 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  	unsigned long flags;
-> >  	struct kfree_rcu_cpu *krcp;
-> >  
-> > -	local_irq_save(flags);	// For safely calling this_cpu_ptr().
-> > +	local_irq_save(flags);	/* For safely calling this_cpu_ptr(). */
-> >  	krcp = this_cpu_ptr(&krc);
-> >  	if (krcp->initialized)
-> >  		raw_spin_lock(&krcp->lock);
-> >  
-> > -	// Queue the object but don't yet schedule the batch.
-> > +	/* Queue the object but don't yet schedule the batch. */
-> >  	if (debug_rcu_head_queue(head)) {
-> > -		// Probable double kfree_rcu(), just leak.
-> > +		/* Probable double kfree_rcu(), just leak. */
-> >  		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
-> >  			  __func__, head);
-> >  		goto unlock_return;
-> > @@ -3176,7 +3176,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  
-> >  	WRITE_ONCE(krcp->count, krcp->count + 1);
-> >  
-> > -	// Set timer to drain after KFREE_DRAIN_JIFFIES.
-> > +	/* Set timer to drain after KFREE_DRAIN_JIFFIES. */
-> >  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
-> >  	    !krcp->monitor_todo) {
-> >  		krcp->monitor_todo = true;
-> > @@ -3722,7 +3722,7 @@ int rcutree_offline_cpu(unsigned int cpu)
-> >  
-> >  	rcutree_affinity_setting(cpu, cpu);
-> >  
-> > -	// nohz_full CPUs need the tick for stop-machine to work quickly
-> > +	/* nohz_full CPUs need the tick for stop-machine to work quickly */
-> >  	tick_dep_set(TICK_DEP_BIT_RCU);
-> >  	return 0;
-> >  }
-> > -- 
-> > 2.20.1
-> > 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/index.rst                       | 13 ++++++++
+>  .../{crc32.txt => staging/crc32.rst}          |  0
+>  Documentation/staging/index.rst               | 32 +++++++++++++++++++
+>  .../{kprobes.txt => staging/kprobes.rst}      |  0
+>  Documentation/{lzo.txt => staging/lzo.rst}    |  0
+>  .../remoteproc.rst}                           |  2 +-
+>  .../{rpmsg.txt => staging/rpmsg.rst}          |  0
+>  .../speculation.rst}                          |  8 +++--
+>  .../static-keys.rst}                          |  0
+>  Documentation/{tee.txt => staging/tee.rst}    |  1 +
+>  Documentation/{xz.txt => staging/xz.rst}      |  0
+>  Documentation/trace/kprobetrace.rst           |  2 +-
+>  MAINTAINERS                                   | 10 +++---
+>  include/asm-generic/bitops/atomic.h           |  2 +-
+>  include/linux/jump_label.h                    |  2 +-
+>  lib/crc32.c                                   |  2 +-
+>  lib/lzo/lzo1x_decompress_safe.c               |  2 +-
+>  lib/xz/Kconfig                                |  2 +-
+>  samples/kprobes/kprobe_example.c              |  2 +-
+>  samples/kprobes/kretprobe_example.c           |  2 +-
+>  20 files changed, 65 insertions(+), 17 deletions(-)
+>  rename Documentation/{crc32.txt => staging/crc32.rst} (100%)
+>  create mode 100644 Documentation/staging/index.rst
+>  rename Documentation/{kprobes.txt => staging/kprobes.rst} (100%)
+>  rename Documentation/{lzo.txt => staging/lzo.rst} (100%)
+>  rename Documentation/{remoteproc.txt => staging/remoteproc.rst} (99%)
+>  rename Documentation/{rpmsg.txt => staging/rpmsg.rst} (100%)
+>  rename Documentation/{speculation.txt => staging/speculation.rst} (97%)
+>  rename Documentation/{static-keys.txt => staging/static-keys.rst} (100%)
+>  rename Documentation/{tee.txt => staging/tee.rst} (99%)
+>  rename Documentation/{xz.txt => staging/xz.rst} (100%)
+> 
+> diff --git a/Documentation/index.rst b/Documentation/index.rst
+> index af2b87afebc8..9a931e157db2 100644
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@ -179,6 +179,19 @@ subprojects.
+>  
+>     filesystems/ext4/index
+>  
+> +Other documentation
+> +-------------------
+> +
+> +There are several unsorted documents that don't seem to fit on other parts
+> +of the documentation body, or may require some adjustments and/or conversion
+> +to ReStructured Text format, or are simply too old.
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   staging/index
+> +
+> +
+>  Translations
+>  ------------
+>  
+> diff --git a/Documentation/crc32.txt b/Documentation/staging/crc32.rst
+> similarity index 100%
+> rename from Documentation/crc32.txt
+> rename to Documentation/staging/crc32.rst
+> diff --git a/Documentation/staging/index.rst b/Documentation/staging/index.rst
+> new file mode 100644
+> index 000000000000..8e98517675ca
+> --- /dev/null
+> +++ b/Documentation/staging/index.rst
+> @@ -0,0 +1,32 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +Unsorted Documentation
+> +======================
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   crc32
+> +   kprobes
+> +   lzo
+> +   remoteproc
+> +   rpmsg
+> +   speculation
+> +   static-keys
+> +   tee
+> +   xz
+> +
+> +Atomic Types
+> +============
+> +
+> +.. literalinclude:: ../atomic_t.txt
+> +
+> +Atomic bitops
+> +=============
+> +
+> +.. literalinclude:: ../atomic_bitops.txt
+> +
+> +Memory Barriers
+> +===============
+> +
+> +.. literalinclude:: ../memory-barriers.txt
+> diff --git a/Documentation/kprobes.txt b/Documentation/staging/kprobes.rst
+> similarity index 100%
+> rename from Documentation/kprobes.txt
+> rename to Documentation/staging/kprobes.rst
+> diff --git a/Documentation/lzo.txt b/Documentation/staging/lzo.rst
+> similarity index 100%
+> rename from Documentation/lzo.txt
+> rename to Documentation/staging/lzo.rst
+> diff --git a/Documentation/remoteproc.txt b/Documentation/staging/remoteproc.rst
+> similarity index 99%
+> rename from Documentation/remoteproc.txt
+> rename to Documentation/staging/remoteproc.rst
+> index 2be1147256e0..9cccd3dd6a4b 100644
+> --- a/Documentation/remoteproc.txt
+> +++ b/Documentation/staging/remoteproc.rst
+> @@ -22,7 +22,7 @@ for remote processors that supports this kind of communication. This way,
+>  platform-specific remoteproc drivers only need to provide a few low-level
+>  handlers, and then all rpmsg drivers will then just work
+>  (for more information about the virtio-based rpmsg bus and its drivers,
+> -please read Documentation/rpmsg.txt).
+> +please read Documentation/staging/rpmsg.rst).
+>  Registration of other types of virtio devices is now also possible. Firmwares
+>  just need to publish what kind of virtio devices do they support, and then
+>  remoteproc will add those devices. This makes it possible to reuse the
+> diff --git a/Documentation/rpmsg.txt b/Documentation/staging/rpmsg.rst
+> similarity index 100%
+> rename from Documentation/rpmsg.txt
+> rename to Documentation/staging/rpmsg.rst
+> diff --git a/Documentation/speculation.txt b/Documentation/staging/speculation.rst
+> similarity index 97%
+> rename from Documentation/speculation.txt
+> rename to Documentation/staging/speculation.rst
+> index 50d7ea857cff..8045d99bcf12 100644
+> --- a/Documentation/speculation.txt
+> +++ b/Documentation/staging/speculation.rst
+> @@ -1,9 +1,11 @@
+> +===========
+> +Speculation
+> +===========
+> +
+>  This document explains potential effects of speculation, and how undesirable
+>  effects can be mitigated portably using common APIs.
+>  
+> -===========
+> -Speculation
+> -===========
+> +------------------------------------------------------------------------------
+>  
+>  To improve performance and minimize average latencies, many contemporary CPUs
+>  employ speculative execution techniques such as branch prediction, performing
+> diff --git a/Documentation/static-keys.txt b/Documentation/staging/static-keys.rst
+> similarity index 100%
+> rename from Documentation/static-keys.txt
+> rename to Documentation/staging/static-keys.rst
+> diff --git a/Documentation/tee.txt b/Documentation/staging/tee.rst
+> similarity index 99%
+> rename from Documentation/tee.txt
+> rename to Documentation/staging/tee.rst
+> index c8fad81c4563..324604a15d17 100644
+> --- a/Documentation/tee.txt
+> +++ b/Documentation/staging/tee.rst
+> @@ -162,6 +162,7 @@ The AMD-TEE driver packages the command buffer payload for processing in TEE.
+>  The command buffer format for the different TEE commands can be found in [7].
+>  
+>  The TEE commands supported by AMD-TEE Trusted OS are:
+> +
+>  * TEE_CMD_ID_LOAD_TA          - loads a Trusted Application (TA) binary into
+>                                  TEE environment.
+>  * TEE_CMD_ID_UNLOAD_TA        - unloads TA binary from TEE environment.
+> diff --git a/Documentation/xz.txt b/Documentation/staging/xz.rst
+> similarity index 100%
+> rename from Documentation/xz.txt
+> rename to Documentation/staging/xz.rst
+> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+> index cc4c5fc313df..c1709165c553 100644
+> --- a/Documentation/trace/kprobetrace.rst
+> +++ b/Documentation/trace/kprobetrace.rst
+> @@ -40,7 +40,7 @@ Synopsis of kprobe_events
+>   MEMADDR	: Address where the probe is inserted.
+>   MAXACTIVE	: Maximum number of instances of the specified function that
+>  		  can be probed simultaneously, or 0 for the default value
+> -		  as defined in Documentation/kprobes.txt section 1.3.1.
+> +		  as defined in Documentation/staging/kprobes.rst section 1.3.1.
+>  
+>   FETCHARGS	: Arguments. Each probe can have up to 128 args.
+>    %REG		: Fetch register REG
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1aa6e89e7424..8aa8f7c0db93 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9494,7 +9494,7 @@ M:	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+>  M:	"David S. Miller" <davem@davemloft.net>
+>  M:	Masami Hiramatsu <mhiramat@kernel.org>
+>  S:	Maintained
+> -F:	Documentation/kprobes.txt
+> +F:	Documentation/staging/kprobes.rst
+>  F:	include/asm-generic/kprobes.h
+>  F:	include/linux/kprobes.h
+>  F:	kernel/kprobes.c
+> @@ -9855,7 +9855,7 @@ L:	linux-kernel@vger.kernel.org
+>  L:	linux-arch@vger.kernel.org
+>  S:	Supported
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+> -F:	Documentation/atomic_bitops.txt
+> +F:	Documentation/staging/atomic_bitops.txt
+>  F:	Documentation/atomic_t.txt
+>  F:	Documentation/core-api/atomic_ops.rst
+>  F:	Documentation/core-api/refcount-vs-atomic.rst
+> @@ -14357,7 +14357,7 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git rproc-next
+>  F:	Documentation/ABI/testing/sysfs-class-remoteproc
+>  F:	Documentation/devicetree/bindings/remoteproc/
+> -F:	Documentation/remoteproc.txt
+> +F:	Documentation/staging/remoteproc.rst
+>  F:	drivers/remoteproc/
+>  F:	include/linux/remoteproc.h
+>  F:	include/linux/remoteproc/
+> @@ -14369,7 +14369,7 @@ L:	linux-remoteproc@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git rpmsg-next
+>  F:	Documentation/ABI/testing/sysfs-bus-rpmsg
+> -F:	Documentation/rpmsg.txt
+> +F:	Documentation/staging/rpmsg.rst
+>  F:	drivers/rpmsg/
+>  F:	include/linux/rpmsg.h
+>  F:	include/linux/rpmsg/
+> @@ -16580,7 +16580,7 @@ TEE SUBSYSTEM
+>  M:	Jens Wiklander <jens.wiklander@linaro.org>
+>  L:	tee-dev@lists.linaro.org
+>  S:	Maintained
+> -F:	Documentation/tee.txt
+> +F:	Documentation/staging/tee.rst
+>  F:	drivers/tee/
+>  F:	include/linux/tee_drv.h
+>  F:	include/uapi/linux/tee.h
+> diff --git a/include/asm-generic/bitops/atomic.h b/include/asm-generic/bitops/atomic.h
+> index dd90c9792909..edeeb8375006 100644
+> --- a/include/asm-generic/bitops/atomic.h
+> +++ b/include/asm-generic/bitops/atomic.h
+> @@ -8,7 +8,7 @@
+>  
+>  /*
+>   * Implementation of atomic bitops using atomic-fetch ops.
+> - * See Documentation/atomic_bitops.txt for details.
+> + * See Documentation/staging/atomic_bitops.txt for details.
+>   */
+>  
+>  static inline void set_bit(unsigned int nr, volatile unsigned long *p)
+> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
+> index 3526c0aee954..32809624d422 100644
+> --- a/include/linux/jump_label.h
+> +++ b/include/linux/jump_label.h
+> @@ -68,7 +68,7 @@
+>   * Lacking toolchain and or architecture support, static keys fall back to a
+>   * simple conditional branch.
+>   *
+> - * Additional babbling in: Documentation/static-keys.txt
+> + * Additional babbling in: Documentation/staging/static-keys.rst
+>   */
+>  
+>  #ifndef __ASSEMBLY__
+> diff --git a/lib/crc32.c b/lib/crc32.c
+> index 4a20455d1f61..35a03d03f973 100644
+> --- a/lib/crc32.c
+> +++ b/lib/crc32.c
+> @@ -24,7 +24,7 @@
+>   * Version 2.  See the file COPYING for more details.
+>   */
+>  
+> -/* see: Documentation/crc32.txt for a description of algorithms */
+> +/* see: Documentation/staging/crc32.rst for a description of algorithms */
+>  
+>  #include <linux/crc32.h>
+>  #include <linux/crc32poly.h>
+> diff --git a/lib/lzo/lzo1x_decompress_safe.c b/lib/lzo/lzo1x_decompress_safe.c
+> index 2717c7963acd..7892a40cf765 100644
+> --- a/lib/lzo/lzo1x_decompress_safe.c
+> +++ b/lib/lzo/lzo1x_decompress_safe.c
+> @@ -32,7 +32,7 @@
+>   * depending on the base count. Since the base count is taken from a u8
+>   * and a few bits, it is safe to assume that it will always be lower than
+>   * or equal to 2*255, thus we can always prevent any overflow by accepting
+> - * two less 255 steps. See Documentation/lzo.txt for more information.
+> + * two less 255 steps. See Documentation/staging/lzo.rst for more information.
+>   */
+>  #define MAX_255_COUNT      ((((size_t)~0) / 255) - 2)
+>  
+> diff --git a/lib/xz/Kconfig b/lib/xz/Kconfig
+> index 22528743d4ce..5cb50245a878 100644
+> --- a/lib/xz/Kconfig
+> +++ b/lib/xz/Kconfig
+> @@ -5,7 +5,7 @@ config XZ_DEC
+>  	help
+>  	  LZMA2 compression algorithm and BCJ filters are supported using
+>  	  the .xz file format as the container. For integrity checking,
+> -	  CRC32 is supported. See Documentation/xz.txt for more information.
+> +	  CRC32 is supported. See Documentation/staging/xz.rst for more information.
+>  
+>  if XZ_DEC
+>  
+> diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
+> index d693c23a85e8..e53603de48b8 100644
+> --- a/samples/kprobes/kprobe_example.c
+> +++ b/samples/kprobes/kprobe_example.c
+> @@ -5,7 +5,7 @@
+>   * stack trace and selected registers when _do_fork() is called.
+>   *
+>   * For more information on theory of operation of kprobes, see
+> - * Documentation/kprobes.txt
+> + * Documentation/staging/kprobes.rst
+>   *
+>   * You will see the trace data in /var/log/messages and on the console
+>   * whenever _do_fork() is invoked to create a new process.
+> diff --git a/samples/kprobes/kretprobe_example.c b/samples/kprobes/kretprobe_example.c
+> index 186315ca88b3..3685df980011 100644
+> --- a/samples/kprobes/kretprobe_example.c
+> +++ b/samples/kprobes/kretprobe_example.c
+> @@ -11,7 +11,7 @@
+>   * If no func_name is specified, _do_fork is instrumented
+>   *
+>   * For more information on theory of operation of kretprobes, see
+> - * Documentation/kprobes.txt
+> + * Documentation/staging/kprobes.rst
+>   *
+>   * Build and insert the kernel module as done in the kprobe example.
+>   * You will see the trace data in /var/log/messages and on the console
+> -- 
+> 2.25.4
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
