@@ -2,115 +2,250 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33F5C47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 01:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BAAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 01:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39CB21835
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 01:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A5320787
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 01:51:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jqb9iKsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgECBof (ORCPT
+        id S1726746AbgECBv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 21:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726684AbgECBoe (ORCPT
+        Sat, 2 May 2020 21:51:29 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21889 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726684AbgECBv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 21:44:34 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0B1C061A0C;
-        Sat,  2 May 2020 18:44:34 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 427202A0605
-Received: by earth.universe (Postfix, from userid 1000)
-        id F17AD3C08C7; Sun,  3 May 2020 03:44:30 +0200 (CEST)
-Date:   Sun, 3 May 2020 03:44:30 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v5 0/3] BQ25150/155 Charger
-Message-ID: <20200503014430.qq7acdoieviuzsed@earth.universe>
-References: <20200304174025.31655-1-r-rivera-matos@ti.com>
- <eb5f0818-21c7-1b84-b0c9-904bce9721be@ti.com>
- <20200501172445.diiccfzbh7kzkxdl@earth.universe>
- <a83b5728-2896-3ec9-00f1-dc611c3aa471@ti.com>
- <5e50e9f1-9f5f-cc0b-8df5-fbc7dc09e0cf@ti.com>
+        Sat, 2 May 2020 21:51:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588470687; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=hB4FBkH/8U2uRl5gbiUMkGwH/lIPHxjTpsf9dChF1Ic=;
+ b=jqb9iKsxAtUrGPda4tpn0q/zHUWgXrHACPLiPiIDnfPtTnNuO4M5oV99Pgea/jo6Jwchwqzk
+ bbhsPGg2KjOmIJd/xiksu69IcDFd1dmR/8jCc9vqXPwr1MXwMBvaYeqWBRxmphbsTjXWfeua
+ CzZHpGnTn/CQbjx8rM31u/fLbBI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eae239e.7fd91d01b928-smtp-out-n05;
+ Sun, 03 May 2020 01:51:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E5F22C4478C; Sun,  3 May 2020 01:51:25 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 14C02C433D2;
+        Sun,  3 May 2020 01:51:24 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hcdx5pm7my3fh6vr"
-Content-Disposition: inline
-In-Reply-To: <5e50e9f1-9f5f-cc0b-8df5-fbc7dc09e0cf@ti.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 03 May 2020 09:51:24 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        asutoshd@codeaurora.org, beanhuo@micron.com,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v3 2/5] scsi: ufs: add "index" in parameter list of
+ ufshcd_query_flag()
+In-Reply-To: <20200501143835.26032-3-stanley.chu@mediatek.com>
+References: <20200501143835.26032-1-stanley.chu@mediatek.com>
+ <20200501143835.26032-3-stanley.chu@mediatek.com>
+Message-ID: <e4528d5ec4cba4bfb50aeb8c1012672b@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-05-01 22:38, Stanley Chu wrote:
+> For preparation of LU Dedicated buffer mode support on WriteBooster
+> feature, "index" parameter shall be added and allowed to be specified
+> by callers.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
 
---hcdx5pm7my3fh6vr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Can Guo <cang@codeaurora.org>
 
-Hi,
-
-On Fri, May 01, 2020 at 01:09:13PM -0500, Ricardo Rivera-Matos wrote:
-> On 5/1/20 12:55 PM, Dan Murphy wrote:
-> > Sebastian
-> >=20
-> > On 5/1/20 12:24 PM, Sebastian Reichel wrote:
-> > > Hi,
-> > >=20
-> > > I don't see any PATCHv5 (with or without RESEND) for bq25150 and
-> > > lore does not see anything either:
-> > >=20
-> > > https://lore.kernel.org/linux-pm/?q=3DPATCH+v5+0%2F3%5D+BQ25150%2F155=
-+Charger
-> > >=20
-> >=20
-> > I posted them for Ricardo.=A0 Maybe he need a lore account.
->=20
-> That is most likely the issue. Sorry for the confusion, all. I am setting
-> one up now.
-
-lore.kernel.org picks up any patches send to the mailing list. You
-don't need an account. So basically the mailing list never received
-the original v5 and I did not receive the mails directly either.
-
-Ricardo, I would have a look at your local git mail setup. Possibly
-test it with some demo target address under your control first.
-
--- Sebastian
-
-> > https://lore.kernel.org/patchwork/project/lkml/list/?series=3D441577
-> >=20
-> > Not sure why his patches did not go through.
-> >=20
-> > Dan
-> >=20
-
---hcdx5pm7my3fh6vr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6uIfkACgkQ2O7X88g7
-+prUeg//Ta5iV4c1NwJRxiIpeL1Lr6xgDHbW/ZL3lhdusRo40vVJ/MCp5eKXADEZ
-2uXhs1XLaOlrlamzjqLHMUBjE1/vxRiLN8N0qXwb9HgU2zRMVhvCIYP8dMvsBoB0
-HXdkNVTkH4Pu889SLC997a4giokLOwRdjTD9JPvPgAdiL5zEH4VVpo+3XPV4xOjq
-bW70GHE+wGNLVz9bwhLgh96u0fk0xoVjXjnhL6c/aSK0+Wbn6KWG0teCfP8onDj1
-JFdK2MAwmhvz1o8CERaGTCvCaL+ciWdpYVMmk8K7ynUQavjySc6ea9UdgPvyKdOc
-uCcge0y4NnxIEk4qLKHWaUruYtDR15/AbsS/irXaCmzwUVD2cZE4tvpxQkqwd3xw
-O8SiWg54Yn0rcAVM96T/3ZYBUg2CrlRSHgCkrThL/7idcIy8cVHWiEA6XCrPT1ch
-C5STKyve9nhkukjeMjkwMJtOHUoUi4oQbk+hCy2nAa0CgEvmfio41/JsCM7VnXwa
-Ngbuzj6s6tWcvmNwpIEmsCSZyjm1GsdKFPQHOwJnzwqqSZarx/YWolNtnJaDn/Ug
-xa37pU9SQAF0Y1IvI5t+cOppL0lKVGsdeKG5L88tnHMvJIQnbgMmo+T76rcD5r5P
-pWD2H5tRYu3hnOgv7vRDYG9EoadiULzh+ZjQWJf5CbVjmTJvP4o=
-=m92t
------END PGP SIGNATURE-----
-
---hcdx5pm7my3fh6vr--
+> ---
+>  drivers/scsi/ufs/ufs-sysfs.c |  2 +-
+>  drivers/scsi/ufs/ufshcd.c    | 28 +++++++++++++++-------------
+>  drivers/scsi/ufs/ufshcd.h    |  2 +-
+>  3 files changed, 17 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufs-sysfs.c 
+> b/drivers/scsi/ufs/ufs-sysfs.c
+> index 93484408bc40..b86b6a40d7e6 100644
+> --- a/drivers/scsi/ufs/ufs-sysfs.c
+> +++ b/drivers/scsi/ufs/ufs-sysfs.c
+> @@ -631,7 +631,7 @@ static ssize_t _name##_show(struct device 
+> *dev,				\
+>  	struct ufs_hba *hba = dev_get_drvdata(dev);			\
+>  	pm_runtime_get_sync(hba->dev);					\
+>  	ret = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,	\
+> -		QUERY_FLAG_IDN##_uname, &flag);				\
+> +		QUERY_FLAG_IDN##_uname, 0, &flag);			\
+>  	pm_runtime_put_sync(hba->dev);					\
+>  	if (ret)							\
+>  		return -EINVAL;						\
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index c6668799d956..f23705379b7d 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -2784,13 +2784,13 @@ static inline void ufshcd_init_query(struct
+> ufs_hba *hba,
+>  }
+> 
+>  static int ufshcd_query_flag_retry(struct ufs_hba *hba,
+> -	enum query_opcode opcode, enum flag_idn idn, bool *flag_res)
+> +	enum query_opcode opcode, enum flag_idn idn, u8 index, bool 
+> *flag_res)
+>  {
+>  	int ret;
+>  	int retries;
+> 
+>  	for (retries = 0; retries < QUERY_REQ_RETRIES; retries++) {
+> -		ret = ufshcd_query_flag(hba, opcode, idn, flag_res);
+> +		ret = ufshcd_query_flag(hba, opcode, idn, index, flag_res);
+>  		if (ret)
+>  			dev_dbg(hba->dev,
+>  				"%s: failed with error %d, retries %d\n",
+> @@ -2811,16 +2811,17 @@ static int ufshcd_query_flag_retry(struct 
+> ufs_hba *hba,
+>   * @hba: per-adapter instance
+>   * @opcode: flag query to perform
+>   * @idn: flag idn to access
+> + * @index: flag index to access
+>   * @flag_res: the flag value after the query request completes
+>   *
+>   * Returns 0 for success, non-zero in case of failure
+>   */
+>  int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+> -			enum flag_idn idn, bool *flag_res)
+> +			enum flag_idn idn, u8 index, bool *flag_res)
+>  {
+>  	struct ufs_query_req *request = NULL;
+>  	struct ufs_query_res *response = NULL;
+> -	int err, index = 0, selector = 0;
+> +	int err, selector = 0;
+>  	int timeout = QUERY_REQ_TIMEOUT;
+> 
+>  	BUG_ON(!hba);
+> @@ -4177,7 +4178,7 @@ static int ufshcd_complete_dev_init(struct 
+> ufs_hba *hba)
+>  	bool flag_res = true;
+> 
+>  	err = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_SET_FLAG,
+> -		QUERY_FLAG_IDN_FDEVICEINIT, NULL);
+> +		QUERY_FLAG_IDN_FDEVICEINIT, 0, NULL);
+>  	if (err) {
+>  		dev_err(hba->dev,
+>  			"%s setting fDeviceInit flag failed with error %d\n",
+> @@ -4188,7 +4189,7 @@ static int ufshcd_complete_dev_init(struct 
+> ufs_hba *hba)
+>  	/* poll for max. 1000 iterations for fDeviceInit flag to clear */
+>  	for (i = 0; i < 1000 && !err && flag_res; i++)
+>  		err = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+> -			QUERY_FLAG_IDN_FDEVICEINIT, &flag_res);
+> +			QUERY_FLAG_IDN_FDEVICEINIT, 0, &flag_res);
+> 
+>  	if (err)
+>  		dev_err(hba->dev,
+> @@ -5003,7 +5004,7 @@ static int ufshcd_enable_auto_bkops(struct 
+> ufs_hba *hba)
+>  		goto out;
+> 
+>  	err = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_SET_FLAG,
+> -			QUERY_FLAG_IDN_BKOPS_EN, NULL);
+> +			QUERY_FLAG_IDN_BKOPS_EN, 0, NULL);
+>  	if (err) {
+>  		dev_err(hba->dev, "%s: failed to enable bkops %d\n",
+>  				__func__, err);
+> @@ -5053,7 +5054,7 @@ static int ufshcd_disable_auto_bkops(struct 
+> ufs_hba *hba)
+>  	}
+> 
+>  	err = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_CLEAR_FLAG,
+> -			QUERY_FLAG_IDN_BKOPS_EN, NULL);
+> +			QUERY_FLAG_IDN_BKOPS_EN, 0, NULL);
+>  	if (err) {
+>  		dev_err(hba->dev, "%s: failed to disable bkops %d\n",
+>  				__func__, err);
+> @@ -5219,7 +5220,7 @@ static int ufshcd_wb_ctrl(struct ufs_hba *hba,
+> bool enable)
+>  		opcode = UPIU_QUERY_OPCODE_CLEAR_FLAG;
+> 
+>  	ret = ufshcd_query_flag_retry(hba, opcode,
+> -				      QUERY_FLAG_IDN_WB_EN, NULL);
+> +				      QUERY_FLAG_IDN_WB_EN, 0, NULL);
+>  	if (ret) {
+>  		dev_err(hba->dev, "%s write booster %s failed %d\n",
+>  			__func__, enable ? "enable" : "disable", ret);
+> @@ -5243,7 +5244,7 @@ static int
+> ufshcd_wb_toggle_flush_during_h8(struct ufs_hba *hba, bool set)
+>  		val = UPIU_QUERY_OPCODE_CLEAR_FLAG;
+> 
+>  	return ufshcd_query_flag_retry(hba, val,
+> -			       QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8,
+> +			       QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8, 0,
+>  				       NULL);
+>  }
+> 
+> @@ -5264,7 +5265,8 @@ static int ufshcd_wb_buf_flush_enable(struct 
+> ufs_hba *hba)
+>  		return 0;
+> 
+>  	ret = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_SET_FLAG,
+> -				      QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN, NULL);
+> +				      QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN,
+> +				      0, NULL);
+>  	if (ret)
+>  		dev_err(hba->dev, "%s WB - buf flush enable failed %d\n",
+>  			__func__, ret);
+> @@ -5283,7 +5285,7 @@ static int ufshcd_wb_buf_flush_disable(struct
+> ufs_hba *hba)
+>  		return 0;
+> 
+>  	ret = ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_CLEAR_FLAG,
+> -				      QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN, NULL);
+> +				      QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN, 0, NULL);
+>  	if (ret) {
+>  		dev_warn(hba->dev, "%s: WB - buf flush disable failed %d\n",
+>  			 __func__, ret);
+> @@ -7263,7 +7265,7 @@ static int ufshcd_device_params_init(struct 
+> ufs_hba *hba)
+>  	ufshcd_get_ref_clk_gating_wait(hba);
+> 
+>  	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+> -			QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+> +			QUERY_FLAG_IDN_PWR_ON_WPE, 0, &flag))
+>  		hba->dev_info.f_power_on_wp_en = flag;
+> 
+>  	/* Probe maximum power mode co-supported by both UFS host and device 
+> */
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 056537e52c19..e555d794d441 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -946,7 +946,7 @@ int ufshcd_read_desc_param(struct ufs_hba *hba,
+>  int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
+>  		      enum attr_idn idn, u8 index, u8 selector, u32 *attr_val);
+>  int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
+> -	enum flag_idn idn, bool *flag_res);
+> +	enum flag_idn idn, u8 index, bool *flag_res);
+> 
+>  void ufshcd_auto_hibern8_enable(struct ufs_hba *hba);
+>  void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit);
