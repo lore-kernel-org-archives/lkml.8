@@ -2,207 +2,537 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0219C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 06:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3114AC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 06:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E3F2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 06:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tiYAj+gy"
+	by mail.kernel.org (Postfix) with ESMTP id F0C0B20757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 06:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgECGNg (ORCPT
+        id S1726965AbgECGgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 02:13:36 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:42419 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726884AbgECGNg (ORCPT
+        Sun, 3 May 2020 02:36:15 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:34317 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbgECGgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 02:13:36 -0400
-X-UUID: 5018c5b0461f42448e1f128fc452b77d-20200503
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WxlCRNEd3K/12hGIoH5QpJli1A1K5IiKT1/saoJU2XE=;
-        b=tiYAj+gyvHuwMN6XeJ4cFi0Iw/NDVukQug5t3UkgYaZnrkjjngYxq83IAivwCOaDLkzo8LcF2U+qNYmR5kPz4A/GJw1v8b/KIIGXAUQXzeTs5ZjBq7d6J6xAEyfszXKLVz+yN1sBMRNA6lRGN4c4SuhhwuatdHPD42Gm+xflrsw=;
-X-UUID: 5018c5b0461f42448e1f128fc452b77d-20200503
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1763318559; Sun, 03 May 2020 14:13:28 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sun, 3 May 2020 14:13:26 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 3 May 2020 14:13:26 +0800
-Message-ID: <1588486406.3197.13.camel@mtkswgap22>
-Subject: Re: [PATCH v3 1/5] scsi: ufs: enable WriteBooster on some pre-3.1
- UFS devices
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>,
-        <beanhuo@micron.com>, <matthias.bgg@gmail.com>,
-        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Date:   Sun, 3 May 2020 14:13:26 +0800
-In-Reply-To: <1d471d07084d7323f0ef021e2c1b9d4e@codeaurora.org>
-References: <20200501143835.26032-1-stanley.chu@mediatek.com>
-         <20200501143835.26032-2-stanley.chu@mediatek.com>
-         <1d471d07084d7323f0ef021e2c1b9d4e@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Sun, 3 May 2020 02:36:15 -0400
+Received: by mail-io1-f71.google.com with SMTP id v12so9754916iol.1
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 23:36:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=67a07j0usMs49GGNNlvvOPtJ8adW6qy1T1+hcEAdDTo=;
+        b=WfyVecXZJDJUA12JYZz5HPOZeKt1ZL0lz2nhX2WRjItgi1c2KKx6IPu47+79G9wy/x
+         E1afw4okqmOTC+KqUmOKlC56IeQsQAxcOme3D3icXGQl3Kzn5juqp+hJ3t+HfG8tE8l2
+         ysX+UzEwKWyMQIRtboCAQTVQ6nHNH13l71te/3BqUms8EZ29cbHwUnbmiiTKVy5y7CW/
+         he4mHZodN0TDDV5HC/9MIzTuTQ+Yp9grldT7pm+rLHHKjUCZ0GzD9eEh0ind91SAihAS
+         QW/MkFqF9hnMT8SDpmSqtzQuQw8VpX5c3cM3n+aceHWf8izXK60Poex1edJQ3ynyzuhl
+         BtKg==
+X-Gm-Message-State: AGi0PuZrHnoCy/YODNWOmb3iarZ0KO8cC/0uMRaQLkfN7scsTypRTwk+
+        pQXsObyedjOB3ngI0iQEgBjvcsyJTTCDestIZxeENeZ05cFh
+X-Google-Smtp-Source: APiQypKaxfcT+YeC4PvSUl2qmq321wZ6VvcD8xu3RyqqPjlAm3QeVdsqlgsl0AaoaxthVj3ddlGQW43W+DbEoRrFjsval54CmH2V
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C3A9AF1BAE99385AD8A90B9EA8391ECD9F3FF53468BCA1C1D23609DCEDBDBD612000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Received: by 2002:a6b:7319:: with SMTP id e25mr10505817ioh.193.1588487771556;
+ Sat, 02 May 2020 23:36:11 -0700 (PDT)
+Date:   Sat, 02 May 2020 23:36:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005a8fe005a4b8a114@google.com>
+Subject: BUG: stack guard page was hit in unwind_next_frame
+From:   syzbot <syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        shile.zhang@linux.alibaba.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBTYXQsIDIwMjAtMDUtMDIgYXQgMTU6NDcgKzA4MDAsIENhbiBHdW8gd3Jv
-dGU6DQo+IEhpIFN0YW5sZXksDQo+IE9uIDIwMjAtMDUtMDEgMjI6MzgsIFN0YW5sZXkgQ2h1IHdy
-b3RlOg0KPiA+IFdyaXRlQm9vc3RlciBmZWF0dXJlIGNhbiBiZSBzdXBwb3J0ZWQgYnkgc29tZSBw
-cmUtMy4xIFVGUyBkZXZpY2VzDQo+ID4gYnkgdXBncmFkaW5nIGZpcm13YXJlLg0KPiA+IA0KPiA+
-IFRvIGVuYWJsZSBXcml0ZUJvb3N0ZXIgZmVhdHVyZSBpbiBzdWNoIGRldmljZXMsIGludHJvZHVj
-ZSBhIGRldmljZQ0KPiA+IHF1aXJrIHRvIHJlbGF4IHRoZSBlbnRyYW5jZSBjb25kaXRpb24gb2Yg
-dWZzaGNkX3diX3Byb2JlKCkgdG8gYWxsb3cNCj4gPiBob3N0IGRyaXZlciB0byBjaGVjayB0aG9z
-ZSBkZXZpY2VzJyBXcml0ZUJvb3N0ZXIgY2FwYWJpbGl0eS4NCj4gPiANCj4gPiBXcml0ZUJvb3N0
-ZXIgZmVhdHVyZSBjYW4gYmUgYXZhaWxhYmxlIGlmIGJlbG93IGFsbCBjb25kaXRpb25zIGFyZQ0K
-PiA+IHNhdGlzZmllZCwNCj4gPiANCj4gPiAxLiBIb3N0IGVuYWJsZXMgV3JpdGVCb29zdGVyIGNh
-cGFiaWxpdHkNCj4gPiAyLiBVRlMgMy4xIGRldmljZSBvciBVRlMgcHJlLTMuMSBkZXZpY2Ugd2l0
-aCBxdWlyaw0KPiA+ICAgIFVGU19ERVZJQ0VfUVVJUktfU1VQUE9SVF9FWFRFTkRFRF9GRUFUVVJF
-UyBlbmFibGVkDQo+ID4gMy4gRGV2aWNlIGRlc2NyaXB0b3IgaGFzIGRFeHRlbmRlZFVGU0ZlYXR1
-cmVzU3VwcG9ydCBmaWVsZA0KPiA+IDQuIFdyaXRlQm9vc3RlciBzdXBwb3J0IGlzIHNwZWNpZmll
-ZCBpbiBhYm92ZSBmaWVsZA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxz
-dGFubGV5LmNodUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvc2NzaS91ZnMv
-dWZzX3F1aXJrcy5oIHwgIDcgKysrKw0KPiA+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jICAg
-ICB8IDY2ICsrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tDQo+ID4gIDIgZmlsZXMg
-Y2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKSwgMjUgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzX3F1aXJrcy5oIA0KPiA+IGIvZHJpdmVycy9z
-Y3NpL3Vmcy91ZnNfcXVpcmtzLmgNCj4gPiBpbmRleCBkZjdhMWU2ODA1YTMuLmUzMTc1YTYzYzY3
-NiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaA0KPiA+ICsr
-KyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzX3F1aXJrcy5oDQo+ID4gQEAgLTEwMSw0ICsxMDEsMTEg
-QEAgc3RydWN0IHVmc19kZXZfZml4IHsNCj4gPiAgICovDQo+ID4gICNkZWZpbmUgVUZTX0RFVklD
-RV9RVUlSS19IT1NUX1ZTX0RFQlVHU0FWRUNPTkZJR1RJTUUJKDEgPDwgOSkNCj4gPiANCj4gPiAr
-LyoNCj4gPiArICogU29tZSBwcmUtMy4xIFVGUyBkZXZpY2VzIGNhbiBzdXBwb3J0IGV4dGVuZGVk
-IGZlYXR1cmVzIGJ5IHVwZ3JhZGluZw0KPiA+ICsgKiB0aGUgZmlybXdhcmUuIEVuYWJsZSB0aGlz
-IHF1aXJrIHRvIG1ha2UgVUZTIGNvcmUgZHJpdmVyIHByb2JlIGFuZCANCj4gPiBlbmFibGUNCj4g
-PiArICogc3VwcG9ydGVkIGZlYXR1cmVzIG9uIHN1Y2ggZGV2aWNlcy4NCj4gPiArICovDQo+ID4g
-KyNkZWZpbmUgVUZTX0RFVklDRV9RVUlSS19TVVBQT1JUX0VYVEVOREVEX0ZFQVRVUkVTICgxIDw8
-IDEwKQ0KPiA+ICsNCj4gPiAgI2VuZGlmIC8qIFVGU19RVUlSS1NfSF8gKi8NCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNk
-LmMNCj4gPiBpbmRleCA5MTVlOTYzMzk4YzQuLmM2NjY4Nzk5ZDk1NiAxMDA2NDQNCj4gPiAtLS0g
-YS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+ID4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91
-ZnNoY2QuYw0KPiA+IEBAIC0yMjksNiArMjI5LDggQEAgc3RhdGljIHN0cnVjdCB1ZnNfZGV2X2Zp
-eCB1ZnNfZml4dXBzW10gPSB7DQo+ID4gIAkJVUZTX0RFVklDRV9RVUlSS19IT1NUX1BBX1NBVkVD
-T05GSUdUSU1FKSwNCj4gPiAgCVVGU19GSVgoVUZTX1ZFTkRPUl9TS0hZTklYLCAiaEI4YUwxIiAv
-KkgyOFU2MjMwMUFNUiovLA0KPiA+ICAJCVVGU19ERVZJQ0VfUVVJUktfSE9TVF9WU19ERUJVR1NB
-VkVDT05GSUdUSU1FKSwNCj4gPiArCVVGU19GSVgoVUZTX1ZFTkRPUl9TS0hZTklYLCAiSDlIUTIx
-QUZBTVpEQVIiLA0KPiA+ICsJCVVGU19ERVZJQ0VfUVVJUktfU1VQUE9SVF9FWFRFTkRFRF9GRUFU
-VVJFUyksDQo+ID4gDQo+ID4gIAlFTkRfRklYDQo+ID4gIH07DQo+ID4gQEAgLTY4MDAsOSArNjgw
-MiwxOSBAQCBzdGF0aWMgaW50IHVmc2hjZF9zY3NpX2FkZF93bHVzKHN0cnVjdCB1ZnNfaGJhIA0K
-PiA+ICpoYmEpDQo+ID4gDQo+ID4gIHN0YXRpYyB2b2lkIHVmc2hjZF93Yl9wcm9iZShzdHJ1Y3Qg
-dWZzX2hiYSAqaGJhLCB1OCAqZGVzY19idWYpDQo+ID4gIHsNCj4gPiArCWlmICghdWZzaGNkX2lz
-X3diX2FsbG93ZWQoaGJhKSkNCj4gPiArCQlyZXR1cm47DQo+ID4gKw0KPiA+ICsJaWYgKGhiYS0+
-ZGVzY19zaXplLmRldl9kZXNjIDw9IERFVklDRV9ERVNDX1BBUkFNX0VYVF9VRlNfRkVBVFVSRV9T
-VVApDQo+ID4gKwkJZ290byB3Yl9kaXNhYmxlZDsNCj4gPiArDQo+ID4gIAloYmEtPmRldl9pbmZv
-LmRfZXh0X3Vmc19mZWF0dXJlX3N1cCA9DQo+ID4gIAkJZ2V0X3VuYWxpZ25lZF9iZTMyKGRlc2Nf
-YnVmICsNCj4gPiAgCQkJCSAgIERFVklDRV9ERVNDX1BBUkFNX0VYVF9VRlNfRkVBVFVSRV9TVVAp
-Ow0KPiA+ICsNCj4gPiArCWlmICghKGhiYS0+ZGV2X2luZm8uZF9leHRfdWZzX2ZlYXR1cmVfc3Vw
-ICYgDQo+ID4gVUZTX0RFVl9XUklURV9CT09TVEVSX1NVUCkpDQo+ID4gKwkJZ290byB3Yl9kaXNh
-YmxlZDsNCj4gPiArDQo+ID4gIAkvKg0KPiA+ICAJICogV0IgbWF5IGJlIHN1cHBvcnRlZCBidXQg
-bm90IGNvbmZpZ3VyZWQgd2hpbGUgcHJvdmlzaW9uaW5nLg0KPiA+ICAJICogVGhlIHNwZWMgc2F5
-cywgaW4gZGVkaWNhdGVkIHdiIGJ1ZmZlciBtb2RlLA0KPiA+IEBAIC02ODE4LDExICs2ODMwLDI5
-IEBAIHN0YXRpYyB2b2lkIHVmc2hjZF93Yl9wcm9iZShzdHJ1Y3QgdWZzX2hiYQ0KPiA+ICpoYmEs
-IHU4ICpkZXNjX2J1ZikNCj4gPiAgCWhiYS0+ZGV2X2luZm8uYl9wcmVzcnZfdXNwY19lbiA9DQo+
-ID4gIAkJZGVzY19idWZbREVWSUNFX0RFU0NfUEFSQU1fV0JfUFJFU1JWX1VTUlNQQ19FTl07DQo+
-ID4gDQo+ID4gLQlpZiAoISgoaGJhLT5kZXZfaW5mby5kX2V4dF91ZnNfZmVhdHVyZV9zdXAgJg0K
-PiA+IC0JCSBVRlNfREVWX1dSSVRFX0JPT1NURVJfU1VQKSAmJg0KPiA+IC0JCWhiYS0+ZGV2X2lu
-Zm8uYl93Yl9idWZmZXJfdHlwZSAmJg0KPiA+ICsJaWYgKCEoaGJhLT5kZXZfaW5mby5iX3diX2J1
-ZmZlcl90eXBlICYmDQo+ID4gIAkgICAgICBoYmEtPmRldl9pbmZvLmRfd2JfYWxsb2NfdW5pdHMp
-KQ0KPiA+IC0JCWhiYS0+Y2FwcyAmPSB+VUZTSENEX0NBUF9XQl9FTjsNCj4gPiArCQlnb3RvIHdi
-X2Rpc2FibGVkOw0KPiA+ICsNCj4gPiArCXJldHVybjsNCj4gPiArDQo+ID4gK3diX2Rpc2FibGVk
-Og0KPiA+ICsJaGJhLT5jYXBzICY9IH5VRlNIQ0RfQ0FQX1dCX0VOOw0KPiA+ICt9DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgdm9pZCB1ZnNfZml4dXBfZGV2aWNlX3NldHVwKHN0cnVjdCB1ZnNfaGJhICpo
-YmEpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCB1ZnNfZGV2X2ZpeCAqZjsNCj4gPiArCXN0cnVjdCB1
-ZnNfZGV2X2luZm8gKmRldl9pbmZvID0gJmhiYS0+ZGV2X2luZm87DQo+ID4gKw0KPiA+ICsJZm9y
-IChmID0gdWZzX2ZpeHVwczsgZi0+cXVpcms7IGYrKykgew0KPiA+ICsJCWlmICgoZi0+d21hbnVm
-YWN0dXJlcmlkID09IGRldl9pbmZvLT53bWFudWZhY3R1cmVyaWQgfHwNCj4gPiArCQkgICAgIGYt
-PndtYW51ZmFjdHVyZXJpZCA9PSBVRlNfQU5ZX1ZFTkRPUikgJiYNCj4gPiArCQkgICAgICgoZGV2
-X2luZm8tPm1vZGVsICYmDQo+ID4gKwkJICAgICAgIFNUUl9QUkZYX0VRVUFMKGYtPm1vZGVsLCBk
-ZXZfaW5mby0+bW9kZWwpKSB8fA0KPiA+ICsJCSAgICAgICFzdHJjbXAoZi0+bW9kZWwsIFVGU19B
-TllfTU9ERUwpKSkNCj4gPiArCQkJaGJhLT5kZXZfcXVpcmtzIHw9IGYtPnF1aXJrOw0KPiA+ICsJ
-fQ0KPiA+ICB9DQo+ID4gDQo+ID4gIHN0YXRpYyBpbnQgdWZzX2dldF9kZXZpY2VfZGVzYyhzdHJ1
-Y3QgdWZzX2hiYSAqaGJhKQ0KPiA+IEBAIC02ODYyLDEwICs2ODkyLDYgQEAgc3RhdGljIGludCB1
-ZnNfZ2V0X2RldmljZV9kZXNjKHN0cnVjdCB1ZnNfaGJhIA0KPiA+ICpoYmEpDQo+ID4gDQo+ID4g
-IAltb2RlbF9pbmRleCA9IGRlc2NfYnVmW0RFVklDRV9ERVNDX1BBUkFNX1BSRENUX05BTUVdOw0K
-PiA+IA0KPiA+IC0JLyogRW5hYmxlIFdCIG9ubHkgZm9yIFVGUy0zLjEgKi8NCj4gPiAtCWlmIChk
-ZXZfaW5mby0+d3NwZWN2ZXJzaW9uID49IDB4MzEwKQ0KPiA+IC0JCXVmc2hjZF93Yl9wcm9iZSho
-YmEsIGRlc2NfYnVmKTsNCj4gPiAtDQo+ID4gIAllcnIgPSB1ZnNoY2RfcmVhZF9zdHJpbmdfZGVz
-YyhoYmEsIG1vZGVsX2luZGV4LA0KPiA+ICAJCQkJICAgICAgJmRldl9pbmZvLT5tb2RlbCwgU0Rf
-QVNDSUlfU1REKTsNCj4gPiAgCWlmIChlcnIgPCAwKSB7DQo+ID4gQEAgLTY4NzQsNiArNjkwMCwx
-MyBAQCBzdGF0aWMgaW50IHVmc19nZXRfZGV2aWNlX2Rlc2Moc3RydWN0IHVmc19oYmEgDQo+ID4g
-KmhiYSkNCj4gPiAgCQlnb3RvIG91dDsNCj4gPiAgCX0NCj4gPiANCj4gPiArCXVmc19maXh1cF9k
-ZXZpY2Vfc2V0dXAoaGJhKTsNCj4gPiArDQo+ID4gKwkvKiBFbmFibGUgV0Igb25seSBmb3IgVUZT
-LTMuMSAqLw0KPiANCj4gQWxzbyB1cGRhdGUgdGhpcyBjb21tZW50IHRvIHJlZmxlY3QgeW91ciBj
-aGFuZ2U/DQo+IA0KPiA+ICsJaWYgKGRldl9pbmZvLT53c3BlY3ZlcnNpb24gPj0gMHgzMTAgfHwN
-Cj4gPiArCSAgICAoaGJhLT5kZXZfcXVpcmtzICYgVUZTX0RFVklDRV9RVUlSS19TVVBQT1JUX0VY
-VEVOREVEX0ZFQVRVUkVTKSkNCj4gPiArCQl1ZnNoY2Rfd2JfcHJvYmUoaGJhLCBkZXNjX2J1Zik7
-DQo+ID4gKw0KPiANCj4gQ2FuIHdlIHNvbWVob3cgbW92ZSB0aGlzIGFmdGVyIHVmc2hjZF90dW5l
-X3VuaXByb19wYXJhbXMoKSBvciBjb21lIHVwIA0KPiB3aXRoDQo+IGEgYmV0dGVyIHdheSB0byBs
-ZXZlcmFnZSB1ZnNoY2Rfdm9wc19hcHBseV9kZXZfcXVpcmtzKCk/IEkgYW0gYXNraW5nIA0KPiB0
-aGlzDQo+IGJlY2F1c2UgaWYgd2Ugb25seSByZWx5IG9uIGFkZGluZyBxdWlya3MgdG8gdWZzX2Zp
-eHVwcyBpbiB1ZnNoY2QuYywgdGhlDQo+IHRhYmxlIHdpbGwga2VlcCBncm93aW5nIGFuZCBJIGFt
-IHN1cmUgaXQgd2lsbCAtIGFzIGZsYXNoIHZlbmRvcnMgYXJlIA0KPiB0cnlpbmcNCj4gdG8gbWFr
-ZSB0aGVpciBVRlMyLjEgcHJvZHVjdHMgdG8gYmUgY2FwYWJsZSBvZiBXQiAoZGlmZmVyZW50IGRl
-bnNpdGllcyANCj4gYW5kDQo+IGRpZmZlcmVudCBOQU5EIHByb2Nlc3NlcyBmcm9tIGRpZmZlcmVu
-dCB2ZW5kb3JzLCB0aGUgY29tYm9zIGNhbiBiZSBxdWl0ZSANCj4gYQ0KPiBmZXcpLiBNZWFud2hp
-bGUsIHNvbWUgbW9kZWxzIGFyZSBzcGVjaWZpY2FsbHkgbWFkZSBmb3Igc29tZSBjdXN0b21lcnMg
-dG8NCj4gc3VwcG9ydCBXQiwgbWVhbmluZyBoYXZpbmcgdGhlbSBpbiB0aGUgdGFibGUgbWF5IG5v
-dCBoZWxwIGluIGEgDQo+IGdlbmVyYWxpemVkDQo+IHdheSwgYW5kIGl0IGlzIG5vdCBsaWtlIHNv
-bWUgaG90IGZpeGVzIHRoYXQgd2UgaGF2ZSB0byB0YWtlLCBpdCBpcyBqdXN0IA0KPiBmb3INCj4g
-YSBub24tc3RhbmRhcmQgZmVhdHVyZS4gSWYgd2UgY2FuIGxldmVyYWdlIA0KPiB1ZnNoY2Rfdm9w
-c19hcHBseV9kZXZfcXVpcmtzKCksDQo+IFNvQyB2ZW5kb3JzIGNhbiBmcmVlbHkgYWRkIHRoZSBx
-dWlyayB3aXRob3V0IHRvdWNoaW5nIHVmc19maXh1cHMgdGFibGUsDQo+IHdoaWNoIG1lYW5zIHlv
-dSBkb24ndCBuZWVkIHRvIHVwZGF0ZSB1ZnNfZml4dXBzIGV2ZXJ5IHRpbWUganVzdCBmb3IgDQo+
-IGFkZGluZw0KPiBhIG5ldyBtb2RlbCAoR0tJIHJ1bGVzKSwgeW91IGNhbiBoYXZlIHlvdXIgb3du
-IFdCIHdoaXRlIGxpc3QgaW4gdmVuZG9yDQo+IGRyaXZlci4gV2hhdCBkbyB5b3UgdGhpbms/DQo+
-IA0KPiBUaGFua3MsDQo+IA0KPiBDYW4gR3VvLg0KDQpWZXJ5IGFwcHJlY2lhdGUgeW91ciB1c2Vm
-dWwgYW5kIGNvbnN0cnVjdGl2ZSBjb21tZW50cyA6ICkNCg0KUGxlYXNlIHRha2UgYSBsb29rIGF0
-IHY0LiBJbiB2NCwgSSBpbnRyb2R1Y2UgYSAiZml4dXBfZGV2X3F1aXJrcyIgdm9wIHRvDQphbGxv
-dyB2ZW5kb3JzIHRvICJmaXgiIGRldmljZSBxdWlya3Mgd2hpY2ggY2FuIGJlIGEgZ2VuZXJhbCBz
-b2x1dGlvbiBub3QNCm9ubHkgZm9yIG5ld2x5IGludHJvZHVjZWQgVUZTX0RFVklDRV9RVUlSS19T
-VVBQT1JUX0VYVEVOREVEX0ZFQVRVUkVTIGJ1dA0KYWxzbyBmb3Igb3RoZXIgcXVpcmtzLg0KDQpU
-aGFua3MsDQpTdGFubGV5IENodQ0KDQo+IA0KPiA+ICAJLyoNCj4gPiAgCSAqIHVmc2hjZF9yZWFk
-X3N0cmluZ19kZXNjIHJldHVybnMgc2l6ZSBvZiB0aGUgc3RyaW5nDQo+ID4gIAkgKiByZXNldCB0
-aGUgZXJyb3IgdmFsdWUNCj4gPiBAQCAtNjg5MywyMSArNjkyNiw2IEBAIHN0YXRpYyB2b2lkIHVm
-c19wdXRfZGV2aWNlX2Rlc2Moc3RydWN0IHVmc19oYmEgDQo+ID4gKmhiYSkNCj4gPiAgCWRldl9p
-bmZvLT5tb2RlbCA9IE5VTEw7DQo+ID4gIH0NCj4gPiANCj4gPiAtc3RhdGljIHZvaWQgdWZzX2Zp
-eHVwX2RldmljZV9zZXR1cChzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KPiA+IC17DQo+ID4gLQlzdHJ1
-Y3QgdWZzX2Rldl9maXggKmY7DQo+ID4gLQlzdHJ1Y3QgdWZzX2Rldl9pbmZvICpkZXZfaW5mbyA9
-ICZoYmEtPmRldl9pbmZvOw0KPiA+IC0NCj4gPiAtCWZvciAoZiA9IHVmc19maXh1cHM7IGYtPnF1
-aXJrOyBmKyspIHsNCj4gPiAtCQlpZiAoKGYtPndtYW51ZmFjdHVyZXJpZCA9PSBkZXZfaW5mby0+
-d21hbnVmYWN0dXJlcmlkIHx8DQo+ID4gLQkJICAgICBmLT53bWFudWZhY3R1cmVyaWQgPT0gVUZT
-X0FOWV9WRU5ET1IpICYmDQo+ID4gLQkJICAgICAoKGRldl9pbmZvLT5tb2RlbCAmJg0KPiA+IC0J
-CSAgICAgICBTVFJfUFJGWF9FUVVBTChmLT5tb2RlbCwgZGV2X2luZm8tPm1vZGVsKSkgfHwNCj4g
-PiAtCQkgICAgICAhc3RyY21wKGYtPm1vZGVsLCBVRlNfQU5ZX01PREVMKSkpDQo+ID4gLQkJCWhi
-YS0+ZGV2X3F1aXJrcyB8PSBmLT5xdWlyazsNCj4gPiAtCX0NCj4gPiAtfQ0KPiA+IC0NCj4gPiAg
-LyoqDQo+ID4gICAqIHVmc2hjZF90dW5lX3BhX3RhY3RpdmF0ZSAtIFR1bmVzIFBBX1RBY3RpdmF0
-ZSBvZiBsb2NhbCBVbmlQcm8NCj4gPiAgICogQGhiYTogcGVyLWFkYXB0ZXIgaW5zdGFuY2UNCj4g
-PiBAQCAtNzI0NCw4ICs3MjYyLDYgQEAgc3RhdGljIGludCB1ZnNoY2RfZGV2aWNlX3BhcmFtc19p
-bml0KHN0cnVjdCANCj4gPiB1ZnNfaGJhICpoYmEpDQo+ID4gDQo+ID4gIAl1ZnNoY2RfZ2V0X3Jl
-Zl9jbGtfZ2F0aW5nX3dhaXQoaGJhKTsNCj4gPiANCj4gPiAtCXVmc19maXh1cF9kZXZpY2Vfc2V0
-dXAoaGJhKTsNCj4gPiAtDQo+ID4gIAlpZiAoIXVmc2hjZF9xdWVyeV9mbGFnX3JldHJ5KGhiYSwg
-VVBJVV9RVUVSWV9PUENPREVfUkVBRF9GTEFHLA0KPiA+ICAJCQlRVUVSWV9GTEFHX0lETl9QV1Jf
-T05fV1BFLCAmZmxhZykpDQo+ID4gIAkJaGJhLT5kZXZfaW5mby5mX3Bvd2VyX29uX3dwX2VuID0g
-ZmxhZzsNCg0K
+Hello,
 
+syzbot found the following crash on:
+
+HEAD commit:    8999dc89 net/x25: Fix null-ptr-deref in x25_disconnect
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=16004440100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7a70e992f2f9b68
+dashboard link: https://syzkaller.appspot.com/bug?extid=e73ceacfd8560cc8a3ca
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e73ceacfd8560cc8a3ca@syzkaller.appspotmail.com
+
+bridge4: port 1(bond0) entered blocking state
+bridge4: port 1(bond0) entered disabled state
+BUG: stack guard page was hit at 000000008ec16325 (stack is 0000000068a067dc..00000000b4f7fcaf)
+kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 7601 Comm: syz-executor.0 Not tainted 5.7.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:unwind_next_frame+0xe4/0x19d0 arch/x86/kernel/unwind_orc.c:386
+Code: 41 5d 41 5e 41 5f c3 4d 8d 67 48 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 0f 85 39 12 00 00 49 8b 47 48 <48> 89 44 24 10 49 8d 47 38 48 89 c2 48 89 04 24 48 b8 00 00 00 00
+RSP: 0018:ffffc9000cd07fe8 EFLAGS: 00010246
+RAX: ffffffff81327f33 RBX: 1ffff920019a1005 RCX: ffffc9000cd08200
+RDX: 1ffff920019a1038 RSI: 0000000000000000 RDI: ffffc9000cd08178
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffffc9000cd081a0
+R10: ffffc9000cd081cf R11: fffff520019a1039 R12: ffffc9000cd081c0
+R13: fffff520019a1031 R14: fffff520019a1030 R15: ffffc9000cd08178
+FS:  00007ff0d192f700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc9000cd07ff8 CR3: 000000005d606000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __unwind_start arch/x86/kernel/unwind_orc.c:655 [inline]
+ __unwind_start+0x474/0x820 arch/x86/kernel/unwind_orc.c:585
+ unwind_start arch/x86/include/asm/unwind.h:60 [inline]
+ arch_stack_walk+0x57/0xd0 arch/x86/kernel/stacktrace.c:24
+ stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
+ save_stack+0x1b/0x40 mm/kasan/common.c:49
+ set_track mm/kasan/common.c:57 [inline]
+ __kasan_kmalloc mm/kasan/common.c:495 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:468
+ slab_post_alloc_hook mm/slab.h:586 [inline]
+ slab_alloc_node mm/slab.c:3263 [inline]
+ kmem_cache_alloc_node+0x13c/0x760 mm/slab.c:3575
+ __alloc_skb+0xba/0x5a0 net/core/skbuff.c:198
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ nlmsg_new include/net/netlink.h:888 [inline]
+ rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3695
+ rtmsg_ifinfo_event.part.0+0x49/0xe0 net/core/rtnetlink.c:3731
+ rtmsg_ifinfo_event net/core/rtnetlink.c:5512 [inline]
+ rtnetlink_event+0x11e/0x150 net/core/rtnetlink.c:5505
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9117
+ bond_compute_features.isra.0+0x521/0xa40 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x6ee/0x930 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:1933
+ call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
+ call_netdevice_notifiers net/core/dev.c:1974 [inline]
+ netdev_features_change net/core/dev.c:1364 [inline]
+ netdev_update_features net/core/dev.c:9101 [inline]
+ netdev_update_features+0xc4/0xd0 net/core/dev.c:9098
+ netdev_sync_lower_features net/core/dev.c:8910 [inline]
+ __netdev_update_features+0x821/0x12f0 net/core/dev.c:9045
+ netdev_update_features+0x63/0xd0 net/core/dev.c:9100
+ dev_disable_lro+0x45/0x320 net/core/dev.c:1592
+ br_add_if+0x8c5/0x1810 net/bridge/br_if.c:633
+ do_set_master net/core/rtnetlink.c:2470 [inline]
+ do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2443
+ do_setlink+0xaa2/0x3680 net/core/rtnetlink.c:2605
+ __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3266
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3391
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff0d192ec78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000500a40 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000006
+RBP: 000000000078bfa0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009fe R14: 00000000004ccb57 R15: 00007ff0d192f6d4
+Modules linked in:
+---[ end trace 9178e0e56bfc9183 ]---
+RIP: 0010:unwind_next_frame+0xe4/0x19d0 arch/x86/kernel/unwind_orc.c:386
+Code: 41 5d 41 5e 41 5f c3 4d 8d 67 48 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 0f 85 39 12 00 00 49 8b 47 48 <48> 89 44 24 10 49 8d 47 38 48 89 c2 48 89 04 24 48 b8 00 00 00 00
+RSP: 0018:ffffc9000cd07fe8 EFLAGS: 00010246
+RAX: ffffffff81327f33 RBX: 1ffff920019a1005 RCX: ffffc9000cd08200
+RDX: 1ffff920019a1038 RSI: 0000000000000000 RDI: ffffc9000cd08178
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffffc9000cd081a0
+R10: ffffc9000cd081cf R11: fffff520019a1039 R12: ffffc9000cd081c0
+R13: fffff520019a1031 R14: fffff520019a1030 R15: ffffc9000cd08178
+FS:  00007ff0d192f700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc9000cd07ff8 CR3: 000000005d606000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
