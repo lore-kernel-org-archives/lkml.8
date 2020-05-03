@@ -2,135 +2,108 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8FEC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2790BC47256
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C42D206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02B75206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bstM6LGq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6cEz+J0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgECTS2 (ORCPT
+        id S1729058AbgECTUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 15:18:28 -0400
-Received: from mail-mw2nam10on2063.outbound.protection.outlook.com ([40.107.94.63]:20787
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728843AbgECTS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 15:18:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nJ03PPFjeFMKqf6Zd90I+hVkcBr614mB5IkW0C1yCrJkkXlNN1zlFFnwac40ymiGDdcmk1McimsW67FEC66wtqKw2YUetdFpHpSK/UP6EPtgoQAgqc2XzrSb9h5MKzplFh+qAPs12MxkVAK1l9IWr91gC0oe00fnS7gU7a3PAJNowKMbNRTpdETRWXbc69nj+xZBE/hQBGTCL8eAvjSCus3D9DEf0YNGWLR44w61VaQMjUZAN7Aov3tTMYx1cJ8wjIZwbYQAyB/RWGSGebjSr5s5yMjjEVn+udScr65p1AVw3ZkD4hs9P27RkJ8EoANTaL3bq6XYp0EUJYRyGdnuTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jMy7DnDJRfliovUluh6hUXFGlryQluvI8RO7eQRwDTQ=;
- b=jMd75E1TV8jW+r06BTShSsznr2svoVVVbCJtYC8HbfeVdjYhpM+VAyaVSYulS41ZSQ1jGsaf4nNq6dt7tzODF7mhNf2kTqBp6AFb8034/ffJ6LYc2S+FNEqrcSROt9J4uu4nHenQvdIW0xeISeNacwTjfOCR+e6QHExgo+293XTQ3WbPLomMMKB5Eh0ouxiTUS5s2aJrZEdjA4u8YmLYe+X0/zjAelvPc//J17B3gTr8tEMKFFHSxEFefhgnG8KiYqGICY/jhecbHZdnk2liYvLjdvCxub2RTTZxTMPZYZFYQnJnaOWAgIP/5lMpw2bkfV70YgtbGut3apyhpb4OeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Sun, 3 May 2020 15:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgECTUh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 15:20:37 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07BFC061A0E;
+        Sun,  3 May 2020 12:20:36 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so4473156pfw.13;
+        Sun, 03 May 2020 12:20:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jMy7DnDJRfliovUluh6hUXFGlryQluvI8RO7eQRwDTQ=;
- b=bstM6LGqOi8MjTiZWkztC40I6fjE6Hoceumr6UNtfFGMuN5tXrjEc9fitr60mjMbNYc/ZaKQ660KBHcCkP5MNxJbqGuBvXC1vzARSM3a8NL4ru6g+98DKUqgTPp/eXrWrFVtfRr96bVHjSbbbbJJfK2+DDm3psfJMZqfEQbTz2s=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB1883.namprd12.prod.outlook.com (2603:10b6:3:113::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.29; Sun, 3 May 2020 19:18:23 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.029; Sun, 3 May 2020
- 19:18:23 +0000
-Subject: Re: AVIC related warning in enable_irq_window
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
- <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
- <27ec00547131cc0e0b807e94eb30fdcff5c1cb47.camel@redhat.com>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <dda0de57-b891-9e30-b2f1-561c5e04ca39@amd.com>
-Date:   Mon, 4 May 2020 02:18:13 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-In-Reply-To: <27ec00547131cc0e0b807e94eb30fdcff5c1cb47.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: KL1P15301CA0003.APCP153.PROD.OUTLOOK.COM
- (2603:1096:802:2::13) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sdFNGTDLDdIBEa4zPq8Xb5v+CQ78ZHRP0MSZwCJG7Do=;
+        b=X6cEz+J00Dq2b2asHfmODYZSaa/w43mmilEx5Ql7+Y7rRGQGJ0W/7uDnrdcEtJJyV0
+         mmaATfO9H1UOTBcvK4/+Xoov9wHC+WGFFT2R7zpTO4RisLNFN1HUW9UtmSTmbgnf+BXS
+         L0GBO/sm+gmefaMXeLQ5v6VP4/8SxFSrCzL2rquGIJSIegXpoHqwgPJAQhNLTJk0+jUc
+         x0RvUF4BhbaEhrb4hnV28s4mkeFwnGgLE7EM9ImGOGAzvFN1TEWkSCT1xQIXNB27kseO
+         VDSs4JxNoZqnkMie/Ih0wooxUUdb01RrTOWrvd+8anm1FOCiFN3xg7BPE+QKS9FKW2+o
+         H8LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sdFNGTDLDdIBEa4zPq8Xb5v+CQ78ZHRP0MSZwCJG7Do=;
+        b=IzU2fYDm7zSYUC00KLJ/jNZWSwMmu6MhiARQ6OkXwVhsnVrlKXG3bl4SkOa92c48gx
+         k3bCdhRCBH58oRclVmi3D2lqK0AfS8N+U8qCnAYmrAPLCZj05bTunK9e02HJZjHeBUKK
+         P1X6uqM3WEC+ntqdczn0Vp3YT30+Gtdcl4bjrLf1/2EI5GCe+Gx8Z4xMS3vdwYp1VkeL
+         EbhHqt0F2CiJE+L6a2q6vlrMtt5GoDfhbrU16oIhpKDl9BnvYfpbgHXf+Wr3OJ74aG4l
+         C0UonjTcrSTUdlBMIaXTt0y0FAaLdITj/SDlrZlsmwjR0jpU+jmEY5q5iNM5hZgdobzy
+         xVvw==
+X-Gm-Message-State: AGi0PuZclSjEYFEaSVoFOMdO/ZPCXGnlOS4PUWx7umuRdjmedWGr29RM
+        9aaYb7RUx+DQ6vphTnoHQcOb7TGJf9HJUc/6FXc=
+X-Google-Smtp-Source: APiQypJiGYeeGCHG1x0MvKwInlqyR0rKQgNUGscccAeZ21vwMf1rDvUTzMn6TDOcJsNlun19U2aKwuLUcK7j/ZiXkgA=
+X-Received: by 2002:a62:f908:: with SMTP id o8mr14017471pfh.170.1588533636386;
+ Sun, 03 May 2020 12:20:36 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Suravees-MacBook-Pro.local (2403:6200:8862:d0e7:1811:ded2:5c1a:f796) by KL1P15301CA0003.APCP153.PROD.OUTLOOK.COM (2603:1096:802:2::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.3 via Frontend Transport; Sun, 3 May 2020 19:18:21 +0000
-X-Originating-IP: [2403:6200:8862:d0e7:1811:ded2:5c1a:f796]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4aa52cd2-c52c-43d9-e91a-08d7ef96bf9a
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1883:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB18835E52D4A97B91944196D0F3A90@DM5PR12MB1883.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0392679D18
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eHa8uIWEzTTqaQuDlZ+ajWT22YzPn4oqR2MfhvxbugAj/GVuH/3I5jDqngnK+XVTMu3/viu78qTskoIEBHO7qSm3aJ83u/ZSRJvmBDfQ+S++7UzAPXS/xki8aiHUW/YSHI9Ed5VZ+GTUcxXxZoYG3KADR0F1hcQTKLwU5lAnkLk+FQEGmwQKcj2LJJHqWB351g88nQ2IC62aeDjt48qVgg0FOUhL1weNEtnXwYkrje1+hgSiRVQxulaI/NXCWSIgk0tXwTdqZiAbebYl3/5e/PjeNwue/Nf7gp0S27csjy1FVUKhRguXCzM2IcQ80+8W5uSjsV90jLzB/mCAQIvtWs3Jcfk21H3sFOHqnLlYqPg88jptvgifvlCBZaa9nGvgUvEtb7fig6NggOPJkWZsD1UDD4Cb7sCMdCgLQ+DmZHzrQ0F/Zs51qDTRm5ttb1Ul
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(136003)(346002)(366004)(52116002)(110136005)(36756003)(66556008)(66476007)(66946007)(2616005)(53546011)(8676002)(6506007)(8936002)(31686004)(316002)(6512007)(478600001)(31696002)(6666004)(86362001)(5660300002)(4326008)(16526019)(44832011)(6486002)(186003)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ALGijgxD5FTHmBm3RYPF7x5vsRzz+ukXmRlg6Z0c06eOHrCFM/b5sVD/1ZkfxQAJmm2rga4ZKRk3YqrpW7hED6A9nTw67IyOq9iK3STvb/eCJ/AdL0UJfKTO+jxh975ZKTLjfXmm8g8rc6hkjdGOKOZOJBcZyhxXIirKfTAuak6VnLd7YjKqhChKqsKOL5I8ZFgZJo+/5/vQkEdKZ2bR4TNfqUMkit5ut4vMcMC4QiIih+/S9pWlczKqt/zq6YO4b37BDl+z9ZylhAiwPvCq5jVqG2/IJm3T/eCG9LnGgYqv3BJ49V49fGoLzPpIdi/6HWBxU37AmRjz9SX05cu8ySWpbFNHe8Vmbq8awQMqNajQ0IFYuHBUjN8wsJmXE0f1RUc8McL1F3GaOotVYUicuM3+Paq0pZWmpGhHNFw4hFd1hcRNg9xSOHHtVYT8UHy4B6bmWGNXfDtroofOXqEhdf4R6ws2wumLEbMe7a9GxAbY2ioYS1uaLn4fOn3CFD0k44DVbIt7mn9ah3eIu/QwxdZvRqLx+dVCFpWBrrbj00LguwCtZplCSiWCrI6u0A4T/3um0x7OW9eNbBa7MCITBe+ua8bTYAOBB1unPxqX2TUr4ff17zrKbNshj95e2xuvs7ruqWPTfbzmrIKtgiWtVsMopGTCQmDaGMBoYltI5i7EbOK1FoRFJoZzLqNlebSJG9vyq6DMSLIKnfnc/8cp/j5olxTPIUawmRdQVYM+4RM45v+smiy3apji7nQbDLoTjp/oEM9pZzGcvLbeAxTlCsEJJDhYk4IQpfJyztkw75zWXBPwczc/ZTIX+Wc0nJx0+42ipny3nvAPVPKBsZyGV2NlcbNzFzUD+PxS5TlqI3GIigf7aM9L7TcArnZYCsDV
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4aa52cd2-c52c-43d9-e91a-08d7ef96bf9a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 19:18:23.7016
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CNltNIOn4OFeR7nXmt5o7cnGCsdZmG0Ee2yTmL/SkV6VN4rHOcIpKg8a/Rxuiob0lXcJ+9ZbpD5FhEaglCtk7A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1883
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 3 May 2020 22:20:23 +0300
+Message-ID: <CAHp75Vcg9kdgr=AXxwmXO-rmL5z9nq=zJvCww8wG7i1B3BQNYg@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxim / Paolo,
+On Sun, May 3, 2020 at 1:54 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
 
-On 5/2/20 11:43 PM, Maxim Levitsky wrote:
-> On Sat, 2020-05-02 at 18:42 +0200, Paolo Bonzini wrote:
->> On 02/05/20 15:58, Maxim Levitsky wrote:
->>> The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
->>> kvm_request_apicv_update, which broadcasts the KVM_REQ_APICV_UPDATE vcpu request,
->>> however it doesn't broadcast it to CPU on which now we are running, which seems OK,
->>> because the code that handles that broadcast runs on each VCPU entry, thus
->>> when this CPU will enter guest mode it will notice and disable the AVIC.
->>>
->>> However later in svm_enable_vintr, there is test 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
->>> which is still true on current CPU because of the above.
->>
->> Good point!  We can just remove the WARN_ON I think.  Can you send a patch?
->>
->> svm_set_vintr also has a rather silly
->>
->> static void svm_set_vintr(struct vcpu_svm *svm)
->> {
->>         set_intercept(svm, INTERCEPT_VINTR);
->>         if (is_intercept(svm, INTERCEPT_VINTR))
->>                 svm_enable_vintr(svm);
->> }
->>
->> so I'm thinking of just inlining svm_enable_vintr and renaming
->> svm_{set,clear}_vintr to svm_{enable,disable}_vintr_window.  Would you
->> like to send two patches for this, the first to remove the WARN_ON and
->> the second to do the cleanup?
-> 
-> Absolutely! I will send a patch very soon.
+Besides the messing with parameter types (int vs. bool) it should be
+rebased on top of Bartosz's tree.
 
-I have been debugging this and I have a patch that is supposed to fix this
-(instead of removing the WARN ON). Please do not remove the warn on just yet.
+Also, it might be that we can instantiate a kind of device (MFD?) that
+will share same regmap between two and have naturally different
+drivers for GPIO and PWM.
 
-Thanks,
-Suravee
+Side note: I still think this should be a function of the pin when
+driver will be converted to pin control. Now this change delays the
+conversion and better approach. But as I said before, if GPIO
+maintainers consider this good enough to go like this, I won't object.
+
+Some background. It's known that some pin control devices may have PWM
+function (limited, like blinking led or so, or full) and it would be
+nice to have a pin mux option which enables PWM on a requested pin. Or
+PWM tries to enable proper pin muxing (this sounds even better in
+order of sharing same API from pin control, like "pin is available for
+GPIO").
+
+-- 
+With Best Regards,
+Andy Shevchenko
