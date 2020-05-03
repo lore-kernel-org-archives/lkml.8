@@ -2,90 +2,64 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4579C47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDE4C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7BF02071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZQgh9CNC"
+	by mail.kernel.org (Postfix) with ESMTP id 1E99B206F0
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgECWsl (ORCPT
+        id S1726415AbgECW6J convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 18:48:41 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60747 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbgECWsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 18:48:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Fh3p45gLz9sRf;
-        Mon,  4 May 2020 08:48:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588546118;
-        bh=+DTZ7vGvV+Z9WnCAwIgghVv2D16ad9AvWeMeyiyct/c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZQgh9CNCoQh43SQo87DWxmXo/SHna5uJQJ6IFPhqx07sCwlD5PPd4lPlUGUk4Us/x
-         db3JVG0CJLIDyJ/dkxKZ5kY5xtQoThj8tATNgDLg1ZfrC/pCTYGOVsPsrSPX7IVWMt
-         NhL3pWz6yd8bmzFm3Ok7bvBaNxBFdh7TQ0UdCtd5q5yYIxOStTSMxzJJ7Aq8xSsnSa
-         QMh1G9RBqABpbCIkBon4JW0C/jid5ZUgP45te4UjMPUANVxp+54/lXJ+mSbw0VXVEw
-         oVu3DRbRwoN91PFsBdVc2b3MlIOVZ2JcXsLpPPP28u4S138RCF+y1gDZ9dCV64viyL
-         gvsruV/T55JBg==
-Date:   Mon, 4 May 2020 08:48:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: error when fetching the clk-samsung tree
-Message-ID: <20200504084835.5814c682@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2KTLp1KJSP/wG18RPW=BZYS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sun, 3 May 2020 18:58:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725844AbgECW6J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 18:58:09 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CA7C061A0E;
+        Sun,  3 May 2020 15:58:09 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8C4351211C987;
+        Sun,  3 May 2020 15:58:08 -0700 (PDT)
+Date:   Sun, 03 May 2020 15:58:07 -0700 (PDT)
+Message-Id: <20200503.155807.975495147223194743.davem@davemloft.net>
+To:     bjorn@mork.no
+Cc:     Kangie@footclan.ninja, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: usb: qmi_wwan: add support for DW5816e
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <87v9ldlccp.fsf@miraculix.mork.no>
+References: <20200502155228.11535-1-Kangie@footclan.ninja>
+        <87v9ldlccp.fsf@miraculix.mork.no>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 03 May 2020 15:58:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2KTLp1KJSP/wG18RPW=BZYS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Bjørn Mork <bjorn@mork.no>
+Date: Sun, 03 May 2020 09:13:58 +0200
 
-Hi all,
+> Matt Jolly <Kangie@footclan.ninja> writes:
+> 
+>> Add support for Dell Wireless 5816e to drivers/net/usb/qmi_wwan.c
+>>
+>> Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+ ...
+> Looks fine to me.  Please add to the stable queue as well,  Thanks.
+> 
+> Acked-by: Bjørn Mork <bjorn@mork.no>
 
-Fetching the clk-samsung tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/snawrocki/clk.git#for-next)
-produces the following error:
-
-fatal: couldn't find remote ref refs/heads/for-next
-
-I am using the last version I fetched (which is empty relative to Linus'
-tree).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2KTLp1KJSP/wG18RPW=BZYS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6vSkMACgkQAVBC80lX
-0GwqmQgAnMW/63HMFdc/uPtvIMCUmaotAXhB/s5uXUl1b8vAG30WR11heCnJMaTV
-xnPN3WGfzhaBc2Kbr86fyYr7VhzZQump4BE/jsaSiblBoCgoZ8MkTriBy4zUKu7s
-2PX3s2ama2NB6wkcN6R8mJb5TD5eBfIRt2Zj3QX7kFP6zTI5AZtyKYWuewvjE7y9
-6f7P1AGw6UUAIsWWadLEzDq8SaE9ZOseuHKHfa1EcV9nJh5KxGS4U97Idz60r2Se
-lcP8YyhGSia2Z/7T5Sllu3P1Dg5ZU9xT1bXF1O0uoZOjzgOeVv31p1LNoFav1ONG
-O4jYoXHTMfMoFtnsnguut6D7Ebr5FA==
-=Nto5
------END PGP SIGNATURE-----
-
---Sig_/2KTLp1KJSP/wG18RPW=BZYS--
+Applied and queued up for -stable.
