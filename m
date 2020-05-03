@@ -2,153 +2,222 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41103C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE05C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D713206A5
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588500451;
-	bh=hn7NJivsaoRyjrym3a4g0GYlcvxB/cSGHASBIqV5HzI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oAhhlzTjR8nmHO4xwmavcKMrpmey8LHzmmfOIb4Qa/ncNE54vcw7w3IjXF/qvTf6z
-	 yLCbKxNwrK/USGCd5HfA6or4Ufz6De+c6ZwWiXfQ8f/yBnWz0wPVVj6bkiZ/LMySk4
-	 UPUpUWYeE+GMJlwNJywClD8sTYNp7P4/1FuAsuMk=
+	by mail.kernel.org (Postfix) with ESMTP id E56CA206A5
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pLQkLJM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgECKHa (ORCPT
+        id S1728179AbgECKKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 06:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728095AbgECKH3 (ORCPT
+        Sun, 3 May 2020 06:10:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43786 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgECKKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 06:07:29 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EE60C061A0C;
-        Sun,  3 May 2020 03:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=11eMvbjGeR29h1DUas3zdmi7upTWauQvUqLXTyueNJg=; b=tfXwO/vsnGFWRrrWcdQPqqP20R
-        YrnQ7Dex9YBnC7SjIj/RxLh8ojnSzWAfuNB6v0HzGMxNtfZSvu7vziVQthR4jdn5LhMi81IGxnYC2
-        Rf9PknX6ObDBjZtDuzpjdImQyZf5Facvi7KA6WJRjp0A+XogHyPJi+pjbRTqTP6SQ3dhTgKgZd1/x
-        CKTjKF2kux7seQ+NAETEUyl8O5mSNG5okp2Sf4RoSyJyMM6v3ya+TgaaifbTNutx6lIoYNfiM2h1O
-        uHAWBC9C7RpLCefjrMejLRZgr2Xp/BiaPh48jIZdsNjUaXjlWfUYiUnbj2mbY49ukkJsZsQtn323j
-        atgU1XSg==;
-Received: from [95.90.213.197] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVBWs-0000so-KN; Sun, 03 May 2020 10:07:22 +0000
-Date:   Sun, 3 May 2020 12:07:14 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Francescodario Cuzzocrea <francescodario.cuzzocrea@mail.polimi.it>
-Cc:     "mchehab+huawei@kernel.org" <mchehab+huawei@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gnomes@lxorguk.ukuu.org.uk" <gnomes@lxorguk.ukuu.org.uk>,
-        "alan@linux.intel.com" <alan@linux.intel.com>
-Subject: Re: [GIT PULL] Ressurect the atomisp staging driver
-Message-ID: <20200503120714.28f62360@coco.lan>
-In-Reply-To: <3f551a8f87808ee7828dc03d41c7a23faac89f3c.camel@mail.polimi.it>
-References: <20200501215741.3be05695@coco.lan>
-        <3f551a8f87808ee7828dc03d41c7a23faac89f3c.camel@mail.polimi.it>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Sun, 3 May 2020 06:10:06 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 043A3XbN179569;
+        Sun, 3 May 2020 10:09:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=+3cvJANHAAeU4d22dlyULTuCEPl9tYfeqegQxmVM3JU=;
+ b=pLQkLJM5wQOlBgB8xdx38a/BkDzOYcAzpnRvUXIMtcd2lScAjnye/aPeADLj5/VRl8dd
+ dYRb7o9j+/vdK55hoxKqv/wuAoIFfJ7o+9jzq5jIdmczj6X0WOUsAFUere4xZCxBtejF
+ kCJdUKV8+ajwls9ieN9jpKW+Pgodeg7qPWC0YZJjRyEMkqc/Kgj8GmWsqd5h1RJrXnCb
+ 8HSddZvuBGgJb+MGhvjZXfBxug3fpCLP0FpWL9vboY+LLc7qkMdW9A/a2DBAXVmb0lFX
+ PZhmT9EpEaOEyqZ8BgqIKX0lyDThP85UJR/v7nidK53yBbfB4Au5CFcGbMOHld1WjOV7 4Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30s09qu5e0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 03 May 2020 10:09:47 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 043A7XNR129168;
+        Sun, 3 May 2020 10:09:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 30sjbane2a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 03 May 2020 10:09:47 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 043A9d6c015487;
+        Sun, 3 May 2020 10:09:45 GMT
+Received: from dhcp-10-175-179-100.vpn.oracle.com (/10.175.179.100)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 03 May 2020 10:09:38 +0000
+Date:   Sun, 3 May 2020 11:09:30 +0100 (BST)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     David Gow <davidgow@google.com>
+cc:     trishalfonso@google.com, brendanhiggins@google.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v7 0/5] KUnit-KASAN Integration
+In-Reply-To: <20200424061342.212535-1-davidgow@google.com>
+Message-ID: <alpine.LRH.2.21.2005031101130.20090@localhost>
+References: <20200424061342.212535-1-davidgow@google.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9609 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005030091
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9609 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005030090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Francescodario,
+On Thu, 23 Apr 2020, David Gow wrote:
 
-Em Sun, 3 May 2020 09:19:55 +0000
-Francescodario Cuzzocrea <francescodario.cuzzocrea@mail.polimi.it> escreveu:
-
-> Hi ! 
+> This patchset contains everything needed to integrate KASAN and KUnit.
 > 
-> Thanks for this, it is very appreciated !! 
+> KUnit will be able to:
+> (1) Fail tests when an unexpected KASAN error occurs
+> (2) Pass tests when an expected KASAN error occurs
 > 
-> I have a bay trail 2in1 (namely, the acer aspire swtich 10 sw5-012,
-> with an OV2722 module, so supported by the driver) on top of which I
-> run android-x86-q so I would be able to help a bit with testing the
-> driver.
+> Convert KASAN tests to KUnit with the exception of copy_user_test
+> because KUnit is unable to test those.
 > 
-> I tried to pull in your changes on top of my 5.7-rc2 here : 
-> https://gitlab.com/lineageos-x86/android_kernel_common/-/commits/5.7-media
+> Add documentation on how to run the KASAN tests with KUnit and what to
+> expect when running these tests.
 > 
-> but I did not understood how to correctly enable the driver.
-> According
-> to Kconfig help, there is still the hardcoded switch between ISP2401
-> and ISP2400, so for my Bay Trail tablet I should set :
+> This patchset depends on:
+> - "[PATCH v3 kunit-next 0/2] kunit: extend kunit resources API" [1]
+> - "[PATCH v3 0/3] Fix some incompatibilites between KASAN and
+>   FORTIFY_SOURCE" [2]
 > 
-> #
-> CONFIG_VIDEO_ATOMISP_ISP2401 is not set
+> Changes from v6:
+>  - Rebased on top of kselftest/kunit
+>  - Rebased on top of Daniel Axtens' fix for FORTIFY_SOURCE
+>    incompatibilites [2]
+>  - Removed a redundant report_enabled() check.
+>  - Fixed some places with out of date Kconfig names in the
+>    documentation.
+>
+
+Sorry for the delay in getting to this; I retested the
+series with the above patchsets pre-applied; all looks
+good now, thanks!  Looks like Daniel's patchset has a v4
+so I'm not sure if that will have implications for applying
+your changes on top of it (haven't tested it yet myself).
+
+For the series feel free to add
+
+Tested-by: Alan Maguire <alan.maguire@oracle.com>
+
+I'll try and take some time to review v7 shortly, but I wanted
+to confirm the issues I saw went away first in case you're
+blocked.  The only remaining issue I see is that we'd need the
+named resource patchset to land first; it would be good
+to ensure the API it provides is solid so you won't need to
+respin.
+
+Thanks!
+
+Alan
+ 
+> Changes from v5:
+>  - Split out the panic_on_warn changes to a separate patch.
+>  - Fix documentation to fewer to the new Kconfig names.
+>  - Fix some changes which were in the wrong patch.
+>  - Rebase on top of kselftest/kunit (currently identical to 5.7-rc1)
 > 
-> but settings this breaks compilation with : 
+> Changes from v4:
+>  - KASAN no longer will panic on errors if both panic_on_warn and
+>    kasan_multishot are enabled.
+>  - As a result, the KASAN tests will no-longer disable panic_on_warn.
+>  - This also means panic_on_warn no-longer needs to be exported.
+>  - The use of temporary "kasan_data" variables has been cleaned up
+>    somewhat.
+>  - A potential refcount/resource leak should multiple KASAN errors
+>    appear during an assertion was fixed.
+>  - Some wording changes to the KASAN test Kconfig entries.
 > 
-> ERROR: modpost:
-> "ia_css_configure_sc"[drivers/staging/media/atomisp/atomisp.ko]
-> undefined!
-
-I'll double check and address this issue. 
-
+> Changes from v3:
+>  - KUNIT_SET_KASAN_DATA and KUNIT_DO_EXPECT_KASAN_FAIL have been
+>  combined and included in KUNIT_DO_EXPECT_KASAN_FAIL() instead.
+>  - Reordered logic in kasan_update_kunit_status() in report.c to be
+>  easier to read.
+>  - Added comment to not use the name "kasan_data" for any kunit tests
+>  outside of KUNIT_EXPECT_KASAN_FAIL().
 > 
-> Looking at commit history, I noticed that the driver should be able to
-> recognize at runtime the ISP version,
-
-Not yet. There are simply too many places there with checks for ISP2400
-or ISP2401. I got rid of most of them, but there are 4 header files
-that contain ISP-version specific information, whose are used by several
-parts of the driver. Getting rid of it would require more work.
-
-> so what I tried next was to set
-> CONFIG_VIDEO_ATOMISP_ISP2401=y, and the compilation went fine.
-> I was able to boot the kernel (and I also added both
-> shisp_2400b0_v21.bin and shisp_2401a0_v21.bin from an android tablet
-> dump).
+> Changes since v2:
+>  - Due to Alan's changes in [1], KUnit can be built as a module.
+>  - The name of the tests that could not be run with KUnit has been
+>  changed to be more generic: test_kasan_module.
+>  - Documentation on how to run the new KASAN tests and what to expect
+>  when running them has been added.
+>  - Some variables and functions are now static.
+>  - Now save/restore panic_on_warn in a similar way to kasan_multi_shot
+>  and renamed the init/exit functions to be more generic to accommodate.
+>  - Due to [3] in kasan_strings, kasan_memchr, and
+>  kasan_memcmp will fail if CONFIG_AMD_MEM_ENCRYPT is enabled so return
+>  early and print message explaining this circumstance.
+>  - Changed preprocessor checks to C checks where applicable.
 > 
-> The kernel booted fine, the ov2722 module is loaded, but according to
-> dmesg it is not able to initialize the hardware : 
-> https://pastebin.com/VBMD1bau
-
-(transcribing the relevant messages from pastebin below)
-
-> ov2722 i2c-INT33FB: 00: gmin: initializing atomisp module subdev data.PMIC ID 1
-> ov2722 i2c-INT33FB: 00: supply V1P2A not found, using dummy regulator
-> ov2722 i2c-INT33FB: 00: supply VPROG4B not found, using dummy regulator
-> ov2722 i2c-INT33FB: 00: supply Regulator1p8v not found, using dummy regulator
-> ov2722 i2c-INT33FB: 00: supply Regulator2p8v not found, using dummy regulator
-> ov2722 i2c-INT33FB: 00: unable to set PMC rate 1
-> ov2722 i2c-INT33FB: 00: camera pdata: port: 0 lanes: 1 order: 00000000
-> ov2722 i2c-INT33FB: 00: read from offset 0x300a error -121
-> ov2722 i2c-INT33FB: 00: sensor_id_high = 0xffff
-> ov2722 i2c-INT33FB: 00: ov2722_detect err s_config.
-> ov2722 i2c-INT33FB: 00: sensor power-gating failed
-
-That's the same that happened with the tests we've done so far:
-it is not finding the regulators. I'm currently seeking for a solution
-to that.
-
-Usually, regulator data comes via OpenFirmware/Device Tree.
-
-However, ACPI BIOS store this on a different way. Some (missing) code
-would need to get the relevant parameters from the BIOS and setup
-the regulators.
-
-Btw, could you please send me a tarball with the output of your
-BIOS ACPI tables?
-
-You can get it with:
-
-	$ sudo acpidump |bzip2 > acpi.log.bz2
-
-Thanks,
-Mauro
+> Changes since v1:
+>  - Make use of Alan Maguire's suggestion to use his patch that allows
+>    static resources for integration instead of adding a new attribute to
+>    the kunit struct
+>  - All KUNIT_EXPECT_KASAN_FAIL statements are local to each test
+>  - The definition of KUNIT_EXPECT_KASAN_FAIL is local to the
+>    test_kasan.c file since it seems this is the only place this will
+>    be used.
+>  - Integration relies on KUnit being builtin
+>  - copy_user_test has been separated into its own file since KUnit
+>    is unable to test these. This can be run as a module just as before,
+>    using CONFIG_TEST_KASAN_USER
+>  - The addition to the current task has been separated into its own
+>    patch as this is a significant enough change to be on its own.
+> 
+> 
+> [1] https://lore.kernel.org/linux-kselftest/1585313122-26441-1-git-send-email-alan.maguire@oracle.com/T/#t
+> [2] https://lkml.org/lkml/2020/4/23/708
+> [3] https://bugzilla.kernel.org/show_bug.cgi?id=206337
+> 
+> 
+> 
+> David Gow (1):
+>   mm: kasan: Do not panic if both panic_on_warn and kasan_multishot set
+> 
+> Patricia Alfonso (4):
+>   Add KUnit Struct to Current Task
+>   KUnit: KASAN Integration
+>   KASAN: Port KASAN Tests to KUnit
+>   KASAN: Testing Documentation
+> 
+>  Documentation/dev-tools/kasan.rst |  70 +++
+>  include/kunit/test.h              |   5 +
+>  include/linux/kasan.h             |   6 +
+>  include/linux/sched.h             |   4 +
+>  lib/Kconfig.kasan                 |  18 +-
+>  lib/Makefile                      |   3 +-
+>  lib/kunit/test.c                  |  13 +-
+>  lib/test_kasan.c                  | 688 +++++++++++++-----------------
+>  lib/test_kasan_module.c           |  76 ++++
+>  mm/kasan/report.c                 |  34 +-
+>  10 files changed, 514 insertions(+), 403 deletions(-)
+>  create mode 100644 lib/test_kasan_module.c
+> 
+> -- 
+> 2.26.2.303.gf8c07b1a785-goog
+> 
+> 
