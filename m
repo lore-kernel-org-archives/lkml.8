@@ -2,219 +2,136 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E96C4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85DAC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB9E2075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18A32075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wxph87Yx"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="loiacN+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgECMFg (ORCPT
+        id S1728522AbgECMF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:05:36 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:11013 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728399AbgECMFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:05:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588507533; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=hxNJwtAyl/XkKRaYqsJ6gfilNYiu24k7iYZBLVhuQuM=; b=wxph87Yx4j6TYLJcVHxvmZ8vPX+T4sxlOTT+OeixiqZ7XvNBh1Qu+2dO0LketrbDOrUA+Ks5
- JEP0+Pscpu5wJCPPjcDsm9+sMvhfRN6iXv2L7vbgjTqyZ5c7w2Fd0w4Oc63tznwfZpa7NsGx
- wUdIvKH/r5OJWTUMjIC0wDl98yM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaeb37a.7f7d8e77c6f8-smtp-out-n02;
- Sun, 03 May 2020 12:05:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EAC3CC44792; Sun,  3 May 2020 12:05:12 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27CF1C4478C;
-        Sun,  3 May 2020 12:05:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27CF1C4478C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v4 4/6] drm/msm: dsi: Use OPP API to set clk/perf state
-Date:   Sun,  3 May 2020 17:34:27 +0530
-Message-Id: <1588507469-31889-5-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
-References: <1588507469-31889-1-git-send-email-rnayak@codeaurora.org>
+        Sun, 3 May 2020 08:05:57 -0400
+Received: from mout.web.de ([212.227.15.14]:41151 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728399AbgECMF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 08:05:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588507542;
+        bh=XRnkz74ueXi7rmpVNxIQfdOIFfpQAIN5P21N1C+5fgI=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=loiacN+rdQUubJGj8RvgXdnfnwwHaY3D4bTPZD/d1DSeUVYmTUg6Dkv/CAKQ3p4OP
+         kjEORJfx9X+6JPTrgx6iBEafTtnTwlHXMPx51oAsBJEe1olvd7S7B5N5iAMoKH91H5
+         o9B2ogPjgO26SC0rO0XZpgeX93v7AbmNAMdRtHhw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.26.31]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MsJP4-1jAnsa2k8o-00tgkS; Sun, 03
+ May 2020 14:05:42 +0200
+To:     Qiushi Wu <wu000273@umn.edu>, linux-rtc@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Kangjie Lu <kjlu@umn.edu>
+Subject: Re: [PATCH] rtc: mc13xxx: fix a double-unlock issue
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b9c82115-c70a-2381-f920-385846eb2a45@web.de>
+Date:   Sun, 3 May 2020 14:05:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:r7ti0yaqPjZEg0G3BPTArXLw16yJ1eN2qi3RD8BlbOKZPEqi+1N
+ Lskx+oD4qtJ4H2amvdIAotQty2g4d9EHNkp58XrLSOoJP+JATiabHBoI3llZoPpMHMeKyB9
+ yrly8pwGZLFX56zU5ACG+1H5GYBu5u006WhpjTPlEb9/QBrIC13mOdpoGjXXhqRu4cPlwGC
+ siDE0a4QgHjiOUlgwc28w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KvkWAnzfJjY=:JU9cUYviDny1KXAZd+Dl1F
+ i9+RAxiRkEobBu9FIWjTVVUf+/HewUMEF+luaFwKFQooXDJsKzcXi9wLmQl5Dv5h74s0wD2Yq
+ gIOQbSfHv05wCU5mgvt2AQvGt4zA/8p2Krxw7lfHVr09OfZwdUiXv4vfDitbgMCl+nVpR4wjV
+ vH+XH7EhInPfA58T1QaCXTJtbD/b5a8dOpbPRFJY3sxfX2atVNXO3H5FfhzxLQdKRmB1jkVbK
+ +Ttd+TqA7NUrGRalfOdsuA5mCayvPkdwqJ6F+SKW+/66K4WQiKvSBF2YLCJ83UhMobfu33FtB
+ oGOuM7DPfxwdGD19N2PYDSwyWlc58aQnBxgjlNvIbPi/9bgxF2TlPY0OBwEGfQN+Yroz+OwOx
+ Ge41ufM/QYCA3vYXoSI8limvNfBsnZdeMISbwFyYhx9e3q8zkdukkG9g1DXDM3TlYz/PRoBse
+ JGBQuEyYDQNhiHi5mjbu1gpN/f2H/ssatexd3nuMHsvmbmcK6PBpCCrqPpPJO2oD4z3TL+Og5
+ v+j/wHd4A2fhQXEEyUenWUvAjG3NnLaC3PFWL1YIE/xpVRuuGqL5q/DjUpGntf+VGFI3sbGg8
+ nHSQY1GgcT3T56Rk3XCcoiU3NAkA4CHlkvC1gW2Yb9U2p2tfyr3HyQwJdiTLUGlblw6uS4xka
+ kZtUnCUp7bxKZJxqBN3dr66BG3qFiWxAJMyEhASLc0KA4OqOTA/sIuf0vZSt7SO7ORb3Zoz2u
+ 0FssYn1QI3vxrOPbKZPedK/MQzNG+p8Nk5mTyIR4lmQHGjL7Ci0f2vr3XuB9z+crX+W4yaTf2
+ xQig4/8MmK/8p77jjKn7NlC2LFajW1BD6K1ECg/GFoUHdSmqxx+emziKTq1IrsUAq9heWhu60
+ TY5tDN7+TtsNM7xo5OSXbU4l3gI5SFn4IsDZGI4SJM3xFA7AEIOd/rxpV9zfPLTEysnRT/Ewi
+ SIdBWwsE0gWqbMuw5cVB/4tYwWhnncBbanneo9V1Dj/LyT3mw5ilOoHFou+td9Ch6oBKRjfDB
+ 2Ya5uEScoaqnMwHqWCOv86ejZbo/B3OJbga0LtYXGN66cjtEWBkl30OTqc3Ne41IRarUG85L+
+ L3TeoqfVG/+z/m/DtiQElMwCGO4Hdlta6cFh3xwNpE8g6ktpWZilv27XmSRxlJt8248ciP2bZ
+ aMQG5tKg7SB35KhyhX3RXbAqggtdMruJstQ4M2NBUZrTVeTuE+MsGesMWkyH6dPuHVWe7BO3H
+ 73rcNgzlaa7Sz4yl0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On SDM845 DSI needs to express a perforamnce state
-requirement on a power domain depending on the clock rates.
-Use OPP table from DT to register with OPP framework and use
-dev_pm_opp_set_rate() to set the clk/perf state.
+> =E2=80=A6 To fix this problem,
+> we need to call mc13xxx_lock() again in this error path.
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/gpu/drm/msm/dsi/dsi.h      |  2 ++
- drivers/gpu/drm/msm/dsi/dsi_cfg.c  |  4 +--
- drivers/gpu/drm/msm/dsi/dsi_host.c | 58 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 62 insertions(+), 2 deletions(-)
+How do you think about a wording variant like the following?
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.h b/drivers/gpu/drm/msm/dsi/dsi.h
-index 4de771d..ba7583c 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.h
-+++ b/drivers/gpu/drm/msm/dsi/dsi.h
-@@ -180,10 +180,12 @@ int msm_dsi_runtime_suspend(struct device *dev);
- int msm_dsi_runtime_resume(struct device *dev);
- int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host);
- int dsi_link_clk_set_rate_v2(struct msm_dsi_host *msm_host);
-+int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host);
- int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host);
- int dsi_link_clk_enable_v2(struct msm_dsi_host *msm_host);
- void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host);
- void dsi_link_clk_disable_v2(struct msm_dsi_host *msm_host);
-+void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host);
- int dsi_tx_buf_alloc_6g(struct msm_dsi_host *msm_host, int size);
- int dsi_tx_buf_alloc_v2(struct msm_dsi_host *msm_host, int size);
- void *dsi_tx_buf_get_6g(struct msm_dsi_host *msm_host);
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index 813d69d..773c4fe 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -210,9 +210,9 @@ static const struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
- };
- 
- static const struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
--	.link_clk_set_rate = dsi_link_clk_set_rate_6g,
-+	.link_clk_set_rate = dsi_link_clk_set_rate_6g_v2,
- 	.link_clk_enable = dsi_link_clk_enable_6g,
--	.link_clk_disable = dsi_link_clk_disable_6g,
-+	.link_clk_disable = dsi_link_clk_disable_6g_v2,
- 	.clk_init_ver = dsi_clk_init_6g_v2,
- 	.tx_buf_alloc = dsi_tx_buf_alloc_6g,
- 	.tx_buf_get = dsi_tx_buf_get_6g,
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index 11ae5b8..d5f3dcd 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -14,6 +14,7 @@
- #include <linux/of_graph.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pm_opp.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/spinlock.h>
-@@ -111,6 +112,9 @@ struct msm_dsi_host {
- 	struct clk *pixel_clk_src;
- 	struct clk *byte_intf_clk;
- 
-+	struct opp_table *opp_table;
-+	bool has_opp_table;
-+
- 	u32 byte_clk_rate;
- 	u32 pixel_clk_rate;
- 	u32 esc_clk_rate;
-@@ -537,6 +541,38 @@ int dsi_link_clk_set_rate_6g(struct msm_dsi_host *msm_host)
- 	return 0;
- }
- 
-+int dsi_link_clk_set_rate_6g_v2(struct msm_dsi_host *msm_host)
-+{
-+	int ret;
-+	struct device *dev = &msm_host->pdev->dev;
-+
-+	DBG("Set clk rates: pclk=%d, byteclk=%d",
-+		msm_host->mode->clock, msm_host->byte_clk_rate);
-+
-+	ret = dev_pm_opp_set_rate(dev, msm_host->byte_clk_rate);
-+	if (ret) {
-+		pr_err("%s: dev_pm_opp_set_rate failed %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	ret = clk_set_rate(msm_host->pixel_clk, msm_host->pixel_clk_rate);
-+	if (ret) {
-+		pr_err("%s: Failed to set rate pixel clk, %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	if (msm_host->byte_intf_clk) {
-+		ret = clk_set_rate(msm_host->byte_intf_clk,
-+				   msm_host->byte_clk_rate / 2);
-+		if (ret) {
-+			pr_err("%s: Failed to set rate byte intf clk, %d\n",
-+			       __func__, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
- 
- int dsi_link_clk_enable_6g(struct msm_dsi_host *msm_host)
- {
-@@ -665,6 +701,13 @@ void dsi_link_clk_disable_6g(struct msm_dsi_host *msm_host)
- 	clk_disable_unprepare(msm_host->byte_clk);
- }
- 
-+void dsi_link_clk_disable_6g_v2(struct msm_dsi_host *msm_host)
-+{
-+	/* Drop the performance state vote */
-+	dev_pm_opp_set_rate(&msm_host->pdev->dev, 0);
-+	dsi_link_clk_disable_6g(msm_host);
-+}
-+
- void dsi_link_clk_disable_v2(struct msm_dsi_host *msm_host)
- {
- 	clk_disable_unprepare(msm_host->pixel_clk);
-@@ -1879,6 +1922,18 @@ int msm_dsi_host_init(struct msm_dsi *msm_dsi)
- 		goto fail;
- 	}
- 
-+	msm_host->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "byte");
-+	if (IS_ERR(msm_host->opp_table))
-+		return PTR_ERR(msm_host->opp_table);
-+	/* OPP table is optional */
-+	ret = dev_pm_opp_of_add_table(&pdev->dev);
-+	if (!ret) {
-+		msm_host->has_opp_table = true;
-+	} else if (ret != -ENODEV) {
-+		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-+		return ret;
-+	}
-+
- 	init_completion(&msm_host->dma_comp);
- 	init_completion(&msm_host->video_comp);
- 	mutex_init(&msm_host->dev_mutex);
-@@ -1904,6 +1959,9 @@ void msm_dsi_host_destroy(struct mipi_dsi_host *host)
- 	struct msm_dsi_host *msm_host = to_msm_dsi_host(host);
- 
- 	DBG("");
-+	if (msm_host->has_opp_table)
-+		dev_pm_opp_of_remove_table(&msm_host->pdev->dev);
-+	dev_pm_opp_put_clkname(msm_host->opp_table);
- 	dsi_tx_buf_free(msm_host);
- 	if (msm_host->workqueue) {
- 		flush_workqueue(msm_host->workqueue);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+   Change description:
+   =E2=80=A6
+   Thus add a call of the function =E2=80=9Cmc13xxx_lock=E2=80=9D in an if=
+ branch
+   for the completion of the exception handling.
+
+
+Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
+
+Regards,
+Markus
