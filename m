@@ -2,87 +2,99 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FB2C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F23C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8FA420757
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7425020757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUSL5ycz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgECQ02 (ORCPT
+        id S1728887AbgECQ2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 12:26:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53592 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgECQ01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 12:26:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 30AAFAB76;
-        Sun,  3 May 2020 16:26:27 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id B282DDA70B; Sun,  3 May 2020 18:25:38 +0200 (CEST)
-From:   David Sterba <dsterba@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 5.7-rc4, part 2
-Date:   Sun,  3 May 2020 18:25:37 +0200
-Message-Id: <cover.1588522631.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.25.0
+        Sun, 3 May 2020 12:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728002AbgECQ2T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 12:28:19 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7514C061A0E;
+        Sun,  3 May 2020 09:28:19 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so4335949pfn.5;
+        Sun, 03 May 2020 09:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iZTD9lcM0rAIpS9Q2/unRVD2X5uHHoJ1vWLTkD3cRHU=;
+        b=BUSL5yczeY4itv53cb6Mv1bbJIFySaRaAroSQkMAs7JozqBqxGi+f1O4arCgeWUT5d
+         s9uH+GhrvdJZ5V+pJrTmicCT0NXMFNeULIcyEi1oF8rP6cWKsvEiBY9o6oRDd6Fm9w6I
+         43whgA2Kk2ZEbjd07tR4LUNN9mDVoAM3EGNWbJDXChCT9nHyboWSSjP4wAv//1A9Acy1
+         A9uuKLJXyeqpRM+OL4Rc5HgNbQ16hGG1y0HIWJUFRY9WY2NLXYy6DLaGS6h0PoB3jQbq
+         5kqag/RUY8zkiMTEg792r10fwSpUBzIydDCB4utO9GSDnjsxz4JIDUz/APD23bxg2zQG
+         6QMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iZTD9lcM0rAIpS9Q2/unRVD2X5uHHoJ1vWLTkD3cRHU=;
+        b=IgzAA24sygSgWySweT3aGnFIKzUR4rVLqz8NaXm+zkm7ftfiHrCcvz9AOD+BRxsnOd
+         +ZIR87/FP6DkHzRwPPE+ZNad7NvzWB6wP4AOGRlq/Qt9ohOaxzJGihx6/cSPeFVgcT0Y
+         E0HTefw5/GfwAjGTN76gwpGK/p9aQf/jigcLR2oGZz64XuJJBHsjZrU2dfxhUsV47aGu
+         MVAm5HarLTvzwtKL/rGx2zfDtLPNhmn/TCdX0sKGrTND5G7BjCpPPff3jiV2LWlKLQI6
+         r9b0zfKHPxZfB8jPeVNTk5QHtRy/P5UEhv/PcWgV1CE0x8ttjKZ+uiAZboS6nsuDHPov
+         9+Bw==
+X-Gm-Message-State: AGi0PubODyf4F13f11Gh2M7s6de0mPNtsD75xcZ3iPCxlPubQdbCxz8W
+        9DoeVfXjetCXohJgO7VPdwzQ3+VPcRBFv3ZaennuiLak
+X-Google-Smtp-Source: APiQypLcFDt5DTmLgLhTFDcPLPahZiS49HetGZ61ophSEz7v1q7YnAGANTtNEFhbChUG8y4Y9VDTtysRp1NKnV4Y/B0=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr13164523pfb.130.1588523299414;
+ Sun, 03 May 2020 09:28:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200503131021.16575-1-aishwaryarj100@gmail.com>
+In-Reply-To: <20200503131021.16575-1-aishwaryarj100@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 3 May 2020 19:28:07 +0300
+Message-ID: <CAHp75VcShqK2B4UdQXfi1nYa4fKkvdZE=d1O=w4QmrFk5Rb=+w@mail.gmail.com>
+Subject: Re: [PATCH] i2c: img-scb: Use devm_platform_ioremap_resource and
+ remove superfluous error message.
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, May 3, 2020 at 4:13 PM Aishwarya Ramakrishnan
+<aishwaryarj100@gmail.com> wrote:
+>
+> Use the helper function that wraps the calls to
+> platform_get_resource() and devm_ioremap_resource()
+> together.
+>
+> The function platform_get_irq can log an error by itself.
+> Omit a redundant message for exception handling in the
+> calling function.
+>
+> Suggested by coccinelle.
 
-please pull a few more stability fixes, minor build warning fixes and
-git url fixup. Thanks.
+Should be two patches, each of which with an explanation given. (And
+of course you have to mention after cutter line '---' what kind of
+tests you performed?)
 
-- fix partial loss of prealloc extent past i_size after fsync
-
-- fix potential deadlock due to wrong transaction handle passing via
-  journal_info
-
-- fix gcc 4.8 struct intialization warning
-
-- update git URL in MAINTAINERS entry
-
-----------------------------------------------------------------
-The following changes since commit 1402d17dfd9657be0da8458b2079d03c2d61c86a:
-
-  btrfs: fix transaction leak in btrfs_recover_relocation (2020-04-23 17:24:56 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.7-rc3-tag
-
-for you to fetch changes up to eb91db63a90d8f8e8768b82fcb2cae5f7198cf6b:
-
-  MAINTAINERS: btrfs: fix git repo URL (2020-05-03 18:13:18 +0200)
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      btrfs: fix gcc-4.8 build warning for struct initializer
-
-Eric Biggers (1):
-      MAINTAINERS: btrfs: fix git repo URL
-
-Filipe Manana (1):
-      btrfs: fix partial loss of prealloc extent past i_size after fsync
-
-Qu Wenruo (1):
-      btrfs: transaction: Avoid deadlock due to bad initialization timing of fs_info::journal_info
-
- MAINTAINERS            |  2 +-
- fs/btrfs/backref.c     |  2 +-
- fs/btrfs/transaction.c | 13 +++++++++++--
- fs/btrfs/tree-log.c    | 43 ++++++++++++++++++++++++++++++++++++++++---
- 4 files changed, 53 insertions(+), 7 deletions(-)
+-- 
+With Best Regards,
+Andy Shevchenko
