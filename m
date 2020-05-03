@@ -2,46 +2,43 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4ED7C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78E1C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D992071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37F720836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:21:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="JjeuhiGZ"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="lnIMfb03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgECPVT (ORCPT
+        id S1728765AbgECPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 11:21:19 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:3830 "EHLO rere.qmqm.pl"
+        Sun, 3 May 2020 11:21:16 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:13571 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgECPVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 11:21:17 -0400
+        id S1727832AbgECPVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 11:21:12 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7Z24nPzyJ;
-        Sun,  3 May 2020 17:21:14 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49FV7T5jmtzBc;
+        Sun,  3 May 2020 17:21:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588519274; bh=D5lHcvsWUfCazaZCIpXQUO49elvu1ZjF+jgG6AivSgU=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=JjeuhiGZ7NFgr9As58a6U4F4hzSsBzWRrMaF9Vu61kXE2h0olxRKmekFeSoAgbnSz
-         0kcFOR4dFjy2TNs0shK9HoNrtDgb9prjPNncw0Yh1CaWC1R/n0y9hYweJkcl1z/oUr
-         hnOHVyczSA8R9kivedUeqgX9uVMw0QjxZVi1rjiqPS6PwZMSS68k3mC0p+Ya6Wy1uK
-         Y8A2R0lBcSTVM/XvOXY7gGp7GkW68XHMGAdX9sZSSGZz/O00GK8Y97V5G8PLWp3ndJ
-         EboElt6gsQqeu+kPIByKDHjP0wmiAf7NlCwYsGPz7YSjAulv4+zMOlpt4UtNpAwEtJ
-         4zvskGCUeeQ9Q==
+        t=1588519270; bh=UjY8PzZ2ebkIWEK1WXKg4E1K2ulg0fn/7pKxOYcFaq8=;
+        h=Date:From:Subject:To:Cc:From;
+        b=lnIMfb03/Wy1nUudkFAxx0UXiVrRejRZY1depI/z9gcIwMCXPkFr7AX1FhTbV1qlw
+         BJE/FgcpU0fc44DlsO+eWGL/pQDZ/q802TTd9V6eMq1e59mlPRHyM8LkyeJ+eaERA4
+         HBjRZKhbuhCfOsBtyJasb9/3rc0HkA/iF4whzxAcW7U6esgPx2dRMlf0i8rQ9VA7X8
+         c0wq0k2N7g/b442BkjtzzlZzSaPspWjOQw0rbEKpzBY8jXl68Gu00Y8LT7Bb19X9zi
+         awzR0+jmkApiNJlAo3zXIcXiNQ2cf/p10+EU9YUBf0sc8VoE0VwDyLt9aU3UKiS8vE
+         lWs0ITADTQAMw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Sun, 03 May 2020 17:21:14 +0200
-Message-Id: <75c3b4fe55ba0059c7f7ed6f224c116ee98623ff.1588517058.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+Date:   Sun, 03 May 2020 17:21:07 +0200
+Message-Id: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 10/11] power: bq25890: support IBAT compensation
+Subject: [PATCH v2 00/11] power: supply: bq25890: fix and extend
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -54,72 +51,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add configuration for compensation of IBAT measuring resistor in series
-with the battery.
+This series consists of a set of fixes and enchancements to bq25890
+driver. This is tested on a board using bq25896 as battery controller.
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- drivers/power/supply/bq25890_charger.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Patches 1-3 are cleans up the code a bit, 4-6 fix property value
+reading, 7-9 add more information to be read from the chip, 10-11 add
+IBAT compensation support.
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 87c5832e23d3..9d1ba3bd0bea 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -83,6 +83,8 @@ struct bq25890_init_data {
- 	u8 boostf;	/* boost frequency		*/
- 	u8 ilim_en;	/* enable ILIM pin		*/
- 	u8 treg;	/* thermal regulation threshold */
-+	u8 rbatcomp;	/* IBAT sense resistor value    */
-+	u8 vclamp;	/* IBAT compensation voltage limit */
- };
- 
- struct bq25890_state {
-@@ -258,6 +260,8 @@ enum bq25890_table_ids {
- 	TBL_VREG,
- 	TBL_BOOSTV,
- 	TBL_SYSVMIN,
-+	TBL_VBATCOMP,
-+	TBL_RBATCOMP,
- 
- 	/* lookup tables */
- 	TBL_TREG,
-@@ -299,6 +303,8 @@ static const union {
- 	[TBL_VREG] =	{ .rt = {3840000, 4608000, 16000} },	 /* uV */
- 	[TBL_BOOSTV] =	{ .rt = {4550000, 5510000, 64000} },	 /* uV */
- 	[TBL_SYSVMIN] = { .rt = {3000000, 3700000, 100000} },	 /* uV */
-+	[TBL_VBATCOMP] ={ .rt = {0,        224000, 32000} },	 /* uV */
-+	[TBL_RBATCOMP] ={ .rt = {0,        140000, 20000} },	 /* uOhm */
- 
- 	/* lookup tables */
- 	[TBL_TREG] =	{ .lt = {bq25890_treg_tbl, BQ25890_TREG_TBL_SIZE} },
-@@ -650,7 +656,9 @@ static int bq25890_hw_init(struct bq25890_device *bq)
- 		{F_BOOSTI,	 bq->init_data.boosti},
- 		{F_BOOSTF,	 bq->init_data.boostf},
- 		{F_EN_ILIM,	 bq->init_data.ilim_en},
--		{F_TREG,	 bq->init_data.treg}
-+		{F_TREG,	 bq->init_data.treg},
-+		{F_BATCMP,	 bq->init_data.rbatcomp},
-+		{F_VCLAMP,	 bq->init_data.vclamp},
- 	};
- 
- 	ret = bq25890_chip_reset(bq);
-@@ -861,11 +869,14 @@ static int bq25890_fw_read_u32_props(struct bq25890_device *bq)
- 		{"ti,boost-max-current", false, TBL_BOOSTI, &init->boosti},
- 
- 		/* optional properties */
--		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg}
-+		{"ti,thermal-regulation-threshold", true, TBL_TREG, &init->treg},
-+		{"ti,ibatcomp-resistance", true, TBL_RBATCOMP, &init->rbatcomp},
-+		{"ti,ibatcomp-clamp-voltage", true, TBL_VBATCOMP, &init->vclamp},
- 	};
- 
- 	/* initialize data for optional properties */
- 	init->treg = 3; /* 120 degrees Celsius */
-+	init->rbatcomp = init->vclamp = 0; /* IBAT compensation disabled */
- 
- 	for (i = 0; i < ARRAY_SIZE(props); i++) {
- 		ret = device_property_read_u32(bq->dev, props[i].name,
+v2 removes VBUS and VSYS additions (they need more intrusive changes
+to properly fit into power supply class ABI) and adds binding
+description to IBAT compensation devicetree properties.
+
+Michał Mirosław (11):
+  power: bq25890: remove redundant I2C bus check
+  power: bq25890: simplify chip name property getter
+  power: bq25890: make property table const
+  power: bq25890: protect view of the chip's state
+  power: bq25890: fix ADC mode configuration
+  power: bq25890: update state on property read
+  power: bq25890: implement CHARGE_TYPE property
+  power: bq25890: implement PRECHARGE_CURRENT property
+  power: bq25890: implement INPUT_CURRENT_LIMIT property
+  power: bq25890: support IBAT compensation
+  power: bq25890: document IBAT compensation DT properties
+
+ .../bindings/power/supply/bq25890.txt         |   4 +
+ drivers/power/supply/bq25890_charger.c        | 190 ++++++++++--------
+ 2 files changed, 113 insertions(+), 81 deletions(-)
+
 -- 
 2.20.1
 
