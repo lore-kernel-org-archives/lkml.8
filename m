@@ -2,111 +2,125 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352E9C4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF20C47258
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C70B2073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987AD20787
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:21:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="wE8SaUDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgECOVQ convert rfc822-to-8bit (ORCPT
+        id S1728703AbgECOVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 10:21:16 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36753 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728522AbgECOVQ (ORCPT
+        Sun, 3 May 2020 10:21:43 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:55622 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727865AbgECOVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 10:21:16 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-195-H0ScGf_APEKaLWptspzlKw-1; Sun, 03 May 2020 15:21:12 +0100
-X-MC-Unique: H0ScGf_APEKaLWptspzlKw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 3 May 2020 15:21:11 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 3 May 2020 15:21:11 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jonathan Cameron' <jic23@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-CC:     "kamel.bouhara@bootlin.com" <kamel.bouhara@bootlin.com>,
-        "gwendal@chromium.org" <gwendal@chromium.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "david@lechnology.com" <david@lechnology.com>,
-        "felipe.balbi@linux.intel.com" <felipe.balbi@linux.intel.com>,
-        "fabien.lahoudere@collabora.com" <fabien.lahoudere@collabora.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "syednwaris@gmail.com" <syednwaris@gmail.com>,
-        "patrick.havelange@essensium.com" <patrick.havelange@essensium.com>,
-        "fabrice.gasnier@st.com" <fabrice.gasnier@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>
-Subject: RE: [PATCH 0/4] Introduce the Counter character device interface
-Thread-Topic: [PATCH 0/4] Introduce the Counter character device interface
-Thread-Index: AQHWIVUDUyU0PU/R2k6dJAMe78u4OaiWaHyQ
-Date:   Sun, 3 May 2020 14:21:11 +0000
-Message-ID: <b2d51e3f9dfb4dd78156b2e945607e8d@AcuMS.aculab.com>
-References: <cover.1588176662.git.vilhelm.gray@gmail.com>
- <20200503151314.2ac1fc2e@archlinux>
-In-Reply-To: <20200503151314.2ac1fc2e@archlinux>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 3 May 2020 10:21:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588515702; x=1620051702;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZxYVmPuuA2zr6UpwhDSq7R3lJgKncnOeJeAf3v7KJHY=;
+  b=wE8SaUDxh7OZ9NmBlvoY57LRaoKZ9rA0UvifVjUVL4/wqXveJGy3JpSn
+   ++/xpRr9zVwquxE1SFq6qb49OMWlkvTLxj9I3ouUyROFA/GZ/UsUvCRkF
+   EFIcJVvXjWX9L2xp7QGvantYxpqMsRNLB6UlhbvegLfpzHQHJzCxgiU3F
+   E=;
+IronPort-SDR: 7qyAQDUnU+bcCnQFJvC2pIBx8dUR+S2UUtK7lgyQLm9YPKIfPF7m9JI3fBitvnA4A8Gd2obW0w
+ G83Qk/vzbktA==
+X-IronPort-AV: E=Sophos;i="5.73,347,1583193600"; 
+   d="scan'208";a="28326231"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 May 2020 14:21:28 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 1F696A25FD;
+        Sun,  3 May 2020 14:21:23 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 3 May 2020 14:21:22 +0000
+Received: from [10.95.73.94] (10.43.161.34) by EX13D01EUB001.ant.amazon.com
+ (10.43.166.194) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 3 May
+ 2020 14:21:13 +0000
+Subject: Re: [PATCH v6 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+To:     Borislav Petkov <bp@alien8.de>, <robh+dt@kernel.org>
+CC:     <mchehab@kernel.org>, <james.morse@arm.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linux-edac@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <hhhawa@amazon.com>,
+        <ronenk@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <eitan@amazon.com>
+References: <20200224134132.23924-1-talel@amazon.com>
+ <20200224134132.23924-2-talel@amazon.com> <20200428110659.GA11272@zn.tnic>
+From:   "Shenhar, Talel" <talel@amazon.com>
+Message-ID: <0b34f059-5abb-2e30-ec6e-6052efc91d91@amazon.com>
+Date:   Sun, 3 May 2020 17:21:08 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200428110659.GA11272@zn.tnic>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D11UWC004.ant.amazon.com (10.43.162.101) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron
-> Sent: 03 May 2020 15:13
-...
-> > The following are some questions I have about this patchset:
-> >
-> > 1. Should enums be used to represent standard counter component states
-> >    (e.g. COUNTER_SIGNAL_LOW), or would these be better defined as int?
-> >
-> >    These standard counter component states are defined in the
-> >    counter-types.h file and serve as constants used by counter device
-> >    drivers and Counter subsystem components in order to ensure a
-> >    consistent interface.
-> >
-> >    My concern is whether enum constants will cause problems when passed
-> >    to userspace via the Counter character device ioctl calls. Along the
-> >    same lines is whether the C bool datatype is safe to pass as well,
-> >    given that it is a more modern C datatype.
-> 
-> For enums, I'd pass them as integers.
-> 
-> Bool is probably fine either way.
 
-Always use fixed size types in any API structures.
-Ensure that fields are always on their natural boundaries.
+On 4/28/2020 2:06 PM, Borislav Petkov wrote:
+> On Mon, Feb 24, 2020 at 03:41:31PM +0200, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   .../bindings/edac/amazon,al-mc-edac.yaml      | 52 +++++++++++++++++++
+>>   1 file changed, 52 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> new file mode 100644
+>> index 000000000000..20505f37c9f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+>> @@ -0,0 +1,52 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-Clause)
+> #36: FILE: Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml:1:
+> +# SPDX-License-Identifier: GPL-2.0-only
+>
+> Hi Rob, should I listen to checkpatch or ignore it?
 
-So no enums and no bools.
-It may even be worth using uint64_t for any userspace pointers.
+Thank you Boris for the review,
 
-At some point you'll live to regret anything else.
+I now see this recent  addition in checkpatch - 
+https://lore.kernel.org/lkml/20200309215153.38824-1-lkundrak@v3.sk/
 
-	David
+Will add that license as part of v7.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>
+> --
+> Regards/Gruss,
+>      Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+
+Thanks,
+
+Talel.
 
