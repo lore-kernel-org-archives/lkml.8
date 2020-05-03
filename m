@@ -2,113 +2,104 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AF4C47254
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 03:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7BFC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 03:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4073B21582
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 03:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530EB20707
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 03:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ju9Fo+gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgECDLa (ORCPT
+        id S1726798AbgECD2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 23:11:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42694 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgECDL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 23:11:29 -0400
-IronPort-SDR: dQKUsn2vjoLOCdIM8uLlJ8WStZnLn9KAOd2QNzoCyEj71zYdU2PkdYq1Dk34QWc6IeVWVN+NYD
- h8EH8UFHW97g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2020 20:11:29 -0700
-IronPort-SDR: BDCSOhfLrIbfj7Y5Tw0emibzPffaFEcH6uyQOaSnsa+CYyRQvgFcoRzXLtMv2aSaIMshzi3s7v
- wmHP1NS0G8+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,346,1583222400"; 
-   d="scan'208";a="262468221"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga006.jf.intel.com with ESMTP; 02 May 2020 20:11:28 -0700
-Date:   Sat, 2 May 2020 20:11:28 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V1 09/10] arch/kmap: Define kmap_atomic_prot() for all
- arch's
-Message-ID: <20200503031127.GA685597@iweiny-DESK2.sc.intel.com>
-References: <20200430203845.582900-1-ira.weiny@intel.com>
- <20200430203845.582900-10-ira.weiny@intel.com>
- <20200501023734.GF23230@ZenIV.linux.org.uk>
- <20200501032020.GG23230@ZenIV.linux.org.uk>
+        Sat, 2 May 2020 23:28:18 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47906 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726756AbgECD2S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 23:28:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588476497; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=38CwaZVZhRUHC/p6LzfUrxvI9XPpaLMCJGwUs68QbLQ=; b=ju9Fo+gvj8BWoxJu5dgtr1uzpSh00m/Z2VVIrJENWjIqg/vmqcxv9+uo3cVBXGvrg9peuN8i
+ iGAmzw9uoIpq6zRcceUXnW5CHo3dI+BN1tnp7eT2YPzR6k6FQ84zVV6x9fOYaDr8tfdmfEPz
+ 6FcJoMCOCKACEgc+6Tc1EEDfpOw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eae3a3d.7f35333fea40-smtp-out-n01;
+ Sun, 03 May 2020 03:27:57 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1510AC433BA; Sun,  3 May 2020 03:27:56 +0000 (UTC)
+Received: from [192.168.1.10] (cpe-70-95-5-60.san.res.rr.com [70.95.5.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sidgup)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57422C433D2;
+        Sun,  3 May 2020 03:27:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57422C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
+Subject: Re: [PATCH] scripts: headers_install: Exit with error on config leak
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1588370065-30312-1-git-send-email-sidgup@codeaurora.org>
+ <CAK7LNARPH+hZdo-0_pmOzZNqTHj7rJTMQq9Nd_F-oyqK2zJrtQ@mail.gmail.com>
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+Message-ID: <2a04e6ca-4c44-f3b2-4c68-e7cdc26e9baf@codeaurora.org>
+Date:   Sat, 2 May 2020 20:27:54 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501032020.GG23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <CAK7LNARPH+hZdo-0_pmOzZNqTHj7rJTMQq9Nd_F-oyqK2zJrtQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 04:20:20AM +0100, Al Viro wrote:
-> On Fri, May 01, 2020 at 03:37:34AM +0100, Al Viro wrote:
-> > On Thu, Apr 30, 2020 at 01:38:44PM -0700, ira.weiny@intel.com wrote:
-> > 
-> > > -static inline void *kmap_atomic(struct page *page)
-> > > +static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
-> > >  {
-> > >  	preempt_disable();
-> > >  	pagefault_disable();
-> > >  	if (!PageHighMem(page))
-> > >  		return page_address(page);
-> > > -	return kmap_atomic_high(page);
-> > > +	return kmap_atomic_high_prot(page, prot);
-> > >  }
-> > > +#define kmap_atomic(page)	kmap_atomic_prot(page, kmap_prot)
-> > 
-> > OK, so it *was* just a bisect hazard - you return to original semantics
-> > wrt preempt_disable()...
-> 
-> FWIW, how about doing the following: just before #5/10 have a patch
-> that would touch only microblaze, ppc and x86 splitting their
-> kmap_atomic_prot() into an inline helper + kmap_atomic_high_prot().
-> Then your #5 would leave their kmap_atomic_prot() as-is (it would
-> use kmap_atomic_prot_high() instead).  The rest of the series plays
-> out pretty much the same way it does now, and wrappers on those
-> 3 architectures would go away when an identical generic one is
-> introduced in this commit (#9/10).
-> 
-> AFAICS, that would avoid the bisect hazard and might even end
-> up with less noise in the patches...
+Sure I will make the recommended changes and send a v2 of the patch.
 
-This works.  V2 coming out shortly.
+Thanks,
+Siddharth
 
-Thanks for catching this,
-Ira
-
+On 5/2/2020 8:03 AM, Masahiro Yamada wrote:
+> On Sat, May 2, 2020 at 6:55 AM Siddharth Gupta <sidgup@codeaurora.org> wrote:
+>> Misuse of CONFIG_* in UAPI headers should result in an error as it exposes
+>> configuration of different targets to userspace.
+>>
+>> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+>> ---
+>>   scripts/headers_install.sh | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+>> index a07668a..bd6c93a 100755
+>> --- a/scripts/headers_install.sh
+>> +++ b/scripts/headers_install.sh
+>> @@ -109,7 +109,8 @@ do
+>>          done
+>>
+>>          if [ "$warn" = 1 ]; then
+>> -               echo "warning: $INFILE: leak $c to user-space" >&2
+>> +               echo "error: $INFILE: leak $c to user-space" >&2
+>> +               exit 1
+>>          fi
+>>   done
+>
+> If you want to change this,
+> please update the comment at line 67.
+>
+> Also, rename the variable $warn to
+> something else, $error or $leak_error, etc. ?
+>
+>
+>
