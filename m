@@ -2,181 +2,139 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2BBC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D15C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 528722071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:54:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="taljpVsP"
+	by mail.kernel.org (Postfix) with ESMTP id 4A41E2075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588507274;
+	bh=HC1KNrA/raxGpfyGWqskbIFiSi8/fj6Mk4pXn4ra93Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=swSJaUHzdNLjw7IhQsV3nr4c3Yq0bn3WQx2McH/9wY6g7FAewQddukTY5AyaSAObE
+	 9fXKO4giu4u3GA+9PHBqGlfxmmDCwiu+KS8k7uaDUW+8AK9zoodfkOXBtB4CQgnbO/
+	 qMYfG+TrPuOGnUeJe2b9LMtBeneGJhQSDaTI2/ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgECLy0 (ORCPT
+        id S1728132AbgECMBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 07:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727112AbgECLyZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 07:54:25 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC34C061A0C;
-        Sun,  3 May 2020 04:54:25 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s8so7164257pgq.1;
-        Sun, 03 May 2020 04:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition:user-agent;
-        bh=BUkMHQD/V/0ORXwYkMywhz4/rrG1c8EmuLKXI0QJv5w=;
-        b=taljpVsPcYgjASQ7IomkR3YZJbOLGafzFyqXmnvC+6zVFMEzneQ/8JJmzqgIPrWV1w
-         rNfS74InWNxXvxnoxhsfXdS9foq22gGlbS7hBBDXSYKxaGhzfDNHbIr9xP5GIbu5jMti
-         jqbeMBcvYK37h4NxLpjBckvG8fuJdlpw3xs5DUT4HnCNMSo/GPXlHN07v8npHM+3Pjag
-         WBlMXAH66S4vfAbf1Fzxw8ddkyylrOv4UKPSoKyyScfS6zzQYyKN4lM4JQOyWPn9WYIe
-         BCYi26Y4EAF6gM7zNQhDkRlkRcMypDdVJjG8QxV6pbUyO9vuBMmwSA2pcxjiQhY4RsuN
-         mq8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition:user-agent;
-        bh=BUkMHQD/V/0ORXwYkMywhz4/rrG1c8EmuLKXI0QJv5w=;
-        b=FbIeuAEcJ/5kap8L313Qzpsm02yXNeppmS5dGlKD9J8UBVER4VWHekANcwn9yel1L8
-         AaEe2DLSqgyuOdIQoPbZWNumRqUGn+6oCMo4Us0C5ofAUiUwwgAsa82bJpA8Ml0VHjzV
-         h40EP9Oz39Wm0rA6YQpLSw1F72AGQlzh3UbGf3MWZDjfDif5hMTCMww+Yww91q/N0BSM
-         xkYt1msvPZAWnHPB3tllO2W3Fhx27yuUHTunxgdd9tTBBdRpTT/IHSPmYfKibC1OGrJP
-         u/OWzPUE23hN5+2K6szmKzZLg5SIfoF81GuBjaTKWgaaJEqtTDUz+5yGK47aYjmlUF2p
-         ad8w==
-X-Gm-Message-State: AGi0PuYAL1+rBq+U7qz5ILPUOGDdovV/JUzjeW45PWsRuEr9Bam+Qv6J
-        uV76aQKOXNUr7gk6lEx+Eo8=
-X-Google-Smtp-Source: APiQypLSSrXj5uw+ridEe+sj0GIban+7bcW+DaU/Y1Q3vv/3T6eTmpmIzsNSRfjyeFG4O42Em5UXAQ==
-X-Received: by 2002:a62:1415:: with SMTP id 21mr12503275pfu.203.1588506865450;
-        Sun, 03 May 2020 04:54:25 -0700 (PDT)
-Received: from udknight.localhost ([59.57.158.27])
-        by smtp.gmail.com with ESMTPSA id r18sm5775570pgu.93.2020.05.03.04.54.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 May 2020 04:54:24 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 043Bs62H010515;
-        Sun, 3 May 2020 19:54:06 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id 043Bs6Zl010514;
-        Sun, 3 May 2020 19:54:06 +0800
-Date:   Sun, 3 May 2020 19:54:06 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     joe@perches.com
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] checkpatch: fix can't check for too long invalid commit id
-Message-ID: <20200503115406.GB10332@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>, joe@perches.com,
-        Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
+        Sun, 3 May 2020 08:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbgECMBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 08:01:09 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C8D20757;
+        Sun,  3 May 2020 12:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588507268;
+        bh=HC1KNrA/raxGpfyGWqskbIFiSi8/fj6Mk4pXn4ra93Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ve1K2UW1Ty6onsP55MtI+FiZYllxDPzWzAM83Nk3qrq6qneiBUusjs7v/UL3CLNnc
+         JXcuhzj7iZYWNHrX0/065Sw8iyfLIQWRDOTPq7E4Rf469vZ5Yytr83lzKNbQXAAoVb
+         8o80Jifm6kRumXSgt7shAqStdX9yHpciA6QU+eB4=
+Date:   Sun, 3 May 2020 13:01:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Saravanan Sekar <saravanan@linumiz.com>
+Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, broonie@kernel.org, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] iio: accel: wsen-itds accel documentation
+Message-ID: <20200503130103.16a92131@archlinux>
+In-Reply-To: <20200429133943.18298-4-saravanan@linumiz.com>
+References: <20200429133943.18298-1-saravanan@linumiz.com>
+        <20200429133943.18298-4-saravanan@linumiz.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.7.1 (2016-10-04)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current UNKNOWN_COMMIT_ID doesn't check for 41+ length commit id,
-and although GIT_COMMIT_ID will check for 41+ length commit id, but
-it willn't warn anything about it due to 41+ length commit will never
-be defined.
+On Wed, 29 Apr 2020 15:39:42 +0200
+Saravanan Sekar <saravanan@linumiz.com> wrote:
 
-This patch moves the unknown commit id check for normal commit description
-to GIT_COMMIT_ID, and uses ERROR instead of WARN, because unknown commit
-id is total useless to track change history in changelog, it deserves the
-ERROR.
+> Add documentation about device operating mode and output data range
+> supported according to operating mode
+> 
+> Signed-off-by: Saravanan Sekar <saravanan@linumiz.com>
+> ---
+>  .../ABI/testing/sysfs-bus-iio-wsen-itds       | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+> new file mode 100644
+> index 000000000000..5979f2b8aa1a
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio-wsen-itds
+> @@ -0,0 +1,23 @@
+> +What:		/sys/bus/iio/devices/iio\:device0/in_accel_samp_freq_available
+> +KernelVersion:	5.7
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Reading gives range of sample frequencies available for current operating mode
+> +		after one data has generated.
 
-Signed-off-by: Wang YanQing <udknight@gmail.com>
----
- v2:
- 1: Fix annonying "Invalid commit id" reports for non commit id number string.
- 2: Fix indentaton issue, reported by Joe Perches.
- 3: Reword the error message in code, suggested by Joe Perches.
- 4: Delete unnecessary capture group in UNKNOWN_COMMIT_ID, suggested by Joe Perches.
+This is standard ABI so should be the main docs, not here.
+It also takes absolute precedence over the power modes (as mentioned below, no
+standard userspace will be able to use those).  So if the frequency is
+only available in high perf mode, then we change to high perf mode.
 
- scripts/checkpatch.pl | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+> +
+> +		Access: Read
+> +		Valid values: represented in Hz
+> +		- range [12.5, 1600] for high permormance mode
+> +		- range [1.6, 200] for normal/low power mode
+> +
+> +What:		/sys/bus/iio/devices/iio\:device0/operating_mode
+> +KernelVersion:	5.7
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Represents the device operating mode. High performance mode gives high output
+> +		data rate and low noise compared to normal mode. Normal mode consumes less
+> +		current.  In single shot device enters to lowpower after one data has
+> +		generated.
+> +
+> +		Access: Read, Write
+> +		Valid values: "lowpower", "normal", "high_perf", "single_shot"
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 23a001a..9b47584 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2829,18 +2829,21 @@ sub process {
- 			my $space = 1;
- 			my $hasdesc = 0;
- 			my $hasparens = 0;
-+			my $hasprefix = 1;
- 			my $id = '0123456789ab';
- 			my $orig_desc = "commit description";
- 			my $description = "";
-+			my $sha1_length_min = 12;
- 
- 			if ($line =~ /\b(c)ommit\s+([0-9a-f]{5,})\b/i) {
- 				$init_char = $1;
- 				$orig_commit = lc($2);
- 			} elsif ($line =~ /\b([0-9a-f]{12,40})\b/i) {
- 				$orig_commit = lc($1);
-+				$hasprefix = 0;
- 			}
- 
--			$short = 0 if ($line =~ /\bcommit\s+[0-9a-f]{12,40}/i);
-+			$short = 0 if ($line =~ /\bcommit\s+[0-9a-f]{$sha1_length_min,40}/i);
- 			$long = 1 if ($line =~ /\bcommit\s+[0-9a-f]{41,}/i);
- 			$space = 0 if ($line =~ /\bcommit [0-9a-f]/i);
- 			$case = 0 if ($line =~ /\b[Cc]ommit\s+[0-9a-f]{5,40}[^A-F]/);
-@@ -2865,10 +2868,21 @@ sub process {
- 			($id, $description) = git_commit_info($orig_commit,
- 							      $id, $orig_desc);
- 
-+			if ($hasprefix && !defined($id)) {
-+				if ($long) {
-+					ERROR("GIT_COMMIT_ID",
-+					      "Invalid commit id '$orig_commit' length '" . length($orig_commit) . "' exceeds allowed maxium of 40
-+					      ($sha1_length_min+ chars of sha1 is recommended).\n" . $herecurr);
-+				} else {
-+					ERROR("GIT_COMMIT_ID",
-+					      "Unknown commit id '$orig_commit', maybe rebased or not pulled?\n" . $herecurr);
-+				}
-+			}
-+
- 			if (defined($id) &&
--			   ($short || $long || $space || $case || ($orig_desc ne $description) || !$hasparens)) {
-+			   ($short || $space || $case || ($orig_desc ne $description) || !$hasparens)) {
- 				ERROR("GIT_COMMIT_ID",
--				      "Please use git commit description style 'commit <12+ chars of sha1> (\"<title line>\")' - ie: '${init_char}ommit $id (\"$description\")'\n" . $herecurr);
-+				      "Please use git commit description style 'commit <$sha1_length_min+ chars of sha1> (\"<title line>\")' - ie: '${init_char}ommit $id (\"$description\")'\n" . $herecurr);
- 			}
- 		}
- 
-@@ -2969,13 +2983,13 @@ sub process {
- 		}
- 
- # check for invalid commit id
--		if ($in_commit_log && $line =~ /(^fixes:|\bcommit)\s+([0-9a-f]{6,40})\b/i) {
-+		if ($in_commit_log && $line =~ /^fixes:\s+([0-9a-f]{6,40})\b/i) {
- 			my $id;
- 			my $description;
--			($id, $description) = git_commit_info($2, undef, undef);
-+			($id, $description) = git_commit_info($1, undef, undef);
- 			if (!defined($id)) {
- 				WARN("UNKNOWN_COMMIT_ID",
--				     "Unknown commit id '$2', maybe rebased or not pulled?\n" . $herecurr);
-+				     "Unknown commit id '$1', maybe rebased or not pulled?\n" . $herecurr);
- 			}
- 		}
- 
--- 
-1.8.5.6.2.g3d8a54e.dirty
+The issue with these sort of 'mode' interface is almost no userspace will ever use them.
+They are too unpredictable across different types of devices.
+
+Some of these should also not be exposed to userspace anyway as they are about 'how'
+you are using the driver.  For example, if you aren't doing triggered capture then
+single_shot is almost always the correct option. Annoyingly I see high performance
+mode gives lower noise...
+
+So no need to expose single_shot to userspace.
+
+For the others we are just looking at different power vs speed and accuracy trade offs.
+Those are better exposed by what they effect.  Here the big control for that is
+sampling frequency.
+
+So if we assume the user is never going to touch this control (if it's even there)
+then we probably want to assume they want the best possible accuracy for whatever
+frequency they are running at.  So transition across the modes to provide that.
+
+Should we ever support low power mode?  It sounds nice on paper, but in reality
+userspace won't use so I suspect we should just drop it - certainly in an initial
+patch submission (as it will hold up acceptance).  Even if we did support
+it, as mentioned above ABI controls will take precedence so we are looking
+at a 'hint' not a control of mode.
+
+ABI is a pain, and we will put a lot of effort into not expanding it unless
+there is a good usecase plus no way of mapping to existing ABI.
+
+Jonathan
+
+
