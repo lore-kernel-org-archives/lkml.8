@@ -2,108 +2,113 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7AFC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 02:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AF4C47254
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 03:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 918C62075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 02:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X99OffZu"
+	by mail.kernel.org (Postfix) with ESMTP id 4073B21582
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 03:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgECCNi (ORCPT
+        id S1726812AbgECDLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 22:13:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726309AbgECCNi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 22:13:38 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C98DC061A0C
-        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 19:13:38 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id c2so8724111iow.7
-        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 19:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ADBzBpzQBfvhpPbSyYsUI5c3id2/Hsq5Y9mJHgKc+Eo=;
-        b=X99OffZulaIQy55n/XoFOgsOhCNRhrtFlbmNo+LvRGdSEGiSq5R64AzVm97MOBqcwg
-         Vj5xle+GwVCdMgBf3H3QXNz1edKykbt8A/jqz6O2mko1RvrdN13Es2voy5idebK7Q1UB
-         l4Xk7EpZq3zurrQJuOFE19FxoE+UNNizmHK+JPkap7NFpykoE1gQALc4wBEgyS8lu87E
-         ASBB6e/4X4iJwFbesFjW3XYWy9yO3t4Jiw4wzs7QkTJSnIRNFwMzmm4RJJTLW0t53OvW
-         0GbqWV0drUYe5sz/LWdNTT8m9hoTKT+0FDSqbt65RMsH9ZNbVjLbGMKNw5v1hW0rRa/x
-         siHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ADBzBpzQBfvhpPbSyYsUI5c3id2/Hsq5Y9mJHgKc+Eo=;
-        b=QPz+t/38VsSJo+c0zzBw53/UAeZ9AkepPNCx9xuXc8dVOEX4fcvRqKxO0zJ7EIQZI6
-         qlstRYq3QwmtFuPRgnEaoe0aD4WMzt73odMgXMu8Mlfr9vYDe/3n9nPc37wpzJmJ1pJ7
-         7n7ueyLTmm0hqBxTppQvDOMNt/q5p/gqJfR00Jmw8v1211irqnunS21SMA6n0pZ3rX96
-         QhWIfqr5BXIt46C6BijyH6qRvrRVGu5xnJ9oYbzL9X2zVHyAMWZrn4tNbG5tydxodol7
-         iTz0XllX9ai9AEKpTkvPv7Hh8pDOMCJ7asFMz6tMzbySV/5NoRrBwQSq2eLiihw5lb32
-         RYLw==
-X-Gm-Message-State: AGi0PuZiG5qHkeoY1Szkh88sLduJZYPFA7RarbNVjmIDyVSkQYLfzOo2
-        YAdzwJwUe0QArj96OZE8ILc=
-X-Google-Smtp-Source: APiQypJwjvuaGmWqLfLEU60RIdP8e5Rl6o+Oy7lzMz6QgXAUAvXDV0syrDiMqlO3lG22rCbX4utrvw==
-X-Received: by 2002:a5d:9c02:: with SMTP id 2mr10123761ioe.67.1588472016156;
-        Sat, 02 May 2020 19:13:36 -0700 (PDT)
-Received: from localhost.net ([2601:681:8600:14a0::c42b])
-        by smtp.gmail.com with ESMTPSA id w69sm3069491ili.76.2020.05.02.19.13.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2020 19:13:35 -0700 (PDT)
-From:   Eric Yu <ejyu99@gmail.com>
-To:     hsweeten@visionengravers.com, abbotti@mev.co.uk
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Eric Yu <ejyu99@gmail.com>
-Subject: [PATCH] Staging: comedi: drivers: ni_pcimio: Fix variable name
-Date:   Sat,  2 May 2020 20:12:47 -0600
-Message-Id: <20200503021247.250785-1-ejyu99@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sat, 2 May 2020 23:11:30 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42694 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726702AbgECDL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 2 May 2020 23:11:29 -0400
+IronPort-SDR: dQKUsn2vjoLOCdIM8uLlJ8WStZnLn9KAOd2QNzoCyEj71zYdU2PkdYq1Dk34QWc6IeVWVN+NYD
+ h8EH8UFHW97g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2020 20:11:29 -0700
+IronPort-SDR: BDCSOhfLrIbfj7Y5Tw0emibzPffaFEcH6uyQOaSnsa+CYyRQvgFcoRzXLtMv2aSaIMshzi3s7v
+ wmHP1NS0G8+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,346,1583222400"; 
+   d="scan'208";a="262468221"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga006.jf.intel.com with ESMTP; 02 May 2020 20:11:28 -0700
+Date:   Sat, 2 May 2020 20:11:28 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH V1 09/10] arch/kmap: Define kmap_atomic_prot() for all
+ arch's
+Message-ID: <20200503031127.GA685597@iweiny-DESK2.sc.intel.com>
+References: <20200430203845.582900-1-ira.weiny@intel.com>
+ <20200430203845.582900-10-ira.weiny@intel.com>
+ <20200501023734.GF23230@ZenIV.linux.org.uk>
+ <20200501032020.GG23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501032020.GG23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed a variable name that was Camel case
+On Fri, May 01, 2020 at 04:20:20AM +0100, Al Viro wrote:
+> On Fri, May 01, 2020 at 03:37:34AM +0100, Al Viro wrote:
+> > On Thu, Apr 30, 2020 at 01:38:44PM -0700, ira.weiny@intel.com wrote:
+> > 
+> > > -static inline void *kmap_atomic(struct page *page)
+> > > +static inline void *kmap_atomic_prot(struct page *page, pgprot_t prot)
+> > >  {
+> > >  	preempt_disable();
+> > >  	pagefault_disable();
+> > >  	if (!PageHighMem(page))
+> > >  		return page_address(page);
+> > > -	return kmap_atomic_high(page);
+> > > +	return kmap_atomic_high_prot(page, prot);
+> > >  }
+> > > +#define kmap_atomic(page)	kmap_atomic_prot(page, kmap_prot)
+> > 
+> > OK, so it *was* just a bisect hazard - you return to original semantics
+> > wrt preempt_disable()...
+> 
+> FWIW, how about doing the following: just before #5/10 have a patch
+> that would touch only microblaze, ppc and x86 splitting their
+> kmap_atomic_prot() into an inline helper + kmap_atomic_high_prot().
+> Then your #5 would leave their kmap_atomic_prot() as-is (it would
+> use kmap_atomic_prot_high() instead).  The rest of the series plays
+> out pretty much the same way it does now, and wrappers on those
+> 3 architectures would go away when an identical generic one is
+> introduced in this commit (#9/10).
+> 
+> AFAICS, that would avoid the bisect hazard and might even end
+> up with less noise in the patches...
 
-Signed-off-by: Eric Yu <ejyu99@gmail.com>
----
- drivers/staging/comedi/drivers/ni_pcimio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This works.  V2 coming out shortly.
 
-diff --git a/drivers/staging/comedi/drivers/ni_pcimio.c b/drivers/staging/comedi/drivers/ni_pcimio.c
-index 7c82d5f9778f..c1d70eec24ab 100644
---- a/drivers/staging/comedi/drivers/ni_pcimio.c
-+++ b/drivers/staging/comedi/drivers/ni_pcimio.c
-@@ -1214,7 +1214,7 @@ static void m_series_init_eeprom_buffer(struct comedi_device *dev)
- 	struct ni_private *devpriv = dev->private;
- 	struct mite *mite = devpriv->mite;
- 	resource_size_t daq_phys_addr;
--	static const int Start_Cal_EEPROM = 0x400;
-+	static const int start_cal_eeprom = 0x400;
- 	static const unsigned int window_size = 10;
- 	unsigned int old_iodwbsr_bits;
- 	unsigned int old_iodwbsr1_bits;
-@@ -1234,7 +1234,7 @@ static void m_series_init_eeprom_buffer(struct comedi_device *dev)
- 	writel(0xf, mite->mmio + 0x30);
- 
- 	for (i = 0; i < M_SERIES_EEPROM_SIZE; ++i)
--		devpriv->eeprom_buffer[i] = ni_readb(dev, Start_Cal_EEPROM + i);
-+		devpriv->eeprom_buffer[i] = ni_readb(dev, start_cal_eeprom + i);
- 
- 	writel(old_iodwbsr1_bits, mite->mmio + MITE_IODWBSR_1);
- 	writel(old_iodwbsr_bits, mite->mmio + MITE_IODWBSR);
--- 
-2.26.2
+Thanks for catching this,
+Ira
 
