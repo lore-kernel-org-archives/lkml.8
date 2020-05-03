@@ -2,86 +2,135 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF89AC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8FEC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85E3520707
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C42D206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 19:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Hgghv2QJ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bstM6LGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgECTMS (ORCPT
+        id S1729026AbgECTS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 15:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728847AbgECTMS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 15:12:18 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C860AC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 12:12:17 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b188so14503859qkd.9
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 12:12:17 -0700 (PDT)
+        Sun, 3 May 2020 15:18:28 -0400
+Received: from mail-mw2nam10on2063.outbound.protection.outlook.com ([40.107.94.63]:20787
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728843AbgECTS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 15:18:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nJ03PPFjeFMKqf6Zd90I+hVkcBr614mB5IkW0C1yCrJkkXlNN1zlFFnwac40ymiGDdcmk1McimsW67FEC66wtqKw2YUetdFpHpSK/UP6EPtgoQAgqc2XzrSb9h5MKzplFh+qAPs12MxkVAK1l9IWr91gC0oe00fnS7gU7a3PAJNowKMbNRTpdETRWXbc69nj+xZBE/hQBGTCL8eAvjSCus3D9DEf0YNGWLR44w61VaQMjUZAN7Aov3tTMYx1cJ8wjIZwbYQAyB/RWGSGebjSr5s5yMjjEVn+udScr65p1AVw3ZkD4hs9P27RkJ8EoANTaL3bq6XYp0EUJYRyGdnuTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jMy7DnDJRfliovUluh6hUXFGlryQluvI8RO7eQRwDTQ=;
+ b=jMd75E1TV8jW+r06BTShSsznr2svoVVVbCJtYC8HbfeVdjYhpM+VAyaVSYulS41ZSQ1jGsaf4nNq6dt7tzODF7mhNf2kTqBp6AFb8034/ffJ6LYc2S+FNEqrcSROt9J4uu4nHenQvdIW0xeISeNacwTjfOCR+e6QHExgo+293XTQ3WbPLomMMKB5Eh0ouxiTUS5s2aJrZEdjA4u8YmLYe+X0/zjAelvPc//J17B3gTr8tEMKFFHSxEFefhgnG8KiYqGICY/jhecbHZdnk2liYvLjdvCxub2RTTZxTMPZYZFYQnJnaOWAgIP/5lMpw2bkfV70YgtbGut3apyhpb4OeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=QjQNTEl64oFXby2DcLfNG1WpAuKAiDgue7kNNdacJts=;
-        b=Hgghv2QJ8bnac2HvY//5dPe+3V01b//VZCjt/zPRvjM7sm9jIt80ZBdVClOxnSjU7b
-         ilPS4ugIYt9vvS3ClL6ewC4aYHioCOtQci7kozyJPcCscPNunCZ1xZGpaPUwCxyh68UB
-         /W6ac3C32vabUS5BIBVUqp30Vbe+cmgOuFcl2d6uM6HzgCoM2WgAwnPmstT9c8WjC1a6
-         FxSRnJkjQcEzCHZQER1maDAD1hqApgStExaPBxzTFvp+LcXmQPxxabiQ7pxrAqrDqVKy
-         6eUsHobeZdKy6+X4fwTVOj8KYu8CGTQ/VnKnZVEf+WneJ6MX1uJT3/t+Jjm0FWo1l4mO
-         VqKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=QjQNTEl64oFXby2DcLfNG1WpAuKAiDgue7kNNdacJts=;
-        b=FxstjAbFkd/u+xepg+79rCd1sdMFS3/5MG7qV/tz7GL7xgP4dHKMB0JvMy9xGsvS47
-         m0zwxB6ZuDwDo4C+2ZuVGwY2maXmhRY6X810Vw9R6sV1Dely2qQjyy6yexyhDpbn3IQj
-         +oK/2ho12nhdpWn+Y3fnhhzy4vry5/fm1oDTD+AZFLRJNXXqivaKXvtKXeRH6SAZr2J8
-         NQeF5n5i+cL0qYkaFSuE1bpDUOqKHJBxOkQuDziAvW+GChdFXSTXEblwjxLNxJjAvgIq
-         JZtwTXcz4dgGwldJ/lQpSpes2cryUn21pv0hnW4CoQrY2c9cax+47980nmU2h4vwGQUn
-         dt3Q==
-X-Gm-Message-State: AGi0PuaELfz+mrGG0Of2stPAOvV9Wgw60XmjnMGpQ5Ww3TiJa56msOiw
-        ZUGEYJrNGpu96EmOPSvUe1yb2oqK+bpcpQ==
-X-Google-Smtp-Source: APiQypJibEKO4v/ek1bD86VUTy9GbWtdTI0sl6Lx3Eq8OG4JLinle7zFyUbyOwqebbSWTG5eTbuyuQ==
-X-Received: by 2002:a37:6dc4:: with SMTP id i187mr13342595qkc.358.1588533136798;
-        Sun, 03 May 2020 12:12:16 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t15sm9023400qtc.64.2020.05.03.12.12.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 May 2020 12:12:16 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jMy7DnDJRfliovUluh6hUXFGlryQluvI8RO7eQRwDTQ=;
+ b=bstM6LGqOi8MjTiZWkztC40I6fjE6Hoceumr6UNtfFGMuN5tXrjEc9fitr60mjMbNYc/ZaKQ660KBHcCkP5MNxJbqGuBvXC1vzARSM3a8NL4ru6g+98DKUqgTPp/eXrWrFVtfRr96bVHjSbbbbJJfK2+DDm3psfJMZqfEQbTz2s=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM5PR12MB1883.namprd12.prod.outlook.com (2603:10b6:3:113::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.29; Sun, 3 May 2020 19:18:23 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.029; Sun, 3 May 2020
+ 19:18:23 +0000
+Subject: Re: AVIC related warning in enable_irq_window
+To:     Maxim Levitsky <mlevitsk@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
+ <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
+ <27ec00547131cc0e0b807e94eb30fdcff5c1cb47.camel@redhat.com>
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-ID: <dda0de57-b891-9e30-b2f1-561c5e04ca39@amd.com>
+Date:   Mon, 4 May 2020 02:18:13 +0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+In-Reply-To: <27ec00547131cc0e0b807e94eb30fdcff5c1cb47.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH] iommu/amd: fix a race in fetch_pte()
-Date:   Sun, 3 May 2020 15:12:15 -0400
-Message-Id: <E18E118B-A79A-40A8-89D4-4B81C24FB486@lca.pw>
-References: <20200503183927.GA18353@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200503183927.GA18353@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>
-X-Mailer: iPhone Mail (17D50)
+X-ClientProxiedBy: KL1P15301CA0003.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:802:2::13) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Suravees-MacBook-Pro.local (2403:6200:8862:d0e7:1811:ded2:5c1a:f796) by KL1P15301CA0003.APCP153.PROD.OUTLOOK.COM (2603:1096:802:2::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.3 via Frontend Transport; Sun, 3 May 2020 19:18:21 +0000
+X-Originating-IP: [2403:6200:8862:d0e7:1811:ded2:5c1a:f796]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4aa52cd2-c52c-43d9-e91a-08d7ef96bf9a
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1883:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB18835E52D4A97B91944196D0F3A90@DM5PR12MB1883.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0392679D18
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eHa8uIWEzTTqaQuDlZ+ajWT22YzPn4oqR2MfhvxbugAj/GVuH/3I5jDqngnK+XVTMu3/viu78qTskoIEBHO7qSm3aJ83u/ZSRJvmBDfQ+S++7UzAPXS/xki8aiHUW/YSHI9Ed5VZ+GTUcxXxZoYG3KADR0F1hcQTKLwU5lAnkLk+FQEGmwQKcj2LJJHqWB351g88nQ2IC62aeDjt48qVgg0FOUhL1weNEtnXwYkrje1+hgSiRVQxulaI/NXCWSIgk0tXwTdqZiAbebYl3/5e/PjeNwue/Nf7gp0S27csjy1FVUKhRguXCzM2IcQ80+8W5uSjsV90jLzB/mCAQIvtWs3Jcfk21H3sFOHqnLlYqPg88jptvgifvlCBZaa9nGvgUvEtb7fig6NggOPJkWZsD1UDD4Cb7sCMdCgLQ+DmZHzrQ0F/Zs51qDTRm5ttb1Ul
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(136003)(346002)(366004)(52116002)(110136005)(36756003)(66556008)(66476007)(66946007)(2616005)(53546011)(8676002)(6506007)(8936002)(31686004)(316002)(6512007)(478600001)(31696002)(6666004)(86362001)(5660300002)(4326008)(16526019)(44832011)(6486002)(186003)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ALGijgxD5FTHmBm3RYPF7x5vsRzz+ukXmRlg6Z0c06eOHrCFM/b5sVD/1ZkfxQAJmm2rga4ZKRk3YqrpW7hED6A9nTw67IyOq9iK3STvb/eCJ/AdL0UJfKTO+jxh975ZKTLjfXmm8g8rc6hkjdGOKOZOJBcZyhxXIirKfTAuak6VnLd7YjKqhChKqsKOL5I8ZFgZJo+/5/vQkEdKZ2bR4TNfqUMkit5ut4vMcMC4QiIih+/S9pWlczKqt/zq6YO4b37BDl+z9ZylhAiwPvCq5jVqG2/IJm3T/eCG9LnGgYqv3BJ49V49fGoLzPpIdi/6HWBxU37AmRjz9SX05cu8ySWpbFNHe8Vmbq8awQMqNajQ0IFYuHBUjN8wsJmXE0f1RUc8McL1F3GaOotVYUicuM3+Paq0pZWmpGhHNFw4hFd1hcRNg9xSOHHtVYT8UHy4B6bmWGNXfDtroofOXqEhdf4R6ws2wumLEbMe7a9GxAbY2ioYS1uaLn4fOn3CFD0k44DVbIt7mn9ah3eIu/QwxdZvRqLx+dVCFpWBrrbj00LguwCtZplCSiWCrI6u0A4T/3um0x7OW9eNbBa7MCITBe+ua8bTYAOBB1unPxqX2TUr4ff17zrKbNshj95e2xuvs7ruqWPTfbzmrIKtgiWtVsMopGTCQmDaGMBoYltI5i7EbOK1FoRFJoZzLqNlebSJG9vyq6DMSLIKnfnc/8cp/j5olxTPIUawmRdQVYM+4RM45v+smiy3apji7nQbDLoTjp/oEM9pZzGcvLbeAxTlCsEJJDhYk4IQpfJyztkw75zWXBPwczc/ZTIX+Wc0nJx0+42ipny3nvAPVPKBsZyGV2NlcbNzFzUD+PxS5TlqI3GIigf7aM9L7TcArnZYCsDV
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4aa52cd2-c52c-43d9-e91a-08d7ef96bf9a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 19:18:23.7016
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CNltNIOn4OFeR7nXmt5o7cnGCsdZmG0Ee2yTmL/SkV6VN4rHOcIpKg8a/Rxuiob0lXcJ+9ZbpD5FhEaglCtk7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1883
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Maxim / Paolo,
 
-
-> On May 3, 2020, at 2:39 PM, Joerg Roedel <joro@8bytes.org> wrote:
+On 5/2/20 11:43 PM, Maxim Levitsky wrote:
+> On Sat, 2020-05-02 at 18:42 +0200, Paolo Bonzini wrote:
+>> On 02/05/20 15:58, Maxim Levitsky wrote:
+>>> The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
+>>> kvm_request_apicv_update, which broadcasts the KVM_REQ_APICV_UPDATE vcpu request,
+>>> however it doesn't broadcast it to CPU on which now we are running, which seems OK,
+>>> because the code that handles that broadcast runs on each VCPU entry, thus
+>>> when this CPU will enter guest mode it will notice and disable the AVIC.
+>>>
+>>> However later in svm_enable_vintr, there is test 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
+>>> which is still true on current CPU because of the above.
+>>
+>> Good point!  We can just remove the WARN_ON I think.  Can you send a patch?
+>>
+>> svm_set_vintr also has a rather silly
+>>
+>> static void svm_set_vintr(struct vcpu_svm *svm)
+>> {
+>>         set_intercept(svm, INTERCEPT_VINTR);
+>>         if (is_intercept(svm, INTERCEPT_VINTR))
+>>                 svm_enable_vintr(svm);
+>> }
+>>
+>> so I'm thinking of just inlining svm_enable_vintr and renaming
+>> svm_{set,clear}_vintr to svm_{enable,disable}_vintr_window.  Would you
+>> like to send two patches for this, the first to remove the WARN_ON and
+>> the second to do the cleanup?
 > 
-> Can I add your Tested-by when I
-> send them to the mailing list tomorrow?
+> Absolutely! I will send a patch very soon.
 
-Sure. Feel free to add,
+I have been debugging this and I have a patch that is supposed to fix this
+(instead of removing the WARN ON). Please do not remove the warn on just yet.
 
-Tested-by: Qian Cai <cai@lca.pw>
+Thanks,
+Suravee
