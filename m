@@ -7,94 +7,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73542C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E92C47256
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F64C2495B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97493206EB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588521306;
-	bh=1lVj9O04pSrh4fKuFXpMuuTNgaBhbrz8sKMQK55Qixc=;
+	s=default; t=1588521313;
+	bh=EpPCIOKt3AtZBuY4gE8SjXaHM9fIc3fZUMoqA9uNNRg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NDA2iuR7niTosmiP2u+SuNFdDQ8oI22s52h1SlfdJzkSr4e55XCoVTBAyEY1CWPoj
-	 7k5VUxX9JVQAX+4jGRX4oMrURRxA/P0DCQBaPxct9OyAmWm2fSgy2pX5CwDBrYeA8B
-	 G85vcaOedVchY4AvDk02dHGLUUjCSmWazsG3ERVI=
+	b=BqnHsoFD+s6Pp66f0A5iTK0JODXKglm7nP7/dm97p+xiyVL3aq5kdYPE7ok+kqEhg
+	 W4v2FTRVww8w41smjlkRUea1yqlWJ2k857+e3Ptrw1lDBMjIkPG6EbXbqvcCV8Grr9
+	 zLBxzn8XhQ11G2HR6ZF9Rl1FKYnwD0ohjZ7I5iME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgECPzF (ORCPT
+        id S1728852AbgECPzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 11:55:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36562 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgECPzE (ORCPT
+        Sun, 3 May 2020 11:55:13 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37281 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728207AbgECPzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 11:55:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t3so2919177otp.3;
-        Sun, 03 May 2020 08:55:04 -0700 (PDT)
+        Sun, 3 May 2020 11:55:12 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r25so4463841oij.4;
+        Sun, 03 May 2020 08:55:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1SJl+Zf+PXhgsQbG0N6jArE/8YWiS3AQ+7VS1y+nDYs=;
-        b=kl82RmQXh0iwAMd0IPL6N1jgKpS4ZBI2vTx8EmY8zh93JWa00EV5tEeVeKHGQGET6d
-         cvc7Olk6/H/WQ18AcINDotPJueCVCQ4PdECnPjjm3FUAIjuAt2E4jacuPhplEk7J7KXp
-         U/j1tOOVwoPYGyMTc/wqTTDBSYYcK6tbnJUBZVoxa0+CGWc4IJ70D8Y0765mbTj7xfTC
-         hgqYzj07w8Bejc16R7USyC//+jk3c20I/ehPG41ab3tUSiO+eMtP02/zZ39DE5Xo61Rt
-         52cfQ8jBSjiklOKIiD/B57NNpruE0NpT829Vy/VnaJMpSehIb/MqZzegGs9EiwlXhE3b
-         S0XA==
-X-Gm-Message-State: AGi0PuaUfn56wApmqTl+cEAEjjUuGEDc/P19y+qwqgIFDh4nkhJpdTul
-        ZMA2T6DIGMxRbdeWEVPNmQ==
-X-Google-Smtp-Source: APiQypLt0OsGOy7bdAk4eX8ZfJHsyORJIwBTySAb9tpBQpijaTQl/DOvjAzwB99sHAw0bd0niLZoUA==
-X-Received: by 2002:a9d:400d:: with SMTP id m13mr11156744ote.347.1588521303624;
-        Sun, 03 May 2020 08:55:03 -0700 (PDT)
+        bh=LtiFnnVOt7u/0FyAShytRgfaLSPAVTpaCIgPOD2FazY=;
+        b=bke798D6c14KRqdjMa4Tpk+7QFlbUHUb039lBQrtn2TroNPKeS/z+N6JBo/Jt/HwVK
+         pC2kuAzF8EK5r3swulsbl8zBg8uMWU1JtIrXpGNopk/7yiE2vLFImJZmV16BLG+l7F8S
+         QZycoTLrsQx/GUoW29FUx3VmD1LxYETbXvCMbEi8pKvTnf2PZvtzAfTcSNGektKQt78i
+         K07iH4EDxsMDv/1DTUFejRW4seWbWDbVHLumgobYpq5u8E2iL8c1qHZy9DmUM5ipQsTu
+         SR+5wb7ejrsBcoaA0+p8ayVRXOVyhhuTUygy/uVZgc46h+Xf+Ru6o4S1Eacb8KxI04t4
+         JDqQ==
+X-Gm-Message-State: AGi0Puby7/lHP/MFeKltpwM6tzHpnNe1Gk1VIkegpUjzM4ATrKI75CPo
+        JBU2zzIAOf9Rn+rIXr7dySmX3Ws=
+X-Google-Smtp-Source: APiQypIgEGOwKeD5ETtDgqEozeKWVNtXZT1WJEmXRXwGBcZqlAyhhYnFolZnWGpJCJZAxVWA1zP8Tw==
+X-Received: by 2002:a54:409a:: with SMTP id i26mr5993529oii.50.1588521311359;
+        Sun, 03 May 2020 08:55:11 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q19sm2489210otf.6.2020.05.03.08.55.02
+        by smtp.gmail.com with ESMTPSA id n38sm2474847ooi.21.2020.05.03.08.55.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 08:55:02 -0700 (PDT)
-Received: (nullmailer pid 19190 invoked by uid 1000);
-        Sun, 03 May 2020 15:55:01 -0000
-Date:   Sun, 3 May 2020 10:55:01 -0500
+        Sun, 03 May 2020 08:55:10 -0700 (PDT)
+Received: (nullmailer pid 19629 invoked by uid 1000);
+        Sun, 03 May 2020 15:55:10 -0000
+Date:   Sun, 3 May 2020 10:55:10 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Andre Przywara <andre.przywara@arm.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Maxime Ripard <mripard@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] dt-bindings: clock: Convert Calxeda clock
- bindings to json-schema
-Message-ID: <20200503155501.GA19073@bogus>
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v3 2/8] dt-bindings: sata: Convert Calxeda SATA
+ controller to json-schema
+Message-ID: <20200503155510.GA19595@bogus>
 References: <20200430211054.30466-1-andre.przywara@arm.com>
- <20200430211054.30466-2-andre.przywara@arm.com>
+ <20200430211054.30466-3-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430211054.30466-2-andre.przywara@arm.com>
+In-Reply-To: <20200430211054.30466-3-andre.przywara@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 22:10:47 +0100, Andre Przywara wrote:
-> Convert the Calxeda clock bindings to DT schema format using json-schema.
-> 
-> This just covers the actual PLL and divider clock nodes. In the actual
-> DTs they are somewhat unconnected (no ranges or bus compatible) children
-> of the sregs node, but for the actual clock bindings this is not
-> relevant.
-> 
-> One oddity is that the addresses are relative to the parent node,
-> without that being pronounced using a ranges property.
-> But this is too late to fix now.
+On Thu, 30 Apr 2020 22:10:48 +0100, Andre Przywara wrote:
+> Convert the Calxeda Highbank SATA controller binding to DT schema format
+> using json-schema.
 > 
 > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Cc: Jens Axboe <axboe@kernel.dk>
 > ---
->  .../devicetree/bindings/clock/calxeda.txt     | 17 ----
->  .../devicetree/bindings/clock/calxeda.yaml    | 82 +++++++++++++++++++
->  2 files changed, 82 insertions(+), 17 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/calxeda.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/calxeda.yaml
+>  .../devicetree/bindings/ata/sata_highbank.txt | 44 ---------
+>  .../bindings/ata/sata_highbank.yaml           | 95 +++++++++++++++++++
+>  2 files changed, 95 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+>  create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.yaml
 > 
 
 Applied, thanks.
