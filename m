@@ -2,202 +2,101 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC217C47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E6EC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C13F420721
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA8E2073E
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 10:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="QmgWuRA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgECKYe (ORCPT
+        id S1728086AbgECKbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 06:24:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46950 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbgECKYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 06:24:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DBEB1ABBE;
-        Sun,  3 May 2020 10:24:32 +0000 (UTC)
+        Sun, 3 May 2020 06:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727051AbgECKbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 06:31:16 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFC6C061A0C
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 03:31:16 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F2A2700882AA5D9A50AC15C.dip0.t-ipconnect.de [IPv6:2003:ec:2f2a:2700:882a:a5d9:a50a:c15c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F6381EC00EE;
+        Sun,  3 May 2020 12:31:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1588501874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:in-reply-to:
+         references; bh=ostmp7kykRgcpZMrZEUHwqIHhGgOh09tY8s3r1HU8No=;
+        b=QmgWuRA93FYzkVLEmudPlMGEZycQWHrEoI/lj2gyqCrBLKJG58Y2ZcAgPyKUZBnfTCxaFk
+        hFw2x9wSVHVOhnVbxJFLj6EIkaYXojfmAKc9+1cWGwYOJJs4BHVmY2g60Ha3h90m7jao1g
+        pSS4Ay1+Irprtbiwmx4gHOY+FJnzXvI=
+From:   Borislav Petkov <bp@alien8.de>
+To:     X86 ML <x86@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/tlb/uv: Add a forward declaration for struct flush_tlb_info
+Date:   Sun,  3 May 2020 12:31:07 +0200
+Message-Id: <20200503103107.3419-1-bp@alien8.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 03 May 2020 12:24:30 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Davidlohr Bueso <dbueso@suse.de>, stable@vger.kernel.org
-Subject: Re: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
-In-Reply-To: <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
-References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
- <930c565705249d2b6264a31f1be6529e@suse.de>
- <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
-Message-ID: <f3c2e63ec34a611ec256785ebfd39270@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-02 00:09, Jason Baron wrote:
-> On 5/1/20 5:02 PM, Roman Penyaev wrote:
->> Hi Jason,
->> 
->> That is indeed a nice catch.
->> Seems we need smp_rmb() pair between list_empty_careful(&rp->rdllist) 
->> and
->> READ_ONCE(ep->ovflist) for ep_events_available(), do we?
->> 
-> 
-> Hi Roman,
-> 
-> Good point, even if we order those reads its still racy, since the
-> read of the ready list could come after its been cleared and the
-> read of the overflow could again come after its been cleared.
+From: Borislav Petkov <bp@suse.de>
 
-You mean the second chunk? True. Sigh.
+... to fix these build warnings:
 
-> So I'm afraid we might need instead something like this to make
-> sure they are read together:
+  In file included from ./arch/x86/include/asm/uv/uv_hub.h:22,
+                   from drivers/misc/sgi-gru/grukdump.c:16:
+  ./arch/x86/include/asm/uv/uv.h:39:21: warning: ‘struct flush_tlb_info’ declared \
+     inside parameter list will not be visible outside of this definition or declaration
+     39 |        const struct flush_tlb_info *info);
+        |                     ^~~~~~~~~~~~~~
+  In file included from ./arch/x86/include/asm/uv/uv_hub.h:22,
+                   from drivers/misc/sgi-gru/grutlbpurge.c:28:
+  ./arch/x86/include/asm/uv/uv.h:39:21: warning: ‘struct flush_tlb_info’ declared \
+    inside parameter list will not be visible outside of this definition or declaration
+     39 |        const struct flush_tlb_info *info);
+        |                     ^~~~~~~~~~~~~~
 
-No, impossible, I can't believe in that :) We can't give up.
+  ...
 
-All we need is to keep a mark, that ep->rdllist is not empty,
-even we've just spliced it.  ep_poll_callback() always takes
-the ->ovflist path, if ->ovflist is not EP_UNACTIVE_PTR, but
-ep_events_available() does not need to observe ->ovflist at
-all, just a ->rdllist.
+after
 
-Take a look at that, do I miss something? :
+  bfe3d8f6313d ("x86/tlb: Restrict access to tlbstate")
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index aba03ee749f8..a8770f9a917e 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -376,8 +376,7 @@ static void ep_nested_calls_init(struct nested_calls 
-*ncalls)
-   */
-  static inline int ep_events_available(struct eventpoll *ep)
-  {
--       return !list_empty_careful(&ep->rdllist) ||
--               READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
-+       return !list_empty_careful(&ep->rdllist);
-  }
+restricted access to tlbstate.
 
-  #ifdef CONFIG_NET_RX_BUSY_POLL
-@@ -683,7 +682,8 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
-*ep,
-  {
-         __poll_t res;
-         struct epitem *epi, *nepi;
--       LIST_HEAD(txlist);
-+       LIST_HEAD(rdllist);
-+       LIST_HEAD(ovflist);
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/uv/uv.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-         lockdep_assert_irqs_enabled();
-
-@@ -704,14 +704,22 @@ static __poll_t ep_scan_ready_list(struct 
-eventpoll *ep,
-          * in a lockless way.
-          */
-         write_lock_irq(&ep->lock);
--       list_splice_init(&ep->rdllist, &txlist);
-+       /*
-+        * We do not call list_splice_init() because for lockless
-+        * ep_events_available() ->rdllist is still "not empty".
-+        * Otherwise the feature that there is something left in
-+        * the list can be lost which causes missed wakeup.
-+        */
-+       list_splice(&ep->rdllist, &rdllist);
-+       /*
-+        * If ->rdllist was empty we should pretend it was not,
-+        * because after the unlock ->ovflist comes into play,
-+        * which is invisible for lockless ep_events_available().
-+        */
-+       ep->rdllist.next = LIST_POISON1;
-         WRITE_ONCE(ep->ovflist, NULL);
-         write_unlock_irq(&ep->lock);
-
-         /*
-          * Now call the callback function.
-          */
--       res = (*sproc)(ep, &txlist, priv);
-+       res = (*sproc)(ep, &rdllist, priv);
-
-         write_lock_irq(&ep->lock);
-         /*
-@@ -724,7 +732,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
-*ep,
-                 /*
-                  * We need to check if the item is already in the list.
-                  * During the "sproc" callback execution time, items are
--                * queued into ->ovflist but the "txlist" might already
-+                * queued into ->ovflist but the "rdllist" might already
-                  * contain them, and the list_splice() below takes care 
-of them.
-                  */
-                 if (!ep_is_linked(epi)) {
-@@ -732,7 +740,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll 
-*ep,
-                          * ->ovflist is LIFO, so we have to reverse it 
-in order
-                          * to keep in FIFO.
-                          */
--                       list_add(&epi->rdllink, &ep->rdllist);
-+                       list_add(&epi->rdllink, &ovflist);
-                         ep_pm_stay_awake(epi);
-                 }
-         }
-@@ -743,10 +751,11 @@ static __poll_t ep_scan_ready_list(struct 
-eventpoll *ep,
-          */
-         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
-
--       /*
--        * Quickly re-inject items left on "txlist".
--        */
--       list_splice(&txlist, &ep->rdllist);
-+       /* Events from ->ovflist happened later, thus splice to the tail 
-*/
-+       list_splice_tail(&ovflist, &rdllist);
-+       /* Just replace list */
-+       list_replace(&rdllist, &ep->rdllist);
-+
-         __pm_relax(ep->ws);
-         write_unlock_irq(&ep->lock);
-
-@@ -1763,13 +1772,13 @@ static __poll_t ep_send_events_proc(struct 
-eventpoll *ep, struct list_head *head
-                          * Trigger mode, we need to insert back inside
-                          * the ready list, so that the next call to
-                          * epoll_wait() will check again the events
--                        * availability. At this point, no one can 
-insert
--                        * into ep->rdllist besides us. The epoll_ctl()
--                        * callers are locked out by
--                        * ep_scan_ready_list() holding "mtx" and the
--                        * poll callback will queue them in ep->ovflist.
-+                        * availability. What we do here is simply
-+                        * return the epi to the same position where
-+                        * it was, the ep_scan_ready_list() will
-+                        * re-inject the leftovers to the ->rdllist
-+                        * under the proper lock.
-                          */
--                       list_add_tail(&epi->rdllink, &ep->rdllist);
-+                       list_add_tail(&epi->rdllink, &tmp->rdllink);
-                         ep_pm_stay_awake(epi);
-                 }
-         }
-
-
---
-Roman
+diff --git a/arch/x86/include/asm/uv/uv.h b/arch/x86/include/asm/uv/uv.h
+index 45ea95ce79b4..91e088ac6904 100644
+--- a/arch/x86/include/asm/uv/uv.h
++++ b/arch/x86/include/asm/uv/uv.h
+@@ -8,6 +8,7 @@ enum uv_system_type {UV_NONE, UV_LEGACY_APIC, UV_X2APIC, UV_NON_UNIQUE_APIC};
+ 
+ struct cpumask;
+ struct mm_struct;
++struct flush_tlb_info;
+ 
+ #ifdef CONFIG_X86_UV
+ #include <linux/efi.h>
+-- 
+2.21.0
 
