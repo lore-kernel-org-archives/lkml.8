@@ -2,103 +2,95 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1823C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712A1C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C59052075B
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E41E2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNFPAeen"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="q90WwHIq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgECMI7 (ORCPT
+        id S1728197AbgECMSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727955AbgECMI7 (ORCPT
+        Sun, 3 May 2020 08:18:24 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:19681 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgECMSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:08:59 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE9B3C061A0C;
-        Sun,  3 May 2020 05:08:58 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id z6so5642427plk.10;
-        Sun, 03 May 2020 05:08:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=OPAruJN93T/BqNZ0orjpx+YVAhbV4pfvgi5Yk5S86ps=;
-        b=TNFPAeenGYQbmWv/hoyiLr7ltiaSlCGNRaCikOM02NUvqd81LLAdzX7ZdyXXSTDSkB
-         U92lpGZEFB2FEYS77NlttQ02q1NbMYearGAlXBXUPzmNVH73Nft0ni+iTkvS+5m1k0s8
-         Q331Zq+8Eccx4akiBl/4DRb6C9VFX/q/8WPH7N6PjsSJpawPdTb4hqG3JyEYiBQ6PacM
-         26RUxOagitSxAat09fRabluxc4Kv3nmqanPclPZct6ltOkzpKMb8ip5yvwKVoj/hk3xI
-         wrFc1cVIqQ+G5RD1yNXHNjESuOAxxxrLEnspaVtoZp30zFUiSkOCRdfmaK4uj5pSbNyS
-         4PjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OPAruJN93T/BqNZ0orjpx+YVAhbV4pfvgi5Yk5S86ps=;
-        b=sabEGqasVA4JkGuOoZjAmlCDr70dvf1zYAmDalZj5JLNOJJxfRgmSF/xlySPokQZtq
-         a8quvTbjueJi/VtAQR/etAxft63m2/l4o6dV7syUUeLoCzCaoy6ct2AxhnHLAmE7qVJS
-         tmGBP44HvDBb4g28bbKoQpLyz8lo0Vb2WPImDR/x/MamWvOIpClfv/fKMmShSFYTshD1
-         3CV6GgrmdiYP7gr6TB98Cz4M/QAy/0/FBNpVSIxZeN9q1lVURSMNCFm4PsL9O1RiacLK
-         gAD73cU+WOH4zvf/9WozjqEr2uqxCwhBtbqtM5fuU5L00AMefDyB9P2DjulQdISWoFRr
-         1xsw==
-X-Gm-Message-State: AGi0PuZjQywqiQdkyU+SATxnPXm6Z/Bz9qIjPkeJffVKJ+r8q9Lf/JhR
-        TtiiydJtWDcbSA0bKlh9shO8aJTv
-X-Google-Smtp-Source: APiQypLDDAB1Sw4AmqmTtsN4ogJyVEpa9EMzvsAE8pljFhpLnM1apQ97W8SeUn0gNbrpl1ptfy1YVg==
-X-Received: by 2002:a17:90a:f698:: with SMTP id cl24mr11046094pjb.71.1588507738318;
-        Sun, 03 May 2020 05:08:58 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:8b:8746:9817:f6e9:c9f8:6a59])
-        by smtp.gmail.com with ESMTPSA id q201sm6371388pfq.40.2020.05.03.05.08.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 05:08:57 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     aishwaryarj100@gmail.com
-Subject: [PATCH] i2c: uniphier: Remove superfluous error message in uniphier_i2c_probe()
-Date:   Sun,  3 May 2020 17:38:47 +0530
-Message-Id: <20200503120847.13528-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 3 May 2020 08:18:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1588508303; x=1620044303;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=c8lDNy1DN1+fUi3A0w27OVt8zaff8+LO9O5hnm7DgNM=;
+  b=q90WwHIqJDuKqJcr+OZrYr+6EHK38IlRivCUKe0MIEe8bhjO/qOVb2R1
+   3bVTwefch5g0li6ECXGZeUI9oJNFqtWFLrywbUPXVIqj+DUtYtdvYyr3t
+   jKJgVXioSMckuE+OQlAZkqRgFKV/PuQhk9Cmc+C/7aAhpcyGMZVgnmFtK
+   +uDBCnG4TLNAH0J7MOjxDuv4Hecjr++Mn8oS/c+VeXfCNjXMI0f2hFMWi
+   k9YTz4UV9oBVIMLVF5PIITYzbGsm4UQ33jkFTU7LqLHr58BR7yL0FwvAV
+   RCOAyef1qG6zXivbqCIJKRl4yy1JP/S0dorhc0wCJxOkgNKP+FwMFsw3/
+   w==;
+IronPort-SDR: DkyR9cKBfknKhzowufnIcNtdsXbkIo7Iw8szQVfEcCM6y7J9LyfIU7HWyWMdbwHkAmQgyaN78N
+ nVTl6/txRq/dfCJpC7RiDdY6hbkpgFh0KirZG6acY6/5YSrIuuChre6Us8MP+zN13HWoNM8vkL
+ V41yH53FxZpMIPNFtn7DN+6eSOg7gtzlJc/FtPUqOolbVXVtyO5ELDzRSRsyLa5ddHag0iLJ0i
+ XzM7IlL878CRd2y8+r5Nfi83n6Dh8HjjI57a4aCSLhV1i0EM3OLga3ZA0dzo2oiCZjjbo7QTif
+ jnQ=
+X-IronPort-AV: E=Sophos;i="5.73,347,1583218800"; 
+   d="scan'208";a="75334447"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 May 2020 05:18:22 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 3 May 2020 05:18:23 -0700
+Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Sun, 3 May 2020 05:18:18 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>
+CC:     <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH 1/2] clk: at91: pmc: do not continue if compatible not located
+Date:   Sun, 3 May 2020 15:18:08 +0300
+Message-ID: <1588508289-10140-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function platform_get_irq can log an error by itself.
-This omit a redundant message for exception handling in the
-calling function.
+pmc_register_ops() is called for all AT91 devices. Return
+-ENODEV in case of_find_matching_node() returns NULL.
 
-Suggested by Coccinelle.
-
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/i2c/busses/i2c-uniphier.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/clk/at91/pmc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-uniphier.c b/drivers/i2c/busses/i2c-uniphier.c
-index 668b1fa2b0ef..ee00a44bf4c7 100644
---- a/drivers/i2c/busses/i2c-uniphier.c
-+++ b/drivers/i2c/busses/i2c-uniphier.c
-@@ -324,10 +324,8 @@ static int uniphier_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->membase);
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index b71515acdec1..bf0570e66fc1 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -274,6 +274,8 @@ static int __init pmc_register_ops(void)
+ 	struct device_node *np;
  
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(dev, "failed to get IRQ number\n");
-+	if (irq < 0)
- 		return irq;
--	}
+ 	np = of_find_matching_node(NULL, sama5d2_pmc_dt_ids);
++	if (!np)
++		return -ENODEV;
  
- 	if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
- 		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
+ 	pmcreg = device_node_to_regmap(np);
+ 	if (IS_ERR(pmcreg))
 -- 
-2.17.1
+2.7.4
 
