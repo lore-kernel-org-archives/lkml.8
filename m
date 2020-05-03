@@ -2,91 +2,102 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931ABC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1242C4724C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5342073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A616520757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588511159;
+	bh=g/KpiyBdHIGtCyxIHLZ2FLL0wKiuJWDBdXJg+ibzx3c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kgZ79wgMVAf+hZzGk8s8TF+9dujv9T5/6Uh5nWMDxiGy0TUBUR9bCyz1K13XeLqrr
+	 eb7su1DKbr0MNLX+PLW/Sa/1xbbpUdI9/eq2Pf0wqTh47c24MK3JX7xAWhAkE8fo6w
+	 h4sfAk5r36RUFL/Z3IQcp54TvU85xvT/peQVqrx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgECNF3 convert rfc822-to-8bit (ORCPT
+        id S1728627AbgECNF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:05:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:20475 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728579AbgECNF3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:05:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mtapsc-1-PiwzYAMxPhqDKD10rKMWKg-1; Sun, 03 May 2020 14:05:25 +0100
-X-MC-Unique: PiwzYAMxPhqDKD10rKMWKg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sun, 3 May 2020 14:05:24 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sun, 3 May 2020 14:05:24 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Jason Baron' <jbaron@akamai.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
-Thread-Topic: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
-Thread-Index: AQHWH+3GezEky6u5mk6GywAVvMmIMKiWVkJw
-Date:   Sun, 3 May 2020 13:05:24 +0000
-Message-ID: <c2921e66bf3a4edfaa667c32abbefebf@AcuMS.aculab.com>
-References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
-In-Reply-To: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Sun, 3 May 2020 09:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbgECNF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 09:05:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765892073E;
+        Sun,  3 May 2020 13:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588511158;
+        bh=g/KpiyBdHIGtCyxIHLZ2FLL0wKiuJWDBdXJg+ibzx3c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A8nlAR0vGepTUJ9VOLKP4r7SrHpnVfuIxCyC68n64Lba5mNZ/BhjfsHckF3Yaurvb
+         shGrDYlCohh9S3T5Ynfho5Ec3Es7fsfrHiMA4KBBttZUo5yQmeMhMsy6OcitGSxG6/
+         EkE+ceu8WsRkn//4og72ELzyXU49Khr9L/GQV1rA=
+Date:   Sun, 3 May 2020 14:05:53 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        tglx@linutronix.de, allison@lohutok.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: bmp280: fix compensation of humidity
+Message-ID: <20200503140553.2152709b@archlinux>
+In-Reply-To: <20200429184852.GA17547@arbad>
+References: <20200429184852.GA17547@arbad>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron
-> Sent: 01 May 2020 20:16
->
-> Now that the ep_events_available() check is done in a lockless way, and
-> we no longer perform wakeups from ep_scan_ready_list(), we need to ensure
-> that either ep->rdllist has items or the overflow list is active. Prior to:
-> commit 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested
-> epoll"), we did wake_up(&ep->wq) after manipulating the ep->rdllist and the
-> overflow list. Thus, any waiters would observe the correct state. However,
-> with that wake_up() now removed we need to be more careful to ensure that
-> condition.
+On Wed, 29 Apr 2020 20:48:54 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-I'm wondering how much all this affects the (probably) more common
-case of a process reading events from a lot of sockets in 'level'
-mode.
+> Output of humidity compensation is limited to the range between 0 and
+> 100 percent. Add this to the compensation formula as described in the
+> datasheet chapter 4.2.3.
 
-Even the change to a rwlock() may have had an adverse effect
-on such programs.
+More details needed...
 
-In 'level' mode it doesn't make any sense to have multiple
-readers of the event queue.
+1. Fixes tag
+2. What is the result of this not being clamped?  What happens if I set
+a value outside that range?
+> 
+> Change to v1:
+> Thanks to Tomasz for suggesting the easier to use function clamp_val()
+> which is now used.
 
-	David
+Change log belongs below the ---
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> ---
+
+Here for changelog.
+
+>  drivers/iio/pressure/bmp280-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> index 29c209cc1108..297ee2205bf6 100644
+> --- a/drivers/iio/pressure/bmp280-core.c
+> +++ b/drivers/iio/pressure/bmp280-core.c
+> @@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+>  		+ (s32)2097152) * calib->H2 + 8192) >> 14);
+>  	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
+>  
+> +	var = clamp_val(var, 0, 419430400);
+> +
+>  	return var >> 12;
+>  };
+>  
 
