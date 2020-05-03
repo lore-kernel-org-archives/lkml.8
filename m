@@ -2,157 +2,339 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE1BC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54018C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB99E20787
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB9C20787
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPy9GLl7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mhVMsQGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgECMmE (ORCPT
+        id S1728782AbgECMmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgECMlj (ORCPT
+        Sun, 3 May 2020 08:42:09 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56916 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728774AbgECMmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:41:39 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00538C061A0C;
-        Sun,  3 May 2020 05:41:38 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a7so2421835pju.2;
-        Sun, 03 May 2020 05:41:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
-         :content-disposition:user-agent;
-        bh=26JhLNWEI7jS5emKz4ATnhzzFH8XDenxaWgLiomlOeY=;
-        b=YPy9GLl7PeY/VbAy+rtrCYKEMCSd1i+TZOUYQT0HFRKiCdGaXv634BBawJ1e5THmfL
-         eh67Lrdrtv/MaTt5a86VEMk8Uib7dYBnBAPdXzVUnJe/yd00z1evetp6VYrHG/auoNaU
-         +t15IHPPtYI1yhtnXi+16ryuQDqkKZViWFcQHlcjzdomsAkERQ2hBoZIoAFF3XrzcuyF
-         KAX/QRaId8NjW0bs1t5GRLU9e/UfGISY/s4eUE9JArpkKMM9KjNCYQoGW/RaA4Nr4Y1q
-         rjBEIbLHyuWYbIf5vYvTj9nr0bNribrbIFXSWiUinJiIljOppQHGYT3sZsf494+SyRLO
-         4ROQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:mime-version:content-disposition:user-agent;
-        bh=26JhLNWEI7jS5emKz4ATnhzzFH8XDenxaWgLiomlOeY=;
-        b=c2UW2xibCRU4AptGAdbSUGR60kSu5Z1BSRFxQWNnwzP2pg9nEWzInxQM+ZTizeHR2m
-         Dzh/Xf1x4h4FZG4l+IsB1AWinEzMUYfkZxG77ZTDQIb1WmPKpMGDUyEHgri7wkyMBQqv
-         XeHm9EBQZ4UBTWyG0Zrdega1RCA2ypXK56tNe3ciE2O8ZB5MGY9DkqZhDAm838SXqBYY
-         +xlc2WVwD17KMpCdGzvp12W88bTYMpW1CEODk1SzJKSPDtqCPCcki3vTs/HZ/8EHhns/
-         eXdm/O7Fzh5zdOwkC+DuyG7wEwSnGQVSGH2pQfbXXuNIzetIF/Q9ck1/3qznGov/v4Ph
-         XA+w==
-X-Gm-Message-State: AGi0PuaTaxRrOkTG92g53YTyq7DlqYYFrXzA3SzvnBg135T0FSMtJIRD
-        o1dk6lnQJzUBEbcPPopON4o=
-X-Google-Smtp-Source: APiQypKsxYR1wIihI41SbkcLyESu/qGqurUARiu7u6Gw8UlAf8pcqWo04JAzEp2UVJLCVs1Y0lvs+Q==
-X-Received: by 2002:a17:902:b186:: with SMTP id s6mr14028869plr.16.1588509698515;
-        Sun, 03 May 2020 05:41:38 -0700 (PDT)
-Received: from udknight.localhost ([59.57.158.27])
-        by smtp.gmail.com with ESMTPSA id d74sm6512030pfd.70.2020.05.03.05.41.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 May 2020 05:41:37 -0700 (PDT)
-Received: from udknight.localhost (localhost [127.0.0.1])
-        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 043CYZlr011084;
-        Sun, 3 May 2020 20:34:35 +0800
-Received: (from root@localhost)
-        by udknight.localhost (8.14.9/8.14.9/Submit) id 043CYZiM011083;
-        Sun, 3 May 2020 20:34:35 +0800
-Date:   Sun, 3 May 2020 20:34:35 +0800
-From:   Wang YanQing <udknight@gmail.com>
-To:     joe@perches.com
-Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] checkpatch: add support for title acrosses three lines in
- commit id description
-Message-ID: <20200503123435.GD10332@udknight>
-Mail-Followup-To: Wang YanQing <udknight@gmail.com>, joe@perches.com,
-        Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
-        kernel-janitors@vger.kernel.org
+        Sun, 3 May 2020 08:42:05 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 043Cfqps108863;
+        Sun, 3 May 2020 07:41:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588509712;
+        bh=l5RB1BFBNGs53h/lFYd+NbwK21SIGQnFwb+EHjWJYqg=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=mhVMsQGUrh+axaQ9zapVRmqu1+439WNgvYaTVNRBue0TPqBrNv+JLLm0KlibjrTen
+         1QG3nTQcSjwAI6P7P2+7LzwwV62u6v/+RCtQgCpOEO2IPVYXH5rgOv8tl13AeFzvPU
+         YjTiRi6QTiBH58oVaANJlTCbJSZnzdlf36Wdyx5I=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 043CfqSX062010
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 3 May 2020 07:41:52 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 3 May
+ 2020 07:41:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 3 May 2020 07:41:51 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 043Cfp7n043955;
+        Sun, 3 May 2020 07:41:51 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v24 16/16] dt: bindings: Update lp55xx binding to recommended LED naming
+Date:   Sun, 3 May 2020 07:32:15 -0500
+Message-ID: <20200503123215.6449-17-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200503123215.6449-1-dmurphy@ti.com>
+References: <20200503123215.6449-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.7.1 (2016-10-04)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current GIT_COMMIT_ID will report error when the title in commit id
-description acrosses three lines, take changelog of commit 87b0f983f66f
-("net: mscc: ocelot: fix untagged packet drops when enslaving to vlan
-aware bridge") as a example.
+Update the LP55xx DT binding examples to the recommended node
+naming convention.  There are no changes to the DT properties.
 
-It make senses to support three lines title, because three lines could only
-have about two lines length title, see above example, but I think we don't
-need to add support for more than three lines length title, ~225 (75 * 3)
-shoud be enough for any sensible title.
-
-This patch adds support for three lines title in the commit id description,
-and emit diagnostics info when the title acrosses more than three lines.
-
-Signed-off-by: Wang YanQing <udknight@gmail.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Tony Lindgren <tony@atomide.com>
+CC: "Benoît Cousson" <bcousson@baylibre.com>
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
 ---
- Hi! Joe
- This is the third patch based on previous two patches.
+ .../devicetree/bindings/leds/leds-lp55xx.txt  | 58 +++++++++----------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
- Thanks.
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+index 0ccc1efc2499..5475f45ef51f 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+@@ -48,7 +48,7 @@ example 1) LP5521
+ 'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
+ on channel 0.
  
- scripts/checkpatch.pl | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index a1e4113..e9c46d3 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2899,15 +2899,27 @@ sub process {
- 				$orig_desc = $1;
- 				$has_parens_and_dqm = 1;
- 			} elsif ($line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\(".+$/i &&
--				 defined $rawlines[$linenr] &&
--				 $rawlines[$linenr] =~ /^\s*.+"\)/) {
--				$line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\("(.+)$/i;
--				$orig_desc = $1;
--				$rawlines[$linenr] =~ /^\s*(.+)"\)/;
--				$orig_desc .= " " . $1;
--				$has_parens_and_dqm = 1;
--
--				if ($prefix eq "Fixes:") {
-+				 defined $rawlines[$linenr]) {
-+				 if ($rawlines[$linenr] =~ /^\s*.+"\)/) {
-+					$line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\("(.+)$/i;
-+					$orig_desc = $1;
-+					$rawlines[$linenr] =~ /^\s*(.+)"\)/;
-+					$orig_desc .= " " . $1;
-+					$has_parens_and_dqm = 1;
-+				 } elsif (defined $rawlines[$linenr + 1] &&
-+					  $rawlines[$linenr + 1] =~ /^\s*.+"\)/) {
-+					$line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\("(.+)$/i;
-+					$orig_desc = $1;
-+					$rawlines[$linenr] =~ /^\s*(.+)/;
-+					$orig_desc .= " " . $1;
-+					$rawlines[$linenr + 1] =~ /^\s*(.+)"\)/;
-+					$orig_desc .= " " . $1;
-+					$has_parens_and_dqm = 1;
-+				 } else {
-+					$diagnostics .= "Missing terminal '\")' at the end of title or the title acrosses more than 3 lines.\n";
-+				 }
-+
-+				if ($has_parens_and_dqm && $prefix eq "Fixes:") {
- 					$acrosslines = 1;
- 					$diagnostics .= "The title acrosses lines.\n";
- 				}
+-lp5521@32 {
++led-controller@32 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "national,lp5521";
+@@ -56,20 +56,20 @@ lp5521@32 {
+ 	label = "lp5521_pri";
+ 	clock-mode = /bits/ 8 <2>;
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		led-cur = /bits/ 8 <0x2f>;
+ 		max-cur = /bits/ 8 <0x5f>;
+ 		linux,default-trigger = "heartbeat";
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		led-cur = /bits/ 8 <0x2f>;
+ 		max-cur = /bits/ 8 <0x5f>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		led-cur = /bits/ 8 <0x2f>;
+ 		max-cur = /bits/ 8 <0x5f>;
+@@ -88,70 +88,70 @@ ASEL1    ASEL0    Address
+  VEN      GND       34h
+  VEN      VEN       35h
+ 
+-lp5523@32 {
++led-controller@32 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "national,lp5523";
+ 	reg = <0x32>;
+ 	clock-mode = /bits/ 8 <1>;
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		chan-name = "d1";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		chan-name = "d2";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		chan-name = "d3";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@3 {
++	led@3 {
+ 		reg = <3>;
+ 		chan-name = "d4";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@4 {
++	led@4 {
+ 		reg = <4>;
+ 		chan-name = "d5";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@5 {
++	led@5 {
+ 		reg = <5>;
+ 		chan-name = "d6";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@6 {
++	led@6 {
+ 		reg = <6>;
+ 		chan-name = "d7";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@7 {
++	led@7 {
+ 		reg = <7>;
+ 		chan-name = "d8";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@8 {
++	led@8 {
+ 		reg = <8>;
+ 		chan-name = "d9";
+ 		led-cur = /bits/ 8 <0x14>;
+@@ -162,35 +162,35 @@ lp5523@32 {
+ example 3) LP5562
+ 4 channels are defined.
+ 
+-lp5562@30 {
++led-controller@30 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "ti,lp5562";
+ 	reg = <0x30>;
+ 	clock-mode = /bits/8 <2>;
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		chan-name = "R";
+ 		led-cur = /bits/ 8 <0x20>;
+ 		max-cur = /bits/ 8 <0x60>;
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		chan-name = "G";
+ 		led-cur = /bits/ 8 <0x20>;
+ 		max-cur = /bits/ 8 <0x60>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		chan-name = "B";
+ 		led-cur = /bits/ 8 <0x20>;
+ 		max-cur = /bits/ 8 <0x60>;
+ 	};
+ 
+-	chan@3 {
++	led@3 {
+ 		reg = <3>;
+ 		chan-name = "W";
+ 		led-cur = /bits/ 8 <0x20>;
+@@ -202,7 +202,7 @@ example 4) LP8501
+ 9 channels are defined. The 'pwr-sel' is LP8501 specific property.
+ Others are same as LP5523.
+ 
+-lp8501@32 {
++led-controller@32 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	compatible = "ti,lp8501";
+@@ -210,63 +210,63 @@ lp8501@32 {
+ 	clock-mode = /bits/ 8 <2>;
+ 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
+ 
+-	chan@0 {
++	led@0 {
+ 		reg = <0>;
+ 		chan-name = "d1";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@1 {
++	led@1 {
+ 		reg = <1>;
+ 		chan-name = "d2";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@2 {
++	led@2 {
+ 		reg = <2>;
+ 		chan-name = "d3";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@3 {
++	led@3 {
+ 		reg = <3>;
+ 		chan-name = "d4";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@4 {
++	led@4 {
+ 		reg = <4>;
+ 		chan-name = "d5";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@5 {
++	led@5 {
+ 		reg = <5>;
+ 		chan-name = "d6";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@6 {
++	led@6 {
+ 		reg = <6>;
+ 		chan-name = "d7";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@7 {
++	led@7 {
+ 		reg = <7>;
+ 		chan-name = "d8";
+ 		led-cur = /bits/ 8 <0x14>;
+ 		max-cur = /bits/ 8 <0x20>;
+ 	};
+ 
+-	chan@8 {
++	led@8 {
+ 		reg = <8>;
+ 		chan-name = "d9";
+ 		led-cur = /bits/ 8 <0x14>;
 -- 
-1.8.5.6.2.g3d8a54e.dirty
+2.25.1
+
