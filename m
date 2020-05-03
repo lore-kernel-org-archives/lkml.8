@@ -2,135 +2,119 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2263C4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E48C28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF109206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZBaNc+xF"
+	by mail.kernel.org (Postfix) with ESMTP id 73303206B9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgECWcr (ORCPT
+        id S1729279AbgECWcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 18:32:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729171AbgECWcq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 18:32:46 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF96C061A0E;
-        Sun,  3 May 2020 15:32:46 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49FgjM6fGNz9sRf;
-        Mon,  4 May 2020 08:32:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588545162;
-        bh=8dTj5935c2UPMnOTm2N4WsH3bI7fujxc7NCr+u+ZRio=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZBaNc+xF4RH4OHLkb8hs7pW9O4WwfFWF9soPBgIv/0oKnYEJLPe+vDb5tnAIpC5zF
-         q0symjiO+didwkp56u+Qa1GGRaHyYMOc24F+N9j8+mZZb2rQECZ113HzYijc7m8Jaz
-         O8sKOgeB1kJPM+yHAKFD7IcOd9kafLh5lTl+Ic6k125yDLlL7a9hcDcgAwV4zCk50q
-         8dmbWUcQrnhoie9xiqRQc5FO/F+iN4fxoipggCfM/Nel1QY7REoiOsH4Hv+ca40xso
-         +XIgAYFqqB1zUTlWz0FRJLpod88KLZTPm+KmmotymIfPlI7S8k1rQ/BJ9rZ4pk0HsH
-         bMYXbfV0wf03A==
-Date:   Mon, 4 May 2020 08:32:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm: Fix undefined "rd_full" link error
-Message-ID: <20200504083239.004057e0@canb.auug.org.au>
-In-Reply-To: <20200430192427.4104899-1-bjorn.andersson@linaro.org>
-References: <20200430192427.4104899-1-bjorn.andersson@linaro.org>
+        Sun, 3 May 2020 18:32:50 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10348 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729171AbgECWct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 18:32:49 -0400
+IronPort-SDR: oEh9WLDoccDO1tCqLZu4CS4VGnMUC02EX7t94Lm4cMIol3MuBKAIREdKInEv3/8quIVKkZLzfq
+ ++XZ8yVvvz9g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 15:32:48 -0700
+IronPort-SDR: sTeKarLq7jLZgLfv76YD7tgCpaLe5Yi0j4r4MStyBV+Ctlfcl6hxElw52rtfdGWB8S9O5lndBl
+ nMJ5Wq6IjL7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,349,1583222400"; 
+   d="scan'208";a="406300258"
+Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.212.197.87]) ([10.212.197.87])
+  by orsmga004.jf.intel.com with ESMTP; 03 May 2020 15:32:47 -0700
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, maz@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
+        KVM list <kvm@vger.kernel.org>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
+ <CAPcyv4hGX5jCzag8oQVUZ6Eq9GvZYLN_6kmBAgQMbrBbNzJ0yg@mail.gmail.com>
+ <20200423194941.GG13640@mellanox.com>
+ <c50c2eda-88aa-00bc-7cd6-37cc26052cd5@linux.intel.com>
+ <20200503222146.GD19158@mellanox.com>
+From:   "Dey, Megha" <megha.dey@linux.intel.com>
+Message-ID: <a3e93be9-7102-fd1b-3043-4e4d967a2bf7@linux.intel.com>
+Date:   Sun, 3 May 2020 15:32:47 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LBun5GZO8F8bXK.oWIHz6uA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200503222146.GD19158@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LBun5GZO8F8bXK.oWIHz6uA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jason,
 
-Hi all,
+On 5/3/2020 3:21 PM, Jason Gunthorpe wrote:
+> On Fri, May 01, 2020 at 03:31:14PM -0700, Dey, Megha wrote:
+>> Hi Jason,
+>>
+>> On 4/23/2020 12:49 PM, Jason Gunthorpe wrote:
+>>> On Thu, Apr 23, 2020 at 12:17:50PM -0700, Dan Williams wrote:
+>>>
+>>>> Per Megha's follow-up can you send the details about that other device
+>>>> and help clear a path for a device-specific MSI addr/data table
+>>>> format. Ever since HMM I've been sensitive, perhaps overly-sensitive,
+>>>> to claims about future upstream users. The fact that you have an
+>>>> additional use case is golden for pushing this into a common area and
+>>>> validating the scope of the proposed API.
+>>>
+>>> I think I said it at plumbers, but yes, we are interested in this, and
+>>> would like dynamic MSI-like interrupts available to the driver (what
+>>> Intel calls IMS)
+>>>
+>>
+>> So basically you are looking for a way to dynamically allocate the
+>> platform-msi interrupts, correct?
+> 
+> The basic high level interface here seems fine, which is bascially a
+> way for a driver to grab a bunch of platform-msi interrupts for its
+> own use
 
-On Thu, 30 Apr 2020 12:24:27 -0700 Bjorn Andersson <bjorn.andersson@linaro.=
-org> wrote:
->
-> rd_full should be defined outside the CONFIG_DEBUG_FS region, in order
-> to be able to link the msm driver even when CONFIG_DEBUG_FS is disabled.
->=20
-> Fixes: e515af8d4a6f ("drm/msm: devcoredump should dump MSM_SUBMIT_BO_DUMP=
- buffers")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/gpu/drm/msm/msm_rd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
-> index 732f65df5c4f..fea30e7aa9e8 100644
-> --- a/drivers/gpu/drm/msm/msm_rd.c
-> +++ b/drivers/gpu/drm/msm/msm_rd.c
-> @@ -29,8 +29,6 @@
->   * or shader programs (if not emitted inline in cmdstream).
->   */
-> =20
-> -#ifdef CONFIG_DEBUG_FS
-> -
->  #include <linux/circ_buf.h>
->  #include <linux/debugfs.h>
->  #include <linux/kfifo.h>
-> @@ -47,6 +45,8 @@ bool rd_full =3D false;
->  MODULE_PARM_DESC(rd_full, "If true, $debugfs/.../rd will snapshot all bu=
-ffer contents");
->  module_param_named(rd_full, rd_full, bool, 0600);
-> =20
-> +#ifdef CONFIG_DEBUG_FS
-> +
->  enum rd_sect_type {
->  	RD_NONE,
->  	RD_TEST,       /* ascii text */
-> --=20
-> 2.24.0
->=20
+ok!
+>   
+>> Since I don't have access to any of the platform-msi devices, it is hard for
+>> me to test this code for other drivers expect idxd for now.
+>> Once I submit the next round of patches, after addressing all the comments,
+>> would it be possible for you to test this code for any of your devices?
+> 
+> Possibly, need to find time
+> 
+Sure, thanks!
 
-Added to my fixes tree form today.  I will remove it when it is merged
-upstream through someone else's tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LBun5GZO8F8bXK.oWIHz6uA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6vRocACgkQAVBC80lX
-0GwhiQf/VDWuaRaQPXVqzmyp2T9cKgo9Td1cqHy1M/7NH0U8U1gFzKaHW8LoAf+z
-t7BAowbPPIRVOag4D4xOgS0FCT1W7AlkSgyd7qy11a2HjPEGovwMGvt1Mgq9VilK
-7k35OmuUiHBXWetQzW3pu57VADvSQko9jsFnHakQLB/GeeOuPNCkDGprFRM7rOL2
-MT/3i//ryk2raPhP+G6yQzRM5Dpy6ud10T0glodLaPwK9SZ1l4q7r5TxUKCN+JlM
-siY6AhN/EvIYGA0BEs8uMZQSxJJlpXc0qlO439KlbjKuVosQ9WrJkgcvlX0YmMMJ
-h/zjahJjJzXhQNwMvemOjqLNbVdZVA==
-=YQZt
------END PGP SIGNATURE-----
-
---Sig_/LBun5GZO8F8bXK.oWIHz6uA--
+> Jason
+> 
