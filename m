@@ -2,119 +2,154 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681B2C47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC55CC47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42B5521973
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC57B206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 16:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588522287;
-	bh=kMwOGtCAJASEPsfvYBAKqgbEH2mxZkJEsxIUNF9WCHc=;
+	s=default; t=1588522484;
+	bh=v/GdpUiwhUEgyLIQs4iqBWqCrRSiBXU6uSbDJ7XGPiA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Pcdk/K90CMosYuUmPyrEwp/QM3M/aSe6eRe9ncutlPtGmZ2g3+yfaczLnyiCE72uD
-	 sA4y+qYHOK5JsYArZKTs5BKrU3CqkocZeBr6QvghmNTR8yej9Z2bz8rZXocv7WGf5C
-	 2SjPWTsMNAYCeEeIKYmX7SNtiRTeqPjr0yqZyWcY=
+	b=UB7sbRIMw1tlqpV3E4HTx5+4IoVPqIiC6teqYUItcOFn1eqTDgrwf0oC6quRT3zpk
+	 0FKATxl9nKM8zQdZqu8J2wFKeDs0F6sraKU5x6JEBAsOHS7g2zuHuU0nDnco2XX87H
+	 90ikh6d5WZJ47RVkfdojas39aKpP/5mQfntbdrbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgECQL0 (ORCPT
+        id S1728883AbgECQOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 12:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
+        Sun, 3 May 2020 12:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgECQL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 12:11:26 -0400
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        id S1728665AbgECQOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 12:14:43 -0400
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2912520757;
-        Sun,  3 May 2020 16:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB96924953;
+        Sun,  3 May 2020 16:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588522286;
-        bh=kMwOGtCAJASEPsfvYBAKqgbEH2mxZkJEsxIUNF9WCHc=;
+        s=default; t=1588522482;
+        bh=v/GdpUiwhUEgyLIQs4iqBWqCrRSiBXU6uSbDJ7XGPiA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KiIozO2XKHAqUQGFX5ObUTW/Qb8ykRUciV4QjSyFo/dcuDA5GH3Em89oX2aMITe8M
-         ugzBS9WW5u1MUq0d2lCXHIrzWWIWNcyi3Xmu1f5giFa5TBNOL/y+s5njPF79PKOoX7
-         g4apTW9Ujqm1TkSgoLQZ2oBQFZDItrsEMK08CNl0=
-Received: by mail-io1-f44.google.com with SMTP id d7so4910488ioq.5;
-        Sun, 03 May 2020 09:11:26 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ5kw/l0EdWYDTl3kTjodCCbwDO4Hlb+T6x+QCX9qLz8Mg9fdr0
-        dAF0YaS8jdN74uDR+HiQf+P8Kg7HeksCp6rK5ro=
-X-Google-Smtp-Source: APiQypKCq/06E5d6skoEysLKVp/ZGOsn9LUOEYM7bPrPVvwAu6PK1ArHCj/14zTc3HOfjo1kWTKG83bFOIokVEh4HxI=
-X-Received: by 2002:a6b:ef03:: with SMTP id k3mr12070303ioh.203.1588522285507;
- Sun, 03 May 2020 09:11:25 -0700 (PDT)
+        b=HUw64GcCuh4QEKVQzd19hfQ6MuE85JT+aL8V+5myvA/ocJchkFZO3QDIbIZkKgTiO
+         hUv4qdIVYpzKt8SY2tlrQA8nwQeSaSYT3HE3luy30EkCF2F7DEU1acSq3puJMyy/fU
+         KMX6Ot8zwqoePdKP+366XeRo3Oqq7OXgONx8WNNA=
+Received: by mail-il1-f176.google.com with SMTP id b18so9034538ilf.2;
+        Sun, 03 May 2020 09:14:42 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYxeO46cs51BazEAU9BHCmXxslW0OuBxT4kKBQHCAkaMLFoZzLZ
+        bOAhNW5jTf4qh7ifUXKC1iKVJy1xe83v5YwqidI=
+X-Google-Smtp-Source: APiQypK7cKz3TGzrgiEEmohb3IEejW1GKi071ccK4M2qSXz7GkH9GOLTsLT+pVxFg8EWfCmzjA1ERwmumjj/PshL39U=
+X-Received: by 2002:a92:39dd:: with SMTP id h90mr12778366ilf.80.1588522482062;
+ Sun, 03 May 2020 09:14:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424130531.30518-1-ardb@kernel.org> <20200424130531.30518-4-ardb@kernel.org>
- <20200503150906.GA57805@roeck-us.net> <20200503160943.GA718804@rani.riverdale.lan>
-In-Reply-To: <20200503160943.GA718804@rani.riverdale.lan>
+References: <20200502182427.104383-1-ebiggers@kernel.org>
+In-Reply-To: <20200502182427.104383-1-ebiggers@kernel.org>
 From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sun, 3 May 2020 18:11:14 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXE3XTMjryJzBMVCujXy=kQYasKAr-Rb5ZKuqC7oWaePdA@mail.gmail.com>
-Message-ID: <CAMj1kXE3XTMjryJzBMVCujXy=kQYasKAr-Rb5ZKuqC7oWaePdA@mail.gmail.com>
-Subject: Re: [PATCH 03/33] efi/libstub: Unify EFI call wrappers for non-x86
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Date:   Sun, 3 May 2020 18:14:31 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEBR1FUHOfCo1G2tGVgZDdSsUx8ZrNdLqHbKP6Hw7LfMw@mail.gmail.com>
+Message-ID: <CAMj1kXEBR1FUHOfCo1G2tGVgZDdSsUx8ZrNdLqHbKP6Hw7LfMw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] sha1 library cleanup
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Zou Wei <zou_wei@huawei.com>
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Paolo Abeni <pabeni@redhat.com>,
+        mptcp@lists.01.org, linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 3 May 2020 at 18:09, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Sat, 2 May 2020 at 20:28, Eric Biggers <ebiggers@kernel.org> wrote:
 >
-> On Sun, May 03, 2020 at 08:09:06AM -0700, Guenter Roeck wrote:
-> > Hi,
-> >
-> > On Fri, Apr 24, 2020 at 03:05:01PM +0200, Ard Biesheuvel wrote:
-> > > We have wrappers around EFI calls so that x86 can define special
-> > > versions for mixed mode, while all other architectures can use the
-> > > same simple definition that just issues the call directly.
-> > > In preparation for the arrival of yet another architecture that doesn't
-> > > need anything special here (RISC-V), let's move the default definition
-> > > into a shared header.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > This patch causes an immediate reboot in linux-next when booting
-> > in qemu with an efi32 bios. Bisect log attached.
-> >
-> > Qemu command line:
-> >
-> > qemu-system-x86_64 -kernel arch/x86/boot/bzImage -m 1G \
-> >       -no-reboot -snapshot \
-> >       -bios OVMF-pure-efi-32.fd \
-> >       -drive file=rootfs.ext2,format=raw \
-> >       --append 'earlycon=uart8250,io,0x3f8,9600n8 panic=-1 root=/dev/sda console=ttyS0' \
-> >       -nographic
-> >
-> > The same command succeeds with OVMF-pure-efi-64.fd.
-> >
-> > Bisect log attached.
-> >
-> > File locations:
-> >       https://github.com/groeck/linux-build-test/blob/master/rootfs/firmware/OVMF-pure-efi-32.fd
-> >       https://github.com/groeck/linux-build-test/blob/master/rootfs/x86_64/rootfs.ext2.gz
-> >
-> > Guenter
-> >
+> <linux/cryptohash.h> sounds very generic and important, like it's the
+> header to include if you're doing cryptographic hashing in the kernel.
+> But actually it only includes the library implementation of the SHA-1
+> compression function (not even the full SHA-1).  This should basically
+> never be used anymore; SHA-1 is no longer considered secure, and there
+> are much better ways to do cryptographic hashing in the kernel.
 >
-> The issue is that efi_is_native is an inline function on x86, not a
-> macro, so the #ifndef efi_is_native is broken.
+> Also the function is named just "sha_transform()", which makes it
+> unclear which version of SHA is meant.
 >
-> We can either turn it into a macro, or add
->         #define efi_is_native efi_is_native
-> in arch/x86/include/asm/efi.h.
+> Therefore, this series cleans things up by moving these SHA-1
+> declarations into <crypto/sha.h> where they better belong, and changing
+> the names to say SHA-1 rather than just SHA.
+>
+> As future work, we should split sha.h into sha1.h and sha2.h and try to
+> remove the remaining uses of SHA-1.  For example, the remaining use in
+> drivers/char/random.c is probably one that can be gotten rid of.
+>
+> This patch series applies to cryptodev/master.
+>
+> Eric Biggers (7):
+>   mptcp: use SHA256_BLOCK_SIZE, not SHA_MESSAGE_BYTES
+>   crypto: powerpc/sha1 - remove unused temporary workspace
+>   crypto: powerpc/sha1 - prefix the "sha1_" functions
+>   crypto: s390/sha1 - prefix the "sha1_" functions
+>   crypto: lib/sha1 - rename "sha" to "sha1"
+>   crypto: lib/sha1 - remove unnecessary includes of linux/cryptohash.h
+>   crypto: lib/sha1 - fold linux/cryptohash.h into crypto/sha.h
+>
 
-Indeed. Fix here:
+For the series,
 
-https://lore.kernel.org/linux-efi/20200503154507.82880-1-ardb@kernel.org/T/#u
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
+>  Documentation/security/siphash.rst          |  2 +-
+>  arch/arm/crypto/sha1_glue.c                 |  1 -
+>  arch/arm/crypto/sha1_neon_glue.c            |  1 -
+>  arch/arm/crypto/sha256_glue.c               |  1 -
+>  arch/arm/crypto/sha256_neon_glue.c          |  1 -
+>  arch/arm/kernel/armksyms.c                  |  1 -
+>  arch/arm64/crypto/sha256-glue.c             |  1 -
+>  arch/arm64/crypto/sha512-glue.c             |  1 -
+>  arch/microblaze/kernel/microblaze_ksyms.c   |  1 -
+>  arch/mips/cavium-octeon/crypto/octeon-md5.c |  1 -
+>  arch/powerpc/crypto/md5-glue.c              |  1 -
+>  arch/powerpc/crypto/sha1-spe-glue.c         |  1 -
+>  arch/powerpc/crypto/sha1.c                  | 33 ++++++++++-----------
+>  arch/powerpc/crypto/sha256-spe-glue.c       |  1 -
+>  arch/s390/crypto/sha1_s390.c                | 12 ++++----
+>  arch/sparc/crypto/md5_glue.c                |  1 -
+>  arch/sparc/crypto/sha1_glue.c               |  1 -
+>  arch/sparc/crypto/sha256_glue.c             |  1 -
+>  arch/sparc/crypto/sha512_glue.c             |  1 -
+>  arch/unicore32/kernel/ksyms.c               |  1 -
+>  arch/x86/crypto/sha1_ssse3_glue.c           |  1 -
+>  arch/x86/crypto/sha256_ssse3_glue.c         |  1 -
+>  arch/x86/crypto/sha512_ssse3_glue.c         |  1 -
+>  crypto/sha1_generic.c                       |  5 ++--
+>  drivers/char/random.c                       |  8 ++---
+>  drivers/crypto/atmel-sha.c                  |  1 -
+>  drivers/crypto/chelsio/chcr_algo.c          |  1 -
+>  drivers/crypto/chelsio/chcr_ipsec.c         |  1 -
+>  drivers/crypto/omap-sham.c                  |  1 -
+>  fs/f2fs/hash.c                              |  1 -
+>  include/crypto/sha.h                        | 10 +++++++
+>  include/linux/cryptohash.h                  | 14 ---------
+>  include/linux/filter.h                      |  4 +--
+>  include/net/tcp.h                           |  1 -
+>  kernel/bpf/core.c                           | 18 +++++------
+>  lib/crypto/chacha.c                         |  1 -
+>  lib/sha1.c                                  | 24 ++++++++-------
+>  net/core/secure_seq.c                       |  1 -
+>  net/ipv6/addrconf.c                         | 10 +++----
+>  net/ipv6/seg6_hmac.c                        |  1 -
+>  net/mptcp/crypto.c                          |  4 +--
+>  41 files changed, 69 insertions(+), 104 deletions(-)
+>  delete mode 100644 include/linux/cryptohash.h
+>
+>
+> base-commit: 12b3cf9093542d9f752a4968815ece836159013f
+> --
+> 2.26.2
+>
