@@ -2,233 +2,166 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B9CC47258
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF3EC47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDED20787
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FC620757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="yuXQSYYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgECAki (ORCPT
+        id S1726635AbgECAsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 20:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40162 "EHLO
+        Sat, 2 May 2020 20:48:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726570AbgECAki (ORCPT
+        by vger.kernel.org with ESMTP id S1726475AbgECAsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 20:40:38 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5A8C061A0C;
-        Sat,  2 May 2020 17:40:38 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id E7DA12A0BBA
-Received: by earth.universe (Postfix, from userid 1000)
-        id EE5E43C08C7; Sun,  3 May 2020 02:40:34 +0200 (CEST)
-Date:   Sun, 3 May 2020 02:40:34 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] Add the bindings for the bq25150 and bq25155
- 500mA charging ICs from Texas Instruments.
-Message-ID: <20200503004034.eroc76g2yyeqmtip@earth.universe>
-References: <20200501175118.26226-1-dmurphy@ti.com>
- <20200501175118.26226-3-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jwgmemsqra7osklz"
-Content-Disposition: inline
-In-Reply-To: <20200501175118.26226-3-dmurphy@ti.com>
+        Sat, 2 May 2020 20:48:40 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F1EC061A0C
+        for <linux-kernel@vger.kernel.org>; Sat,  2 May 2020 17:48:40 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d184so3654506pfd.4
+        for <linux-kernel@vger.kernel.org>; Sat, 02 May 2020 17:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=6jwsuwljAsVBGE4xymx7dV14JFcZxi8+xgH7yHh9HA4=;
+        b=yuXQSYYk+Hrn8HvXg0kY7DhFgO4C6LsR4blnvVruZi6vvN2YJIXop11ivEUK/NDJEc
+         q7hZPIJrq96YeAuvTRaA9/TGKMOetoJOs9Et1M1nDbxJB9GAK7xhbyg3QlZaolBjdFYJ
+         uZOH/yH+pIF2LTQLTKorxLS0dXnbuRcBk8HZMsxjNhgBy7sTR5R10vMXuj/tCuo5RK3i
+         jubfaIgQP6OVxznaWK1MK8tHvrsCpHwwUOrN838KCiQ/gF9+adMxaGeX4xqZ9MREY/wG
+         /cs6U5N3ZrzA94KC8V58cU6mr7YJRpBUYKOwsxtfVyiZ6uNOvwrV2gkjADma4RI8uoBA
+         I0Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=6jwsuwljAsVBGE4xymx7dV14JFcZxi8+xgH7yHh9HA4=;
+        b=LDb/L4UjTrPTGuSYAUUcKC9xqlkTb3VaFJ1d3ly0xICJ6pf9n1I4G7dklqReyqNQte
+         TlEuLgpeKMLfGPS+PC5XI+0nhSc4xbM1DKR9OD34mk3lOG9+XiARd35ohbLJV/x6g+I/
+         FXNUUxFt2nelyeK2ptPwfztbDkQqwodI2gKR+2UR2V1HwFkSXtp6Nl+s9owtm3dGn59P
+         TnAG+TWakAtA6wubG/QUHyo0J0ZrXrgqZGGt+i6Vv1IfhekNk6CVYyZjDswSAj9Uhm5r
+         02RuzUm7wXLaFMsN2DqlRbbvq0YdWvW/Me82ZO4kgH51Vz3lziUnM+ouUYH4Xndf4jGP
+         BnFQ==
+X-Gm-Message-State: AGi0PuaALLvtxmnPnGVvW0Sl4AhgBKKCbwisTeHdw0cZYuE51swB7+vE
+        fgqTN4feO8iZB7R/tfiDge4XRg==
+X-Google-Smtp-Source: APiQypKXR/iwp2/MyfrkDK08We+62r3joTkPf6Q29QQDhJtcOe3Pf2oLbafpnp6s/pzFK/Et88HBfw==
+X-Received: by 2002:a65:4bc6:: with SMTP id p6mr10687602pgr.20.1588466919431;
+        Sat, 02 May 2020 17:48:39 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:21b6:fdf6:a361:f24a? ([2601:646:c200:1ef2:21b6:fdf6:a361:f24a])
+        by smtp.gmail.com with ESMTPSA id f76sm5291154pfa.167.2020.05.02.17.48.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 May 2020 17:48:38 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Date:   Sat, 2 May 2020 17:48:30 -0700
+Message-Id: <BD424C59-0B02-451D-8DF0-74F92292A87C@amacapital.net>
+References: <20200502230510.GA28470@wind.enjellic.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com
+In-Reply-To: <20200502230510.GA28470@wind.enjellic.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jwgmemsqra7osklz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Fri, May 01, 2020 at 12:51:17PM -0500, Dan Murphy wrote:
-> From: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+> On May 2, 2020, at 4:05 PM, Dr. Greg <greg@enjellic.com> wrote:
 >=20
-> Description:
-> The BQ2515X family of devices are highly integrated battery management
-> ICs that integrate the most common functions for wearbale devices
-> namely a charger, an output voltage rail, ADC for battery and system
-> monitoring, and a push-button controller.
+> =EF=BB=BFOn Thu, Apr 30, 2020 at 06:59:11AM +0300, Jarkko Sakkinen wrote:
 >=20
-> Datasheets:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
+> Good afternoon, I hope the weekend is going well for everyone.
 >=20
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> ---
->  .../bindings/power/supply/bq2515x.yaml        | 99 +++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515=
-x.yaml
+>>> On Wed, Apr 29, 2020 at 08:14:59AM -0700, Sean Christopherson wrote:
+>>> On Wed, Apr 29, 2020 at 08:23:29AM +0300, Jarkko Sakkinen wrote:
+>>>> On Sun, Apr 26, 2020 at 11:57:53AM -0500, Dr. Greg wrote:
+>>>>> On Wed, Apr 22, 2020 at 12:52:56AM +0300, Jarkko Sakkinen wrote:
+>>>>=20
+>>>>>> The current implementation requires that the firmware sets
+>>>>>> IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately
+>>>>>> the kernel can decide what enclaves it wants run. The
+>>>>>> implementation does not create any bottlenecks to support
+>>>>>> read-only MSRs later on.
+>>>>=20
+>>>>> It seems highly unlikely that a driver implementation with any type of=
+
+>>>>> support for read-only launch control registers would ever get into the=
+
+>>>>> kernel.  All one needs to do is review the conversations that Matthew
+>>>>> Garrett's lockdown patches engender to get a sense of that, ie:
+>>>>>=20
+>>>>> https://lwn.net/Articles/818277/
+>>>>=20
+>>>> We do not require read-only MSRs.
+>>>=20
+>>> Greg is pointing out the opposite, that supporting read-only MSRs is hig=
+hly
+>>> unlikely to ever be supported in the mainline kernel.
 >=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq2515x.yaml =
-b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> new file mode 100644
-> index 000000000000..673caf67a993
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/bq2515x.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI bq2515x 500-mA Linear charger family
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The BQ2515x family is a highly integrated battery charge management IC=
- that
-> +  integrates the most common functions for wearable devices, namely a ch=
-arger,
-> +  an output voltage rail, ADC for battery and system monitoring, and
-> +  push-button controller.
-> +
-> +  Specifications about the charger can be found at:
-> +    http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> +    http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,bq25150
-> +      - ti,bq25155
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ac_detect-gpios:
-> +    description: |
-> +       GPIO used for connecting the bq2515x device PG (AC Detect)
-> +       pin.  This pin should be used if possible as this is the
-> +       recommended way to obtain the charger's input PG state.
-> +       If this pin is not specified a software-based approach for PG
-> +       detection is used.
+>> In a nutshell, what is wrong in the current code changes and what
+>> *exactly* should we change? This is way too high level at the moment
+>> at least for my limited brain capacity.
+>=20
+> In a nutshell, the driver needs our patch that implements
+> cryptographic policy management.
+>=20
+> A patch that:
+>=20
+> 1.) Does not change the default behavior of the driver.
+>=20
+> 2.) Implements capabilities that are consistent with what the hardware
+> was designed to do, but only at the discretion of the platform owner.
+>=20
+> 3.) Has no impact on the driver architecture.
+>=20
+> The only consumer for this driver are SGX runtimes.  To our knowledge,
+> there exist only two complete runtime implementations, Intel's and
+> ours.  It us unclear why our approach to the use of the technology
+> should be discriminated against when it doesn't impact the other user
+> community.
 
-No _ in DT properties, please use ac-detect-gpios as I wrote in PATCHv4.
+Can you clarify how exactly this patch set discriminates against your stack?=
 
-> +  reset-gpios:
-> +    description: |
-> +       GPIO used for hardware reset.
-> +
-> +  low-power-gpios:
-> +    description: |
-> +       GPIO used for low power mode of IC.
-> +
-> +  charge-enable-gpios:
-> +    description: |
-> +       GPIO used to turn on and off charging.
-> +
-> +  constant-charge-current-max-microamp:
-> +    description: |
-> +       Maximum charging current in micro Amps.
-> +    minimum: 50000
-> +    maximum: 600000
-> +
-> +  precharge-current-max-microamp:
-> +    description: |
-> +       Maximum precharging current in micro Amps.
-> +    minimum: 1250
-> +    maximum: 77500
-> +
-> +  input-current-limit-microamp:
-> +    description: |
-> +       Maximum input current in micro Amps.
-> +    minimum: 50000
-> +    maximum: 500000
-> +
-> +  constant-charge-voltage-max-microvolt:
-> +    description: |
-> +       Maximum charging voltage in micro volts.
-> +    minimum: 3600000
-> +    maximum: 4600000
 
-The following properties describe battery properties
-and should go into a simple-battery node, which is
-referenced by the charger. Then you get the properties
-in the driver via power_supply_get_battery_info():
-
-constant-charge-current-max-microamp
-constant-charge-voltage-max-microvolt
-precharge-current-max-microamp
-
-The binding for simple-battery can be found here:
-
-Documentation/devicetree/bindings/power/supply/battery.txt
-
-(still needs to be converted to YAML)
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    i2c0 {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      charger@6b {
-> +          compatible =3D "ti,bq25150";
-> +          reg =3D <0x6b>;
-> +
-> +          ac_detect-gpios =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +          reset-gpios =3D <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +          low-power-gpios =3D <&gpio0 15 GPIO_ACTIVE_HIGH>;
-> +          charge-enable-gpios =3D <&gpio0 13 GPIO_ACTIVE_LOW>;
-> +          constant-charge-current-max-microamp =3D <300000>;
-> +          constant-charge-voltage-max-microvolt =3D <4200000>;
-> +	  precharge-current-max-microamp =3D <2500>;
-> +	  input-current-limit-microamp =3D <100000>;
-
-bogus indention
-
-> +      };
-> +    };
-
--- Sebastian
-
---jwgmemsqra7osklz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6uEwIACgkQ2O7X88g7
-+poYthAApXLPRZ2KAIty+bU6dXkuWyH6CVmLJw54N5i1RMnagbSSU0b7W3SbuwOi
-uW12N9aNh4mRt9W8/F2fbnGYp6iQjJJ3Hfl0xEcg+4PMy7UJkVsVlISXJkdR229r
-UeyusIEjPQcVKe4ilf04bmLaeyKuVIwNA5mD1LXBQMSH5JgAjfsNUkFdTl7+2moa
-fkP2L2zPukrQfqdP7AvOYkRZHENHwP+TR4h7pZtHnvT5l1epM75MxralnE2YBRht
-7DXX5WP15Y1bSTiZ5+1ksBHP7JsOPYaQRw6E7UCJNHOlxDIXBedAqJ1KT0NIKHdS
-ToU8HTLlSe4a6qXdxhWc0Aoxq+8/DeO/D8RAFzt60wXdqI181pE1U4rtX0CC4IjP
-oUJf2w6ZxnUeV8lAdhsIE3K8+CaTLuUk+KLRg4JHmRRS8i58ze4hRvnLbE/JElVE
-PwjHyij1HzR09gMTKTXWCS68awbh5TVLPsxS6OQf4nM69PWN8lKwZny7MFLWG1d1
-clAsSIcMwiObqIaiY/Pwu6ozTetPxA1edz3pkLJYYvJ7kwWRGJs3YBmNk2J4gPo2
-i+wg6z114fv2QL0P7gYQvOtSC7zglXHbS9j+QuRfgXwFBlTBypXzoMIt1x9/iQYQ
-0NLicFRgJW6Rmwh5VnW1WJsj6a+Rt07CJ6BW7zQ9/HQ6Ai5DVmg=
-=ZNJM
------END PGP SIGNATURE-----
-
---jwgmemsqra7osklz--
+>=20
+> The Linux kernel that I have worked on and supported since 1992 has
+> always focused on technical rationale and meritocracy rather then
+> politics.  We would be interested in why our proposal for the driver
+> fails on the former grounds rather then the latter.
+>=20
+>> /Jarkko
+>=20
+> Best wishes for a productive week.
+>=20
+> Dr. Greg
+>=20
+> As always,
+> Dr. Greg Wettstein, Ph.D, Worker      Artisans in autonomously
+> Enjellic Systems Development, LLC     self-defensive IOT platforms
+> 4206 N. 19th Ave.                     and edge devices.
+> Fargo, ND  58102
+> PH: 701-281-1686                      EMAIL: greg@enjellic.com
+> --------------------------------------------------------------------------=
+----
+> "The best way to predict the future is to invent it."
+>                                -- Alan Kay
