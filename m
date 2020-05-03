@@ -2,167 +2,252 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72709C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C28C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F72D206A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="S4jyhd/m"
+	by mail.kernel.org (Postfix) with ESMTP id 8830720707
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgECUto (ORCPT
+        id S1729117AbgECVKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 16:49:44 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:50062 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729034AbgECUtn (ORCPT
+        Sun, 3 May 2020 17:10:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50470 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbgECVKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 16:49:43 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49FdQZ45yfz9vKTB
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 20:49:42 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Q6Lq0ykXCmLy for <linux-kernel@vger.kernel.org>;
-        Sun,  3 May 2020 15:49:42 -0500 (CDT)
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49FdQZ2scPz9vKT9
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 15:49:42 -0500 (CDT)
-Received: by mail-qk1-f198.google.com with SMTP id k138so16697091qke.15
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 13:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zSYYMjCer/k9tmJ7ZZe4YO3vkQ6QJMlcwBfIN/y6pU4=;
-        b=S4jyhd/m97dQjajh3P06TxKvTaD5NanIRG9+JD9GuZVN+HHjK92aLTnnMkH914pr3J
-         E6MJi1qP/gWWjsfaKqEkDrLTePribNxLCtgLQE87Iwgg5aCFd0VkEZhjYW+INF0HEYJ5
-         FvQf6AccCvuhnHLXSvretDJxSYjoGoREO+iyqbGFL51LcoCySRjgTteR8+fy08cPuncp
-         fYNp8G+yqikiMNpn8/KK2gWKysFCslyJf24GhdE1IpxNMTnqcJTnTYUypsQPfVm+5qbI
-         y8rGLXqF4+FIJslak9Qq8gxi/Pyv8iqMoLtNcvJP4313bI1YaDGPppuLjK2NhLlvmRB4
-         2xDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zSYYMjCer/k9tmJ7ZZe4YO3vkQ6QJMlcwBfIN/y6pU4=;
-        b=mJD1W2bLdy/kI7hRyksfv05zZOlWcHT+N5Ptez1G1kvSqIfcWakI6BxwgFBTqL28Hb
-         nSwCvC88/jh/QUutYMdHGCRIJvJiel5n9NPUGgwKU3X1lJQBJCEZSIhoGemXsN/OIRM6
-         A4BiqL7zIs1p4i5VH2U4uUqiX8inYRaOsAPXqTKEZx5z7mzAdcUCbmBFSkW4um0TbNRF
-         zWzz0dlrrBOQByD2B6e7XsCe3luPnDbJJzrJJCb94zxm+LAf+3YdigPK4LfxT48caPnW
-         UU7piJh9WAloK5Dd34h0ANZLD9uf97Gny13h727jFI9IAtJMtTBXovaF4tGrUoZM+8gX
-         WzTg==
-X-Gm-Message-State: AGi0PuYDXksR6oi8b1wWy/WwQGptj3YFhNjs/gZk494XUp3JsU8BOMfb
-        UngvlcZX9lCfUBMqpbxKcznbhXRxEFrgn52NcW5FC41MIurmsqSg2hoD2qzr+yzU8QSNBg92ZVv
-        W2F+DuTbPbic8spGDW3ilutP83p/g
-X-Received: by 2002:a37:4955:: with SMTP id w82mr12151027qka.240.1588538981655;
-        Sun, 03 May 2020 13:49:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL/yRI3pvKwp5EcSRyFRyzRWgGDsy73tBk0Bjk1YTubstQEXIh8JCXYenyVhJAmb49/eivC6w==
-X-Received: by 2002:a37:4955:: with SMTP id w82mr12151006qka.240.1588538981093;
-        Sun, 03 May 2020 13:49:41 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id a124sm8366919qkf.93.2020.05.03.13.49.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 13:49:40 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kuba@kernel.org
-Cc:     davem@davemloft.net, Markus.Elfring@web.de,
-        oss-drivers@netronome.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kjlu@umn.edu, wu000273@umn.edu
-Subject: [PATCH v3] nfp: abm: Fix incomplete release of system resources in nfp_abm_vnic_set_mac()
-Date:   Sun,  3 May 2020 15:49:32 -0500
-Message-Id: <20200503204932.11167-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Sun, 3 May 2020 17:10:42 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 95BF32A083E
+Received: by earth.universe (Postfix, from userid 1000)
+        id 823973C08C7; Sun,  3 May 2020 23:10:37 +0200 (CEST)
+Date:   Sun, 3 May 2020 23:10:37 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 04/11] power: bq25890: protect view of the chip's state
+Message-ID: <20200503211037.eovuhtugmg2vy4er@earth.universe>
+References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+ <3291ca81bf8eb1b0401579ae08e7835e71dfc1ff.1588517058.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="avukksuw7xknvrq2"
+Content-Disposition: inline
+In-Reply-To: <3291ca81bf8eb1b0401579ae08e7835e71dfc1ff.1588517058.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
 
-In function nfp_abm_vnic_set_mac, pointer nsp is allocated by nfp_nsp_open.
-But when nfp_nsp_has_hwinfo_lookup fail, the pointer is not released,
-which can lead to a memory leak bug. Thus add a call of the function
-“nfp_nsp_close” for the completion of the exception handling.
+--avukksuw7xknvrq2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: f6e71efdf9fb1 ("nfp: abm: look up MAC addresses via management FW")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/net/ethernet/netronome/nfp/abm/main.c | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+Hi,
 
-diff --git a/drivers/net/ethernet/netronome/nfp/abm/main.c b/drivers/net/ethernet/netronome/nfp/abm/main.c
-index 9183b3e85d21..f196789f62fe 100644
---- a/drivers/net/ethernet/netronome/nfp/abm/main.c
-+++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
-@@ -265,8 +265,7 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_abm *abm, struct nfp_net *nn,
- 
- 	if (id > pf->eth_tbl->count) {
- 		nfp_warn(pf->cpp, "No entry for persistent MAC address\n");
--		eth_hw_addr_random(nn->dp.netdev);
--		return;
-+		goto generate_random_address;
- 	}
- 
- 	snprintf(hwinfo, sizeof(hwinfo), "eth%u.mac.pf%u",
-@@ -276,14 +275,13 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_abm *abm, struct nfp_net *nn,
- 	if (IS_ERR(nsp)) {
- 		nfp_warn(pf->cpp, "Failed to access the NSP for persistent MAC address: %ld\n",
- 			 PTR_ERR(nsp));
--		eth_hw_addr_random(nn->dp.netdev);
--		return;
-+		goto generate_random_address;
- 	}
- 
- 	if (!nfp_nsp_has_hwinfo_lookup(nsp)) {
- 		nfp_warn(pf->cpp, "NSP doesn't support PF MAC generation\n");
--		eth_hw_addr_random(nn->dp.netdev);
--		return;
-+		nfp_nsp_close(nsp);
-+		goto generate_random_address;
- 	}
- 
- 	err = nfp_nsp_hwinfo_lookup(nsp, hwinfo, sizeof(hwinfo));
-@@ -291,8 +289,7 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_abm *abm, struct nfp_net *nn,
- 	if (err) {
- 		nfp_warn(pf->cpp, "Reading persistent MAC address failed: %d\n",
- 			 err);
--		eth_hw_addr_random(nn->dp.netdev);
--		return;
-+		goto generate_random_address;
- 	}
- 
- 	if (sscanf(hwinfo, "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx",
-@@ -300,12 +297,16 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_abm *abm, struct nfp_net *nn,
- 		   &mac_addr[3], &mac_addr[4], &mac_addr[5]) != 6) {
- 		nfp_warn(pf->cpp, "Can't parse persistent MAC address (%s)\n",
- 			 hwinfo);
--		eth_hw_addr_random(nn->dp.netdev);
--		return;
-+		goto generate_random_address;
- 	}
- 
- 	ether_addr_copy(nn->dp.netdev->dev_addr, mac_addr);
- 	ether_addr_copy(nn->dp.netdev->perm_addr, mac_addr);
-+	return;
-+
-+generate_random_address:
-+	eth_hw_addr_random(nn->dp.netdev);
-+	return;
- }
- 
- static int
--- 
-2.17.1
+On Sun, May 03, 2020 at 05:21:11PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
+> Extend bq->lock over whole updating of the chip's state. Might get
+> useful later for switching ADC modes correctly.
+>=20
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
 
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/bq25890_charger.c | 82 ++++++++------------------
+>  1 file changed, 26 insertions(+), 56 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/suppl=
+y/bq25890_charger.c
+> index c4a69fd69f34..9339e216651f 100644
+> --- a/drivers/power/supply/bq25890_charger.c
+> +++ b/drivers/power/supply/bq25890_charger.c
+> @@ -510,74 +510,50 @@ static int bq25890_get_chip_state(struct bq25890_de=
+vice *bq,
+>  	return 0;
+>  }
+> =20
+> -static bool bq25890_state_changed(struct bq25890_device *bq,
+> -				  struct bq25890_state *new_state)
+> -{
+> -	struct bq25890_state old_state;
+> -
+> -	mutex_lock(&bq->lock);
+> -	old_state =3D bq->state;
+> -	mutex_unlock(&bq->lock);
+> -
+> -	return (old_state.chrg_status !=3D new_state->chrg_status ||
+> -		old_state.chrg_fault !=3D new_state->chrg_fault	||
+> -		old_state.online !=3D new_state->online		||
+> -		old_state.bat_fault !=3D new_state->bat_fault	||
+> -		old_state.boost_fault !=3D new_state->boost_fault ||
+> -		old_state.vsys_status !=3D new_state->vsys_status);
+> -}
+> -
+> -static void bq25890_handle_state_change(struct bq25890_device *bq,
+> -					struct bq25890_state *new_state)
+> +static irqreturn_t __bq25890_handle_irq(struct bq25890_device *bq)
+>  {
+> +	struct bq25890_state new_state;
+>  	int ret;
+> -	struct bq25890_state old_state;
+> =20
+> -	mutex_lock(&bq->lock);
+> -	old_state =3D bq->state;
+> -	mutex_unlock(&bq->lock);
+> +	ret =3D bq25890_get_chip_state(bq, &new_state);
+> +	if (ret < 0)
+> +		return IRQ_NONE;
+> =20
+> -	if (!new_state->online) {			     /* power removed */
+> +	if (!memcmp(&bq->state, &new_state, sizeof(new_state)))
+> +		return IRQ_NONE;
+> +
+> +	if (!new_state.online && bq->state.online) {	    /* power removed */
+>  		/* disable ADC */
+>  		ret =3D bq25890_field_write(bq, F_CONV_START, 0);
+>  		if (ret < 0)
+>  			goto error;
+> -	} else if (!old_state.online) {			    /* power inserted */
+> +	} else if (new_state.online && !bq->state.online) { /* power inserted */
+>  		/* enable ADC, to have control of charge current/voltage */
+>  		ret =3D bq25890_field_write(bq, F_CONV_START, 1);
+>  		if (ret < 0)
+>  			goto error;
+>  	}
+> =20
+> -	return;
+> +	bq->state =3D new_state;
+> +	power_supply_changed(bq->charger);
+> =20
+> +	return IRQ_HANDLED;
+>  error:
+> -	dev_err(bq->dev, "Error communicating with the chip.\n");
+> +	dev_err(bq->dev, "Error communicating with the chip: %pe\n",
+> +		ERR_PTR(ret));
+> +	return IRQ_HANDLED;
+>  }
+> =20
+>  static irqreturn_t bq25890_irq_handler_thread(int irq, void *private)
+>  {
+>  	struct bq25890_device *bq =3D private;
+> -	int ret;
+> -	struct bq25890_state state;
+> -
+> -	ret =3D bq25890_get_chip_state(bq, &state);
+> -	if (ret < 0)
+> -		goto handled;
+> -
+> -	if (!bq25890_state_changed(bq, &state))
+> -		goto handled;
+> -
+> -	bq25890_handle_state_change(bq, &state);
+> +	irqreturn_t ret;
+> =20
+>  	mutex_lock(&bq->lock);
+> -	bq->state =3D state;
+> +	ret =3D __bq25890_handle_irq(bq);
+>  	mutex_unlock(&bq->lock);
+> =20
+> -	power_supply_changed(bq->charger);
+> -
+> -handled:
+> -	return IRQ_HANDLED;
+> +	return ret;
+>  }
+> =20
+>  static int bq25890_chip_reset(struct bq25890_device *bq)
+> @@ -607,7 +583,6 @@ static int bq25890_hw_init(struct bq25890_device *bq)
+>  {
+>  	int ret;
+>  	int i;
+> -	struct bq25890_state state;
+> =20
+>  	const struct {
+>  		enum bq25890_fields id;
+> @@ -655,16 +630,12 @@ static int bq25890_hw_init(struct bq25890_device *b=
+q)
+>  		return ret;
+>  	}
+> =20
+> -	ret =3D bq25890_get_chip_state(bq, &state);
+> +	ret =3D bq25890_get_chip_state(bq, &bq->state);
+>  	if (ret < 0) {
+>  		dev_dbg(bq->dev, "Get state failed %d\n", ret);
+>  		return ret;
+>  	}
+> =20
+> -	mutex_lock(&bq->lock);
+> -	bq->state =3D state;
+> -	mutex_unlock(&bq->lock);
+> -
+>  	return 0;
+>  }
+> =20
+> @@ -1001,19 +972,16 @@ static int bq25890_suspend(struct device *dev)
+>  static int bq25890_resume(struct device *dev)
+>  {
+>  	int ret;
+> -	struct bq25890_state state;
+>  	struct bq25890_device *bq =3D dev_get_drvdata(dev);
+> =20
+> -	ret =3D bq25890_get_chip_state(bq, &state);
+> +	mutex_lock(&bq->lock);
+> +
+> +	ret =3D bq25890_get_chip_state(bq, &bq->state);
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	mutex_lock(&bq->lock);
+> -	bq->state =3D state;
+> -	mutex_unlock(&bq->lock);
+> -
+>  	/* Re-enable ADC only if charger is plugged in. */
+> -	if (state.online) {
+> +	if (bq->state.online) {
+>  		ret =3D bq25890_field_write(bq, F_CONV_START, 1);
+>  		if (ret < 0)
+>  			return ret;
+> @@ -1022,6 +990,8 @@ static int bq25890_resume(struct device *dev)
+>  	/* signal userspace, maybe state changed while suspended */
+>  	power_supply_changed(bq->charger);
+> =20
+> +	mutex_unlock(&bq->lock);
+> +
+>  	return 0;
+>  }
+>  #endif
+> --=20
+> 2.20.1
+>=20
+
+--avukksuw7xknvrq2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6vM0cACgkQ2O7X88g7
++poI0BAAihCMYr96iK1zSZzrOUb6cFWbGTK9kk735UpGterCN8qlVqwEHZcOW5lw
+TSL83l9sz3FwoYiMrZA98K4zY86slknBOmod7GcQjfEvWLQRQ7tWSrdUWcfNgC4u
+2AZjFkenrUxXeTCqqTY3vLZEcTrBa9kznIr3kCdQsxLt3c9QgQ+xr33RwojmsFdJ
+VMvnDopLfYF4kqMtf7oMSFH8c3Dmest/oFlg//k16VhliNyLGCcQnY8+swR4Lcc0
+1uMWEAtyRQ5okupCpg7gu5HejB3er0NVf7KWSUrzjYdJxmuWIKSVQTO7oJgaP0lo
+eVJ//Smin3bBNL0CrnsySPiEpMhgAhpF4Klc7hP78SyM92h080GQqzOq4Ej63Tj5
+g3w5q0+oSqbgr0ekvnMrHwlLJk9mQX7516qFbIAP9fLQh7x/ZmGgpFgZdqOkzZ4B
+qYR2fm/r5VARFOfJEIgQBk/0ChvUDe4wxckxVj2ZBvVlkBqnsVmhp9Mnr6Y5NMxH
+4Tq8l35AtRrotAamV2NhffB1kB+NWuXOwgdQxmaTRyfz4yOyhOrbnEErBt7OZqKq
+fnjW0L3+Kkl0LBgHciWLdPvpTf2cI8i//50spxIDU4aOeYoaIcyjLw4ish2ebyR5
+1r1rfhB2H9DSmCLr/J10NTRCgWH7ejiwq2j0J/wsrLNOL6WTNAc=
+=N5HG
+-----END PGP SIGNATURE-----
+
+--avukksuw7xknvrq2--
