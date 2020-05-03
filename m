@@ -2,103 +2,105 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E3C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318D0C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3067F2071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6FD24958
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:35:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfiAq3xh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HGRHkl0N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgECMcm (ORCPT
+        id S1728477AbgECMfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbgECMcl (ORCPT
+        Sun, 3 May 2020 08:35:21 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56040 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbgECMfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:32:41 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA989C061A0C;
-        Sun,  3 May 2020 05:32:40 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id r14so4158447pfg.2;
-        Sun, 03 May 2020 05:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=S9UZgj84mZAUAnmYOiySi9W6UM6bjoHB6qeDJBZBBZ4=;
-        b=EfiAq3xhC9XfMREVxYJntXiQCSfbWYk1IgxAqVXwY9/XYi9od5O8peytXsfQ2QvClD
-         /PCFthfcWmKq3W9UShq5i5xhkuVacd1WfhrKE8CoBJ8uATv0/CZ63Z+LgsdZgeC0WqvH
-         sVSwL3NT6MaA56QifgOddRScrZbTpPRwF70nOR2LTtidsztx3yiMaCo5a4ksyqWZsJFQ
-         sUGSCaGQOVLvBKE9BIJrcSKAtVA4dX6M6+cvjwGX6nCOnBsmOQV4JeowAFgsmYxfb0tm
-         WXvSKjc+/eJc+zHNn28/W4obnMslqfQnJE1qBIzbY/eazL8H3K/7SEGvvbIv5Jx+2Rpu
-         elXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=S9UZgj84mZAUAnmYOiySi9W6UM6bjoHB6qeDJBZBBZ4=;
-        b=FXRMj15/klwKi/2psMa8JJMUgNGdokj6nhezqAJJw2RRCTGk0scr0G+olycqQUqAoF
-         agF0UQiGtypji1knIjdBX+NOc2YN2gG+3B7YugjTo38MjUp7qv8b3tTGXhTW/xtntJFN
-         g0jBeKa5mnl5k6OPheYclRFlQmt4PQY3rDd7XOrZXsJZdX99SZKk23o4Y+iLSn/wetMz
-         cwBWNb43NwAGUIrcpCBO6Tp7O2IOSrHY0ReXbNz3KODfzHPUsAe3tPm7ZfmTrieQG692
-         efMvfhdhP8R4xD9nT83sfwT91IAMjnPmxF5z7DBTbgPlGeEcSB1J0TvvvcVUyd69GRbX
-         Byuw==
-X-Gm-Message-State: AGi0Pub/+K6+9oxiJQvEm8EGhAuqckgSuGoFFijkHxrBcRXIJjSenGqw
-        tnZQTlU4YsI12QSDPRDa63w=
-X-Google-Smtp-Source: APiQypL6YSIqiQz/09JrBRtKPPnIm0Gn/IEdymEAxBFebb6kaG2jLSnHf77BG22ZRivXdD11gPVNhg==
-X-Received: by 2002:a63:3206:: with SMTP id y6mr12499287pgy.68.1588509160450;
-        Sun, 03 May 2020 05:32:40 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:8b:8746:9817:f6e9:c9f8:6a59])
-        by smtp.gmail.com with ESMTPSA id u5sm6496514pfu.198.2020.05.03.05.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 05:32:39 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Vladimir Zapolskiy <vz@mleia.com>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     aishwaryarj100@gmail.com
-Subject: [PATCH] i2c: lpc2k: Remove superfluous error message in i2c_lpc2k_probe()
-Date:   Sun,  3 May 2020 18:02:30 +0530
-Message-Id: <20200503123230.14304-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 3 May 2020 08:35:20 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 043CZFf8037315;
+        Sun, 3 May 2020 07:35:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588509315;
+        bh=TKKNAOkF2jAtJRcMeSHJHG0+FAnDUE28xaOhXuqo9oE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HGRHkl0NzJGjyGSifwWFpK1x9dG35KnNK942jhJqXEqLgk/ILw/YRvg3w/rxuUPhE
+         HkOEBvnCrBrV8KfbU6mjQFU1IvY9//4nEL1BTyklklMbrqHQxJ4zlkZeoGufusySYj
+         2EpEcGE9K6FJXoxG5+w1taxoMzBQKTUJzp+JRhE0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 043CZFhn009063;
+        Sun, 3 May 2020 07:35:15 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 3 May
+ 2020 07:35:15 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 3 May 2020 07:35:15 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 043CZFlN032465;
+        Sun, 3 May 2020 07:35:15 -0500
+Subject: Re: [PATCH v23 02/16] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200429202816.26501-1-dmurphy@ti.com>
+ <20200429202816.26501-3-dmurphy@ti.com>
+ <5533a7b4-12b4-90b8-2731-a9cdfbee5e12@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <05377684-c316-24c2-d577-f52b8eea5656@ti.com>
+Date:   Sun, 3 May 2020 07:26:28 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <5533a7b4-12b4-90b8-2731-a9cdfbee5e12@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function platform_get_irq can log an error by itself.
-This omit a redundant message for exception handling in the
-calling function.
+Jacek
 
-Suggested by Coccinelle.
+On 5/2/20 4:51 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> I've converted drivers/leds/leds-an30259a.c to LED mc framework
+> and tested it on Samsung Galaxy S3 (exysnos4412-trats2 board).
+> Works as expected. And now the framework usability is indeed neater.
+>
+> One thing to improve: LED mc based drivers' entries in Kconfig should 
+> have this dependency:
+>
+> depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>
+> It is required to enforce building driver as a module if
+> LED mc framework is configured as such.
+>
+Do you think the FLASH class needs this as well?  If so I will send this 
+in a separate patch
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/i2c/busses/i2c-lpc2k.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
-index 13b0c12e2dba..43dc9b7043e4 100644
---- a/drivers/i2c/busses/i2c-lpc2k.c
-+++ b/drivers/i2c/busses/i2c-lpc2k.c
-@@ -362,10 +362,8 @@ static int i2c_lpc2k_probe(struct platform_device *pdev)
- 		return PTR_ERR(i2c->base);
- 
- 	i2c->irq = platform_get_irq(pdev, 0);
--	if (i2c->irq < 0) {
--		dev_err(&pdev->dev, "can't get interrupt resource\n");
-+	if (i2c->irq < 0)
- 		return i2c->irq;
--	}
- 
- 	init_waitqueue_head(&i2c->wait);
- 
--- 
-2.17.1
+> With this (and DT bindings nits) addressed, for patches 1-6:
+>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>
+Ack
+> It's been a long journey. Thank you for your determination to drive
+> this work to the end.
+>
+Ack to that.
+
+Dan
+
 
