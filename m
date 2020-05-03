@@ -2,162 +2,81 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D257C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C92C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD9420721
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56233205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="an+oPgSN"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZhChPRku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgECLam (ORCPT
+        id S1727982AbgECLeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 07:30:42 -0400
-Received: from mout.web.de ([212.227.15.4]:47341 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgECLal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 07:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588505420;
-        bh=ZfR/j8FzIXQ40geuJjkx72Nqy0w37sA/9k4Ot8IruFo=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=an+oPgSNFp8kgqFZrPRhQLDwUFqtxB3WnW7lzOOHJCTFgREKeJVeeUy6QOaxtZdPn
-         s9q6chxoKMMaZEcqMiS3uTqMBV8GzH1BeVM8kP7rzSOzvuVv2fWI9zYmSwtjxh9V7g
-         e9hGYvkqcD9acxzugzZj17ptLs+g8DbJVuFw5Pv4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.26.31]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M5bEe-1jFkNH3mkC-00xcT6; Sun, 03
- May 2020 13:30:20 +0200
-To:     Qiushi Wu <wu000273@umn.edu>, netdev@vger.kernel.org,
-        oss-drivers@netronome.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Kangjie Lu <kjlu@umn.edu>
-Subject: Re: [PATCH] nfp: abm: fix a memory leak bug
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <75768a26-836d-2aa5-94c8-6d8183745a9c@web.de>
-Date:   Sun, 3 May 2020 13:30:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 3 May 2020 07:34:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16515 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726948AbgECLeX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 07:34:23 -0400
+X-UUID: 985500f675fd4b26ac2860b0855f46b7-20200503
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=1we8JyFXhrfFQrNykpkhBejkn13KANZQ+bOSTPL6Efk=;
+        b=ZhChPRkuoRVWvnlLjxolHu80FBFc6fzA2tlJ0ArzoyAfb6VN+M9EU2UT0nXb/lbBCBkY2Myq9D/ZZ8h55VVW98wG0Et+PJEdhdYAkZfFZSXZyKnoZcSjbl+Uu9Dpl/mo/HICILwlB/xdB2Sd11sK5tBEBOuF7v0o/VYRIggFX2g=;
+X-UUID: 985500f675fd4b26ac2860b0855f46b7-20200503
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1333965373; Sun, 03 May 2020 19:34:21 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sun, 3 May 2020 19:34:17 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 3 May 2020 19:34:17 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
+CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v5 7/8] scsi: ufs-mediatek: enable WriteBooster capability
+Date:   Sun, 3 May 2020 19:34:14 +0800
+Message-ID: <20200503113415.21034-8-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200503113415.21034-1-stanley.chu@mediatek.com>
+References: <20200503113415.21034-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:u1OWjvm55dXZxmYL+qlxpHxoxhehLFicR6L3MkhYNAQTVrjI7a5
- aRRITsWkXM1efYpfkLfuRoJ+nnfna1f2Q4fnI6ujiunlFWb/ZIgAe3W4ABvpOxCdShM2CyK
- UykMfYmiqvAgM9lHIqY4vfP1XhGlmmlzzQ6b+giz3U1WSax94DhAxTgTJIyneejnzSyzl3t
- akNhTpY45wo/+Ex0jPbxA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:R2aKBlD2Bms=:ckg9H4bnNLS86075gaqFUR
- 7sganYzDW7j/ydhpob/5o17FpxGq7hBm1DFxSYMrdIQtYWoKKR7pirLJTVDMnpWd1D8UaCyFT
- KRT1R/I0r4HlZLAO261p2/MgGgJ8RdxXdoC/gTRvLvJ6FpSy6TupW1Vcuff16hj8wPcN3gtEz
- /ZwTkLo7ih9pDa4fUlvM3jBHaxEJdKhGjQQo3Uu2oRGDLWJCW+F52qOZRV+J8dlWqCH5KzWJP
- Y3v8nPovO7OKND1WbcGBQRMj5YbCS2YdBDN1uGjV10d1ncNzJQTcS0p3OumO2okG1b910xn57
- 0sr9BIokeaNmsA5psnXA9FBKAwnVYiXh/BkPw13ggJZ6oTfMHO+QrAEtVPiaT0nhKG795r381
- ZyJNf0/yeV7ec4yMGmd4fuTzcU3nEDERdkpsmZnhJkfcNLL7ps5krH1t3IsZ+ZUKj7IO7/vau
- nnqCwPacLvMe/I39bc0xizuXK5pojbH5LjGc9SC9r6Eu0BwACgb8tZgPv1A1Aphe0x6lN79EJ
- lsnSo6IxCNDYCtvdg49/HnhM1Sg88gchqj0bDAjmEv1HquCfY7E3pCgiT3ArLtXIL7xuvuQP4
- xdTPYsGyDkhYV1V83pMzBoT0zoQ2embLNaA7Vj+6j9hk0sJRz1DB2bR9ndgOzH8nzEUQ9P1mP
- G7UZC3EYgyOCE0i/zGYupJw2TQhgEuxothUtGXeehmyR/HKzYGonsUMoKn4FOKUMwLhTK1fyu
- XRzLHREqAkFKofpgX2DO/vJgoMPwbObnGMU0DMFh3o5/VeGwRjSX0RIhtb53U91wwh06fvfKV
- 46zgYsndrA/t56Ss1dTQJy0nlGdc237L5iM/asUWzh3tzv3t5Xy0x+xwWn4gM+BoUPhRHcD7F
- 6yyk8TxfNeTedLdQKz0Bq3lu51ZObsAs9SPXsLpqRojiQowintRw2e20yeFMjPwAIicry4KCs
- bCKxKC2VIBCM6YwjgUSOKxhpLbFKaJibEYZn8INjpzNmkPOoCQm9NSvtxQ1PxrLChnvIJivXJ
- 54SPdfVrCd/sq3IlMh6mc3kSjlBLGFQ2kIHGk/obJGpdKMGog3wA2QnXbFrf1odOf83cnA8h9
- r+9msToOLx90nG6hh8Lf1MtmVvbvmXeQJdwjH0hu/1sFVR65m7G0YjEMs6up2/vhdZMK9ouRW
- fAidqpg/Wt4Hce0hcv7rcRv2rUMPbS8gIiURpqRYWSRgAqZpoCE5WAsKxGzAX7cUCP7ix/Q+n
- YmUEv3fvCLoBYv6cD
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 4823BEACEE8DD2CEF87B6110C78AEA5D46FC01534406EAFA006FBB7EF149851C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> Fix this issue by adding nfp_nsp_close(nsp) in the error path.
+RW5hYmxlIFdyaXRlQm9vc3RlciBjYXBhYmlsaXR5IG9uIE1lZGlhVGVrIFVGUyBwbGF0Zm9ybXMu
+DQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+
+DQpSZXZpZXdlZC1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCi0tLQ0KIGRyaXZl
+cnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMgfCAzICsrKw0KIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
+c2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVr
+LmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQppbmRleCBjZTdiYTUyOWU2MTMu
+LmQ1MDNhOWQ4Mjg1NCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVr
+LmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCkBAIC0yNjksNiArMjY5
+LDkgQEAgc3RhdGljIGludCB1ZnNfbXRrX2luaXQoc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJLyog
+RW5hYmxlIGNsb2NrLWdhdGluZyAqLw0KIAloYmEtPmNhcHMgfD0gVUZTSENEX0NBUF9DTEtfR0FU
+SU5HOw0KIA0KKwkvKiBFbmFibGUgV3JpdGVCb29zdGVyICovDQorCWhiYS0+Y2FwcyB8PSBVRlNI
+Q0RfQ0FQX1dCX0VOOw0KKw0KIAkvKg0KIAkgKiB1ZnNoY2Rfdm9wc19pbml0KCkgaXMgaW52b2tl
+ZCBhZnRlcg0KIAkgKiB1ZnNoY2Rfc2V0dXBfY2xvY2sodHJ1ZSkgaW4gdWZzaGNkX2hiYV9pbml0
+KCkgdGh1cw0KLS0gDQoyLjE4LjANCg==
 
-How do you think about a wording variant like the following?
-
-   Subject:
-   [PATCH v2] nfp: abm: Fix incomplete release of system resources in nfp_=
-abm_vnic_set_mac()
-
-   Change description:
-   =E2=80=A6
-   Thus add a call of the function =E2=80=9Cnfp_nsp_close=E2=80=9D for the=
- completion
-   of the exception handling.
-
-
-=E2=80=A6
-> +++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
-> @@ -283,6 +283,7 @@  nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp_=
-abm *abm, struct nfp_net *nn,
->  	if (!nfp_nsp_has_hwinfo_lookup(nsp)) {
->  		nfp_warn(pf->cpp, "NSP doesn't support PF MAC generation\n");
->  		eth_hw_addr_random(nn->dp.netdev);
-> +		nfp_nsp_close(nsp);
->  		return;
->  	}
-
-I suggest to reconsider the order for resource clean-up function calls
-a bit more.
-
-+		nfp_nsp_close(nsp);
--		eth_hw_addr_random(nn->dp.netdev);
--		return;
-+		goto generate_random_address;
-
-
-Should such a jump target be added in another update step?
-
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D?
-
-Regards,
-Markus
