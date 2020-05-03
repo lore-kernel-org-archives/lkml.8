@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FBFC47259
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10A8C4725B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBE4206B9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B41B206EB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 21:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgECVr1 (ORCPT
+        id S1729239AbgECVr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 17:47:27 -0400
+        Sun, 3 May 2020 17:47:29 -0400
 Received: from relmlor1.renesas.com ([210.160.252.171]:55952 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729204AbgECVrX (ORCPT
+        by vger.kernel.org with ESMTP id S1729217AbgECVr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 17:47:23 -0400
+        Sun, 3 May 2020 17:47:27 -0400
 X-IronPort-AV: E=Sophos;i="5.73,349,1583161200"; 
-   d="scan'208";a="46232093"
+   d="scan'208";a="46232098"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 04 May 2020 06:47:21 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 04 May 2020 06:47:25 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 537CC4006DF9;
-        Mon,  4 May 2020 06:47:18 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 3903A4006DF9;
+        Mon,  4 May 2020 06:47:22 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -41,9 +41,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-serial@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 03/10] dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
-Date:   Sun,  3 May 2020 22:46:47 +0100
-Message-Id: <1588542414-14826-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 04/10] dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
+Date:   Sun,  3 May 2020 22:46:48 +0100
+Message-Id: <1588542414-14826-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -52,28 +52,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
-so document the SoC specific bindings.
+Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) MMCIF is identical
+to the R-Car Gen2 family.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/serial/renesas,scifa.yaml | 1 +
+ Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,scifa.yaml b/Documentation/devicetree/bindings/serial/renesas,scifa.yaml
-index b28bcb268854..97ddd76d700f 100644
---- a/Documentation/devicetree/bindings/serial/renesas,scifa.yaml
-+++ b/Documentation/devicetree/bindings/serial/renesas,scifa.yaml
-@@ -24,6 +24,7 @@ properties:
- 
-       - items:
-           - enum:
-+              - renesas,scifa-r8a7742      # R8A7742 RZ/G1H
-               - renesas,scifa-r8a7743      # R8A7743 RZ/G1M
-               - renesas,scifa-r8a7744      # R8A7744 RZ/G1N
-               - renesas,scifa-r8a7745      # R8A7745 RZ/G1E
+diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+index c064af5838aa..42c703e246b9 100644
+--- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
++++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 	- "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+ 	- "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+ 	- "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
++	- "renesas,mmcif-r8a7742" for the MMCIF found in r8a7742 SoCs
+ 	- "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
+ 	- "renesas,mmcif-r8a7744" for the MMCIF found in r8a7744 SoCs
+ 	- "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
 -- 
 2.17.1
 
