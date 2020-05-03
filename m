@@ -2,126 +2,97 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D33C4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2511EC4724C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F46F20757
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrHOkhy6"
+	by mail.kernel.org (Postfix) with ESMTP id EFAB120757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588511629;
+	bh=r6kUel92F21xdlWgHiLGCVGgvrA9gKqAVuMvTe5dCa4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=hLohDqqptJiGxQhioUM5zQ5B6bUUPeBEJepu+MHcPz8HLMxgPvhmeV/eNy7QpwfJH
+	 EzcrujfK3+2RXnSWBY+UJeR1Fkoe3sCL1UmGZDRR08UxZGSLkVULUaZ7VYwDPL4Hq8
+	 sBrZiyO1saWaYiEmvV5byUnxw8gjU5foTPrrqE/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgECNKc (ORCPT
+        id S1728582AbgECNNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:10:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728378AbgECNKb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:10:31 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14A4C061A0C;
-        Sun,  3 May 2020 06:10:31 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id z6so5673111plk.10;
-        Sun, 03 May 2020 06:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=HPO6k65ImqEnfaL+we0qFzrQP+hQAQ35nSDiLuw05GM=;
-        b=UrHOkhy6JyWGSEgUshCOl6LbN9yc1T4DXgCNfoJk6ma5wapSCnidGaXmB5tn5lPaS5
-         F8CE7aJUxCyE8ZXDEeIvDbxsC00Ufqv8bbinoyJoGfRR/TOVmWUgsEyp3BsSXIvS/zW9
-         5abCqAsttz4CaJZAmqY8i+ztbtBS2sEXEztP7ohdTjQ8W6dlX5uJ1pSQMJsl3i2scNRe
-         DeOkl7D4uw05ssqTy8xi6JZfGCOCR+C6yhBA4vZZL4NtgSnZCn3wP9tb7f15lFtnFi46
-         mJA1gMu4WbJbuNSIyln/u1dagk8StI8jvT7Vvbjvv6xbFJ5q4yydqQ1RUrQjUAFp3p5t
-         qexA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=HPO6k65ImqEnfaL+we0qFzrQP+hQAQ35nSDiLuw05GM=;
-        b=CahZqPsps0oJakDFJCNS15IkQr3+ZbV96BA+Uek2IkwtpEgU2MgkcuLXH34RlDz55y
-         TiRM5ktqxwhjYoH0LNPAeQxeIZg4VSEradxSwJMEwic+Fwt50EHuqQYOONNw9LXmkQAJ
-         1LHiAiNngTRFR8aguPn1BsZtGsD5UExvpsptMXf0W7ftzBqd/QvW7yhLDukgUVMqSC0x
-         d2BcdSZVJ99HLlqllQcBu9hOY4nalj0BVKk/NRp0lpfl/J39S1NqjvijX6yI/Vd27yns
-         wp6DIiujalitQ5P3r9aS56AGrWQ5KNCInmiGAESKIr8ZeGggSSew6+O3Lcyirpvl60AV
-         3RRQ==
-X-Gm-Message-State: AGi0PuYkBNEP23uIL7ePiqr4NptA9t5ZcdLbIf4mILJorwVyyd4UqpBg
-        BNzkwaO0qFbFar0iSgn97zA=
-X-Google-Smtp-Source: APiQypK2ml7rYX+bhpT3/q+Z4ibV3Cp+kU63Iv1q3sjMj2drC/Z7qW/MZIImiOkLLzkxg+7b2LUqtw==
-X-Received: by 2002:a17:902:b402:: with SMTP id x2mr13602667plr.42.1588511431056;
-        Sun, 03 May 2020 06:10:31 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:8b:8746:9817:f6e9:c9f8:6a59])
-        by smtp.gmail.com with ESMTPSA id o63sm4386802pjb.40.2020.05.03.06.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 06:10:30 -0700 (PDT)
-From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: img-scb: Use devm_platform_ioremap_resource and remove superfluous error message.
-Date:   Sun,  3 May 2020 18:40:18 +0530
-Message-Id: <20200503131021.16575-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 3 May 2020 09:13:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728393AbgECNNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 09:13:47 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7231E2073E;
+        Sun,  3 May 2020 13:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588511627;
+        bh=r6kUel92F21xdlWgHiLGCVGgvrA9gKqAVuMvTe5dCa4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kdkMz6Zg9PVBmx7JBLmbxD/dpFX1qe2Pny3gm+8BCzrWPCe9hcxAQePEqysMZ4lqN
+         ZTSL0ypswdSTgvXj1eP7CNBR+4J89uv/v//UNc4or+9lWl3s8pkJ41r8eATnMkG1FN
+         yGd3VVONW8CcZiaRxm8hfmkoPJj6/Af4U8XfdUrs=
+Date:   Sun, 3 May 2020 14:13:43 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>
+Subject: Re: [PATCH] iio: imu: adis16xxx: use helper to access iio core
+ debugfs dir
+Message-ID: <20200503141343.1bf6c781@archlinux>
+In-Reply-To: <BN6PR03MB3347761C636F1406DCA6F23199AA0@BN6PR03MB3347.namprd03.prod.outlook.com>
+References: <20200430110422.7472-1-alexandru.ardelean@analog.com>
+        <BN6PR03MB3347761C636F1406DCA6F23199AA0@BN6PR03MB3347.namprd03.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the helper function that wraps the calls to
-platform_get_resource() and devm_ioremap_resource()
-together.
+On Thu, 30 Apr 2020 11:53:08 +0000
+"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
 
-The function platform_get_irq can log an error by itself.
-Omit a redundant message for exception handling in the
-calling function.
+> > From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > Sent: Donnerstag, 30. April 2020 13:04
+> > To: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Cc: Bogdan, Dragos <Dragos.Bogdan@analog.com>; Sa, Nuno
+> > <Nuno.Sa@analog.com>; jic23@kernel.org; Ardelean, Alexandru
+> > <alexandru.Ardelean@analog.com>
+> > Subject: [PATCH] iio: imu: adis16xxx: use helper to access iio core deb=
+ugfs dir
+> >=20
+> > The IIO core provides a iio_get_debugfs_dentry() helper.
+> > It seems that the ADIS IMU drivers access that field directly.
+> >=20
+> > This change converts them to use iio_get_debugfs_dentry() instead.
+> >=20
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  drivers/iio/gyro/adis16136.c | 10 ++++------
+> >  drivers/iio/imu/adis16400.c  | 10 ++++------
+> >  drivers/iio/imu/adis16460.c  | 10 ++++------
+> >  drivers/iio/imu/adis16475.c  | 15 ++++++---------
+> >  drivers/iio/imu/adis16480.c  | 16 ++++++----------
+> >  5 files changed, 24 insertions(+), 37 deletions(-)
+> >  =20
+>=20
+> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-Suggested by coccinelle.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the usual reasons.
 
-Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
----
- drivers/i2c/busses/i2c-img-scb.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Thanks,
 
-diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
-index 422097a31c95..98a89301ed2a 100644
---- a/drivers/i2c/busses/i2c-img-scb.c
-+++ b/drivers/i2c/busses/i2c-img-scb.c
-@@ -1330,7 +1330,6 @@ static int img_i2c_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
- 	struct img_i2c *i2c;
--	struct resource *res;
- 	int irq, ret;
- 	u32 val;
- 
-@@ -1338,16 +1337,13 @@ static int img_i2c_probe(struct platform_device *pdev)
- 	if (!i2c)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	i2c->base = devm_ioremap_resource(&pdev->dev, res);
-+	i2c->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(i2c->base))
- 		return PTR_ERR(i2c->base);
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "can't get irq number\n");
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
- 	if (IS_ERR(i2c->sys_clk)) {
--- 
-2.17.1
-
+Jonathan
