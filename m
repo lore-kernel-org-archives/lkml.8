@@ -5,91 +5,99 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AC0C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE064C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E932068E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6ED2075B
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkgRwto9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHL2Lquv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgECNXh (ORCPT
+        id S1728612AbgECNXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:23:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44918 "EHLO
+        Sun, 3 May 2020 09:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728378AbgECNXg (ORCPT
+        with ESMTP id S1728378AbgECNXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:23:36 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121BAC061A0C
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 06:23:35 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k1so17653631wrx.4
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 06:23:34 -0700 (PDT)
+        Sun, 3 May 2020 09:23:48 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48441C061A0C;
+        Sun,  3 May 2020 06:23:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x6so1001483plv.8;
+        Sun, 03 May 2020 06:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=XO180w3Gyt92NXqJ8MWXDYCkhwcnEwcS3GLjFPvLeyQ=;
-        b=TkgRwto9LeHwZqEescpLjbmPcNXR6ZqMQ6oFJd31QHctyxedVzzFpIfQfmEZwXtPCa
-         e94RGi0uD2XG9dOfA4uEJgs6l/FepcxPDmRkUjX75OQWTspPGDXE4mDv1I/K6uR2gqj0
-         1liKR0PXX6sewDORV2kOahqUjHh57XMhcin5PIt2atuXMH0+XmnECJ931j9ugUsH5OPE
-         SI6XAvJOGb5HQESVUzFFEFR2kDguNqyWDKV05T3HhHB43t4IndcSnDD3wmvyMN1QOHzt
-         115ek6T9kocsGGhX+R6YH89Bwm8Nl6zkJl+BnW6+j/cOBHXIrZKQFqSnXRAspJgYeEzh
-         kknA==
+        bh=iSFC45SzZleqEQtMOgbxTxHu0cI+C5iln/qZ/stfWz4=;
+        b=WHL2LquvLUyxTY2HKw9fsSSn1uydDuqSKOXsaPRB9ZxLDOqh6rqD5DaqH/hqUf5ErZ
+         4012cwKJ+MxJ5dwjf3yG3d2SeR6Z3dDcE6Np91DYd4BNlfMbjKOT9W4FdFQ9ZffJMMm9
+         YhxZb14BKzhaFNKisJ667CesfepmRMjgvq6ET6LOLjgFtlzheRU2vTpFcSgobm4Sfj4k
+         8AhH5Z83ndxesADhXzOAwu/BRa8B5ahWGi4Ujjukkk1Xitvc1nHTrh+UDjKFeAA3qXJG
+         U/UbXT9zxYsBd0WCqyAepDbL8hxTpq0ebkyYSEPYaar4IMmGxC9IlEAiFMIH4eBqeEN+
+         iGbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XO180w3Gyt92NXqJ8MWXDYCkhwcnEwcS3GLjFPvLeyQ=;
-        b=OPlCtWaxwSPWOp/CqNaXE7pZXh51RqmRalfn+oWgecgCry59MiuF/KyokgkIurU6yt
-         zsPXHnDGlk/rm3WK/GR/K9xdpW9ZXvnBzJgYBBDV2/eMb0pbUgGJUUPZUbnZrdEREzTb
-         AZW1IDdyTZ2obn8hWQs1w0wV0gI8+qFy2IQe6j7rCIJ5jMLtSlJH7m9bPXAYEmoseq3v
-         azReNVsTHeAc/szZu7RTHujMR1cDnHj2RUzOiv/Qus2FvslywQGHG+Frnw8UR68D73E5
-         QQRfxhxR1CmMytJ4iDWBnEY8hStk8WDxOE8hBK8eJ7EqranEfi50f+XYHhvq/9uwoLgx
-         dgkQ==
-X-Gm-Message-State: AGi0PuafgCEmb4BfKtZOY0mq73UcWzHVGvqpzeFnSyciR8QP8x9lNEk7
-        X0QABrPo+8w2KZge7sMHw0yhCm/P
-X-Google-Smtp-Source: APiQypIN5kEoyJRhf3LoJRNomYGnlSGdDowwfllqXDF38RWnmatQwgRoLZLCsUjJiSeJMd0TCIfDFA==
-X-Received: by 2002:adf:ce0a:: with SMTP id p10mr13517816wrn.89.1588512213265;
-        Sun, 03 May 2020 06:23:33 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id r23sm7627188wra.74.2020.05.03.06.23.31
+        bh=iSFC45SzZleqEQtMOgbxTxHu0cI+C5iln/qZ/stfWz4=;
+        b=sj3ZfKIHq9Uz2AuIOcnCyK+0d7r3toz1rl0PNdFzCmQHL9qcFfapu7O4tOEyxfA+ir
+         2X9JXoVSs2a3F5qf9TrIcqLHWKSdzEG/mIczH+b9UZ1+M71hAKtpgkJUn1S8UflOq9oz
+         a+uVSEYvLFWa2DejX2UHjYvyPi1O32aWuGyF6opFW4YAPc6ZcqnaC0E27B2VgdSkhvNP
+         J1pRVlKbG7HDXhds3jjaWVWIxMe8SK+cS/kSwVnA+XtBnHShjfxGX65SwWQ8cDGpYTPI
+         Tat4iuqAbHyoTmggba1yqSLqd5poWcQ8In3a1vGt+gPlkkbjG9U5ZxcqUq5UHi0vSWNM
+         mcxA==
+X-Gm-Message-State: AGi0PuZ2GKx5AqNHJJxd63pGgOpcsy9HmT7bToiSMCi7FRwF40kzVu67
+        cA+fdzHUrgHzahwkvCOPzC8=
+X-Google-Smtp-Source: APiQypIdD7jNt/0XcbilzJsf4d9CM/WtqlgE+2p/WU2k73PcXfw//99bcFIIMghDWFRMiBPA4bS9Hg==
+X-Received: by 2002:a17:902:9042:: with SMTP id w2mr13647438plz.127.1588512227752;
+        Sun, 03 May 2020 06:23:47 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:8b:8746:38:47a5:7bcb:f964])
+        by smtp.gmail.com with ESMTPSA id l1sm5895875pgn.66.2020.05.03.06.23.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 06:23:32 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: add missing MODULE_DEVICE_TABLE
-Date:   Sun,  3 May 2020 17:29:19 +0300
-Message-Id: <20200503142919.14863-1-oded.gabbay@gmail.com>
+        Sun, 03 May 2020 06:23:46 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     aishwaryarj100@gmail.com
+Subject: [PATCH] i2c: cht-wc: Remove superfluous error message in cht_wc_i2c_adap_i2c_probe()
+Date:   Sun,  3 May 2020 18:53:38 +0530
+Message-Id: <20200503132339.17718-1-aishwaryarj100@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCI drivers should use this define to declare their PCI ID table.
+The function platform_get_irq can log an error by itself.
+This omit a redundant message for exception handling in the
+calling function.
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Suggested by Coccinelle.
+
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 ---
- drivers/misc/habanalabs/habanalabs_drv.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-cht-wc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs_drv.c b/drivers/misc/habanalabs/habanalabs_drv.c
-index b670859c677a..5e73b456facd 100644
---- a/drivers/misc/habanalabs/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/habanalabs_drv.c
-@@ -47,6 +47,7 @@ static const struct pci_device_id ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_HABANALABS, PCI_IDS_GAUDI), },
- 	{ 0, }
- };
-+MODULE_DEVICE_TABLE(pci, ids);
+diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+index 35e55feda763..343ae5754e6e 100644
+--- a/drivers/i2c/busses/i2c-cht-wc.c
++++ b/drivers/i2c/busses/i2c-cht-wc.c
+@@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+ 	int ret, reg, irq;
  
- /*
-  * get_asic_type - translate device id to asic type
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Error missing irq resource\n");
++	if (irq < 0)
+ 		return -EINVAL;
+-	}
+ 
+ 	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
+ 	if (!adap)
 -- 
 2.17.1
 
