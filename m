@@ -2,106 +2,142 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E8CC4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12036C47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35CC1205ED
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:42:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/VeyKDZ"
+	by mail.kernel.org (Postfix) with ESMTP id E547820757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588506497;
+	bh=MjIriiKXwBhuy3vRVQshwzttKeQfN8gHwz12BeKmiyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=V/pO4GWMS4T9OrZAry5s2f8ijfQ2Vcukdjnu7VW2iLIwv3Dwmz+ZwRSv60+GvuOaq
+	 rLX3QkiiRDwrmlHX2Cz/UDcxnZoHVeqbJg6Hicf7W/hFtHcm4J4f3Z4gpEU5pffnkL
+	 h8SwQN9OlT7iF5+lQfIDUbkD/F7cR6aTFK3r7ZHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgECLmr (ORCPT
+        id S1727911AbgECLsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 07:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727023AbgECLmr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 07:42:47 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3AD5C061A0C;
-        Sun,  3 May 2020 04:42:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z2so9378273iol.11;
-        Sun, 03 May 2020 04:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CswbDbzRoY7hOaMpKGQ7lTgkmEKRA2Ia8858GzcpRyQ=;
-        b=B/VeyKDZ4SLuIY7xHuxpXOzOskfvZKU+A5FK81ESN3wNpQDFeg5YMMn10lN8K1HlzU
-         ucNQI44nZ0RuaN9V467tsqNfMHZxbuNPptiUAsaVg3KYYzH75VV4unRSTt+NsACNb4lc
-         dmcvbKyaOxB31ly2JwulyTgFbdifyHm56KvXnfOHErfj5UVE7YK2+skEdePVFu+BR44B
-         uhVpDPvmnRDtBvfnAqrbUU5KLt9w1767QhJPPXsDn7tZknjhE++fAPu4TrDilwXBU/d1
-         P2CRaRavJOqCiQE5DwlZs5i9VhlFSnNBdt72/1BGc2EAlaYKKm0a8lAz8UeYwOT07Ide
-         HpOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CswbDbzRoY7hOaMpKGQ7lTgkmEKRA2Ia8858GzcpRyQ=;
-        b=K/uw8rUY+N83SIkT07MPONYaQwtZBj+85zUdcQdEsRI5L2awo8bjdfDfzwdh7hB6cW
-         hXmW88s3Gq2nmnGPOXbXkUZmxsb6esBR1j9M7VSNZRyL2XUboQ8LM4S2HX/jpj/yHXcO
-         pKqJp8IkjDpbGWZ3D51RQ7vQMhuFYJ3FlLNFxaka6VHCYwLl8IbT+Rdxswyb1+08FRtf
-         zJNVgM+0FHXm1xWNGZhumc+9XBsg5I1ICeG6+gNihofRPuXCwGavFAEcp2Nrw5Gbeumr
-         jdAiibmx7HrkKo9RP3LJmnPSZox/BdZGRpbC8vPcny3HqhzutUEhh2kOz8vjcuZ2Kn/b
-         FQhQ==
-X-Gm-Message-State: AGi0PuZr9BtjY1vHab9rxEH8uicuFjXCNx3jmv0hJm3goQsEL/upDYIp
-        fPZtshDjHp6sn7cFY3KwArtqOAvRMWKu13OJpnc=
-X-Google-Smtp-Source: APiQypK7bQYFFm90yVaM++6A1mWUH1dHV3MQb0qbIp+ohH4OaxgHO6pX+nd1tdial7Rn5XJUxQbfqsSdn1DrT9htlVU=
-X-Received: by 2002:a02:3f44:: with SMTP id c4mr10593844jaf.144.1588506164909;
- Sun, 03 May 2020 04:42:44 -0700 (PDT)
+        Sun, 3 May 2020 07:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727091AbgECLsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 07:48:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AABF22071C;
+        Sun,  3 May 2020 11:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588506496;
+        bh=MjIriiKXwBhuy3vRVQshwzttKeQfN8gHwz12BeKmiyQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YTJEQ3/OjiyY9cpQSweNqt7J1FtAJdP0BBQjtgz2enfFFunpuoUqiE1KIGeYipLku
+         gKjQ6tjRBCgT02PERAu+p5HLfeBNobOvP8PivfyKYhZjwmlSvHLFXpjqJHZPFw4L/q
+         uA2HBRbJjFtwoo9sxXF09GsbykqLUcFYRgPMSgP4=
+Date:   Sun, 3 May 2020 12:48:11 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     <rjw@rjwysocki.net>, <ulf.hansson@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <benjamin.gaignard@st.com>, <alexandre.torgue@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH v2] iio: adc: stm32-adc: fix runtime autosuspend delay
+ when slow polling
+Message-ID: <20200503124811.0abf7655@archlinux>
+In-Reply-To: <1588163348-31640-1-git-send-email-fabrice.gasnier@st.com>
+References: <1588163348-31640-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200426104115.22630-1-peron.clem@gmail.com> <20200426104115.22630-7-peron.clem@gmail.com>
- <CAGb2v66TFzpEmzdqxmjqGvVONkPEhaDMHNA4tRUvrX_Mg8w=tA@mail.gmail.com>
-In-Reply-To: <CAGb2v66TFzpEmzdqxmjqGvVONkPEhaDMHNA4tRUvrX_Mg8w=tA@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 3 May 2020 13:42:33 +0200
-Message-ID: <CAJiuCcfpk=9E2dQnE+QeZrDHG7EqCBWqbEbnpBvhn-uvWuRV2w@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] ASoC: sun4i-i2s: Adjust regmap settings
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Marcus Cooper <codekipper@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 29 Apr 2020 14:29:08 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-On Mon, 27 Apr 2020 at 13:03, Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Sun, Apr 26, 2020 at 6:41 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
-.com> wrote:
-> >
-> > From: Marcus Cooper <codekipper@gmail.com>
-> >
-> > Bypass the regmap cache when flushing or reading the i2s FIFOs.
-> >
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
->
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> When the ADC is runtime suspended and starting a conversion, the stm32-adc
+> driver calls pm_runtime_get_sync() that gets cascaded to the parent
+> (e.g. runtime resume of stm32-adc-core driver). This also kicks the
+> autosuspend delay (e.g. 2s) of the parent.
+> Once the ADC is active, calling pm_runtime_get_sync() again (upon a new
+> capture) won't kick the autosuspend delay for the parent (stm32-adc-core
+> driver) as already active.
+> 
+> Currently, this makes the stm32-adc-core driver go in suspend state
+> every 2s when doing slow polling. As an example, doing a capture, e.g.
+> cat in_voltageY_raw at a 0.2s rate, the auto suspend delay for the parent
+> isn't refreshed. Once it expires, the parent immediately falls into
+> runtime suspended state, in between two captures, as soon as the child
+> driver falls into runtime suspend state:
+> - e.g. after 2s, + child calls pm_runtime_put_autosuspend() + 100ms
+>   autosuspend delay of the child.
+> - stm32-adc-core switches off regulators, clocks and so on.
+> - They get switched on back again 100ms later in this example (at 2.2s).
+> 
+> So, use runtime_idle() callback in stm32-adc-core driver to call
+> pm_runtime_mark_last_busy() for the parent driver (stm32-adc-core),
+> to avoid this.
+> 
+> Fixes: 9bdbb1139ca1 ("iio: adc: stm32-adc: add power management support")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-The  SUN4I_I2S_FIFO_CTRL_REG is also missing.
-As some bits can self-clear by themselves.
+Whilst this seems 'sensible' to me, I really don't have a good enough grasp
+of runtime pm to be sure. 
 
-I will fix this in v4.
+I see something similar looking in the greybus driver, but not sure on the
+reason it is there.
 
-Regards,
-Clement
+Hence, ideally looking for an ack from Rafael on this one!
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes in v2:
+> - Use runtime_idle callback in stm32-adc-core driver, instead of refreshing
+>   last_busy from the child (for the parent) at many place. Initial patch v1
+>   looked like "somewhat adhoc solution" as commented by Jonathan.
+> ---
+>  drivers/iio/adc/stm32-adc-core.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index 2df88d2..ebe5dbc 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -803,6 +803,13 @@ static int stm32_adc_core_runtime_resume(struct device *dev)
+>  {
+>  	return stm32_adc_core_hw_start(dev);
+>  }
+> +
+> +static int stm32_adc_core_runtime_idle(struct device *dev)
+> +{
+> +	pm_runtime_mark_last_busy(dev);
+> +
+> +	return 0;
+> +}
+>  #endif
+>  
+>  static const struct dev_pm_ops stm32_adc_core_pm_ops = {
+> @@ -810,7 +817,7 @@ static const struct dev_pm_ops stm32_adc_core_pm_ops = {
+>  				pm_runtime_force_resume)
+>  	SET_RUNTIME_PM_OPS(stm32_adc_core_runtime_suspend,
+>  			   stm32_adc_core_runtime_resume,
+> -			   NULL)
+> +			   stm32_adc_core_runtime_idle)
+>  };
+>  
+>  static const struct stm32_adc_priv_cfg stm32f4_adc_priv_cfg = {
+
