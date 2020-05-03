@@ -2,149 +2,153 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7019CC47257
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C64BC47258
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D437206E9
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0070C206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="g5CtopVi"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="LWRjvDWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgECW2U (ORCPT
+        id S1729229AbgECW3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 18:28:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
+        Sun, 3 May 2020 18:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729151AbgECW2U (ORCPT
+        by vger.kernel.org with ESMTP id S1729151AbgECW27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 18:28:20 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D3CC061A0E;
-        Sun,  3 May 2020 15:28:19 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id g13so18678983wrb.8;
-        Sun, 03 May 2020 15:28:19 -0700 (PDT)
+        Sun, 3 May 2020 18:28:59 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0113FC061A10
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 15:28:57 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id i68so12585710qtb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 15:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y69lAmBUHqgE1AImwpWCVOk5aRft5ihzG6qW/7B3meA=;
-        b=g5CtopVisuuYHom2E36JzSmflZ8Vpts4weEltBoFA5PHeqZuw7xpF4tDEugEIDRJTT
-         TSB2h+14aRVNkj+RQbcbjhQQdnxc8Kq2mlRrdjUItjzh1V4liq3aYuRgmnadNQ8usjgA
-         YM7ogrF4rnFPdpKT6rijBFR9aemkr8yt7UJRt/Ke97sabnwNNB3HqBewu9sbrEh9QOR4
-         wCHVpKdtEzfjFb6Ji23FM4HfLGh/FdkDPnpPZWY8pk7HycjmCWAWf3xWDNvYGOVKQT8U
-         O7KmlKYW2V/+xzF56s5uTVYaBP3Fmx727jy1s/DXxOdh8wRJhR0IYipKQ8Jck434a0ic
-         Ttqg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uZ+K+ih0mNuF/pOvIE/xKN1vFjcEACHdo80ycEUlHfg=;
+        b=LWRjvDWvojMKjrn+WxzIqCeWuxOhHJ6+/ybhiASHHGUUEt6RiHvB34fY9XpWF4RhLP
+         t+CRl/TGVKUFpA22wbbMNsoxdDzu1saejrWFriYJCHU471wwifSDFYr4GPPEmaPCce7I
+         qjrwcOXVnhBsEpNANWD5sbULmDYM/R89PYiQWwU7bisbB18hqpsVz5tSRVzH7z3VXlhf
+         hxPNS6cJ+RlDHJ/N2TdiwPiosWaAPQAANOnlXGNiKcNxbCF4AxXutsVim/L4GmSYuvmP
+         l2gQRMQGZc+aIsZyq0rFZcBfX1Xbu+4nXPjB085vgLB/Sb1FmVnWI3PaW0jAOzHuI7Xl
+         RN/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y69lAmBUHqgE1AImwpWCVOk5aRft5ihzG6qW/7B3meA=;
-        b=hupEyenWXv84lhfeV9Fw9hUQvZUkLsU8Qh3q5Albj+hADYSJpMFUee5NlhhRNJZTGA
-         GFpF6E0bwCNlvtuU2IvPHx0mHshA/JiBlkYCp0gSVFL8bUrA2IvvP6Y2/UbNAWw9Xanw
-         o8Vs8X2QOpIF33imRaq9jbF4BPF1hD9M1FNteeLZJA4mY2ac/FKcIuQFqSjN5yy2KPSY
-         WT3sRVjBu5OQu8Vx/Ks9TAX0LL1qdQLBCZXrxN1T+iW/4+bMFKD2bxcDljf9LXH0jhs9
-         cnx1XIkLYGQbzxtmXeK+0icFYIDOMujZCET7CBBYu2RoiaAhLq4yYaMiRNnHQnRv3UM/
-         IFDQ==
-X-Gm-Message-State: AGi0PuYe167Q5ofEQqBbwo89Sfdv4KeRyX38SHVOLAIZ5rAXb3Ggho6J
-        XXG2C2ghOsRPDxh2un2J73o=
-X-Google-Smtp-Source: APiQypKTFvLpzJxWxC/mVKGKRYn8CTyLnoU9CuxJncu5LvibrivSYXR2dENDCWKJUUC+YmHk1ohmUw==
-X-Received: by 2002:adf:cd88:: with SMTP id q8mr13169106wrj.67.1588544898444;
-        Sun, 03 May 2020 15:28:18 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id i129sm11200081wmi.20.2020.05.03.15.28.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 15:28:17 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
-        ulf.hansson@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] mmc: meson-mx-sdio: trigger a soft reset after a timeout or CRC error
-Date:   Mon,  4 May 2020 00:28:05 +0200
-Message-Id: <20200503222805.2668941-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uZ+K+ih0mNuF/pOvIE/xKN1vFjcEACHdo80ycEUlHfg=;
+        b=Jo3qutLcnql0lMefMSjenIjKPz5uAlkj6BFZYFZ4WOZCQ5Ns6HoKb2QlqoaCOtuvK8
+         e+TPkKQ0eAOnU1TJdmIbV2UMOTpH/j849CRO/HMacNW89yjKAJ8XocDaflBDGtu9/HW3
+         gCClnM6Dk+Uya0tXSx3UNtfIcNhqrvje6+mwRwm5CDQTcOYNimwTAqlF00E/i/vm3K3Z
+         Up8xDuvm6gN52b51rB5+rFPmAhv3vYOvFnKO9km2QetaDyHtYiKjh8pbFTKR/6MK1dfw
+         Yl7f9xJB+2boMzcGJGa4VeMMneK8KCAl2s6ouSQ/fKa+BeEErCCv+5bobTLYphkvvubG
+         2JVg==
+X-Gm-Message-State: AGi0PubgJvY7yAZJqjahilp6IloVKKINKod4rwTzmJi2blZpRLSYK6KQ
+        GSwxvnXTsuTs9MFu3ejXSuNgCw==
+X-Google-Smtp-Source: APiQypKYxrNhYHbmyIb1vKCNt8ennSGrROO729y1tL1l5VbHybFfkW5ZWT7zTe85CeHXC40l6+RsVQ==
+X-Received: by 2002:aed:2591:: with SMTP id x17mr14119279qtc.76.1588544937120;
+        Sun, 03 May 2020 15:28:57 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id k2sm9657677qta.39.2020.05.03.15.28.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 May 2020 15:28:56 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jVN6W-0002Vu-0N; Sun, 03 May 2020 19:28:56 -0300
+Date:   Sun, 3 May 2020 19:28:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Dey, Megha" <megha.dey@linux.intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 07/15] Documentation: Interrupt Message store
+Message-ID: <20200503222855.GT26002@ziepe.ca>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751207000.36773.18208950543781892.stgit@djiang5-desk3.ch.intel.com>
+ <20200423200436.GA29181@ziepe.ca>
+ <afd2ae49-ed65-5cde-c867-a923ac9bf8ac@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afd2ae49-ed65-5cde-c867-a923ac9bf8ac@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vendor driver (from the 3.10 kernel) triggers a soft reset every
-time before starting a new command. While this fixes a problem where
-SDIO cards are not detected at all (because all commands simply
-timed out) this hurts SD card read performance a bit (in my tests
-between 10% to 20%).
+On Fri, May 01, 2020 at 03:32:22PM -0700, Dey, Megha wrote:
+> Hi Jason,
+> 
+> On 4/23/2020 1:04 PM, Jason Gunthorpe wrote:
+> > On Tue, Apr 21, 2020 at 04:34:30PM -0700, Dave Jiang wrote:
+> > 
+> > > diff --git a/Documentation/ims-howto.rst b/Documentation/ims-howto.rst
+> > > new file mode 100644
+> > > index 000000000000..a18de152b393
+> > > +++ b/Documentation/ims-howto.rst
+> > > @@ -0,0 +1,210 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > > +.. include:: <isonum.txt>
+> > > +
+> > > +==========================
+> > > +The IMS Driver Guide HOWTO
+> > > +==========================
+> > > +
+> > > +:Authors: Megha Dey
+> > > +
+> > > +:Copyright: 2020 Intel Corporation
+> > > +
+> > > +About this guide
+> > > +================
+> > > +
+> > > +This guide describes the basics of Interrupt Message Store (IMS), the
+> > > +need to introduce a new interrupt mechanism, implementation details of
+> > > +IMS in the kernel, driver changes required to support IMS and the general
+> > > +misconceptions and FAQs associated with IMS.
+> > 
+> > I'm not sure why we need to call this IMS in kernel documentat? I know
+> > Intel is using this term, but this document is really only talking
+> > about extending the existing platform_msi stuff, which looks pretty
+> > good actually.
+> 
+> hmmm, so maybe we call it something else or just say dynamic platform-msi?
+> 
+> > 
+> > A lot of this is good for the cover letter..
+> 
+> Well, I got a lot of comments internally and externally about how the cover
+> page needs to have just the basics and all the ugly details can go in the
+> Documentation. So well, I am confused here.
 
-Trigger a soft reset after we got a CRC error or if the previous command
-timed out (just like the vendor driver from the same 3.10 kernel for the
-newer SDHC controller IP does). This fixes detection of SDIO cards and
-doesn't hurt SD card read performance at the same time.
+Documentation should be documentation for users and developers.
 
-With this patch the initialization of an RTL8723BS SDIO card looks like
-this:
-  req done (CMD52): -110: 00000000 00000000 00000000 00000000
-  clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
-  starting CMD0 arg 00000000 flags 000000c0
-  req done (CMD0): 0: 00000000 00000000 00000000 00000000
-  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
-  starting CMD8 arg 000001aa flags 000002f5
-  req done (CMD8): -110: 00000000 00000000 00000000 00000000
-  starting CMD5 arg 00000000 flags 000002e1
-  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-  starting CMD5 arg 00200000 flags 000002e1
-  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
-  starting CMD3 arg 00000000 flags 00000075
-  req done (CMD3): 0: 00010000 00000000 00000000 00000000
-  starting CMD7 arg 00010000 flags 00000015
-  req done (CMD7): 0: 00001e00 00000000 00000000 00000000
-  starting CMD52 arg 00000000 flags 00000195
-  req done (CMD52): 0: 00001032 00000000 00000000 00000000
-  [... more CMD52 omitted ...]
-  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
-  starting CMD52 arg 00000e00 flags 00000195
-  req done (CMD52): 0: 00001000 00000000 00000000 00000000
-  starting CMD52 arg 80000e02 flags 00000195
-  req done (CMD52): 0: 00001002 00000000 00000000 00000000
-  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
-  starting CMD52 arg 00020000 flags 00000195
-  req done (CMD52): 0: 00001007 00000000 00000000 00000000
-  [... more CMD52 omitted ...]
-  new high speed SDIO card at address 0001
+Justification and rational for why functionality should be merged
+belong in the commit message and cover letter, IMHO.
 
-Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-Ulf, I consider this non-critical because as long as the meson-mx-sdhc
-driver is not merged we only have one MMC driver for these platforms.
-I don't know anybody to prefer SDIO wifi over SD card access, so this
-can go into -next (in my option at least).
+Here too much time is spent belabouring IMS's rational and not enough
+is spent explaining how a driver should consume it or how a platform
+should provide it.
 
+And since most of this tightly related to platform-msi it might make
+sense to start by documenting platform msi then adding a diff on that
+to explain what change is being made to accommodate IMS.
 
- drivers/mmc/host/meson-mx-sdio.c | 3 +++
- 1 file changed, 3 insertions(+)
+Most likely few people are very familiar with platform-msi in the
+first place..
 
-diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-index 2e58743d83bb..3813b544f571 100644
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -246,6 +246,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
- 
- 	mrq = host->mrq;
- 
-+	if (host->cmd->error)
-+		meson_mx_mmc_soft_reset(host);
-+
- 	host->mrq = NULL;
- 	host->cmd = NULL;
- 
--- 
-2.26.2
-
+Jason
