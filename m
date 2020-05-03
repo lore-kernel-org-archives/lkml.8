@@ -2,186 +2,149 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B5AC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7019CC47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A932071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D437206E9
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 22:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Iuv8uvwI"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="g5CtopVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgECWZQ (ORCPT
+        id S1729188AbgECW2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 18:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
+        Sun, 3 May 2020 18:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729158AbgECWZP (ORCPT
+        by vger.kernel.org with ESMTP id S1729151AbgECW2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 18:25:15 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0E5C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 15:25:15 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id k81so12171170qke.5
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 15:25:15 -0700 (PDT)
+        Sun, 3 May 2020 18:28:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D3CC061A0E;
+        Sun,  3 May 2020 15:28:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g13so18678983wrb.8;
+        Sun, 03 May 2020 15:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=fE1DsHMLeD3vUe7bC1r7mfbyeNGV2bFbtoi5gmdBxnc=;
-        b=Iuv8uvwIEuuVEU+E9/d0lU12GRhwJXxzMOTrQ92WjdBA04tJLjmPxjp6gl1VrNZWnn
-         oMQMWjSyMu4om5lGhqyLodhcxZV4LEsdWktKi016L5V6uap1LaKTC5qqc4vxcbZAFvDM
-         bZHtM6mulmG8tAtV+/WvpEdo3YntvODOaINQ0HA9BxegSyeUbeaPrpkmsMyv2v1j4VBn
-         ut4AbaXhIdUNp+1/2wTh1OPq3A2TQiYewm3OPEC/WaQgMgxyQDaHqVDe1AkfMXpvCguz
-         L5R4vAPnsbO0bMb5A0XtxBOPspzZhnRZlXAVY9E+ZVDYwtDa1Jtuvs1FkJo/bUFrF7Ud
-         x4yA==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y69lAmBUHqgE1AImwpWCVOk5aRft5ihzG6qW/7B3meA=;
+        b=g5CtopVisuuYHom2E36JzSmflZ8Vpts4weEltBoFA5PHeqZuw7xpF4tDEugEIDRJTT
+         TSB2h+14aRVNkj+RQbcbjhQQdnxc8Kq2mlRrdjUItjzh1V4liq3aYuRgmnadNQ8usjgA
+         YM7ogrF4rnFPdpKT6rijBFR9aemkr8yt7UJRt/Ke97sabnwNNB3HqBewu9sbrEh9QOR4
+         wCHVpKdtEzfjFb6Ji23FM4HfLGh/FdkDPnpPZWY8pk7HycjmCWAWf3xWDNvYGOVKQT8U
+         O7KmlKYW2V/+xzF56s5uTVYaBP3Fmx727jy1s/DXxOdh8wRJhR0IYipKQ8Jck434a0ic
+         Ttqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=fE1DsHMLeD3vUe7bC1r7mfbyeNGV2bFbtoi5gmdBxnc=;
-        b=mgYI+Iv3oXPG/bI8ih+MkTcMdUOrVMSVPGRWDxhrdAm7Ok39Kg+lMVQm9Q4s3QFCt9
-         dmgRqXMDRUVjoTlS5/+IPH4Ygjy3WeIS7vaoWDgaK/P2Ki+MX+7M2rAvNHPtDIvbbuwp
-         GgYZtbg0q+leogT5hN03f7BbMEifXndiv3EFZ7JIAr9HbAlzk9UOy7zG8OWDduCo5ENJ
-         27l/4dbDxtjIhChtIQ0ogZTzJv96sZhhqr725YBU6ymMJAiF6zJkHEWenWfhozM5cAbo
-         EkQBtljY14ti0UTbnuOb5x9sZVkO8LRGink1L6lGf2rtsU53gwpITkmhV8wlvw+jccVL
-         Ey3Q==
-X-Gm-Message-State: AGi0PuaieUSs99wbNwMh+psXJzUNdS0kZ/LLs6jPbix9l+FvFY8O5ZDX
-        yiS1HsSL6+TOdsweftH6ksglmw==
-X-Google-Smtp-Source: APiQypLo8CBxepN9L5tiMWDFp5DJImiXdhLUtRbT60zIZXhhiuntugGhkFhRsYpUPOjZpXopTs+nrg==
-X-Received: by 2002:a37:ac14:: with SMTP id e20mr12271790qkm.23.1588544714466;
-        Sun, 03 May 2020 15:25:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id w69sm1792213qka.75.2020.05.03.15.25.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 May 2020 15:25:13 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jVN2v-0002Sw-33; Sun, 03 May 2020 19:25:13 -0300
-Date:   Sun, 3 May 2020 19:25:13 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Dey, Megha" <megha.dey@linux.intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-Message-ID: <20200503222513.GS26002@ziepe.ca>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
- <20200423201118.GA29567@ziepe.ca>
- <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y69lAmBUHqgE1AImwpWCVOk5aRft5ihzG6qW/7B3meA=;
+        b=hupEyenWXv84lhfeV9Fw9hUQvZUkLsU8Qh3q5Albj+hADYSJpMFUee5NlhhRNJZTGA
+         GFpF6E0bwCNlvtuU2IvPHx0mHshA/JiBlkYCp0gSVFL8bUrA2IvvP6Y2/UbNAWw9Xanw
+         o8Vs8X2QOpIF33imRaq9jbF4BPF1hD9M1FNteeLZJA4mY2ac/FKcIuQFqSjN5yy2KPSY
+         WT3sRVjBu5OQu8Vx/Ks9TAX0LL1qdQLBCZXrxN1T+iW/4+bMFKD2bxcDljf9LXH0jhs9
+         cnx1XIkLYGQbzxtmXeK+0icFYIDOMujZCET7CBBYu2RoiaAhLq4yYaMiRNnHQnRv3UM/
+         IFDQ==
+X-Gm-Message-State: AGi0PuYe167Q5ofEQqBbwo89Sfdv4KeRyX38SHVOLAIZ5rAXb3Ggho6J
+        XXG2C2ghOsRPDxh2un2J73o=
+X-Google-Smtp-Source: APiQypKTFvLpzJxWxC/mVKGKRYn8CTyLnoU9CuxJncu5LvibrivSYXR2dENDCWKJUUC+YmHk1ohmUw==
+X-Received: by 2002:adf:cd88:: with SMTP id q8mr13169106wrj.67.1588544898444;
+        Sun, 03 May 2020 15:28:18 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id i129sm11200081wmi.20.2020.05.03.15.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 15:28:17 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, linux-mmc@vger.kernel.org,
+        ulf.hansson@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] mmc: meson-mx-sdio: trigger a soft reset after a timeout or CRC error
+Date:   Mon,  4 May 2020 00:28:05 +0200
+Message-Id: <20200503222805.2668941-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:30:02PM -0700, Dey, Megha wrote:
-> Hi Jason,
-> 
-> On 4/23/2020 1:11 PM, Jason Gunthorpe wrote:
-> > On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
-> > > diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-> > > new file mode 100644
-> > > index 000000000000..738f6d153155
-> > > +++ b/drivers/base/ims-msi.c
-> > > @@ -0,0 +1,100 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Support for Device Specific IMS interrupts.
-> > > + *
-> > > + * Copyright © 2019 Intel Corporation.
-> > > + *
-> > > + * Author: Megha Dey <megha.dey@intel.com>
-> > > + */
-> > > +
-> > > +#include <linux/dmar.h>
-> > > +#include <linux/irq.h>
-> > > +#include <linux/mdev.h>
-> > > +#include <linux/pci.h>
-> > > +
-> > > +/*
-> > > + * Determine if a dev is mdev or not. Return NULL if not mdev device.
-> > > + * Return mdev's parent dev if success.
-> > > + */
-> > > +static inline struct device *mdev_to_parent(struct device *dev)
-> > > +{
-> > > +	struct device *ret = NULL;
-> > > +	struct device *(*fn)(struct device *dev);
-> > > +	struct bus_type *bus = symbol_get(mdev_bus_type);
-> > > +
-> > > +	if (bus && dev->bus == bus) {
-> > > +		fn = symbol_get(mdev_dev_to_parent_dev);
-> > > +		ret = fn(dev);
-> > > +		symbol_put(mdev_dev_to_parent_dev);
-> > > +		symbol_put(mdev_bus_type);
-> > 
-> > No, things like this are not OK in the drivers/base
-> > 
-> > Whatever this is doing needs to be properly architected in some
-> > generic way.
-> 
-> Basically what I am trying to do here is to determine if the device is an
-> mdev device or not.
+The vendor driver (from the 3.10 kernel) triggers a soft reset every
+time before starting a new command. While this fixes a problem where
+SDIO cards are not detected at all (because all commands simply
+timed out) this hurts SD card read performance a bit (in my tests
+between 10% to 20%).
 
-Why? mdev devices are virtual they don't have HW elements.
+Trigger a soft reset after we got a CRC error or if the previous command
+timed out (just like the vendor driver from the same 3.10 kernel for the
+newer SDHC controller IP does). This fixes detection of SDIO cards and
+doesn't hurt SD card read performance at the same time.
 
-The caller should use the concrete pci_device to allocate
-platform_msi? What is preventing this?
+With this patch the initialization of an RTL8723BS SDIO card looks like
+this:
+  req done (CMD52): -110: 00000000 00000000 00000000 00000000
+  clock 400000Hz busmode 2 powermode 2 cs 1 Vdd 21 width 1 timing 0
+  starting CMD0 arg 00000000 flags 000000c0
+  req done (CMD0): 0: 00000000 00000000 00000000 00000000
+  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 0
+  starting CMD8 arg 000001aa flags 000002f5
+  req done (CMD8): -110: 00000000 00000000 00000000 00000000
+  starting CMD5 arg 00000000 flags 000002e1
+  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+  starting CMD5 arg 00200000 flags 000002e1
+  req done (CMD5): 0: 90ff0000 00000000 00000000 00000000
+  starting CMD3 arg 00000000 flags 00000075
+  req done (CMD3): 0: 00010000 00000000 00000000 00000000
+  starting CMD7 arg 00010000 flags 00000015
+  req done (CMD7): 0: 00001e00 00000000 00000000 00000000
+  starting CMD52 arg 00000000 flags 00000195
+  req done (CMD52): 0: 00001032 00000000 00000000 00000000
+  [... more CMD52 omitted ...]
+  clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 1 timing 2
+  starting CMD52 arg 00000e00 flags 00000195
+  req done (CMD52): 0: 00001000 00000000 00000000 00000000
+  starting CMD52 arg 80000e02 flags 00000195
+  req done (CMD52): 0: 00001002 00000000 00000000 00000000
+  clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 21 width 4 timing 2
+  starting CMD52 arg 00020000 flags 00000195
+  req done (CMD52): 0: 00001007 00000000 00000000 00000000
+  [... more CMD52 omitted ...]
+  new high speed SDIO card at address 0001
 
-> > > +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
-> > > +					      const char *name)
-> > > +{
-> > > +	struct fwnode_handle *fn;
-> > > +	struct irq_domain *domain;
-> > > +
-> > > +	fn = irq_domain_alloc_named_fwnode(name);
-> > > +	if (!fn)
-> > > +		return NULL;
-> > > +
-> > > +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
-> > > +	if (!domain)
-> > > +		return NULL;
-> > > +
-> > > +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
-> > > +	irq_domain_free_fwnode(fn);
-> > > +
-> > > +	return domain;
-> > > +}
-> > 
-> > I'm still not really clear why all this is called IMS.. This looks
-> > like the normal boilerplate to setup an IRQ domain? What is actually
-> > 'ims' in here?
-> 
-> It is just a way to create a new domain specifically for IMS interrupts.
-> Although, since there is a platform_msi_create_irq_domain already, which
-> does something similar, I will use the same for IMS as well.
+Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+Ulf, I consider this non-critical because as long as the meson-mx-sdhc
+driver is not merged we only have one MMC driver for these platforms.
+I don't know anybody to prefer SDIO wifi over SD card access, so this
+can go into -next (in my option at least).
 
-But this is all code already intended to be used by the platform, why
-is it in drivers/base?
 
-> Also, since there is quite a stir over the name 'IMS' do you have any
-> suggestion for a more generic name for this?
+ drivers/mmc/host/meson-mx-sdio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It seems we have a name, this is called platform_msi in Linux?
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 2e58743d83bb..3813b544f571 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -246,6 +246,9 @@ static void meson_mx_mmc_request_done(struct meson_mx_mmc_host *host)
+ 
+ 	mrq = host->mrq;
+ 
++	if (host->cmd->error)
++		meson_mx_mmc_soft_reset(host);
++
+ 	host->mrq = NULL;
+ 	host->cmd = NULL;
+ 
+-- 
+2.26.2
 
-Jason
