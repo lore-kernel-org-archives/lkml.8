@@ -2,136 +2,211 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A023C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD616C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0065E24955
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A750E20787
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 00:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CikoTH8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgECAJ0 (ORCPT
+        id S1726678AbgECAKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 2 May 2020 20:09:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44372 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgECAJZ (ORCPT
+        Sat, 2 May 2020 20:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgECAKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 2 May 2020 20:09:25 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 322D92A0590
-Received: by earth.universe (Postfix, from userid 1000)
-        id 022D33C08C7; Sun,  3 May 2020 02:09:21 +0200 (CEST)
-Date:   Sun, 3 May 2020 02:09:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 2/4] power: supply: core: add input voltage/current
- measurements
-Message-ID: <20200503000921.6krrkai7onsba2uz@earth.universe>
-References: <cover.1588345420.git.mirq-linux@rere.qmqm.pl>
- <249d7ad42b02bfeb8c31c49a64ee92b3e745086d.1588345420.git.mirq-linux@rere.qmqm.pl>
- <20200502222349.tfa72nr5zunybpla@earth.universe>
- <20200502224526.GA25127@qmqm.qmqm.pl>
- <20200502231158.GB25127@qmqm.qmqm.pl>
+        Sat, 2 May 2020 20:10:23 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB43DC061A0C;
+        Sat,  2 May 2020 17:10:22 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r4so6658160pgg.4;
+        Sat, 02 May 2020 17:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=j0I6jYWaKY4+V4FMpcS76pI7d2z/G1zMDmPX9h3fut8=;
+        b=CikoTH8R+IrjHXImCPhE51UyBre5MwyLY+w5YSoZHMaeftwCZu+1Df34EVyXWiD9Sg
+         IbdSMGUJj5yvN6bYFwU93JzzQdycjfLCGSPtjGfbsKgrc/BP9e1UROWxo+OSb31jZvzk
+         8QAcV9Q1qPbSrc4zEr+Obf1D/axbN+UJ1XMf82lBQFx5wOox6HXgYdRIVVm1Lngv62ub
+         GwYBYFqNyOqOPP25bb9x/pniUaH/2VhNolnLK/lFlAnR+yxrx4fABXaNc4zDJFEuj1ee
+         9UshZEtCgcugafRPAHFP4P+8zQVD9C5q2Wvt4hBFnX48xvwNzXi4qiqq6fWtSShBhb9d
+         ddLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=j0I6jYWaKY4+V4FMpcS76pI7d2z/G1zMDmPX9h3fut8=;
+        b=EXkNkLr+ZRxY8647MQQur3nEvu7eh55L70rsHVeXgqdM2pICfyYwU4+XWi6SdJsSBZ
+         62urFGknVkNmfo55XKLsnLiX34vCcVEgbvsGypwbRpA1hDxjaNNXt9W5YyQ6HGCkCJbP
+         NXXIR90Azubz/xd1KuKbdKKVU18q1kacdwCIrELCvqiWd/zI3sneSESWQyDRp+9okyJP
+         F4epO0QX193NwMF37YUd8tlUEapBcK4sG7Y/bhx7MGatVIbXyvpkZ8VTv/NJLyQnspoG
+         kkOl7wGAXxMEORi4vFRk5CZRrx6yRRGhnGIt2kg+H695Gvx6kVfVbLl16A7jo3s7/MbJ
+         au/g==
+X-Gm-Message-State: AGi0PuYvtrWHyc1unxAaSYsJ8w3W0LSnbmHc9e/YpwgWX/N2to26PkYU
+        OiSVXc6sS4ZVINcaW3xrWzo=
+X-Google-Smtp-Source: APiQypKnVsQsDZ4ldItm0kvZ+IyDjuj3mJh4QKU7S2CoeEAm0FsB6Az9waUAWcdGvE3HzdSegHQSXQ==
+X-Received: by 2002:a63:d60a:: with SMTP id q10mr11099642pgg.37.1588464622384;
+        Sat, 02 May 2020 17:10:22 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id o190sm5319704pfb.178.2020.05.02.17.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2020 17:10:21 -0700 (PDT)
+Date:   Sun, 3 May 2020 08:10:15 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3] streamline_config.pl: add LMC_KEEP to preserve some
+ kconfigs
+Message-ID: <20200503001015.e2rjecyq46ykp3dm@mail.google.com>
+References: <20200502153052.5461-1-changbin.du@gmail.com>
+ <6a0c13c6-148d-74b3-4ddc-7252b8b112bf@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wwkc4zuembsuqcjr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200502231158.GB25127@qmqm.qmqm.pl>
+In-Reply-To: <6a0c13c6-148d-74b3-4ddc-7252b8b112bf@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---wwkc4zuembsuqcjr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sun, May 03, 2020 at 01:11:58AM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> On Sun, May 03, 2020 at 12:45:26AM +0200, Micha=C5=82 Miros=C5=82aw wrote:
-> > On Sun, May 03, 2020 at 12:23:49AM +0200, Sebastian Reichel wrote:
-> > > On Fri, May 01, 2020 at 05:11:18PM +0200, Micha=C5=82 Miros=C5=82aw w=
-rote:
-> [...]
-> > > > --- a/include/linux/power_supply.h
-> > > > +++ b/include/linux/power_supply.h
-> > > > @@ -127,7 +127,9 @@ enum power_supply_property {
-> > > >  	POWER_SUPPLY_PROP_CHARGE_CONTROL_LIMIT_MAX,
-> > > >  	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD, /* in percents!=
- */
-> > > >  	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD, /* in percents! */
-> > > > +	POWER_SUPPLY_PROP_INPUT_CURRENT_NOW,
-> > >=20
-> > > What:           /sys/class/power_supply/<supply_name>/current_avg   =
-=20
-> > > Date:           May 2007
-> > > Contact:        linux-pm@vger.kernel.org                         =20
-> > > Description:                 =20
-> > >                 Reports an average IBUS current reading over a fixed =
-period.  =20
-> > >                 Normally devices will provide a fixed interval in whi=
-ch they  =20
-> > >                 average readings to smooth out the reported value.   =
-         =20
-> > >                                                                      =
-          =20
-> > >                 Access: Read   =20
-> > >                 Valid values: Represented in microamps
-> > >=20
-> >=20
-> > There are two entries for /sys/class/power_supply/<supply_name>/current=
-_avg
-> > in the file, the other one mentions IBAT instead. "voltage_now" has the
-> > same problem.
-> [...]
->=20
-> So the general idea of the sysfs API seems to require separate devices fo=
-r the
-> input (charger) and battery elements.
+On Sat, May 02, 2020 at 08:50:22AM -0700, Randy Dunlap wrote:
+> On 5/2/20 8:30 AM, Changbin Du wrote:
+> > Sometimes it is useful to preserve batches of configs when making
+> > localmodconfig. For example, I usually don't want any usb and fs
+> > modules to be disabled. Now we can do it by:
+> > 
+> >  $ make LMC_KEEP="drivers/usb;fs" localmodconfig
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > 
+> > ---
+> > v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
+> > v2: fix typo in documentation. (Randy Dunlap)
+> > ---
+> >  Documentation/admin-guide/README.rst |  8 +++++++-
+> >  scripts/kconfig/Makefile             |  1 +
+> >  scripts/kconfig/streamline_config.pl | 23 +++++++++++++++++++++++
+> >  3 files changed, 31 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+> > index cc6151fc0845..f7b02ce61ea7 100644
+> > --- a/Documentation/admin-guide/README.rst
+> > +++ b/Documentation/admin-guide/README.rst
+> > @@ -209,10 +209,16 @@ Configuring the kernel
+> >                             store the lsmod of that machine into a file
+> >                             and pass it in as a LSMOD parameter.
+> >  
+> > +                           Also, you can preserve modules in certain folders
+> > +                           or kconfig files by spcifying their paths in
+> 
+>                                                   specifying
+> 
+> More below.
 >
-> Since what I'm looking at is an integrated battery controller
-> (bq25896) which has three connections: an USB power (VBUS), a
-> battery and the system load, but it creates only a single
-> power-class device.
+Will fix them, thank you!
 
-power-supply exposes either TYPE_MAINS/TYPE_USB or TYPE_BATTERY.
-If a device is combined function, then it should register two
-power-supply devices.
+> 
+> > +                           parameter LMC_KEEP.
+> > +
+> >                     target$ lsmod > /tmp/mylsmod
+> >                     target$ scp /tmp/mylsmod host:/tmp
+> >  
+> > -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
+> > +                   host$ make LSMOD=/tmp/mylsmod \
+> > +                           LMC_KEEP="drivers/usb;drivers/gpu;fs" \
+> > +                           localmodconfig
+> >  
+> >                             The above also works when cross compiling.
+> >  
+> > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> > index c9d0a4a8efb3..e0abbf5805f5 100644
+> > --- a/scripts/kconfig/Makefile
+> > +++ b/scripts/kconfig/Makefile
+> > @@ -123,6 +123,7 @@ help:
+> >  	@echo  '  gconfig	  - Update current config utilising a GTK+ based front-end'
+> >  	@echo  '  oldconfig	  - Update current config utilising a provided .config as base'
+> >  	@echo  '  localmodconfig  - Update current config disabling modules not loaded'
+> > +	@echo  '                    except those preserved by LMC_KEEP environment variable'
+> >  	@echo  '  localyesconfig  - Update current config converting local mods to core'
+> >  	@echo  '  defconfig	  - New config with default from ARCH supplied defconfig'
+> >  	@echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
+> > diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+> > index e2f8504f5a2d..f3a2ceed1e82 100755
+> > --- a/scripts/kconfig/streamline_config.pl
+> > +++ b/scripts/kconfig/streamline_config.pl
+> > @@ -143,6 +143,7 @@ my %depends;
+> >  my %selects;
+> >  my %prompts;
+> >  my %objects;
+> > +my %config2kfile;
+> >  my $var;
+> >  my $iflevel = 0;
+> >  my @ifdeps;
+> > @@ -201,6 +202,7 @@ sub read_kconfig {
+> >  	if (/^\s*(menu)?config\s+(\S+)\s*$/) {
+> >  	    $state = "NEW";
+> >  	    $config = $2;
+> > +	    $config2kfile{"CONFIG_$config"} = $kconfig;
+> >  
+> >  	    # Add depends for 'if' nesting
+> >  	    for (my $i = 0; $i < $iflevel; $i++) {
+> > @@ -592,6 +594,22 @@ while ($repeat) {
+> >  
+> >  my %setconfigs;
+> >  
+> > +my @presevered_kconfigs;
+> 
+> s/presevered/preserved/g  (g means globally, throughout this script)
+> 
+> > +@presevered_kconfigs = split(/;/,$ENV{LMC_KEEP}) if (defined($ENV{LMC_KEEP}));
+> > +
+> > +sub in_presevered_kconfigs {
+> > +    my $kconfig = $config2kfile{$_[0]};
+> > +    if (!defined($kconfig)) {
+> > +        return 0;
+> > +    }
+> > +    foreach my $excl (@presevered_kconfigs) {
+> > +        if($kconfig =~ /^$excl/) {
+> > +            return 1;
+> > +        }
+> > +    }
+> > +    return 0;
+> > +}
+> > +
+> >  # Finally, read the .config file and turn off any module enabled that
+> >  # we could not find a reason to keep enabled.
+> >  foreach my $line (@config_file) {
+> > @@ -644,6 +662,11 @@ foreach my $line (@config_file) {
+> >      }
+> >  
+> >      if (/^(CONFIG.*)=(m|y)/) {
+> > +        if (in_presevered_kconfigs($1)) {
+> > +            dprint "Preserve config $1";
+> > +            print;
+> > +            next;
+> > +        }
+> >  	if (defined($configs{$1})) {
+> >  	    if ($localyesconfig) {
+> >  	        $setconfigs{$1} = 'y';
+> > 
+> 
+> thanks.
+> -- 
+> ~Randy
+> 
 
-> This is complicated by the fact that this is an OTG device and so
-> it can sink or source VBUS power.
-
-Ok.
-
--- Sebastian
-
---wwkc4zuembsuqcjr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6uC6wACgkQ2O7X88g7
-+ppcRA//UIFhxQTftT9jUww7uCRqVy59YKRey2qkQpr6H4jn47RcVYCpVe82p0sZ
-Mxg2BF9LyMMquAtFXWK4sTtiCcPjklf7yd5kAl97cxy5WF9FZmBkbiAxvVdXSFmn
-i2Gt43SzzWoGHW3155UYr3DMwX0K/eK4HUKAfxTmGP25EXhYPmetMff6Oz5KDP1s
-EUt8QRn34K0Sc8nnb5Kxye161bCVn0dnI+Q1zAtAwAs1GCoPrluHK0Pnb60Ye/TE
-8K/8zh4HHXwtRa51M+qsLQRIzoompZK5JS2b9FTAOeUpiyDCG6OCunkjpjrGKzXi
-ea0afXbhltswYrUlBhbBqsrkPewqCYpaWdwwcVpntwjtTqY9rhFeSlLLbcfJFtOD
-RypG6ob3leVakXodCbU4KQQjMkOv5rka6/2o9tJijwetQ1IUnSW8WqecPTBY2Rkk
-F3U4tZGieL9P1DPiheb9XhQmnnUtATrAGtDS8LHOtNqgCdFLPA/oVCqQCl6I3bmz
-mWHev2TtyXeTnFVH+QL6FtssYq+6J1cR4t0aqXTBpTNTQvoUj3u1oegj27wCvd0T
-Co+/w2S7S+7JLwPW36TRk0Uap3mWNc4yZPOeywJZon3bpWGB9fL86k+j1Htc7aG/
-GNN9HI2DA54u/Yz+11594bi7rzQEd4BbS2+SWiS+5VcYYLbYSao=
-=TUBU
------END PGP SIGNATURE-----
-
---wwkc4zuembsuqcjr--
+-- 
+Cheers,
+Changbin Du
