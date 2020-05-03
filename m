@@ -2,164 +2,126 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEE9C47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E47AC47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB3312073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E84C20836
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 14:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="WdhA2IKC";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="EXn6w5+P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQpt/6nH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgECO05 (ORCPT
+        id S1728693AbgECOkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 10:26:57 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:55354 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgECO04 (ORCPT
+        Sun, 3 May 2020 10:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgECOkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 10:26:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1588516014; x=1620052014;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=E/3RoVZD9KTAdv84eNBZ4aqJUgMuNvOuxybo4+pRvtE=;
-  b=WdhA2IKCFnmr6izUvjRDV2aCjsF9Nutitce5jQb++MV50jLk5A1glC68
-   60Bb1Zev3Xzx/KBzfr0EWDnyyNHnPA9us3PHpoNEN2PNYuDb2lOGltJsA
-   qSPMAipt3W797bwc8FL8P8xWj7HWUlfXgbTOQYs0ADtcGD3nLsYJp1meG
-   lJrRmW8d16zVQU7mSFZ/cmsb5Bm9Omc9t/6FU/IMtjydJ0Py6XNzMLOD/
-   V4eG1y7ob7OOvb/W5AwaTGN4uS5U0h5JLwMdRaD5GdffJ6vdDfL7jGTmF
-   HQD3/HJpZCZ1xwAwEWyUIFgW8oUayRQrN13sRAssqilr4HVV5GKgXTx/d
-   A==;
-IronPort-SDR: lOOHwGR8Q9cyiKAGjbmEgLI43qzjwsHYVo4khlYyBpm+FR3g7I6N+19c/B60imFcBVKmRgnLSy
- X6lRyoD+Z27Hi2guO+Q/QJxsh2A2qAufKOmFqDvU9Ze2gHMXyDTr8NeGMLMrsTlprvp6HcQJrH
- OMxQXvOp1psdypoWwMsExLTcXqee2TYlsW59ccOuWQZcNaYcWf2Q8hASt8JtXhPhcqDX1+Qjfd
- 8Qp9/yGB0R+13q8f5cFM8SyR3CXeD5BtvPIudTdD2g4IR5daBeHLoMIpsFvOxy0asE+TF5g5J1
- uC8=
-X-IronPort-AV: E=Sophos;i="5.73,347,1583164800"; 
-   d="scan'208";a="245626174"
-Received: from mail-sn1nam02lp2053.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.53])
-  by ob1.hgst.iphmx.com with ESMTP; 03 May 2020 22:26:54 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VptBTa8VDydqUhtukyK1xYSBmz+DQvt4EEJd6YRRyg0y6Nu9B7Y0hhcqHTDfwnkir9n0i0WqCYAl4mAr1CNJJmFQtAmkznE5vvXWcStwZfdFB1yilSrHLGZJIh8NKpyNEmNwvDjQNnsxtlYyMDMUrFA3vFt9js55VVCHdYA8W96ADd/q4cWs2wchMpVu1DxfzHJAUpAWAw1+fMXQdY68zIKag2MkroHUxqeR9LCpkhBamNJ9rKb6/geaOZKTsIWtVY0aDAXRQuWpO5wLY2KFJhT8r2IYIBX4dkfIq56bMvHX+N1uUVFORvOn61LhIJ5Q5cYHkk+TOMahJE/jUbsF/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/3RoVZD9KTAdv84eNBZ4aqJUgMuNvOuxybo4+pRvtE=;
- b=fvkQK5h5ykuPWREFRpfcZJMlX3vOi6apRlzIcdbQ5gGSPh+qOk2S9Kn9Aa4A34H0kwrtGo5JAdjONr85YUYE3qtFTay/uhfYr5UJUUlw8TX+EoYi3rukTRn5/YdhebZs8mALXyN3ZGJ/a7P6B8Z2iHoZUaUbeugd5GftX7EG5vUdrFoTt45h6zj5KaABTa6ECJTkkxXDrUhtif8E2I1p7RMK825xPEAcesMMVGJ0QxQerTG2nq2G6fcg6gYHYO2iOquS7ha0fU4m/9rJD8tU6SrseUGCR/2CejuF4C4kJnHF5ufxuKdN2ODlKoLrzkXkISJMKRoySYQ+GDndmU/lkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Sun, 3 May 2020 10:40:01 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FCBFC061A0E;
+        Sun,  3 May 2020 07:40:01 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 207so1653665pgc.6;
+        Sun, 03 May 2020 07:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/3RoVZD9KTAdv84eNBZ4aqJUgMuNvOuxybo4+pRvtE=;
- b=EXn6w5+PLaUyYtqYORTfg0MVKC3wOOS2tjPns6rGVYMzY4xg4KR4UQT7ATmklviY1O6j+M3WLV4+Lys7e28gbY4nzRKGxDrvs90h9dzfzLsxRpmbsSlLJxgDiLvbp+kNSwPeOEJdI0HumvoX7d7kfUClZuZJjWE91E72J/FqRNk=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB4078.namprd04.prod.outlook.com (2603:10b6:805:49::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Sun, 3 May
- 2020 14:26:52 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.2958.029; Sun, 3 May 2020
- 14:26:52 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>
-CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [PATCH v5 6/8] scsi: ufs: add LU Dedicated buffer mode support
- for WriteBooster
-Thread-Topic: [PATCH v5 6/8] scsi: ufs: add LU Dedicated buffer mode support
- for WriteBooster
-Thread-Index: AQHWIT7QsudkATr/C06W3kVb0y94nqiWaxLg
-Date:   Sun, 3 May 2020 14:26:51 +0000
-Message-ID: <SN6PR04MB4640EFE86AE1B59795249A2DFCA90@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200503113415.21034-1-stanley.chu@mediatek.com>
- <20200503113415.21034-7-stanley.chu@mediatek.com>
-In-Reply-To: <20200503113415.21034-7-stanley.chu@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: mediatek.com; dkim=none (message not signed)
- header.d=none;mediatek.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 02a68f00-fec3-4342-1dd5-08d7ef6e05e5
-x-ms-traffictypediagnostic: SN6PR04MB4078:
-x-microsoft-antispam-prvs: <SN6PR04MB4078F3D973181882A1FF5D07FCA90@SN6PR04MB4078.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0392679D18
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I/Uxi7ZKBsXNaauCqsYqjcuExZDc6Z5AlXAIbuI23UeSfnJ5gM1tMQuaaHzAv5CiM8am7h2tQI0aQLr2K+Cjqur/DDmIFJBYxxKg1RD6ZUopyL45Ah0FwtIkZXPcror16N73jyMkLg0lnNeTrgv1RqwfZRdFbXG+VujE/DBWHZJjXs/f7GO0kqc82X3glzFkuWABp1/qF4UHiF+H1eP2b3mBuM4cegid/VmDb9bo7gP/nNR2/IFTBKlC081PTBTcpmIpxI5cPMfNVYSy4n42jeytRbu78EVVLg/ST4j76HjHSB45znQGQfnRdXoLTzD8gkpm/E17CRpMdS/dR6cb9W4n5/UopwM3dl0N+IjesJSNEZXubL/1frcl+PgT1+9oj+P/G9NdAtOUmIgA3hCMd7TdrUbvU6GDrDqtnSph8IVwDM0GOmqHXBH018JWWP/9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(136003)(346002)(366004)(376002)(66946007)(9686003)(55016002)(7696005)(2906002)(76116006)(186003)(6506007)(26005)(52536014)(71200400001)(33656002)(4326008)(66446008)(66476007)(66556008)(64756008)(7416002)(316002)(5660300002)(54906003)(110136005)(8936002)(86362001)(478600001)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: NVhb1H4RUWY+sEMikxYTZe9iBPQ7WjnMjGaaJJakZFOH27/H+LXpt4rI9opaCU9JYgKmKQkHD2U0LQhJB/bAiCt9+fcw8Kdm1Rgi3xRDghaUpuCozxHuSy6VUq27tXu58LJe2IOsSdPm5JaiuMA5XrS9MW+FNWoHNUN8gqZR115khrxHxXyQtDuypL4XDl24/1kghDPEsrLJ3HNcgYaACyTVzL9kEEOaQEyFUTHJwOR3V7dNddH1kJZalykE6e2Vp6Aa6oMAV/V1qz29vjy99YZUEqYRlREf+/IbZZzUI9hBFnTVxD7p1Z3XenjqazNqJKZiaVD5sghqfNk1donj1SqJgA0kGZrE8pbKoNgTxqVWf6S6pzbel9NSwiqVDE8FR4/s8wCdZoZa0qqYg7BLOO0foLbPkorSRJNpFkvou2cf5DPy11phsolF10nEsjoaW4ayIr6FHWQ0/i+6qz11PQdR5Sgb80YWYOI2sogHvdTBu8aWdmCgLZEgp9ySKdEyAcIm6xD904/VxYdh6YFfWnan1XttTSyI0GoT7LlbAM51Nq9zowRGiAg+AM8WKh2iSdGsVTROxEzCIu9/72iCppS3Xqmlf0jw1iRkSW/sp2l8WlXzWIEeVqzBK0s6iozTWC7tgVoI1j1bHXPj5z2YmZ2lLc2A5+BCrYOeGOHc8pCDFvQb6RQRoKemo4z3RF+QrPe1ePZbjj+Vz4Vd/LQi9mePlNvHEb31w9K5OsnOFj83TKeA44nEXTOHrqNrB3R8eMAc8lYrHyGFYhP/4yeW1a7l+0aa3Q95THEjL/3//qg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=vzHd9ZymIKRrpHQ363yCDAXeELoiD3z0sFBKN7UrzMw=;
+        b=AQpt/6nHSgT/vFIrn9K9VD/iVoY4CSYAEFCIvU3PbVzADO2eLRuNYvP3qcslY/3wu/
+         wjOaylgRpmncoXhUMMfnB+4cqnY8n3fVkisA78mZHFbduwOy+Ccp1sJ+uNbxsAxiExts
+         CZ88xPCgDnoYVnbrxoc2AgurjnSIfL1wdIHwJGnT3Vq3TpVmIpsKwhRjMR9K5IOMGpdV
+         0Y/AUqB5uLyaTZuYrlBxUApWBk50uSVqCBUq9YL0B+cGj9/3QcEBtSQ+9FiKbPtU/wuj
+         qikuzkQ5PVaiP0Ym1QzFKRAyAlCj3jYxTyPyyiS3R81EQU3f5JnZ7WvnJrYcxylqgaO4
+         CYDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=vzHd9ZymIKRrpHQ363yCDAXeELoiD3z0sFBKN7UrzMw=;
+        b=s9DpaXNi0jXrYrbjbNtY0wVR4uboREizNqzi2MWAD/i+Q5G3HWxnfzI5tReYEyHPRz
+         X0FjAqO6jvgLt7EJtNKyrHIITrqTLhweSuwPT2uCbi1wFNlgcMmwSKb5gdK7+hnNVvk3
+         gjlrBQ0Dz4c/UOpgqoxwscUoZwg6SVdcweTXOBfu3nsiuTtI4iOhngjN3oEvnUk8xRdc
+         awr1HQ7CAeg/+jOIxU9q7zBzFazkdpcBWh5qZK/UyOgPGacLvBKYf7HVHSA9Lpz69EDS
+         0LBJGJuYrYFjoFPGfnScAA6FH6JZfIltx94fO20tOdUWZvynd0g3hx/DdnJznKlUL72C
+         vXHQ==
+X-Gm-Message-State: AGi0PubH+UssxRCoS7glnn8ylvflOmt8OYscP/ZLkfl+W2gGGpF5NXjU
+        K0bHAFceG8MN1YU3H6eZPfZk5DUd
+X-Google-Smtp-Source: APiQypItOmlkKQHvj50bJZpfYlwZ2YcQNJn5IrjJdO8lXUr3oS3IMFG5+JBX7VwaIqln1KTFgoUoWw==
+X-Received: by 2002:aa7:9689:: with SMTP id f9mr12190591pfk.24.1588516799764;
+        Sun, 03 May 2020 07:39:59 -0700 (PDT)
+Received: from udknight.localhost ([59.57.158.27])
+        by smtp.gmail.com with ESMTPSA id nm22sm4359658pjb.38.2020.05.03.07.39.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 May 2020 07:39:59 -0700 (PDT)
+Received: from udknight.localhost (localhost [127.0.0.1])
+        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 043EbCUm013374;
+        Sun, 3 May 2020 22:37:12 +0800
+Received: (from root@localhost)
+        by udknight.localhost (8.14.9/8.14.9/Submit) id 043Eb1Mf013372;
+        Sun, 3 May 2020 22:37:01 +0800
+Date:   Sun, 3 May 2020 22:37:01 +0800
+From:   Wang YanQing <udknight@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+Subject: Re: [PATCH v5] checkpatch: add support to check 'Fixes:' tag format
+Message-ID: <20200503143700.GA12276@udknight>
+Mail-Followup-To: Wang YanQing <udknight@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Joe Perches <joe@perches.com>, Andy Whitcroft <apw@canonical.com>,
+        kernel-janitors@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+References: <20200503122938.GC10332@udknight>
+ <2d13b5c1-6745-23da-e22d-d56f0644edb2@web.de>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02a68f00-fec3-4342-1dd5-08d7ef6e05e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2020 14:26:51.8118
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ULwqFqKvMX1KzK/hZ1qcJn0tXZlv8msqcMSp3nKxCLPeV3VsTMv/KB4QcwBb/uGiIlfmBG5Ixg4LuhwwteItAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4078
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2d13b5c1-6745-23da-e22d-d56f0644edb2@web.de>
+User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
-> According to UFS specification, there are two WriteBooster mode of
-> operations: "LU dedicated buffer" mode and "shared buffer" mode.
-> In the "LU dedicated buffer" mode, the WriteBooster Buffer is
-> dedicated to a logical unit.
->=20
-> If the device supports the "LU dedicated buffer" mode, this mode is
-> configured by setting bWriteBoosterBufferType to 00h. The logical
-> unit WriteBooster Buffer size is configured by setting the
-> dLUNumWriteBoosterBufferAllocUnits field of the related Unit
-> Descriptor. Only a value greater than zero enables the WriteBooster
-> feature in the logical unit.
->=20
-> Modify ufshcd_wb_probe() as above description to support LU Dedicated
-> buffer mode.
->=20
-> Note that according to UFS 3.1 specification, the valid value of
-> bDeviceMaxWriteBoosterLUs parameter in Geometry Descriptor is 1,
-> which means at most one LUN can have WriteBooster buffer in "LU
-> dedicated buffer mode". Therefore this patch supports only one
-> LUN with WriteBooster enabled. All WriteBooster related sysfs nodes
-> are specifically mapped to the LUN with WriteBooster enabled in
-> LU Dedicated buffer mode.
->=20
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+On Sun, May 03, 2020 at 03:51:39PM +0200, Markus Elfring wrote:
+> 
+> 
+> …
+> > +					$diagnostics .= "The title is too abbreviated, at least half of orignial commit title is necessary.\n";
+> 
+> Will the word “original” be more appropriate here?
+> (Why did you not integrate my previous patch review comment?)
+
+Sorry, I miss it.
+
+This version patch has indentation issue, I will fix the typo
+with the indentation issue in next version (v6).
+
+Thanks.
+
+> 
+> 
+> …
+> > +				      "Please use git commit description style '$prefix <$sha1_length_min+ chars of sha1> (\"<$title>\")' - ie: '${init_char}" . substr($prefix, 1) .
+> > +				      " $id (\"$description\")'\n" . $diagnostics . $herecurr);
+> 
+> Can error diagnostics become multi-line?
+The length of "$description" is unknown, it is difficult to
+cook the error message into pretty format with any length of
+"$description", so let's keep it in current way.
+
+Thanks.
