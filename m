@@ -2,105 +2,125 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6494DC28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59CFC47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE4E21582
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:34:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="p8d5mAuZ"
+	by mail.kernel.org (Postfix) with ESMTP id 84B03205ED
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 11:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588505879;
+	bh=OGiegH7Y1FcxfJPta06unb8ZfPJOBLzHj+Vjm8Hkpx8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ARvATtIrFVnnHRBhR+rCtfolX7mUT58xn8lwFDBwLjyaLHeBrdpGYRcn/em9kIbBI
+	 lWNx06L6YzvViNONalebyIsUhJ1wBNRhzXNcmcrrZ88Ve493eiraMC0DFnwZulnslN
+	 BglQmAynHbcI9fmazX1a7dubOmMFTqPspkuVXDL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgECLes (ORCPT
+        id S1727909AbgECLh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 07:34:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:26994 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728250AbgECLef (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 07:34:35 -0400
-X-UUID: d02627f33e2e48d6afb1057e4835c8bb-20200503
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=yiBt59pGPa5af3Xa1ETUCF0N23dyPxrRMpkQTA3FRn4=;
-        b=p8d5mAuZGqRWsj8eL88U2oprcwtj7JoYw0Ly657R0GrIa3g08fursi+jehQW66+dTUjz1NQHpHXfjH2s7jgyyhGMwAQp90vlSQT84eulHyyDqNSkETMLaTRjs9QgMzPNz+D2zG5+rU24uCZKBIhyu9MvCuESVjV4rlMn01cRwQo=;
-X-UUID: d02627f33e2e48d6afb1057e4835c8bb-20200503
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 318592110; Sun, 03 May 2020 19:34:32 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Sun, 3 May 2020 19:34:15 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 3 May 2020 19:34:15 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <asutoshd@codeaurora.org>
-CC:     <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v5 0/8] scsi: ufs: support LU Dedicated buffer mode for WriteBooster
-Date:   Sun, 3 May 2020 19:34:07 +0800
-Message-ID: <20200503113415.21034-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 3 May 2020 07:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727792AbgECLh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 07:37:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD391205ED;
+        Sun,  3 May 2020 11:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588505877;
+        bh=OGiegH7Y1FcxfJPta06unb8ZfPJOBLzHj+Vjm8Hkpx8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vp6Y4Ep0lWA1Y4PuaJnYLumR21o8vn0i6qN0yzg0KEGVHySvo6IDkZwOGTDWN+dzb
+         +8wwpQfi1mPsQwurWMoEtqL27el0vr9YVFcGPfcXjPg1e6eyurKUaLE/KgQUxw2TaN
+         h7r/sjEF0kXYBQd8+gwnwPvNcB4gadGeY37nP3FI=
+Date:   Sun, 3 May 2020 12:37:53 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <gregkh@linuxfoundation.org>,
+        Dragos Bogdan <dragos.bogdan@analog.com>
+Subject: Re: [PATCH] staging: iio: ad2s1210: Fix SPI reading
+Message-ID: <20200503123753.29ea8be0@archlinux>
+In-Reply-To: <20200429072129.81504-1-alexandru.ardelean@analog.com>
+References: <20200429072129.81504-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 58E8FF7771C70D45612BE3D87281D2BCB3D15FDC75473F9B5857D265733F98992000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQpUaGlzIHBhdGNoc2V0IGFkZHMgTFUgZGVkaWNhdGVkIGJ1ZmZlciBtb2RlIHN1cHBvcnQg
-Zm9yIFdyaXRlQm9vc3Rlci4NCkluIHRoZSBtZWFud2hpbGUsIGVuYWJsZSBXcml0ZUJvb3N0ZXIg
-Y2FwYWJpbGl0eSBvbiBNZWRpYVRlayBVRlMgcGxhdGZvcm1zLg0KDQp2NCAtPiB2NToNCiAgLSBD
-aGVjayBMVU4gSUQgZm9yIGF2YWlsYWJsZSBXcml0ZUJvb3N0ZXIgYnVmZmVyIG9ubHkgZnJvbSAw
-IHRvIDcgYWNjb3JkaW5nIHRvIHNwZWMgKEF2cmkgQWx0bWFuKQ0KICAtIFNraXAgY2hlY2tpbmcg
-YW55IHBvc3NpYmxlIGVycm9ycyBmcm9tIHVmc2hjZF9yZWFkX3VuaXRfZGVzY19wYXJhbShoYmEs
-IGx1biwgVU5JVF9ERVNDX1BBUkFNX1dCX0JVRl9BTExPQ19VTklUUykgaW4gdWZzaGNkX3diX3By
-b2JlKCkgYW5kIGNoZWNrIHJldHVybmVkIGRfbHVfd2JfYnVmX2FsbG9jIChzaGFsbCBiZSB6ZXJv
-IGlmIGVycm9yIGhhcHBlbnMpIChBdnJpIEFsdG1hbikNCg0KdjMgLT4gdjQ6DQogIC0gSW50cm9k
-dWNlICJmaXh1cF9kZXZfcXVpcmtzIiB2b3BzIHRvIGFsbG93IHZlbmRvcnMgdG8gZml4IGFuZCBt
-b2RpZnkgZGV2aWNlIHF1aXJrcywgYW5kIHByb3ZpZGUgYW4gaW5pdGlhbCB2ZW5kb3Itc3BlY2lm
-aWMgZGV2aWNlIHF1aXJrIHRhYmxlIG9uIE1lZGlhVGVrIFVGUyBwbGF0Zm9ybXMNCiAgLSBBdm9p
-ZCByZWx5aW5nIG9uIGNvbW1vbiBkZXZpY2UgcXVpcmsgdGFibGUgZm9yIHByZS0zLjEgVUZTIGRl
-dmljZSB3aXRoIG5vbi1zdGFuZGFyZCBXcml0ZUJvb3N0ZXIgc3VwcG9ydCAoQ2FuIEd1bykNCiAg
-LSBGaXggY29tbWVudHMgZm9yIHVmc2hjZF93Yl9wcm9iZSgpIChDYW4gR3VvKQ0KICAtIE1ha2Ug
-dWZzaGNkX3diX2dldF9mbGFnX2luZGV4KCkgaW5saW5lIGFuZCBmaXggdWZzaGNkX2lzX3diX2Zs
-YWdzKCkgKEF2cmkgQWx0bWFuKQ0KDQp2MiAtPiB2MzoNCiAgLSBJbnRyb2R1Y2UgYSBkZXZpY2Ug
-cXVpcmsgdG8gc3VwcG9ydCBXcml0ZUJvb3N0ZXIgaW4gcHJlLTMuMSBVRlMgZGV2aWNlcyAoQXZy
-aSBBbHRtYW4pDQogIC0gRml4IFdyaXRlQm9vc3RlciByZWxhdGVkIHN5c2ZzIG5vZGVzLiBOb3cg
-YWxsIFdyaXRlQm9vc3RlciByZWxhdGVkIHN5c2ZzIG5vZGVzIGFyZSBzcGVjaWZpY2FsbHkgbWFw
-cGVkIHRvIHRoZSBMVU4gd2l0aCBXcml0ZUJvb3N0ZXIgZW5hYmxlZCBpbiBMVSBEZWRpY2F0ZWQg
-YnVmZmVyIG1vZGUgKEF2cmkgQWx0bWFuKQ0KDQp2MSAtPiB2MjoNCiAgLSBDaGFuZ2UgdGhlIGRl
-ZmluaXRpb24gbmFtZSBvZiBXcml0ZUJvb3N0ZXIgYnVmZmVyIG1vZGUgdG8gY29ycmVzcG9uZCB0
-byBzcGVjaWZpY2F0aW9uIChCZWFuIEh1bykNCiAgLSBBZGQgcGF0Y2ggIzU6ICJzY3NpOiB1ZnM6
-IGNsZWFudXAgV3JpdGVCb29zdGVyIGZlYXR1cmUiDQoNClN0YW5sZXkgQ2h1ICg4KToNCiAgc2Nz
-aTogdWZzOiBlbmFibGUgV3JpdGVCb29zdGVyIG9uIHNvbWUgcHJlLTMuMSBVRlMgZGV2aWNlcw0K
-ICBzY3NpOiB1ZnM6IGludHJvZHVjZSBmaXh1cF9kZXZfcXVpcmtzIHZvcHMNCiAgc2NzaTogdWZz
-OiBleHBvcnQgdWZzX2ZpeHVwX2RldmljZV9zZXR1cCgpIGZ1bmN0aW9uDQogIHNjc2k6IHVmcy1t
-ZWRpYXRlazogYWRkIGZpeHVwX2Rldl9xdWlya3Mgdm9wcw0KICBzY3NpOiB1ZnM6IGFkZCAiaW5k
-ZXgiIGluIHBhcmFtZXRlciBsaXN0IG9mIHVmc2hjZF9xdWVyeV9mbGFnKCkNCiAgc2NzaTogdWZz
-OiBhZGQgTFUgRGVkaWNhdGVkIGJ1ZmZlciBtb2RlIHN1cHBvcnQgZm9yIFdyaXRlQm9vc3Rlcg0K
-ICBzY3NpOiB1ZnMtbWVkaWF0ZWs6IGVuYWJsZSBXcml0ZUJvb3N0ZXIgY2FwYWJpbGl0eQ0KICBz
-Y3NpOiB1ZnM6IGNsZWFudXAgV3JpdGVCb29zdGVyIGZlYXR1cmUNCg0KIGRyaXZlcnMvc2NzaS91
-ZnMvdWZzLW1lZGlhdGVrLmMgfCAgMjUgKysrKy0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1zeXNm
-cy5jICAgIHwgIDExICsrLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzLmggICAgICAgICAgfCAgMTAg
-KysNCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc19xdWlya3MuaCAgIHwgICA3ICsrDQogZHJpdmVycy9z
-Y3NpL3Vmcy91ZnNoY2QuYyAgICAgICB8IDE1NiArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
-LS0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmggICAgICAgfCAgMjAgKysrLQ0KIDYgZmls
-ZXMgY2hhbmdlZCwgMTY3IGluc2VydGlvbnMoKyksIDYyIGRlbGV0aW9ucygtKQ0KDQotLSANCjIu
-MTguMA0K
+On Wed, 29 Apr 2020 10:21:29 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+
+> From: Dragos Bogdan <dragos.bogdan@analog.com>
+> 
+> If the serial interface is used, the 8-bit address should be latched using
+> the rising edge of the WR/FSYNC signal.
+> 
+> This basically means that a CS change is required between the first byte
+> sent, and the second one.
+> This change splits the single-transfer transfer of 2 bytes into 2 transfers
+> with a single byte, and CS change in-between.
+> 
+> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Fixes tag would have been nice. I've had a go by picking a patch where I
+refactored this code, but I think the issue probably predates that one.
+Its in 2011 so I doubt anyone will try going past that with backports ;)
+
+Applied to the fixes-togreg branch of iio.git and marked for stable.
+
+I'm guessing this means you have hardware and hope to get this one out
+of staging shortly? *crosses fingers* :)
+
+Jonathan
+
+> ---
+>  drivers/staging/iio/resolver/ad2s1210.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/resolver/ad2s1210.c b/drivers/staging/iio/resolver/ad2s1210.c
+> index 4b25a3a314ed..ed404355ea4c 100644
+> --- a/drivers/staging/iio/resolver/ad2s1210.c
+> +++ b/drivers/staging/iio/resolver/ad2s1210.c
+> @@ -130,17 +130,24 @@ static int ad2s1210_config_write(struct ad2s1210_state *st, u8 data)
+>  static int ad2s1210_config_read(struct ad2s1210_state *st,
+>  				unsigned char address)
+>  {
+> -	struct spi_transfer xfer = {
+> -		.len = 2,
+> -		.rx_buf = st->rx,
+> -		.tx_buf = st->tx,
+> +	struct spi_transfer xfers[] = {
+> +		{
+> +			.len = 1,
+> +			.rx_buf = &st->rx[0],
+> +			.tx_buf = &st->tx[0],
+> +			.cs_change = 1,
+> +		}, {
+> +			.len = 1,
+> +			.rx_buf = &st->rx[1],
+> +			.tx_buf = &st->tx[1],
+> +		},
+>  	};
+>  	int ret = 0;
+>  
+>  	ad2s1210_set_mode(MOD_CONFIG, st);
+>  	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
+>  	st->tx[1] = AD2S1210_REG_FAULT;
+> -	ret = spi_sync_transfer(st->sdev, &xfer, 1);
+> +	ret = spi_sync_transfer(st->sdev, xfers, 2);
+>  	if (ret < 0)
+>  		return ret;
+>  
 
