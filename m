@@ -2,102 +2,126 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1242C4724C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D33C4724C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A616520757
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:05:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588511159;
-	bh=g/KpiyBdHIGtCyxIHLZ2FLL0wKiuJWDBdXJg+ibzx3c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kgZ79wgMVAf+hZzGk8s8TF+9dujv9T5/6Uh5nWMDxiGy0TUBUR9bCyz1K13XeLqrr
-	 eb7su1DKbr0MNLX+PLW/Sa/1xbbpUdI9/eq2Pf0wqTh47c24MK3JX7xAWhAkE8fo6w
-	 h4sfAk5r36RUFL/Z3IQcp54TvU85xvT/peQVqrx4=
+	by mail.kernel.org (Postfix) with ESMTP id 5F46F20757
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 13:10:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrHOkhy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgECNF7 (ORCPT
+        id S1728548AbgECNKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 09:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbgECNF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 09:05:58 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765892073E;
-        Sun,  3 May 2020 13:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588511158;
-        bh=g/KpiyBdHIGtCyxIHLZ2FLL0wKiuJWDBdXJg+ibzx3c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A8nlAR0vGepTUJ9VOLKP4r7SrHpnVfuIxCyC68n64Lba5mNZ/BhjfsHckF3Yaurvb
-         shGrDYlCohh9S3T5Ynfho5Ec3Es7fsfrHiMA4KBBttZUo5yQmeMhMsy6OcitGSxG6/
-         EkE+ceu8WsRkn//4og72ELzyXU49Khr9L/GQV1rA=
-Date:   Sun, 3 May 2020 14:05:53 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
-        tglx@linutronix.de, allison@lohutok.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: bmp280: fix compensation of humidity
-Message-ID: <20200503140553.2152709b@archlinux>
-In-Reply-To: <20200429184852.GA17547@arbad>
-References: <20200429184852.GA17547@arbad>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 3 May 2020 09:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728378AbgECNKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 09:10:31 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14A4C061A0C;
+        Sun,  3 May 2020 06:10:31 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id z6so5673111plk.10;
+        Sun, 03 May 2020 06:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=HPO6k65ImqEnfaL+we0qFzrQP+hQAQ35nSDiLuw05GM=;
+        b=UrHOkhy6JyWGSEgUshCOl6LbN9yc1T4DXgCNfoJk6ma5wapSCnidGaXmB5tn5lPaS5
+         F8CE7aJUxCyE8ZXDEeIvDbxsC00Ufqv8bbinoyJoGfRR/TOVmWUgsEyp3BsSXIvS/zW9
+         5abCqAsttz4CaJZAmqY8i+ztbtBS2sEXEztP7ohdTjQ8W6dlX5uJ1pSQMJsl3i2scNRe
+         DeOkl7D4uw05ssqTy8xi6JZfGCOCR+C6yhBA4vZZL4NtgSnZCn3wP9tb7f15lFtnFi46
+         mJA1gMu4WbJbuNSIyln/u1dagk8StI8jvT7Vvbjvv6xbFJ5q4yydqQ1RUrQjUAFp3p5t
+         qexA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=HPO6k65ImqEnfaL+we0qFzrQP+hQAQ35nSDiLuw05GM=;
+        b=CahZqPsps0oJakDFJCNS15IkQr3+ZbV96BA+Uek2IkwtpEgU2MgkcuLXH34RlDz55y
+         TiRM5ktqxwhjYoH0LNPAeQxeIZg4VSEradxSwJMEwic+Fwt50EHuqQYOONNw9LXmkQAJ
+         1LHiAiNngTRFR8aguPn1BsZtGsD5UExvpsptMXf0W7ftzBqd/QvW7yhLDukgUVMqSC0x
+         d2BcdSZVJ99HLlqllQcBu9hOY4nalj0BVKk/NRp0lpfl/J39S1NqjvijX6yI/Vd27yns
+         wp6DIiujalitQ5P3r9aS56AGrWQ5KNCInmiGAESKIr8ZeGggSSew6+O3Lcyirpvl60AV
+         3RRQ==
+X-Gm-Message-State: AGi0PuYkBNEP23uIL7ePiqr4NptA9t5ZcdLbIf4mILJorwVyyd4UqpBg
+        BNzkwaO0qFbFar0iSgn97zA=
+X-Google-Smtp-Source: APiQypK2ml7rYX+bhpT3/q+Z4ibV3Cp+kU63Iv1q3sjMj2drC/Z7qW/MZIImiOkLLzkxg+7b2LUqtw==
+X-Received: by 2002:a17:902:b402:: with SMTP id x2mr13602667plr.42.1588511431056;
+        Sun, 03 May 2020 06:10:31 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:8b:8746:9817:f6e9:c9f8:6a59])
+        by smtp.gmail.com with ESMTPSA id o63sm4386802pjb.40.2020.05.03.06.10.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 06:10:30 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: img-scb: Use devm_platform_ioremap_resource and remove superfluous error message.
+Date:   Sun,  3 May 2020 18:40:18 +0530
+Message-Id: <20200503131021.16575-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 20:48:54 +0200
-Andreas Klinger <ak@it-klinger.de> wrote:
+Use the helper function that wraps the calls to
+platform_get_resource() and devm_ioremap_resource()
+together.
 
-> Output of humidity compensation is limited to the range between 0 and
-> 100 percent. Add this to the compensation formula as described in the
-> datasheet chapter 4.2.3.
+The function platform_get_irq can log an error by itself.
+Omit a redundant message for exception handling in the
+calling function.
 
-More details needed...
+Suggested by coccinelle.
 
-1. Fixes tag
-2. What is the result of this not being clamped?  What happens if I set
-a value outside that range?
-> 
-> Change to v1:
-> Thanks to Tomasz for suggesting the easier to use function clamp_val()
-> which is now used.
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+---
+ drivers/i2c/busses/i2c-img-scb.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Change log belongs below the ---
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-
-> ---
-
-Here for changelog.
-
->  drivers/iio/pressure/bmp280-core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-> index 29c209cc1108..297ee2205bf6 100644
-> --- a/drivers/iio/pressure/bmp280-core.c
-> +++ b/drivers/iio/pressure/bmp280-core.c
-> @@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
->  		+ (s32)2097152) * calib->H2 + 8192) >> 14);
->  	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
->  
-> +	var = clamp_val(var, 0, 419430400);
-> +
->  	return var >> 12;
->  };
->  
+diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+index 422097a31c95..98a89301ed2a 100644
+--- a/drivers/i2c/busses/i2c-img-scb.c
++++ b/drivers/i2c/busses/i2c-img-scb.c
+@@ -1330,7 +1330,6 @@ static int img_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct img_i2c *i2c;
+-	struct resource *res;
+ 	int irq, ret;
+ 	u32 val;
+ 
+@@ -1338,16 +1337,13 @@ static int img_i2c_probe(struct platform_device *pdev)
+ 	if (!i2c)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	i2c->base = devm_ioremap_resource(&pdev->dev, res);
++	i2c->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(i2c->base))
+ 		return PTR_ERR(i2c->base);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't get irq number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+ 	if (IS_ERR(i2c->sys_clk)) {
+-- 
+2.17.1
 
