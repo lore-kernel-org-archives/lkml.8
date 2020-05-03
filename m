@@ -2,201 +2,147 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1725CC47247
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4BCC47247
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D0A21655
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588518361;
-	bh=U46rvfOuCR6wuzfSXdF1O1HT2BtfPvjN87TVZ2VG8QI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ao1mEaGXe+/DWjP/mBpDNudfXe/Vk7uBveChR2aJcQ8SzMV70WXvWQEAVtNs4pbIF
-	 ePjBVwVtC8imy2Qx9BeRFik4GhgzfPt9FPfok9AcV5Ofhmv18U3PN9RQJvGeJQ4phb
-	 GN0NWPMWTS1XcE0jBE7b5FUVA0NrPXxR6y4+dPRw=
+	by mail.kernel.org (Postfix) with ESMTP id 965F6208DB
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 15:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHxCS3h0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgECPGA (ORCPT
+        id S1728768AbgECPJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 11:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728706AbgECPF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 11:05:59 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEA4E205C9;
-        Sun,  3 May 2020 15:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588518358;
-        bh=U46rvfOuCR6wuzfSXdF1O1HT2BtfPvjN87TVZ2VG8QI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JvyCFCzSgu+w0KIjd/g45CSgx7651ThPJQ1J4TyIfDjboevolLKli2nOSl4iDqNMy
-         /UMekt/iWBrT/pASJAA9XOqiJ5NAwACd+qL4L3FFLk4dVo1gZbwwQhdIWKGJGgHct6
-         n481JeLQp4+PFWCSuFxINcLgJCnEJjz7pY0gY4ic=
-Date:   Sun, 3 May 2020 16:05:52 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        kamel.bouhara@bootlin.com, gwendal@chromium.org,
-        david@lechnology.com, felipe.balbi@linux.intel.com,
-        fabien.lahoudere@collabora.com, linux-iio@vger.kernel.org,
+        Sun, 3 May 2020 11:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728706AbgECPJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 11:09:09 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05A5C061A0E;
+        Sun,  3 May 2020 08:09:08 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id t9so2571199pjw.0;
+        Sun, 03 May 2020 08:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RQ4xQUOUYU1ceGWYZbAOlK79wRaKTSufpi1Gmn5srvE=;
+        b=HHxCS3h0tCUtMIpNqidypzzKNVbIg4HTknvVTUhXOOFToBYuJjy5fuaKgJytnyXvhw
+         wPPFOdwwDTAHPb9hlfGaVte38apN/7r0EwGrPL94UZ5iAvdiqpMvHE1ESqdP6mEK05i1
+         L4smFhld6gwL7d1Dx3Ylc8D0PcTJXGjD1xME5y8C0IZIhyU2SF8ijK72e9mK4u5CYHMV
+         nDu0CEAqK/7Zckq/eMIv5Az7t1V40SZ0b+zWO5wl8hEQhrzPlSq3qM4ZprVjsZql22FN
+         lsZWJ3Rcz4frSEKjcJLqlXxGbcT2bomS7og1SNcnJwCtOQmrDotUOKABM/hqWCVavDGA
+         QGpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RQ4xQUOUYU1ceGWYZbAOlK79wRaKTSufpi1Gmn5srvE=;
+        b=B9o+QHs1uCjtgzhQouZGIZ5mt6ZArlB+89S2sKpH5WMufqns7kXypvd+u2JHq1GGtl
+         s+cRgeaUAqr/VstFqtn4pCaF/HHqAfVfRY+3hF79B636XkI8/axCeZgvw7ASfvIhfPU2
+         2lmcX0SSZr3FpympxxuwFIIfHKnpWdyUFtTwEh5pj7dwq3weBakadk0AqjK3ZvYRzV1f
+         wNr8qY5aUVxos1Q2akl1tEGTqEklWXaAM/IlNggt5s33dVJPDsBmflTbzpzBXTpjY299
+         UAA9CA5peftDuwQ564m/DKs4zdCKQhSvx1nNBmquG1xDsN7pKRrp7ZtykEqURRkg0aSH
+         ClxQ==
+X-Gm-Message-State: AGi0PuajpLRFgcRxWWxQD4VL40seN/bhP+W5g2VlOblNp6YdqpjMD+tW
+        K671ZTFDDI57whVJt1rTgAs=
+X-Google-Smtp-Source: APiQypJGZ93YHeSypddIUZP/4UQ1paeTkCVIcHTsPPrd0xrTLyo3Bk+T4hlWFt7ruAIhypS4ZsMYhg==
+X-Received: by 2002:a17:90a:1912:: with SMTP id 18mr12211496pjg.115.1588518548356;
+        Sun, 03 May 2020 08:09:08 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id cv21sm4584481pjb.23.2020.05.03.08.09.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 May 2020 08:09:07 -0700 (PDT)
+Date:   Sun, 3 May 2020 08:09:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Subject: Re: [PATCH 0/4] Introduce the Counter character device interface
-Message-ID: <20200503160552.7b45a0ac@archlinux>
-In-Reply-To: <20200501154519.GA4581@icarus>
-References: <cover.1588176662.git.vilhelm.gray@gmail.com>
-        <20200430201345.GX51277@piout.net>
-        <20200501154519.GA4581@icarus>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: Re: [PATCH 03/33] efi/libstub: Unify EFI call wrappers for non-x86
+Message-ID: <20200503150906.GA57805@roeck-us.net>
+References: <20200424130531.30518-1-ardb@kernel.org>
+ <20200424130531.30518-4-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424130531.30518-4-ardb@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 May 2020 11:46:10 -0400
-William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+Hi,
 
-> On Thu, Apr 30, 2020 at 10:13:45PM +0200, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 29/04/2020 14:11:34-0400, William Breathitt Gray wrote:  
-> > > Over the past couple years we have noticed some shortcomings with the
-> > > Counter sysfs interface. Although useful in the majority of situations,
-> > > there are certain use-cases where interacting through sysfs attributes
-> > > can become cumbersome and inefficient. A desire to support more advanced
-> > > functionality such as timestamps, multi-axis positioning tables, and
-> > > other such latency-sensitive applications, has motivated a reevaluation
-> > > of the Counter subsystem. I believe a character device interface will be
-> > > helpful for this more niche area of counter device use.
-> > > 
-> > > To quell any concerns from the offset: this patchset makes no changes to
-> > > the existing Counter sysfs userspace interface -- existing userspace
-> > > applications will continue to work with no modifications necessary. I
-> > > request that driver maintainers please test their applications to verify
-> > > that this is true, and report any discrepancies if they arise.
-> > >   
-> > 
-> > On that topic, I'm wondering why the counter subsystem uses /sys/bus
-> > instead of /sys/class that would be more natural for a class of devices.
-> > I can't see how counters would be considered busses. I think you should
-> > consider moving it over to /sys/class (even if deprecating
-> > /sys/bus/counter will be long).  
+On Fri, Apr 24, 2020 at 03:05:01PM +0200, Ard Biesheuvel wrote:
+> We have wrappers around EFI calls so that x86 can define special
+> versions for mixed mode, while all other architectures can use the
+> same simple definition that just issues the call directly.
+> In preparation for the arrival of yet another architecture that doesn't
+> need anything special here (RISC-V), let's move the default definition
+> into a shared header.
 > 
-> At the time I wasn't quite familiar with sysfs development so I was
-> following the iio sysfs code rather closely. However, I see now that
-> you're probably right: this isn't really a bus but rather a collection
-> of various types of counters -- i.e. a class of devices.
-> 
-> Perhaps I should migrate this then to /sys/class/counter. Of course, the
-> /sys/bus/counter location will have to remain for compatibility with
-> existing applications, but I think a simple symlink to the new
-> /sys/class/counter location should suffice for that.
-> 
-> If anyone sees an issue with this give me a heads up.
-> 
-> > > Interaction with Counter character devices occurs via ioctl commands.
-> > > This allows userspace applications to access and set counter data using
-> > > native C datatypes rather than working through string translations.
-> > >   
-> > 
-> > I agree with David that you should consider using read to retrieve the
-> > counter data as this will simplify interrupt handling/polling and
-> > blocking/non-blocking reads can be used by an application. ABI wise,
-> > this can also be a good move as you could always consider having an
-> > ioctl requesting a specific format when reading the device so you are
-> > not stuck with the initial format you are going to choose.  
-> 
-> My hesitation to implement support for read/write calls is due to a
-> concern that we will end up with various incompatible formats between
-> counter drivers (thus requiring users to have intimate knowledge of the
-> drivers and therefore defeating the purpose of a subsystem). However, if
-> we can standardize on a format that is flexible enough to work for all
-> counter drivers, then read/write calls should not be a problem.
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Absolutely.  So the different approaches that have been taken to this
-approach...
+This patch causes an immediate reboot in linux-next when booting
+in qemu with an efi32 bios. Bisect log attached.
 
-1) IIO, describe the format in sysfs.  Highest performance option but
-   heavily constrained in what the data flow can be. Was it a good idea?
-   I think the jury is still out on that after 11 or more years :)
+Qemu command line:
 
-2) Input (evdev) - fixed length self describing records. High overhead,
-   inflexible format, but just fine for the fairly sensible sorts of things
-   that make up human input.
+qemu-system-x86_64 -kernel arch/x86/boot/bzImage -m 1G \
+	-no-reboot -snapshot \
+	-bios OVMF-pure-efi-32.fd \
+	-drive file=rootfs.ext2,format=raw \
+	--append 'earlycon=uart8250,io,0x3f8,9600n8 panic=-1 root=/dev/sda console=ttyS0' \
+	-nographic
 
-   https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/input.h#L28
+The same command succeeds with OVMF-pure-efi-64.fd.
 
-> 
-> I think a general format could be possible. For example, the counter
-> character device can return a standard header data at the start which
-> provides general information about the counter device: number of
-> counters, number or signals, number of extensions, etc. From this
-> information, offsets can be computed (or perhaps provided by the device)
-> to where the binary data for the count, extension, etc., can be read or
-> written. Interrupts can then be handled as blocking reads, as could
-> other types of events we implement.
-> 
-> Would something like this work well?
+Bisect log attached.
 
-It's kind of somewhere between IIO and Input.  Firstly think about what
-you might want to actually have out.  Mostly I'm thinking timestamp + count
-value from devices that self clock.  Perhaps additional flag to indicate
-a preset has been hit.
+File locations:
+	https://github.com/groeck/linux-build-test/blob/master/rootfs/firmware/OVMF-pure-efi-32.fd
+	https://github.com/groeck/linux-build-test/blob/master/rootfs/x86_64/rootfs.ext2.gz
 
-Variable length records are a pain. Reality is neither IIO* nor input
-actually uses them (*once running :) ).  Fixed length lets you push it
-through a kfifo to deal with userspace being slow to read it.
+Guenter
 
-So I'd think about doing it the input way and using multiple records
-for multiple counters.  Timestamp can be used to work out they were at the
-same instant (or various other options such as an 'end' flag).
-
-More fun occurs if you want to start controlling 'triggers' etc as that
-leads to an explosion of the control interface that we still haven't gotten
-fully sorted in IIO.
-
-Good luck :)
-
-Jonathan
-
-> 
-> William Breathitt Gray
-> 
-> > > 2. Should device driver callbacks return int or long? I sometimes see
-> > >    error values returned as long (e.g. PTR_ERR(), the file_operations
-> > >    structure's ioctl callbacks, etc.); when is it necessary to return
-> > >    long as opposed to int?
-> > >   
-> > 
-> > You should use a long if you ever have to return a point as it is
-> > guaranteed to have the correct size. Else, just stick to an int if you
-> > are not going to overflow it.
-> >   
-> > > 3. I only implemented the unlocked_ioctl callback. Should I implement a
-> > >    compat_ioctl callback as well?
-> > >   
-> > 
-> > The compat_ioctl is to handle 32bit userspace running on a 64bit kernel.
-> > If your structures have the same size in both cases, then you don't have
-> > to implement compat_ioctl.
-> > 
-> > Have a look at Documentation/driver-api/ioctl.rst
-> > 
-> > 
-> > -- 
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com  
-
+---
+# bad: [fb9d670f57e3f6478602328bbbf71138be06ca4f] Add linux-next specific files for 20200501
+# good: [6a8b55ed4056ea5559ebe4f6a4b247f627870d4c] Linux 5.7-rc3
+git bisect start 'HEAD' 'v5.7-rc3'
+# good: [068b80b68a670f0b17288c8a3d1ee751f35162ab] Merge remote-tracking branch 'drm/drm-next'
+git bisect good 068b80b68a670f0b17288c8a3d1ee751f35162ab
+# bad: [46c70fc6a3ac35cd72ddad248dcbe4eee716d2a5] Merge remote-tracking branch 'drivers-x86/for-next'
+git bisect bad 46c70fc6a3ac35cd72ddad248dcbe4eee716d2a5
+# good: [3fc893798e1ca8276eaf2b0e3210f2ff927f0c80] Merge remote-tracking branch 'integrity/next-integrity'
+git bisect good 3fc893798e1ca8276eaf2b0e3210f2ff927f0c80
+# bad: [88188475d4d3fd10edabb172a7dc71e4bf997c19] Merge remote-tracking branch 'tip/auto-latest'
+git bisect bad 88188475d4d3fd10edabb172a7dc71e4bf997c19
+# good: [a51a8decbc07a511d9a05b2aff93bd8b10bfe812] Merge branch 'objtool/core'
+git bisect good a51a8decbc07a511d9a05b2aff93bd8b10bfe812
+# good: [12414a49ebe9d6584f4942a4bfd98ce5c34e034b] Merge remote-tracking branch 'spi/for-next'
+git bisect good 12414a49ebe9d6584f4942a4bfd98ce5c34e034b
+# good: [703b321501c95c658275fd76775282fe45989641] kcsan: Introduce ASSERT_EXCLUSIVE_BITS(var, mask)
+git bisect good 703b321501c95c658275fd76775282fe45989641
+# bad: [e71356fe29e7bd5cd5e07800d4940a7481fb0854] efi/libstub/arm64: Switch to ordinary page allocator for kernel image
+git bisect bad e71356fe29e7bd5cd5e07800d4940a7481fb0854
+# bad: [9867fc9de6a6a7a54edb2c43540c6db226e84a14] efi/gop: Use helper macros for find_bits
+git bisect bad 9867fc9de6a6a7a54edb2c43540c6db226e84a14
+# bad: [8cd207973c37175bf44727e28aa9c74fcf18de5e] efi/gop: Move check for framebuffer before con_out
+git bisect bad 8cd207973c37175bf44727e28aa9c74fcf18de5e
+# bad: [22090f84bc3f8081e0ec180ccaedc85820085376] efi/libstub: unify EFI call wrappers for non-x86
+git bisect bad 22090f84bc3f8081e0ec180ccaedc85820085376
+# good: [cf6b83664895a5c7e97710df282e220bd047f0f5] efi/libstub: Make initrd file loader configurable
+git bisect good cf6b83664895a5c7e97710df282e220bd047f0f5
+# first bad commit: [22090f84bc3f8081e0ec180ccaedc85820085376] efi/libstub: unify EFI call wrappers for non-x86
