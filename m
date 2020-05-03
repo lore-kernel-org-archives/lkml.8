@@ -2,138 +2,102 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EE4C28CBC
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BF2C4724C
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC432071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A17A20661
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 12:48:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TBEjeQq+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPT8Hm7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgECMmU (ORCPT
+        id S1728467AbgECMsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 08:42:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56586 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728631AbgECMl2 (ORCPT
+        Sun, 3 May 2020 08:48:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgECMsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 08:41:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 043CfPcG038609;
-        Sun, 3 May 2020 07:41:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588509685;
-        bh=cpHOcxwnjho3INKT3sFhD9XlStpAaDQZ/SjiJomkzhM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TBEjeQq+YYj2LF1Df1pX6FQWmHJ+kXkhUGRDOCb72OAvBFbbyTRa9EJd1KDrtY/sK
-         vN7ADEaNS6l9qp6atya/f7rvqxTFQr0ay4CXPn3Zc0V1nJVj7S4ImEvzZo6mi10Mmt
-         JMj2exrGB5YrFTeBMv6+5jcmYoQHYKzVmVS5Jl1k=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 043CfPu1025731
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 3 May 2020 07:41:25 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 3 May
- 2020 07:41:25 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sun, 3 May 2020 07:41:25 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 043CfP33019170;
-        Sun, 3 May 2020 07:41:25 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v24 09/16] ARM: dts: ste-href: Add reg property to the LP5521 channel nodes
-Date:   Sun, 3 May 2020 07:32:08 -0500
-Message-ID: <20200503123215.6449-10-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200503123215.6449-1-dmurphy@ti.com>
-References: <20200503123215.6449-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Sun, 3 May 2020 08:48:43 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A99EC061A0C;
+        Sun,  3 May 2020 05:48:43 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id z6so5662365plk.10;
+        Sun, 03 May 2020 05:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=A+kYgIXhPpnbF20dGR3Ntj0HbDnG3Ux93VPlAZngCjU=;
+        b=MPT8Hm7y6XBLc1Ir4CqSlY4SiOkYFzLSaGCfuSOanZtxlJpvI3fIY2RudVU+lWQ3zR
+         6OWa+RjbVT9Y1skDUPZ2JYzAzw4eJ6HSusIjM/c4ggSUtfxy8CjCG6FTJgASzzbJTots
+         g5ar6isfGMFKZTAaP5nPtp8qGdyE+gmieZHbXMguPrC+x5H4adAiE1fnjJ/t60D03jdK
+         W345NnqJDl1QnJ+5kU6tCxutGXBbEjahuqUi8OuAJQt8TdIgZyayKBsTOnlDyMeucjgX
+         ijxCns7sthRs/ICd1zGXIzf4OJQZEnIt2OKj+DZ+S2dFNuHtgCkamcrEBBTknB6Y0lrG
+         i09A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A+kYgIXhPpnbF20dGR3Ntj0HbDnG3Ux93VPlAZngCjU=;
+        b=cRdYFYwHVrXFtmfsz7VEPhOF1lzmu+yJsMieXI3ACZsVHWnNBYvUhxZ0wpc2L7vSKf
+         eR0yq6ILXx7Svrg7CIod15LoivKUp5UvbDt2eYtdlAOOJW/vfhZfunkfiqvjlIImhBwG
+         j71tkFZ+ad834ZKd1wGgo5PugY6niyMyWg9jyzx60B7VeJTQUh83cYoDHLAfcjClbXPk
+         mTofQNwFYjBd1EoWBdemSa1bf5FUizw00CpsZQlvZyu9AH3Thg7/OVB9N1M99GbC9J2g
+         k5MTJqjZkyq7Sq/kG1AmKBNR7oxSwG1vCYeLdUHgJPIJnjQLpXzt8HBharfJ3hXdV2Le
+         RUZQ==
+X-Gm-Message-State: AGi0PuY/wrfIu4MLTaWCKSH6OlNEJlHiUZNavoD0Zxa+qoJMOJOLMLW1
+        rTfXi+nur2wf5gRAMxot/umMJzRb
+X-Google-Smtp-Source: APiQypKNfST86XEioxy/4zzUNsERmVfmrQVn//+BjF2IG6siv5KWr7f3fC05Mvn6dNpXGvu4g/tIqw==
+X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr11195240pjk.58.1588510122936;
+        Sun, 03 May 2020 05:48:42 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:8b:8746:9817:f6e9:c9f8:6a59])
+        by smtp.gmail.com with ESMTPSA id z1sm4245123pjn.43.2020.05.03.05.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 05:48:42 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     aishwaryarj100@gmail.com
+Subject: [PATCH] i2c: altera: Remove superfluous error message in altr_i2c_probe()
+Date:   Sun,  3 May 2020 18:18:33 +0530
+Message-Id: <20200503124833.15070-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reg property to each channel node.  This update is
-to accomodate the multicolor framework.  In addition to the
-accomodation this allows the LEDs to be placed on any channel
-and allow designs to skip channels as opposed to requiring
-sequential order.
+The function platform_get_irq can log an error by itself.
+This omit a redundant message for exception handling in the
+calling function.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Suggested by Coccinelle.
+
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 ---
- arch/arm/boot/dts/ste-href.dtsi | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-altera.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-href.dtsi b/arch/arm/boot/dts/ste-href.dtsi
-index 33e3b0b3c53d..ff47cbf6ed3b 100644
---- a/arch/arm/boot/dts/ste-href.dtsi
-+++ b/arch/arm/boot/dts/ste-href.dtsi
-@@ -58,16 +58,21 @@ lp5521@33 {
- 				reg = <0x33>;
- 				label = "lp5521_pri";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 					linux,default-trigger = "heartbeat";
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
-@@ -77,15 +82,20 @@ lp5521@34 {
- 				reg = <0x34>;
- 				label = "lp5521_sec";
- 				clock-mode = /bits/ 8 <2>;
--				chan0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				chan@0 {
-+					reg = <0>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan1 {
-+				chan@1 {
-+					reg = <1>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
--				chan2 {
-+				chan@2 {
-+					reg = <2>;
- 					led-cur = /bits/ 8 <0x2f>;
- 					max-cur = /bits/ 8 <0x5f>;
- 				};
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index f5c00f903df3..af6985f0ae63 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -395,10 +395,8 @@ static int altr_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(idev->base);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "missing interrupt resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	idev->i2c_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(idev->i2c_clk)) {
 -- 
-2.25.1
+2.17.1
 
