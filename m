@@ -2,106 +2,194 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20545C47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B74C47257
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1B42054F
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rsR9nTkg"
+	by mail.kernel.org (Postfix) with ESMTP id E0F312054F
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgECUA5 (ORCPT
+        id S1729091AbgECUCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 16:00:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49810 "EHLO
+        Sun, 3 May 2020 16:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgECUA5 (ORCPT
+        with ESMTP id S1729005AbgECUCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 16:00:57 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE787C061A0E;
-        Sun,  3 May 2020 13:00:56 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x17so18423584wrt.5;
-        Sun, 03 May 2020 13:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=QqRdtHtAi8l/8c9aZkszbUa8kmMqeeh3ZFLZmpwUXmw=;
-        b=rsR9nTkgNRQ+kOj8RXQMdPcb5bI+0UB8BKi8B9ep9Fqf9BS/e8KvpLxdg1mVz4ugaU
-         4APvVLy9nGW/n6+rSDItFmATfsqLJLl/9LICi9eMNdXubXIXs57PsYy93bHAlhPj4mp5
-         d1S6ahLhalEtMEIv1t3YNmwqb55REwYOa3Im+f6Daq5d+8T0T0CSmzfFQSXALCv0EeZP
-         0KaPRpqYq+BPrpvJP8L1mE/H7707aUlh2To2vNkqES7iOLcW17IKBq6fBR45BHcFRLlp
-         0F9RrnhzOnUxXvegK2atG9ikLrHzK5Piz/vCm5cAmlrT58VOwNEDZTGp0vd6RX2PwKCL
-         79dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=QqRdtHtAi8l/8c9aZkszbUa8kmMqeeh3ZFLZmpwUXmw=;
-        b=Ldw0+G5+nGY42Om1gbI7AUsF8AHFzR7R49GSbpm5StUWB6ss0q4VVcBGP5XMJSeuaB
-         3HEUxEWmV9JZG3ULrZ/KLZ7lJwwuXQ5t5DpHLG5EO1rKSijZmOHiB/aVbh6iWOk09nnt
-         H1R+5aNwVQ/FKbN95O8CoZ/cUywXSlZkPCMxDztNGh5s4CSU20l/2AIMYptQ3nE8SHXU
-         Tb9V23ZO2YtcziA2DEhKjAoG2+tnw/eqnIxS46RpYUhq7ww0SaZfCg55/pyeZKXRyEHx
-         xWQt7Yw6tc2Yi3lf1fLzIMushxkq6utvBjDX32NIx5yvbzDrW81w14T5ePa+pGiEC1rJ
-         viZA==
-X-Gm-Message-State: AGi0Pubrq1ZKlQOf6Uk029Re9sOYzI+ofKFkctvBRApPaqciM5idXAq/
-        DtcgI5WWxClDfhL01XOLsOc=
-X-Google-Smtp-Source: APiQypJ644QIvHgh2YqgFFZPR//UNfvakJMh9tvgXPWNy87mnUXcL1Kt5Wzc5PopV/ZAmqfmph3Ypg==
-X-Received: by 2002:adf:9264:: with SMTP id 91mr2600213wrj.362.1588536055673;
-        Sun, 03 May 2020 13:00:55 -0700 (PDT)
-Received: from vasteMachine (s559503e2.adsl.online.nl. [85.149.3.226])
-        by smtp.gmail.com with ESMTPSA id q4sm9080597wrx.9.2020.05.03.13.00.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 13:00:55 -0700 (PDT)
-Date:   Sun, 3 May 2020 22:00:33 +0200
-From:   Jacko Dirks <jdirks.linuxdev@gmail.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: bcm2835: Fixes bare use of unsigned
-Message-ID: <20200503200033.GA3256@vasteMachine>
+        Sun, 3 May 2020 16:02:00 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBCF3C061A0E;
+        Sun,  3 May 2020 13:01:59 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A56FC2A0113
+Received: by earth.universe (Postfix, from userid 1000)
+        id 78B083C08C7; Sun,  3 May 2020 22:01:55 +0200 (CEST)
+Date:   Sun, 3 May 2020 22:01:55 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 05/11] power: bq25890: fix ADC mode configuration
+Message-ID: <20200503200155.zjimaux5dfonwjdw@earth.universe>
+References: <cover.1588517058.git.mirq-linux@rere.qmqm.pl>
+ <c3b8fac36e4ed2b45925107417728591725d99a1.1588517058.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nw6cs6bh4jrtlkv2"
 Content-Disposition: inline
+In-Reply-To: <c3b8fac36e4ed2b45925107417728591725d99a1.1588517058.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Jacko Dirks <jdirks.linuxdev@gmail.com>
----
- drivers/spi/spi-bcm2835.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index 11c235879bb7..e10b8f3b4bab 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -191,12 +191,12 @@ static void bcm2835_debugfs_remove(struct bcm2835_spi *bs)
- }
- #endif /* CONFIG_DEBUG_FS */
- 
--static inline u32 bcm2835_rd(struct bcm2835_spi *bs, unsigned reg)
-+static inline u32 bcm2835_rd(struct bcm2835_spi *bs, unsigned int reg)
- {
- 	return readl(bs->regs + reg);
- }
- 
--static inline void bcm2835_wr(struct bcm2835_spi *bs, unsigned reg, u32 val)
-+static inline void bcm2835_wr(struct bcm2835_spi *bs, unsigned int reg, u32 val)
- {
- 	writel(val, bs->regs + reg);
- }
--- 
-2.26.2
+--nw6cs6bh4jrtlkv2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
+
+On Sun, May 03, 2020 at 05:21:11PM +0200, Micha=C5=82 Miros=C5=82aw wrote:
+> Datasheet describes two modes for reading ADC measurements:
+> 1. continuous, 1 Hz - enabled and started by CONV_RATE bit
+> 2. one-shot - triggered by CONV_START bit
+>=20
+> In continuous mode, CONV_START is read-only and signifies an ongoing
+> conversion.
+>=20
+> Change the code to follow the datasheet and really disable continuous
+> mode for power saving.
+>=20
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/power/supply/bq25890_charger.c | 33 ++++++++++++++++++++++----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/suppl=
+y/bq25890_charger.c
+> index 9339e216651f..3b02fa80aedd 100644
+> --- a/drivers/power/supply/bq25890_charger.c
+> +++ b/drivers/power/supply/bq25890_charger.c
+> @@ -126,6 +126,7 @@ static const struct regmap_access_table bq25890_write=
+able_regs =3D {
+> =20
+>  static const struct regmap_range bq25890_volatile_reg_ranges[] =3D {
+>  	regmap_reg_range(0x00, 0x00),
+> +	regmap_reg_range(0x02, 0x02),
+>  	regmap_reg_range(0x09, 0x09),
+>  	regmap_reg_range(0x0b, 0x14),
+>  };
+> @@ -374,18 +375,40 @@ enum bq25890_chrg_fault {
+>  	CHRG_FAULT_TIMER_EXPIRED,
+>  };
+> =20
+> +static bool bq25890_is_adc_property(enum power_supply_property psp)
+> +{
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_NOW:
+> +	case POWER_SUPPLY_PROP_OUTPUT_VOLTAGE_NOW:
+
+^^^ does not compile without your other patchset, so not applied.
+
+When you send a new version, please Cc some of the recent
+contributors to bq25890_charger.c, so that they have a chance
+to test the changes with their setup:
+
+Angus Ainslie (Purism) <angus@akkea.ca>
+Yauhen Kharuzhy <jekhor@gmail.com>
+
+-- Sebastian
+
+> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
+> +		return true;
+> +
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+>  static int bq25890_power_supply_get_property(struct power_supply *psy,
+>  					     enum power_supply_property psp,
+>  					     union power_supply_propval *val)
+>  {
+> -	int ret;
+>  	struct bq25890_device *bq =3D power_supply_get_drvdata(psy);
+>  	struct bq25890_state state;
+> +	bool do_adc_conv;
+> +	int ret;
+> =20
+>  	mutex_lock(&bq->lock);
+>  	state =3D bq->state;
+> +	do_adc_conv =3D !state.online && bq25890_is_adc_property(psp);
+> +	if (do_adc_conv)
+> +		bq25890_field_write(bq, F_CONV_START, 1);
+>  	mutex_unlock(&bq->lock);
+> =20
+> +	if (do_adc_conv)
+> +		regmap_field_read_poll_timeout(bq->rmap_fields[F_CONV_START],
+> +			ret, !ret, 25000, 1000000);
+> +
+>  	switch (psp) {
+>  	case POWER_SUPPLY_PROP_STATUS:
+>  		if (!state.online)
+> @@ -623,8 +646,8 @@ static int bq25890_hw_init(struct bq25890_device *bq)
+>  		}
+>  	}
+> =20
+> -	/* Configure ADC for continuous conversions. This does not enable it. */
+> -	ret =3D bq25890_field_write(bq, F_CONV_RATE, 1);
+> +	/* Configure ADC for continuous conversions when charging */
+> +	ret =3D bq25890_field_write(bq, F_CONV_RATE, !!bq->state.online);
+>  	if (ret < 0) {
+>  		dev_dbg(bq->dev, "Config ADC failed %d\n", ret);
+>  		return ret;
+> @@ -966,7 +989,7 @@ static int bq25890_suspend(struct device *dev)
+>  	 * If charger is removed, while in suspend, make sure ADC is diabled
+>  	 * since it consumes slightly more power.
+>  	 */
+> -	return bq25890_field_write(bq, F_CONV_START, 0);
+> +	return bq25890_field_write(bq, F_CONV_RATE, 0);
+>  }
+> =20
+>  static int bq25890_resume(struct device *dev)
+> @@ -982,7 +1005,7 @@ static int bq25890_resume(struct device *dev)
+> =20
+>  	/* Re-enable ADC only if charger is plugged in. */
+>  	if (bq->state.online) {
+> -		ret =3D bq25890_field_write(bq, F_CONV_START, 1);
+> +		ret =3D bq25890_field_write(bq, F_CONV_RATE, 1);
+>  		if (ret < 0)
+>  			return ret;
+>  	}
+> --=20
+> 2.20.1
+>=20
+
+--nw6cs6bh4jrtlkv2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6vIzMACgkQ2O7X88g7
++ppfFxAAgajsn+eCYsxSLe/L55964K/Z+4ouMHGcNkewD3I7bDlOdc7Ss7l91PEy
+f5ey+4RnFMVbFI5qar0CXp2mGfnq7WSZTZAthLpjfJdd2QRb0AI8wkdUDroX4Hdb
+6iG9eZE9xklDNRsNy1H4D95c55T0u7JDg3zvQSzoGAxHSo/D0iqq69m5y1O++lAj
+TCUHwxLF+oRsrEuxReWKpW0t1cdf/z8/ni7b8w+kZMQZKDKYxSCbDtQ2TZNQLqOg
+wVxVUPku5jiQAwU3ktgH2tfUG+BLNMC5jH2Dazo1BEAYk41dmTW3/uoYva5Zc2F9
+yyVS/773j2kN8svYpXdsMrwbmQmJV8cwLjdyaO0PVZvhLO1gTLonGFn9BHy57SRj
+a8Izuf83wL3w/oP9XrGR9nRME60CU/0Cl6a3lj7ul30VZnm7P/rar+KoGYkBwWG5
+PmNOWng5h3tYIKCjGrreKcm3MRYYtCIXGzASGo95PEU2pDZ7MeVA68jmgYMEptum
+mYKrB1LJ6lF41Wv68PQxt16nwRGfXAedu18Uv1Dv/8J0ZDL4gdECJ3b8pQ1LfEvD
+09IONan8CxWnPT3g5Z2dr9kQJizHCxwjMEfudVyA7Aosr6jFASYeGIqYRaxdmTW1
+KgFoK4oYGzC5cC0M0w3qkpWdz+wrhGrlnGi/aCg9dejy2RbtcNI=
+=yJCF
+-----END PGP SIGNATURE-----
+
+--nw6cs6bh4jrtlkv2--
