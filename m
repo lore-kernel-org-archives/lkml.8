@@ -2,103 +2,76 @@ Return-Path: <SRS0=5Fkd=6R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A1AC47256
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D302FC28CBC
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C582073E
-	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="vA549mQf"
+	by mail.kernel.org (Postfix) with ESMTP id A9907206A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  3 May 2020 20:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgECUh0 (ORCPT
+        id S1729101AbgECUre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 16:37:26 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:34207 "EHLO mail.zx2c4.com"
+        Sun, 3 May 2020 16:47:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36770 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgECUhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 16:37:25 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 1c1f5387;
-        Sun, 3 May 2020 20:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=4oxhkRayVlbQD2eyndSaQE0tWZc=; b=vA549m
-        QfhxuqTQ/UFjGIJfh7Pmgt4ABg7edALWKWwfr+p1a7XQUU+OstnbhpbqS7SAvgVk
-        JFyEkLs4sNxlV9cfnMyfQiOhNv8VH/FGPtfK/S7mOPo27jeZnLCbYU0L+gGOFXQu
-        1RgrDZSj7KWXUHl6carogwlb1a+TMju+JstP1XP0BCDYgp98tGi0Iy+NGRdP/dSX
-        6+xKXkjuhXYnkF7XDe9v8kJcWoGC/9VzqXlXxJ9F3XTtWuTCiQ9ZpeZrRma29Mgj
-        8kEEb52x9xW3FrJraAMXywcoqdn9XLgo4hnAGX17f0+21BfKZUNP3o78SZ/JWKHz
-        h1kU4mhSVxR+Rk3g==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 285f47ea (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Sun, 3 May 2020 20:24:59 +0000 (UTC)
-Received: by mail-il1-f179.google.com with SMTP id e8so9415329ilm.7;
-        Sun, 03 May 2020 13:37:19 -0700 (PDT)
-X-Gm-Message-State: AGi0Pua+ijx82Dzriaz7H1o1IcFJQHPygzRe43uD+7WreGMoHNNsu8+s
-        xGG0QhTnjDNu26RiyS7xIHFco0mxsfhaDm/4aI0=
-X-Google-Smtp-Source: APiQypIRfBeAuZGWtTR/twhRA+JKgfG0fxdVuT4KIOOzAu177n+yQghVKAOj9DMvm3a8v0062/KgRLH/QmcumDNrKd4=
-X-Received: by 2002:a92:d4c4:: with SMTP id o4mr13779158ilm.38.1588538238517;
- Sun, 03 May 2020 13:37:18 -0700 (PDT)
+        id S1729002AbgECUre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 16:47:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 64416AAC7;
+        Sun,  3 May 2020 20:47:33 +0000 (UTC)
+Date:   Sun, 3 May 2020 13:43:15 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     akpm@linux-foundation.org, tglx@linutronix.de, mingo@kernel.org,
+        mgorman@techsingularity.net, bp@suse.de,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
+        oleg@redhat.com
+Subject: Re: [PATCH] kernel/sys: do not use tasklist_lock to set/get
+ scheduling priorities
+Message-ID: <20200503204315.lmk66kludmjaoxbq@linux-p48b>
+References: <20200502030539.32581-1-dave@stgolabs.net>
+ <20200502093105.GJ3762@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200503203108.15420-1-chris@chris-wilson.co.uk>
-In-Reply-To: <20200503203108.15420-1-chris@chris-wilson.co.uk>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Sun, 3 May 2020 14:37:07 -0600
-X-Gmail-Original-Message-ID: <CAHmME9rK29z+uoEU4wBuZFF+=0vC_0zQWKcaW71ZrGV2spjwjw@mail.gmail.com>
-Message-ID: <CAHmME9rK29z+uoEU4wBuZFF+=0vC_0zQWKcaW71ZrGV2spjwjw@mail.gmail.com>
-Subject: Re: [PATCH] drm/i915: Avoid using simd from interrupt context
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     intel-gfx@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        David Laight <David.Laight@aculab.com>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200502093105.GJ3762@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 2:31 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
->
-> Query whether or not we are in a legal context for using SIMD, before
-> using SSE4.2 registers.
->
-> Suggested-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> ---
->  drivers/gpu/drm/i915/i915_memcpy.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/gpu/drm/i915/i915_memcpy.c b/drivers/gpu/drm/i915/i915_memcpy.c
-> index 7b3b83bd5ab8..fc18d6c28d5f 100644
-> --- a/drivers/gpu/drm/i915/i915_memcpy.c
-> +++ b/drivers/gpu/drm/i915/i915_memcpy.c
-> @@ -24,6 +24,7 @@
->
->  #include <linux/kernel.h>
->  #include <asm/fpu/api.h>
-> +#include <asm/simd.h>
->
->  #include "i915_memcpy.h"
->
-> @@ -115,6 +116,9 @@ bool i915_memcpy_from_wc(void *dst, const void *src, unsigned long len)
->         if (unlikely(((unsigned long)dst | (unsigned long)src | len) & 15))
->                 return false;
->
-> +       if (unlikely(!may_use_simd()))
-> +               return false;
-> +
->         if (static_branch_likely(&has_movntdqa)) {
->                 if (likely(len))
->                         __memcpy_ntdqa(dst, src, len >> 4);
-> --
-> 2.20.1
+Cc'ing Oleg who iirc also like this stuff.
 
-Looks like you beat me to the punch. Thanks for doing this.
+On Sat, 02 May 2020, Peter Zijlstra wrote:
 
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+>On Fri, May 01, 2020 at 08:05:39PM -0700, Davidlohr Bueso wrote:
+>> For both setpriority(2) and getpriority(2) there's really no need
+>> to be taking the tasklist_lock at all - for which both share it
+>> for the entirety of the syscall. The tasklist_lock does not protect
+>> reading/writing the p->static_prio and task lookups are already rcu
+>> safe, providing a stable pointer.
+>
+>RCU-safe, as in, it will not crash.. However, without tasklist_lock the
+>thread iterations (for PRIO_PGRP/PRIO_USER) now race against fork().
+>
+>That is a user observable change in behaviour.
+>
+>Do we care about it? No idea, and your Changelog also doesn't provide
+>clue.
+
+Yeah, that was convenient of me to leave out, sorry. So copy_process()
+will hlist_add_rcu() under the writer tasklist_lock, but pid->tasks rculist
+traversals are safe. As such afaiu this fork serialization is for concurrent
+changes, something these syscalls do not do.
+
+In any case, we could at least keep the changes to getpriority(2) as even
+if there is a race in the list the new priority won't be any higher than
+what was observed already, thus maintaining semantics.
+
+Thanks,
+Davidlohr
