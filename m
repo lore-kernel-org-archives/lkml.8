@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19807C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA55C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF22206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC5B20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615480;
-	bh=5dCP/Gb0YTMsyzKSqzDCdkXmTEkcfDYj7iiRizgRm3E=;
+	s=default; t=1588615481;
+	bh=d+xFEZVtlJxwViYlMg9U/nr9NihjyZbPDu5cWuJZ6To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DBmkQNtO4MdsASj1fRl8IIO57eE0+qrKOPR5gMr08VOo0YhvR2MpjFXbCSYb8F76e
-	 rG6kMCGrfXa3dLOWjFDQw6DMG3pwPj1Sp7ifDCXQxgF16ZI1rvBwN5MQE09G1nZVz9
-	 WXVRA/drVyKrZqnc6ssbJXSct/8cQLcA9G5IxYPw=
+	b=TumF/sR8OI9nS/8Nx6NiO4HWCNtzbKjeR59dAhoIJbZ0RtUASIBMAKvXD4lCoEAzA
+	 sGFeXbho1nseP/8M8thVeIiE2ZJBbqYRR8uulgFhPWmEHTvSmz7Bb1VeQ4ZeWrqk7G
+	 VHHMdH00TSJ+xGWVITOlG3qx/4FQnMhkCfghVjcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbgEDSEj (ORCPT
+        id S1731700AbgEDSEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730391AbgEDSE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:29 -0400
+        id S1731683AbgEDSEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B51205ED;
-        Mon,  4 May 2020 18:04:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F031F206B8;
+        Mon,  4 May 2020 18:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615469;
-        bh=5dCP/Gb0YTMsyzKSqzDCdkXmTEkcfDYj7iiRizgRm3E=;
+        s=default; t=1588615476;
+        bh=d+xFEZVtlJxwViYlMg9U/nr9NihjyZbPDu5cWuJZ6To=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EYFIJ+QSrPhMzK8mzqTON0okLQr/kVzmvixeW0Fla2bDIFO6c44FG6yGulUE5CYol
-         LUV6NT+3S0X/jC5k7/OWAaKUIfJf55lOkFcsDqTjHhAXukfJs9xkc2eN9iQ7wNdYJt
-         fANf0gbPgHwt5I18euBE530yih5XUlHgliW3oJsw=
+        b=r6J5TBRJnLG6+Mw6vN4qY49GbUETdMIEvHMBSqz6hnH3UtcmfpwaItpxMwQzch4id
+         FGOiGZd7X7p2na1lpAYuA1o5qZOFgpVwvq/Fo9UWyp5D80vW0RO/5vpRilPRifdnra
+         3Tz6H+FuvwEL0zEjF0Pe4hxsHEMCnq1YoTf/ime4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 51/57] Fix use after free in get_tree_bdev()
-Date:   Mon,  4 May 2020 19:57:55 +0200
-Message-Id: <20200504165501.103417676@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.4 54/57] dmaengine: dmatest: Fix iteration non-stop logic
+Date:   Mon,  4 May 2020 19:57:58 +0200
+Message-Id: <20200504165501.498645923@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -61,46 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit dd7bc8158b413e0b580c491e8bd18cb91057c7c2 upstream.
+commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
 
-Commit 6fcf0c72e4b9, a fix to get_tree_bdev() put a missing blkdev_put() in
-the wrong place, before a warnf() that displays the bdev under
-consideration rather after it.
+Under some circumstances, i.e. when test is still running and about to
+time out and user runs, for example,
 
-This results in a silent lockup in printk("%pg") called via warnf() from
-get_tree_bdev() under some circumstances when there's a race with the
-blockdev being frozen.  This can be caused by xfstests/tests/generic/085 in
-combination with Lukas Czerner's ext4 mount API conversion patchset.  It
-looks like it ought to occur with other users of get_tree_bdev() such as
-XFS, but apparently doesn't.
+	grep -H . /sys/module/dmatest/parameters/*
 
-Fix this by switching the order of the lines.
+the iterations parameter is not respected and test is going on and on until
+user gives
 
-Fixes: 6fcf0c72e4b9 ("vfs: add missing blkdev_put() in get_tree_bdev()")
-Reported-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Ian Kent <raven@themaw.net>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+	echo 0 > /sys/module/dmatest/parameters/run
+
+This is not what expected.
+
+The history of this bug is interesting. I though that the commit
+  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+is a culprit, but looking closer to the code I think it simple revealed the
+broken logic from the day one, i.e. in the commit
+  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
+which adds iterations parameter.
+
+So, to the point, the conditional of checking the thread to be stopped being
+first part of conjunction logic prevents to check iterations. Thus, we have to
+always check both conditions to be able to stop after given iterations.
+
+Since it wasn't visible before second commit appeared, I add a respective
+Fixes tag.
+
+Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/super.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/dmatest.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1302,8 +1302,8 @@ int get_tree_bdev(struct fs_context *fc,
- 	mutex_lock(&bdev->bd_fsfreeze_mutex);
- 	if (bdev->bd_fsfreeze_count > 0) {
- 		mutex_unlock(&bdev->bd_fsfreeze_mutex);
--		blkdev_put(bdev, mode);
- 		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
-+		blkdev_put(bdev, mode);
- 		return -EBUSY;
- 	}
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -662,8 +662,8 @@ static int dmatest_func(void *data)
+ 		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
  
+ 	ktime = ktime_get();
+-	while (!kthread_should_stop()
+-	       && !(params->iterations && total_tests >= params->iterations)) {
++	while (!(kthread_should_stop() ||
++	       (params->iterations && total_tests >= params->iterations))) {
+ 		struct dma_async_tx_descriptor *tx = NULL;
+ 		struct dmaengine_unmap_data *um;
+ 		dma_addr_t *dsts;
 
 
