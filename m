@@ -2,242 +2,123 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BABC47259
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEA2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6020643
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E77520735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AnMCjUrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgEDFeH (ORCPT
+        id S1727123AbgEDFg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 01:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        Mon, 4 May 2020 01:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgEDFeH (ORCPT
+        with ESMTP id S1725859AbgEDFg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 01:34:07 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A94EC061A0E;
-        Sun,  3 May 2020 22:34:07 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVTjp-000ZHp-A5; Mon, 04 May 2020 05:33:57 +0000
-Date:   Mon, 4 May 2020 06:33:57 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
-Message-ID: <20200504053357.GV23230@ZenIV.linux.org.uk>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
- <20200504013509.GU23230@ZenIV.linux.org.uk>
- <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
+        Mon, 4 May 2020 01:36:56 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C50DC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 22:36:56 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id r66so5695566oie.5
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 22:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uEr7VDGO1sQzOvtIGcTs52hYhp3KlihYjjFwOGOE52E=;
+        b=AnMCjUrc0dEBsDtyieZcjRyaWh1ZyG7DB345/RKRwunS9IbLIl18twCJWYDSN1f092
+         M+39bCI4yvuMpohhu1PNnD5u4xGLJkdXBH8HGV9aN3NKRyM+x7PhL2wqb7fUdEqfSp2G
+         EMFjB0nmBOpmz1FQ5lOB6Gg0RlZuz5dTYZYSHUfdX2CjGWT8Bn11GpCCF6FGOWIzLVlQ
+         1mJ/ECtrVccBsw+S6DXsG6y0VmYSx8lOQyhEHD/s8//lfppknEQzqLzgvY59saAigEbN
+         4+3P9sKuuzp5/wijfK1HjOZXqjJmmXFr/GsS8M0DI4H2KfG8Wfq/9ZYAQ5NRQlK/BuGf
+         kvfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uEr7VDGO1sQzOvtIGcTs52hYhp3KlihYjjFwOGOE52E=;
+        b=akdyaiWDB/1sb6inxCqFcDrzEQUZJFIUcxq68Rdc+fRNMCXTq0OXV4EW0NE+VACHnD
+         +3+Vxizo2OKwh/yPjEGkFX9Q/It8/ivGcLKW0b8GJplhz65szAfVLkDyZ/BRPCkOBG7g
+         Tt3aU71x/LDjVj8z0uCRsyxv2OqvM31y5NWa/zi/K2eGU+4lfOcW6eRWtnWMgeOn9YO6
+         U/N9wnQvarq+/epq1qNVXJ0KWd7RI4YUXM5eK8IlOqkOiSi0e23/wECXUpvtiykz4CGg
+         Fj5zEAbNsqL3JmTweEat91bRm/hoWHbCkTzYhR0dDR5LMcuQUnwTTM6HELP1B15xDj2n
+         DIdg==
+X-Gm-Message-State: AGi0PuYb85jJM0oi9rNuVx81jGvmOimI7lcV0DLvHhclGSGiHFwAMkwz
+        7IL8RtQcl6Hj2l6lwpqE4mIvj9PQnoOuX5X+G+U90Q==
+X-Google-Smtp-Source: APiQypIId44/BH5hF7x7zP3LxhrtvZZiDqySLw/fVersvjCbMawM6wZqXjmgu2YmTBc1Sm0vf9NHdFnE+jVSZSHQVss=
+X-Received: by 2002:aca:c78d:: with SMTP id x135mr7835649oif.91.1588570614459;
+ Sun, 03 May 2020 22:36:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
+References: <20200504040319.31423-1-atish.patra@wdc.com>
+In-Reply-To: <20200504040319.31423-1-atish.patra@wdc.com>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Mon, 4 May 2020 13:36:43 +0800
+Message-ID: <CANXhq0qrnS5DFC4sTHP1aBKd-32rjvzGBV4O56Fq4JujR5b7PQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Remove unused code from STRICT_KERNEL_RWX
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 10:04:47PM -0700, Ira Weiny wrote:
+On Mon, May 4, 2020 at 12:04 PM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> This patch removes the unused functions set_kernel_text_rw/ro.
+> Currently, it is not being invoked from anywhere and no other architecture
+> (except arm) uses this code. Even in ARM, these functions are not invoked
+> from anywhere currently.
+>
+> Fixes: d27c3c90817e ("riscv: add STRICT_KERNEL_RWX support")
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/mm/init.c | 16 ----------------
+>  1 file changed, 16 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index b55be44ff9bd..ba60a581e9b6 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -501,22 +501,6 @@ static inline void setup_vm_final(void)
+>  #endif /* CONFIG_MMU */
+>
+>  #ifdef CONFIG_STRICT_KERNEL_RWX
+> -void set_kernel_text_rw(void)
+> -{
+> -       unsigned long text_start = (unsigned long)_text;
+> -       unsigned long text_end = (unsigned long)_etext;
+> -
+> -       set_memory_rw(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> -}
+> -
+> -void set_kernel_text_ro(void)
+> -{
+> -       unsigned long text_start = (unsigned long)_text;
+> -       unsigned long text_end = (unsigned long)_etext;
+> -
+> -       set_memory_ro(text_start, (text_end - text_start) >> PAGE_SHIFT);
+> -}
+> -
+>  void mark_rodata_ro(void)
+>  {
+>         unsigned long text_start = (unsigned long)_text;
+> --
+> 2.26.2
+>
 
-> Grepping for 'asm/highmem.h' and investigations don't reveal any issues...  But
-> you do have me worried.  That said 0-day has been crunching on multiple
-> versions of this series without issues such as this (save the mips issue
-> above).
-> 
-> I have to say it would be nice if the relation between linux/highmem.h and
-> asm/highmem.h was more straightforward.
-
-IIRC, the headache was due to asm/pgtable.h on several architectures and
-asm/cacheflush.h on parisc.
-
-<digs the notes out>
-
-||         IOW, there's one in linux/highmem.h (conditional on !CONFIG_HIGHMEM,
-|| !ARCH_HAS_KMAP) and several per-architecture variants, usually declared in
-|| their asm/highmem.h.  In three of those (microblaze, parisc and powerpc) these
-|| are inlines (parisc one identical to linux/highmem.h, lives in asm/cacheflush.h,
-|| powerpc and microblaze ones calling kmap_atomic_prot() which is defined in
-|| arch/$ARCH/mm/highmem.c).
-|| 
-||         parisc case is weird - essentially, they want to call 
-|| flush_kernel_dcache_page_addr() at the places where kunmap/kunmap_atomic
-|| is done.  And they do so despite not selecting HIGHMEM, with definitions
-|| in usual place.  They do have ARCH_HAS_KMAP defined, which prevents
-|| getting buggered in linux/highmem.h.  ARCH_HAS_KMAP is parisc-unique,
-|| BTW, and checked only in linux/highmem.h.
-|| 
-||         All genuine arch-specific variants are defined in (or call functions
-|| defined in) translation units that are only included CONFIG_HIGHMEM builds.
-|| 
-||         It would be tempting to consolidate those, e.g. by adding __kmap_atomic()
-|| and __kmap_atomic_prot() without that boilerplate, with universal kmap_atomic()
-|| and kmap_atomic_prot() in linux/highmem.h.  Potential problem with that would
-|| be something that pulls ash/highmem.h (or asm/cacheflush.h in case of parisc)
-|| directly and uses kmap_atomic/kmap_atomic_prot.  There's not a lot places
-|| pulling asm/highmem.h, and many of them are not even in includes:
-|| 
-|| arch/arm/include/asm/efi.h:13:#include <asm/highmem.h>
-|| arch/arm/mm/dma-mapping.c:31:#include <asm/highmem.h>
-|| arch/arm/mm/flush.c:14:#include <asm/highmem.h>
-|| arch/arm/mm/mmu.c:27:#include <asm/highmem.h>
-|| arch/mips/include/asm/pgtable-32.h:22:#include <asm/highmem.h>
-|| arch/mips/mm/cache.c:19:#include <asm/highmem.h>
-|| arch/mips/mm/fault.c:28:#include <asm/highmem.h>                /* For VMALLOC_END */
-|| arch/nds32/include/asm/pgtable.h:60:#include <asm/highmem.h>
-|| arch/x86/kernel/setup_percpu.c:20:#include <asm/highmem.h>
-|| include/linux/highmem.h:35:#include <asm/highmem.h>
-|| 
-|| Users of asm/cacheflush.h are rather more numerous; however, anything
-|| outside of parisc-specific code has to pull linux/highmem.h, or it won't see
-|| the definitions of kmap_atomic/kmap_atomic_prot at all.  arch/parisc itself
-|| has no callers of those.
-|| 
-|| Outside of arch/* there is a plenty of callers.  However, the following is
-|| true: all instances of kmap_atomic or kmap_atomic_prot outside of arch/*
-|| are either inside the linux/highmem.h or are preceded by include of
-|| linux/highmem.h on any build that sees them (there is a common include
-|| chain that is conditional upon CONFIG_BLOCK, but it's only needed in
-|| drivers that are BLOCK-dependent).  It was not fun to verify, to put
-|| it mildly...
-|| 
-|| So for parisc we have no problem - leaving __kmap_atomic()/__kmap_atomic_prot()
-|| in asm/cachefile.h and adding universal wrappers in linux/highmem.h will be
-|| fine.  For other architectures the things might be trickier.
-|| 
-|| * arc: all users in arch/arc/ are within arch/arc/mm/{cache,highmem}.c;
-|| both pull linux/highmem.h.  We are fine.
-|| 
-|| * arm: much, much worse.  We have several files that pull linux/highmem.h:
-|| arch/arm/mm/cache-feroceon-l2.c, arch/arm/mm/cache-xsc3l2.c,
-|| arch/arm/mm/copypage-*.c, arch/arm/mm/dma-mapping.c, arch/arm/mm/flush.c,
-|| arch/arm/mm/highmem.c, arch/arm/probes/uprobes/core.c,
-|| arch/arm/include/asm/kvm_mmu.h (kmap_atomic_pfn()).
-|| Those are fine, but we also have this:
-|| arch/arm/include/asm/pgtable.h:200:#define __pte_map(pmd)               (pte_t *)kmap_atomic(pmd_page(*(pmd)))
-|| arch/arm/include/asm/pgtable.h:208:#define pte_offset_map(pmd,addr)     (__pte_map(pmd) + pte_index(addr))
-|| and sure as hell, asm/pgtable.h does *NOT* pull linux/highmem.h.
-|| 
-|| Fortunately, the users of pte_offset_map() (__pte_map() has no other users)
-|| are few, both in arch/arm and outside of arch.  All arm ones are pulling
-|| linux/highmem (arch/arm/mm/{pgd,fault*}.c).  Outside of arch we have several
-|| that pull highmem.h (by way of rmap.h or pagemap.h, usually):
-||         fs/userfaultfd.c, mm/gup.c, mm/hmm.c, mm/huge_memory.c,
-||         mm/khugepaged.c, mm/memory-failure.c, mm/memory.c, mm/migrate.c,
-||         mm/mremap.c, mm/page_vma_mapped.c, mm/swap_state.c, mm/swapfile.c,
-||         mm/vmalloc.c
-|| and then there are these in linux/mm.h:
-|| 
-|| #define pte_offset_map_lock(mm, pmd, address, ptlp)     \
-|| ({                                                      \
-||         spinlock_t *__ptl = pte_lockptr(mm, pmd);       \
-||         pte_t *__pte = pte_offset_map(pmd, address);    \
-||         *(ptlp) = __ptl;                                \
-||         spin_lock(__ptl);                               \
-||         __pte;                                          \
-|| })
-|| #define pte_alloc_map(mm, pmd, address)                 \
-||         (pte_alloc(mm, pmd) ? NULL : pte_offset_map(pmd, address))
-|| #define pte_alloc_map_lock(mm, pmd, address, ptlp)      \
-||         (pte_alloc(mm, pmd) ?                   \
-||                  NULL : pte_offset_map_lock(mm, pmd, address, ptlp))
-|| 
-||         These have two users in arch/arm (arch/arm/mm/pgd.c and
-|| arch/arm/lib/uaccess_with_memcpy.c, both pulling highmem.h).  Outside of
-|| arch there are several new files (plus a lot of what we'd already seen
-|| in mm/*.c, unsurprisingly):
-||         fs/proc/task_mmu.c, mm/ksm.c, mm/madvise.c, mm/memcontrol.c,
-||         mm/mempolicy.c, mm/mincore.c, mm/mprotect.c, mm/pagewalk.c,
-||         mm/shmem.c, mm/userfaultfd.c,
-|| all pulling linux/highmem.h, as pretty much all core VM does.  So we are
-|| still fine.
-|| 
-|| * csky: users in arch/csky/abiv2/cacheflush.c, arch/csky/mm/dma-mapping.c,
-|| arch/csky/mm/highmem.c, all pulling linux/highmem.h
-|| 
-|| * microblaze: users in arch/microblaze/mm/highmem.c (pulls linux/highmem.h) and,
-|| arch/microblaze/include/asm/pgtable.h, this:
-|| #define pte_offset_map(dir, addr)               \
-||         ((pte_t *) kmap_atomic(pmd_page(*(dir))) + pte_index(addr))
-||         One pte_offset_map user in arch/microblaze:
-|| arch/microblaze/kernel/signal.c:207:    ptep = pte_offset_map(pmdp, address);
-|| Messy, but doesn't require any changes (we have asm/pgalloc.h included
-|| there, and that pull linux/highmem.h).
-||         Outside of arch we'd already sorted it out when looking at arm.
-|| 
-|| * mips: users in arch/mips/kernel/crash_dump.c, arch/mips/kernel/uprobes.c,
-|| arch/mips/mm/c-r4k.c, arch/mips/mm/dma-noncoherent.c, arch/mips/mm/highmem.c,
-|| and arch/mips/mm/init.c (all pulling linux/highmem.h) plus this
-|| arch/mips/mm/cache.c, which relies upon asm/highmem.h.  This can be switched
-|| to linux/highmem.h.  On !CONFIG_HIGHMEM builds the call of kmap_atomic() in
-|| there is eliminated, since it's conditional upon PageHighMem().  IOW, even
-|| though we get a call of (inexistent) out-of-line version, it's not going to
-|| survive into object file.  With linux/highmem.h use it will be an equally
-|| eliminated call of inlined version.
-|| XXX: arch/mips/mm/cache.c
-|| 
-|| * nds32: users in arch/nds32/kernel/dma.c, arch/nds32/mm/cacheflush.c and
-|| arch/nds32/mm/highmem.c, all pulling linux/highmem.h
-|| 
-|| * powerpc: users in arch/powerpc/kvm/book3s_pr.c,
-|| arch/powerpc/kvm/e500_mmu_host.c, arch/powerpc/mm/dma-noncoherent.c,
-|| arch/powerpc/mm/highmem.c and arch/powerpc/mm/mem.c, all pulling
-|| linux/highmem.h, a user in arch/powerpc/mm/hugetlbpage.c pulling it
-|| via asm/tlb.h -> linux/pagemap.h -> linux/highmem.h and
-|| macros for pte_offset_map in arch/powerpc/include/asm/*/32/pgtable.h.
-|| Users of that within arch/powerpc are either 64bit-only or
-|| pull linux/highmem.h (arch/powerpc/mm/pgtable_32.c and
-|| arch/powerpc/xmon/xmon.c).  Users outside of arch - same as for arm.
-|| 
-|| * sparc: users in arch/sparc/kernel/uprobes.c and arch/sparc/mm/highmem.c
-|| (both pulling linux/highmem.h directly) + arch/sparc/mm/init_64.c pulling
-|| it via linux/pagemap.h.  Strangely, arch/sparc/mm/io-unit.c and
-|| arch/sparc/mm/iommu.c both include linux/highmem.h with odd comment
-|| that seems to indicate that once upon a time pte_offset_map() used to
-|| requite kmap_atomic() there...  Right, it used to - until 2002.
-|| These includes are pointless, then...
-|| 
-|| * x86: users in arch/x86/kernel/crash_dump_32.c, arch/x86/kvm/svm.c,
-|| arch/x86/lib/usercopy_64.c, arch/x86/mm/highmem_32.c and arch/x86/mm/iomap_32.c,
-|| all pulling linux/highmem.h, users in paging_tmpl.h (included from
-|| arch/x86/kvm/mmu/mmu.c, which has pulled linux/highmem.h prior to that)
-|| and definition of pte_offset_map() (in asm/pgtable_32.h)
-|| Users of pte_offset_map() and friends in arch/x86 are in
-|| arch/x86/kernel/vm86_32.c and arch/x86/mm/dump_pagetables.c (both
-|| pulling linux/highmem.h), in arch/x86/mm/mem_encrypt_identity.c
-|| (64bit-only, pte_offset_map() doesn't use kmap_atomic() there) and
-|| arch/x86/kernel/tboot.c (pulls linux/highmem.h via asm/pgalloc.h
-|| and linux/pagemap.h)
-|| 
-|| * xtensa: users in arch/xtensa/kernel/pci-dma.c, arch/xtensa/mm/highmem.c,
-|| arch/xtensa/mm/cache.c and arch/xtensa/platforms/iss/simdisk.c (all pull
-|| linux/highmem.h).
-
+Looks good to me. Thanks.
+Reviewed-by: Zong Li <zong.li@sifive.com>
