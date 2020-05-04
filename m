@@ -2,143 +2,259 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35700C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A3C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8DD20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9C920705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:13:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="afXj9uq2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OtcfT3Xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgEDOM3 (ORCPT
+        id S1728828AbgEDONU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:12:29 -0400
-Received: from mout.web.de ([212.227.17.11]:43859 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbgEDOM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:12:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588601535;
-        bh=UAsDAdzEesDdhSsGNqKHkiDxf63hFvLRdf35+NhJn64=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=afXj9uq2CXdiZOs5EVAMQB2Iw1ZGJ298HmyDgRU5Xl3bFMoXL1FcWBod/Q6qXasw2
-         IYl0Tx8hDOLZ4RmH0oti3dihxlgFbjA/9DirXJSXMzSmpJTPDftLZpBPCL8u84/Goq
-         exm2iSnr2YNBX6BLLbl6AMFV754cPfwSxLD1Xxjs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MMpCg-1joNhL1SOC-00IxGG; Mon, 04
- May 2020 16:12:15 +0200
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH] net: enetc: fix an issue about leak system resources
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Dejin Zheng <zhengdejin5@gmail.com>, netdev@vger.kernel.org
-Message-ID: <9de14fae-458f-adb7-a5e7-5beb05d8d9ea@web.de>
-Date:   Mon, 4 May 2020 16:12:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 10:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728233AbgEDONT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:13:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27117C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 07:13:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h9so10798598wrt.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 07:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gg7NmM+Hl82lwFdgF23a7OUMDRxdbsm38gnonOFK+XM=;
+        b=OtcfT3XmsZeMwk96Rl8rcxQGQ20k09Xulay6gvzipRn3NlRcQkFrbMfWOFPwWD0Udp
+         KUxpQ9mpkVnLl4IJpDjdeAFyb7QY1Ztvksf88s71NjcGcFHwGDo3y2eI46Qem/VL545D
+         DW1FadNzvOBtVQlPAoFy7v3ZePPe70S17W6p8017ITbzBYHGTYL2oVqGSrOj6Oj8kxNG
+         0ctCirWtHZ/lM9u/cbRbG9gzO/ciEm8TLv7S3p5GoZTuhyoHcisnTuDIPOzvPuOAMENe
+         10hqktoKB3Thb9hLD9lPf8eUJRAWkyCBvP+JEjye4H+fZN3qPIBF7BVh0WebTFVR1YFs
+         7m0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gg7NmM+Hl82lwFdgF23a7OUMDRxdbsm38gnonOFK+XM=;
+        b=iH5JkegzsdH1njAZ5XW8WlCf/Bj4z80ExUKxFVU8eUksURCqyNxzwcbH8ya8dtjmE6
+         5PPJWOqzc/DsDcj42+4x7yDRkh9fYa5dsLZWa6WEKoSRq0s+LDi6BUVjFPBlWOledlvh
+         8bRkzaSOk3yiwoo2jJZ2HDIXNQ2/OKngTG9/aJ7JD+cfw4Ev2BzE1LwCeLuSwLY9c9BD
+         hI4IkjqCKPDFl1eYkL+83sozqDMkWPo/ym9EivZpWHRQaEA1rxaOoPtVbZvN3hf3iuU/
+         xrf44B2oQ1HM1+QvB6EXv0G/g0ILEBtEPL+OjComeHe0VtdYsViEHi1J0jsrQ482S0rn
+         WUFg==
+X-Gm-Message-State: AGi0PuZ4WXdTRuysNrQqD+lXQAd7f47/o1OhCZ8CU/DshZwbZSTKcyzt
+        /WCQdQcCkLHer/3z/C4HGMZK5Q==
+X-Google-Smtp-Source: APiQypIOX7rEevV8DV08zsAzTwALQGpi+aP6uOBbCyr7RezF9Vt+lnOQuBRpDbnD1Wdb4rh7Uri8gQ==
+X-Received: by 2002:adf:b246:: with SMTP id y6mr19864355wra.205.1588601597742;
+        Mon, 04 May 2020 07:13:17 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id q187sm13437406wma.41.2020.05.04.07.13.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:13:17 -0700 (PDT)
+Date:   Mon, 4 May 2020 15:13:15 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        agross@kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        catalin.marinas@arm.com, linux-serial@vger.kernel.org,
+        sumit.garg@linaro.org, corbet@lwn.net, mingo@redhat.com,
+        will@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        frowand.list@gmail.com, bp@alien8.de, bjorn.andersson@linaro.org,
+        jslaby@suse.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/11] kgdboc: Add kgdboc_earlycon to support early
+ kgdb using boot consoles
+Message-ID: <20200504141315.oo7uxb6y75l6tv32@holly.lan>
+References: <20200428211351.85055-1-dianders@chromium.org>
+ <20200428141218.v3.7.I8fba5961bf452ab92350654aa61957f23ecf0100@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rl3DVGTzFlHf+dEb536eUHxAAiO3NGO8mSyhRmD3WgOx91M+zVn
- I6p4nUs9dVK+meGWXzIFCp4ADheAVN6Q+525jVfksIVZfKLxD41FvgFpUJK9cm616TjW6uv
- Rupeq0zA2Up3AzfFJwFJbcvRWLldJMjhwSVSwY/UzmRzFo7UIxioPpv8LWcfLCyr3SNWWjq
- fovb35JbZpEp+pP4ZCsTw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:KeONVTIGYXs=:nV2XLIAWlmy40BSi1wZW87
- DGbk5lA//It4624X2p4KEFyELzaCq1VL1xYgILgiwI94YpB58rhlKHJarbq3ypI5NeI+Bi1Ka
- qJSnBPeQXBMLHNc5Q1PtfvBY4gn7z5oum2wpAFU0nkDdgm+HlJn6ngg/VW6LWFaEh9tffL5PY
- 3B9GhTtnBZSVR35jlbR/xUrY96iHpbOo8QfUVoYGbMM+A8eUqj5PAGv7SEzX2f6To+VZEumUi
- 4zkoRI6nWodpJj+ukaLZKkFLg/dhXO1Wsc0I05wPOpyPk9ndhwN1ouOPH98IeV4SvU0GekldG
- 0eJQFcXf+3/CZx7P5vbqoTZf/3NxWBPsJuTgZzCsYMw5XpiC7XQS2nb4ChLb94glCy/hw62TU
- dzMTm3F0JjB0MKR1X8KxnKt71h8ioNt9OZFIUB+ZsFzMI0gOBAX1Eaxfs54kn582kncndmUyE
- Uw442fkiVD7ddTVTYoDUwR0Y9xFbptcm5hTldyaWx4WcinBSrX70qcvLbzxviIWXFzMPuF3ez
- qb9t5za7kDTAtd3bvZQQq0SBeGieE6v4wQ5Qk3cXaa3mljL20x747W0f+IqNSejMxZ7aQu4cw
- JSrUt1VB5rvVramN30mNd1/8/gyYEjqwxd/NBcIIp8fXJrGtfby4VHLC6fsddItGnkCXVLX8r
- lN74bWCYirgcjXXon1uCgvEy+lSj60VAxT6mbzd2d1vHYU47xWS/pnKE6WYcdQ4kyTjRvkIWt
- Ynx1oiDFtqK0XkBR9v03jz6y1aGGzcGmz9Sxx2P9CgNNAnyC828l0ELz5GhI+vExRFRyt3BAX
- AwCQg8WeJY/mUtP4h07Wl26Uz85fAAX2JCKr7c+rZUzHYHHUjiGXwDAhULCS6kDfJhO1Qdbqm
- NOgCudYmdY8fmkvNea9kNlGanmDp7p59LVPrItIkW6R42wbc6Gy3FXqWypfhi0ogVxZcwcNWX
- YLxm/V6fMf6TWrghPMcOePXX2d9T5FmANYuBE58aUloU/UYUyMiL/pVTRPsUODg59qfk+96H8
- 0qa9w7sMYialpdjZgI4sqwFADgt2FkFd2MLCobLZIjljxXrTuXBEOrLQRmZ7eJRpDfPTnsNUO
- 5AZHfYVUJ1dBAHZJ05uSi14k+4AoYtvv0bQ9YOMwc/rGF9O9bu8ej3L2FOFseOO9gleTBWY6U
- 5X+yZhAnQzYiWjy9dHrbFR6hxrTqg6/Qn3TreblhEX4dM/LP7d7w/VEMiDIm5E6GB900K/jY0
- w+9X39Zt9PUIWzer+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428141218.v3.7.I8fba5961bf452ab92350654aa61957f23ecf0100@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> the related system resources were not released when enetc_hw_alloc()
-> return error in the enetc_pci_mdio_probe(), add iounmap() for error
-> handling label "err_hw_alloc" to fix it.
+On Tue, Apr 28, 2020 at 02:13:47PM -0700, Douglas Anderson wrote:
+> We want to enable kgdb to debug the early parts of the kernel.
+> Unfortunately kgdb normally is a client of the tty API in the kernel
+> and serial drivers don't register to the tty layer until fairly late
+> in the boot process.
+> 
+> Serial drivers do, however, commonly register a boot console.  Let's
+> enable the kgdboc driver to work with boot consoles to provide early
+> debugging.
+> 
+> This change co-opts the existing read() function pointer that's part
+> of "struct console".  It's assumed that if a boot console (with the
+> flag CON_BOOT) has implemented read() that both the read() and write()
+> function are polling functions.  That means they work without
+> interrupts and read() will return immediately (with 0 bytes read) if
+> there's nothing to read.  This should be a safe assumption since it
+> appears that no current boot consoles implement read() right now and
+> there seems no reason to do so unless they wanted to support
+> "kgdboc_earlycon".
+> 
+> The console API isn't really intended to have clients work with it
+> like we're doing.  Specifically there doesn't appear to be any way for
+> clients to be notified about a boot console being unregistered.  We'll
+> work around this by checking that our console is still valid before
+> using it.  We'll also try to transition off of the boot console and
+> onto the "tty" API as quickly as possible.
+> 
+> The normal/expected way to make all this work is to use
+> "kgdboc_earlycon" and "kgdboc" together.  You should point them both
+> to the same physical serial connection.  At boot time, as the system
+> transitions from the boot console to the normal console, kgdb will
+> switch over.  If you don't use things in the normal/expected way it's
+> a bit of a buyer-beware situation.  Things thought about:
+> 
+> - If you specify only "kgdboc_earlycon" but not "kgdboc" and the boot
+>   console vanishes at a weird time we'll panic if someone tries to
+>   drop into kgdb.
+> - If you use "keep_bootcon" (which is already a bit of a buyer-beware
+>   option) and specify "kgdboc_earlycon" but not "kgdboc" we'll keep
+>   trying to use your boot console for kgdb.
+> - If your "kgdboc_earlycon" and "kgdboc" devices are not the same
+>   device things should work OK, but it'll be your job to switch over
+>   which device you're monitoring (including figuring out how to switch
+>   over gdb in-flight if you're using it).
 
-How do you think about a wording variant like the following?
-
-   Subject:
-   [PATCH v2] net: enetc: Complete exception handling in enetc_pci_mdio_pr=
-obe()
-
-   Change description:
-   A call of the function =E2=80=9Cenetc_hw_alloc=E2=80=9D can fail here.
-   The corresponding system resources were not released then.
-   Thus move a call of the function =E2=80=9Ciounmap=E2=80=9D behind
-   the label =E2=80=9Cerr_hw_alloc=E2=80=9D.
+As mentioned in other threads. If we are changing the way we manage the
+lifetime of the consoles I think it would be good to squash that change
+down and simplify some of these cases.
 
 
-Would you like to reduce the labels for this function implementation inste=
-ad?
+> When trying to enable "kgdboc_earlycon" it should be noted that the
+> names that are registered through the boot console layer and the tty
+> layer are not the same for the same port.  For example when debugging
+> on one board I'd need to pass "kgdboc_earlycon=qcom_geni
+> kgdboc=ttyMSM0" to enable things properly.  Since digging up the boot
+> console name is a pain and there will rarely be more than one boot
+> console enabled, you can provide the "kgdboc_earlycon" parameter
+> without specifying the name of the boot console.  In this case we'll
+> just pick the first boot that implements read() that we find.
+> 
+> This new "kgdboc_earlycon" parameter should be contrasted to the
+> existing "ekgdboc" parameter.  While both provide a way to debug very
+> early, the usage and mechanisms are quite different.  Specifically
+> "kgdboc_earlycon" is meant to be used in tandem with "kgdboc" and
+> there is a transition from one to the other.  The "ekgdboc" parameter,
+> on the other hand, replaces the "kgdboc" parameter.  It runs the same
+> logic as the "kgdboc" parameter but just relies on your TTY driver
+> being present super early.  The only known usage of the old "ekgdboc"
+> parameter is documented as "ekgdboc=kbd earlyprintk=vga".  It should
+> be noted that "kbd" has special treatment allowing it to init early as
+> a tty device.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Tested-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+> I have kept Greg's Reviewed-by and Sumit's Tested-by tags on this
+> commit despite changes that aren't totally trivial.  Please yell if
+> you disagree with this.  Reasons:
+> - Greg's Reviewed-by seemed more an overall acknowledgment that the
+>   series wasn't totally insane rather than a detailed review.  I don't
+>   think the changes from v2 to v3 change that.
+> - Sumit's Tested-by seemed useful as confirmation that someone else
+>   made this work on a machine that wasn't mine.  I don't believe that
+>   the changes from v2 to v3 should affect anything here.
+> 
+> Changes in v3:
+> - Add deinit() to I/O ops to know a driver can be replaced.
+> - Don't just neuter input, panic if earlycon vanishes.
+> - No extra param to kgdb_register_io_module().
+> - Renamed earlycon_kgdboc to kgdboc_earlycon.
+> - Simplify earlycon_kgdb deinit by using the deinit() function.
+> 
+> Changes in v2:
+> - Assumes we have ("kgdb: Disable WARN_CONSOLE_UNLOCKED for all kgdb")
+> - Fix kgdbts, tty/mips_ejtag_fdc, and usb/early/ehci-dbgp
+> 
+>  drivers/tty/serial/kgdboc.c | 136 ++++++++++++++++++++++++++++++++++++
+>  include/linux/kgdb.h        |   4 ++
+>  kernel/debug/debug_core.c   |  23 ++++--
+>  3 files changed, 159 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
+> index 519d8cfbfbed..7aca0a67fc0b 100644
+> --- a/drivers/tty/serial/kgdboc.c
+> +++ b/drivers/tty/serial/kgdboc.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/input.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/serial_core.h>
+>  
+>  #define MAX_CONFIG_LEN		40
+>  
+> @@ -42,6 +43,13 @@ static int			kgdb_tty_line;
+>  
+>  static struct platform_device *kgdboc_pdev;
+>  
+> +#ifdef CONFIG_KGDB_SERIAL_CONSOLE
 
-Regards,
-Markus
+Isn't this always set for this file (see Makefile)?
+
+I think all the instances of this check (and the diligent
+#else clauses are redundant).
+
+> +static struct kgdb_io		kgdboc_earlycon_io_ops;
+> +struct console			*earlycon;
+
+static?
+
+
+> <snip>
+> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> index b072aeb1fd78..77a3c519478a 100644
+> --- a/include/linux/kgdb.h
+> +++ b/include/linux/kgdb.h
+> @@ -1075,15 +1075,21 @@ EXPORT_SYMBOL_GPL(kgdb_schedule_breakpoint);
+>   */
+>  int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
+>  {
+> +	struct kgdb_io *old_dbg_io_ops;
+>  	int err;
+>  
+>  	spin_lock(&kgdb_registration_lock);
+>  
+> -	if (dbg_io_ops) {
+> -		spin_unlock(&kgdb_registration_lock);
+> +	old_dbg_io_ops = dbg_io_ops;
+> +	if (old_dbg_io_ops) {
+> +		if (!old_dbg_io_ops->deinit) {
+> +			spin_unlock(&kgdb_registration_lock);
+>  
+> -		pr_err("Another I/O driver is already registered with KGDB\n");
+> -		return -EBUSY;
+> +			pr_err("KGDB I/O driver %s can't replace %s.\n",
+> +				new_dbg_io_ops->name, old_dbg_io_ops->name);
+> +			return -EBUSY;
+> +		}
+> +		old_dbg_io_ops->deinit();
+>  	}
+>  
+>  	if (new_dbg_io_ops->init) {
+> @@ -1098,6 +1104,12 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
+>  
+>  	spin_unlock(&kgdb_registration_lock);
+>  
+> +	if (old_dbg_io_ops) {
+> +		pr_info("Replaced I/O driver %s with %s\n",
+> +			old_dbg_io_ops->name, new_dbg_io_ops->name);
+
+I know that causes no trouble for the current deinit() method does but 
+I'd be more comfortable if the core printed this before calling deinit()?
+
+
+Daniel.
