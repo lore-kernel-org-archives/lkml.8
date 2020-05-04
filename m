@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE807C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA65AC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75242073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE1C205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615634;
-	bh=cNHYncv6nI3E1IZ9bJ2r7TR/o+trGDi/hKmbzKFpJPs=;
+	s=default; t=1588615636;
+	bh=nyuc0UrXFf+Y/rW8iOi/qOX3NRNEicLnLnbSzCvQ8As=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VP1mG7vb1RRLriXPHcgbFQmUUa3Ob9KhHgqch0OLjgRIaHz2sOHPhE1SnNU8nAKAp
-	 oku9NlsFa/ND+AACnTsra6kJJfJTcSg97/V9klXk1Wd921t4y9IHkFcDlqPdMRiTDj
-	 9GbpJrZ31ENc9rUnbZ6c+6LzIq8dPJRAbjCLqJdg=
+	b=PIviPt9yzNsBAgXbHWBiQOzo0jcNtHN0bv3piKaSJpRxUg0Aix7JVp4Gj+5d+P14n
+	 lE53N5m0TIgVCVdko0Rkh0ZS240EJTpjkrDSUyEbY2QwmRkmO/uN/PCee1IDhV3IAZ
+	 CL6QQI9kbefcuk9vfmVAWoBBBkUTPxhDCuKpCsj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732106AbgEDSHN (ORCPT
+        id S1731210AbgEDSHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37788 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731556AbgEDSHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:09 -0400
+        id S1732093AbgEDSHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6D022073B;
-        Mon,  4 May 2020 18:07:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC8720721;
+        Mon,  4 May 2020 18:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615628;
-        bh=cNHYncv6nI3E1IZ9bJ2r7TR/o+trGDi/hKmbzKFpJPs=;
+        s=default; t=1588615630;
+        bh=nyuc0UrXFf+Y/rW8iOi/qOX3NRNEicLnLnbSzCvQ8As=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CB7sDHtBI5D54JlB49Y62qyyFefygr1g4W8xPqQJxXX28aGI/fsqHwbZqO/EsSvQ4
-         VMEHCSHChv7JiYmxkPspIi6XhFPDs0hDqv4IWM6KBzcYlxZiykeFxy3WEPQTMe1JRS
-         jS7f6FwCYhoeDvs0ZhwBp2d2iCAFO69QWkKrvCz4=
+        b=oWJGSxt0MQg2ZV1elRv/A/hx58cQtkxx92ZvwnRzg/oOGBUaEc8g2cZARgJhdnVtU
+         JGNe5sACNqPxPak2Gqq4vm1mg+FXDoBGIUwiVYjB9vs88YNKGT65LGCPOzyptuEJ1F
+         Nx7KlfGkFmgWSm8y68Inc2U1SJ171AMEn31fEwuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yixin Zhang <yixin.zhang@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.6 58/73] dmaengine: fix channel index enumeration
-Date:   Mon,  4 May 2020 19:58:01 +0200
-Message-Id: <20200504165509.665982542@linuxfoundation.org>
+        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        David Disseldorp <ddiss@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 59/73] scsi: target/iblock: fix WRITE SAME zeroing
+Date:   Mon,  4 May 2020 19:58:02 +0200
+Message-Id: <20200504165509.731015461@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -60,198 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: David Disseldorp <ddiss@suse.de>
 
-commit 0821009445a8261ac4d32a6df4b83938e007c765 upstream.
+commit 1d2ff149b263c9325875726a7804a0c75ef7112e upstream.
 
-When the channel register code was changed to allow hotplug operations,
-dynamic indexing wasn't taken into account. When channels are randomly
-plugged and unplugged out of order, the serial indexing breaks. Convert
-channel indexing to using IDA tracking in order to allow dynamic
-assignment. The previous code does not cause any regression bug for
-existing channel allocation besides idxd driver since the hotplug usage
-case is only used by idxd at this point.
+SBC4 specifies that WRITE SAME requests with the UNMAP bit set to zero
+"shall perform the specified write operation to each LBA specified by the
+command".  Commit 2237498f0b5c ("target/iblock: Convert WRITE_SAME to
+blkdev_issue_zeroout") modified the iblock backend to call
+blkdev_issue_zeroout() when handling WRITE SAME requests with UNMAP=0 and a
+zero data segment.
 
-With this change, the chan->idr_ref is also not needed any longer. We can
-have a device with no channels registered due to hot plug. The channel
-device release code no longer should attempt to free the dma device id on
-the last channel release.
+The iblock blkdev_issue_zeroout() call incorrectly provides a flags
+parameter of 0 (bool false), instead of BLKDEV_ZERO_NOUNMAP.  The bool
+false parameter reflects the blkdev_issue_zeroout() API prior to commit
+ee472d835c26 ("block: add a flags argument to (__)blkdev_issue_zeroout")
+which was merged shortly before 2237498f0b5c.
 
-Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
-
-Reported-by: Yixin Zhang <yixin.zhang@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Yixin Zhang <yixin.zhang@intel.com>
-Link: https://lore.kernel.org/r/158679961260.7674.8485924270472851852.stgit@djiang5-desk3.ch.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200419163109.11689-1-ddiss@suse.de
+Fixes: 2237498f0b5c ("target/iblock: Convert WRITE_SAME to blkdev_issue_zeroout")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dmaengine.c   |   60 +++++++++++++++++++---------------------------
- include/linux/dmaengine.h |    4 +--
- 2 files changed, 28 insertions(+), 36 deletions(-)
+ drivers/target/target_core_iblock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -151,10 +151,6 @@ static void chan_dev_release(struct devi
- 	struct dma_chan_dev *chan_dev;
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -432,7 +432,7 @@ iblock_execute_zero_out(struct block_dev
+ 				target_to_linux_sector(dev, cmd->t_task_lba),
+ 				target_to_linux_sector(dev,
+ 					sbc_get_write_same_sectors(cmd)),
+-				GFP_KERNEL, false);
++				GFP_KERNEL, BLKDEV_ZERO_NOUNMAP);
+ 	if (ret)
+ 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
  
- 	chan_dev = container_of(dev, typeof(*chan_dev), device);
--	if (atomic_dec_and_test(chan_dev->idr_ref)) {
--		ida_free(&dma_ida, chan_dev->dev_id);
--		kfree(chan_dev->idr_ref);
--	}
- 	kfree(chan_dev);
- }
- 
-@@ -952,27 +948,9 @@ static int get_dma_id(struct dma_device
- }
- 
- static int __dma_async_device_channel_register(struct dma_device *device,
--					       struct dma_chan *chan,
--					       int chan_id)
-+					       struct dma_chan *chan)
- {
- 	int rc = 0;
--	int chancnt = device->chancnt;
--	atomic_t *idr_ref;
--	struct dma_chan *tchan;
--
--	tchan = list_first_entry_or_null(&device->channels,
--					 struct dma_chan, device_node);
--	if (!tchan)
--		return -ENODEV;
--
--	if (tchan->dev) {
--		idr_ref = tchan->dev->idr_ref;
--	} else {
--		idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
--		if (!idr_ref)
--			return -ENOMEM;
--		atomic_set(idr_ref, 0);
--	}
- 
- 	chan->local = alloc_percpu(typeof(*chan->local));
- 	if (!chan->local)
-@@ -988,29 +966,36 @@ static int __dma_async_device_channel_re
- 	 * When the chan_id is a negative value, we are dynamically adding
- 	 * the channel. Otherwise we are static enumerating.
- 	 */
--	chan->chan_id = chan_id < 0 ? chancnt : chan_id;
-+	mutex_lock(&device->chan_mutex);
-+	chan->chan_id = ida_alloc(&device->chan_ida, GFP_KERNEL);
-+	mutex_unlock(&device->chan_mutex);
-+	if (chan->chan_id < 0) {
-+		pr_err("%s: unable to alloc ida for chan: %d\n",
-+		       __func__, chan->chan_id);
-+		goto err_out;
-+	}
-+
- 	chan->dev->device.class = &dma_devclass;
- 	chan->dev->device.parent = device->dev;
- 	chan->dev->chan = chan;
--	chan->dev->idr_ref = idr_ref;
- 	chan->dev->dev_id = device->dev_id;
--	atomic_inc(idr_ref);
- 	dev_set_name(&chan->dev->device, "dma%dchan%d",
- 		     device->dev_id, chan->chan_id);
--
- 	rc = device_register(&chan->dev->device);
- 	if (rc)
--		goto err_out;
-+		goto err_out_ida;
- 	chan->client_count = 0;
--	device->chancnt = chan->chan_id + 1;
-+	device->chancnt++;
- 
- 	return 0;
- 
-+ err_out_ida:
-+	mutex_lock(&device->chan_mutex);
-+	ida_free(&device->chan_ida, chan->chan_id);
-+	mutex_unlock(&device->chan_mutex);
-  err_out:
- 	free_percpu(chan->local);
- 	kfree(chan->dev);
--	if (atomic_dec_return(idr_ref) == 0)
--		kfree(idr_ref);
- 	return rc;
- }
- 
-@@ -1019,7 +1004,7 @@ int dma_async_device_channel_register(st
- {
- 	int rc;
- 
--	rc = __dma_async_device_channel_register(device, chan, -1);
-+	rc = __dma_async_device_channel_register(device, chan);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -1039,6 +1024,9 @@ static void __dma_async_device_channel_u
- 	device->chancnt--;
- 	chan->dev->chan = NULL;
- 	mutex_unlock(&dma_list_mutex);
-+	mutex_lock(&device->chan_mutex);
-+	ida_free(&device->chan_ida, chan->chan_id);
-+	mutex_unlock(&device->chan_mutex);
- 	device_unregister(&chan->dev->device);
- 	free_percpu(chan->local);
- }
-@@ -1061,7 +1049,7 @@ EXPORT_SYMBOL_GPL(dma_async_device_chann
-  */
- int dma_async_device_register(struct dma_device *device)
- {
--	int rc, i = 0;
-+	int rc;
- 	struct dma_chan* chan;
- 
- 	if (!device)
-@@ -1166,9 +1154,12 @@ int dma_async_device_register(struct dma
- 	if (rc != 0)
- 		return rc;
- 
-+	mutex_init(&device->chan_mutex);
-+	ida_init(&device->chan_ida);
-+
- 	/* represent channels in sysfs. Probably want devs too */
- 	list_for_each_entry(chan, &device->channels, device_node) {
--		rc = __dma_async_device_channel_register(device, chan, i++);
-+		rc = __dma_async_device_channel_register(device, chan);
- 		if (rc < 0)
- 			goto err_out;
- 	}
-@@ -1239,6 +1230,7 @@ void dma_async_device_unregister(struct
- 	 */
- 	dma_cap_set(DMA_PRIVATE, device->cap_mask);
- 	dma_channel_rebalance();
-+	ida_free(&dma_ida, device->dev_id);
- 	dma_device_put(device);
- 	mutex_unlock(&dma_list_mutex);
- }
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -336,13 +336,11 @@ struct dma_chan {
-  * @chan: driver channel device
-  * @device: sysfs device
-  * @dev_id: parent dma_device dev_id
-- * @idr_ref: reference count to gate release of dma_device dev_id
-  */
- struct dma_chan_dev {
- 	struct dma_chan *chan;
- 	struct device device;
- 	int dev_id;
--	atomic_t *idr_ref;
- };
- 
- /**
-@@ -827,6 +825,8 @@ struct dma_device {
- 	int dev_id;
- 	struct device *dev;
- 	struct module *owner;
-+	struct ida chan_ida;
-+	struct mutex chan_mutex;	/* to protect chan_ida */
- 
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
 
 
