@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79BFC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F79C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBA2E206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513A920661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616029;
-	bh=oEu8JaHdU1+xsrFM3p3FbBX1dt3GQ8Bq1iSt+kqU8BA=;
+	s=default; t=1588616035;
+	bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wbbTpZHPX4TiAYeq0wMMx3sl2qqwPV2OIRQp2Nb3gXUk2d3xf8+YStEDBJfQAaYgM
-	 RpsHMe2vCoFTWlcJ96qdb8alO9NPlK8FUE5ohFBNjPIfdcKORG6/DhhVnNTViHWzrc
-	 bNzLQ/5l+zvTevRcJj36pg7GYnP7NwjrRR9aATek=
+	b=Y2tQXeCQY/4DpmLTrIy9Eff96RQAZ1XsOyV4z/OV4aG6YuvS1yaE3rpv/nmi4JodS
+	 djQsnZyQ86O5bmbTArrKX0U/siZF+Ou/ZEJjes91HXln0tEaq6Kp7js3m3aKr028xU
+	 8S8Ly7E7wYetP9+kQvxY5fIfY5d+5IUAhk7hRigA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbgEDSNl (ORCPT
+        id S1732322AbgEDSNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbgEDSBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:10 -0400
+        id S1731104AbgEDSBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDAEF2078C;
-        Mon,  4 May 2020 18:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DDCC2073B;
+        Mon,  4 May 2020 18:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615270;
-        bh=oEu8JaHdU1+xsrFM3p3FbBX1dt3GQ8Bq1iSt+kqU8BA=;
+        s=default; t=1588615263;
+        bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bpv0ZLQFktIqhApKgiTRqYToWd8MG2tGGeneMVdj5KGWe4jE/0VIdOckB356HEY01
-         4qRq7YHYmtr7BaNEAJ9nnxmD714d20nQOKhdxw51kPjMOQki5GqaBHppq13mZPXDc/
-         VGC0ncTefJ9PyZ0vc+HJWrNgZVfbZTecd2STnMKA=
+        b=Zl5obtgwKEPZtqCOYIpHuoY2KfZukm+2XcV1jD8PaN6MZaw6h8qaW5JwFLGMRpAJQ
+         J0j0sYtev4Ll5HiemMM4/uBpaNtmoInQtmu/OaDcdPN91LjEZ9RmvYkoefazlMfCGu
+         CJ9Q+Uk0DVYIRbzk1yuWz7K4HrNm8peSEyFPGjzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.14 22/26] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-Date:   Mon,  4 May 2020 19:57:36 +0200
-Message-Id: <20200504165447.383012450@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.14 24/26] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon,  4 May 2020 19:57:38 +0200
+Message-Id: <20200504165447.897342672@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
 References: <20200504165442.494398840@linuxfoundation.org>
@@ -60,39 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 upstream.
+commit 7648f939cb919b9d15c21fff8cd9eba908d595dc upstream.
 
-Currently, system fails to boot because the legacy interrupt remapping
-mode does not enable 128-bit IRTE (GA), which is required for x2APIC
-support.
+nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acls
+that differ from the acl originally passed into nfs3_set_acl.
 
-Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
-kernel option amd_iommu_intr=legacy instead. The initialization
-logic will check GASup and automatically fallback to using
-AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
-
-Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu_init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs3acl.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2809,7 +2809,7 @@ static int __init parse_amd_iommu_intr(c
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inod
+ 
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
  {
- 	for (; *str; ++str) {
- 		if (strncmp(str, "legacy", 6) == 0) {
--			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
-+			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
+-	struct posix_acl *alloc = NULL, *dfacl = NULL;
++	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
+ 	int status;
+ 
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = alloc;
+ 			break;
+ 
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl = acl;
+-			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
++			alloc = get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = acl;
++			acl = alloc;
  			break;
  		}
- 		if (strncmp(str, "vapic", 5) == 0) {
+ 	}
+ 
+ 	if (acl == NULL) {
+-		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl = alloc;
+ 	}
+ 	status = __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl != orig)
++		posix_acl_release(acl);
++	if (dfacl != orig)
++		posix_acl_release(dfacl);
+ 	return status;
+ 
+ fail:
+-	return PTR_ERR(alloc);
++	status = PTR_ERR(alloc);
++	goto out;
+ }
+ 
+ const struct xattr_handler *nfs3_xattr_handlers[] = {
 
 
