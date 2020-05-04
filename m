@@ -2,110 +2,132 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F12C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4E6C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBEE2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="IpF0KAT3"
+	by mail.kernel.org (Postfix) with ESMTP id 28D3720721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbgEDLXb (ORCPT
+        id S1728477AbgEDLZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:23:31 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:40343 "EHLO mail.zx2c4.com"
+        Mon, 4 May 2020 07:25:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:42270 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgEDLXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:23:31 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 49e0af25;
-        Mon, 4 May 2020 11:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=MshPdTivdQoEaiICWNo3xWGuO00=; b=IpF0KA
-        T3Flp86mw4XwuAySVKKGzTvzRvxgd+j/1OZCgygCNJwSvUzC0qvPrGi6FzHBlKjP
-        /uZZwjfgGZ9b9joUdSY6SmPbW8L6OCpaGwUS6iCvGOFEdJ9aAEEvDDqrVChDkFjc
-        cg0ssL+i9ZZKKKmjgwwi15OvOq9Z6MyEIcLT34fmi15OJpmk/vrzmXdSYYcW9g1U
-        TW/vLuvXbatTOna8Dja3WBuynAdtA6nn7nsCnG0C6hpxejT5d6LjLixcZmDZSuIG
-        H+KqlweT4z0GjEkZuIRhqyGJVU5A82pmDFfLg8VxlVC+LOR9uVVXnLCaHPy3ejxF
-        ywUgzniriikoQC4g==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b89c4137 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Mon, 4 May 2020 11:11:05 +0000 (UTC)
-Received: by mail-il1-f176.google.com with SMTP id w6so10874770ilg.1;
-        Mon, 04 May 2020 04:23:28 -0700 (PDT)
-X-Gm-Message-State: AGi0PubGAMAGEIpIOAfqwZdpRlTiYqHAsCoJ9ZauaBxFWIRowFJzrCD8
-        O192DZVqMcY0F0dqhSBooDBaxkCEhK/l3BqFeCg=
-X-Google-Smtp-Source: APiQypKKfDzUtssMsRFuPB9MBgpCxpRDJrla4OQThGgQpXh+dzwUnDUeYrjOVDcBl/9bz1EkcmaNqR/+tP+3OIoMfzU=
-X-Received: by 2002:a92:5c82:: with SMTP id d2mr16079991ilg.231.1588591408099;
- Mon, 04 May 2020 04:23:28 -0700 (PDT)
+        id S1726445AbgEDLZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:25:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 623631FB;
+        Mon,  4 May 2020 04:25:45 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 433BC3F71F;
+        Mon,  4 May 2020 04:25:44 -0700 (PDT)
+Date:   Mon, 4 May 2020 12:25:35 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
+ ID property from DT
+Message-ID: <20200504112535.GA27662@e121166-lin.cambridge.arm.com>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-5-kishon@ti.com>
+ <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
+ <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
 MIME-Version: 1.0
-References: <0000000000005fd19505a4355311@google.com> <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
- <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com>
- <f2eb18ea-b32a-4b64-0417-9b5b2df98e33@gmail.com> <29bd64f4-5fe0-605e-59cc-1afa199b1141@gmail.com>
- <CAHmME9rR-_KvENZyBrRhYNWD+hVD-FraxPJiofsmuXBh651QXw@mail.gmail.com> <85e76f66-f807-ad12-df9d-0805b68133fa@gmail.com>
-In-Reply-To: <85e76f66-f807-ad12-df9d-0805b68133fa@gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 4 May 2020 05:23:17 -0600
-X-Gmail-Original-Message-ID: <CAHmME9ocB-LUYwJTxsqui1Bh+cbKixEP-sayVNa9puY25hEASA@mail.gmail.com>
-Message-ID: <CAHmME9ocB-LUYwJTxsqui1Bh+cbKixEP-sayVNa9puY25hEASA@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, kvalo@codeaurora.org,
-        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>, vivien.didelot@gmail.com,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So in spite of this Syzkaller bug being unrelated in the end, I've
-continued to think about the stacktrace a bit, and combined with some
-other [potentially false alarm] bug reports I'm trying to wrap my head
-around, I'm a bit a curious about ideal usage for the udp_tunnel API.
+On Mon, May 04, 2020 at 02:22:30PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
+> 
+> On 5/1/2020 8:41 PM, Lorenzo Pieralisi wrote:
+> > On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
+> >> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
+> >> defines both Vendor ID and Device ID to be 32-bits. Fix
+> >> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
+> >> properties from device tree.
+> >>
+> >> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
+> >>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
+> >>  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > I don't see how you would use a 32-bit value for a 16-bit register so
+> > certainly the struct cdns_pcie_rc fields size is questionable anyway.
+> > 
+> > I *assume* you are referring to 4.1.2.1 and the property list
+> > encoded as "encode-int".
+> > 
+> > I would like to get RobH's opinion on this - I don't know myself
+> > whether the PCI OF bindings you added are still relevant and how
+> > they should be interpreted.
+> 
+> This change was made due to RobH's comment below [1]
+> 
+> [1] ->
+> https://lore.kernel.org/r/CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com/
 
-All the uses I've seen in the kernel (including wireguard) follow this pattern:
+Thanks for the pointer - that's what I needed to proceed with this
+patch.
 
-rcu_read_lock_bh();
-sock = rcu_dereference(obj->sock);
-...
-udp_tunnel_xmit_skb(..., sock, ...);
-rcu_read_unlock_bh();
+Lorenzo
 
-udp_tunnel_xmit_skb calls iptunnel_xmit, which winds up in the usual
-ip_local_out path, which eventually winds up calling some other
-devices' ndo_xmit, or gets queued up in a qdisc. Calls to
-udp_tunnel_xmit_skb aren't exactly cheap. So I wonder: is holding the
-rcu lock for all that time really a good thing?
-
-A different pattern that avoids holding the rcu lock would be:
-
-rcu_read_lock_bh();
-sock = rcu_dereference(obj->sock);
-sock_hold(sock);
-rcu_read_unlock_bh();
-...
-udp_tunnel_xmit_skb(..., sock, ...);
-sock_put(sock);
-
-This seems better, but I wonder if it has some drawbacks too. For
-example, sock_put has some comment that warns against incrementing it
-in response to forwarded packets. And if this isn't necessary to do,
-it's marginally more costly than the first pattern.
-
-Any opinions about this?
-
-Jason
+> Thanks
+> Kishon
+> 
+> > 
+> > Thanks
+> > Lorenzo
+> > 
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> index 8f72967f298f..31e67c9c88cf 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+> >>  	}
+> >>  
+> >>  	rc->vendor_id = 0xffff;
+> >> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> >> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
+> >>  
+> >>  	rc->device_id = 0xffff;
+> >> -	of_property_read_u16(np, "device-id", &rc->device_id);
+> >> +	of_property_read_u32(np, "device-id", &rc->device_id);
+> >>  
+> >>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> >>  	pcie->reg_base = devm_ioremap_resource(dev, res);
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> >> index 6bd89a21bb1c..df14ad002fe9 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> >> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
+> >>  	struct resource		*bus_range;
+> >>  	void __iomem		*cfg_base;
+> >>  	u32			no_bar_nbits;
+> >> -	u16			vendor_id;
+> >> -	u16			device_id;
+> >> +	u32			vendor_id;
+> >> +	u32			device_id;
+> >>  };
+> >>  
+> >>  /**
+> >> -- 
+> >> 2.17.1
+> >>
