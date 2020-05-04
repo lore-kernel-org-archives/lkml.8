@@ -2,142 +2,107 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D820C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C28C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02FCC2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995CA20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbgEDS3q (ORCPT
+        id S1731027AbgEDSaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:29:46 -0400
-Received: from smtprelay0141.hostedemail.com ([216.40.44.141]:33792 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730292AbgEDS3n (ORCPT
+        Mon, 4 May 2020 14:30:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729937AbgEDSaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:29:43 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id BCBAE180050EA;
-        Mon,  4 May 2020 18:29:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: care86_8eb3f26475931
-X-Filterd-Recvd-Size: 3895
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 May 2020 18:29:40 +0000 (UTC)
-Message-ID: <f1926d434cdeb091405ef8c01a90c0140d296bed.camel@perches.com>
-Subject: [trivial PATCH] efi/libstub: Reduce efi_printk object size
-From:   Joe Perches <joe@perches.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>
-Date:   Mon, 04 May 2020 11:29:39 -0700
-In-Reply-To: <CAMj1kXHwdy3BTqt-q_qnezyz666BcqKiFxeumfsD+Qjy5qRzZA@mail.gmail.com>
-References: <091e3fc3bdbc5f480af7d3b3ac096d174a4480d0.1588273612.git.joe@perches.com>
-         <ec53e67b3ac928922807db3cb1585e911971dadc.1588273612.git.joe@perches.com>
-         <CAMj1kXHwdy3BTqt-q_qnezyz666BcqKiFxeumfsD+Qjy5qRzZA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 4 May 2020 14:30:19 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FABDC061A0E;
+        Mon,  4 May 2020 11:30:19 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jVfr6-0005N9-DG; Mon, 04 May 2020 20:30:16 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D90DD1C0084;
+        Mon,  4 May 2020 20:30:15 +0200 (CEST)
+Date:   Mon, 04 May 2020 18:30:15 -0000
+From:   "tip-bot2 for Joerg Roedel" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/boot/compressed/64: Switch to __KERNEL_CS after
+ GDT is loaded
+Cc:     Joerg Roedel <jroedel@suse.de>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200428151725.31091-13-joro@8bytes.org>
+References: <20200428151725.31091-13-joro@8bytes.org>
 MIME-Version: 1.0
+Message-ID: <158861701576.8414.8257104010943662350.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a few more common kernel styles.
+The following commit has been merged into the x86/boot branch of tip:
 
-Trivially reduce efi_printk object size by using a dereference to
-a temporary instead of multiple dereferences of the same object.
+Commit-ID:     34bb49229f19399a5b45c323afb5749f31f7876c
+Gitweb:        https://git.kernel.org/tip/34bb49229f19399a5b45c323afb5749f31f7876c
+Author:        Joerg Roedel <jroedel@suse.de>
+AuthorDate:    Tue, 28 Apr 2020 17:16:22 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 04 May 2020 19:53:08 +02:00
 
-Use efi_printk(const char *str) and static or static const for its
-internal variables.
+x86/boot/compressed/64: Switch to __KERNEL_CS after GDT is loaded
 
-Use the more common form of while instead of a for loop.
+When the pre-decompression code loads its first GDT in startup_64(), it
+is still running on the CS value of the previous GDT. In the case of
+SEV-ES, this is the EFI GDT but it can be anything depending on what has
+loaded the kernel (boot loader, container runtime, etc.)
 
-Change efi_char16_printk argument to const.
+To make exception handling work (especially IRET) the CPU needs to
+switch to a CS value in the current GDT, so jump to __KERNEL_CS after
+the first GDT is loaded. This is prudent also as a general sanitization
+of CS to a known good value.
 
-Signed-off-by: Joe Perches <joe@perches.com>
+ [ bp: Massage commit message. ]
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200428151725.31091-13-joro@8bytes.org
 ---
- drivers/firmware/efi/libstub/efi-stub-helper.c | 16 ++++++++--------
- drivers/firmware/efi/libstub/efistub.h         |  6 +++---
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/boot/compressed/head_64.S | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 1c92ac231f94..dfd72a4360ac 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -26,19 +26,19 @@ bool __pure __efi_soft_reserve_enabled(void)
- 	return !efi_nosoftreserve;
- }
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 4f7e6b8..6b11060 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -393,6 +393,14 @@ SYM_CODE_START(startup_64)
+ 	addq	%rax, 2(%rax)
+ 	lgdt	(%rax)
  
--void efi_printk(char *str)
-+void efi_printk(const char *str)
- {
--	char *s8;
-+	char s8;
- 
--	for (s8 = str; *s8; s8++) {
--		efi_char16_t ch[2] = { 0 };
-+	while ((s8 = *str++)) {
-+		static efi_char16_t ch[2] = {0, 0};
- 
--		ch[0] = *s8;
--		if (*s8 == '\n') {
--			efi_char16_t nl[2] = { '\r', 0 };
-+		if (s8 == '\n') {
-+			static const efi_char16_t nl[2] = { '\r', 0 };
- 			efi_char16_printk(nl);
- 		}
- 
-+		ch[0] = s8;
- 		efi_char16_printk(ch);
- 	}
- }
-@@ -284,7 +284,7 @@ void *get_efi_config_table(efi_guid_t guid)
- 	return NULL;
- }
- 
--void efi_char16_printk(efi_char16_t *str)
-+void efi_char16_printk(const efi_char16_t *str)
- {
- 	efi_call_proto(efi_table_attr(efi_system_table, con_out),
- 		       output_string, str);
-diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
-index 5ff63230a1f1..a03a92c665f0 100644
---- a/drivers/firmware/efi/libstub/efistub.h
-+++ b/drivers/firmware/efi/libstub/efistub.h
-@@ -251,7 +251,7 @@ union efi_simple_text_output_protocol {
- 	struct {
- 		void *reset;
- 		efi_status_t (__efiapi *output_string)(efi_simple_text_output_protocol_t *,
--						       efi_char16_t *);
-+						       const efi_char16_t *);
- 		void *test_string;
- 	};
- 	struct {
-@@ -599,7 +599,7 @@ efi_status_t efi_exit_boot_services(void *handle,
- 				    void *priv,
- 				    efi_exit_boot_map_processing priv_func);
- 
--void efi_char16_printk(efi_char16_t *);
-+void efi_char16_printk(const efi_char16_t *str);
- 
- efi_status_t allocate_new_fdt_and_exit_boot(void *handle,
- 					    unsigned long *new_fdt_addr,
-@@ -624,7 +624,7 @@ efi_status_t check_platform_features(void);
- 
- void *get_efi_config_table(efi_guid_t guid);
- 
--void efi_printk(char *str);
-+void efi_printk(const char *str);
- 
- void efi_free(unsigned long size, unsigned long addr);
- 
-
++	/* Reload CS so IRET returns to a CS actually in the GDT */
++	pushq	$__KERNEL_CS
++	leaq	.Lon_kernel_cs(%rip), %rax
++	pushq	%rax
++	lretq
++
++.Lon_kernel_cs:
++
+ 	/*
+ 	 * paging_prepare() sets up the trampoline and checks if we need to
+ 	 * enable 5-level paging.
