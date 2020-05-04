@@ -2,131 +2,132 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6DCC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00787C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC8902075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588611157;
-	bh=pHevdodwKI9AchWwf20bTvyMZmY/KXT51VAk5UHfloY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XElsTuRe3qgvjXI8LGEHyhTtoujoxqfP/VA5tERejZCHC/WiJbHDMy67SBU8oMitV
-	 XaFTICTmVMv/hnI1+WFjwwfhGBKIJOVq+Sb1IzqiLXAm8aDg85FeMmermmVJBOCRlT
-	 OQw4yJ8eUNmj9Dd3I4PFLyxj1549gmXaoWsFZhMI=
+	by mail.kernel.org (Postfix) with ESMTP id CD6FF2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="t9zuEan8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgEDQwg (ORCPT
+        id S1729876AbgEDQww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729740AbgEDQwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:52:36 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 May 2020 12:52:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729724AbgEDQwv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:52:51 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D2AC061A0E;
+        Mon,  4 May 2020 09:52:51 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C292E20721;
-        Mon,  4 May 2020 16:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588611155;
-        bh=pHevdodwKI9AchWwf20bTvyMZmY/KXT51VAk5UHfloY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uyMa7mayYmQKcwMDm+GOx012e1zqDeyv+W5L6bDtfpKFAZ+E7dHLgSdsy/T09kHTW
-         ixd15enHaJKKfVWzOVcZQBM4JTXKH1eXGREFx5btkK873B8qrSEX32IqtAqg24KSMC
-         y7A6s2xNnFeJRxYbjVN/DbsKn+VXK3WbXoGH2kNQ=
-Date:   Mon, 4 May 2020 17:52:28 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 01/12] add support for Clang's Shadow Call Stack (SCS)
-Message-ID: <20200504165227.GB1833@willie-the-truck>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200416161245.148813-1-samitolvanen@google.com>
- <20200416161245.148813-2-samitolvanen@google.com>
- <20200420171727.GB24386@willie-the-truck>
- <20200420211830.GA5081@google.com>
- <20200422173938.GA3069@willie-the-truck>
- <20200422235134.GA211149@google.com>
- <202004231121.A13FDA100@keescook>
- <20200424112113.GC21141@willie-the-truck>
- <20200427204546.GA80713@google.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 190E822FF5;
+        Mon,  4 May 2020 18:52:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588611169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=s3MJel5dUV3iL+D3nK/MzZnYREoru8RurZpnEykOVsQ=;
+        b=t9zuEan8+Y5jKryk55vfcPI5vOFxLGri2s2STZlooSNGGkQqD/3NuI4nMpimzXixTW0zlu
+        8oIX9gF/JCn5vb2Ww1SDCUEq0HP98Pe7rGQyHQo0QgmmFx6DOUB7RvIhfwXlFBCqdQiGu4
+        H/PN+kTxkxOReVCPH8UZFx7FloB72i4=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH RESEND net-next] net: dsa: felix: allow the device to be disabled
+Date:   Mon,  4 May 2020 18:52:28 +0200
+Message-Id: <20200504165228.12787-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427204546.GA80713@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 190E822FF5
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[0.858];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[11];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[davemloft.net,gmail.com,lunn.ch,nxp.com,kernel.org,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 01:45:46PM -0700, Sami Tolvanen wrote:
-> On Fri, Apr 24, 2020 at 12:21:14PM +0100, Will Deacon wrote:
-> > Also, since you mentioned the lack of redzoning, isn't it a bit dodgy
-> > allocating blindly out of the kmem_cache? It means we don't have a redzone
-> > or a guard page, so if you can trigger something like a recursion bug then
-> > could you scribble past the SCS before the main stack overflows? Would this
-> > clobber somebody else's SCS?
-> 
-> I agree that allocating from a kmem_cache isn't ideal for safety. It's a
-> compromise to reduce memory overhead.
+If there is no specific configuration of the felix switch in the device
+tree, but only the default configuration (ie. given by the SoCs dtsi
+file), the probe fails because no CPU port has been set. On the other
+hand you cannot set a default CPU port because that depends on the
+actual board using the switch.
 
-Do you think it would be a problem if we always allocated a page for the
-SCS?
+[    2.701300] DSA: tree 0 has no CPU port
+[    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+[    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
 
-> > The vmap version that I asked Sami to drop
-> > is at least better in this regard, although the guard page is at the wrong
-> > end of the stack and we just hope that the allocation below us didn't pass
-> > VM_NO_GUARD. Looks like the same story for vmap stack :/
-> 
-> SCS grows up and the guard page is after the allocation, so how is it at
-> the wrong end? Am I missing something here?
+Thus let the device tree disable this device entirely, like it is also
+done with the enetc driver of the same SoC.
 
-Sorry, I'd got the SCS upside-down in my head (hey, that second 'S' stands
-for 'Stack'!). But I think I'm right about vmap stack, which feels a
-little fragile even though it seems to work out today with the very limited
-uses of VM_NO_GUARD.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+This was part of a two patch series. The second patch is already merged.
+This patch was never picked up, although it was Acked-by: David Miller,
+see:
+https://lore.kernel.org/netdev/20200314.205335.907987569817755804.davem@davemloft.net/
 
-> > If we split the pointer in two (base, offset) then we could leave the
-> > base live in the thread_info, not require alignment of the stacks (which
-> > may allow for unconditional redzoning?) and then just update the offset
-> > value on context switch, which could be trivially checked as part of the
-> > existing stack overflow checking on kernel entry.
-> 
-> I sent out v13 with split pointers, but I'm not sure it's convenient to
-> add an overflow check to kernel_ventry where the VMAP_STACK check is
-> done. I suppose I could add a check to kernel_entry after we load x18
-> from tsk. Thoughts?
+Since there is no more dependency, this patch could go through the
+net-next queue.
 
-I'll take a look at v13, since at this stage I'm keen to get something
-queued up so that we can use it as a base for further improvements without
-you having to repost the whole stack every time.
+ drivers/net/dsa/ocelot/felix.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Cheers,
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index 69546383a382..531c7710063f 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
+ 	struct felix *felix;
+ 	int err;
+ 
++	if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
++		dev_info(&pdev->dev, "device is disabled, skipping\n");
++		return -ENODEV;
++	}
++
+ 	err = pci_enable_device(pdev);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "device enable failed\n");
+-- 
+2.20.1
 
-Will
