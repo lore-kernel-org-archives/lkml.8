@@ -2,224 +2,136 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F957C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F3EC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C35820663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71871206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:48:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="habj8Apk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hq/36UR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgEDXqC (ORCPT
+        id S1728412AbgEDXsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:46:02 -0400
-Received: from mail-eopbgr680095.outbound.protection.outlook.com ([40.107.68.95]:43233
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726911AbgEDXqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:46:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TJhaJNCG+pqCwQ6zvOHeVbHSRLZetyqyhudrpeSXDoGonDPbDO8/jata5mVEC/rQ0ly8Kj4N9+upiqqSym50XWTwFAm7wYtO0/VOr4h8QU5CB6dQgfxAF1u2+0uLOC8cnnn63E15f1MvFIasOINmvCdqURv17sqVfV0XmzmEEJPmVIZmrWB04ti+KH0F6sMHWE+F+MZep7i9+VeRLGOfIeqJqHN7jyTBJ6e0ql6juSU1Jb8BSHXIPUKInEmHDsjZoCqf7wz9jcHMRMeoAVB0G4PhtVFC7aUxgPA1Hc6YbBV4qu09f1WgEOSJOiTHAI117TNwNRU4xaXLh2/tldDJIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQmK+ef+1X94VfsZ+h9BKEa7gGhq1O26F3E+VApMdPc=;
- b=GtWVEmSzScG1N+PwbMF6unRumJ3MrGb5YmNQhq5bf04L5i6YbxREusPj0oDztgxPxpuEae/ivZ8bJFTSys3w7BzGnbqUoJPMI+1/rrM97dsNN9S/JVrggXegBwQL4godgSjBZPKKN2rjKRXL4bEEm/BQLTSJ37kT0WqXapAtznC5gCSnM2z4acCkWkU7mRQDR6U9tMGlpYWnIlTpZcFeusn/YGEcGNd9acOb823fTncqvGsClAd9ALFJHLUfzopQL8e+BNC+YVhhy78pGMyeJ29xEk+q67VlDoNegr7Vf9ZgmMsoybBOpYU4Wj7QAPZ4Vu9ACwb3qjmjk4EhJ/oLuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TQmK+ef+1X94VfsZ+h9BKEa7gGhq1O26F3E+VApMdPc=;
- b=habj8ApkhrVzLUg0JzNWicQYBMurDHzZN84OWTtSClPbpQTGozh5RpKt1ZWVrkMOR0vdMt1Xjx30WLoA37X8wqF1BfLgZIBqioa0D44kn6y7z/4rKvC1dsuh58QZNA+USUjcpVw7CQOLt9byyEopYdV63E8vA8CZJYifQ7bQmDY=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1004.namprd21.prod.outlook.com (2603:10b6:302:4::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.3; Mon, 4 May
- 2020 23:45:58 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::5a3:a5e0:1e3c:e950]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::5a3:a5e0:1e3c:e950%5]) with mapi id 15.20.3000.007; Mon, 4 May 2020
- 23:45:58 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Wei Hu <weh@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state
-Thread-Topic: [PATCH v2 2/2] PCI: hv: Retry PCI bus D0 entry when the first
- attempt failed with invalid device state
-Thread-Index: AQHWH3qvuWQEJfJorUimFOkwHbGJ56iYnRHw
-Date:   Mon, 4 May 2020 23:45:58 +0000
-Message-ID: <MW2PR2101MB1052F3C838E8E49823FCF47DD7A60@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200501053728.24740-1-weh@microsoft.com>
-In-Reply-To: <20200501053728.24740-1-weh@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-05-04T23:45:56.4959192Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4603fe58-4f86-489c-a9e2-57748da1ea0d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d28e944-7909-4bd3-edf2-08d7f0854b8b
-x-ms-traffictypediagnostic: MW2PR2101MB1004:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW2PR2101MB100479E44AF677DE2627C8FCD7A60@MW2PR2101MB1004.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03932714EB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QQ5by2qwt3mXv9Z6CGikyAIy/ZQzOWaqYZzUSqS5j3jcCFrItgyEx14OAXkdcWub6ZOBWD2vhgwdgcOtz63XOWRuaREVy4UpjPELKNLWWdvuWJNAm20vaT5N0dWvj60fLT2HbHklRFTALkfg1L+wqSI/4ZVIc4tRDjEBQKY21y4x/dFSClx1SAbXj20JnfSI5+0yVcwAMHJuVZ81JqCtQ9Xm9249w7bg4psswWDPMzVTOeZAe/W5joVVAe7jqStqPADyQ5zvOrMfy/2juUPN4gyWO9+yw1NOO1dAOgBUN7Nm4xc+FQV9XMg8hy5cCX38frOnCfJ62ei5ZzN3cptZfxwIeNlgKEpaSaAO7sBAA6aItHSgUVFQYx7Supc2/0bgss+iD2sM1kaQhH+uFE49+xdReOV8cMlzMtq4DQiVXekRjGjWesgCVhzescCGxrs//UgO+ABKGL2KMzvRITpkGFYxSlGdNvJ27r+7woOdqHuGVAoFs6fmm9j9ZAjbvSjwsMSLg/nL3LI8R0R9DcJW2N+Y5X8Lh3WvJe6jexqj3BM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(136003)(396003)(376002)(39860400002)(33430700001)(76116006)(7696005)(66946007)(478600001)(6636002)(2906002)(66446008)(66556008)(66476007)(82960400001)(64756008)(33656002)(82950400001)(316002)(8990500004)(110136005)(52536014)(71200400001)(10290500003)(5660300002)(86362001)(8936002)(8676002)(55016002)(9686003)(26005)(186003)(6506007)(33440700001)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: zzR91oMwzCH1wDvP9cKxyBffT+PmoGd10ErD7szmWoRNvMuciYycbDFv8rw6P+upptNu8ZWbJvGV1ReQN2q5dETpJyP0SifysgQUn+FUSVTdsPfQsQD6MGUb8zHZUesBdLex2M65ELoNL3FgiCqfNnxNTz35ws89KKNxDO+INQf1biL6512Lh9czCaR/lGF2Y67DgNPjU08uprKGOj+9ksNe36LChz6Jy/x99QeYTbGB7VwucHbDYGq9zbxxR18U68dd3CvJ89sewW/eyl3lcbK9jYB55A0ZuMsBGscI7v0vR6loxrL444IElzC0NF4SZXFWjBBgOec0YT5KiaER6C3GLeggUVBjhmcULEbbMXqEyB2Jum4aDHv6Op7Te57oRa/J8lnb6TSw6dUpuXXrJlvv4n9m2FzADRsWvQcDxHbAO6hieM9mdRERGznGFraE4+roZfCancWOy7YFx62J05P9S88MRH/ilxd9ypfTSGAnIGxIf4SoHRme946whGkpMOt7S+wWj7JRckN9gXjj8uhRECrd0x4giWz8erk368fJak+00/jABYyGqX2QMeSxU9Ji15yGJzWhiGY59Szk+J0cBKrGbMog4P4KlhcN+CmUI2Zw5/fiYqaN78tgAHSwkqxiKco3IwGOxwxGJvnx5pv8c1e1sZ3hqkTKldKuTzpLu4PY916D6IRYs0EfQzKYqFAAGBFdJTK7rBgXL5ZCvMP5fbeEf52IhOHxO4EK0Gi8yQk+6KHJFoVF8E68BSPDnLI/n0J/engyY8sNumK98sxI4eTvm+koN3rvfHHrgc8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 May 2020 19:48:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgEDXsb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 19:48:31 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06C1C061A0E;
+        Mon,  4 May 2020 16:48:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w3so55782plz.5;
+        Mon, 04 May 2020 16:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cfGiwA9LJRPCF3MX+zGph8ephlPPnJi7faJRy6NmTEM=;
+        b=Hq/36UR+001Cwdpa+mLC4Zh1Dcu1HO4VDCScIWOw8YBsam7r8K5FJE6vJ9SIQbW63u
+         aZVS9VhnNj2uoCryrXVaqOT/FdQNN+lyHz3/l0DJCuAsnNHIwbmDwUw+U6SmwsZnWNx6
+         ZESTIljqgaWBKyjgbYVs4Q7S4yyzcoCVOcbCeVdtVH8JbYn1ZwOJGF14QDPRHGjAPf/2
+         b/PfjO40F+JR2HcxpZKjhuQ3x9bojDpkdIOs06HpzMlHhNdD2ZAomcxiP7QdR/UUAMBo
+         abHjooMu6Xsxd82zotN0x0zki5QsSWlcIoO6C7PTq4vLwRvIvndkrVUCO74g2ZM3M/v3
+         qx7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cfGiwA9LJRPCF3MX+zGph8ephlPPnJi7faJRy6NmTEM=;
+        b=jrwU4HdkadwUW8Zma68ru6okUFdEzH8VCz9BEQeLK8kyfYEuAdkvyLjGRimEQE1OZG
+         vETZVs7WF4tkIxHq68QBKq/6RWxXPM+76GwyMrnhV2Jk5U0GOVzufS10fI2OvZYAGyjV
+         pnoDhNRZbWl+5pKbCY+Paj/+dB8+RlhTQdHTddgbXoHKHYPCfq4CUJW7SeilrtWqdMM9
+         Cc1nZSp52UWXKtBXF3r1phu3DXXJoNFm1xnp4S8Z/4M/3xpVMbAx7pvrgNb2PV5RPwhb
+         +aitMlOVgvsphvdM4FgkAFg+lf7FaYE4ghB4cRlJoRpANAtqmoQM3GMH92ZdW262AgNH
+         U+cg==
+X-Gm-Message-State: AGi0PuaPnZXCDFD4eYr+Qz0nIbBZftFBcWxFRq5JNk9ZnMs+sgRefZ66
+        QAs1a+NE/4tlMSggVLM/QOg=
+X-Google-Smtp-Source: APiQypJojuvPLz4twGJW8t6CwdqX8pTJnOfRf5lowAkSZK9DI6d6rObg5OP7V/JcqnXhLMsmIvR3kw==
+X-Received: by 2002:a17:902:fe09:: with SMTP id g9mr416924plj.65.1588636111122;
+        Mon, 04 May 2020 16:48:31 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:1bad])
+        by smtp.gmail.com with ESMTPSA id b140sm191542pfb.119.2020.05.04.16.48.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 16:48:30 -0700 (PDT)
+Date:   Mon, 4 May 2020 16:48:27 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Lorenz Bauer <lmb@cloudflare.com>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Theo Julienne <theojulienne@github.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 1/1] selftests/bpf: add cls_redirect classifier
+Message-ID: <20200504234827.6mrogryxk73jc6x2@ast-mbp.dhcp.thefacebook.com>
+References: <20200424185556.7358-1-lmb@cloudflare.com>
+ <20200424185556.7358-2-lmb@cloudflare.com>
+ <20200426173324.5zg7isugereb5ert@ast-mbp.dhcp.thefacebook.com>
+ <CACAyw98nK_Vkstp-vEqNwKXtoCRnTOPr7Eh+ziH56tJGbnPsig@mail.gmail.com>
+ <185417b8-0d50-f8a3-7a09-949066579732@iogearbox.net>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d28e944-7909-4bd3-edf2-08d7f0854b8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2020 23:45:58.2384
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mgyVfh82+134RN+iAL6ARo+4H6+MIAHDls85dZseab0pzOVJxPFAtZHjAA8F23h106O9sheMtSEA2cfDvKgdQmVw0sfVVDfbUfJtNC5YuXk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1004
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <185417b8-0d50-f8a3-7a09-949066579732@iogearbox.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Hu <weh@microsoft.com> Sent: Thursday, April 30, 2020 10:37 PM
->=20
-> In the case of kdump, the PCI device was not cleanly shut down
-> before the kdump kernel starts. This causes the initial
-> attempt of entering D0 state in the kdump kernel to fail with
-> invalid device state returned from Hyper-V host.
-> When this happens, explicitly call PCI bus exit and retry to
-> enter the D0 state.
->=20
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> ---
->    v2: Incorporate review comments from Michael Kelley, Dexuan Cui and
->    Bjorn Helgaas
->=20
->  drivers/pci/controller/pci-hyperv.c | 40 +++++++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index e6fac0187722..92092a47d3af 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2739,6 +2739,8 @@ static void hv_free_config_window(struct hv_pcibus_=
-device
-> *hbus)
->  	vmbus_free_mmio(hbus->mem_config->start, PCI_CONFIG_MMIO_LENGTH);
->  }
->=20
-> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs);
-> +
->  /**
->   * hv_pci_enter_d0() - Bring the "bus" into the D0 power state
->   * @hdev:	VMBus's tracking struct for this root PCI bus
-> @@ -2751,8 +2753,10 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	struct pci_bus_d0_entry *d0_entry;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> +	bool retry =3D true;
->  	int ret;
->=20
-> +enter_d0_retry:
->  	/*
->  	 * Tell the host that the bus is ready to use, and moved into the
->  	 * powered-on state.  This includes telling the host which region
-> @@ -2779,6 +2783,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	if (ret)
->  		goto exit;
->=20
-> +	/*
-> +	 * In certain case (Kdump) the pci device of interest was
-> +	 * not cleanly shut down and resource is still held on host
-> +	 * side, the host could return invalid device status.
-> +	 * We need to explicitly request host to release the resource
-> +	 * and try to enter D0 again.
-> +	 */
-> +	if (comp_pkt.completion_status < 0 && retry) {
-> +		retry =3D false;
-> +
-> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> +
-> +		/*
-> +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-> +		 * to free up resources of its child devices.
-> +		 * In the kdump kernel we need to set the
-> +		 * wslot_res_allocated to 255 so it scans all child
-> +		 * devices to release resources allocated in the
-> +		 * normal kernel before panic happened.
-> +		 */
-> +		hbus->wslot_res_allocated =3D 255;
-> +
-> +		ret =3D hv_pci_bus_exit(hdev, true);
-> +
-> +		if (ret =3D=3D 0) {
-> +			kfree(pkt);
-> +			goto enter_d0_retry;
-> +		}
-> +		dev_err(&hdev->device,
-> +			"Retrying D0 failed with ret %d\n", ret);
-> +	}
-> +
->  	if (comp_pkt.completion_status < 0) {
->  		dev_err(&hdev->device,
->  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-> @@ -3185,7 +3221,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	return ret;
->  }
->=20
-> -static int hv_pci_bus_exit(struct hv_device *hdev, bool hibernating)
-> +static int hv_pci_bus_exit(struct hv_device *hdev, bool keep_devs)
->  {
->  	struct hv_pcibus_device *hbus =3D hv_get_drvdata(hdev);
->  	struct {
-> @@ -3203,7 +3239,7 @@ static int hv_pci_bus_exit(struct hv_device *hdev, =
-bool
-> hibernating)
->  	if (hdev->channel->rescind)
->  		return 0;
->=20
-> -	if (!hibernating) {
-> +	if (!keep_devs) {
->  		/* Delete any children which might still exist. */
->  		dr =3D kzalloc(sizeof(*dr), GFP_KERNEL);
->  		if (dr && hv_pci_start_relations_work(hbus, dr))
-> --
-> 2.20.1
+On Sat, May 02, 2020 at 01:48:51AM +0200, Daniel Borkmann wrote:
+> On 4/27/20 11:45 AM, Lorenz Bauer wrote:
+> > On Sun, 26 Apr 2020 at 18:33, Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> [...]
+> > > > +/* Linux packet pointers are either aligned to NET_IP_ALIGN (aka 2 bytes),
+> > > > + * or not aligned if the arch supports efficient unaligned access.
+> > > > + *
+> > > > + * Since the verifier ensures that eBPF packet accesses follow these rules,
+> > > > + * we can tell LLVM to emit code as if we always had a larger alignment.
+> > > > + * It will yell at us if we end up on a platform where this is not valid.
+> > > > + */
+> > > > +typedef uint8_t *net_ptr __attribute__((align_value(8)));
+> > > 
+> > > Wow. I didn't know about this attribute.
+> > > I wonder whether it can help Daniel's memcpy hack.
+> > 
+> > Yes, I think so.
+> 
+> Just for some more context [0]. I think the problem is a bit more complex in
+> general. Generally, _any_ kind of pointer to some data (except for the stack)
+> is currently treated as byte-by-byte copy from __builtin_memcpy() and other
+> similarly available __builtin_*() helpers on BPF backend since the backend
+> cannot make any assumptions about the data's alignment and whether unaligned
+> access from the underlying arch is ok & efficient (the latter the verifier
+> does judge for us however). So it's definitely not just limited to xdp->data.
+> There is also the issue that while access to any non-stack data can be
+> unaligned, access to the stack however cannot. I've discussed a while back
+> with Yonghong about potential solutions. One would be to add a small patch
+> to the BPF backend to enable __builtin_*() helpers to allow for unaligned
+> access which could then be opt-ed in e.g. via -mattr from llc for the case
+> when we know that the compiled program only runs on archs with efficient
+> unaligned access anyway. However, this still potentially breaks with the BPF
+> stack for the case when objects are, for example, larger than size 8 but with
+> a natural alignment smaller than 8 where __builtin_memcpy() would then decide
+> to emit dw-typed load/stores. But for these cases could then be annotated via
+> __aligned(8) on stack. So this is basically what we do right now as a generic
+> workaround in Cilium [0], meaning, our own memcpy/memset with optimal number
+> of instructions and __aligned(8) where needed; most of the time this __aligned(8)
+> is not needed, so it's really just a few places, and we also have a cocci
+> scripts to catch these during development if needed. Anyway, real thing would
+> be to allow the BPF stack for unaligned access as well and then BPF backend
+> could nicely solve this in a native way w/o any workarounds, but that is tbd.
+> 
+> Thanks,
+> Daniel
+> 
+>   [0] https://github.com/cilium/cilium/blob/master/bpf/include/bpf/builtins.h
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
+Daniel,
+do you mind adding such memcpy to libbpf ?
