@@ -2,167 +2,314 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F94C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEC5C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16F5B20746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C8F20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:32:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="2oipZs19"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IbNtuBab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgEDGbQ (ORCPT
+        id S1727967AbgEDGcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:31:16 -0400
-Received: from mail-eopbgr760078.outbound.protection.outlook.com ([40.107.76.78]:30786
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726404AbgEDGbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:31:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K1MEnqCYMt3Ws+6WCHoYwzN7V2XBnXUeV8pncfmjqJHogg0rPHkXKjjutlBFMnidgy1OpEsHG90GlW08emF/v9VPrRNXgP2ZEqNd/18qwTkMXJAAKDU7ykBxttQYIMMval0Mh5ASkvnjLYDtCQd+YCtZ0d6jQklUvqqpP5VrkCIzfRa8xA9Jz04g1WmUU8e3Z8gGPrb+e8YcUo5toKMUJwSHcqbiVM+RDEpMN97vT1yU0vAy8iJMQqBAG1KhlPncqe0TArdlYJ4o5PjGeDBPU0dnyTgaPklWqjF6QiOtSURfAImiQqQAB4kHvyT3TMx1uvvVEbDUGVtICbssnszhVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pJs9APsA/TA2m/74703C5FE7qbDPux9zMDGgDchf5J0=;
- b=NM5+rT93mF9/OV6ef8MIeOqJe1MCjT3gV+6do+lO5cp+OFtNw/7a9Sw0P1PQOhVF2/uIkA1Ok9xWagN7ynvmCsbZmWmuW4W9hJLbHTv6MZxgYIONeZRWYqUdasQbEnu8kDEO93bvIKtKWHCjlt1dFP7cMZBCrIf2+doP+cK0k7zgLQIjC/Bd3LA7syT5fShsyHGBS9BSCZN6W+0ksw06VXRDqs4kI/8F8ffapB9DGt17C30bgfMPQa3HrxOaIZJi5wcADHnhX+GyZBGoAb3uGuN4uMK/dDlLbkLmM3UbuwatKszmcQiW1/KkGQ7RmQFH99LaKcGpi/z3cv/LOBhQlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 4 May 2020 02:32:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbgEDGcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:32:01 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82861C061A41
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 23:32:00 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f18so8462039lja.13
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 23:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pJs9APsA/TA2m/74703C5FE7qbDPux9zMDGgDchf5J0=;
- b=2oipZs19OF2Chopy4zHtywlwKeztQEfyUGjV+oyk0O5NwsYWgXPqclNtqE7woCsTvi2iqJG8y/H8LL7+uQkzn9pSDBuQ0xu8pC+Iy5n9y3lthwJV2rS/otOOVIdrN7ZZvPeYWF3L7hVx93sejuugNGWDjUmOCbkaGO5J+KgIVmg=
-Authentication-Results: bstnet.org; dkim=none (message not signed)
- header.d=none;bstnet.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
- DM5PR12MB1466.namprd12.prod.outlook.com (2603:10b6:4:d::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.29; Mon, 4 May 2020 06:31:12 +0000
-Received: from DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
- ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.029; Mon, 4 May 2020
- 06:31:12 +0000
-Subject: Re: [PATCH v2] kvm: ioapic: Introduce arch-specific check for lazy
- update EOI mechanism
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     rkrcmar@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        borisvk@bstnet.org
-References: <1588411495-202521-1-git-send-email-suravee.suthikulpanit@amd.com>
- <e09f0be9-6a2f-a8ee-3a96-c8ffdf3add3f@redhat.com>
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Message-ID: <fd2529b7-66f9-fd4e-d071-a38d01e4b61c@amd.com>
-Date:   Mon, 4 May 2020 13:31:02 +0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-In-Reply-To: <e09f0be9-6a2f-a8ee-3a96-c8ffdf3add3f@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR04CA0181.apcprd04.prod.outlook.com
- (2603:1096:4:14::19) To DM5PR12MB1163.namprd12.prod.outlook.com
- (2603:10b6:3:7a::18)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=15GEnTmegXJFSpar+IlKuYxil7cPr4qiqw1UqwXmEK4=;
+        b=IbNtuBabKGrRCwWn89UnhW6zswaaA73zCqJIWm69Ib22X/jHQricNQIOOZFZdTvLBu
+         qVvMN3Wjp8A6h4JHPSo1PW0v1yQS+MWozhKSkWn6cec2h1IGD3dd3RrHuTPLbtHG/Wjx
+         gevMwyKevbtABkYtgIk2pJ+/C/lP6oBo9nks51KFpObuYTlD1T2UPk50fnM/Zr0D0Neu
+         M1Jq5w8COLh3urQJ3Rfv/ZBrM8plTrtFklckUNc1guarVjI/gQtmCZ4qoSf2bjg7N56p
+         InvhmX9O8i653FRoGnZtedFLebUyOST4uxii47TuX4IOCfNpyrkrwLFotPt9v5yZMR+M
+         b6DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=15GEnTmegXJFSpar+IlKuYxil7cPr4qiqw1UqwXmEK4=;
+        b=BR0jYeXHwReq6hGqAqEA7HAI0V1gpoca2uhWrdyNiLqaI1bLTwrLmrob0soZFZ9YaX
+         O7wFaKDKbA32HAuV4E7qrgz38Z8U5u7xbnQZVj46XG6cqGMETgwzevmu/D3ENLQ1kmMd
+         XW2Y7S4F68yRGBtQbfB9wLZBKV2gGOOYqqtjFPr+gCW91/DtTLGybdztaQDVdRquoyi4
+         3BoMEbQIVkIEI25wE71dOq/O7PYkbYSuvzdAxHaD+XBracbqby1PMpPtGj47aEplCDKi
+         hYSlUeWoy3IYhnl1IwwWZjAwDDzwCg+/Bx3hfn32W04FG+3JAw10kb0FSYG3QUceK+uC
+         RfVQ==
+X-Gm-Message-State: AGi0PuYm7H39dfOLCS/RI5XtSpTnzsctf+XJ8+Pvj9kpBTGAWfmghtjt
+        ApkJbb9i6YNxin0tL0OB7ZUeRgX1LdrXlYtikn9ymg==
+X-Google-Smtp-Source: APiQypISziGViI7rr1VN0Q5hVXr1Td+AkK1T4H0fFF9nJZAJ/Ik/1qnbkQVA1GCoaF1mGMmBgbot5UUu79Uzo6pjqJY=
+X-Received: by 2002:a2e:8e22:: with SMTP id r2mr9224789ljk.286.1588573918781;
+ Sun, 03 May 2020 23:31:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Suravees-MacBook-Pro.local (2403:6200:8862:d0e7:1811:ded2:5c1a:f796) by SG2PR04CA0181.apcprd04.prod.outlook.com (2603:1096:4:14::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Mon, 4 May 2020 06:31:09 +0000
-X-Originating-IP: [2403:6200:8862:d0e7:1811:ded2:5c1a:f796]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2ad30cfa-711d-4639-1422-08d7eff4bd16
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1466:|DM5PR12MB1466:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1466CCAD497D203C88FB69B3F3A60@DM5PR12MB1466.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03932714EB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rnV7mmZi8YH+pYCwewJqBU0sh2JVPuve+0Z+idkAqWtOBwnDukOr1EkuDJq82kjTjH0jOQfQR9T1UNh5hQnzCLq9yfd4FNO4wm4c4ZiiZ4GYTmdQEd0Mn04G74oeKzUEeFcFDDUIPkbBeHGpbnjKkDjLtBnCVDNMB1HqYMv/pI1/6z1z4tkuwTWesn5TIdAvZGJKxBnjZ/6voiOUOqRI6sD/wYtXA64gRAKwn+pzbm90NqMxrdIAAjGJQgwixxEQqIcSkfYI7OIOb1gi+nFsdgt1ZtgVldE2JGud+yyLgHO+YguQ/gSYSvo6Axvkifx8S5Dp8v/kre8rts1Y1xvCATXvlmVq8wbAoxe0tyRt6XZpv14+gLrdZY63gZ/YfPwT8la+akwHjOgYr6SSb0gc1HMxbpM3QRsILeKxH0NmClwADu4u4HkrNIv6O9RDMERS
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(366004)(396003)(346002)(44832011)(6666004)(5660300002)(2616005)(86362001)(31696002)(2906002)(4326008)(31686004)(15650500001)(6512007)(478600001)(6486002)(66556008)(66476007)(66946007)(8676002)(52116002)(316002)(36756003)(6506007)(8936002)(53546011)(186003)(16526019);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: S+bPUe2GdRjQtn7rbPlTG/aBqWWtJu1AHu+QjTuEUgAiDVujBfJLvyKwFWZvVvFtnOaUdgjj5nmJeD0nzuUMeyuzThfPRmPCk226uFmopkigk5VmWl9zgGZNNNiqc13PVC+LFqS1ZKx5speOaxH124kQ+ENqTyFrIvMqAxdK2BrukOdKf7s2shRrNnqNXZyL8s15Ibp+adRLVmgNth8NsWYYLUoaBwoSt9yuir0aZWN08Eu/b4lu3COL9Wyu+EvAsP+DHvzthEEcloIXCJb5zCGo6/IcliTT1xkn9DEcuxvDmjPuqgv/WnfUK3hT44zRDC+Hfpgj2Im1Lbd+E1p0DmyZVhlCxX3M4/TNsTH9BCqUAP/CyLuLBmyiUsZtO0sCxCCIccVWPWwg8/abuna1OLIhPDFobVzz3H2QFECMc/qZHskgTMcPbLHIYl+egJn4JIUP5CU2aEsRVH+s/wH3NvVT/g4nobf1ctGo4ngG7W8SJmW9xBcESrpCwPY7KPkUyc3tYkLj1FjMqiZA8x8O9RE+5nkdi+wdFRnNPYCyMDFTA/8Pvyjl6pL7pg95hhIjSQRpv3O6sq4QPYAc39LV9gDb4/MeUwh4Dqclw1MxveskPX+E7E4COuWnDNo2FGWviMccNMt57rhpKGVDv40FdFovcJyZIFNX0sq6wcqNp5xDJB5KFwzMA7PcCggYmjzL0MKJRew3R0PtHxYLsuntGu7LF6WzMIJF552ABmmL2qsJOnlXCtnvixOMDmWw/b5orhX7LPUJ9RvQxCu2XsvCX6HUtHGcaIFzWqByD+/mHPSEcL9jkXsZrozmaS/mJNsy/f6raUl2RUGoxOFbGqSVGfHsRdFahiilLb5XwWdgl78M/44Ltrxiq6S8i+AL8n05
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ad30cfa-711d-4639-1422-08d7eff4bd16
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 06:31:12.1723
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PnJ4T0WZy1SIMNS51bntGhdrbk8OCOU/YNqvQttHlJuDqGI8Hh6rGxlsdnrYokGaU1PTf1pv+Q/43hjC5clwSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1466
+References: <20200501203311.143934-1-konradybcio@gmail.com> <20200501203311.143934-2-konradybcio@gmail.com>
+In-Reply-To: <20200501203311.143934-2-konradybcio@gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 4 May 2020 12:01:29 +0530
+Message-ID: <CAP245DUOcsort1B1ftWW251Bzxp8=SuaGdZuZBmUubO9tw78cw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] thermal: qcom: tsens-v0_1: Add support for MSM8939
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo,
+On Sat, May 2, 2020 at 2:03 AM Konrad Dybcio <konradybcio@gmail.com> wrote:
+>
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+> ---
+>  drivers/thermal/qcom/tsens-v0_1.c | 142 +++++++++++++++++++++++++++++-
+>  drivers/thermal/qcom/tsens.c      |   3 +
+>  drivers/thermal/qcom/tsens.h      |   2 +-
+>  3 files changed, 145 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+> index 959a9371d205c..29b95886273b7 100644
+> --- a/drivers/thermal/qcom/tsens-v0_1.c
+> +++ b/drivers/thermal/qcom/tsens-v0_1.c
+> @@ -48,6 +48,64 @@
+>  #define MSM8916_CAL_SEL_MASK   0xe0000000
+>  #define MSM8916_CAL_SEL_SHIFT  29
+>
+> +/* eeprom layout data for 8939 */
+> +#define MSM8939_BASE0_MASK           0x000000ff
+> +#define MSM8939_BASE1_MASK           0xff000000
+> +#define MSM8939_BASE0_SHIFT
 
-On 5/3/20 12:19 AM, Paolo Bonzini wrote:
-> On 02/05/20 11:24, Suravee Suthikulpanit wrote:
-> ....
-> The questions to answer are: what is causing the re-entrancy? and why
-> is dropping the second EOI update safe?
-> 
-> The answer to the latter could well be "because we've already processed
-> it", but the answer to the former is more important.
-> 
-> The re-entrancy happens because the irq state is the OR of
-> the interrupt state and the resamplefd state.  That is, we don't
-> want to show the state as 0 until we've had a chance to set the
-> resamplefd.  But if the interrupt has _not_ gone low then we get an
-> infinite loop.
+Use 0?
 
-I'm not too familiar w/ the resamplefd.  I must have missed this part.
-Could you please point out to me where the OR logic is?
+> +#define MSM8939_BASE1_SHIFT          24
+> +
+> +#define MSM8939_S0_P1_MASK         0x000001f8
+> +#define MSM8939_S1_P1_MASK         0x001f8000
+> +#define MSM8939_S2_P1_MASK_0_4     0xf8000000
+> +#define MSM8939_S2_P1_MASK_5       0x00000001
+> +#define MSM8939_S3_P1_MASK         0x00001f80
+> +#define MSM8939_S4_P1_MASK         0x01f80000
+> +#define MSM8939_S5_P1_MASK         0x00003f00
+> +#define MSM8939_S6_P1_MASK         0x03f00000
+> +#define MSM8939_S7_P1_MASK         0x0000003f
+> +#define MSM8939_S8_P1_MASK         0x0003f000
+> +#define MSM8939_S9_P1_MASK         0x07e00000
+> +
+> +#define MSM8939_S0_P2_MASK         0x00007e00
+> +#define MSM8939_S1_P2_MASK         0x07e00000
+> +#define MSM8939_S2_P2_MASK         0x0000007e
+> +#define MSM8939_S3_P2_MASK         0x0007e000
+> +#define MSM8939_S4_P2_MASK         0x7e000000
+> +#define MSM8939_S5_P2_MASK         0x000fc000
+> +#define MSM8939_S6_P2_MASK         0xfc000000
+> +#define MSM8939_S7_P2_MASK         0x00000fc0
+> +#define MSM8939_S8_P2_MASK         0x00fc0000
+> +#define MSM8939_S9_P2_MASK_0_4     0xf8000000
+> +#define MSM8939_S9_P2_MASK_5       0x00002000
+> +
+> +#define MSM8939_CAL_SEL_MASK   0xc0000000
+> +#define MSM8939_CAL_SEL_SHIFT  0
+> +
+> +
 
-> So the actual root cause is that this is a level-triggered interrupt,
-> otherwise irqfd_inject would immediately set the KVM_USERSPACE_IRQ_SOURCE_ID
-> high and then low and you wouldn't have the infinite loop.  
+Get rid of extra line.
 
-Okay.
+> +#define MSM8939_S0_P1_SHIFT        3
+> +#define MSM8939_S1_P1_SHIFT        15
+> +#define MSM8939_S2_P1_SHIFT_0_4    27
+> +#define MSM8939_S2_P1_SHIFT_5      5
+> +#define MSM8939_S3_P1_SHIFT        7
+> +#define MSM8939_S4_P1_SHIFT        19
+> +#define MSM8939_S5_P1_SHIFT        8
+> +#define MSM8939_S6_P1_SHIFT        20
+> +//yes, 7 is missing in downstream
 
-> But in the case of level-triggered interrupts the VMEXIT already happens because
-> TMR is set; only edge-triggered interrupts need the lazy invocation
-> of the ack notifier.  
+Use C style comments.
 
-For AVIC, EOI write for level-triggered would have also be trapped.
-And yes, edge-triggered needs lazy ack notifier.
+> +#define MSM8939_S8_P1_SHIFT        12
+> +#define MSM8939_S9_P1_SHIFT        21
+> +
+> +#define MSM8939_S0_P2_SHIFT        9
+> +#define MSM8939_S1_P2_SHIFT        21
+> +#define MSM8939_S2_P2_SHIFT        1
+> +#define MSM8939_S3_P2_SHIFT        13
+> +#define MSM8939_S4_P2_SHIFT        25
+> +#define MSM8939_S5_P2_SHIFT        14
+> +#define MSM8939_S6_P2_SHIFT        26
+> +#define MSM8939_S7_P2_SHIFT        6
+> +#define MSM8939_S8_P2_SHIFT        18
+> +#define MSM8939_S9_P2_SHIFT_0_4    27
+> +#define MSM8939_S9_P2_SHIFT_5      8
+> +
+>  /* eeprom layout data for 8974 */
+>  #define BASE1_MASK             0xff
+>  #define S0_P1_MASK             0x3f00
+> @@ -189,6 +247,73 @@ static int calibrate_8916(struct tsens_priv *priv)
+>         return 0;
+>  }
+>
+> +static int calibrate_8939(struct tsens_priv *priv)
+> +{
+> +       int base0 = 0, base1 = 0, i;
+> +       u32 p1[11], p2[11];
+> +       int mode = 0;
+> +       u32 *qfprom_cdata, *qfprom_csel;
+> +
+> +       qfprom_cdata = (u32 *)qfprom_read(priv->dev, "calib");
+> +       if (IS_ERR(qfprom_cdata))
+> +               return PTR_ERR(qfprom_cdata);
+> +
+> +       qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+> +       if (IS_ERR(qfprom_csel)) {
+> +               kfree(qfprom_cdata);
+> +               return PTR_ERR(qfprom_csel);
+> +       }
+> +
+> +       mode = (qfprom_csel[0] & MSM8939_CAL_SEL_MASK) >> MSM8939_CAL_SEL_SHIFT;
+> +       dev_dbg(priv->dev, "calibration mode is %d\n", mode);
 
-> So this should be the fix:
-> 
-> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-> index 7668fed1ce65..ca2d73cd00a3 100644
-> --- a/arch/x86/kvm/ioapic.c
-> +++ b/arch/x86/kvm/ioapic.c
-> @@ -225,12 +225,12 @@ static int ioapic_set_irq(struct kvm_ioapic *ioapic, unsigned int irq,
->   	}
->   
->   	/*
-> -	 * AMD SVM AVIC accelerate EOI write and do not trap,
-> -	 * in-kernel IOAPIC will not be able to receive the EOI.
-> +	 * AMD SVM AVIC accelerate EOI write iff the interrupt is level
-> +	 * triggered, in-kernel IOAPIC will not be able to receive the EOI.
+Add an extra line here.
 
-Actually, it should be "AMD SVM AVIC accelerate EOI write iff the interrupt is _edge_ triggered".
+> +       switch (mode) {
+> +       case TWO_PT_CALIB:
+> +               base1 = (qfprom_cdata[1] & MSM8939_BASE1_MASK) >> MSM8939_BASE1_SHIFT;
+> +               p2[0] = (qfprom_cdata[0] & MSM8939_S0_P2_MASK) >> MSM8939_S0_P2_SHIFT;
+> +               p2[1] = (qfprom_cdata[0] & MSM8939_S1_P2_MASK) >> MSM8939_S1_P2_SHIFT;
+> +               p2[2] = (qfprom_cdata[1] & MSM8939_S2_P2_MASK) >> MSM8939_S2_P2_SHIFT;
+> +               p2[3] = (qfprom_cdata[1] & MSM8939_S3_P2_MASK) >> MSM8939_S3_P2_SHIFT;
+> +               p2[4] = (qfprom_cdata[1] & MSM8939_S4_P2_MASK) >> MSM8939_S4_P2_SHIFT;
+> +               p2[5] = (qfprom_cdata[1] & MSM8939_S5_P2_MASK) >> MSM8939_S5_P2_SHIFT;
+> +               p2[6] = (qfprom_cdata[1] & MSM8939_S6_P2_MASK) >> MSM8939_S6_P2_SHIFT;
+> +               p2[7] = (qfprom_cdata[1] & MSM8939_S7_P2_MASK) >> MSM8939_S7_P2_SHIFT;
+> +               p2[8] = (qfprom_cdata[1] & MSM8939_S8_P2_MASK) >> MSM8939_S8_P2_SHIFT;
+> +               p2[9] = (qfprom_cdata[1] & MSM8939_S9_P2_MASK_0_4) >> MSM8939_S9_P2_SHIFT_0_4;
+> +               p2[10] = (qfprom_cdata[1] & MSM8939_S9_P2_MASK_5) >> MSM8939_S9_P2_SHIFT_5;
+> +               for (i = 0; i < priv->num_sensors; i++)
+> +                       p2[i] = ((base1 + p2[i]) << 3);
+> +               /* Fall through */
+> +       case ONE_PT_CALIB2:
+> +               base0 = (qfprom_cdata[0] & MSM8939_BASE0_MASK);
+> +               p1[0] = (qfprom_cdata[0] & MSM8939_S0_P1_MASK) >> MSM8939_S0_P1_SHIFT;
+> +               p1[1] = (qfprom_cdata[0] & MSM8939_S1_P1_MASK) >> MSM8939_S1_P1_SHIFT;
+> +               p1[2] = (qfprom_cdata[0] & MSM8939_S2_P1_MASK_0_4) >> MSM8939_S2_P1_SHIFT_0_4;
+> +               p1[3] = (qfprom_cdata[0] & MSM8939_S2_P1_MASK_5) >> MSM8939_S2_P1_SHIFT_5;
+> +               p1[4] = (qfprom_cdata[1] & MSM8939_S3_P1_MASK) >> MSM8939_S3_P1_SHIFT;
+> +               p1[5] = (qfprom_cdata[1] & MSM8939_S4_P1_MASK) >> MSM8939_S4_P1_SHIFT;
+> +               p1[6] = (qfprom_cdata[1] & MSM8939_S5_P1_MASK) >> MSM8939_S5_P1_SHIFT;
+> +               p1[7] = (qfprom_cdata[1] & MSM8939_S6_P1_MASK) >> MSM8939_S6_P1_SHIFT;
+> +               //yes, 7 is missing in downstream
 
->   	 * In this case, we do lazy update of the pending EOI when
->   	 * trying to set IOAPIC irq.
->   	 */
-> -	if (kvm_apicv_activated(ioapic->kvm))
-> +	if (edge && kvm_apicv_activated(ioapic->kvm))
->   		ioapic_lazy_update_eoi(ioapic, irq);
->   
->   	/*
-> 
-> Did I miss anything in the above analysis with respect to AVIC?
+Use C comment style. Might this be a bug?
+
+> +               p1[8] = (qfprom_cdata[1] & MSM8939_S8_P1_MASK) >> MSM8939_S8_P1_SHIFT;
+> +               p1[9] = (qfprom_cdata[1] & MSM8939_S9_P1_MASK) >> MSM8939_S9_P1_SHIFT;
+> +               for (i = 0; i < priv->num_sensors; i++)
+> +                       p1[i] = (((base0) + p1[i]) << 3);
+> +               break;
+> +       default:
+> +               for (i = 0; i < priv->num_sensors; i++) {
+> +                       p1[i] = 500;
+> +                       p2[i] = 780;
+> +               }
+> +               break;
+> +       }
+> +
+> +       compute_intercept_slope(priv, p1, p2, mode);
+> +       kfree(qfprom_cdata);
+> +       kfree(qfprom_csel);
+> +
+> +       return 0;
+> +}
+> +
+>  static int calibrate_8974(struct tsens_priv *priv)
+>  {
+>         int base1 = 0, base2 = 0, i;
+> @@ -325,7 +450,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+>         return 0;
+>  }
+>
+> -/* v0.1: 8916, 8974 */
+> +/* v0.1: 8916, 8939, 8974 */
+>
+>  static struct tsens_features tsens_v0_1_feat = {
+>         .ver_major      = VER_0_1,
+> @@ -386,6 +511,21 @@ struct tsens_plat_data data_8916 = {
+>         .fields = tsens_v0_1_regfields,
+>  };
+>
+> +static const struct tsens_ops ops_8939 = {
+> +       .init           = init_common,
+> +       .calibrate      = calibrate_8939,
+> +       .get_temp       = get_temp_common,
+> +};
+> +
+> +struct tsens_plat_data data_8939 = {
+> +       .num_sensors    = 10,
+
+I think 8939 has 11 sensors. Can you confirm?
+
+> +       .ops            = &ops_8939,
+> +       .hw_ids         = (unsigned int []){0, 1, 2, 4, 5, 6, 7, 8, 9 },
+
+And this should be equal to the number of sensors
 
 
-For AMD:
-Tested-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-
-Thanks,
-Suravee
+> +
+> +       .feat           = &tsens_v0_1_feat,
+> +       .fields = tsens_v0_1_regfields,
+> +};
+> +
+>  static const struct tsens_ops ops_8974 = {
+>         .init           = init_common,
+>         .calibrate      = calibrate_8974,
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 2f77d235cf735..f654057e96ae1 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -59,6 +59,9 @@ static const struct of_device_id tsens_table[] = {
+>         {
+>                 .compatible = "qcom,msm8916-tsens",
+>                 .data = &data_8916,
+> +       }, {
+> +               .compatible = "qcom,msm8939-tsens",
+> +               .data = &data_8939,
+>         }, {
+>                 .compatible = "qcom,msm8974-tsens",
+>                 .data = &data_8974,
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 502acf0e68285..403b15546f648 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -590,7 +590,7 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data);
+>  extern struct tsens_plat_data data_8960;
+>
+>  /* TSENS v0.1 targets */
+> -extern struct tsens_plat_data data_8916, data_8974;
+> +extern struct tsens_plat_data data_8916, data_8939, data_8974;
+>
+>  /* TSENS v1 targets */
+>  extern struct tsens_plat_data data_tsens_v1, data_8976;
+> --
+> 2.26.1
+>
