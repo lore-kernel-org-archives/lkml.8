@@ -2,121 +2,246 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C50C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B807C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B03F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5508E206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VxY0G9Pi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bbQCRaBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbgEDQt7 (ORCPT
+        id S1729774AbgEDQun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:49:59 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50942 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729606AbgEDQt7 (ORCPT
+        Mon, 4 May 2020 12:50:43 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58564 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729634AbgEDQun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:49:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588610997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oHIFHZpMTFsS6o4C4eP4nmeKJgG/zhFL7wedsTnup60=;
-        b=VxY0G9PidKrQ0eOpp/ncMeda9TwULTFan3Lqw/SGlHxy+AAh8v0h3A4L6Tcg3oOFsEXyzh
-        m73/Z105RtZXPkEEO15k+jQGusrxoq0hjOfoAi+1BoML4vUls1VUMDVskTQM5UuJvZTH98
-        SnFfXa3ZONlBW8tblddzHGqfGt1idNo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-71--sO8lHQSPB67IiLMQPN9Lg-1; Mon, 04 May 2020 12:49:55 -0400
-X-MC-Unique: -sO8lHQSPB67IiLMQPN9Lg-1
-Received: by mail-wm1-f71.google.com with SMTP id v185so115034wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:49:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oHIFHZpMTFsS6o4C4eP4nmeKJgG/zhFL7wedsTnup60=;
-        b=F9CBNkeZ8p5ydv09M/dlTI35M7YWvAPcL7kOZZNm+cvi5/CnCjIXwltKzQpMzDaeIS
-         k9ooyvzRXQk8IPzkFA2e2YSPyxl1EDECl7bWv/7AV0HOrVXY34b7KK4lpYJ5yjV4ckdR
-         fFv8Mydg32/mD47rhQPjeAoyt7BE4ocywd2BvcDpEoICFaAbIu5MdE6/ONjOkdA6nBvt
-         avPncPq+0KQhJkl0YoMuII1+2OFqJGUQnUFTNyUyBJF3E2H1r22weET7kA031VAb1NyN
-         nnMn5CofszXp0Ea2ahgZC9+FLZZBrp5aRjBqcKig2Cy5R2K6YXceMMbkzHHcPaOgJOHN
-         Bnug==
-X-Gm-Message-State: AGi0PubCFFhf0nha4EYhZEw/gBSMJ8dA3dGU3T9/APSBf1z0I4j4b9nR
-        PAo7SeTuJdZhtP0X7fvqpbRGynMKcp4LAX3Tg9wS4QKURGAPpEN0n1gESMLCdhHW6yMv5GAzqzK
-        YsYfaEZPwqybxca4nHZyxWy2f
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr174147wro.93.1588610994692;
-        Mon, 04 May 2020 09:49:54 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLKtFHZIUv4NcG3vTVjC4T0n5A2J4iO87GdeaxTeFI/aWSAwfse461FLfDPml9gQKYkw32KGw==
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr174120wro.93.1588610994397;
-        Mon, 04 May 2020 09:49:54 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id d5sm19736003wrp.44.2020.05.04.09.49.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:49:53 -0700 (PDT)
-Subject: Re: [PATCH 0/3] KVM: x86/mmu: Use kernel's PG_LEVEL_* enums
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Barret Rhoden <brho@google.com>
-References: <20200428005422.4235-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <35a94d18-d6d1-78f1-aee5-0e40b5edc60b@redhat.com>
-Date:   Mon, 4 May 2020 18:49:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 4 May 2020 12:50:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044GoeY3038670;
+        Mon, 4 May 2020 11:50:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588611040;
+        bh=lsII3Py9s+SHOVmgNp+S9qM4NUvmFLJTFhD7yaqMXLA=;
+        h=From:To:CC:Subject:Date;
+        b=bbQCRaBOlWyggGD2bmWjmXVxYbJy1QBJxf2N1zihi5av1EakSM8eMsfPiTMS0iHk3
+         UXJLCJdHA5aVmjuZrnhnj1sY1g5wYzGuPlByVB5SUXNvMqLT+qGr0c2TTrXODhbMlj
+         DSmoVNVSQ/Y6QaiJF+vA+UdmKQ8L1AfSwn96pTAo=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044Goemx011435
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 May 2020 11:50:40 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 11:50:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 11:50:40 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044Goev6129119;
+        Mon, 4 May 2020 11:50:40 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Subject: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
+Date:   Mon, 4 May 2020 11:41:56 -0500
+Message-ID: <20200504164156.21469-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200428005422.4235-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/04/20 02:54, Sean Christopherson wrote:
-> Drop KVM's PT_{PAGE_TABLE,DIRECTORY,PDPE}_LEVEL KVM enums in favor of the
-> kernel's PG_LEVEL_{4K,2M,1G} enums, which have far more user friendly
-> names.
-> 
-> The KVM names were presumably intended to abstract away the page size.  In
-> practice, the abstraction is only useful for a single line of code, a PSE
-> paging related large page check.  For everything else, the abstract names
-> do nothing but obfuscate the code.
-> 
-> Boot tested a PSE kernel under 32-bit KVM and 64-bit KVM, with and without
-> EPT enabled.  Patches 2 and 3 generate no binary difference relative to
-> patch 1 when compared via "objdump -d".
-> 
-> Sean Christopherson (3):
->   KVM: x86/mmu: Tweak PSE hugepage handling to avoid 2M vs 4M conundrum
->   KVM: x86/mmu: Move max hugepage level to a separate #define
->   KVM: x86/mmu: Drop KVM's hugepage enums in favor of the kernel's enums
-> 
->  arch/x86/include/asm/kvm_host.h |  13 +---
->  arch/x86/kvm/mmu/mmu.c          | 118 +++++++++++++++-----------------
->  arch/x86/kvm/mmu/page_track.c   |   4 +-
->  arch/x86/kvm/mmu/paging_tmpl.h  |  18 ++---
->  arch/x86/kvm/mmu_audit.c        |   6 +-
->  arch/x86/kvm/svm/svm.c          |   2 +-
->  arch/x86/kvm/vmx/vmx.c          |   6 +-
->  arch/x86/kvm/x86.c              |   4 +-
->  8 files changed, 79 insertions(+), 92 deletions(-)
-> 
+Convert the bq27xxx.txt to yaml format
 
-Queued, thanks.
+CC: Pali Rohár <pali@kernel.org>
+CC: Andrew F. Davis" <afd@ti.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/power/supply/bq27xxx.txt         | 56 -----------
+ .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
+ 2 files changed, 95 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
 
-Paolo
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+deleted file mode 100644
+index 4fa8e08df2b6..000000000000
+--- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-TI BQ27XXX fuel gauge family
+-
+-Required properties:
+-- compatible: contains one of the following:
+- * "ti,bq27200" - BQ27200
+- * "ti,bq27210" - BQ27210
+- * "ti,bq27500" - deprecated, use revision specific property below
+- * "ti,bq27510" - deprecated, use revision specific property below
+- * "ti,bq27520" - deprecated, use revision specific property below
+- * "ti,bq27500-1" - BQ27500/1
+- * "ti,bq27510g1" - BQ27510-g1
+- * "ti,bq27510g2" - BQ27510-g2
+- * "ti,bq27510g3" - BQ27510-g3
+- * "ti,bq27520g1" - BQ27520-g1
+- * "ti,bq27520g2" - BQ27520-g2
+- * "ti,bq27520g3" - BQ27520-g3
+- * "ti,bq27520g4" - BQ27520-g4
+- * "ti,bq27521" - BQ27521
+- * "ti,bq27530" - BQ27530
+- * "ti,bq27531" - BQ27531
+- * "ti,bq27541" - BQ27541
+- * "ti,bq27542" - BQ27542
+- * "ti,bq27546" - BQ27546
+- * "ti,bq27742" - BQ27742
+- * "ti,bq27545" - BQ27545
+- * "ti,bq27411" - BQ27411
+- * "ti,bq27421" - BQ27421
+- * "ti,bq27425" - BQ27425
+- * "ti,bq27426" - BQ27426
+- * "ti,bq27441" - BQ27441
+- * "ti,bq27621" - BQ27621
+-- reg: integer, I2C address of the fuel gauge.
+-
+-Optional properties:
+-- monitored-battery: phandle of battery characteristics node
+-    The fuel gauge uses the following battery properties:
+-    + energy-full-design-microwatt-hours
+-    + charge-full-design-microamp-hours
+-    + voltage-min-design-microvolt
+-  Both or neither of the *-full-design-*-hours properties must be set.
+-  See Documentation/devicetree/bindings/power/supply/battery.txt
+-
+-Example:
+-
+-	bat: battery {
+-		compatible = "simple-battery";
+-		voltage-min-design-microvolt = <3200000>;
+-		energy-full-design-microwatt-hours = <5290000>;
+-		charge-full-design-microamp-hours = <1430000>;
+-	};
+-
+-	bq27510g3: fuel-gauge@55 {
+-		compatible = "ti,bq27510g3";
+-		reg = <0x55>;
+-		monitored-battery = <&bat>;
+-	};
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+new file mode 100644
+index 000000000000..6c53ee849004
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+@@ -0,0 +1,95 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2020 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: TI BQ27XXX fuel gauge family
++
++maintainers:
++  - Pali Rohár <pali@kernel.org>
++  - Andrew F. Davis" <afd@ti.com>
++  - Sebastian Reichel <sre@kernel.org>
++
++description: |
++  Support various Texas Instruments fuel gauge devices that share similar
++  register maps and power supply properties
++
++properties:
++  compatible:
++    enum:
++      - ti,bq27200 - BQ27200
++      - ti,bq27210 - BQ27210
++      - ti,bq27500 - deprecated, use revision specific property below
++      - ti,bq27510 - deprecated, use revision specific property below
++      - ti,bq27520 - deprecated, use revision specific property below
++      - ti,bq27500-1 - BQ27500/1
++      - ti,bq27510g1 - BQ27510-g1
++      - ti,bq27510g2 - BQ27510-g2
++      - ti,bq27510g3 - BQ27510-g3
++      - ti,bq27520g1 - BQ27520-g1
++      - ti,bq27520g2 - BQ27520-g2
++      - ti,bq27520g3 - BQ27520-g3
++      - ti,bq27520g4 - BQ27520-g4
++      - ti,bq27521 - BQ27521
++      - ti,bq27530 - BQ27530
++      - ti,bq27531 - BQ27531
++      - ti,bq27541 - BQ27541
++      - ti,bq27542 - BQ27542
++      - ti,bq27546 - BQ27546
++      - ti,bq27742 - BQ27742
++      - ti,bq27545 - BQ27545
++      - ti,bq27411 - BQ27411
++      - ti,bq27421 - BQ27421
++      - ti,bq27425 - BQ27425
++      - ti,bq27426 - BQ27426
++      - ti,bq27441 - BQ27441
++      - ti,bq27621 - BQ27621
++
++  reg:
++    maxItems: 1
++    description: integer, I2C address of the fuel gauge.
++
++  monitored-battery:
++    description: phandle of battery characteristics node
++
++  energy-full-design-microwatt-hours:
++    description: |
++      See Documentation/devicetree/bindings/power/supply/battery.txt.
++      If this property is set then charge-full-design-microamp-hours must be
++      set as well.
++
++  charge-full-design-microamp-hours:
++    description: |
++      See Documentation/devicetree/bindings/power/supply/battery.txt.
++      If this property is set then energy-full-design-microwatt-hours must be
++      set as well.
++
++  voltage-min-design-microvolt:
++    description: |
++      See Documentation/devicetree/bindings/power/supply/battery.txt.
++
++required:
++  - compatible
++  - reg
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      bat: battery {
++        compatible = "simple-battery";
++        voltage-min-design-microvolt = <3200000>;
++        energy-full-design-microwatt-hours = <5290000>;
++        charge-full-design-microamp-hours = <1430000>;
++      };
++
++      bq27510g3: fuel-gauge@55 {
++        compatible = "ti,bq27510g3";
++        reg = <0x55>;
++        monitored-battery = <&bat>;
++      };
++    };
+-- 
+2.25.1
 
