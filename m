@@ -2,184 +2,106 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F034CC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E606CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D388D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9B0E205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOckHhZK"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="HiS3C7pV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgEDUb2 (ORCPT
+        id S1728102AbgEDUbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52494 "EHLO
+        Mon, 4 May 2020 16:31:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgEDUb1 (ORCPT
+        with ESMTP id S1726948AbgEDUba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:31:27 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA81C061A0E;
-        Mon,  4 May 2020 13:31:26 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id s8so57117wrt.9;
-        Mon, 04 May 2020 13:31:26 -0700 (PDT)
+        Mon, 4 May 2020 16:31:30 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B7EC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:31:29 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id s3so15140479eji.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 13:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+Ti5azn6Yh/Q7ZcDBSDYQDf6zyS6jTJFcXMAyzC/7iA=;
-        b=DOckHhZK4jjOC1IfrCnHHtprgrGvT/Ga6krPMkSh+5e997FjwWCBs4aqh6xhNlBYY3
-         xiIss8cCo0R9nhsvzYCDBTKOKMFw4tVu02oBP1ubdE8dIu1jjVTBQxfme2i4rMxUzzX8
-         XNTCfPbqO/SPf86eMEsKMGFZ1X+YF2uMkuo/gf8vFAYPfSa3K2yVUhtCAVcpZH7wmXfT
-         H3YZwaSc6819tuYBW9T8Hk2m+q7ErRNYSAbMWjTfWvZHZ11d9qLVPYes1HTLhWfcZLgk
-         7x07qw7zFJYmuNISUjPCqZTl5X4ZhckZcOe+S0Scj8VTVSzucfTJvPTJ1AEv7zIQloSl
-         6NrQ==
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iD+7rCv19A+JVwng0cwm3/xzNCTcSEjwlIiYKk9uiJc=;
+        b=HiS3C7pVeSXcrkb235oy8Rnf/oLD0dVimUKrLc0zeeW/8XaSu203SAaOKchrWyKAxB
+         Z9MjsQPaSAO2yPuBjYFgCll5xe7kHNJ66BXwMCPOffizsuBNB4WoiJGbKqr5FhwcTWL7
+         epoa3TmJlDVEJqejcAW8n4Y+bHuwSpRaBkCJvukLd7/UaCkLY284LPMrm4Zi12c1pzhr
+         NaT85hv/kpIrmtLG5IGEUpvfHioRj+H3SlIznGgpN3pbXQJHmyiQC9brFJZ5pojQ1BO5
+         t38dnwRBT5lNXIzdfhUd7Cjwjgfq3tsYfJfii92eTR/RTHyoxrcmjRtQwuTpRc5Lr46K
+         c6mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+Ti5azn6Yh/Q7ZcDBSDYQDf6zyS6jTJFcXMAyzC/7iA=;
-        b=XLQ59N4k4xr1osmskm7W8dBLHPnGyZoEyzjG5gm8QwwXWfjf6JP2Mu+W2eNmthbHbD
-         mE7KUfnN74B/SHH0yCjxn3XIg9GzsrLmAXU4you+Ae4AJ8mdJkhWbS5V5WR9NtlycSWe
-         K+L9ftJbtJiyolOhf0m8cjOrQ8C8ZrZKvUFFCHiitfs6luUtuMUbIPL4276FT69cD4tq
-         Fw1HffwqroVZr9za9rFcaFFcRt4JfGaenFZsvmWpGnp3E3dm4N3AjTM32Ongfc/vGWR4
-         GDajyhPEee0qiXE+ryMNGrBSigzx5SI4L2DjowRtg5pObVh+4DCIeQzqugXVGLX1quwp
-         qI8g==
-X-Gm-Message-State: AGi0PuY7gEvinQZhU17DfujzVwVr9Um9H5nhKuE+eeQNFHgclyTeXm4e
-        oFFQv8ER9Nwb038yKyeg5ulxXLhv6L0=
-X-Google-Smtp-Source: APiQypIykKDIgnSEmZcksjdyBWd1H+NnBe/U12YK14m64Wx+gNowJUHrhARn1dzUUsDtcaSMqlx7TQ==
-X-Received: by 2002:a5d:5404:: with SMTP id g4mr1113753wrv.310.1588624285285;
-        Mon, 04 May 2020 13:31:25 -0700 (PDT)
-Received: from [192.168.1.23] (afde147.neoplus.adsl.tpnet.pl. [95.49.82.147])
-        by smtp.gmail.com with ESMTPSA id 2sm16356136wre.25.2020.05.04.13.31.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 13:31:24 -0700 (PDT)
-Subject: Re: [PATCH v24 02/16] leds: multicolor: Introduce a multicolor class
- definition
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200503123215.6449-1-dmurphy@ti.com>
- <20200503123215.6449-3-dmurphy@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <b33c83a2-4cf1-7137-74d9-7e1cb8b00737@gmail.com>
-Date:   Mon, 4 May 2020 22:31:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iD+7rCv19A+JVwng0cwm3/xzNCTcSEjwlIiYKk9uiJc=;
+        b=VKDc/Xgv1ST0yfApraUM2ADRZW3ScoTJIf42AF9r6y3eXrcJvPICx6o/vBPzGv5gbl
+         zBTyFwlFifGmvRekOZ9EVtADVZmBJNlDms+0NfNvC3wbx8VhYqTYmKmfWDS7QS5stBXJ
+         IHOl4V5cMKDzJj0l2GMFKjWRVdyVlUarAlXC92cg8eTzAsJNXn1oKug1775sbKWhN33n
+         15d4UU5G4ccWvM/BfHJIXdzRJ8hkAEsNdf17YFk6GRx+GviUWrhr+5jOsbLdcBXY4MVt
+         nM16ZHxcM98aQOf19szXXg/VDvyTX0g/RAAHZZOHKCsAKlZWaB38dFFNoTNFI/e0yd/i
+         GTbg==
+X-Gm-Message-State: AGi0PuZXKi5fy+iC6Azs198PCBYC6R1TA+9NSmyLbMC6Vu7/mJaAshd9
+        TQzn6u8boFwl7dyQG2XIJoWuw8WiuCFYSUIl2jQEdkWnMDo=
+X-Google-Smtp-Source: APiQypLjLLzJYSGQHmzKy9PL7/vfCx8HEa61JRW6aeMlPHl9r7osDVCErguI8BiMvjtked5EcSIjQgppbgkYxYAopd4=
+X-Received: by 2002:a17:906:49c7:: with SMTP id w7mr16855566ejv.29.1588624288649;
+ Mon, 04 May 2020 13:31:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200503123215.6449-3-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-3-pasha.tatashin@soleen.com> <202005041222.4A870DFEC@keescook>
+In-Reply-To: <202005041222.4A870DFEC@keescook>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 16:30:52 -0400
+Message-ID: <CA+CK2bDyi-vncYc0_sSZZ9Wb4O7oNUYH-6SN=-XKkeEamB8W8A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] pstore/ram: allow to dump kmesg during regular reboot
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+> > -static void pstore_register_kmsg(void)
+> > +static void pstore_register_kmsg(int dmesg_all)
+> >  {
+> > +     if (dmesg_all)
+> > +             pstore_dumper.max_reason = KMSG_DUMP_MAX;
+>
+> So, I'd like to avoid any new arguments in the API and instead add a new
+> field to struct pstore_info, which will be valid when PSTORE_FLAGS_DMESG
+> is set, and the max kdump reason can be set there by the pstore backends.
 
-On 5/3/20 2:32 PM, Dan Murphy wrote:
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
-> 
-> The multi color class groups monochrome LEDs and allows controlling two
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via the intensity file and the latter is controlled
-> via brightness file.
-> 
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-[...]
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -30,6 +30,17 @@ config LEDS_CLASS_FLASH
->   	  for the flash related features of a LED device. It can be built
->   	  as a module.
->   
-> +config LEDS_CLASS_MULTI_COLOR
-> +	tristate "LED MultiColor LED Class Support"
-> +	depends on LEDS_CLASS
-> +	depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+Hi Kees,
 
-I was saying about adding this dependency to the drivers based on
-LED mc class. This way it does not make any sense. Moreover it is
-erroneous:
+I am trying to verify that I understand the request correctly:
 
-$ make menuconfig
-drivers/leds/Kconfig:33:error: recursive dependency detected!
+1. pstore_register_kmsg() -> remove argument.
+2. pstore_info -> add a new field  max_kmsg_reason: contains the
+actual reason value
+3. Modify: pstore_register() to set this field in pstore_dumper prior
+to calling pstore_register_kmsg().
+4. remove ramoops.dump_all boolean parameter
+5. add a new parameter ramoops.max_reason integer variable, which will
+be set in pstore_register_kmsg
+6. Modify other users of pstore_register() to provide the correct
+max_kmsg_reason.
 
-Instead you should add it to the Kconfig entries of all drivers
-that depend on LED mc class, i.e.:
+Is this correct?
 
-- config LEDS_LP50XX
-- config LEDS_LP5521
-- config LEDS_LP5523
-
-Moreover there are still some checkpatch.pl problems:
-
----------------------------------------------------------------
-0003-leds-multicolor-Introduce-a-multicolor-class-definit.patch
----------------------------------------------------------------
-WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-#89: FILE: Documentation/leds/leds-class-multicolor.rst:1:
-+====================================
-
-ERROR: spaces required around that '=' (ctx:WxO)
-#294: FILE: drivers/leds/led-class-multicolor.c:62:
-+		ret =-EINVAL;
-  		    ^
-
-ERROR: space required before that '-' (ctx:OxV)
-#294: FILE: drivers/leds/led-class-multicolor.c:62:
-+		ret =-EINVAL;
-
-WARNING: DT binding documents should be licensed (GPL-2.0-only OR 
-BSD-2-Clause)
-#31: FILE: Documentation/devicetree/bindings/leds/leds-lp50xx.yaml:1:
-+# SPDX-License-Identifier: GPL-2.0
-
-WARNING: Block comments use * on subsequent lines
-#705: FILE: drivers/leds/leds-lp50xx.c:636:
-+		/* There are only 3 LEDs per module otherwise they should be
-+		   banked which also is presented as 3 LEDs*/
-
-WARNING: Block comments use a trailing */ on a separate line
-#705: FILE: drivers/leds/leds-lp50xx.c:636:
-+		   banked which also is presented as 3 LEDs*/
-
-
----------------------------------------------------------------
-0008-ARM-dts-n900-Add-reg-property-to-the-LP5523-channel-.patch
----------------------------------------------------------------
-WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
-
----------------------------------------------------------------
-0009-ARM-dts-imx6dl-yapp4-Add-reg-property-to-the-lp5562-.patch
----------------------------------------------------------------
-WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
-
----------------------------------------------------------------
-0010-ARM-dts-ste-href-Add-reg-property-to-the-LP5521-chan.patch
----------------------------------------------------------------
-WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
-
-
-> +	help
-> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
-> +	  It wraps LED class and adds multicolor LED specific sysfs attributes
-> +	  and kernel internal API to it. You'll need this to provide support
-> +	  for multicolor LEDs that are grouped together. This class is not
-> +	  intended for single color LEDs. It can be built as a module.
-> +
-
-
--- 
-Best regards,
-Jacek Anaszewski
+Thank you,
+Pasha
