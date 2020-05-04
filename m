@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0F9C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B370DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E7D20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926AE20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616104;
-	bh=YO4O5qk07yYWKRjbbepMU90BCfrnGSjV8Bk/NcGK8UE=;
+	s=default; t=1588616112;
+	bh=W2Ffas+nZMrihNOOgOWnoqgXgERFK+vJJddkK6R9I/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LR/sMj/5x1Tlo7eF3MAadW24ZpGFmZgzm5W00SuTrbpYgFoemrq8GqnK4p3jr4Imn
-	 LZu72Ct3sOyyGk/yHqa4VCYAfbcHPr/vh+B3vej91n1x+jMYTLd6LtuHUfWuxEqOOX
-	 /ZBZ8F3gDQaWm8ZACSJe2t/7V5/Em54jweparnsw=
+	b=wFwPvNLbge9CtqHJAtW0qOUC1mUJBqsNTV2a78FVn1wYMZVYg8wEBNSPuzT3+dVnX
+	 pRGaNDEl6SVOy39yTaBItEsON9kt6B5rWBztUgiJnBSLQH7mgr8kux5NO4CWQe5WRk
+	 czNhQh1AhNFQeAEWLCmNu/VJgo3PicVG9FuvBSeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbgEDR76 (ORCPT
+        id S1731711AbgEDSPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53962 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbgEDR7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:52 -0400
+        id S1730851AbgEDR7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8F420663;
-        Mon,  4 May 2020 17:59:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D226E20663;
+        Mon,  4 May 2020 17:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615192;
-        bh=YO4O5qk07yYWKRjbbepMU90BCfrnGSjV8Bk/NcGK8UE=;
+        s=default; t=1588615182;
+        bh=W2Ffas+nZMrihNOOgOWnoqgXgERFK+vJJddkK6R9I/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKMfTv7H7Sxrjt/KqzTbAo789/tgdIvWAhyO+FUbMB65Gsye4AiR20VZTeFdlrvu7
-         mcw/nTcWr7fuRb4wT0/rtALrdTuFTs9MyY0qZ/Rgr+R/KMZr8NwJjgCvzHBF3lRsph
-         LSGQ1iRsVlzLfwGwrAHSdCPxNMT7ahf/D0XOyE2k=
+        b=dxsGftKeIDNfbyxZZlRXe6xfIlgg/5bTC6s8sz/Aa+r2Ter+Oi6dxX7iqPOUPS4Ie
+         RGysXUgopr5dLQBZbpjL3DekgydzzyGPnjUQm0qGI72ufQJgXvf9DTaWOxQT2pFooe
+         FmyWvW9Cq5YdQNnXAXq8yAHjgi8xI/Cr6jtD3ECI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.9 09/18] PM: hibernate: Freeze kernel threads in software_resume()
-Date:   Mon,  4 May 2020 19:57:19 +0200
-Message-Id: <20200504165444.062809796@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 05/18] btrfs: fix block group leak when removing fails
+Date:   Mon,  4 May 2020 19:57:15 +0200
+Message-Id: <20200504165443.251593903@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
@@ -59,46 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 2351f8d295ed63393190e39c2f7c1fee1a80578f upstream.
+commit f6033c5e333238f299c3ae03fac8cc1365b23b77 upstream.
 
-Currently the kernel threads are not frozen in software_resume(), so
-between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
-system_freezable_power_efficient_wq can still try to submit SCSI
-commands and this can cause a panic since the low level SCSI driver
-(e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
-any SCSI commands: https://lkml.org/lkml/2020/4/10/47
+btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+returns a local reference of the block group that contains the given
+bytenr to "block_group" with increased refcount.
 
-At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
-to resolve the issue from hv_storvsc, but with the help of
-Bart Van Assche, I realized it's better to fix software_resume(),
-since this looks like a generic issue, not only pertaining to SCSI.
+When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
 
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The reference counting issue happens in several exception handling paths
+of btrfs_remove_block_group(). When those error scenarios occur such as
+btrfs_alloc_path() returns NULL, the function forgets to decrease its
+refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+leak.
+
+Fix this issue by jumping to "out_put_group" label and calling
+btrfs_put_block_group() when those error scenarios occur.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/power/hibernate.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/btrfs/extent-tree.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -892,6 +892,13 @@ static int software_resume(void)
- 	error = freeze_processes();
- 	if (error)
- 		goto Close_Finish;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10645,7 +10645,7 @@ int btrfs_remove_block_group(struct btrf
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_put_group;
+ 	}
+ 
+ 	/*
+@@ -10684,7 +10684,7 @@ int btrfs_remove_block_group(struct btrf
+ 		ret = btrfs_orphan_add(trans, inode);
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out;
++			goto out_put_group;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -10707,13 +10707,13 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out;
++		goto out_put_group;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out;
++			goto out_put_group;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -10871,9 +10871,9 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = remove_block_group_free_space(trans, root->fs_info, block_group);
+ 	if (ret)
+-		goto out;
++		goto out_put_group;
+ 
+-	btrfs_put_block_group(block_group);
++	/* Once for the block groups rbtree */
+ 	btrfs_put_block_group(block_group);
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+@@ -10883,6 +10883,10 @@ int btrfs_remove_block_group(struct btrf
+ 		goto out;
+ 
+ 	ret = btrfs_del_item(trans, root, path);
 +
-+	error = freeze_kernel_threads();
-+	if (error) {
-+		thaw_processes();
-+		goto Close_Finish;
-+	}
-+
- 	error = load_image_and_restore();
- 	thaw_processes();
-  Finish:
++out_put_group:
++	/* Once for the lookup reference */
++	btrfs_put_block_group(block_group);
+ out:
+ 	btrfs_free_path(path);
+ 	return ret;
 
 
