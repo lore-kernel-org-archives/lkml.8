@@ -5,64 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18418C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B14C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7FE206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101E2206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OC0Oig/8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzvieQvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgEDK5R (ORCPT
+        id S1728297AbgEDK6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
+        Mon, 4 May 2020 06:58:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726756AbgEDK5R (ORCPT
+        by vger.kernel.org with ESMTP id S1726445AbgEDK6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:57:17 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2C8C061A0E;
-        Mon,  4 May 2020 03:57:16 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x4so7920976wmj.1;
-        Mon, 04 May 2020 03:57:16 -0700 (PDT)
+        Mon, 4 May 2020 06:58:06 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA38C061A0E;
+        Mon,  4 May 2020 03:58:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so8513135wml.2;
+        Mon, 04 May 2020 03:58:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wa5WiCb9TEfNBJdjqXOuNtc/EWG1LBgXWPOn2VDgW3c=;
-        b=OC0Oig/8p1pqe6Npie+Z3tLPK0YEEKOjNLDYcZH+Eei1Q1Jau92N2IIZaovS0dvqe3
-         AIVqVnvRLI5LQECLxmgrKjx5oNKZjv25SWD8rfkdeXH2Ho/A9oKYq/Cc/fFADYMS5E8q
-         d7V85Q6JXDhsFLyOsxf+3D97Oj9GTM3E+iV695GaIcoBpcS7X6cKFK//3DcoYtDJ1dAA
-         bB1E6IPqdTM7qHGg8l8OBB/1S/NZlm2N7XvVwf4blNrJpfD3SOOPUj5ZGbjQar+40caZ
-         qou4bYadPbj779ARQ+/NffLLG3oRemD8cR7R3EYTp6AaHH4tFDmeeIk6pmVHZsW1/i2h
-         VXKA==
+        bh=0VLwOT6bJqN3K7ts+w2SYMjYr93mptYzOJqRAqbrzsY=;
+        b=HzvieQvpoS8MOsvOHkWRFAqYFMxa5kiZ+2Cca+rP7jHhs3UvjiTtmb8ZSfAUMIxUd2
+         WKbQ1JA6DjZg7sVjddKL5WhNFiqYHmuWSg7zSJZqyvStKoYRrZ8q37qX1AUYNnOA8LmP
+         rbFEzhyylwrl7ftFEqdrNt8YzHPWiTg4lM0JmzeM5v4GwWNlbQQND2cNGGAYY+om/zrM
+         BJ28Vm7FE5UDtaYfZYoAFn1zHn8AQ+Wa89gyE0DDB7WGD6EsM2Ydn59/w36iNf/6p/hH
+         zmt6/1wajPh0TcFGgA11IBL2NxKUXzk5P9azCkEptTQGrjVRAKJgmzWMJA24y1gOUgGT
+         Vszw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wa5WiCb9TEfNBJdjqXOuNtc/EWG1LBgXWPOn2VDgW3c=;
-        b=hzeTOlj2/bJXay4AUiXuhmHwSZNzlpdhAQ/WZ0lY/t6NUF5qRS+RSt/akn4cCrj7gP
-         SMgfsoXIaAIGPR0pJrRi5I59+yxHsLkf3nNRQlMsRo/W0HDWJxbRVf/OzydXHDxZ6Vqk
-         VjAAPw8dFph023y1Iu7bH8mTT75sYbJhzbApQyOh5xpd8XoYANC4sxCts3g3aXIVDhu0
-         y3aoNuq09l2fI5dk5hpBL1C5hneac8CUP4INbJU2/CHtO76rVdnIh5es1f4YZKZX+Muw
-         ywXfcWFVDmxorQ0qe7zT0CcCZrbqX73EoPe3xkwjQFLkQdBpQgKeTYl6GfFpPVK3pMtA
-         /c4w==
-X-Gm-Message-State: AGi0PuaeeNQJs6sqQr9lg1splPGcmXQ971ovPSU4cImjLSpcazrMXrbd
-        C0KTQYYJe6kW4tWU/oDe7oQRq4ZF20AyNc75oi0=
-X-Google-Smtp-Source: APiQypLqWxs9smL4/H4j2LkvDhC+HNcMjptT98h06tKklq/lvJxELX6C+aKZcpkjEaQMIP9E4GnKbgGSyCkX+f2KiWE=
-X-Received: by 2002:a1c:f20c:: with SMTP id s12mr15099067wmc.83.1588589835503;
- Mon, 04 May 2020 03:57:15 -0700 (PDT)
+        bh=0VLwOT6bJqN3K7ts+w2SYMjYr93mptYzOJqRAqbrzsY=;
+        b=f8Pwa9ZETWkSoZmqrl6pHG+tza5JiqBqIejDgKIHvVjno1d/I1ObxVf7o1WAqURc+J
+         r6vjGxh1vNSXbya2mte1+buO/7qxuVHHzn0Uzpyiwn/eAOQKDnyv9y8uLq4RqHB+VWSp
+         FTeJtXPeO6TS3WA/5HwwvTU3i9i51KuEzma7tuUiyG1X9sQ0RhBy92HunMuN3DfLxKU3
+         yM+iUd+eXlu2yiNdVCoxdIzZrcZDQzGSihdFZ+3cqByc+Nwfth/WOPGGun1vghBsymna
+         xa+Sb5kfHJfFkoxqp1jUw9A06rrUcUwlPPLf2z3EmBFPHkX+x9450yq1HBL8rhYSWxaR
+         /ByA==
+X-Gm-Message-State: AGi0PubJLJwI5e3UkPuYKR5kVHyph6x14PSO7h1IwXduHN83iEBOdZ96
+        kIt0+WhDv0gaq/T4CY0xg9Mz10LXw0+eNKqP6Eg=
+X-Google-Smtp-Source: APiQypIyFdGV0t4KhW/32RO57/X+1YIjrApNcxzi2Lmx8drWPz/6xswQx7UZRCu8zdIJb7JNUsYHxLqNiDDqpxOvkTQ=
+X-Received: by 2002:a1c:9e51:: with SMTP id h78mr15112247wme.177.1588589885341;
+ Mon, 04 May 2020 03:58:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com> <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
+References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com> <20200502114752.1048500-4-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200502114752.1048500-4-martin.blumenstingl@googlemail.com>
 From:   hex dump <hexdump0815@gmail.com>
-Date:   Mon, 4 May 2020 12:57:01 +0200
-Message-ID: <CAKTihDUSbnCyqrH3eBU89h9vae3FoAUm9k1j=4s21A=VviyN1A@mail.gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: phy: meson8b-usb2: Add compatible string
- for Meson8m2
+Date:   Mon, 4 May 2020 12:57:51 +0200
+Message-ID: <CAKTihDUY5VRMtydLWkH3pg+EYdUbss5-mKzrfPOapLP1J0cEXg@mail.gmail.com>
+Subject: Re: [PATCH 3/6] phy: amlogic: meson8b-usb2: Use a MMIO regmap
 To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
@@ -77,32 +76,165 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Sat, May 2, 2020 at 1:48 PM Martin Blumenstingl
 <martin.blumenstingl@googlemail.com> wrote:
 >
-> The USB2 PHY on Meson8m2 is identical to the one on Meson8b but
-> different to the one on Meson8. The only known difference is that Meson8
-> does not set the ACA_ENABLE bit while Meson8b and Meson8m2 do.
-> Add an explicit compatible string for Meson8m2 so those differences can
-> be taken care of.
+> Using a MMIO regmap and switch to regmap_update_bits() to simplify the
+> code in the driver. Also switch to devm_platform_ioremap_resource()
+> instead of open-coding it. No functional changes intended.
 >
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
 Tested-by: hexdump <hexdump0815@googlemail.com>
 
 > ---
->  .../devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml        | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/phy/amlogic/Kconfig            |  1 +
+>  drivers/phy/amlogic/phy-meson8b-usb2.c | 73 ++++++++++++--------------
+>  2 files changed, 35 insertions(+), 39 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
-> index c2fe8c08d99e..1d402e055045 100644
-> --- a/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml
-> @@ -16,6 +16,7 @@ properties:
->            - enum:
->              - amlogic,meson8-usb2-phy
->              - amlogic,meson8b-usb2-phy
-> +            - amlogic,meson8m2-usb2-phy
->            - const: amlogic,meson-mx-usb2-phy
->        - const: amlogic,meson-gxbb-usb2-phy
+> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> index 71801e30d601..3495b23af797 100644
+> --- a/drivers/phy/amlogic/Kconfig
+> +++ b/drivers/phy/amlogic/Kconfig
+> @@ -9,6 +9,7 @@ config PHY_MESON8B_USB2
+>         depends on USB_SUPPORT
+>         select USB_COMMON
+>         select GENERIC_PHY
+> +       select REGMAP_MMIO
+>         help
+>           Enable this to support the Meson USB2 PHYs found in Meson8,
+>           Meson8b and GXBB SoCs.
+> diff --git a/drivers/phy/amlogic/phy-meson8b-usb2.c b/drivers/phy/amlogic/phy-meson8b-usb2.c
+> index bd66bd723e4a..86824cc21f11 100644
+> --- a/drivers/phy/amlogic/phy-meson8b-usb2.c
+> +++ b/drivers/phy/amlogic/phy-meson8b-usb2.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/regmap.h>
+>  #include <linux/reset.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> @@ -105,34 +106,24 @@
+>  #define ACA_ENABLE_COMPLETE_TIME                       50
 >
+>  struct phy_meson8b_usb2_priv {
+> -       void __iomem            *regs;
+> +       struct regmap           *regmap;
+>         enum usb_dr_mode        dr_mode;
+>         struct clk              *clk_usb_general;
+>         struct clk              *clk_usb;
+>         struct reset_control    *reset;
+>  };
+>
+> -static u32 phy_meson8b_usb2_read(struct phy_meson8b_usb2_priv *phy_priv,
+> -                                u32 reg)
+> -{
+> -       return readl(phy_priv->regs + reg);
+> -}
+> -
+> -static void phy_meson8b_usb2_mask_bits(struct phy_meson8b_usb2_priv *phy_priv,
+> -                                      u32 reg, u32 mask, u32 value)
+> -{
+> -       u32 data;
+> -
+> -       data = phy_meson8b_usb2_read(phy_priv, reg);
+> -       data &= ~mask;
+> -       data |= (value & mask);
+> -
+> -       writel(data, phy_priv->regs + reg);
+> -}
+> +static const struct regmap_config phy_meson8b_usb2_regmap_conf = {
+> +       .reg_bits = 8,
+> +       .val_bits = 32,
+> +       .reg_stride = 4,
+> +       .max_register = REG_TUNE,
+> +};
+>
+>  static int phy_meson8b_usb2_power_on(struct phy *phy)
+>  {
+>         struct phy_meson8b_usb2_priv *priv = phy_get_drvdata(phy);
+> +       u32 reg;
+>         int ret;
+>
+>         if (!IS_ERR_OR_NULL(priv->reset)) {
+> @@ -156,34 +147,34 @@ static int phy_meson8b_usb2_power_on(struct phy *phy)
+>                 return ret;
+>         }
+>
+> -       phy_meson8b_usb2_mask_bits(priv, REG_CONFIG, REG_CONFIG_CLK_32k_ALTSEL,
+> -                                  REG_CONFIG_CLK_32k_ALTSEL);
+> +       regmap_update_bits(priv->regmap, REG_CONFIG, REG_CONFIG_CLK_32k_ALTSEL,
+> +                          REG_CONFIG_CLK_32k_ALTSEL);
+>
+> -       phy_meson8b_usb2_mask_bits(priv, REG_CTRL, REG_CTRL_REF_CLK_SEL_MASK,
+> -                                  0x2 << REG_CTRL_REF_CLK_SEL_SHIFT);
+> +       regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_REF_CLK_SEL_MASK,
+> +                          0x2 << REG_CTRL_REF_CLK_SEL_SHIFT);
+>
+> -       phy_meson8b_usb2_mask_bits(priv, REG_CTRL, REG_CTRL_FSEL_MASK,
+> -                                  0x5 << REG_CTRL_FSEL_SHIFT);
+> +       regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_FSEL_MASK,
+> +                          0x5 << REG_CTRL_FSEL_SHIFT);
+>
+>         /* reset the PHY */
+> -       phy_meson8b_usb2_mask_bits(priv, REG_CTRL, REG_CTRL_POWER_ON_RESET,
+> -                                  REG_CTRL_POWER_ON_RESET);
+> +       regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET,
+> +                          REG_CTRL_POWER_ON_RESET);
+>         udelay(RESET_COMPLETE_TIME);
+> -       phy_meson8b_usb2_mask_bits(priv, REG_CTRL, REG_CTRL_POWER_ON_RESET, 0);
+> +       regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_POWER_ON_RESET, 0);
+>         udelay(RESET_COMPLETE_TIME);
+>
+> -       phy_meson8b_usb2_mask_bits(priv, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT,
+> -                                  REG_CTRL_SOF_TOGGLE_OUT);
+> +       regmap_update_bits(priv->regmap, REG_CTRL, REG_CTRL_SOF_TOGGLE_OUT,
+> +                          REG_CTRL_SOF_TOGGLE_OUT);
+>
+>         if (priv->dr_mode == USB_DR_MODE_HOST) {
+> -               phy_meson8b_usb2_mask_bits(priv, REG_ADP_BC,
+> -                                          REG_ADP_BC_ACA_ENABLE,
+> -                                          REG_ADP_BC_ACA_ENABLE);
+> +               regmap_update_bits(priv->regmap, REG_ADP_BC,
+> +                                  REG_ADP_BC_ACA_ENABLE,
+> +                                  REG_ADP_BC_ACA_ENABLE);
+>
+>                 udelay(ACA_ENABLE_COMPLETE_TIME);
+>
+> -               if (phy_meson8b_usb2_read(priv, REG_ADP_BC) &
+> -                       REG_ADP_BC_ACA_PIN_FLOAT) {
+> +               regmap_read(priv->regmap, REG_ADP_BC, &reg);
+> +               if (reg & REG_ADP_BC_ACA_PIN_FLOAT) {
+>                         dev_warn(&phy->dev, "USB ID detect failed!\n");
+>                         clk_disable_unprepare(priv->clk_usb);
+>                         clk_disable_unprepare(priv->clk_usb_general);
+> @@ -213,18 +204,22 @@ static const struct phy_ops phy_meson8b_usb2_ops = {
+>  static int phy_meson8b_usb2_probe(struct platform_device *pdev)
+>  {
+>         struct phy_meson8b_usb2_priv *priv;
+> -       struct resource *res;
+>         struct phy *phy;
+>         struct phy_provider *phy_provider;
+> +       void __iomem *base;
+>
+>         priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+>                 return -ENOMEM;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       priv->regs = devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(priv->regs))
+> -               return PTR_ERR(priv->regs);
+> +       base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+> +                                            &phy_meson8b_usb2_regmap_conf);
+> +       if (IS_ERR(priv->regmap))
+> +               return PTR_ERR(priv->regmap);
+>
+>         priv->clk_usb_general = devm_clk_get(&pdev->dev, "usb_general");
+>         if (IS_ERR(priv->clk_usb_general))
 > --
 > 2.26.2
 >
