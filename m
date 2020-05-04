@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A23C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B122BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8127A206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBFF206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5y9l0J3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yODIs6sx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgEDXhZ (ORCPT
+        id S1728401AbgEDXh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53228 "EHLO
+        Mon, 4 May 2020 19:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgEDXhU (ORCPT
+        with ESMTP id S1728374AbgEDXhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:37:20 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BA5C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:37:20 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id h26so537579qtu.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:37:20 -0700 (PDT)
+        Mon, 4 May 2020 19:37:25 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A211BC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:37:23 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x12so532974qts.9
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:37:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=J11alJGda5HaqAUxfI/cdtT9wkZmopm5cF4QPolHp/c=;
-        b=a5y9l0J3zaR2uSZcvyFzfQZKffiPpM6RMnsj8/sZhMqDK6pgE9026ML3pIjHZq584Q
-         6FlW7TWaxp1uc9NQGjfDVNA6PiG7zj3WZ6O2oj6BAl41IHF8QP+UWCmQhGjCtcaezfuV
-         tZEFV2AN+gjtbxD41DDPdVJ5aSmPobkAP9V/XB7mJO06oy/y3H7SWewrX4qtcCWmSzYs
-         KW66XBNj1rGvDjOfYhgdYUHi+kUYQqLzIRYga2cKlh4N0Rtr1E9RMFr9t7iBi7B7hpXl
-         HA8rZfCRVH1qeSz2BINcXt7gNIQj6jgvc2ISokr0WdCJY8LChZVSwB6uvETjWAvpru3Z
-         gulw==
+        bh=Sp4luMaF6IKbI/3fhMGnaHSP2UluU8wsl5sO/u1BVg8=;
+        b=yODIs6sx85nyS1LAB3htJ85KxKopBPuE4uu/Ga7AS7Zu7KTuBIXYqhwu+/wPz2gC82
+         OIXJBsmQSRKc0G7LJCCCMKUqfQt3DZchu6NOJATTBVVOuDlWzdNsop76Pjqm6EHRm/uV
+         MiUUEGlBieUZLJyBDh/gue+WiniyHgzx1i7RwChaw5UpgF6yewDFQ2rEJ3g/LgAGvf79
+         xpYqB5pV8rfXhm5BhAunCeY3zqV/B0ZDfzJuSH1473v5XJpqCugbfkpXuzpDwRNR9whF
+         DKudliVGpCJUy0ZxScYNcsBbF7+k1ltnLqNa/+tHvzG9muCXJbssf0m4nHNJGl7md10q
+         IqxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=J11alJGda5HaqAUxfI/cdtT9wkZmopm5cF4QPolHp/c=;
-        b=Qd0AeNnGkA0xLPunA4yd//GNWgj/3VKC5AeC5084GqcwJIXPvAapRfC0cao8e7IwgQ
-         7iMfX4D2xtoBx7NZSG+EDxmNLSdD/3ercMDSo0dEA+G3onjU/3sqvziDv66qQ6M9Ab5i
-         kOMTahor/6hMSpNDKDevTZXAhq9onoQ5S67zcZPJkcRSS1w2XPkBauG71tN3B+TRZglo
-         eywcfSYgqMWrZsZ8lqf9GdTFJlS1lP20iWcR+1hPNKw7rUpCLhPpoLAvGxG0GW0IjUj1
-         fQZp0hS03LG3+FQTOXSswgBOBFA5FeqN6aP6nKtMwSe5uDbBwgRJaXQ2ZYpBBNXw4I5A
-         oEhQ==
-X-Gm-Message-State: AGi0Pua8n57SrW8OJJi6GxxUm9j3EMQI4wkSNCvfiOfvNR9khSJih8Px
-        1ePE6pY/s/vkJxHcm7d8YEpphg==
-X-Google-Smtp-Source: APiQypLhwk6BWUyml3LuTvS3m1RTo8mByAb6bzwhBhE/9FMy8E00f1S2PfWWFO6KS9Otk0PZjnanBw==
-X-Received: by 2002:ac8:65d4:: with SMTP id t20mr26926qto.358.1588635439718;
-        Mon, 04 May 2020 16:37:19 -0700 (PDT)
+        bh=Sp4luMaF6IKbI/3fhMGnaHSP2UluU8wsl5sO/u1BVg8=;
+        b=ZB6gKiRyuI0DAA7Jio6GkdfQstvaTmhdGv6Myy519tRS8xHo5eWChCJBdX1oEB3F0W
+         7HJ59Y5AIa8dyZwVfVwPBC+xmdlfUsTsdvoAhhKPnkyQF/l2lYdotmye/kgomeUaX8Bx
+         LZGNirlc8yFPqevMIcuvt8ScdA8+n1fUC36dyeZl+4Y6GbsJH0MWzqRDps6RxC/tc2F8
+         x4F/yzrUEImMfufb3HPxeShQC9qiuDDn6Z8t7ahZzkrhd22/+iDLQwPbBeuAauoXaphT
+         b5+XctKCsd3dvRVQp42cp0LUMGAo/I7nECZ54RCVpy3fwHdHLA12HnObJi3m2Z5sF035
+         co1Q==
+X-Gm-Message-State: AGi0PubaQhfO+ta+Wc5UA952vvGTQs9RL2MbHBSRrpifOciMZzWKumQb
+        7172xtrSCrBjbtKqnPKa2vY0Ag==
+X-Google-Smtp-Source: APiQypK4Dfb2FAR2CSwLiWHXdfhVVee7mbYkoiVuuMUHAzuuzPxl4/tmD+Z8446kUGgatAEm6mHUlA==
+X-Received: by 2002:aed:2591:: with SMTP id x17mr188790qtc.76.1588635442816;
+        Mon, 04 May 2020 16:37:22 -0700 (PDT)
 Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id x125sm494311qke.34.2020.05.04.16.37.18
+        by smtp.gmail.com with ESMTPSA id x125sm494311qke.34.2020.05.04.16.37.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 16:37:19 -0700 (PDT)
+        Mon, 04 May 2020 16:37:21 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net
 Cc:     evgreen@chromium.org, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/3] net: ipa: have ipa_endpoint_init_ctrl() return previous state
-Date:   Mon,  4 May 2020 18:37:11 -0500
-Message-Id: <20200504233713.16954-2-elder@linaro.org>
+Subject: [PATCH net-next 3/3] net: ipa: remove endpoint delay mode feature
+Date:   Mon,  4 May 2020 18:37:13 -0500
+Message-Id: <20200504233713.16954-4-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200504233713.16954-1-elder@linaro.org>
 References: <20200504233713.16954-1-elder@linaro.org>
@@ -77,99 +77,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change ipa_endpoint_init_ctrl() so it returns the previous state
-(whether suspend or delay mode was enabled) rather than indicating
-whether the request caused a change in state.  This makes it easier
-to understand what's happening where called.
+A "delay mode" feature was put in place to work around a problem
+that was observed during development of the upstream IPA driver.  It
+used TX endpoint "delay mode" in order to prevent transmitting
+packets toward the modem before it was ready.
+
+A race condition that would explain the problem has long since been
+fixed, and we have concluded that the "delay mode" feature is no
+longer required.  So get rid of it.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_endpoint.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/ipa/ipa_data-sdm845.c | 1 -
+ drivers/net/ipa/ipa_data.h        | 6 ------
+ drivers/net/ipa/ipa_endpoint.c    | 4 +---
+ 3 files changed, 1 insertion(+), 10 deletions(-)
 
+diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
+index f7ba85717edf..52d4b84e0dac 100644
+--- a/drivers/net/ipa/ipa_data-sdm845.c
++++ b/drivers/net/ipa/ipa_data-sdm845.c
+@@ -74,7 +74,6 @@ static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
+ 				.tx = {
+ 					.status_endpoint =
+ 						IPA_ENDPOINT_MODEM_AP_RX,
+-					.delay	= true,
+ 				},
+ 			},
+ 		},
+diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
+index 16dfd74717b1..7fc1058a5ca9 100644
+--- a/drivers/net/ipa/ipa_data.h
++++ b/drivers/net/ipa/ipa_data.h
+@@ -80,18 +80,12 @@ struct gsi_channel_data {
+ /**
+  * struct ipa_endpoint_tx_data - configuration data for TX endpoints
+  * @status_endpoint:	endpoint to which status elements are sent
+- * @delay:		whether endpoint starts in delay mode
+- *
+- * Delay mode prevents a TX endpoint from transmitting anything, even if
+- * commands have been presented to the hardware.  Once the endpoint exits
+- * delay mode, queued transfer commands are sent.
+  *
+  * The @status_endpoint is only valid if the endpoint's @status_enable
+  * flag is set.
+  */
+ struct ipa_endpoint_tx_data {
+ 	enum ipa_endpoint_name status_endpoint;
+-	bool delay;
+ };
+ 
+ /**
 diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 6de03be28784..ad72adff653e 100644
+index a830101b8edb..8dc12ec18fc7 100644
 --- a/drivers/net/ipa/ipa_endpoint.c
 +++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -284,11 +284,12 @@ static struct gsi_trans *ipa_endpoint_trans_alloc(struct ipa_endpoint *endpoint,
- /* suspend_delay represents suspend for RX, delay for TX endpoints.
-  * Note that suspend is not supported starting with IPA v4.0.
-  */
--static int
-+static bool
- ipa_endpoint_init_ctrl(struct ipa_endpoint *endpoint, bool suspend_delay)
+@@ -1341,10 +1341,8 @@ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
+ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
  {
- 	u32 offset = IPA_REG_ENDP_INIT_CTRL_N_OFFSET(endpoint->endpoint_id);
- 	struct ipa *ipa = endpoint->ipa;
-+	bool state;
- 	u32 mask;
- 	u32 val;
- 
-@@ -296,13 +297,14 @@ ipa_endpoint_init_ctrl(struct ipa_endpoint *endpoint, bool suspend_delay)
- 	mask = endpoint->toward_ipa ? ENDP_DELAY_FMASK : ENDP_SUSPEND_FMASK;
- 
- 	val = ioread32(ipa->reg_virt + offset);
--	if (suspend_delay == !!(val & mask))
--		return -EALREADY;	/* Already set to desired state */
-+	/* Don't bother if it's already in the requested state */
-+	state = !!(val & mask);
-+	if (suspend_delay != state) {
-+		val ^= mask;
-+		iowrite32(val, ipa->reg_virt + offset);
-+	}
- 
--	val ^= mask;
--	iowrite32(val, ipa->reg_virt + offset);
--
--	return 0;
-+	return state;
- }
- 
- /* Enable or disable delay or suspend mode on all modem endpoints */
-@@ -1164,8 +1166,7 @@ static int ipa_endpoint_reset_rx_aggr(struct ipa_endpoint *endpoint)
- 
- 	/* Make sure the channel isn't suspended */
- 	if (endpoint->ipa->version == IPA_VERSION_3_5_1)
--		if (!ipa_endpoint_init_ctrl(endpoint, false))
--			endpoint_suspended = true;
-+		endpoint_suspended = ipa_endpoint_init_ctrl(endpoint, false);
- 
- 	/* Start channel and do a 1 byte read */
- 	ret = gsi_channel_start(gsi, endpoint->channel_id);
-@@ -1318,21 +1319,20 @@ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
  	if (endpoint->toward_ipa) {
- 		bool delay_mode = endpoint->data->tx.delay;
- 
--		ret = ipa_endpoint_init_ctrl(endpoint, delay_mode);
- 		/* Endpoint is expected to not be in delay mode */
--		if (!ret != delay_mode) {
-+		if (ipa_endpoint_init_ctrl(endpoint, delay_mode))
- 			dev_warn(dev,
- 				"TX endpoint %u was %sin delay mode\n",
- 				endpoint->endpoint_id,
- 				delay_mode ? "already " : "");
--		}
+-		bool delay_mode = endpoint->data->tx.delay;
+-
+ 		if (endpoint->ipa->version != IPA_VERSION_4_2)
+-			ipa_endpoint_program_delay(endpoint, delay_mode);
++			ipa_endpoint_program_delay(endpoint, false);
  		ipa_endpoint_init_hdr_ext(endpoint);
  		ipa_endpoint_init_aggr(endpoint);
  		ipa_endpoint_init_deaggr(endpoint);
- 		ipa_endpoint_init_seq(endpoint);
- 	} else {
-+		/* Endpoint is expected to not be suspended */
- 		if (endpoint->ipa->version == IPA_VERSION_3_5_1) {
--			if (!ipa_endpoint_init_ctrl(endpoint, false))
-+			if (ipa_endpoint_init_ctrl(endpoint, false))
- 				dev_warn(dev,
- 					"RX endpoint %u was suspended\n",
- 					endpoint->endpoint_id);
-@@ -1471,7 +1471,7 @@ void ipa_endpoint_resume_one(struct ipa_endpoint *endpoint)
- 	/* IPA v3.5.1 doesn't use channel start for resume */
- 	start_channel = endpoint->ipa->version != IPA_VERSION_3_5_1;
- 	if (!endpoint->toward_ipa && !start_channel)
--		WARN_ON(ipa_endpoint_init_ctrl(endpoint, false));
-+		WARN_ON(!ipa_endpoint_init_ctrl(endpoint, false));
- 
- 	ret = gsi_channel_resume(gsi, endpoint->channel_id, start_channel);
- 	if (ret)
 -- 
 2.20.1
 
