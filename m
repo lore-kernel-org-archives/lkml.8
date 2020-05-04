@@ -2,121 +2,188 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592E1C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A704FC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D104206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCA0206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PyR8ZPBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgEDJfD (ORCPT
+        id S1728387AbgEDJgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:35:03 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:42948 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726625AbgEDJfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:35:03 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 0449YXRD005741;
-        Mon, 4 May 2020 04:34:33 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 0449YWfb005740;
-        Mon, 4 May 2020 04:34:32 -0500
-Date:   Mon, 4 May 2020 04:34:32 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200504093432.GA5382@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200502230510.GA28470@wind.enjellic.com> <BD424C59-0B02-451D-8DF0-74F92292A87C@amacapital.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BD424C59-0B02-451D-8DF0-74F92292A87C@amacapital.net>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 04 May 2020 04:34:33 -0500 (CDT)
+        Mon, 4 May 2020 05:36:03 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48623 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728360AbgEDJgD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:36:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588584961;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=raiGMQBr/QB8sEi7LcRd99xA1ZNobBB74rqfsqcEmj8=;
+        b=PyR8ZPBKn+u37tbUGuo0gW+HFEz7V2YuIqxOkCsXs9hJ/Bahfgqol6bOqlEvy2pliMLabZ
+        /W3fDawPW0ZMnyOrz5Q0k9uFiKi90EyKcdL31jioEQ9wadeJoE3WdaFOEf/elyU3/hEO35
+        PHD95i0CFmo77tM/WhFv+Kf4copfxbA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-NTQ1e72jP8KWwUrB95dTYg-1; Mon, 04 May 2020 05:35:57 -0400
+X-MC-Unique: NTQ1e72jP8KWwUrB95dTYg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CA4A1B18BC0;
+        Mon,  4 May 2020 09:35:56 +0000 (UTC)
+Received: from gondolin (ovpn-112-215.ams2.redhat.com [10.36.112.215])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE3CB60BEC;
+        Mon,  4 May 2020 09:35:54 +0000 (UTC)
+Date:   Mon, 4 May 2020 11:35:51 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jared Rossi <jrossi@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Message-ID: <20200504113551.2e2d1df9.cohuck@redhat.com>
+In-Reply-To: <20200430212959.13070-2-jrossi@linux.ibm.com>
+References: <20200430212959.13070-1-jrossi@linux.ibm.com>
+        <20200430212959.13070-2-jrossi@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 05:48:30PM -0700, Andy Lutomirski wrote:
+On Thu, 30 Apr 2020 17:29:59 -0400
+Jared Rossi <jrossi@linux.ibm.com> wrote:
 
-Good morning, I hope the week is starting well for everyone.
+> Remove the explicit prefetch check when using vfio-ccw devices.
+> This check is not needed in practice as all Linux channel programs
 
-> > On May 2, 2020, at 4:05 PM, Dr. Greg <greg@enjellic.com> wrote:
-> > In a nutshell, the driver needs our patch that implements
-> > cryptographic policy management.
-> > 
-> > A patch that:
-> > 
-> > 1.) Does not change the default behavior of the driver.
-> > 
-> > 2.) Implements capabilities that are consistent with what the hardware
-> > was designed to do, but only at the discretion of the platform owner.
-> > 
-> > 3.) Has no impact on the driver architecture.
-> > 
-> > The only consumer for this driver are SGX runtimes.  To our knowledge,
-> > there exist only two complete runtime implementations, Intel's and
-> > ours.  It us unclear why our approach to the use of the technology
-> > should be discriminated against when it doesn't impact the other user
-> > community.
+s/is not needed/does not trigger/ ?
 
-> Can you clarify how exactly this patch set discriminates against
-> your stack?
+> are intended to use prefetch.
+> 
+> It is expected that all ORBs issued by Linux will request prefetch.
+> Although non-prefetching ORBs are not rejected, they will prefetch
+> nonetheless. A warning is issued up to once per 5 seconds when a
+> forced prefetch occurs.
+> 
+> A non-prefetch ORB does not necessarily result in an error, however
+> frequent encounters with non-prefetch ORBs indicates that channel
 
-The driver has no provisions for implementing cryptographically based
-SGX policy management of any type.
+s/indicates/indicate/
 
-Our stack is extremely lightweight with no external dependencies and
-is used in privacy and security sensitive applications, including
-financial services of certain types.  There is a desire in this, and
-other venues, to use cloud and edge resources with a strong guarantee
-that the platforms have only had a known set of behaviors.  The
-current DAC based controls in the driver are insufficient to provide
-those guarantees.
+> programs are being executed in a way that is inconsistent with what
+> the guest is requesting. While there are currently no known errors
+> caused by forced prefetch, it is possible in theory that forced
 
-I believe I have discussed our use of SGX previously.  In a nutshell,
-we use SGX based modeling engines to supervise kernel based behavioral
-namespaces, one enclave per namespace.  The closest equivalent work
-that we have seen may be the IPE architecture advanced by Deven Bowers
-at Microsoft but we address a number of issues that work does not,
-including non-kernel based behavioral supervision.
+"While there is currently no known case of an error caused by forced
+prefetch, ..." ?
 
-We support the concern over hardware locked platforms and do not
-disagree with the driver not supporting those platforms.  That being
-said, there is no technical rationale for not providing cryptographic
-policy management on FLC based platforms, as I believe our patch
-demonstrates.
+> prefetch could result in an error if applied to a channel program
+> that is dependent on non-prefetch.
+> 
+> Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
+> ---
+>  Documentation/s390/vfio-ccw.rst |  4 ++++
+>  drivers/s390/cio/vfio_ccw_cp.c  | 16 +++++++---------
+>  2 files changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
+> index fca9c4f5bd9c..8f71071f4403 100644
+> --- a/Documentation/s390/vfio-ccw.rst
+> +++ b/Documentation/s390/vfio-ccw.rst
+> @@ -335,6 +335,10 @@ device.
+>  The current code allows the guest to start channel programs via
+>  START SUBCHANNEL, and to issue HALT SUBCHANNEL and CLEAR SUBCHANNEL.
+>  
+> +Currently all channel programs are prefetched, regardless of the
+> +p-bit setting in the ORB.  As a result, self modifying channel
+> +programs are not supported (IPL is handled as a special case).
 
-Best wishes for a productive week.
+"IPL has to be handled as a special case by a userspace/guest program;
+this has been implemented in QEMU's s390-ccw bios as of QEMU 4.1" ?
 
-Dr. Greg
+> +
+>  vfio-ccw supports classic (command mode) channel I/O only. Transport
+>  mode (HPF) is not supported.
+>  
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+> index 3645d1720c4b..48802e9827b6 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.c
+> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+> @@ -8,6 +8,7 @@
+>   *            Xiao Feng Ren <renxiaof@linux.vnet.ibm.com>
+>   */
+>  
+> +#include <linux/ratelimit.h>
+>  #include <linux/mm.h>
+>  #include <linux/slab.h>
+>  #include <linux/iommu.h>
+> @@ -625,23 +626,20 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
+>   * the target channel program from @orb->cmd.iova to the new ccwchain(s).
+>   *
+>   * Limitations:
+> - * 1. Supports only prefetch enabled mode.
+> - * 2. Supports idal(c64) ccw chaining.
+> - * 3. Supports 4k idaw.
+> + * 1. Supports idal(c64) ccw chaining.
+> + * 2. Supports 4k idaw.
+>   *
+>   * Returns:
+>   *   %0 on success and a negative error value on failure.
+>   */
+>  int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
+>  {
+> +	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
+>  	int ret;
+>  
+> -	/*
+> -	 * XXX:
+> -	 * Only support prefetch enable mode now.
+> -	 */
+> -	if (!orb->cmd.pfch)
+> -		return -EOPNOTSUPP;
+> +	/* All Linux channel programs are expected to support prefetching */
 
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      Artisans in autonomously
-Enjellic Systems Development, LLC     self-defensive platforms.
-4206 N. 19th Ave.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Can't they?
+I think we want a longer comment here as well, not only in the patch
+description.
 
- A 64bit number incremented every millisecond can grow for half a
- billion years.  As far as I'm concerned, that is forever."
-                                -- Neil Brown
-                                   linux-raid
+"We only support prefetching the channel program. We assume all channel
+programs executed by supported guests (i.e. Linux) to support
+prefetching. If prefetching is not specified, executing the channel
+program may still work without problems; but log a message to give at
+least a hint if something goes wrong."
+
+?
+
+> +	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
+> +		printk(KERN_WARNING "vfio_ccw_cp: prefetch will be forced\n");
+
+"prefetch will be forced" is a bit misleading: the code does not force
+the p bit in the orb to be on, it's just the vfio-ccw cp translation
+code that relies on prefetching. Maybe rather "executing unsupported
+channel program without prefetch, things may break"?
+
+Also, this message does not mention the affected device, which makes it
+hard to locate the issuer in the guest. Maybe use
+dev_warn_ratelimited() instead of the home-grown ratelimiting? Or did
+you already try the generic ratelimiting?
+
+>  
+>  	INIT_LIST_HEAD(&cp->ccwchain_list);
+>  	memcpy(&cp->orb, orb, sizeof(*orb));
+
