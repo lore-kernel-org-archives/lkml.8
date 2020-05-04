@@ -2,101 +2,114 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B20C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D9AC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F00320757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D462075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:15:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588601725;
+	bh=4OTUs88V5+gAe8AdiZH5K55ttinyK7tBrbq3axVmxJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0LsI1TzxF3WaqSJvqXRFxFohVG5AsCa1TDcdG2Zs9RE9PQrwnJrTIC/M34hMRyBNL
+	 42CSYD4aQCXaROxmkgrCqlGNMT9sDwdT5zmj29bwn0IEFfkxMgbr7TeFb4Bx/AfMcz
+	 mTEhWsFXEMbTtCSxTRSgSm9ZI7hPucARrJnHVS4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbgEDOOW (ORCPT
+        id S1728821AbgEDOPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:14:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58228 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbgEDOOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:14:19 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id AB72A2A131E
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        laurent.pinchart@ideasonboard.com,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH 3/3] drm/mediatek: mtk_dpi: Use simple encoder
-Date:   Mon,  4 May 2020 16:14:08 +0200
-Message-Id: <20200504141408.60877-4-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504141408.60877-1-enric.balletbo@collabora.com>
-References: <20200504141408.60877-1-enric.balletbo@collabora.com>
+        Mon, 4 May 2020 10:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728486AbgEDOPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:15:24 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B49D20721;
+        Mon,  4 May 2020 14:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588601723;
+        bh=4OTUs88V5+gAe8AdiZH5K55ttinyK7tBrbq3axVmxJQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fGXiVH0q/KUvrxK42bzRAxzmJOFAsOoDQVM38AWNfJBALZLc6EFTe+Fe5E4YxQxLC
+         f5aeCU1VezyuosRVGtnSe1nhjeuYQM7ict83sr0OXOz5TppI0T7qY/88eBLQgy7E1n
+         BYytZM4Q9+JVCfY6MH/isb5D9FyARpgyuF0TPBfI=
+Date:   Mon, 4 May 2020 09:15:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PCI: Enable ASPM L1 on TI PCIe-to-PCI bridge
+Message-ID: <20200504141521.GA265122@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504070259.6034-1-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mtk_dpi driver uses an empty implementation for its encoder. Replace
-the code with the generic simple encoder.
+On Mon, May 04, 2020 at 03:02:59PM +0800, Kai-Heng Feng wrote:
+> The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+> state deeper than PC3, consumes lots of unnecessary power.
+> 
+> On Windows ASPM L1 is enabled on the device and its upstream bridge,
+> so it can make the Intel SoC reach PC8 or PC10 to save lots of power.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+Does this work around some kind of hardware or firmware defect?  If
+ASPM on this device works correctly, the generic code in aspm.c should
+enable L1 automatically as it does for all other devices.
 
- drivers/gpu/drm/mediatek/mtk_dpi.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+I don't think we should add quirks to set the ASPM configuration
+directly for random devices.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index baad198c69eb..80778b2aac2a 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -20,6 +20,7 @@
- #include <drm/drm_bridge.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_of.h>
-+#include <drm/drm_simple_kms_helper.h>
- 
- #include "mtk_dpi_regs.h"
- #include "mtk_drm_ddp_comp.h"
-@@ -510,15 +511,6 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
- 	return 0;
- }
- 
--static void mtk_dpi_encoder_destroy(struct drm_encoder *encoder)
--{
--	drm_encoder_cleanup(encoder);
--}
--
--static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
--	.destroy = mtk_dpi_encoder_destroy,
--};
--
- static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
- 				 enum drm_bridge_attach_flags flags)
- {
-@@ -591,8 +583,8 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
- 		return ret;
- 	}
- 
--	ret = drm_encoder_init(drm_dev, &dpi->encoder, &mtk_dpi_encoder_funcs,
--			       DRM_MODE_ENCODER_TMDS, NULL);
-+	ret = drm_simple_encoder_init(drm_dev, &dpi->encoder,
-+				      DRM_MODE_ENCODER_TMDS);
- 	if (ret) {
- 		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
- 		goto err_unregister;
--- 
-2.26.2
-
+> So enable ASPM L1 like Windows does, to save additional power.
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/pci/quirks.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index ca9ed5774eb1..ac7eccf34f87 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2330,6 +2330,27 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
+>  
+> +static void quirk_enable_aspm_l1(struct pci_dev *dev)
+> +{
+> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
+> +	u16 lnkctl;
+> +
+> +	pci_info(dev, "Enabling L1\n");
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
+> +	if (!(lnkctl & PCI_EXP_LNKCTL_ASPM_L1))
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
+> +					   lnkctl | PCI_EXP_LNKCTL_ASPM_L1);
+> +
+> +	if (!bridge)
+> +		return;
+> +
+> +	pcie_capability_read_word(bridge, PCI_EXP_LNKCTL, &lnkctl);
+> +	if (!(lnkctl & PCI_EXP_LNKCTL_ASPM_L1))
+> +		pcie_capability_write_word(bridge, PCI_EXP_LNKCTL,
+> +					   lnkctl | PCI_EXP_LNKCTL_ASPM_L1);
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_TI, 0x8240, quirk_enable_aspm_l1);
+> +
+>  /*
+>   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+>   * Link bit cleared after starting the link retrain process to allow this
+> -- 
+> 2.17.1
+> 
