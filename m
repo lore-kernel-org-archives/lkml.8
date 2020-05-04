@@ -2,118 +2,109 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32A0C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413E1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A02772073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C43206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nG7On+yM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BoupBZji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgEDMOG (ORCPT
+        id S1728743AbgEDMPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:14:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728630AbgEDMOE (ORCPT
+        Mon, 4 May 2020 08:15:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53222 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728587AbgEDMPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:14:04 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE626C061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 05:14:03 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id k81so13519753qke.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uYct+1EXK4RvBhS2R9oCZJOA6YnnY92fxMdH3FTHSR4=;
-        b=nG7On+yMwtfGBMG3EEnGP/Eyr+dDKC4jICpKbPO6K4fszentgI/sW7dpsCMmC3kiqN
-         r05PiNpFvfalngk5g8x2kENDR3bKi+zfFry4JRXeKkoS3rM3hNXK/XEdpT8Eq/owHSGW
-         UdGPVNu1ZZE1RFEa4aePGP7JUhSU9acIvXIAgsAUBkHPimnV3tZu8BatePbjTXLAgV7+
-         9j2xKqJiFFEFoCV0uizdmuOa8BXz0tOnGSMScdbrYZl1Tgqm2W/ItGaqMvd7WKHjuPUD
-         CVJsX/sNmyL9+anfWB63V5O4sThGrMWEzqEkdprm3ZBcuTYZytOlWIPSHHZERyGUDr5J
-         kOZg==
+        Mon, 4 May 2020 08:15:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588594547;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=q5qLe/YbLa8g+76m0wKCJz9sEFGWHkbwiwLtZx/ZVFk=;
+        b=BoupBZjinqWOG60CRL1nwi+ttchJJbX0UNYWrTc0U4ZfNvu8j01xdyxYUaoMen9ob3/VDH
+        7+LD20bUUoSII35T8mXnqx1GIKOuO0P4it5g/LcjFyLFTrwGngSlhuHxMoamfcPP0o91iJ
+        2DHfcVLnxELFkWrWpBwBu80wkVqpQRI=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-OeNESl1lNqa3kXw8ft5Jfw-1; Mon, 04 May 2020 08:15:43 -0400
+X-MC-Unique: OeNESl1lNqa3kXw8ft5Jfw-1
+Received: by mail-wm1-f71.google.com with SMTP id f17so3376788wmm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:15:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uYct+1EXK4RvBhS2R9oCZJOA6YnnY92fxMdH3FTHSR4=;
-        b=lnrHzoFoKpaeEQJ8gZIX14fjSOhCDEHr11wkhg0mPxB3geCNLWp7NVOh72ArTOuplu
-         wuBSK3S3ykm1uodocQAC3F0RdAmtY6zZPik8EdBXk122zsZ5avE80MAoz+s1bKa8Hy46
-         hMudr/NVCi21zVU0FSQKPeHfwH1CGWI14yOCFnnplHU3NjvIDm3d/O2MfodKpmgANg+5
-         ZKZrEykkUCLA0eWtP+EoSyq7jZygNIPOfTjg20hR0Qx0Hk3j+wCKEnNrcyY1IpSxkeIe
-         +8NhD9iCnPLgRoYwCUzriou44nr0/NcjioQBZ0ssF7+OFSObMMdhr9WsTLdvmza6/aRM
-         X+eA==
-X-Gm-Message-State: AGi0PubJ/frOGQTZoCujNoUz2oMP1mcgSzA5L1RMNCkmr/FEJ1Loep3j
-        7UX/MqJ4G7KmwG0X6sLVmEAjnw==
-X-Google-Smtp-Source: APiQypJo409ZJxzf2nxC+vnBmVCvb7bUK735uBejgyjN4EXp0iDnDYCtO3gUOEBm4tnsvWXbjqQYtA==
-X-Received: by 2002:a37:5941:: with SMTP id n62mr15543383qkb.419.1588594442936;
-        Mon, 04 May 2020 05:14:02 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id a139sm5077890qkg.107.2020.05.04.05.14.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 05:14:02 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jVZyz-0005Zd-K8; Mon, 04 May 2020 09:14:01 -0300
-Date:   Mon, 4 May 2020 09:14:01 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Dey, Megha" <megha.dey@linux.intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-Message-ID: <20200504121401.GV26002@ziepe.ca>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
- <20200423201118.GA29567@ziepe.ca>
- <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
- <20200503222513.GS26002@ziepe.ca>
- <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
- <20200503224659.GU26002@ziepe.ca>
- <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=q5qLe/YbLa8g+76m0wKCJz9sEFGWHkbwiwLtZx/ZVFk=;
+        b=czWeT1QRDGW31TM0xHOctWuFoWC3UJZeDe7XcRRNu7DDor3qEeelxW+yi0V9d4FvbA
+         BzSWDcLpGN3oJWKoIlT/kc66fs6m9LwKRG3Oy7GKTaJ7dd48c9PrCzfCGX5Mvn27qGx+
+         sG6jiFA5ZjAPt6PnOftdUe1cZ7nz2ivtFXKctoKOaJrGPpxX1ChfD+9bDIo3P0jS3hvx
+         i+dA9GKX1Jm0Y1mF0gTz4CZ4zqeOuztwcCP3HCa9fUYA9aXpiBbf8FxIg6SBFsUkYmoH
+         L0gJ3EP/dVKUfqnauaL7Dn9RYoM67jkZbsSXOMHv8XCMo4y62EZLiQRbD9VzgtFbiAMS
+         YT5g==
+X-Gm-Message-State: AGi0PuYa25M6hV5kVizAgoruf4jrPrRHOxaWyrUuCvwqqzxhLtDqr7ce
+        rik8oAlaxre4aSoLaxjd+v2e1frspCahOxROq1HSA8GUqGVauBIGULXQGdxZ05r/5zQ/mQNxoRt
+        NLATTRlfYuzz8EPQBl/wE8anJ
+X-Received: by 2002:a1c:4e06:: with SMTP id g6mr14085618wmh.186.1588594542755;
+        Mon, 04 May 2020 05:15:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIAWbJGa73k/tJK0QUm1DfayD29dwoou70hN0HhHJnMSNr/UKPo3sTuvVCseBF2z+tgI/8tzQ==
+X-Received: by 2002:a1c:4e06:: with SMTP id g6mr14085601wmh.186.1588594542532;
+        Mon, 04 May 2020 05:15:42 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id s24sm13455322wmj.28.2020.05.04.05.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 05:15:41 -0700 (PDT)
+Date:   Mon, 4 May 2020 08:15:40 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        justin.he@arm.com, ldigby@redhat.com, mst@redhat.com, n.b@live.com,
+        stefanha@redhat.com
+Subject: [GIT PULL] vhost: fixes
+Message-ID: <20200504081540-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 05:25:28PM -0700, Dey, Megha wrote:
-> > > The use case if when we have a device assigned to a guest and we
-> > > want to allocate IMS(platform-msi) interrupts for that
-> > > guest-assigned device. Currently, this is abstracted through a mdev
-> > > interface.
-> > 
-> > And the mdev has the pci_device internally, so it should simply pass
-> > that pci_device to the platform_msi machinery.
-> 
-> hmm i am not sure I follow this. mdev has a pci_device internally? which
-> struct are you referring to here?
+The following changes since commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
 
-mdev in general may not, but any ADI trying to use mdev will
-necessarily have access to a struct pci_device.
+  Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
 
-> mdev is merely a micropartitioned PCI device right, which no real PCI
-> resource backing. I am not how else we can find the IRQ domain associated
-> with an mdev..
+are available in the Git repository at:
 
-ADI always has real PCI resource backing.
+  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
 
-Jason
+for you to fetch changes up to 0b841030625cde5f784dd62aec72d6a766faae70:
+
+  vhost: vsock: kick send_pkt worker once device is started (2020-05-02 10:28:21 -0400)
+
+----------------------------------------------------------------
+virtio: fixes
+
+A couple of bug fixes.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+
+----------------------------------------------------------------
+Jia He (1):
+      vhost: vsock: kick send_pkt worker once device is started
+
+Stefan Hajnoczi (1):
+      virtio-blk: handle block_device_operations callbacks after hot unplug
+
+ drivers/block/virtio_blk.c | 86 +++++++++++++++++++++++++++++++++++++++++-----
+ drivers/vhost/vsock.c      |  5 +++
+ 2 files changed, 83 insertions(+), 8 deletions(-)
+
