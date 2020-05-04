@@ -2,185 +2,186 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B83C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D83FC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1D72087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5424220721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UDF1SGbS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iOX7z1yW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgEDPAx (ORCPT
+        id S1729353AbgEDPA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:00:53 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26307 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729313AbgEDPAk (ORCPT
+        Mon, 4 May 2020 11:00:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51186 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729313AbgEDPAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:00:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588604438;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k/AbVdWQcv/op6lCc5GakXsqxzuoe2d/8WuuTJkt0n0=;
-        b=UDF1SGbSWXd2BCmuDf8ReoaHaXUUi8SEFXqIMUo6SQsabHq+uuxWa+5M+nH5C+ehYtX3aj
-        v6qgaBYiXS11ZfGt8+yRyIponItfR0DIpRHzgycV1mecxRlHRqPgPjv0ZUNty5OiAroZzM
-        Wc5UQO+jcJjIgbCHgB8ZeJFnAWZzXvg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-S2BZkCeNN3KFyCb4TrnZsw-1; Mon, 04 May 2020 11:00:35 -0400
-X-MC-Unique: S2BZkCeNN3KFyCb4TrnZsw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 602F6801503;
-        Mon,  4 May 2020 15:00:33 +0000 (UTC)
-Received: from hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com (hp-dl360pgen8-07.khw2.lab.eng.bos.redhat.com [10.16.210.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4443E707B4;
-        Mon,  4 May 2020 15:00:30 +0000 (UTC)
-From:   Jarod Wilson <jarod@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org
-Subject: [RFC PATCH net-next 2/3] ixgbe_ipsec: become aware of when running as a bonding slave
-Date:   Mon,  4 May 2020 10:59:42 -0400
-Message-Id: <20200504145943.8841-3-jarod@redhat.com>
-In-Reply-To: <20200504145943.8841-1-jarod@redhat.com>
-References: <20200504145943.8841-1-jarod@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 May 2020 11:00:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044ElbG6116513;
+        Mon, 4 May 2020 15:00:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=5ClwOk8hAM6M0zm7zYo3+G30LLjRZv1vfMafgBD0Iqw=;
+ b=iOX7z1yWED8rz7gVbvpEo6SnpLCCF4ZeouDB99xr1IgkZ3XlsF/eK/xXi7ZGZ85VDgXS
+ Sqvb1zzwJ+AKfjw42W+CeC616p7RVZvaA5RrEeX/l714yca5ICzhTIu6vhbZJF+yN9J+
+ rI4f3jqfKMCEZI2It1GBEPvkhminSBDaSVCuNJ0E89LbKVMd1VksNlNs7AxD08xXYNlC
+ ugx6ChcQMdfgDuOMfXwWzs1aqmLmfRt+k5SxBhBUJQLx36BFNDibfSJa3VCzRGbnCHGO
+ 4e57hhQGSWWWlA0oPBfFExmmUtEFuWxUfKzV2+Arxz4yJk4Z0Obpy+AQ6QBjW3NBa6M3 HQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30s09qyfvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 15:00:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044ElLHX033714;
+        Mon, 4 May 2020 15:00:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30sjnaw42d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 15:00:28 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044F0RUp001695;
+        Mon, 4 May 2020 15:00:27 GMT
+Received: from linux-1.home.com (/10.175.9.166)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 08:00:26 -0700
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
+        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
+        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
+        kuzuno@gmail.com, mgross@linux.intel.com,
+        alexandre.chartre@oracle.com
+Subject: [RFC v4][PATCH part-2 13/13] mm/asi: Function to init decorated page-table with ASI core mappings
+Date:   Mon,  4 May 2020 16:58:10 +0200
+Message-Id: <20200504145810.11882-14-alexandre.chartre@oracle.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200504145810.11882-1-alexandre.chartre@oracle.com>
+References: <20200504145810.11882-1-alexandre.chartre@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=67 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=58 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Slave devices in a bond doing hardware encryption also need to be aware
-that they're slaves, so we operate on the slave instead of the bonding
-master to do the actual hardware encryption offload bits.
+Core mappings are the minimal mappings we need to be able to
+enter isolation and handle an isolation abort or exit. This
+includes the kernel code, the GDT and the percpu ASI sessions.
+We also need a stack so we map the current stack when entering
+isolation and unmap it on exit/abort.
 
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-CC: Jakub Kicinski <kuba@kernel.org>
-CC: Steffen Klassert <steffen.klassert@secunet.com>
-CC: Herbert Xu <herbert@gondor.apana.org.au>
-CC: netdev@vger.kernel.org
-CC: intel-wired-lan@lists.osuosl.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- .../net/ethernet/intel/ixgbe/ixgbe_ipsec.c    | 39 +++++++++++++++----
- 1 file changed, 31 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/asi.h |  2 ++
+ arch/x86/mm/asi.c          | 57 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net=
-/ethernet/intel/ixgbe/ixgbe_ipsec.c
-index 113f6087c7c9..26b0a58a064d 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-@@ -432,6 +432,9 @@ static int ixgbe_ipsec_parse_proto_keys(struct xfrm_s=
-tate *xs,
- 	char *alg_name =3D NULL;
- 	int key_len;
-=20
-+	if (xs->xso.slave_dev)
-+		dev =3D xs->xso.slave_dev;
+diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
+index ac0594d4f549..eafed750e07f 100644
+--- a/arch/x86/include/asm/asi.h
++++ b/arch/x86/include/asm/asi.h
+@@ -45,6 +45,7 @@
+ #include <linux/export.h>
+ 
+ #include <asm/asi_session.h>
++#include <asm/dpt.h>
+ 
+ /*
+  * ASI_NR_DYN_ASIDS is the same as TLB_NR_DYN_ASIDS. We can't directly
+@@ -150,6 +151,7 @@ extern void asi_destroy(struct asi *asi);
+ extern void asi_set_pagetable(struct asi *asi, pgd_t *pagetable);
+ extern int asi_enter(struct asi *asi);
+ extern void asi_exit(struct asi *asi);
++extern int asi_init_dpt(struct dpt *dpt);
+ 
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+ DECLARE_ASI_TYPE(user);
+diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
+index b63a0a883293..8b670ed13729 100644
+--- a/arch/x86/mm/asi.c
++++ b/arch/x86/mm/asi.c
+@@ -162,6 +162,63 @@ void asi_set_pagetable(struct asi *asi, pgd_t *pagetable)
+ }
+ EXPORT_SYMBOL(asi_set_pagetable);
+ 
++/*
++ * asi_init_dpt - Initialize a decorated page-table with the minimum
++ * mappings for using an ASI. Note that this function doesn't map any
++ * stack. If the stack of the task entering an ASI is not mapped then
++ * this will trigger a double-fault as soon as the task tries to access
++ * its stack.
++ */
++int asi_init_dpt(struct dpt *dpt)
++{
++	int err;
 +
- 	if (!xs->aead) {
- 		netdev_err(dev, "Unsupported IPsec algorithm\n");
- 		return -EINVAL;
-@@ -478,8 +481,8 @@ static int ixgbe_ipsec_parse_proto_keys(struct xfrm_s=
-tate *xs,
- static int ixgbe_ipsec_check_mgmt_ip(struct xfrm_state *xs)
- {
- 	struct net_device *dev =3D xs->xso.dev;
--	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
--	struct ixgbe_hw *hw =3D &adapter->hw;
-+	struct ixgbe_adapter *adapter;
-+	struct ixgbe_hw *hw;
- 	u32 mfval, manc, reg;
- 	int num_filters =3D 4;
- 	bool manc_ipv4;
-@@ -497,6 +500,12 @@ static int ixgbe_ipsec_check_mgmt_ip(struct xfrm_sta=
-te *xs)
- #define BMCIP_V6                 0x3
- #define BMCIP_MASK               0x3
-=20
-+	if (xs->xso.slave_dev)
-+		dev =3D xs->xso.slave_dev;
++	/*
++	 * Map the kernel.
++	 *
++	 * XXX We should check if we can map only kernel text, i.e. map with
++	 * size = _etext - _text
++	 */
++	err = dpt_map(dpt, (void *)__START_KERNEL_map, KERNEL_IMAGE_SIZE);
++	if (err)
++		return err;
 +
-+	adapter =3D netdev_priv(dev);
-+	hw =3D &adapter->hw;
++	/*
++	 * Map the cpu_entry_area because we need the GDT to be mapped.
++	 * Not sure we need anything else from cpu_entry_area.
++	 */
++	err = dpt_map_range(dpt, (void *)CPU_ENTRY_AREA_PER_CPU, P4D_SIZE,
++			    PGT_LEVEL_P4D);
++	if (err)
++		return err;
 +
- 	manc =3D IXGBE_READ_REG(hw, IXGBE_MANC);
- 	manc_ipv4 =3D !!(manc & MANC_EN_IPV4_FILTER);
- 	mfval =3D IXGBE_READ_REG(hw, IXGBE_MFVAL);
-@@ -561,14 +570,21 @@ static int ixgbe_ipsec_check_mgmt_ip(struct xfrm_st=
-ate *xs)
- static int ixgbe_ipsec_add_sa(struct xfrm_state *xs)
- {
- 	struct net_device *dev =3D xs->xso.dev;
--	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
--	struct ixgbe_ipsec *ipsec =3D adapter->ipsec;
--	struct ixgbe_hw *hw =3D &adapter->hw;
-+	struct ixgbe_adapter *adapter;
-+	struct ixgbe_ipsec *ipsec;
-+	struct ixgbe_hw *hw;
- 	int checked, match, first;
- 	u16 sa_idx;
- 	int ret;
- 	int i;
-=20
-+	if (xs->xso.slave_dev)
-+		dev =3D xs->xso.slave_dev;
++	/*
++	 * Map fixed_percpu_data to get the stack canary.
++	 */
++	if (IS_ENABLED(CONFIG_STACKPROTECTOR)) {
++		err = DPT_MAP_CPUVAR(dpt, fixed_percpu_data);
++		if (err)
++			return err;
++	}
 +
-+	adapter =3D netdev_priv(dev);
-+	ipsec =3D adapter->ipsec;
-+	hw =3D &adapter->hw;
++	/* Map current_task, we need it for __schedule() */
++	err = DPT_MAP_CPUVAR(dpt, current_task);
++	if (err)
++		return err;
 +
- 	if (xs->id.proto !=3D IPPROTO_ESP && xs->id.proto !=3D IPPROTO_AH) {
- 		netdev_err(dev, "Unsupported protocol 0x%04x for ipsec offload\n",
- 			   xs->id.proto);
-@@ -746,12 +762,19 @@ static int ixgbe_ipsec_add_sa(struct xfrm_state *xs=
-)
- static void ixgbe_ipsec_del_sa(struct xfrm_state *xs)
- {
- 	struct net_device *dev =3D xs->xso.dev;
--	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
--	struct ixgbe_ipsec *ipsec =3D adapter->ipsec;
--	struct ixgbe_hw *hw =3D &adapter->hw;
-+	struct ixgbe_adapter *adapter;
-+	struct ixgbe_ipsec *ipsec;
-+	struct ixgbe_hw *hw;
- 	u32 zerobuf[4] =3D {0, 0, 0, 0};
- 	u16 sa_idx;
-=20
-+	if (xs->xso.slave_dev)
-+		dev =3D xs->xso.slave_dev;
++	/*
++	 * Map the percpu ASI tlbstate. This also maps the asi_session
++	 * which is used by interrupt handlers to figure out if we have
++	 * entered isolation and switch back to the kernel address space.
++	 */
++	err = DPT_MAP_CPUVAR(dpt, cpu_tlbstate);
++	if (err)
++		return err;
 +
-+	adapter =3D netdev_priv(dev);
-+	ipsec =3D adapter->ipsec;
-+	hw =3D &adapter->hw;
++	return 0;
++}
++EXPORT_SYMBOL(asi_init_dpt);
 +
- 	if (xs->xso.flags & XFRM_OFFLOAD_INBOUND) {
- 		struct rx_sa *rsa;
- 		u8 ipi;
---=20
-2.20.1
+ /*
+  * Update ASI TLB flush information for the specified ASI CR3 value.
+  * Return an updated ASI CR3 value which specified if TLB needs to
+-- 
+2.18.2
 
