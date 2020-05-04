@@ -2,97 +2,159 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB13C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D55C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE73206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:17:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FItz7Hwl"
+	by mail.kernel.org (Postfix) with ESMTP id B2720206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgEDKRq (ORCPT
+        id S1728200AbgEDKUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgEDKRp (ORCPT
+        Mon, 4 May 2020 06:20:49 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36177 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgEDKUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:17:45 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C36CC061A0E;
-        Mon,  4 May 2020 03:17:44 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d16so13055006edv.8;
-        Mon, 04 May 2020 03:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=9YLhFsATDF9CQ1Kz7zcFcPQ6ReaZ8MJ/irWvA43Y+c0=;
-        b=FItz7HwlVSu7eS7n7AwPvpHdLcGWnBU6ErB/HRgCMWw8TeAUlfMFmxWjXDnyzgzqbc
-         WSE8rhkeVDiuI9IBCQTMSqrrnfcOV2vfddsJ3KGOdabSsCQFzuDcQuaf5LExyJdzhfb8
-         6BBRYOVRGWECjVxgTzjm2VHNosRK7EjTio6yj1AswTOanWgu3cCTONMhuSolIYbsIh6S
-         eeF2b41Ubkd+t5saU2WZ24BbD5KpIzEnDVanhW2SwARZGX2na7tvfA+Bl9SRKI71XHTp
-         AMudOq7AEjYcqgawIR0tNH8Ume6Ps1DcY+qzbwCwApxxqsQtMVob1MEkgAXGwn2d2oY8
-         h6ng==
+        Mon, 4 May 2020 06:20:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t3so4583219otp.3;
+        Mon, 04 May 2020 03:20:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=9YLhFsATDF9CQ1Kz7zcFcPQ6ReaZ8MJ/irWvA43Y+c0=;
-        b=ExscYGXsN9WI3P4S7EXSeZ4BMH/P08iwsbKPboFhuX337H7M6MQTTJKg0uEix8hLZb
-         2C6AWWIWcrZTk148ZIUcQ9ekrgUckAYpFJ/EHtmf0i56/7tVeUUEqQXzPrG4vCTFjJLM
-         PZsvRjYs14Xx6bIOt/NhlekGHlnoffBS+rezKlwsYA51t6ZLsNzKP1Rj9YPXrL6EzVLt
-         CSm95XF9BubLem/tSYQCxVplJJeSQXgdVoYDakVfNBCqzjiTrUjw4IP/n5jPAHFiMfoZ
-         ZZmA/yju+36Q2DlSoPq3JaOFq/rv+1XdRpHdJTBsTxYwHXnnc/SCpA5O4zfNDcWXGAAp
-         aV/g==
-X-Gm-Message-State: AGi0PuaKZXLhjs0wYBczV6Vqytb1jLyZxa0AcPcjlIexohfchr5EBsK3
-        8HYUBw9Id9gVHC86L+iog4510ikzNe7dOTxrhH0=
-X-Google-Smtp-Source: APiQypIwdDOKDpx+1h9+iSL94zUNe8BJguW9reVlsixilagJeowBiCSiwwCY3WMAA+G2UF+rvlg34kzDlOSMNeQ+TtE=
-X-Received: by 2002:a05:6402:7d6:: with SMTP id u22mr13626163edy.149.1588587462974;
- Mon, 04 May 2020 03:17:42 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aGRMnuTg/l5w0maHVGEcneYHQFdFGNPfiCYfIWkTR0o=;
+        b=JDi7a1+k4nDIQ2X2u7vfsWkL8tk/b85acH4ZTdmB1bwLUQNKhJfb//dPxIPNcgljhm
+         jOTigMo6x1Q5lEAD7ZYe8RvzVrD5gxmJVBT4HdxH2/GfjjOO7pdK2W7nxiSzaQy+FBN2
+         9npqFZe7t5nM4HsGGHyGb34zmXkN85egcixHyEtHSk4vnOEzAJEIjB5ZA9rYCijfGoGo
+         pfCHnTdi3gJZxDk64F0uW4fDZj0N9Zta0SjT0bzkKV4R817Fi21w0QWPWcqkYL4TSTlI
+         kJpuJQMc1HxwzuxCWoqjdKKwZ8ClEVc5HnnBnau4oEK2ZzAbDhuLvPLvVirzCvpn7Mz0
+         IQQw==
+X-Gm-Message-State: AGi0PubxR6DnC7gYGJtUCTCQGM/dXeVBj5JslidJOUZvwO/hrIYM7yr4
+        W23D8Z4SZGcHzxnb43AZySrW7wmi/hgiPJwwuWE=
+X-Google-Smtp-Source: APiQypKI/tnpEasz9c6NjgVI5Zv53OBORTXWD6v5yxAV42kvA/cHTjT9UpDrC7tAkI9k8UoXntXphLbQKxc99tQWof8=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr12887666otn.107.1588587644541;
+ Mon, 04 May 2020 03:20:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200202151907.23587-1-cyphar@cyphar.com> <20200202151907.23587-3-cyphar@cyphar.com>
- <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com> <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
- <cd3a6aad-b906-ee57-1b5b-5939b9602ad0@gmail.com> <20200412164943.imwpdj5qgtyfn5de@yavin.dot.cyphar.com>
- <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com> <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
-In-Reply-To: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Mon, 4 May 2020 12:17:32 +0200
-Message-ID: <CAKgNAkjUssPCeOHQCg5zxjt2b9huRKfZQ3nR7Qtyr9jaizoqsw@mail.gmail.com>
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2) syscall
-To:     Aleksa Sarai <asarai@suse.de>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        linux-man <linux-man@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 12:20:33 +0200
+Message-ID: <CAMuHMdXruqw2pb3pfXNfxNgtc24FmVA376DLBQgubEYSGO7LSA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aleksa,
+Hi Prabhakar,
 
-Ping on this piece please:
+Thanks for the update!
 
-> > > It wouldn't hurt to add a longer description of magic-links in
-> > > symlink(7). I'll send you a small patch to beef up the description (I
-> > > had planned to include a longer rewrite with the O_EMPTYPATH patches but
-> > > those require quite a bit more work to land).
-> >
-> > That would be great. Thank you!
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790),
+> however it doesn't have several automotive specific peripherals. Add
+> a r8a7790 specific pin groups/functions along with common pin
+
+s/a r8a7790/automotive/?
+
+> groups/functions for supporting both r8a7790 and r8a7742 SoC.
 >
-> I'll cook something up later this week.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Thanks,
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
 
-Michael
+> @@ -5736,6 +5750,7 @@ static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
+>         .pin_to_pocctrl = r8a7790_pin_to_pocctrl,
+>  };
+>
+> +#ifdef CONFIG_PINCTRL_PFC_R8A7790
+>  const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>         .name = "r8a77900_pfc",
+>         .ops = &r8a7790_pinmux_ops,
+> @@ -5745,13 +5760,38 @@ const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>
+>         .pins = pinmux_pins,
+>         .nr_pins = ARRAY_SIZE(pinmux_pins),
+> -       .groups = pinmux_groups,
+> -       .nr_groups = ARRAY_SIZE(pinmux_groups),
+> -       .functions = pinmux_functions,
+> -       .nr_functions = ARRAY_SIZE(pinmux_functions),
+> +       .groups = pinmux_groups.common,
+> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common) +
+> +               ARRAY_SIZE(pinmux_groups.automotive),
+> +       .functions = pinmux_functions.common,
+> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common) +
+> +               ARRAY_SIZE(pinmux_functions.automotive),
+> +
+> +       .cfg_regs = pinmux_config_regs,
+> +
+> +       .pinmux_data = pinmux_data,
+> +       .pinmux_data_size = ARRAY_SIZE(pinmux_data),
+> +};
+> +#endif
+> +
+> +#ifdef CONFIG_PINCTRL_PFC_R8A7742
+> +const struct sh_pfc_soc_info r8a7742_pinmux_info = {
+> +       .name = "r8a77420_pfc",
+> +       .ops = &r8a7790_pinmux_ops,
+> +       .unlock_reg = 0xe6060000, /* PMMR */
+> +
+> +       .function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
+> +
+> +       .pins = pinmux_pins,
+> +       .nr_pins = ARRAY_SIZE(pinmux_pins),
+> +       .groups = pinmux_groups.common,
+> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common),
+> +       .functions = pinmux_functions.common,
+> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common),
+>
+>         .cfg_regs = pinmux_config_regs,
+>
+>         .pinmux_data = pinmux_data,
+>         .pinmux_data_size = ARRAY_SIZE(pinmux_data),
+>  };
+> +#endif
+
+The r8a7742 section should be inserted before the r8a7790 section,
+to preserve sort order.
+
+No need to resend, will fix up while applying.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v5.8.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
