@@ -2,177 +2,230 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956A0C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FFDC47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF612071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53D120661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:43:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0HOjBb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgEDMm6 (ORCPT
+        id S1728836AbgEDMnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:42:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:61499 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgEDMm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:42:58 -0400
-IronPort-SDR: UEOS+CMm56Yg/50P4f3Vq1bMlZQzt7ljnJRNl/nSOjyVW6jWfCnDGiVfQ8hJgOU52Dqo5XEiED
- og4+Tq1Kz99A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 05:42:57 -0700
-IronPort-SDR: GZ5CLlJqOXi5gp7wS+11Ftok3l7QEB8bkkbjg3l7se4ElhXZSXh++4QMLGzklhBtp32cu/PIvn
- OvjiMVJc5Dfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="338307544"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 04 May 2020 05:42:54 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jVaQy-004cHK-N9; Mon, 04 May 2020 15:42:56 +0300
-Date:   Mon, 4 May 2020 15:42:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] i2c: drivers: Remove superfluous error message
-Message-ID: <20200504124256.GF185537@smile.fi.intel.com>
-References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
- <20200504114408.9128-1-aishwaryarj100@gmail.com>
+        Mon, 4 May 2020 08:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727103AbgEDMn2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 08:43:28 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53084C061A0E;
+        Mon,  4 May 2020 05:43:28 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so9424255lfd.0;
+        Mon, 04 May 2020 05:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LY2vVgC+cbtdUXhh6dmU56B7JQpHi0i0aYK6LOUqicI=;
+        b=H0HOjBb9hzV/FDQ0/d0UiRz3Ycph1g+TCIEQVTHFobzyrZ3lr3MgEgj2O0R5TuLOOq
+         mZ3+YKZkLBVz0wojifBQxAhPMATX+OaGfEA0DhhPYIVhqB9AAWNHFfAYWVBmxSHjT1AL
+         LOwkD8d+wVq1lQ/wtdhGpgZcz+WLh/vW56RpEc3uk45gJN+CZAXSVUazBI9a5BpXnuUt
+         MsFtr8zkxk1Zf17Y6m2qNHVom8hIwdkKzU5jvQcLTOzEe8VV21+1KauaDHmC7RRpXoLs
+         xMRBSd5xZifuzumCOCMeG1G33OamL3Oy95aqsbYkllKH/17rASM06//9oMtjlFNkMc8/
+         qz2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LY2vVgC+cbtdUXhh6dmU56B7JQpHi0i0aYK6LOUqicI=;
+        b=cpsf/0qVjWjAGeHSQgr2xWAIyvyQXxUcREm2KIQ5fM5CQ/gSI2VYkj9JdD4R/8soQY
+         KhSUNgX7y5gPF6qUOLCh+kufRkfsG4vKFVhuP7nrvJbb2SBq7A5XFr+ZSC6uvib03VG2
+         HSi8Co/XHpOmOCmARV9jcwOuyTAvGPbN6sR7jhLRvzmenk+btR9BYauAK9hV0Lwyp1BD
+         SV7tECqNqmKap7quWixVCib4Vw44D/6w8MiBhDZbgR0utgVZtIzav4UNmX3s8VYMkoqA
+         MX8R1Cg8Rbxer1Y1BJdvSzOh3esokxLi2GX5cSu5Bv5llLbgy29grjL7dNCZ0U1mTlo+
+         6kHg==
+X-Gm-Message-State: AGi0PubYOj6gnWzbIaRISHLozc2WL4LKnJ+BxpN4BYIEsizoirA8WyIE
+        3XDR1df0EloAtnGmlUxKTqI=
+X-Google-Smtp-Source: APiQypKIkNZaeqpNNjFZCpFyjTIpjvlXudh08G2yez832a5PcnPpsYMXTySn3pJQXCwgq57cS6RVHw==
+X-Received: by 2002:a05:6512:31c1:: with SMTP id j1mr11627561lfe.14.1588596206766;
+        Mon, 04 May 2020 05:43:26 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id u3sm4650793lfq.59.2020.05.04.05.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 05:43:26 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 4 May 2020 14:43:23 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
+Message-ID: <20200504124323.GA17577@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-10-urezki@gmail.com>
+ <20200501212749.GD7560@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504114408.9128-1-aishwaryarj100@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200501212749.GD7560@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 05:14:06PM +0530, Aishwarya Ramakrishnan wrote:
-> The function platform_get_irq can log an error by itself.
-> This omit a redundant message for exception handling in the
-> calling function.
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-
-> Suggested by Coccinelle.
-
-Compile tested only, right?
-
+On Fri, May 01, 2020 at 02:27:49PM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 28, 2020 at 10:58:48PM +0200, Uladzislau Rezki (Sony) wrote:
+> > Cache some extra objects per-CPU. During reclaim process
+> > some pages are cached instead of releasing by linking them
+> > into the list. Such approach provides O(1) access time to
+> > the cache.
+> > 
+> > That reduces number of requests to the page allocator, also
+> > that makes it more helpful if a low memory condition occurs.
+> > 
+> > A parameter reflecting the minimum allowed pages to be
+> > cached per one CPU is propagated via sysfs, it is read
+> > only, the name is "rcu_min_cached_objs".
+> > 
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  kernel/rcu/tree.c | 64 ++++++++++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 60 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 89e9ca3f4e3e..d8975819b1c9 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -178,6 +178,14 @@ module_param(gp_init_delay, int, 0444);
+> >  static int gp_cleanup_delay;
+> >  module_param(gp_cleanup_delay, int, 0444);
+> >  
+> > +/*
+> > + * This rcu parameter is read-only, but can be write also.
 > 
-> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-altera.c   | 4 +---
->  drivers/i2c/busses/i2c-cht-wc.c   | 4 +---
->  drivers/i2c/busses/i2c-img-scb.c  | 4 +---
->  drivers/i2c/busses/i2c-lpc2k.c    | 4 +---
->  drivers/i2c/busses/i2c-uniphier.c | 4 +---
->  5 files changed, 5 insertions(+), 15 deletions(-)
+> You mean that although the parameter is read-only, you see no reason
+> why it could not be converted to writeable?
 > 
-> diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-> index f5c00f903df3..af6985f0ae63 100644
-> --- a/drivers/i2c/busses/i2c-altera.c
-> +++ b/drivers/i2c/busses/i2c-altera.c
-> @@ -395,10 +395,8 @@ static int altr_i2c_probe(struct platform_device *pdev)
->  		return PTR_ERR(idev->base);
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "missing interrupt resource\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	idev->i2c_clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(idev->i2c_clk)) {
-> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-> index 35e55feda763..343ae5754e6e 100644
-> --- a/drivers/i2c/busses/i2c-cht-wc.c
-> +++ b/drivers/i2c/busses/i2c-cht-wc.c
-> @@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
->  	int ret, reg, irq;
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "Error missing irq resource\n");
-> +	if (irq < 0)
->  		return -EINVAL;
-> -	}
->  
->  	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
->  	if (!adap)
-> diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
-> index 422097a31c95..2f6de763816a 100644
-> --- a/drivers/i2c/busses/i2c-img-scb.c
-> +++ b/drivers/i2c/busses/i2c-img-scb.c
-> @@ -1344,10 +1344,8 @@ static int img_i2c_probe(struct platform_device *pdev)
->  		return PTR_ERR(i2c->base);
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "can't get irq number\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
->  	if (IS_ERR(i2c->sys_clk)) {
-> diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
-> index 13b0c12e2dba..43dc9b7043e4 100644
-> --- a/drivers/i2c/busses/i2c-lpc2k.c
-> +++ b/drivers/i2c/busses/i2c-lpc2k.c
-> @@ -362,10 +362,8 @@ static int i2c_lpc2k_probe(struct platform_device *pdev)
->  		return PTR_ERR(i2c->base);
->  
->  	i2c->irq = platform_get_irq(pdev, 0);
-> -	if (i2c->irq < 0) {
-> -		dev_err(&pdev->dev, "can't get interrupt resource\n");
-> +	if (i2c->irq < 0)
->  		return i2c->irq;
-> -	}
->  
->  	init_waitqueue_head(&i2c->wait);
->  
-> diff --git a/drivers/i2c/busses/i2c-uniphier.c b/drivers/i2c/busses/i2c-uniphier.c
-> index 668b1fa2b0ef..ee00a44bf4c7 100644
-> --- a/drivers/i2c/busses/i2c-uniphier.c
-> +++ b/drivers/i2c/busses/i2c-uniphier.c
-> @@ -324,10 +324,8 @@ static int uniphier_i2c_probe(struct platform_device *pdev)
->  		return PTR_ERR(priv->membase);
->  
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(dev, "failed to get IRQ number\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
->  
->  	if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
->  		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
-> -- 
-> 2.17.1
+I added just a note. If it is writable, then we can change the size of the
+per-CPU cache dynamically, i.e. "echo 5 > /sys/.../rcu_min_cached_objs"
+would cache 5 pages. But i do not have a strong opinion if it should be
+writable.
+
+>
+> If it was writeable, and a given CPU had the maximum numbr of cached
+> objects, the rcu_min_cached_objs value was decreased, but that CPU never
+> saw another kfree_rcu(), would the number of cached objects change?
 > 
+No. It works the way: unqueue the page from cache in the kfree_rcu(),
+whereas "rcu work" will put it back if number of objects < rcu_min_cached_objs,
+if >= will free the page.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> (Just curious, not asking for a change in functionality.)
+> 
+> > + * It reflects the minimum allowed number of objects which
+> > + * can be cached per-CPU. Object size is equal to one page.
+> > + */
+> > +int rcu_min_cached_objs = 2;
+> > +module_param(rcu_min_cached_objs, int, 0444);
+> > +
+> >  /* Retrieve RCU kthreads priority for rcutorture */
+> >  int rcu_get_gp_kthreads_prio(void)
+> >  {
+> > @@ -2887,7 +2895,6 @@ struct kfree_rcu_cpu_work {
+> >   * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
+> >   * @head: List of kfree_rcu() objects not yet waiting for a grace period
+> >   * @bhead: Bulk-List of kfree_rcu() objects not yet waiting for a grace period
+> > - * @bcached: Keeps at most one object for later reuse when build chain blocks
+> >   * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
+> >   * @lock: Synchronize access to this structure
+> >   * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
+> > @@ -2902,7 +2909,6 @@ struct kfree_rcu_cpu_work {
+> >  struct kfree_rcu_cpu {
+> >  	struct rcu_head *head;
+> >  	struct kfree_rcu_bulk_data *bhead;
+> > -	struct kfree_rcu_bulk_data *bcached;
+> >  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
+> >  	raw_spinlock_t lock;
+> >  	struct delayed_work monitor_work;
+> > @@ -2910,6 +2916,15 @@ struct kfree_rcu_cpu {
+> >  	bool initialized;
+> >  	// Number of objects for which GP not started
+> >  	int count;
+> > +
+> > +	/*
+> > +	 * Number of cached objects which are queued into
+> > +	 * the lock-less list. This cache is used by the
+> > +	 * kvfree_call_rcu() function and as of now its
+> > +	 * size is static.
+> > +	 */
+> > +	struct llist_head bkvcache;
+> > +	int nr_bkv_objs;
+> >  };
+> >  
+> >  static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc) = {
+> > @@ -2946,6 +2961,31 @@ krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
+> >  	local_irq_restore(flags);
+> >  }
+> >  
+> > +static inline struct kfree_rcu_bulk_data *
+> > +get_cached_bnode(struct kfree_rcu_cpu *krcp)
+> > +{
+> > +	if (!krcp->nr_bkv_objs)
+> > +		return NULL;
+> > +
+> > +	krcp->nr_bkv_objs--;
+> > +	return (struct kfree_rcu_bulk_data *)
+> > +		llist_del_first(&krcp->bkvcache);
+> > +}
+> > +
+> > +static inline bool
+> > +put_cached_bnode(struct kfree_rcu_cpu *krcp,
+> > +	struct kfree_rcu_bulk_data *bnode)
+> > +{
+> > +	/* Check the limit. */
+> > +	if (krcp->nr_bkv_objs >= rcu_min_cached_objs)
+> > +		return false;
+> > +
+> > +	llist_add((struct llist_node *) bnode, &krcp->bkvcache);
+> > +	krcp->nr_bkv_objs++;
+> > +	return true;
+> > +
+> > +}
+> > +
+> >  /*
+> >   * This function is invoked in workqueue context after a grace period.
+> >   * It frees all the objects queued on ->bhead_free or ->head_free.
+> > @@ -2981,7 +3021,12 @@ static void kfree_rcu_work(struct work_struct *work)
+> >  		kfree_bulk(bhead->nr_records, bhead->records);
+> >  		rcu_lock_release(&rcu_callback_map);
+> >  
+> > -		if (cmpxchg(&krcp->bcached, NULL, bhead))
+> > +		krcp = krc_this_cpu_lock(&flags);
+> 
+> Presumably the list can also be accessed without holding this lock,
+> because otherwise we shouldn't need llist...
+> 
+Hm... We increase the number of elements in cache, therefore it is not
+lockless. From the other hand i used llist_head to maintain the cache
+because it is single linked list, we do not need "*prev" link. Also
+we do not need to init the list.
 
+But i can change it to list_head. Please let me know if i need :)
 
+--
+Vlad Rezki
