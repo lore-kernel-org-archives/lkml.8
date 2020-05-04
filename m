@@ -2,130 +2,110 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31DFC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96981C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86253206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786692085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:37:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="F+2NEE8n"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Loxg7qHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgEDSd7 (ORCPT
+        id S1726453AbgEDShY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34052 "EHLO
+        Mon, 4 May 2020 14:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729762AbgEDSd7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726111AbgEDShX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:33:59 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC82DC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:33:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id b20so3104603ejg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Glau+s6Q6iM76mHi/QXePg8xF2snTXD5otz87ESSu8A=;
-        b=F+2NEE8n0+6a2Uxkq3oo+gK/iDs1gXhBaBtJu3It7O83YXrMkKTw/j5R5KqU4cLb1I
-         vlOYdG8d6H2sSQjfFpkieMLY+KM5edr1MbbCXsj+B9wkYlXKMNdfSGw1CJFXf7fx5Q7C
-         nLx7CYq5rjomyrqgHsVmp6vku6f3HeDmYZpPHsh7ka8b5Df1pXeivwm1iUG0Tio8BF4o
-         ZS585n3JOtRJMk45ZcupX+D3R94fYlWZsYjSr5wbogW/u9eqdMEat4pDnASo56oFKvzS
-         7tnb7wc1b4OhUfvjaDeX366gFmfgoP2fFKltlwAvd8N31RZXbHNtbqksmP+ogCEDB/JL
-         SgwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Glau+s6Q6iM76mHi/QXePg8xF2snTXD5otz87ESSu8A=;
-        b=pjeQnXMlqFlHksMlBi6DAg+CFtuWeOLT3j6SBPLMQKhTjbhW0BcfyJbXAscCRD0sDV
-         wkc56fxUJxH02mTzy4QHh0ZcIiueBbSSfrCFuVeaAEWatJjEGRbGmSwISIrFHLqsegER
-         5UlSEz5o6jyQmw65jvA1pU4NB30ebyhX3dAmUf2vsHN6MCUf7QeAQunUdUKpuqrwYPT0
-         S6qIPoizNVl3BS6h3AlB6IOxgsAlBEjrtyNiiLhXkf5twO05eXotDwhhiNzrMbl7nELa
-         PG463/txh9itNifxA0+ortFadMyJ4+auVvdxOca1pFsCEhRGvgdIuu1tfQXG6M/CeO8O
-         uNJg==
-X-Gm-Message-State: AGi0Pub0HZPEmNK75tK9ea3JSyRGRfKpf6VjnPTPuqLOiRk5JeSeYz+W
-        242qAfdAw1nzIxPOlgwuk35WkM87DKTXeiqT631ADA==
-X-Google-Smtp-Source: APiQypKMZgww2SWaJ3dlnMp45iEyQic5CmZ0rEfuzBZzZC+1C4Op+IwopR9sfyLSwESK4to/xI+WLCvGiTO9JNWKJqE=
-X-Received: by 2002:a17:907:9e5:: with SMTP id ce5mr15759967ejc.123.1588617237480;
- Mon, 04 May 2020 11:33:57 -0700 (PDT)
+        Mon, 4 May 2020 14:37:23 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CDEC061A0F;
+        Mon,  4 May 2020 11:37:23 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F08AF0065FB624DCF4BA4D3.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:af00:65fb:624d:cf4b:a4d3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EC3E21EC02CA;
+        Mon,  4 May 2020 20:37:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1588617440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=YuW8tb+waz9pfSvMfWhFe9y4ge3JyCySIqtRfEA1Ev8=;
+        b=Loxg7qHfyNd5NlctbHdWyRlUKhl4uMV33Gqbnl6jLD+pV37pY/Z3s97vOjSG0DrJZcSrWC
+        NZZZdI5FefhNTVMEdziALRtWLraKpwHiXKxQSxNrujV9olY0U5AxQM58uFSr0koaRfmiyx
+        xXfDo1hym6MHekNpykIm/9pXyWJlkps=
+Date:   Mon, 4 May 2020 20:37:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Shenhar, Talel" <talel@amazon.com>
+Cc:     mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
+        will@kernel.org, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, eitan@amazon.com
+Subject: Re: [PATCH v6 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+Message-ID: <20200504183716.GJ15046@zn.tnic>
+References: <20200224134132.23924-1-talel@amazon.com>
+ <20200224134132.23924-3-talel@amazon.com>
+ <20200428113950.GB11272@zn.tnic>
+ <46ccdb47-f28d-63f7-e759-1ba34e98add8@amazon.com>
 MIME-Version: 1.0
-References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
- <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
- <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
- <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
- <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com> <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
- <CAPcyv4g0a406X9-=NATJZ9QqObim9Phdkb_WmmhsT9zvXsGSpw@mail.gmail.com>
- <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
- <CAPcyv4jvgCGU700x_U6EKyGsHwQBoPkJUF+6gP4YDPupjdViyQ@mail.gmail.com>
- <CAHk-=wiPkwF2+y6wZd=VD9BooKxHRWhSVW8dr+WSeeSPkJk7kQ@mail.gmail.com> <a4aabe6f2ca649779a772a5f0365af6f@AcuMS.aculab.com>
-In-Reply-To: <a4aabe6f2ca649779a772a5f0365af6f@AcuMS.aculab.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 4 May 2020 11:33:46 -0700
-Message-ID: <CAPcyv4i8V9FCuTHZG2RG9o3vjrMmLkv40-41MwLBO8tZWUsZ5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        stable <stable@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Erwin Tsaur <erwin.tsaur@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <46ccdb47-f28d-63f7-e759-1ba34e98add8@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 5:57 AM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Linus Torvalds
-> > Sent: 01 May 2020 19:29
-> ...
-> > And as DavidL pointed out - if you ever have "iomem" as a source or
-> > destination, you need yet another case. Not because they can take
-> > another kind of fault (although on some platforms you have the machine
-> > checks for that too), but because they have *very* different
-> > performance profiles (and the ERMS "rep movsb" sucks baby donkeys
-> > through a straw).
->
->
-> I was actually thinking that the nvdimm accesses need to be treated
-> much more like (cached) memory mapped io space than normal system
-> memory.
-> So treating them the same as "iomem" and then having access functions
-> that report access failures (which the current readq() doesn't)
-> might make sense.
+On Mon, May 04, 2020 at 01:16:10PM +0300, Shenhar, Talel wrote:
+> > > +     mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> > > +                         sizeof(struct al_mc_edac));
+> > You can let that line stick out.
+> 
+> I rather avoid having this as a checkpatch warnning... (automation and
+> stuff...)
 
-While I agree that something like copy_mc_iomem_to_{user,kernel} could
-have users, nvdimm is not one of them.
+checkpatch.pl - while useful - should not be taken to the letter and
+human brain should be applied to sanity check it what it warns about.
 
-> If you are using memory that 'might fail' for kernel code or data
-> you really get what you deserve.
+> This line break does seems to my eye as too hard to read.
+> 
+> Let me know if you feel strongly about it.
 
-nvdimms are no less "might fail" than DRAM, recall that some nvdimms
-are just DRAM with a platform promise that their contents are battery
-backed.
+I'm just sayin' - in the end of the day you'll be staring at that code -
+not me - so whatever *you* prefer. :-)
 
-> OTOH system response to PCIe errors is currently rather problematic.
-> Mostly reads time out and return ~0u.
-> This can be checked for and, if possibly valid, a second location read.
+Just don't follow tools blindly.
 
-Yes, the ambiguous ~0u return needs careful handling.
+> > > +     if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
+> > Shouldn't this be && here?
+> > 
+> > I mean, you want to poll when neither of the IRQs can be found. But then
+> > if you find one of them and not the other, what do you do? Poll and
+> > interrupt? Is that case even possible?
+> 
+> Correct.
+> 
+> In case dt defined interrupt line only for one type and not for the other,
+> than the interrupt mode shall be used for one of them while polling mode for
+> the other.
+
+That warrants a comment above it.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
