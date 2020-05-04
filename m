@@ -2,186 +2,95 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7068BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AFFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD182068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADC82068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDXanxAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgEDX3E (ORCPT
+        id S1728340AbgEDXaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:29:04 -0400
-Received: from smtprelay0036.hostedemail.com ([216.40.44.36]:48910 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727982AbgEDX3E (ORCPT
+        Mon, 4 May 2020 19:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727982AbgEDXaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:29:04 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8294D1822384F;
-        Mon,  4 May 2020 23:29:02 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: burst33_88fb33cf02246
-X-Filterd-Recvd-Size: 5410
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 May 2020 23:29:01 +0000 (UTC)
-Message-ID: <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
-Subject: [trivial PATCH] video: fbdev: Use IS_BUILTIN
-From:   Joe Perches <joe@perches.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Date:   Mon, 04 May 2020 16:29:00 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 4 May 2020 19:30:16 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DFFC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:30:15 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b6so527384qkh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:30:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZBc+PcefEfR4/vKXm3LERVOyhVmQ3WDeB0fuysL9Yg8=;
+        b=tDXanxAudaCjvCTkpg/BK6/fix93BEE/+gnqN29tge5PNAJgwX3rrfcZX2o1TDtEpL
+         5q3C8VjsFMSkOZt6qxTlZg0Z8gS6jdqvTrYFceAmqyaEP4zGacyqhMkU6wAjHl+wsb0Q
+         07MloAwFlkW0zarJyPx8bxIqCC/E5rniRaSCoKHv00FjgKF92T09xmojwVUSXlo/WGJI
+         PfvA7A3pBeZkXN28BvOBNlSPhAZYHOMmitau8Tm2GhHybMlQihBU8/V2Yf2Ame7RZz6c
+         tGCxKLZhYFtkLIsxHIwyRn6BxQr/+SteGgo/GtXQ8eGibHclStiHQAUpCEXE4NBLvC92
+         8hzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZBc+PcefEfR4/vKXm3LERVOyhVmQ3WDeB0fuysL9Yg8=;
+        b=G635J52EvQpEQ0vaGd8nEEdgtrsveD6aT9goS2UJqLNDjvSLlLO8ZqS5P/1cnbfm+t
+         Ev3yw5WCi/S4eHw7c5qmCQKVyjM4wwqIX6dGFXY/9IeuQSsCTOmO7z2yGNu8sfGXwv1U
+         lsH+csu9jIwntfK//CiShh9caiTYd1YcKnupfl9MznuasX6nAi6+97wZ7pK40077ojpF
+         mnlnOL3b1zAcAt3m49mw9q2eaal/vym72ZCHqNIz9RqDP25c0jmCZtdAfJ6tKnXbPJ20
+         iKcVrPs9zJu7Af8aia+cYAe/RnVxm7ss8FZQ6QExy5j4nzfflsf638tyW+TWWlEPDr8g
+         7JZw==
+X-Gm-Message-State: AGi0PuZhw3USZeZvTpLRx0DrQXG+1/Cnzd3NvwgaapPWOiRoz44O10dW
+        96O0ohXcF45l6tYMUlOgRVcCE7vHfpc=
+X-Google-Smtp-Source: APiQypKkOFL6XLk3UlAyGUKU5tlTZOJIL57K9M6UeUc/14P66LocB7Chg+CxagnIfeA1KcajoS/HkA==
+X-Received: by 2002:a05:620a:490:: with SMTP id 16mr826721qkr.203.1588635014981;
+        Mon, 04 May 2020 16:30:14 -0700 (PDT)
+Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id c41sm253033qta.96.2020.05.04.16.30.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 16:30:14 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/2] net: ipa: limit special reset handling
+Date:   Mon,  4 May 2020 18:30:01 -0500
+Message-Id: <20200504233003.16670-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IS_BUILTIN can be use to replace various initializations
-like #if CONFIG_<FOO> int val = 1; #else int val = 0; #endif
-so do so.
+Some special handling done during channel reset should only be done
+for IPA hardare version 3.5.1.  This series generalizes the meaning
+of a flag passed to indicate special behavior, then has the special
+handling be used only when appropriate.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/video/fbdev/aty/aty128fb.c     | 6 +-----
- drivers/video/fbdev/aty/atyfb_base.c   | 7 +------
- drivers/video/fbdev/aty/radeon_base.c  | 6 +-----
- drivers/video/fbdev/nvidia/nvidia.c    | 6 +-----
- drivers/video/fbdev/omap/omapfb_main.c | 6 +-----
- drivers/video/fbdev/riva/fbdev.c       | 6 +-----
- drivers/video/fbdev/s3c2410fb.c        | 6 +-----
- 7 files changed, 7 insertions(+), 36 deletions(-)
+					-Alex
 
-diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
-index d05d4195acad..6fae6ad6cb77 100644
---- a/drivers/video/fbdev/aty/aty128fb.c
-+++ b/drivers/video/fbdev/aty/aty128fb.c
-@@ -384,11 +384,7 @@ static int default_lcd_on = 1;
- static bool mtrr = true;
- 
- #ifdef CONFIG_FB_ATY128_BACKLIGHT
--#ifdef CONFIG_PMAC_BACKLIGHT
--static int backlight = 1;
--#else
--static int backlight = 0;
--#endif
-+static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
- #endif
- 
- /* PLL constants */
-diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
-index 49d192869cf5..23a29d61c2a2 100644
---- a/drivers/video/fbdev/aty/atyfb_base.c
-+++ b/drivers/video/fbdev/aty/atyfb_base.c
-@@ -317,12 +317,7 @@ static int mclk;
- static int xclk;
- static int comp_sync = -1;
- static char *mode;
--
--#ifdef CONFIG_PMAC_BACKLIGHT
--static int backlight = 1;
--#else
--static int backlight = 0;
--#endif
-+static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
- 
- #ifdef CONFIG_PPC
- static int default_vmode = VMODE_CHOOSE;
-diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
-index e116a3f9ad56..3fe509cb9b87 100644
---- a/drivers/video/fbdev/aty/radeon_base.c
-+++ b/drivers/video/fbdev/aty/radeon_base.c
-@@ -269,11 +269,7 @@ static bool force_measure_pll = 0;
- static bool nomtrr = 0;
- static bool force_sleep;
- static bool ignore_devlist;
--#ifdef CONFIG_PMAC_BACKLIGHT
--static int backlight = 1;
--#else
--static int backlight = 0;
--#endif
-+static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
- 
- /* Note about this function: we have some rare cases where we must not schedule,
-  * this typically happen with our special "wake up early" hook which allows us to
-diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
-index c24de9107958..c6820e21875d 100644
---- a/drivers/video/fbdev/nvidia/nvidia.c
-+++ b/drivers/video/fbdev/nvidia/nvidia.c
-@@ -74,11 +74,7 @@ static int vram = 0;
- static int bpp = 8;
- static int reverse_i2c;
- static bool nomtrr = false;
--#ifdef CONFIG_PMAC_BACKLIGHT
--static int backlight = 1;
--#else
--static int backlight = 0;
--#endif
-+static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
- 
- static char *mode_option = NULL;
- 
-diff --git a/drivers/video/fbdev/omap/omapfb_main.c b/drivers/video/fbdev/omap/omapfb_main.c
-index 1a9d6242916e..0cbcc74fa943 100644
---- a/drivers/video/fbdev/omap/omapfb_main.c
-+++ b/drivers/video/fbdev/omap/omapfb_main.c
-@@ -34,11 +34,7 @@ static unsigned long	def_vyres;
- static unsigned int	def_rotate;
- static unsigned int	def_mirror;
- 
--#ifdef CONFIG_FB_OMAP_MANUAL_UPDATE
--static bool		manual_update = 1;
--#else
--static bool		manual_update;
--#endif
-+static bool	manual_update = IS_BUILTIN(CONFIG_FB_OMAP_MANUAL_UPDATE);
- 
- static struct platform_device	*fbdev_pdev;
- static struct lcd_panel		*fbdev_panel;
-diff --git a/drivers/video/fbdev/riva/fbdev.c b/drivers/video/fbdev/riva/fbdev.c
-index 764ec3285e62..9b3493846f4d 100644
---- a/drivers/video/fbdev/riva/fbdev.c
-+++ b/drivers/video/fbdev/riva/fbdev.c
-@@ -202,11 +202,7 @@ static int flatpanel = -1; /* Autodetect later */
- static int forceCRTC = -1;
- static bool noaccel  = 0;
- static bool nomtrr = 0;
--#ifdef CONFIG_PMAC_BACKLIGHT
--static int backlight = 1;
--#else
--static int backlight = 0;
--#endif
-+static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
- 
- static char *mode_option = NULL;
- static bool strictmode       = 0;
-diff --git a/drivers/video/fbdev/s3c2410fb.c b/drivers/video/fbdev/s3c2410fb.c
-index 2fb15a540167..6f8fa501583f 100644
---- a/drivers/video/fbdev/s3c2410fb.c
-+++ b/drivers/video/fbdev/s3c2410fb.c
-@@ -44,11 +44,7 @@
- #include "s3c2410fb.h"
- 
- /* Debugging stuff */
--#ifdef CONFIG_FB_S3C2410_DEBUG
--static int debug	= 1;
--#else
--static int debug;
--#endif
-+static int debug = IS_BUILTIN(CONFIG_FB_S3C2410_DEBUG);
- 
- #define dprintk(msg...) \
- do { \
+Alex Elder (2):
+  net: ipa: rename db_enable flag
+  net: ipa: only reset channel twice for IPA v3.5.1
 
+ drivers/net/ipa/gsi.c          | 20 ++++++++++----------
+ drivers/net/ipa/gsi.h          | 12 ++++++------
+ drivers/net/ipa/ipa_endpoint.c | 12 ++++++------
+ drivers/net/ipa/ipa_main.c     |  2 +-
+ 4 files changed, 23 insertions(+), 23 deletions(-)
+
+-- 
+2.20.1
 
