@@ -2,112 +2,352 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6085AC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9216C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FEB2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0AD620721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oxvtDDfT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TsHx+LUb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgEDVId (ORCPT
+        id S1727982AbgEDVKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:08:33 -0400
-Received: from ozlabs.org ([203.11.71.1]:42111 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbgEDVId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:08:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49GFnp29n5z9sRf;
-        Tue,  5 May 2020 07:08:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588626511;
-        bh=LWc7WDFCEe4/CqRdxD8y0ASLGpoEli6mYUnBjW2ojek=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oxvtDDfTAmGhZsiDyeSkaPzxqc5R4JAushqgSvEozm+8m60vD5NXplkXq0IKnkiTL
-         ZyebJTrEvSmlc/KmNRPkhjmYCcoqIAcS551O/Re48sR0dSV9ng3LSBZf+rFOcoWUM3
-         mfGzX3GOAN7xKZaC73P3l6jcgUkVDcbPNLgT39mrOYowtjHZRvV4JPOq6xC0BmFCBN
-         L9Cg1Yt2NTlaIFU3JtBij2eIESyuqVjoCrkVCtdZ2t5GbMB2y2g7pm3Xhk2QQNl89V
-         RXhd6foSKeYTxpn47ev8FRFs4uojxJsymCScx4fHBEg5UL6sN2ycyGZChHjmb0cjOo
-         wS7ywR8zcazBw==
-Date:   Tue, 5 May 2020 07:08:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: linux-next: Tree for May 4 --> mm: free_area_init: allow
- defining max_zone_pfn in descending order does increase memory use
-Message-ID: <20200505070828.20fd21af@canb.auug.org.au>
-In-Reply-To: <20200504154410.GF342687@linux.ibm.com>
-References: <20200504173547.2cdd83bf@canb.auug.org.au>
-        <9e9edd1e-6653-a585-0e22-69930a07dce1@de.ibm.com>
-        <20200504154410.GF342687@linux.ibm.com>
+        Mon, 4 May 2020 17:10:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57968 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgEDVKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 17:10:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044L9Xdc187750;
+        Mon, 4 May 2020 21:09:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=PLcYr1wD2Icnc/sFUstGtwMmvpnHA9CE9i6umK8mDL4=;
+ b=TsHx+LUb/3EzhOVYyytb7FIQ5LVJLt5c0SRWPEGpKRRgE8WYPJg8syfJKx05KdTPmowf
+ 1mcaWdIbfvj2KsOIzi1dFsJfZZNjvs4fzL5VQRcxwUuVqvhK6YMlofcb3/o7i/Yei6rr
+ UaSQJsLck7VMFRd07Wg7mFdCw0F21mLi26hctMwWjE3jSpFPs8fu/oROctPzhsoTc4lG
+ vZAadGtg3ubcjFFd25uzHA45HWbppWUPpl7HdgxfnzSzI5CJeD6T5Wnd5Z+bEgwth6aQ
+ NdDBN9cUM7lXXYO8iW6+0luruMMPbl4Q07E9xmtekPDlB/OhgKZTmpoX21XKdn6S8G0V gg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 30s09r1e7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 21:09:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044L7NRm050315;
+        Mon, 4 May 2020 21:07:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30sjnbxqh7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 21:07:29 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044L7JrY013551;
+        Mon, 4 May 2020 21:07:20 GMT
+Received: from vbusired-dt (/10.39.235.150)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 14:07:18 -0700
+Date:   Mon, 4 May 2020 16:07:17 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srutherford@google.com,
+        rientjes@google.com, brijesh.singh@amd.com
+Subject: Re: [PATCH v7 01/18] KVM: SVM: Add KVM_SEV SEND_START command
+Message-ID: <20200504210717.GA1699387@vbusired-dt>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+ <6473e5803d8c47d9b207810e8015c3066c39f17d.1588234824.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6473e5803d8c47d9b207810e8015c3066c39f17d.1588234824.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1011 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2020-04-30 08:40:34 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
+> 
+> The command is used to create an outgoing SEV guest encryption context.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Steve Rutherford <srutherford@google.com>
+> Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  27 ++++
+>  arch/x86/kvm/svm/sev.c                        | 125 ++++++++++++++++++
+>  include/linux/psp-sev.h                       |   8 +-
+>  include/uapi/linux/kvm.h                      |  12 ++
+>  4 files changed, 168 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> index c3129b9ba5cb..4fd34fc5c7a7 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -263,6 +263,33 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
+>          };
+>  
+> +10. KVM_SEV_SEND_START
+> +----------------------
+> +
+> +The KVM_SEV_SEND_START command can be used by the hypervisor to create an
+> +outgoing guest encryption context.
+> +
+> +Parameters (in): struct kvm_sev_send_start
+> +
+> +Returns: 0 on success, -negative on error
+> +
+> +::
+> +        struct kvm_sev_send_start {
+> +                __u32 policy;                 /* guest policy */
+> +
+> +                __u64 pdh_cert_uaddr;         /* platform Diffie-Hellman certificate */
+> +                __u32 pdh_cert_len;
+> +
+> +                __u64 plat_certs_uadr;        /* platform certificate chain */
 
-Hi Mike,
+Can this be changed as mentioned in the previous review
+(https://lore.kernel.org/kvm/20200402062726.GA647295@vbusired-dt/)?
 
-On Mon, 4 May 2020 18:44:10 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
->
-> Ho Christian,
->=20
-> On Mon, May 04, 2020 at 04:50:06PM +0200, Christian Borntraeger wrote:
-> > Mike,
-> > commit 51a2f644fd020d5f090044825c388444d11029d ("mm: free_area_init: al=
-low defining max_zone_pfn in descending order")
-> > does increase the memory use on s390 (e.g. 700 MB vs.1.8 GB).
-> >=20
-> > Something is odd in this patch. Any idea? =20
->=20
-> Yeah, this patch is buggy. In short, it breaks zone size calculation on
-> s390 and some other architectures.
->=20
-> I've just replied at [1] with more details and a fix.
->=20
-> [1] https://lore.kernel.org/linux-mm/20200504153901.GM14260@kernel.org/
+> +                __u32 plat_certs_len;
+> +
+> +                __u64 amd_certs_uaddr;        /* AMD certificate */
+> +                __u32 amd_cert_len;
 
-I have added that to linux-next for today.
+Can this be changed as mentioned in the previous review
+(https://lore.kernel.org/kvm/20200402062726.GA647295@vbusired-dt/)?
 
---=20
-Cheers,
-Stephen Rothwell
+> +
+> +                __u64 session_uaddr;          /* Guest session information */
+> +                __u32 session_len;
+> +        };
+> +
+>  References
+>  ==========
+>  
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index cf912b4aaba8..5a15b43b4349 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -913,6 +913,128 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  	return ret;
+>  }
+>  
+> +/* Userspace wants to query session length. */
+> +static int
+> +__sev_send_start_query_session_length(struct kvm *kvm, struct kvm_sev_cmd *argp,
+> +				      struct kvm_sev_send_start *params)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_send_start *data;
+> +	int ret;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> +	if (data == NULL)
+> +		return -ENOMEM;
+> +
+> +	data->handle = sev->handle;
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
+> +
+> +	params->session_len = data->session_len;
+> +	if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
+> +				sizeof(struct kvm_sev_send_start)))
+> +		ret = -EFAULT;
+> +
+> +	kfree(data);
+> +	return ret;
+> +}
+> +
+> +static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_send_start *data;
+> +	struct kvm_sev_send_start params;
+> +	void *amd_certs, *session_data;
+> +	void *pdh_cert, *plat_certs;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
+> +
+> +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
+> +				sizeof(struct kvm_sev_send_start)))
+> +		return -EFAULT;
+> +
+> +	/* if session_len is zero, userspace wants to query the session length */
+> +	if (!params.session_len)
+> +		return __sev_send_start_query_session_length(kvm, argp,
+> +				&params);
+> +
+> +	/* some sanity checks */
+> +	if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
+> +	    !params.session_uaddr || params.session_len > SEV_FW_BLOB_MAX_SIZE)
+> +		return -EINVAL;
+> +
+> +	/* allocate the memory to hold the session data blob */
+> +	session_data = kmalloc(params.session_len, GFP_KERNEL_ACCOUNT);
+> +	if (!session_data)
+> +		return -ENOMEM;
+> +
+> +	/* copy the certificate blobs from userspace */
+> +	pdh_cert = psp_copy_user_blob(params.pdh_cert_uaddr,
+> +				params.pdh_cert_len);
+> +	if (IS_ERR(pdh_cert)) {
+> +		ret = PTR_ERR(pdh_cert);
+> +		goto e_free_session;
+> +	}
+> +
+> +	plat_certs = psp_copy_user_blob(params.plat_certs_uaddr,
+> +				params.plat_certs_len);
+> +	if (IS_ERR(plat_certs)) {
+> +		ret = PTR_ERR(plat_certs);
+> +		goto e_free_pdh;
+> +	}
+> +
+> +	amd_certs = psp_copy_user_blob(params.amd_certs_uaddr,
+> +				params.amd_certs_len);
+> +	if (IS_ERR(amd_certs)) {
+> +		ret = PTR_ERR(amd_certs);
+> +		goto e_free_plat_cert;
+> +	}
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> +	if (data == NULL) {
+> +		ret = -ENOMEM;
+> +		goto e_free_amd_cert;
+> +	}
+> +
+> +	/* populate the FW SEND_START field with system physical address */
+> +	data->pdh_cert_address = __psp_pa(pdh_cert);
+> +	data->pdh_cert_len = params.pdh_cert_len;
+> +	data->plat_certs_address = __psp_pa(plat_certs);
+> +	data->plat_certs_len = params.plat_certs_len;
+> +	data->amd_certs_address = __psp_pa(amd_certs);
+> +	data->amd_certs_len = params.amd_certs_len;
+> +	data->session_address = __psp_pa(session_data);
+> +	data->session_len = params.session_len;
+> +	data->handle = sev->handle;
+> +
 
---Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Can the following code be changed as acknowledged in
+https://lore.kernel.org/kvm/f715bf99-0158-4d5f-77f3-b27743db3c59@amd.com/?
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6whEwACgkQAVBC80lX
-0GzmWwf+JTR9NVgZ198HKHx7MTJLK6YQL0hAXJV5Dz/0wmzoL2UDKclFwic2HZv9
-wK9ztJaqX20Vdxq6zbQMB/xvTiItLdbe8EosmrPdG46BeocBOKX0AInV/zRb9K9P
-GgJPZemdo3HJqLPqY4Djw/CWTewa6g21M5xg5HMy5EbnTRSitEotZuHt69EHmJKo
-nuPEFRG/cn8xXel/4963dNTFfTESCFOPs++wooDHFQ0mQzAnsR3nKMcEVZYFb1Br
-T7wSanues09dSqhsC+lJDe37tyMwcU5N/y2NusDKahBn63aZEz/q/qXNrbBDhYgE
-RqXCWfPt+gliNxsihqbuk5o9lYk/pQ==
-=1Mmd
------END PGP SIGNATURE-----
-
---Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm--
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
+> +
+> +	if (!ret && copy_to_user((void __user *)(uintptr_t)params.session_uaddr,
+> +			session_data, params.session_len)) {
+> +		ret = -EFAULT;
+> +		goto e_free;
+> +	}
+> +
+> +	params.policy = data->policy;
+> +	params.session_len = data->session_len;
+> +	if (copy_to_user((void __user *)(uintptr_t)argp->data, &params,
+> +				sizeof(struct kvm_sev_send_start)))
+> +		ret = -EFAULT;
+> +
+> +e_free:
+> +	kfree(data);
+> +e_free_amd_cert:
+> +	kfree(amd_certs);
+> +e_free_plat_cert:
+> +	kfree(plat_certs);
+> +e_free_pdh:
+> +	kfree(pdh_cert);
+> +e_free_session:
+> +	kfree(session_data);
+> +	return ret;
+> +}
+> +
+>  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -957,6 +1079,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  	case KVM_SEV_LAUNCH_SECRET:
+>  		r = sev_launch_secret(kvm, &sev_cmd);
+>  		break;
+> +	case KVM_SEV_SEND_START:
+> +		r = sev_send_start(kvm, &sev_cmd);
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		goto out;
+> diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
+> index 5167bf2bfc75..9f63b9d48b63 100644
+> --- a/include/linux/psp-sev.h
+> +++ b/include/linux/psp-sev.h
+> @@ -323,11 +323,11 @@ struct sev_data_send_start {
+>  	u64 pdh_cert_address;			/* In */
+>  	u32 pdh_cert_len;			/* In */
+>  	u32 reserved1;
+> -	u64 plat_cert_address;			/* In */
+> -	u32 plat_cert_len;			/* In */
+> +	u64 plat_certs_address;			/* In */
+> +	u32 plat_certs_len;			/* In */
+>  	u32 reserved2;
+> -	u64 amd_cert_address;			/* In */
+> -	u32 amd_cert_len;			/* In */
+> +	u64 amd_certs_address;			/* In */
+> +	u32 amd_certs_len;			/* In */
+>  	u32 reserved3;
+>  	u64 session_address;			/* In */
+>  	u32 session_len;			/* In/Out */
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 428c7dde6b4b..8827d43e2684 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1598,6 +1598,18 @@ struct kvm_sev_dbg {
+>  	__u32 len;
+>  };
+>  
+> +struct kvm_sev_send_start {
+> +	__u32 policy;
+> +	__u64 pdh_cert_uaddr;
+> +	__u32 pdh_cert_len;
+> +	__u64 plat_certs_uaddr;
+> +	__u32 plat_certs_len;
+> +	__u64 amd_certs_uaddr;
+> +	__u32 amd_certs_len;
+> +	__u64 session_uaddr;
+> +	__u32 session_len;
+> +};
+> +
+>  #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
+>  #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
+>  #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
+> -- 
+> 2.17.1
+> 
