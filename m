@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC46C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2276C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9F820721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C548520721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615681;
-	bh=EQblGGpLkGOfM1NRKoo8QUwTJ8FnFzmzoaLxEdKnxks=;
+	s=default; t=1588615685;
+	bh=ds1Jxau9BSf+D3cDbxpy7Qio3XbI/M2VHzL83wDBhyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lLVIhPPjtNsK3QwjBQGbRcRXkXfVVrOoNWQ8BDKF1VX40wB7WMPtJyLFbDOJT4FtY
-	 +49W9dFyY5ZQ3aanXJXura+rdTXcfNwWt2B3AuhLi4qzu96Zs2d006kTPClV9kBPNR
-	 xuhqBY94vDSff1UspdoqQYuQwphySzQbNmp8b240=
+	b=tUjYREhvPJrwQtPeG/bYiEAxA7wBliLG179hw6Yd9NWhRPMTsIjr3uSp19iYXW6CW
+	 zqH7B6p7RtZMW1tr7RTP8nyeCqJsvRsknx+xOePErNulQ+KOQ6Gk82cbgw8Y1XIGkh
+	 QTDSqBomV6kJYvyBqQ36oi2bOExs/Y3mTRCLSi1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbgEDSIA (ORCPT
+        id S1731316AbgEDSID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730911AbgEDSHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:54 -0400
+        id S1732211AbgEDSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BEBD206B8;
-        Mon,  4 May 2020 18:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B198520721;
+        Mon,  4 May 2020 18:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615673;
-        bh=EQblGGpLkGOfM1NRKoo8QUwTJ8FnFzmzoaLxEdKnxks=;
+        s=default; t=1588615676;
+        bh=ds1Jxau9BSf+D3cDbxpy7Qio3XbI/M2VHzL83wDBhyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fr2hh1yjyVJv5b+QKAPhVWaY5w+uhyvA2Vv6u/vIA9mg48rjOvh1Sb2f7gO3GCCUO
-         7SxBZzteOip+vfCKz4jozf32eHFOc2t02lcRnI6ErV2RibVwogRaqRdsJlBr//KI+e
-         im8RCvyu78UEOvzOkIdo7SfF6P0IaIw5xelW6TPg=
+        b=CF27ETN0+K5CB+5/e7HzDA5JQalgr4cY0s6NVjMoLtCSXp31YENK1fDNllkRHqbgt
+         N8k18Vsy1Mefu7xVBge5ZdeL4abVMq9s2Ac5pHvMbOAzKjmT4bangFYPJPi9BcOhvq
+         W7WG0DofW45djX1OmLaUI7xfMkpK0NJbcyNZbsKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Martin Wilck <mwilck@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 42/73] scsi: qla2xxx: check UNLOADING before posting async work
-Date:   Mon,  4 May 2020 19:57:45 +0200
-Message-Id: <20200504165508.360336069@linuxfoundation.org>
+        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.6 43/73] RDMA/mlx5: Set GRH fields in query QP on RoCE
+Date:   Mon,  4 May 2020 19:57:46 +0200
+Message-Id: <20200504165508.641327076@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,43 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Aharon Landau <aharonl@mellanox.com>
 
-commit 5a263892d7d0b4fe351363f8d1a14c6a75955475 upstream.
+commit 2d7e3ff7b6f2c614eb21d0dc348957a47eaffb57 upstream.
 
-qlt_free_session_done() tries to post async PRLO / LOGO, and waits for the
-completion of these async commands. If UNLOADING is set, this is doomed to
-timeout, because the async logout command will never complete.
+GRH fields such as sgid_index, hop limit, et. are set in the QP context
+when QP is created/modified.
 
-The only way to avoid waiting pointlessly is to fail posting these commands
-in the first place if the driver is in UNLOADING state.  In general,
-posting any command should be avoided when the driver is UNLOADING.
+Currently, when query QP is performed, we fill the GRH fields only if the
+GRH bit is set in the QP context, but this bit is not set for RoCE. Adjust
+the check so we will set all relevant data for the RoCE too.
 
-With this patch, "rmmod qla2xxx" completes without noticeable delay.
+Since this data is returned to userspace, the below is an ABI regression.
 
-Link: https://lore.kernel.org/r/20200421204621.19228-3-mwilck@suse.com
-Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
-Acked-by: Arun Easi <aeasi@marvell.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: d8966fcd4c25 ("IB/core: Use rdma_ah_attr accessor functions")
+Link: https://lore.kernel.org/r/20200413132028.930109-1-leon@kernel.org
+Signed-off-by: Aharon Landau <aharonl@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_os.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/infiniband/hw/mlx5/qp.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -4854,6 +4854,9 @@ qla2x00_alloc_work(struct scsi_qla_host
- 	struct qla_work_evt *e;
- 	uint8_t bail;
- 
-+	if (test_bit(UNLOADING, &vha->dpc_flags))
-+		return NULL;
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -5545,7 +5545,9 @@ static void to_rdma_ah_attr(struct mlx5_
+ 	rdma_ah_set_path_bits(ah_attr, path->grh_mlid & 0x7f);
+ 	rdma_ah_set_static_rate(ah_attr,
+ 				path->static_rate ? path->static_rate - 5 : 0);
+-	if (path->grh_mlid & (1 << 7)) {
 +
- 	QLA_VHA_MARK_BUSY(vha, bail);
- 	if (bail)
- 		return NULL;
++	if (path->grh_mlid & (1 << 7) ||
++	    ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
+ 		u32 tc_fl = be32_to_cpu(path->tclass_flowlabel);
+ 
+ 		rdma_ah_set_grh(ah_attr, NULL,
 
 
