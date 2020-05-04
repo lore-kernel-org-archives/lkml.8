@@ -2,225 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A4BC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A35AC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 680832073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35CA72073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qQf6XSk7"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="rtVHEmP1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgEDMCI (ORCPT
+        id S1728682AbgEDMFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:02:08 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59234 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgEDMCI (ORCPT
+        Mon, 4 May 2020 08:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726797AbgEDMFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:02:08 -0400
+        Mon, 4 May 2020 08:05:14 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB21BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 05:05:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f13so4773307qkh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588593728; x=1620129728;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=oz/2ALb5OVTxQnVg7IfzEFgf/Uw6IfZKqeh0udnmnjg=;
-  b=qQf6XSk7brf4LID4dKCKcDk+kHXJIZXiHuSFWXO4Y1Qfsa4VWLR2ggDI
-   xHUgUObj6ZXLkHNHvNMAxOPOUg+L8n/jt/pDwGbzsMNrz7rCpExvl5Gak
-   R5QocMILYFWIP1jumHP4gzS1/xZGNYtPFyHMlUa22Z6JQfDTgUgidxkMA
-   I=;
-IronPort-SDR: D9MG6OUrNRO3shhHXPKjuNCQd3zrfkdDTNWVXm3w7W8GpmmWJb7x2Ghr4OsPW6akkDY0+i5its
- 089G92bYV8cw==
-X-IronPort-AV: E=Sophos;i="5.73,351,1583193600"; 
-   d="scan'208";a="29930547"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 04 May 2020 12:01:54 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 021E3A450F;
-        Mon,  4 May 2020 12:01:51 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 4 May 2020 12:01:51 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.247) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 4 May 2020 12:01:48 +0000
-Subject: Re: [PATCH v2] KVM: nVMX: Skip IBPB when switching between vmcs01 and
- vmcs02
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        KarimAllah Raslan <karahmed@amazon.de>
-References: <20200501163117.4655-1-sean.j.christopherson@intel.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <1de7b016-8bc9-23d4-7f8b-145c30d7e58a@amazon.com>
-Date:   Mon, 4 May 2020 14:01:46 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DS++A28Sh4YuaqyBwWRbxbmVEu733+KrFFtrnA7xbs8=;
+        b=rtVHEmP14tFavtrMl2kCsfA31NxuymsQu8umBMB3Dl7s+NzUCfNvdF4FiC+FL/QMGO
+         HwyZKmyN3i3brVIudSE3r0cHWSKpv4hv90ZKfGANxC/gUc++i0uowHvDbr7n6JcmJV3d
+         yTTtaf4Gardm8NucaNktiNDDpNSRFUW++FCJg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DS++A28Sh4YuaqyBwWRbxbmVEu733+KrFFtrnA7xbs8=;
+        b=Xh2lbM7UbM88i5h26tVHe+++wgl8lMzk3wnMFqCy/gTDe7L2uRniN+92PJ0skbPAxS
+         z2YV198+jbmxerVZgW+DC9cohjoeKKQ3u1BG1nUOncS+Ystwrsg3Sy/YKWhn8l/SYyQU
+         xlZ2/FHDc/WSRWpVMmzxswGYMpgEpMtsVLp/+z9q7VsaF7vE/UUrnX5p9B8Y+Wqw2Al/
+         SsbPsr732+0UdYdOd6QJzrXt3qWbR+HbD2inXVsiz6O3Oy3FNbqF4u9tyI2K8PJdWuOR
+         c9lOHyI/GkJ1XDaYpKtL4v8iYuHvMb9xW7a9W8asxT8FRPTFN17zCLjYALnlDT4vs6tl
+         caGg==
+X-Gm-Message-State: AGi0PubYyPejqgHw531RWWsvoTMNHxeJc0EkPoXEqQnIGHIGN9BvcvBu
+        1xoCkEEhi1uDgLWY+XJJ/Lw0UQytiiQ=
+X-Google-Smtp-Source: APiQypLPAvbk14sQlHrVZi67scGx/9pMjn2HmrrOBspEAdaiBo+4EXf9zml7kfDGC+ee+0MlTeIxCA==
+X-Received: by 2002:a37:48a:: with SMTP id 132mr16527293qke.390.1588593912487;
+        Mon, 04 May 2020 05:05:12 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y50sm6194534qta.56.2020.05.04.05.05.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 05:05:11 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        madhuparnabhowmik04@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, peterz@infradead.org,
+        Petr Mladek <pmladek@suse.com>, rcu@vger.kernel.org,
+        rostedt@goodmis.org, tglx@linutronix.de, vpillai@digitalocean.com
+Subject: [PATCH v3 0/5] RCU dyntick nesting counter cleanups for rcu -dev
+Date:   Mon,  4 May 2020 08:05:00 -0400
+Message-Id: <20200504120505.89351-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 MIME-Version: 1.0
-In-Reply-To: <20200501163117.4655-1-sean.j.christopherson@intel.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.247]
-X-ClientProxiedBy: EX13D07UWB004.ant.amazon.com (10.43.161.196) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These patches clean up the usage of dynticks nesting counters simplifying the
+code, while preserving the usecases.
 
+It is a much needed simplification, makes the code less confusing, and prevents
+future bugs such as those that arise from forgetting that the
+dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
+common situations.
 
-On 01.05.20 18:31, Sean Christopherson wrote:
-> =
+rcutorture testing with all TREE RCU configurations succeed with
+CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
 
-> Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
-> switch when running with spectre_v2_user=3Don/auto if the switch is
-> between two VMCSes in the same guest, i.e. between vmcs01 and vmcs02.
-> The IBPB is intended to prevent one guest from attacking another, which
-> is unnecessary in the nested case as it's the same guest from KVM's
-> perspective.
-> =
+v1->v2:
+- Rebase on v5.6-rc6
 
-> This all but eliminates the overhead observed for nested VMX transitions
-> when running with CONFIG_RETPOLINE=3Dy and spectre_v2_user=3Don/auto, whi=
-ch
-> can be significant, e.g. roughly 3x on current systems.
-> =
+v2->v3:
+- Rebase on rcu/dev with adjustments for tasks-RCU.
 
-> Reported-by: Alexander Graf <graf@amazon.com>
-> Cc: KarimAllah Raslan <karahmed@amazon.de>
-> Cc: stable@vger.kernel.org
-> Fixes: 15d45071523d ("KVM/x86: Add IBPB support")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
-> =
+Joel Fernandes (Google) (4):
+Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of
+->dynticks counter")
+rcu/tree: Add better tracing for dyntick-idle
+rcu/tree: Clean up dynticks counter usage
+rcu/tree: Remove dynticks_nmi_nesting counter
 
-> v2: Pass a boolean to indicate a nested VMCS switch and instead WARN if
->      the buddy VMCS is not already loaded.  [Alex]
-> =
+Madhuparna Bhowmik (1):
+trace: events: rcu: Change description of rcu_dyntick trace event
 
-> Paolo, feel free to drop the WARN_ON_ONCE() if you think it's overkill.
-> I'm 50/50 as to whether it's useful or just a waste of cycles.  Figured
-> it'd be easier for you to delete a line of code while applying than to add
-> and test a new WARN.
+.../Data-Structures/Data-Structures.rst       |  31 +--
+Documentation/RCU/stallwarn.rst               |   6 +-
+include/linux/rcutiny.h                       |   3 -
+include/trace/events/rcu.h                    |  29 +--
+kernel/rcu/rcu.h                              |   4 -
+kernel/rcu/tree.c                             | 199 +++++++-----------
+kernel/rcu/tree.h                             |   4 +-
+kernel/rcu/tree_stall.h                       |   4 +-
+8 files changed, 110 insertions(+), 170 deletions(-)
 
-I like the WARN_ON :). It should be almost free during execution, but =
-
-helps us catch problems early.
-
-> =
-
->   arch/x86/kvm/vmx/nested.c | 3 ++-
->   arch/x86/kvm/vmx/vmx.c    | 7 ++++---
->   arch/x86/kvm/vmx/vmx.h    | 2 +-
->   3 files changed, 7 insertions(+), 5 deletions(-)
-> =
-
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 2c36f3f53108..b57420f3dd8f 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -302,8 +302,9 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, st=
-ruct loaded_vmcs *vmcs)
-> =
-
->          cpu =3D get_cpu();
->          prev =3D vmx->loaded_vmcs;
-> +       WARN_ON_ONCE(prev->cpu !=3D cpu || prev->vmcs !=3D per_cpu(curren=
-t_vmcs, cpu));
->          vmx->loaded_vmcs =3D vmcs;
-> -       vmx_vcpu_load_vmcs(vcpu, cpu);
-> +       vmx_vcpu_load_vmcs(vcpu, cpu, true);
->          vmx_sync_vmcs_host_state(vmx, prev);
->          put_cpu();
-> =
-
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 3ab6ca6062ce..d3d57b7a67bd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1311,7 +1311,7 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu,=
- int cpu)
->                  pi_set_on(pi_desc);
->   }
-> =
-
-> -void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
-> +void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_swit=
-ch)
->   {
->          struct vcpu_vmx *vmx =3D to_vmx(vcpu);
->          bool already_loaded =3D vmx->loaded_vmcs->cpu =3D=3D cpu;
-> @@ -1336,7 +1336,8 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int =
-cpu)
->          if (per_cpu(current_vmcs, cpu) !=3D vmx->loaded_vmcs->vmcs) {
->                  per_cpu(current_vmcs, cpu) =3D vmx->loaded_vmcs->vmcs;
->                  vmcs_load(vmx->loaded_vmcs->vmcs);
-> -               indirect_branch_prediction_barrier();
-
-... however, this really needs an in-code comment to explain why it's =
-
-safe not to flush the branch predictor cache here.
-
-
-Alex
-
-> +               if (!nested_switch)
-> +                       indirect_branch_prediction_barrier();
->          }
-> =
-
->          if (!already_loaded) {
-> @@ -1377,7 +1378,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   {
->          struct vcpu_vmx *vmx =3D to_vmx(vcpu);
-> =
-
-> -       vmx_vcpu_load_vmcs(vcpu, cpu);
-> +       vmx_vcpu_load_vmcs(vcpu, cpu, false);
-> =
-
->          vmx_vcpu_pi_load(vcpu, cpu);
-> =
-
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index b5e773267abe..fa61dc802183 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -320,7 +320,7 @@ struct kvm_vmx {
->   };
-> =
-
->   bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
-> -void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
-> +void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_swit=
-ch);
->   void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
->   int allocate_vpid(void);
->   void free_vpid(int vpid);
-> --
-> 2.26.0
-> =
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+--
+2.26.2.526.g744177e7f7-goog
 
