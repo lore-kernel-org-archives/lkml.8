@@ -2,79 +2,101 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FADC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A715EC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BE32073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C412073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgEDUEf (ORCPT
+        id S1727896AbgEDUFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:04:35 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:58565 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgEDUEf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:04:35 -0400
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id BEBEA200003;
-        Mon,  4 May 2020 20:04:31 +0000 (UTC)
-Date:   Mon, 4 May 2020 22:04:31 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] clk: at91: allow setting all PMC clock parents
- via DT
-Message-ID: <20200504200431.GI34497@piout.net>
-References: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
- <ae0c612ce6bc53ea726ddcb25eb36bca78055e33.1588526049.git.mirq-linux@rere.qmqm.pl>
+        Mon, 4 May 2020 16:05:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:18647 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726419AbgEDUFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 16:05:14 -0400
+IronPort-SDR: KWgWEZ/ii+ivuP3yJ+IF6olgaVQi4gNX6mp7rmUcoLwys6nj1Vf9TQZAC9RrvTcLYCLy6R2qNq
+ YsW18I/MueLg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 13:05:14 -0700
+IronPort-SDR: y6fTkTYfYGLd3JKagbsQwauiKg0nMn8mM9txTn416ln2atUAwyG96Uo76gWXw3GTge/+DbTk/6
+ +0HZlUW+PY3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
+   d="scan'208";a="338429331"
+Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
+  by orsmga001.jf.intel.com with ESMTP; 04 May 2020 13:05:14 -0700
+Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 4 May 2020 13:05:13 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.83]) by
+ ORSMSX121.amr.corp.intel.com ([169.254.10.248]) with mapi id 14.03.0439.000;
+ Mon, 4 May 2020 13:05:13 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        "Tsaur, Erwin" <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Thread-Topic: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+Thread-Index: AQHWHsst2+7frPAw9kCYaqQsGNEgp6iSJ9mAgAAvKwCAAAcmgIAAF8EA//+WBACAAH0TAIAAQ4gAgAAE/4CAAAO1gIAAb4YQgAK28ICAAmL9AA==
+Date:   Mon, 4 May 2020 20:05:13 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F612DF4@ORSMSX115.amr.corp.intel.com>
+References: <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+ <1962EE67-8AD1-409D-963A-4F1E1AB3B865@amacapital.net>
+ <3908561D78D1C84285E8C5FCA982C28F7F60EBB6@ORSMSX115.amr.corp.intel.com>
+ <CALCETrW5zNLOrhOS69xeb3ANa0HVAW5+xaHvG2CA8iFy1ByHKQ@mail.gmail.com>
+In-Reply-To: <CALCETrW5zNLOrhOS69xeb3ANa0HVAW5+xaHvG2CA8iFy1ByHKQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ae0c612ce6bc53ea726ddcb25eb36bca78055e33.1588526049.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 03/05/2020 19:19:26+0200, Michał Mirosław wrote:
-> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-> index c3f4aa6a2d29..adcf608b41fa 100644
-> --- a/include/dt-bindings/clock/at91.h
-> +++ b/include/dt-bindings/clock/at91.h
-> @@ -21,6 +21,9 @@
->  #define PMC_MCK2		4
->  #define PMC_I2S0_MUX		5
->  #define PMC_I2S1_MUX		6
-> +#define PMC_PLLACK		7
-> +#define PMC_PLLBCK		8
-> +#define PMC_AUDIOPLLCK		8		/* SAMA5D2-only, no PLLB there */
-
-Just use 9 here because we can't know for sure that a future SoC won't
-have both a PLLB and audio PLL.
-
->  
->  #ifndef AT91_PMC_MOSCS
->  #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
-> -- 
-> 2.20.1
-> 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+PiBXaGVuIGEgY29weSBmdW5jdGlvbiBoaXRzIGEgYmFkIHBhZ2UgYW5kIHRoZSBwYWdlIGlzIG5v
+dCB5ZXQga25vd24gdG8NCj4gYmUgYmFkLCB3aGF0IGRvZXMgaXQgZG8/ICAoSS5lLiB0aGUgcGFn
+ZSB3YXMgYmVsaWV2ZWQgdG8gYmUgZmluZSBidXQNCj4gdGhlIGNvcHkgZnVuY3Rpb24gZ2V0cyAj
+TUMuKSAgRG9lcyBpdCB1bm1hcCBpdCByaWdodCBhd2F5PyAgV2hhdCBkb2VzDQo+IGl0IHJldHVy
+bj8NCg0KSSBzdXNwZWN0IHRoYXQgd2Ugd2lsbCBvbmx5IGV2ZXIgZmluZCBhIGhhbmRmdWwgb2Yg
+c2l0dWF0aW9ucyB3aGVyZSB0aGUNCmtlcm5lbCBjYW4gcmVjb3ZlciBmcm9tIG1lbW9yeSB0aGF0
+IGhhcyBnb25lIGJhZCB0aGF0IGFyZSB3b3J0aCBmaXhpbmcNCihnb3QgdG8gYmUgc29tZSBjb2Rl
+IHBhdGggdGhhdCB0b3VjaGVzIGEgbWVhbmluZ2Z1bCBmcmFjdGlvbiBvZiBtZW1vcnksDQpvdGhl
+cndpc2Ugd2UgZ2V0IGNvZGUgY29tcGxleGl0eSB3aXRob3V0IGFueSBtZWFuaW5nZnVsIHBheW9m
+ZikuDQoNCkkgZG9uJ3QgdGhpbmsgd2UnZCB3YW50IGRpZmZlcmVudCBhY3Rpb25zIGZvciB0aGUg
+Y2FzZXMgb2YgIndlIGp1c3QgZm91bmQgb3V0DQpub3cgdGhhdCB0aGlzIHBhZ2UgaXMgYmFkIiBh
+bmQgIndlIGdvdCBhIG5vdGlmaWNhdGlvbiBhbiBob3VyIGFnbyB0aGF0IHRoaXMNCnBhZ2UgaGFk
+IGdvbmUgYmFkIi4gQ3VycmVudGx5IHdlIHRyZWF0IHRob3NlIHRoZSBzYW1lIGZvciBhcHBsaWNh
+dGlvbg0KZXJyb3JzIC4uLiBTSUdCVVMgZWl0aGVyIHdheVsxXS4NCg0KLVRvbnkNCg0KWzFdIHdl
+bGwgdGhlcmUgYXJlIG9wdGlvbnMgYm90aCBnbG9iYWxseSBhbmQgYXQgdGhlIHBlci1wcm9jZXNz
+IGxldmVsIHRvIGhhdmUNCnRoZSAiZWFybHkiIG5vdGlmaWNhdGlvbnMgZGVsaXZlcmVkIHJpZ2h0
+IGF3YXkuDQo=
