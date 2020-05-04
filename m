@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4D9C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBF0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23E12073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD7E206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615328;
-	bh=wJZikCOwCgHtvasCHg+KWLI22Jg9cLD8ZEXCaOGAnRk=;
+	s=default; t=1588615332;
+	bh=ALr5P5uc5kfYMY0WVPmuOGBIuhGk+HBbjdIrCLtCg9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ydCGscG1k78mWjCGoloi644c8+fbvId9noX0IdKqLFNogPpaL5oou3M3iv/vV0+0d
-	 2XWgfZ4qJEE4qlGKhCkIxI6rl/3RAOI36VDMgP1cpE+jFlAM5peAfuKV+Mz80p1ANv
-	 HMAFdW9qrsQeU64CpbZhYB3AOjI6OeRwraPNnVus=
+	b=cQkrXnQ/rDLT/YYdIr5MiepuupwreeATPSE7geRi9dakobaWP+TCtGOl2HA+9g90a
+	 K8iVGsnaRq46K0NEOAu34xbB4dBzQiMyeVgT1JGZMx9Qf82LrqX8UZpi2YhIfqGulE
+	 qoi4AgB3Jr+sHdITaF73M2jzHz+y9NX3CjW22cyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbgEDSCH (ORCPT
+        id S1731290AbgEDSCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731267AbgEDSCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:04 -0400
+        id S1731276AbgEDSCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 202A720707;
-        Mon,  4 May 2020 18:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93488206B8;
+        Mon,  4 May 2020 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615323;
-        bh=wJZikCOwCgHtvasCHg+KWLI22Jg9cLD8ZEXCaOGAnRk=;
+        s=default; t=1588615326;
+        bh=ALr5P5uc5kfYMY0WVPmuOGBIuhGk+HBbjdIrCLtCg9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udOCnmHiy8zKkNbzIC/wIXexXlIH5g4wiHa6J1+EVppfGqGBPBjJpd+o0lluBkrAQ
-         8Km5XDmETjEmyxeJLHC5i1vY9eqCFiIWYNyfCzdlSEDborHBzyUDEJ8COsJaT44PpS
-         eQfcNetPfcoQ746Ty8TB9xvPnYiwpp+Ui8kGFg0E=
+        b=hH8MaPongcqNMftRhEIDSlp+Pmyv93qPRD5Qa1r5QYtv+IJtx+asnHPxfyCqPMMgH
+         kG21Vn2y4/5pN38uqUIf7C7pjgjIKLt81P2J2+ATztr8za43WlzOOJfYDFG9HkT4Sw
+         x8/eBP+CPmQzWDAGEpaHeN9EVrpEyp5osJ4mZerI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 30/37] btrfs: fix partial loss of prealloc extent past i_size after fsync
-Date:   Mon,  4 May 2020 19:57:43 +0200
-Message-Id: <20200504165451.410747989@linuxfoundation.org>
+Subject: [PATCH 4.19 31/37] btrfs: transaction: Avoid deadlock due to bad initialization timing of fs_info::journal_info
+Date:   Mon,  4 May 2020 19:57:44 +0200
+Message-Id: <20200504165451.463599438@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,139 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit f135cea30de5f74d5bfb5116682073841fb4af8f upstream.
+commit fcc99734d1d4ced30167eb02e17f656735cb9928 upstream.
 
-When we have an inode with a prealloc extent that starts at an offset
-lower than the i_size and there is another prealloc extent that starts at
-an offset beyond i_size, we can end up losing part of the first prealloc
-extent (the part that starts at i_size) and have an implicit hole if we
-fsync the file and then have a power failure.
+[BUG]
+One run of btrfs/063 triggered the following lockdep warning:
+  ============================================
+  WARNING: possible recursive locking detected
+  5.6.0-rc7-custom+ #48 Not tainted
+  --------------------------------------------
+  kworker/u24:0/7 is trying to acquire lock:
+  ffff88817d3a46e0 (sb_internal#2){.+.+}, at: start_transaction+0x66c/0x890 [btrfs]
 
-Consider the following example with comments explaining how and why it
-happens.
+  but task is already holding lock:
+  ffff88817d3a46e0 (sb_internal#2){.+.+}, at: start_transaction+0x66c/0x890 [btrfs]
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
+  other info that might help us debug this:
+   Possible unsafe locking scenario:
 
-  # Create our test file with 2 consecutive prealloc extents, each with a
-  # size of 128Kb, and covering the range from 0 to 256Kb, with a file
-  # size of 0.
-  $ xfs_io -f -c "falloc -k 0 128K" /mnt/foo
-  $ xfs_io -c "falloc -k 128K 128K" /mnt/foo
+         CPU0
+         ----
+    lock(sb_internal#2);
+    lock(sb_internal#2);
 
-  # Fsync the file to record both extents in the log tree.
-  $ xfs_io -c "fsync" /mnt/foo
+   *** DEADLOCK ***
 
-  # Now do a redudant extent allocation for the range from 0 to 64Kb.
-  # This will merely increase the file size from 0 to 64Kb. Instead we
-  # could also do a truncate to set the file size to 64Kb.
-  $ xfs_io -c "falloc 0 64K" /mnt/foo
+   May be due to missing lock nesting notation
 
-  # Fsync the file, so we update the inode item in the log tree with the
-  # new file size (64Kb). This also ends up setting the number of bytes
-  # for the first prealloc extent to 64Kb. This is done by the truncation
-  # at btrfs_log_prealloc_extents().
-  # This means that if a power failure happens after this, a write into
-  # the file range 64Kb to 128Kb will not use the prealloc extent and
-  # will result in allocation of a new extent.
-  $ xfs_io -c "fsync" /mnt/foo
+  4 locks held by kworker/u24:0/7:
+   #0: ffff88817b495948 ((wq_completion)btrfs-endio-write){+.+.}, at: process_one_work+0x557/0xb80
+   #1: ffff888189ea7db8 ((work_completion)(&work->normal_work)){+.+.}, at: process_one_work+0x557/0xb80
+   #2: ffff88817d3a46e0 (sb_internal#2){.+.+}, at: start_transaction+0x66c/0x890 [btrfs]
+   #3: ffff888174ca4da8 (&fs_info->reloc_mutex){+.+.}, at: btrfs_record_root_in_trans+0x83/0xd0 [btrfs]
 
-  # Now set the file size to 256K with a truncate and then fsync the file.
-  # Since no changes happened to the extents, the fsync only updates the
-  # i_size in the inode item at the log tree. This results in an implicit
-  # hole for the file range from 64Kb to 128Kb, something which fsck will
-  # complain when not using the NO_HOLES feature if we replay the log
-  # after a power failure.
-  $ xfs_io -c "truncate 256K" -c "fsync" /mnt/foo
+  stack backtrace:
+  CPU: 0 PID: 7 Comm: kworker/u24:0 Not tainted 5.6.0-rc7-custom+ #48
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  Workqueue: btrfs-endio-write btrfs_work_helper [btrfs]
+  Call Trace:
+   dump_stack+0xc2/0x11a
+   __lock_acquire.cold+0xce/0x214
+   lock_acquire+0xe6/0x210
+   __sb_start_write+0x14e/0x290
+   start_transaction+0x66c/0x890 [btrfs]
+   btrfs_join_transaction+0x1d/0x20 [btrfs]
+   find_free_extent+0x1504/0x1a50 [btrfs]
+   btrfs_reserve_extent+0xd5/0x1f0 [btrfs]
+   btrfs_alloc_tree_block+0x1ac/0x570 [btrfs]
+   btrfs_copy_root+0x213/0x580 [btrfs]
+   create_reloc_root+0x3bd/0x470 [btrfs]
+   btrfs_init_reloc_root+0x2d2/0x310 [btrfs]
+   record_root_in_trans+0x191/0x1d0 [btrfs]
+   btrfs_record_root_in_trans+0x90/0xd0 [btrfs]
+   start_transaction+0x16e/0x890 [btrfs]
+   btrfs_join_transaction+0x1d/0x20 [btrfs]
+   btrfs_finish_ordered_io+0x55d/0xcd0 [btrfs]
+   finish_ordered_fn+0x15/0x20 [btrfs]
+   btrfs_work_helper+0x116/0x9a0 [btrfs]
+   process_one_work+0x632/0xb80
+   worker_thread+0x80/0x690
+   kthread+0x1a3/0x1f0
+   ret_from_fork+0x27/0x50
 
-So instead of always truncating the log to the inode's current i_size at
-btrfs_log_prealloc_extents(), check first if there's a prealloc extent
-that starts at an offset lower than the i_size and with a length that
-crosses the i_size - if there is one, just make sure we truncate to a
-size that corresponds to the end offset of that prealloc extent, so
-that we don't lose the part of that extent that starts at i_size if a
-power failure happens.
+It's pretty hard to reproduce, only one hit so far.
 
-A test case for fstests follows soon.
+[CAUSE]
+This is because we're calling btrfs_join_transaction() without re-using
+the current running one:
 
-Fixes: 31d11b83b96f ("Btrfs: fix duplicate extents after fsync of file with prealloc extents")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+btrfs_finish_ordered_io()
+|- btrfs_join_transaction()		<<< Call #1
+   |- btrfs_record_root_in_trans()
+      |- btrfs_reserve_extent()
+	 |- btrfs_join_transaction()	<<< Call #2
+
+Normally such btrfs_join_transaction() call should re-use the existing
+one, without trying to re-start a transaction.
+
+But the problem is, in btrfs_join_transaction() call #1, we call
+btrfs_record_root_in_trans() before initializing current::journal_info.
+
+And in btrfs_join_transaction() call #2, we're relying on
+current::journal_info to avoid such deadlock.
+
+[FIX]
+Call btrfs_record_root_in_trans() after we have initialized
+current::journal_info.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   43 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+ fs/btrfs/transaction.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4182,6 +4182,9 @@ static int btrfs_log_prealloc_extents(st
- 	const u64 ino = btrfs_ino(inode);
- 	struct btrfs_path *dst_path = NULL;
- 	bool dropped_extents = false;
-+	u64 truncate_offset = i_size;
-+	struct extent_buffer *leaf;
-+	int slot;
- 	int ins_nr = 0;
- 	int start_slot;
- 	int ret;
-@@ -4196,9 +4199,43 @@ static int btrfs_log_prealloc_extents(st
- 	if (ret < 0)
- 		goto out;
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -572,10 +572,19 @@ again:
+ 	}
  
+ got_it:
+-	btrfs_record_root_in_trans(h, root);
+-
+ 	if (!current->journal_info)
+ 		current->journal_info = h;
++
 +	/*
-+	 * We must check if there is a prealloc extent that starts before the
-+	 * i_size and crosses the i_size boundary. This is to ensure later we
-+	 * truncate down to the end of that extent and not to the i_size, as
-+	 * otherwise we end up losing part of the prealloc extent after a log
-+	 * replay and with an implicit hole if there is another prealloc extent
-+	 * that starts at an offset beyond i_size.
++	 * btrfs_record_root_in_trans() needs to alloc new extents, and may
++	 * call btrfs_join_transaction() while we're also starting a
++	 * transaction.
++	 *
++	 * Thus it need to be called after current->journal_info initialized,
++	 * or we can deadlock.
 +	 */
-+	ret = btrfs_previous_item(root, path, ino, BTRFS_EXTENT_DATA_KEY);
-+	if (ret < 0)
-+		goto out;
++	btrfs_record_root_in_trans(h, root);
 +
-+	if (ret == 0) {
-+		struct btrfs_file_extent_item *ei;
-+
-+		leaf = path->nodes[0];
-+		slot = path->slots[0];
-+		ei = btrfs_item_ptr(leaf, slot, struct btrfs_file_extent_item);
-+
-+		if (btrfs_file_extent_type(leaf, ei) ==
-+		    BTRFS_FILE_EXTENT_PREALLOC) {
-+			u64 extent_end;
-+
-+			btrfs_item_key_to_cpu(leaf, &key, slot);
-+			extent_end = key.offset +
-+				btrfs_file_extent_num_bytes(leaf, ei);
-+
-+			if (extent_end > i_size)
-+				truncate_offset = extent_end;
-+		}
-+	} else {
-+		ret = 0;
-+	}
-+
- 	while (true) {
--		struct extent_buffer *leaf = path->nodes[0];
--		int slot = path->slots[0];
-+		leaf = path->nodes[0];
-+		slot = path->slots[0];
+ 	return h;
  
- 		if (slot >= btrfs_header_nritems(leaf)) {
- 			if (ins_nr > 0) {
-@@ -4236,7 +4273,7 @@ static int btrfs_log_prealloc_extents(st
- 				ret = btrfs_truncate_inode_items(trans,
- 							 root->log_root,
- 							 &inode->vfs_inode,
--							 i_size,
-+							 truncate_offset,
- 							 BTRFS_EXTENT_DATA_KEY);
- 			} while (ret == -EAGAIN);
- 			if (ret)
+ join_fail:
 
 
