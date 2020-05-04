@@ -2,173 +2,152 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59068C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E88C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38B5220721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A1E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmyLFN/n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWM2UWBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgEDOUp (ORCPT
+        id S1728940AbgEDOUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
+        Mon, 4 May 2020 10:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgEDOUo (ORCPT
+        with ESMTP id S1726922AbgEDOUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:20:44 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECAEC061A0E;
-        Mon,  4 May 2020 07:20:44 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id i13so6729055oie.9;
-        Mon, 04 May 2020 07:20:44 -0700 (PDT)
+        Mon, 4 May 2020 10:20:46 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC079C061A0E;
+        Mon,  4 May 2020 07:20:45 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x18so21182568wrq.2;
+        Mon, 04 May 2020 07:20:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7dFZhnDWS7Tizxu2OEo0qs58jGqBEpce/n1a/aPfM+M=;
-        b=gmyLFN/nYCg1n7UscEV+5jC9u6q5GYu3AHv3+aU7Fjjw9dTfo4ARG/9m1ro0M5MMEi
-         a6bbASvcxqmY5LPFOrLCWtelWFHBnP8G3vtjnzAvkga9NRi0IL3PeSl35vT8irzanSP7
-         X+adc0ebp2xGHjsH9mb4tf/IzHTWObBo2I2ZP2UjPtUS/4L3KuKXlSnSPiFyQ8Tu9e/Q
-         pudQRvc7xxjSRZOVRJk+Pic34GazJCjrGWIT/nmq0uzN7hZoiMNg9CHV+yOCxHj0ykdo
-         jdd5G56/uWvfqtOWfoDIRb3/KOQuKt2WJCeEQCsPAViF+sp9GuGwQQNKwS+CjKNeyMSA
-         Qqbg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K/m0J6IyUexLr1zelV4bVuf4hcHqGLiMQVhrPq4fGCY=;
+        b=jWM2UWBblnsg9pQGaPg0wCqqysmx13BM4x7XoD9Y8wtKQ4qZS7KIPXxf3+dhI6Bb19
+         J7TZTilkZzUOMeRcTv2+0zWpmuAuIXnEZtpLx+O+Jsk8HToibKXY3f+L2C9dE343iKAT
+         OCAqVWtJpJCwfTOBFY4uhV9UtXhJBPAdsaCHTJwLCFF8JWe6RCiQpmo8F2QrxtCvLifX
+         hZZvVtGwWaqZDF2LOQU6yn1viYW6k488stBWbIhtfaWMaJ5yFggVXklLZgJ8GkrUg0FS
+         bzwXGmCd92tpi75OPaTNFUQ1ExlEgCC9agZy4enfpnYwTOg5N17z7SPi+RD28Z2JlHpH
+         bPnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7dFZhnDWS7Tizxu2OEo0qs58jGqBEpce/n1a/aPfM+M=;
-        b=sRBmZzi/tNu6/JlWqS5W/yZS+/oqRUqHThbrOoR9GtEWGJHuyKQj0uV2podLIFl54k
-         RKEXCC9KbTWgAX4VuQy00LuQThFAE2cnWClq5YNSuGFN1tqeqacZsxC/Gl2uAlY1V7W1
-         WSry1yfnGDuaEyv9h074zLh6ZbrLjGwnsKthNoi3XlPFa2YCCFn2ngTV5vGr5XTDzefI
-         7/F8lOL4xH8Pc4S7j7DTn48tkybjqkPQdrWxZ3Z7DYBv+HA3F2REMjv98yAft7opRvQ1
-         IbtL3MqHnBMn+GbZJQKl9BMi/Lsvo3lGfngvL9LDIF384T7L8tb10/RCxH3fVVQ5xdyl
-         OVgg==
-X-Gm-Message-State: AGi0PuaVKdTFHfZCW8jBM5Q8Ax3InWv/srlPCuX/FC+GFvMmPJqPYw2R
-        6yJrqAe9OFMgnmTtanuoSycgN1jEa5m5kll0LIU=
-X-Google-Smtp-Source: APiQypJJNLmN9IdSWfIrtoFcumitqYdjMlQ/xm3GpcuUQNKTnSGBHyQMIaQNzSPDuLIDwjYVOaixm5qG87Uq7o+MR6w=
-X-Received: by 2002:aca:b783:: with SMTP id h125mr9088932oif.62.1588602043656;
- Mon, 04 May 2020 07:20:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=K/m0J6IyUexLr1zelV4bVuf4hcHqGLiMQVhrPq4fGCY=;
+        b=T7eqN/u66CocrGZNNRtjRqKorLsz6PAyUHiqb3sluwe4QFcj5NTGMikXfjW28fxMYk
+         SD7Es22ziujTkonV49gLlpDPfylZ7AePKwrz1K6kLqnP5TRcDRv4BXLGeEaFP8NDatnP
+         5Bdn7atvlLKmTfHjFU9/+0tSZ5+MYnmy9NF3PmKUj4U5y3mR3IcvsVRqleiZ84eNSME+
+         1Yrosj8cT+v/OT1kKW4hY060mtPwxw7CY8tF6It3DXuT2BOIwku86sccRDJ/KydyrFk4
+         6AQlF5LK+AIMwn5Vz4pFlK3XECF0Y9SifMfjxc9AlMR3amFnLZRKQXn1R47vi6MdAsi9
+         1+QA==
+X-Gm-Message-State: AGi0PuanxRj9M1fHSXhlJC1vSETk1u846WnSoZyq6hjtuornOi0KIjcd
+        7n9Of5hp42QW6E9uplkPIUU=
+X-Google-Smtp-Source: APiQypKORWfB64ClK3VTsK7FHrBYFJr/4QNBMMjnhyOISosGKqOmozxetUHNR2zett8grkKBjWBn1Q==
+X-Received: by 2002:adf:f343:: with SMTP id e3mr18821264wrp.51.1588602044330;
+        Mon, 04 May 2020 07:20:44 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.gmail.com with ESMTPSA id p7sm19196140wrf.31.2020.05.04.07.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:20:43 -0700 (PDT)
+From:   huobean@gmail.com
+X-Google-Original-From: beanhuo@micron.com
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, rdunlap@infradead.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org
+Subject: [RESENT PATCH RFC v3 0/5] scsi: ufs: add UFS Host Performance Booster(HPB) support
+Date:   Mon,  4 May 2020 16:20:27 +0200
+Message-Id: <20200504142032.16619-1-beanhuo@micron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
-In-Reply-To: <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 4 May 2020 15:20:17 +0100
-Message-ID: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
- Qseven SOM
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+From: Bean Huo <beanhuo@micron.com>
 
-Thank you for the review.
+Re-sent this patchset since the reference link missed in the cover letter.
 
-On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Add support for iWave RZ/G1H Qseven System On Module.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> > @@ -0,0 +1,53 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
-> > + *
-> > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > + */
-> > +
-> > +#include "r8a7742.dtsi"
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +
-> > +/ {
-> > +       compatible = "iwave,g21m", "renesas,r8a7742";
-> > +
-> > +       memory@40000000 {
-> > +               device_type = "memory";
-> > +               reg = <0 0x40000000 0 0x40000000>;
-> > +       };
-> > +
-> > +       memory@200000000 {
-> > +               device_type = "memory";
-> > +               reg = <2 0x00000000 0 0x20000000>;
->
-> According to the schematics, the second bank is also 1 GiB, so the
-> reg length should be 0x40000000.
->
-Agreed will fix that.
+This patchset is an RFC to add UFS HPB support in the upstream Linux.
+Before this series, I have submitted two versions [2] and [4] of UFS
+HPB driver in the community. The first two series HPB driver patchsets
+follow the Samsung HPB driver[1] approach, in which the HPB driver submits
+its HPB READ BUFFER  and HPB WRITE BUFFER requests to the SCSI
+device->request_queueu to execute. Since this fly submission is unacceptable,
+in this RFC version, I changed it, and now the HPB requests will be directly
+submitted to UFS device, don't go backwards to SCSI mid-layer. In this
+approach, the L2P mapping entries loading path will be shorter, and the
+latency is smaller.
 
-> > +       };
->
-> > +&pfc {
-> > +       mmc1_pins: mmc1 {
-> > +               groups = "mmc1_data4", "mmc1_ctrl";
-> > +               function = "mmc1";
-> > +       };
-> > +};
-> > +
-> > +&mmcif1 {
-> > +       pinctrl-0 = <&mmc1_pins>;
-> > +       pinctrl-names = "default";
-> > +
-> > +       vmmc-supply = <&reg_3p3v>;
-> > +       bus-width = <4>;
-> > +       non-removable;
-> > +       status = "okay";
-> > +};
->
-> The eMMC has an 8-bit data path.  Is there any specific reason you use
-> bus-width = <4>, and the "mmc1_data4" pin group?
->
-MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
-device when using 8-bit just switched to 4bit mode so that both the
-peripherals can be used.
+Regarding the UFS HPB feature, which is defined in Jedec Standard Universal
+Flash (UFS) Host Performance Booster (HPB) Extension Version 1.0, its purpose
+is to improve read performance by utilizing the host side memory. For the more
+detail information about HPB, you can refer to the HPB Spec. If the approach
+in this RFC patchset is accepted and feasible, it is necessary to add a
+document to detail HPB feature and its implementation later.
 
-Cheers,
---Prabhakar
+Based on the Avri's comments in the second patchset, to be reviewable patches,
+I shortened HPB driver, deleted HPB host control mode. Also, for change tracing,
+this patch is RFC v3, including the first two patchsets changes.
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+This series patch is still based on the [3] branch 5.8/scsi-queue
+
+v2--v3
+    1. delete GET_BYTE_* and SHIFT_BYTE_* macro definition , using
+       get_unaligned_*()/put_unaligned_*() instead. (Bart Van Assche)
+    2. change Kconfig help message (Randy Dunlap)
+    3. delete HPB host control mode code
+    4. change the way of submission of HPB request, and let the HPB
+       driver directly submit HPB request to UFS.
+
+v1--v2:
+    1. Rebased the patch on the [3] branch 5.8/scsi-queue
+    2. Optimized and simplified several functions
+    3. Add parameter read_threshold in HPB sysfs, by which the user can change
+       read_threshold for the HPB host control mode
+    4. Add HPB memory limitation, let the user adjust its size according to the
+       system memory capacity
+
+[1] https://github.com/OpenMPDK/HPBDriver
+[2] https://www.spinics.net/lists/kernel/msg3449471.html
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git
+[4] https://marc.info/?l=linux-scsi&m=158706915110258&w=4
+
+Bean Huo (5):
+  scsi; ufs: add device descriptor for Host Performance Booster
+  scsi: ufs: make ufshcd_read_unit_desc_param() non-static func
+  scsi: ufs: add ufs_features parameter in structure ufs_dev_info
+  scsi: ufs: add unit and geometry parameters for HPB
+  scsi: ufs: UFS Host Performance Booster(HPB) driver
+
+ drivers/scsi/ufs/Kconfig  |   62 +
+ drivers/scsi/ufs/Makefile |    1 +
+ drivers/scsi/ufs/ufs.h    |   15 +
+ drivers/scsi/ufs/ufshcd.c |  245 +++-
+ drivers/scsi/ufs/ufshcd.h |   28 +-
+ drivers/scsi/ufs/ufshpb.c | 2767 +++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h |  423 ++++++
+ 7 files changed, 3534 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/scsi/ufs/ufshpb.c
+ create mode 100644 drivers/scsi/ufs/ufshpb.h
+
+-- 
+2.17.1
+
