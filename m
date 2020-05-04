@@ -2,55 +2,55 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD592C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42201C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFCA220663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFBB2068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K8OKRjqT"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DPftL38k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgEDXXv (ORCPT
+        id S1728475AbgEDXXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:23:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51028 "EHLO
+        Mon, 4 May 2020 19:23:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51054 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgEDXXs (ORCPT
+        with ESMTP id S1728452AbgEDXXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:23:48 -0400
+        Mon, 4 May 2020 19:23:50 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NNOlk100259;
-        Mon, 4 May 2020 23:23:24 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NJIXk097247;
+        Mon, 4 May 2020 23:22:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=R0wqtFdhHPWyxkeH774P5glzvKGkY+n3t2Jlub0gYr8=;
- b=K8OKRjqTDVOYIjHyuVDzNeY5MSZ/15M4am+PenRjKqMSG+7QFUWwtPCLoCv1rhyHct3e
- vcb570kOn6/d2dRZnX0z/9ct8Xtk6PleKLQMwr1Wpc59UiJ//wVX90f7nSWjnIVbQd8o
- giyLY8PizWvVN3eXu2QgpnYAEqokqNHqDHZIT7OG8vfaDmdkHjCW59Fu24pO03jqQ6Do
- BfuCFjJeruGuQBr42etk0ZshTobnkLEMtqXFDLZBv4ecU27knZ6rYwIt1rkALlVrnrcr
- HopSDEWx+md37OfltkJuDviuLPpOPImGq59jX/ZOIkUPdaB/O+e1vu28kdMg1HZ929Bz dg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30s0tm9t44-1
+ bh=e/TtFKtMhJ/896wUcLf0LH9xhAEKzCC+QAaSL5idCiQ=;
+ b=DPftL38k44J1lz5KHTnniD0E36T6TfnO+3/62pHOLtS1IIdBG+vky+PjTZKkjJVQZ+yX
+ tUkrWSceDt+zYZFTz2lkcDvg+Qc1u9nut4z+m8+PzUX2Zb32Ff7DXnlwFkptxYtiO+YJ
+ XxrTzgtkzwluVxxQxhUn2lEezHG8+sU8G0XtR47fwBp3epVmUh9c10tm+0Uk/ROmnIbd
+ 0F4jAIDGIPwE4y3oxMPlRvCPGAZN5WPkcczN8OUzAyhBiqzeGRzvcnW0Cx7XCnHgWKYJ
+ rMIAVjxdSRX8Wcpn33P2OwEf84SBFq8tF9ZhrylZ806jyB0XvE3gMD9/mqJntPCr6pSs ig== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30s0tm9t16-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 23:23:24 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NLciC140002;
-        Mon, 4 May 2020 23:23:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 30t1r3j23g-1
+        Mon, 04 May 2020 23:22:28 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NGhiC082611;
+        Mon, 4 May 2020 23:22:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 30sjdrpec1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 23:23:23 +0000
+        Mon, 04 May 2020 23:22:28 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044NNLZJ003803;
-        Mon, 4 May 2020 23:23:22 GMT
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044NMQ0t004107;
+        Mon, 4 May 2020 23:22:26 GMT
 Received: from tomti.i.net-space.pl (/10.175.189.148)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 16:23:21 -0700
+        with ESMTP ; Mon, 04 May 2020 16:22:26 -0700
 From:   Daniel Kiper <daniel.kiper@oracle.com>
 To:     grub-devel@gnu.org, linux-kernel@vger.kernel.org,
         trenchboot-devel@googlegroups.com, x86@kernel.org
@@ -61,340 +61,129 @@ Cc:     alexander.burmashev@oracle.com, andrew.cooper3@citrix.com,
         krystian.hebel@3mdeb.com, lukasz.hawrylko@linux.intel.com,
         michal.zygowski@3mdeb.com, mjg59@google.com, phcoder@gmail.com,
         pirot.krol@3mdeb.com, pjones@redhat.com, ross.philipson@oracle.com
-Subject: [GRUB PATCH RFC 17/18] i386/txt: Add Intel TXT verification routines
-Date:   Tue,  5 May 2020 01:21:31 +0200
-Message-Id: <20200504232132.23570-18-daniel.kiper@oracle.com>
+Subject: [GRUB PATCH RFC 06/18] mmap: Add grub_mmap_get_lowest() and grub_mmap_get_highest()
+Date:   Tue,  5 May 2020 01:21:20 +0200
+Message-Id: <20200504232132.23570-7-daniel.kiper@oracle.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200504232132.23570-1-daniel.kiper@oracle.com>
 References: <20200504232132.23570-1-daniel.kiper@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040182
+ definitions=main-2005040181
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=2
  phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040182
+ engine=8.12.0-2003020000 definitions=main-2005040181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ross Philipson <ross.philipson@oracle.com>
+The functions calculate lowest and highest available RAM
+addresses respectively.
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+Both functions are needed to calculate PMR boundaries for
+Intel TXT secure launcher introduced by subsequent patches.
+
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- grub-core/loader/i386/txt/verify.c | 297 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 297 insertions(+)
- create mode 100644 grub-core/loader/i386/txt/verify.c
+ grub-core/mmap/mmap.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/grub/memory.h |  3 +++
+ 2 files changed, 67 insertions(+)
 
-diff --git a/grub-core/loader/i386/txt/verify.c b/grub-core/loader/i386/txt/verify.c
-new file mode 100644
-index 000000000..97f3b325d
---- /dev/null
-+++ b/grub-core/loader/i386/txt/verify.c
-@@ -0,0 +1,297 @@
-+/*
-+ * verify.c: verify that platform and processor supports Intel(r) TXT
-+ *
-+ * Copyright (c) 2003-2010, Intel Corporation
-+ * All rights reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ *   * Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ *   * Redistributions in binary form must reproduce the above
-+ *     copyright notice, this list of conditions and the following
-+ *     disclaimer in the documentation and/or other materials provided
-+ *     with the distribution.
-+ *   * Neither the name of the Intel Corporation nor the names of its
-+ *     contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-+ * OF THE POSSIBILITY OF SUCH DAMAGE.
-+ *
-+ */
-+
-+/*
-+ *  GRUB  --  GRand Unified Bootloader
-+ *  Copyright (C) 2020  Oracle and/or its affiliates.
-+ *
-+ *  GRUB is free software: you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation, either version 3 of the License, or
-+ *  (at your option) any later version.
-+ *
-+ *  GRUB is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <grub/loader.h>
-+#include <grub/memory.h>
-+#include <grub/normal.h>
-+#include <grub/err.h>
-+#include <grub/misc.h>
-+#include <grub/types.h>
-+#include <grub/dl.h>
-+#include <grub/cpu/relocator.h>
-+#include <grub/i386/cpuid.h>
-+#include <grub/i386/msr.h>
-+#include <grub/i386/txt.h>
-+
-+/* Current max that the secure launch can handle */
-+#define TXT_MAX_CPUS	512
-+
-+static grub_err_t
-+verify_bios_spec_ver_elt (struct grub_txt_heap_ext_data_element *elt)
+diff --git a/grub-core/mmap/mmap.c b/grub-core/mmap/mmap.c
+index b569cb23b..cf4b69f56 100644
+--- a/grub-core/mmap/mmap.c
++++ b/grub-core/mmap/mmap.c
+@@ -340,6 +340,70 @@ grub_mmap_unregister (int handle)
+ 
+ #endif /* ! GRUB_MMAP_REGISTER_BY_FIRMWARE */
+ 
++typedef struct
 +{
-+  grub_uint8_t *ptr = (grub_uint8_t *)elt;
-+  struct grub_txt_heap_bios_spec_ver_element *bios_spec_ver_elt =
-+         (struct grub_txt_heap_bios_spec_ver_element *)ptr;
++  grub_uint64_t addr;
++  grub_uint64_t limit;
++} addr_limit_t;
 +
-+  if ( elt->size != sizeof(*elt) + sizeof(*bios_spec_ver_elt) )
-+    return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                N_("HEAP_BIOS_SPEC_VER element has wrong size (%d)"),
-+                elt->size);
++/* Helper for grub_mmap_get_lowest().  */
++static int
++lowest_hook (grub_uint64_t addr, grub_uint64_t size, grub_memory_type_t type,
++	     void *data)
++{
++  addr_limit_t *al = data;
 +
-+  /* Any values are allowed */
-+  return GRUB_ERR_NONE;
++  if (type != GRUB_MEMORY_AVAILABLE)
++    return 0;
++
++  if (addr >= al->limit)
++    al->addr = grub_min (al->addr, addr);
++
++  if ((addr < al->limit) && ((addr + size) > al->limit))
++    al->addr = al->limit;
++
++  return 0;
 +}
 +
-+static grub_err_t
-+verify_acm_elt (struct grub_txt_heap_ext_data_element *elt)
++grub_uint64_t
++grub_mmap_get_lowest (grub_uint64_t limit)
 +{
-+  grub_uint8_t *ptr = ((grub_uint8_t *)elt + sizeof(*elt));
-+  struct grub_txt_heap_acm_element *acm_elt =
-+         (struct grub_txt_heap_acm_element *)ptr;
-+  grub_uint64_t *acm_addrs;
-+  grub_uint32_t i;
++  addr_limit_t al = {~0, limit};
 +
-+  if ( elt->size != sizeof(*elt) + sizeof(*acm_elt) +
-+       acm_elt->num_acms*sizeof(grub_uint64_t) )
-+    return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                N_("HEAP_ACM element has wrong size (%d)"),
-+                elt->size);
++  grub_mmap_iterate (lowest_hook, &al);
 +
-+  /* No addrs is not error, but print warning. */
-+  if ( acm_elt->num_acms == 0 )
-+    grub_printf ("WARNING: HEAP_ACM element has no ACM addrs\n");
-+
-+  acm_addrs = (grub_uint64_t *)(ptr + sizeof(*acm_elt));
-+  for ( i = 0; i < acm_elt->num_acms; i++ )
-+    {
-+      if ( acm_addrs[i] == 0 )
-+        return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                    N_("HEAP_ACM element ACM addr (%d) is NULL"), i);
-+
-+      if ( acm_addrs[i] >= 0x100000000UL )
-+        return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                    N_("HEAP_ACM element ACM addr (%d) is >4GB"), i);
-+
-+      /* Not going to check if ACM addrs are valid ACMs */
-+    }
-+
-+  return GRUB_ERR_NONE;
++  return al.addr;
 +}
 +
-+static grub_err_t
-+verify_custom_elt (struct grub_txt_heap_ext_data_element *elt)
++/* Helper for grub_mmap_get_highest().  */
++static int
++highest_hook (grub_uint64_t addr, grub_uint64_t size, grub_memory_type_t type,
++	      void *data)
 +{
-+  grub_uint8_t *ptr = (grub_uint8_t *)elt;
-+  struct grub_txt_heap_custom_element *custom_elt =
-+         (struct grub_txt_heap_custom_element *)ptr;
++  addr_limit_t *al = data;
 +
-+  if ( elt->size < sizeof(*elt) + sizeof(*custom_elt) )
-+     return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                 N_("HEAP_CUSTOM element has wrong size (%d)"),
-+                 elt->size);
++  if (type != GRUB_MEMORY_AVAILABLE)
++    return 0;
 +
-+  /* Any values are allowed */
++  if ((addr + size) < al->limit)
++    al->addr = grub_max (al->addr, addr + size);
 +
-+  return GRUB_ERR_NONE;
++  if ((addr < al->limit) && ((addr + size) >= al->limit))
++    al->addr = al->limit;
++
++  return 0;
 +}
 +
-+static grub_err_t
-+verify_evt_log_ptr_elt (struct grub_txt_heap_ext_data_element *elt)
++grub_uint64_t
++grub_mmap_get_highest (grub_uint64_t limit)
 +{
-+  grub_uint8_t *ptr = (grub_uint8_t *)elt;
-+  struct grub_txt_heap_tpm_event_log_element *elog_elt =
-+         (struct grub_txt_heap_tpm_event_log_element *)ptr;
++  addr_limit_t al = {0, limit};
 +
-+  if ( elt->size != sizeof(*elt) + sizeof(*elog_elt) )
-+     return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                 N_("HEAP_EVENT_LOG_POINTER element has wrong size (%d)"),
-+                 elt->size);
++  grub_mmap_iterate (highest_hook, &al);
 +
-+  /* TODO: Sort out how to do this verifier once the event log handling is in place
-+   *
-+   * return verify_evt_log((event_log_container_t *)(unsigned long)
-+   *                       elog_elt->event_log_phys_addr);
-+   */
-+
-+  return GRUB_ERR_NONE;
++  return al.addr;
 +}
 +
-+static grub_err_t
-+verify_ext_data_elts(struct grub_txt_heap_ext_data_element *elts,
-+                     grub_uint64_t elts_size)
-+{
-+  struct grub_txt_heap_ext_data_element *elt = elts;
-+  grub_err_t err;
+ #define CHUNK_SIZE	0x400
+ 
+ struct badram_entry {
+diff --git a/include/grub/memory.h b/include/grub/memory.h
+index 6da114a1b..8f22f7525 100644
+--- a/include/grub/memory.h
++++ b/include/grub/memory.h
+@@ -69,6 +69,9 @@ void *grub_mmap_malign_and_register (grub_uint64_t align, grub_uint64_t size,
+ 
+ void grub_mmap_free_and_unregister (int handle);
+ 
++extern grub_uint64_t grub_mmap_get_lowest (grub_uint64_t limit);
++extern grub_uint64_t grub_mmap_get_highest (grub_uint64_t limit);
 +
-+  if ( elts_size < sizeof(*elt) )
-+     return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                 N_("TXT heap ext data elements too small"));
-+
-+  for ( ; ; )
-+    {
-+      if ( elts_size < elt->size || elt->size == 0 )
-+        return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                    N_("TXT heap invalid element size: type: %d, size: %d"),
-+                    elt->type, elt->size);
-+
-+      switch ( elt->type )
-+        {
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_END:
-+            return GRUB_ERR_NONE;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_BIOS_SPEC_VER:
-+            err = verify_bios_spec_ver_elt (elt);
-+            if ( err )
-+              return err;
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_ACM:
-+            err = verify_acm_elt (elt);
-+            if ( err )
-+              return err;
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_STM:
-+            /* Nothing to check, platform specific */
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_CUSTOM:
-+            err = verify_custom_elt (elt);
-+            if ( err )
-+              return err;
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_TPM_EVENT_LOG_PTR:
-+            err = verify_evt_log_ptr_elt (elt);
-+            if ( err )
-+              return err;
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_MADT:
-+            /* Copy of ACPI MADT, not validating */
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1:
-+            /* TODO TBOOT did not verify this, not sure why or how to do it */
-+            break;
-+          case GRUB_TXT_HEAP_EXTDATA_TYPE_MCFG:
-+            /* Copy of ACPI MCFG, not validating */
-+            break;
-+          default:
-+	    /* TODO: What kind of element??? Improve the message. */
-+	    grub_printf ("WARNING: unknown element: type: %u, size: %u\n", elt->type, elt->size);
-+            break;
-+        }
-+
-+      elts_size -= elt->size;
-+      elt = (struct grub_txt_heap_ext_data_element *)((grub_uint8_t *)elt + elt->size);
-+    }
-+
-+  return GRUB_ERR_NONE;
-+}
-+
-+grub_err_t
-+grub_txt_verify_platform (void)
-+{
-+  grub_uint8_t *txt_heap;
-+  grub_uint32_t eax, ebx, ecx, edx;
-+  grub_uint64_t bios_size, heap_base, heap_size, msr;
-+  grub_err_t err = GRUB_ERR_NONE;
-+  struct grub_txt_bios_data *bios_data;
-+  struct grub_txt_heap_ext_data_element *elts;
-+
-+  grub_cpuid (GRUB_X86_CPUID_FEATURES, eax, ebx, ecx, edx);
-+
-+  if (!(ecx & GRUB_SMX_CPUID_FEATURE))
-+    return grub_error (GRUB_ERR_BAD_DEVICE, N_("CPU does not support SMX"));
-+
-+  msr = grub_rdmsr (GRUB_MSR_X86_FEATURE_CONTROL);
-+
-+  if ((msr & (GRUB_MSR_X86_SENTER_FUNCTIONS | GRUB_MSR_X86_SENTER_ENABLE)) !=
-+      (GRUB_MSR_X86_SENTER_FUNCTIONS | GRUB_MSR_X86_SENTER_ENABLE))
-+    return grub_error (GRUB_ERR_BAD_DEVICE, N_("GETSEC[SENTER] is not enabled"));
-+
-+  /*
-+   * TODO
-+   * TXT Specification
-+   * 4.5 SGX Requirement for TXT Platform
-+   * Secure Launch currently does not support interop with SGX since it does
-+   * not have TPM support to write the SE NVRAM index.
-+   * Eventually need the verify_IA32_se_svn_status routine to be called here.
-+   */
-+
-+  if (grub_txt_reg_pub_readq (GRUB_TXT_ESTS) & GRUB_TXT_ESTS_TXT_RESET)
-+     return grub_error (GRUB_ERR_BAD_DEVICE,
-+			N_("TXT_RESET.STS is set and GETSEC[SENTER] is disabled"));
-+
-+  /*
-+   * Verify that the BIOS information in the TXT heap that was setup by the
-+   * BIOS ACM is sane.
-+   */
-+
-+  txt_heap = grub_txt_get_heap ();
-+  heap_base = grub_txt_reg_pub_readq (GRUB_TXT_HEAP_BASE);
-+  heap_size = grub_txt_reg_pub_readq (GRUB_TXT_HEAP_SIZE);
-+
-+  if ( txt_heap == NULL || heap_base == 0 || heap_size == 0 )
-+     return grub_error (GRUB_ERR_BAD_DEVICE,
-+                 N_("TXT heap is not configured correctly"));
-+
-+  bios_size = grub_txt_bios_data_size (txt_heap);
-+  if ( bios_size == 0 || bios_size > heap_size )
-+     return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                 N_("invalid size of the TXT heap BIOS data table"));
-+
-+  bios_data = grub_txt_bios_data_start (txt_heap);
-+
-+  /* Check version */
-+  if ( bios_data->version < 5 )
-+     return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                 N_("unsupported BIOS data version (%d)"), bios_data->version);
-+
-+  if ( bios_data->num_logical_procs > TXT_MAX_CPUS )
-+     return grub_error (GRUB_ERR_OUT_OF_RANGE,
-+                 N_("BIOS reports too many CPUs for secure launch (%d)"),
-+                 bios_data->num_logical_procs);
-+
-+  if ( bios_data->version >= 4 && bios_size > sizeof(*bios_data) + sizeof(bios_size) )
-+    {
-+      elts = (struct grub_txt_heap_ext_data_element *) ((grub_uint8_t *)bios_data + sizeof(*bios_data));
-+      err = verify_ext_data_elts(elts, bios_size - sizeof(*bios_data));
-+    }
-+
-+  return err;
-+}
+ #ifndef GRUB_MMAP_REGISTER_BY_FIRMWARE
+ 
+ struct grub_mmap_region
 -- 
 2.11.0
 
