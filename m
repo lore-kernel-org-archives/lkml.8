@@ -2,115 +2,126 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3021FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ED7C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 056C5206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pzLzkbHm"
+	by mail.kernel.org (Postfix) with ESMTP id 27CA5206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:15:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588605314;
+	bh=5Yi6sD4kXCyHEvHQC8xe5qp9xZ1wfoODAUheiqjGCOY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OIrnk9tCGh4jT2SX6wtuqFS0oFbi6kGT8lUVV9TIeVBdAlAxjFRvN+2ak7/OCaKRY
+	 8JACtPGX8t4mrL3DHshTx0IFK3Z7mkpRzB7Bf+pLU8HaRWZfGbX/KT9tIxzj/KdSMb
+	 KjYAtWUs3WIQqEpiPDo1bMIrvwLDjqCpVaVB/b/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgEDPOt (ORCPT
+        id S1729437AbgEDPPN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:14:49 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.129]:22385 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726509AbgEDPOs (ORCPT
+        Mon, 4 May 2020 11:15:13 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35083 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgEDPPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:14:48 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 26059FFD2A
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:14:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id VcnwjK9aHEfyqVcnwj8Akx; Mon, 04 May 2020 10:14:48 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0aRQZfEcxHyBj7xnDiHsle71WyIV/i7sE6OjfEdSZt4=; b=pzLzkbHmwXQ0GeUH5+6kvnEZha
-        ZteJlMux6TZSH/AikoPvYp7CfasYeff9LU8ME9UZabFJYAmM7iDAk7Dtzd1vcIfYWHlGDQY9xj3GQ
-        5RQhnx3brUKeJUoSly0atiiJYFBRueb3lIe9AnwHP3GZhpKpOkex+UUG7cURDZKkkyZSOGI34bbT+
-        sMAWxPOItDndSR3yBtlBp4nQrF6rnfpHM92U0XDIxpf0NELlZFcENRtKk5veV6UZSCEUExxMFhIkX
-        3+fCN6loSsmy2E8ZSbIySndGn2+G7B46iRqgNRMUeAzgUzoe/VZDGtBaJKHJpAgPBPYX3K56srXBL
-        OLWqf/Qg==;
-Received: from [189.207.59.248] (port=60896 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jVcnv-003tgs-Q8; Mon, 04 May 2020 10:14:47 -0500
-Date:   Mon, 4 May 2020 10:19:12 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] io_uring: Remove logically dead code in io_splice
-Message-ID: <20200504151912.GA22779@embeddedor>
+        Mon, 4 May 2020 11:15:13 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a8so13846076edv.2;
+        Mon, 04 May 2020 08:15:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LCc+eYdO3tX3LkVF95rDTpEk+HBT/KELfuXGkU4VVhM=;
+        b=p604soKS+8HyOzeDutcUjBGXG/4TW8PCYxm8/RbCdYKZARwQ3H1/LDcbJqu26/8Bij
+         DZhbYmG1kmloHI9mhAA1o11sEHyl8yoD9GYUcz8T1nT0vPKY9bweMBC6LIO5qJcR60qv
+         fuPzni36o4tuyA7qPThu/xAZ8fomrym1Mb1VQpohSF0Sk5GnVWZP4dn56a7uu5FUY9Xi
+         Tnqmvd/2rvS4m+Bi/Pmr43W/MqIAFs020zP8RqIz0KzGFQGmSRJ1SCjGTgsHiYBxLvO3
+         GqiaYAdOhH08z9DrallzIo/D4/koS+fCeYC1xP/qaxUZw/GdtcisiP6hTTt5isU00mcx
+         Q32A==
+X-Gm-Message-State: AGi0PuZnZSR1ryp56Feia1H74AyZxpCxbX1SCq3MOT6lfBgsCQitXjHC
+        QvRihXAhtEB8oPyohOnLpOAO6uM/
+X-Google-Smtp-Source: APiQypLgL0BNupES2fskOUM21pKl/rDCVu+OP0SF7FJCBNEdF6HBSjXWjjho1YvOBX3WBlLXsQtV9g==
+X-Received: by 2002:a05:6402:22a6:: with SMTP id cx6mr14498532edb.277.1588605310748;
+        Mon, 04 May 2020 08:15:10 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.237])
+        by smtp.googlemail.com with ESMTPSA id 10sm1488687ejt.80.2020.05.04.08.15.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 08:15:10 -0700 (PDT)
+Date:   Mon, 4 May 2020 17:15:08 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     kgene@kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] S5PV210 and Aries DTS improvements
+Message-ID: <20200504151508.GA3205@kozik-lap>
+References: <20200426183604.28494-1-xc-racer2@live.ca>
+ <BN6PR04MB066033FD7FF6E5C37747C7A2A3AB0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <BN6PR04MB066033FD7FF6E5C37747C7A2A3AB0@BN6PR04MB0660.namprd04.prod.outlook.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jVcnv-003tgs-Q8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.207.59.248]:60896
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case force_nonblock happens to be true, the function returns
-at:
+On Fri, May 01, 2020 at 04:50:01PM -0700, Jonathan Bakker wrote:
+> This patchset makes several improvements to Aries devices which are
+> based on S5PV210.  Several pulls on GPIOs were incorrect/not specified,
+> sleep GPIO configurations have been added, and more devices have been
+> added.
+> 
+> Touching the common S5PV210 DTSI are the addition of the ADC node
+> as well as fixes to the FIMC definitions and a sleep GPIO helper
+> added.  The GPI gpio node name has been corrected.
+> 
+> The patches have been tested on both a GT-i9000 as well as an
+> SGH-T959P and both can now suspend/resume properly.
+> 
+> Changes from v1:
+> - Correct ADC node name to match reg
+> - Restore removed regulator suspend state
+> - Split commit adding support for new devices into separate commits
+>   for each device
+> - Add note where sleep gpio cfgs come from
+> - Ensure subject of all patches matches subsystem
+> - Add patch correcting GPI node name
+> 
+> 
+> Jonathan Bakker (17):
+>   ARM: dts: s5pv210: Add helper define for sleep gpio config
+>   ARM: dts: s5pv210: Add sleep GPIO configuration for fascinate4g
+>   ARM: dts: s5pv210: Add sleep GPIO configuration for galaxys
+>   ARM: dts: s5pv210: Set keep-power-in-suspend for SDHCI1 on aries
+>   ARM: dts: s5pv210: Disable pulls on GPIO i2c adapters for aries
+>   ARM: dts: s5pv210: Add WM8994 support to aries boards
+>   ARM: dts: s5pv210: Add FSA9480 support to Aries boards
+>   ARM: dts: s5pv210: Add touchkey support to aries boards
+>   ARM: dts: s5pv210: Add panel support to aries boards
+>   ARM: dts: s5pv210: Add remaining i2c-gpio adapters to aries
+>   ARM: dts: s5pv210: Disable pull for vibrator ena GPIO on aries
+>   ARM: dts: s5pv210: Add an ADC node
+>   ARM: dts: s5pv210: Enable ADC on aries boards
+>   ARM: dts: s5pv210: Assign clocks to MMC devices on aries
+>   ARM: dts: s5pv210: Correct FIMC definitions
+>   ARM: dts: s5pv210: Set MAX8998 GPIO pulls on aries
+>   ARM: dts: s5pv210: Correct gpi gpio node name
+> 
+> Paweł Chmiel (1):
+>   ARM: dts: s5pv210: Add si470x fmradio to galaxys
+>
 
- 2779         if (force_nonblock)
- 2780                 return -EAGAIN;
+Nice job!
 
-before reaching this line of code. So, the null check on force_nonblock
-at 2785, is never actually being executed.
+Thanks, I applied entire set.
 
-Addresses-Coverity-ID: 1492838 ("Logically dead code")
-Fixes: 2fb3e82284fc ("io_uring: punt splice async because of inode mutex")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index e5dfbbd2aa34..4b1efb062f7f 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2782,7 +2782,7 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
- 	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
- 	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
- 	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
--	if (force_nonblock && ret == -EAGAIN)
-+	if (ret == -EAGAIN)
- 		return -EAGAIN;
- 
- 	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
--- 
-2.26.0
+Best regards,
+Krzysztof
 
