@@ -2,100 +2,108 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8641C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A389AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D1F20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616042;
-	bh=u1eRWLzcSsHvN8fzxr/uCnaS7bnXn9sRpbs/0zvLWHM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPM5kr6BojFfvhoFK21VMK1FVhtnQ2qg2ULwbKL/prc7h/n2J04xWnGTDGDZ2eczK
-	 oC/LwPwhjKZr+Vj28zgkWPjfPOKX1c+wp9tZ7wjgstgInyvxL9k7XUEK9mz1awZckK
-	 WIg968saAVh6Er+MYXGVdh0F9Aa55f01rp485/PI=
+	by mail.kernel.org (Postfix) with ESMTP id 8120124959
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K1h0aeVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbgEDSOB (ORCPT
+        id S1731855AbgEDSOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731084AbgEDSA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7183E2073B;
-        Mon,  4 May 2020 18:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615255;
-        bh=u1eRWLzcSsHvN8fzxr/uCnaS7bnXn9sRpbs/0zvLWHM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zWCZUQ1m/edPpmXWt6tee3yajjLc7I2aPfl335/fY0pv/QY2lO50Y41WV2knBjKu2
-         U7olG2VwaSr4mLju00SbymHliqM9v5GqHhGEc+oPvJuaNRf5t4lZ7PFqquu0fO/YX5
-         XNGVACKJyCAen7v1hvSvQbVop21o7JqPXwdlYTpg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.14 09/26] mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers
-Date:   Mon,  4 May 2020 19:57:23 +0200
-Message-Id: <20200504165444.899552282@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
-References: <20200504165442.494398840@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 May 2020 14:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732091AbgEDSOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:14:00 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FD8C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:14:00 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id g26so264142qtv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3nW96fFZYnDn8jk8+VYyojQcEjzERa3OD5pCIlBdho=;
+        b=K1h0aeVunNzSt5ERI2Q5f1AdAZ3vbRcewfdgTDjWr/DOw/0bFRJyHo5X3G1b4FH9Xu
+         gr4v3njy+NCCtBeUGcdM6EZfJjBU6Sb4QUbjBMA1Kf13psCgtumNxIH5kyXKgupAOryp
+         IQhYOQHjNWrgm0b3KRupuCNtFivn+Gqns6Zb0HPC4S3bQY3xzBOxxEUeNIDvpR6c8JPA
+         O65YVwhn7Nx9KOa2gtSjrvavv1qiH0w42V+gZdqaIAPrDgMfh4SLBo6u3sD/DfiY88EK
+         OMf9ZIRY2El4ZvVgtPG2UoIZkbB3A4Y0bllnjIo9M+x+MzBKenOUkIRU2d1Rhgahl7ik
+         W28A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Z3nW96fFZYnDn8jk8+VYyojQcEjzERa3OD5pCIlBdho=;
+        b=UdlgQhduQZnU6IzhQk9tD1HrPnexnemvmyO/qmDcB02eIWIOBUgmuaidgvrdHJTu3g
+         lntTVgZGgWo/YaAS98JZeMw5Pn3eEViRkHXKqlLWf0FwXW6tarMGvR2sigED8hHipVU/
+         zkn07qh2u7YPhnJsIXLIWl29UdnRB0g8z9C2H6I7zbzAy3DtoVlwbolrST+1EwFTlRj3
+         bm55PCEuBtQwLgjtBO6UV6VwX58IFwMpDWvzHvXYak4Jm4flxsz4286W/iTpdjJmka88
+         CacOKgnVGA5R5lUuqFY3AedQh7Th25IRSyEQkS6N6ZH1XQ0b06Ggt7C64Ldqh1O8v2m2
+         XVdg==
+X-Gm-Message-State: AGi0PuaWRplpXMcDrQCNmeV7x9L8f5Fe/iA8Qitz834X3Il+7Qn0/bD2
+        qKAW5z1uJlfRqowUPRS5qYvcGA==
+X-Google-Smtp-Source: APiQypI4Oi2r4p833QHi40cXGxwDFX3mON5ouXXX22y6pe3WuHg5/KcOdeA1C0f71wZ5egHt2uEuCQ==
+X-Received: by 2002:ac8:1c35:: with SMTP id a50mr389657qtk.286.1588616039180;
+        Mon, 04 May 2020 11:13:59 -0700 (PDT)
+Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id v4sm7107146qkv.43.2020.05.04.11.13.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 11:13:58 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     davem@davemloft.net, evgreen@chromium.org.net,
+        subashab@codeaurora.org, cpratapa@codeaurora.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH net-next v2 1/1] arm64: dts: sdm845: add IPA iommus property
+Date:   Mon,  4 May 2020 13:13:50 -0500
+Message-Id: <20200504181350.22822-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+Add an "iommus" property to the IPA node in "sdm845.dtsi".  It is
+required because there are two regions of memory the IPA accesses
+through an SMMU.  The next few patches define and map those regions.
 
-commit 1a8eb6b373c2af6533c13d1ea11f504e5010ed9a upstream.
-
-BIOS writers have begun the practice of setting 40 ohm eMMC driver strength
-even though the eMMC may not support it, on the assumption that the kernel
-will validate the value against the eMMC (Extended CSD DRIVER_STRENGTH
-[offset 197]) and revert to the default 50 ohm value if 40 ohm is invalid.
-
-This is done to avoid changing the value for different boards.
-
-Putting aside the merits of this approach, it is clear the eMMC's mask
-of supported driver strengths is more reliable than the value provided
-by BIOS. Add validation accordingly.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: 51ced59cc02e ("mmc: sdhci-pci: Use ACPI DSM to get driver strength for some Intel devices")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200422111629.4899-1-adrian.hunter@intel.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/mmc/host/sdhci-pci-core.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -490,6 +490,9 @@ static int intel_select_drive_strength(s
- 	struct sdhci_pci_slot *slot = sdhci_priv(host);
- 	struct intel_host *intel_host = sdhci_pci_priv(slot);
+NOTE: This was posted in error previously as part of another series,
+      which has since been superseded (and no longer includes it).
+      https://lore.kernel.org/netdev/20200504175859.22606-1-elder@linaro.org/
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 71dfdfcf2033..7cce6f1b7c9e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1762,6 +1762,8 @@
  
-+	if (!(mmc_driver_type_mask(intel_host->drv_strength) & card_drv))
-+		return 0;
+ 		ipa: ipa@1e40000 {
+ 			compatible = "qcom,sdm845-ipa";
 +
- 	return intel_host->drv_strength;
- }
- 
-
++			iommus = <&apps_smmu 0x720 0x3>;
+ 			reg = <0 0x1e40000 0 0x7000>,
+ 			      <0 0x1e47000 0 0x2000>,
+ 			      <0 0x1e04000 0 0x2c000>;
+-- 
+2.20.1
 
