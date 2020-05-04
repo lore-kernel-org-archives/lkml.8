@@ -2,135 +2,130 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FC4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D223C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 961C520735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OHD89EcN"
+	by mail.kernel.org (Postfix) with ESMTP id 4EB3C20746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588584040;
+	bh=MYHQ3d6CFjGzrhTzqTQ+wFDwk/U6SfbTLdwKj1lU4JY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DMTdppcDBXOby+ThG8+6OwjxXJo+MPp045IPu3ijqiScpYTSbtKFIXZi9yUsMm/sx
+	 eko5bKwRjgg6RhT3hCsAAoasPbDHaMV7oNn6kib2iZYWdOVe9fOZB2mRvNWtuASNri
+	 VEsf/kRYJMUeyjZUf56HwjTT+rfuysCAyRov0uDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgEDJUG (ORCPT
+        id S1728332AbgEDJUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:20:06 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55987 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727930AbgEDJUE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:20:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588584003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PXKefhyNsVrqhbSaw0uWJPXnOxnNca0tzq80MmeMsgs=;
-        b=OHD89EcN3g5SVUY58hcKs1OwMJMdGDZjxmmZ7T0XCesH3kw94nnvrGxGehJLH8GihR1T2u
-        w4/ZjpkqJ2Hy7ngyGD8ur+o99glxCfp5aScpfarH1TAAtscWyAOeTxA+wG2BErxVDwhR6g
-        eQ7DYMWJk1/DZYN6SXetQLqy6bJ267s=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-vNVwR_DjMJCLNNweDWbWZA-1; Mon, 04 May 2020 05:19:59 -0400
-X-MC-Unique: vNVwR_DjMJCLNNweDWbWZA-1
-Received: by mail-wm1-f69.google.com with SMTP id f128so4551209wmf.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 02:19:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PXKefhyNsVrqhbSaw0uWJPXnOxnNca0tzq80MmeMsgs=;
-        b=P4T/wNHr7I3WQ7js26gKMRSMAsbn0flWIs74c4X/tjVbTxm5kov9aBSi2QvVUM28eX
-         RPrXYr41M3IvH63RGqTVMm129hrVa+eq7CYL4cGfFmqM+fqEWPREtwgeuvGQg+69Zfui
-         n2MazTZh2FNNyngmWymMwWmKipscM6OFSASYsg2ZwRlKga/pdCwsQuPcKlTa5iU8GKSZ
-         xiS+4ggLf/lEVYyREtFJtf27SRxOSFRM9c+kIb3CVXQXWxj2Q3mlK2uyIGCSRlZAQ7hB
-         5c8eObmawDdajisIMDGsrWjWcGQiT0kfjn8WMSpZsOQvwSS4vD3+cUkWJv4Lu32qxFPC
-         rDCg==
-X-Gm-Message-State: AGi0PuZF4tcRk7uM+cmQElnWaAQl68Jlw1SWxRgkCyEq5rqrfnGMZWAi
-        9tHlfr4w7Z2MvitgUpwg3afvkI0eQG7ktnAG/6c3ef9srAToNFJfwFd2P2/4kZW167NH31xW05s
-        hcGyWg4iLhgB2fePlFyfFQKP2
-X-Received: by 2002:adf:afd6:: with SMTP id y22mr3795460wrd.417.1588583998718;
-        Mon, 04 May 2020 02:19:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKuG6PVHUr7bVaMOUCUhOEqyeRNEbOObtw4ZSVEKStgyvWMt+cncD9RnxxusPFv0UBIOXqGKQ==
-X-Received: by 2002:adf:afd6:: with SMTP id y22mr3795438wrd.417.1588583998478;
-        Mon, 04 May 2020 02:19:58 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id i74sm18070472wri.49.2020.05.04.02.19.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 02:19:57 -0700 (PDT)
-Subject: Re: [PATCH v2] kvm: ioapic: Introduce arch-specific check for lazy
- update EOI mechanism
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     rkrcmar@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        borisvk@bstnet.org
-References: <1588411495-202521-1-git-send-email-suravee.suthikulpanit@amd.com>
- <e09f0be9-6a2f-a8ee-3a96-c8ffdf3add3f@redhat.com>
- <fd2529b7-66f9-fd4e-d071-a38d01e4b61c@amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a78c88fa-5d2b-1329-9200-922e1c95e730@redhat.com>
-Date:   Mon, 4 May 2020 11:19:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 4 May 2020 05:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgEDJUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:20:39 -0400
+Received: from localhost (unknown [171.76.84.84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA3C206B9;
+        Mon,  4 May 2020 09:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588584038;
+        bh=MYHQ3d6CFjGzrhTzqTQ+wFDwk/U6SfbTLdwKj1lU4JY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q8ojyhmPSIQ4YfWkr03SwWlPcqj0qM/5ZNALiPgYN6QtY2clIHxwIW5AdAKP0NbBA
+         NRlVVXvuLtarGeks8FBoc0OHsz+BoFSjKIVtxmK2i5oKX3jX7uvIrvnIILFMvkKOLp
+         0mx5Jtd55ZivAlOfxDYwsRBnqylrEl9EUyFPDSYg=
+Date:   Mon, 4 May 2020 14:50:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
+Message-ID: <20200504092034.GS1375924@vkoul-mobl>
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
+ <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
+ <20200504072923.GN1375924@vkoul-mobl>
+ <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <fd2529b7-66f9-fd4e-d071-a38d01e4b61c@amd.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f12e76ac-e0fd-4afa-e1cd-2b90f175adfd@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/20 08:31, Suravee Suthikulpanit wrote:
->>
->>
->> The re-entrancy happens because the irq state is the OR of
->> the interrupt state and the resamplefd state.  That is, we don't
->> want to show the state as 0 until we've had a chance to set the
->> resamplefd.  But if the interrupt has _not_ gone low then we get an
->> infinite loop.
+On 04-05-20, 16:26, Dilip Kota wrote:
 > 
-> I'm not too familiar w/ the resamplefd.  I must have missed this part.
-> Could you please point out to me where the OR logic is?
+> On 5/4/2020 3:29 PM, Vinod Koul wrote:
+> > On 30-04-20, 15:15, Dilip Kota wrote:
+> > 
+> > > +enum {
+> > > +	PHY_0,
+> > > +	PHY_1,
+> > > +	PHY_MAX_NUM
+> > PHY_MAX_NUM = PHY_1?
+> Driver is using it for no. of PHYs/maximum PHY id.
 
-It's because kvm_ioapic_set_irq gets the actual state of the interrupt
-line from __kvm_irq_line_state before calling ioapic_set_irq.
+Ok
 
->> But in the case of level-triggered interrupts the VMEXIT already
->> happens because TMR is set; only edge-triggered interrupts need
->> the lazy invocation of the ack notifier.  
+> > > +static inline void combo_phy_w32_off_mask(void __iomem *base, unsigned int reg,
+> > > +					  u32 mask, u32 val)
+> > > +{
+> > > +	u32 reg_val;
+> > > +
+> > > +	reg_val = readl(base + reg);
+> > > +	reg_val &= ~mask;
+> > > +	reg_val |= FIELD_PREP(mask, val);
+> > > +	writel(reg_val, base + reg);
+> > bypassing regmap here... why?
+> It is not regmap address, one of the below two addresses are passed to this
+> function.
+
+okay, perhaps add a comment somewhere that regmap is not used for this
+base?
+
+> struct intel_combo_phy {
+> ...
+>         void __iomem            *app_base;
+>         void __iomem            *cr_base;
+> ...
+> }
+
+
+> > > +static int intel_cbphy_calibrate(struct phy *phy)
+> > > +{
+> > > +	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
+> > > +	struct intel_combo_phy *cbphy = iphy->parent;
+> > > +	void __iomem *cr_base = cbphy->cr_base;
+> > > +	int val, ret, id;
+> > > +
+> > > +	if (cbphy->phy_mode != PHY_XPCS_MODE)
+> > > +		return 0;
+> > > +
+> > > +	id = PHY_ID(iphy);
+> > > +
+> > > +	/* trigger auto RX adaptation */
+> > > +	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
+> > > +			       ADAPT_REQ_MSK, 3);
+> > > +	/* Wait RX adaptation to finish */
+> > > +	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
+> > > +				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
+> > > +	if (ret)
+> > > +		dev_err(cbphy->dev, "RX Adaptation failed!\n");
+> > you want to continue her and not return error?
 > 
-> For AVIC, EOI write for level-triggered would have also be trapped.
+> Next step is stopping the Adaptation, it should be done in both error and
+> success case.
 
-Yes, I was talking about AVIC only there.
+Again documenting this helps, pls add some comments on this behaviour
 
-> And yes, edge-triggered needs lazy ack notifier.
-> 
->> So this should be the fix:
->>
->> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
->> index 7668fed1ce65..ca2d73cd00a3 100644
->> --- a/arch/x86/kvm/ioapic.c
->> +++ b/arch/x86/kvm/ioapic.c
->> @@ -225,12 +225,12 @@ static int ioapic_set_irq(struct kvm_ioapic
->> *ioapic, unsigned int irq,
->>       }
->>         /*
->> -     * AMD SVM AVIC accelerate EOI write and do not trap,
->> -     * in-kernel IOAPIC will not be able to receive the EOI.
->> +     * AMD SVM AVIC accelerate EOI write iff the interrupt is level
->> +     * triggered, in-kernel IOAPIC will not be able to receive the EOI.
-> 
-> Actually, it should be "AMD SVM AVIC accelerate EOI write iff the
-> interrupt is _edge_ triggered".
-
-Of course, thanks.
-
-Paolo
-
+-- 
+~Vinod
