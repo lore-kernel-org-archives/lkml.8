@@ -2,164 +2,358 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B4BC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51F1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F5024958
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944AD206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rUWaCASb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4xzFRWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgEDIon (ORCPT
+        id S1728297AbgEDIox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:44:43 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58854 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgEDIon (ORCPT
+        Mon, 4 May 2020 04:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727837AbgEDIox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:44:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0448iaJb095179;
-        Mon, 4 May 2020 03:44:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588581876;
-        bh=MJFZeP9Kt0d/U5r8cedlUqKEgzNmU/L56TzLmHNhuwA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rUWaCASbPDM5c8AbQEl/BHEC1S34pGHrrmTIrCEytrpIRC7r43gMhnh2SEwVSoDsQ
-         kWbrAWHMXTO5XjofI2djF5EIlUPNUI/1wCAqM17XhbB+4htYTn8vKCVmWIOSpB7OZ7
-         xX5ee6Zi4IF739eyV3OvEtRPGfm75XxIttsbnN/M=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0448iafK069176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 03:44:36 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 03:44:36 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 03:44:36 -0500
-Received: from [10.250.150.106] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0448iUss019965;
-        Mon, 4 May 2020 03:44:31 -0500
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-Date:   Mon, 4 May 2020 14:14:29 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 04:44:53 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD61BC061A0E;
+        Mon,  4 May 2020 01:44:52 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x10so843238plr.4;
+        Mon, 04 May 2020 01:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=5Yai1mh62Q1solPiCk5A4JNZMG/ryoGn53TObEH/YFg=;
+        b=o4xzFRWzU2tr+XLFo5PWGsZcaQY2ul5XDfU2Lvl3XWIQP8GbUBh+YbC5zHZ+8QRU7m
+         lOdGw0Qpw6rH8Waj/DANKJ/WMIRXeAykFQLUHxOg4UYTz5RQFVkyPYqpxyB6pXH7R04w
+         ryVJm5xNKoAzJofrqEUxD1gDLDePO7EymsLodc0Mw3/OO5fM9UMdM16j8t9G4LMvGMcb
+         /w0pkat6A2aGaOWVM1AY1xcWcxx/TU79Dgs1BEuwuvJVRvrey8YNxRanCn0PK2PdbA/w
+         FRvYEd8ngU9imdW+TU1RziWcMGHeQSbFxLfNTYCHpyRjaS1y+ML3A6GYmbrE74ufC7Ss
+         J1tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=5Yai1mh62Q1solPiCk5A4JNZMG/ryoGn53TObEH/YFg=;
+        b=GARrR10EDvvvDQJvhPUS/xIbMxpeNDHvkfG6OkVtjbZMJg0Y8VhV7uk0DoX2VSob0q
+         WaREuFGEU0NuXvs8TUIfLGxuSM3HWc/I53lKhjG1RZMyJzmZSdQtHvAe1QuYC6quyedC
+         7k3VlDMjEs9z+icw3xJVqLN0g7pYtj4Xlp7ImeYbXQoOheqqE506Ju9Fw3uCrTMtFfJl
+         OTPUYCv4ptLje0y71oUAGI6EHe8rDUKA4y2zlY7Ed7eIOMJJtpuYiZW+uqom4KEPvb3U
+         rIUGjqLqUY1WYxyKTQWVLLs/AlsUhQJh/OjGQlw2NAtQEovD1Qr51wIDMmceepIN5Pjm
+         i3YA==
+X-Gm-Message-State: AGi0PuZe58xhDHOX0HxCOMLWIeYXQa+mhITqICT9Nwf2xWmMZY6BdH/r
+        8I+VBK29WbJejxs1hk3qXxrEYelJ
+X-Google-Smtp-Source: APiQypL1d3S6fbyn5nuBIaRXSKWV95qY4ZOfDy3bzbc8FMQrI/UCvoUVGtihU9OrNIenG7FMETsSyQ==
+X-Received: by 2002:a17:90a:2709:: with SMTP id o9mr16113434pje.168.1588581892236;
+        Mon, 04 May 2020 01:44:52 -0700 (PDT)
+Received: from udknight.localhost ([59.57.158.67])
+        by smtp.gmail.com with ESMTPSA id gv24sm6202193pjb.6.2020.05.04.01.44.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 May 2020 01:44:51 -0700 (PDT)
+Received: from udknight.localhost (localhost [127.0.0.1])
+        by udknight.localhost (8.14.9/8.14.4) with ESMTP id 0448K61i030281;
+        Mon, 4 May 2020 16:20:06 +0800
+Received: (from root@localhost)
+        by udknight.localhost (8.14.9/8.14.9/Submit) id 0448K2fm030280;
+        Mon, 4 May 2020 16:20:02 +0800
+Date:   Mon, 4 May 2020 16:20:02 +0800
+From:   Wang YanQing <udknight@gmail.com>
+To:     joe@perches.com
+Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH v6] checkpatch: add support to check 'Fixes:' tag format
+Message-ID: <20200504082002.GA29972@udknight>
+Mail-Followup-To: Wang YanQing <udknight@gmail.com>, joe@perches.com,
+        Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
+        kernel-janitors@vger.kernel.org
 MIME-Version: 1.0
-In-Reply-To: <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mutt/1.7.1 (2016-10-04)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+According to submitting-patches.rst, 'Fixes:' tag has a little
+stricter condition about the one line summary than normal git
+commit description:
+“...
+Do not split the tag across multiple lines, tags are exempt from
+the "wrap at 75 columns" rule in order to simplify parsing scripts
+...”
 
-On 5/1/2020 9:24 PM, Robin Murphy wrote:
-> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->> [+Robin - to check on dma-ranges intepretation]
->>
->> I would need RobH and Robin to review this.
->>
->> Also, An ACK from Tom is required - for the whole series.
->>
->> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>> property to configure the number of bits passed through from PCIe
->>> address to internal address in Inbound Address Translation register.
->>>
->>> However standard PCI dt-binding already defines "dma-ranges" to
->>> describe the address range accessible by PCIe controller. Parse
->>> "dma-ranges" property to configure the number of bits passed
->>> through from PCIe address to internal address in Inbound Address
->>> Translation register.
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>>   drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>   1 file changed, 11 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>> index 9b1c3966414b..60f912a657b9 100644
->>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>       struct device *dev = rc->pcie.dev;
->>>       struct platform_device *pdev = to_platform_device(dev);
->>>       struct device_node *np = dev->of_node;
->>> +    struct of_pci_range_parser parser;
->>>       struct pci_host_bridge *bridge;
->>>       struct list_head resources;
->>> +    struct of_pci_range range;
->>>       struct cdns_pcie *pcie;
->>>       struct resource *res;
->>>       int ret;
->>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>       rc->max_regions = 32;
->>>       of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->>>   -    rc->no_bar_nbits = 32;
->>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>> +        if (of_pci_range_parser_one(&parser, &range))
->>> +            rc->no_bar_nbits = ilog2(range.size);
-> 
-> You probably want "range.pci_addr + range.size" here just in case the bottom of
-> the window is ever non-zero. Is there definitely only ever a single inbound
-> window to consider?
+And there is no sanity check for 'Fixes:' tag format in checkpatch
+the same as GIT_COMMIT_ID for git commit description, so let's expand
+the GIT_COMMIT_ID to add 'Fixes:' tag format check support.
 
-Cadence IP has 3 inbound address translation registers, however we use only 1
-inbound address translation register to map the entire 32 bit or 64 bit address
-region.
-> 
-> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
-> for you, but I suppose plumbing that in plus processing the resulting
-> dma_ranges resource probably ends up a bit messier than the concise open-coding
-> here.
+The check supports below formats:
+Fixes: 54a4f0239f2e ("KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed")
+Fixes: 85f7cd3a2aad ("Revert "media: Kconfig: better support hybrid TV devices"")
+Fixes: 878520ac45f9 ("ext4: save the error code which triggered...")
+Fixes: 878520ac45f9 ("ext4: save the error code which triggered")
+Fixes: 277f27e2f277 ("SUNRPC/cache: Allow garbage collection ... ")
 
-right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
-for outbound configuration, whereas here we parse "dma-ranges" property and is
-used for inbound configuration.
+The check doesn't support below formats and it will emit diagnostics info for them:
+Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
+Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
+Fixes: 3fd6e7d9a146 (ASoC: tas571x: New driver for TI TAS571x power amplifiers)
+Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
+Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
+Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
+Fixes:      9b1640686470 ("scsi: lpfc: Fix use-after-free mailbox cmd completion")
+Fixes: 03f6fc6de919 ('ASoC: rt5682: Add the soundwire support')
+Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
 
-Thanks
-Kishon
+Because after GIT_COMMIT_ID supports 'Fixes:' tag format check, it could do
+the same check as the UNKNOWN_COMMIT_ID, so we don't need UNKNOWN_COMMIT_ID
+anymore and I decide to delete it.
 
-> 
-> Robin.
-> 
->>> +
->>> +    if (!rc->no_bar_nbits) {
->>> +        rc->no_bar_nbits = 32;
->>> +        of_property_read_u32(np, "cdns,no-bar-match-nbits",
->>> +                     &rc->no_bar_nbits);
->>> +    }
->>>         rc->vendor_id = 0xffff;
->>>       of_property_read_u16(np, "vendor-id", &rc->vendor_id);
->>> -- 
->>> 2.17.1
->>>
+Note: this patch also fixes double quotation mark issue for normal git
+      commit description, and now it supports double quotation mark in
+      title line, for example:
+      Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by default
+      when checking usable channels"")
+
+Note: this patch also adds diagnostics info support for normal git commit
+      description format check.
+
+Based on original patch by Joe Perches <joe@perches.com>
+
+Link: https://lore.kernel.org/lkml/40bfc40958fca6e2cc9b86101153aa0715fac4f7.camel@perches.com/
+Signed-off-by: Wang YanQing <udknight@gmail.com>
+---
+ v6:
+ 1: Fix indentation issue.
+ 2: Fix a typo issue, reported by Markus Elfring.
+ 3: Reword some diagnostics info.
+ 4: Add support to check and emit sensible diagnostics
+    info for description which spans across more than
+    two lines.
+ 5: Avoid the word "acrosses", suggested by Markus Elfring.
+
+ v5:
+ 1: Rebased on '[PATCH v2] checkpatch: fix can't check for too long invalid commit id'.
+ 2: Fix wrong diagnostics info for below non-standard 'Fixes:' formats.
+    a: Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
+    b: Fixes: da97e18458fb: ("perf_event: Add support for LSM and SELinux checks")
+ 3: Reword the diagnostics info for non-standard title format.
+
+ v4:
+ 1: Add diagnostics info support, suggested by Joe Perches and Markus Elfring.
+ 2: Delete UNKNOWN_COMMIT_ID and do the check in GIT_COMMIT_ID.
+
+ v3:
+ 1: Fix a bug in short title line support.
+
+ v2:
+ 1: Add support for double quotation mark in title line, suggested by Markus Elfring.
+ 2: Add support for short title line with/without ellipsis.
+ 3: Add supported format examples and unsupported format examples in changelog.
+ 4: Fix a little wording issue in changelog , suggested by Markus Elfring.
+
+ scripts/checkpatch.pl | 129 ++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 99 insertions(+), 30 deletions(-)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 9b47584..ef34716 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2818,51 +2818,109 @@ sub process {
+ 		    $line !~ /^\s*(?:Link|Patchwork|http|https|BugLink|base-commit):/i &&
+ 		    $line !~ /^This reverts commit [0-9a-f]{7,40}/ &&
+ 		    ($line =~ /\bcommit\s+[0-9a-f]{5,}\b/i ||
++		     $line =~ /\bfixes:\s+[0-9a-f]{5,}\b/i ||
+ 		     ($line =~ /(?:\s|^)[0-9a-f]{12,40}(?:[\s"'\(\[]|$)/i &&
+-		      $line !~ /[\<\[][0-9a-f]{12,40}[\>\]]/i &&
+-		      $line !~ /\bfixes:\s*[0-9a-f]{12,40}/i))) {
++		      $line !~ /[\<\[][0-9a-f]{12,40}[\>\]]/i))) {
+ 			my $init_char = "c";
+ 			my $orig_commit = "";
++			my $prefix = "commit";
++			my $prefix_case = "[Cc]ommit";
+ 			my $short = 1;
+ 			my $long = 0;
+ 			my $case = 1;
+ 			my $space = 1;
++			my $space2 = 1;
+ 			my $hasdesc = 0;
+-			my $hasparens = 0;
++			my $has_parens_and_dqm = 0; # Double quotation mark
+ 			my $hasprefix = 1;
+ 			my $id = '0123456789ab';
+ 			my $orig_desc = "commit description";
+ 			my $description = "";
+ 			my $sha1_length_min = 12;
++			my $acrosslines = 0;
++			my $title = "title line";
++			my $desc_mismatch = 0;
++			my $diagnostics = "Diagnostics info:\n";
++			my $name = "commit description";
+ 
+-			if ($line =~ /\b(c)ommit\s+([0-9a-f]{5,})\b/i) {
++			if ($line =~ /\b(f)ixes:\s+([0-9a-f]{5,})\b/i) {
++				$init_char = $1;
++				$orig_commit = lc($2);
++				$prefix = "Fixes:";
++				$prefix_case = "Fixes:";
++				$init_char = "F";
++				$title = "a single line title (without line breaks but ellipsis is fine!)";
++				$name = "Fixes: tag";
++			} elsif ($line =~ /\b(c)ommit\s+([0-9a-f]{5,})\b/i) {
+ 				$init_char = $1;
+ 				$orig_commit = lc($2);
+ 			} elsif ($line =~ /\b([0-9a-f]{12,40})\b/i) {
+ 				$orig_commit = lc($1);
+ 				$hasprefix = 0;
++				$diagnostics .= "Missing prefix \"$prefix_case\".\n";
++
++			}
++
++			if ($line =~ /\b$prefix\s+[0-9a-f]{41,}/i) {
++				$long = 1;
++			} elsif ($line =~ /\b$prefix\s+[0-9a-f]{$sha1_length_min,40}/i) {
++				$short = 0;
++			} elsif ($hasprefix) {
++				$diagnostics .= "Commit id $orig_commit is too short.\n";
++			}
++
++			if ($line =~ /\b$prefix [0-9a-f]/i) {
++				$space = 0;
++			} elsif ($hasprefix) {
++				$diagnostics .= "Extra whitespace between prefix \"${init_char}" . substr($prefix, 1) . "\" and $orig_commit.\n";
+ 			}
+ 
+-			$short = 0 if ($line =~ /\bcommit\s+[0-9a-f]{$sha1_length_min,40}/i);
+-			$long = 1 if ($line =~ /\bcommit\s+[0-9a-f]{41,}/i);
+-			$space = 0 if ($line =~ /\bcommit [0-9a-f]/i);
+-			$case = 0 if ($line =~ /\b[Cc]ommit\s+[0-9a-f]{5,40}[^A-F]/);
+-			if ($line =~ /\bcommit\s+[0-9a-f]{5,}\s+\("([^"]+)"\)/i) {
++			if ($line =~ /[0-9a-f]{5,} \S+/i || $line =~ /[0-9a-f]{5,}\s*$/i) {
++				$space2 = 0;
++			} elsif ($hasprefix) {
++				$diagnostics .= "Please use a and only a single whitespace between $orig_commit and title line.\n";
++			}
++
++			if ($line =~ /\b$prefix_case\s+[0-9a-f]{5,40}[^A-F]/) {
++				$case = 0;
++			} elsif ($hasprefix) {
++				$line =~ /(\b$prefix)\s+[0-9a-f]{5,40}[^A-F]/i;
++				$diagnostics .= "The prefix \"$1\" has case error.\n";
++			}
++
++			if ($line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\("(.+)"\)/i) {
+ 				$orig_desc = $1;
+-				$hasparens = 1;
++				$has_parens_and_dqm = 1;
++				# Drop the ellipsis
++				if ($prefix eq "Fixes:" && $orig_desc =~ /(\s*\.{3}\s*$)/) {
++				    $orig_desc = substr($orig_desc, 0, length($orig_desc) - length($1));
++				}
+ 			} elsif ($line =~ /\bcommit\s+[0-9a-f]{5,}\s*$/i &&
+ 				 defined $rawlines[$linenr] &&
+-				 $rawlines[$linenr] =~ /^\s*\("([^"]+)"\)/) {
++				 $rawlines[$linenr] =~ /^\s*\("(.+)"\)/) {
+ 				$orig_desc = $1;
+-				$hasparens = 1;
+-			} elsif ($line =~ /\bcommit\s+[0-9a-f]{5,}\s+\("[^"]+$/i &&
++				$has_parens_and_dqm = 1;
++			} elsif ($line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\(".+$/i &&
+ 				 defined $rawlines[$linenr] &&
+-				 $rawlines[$linenr] =~ /^\s*[^"]+"\)/) {
+-				$line =~ /\bcommit\s+[0-9a-f]{5,}\s+\("([^"]+)$/i;
++				 $rawlines[$linenr] =~ /^\s*.+"\)/) {
++				$line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\("(.+)$/i;
+ 				$orig_desc = $1;
+-				$rawlines[$linenr] =~ /^\s*([^"]+)"\)/;
++				$rawlines[$linenr] =~ /^\s*(.+)"\)/;
+ 				$orig_desc .= " " . $1;
+-				$hasparens = 1;
++				$has_parens_and_dqm = 1;
++
++				if ($prefix eq "Fixes:") {
++					$acrosslines = 1;
++					$diagnostics .= "The $name spans across lines.\n";
++				}
++			} elsif (($line =~ /\bcommit\s+[0-9a-f]{5,}\s*$/i &&
++				  defined $rawlines[$linenr] &&
++				  $rawlines[$linenr] =~ /^\s*\("/) ||
++				 $line =~ /\b$prefix\s+[0-9a-f]{5,}\s+\(".+$/i) {
++				$diagnostics .= "Missing right '\")' at the end of title line?\n";
++				$diagnostics .= "The $name spans across more than two lines?\n";
++			} elsif ($hasprefix && !$space2) {
++				$diagnostics .= "No title line in '(\"<$title>\")' format is found.\n";
+ 			}
+ 
+ 			($id, $description) = git_commit_info($orig_commit,
+@@ -2879,10 +2937,32 @@ sub process {
+ 				}
+ 			}
+ 
++			if (defined($id) && $has_parens_and_dqm && ($orig_desc ne $description)) {
++			    # Allow short description without too short!
++				if ($prefix eq "Fixes:") {
++						if (length($orig_desc) >= length($description)/2) {
++							my $desc = substr($description, 0, length($orig_desc));
++
++							if ($orig_desc ne $desc) {
++								$desc_mismatch = 1;
++								$diagnostics .= "The title line doesn't match the original commit.\n";
++							}
++						} else {
++							$desc_mismatch = 1;
++							$diagnostics .= "The title line is too abbreviated, at least half of original commit is necessary.\n";
++						}
++				} else {
++						$desc_mismatch = 1;
++						$diagnostics .= "The title line doesn't match the original commit.\n";
++				}
++			}
++
+ 			if (defined($id) &&
+-			   ($short || $space || $case || ($orig_desc ne $description) || !$hasparens)) {
++			   ($short || $space || $space2 || $case || $desc_mismatch || !$hasprefix || !$has_parens_and_dqm || $acrosslines)) {
+ 				ERROR("GIT_COMMIT_ID",
+-				      "Please use git commit description style 'commit <$sha1_length_min+ chars of sha1> (\"<title line>\")' - ie: '${init_char}ommit $id (\"$description\")'\n" . $herecurr);
++				      "Please use git commit description style:\n$prefix <$sha1_length_min+ chars of sha1> (\"<$title>\")\n" .
++				      "i.e.: '${init_char}" . substr($prefix, 1) . " $id (\"$description\")'\n" .
++				      $diagnostics . $herecurr);
+ 			}
+ 		}
+ 
+@@ -2982,17 +3062,6 @@ sub process {
+ 			}
+ 		}
+ 
+-# check for invalid commit id
+-		if ($in_commit_log && $line =~ /^fixes:\s+([0-9a-f]{6,40})\b/i) {
+-			my $id;
+-			my $description;
+-			($id, $description) = git_commit_info($1, undef, undef);
+-			if (!defined($id)) {
+-				WARN("UNKNOWN_COMMIT_ID",
+-				     "Unknown commit id '$1', maybe rebased or not pulled?\n" . $herecurr);
+-			}
+-		}
+-
+ # ignore non-hunk lines and lines being removed
+ 		next if (!$hunk_line || $line =~ /^-/);
+ 
+-- 
+1.8.5.6.2.g3d8a54e.dirty
