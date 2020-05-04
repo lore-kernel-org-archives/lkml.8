@@ -7,58 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAFBC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B898FC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCD292078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C29120663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615946;
-	bh=N4i6e4VsODP2CW1mwqCEy5GnptRmE9Pa1G3YDTPyGAc=;
+	s=default; t=1588615950;
+	bh=GUaGAj2BoswgOS0mZZ9WeX+v+dA7ntJLpyiAnRMWbPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3GeYF/cnJ5KRmbUQ2XyMO3nekSQlt0XWdIbmnqVBUe7mK4MsSwQtVEL2UFu/qQOn
-	 8509Y0ws+qdvDSOzhp/ogMYKyuBQkNGw+VF0XV/DTBycZ10El+8025zXZor5za+zDQ
-	 oWWrhyuyWkOpITVKYn+wpdo+dEGInzA/rkIG5Asc=
+	b=Ru8pTMi48oC5k1WKToWll+ooZKBxZFyOxqqcYFSKqaOU3dnw/XveIXWArssW5BXBu
+	 41DhNkX5hHnOi97E7n1sH6SGT1v50sMlVsDKUCUf9prXHSMv6Q7zuhbvOiOI3Dqbgk
+	 1fmsXz8X7z/cT9YHNa2+SvWoICqhPlxy+8BLloXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbgEDSCv (ORCPT
+        id S1731346AbgEDSCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731372AbgEDSCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:45 -0400
+        id S1731318AbgEDSCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C16020721;
-        Mon,  4 May 2020 18:02:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF093206B8;
+        Mon,  4 May 2020 18:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615364;
-        bh=N4i6e4VsODP2CW1mwqCEy5GnptRmE9Pa1G3YDTPyGAc=;
+        s=default; t=1588615343;
+        bh=GUaGAj2BoswgOS0mZZ9WeX+v+dA7ntJLpyiAnRMWbPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EwlF4hdQ2WhT+nZuqQc7NYW+8JqniJEeuMwf5SKAgaJUIwtgwn8UdxTLhiHJK0GXo
-         uC8vXdwSIhqBVjLcv5s8OKbbILyEP3auDAnUzeN9IKmzI/V7sYrF8pYnIkdxxzfBTw
-         sBjwTOHN8/CNy/TUIIoIIWhbI+KQLKsXGOBehyOA=
+        b=aTUa0cwbO9zkkJo/Ttx6dvR/8G7m6dIC20phh1zuPZv+Tri+Py/AvVae89MXZlKcQ
+         YXyHNCQ37HGsLD7ql/iB+HBuzCxJM9iaWLwwFQtlQ9kKtWPgoGNbgDriQvlVAreIaU
+         7BZvOlthDGjvzNEonq+p58iD/+oh3T73E1EdYzcs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        minchan@kernel.org, surenb@google.com, jenhaochen@google.com,
-        Martin Liu <liumartin@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5.4 01/57] dma-buf: Fix SET_NAME ioctl uapi
-Date:   Mon,  4 May 2020 19:57:05 +0200
-Message-Id: <20200504165456.862815638@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 37/37] mmc: meson-mx-sdio: remove the broken ->card_busy() op
+Date:   Mon,  4 May 2020 19:57:50 +0200
+Message-Id: <20200504165452.115640541@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
-References: <20200504165456.783676004@linuxfoundation.org>
+In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
+References: <20200504165448.264746645@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,69 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@intel.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit a5bff92eaac45bdf6221badf9505c26792fdf99e upstream.
+commit ddca1092c4324c89cf692b5efe655aa251864b51 upstream.
 
-The uapi is the same on 32 and 64 bit, but the number isn't. Everyone
-who botched this please re-read:
+The recent commit 0d84c3e6a5b2 ("mmc: core: Convert to
+mmc_poll_for_busy() for erase/trim/discard") makes use of the
+->card_busy() op for SD cards. This uncovered that the ->card_busy() op
+in the Meson SDIO driver was never working right:
+while polling the busy status with ->card_busy()
+meson_mx_mmc_card_busy() reads only one of the two MESON_MX_SDIO_IRQC
+register values 0x1f001f10 or 0x1f003f10. This translates to "three out
+of four DAT lines are HIGH" and "all four DAT lines are HIGH", which
+is interpreted as "the card is busy".
 
-https://www.kernel.org/doc/html/v5.4-preprc-cpu/ioctl/botching-up-ioctls.html
+It turns out that no situation can be observed where all four DAT lines
+are LOW, meaning the card is not busy anymore. Upon further research the
+3.10 vendor driver for this controller does not implement the
+->card_busy() op.
 
-Also, the type argument for the ioctl macros is for the type the void
-__user *arg pointer points at, which in this case would be the
-variable-sized char[] of a 0 terminated string. So this was botched in
-more than just the usual ways.
+Remove the ->card_busy() op from the meson-mx-sdio driver since it is
+not working. At the time of writing this patch it is not clear what's
+needed to make the ->card_busy() implementation work with this specific
+controller hardware. For all use-cases which have previously worked the
+MMC_CAP_WAIT_WHILE_BUSY flag is now taking over, even if we don't have
+a ->card_busy() op anymore.
 
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Greg Hackmann <ghackmann@google.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: linux-media@vger.kernel.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: minchan@kernel.org
-Cc: surenb@google.com
-Cc: jenhaochen@google.com
-Cc: Martin Liu <liumartin@google.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Tested-by: Martin Liu <liumartin@google.com>
-Reviewed-by: Martin Liu <liumartin@google.com>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-  [sumits: updated some checkpatch fixes, corrected author email]
-Link: https://patchwork.freedesktop.org/patch/msgid/20200407133002.3486387-1-daniel.vetter@ffwll.ch
+Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200416183513.993763-3-martin.blumenstingl@googlemail.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/dma-buf.c    |    3 ++-
- include/uapi/linux/dma-buf.h |    6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/mmc/host/meson-mx-sdio.c |    9 ---------
+ 1 file changed, 9 deletions(-)
 
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -388,7 +388,8 @@ static long dma_buf_ioctl(struct file *f
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -360,14 +360,6 @@ static void meson_mx_mmc_request(struct
+ 		meson_mx_mmc_start_cmd(mmc, mrq->cmd);
+ }
  
- 		return ret;
- 
--	case DMA_BUF_SET_NAME:
-+	case DMA_BUF_SET_NAME_A:
-+	case DMA_BUF_SET_NAME_B:
- 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
- 
- 	default:
---- a/include/uapi/linux/dma-buf.h
-+++ b/include/uapi/linux/dma-buf.h
-@@ -39,6 +39,12 @@ struct dma_buf_sync {
- 
- #define DMA_BUF_BASE		'b'
- #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-+
-+/* 32/64bitness of this uapi was botched in android, there's no difference
-+ * between them in actual uapi, they're just different numbers.
-+ */
- #define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
-+#define DMA_BUF_SET_NAME_A	_IOW(DMA_BUF_BASE, 1, u32)
-+#define DMA_BUF_SET_NAME_B	_IOW(DMA_BUF_BASE, 1, u64)
- 
- #endif
+-static int meson_mx_mmc_card_busy(struct mmc_host *mmc)
+-{
+-	struct meson_mx_mmc_host *host = mmc_priv(mmc);
+-	u32 irqc = readl(host->base + MESON_MX_SDIO_IRQC);
+-
+-	return !!(irqc & MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK);
+-}
+-
+ static void meson_mx_mmc_read_response(struct mmc_host *mmc,
+ 				       struct mmc_command *cmd)
+ {
+@@ -509,7 +501,6 @@ static void meson_mx_mmc_timeout(struct
+ static struct mmc_host_ops meson_mx_mmc_ops = {
+ 	.request		= meson_mx_mmc_request,
+ 	.set_ios		= meson_mx_mmc_set_ios,
+-	.card_busy		= meson_mx_mmc_card_busy,
+ 	.get_cd			= mmc_gpio_get_cd,
+ 	.get_ro			= mmc_gpio_get_ro,
+ };
 
 
