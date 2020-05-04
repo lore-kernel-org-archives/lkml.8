@@ -2,130 +2,176 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2700C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B530C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF5C20735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4587820746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgEDGa6 (ORCPT
+        id S1727867AbgEDGbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:30:58 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:52224 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbgEDGa5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:30:57 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 03 May 2020 23:30:31 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 03 May 2020 23:30:29 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 5BDE92168F; Mon,  4 May 2020 12:00:27 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH] dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
-Date:   Mon,  4 May 2020 12:00:03 +0530
-Message-Id: <1588573803-3823-1-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 May 2020 02:31:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48266 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbgEDGa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:30:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A7EE9ABBD;
+        Mon,  4 May 2020 06:30:58 +0000 (UTC)
+Subject: Re: [PATCH 3/3] tty: n_gsm: Fix waking up upper tty layer when room
+ available
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20200430113433.2162886-1-gregory.clement@bootlin.com>
+ <20200430113433.2162886-5-gregory.clement@bootlin.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <dee67599-a3bf-3904-e26b-4a02f36cf67f@suse.cz>
+Date:   Mon, 4 May 2020 08:30:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200430113433.2162886-5-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds schema for primary CPU PLL found on few Qualcomm
-platforms.
+On 30. 04. 20, 13:34, Gregory CLEMENT wrote:
+> Warn the upper layer when n_gms is ready to receive data
+> again. Without this the associated virtual tty remain blocked
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 ------------
- .../devicetree/bindings/clock/qcom,a53pll.yaml     | 40 ++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
+s/remain/&s/
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-deleted file mode 100644
-index e3fa811..0000000
---- a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Qualcomm MSM8916 A53 PLL Binding
----------------------------------
--The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
--above 1GHz.
--
--Required properties :
--- compatible : Shall contain only one of the following:
--
--		"qcom,msm8916-a53pll"
--
--- reg : shall contain base register location and length
--
--- #clock-cells : must be set to <0>
--
--Example:
--
--	a53pll: clock@b016000 {
--		compatible = "qcom,msm8916-a53pll";
--		reg = <0xb016000 0x40>;
--		#clock-cells = <0>;
--	};
--
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-new file mode 100644
-index 0000000..20d2638
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,a53pll.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm A53 PLL Binding
-+
-+maintainers:
-+  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
-+
-+description:
-+  The A53 PLL on few Qualcomm platforms is the main CPU PLL used used for
-+  frequencies above 1GHz.
-+
-+properties:
-+  compatible:
-+    const: qcom,msm8916-a53pll
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  #Example 1 - A53 PLL found on MSM8916 devices
-+  - |
-+    a53pll: clock@b016000 {
-+        compatible = "qcom,msm8916-a53pll";
-+        reg = <0xb016000 0x40>;
-+        #clock-cells = <0>;
-+    };
+> indefinitely.
+> 
+> Fixes: 96fd7ce58ffb ("TTY: create drivers/tty and move the tty core files there")
+
+This looks invalid. Did you use git blame? Or git log, with --follow -M?
+
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  drivers/tty/n_gsm.c | 33 +++++++++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+> index 58950b33e5ac..4ff2b981aa7e 100644
+> --- a/drivers/tty/n_gsm.c
+> +++ b/drivers/tty/n_gsm.c
+> @@ -665,10 +665,12 @@ static struct gsm_msg *gsm_data_alloc(struct gsm_mux *gsm, u8 addr, int len,
+>   *	FIXME: lock against link layer control transmissions
+>   */
+>  
+> -static void gsm_data_kick(struct gsm_mux *gsm)
+> +static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+>  {
+>  	struct gsm_msg *msg, *nmsg;
+>  	int len;
+> +	struct tty_struct *tty_dlci = NULL;
+> +
+>  
+>  	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
+>  		if (gsm->constipated && msg->addr)
+> @@ -697,6 +699,29 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+>  
+>  		list_del(&msg->list);
+>  		kfree(msg);
+> +
+> +		if (dlci) {
+> +			tty_dlci = tty_port_tty_get(&dlci->port);
+> +			if (tty_dlci)
+> +				tty_wakeup(tty_dlci);
+
+No tty_port_put looks wrong to me?
+
+Why not to use tty_port_tty_wakeup?
+
+> +		} else {
+> +			int i = 0;
+> +
+> +			while (i < NUM_DLCI) {
+
+Hmm, feels like 'for' loop fits better here.
+
+> +				struct gsm_dlci *dlci;
+> +
+> +				dlci = gsm->dlci[i];
+> +				if (dlci == NULL) {
+> +					i++;
+> +					continue;
+> +				}
+> +
+> +				tty_dlci = tty_port_tty_get(&dlci->port);
+> +				if (tty_dlci)
+> +					tty_wakeup(tty_dlci);
+
+Dtto
+
+> +				i++;
+> +			}
+> +		}
+>  	}
+>  }
+>  
+> @@ -748,7 +773,7 @@ static void __gsm_data_queue(struct gsm_dlci *dlci, struct gsm_msg *msg)
+>  	/* Add to the actual output queue */
+>  	list_add_tail(&msg->list, &gsm->tx_list);
+>  	gsm->tx_bytes += msg->len;
+> -	gsm_data_kick(gsm);
+> +	gsm_data_kick(gsm, dlci);
+
+thanks,
 -- 
-2.7.4
-
+js
+suse labs
