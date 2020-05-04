@@ -2,97 +2,103 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB06C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A90C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2F520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA7220721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="XZvSQYHN"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ON7kbrtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgEDTsL (ORCPT
+        id S1726773AbgEDTvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:48:11 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:2691 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727839AbgEDTrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:47:49 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GD0f3WsZzLn;
-        Mon,  4 May 2020 21:47:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588621666; bh=cQuVrUR3wgTd8lZabcNbfWQeqVxfRyNFlVyOZvgXwJk=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=XZvSQYHN9LeJpr3cfWfmFvU1OLPJHpuQVUUKBiQZGCpGExaESjaBqGLsRiiZKF7YR
-         LmLUoTX3yjb3cBHu+GIkAzjSL9CxlYwJxYxbUi6mfKNeuHPlGj5UN0UC1aanJAVXgn
-         ks5GaQ2vtvABsuQMRtP83X8vrrOu875OupshO9WHR8ko+RIowC8SjpcGprhb/7K1DW
-         WHHGwf8zNECtxWsyzoa6gn34k+nE3tLZR0htnY/DNdWIY+4d/OPzvNowzk+qZ5MNi/
-         96T1fbyVjyLsmnkBadI16bmwWvArpficzy9334M3t8bqPIrUUWo5rH0/iy9FZkdbPs
-         vt/OVUGdX68ew==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Mon, 04 May 2020 21:47:46 +0200
-Message-Id: <7c42c59a5f27a8f88dad6501d9032189d1878614.1588621247.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588621247.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588621247.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v3 4/8] power: bq25890: implement CHARGE_TYPE property
+        Mon, 4 May 2020 15:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgEDTvU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:51:20 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11036C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:51:19 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id i10so522487wrv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vh444uXRAgRXgT6rgkMAr0JYfUHIeqhqHIUGvOQ7pc0=;
+        b=ON7kbrtBoT7MWLLUIuP7TZ3htQOPLVWFBTBZ+UKghdA0FRitoBixlUWJqfqpSKwwVs
+         oJQ/qMcfVZgbrULsnztljOBZU6liqQdGRj+NbCMtQJmABc/uXwnPQwcI8boc14vQpTR9
+         ZCm3CuLdREKuXR5WgCj/NrYEphF2fDtpZOGnlm42G09T84ytf3uWhUqmoiTlTLfuMqpA
+         IdQ7F3mHSbjUy+yzX77uVe/4BkuAvgzlquliu+uKz1Nvy6dlabkeRgZSjZ0NQxiKJjqv
+         3bj94Bm3zfFwgI5T6NnKJH86UaYxlAT5w4IVwUs5qZBxnvYm99gWVWjiA/vT+paWf9jl
+         30lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vh444uXRAgRXgT6rgkMAr0JYfUHIeqhqHIUGvOQ7pc0=;
+        b=awG4JT2826qfgUsGjJMY3/0wzMV2jFEMT0+RmG5cBp9BgqOJnE74QIRYrKRTV6cVod
+         NmUzOo5nOQKBBZJqX4aCDQn6OOL4j91NaSvupUykbcPbM/fPMh6/ZzDMIBInQ7GjPQA6
+         Qid3MHEIiOpCsNLXpz7omk9axsbh7JWROc/e27jQAE2OupsBOH8pZZRFGpK7rEWXOqss
+         YlWXDmyygm17hvLuBASnfuJ3uHwtQzKDp53qsODQ2kDCxL86XER/lWT/HW87qL84KvOC
+         9lg9taikRwuNxBYd3KlY9hQyd9MFdByYQR9OouU7wday6YO80vQAB4Z3loSE+yuQqOWZ
+         T1ZQ==
+X-Gm-Message-State: AGi0PuZn/Qzt9aQFiNxL/GbjopyNPN4q4fEs02IdFkTe1wAQ20JYcaQF
+        mL5hEUbE1DOm6Qm9pHYaabk=
+X-Google-Smtp-Source: APiQypJILD6MKPAye5JlbWy5uG3IwH9ogJIS9ceuBRa79erV4+lC5JGQL1Cqz9Df/SLLdF7ilxIMKw==
+X-Received: by 2002:adf:cc89:: with SMTP id p9mr743414wrj.269.1588621877710;
+        Mon, 04 May 2020 12:51:17 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id f83sm696042wmf.42.2020.05.04.12.51.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 12:51:17 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] ARM: dts: meson: add the gadget mode properties to the USB0 controller
+Date:   Mon,  4 May 2020 21:51:05 +0200
+Message-Id: <20200504195105.2909711-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Angus Ainslie <angus@akkea.ca>, Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Report charging type based on recently read state.
+Testing with a USB RNDIS connection and iperf3 gives the following
+results:
+- From the host computer to the device at ~250Mbit/s
+- From the device to the host computer at ~76Mbit/s
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/power/supply/bq25890_charger.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/meson.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
-index 322d48d28fe5..02e62ac76e15 100644
---- a/drivers/power/supply/bq25890_charger.c
-+++ b/drivers/power/supply/bq25890_charger.c
-@@ -427,6 +427,18 @@ static int bq25890_power_supply_get_property(struct power_supply *psy,
- 
- 		break;
- 
-+	case POWER_SUPPLY_PROP_CHARGE_TYPE:
-+		if (!state.online || state.chrg_status == STATUS_NOT_CHARGING ||
-+		    state.chrg_status == STATUS_TERMINATION_DONE)
-+			val->intval = POWER_SUPPLY_CHARGE_TYPE_NONE;
-+		else if (state.chrg_status == STATUS_PRE_CHARGING)
-+			val->intval = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-+		else if (state.chrg_status == STATUS_FAST_CHARGING)
-+			val->intval = POWER_SUPPLY_CHARGE_TYPE_FAST;
-+		else /* unreachable */
-+			val->intval = POWER_SUPPLY_CHARGE_TYPE_UNKNOWN;
-+		break;
-+
- 	case POWER_SUPPLY_PROP_MANUFACTURER:
- 		val->strval = BQ25890_MANUFACTURER;
- 		break;
-@@ -668,6 +680,7 @@ static const enum power_supply_property bq25890_power_supply_props[] = {
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_CHARGE_TYPE,
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_HEALTH,
- 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 5d198309058a..ae89deaa8c9c 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -229,6 +229,9 @@ usb0: usb@c9040000 {
+ 			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&usb0_phy>;
+ 			phy-names = "usb2-phy";
++			g-rx-fifo-size = <512>;
++			g-np-tx-fifo-size = <500>;
++			g-tx-fifo-size = <256 192 128 128 128>;
+ 			dr_mode = "host";
+ 			status = "disabled";
+ 		};
 -- 
-2.20.1
+2.26.2
 
