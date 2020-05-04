@@ -2,222 +2,115 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804B5C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922B9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65E69206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9E0206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:46:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OPD0Xtwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbgEDRpm (ORCPT
+        id S1730394AbgEDRqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:45:42 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51864 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgEDRpm (ORCPT
+        Mon, 4 May 2020 13:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729667AbgEDRqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:45:42 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 674D0804C8;
-        Mon,  4 May 2020 19:45:29 +0200 (CEST)
-Date:   Mon, 4 May 2020 19:45:22 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, alsa-devel@alsa-project.org,
-        Olivier Moysan <olivier.moysan@st.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, Sandy Huang <hjc@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-rockchip@lists.infradead.org, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
-        Jyri Sarha <jsarha@ti.com>, Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-Message-ID: <20200504174522.GA3383@ravnborg.org>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+        Mon, 4 May 2020 13:46:52 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443F5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:46:52 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id 7so110782pjo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=gt27CLurvYsK7qkWUdWOy6wuN6djEE1cyv2+umNLdkI=;
+        b=OPD0XtwaaTz+TwDb5S2Ga3A9WGt7H977EIyB2Mafk4tVLlj1upGyCin1tsVAn0QnWg
+         cwUgKrJn9xecbT06PIrxsRHkxuigdwYITA5cPTBxtPF9aznwrRn6aevPRBWIVw6/2e+n
+         xneS7YhQ7CK2mXy+JN0quWUBZZF5EF3rhcMJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=gt27CLurvYsK7qkWUdWOy6wuN6djEE1cyv2+umNLdkI=;
+        b=f6LsvqCV7vbSlChTqsN+b9nYDEcXn0kazULf+o8Htk7hX1kZFR8Q2DHGW3G4uD2U7i
+         gpSRb8BWjZG8XLbropxeo3QhQkegIXl7LvHQCaUID8K6IorJSZDCRWkHJm2yb2+97Zqy
+         IggdTXQ9v8WUT+RW540mqJ3YWniVQ9K3gBzBXStWErBYQCs4dtseJbUqZEAKvjuv3vnV
+         zYLBh9v4gOGdy5Lj5VJEHKvy8sZ0TtA0B22NDHrFltAhbjBbzZr1YIPRzWCJUWW7mAWI
+         rR7InoiJimTQfoO+rliWxtOjcHSfUeo6LZr7FQOTBCn60MOv84KThpKOD2/WFG2pHkMg
+         iDEQ==
+X-Gm-Message-State: AGi0Pub4LiFwczoohBZLG9GFfCO2fHggdZc7ZPavthzqPlokABRh7yWC
+        wawFLIaS/y4QvudRe3lhT3831tb0cyI=
+X-Google-Smtp-Source: APiQypIr927pMvZ40rFFE8e3cKWdt2STWcPYwJMQ9H7kZsorAAdojehUHsHyF0v+Tl7SaxB6g3a+Sw==
+X-Received: by 2002:a17:902:82c6:: with SMTP id u6mr373243plz.146.1588614411839;
+        Mon, 04 May 2020 10:46:51 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t23sm91508pji.32.2020.05.04.10.46.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 10:46:51 -0700 (PDT)
+Date:   Mon, 4 May 2020 10:46:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Pierret 
+        <frederic.pierret@qubes-os.org>
+Subject: [GIT PULL] gcc-plugins fixes for v5.7-rc5
+Message-ID: <202005041045.BC2557B6@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=7CQSdrXTAAAA:8
-        a=8AirrxEcAAAA:8 a=vzhER2c_AAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
-        a=bwdeMy8yTPKsQMvDTKEA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-        a=ST-jHhOKWsTCqRlWije3:22 a=0YTRHmU2iG2pZC6F1fw2:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro.
+Hi Linus,
 
-On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> There are some new broken doc links due to yaml renames
-> at DT. Developers should really run:
-> 
-> 	./scripts/documentation-file-ref-check
-> 
-> in order to solve those issues while submitting patches.
-Would love if some bot could do this for me on any patches that creates
-.yaml files or so.
-I know I will forget this and it can be automated.
-If I get a bot mail that my patch would broke a link I would
-have it fixed before it hits any tree.
+Please pull these gcc-plugins fixes for v5.7-rc5. These are some more
+clean-ups for using the plugins under GCC 10.
 
+Thanks!
 
-> This tool can even fix most of the issues with:
-> 
-> 	./scripts/documentation-file-ref-check --fix
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+-Kees
 
-Patch looks good.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-> ---
-> 
-> PS.: This patch is against today's linux-next.
-> 
-> 
->  .../devicetree/bindings/display/bridge/sii902x.txt          | 2 +-
->  .../devicetree/bindings/display/rockchip/rockchip-drm.yaml  | 2 +-
->  .../devicetree/bindings/net/mediatek-bluetooth.txt          | 2 +-
->  .../devicetree/bindings/sound/audio-graph-card.txt          | 2 +-
->  .../devicetree/bindings/sound/st,sti-asoc-card.txt          | 2 +-
->  Documentation/mips/ingenic-tcu.rst                          | 2 +-
->  MAINTAINERS                                                 | 6 +++---
->  7 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/sii902x.txt b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
-> index 6e14e087c0d0..0d1db3f9da84 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
-> @@ -37,7 +37,7 @@ Optional properties:
->  	simple-card or audio-graph-card binding. See their binding
->  	documents on how to describe the way the sii902x device is
->  	connected to the rest of the audio system:
-> -	Documentation/devicetree/bindings/sound/simple-card.txt
-> +	Documentation/devicetree/bindings/sound/simple-card.yaml
->  	Documentation/devicetree/bindings/sound/audio-graph-card.txt
->  	Note: In case of the audio-graph-card binding the used port
->  	index should be 3.
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> index ec8ae742d4da..7204da5eb4c5 100644
-> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-drm.yaml
-> @@ -24,7 +24,7 @@ properties:
->      description: |
->        Should contain a list of phandles pointing to display interface port
->        of vop devices. vop definitions as defined in
-> -      Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-> +      Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
->  
->  required:
->    - compatible
-> diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-> index 219bcbd0d344..9ef5bacda8c1 100644
-> --- a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
-> @@ -3,7 +3,7 @@ MediaTek SoC built-in Bluetooth Devices
->  
->  This device is a serial attached device to BTIF device and thus it must be a
->  child node of the serial node with BTIF. The dt-bindings details for BTIF
-> -device can be known via Documentation/devicetree/bindings/serial/8250.txt.
-> +device can be known via Documentation/devicetree/bindings/serial/8250.yaml.
->  
->  Required properties:
->  
-> diff --git a/Documentation/devicetree/bindings/sound/audio-graph-card.txt b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
-> index 269682619a70..d5f6919a2d69 100644
-> --- a/Documentation/devicetree/bindings/sound/audio-graph-card.txt
-> +++ b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
-> @@ -5,7 +5,7 @@ It is based on common bindings for device graphs.
->  see ${LINUX}/Documentation/devicetree/bindings/graph.txt
->  
->  Basically, Audio Graph Card property is same as Simple Card.
-> -see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
-> +see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.yaml
->  
->  Below are same as Simple-Card.
->  
-> diff --git a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> index 4d51f3f5ea98..a6ffcdec6f6a 100644
-> --- a/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> +++ b/Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt
-> @@ -5,7 +5,7 @@ codec or external codecs.
->  
->  sti sound drivers allows to expose sti SoC audio interface through the
->  generic ASoC simple card. For details about sound card declaration please refer to
-> -Documentation/devicetree/bindings/sound/simple-card.txt.
-> +Documentation/devicetree/bindings/sound/simple-card.yaml.
->  
->  1) sti-uniperiph-dai: audio dai device.
->  ---------------------------------------
-> diff --git a/Documentation/mips/ingenic-tcu.rst b/Documentation/mips/ingenic-tcu.rst
-> index c5a646b14450..2b75760619b4 100644
-> --- a/Documentation/mips/ingenic-tcu.rst
-> +++ b/Documentation/mips/ingenic-tcu.rst
-> @@ -68,4 +68,4 @@ and frameworks can be controlled from the same registers, all of these
->  drivers access their registers through the same regmap.
->  
->  For more information regarding the devicetree bindings of the TCU drivers,
-> -have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.txt.
-> +have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.yaml.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b6ec0b3c3125..b70842425302 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3911,7 +3911,7 @@ L:	linux-crypto@vger.kernel.org
->  S:	Supported
->  F:	drivers/char/hw_random/cctrng.c
->  F:	drivers/char/hw_random/cctrng.h
-> -F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
-> +F:	Documentation/devicetree/bindings/rng/arm-cctrng.yaml
->  W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
->  
->  CEC FRAMEWORK
-> @@ -5446,7 +5446,7 @@ F:	include/uapi/drm/r128_drm.h
->  DRM DRIVER FOR RAYDIUM RM67191 PANELS
->  M:	Robert Chiras <robert.chiras@nxp.com>
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
-> +F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.yaml
->  F:	drivers/gpu/drm/panel/panel-raydium-rm67191.c
->  
->  DRM DRIVER FOR ROCKTECH JH057N00900 PANELS
-> @@ -16294,7 +16294,7 @@ M:	Hoan Tran <hoan@os.amperecomputing.com>
->  M:	Serge Semin <fancer.lancer@gmail.com>
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-> +F:	Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
->  F:	drivers/gpio/gpio-dwapb.c
->  
->  SYNOPSYS DESIGNWARE AXI DMAC DRIVER
-> -- 
-> 2.25.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/gcc-plugins-v5.7-rc5
+
+for you to fetch changes up to c7527373fe28f97d8a196ab562db5589be0d34b9:
+
+  gcc-common.h: Update for GCC 10 (2020-04-13 10:19:20 -0700)
+
+----------------------------------------------------------------
+GCC 10 fixes for gcc-plugins
+
+- Adjust caller of cgraph_create_edge for GCC 10 argument usage
+- Update common headers to build under GCC 10 (Frédéric Pierret)
+
+----------------------------------------------------------------
+Frédéric Pierret (fepitre) (1):
+      gcc-common.h: Update for GCC 10
+
+Kees Cook (1):
+      gcc-plugins/stackleak: Avoid assignment for unused macro argument
+
+ scripts/gcc-plugins/Makefile           | 1 +
+ scripts/gcc-plugins/gcc-common.h       | 4 ++++
+ scripts/gcc-plugins/stackleak_plugin.c | 5 ++---
+ 3 files changed, 7 insertions(+), 3 deletions(-)
+
+-- 
+Kees Cook
