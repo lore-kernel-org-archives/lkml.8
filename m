@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6136C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B4AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91C942075E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A79FD205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615807;
-	bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
+	s=default; t=1588615812;
+	bh=+lCzk60t6D3AqqDcbuo5xmrcjuWvczNzUemVjNaWeRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fko4UFs58cMo7k30LyZLTWkGKY6tmmp3ckSGrUQNqnQOxZhASRPsOwQJ4fEBzH44e
-	 6DNhiheAStcNYThQkvWt4CKNsoqzwzHyWskfhCDi0YVVPAAvc1FYgvo83ggC4FFEYU
-	 aa4UItgrigENJinMTvz6+WaeSDzifa7lry6V7VIA=
+	b=qEh/XxZRS42xaC7t7/Ju1x+9kfzDOx1F7w8QCQU8UvRYfzv3BFPCu70xXo0sVoEVZ
+	 PUlvOZV7AQyV1pKZtNVpfFsHik6Cf6qqW4idCYFyWb2z0Ru0XFpkdq43V08XK7pgd0
+	 +HeykrLUgtD3f8RneKiQCVPxyXzkY5pxeOGMgRTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732009AbgEDSKG (ORCPT
+        id S1732256AbgEDSKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:10:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731260AbgEDSFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:54 -0400
+        id S1731303AbgEDSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:05:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A632D206B8;
-        Mon,  4 May 2020 18:05:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318F1206B8;
+        Mon,  4 May 2020 18:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615553;
-        bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
+        s=default; t=1588615545;
+        bh=+lCzk60t6D3AqqDcbuo5xmrcjuWvczNzUemVjNaWeRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwdukKat7RM6lwY5d6fTwtS9/EOsg6YKoUsUrZd+filzc99qNBcO8QRgsbW7UNijp
-         GVdr33uzy4iJb8D13vwUPUNceI+iHvisxG3iDsWo2tsCrvSOonBkeR/2uDb39jZlum
-         hJ0Bo9cefdoqXJdDXiMO6QolUqYUcC8bEmUzl+QE=
+        b=al6y9OGW5bHXgEkwXAeXwXURTdNVCWno/Q5RoiWOyG5IxzQj5GtQnADTMAhaDn7pm
+         e1eeJICe4Wz96reuH2360P4dpalXffkB8FQiE+AKhpJ6cYL3BB7eKWql3R12zXlkyF
+         p+dbOHeoPyIkEVFSvlPDJzNFQxJzooONakvib97c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 27/73] ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
-Date:   Mon,  4 May 2020 19:57:30 +0200
-Message-Id: <20200504165507.093805332@linuxfoundation.org>
+Subject: [PATCH 5.6 24/73] ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
+Date:   Mon,  4 May 2020 19:57:27 +0200
+Message-Id: <20200504165506.634960965@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -60,90 +60,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 4285de0725b1bf73608abbcd35ad7fd3ddc0b61e upstream.
+commit 547d2c9cf4f1f72adfecacbd5b093681fb0e8b3e upstream.
 
-The checks of the plugin buffer overflow in the previous fix by commit
-  f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
-are put in the wrong places mistakenly, which leads to the expected
-(repeated) sound when the rate plugin is involved.  Fix in the right
-places.
+The USB vendor ID of NuPrime DAC-10 is not 16b0 but 16d0.
 
-Also, at those right places, the zero check is needed for the
-termination node, so added there as well, and let's get it done,
-finally.
-
-Fixes: f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
+Fixes: f656891c6619 ("ALSA: usb-audio: add more quirks for DSD interfaces")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200424193350.19678-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200430124755.15940-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ sound/usb/quirks.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -211,21 +211,23 @@ static snd_pcm_sframes_t plug_client_siz
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
--			if (check_size && drv_frames > plugin->buf_frames)
--				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-+			if (check_size && plugin->buf_frames &&
-+			    drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_prev;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_first(plug);
- 		while (plugin && drv_frames > 0) {
- 			plugin_next = plugin->next;
-+			if (check_size && plugin->buf_frames &&
-+			    drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
--			if (check_size && drv_frames > plugin->buf_frames)
--				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -251,26 +253,28 @@ static snd_pcm_sframes_t plug_slave_size
- 		plugin = snd_pcm_plug_first(plug);
- 		while (plugin && frames > 0) {
- 			plugin_next = plugin->next;
-+			if (check_size && plugin->buf_frames &&
-+			    frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			if (plugin->dst_frames) {
- 				frames = plugin->dst_frames(plugin, frames);
- 				if (frames < 0)
- 					return frames;
- 			}
--			if (check_size && frames > plugin->buf_frames)
--				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
--			if (check_size && frames > plugin->buf_frames)
--				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (check_size && plugin->buf_frames &&
-+			    frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_prev;
- 		}
- 	} else
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1643,7 +1643,7 @@ u64 snd_usb_interface_dsd_format_quirks(
+ 
+ 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
+ 	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
+-	case USB_ID(0x16b0, 0x06b2): /* NuPrime DAC-10 */
++	case USB_ID(0x16d0, 0x06b2): /* NuPrime DAC-10 */
+ 	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
+ 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
+ 	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
 
 
