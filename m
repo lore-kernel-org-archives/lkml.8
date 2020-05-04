@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F00C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A317C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C42C3206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143302073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615281;
-	bh=UGGbM2hQYyJn/Vg6Sovij8kw+FeIOPufGCrPLGKnL/0=;
+	s=default; t=1588615284;
+	bh=O+pe16/+gV0M76A3Vsa3Q7B4gbmA/KjhrvvTiB3+uLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIzzx00i1x+uh4m+NiqfbTf/ux6kmwftimU6RQuVpMP8Rykh3UjIpYaxNE8BPJyly
-	 rcJ5Y4DHasKOszhhfaXuEct+KD8Th56vxzKfCtFYzwEMME3wFCYvzuk7KGtrLdNQcL
-	 308exf2h5k7w/ESrsXVEH/9r1hZjuvfW/onDsTao=
+	b=hqft3x5WTbMOz7WtGG01kUOdiE7YFCxvGqK1JQSrN2EFYDBi41FiSF69eGkIqVlBw
+	 mQClJ2T8MC0wSpl/7zf8ePZSFk8sed8ILqxN1PbuC/g0WYsJH3NC+Ygn6a2tubmPNl
+	 KAndGSveOYR7iqN2pDwEy7C1pemX8vV09FkfUBe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbgEDSBV (ORCPT
+        id S1731148AbgEDSBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56626 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731110AbgEDSBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:15 -0400
+        id S1731123AbgEDSBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D28206B8;
-        Mon,  4 May 2020 18:01:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47A6924958;
+        Mon,  4 May 2020 18:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615275;
-        bh=UGGbM2hQYyJn/Vg6Sovij8kw+FeIOPufGCrPLGKnL/0=;
+        s=default; t=1588615272;
+        bh=O+pe16/+gV0M76A3Vsa3Q7B4gbmA/KjhrvvTiB3+uLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kHUO98cTzHzP7TYWpFoN6Zw+9Yfxr3nf2M0jp5jmKxY+XJe38rU6SpdW04xTxoM/x
-         aQBpKz3QRFC7yL+XLui8MWw0R5BQ9CwM8GDwV3ZABzUCha0ktHgcEmrTy8fFWfXgnX
-         C8KQfaiOzXrIaFHn/QShd7j2lSeQii0WpYT/3yJg=
+        b=Trwkf96ATumDOoHBFFSRHMWnBLXWc8OIGgiU+93zk/IfjVhiUWZp7OiHPGi17Xui/
+         FyMBLv7DHyfD/yGDPauWdjP4QwlC92EMc5+oX92aoiEH2Rfs8NPeqVV4mPTZw17sN4
+         JS2JnQqc+MOFzQDQi43BKaTbO/wuFCrFHyv9JS1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 10/37] PM: ACPI: Output correct message on target power state
-Date:   Mon,  4 May 2020 19:57:23 +0200
-Message-Id: <20200504165449.690035547@linuxfoundation.org>
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>
+Subject: [PATCH 4.19 01/37] drm/edid: Fix off-by-one in DispID DTD pixel clock
+Date:   Mon,  4 May 2020 19:57:14 +0200
+Message-Id: <20200504165448.531491727@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,43 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit a9b760b0266f563b4784f695bbd0e717610dc10a upstream.
+commit 6292b8efe32e6be408af364132f09572aed14382 upstream.
 
-Transitioned power state logged at the end of setting ACPI power.
+The DispID DTD pixel clock is documented as:
+"00 00 00 h → FF FF FF h | Pixel clock ÷ 10,000 0.01 → 167,772.16 Mega Pixels per Sec"
+Which seems to imply that we to add one to the raw value.
 
-However, D3cold won't be in the message because state can only be
-D3hot at most.
+Reality seems to agree as there are tiled displays in the wild
+which currently show a 10kHz difference in the pixel clock
+between the tiles (one tile gets its mode from the base EDID,
+the other from the DispID block).
 
-Use target_state to corretly report when power state is D3cold.
-
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200423151743.18767-1-ville.syrjala@linux.intel.com
+Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/device_pm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_edid.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -227,13 +227,13 @@ int acpi_device_set_power(struct acpi_de
-  end:
- 	if (result) {
- 		dev_warn(&device->dev, "Failed to change power state to %s\n",
--			 acpi_power_state_string(state));
-+			 acpi_power_state_string(target_state));
- 	} else {
- 		device->power.state = target_state;
- 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 				  "Device [%s] transitioned to %s\n",
- 				  device->pnp.bus_id,
--				  acpi_power_state_string(state)));
-+				  acpi_power_state_string(target_state)));
- 	}
- 
- 	return result;
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -4706,7 +4706,7 @@ static struct drm_display_mode *drm_mode
+ 	struct drm_display_mode *mode;
+ 	unsigned pixel_clock = (timings->pixel_clock[0] |
+ 				(timings->pixel_clock[1] << 8) |
+-				(timings->pixel_clock[2] << 16));
++				(timings->pixel_clock[2] << 16)) + 1;
+ 	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
+ 	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
+ 	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;
 
 
