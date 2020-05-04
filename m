@@ -2,122 +2,99 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A00C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0271C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3857D21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9992821582
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgEDNcK (ORCPT
+        id S1728249AbgEDNfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:32:10 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:8215 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728125AbgEDNcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:32:10 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 May 2020 19:01:27 +0530
-Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 May 2020 19:01:07 +0530
-Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
-        id EAE0346E3; Mon,  4 May 2020 19:01:05 +0530 (IST)
-From:   Krishna Manikandan <mkrishn@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org, mka@chromium.org
-Subject: [v1] drm/msm/dpu: update bandwidth threshold check
-Date:   Mon,  4 May 2020 19:01:03 +0530
-Message-Id: <1588599063-15754-1-git-send-email-mkrishn@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 4 May 2020 09:35:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34982 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726913AbgEDNfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 09:35:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3AA7AAD2C;
+        Mon,  4 May 2020 13:35:38 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id AFC15604EE; Mon,  4 May 2020 15:35:35 +0200 (CEST)
+Date:   Mon, 4 May 2020 15:35:35 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v5 1/2] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200504133535.GC8237@lion.mk-sys.cz>
+References: <20200504071214.5890-1-o.rempel@pengutronix.de>
+ <20200504071214.5890-2-o.rempel@pengutronix.de>
+ <20200504080417.i3d2jsjjpu2zjk4z@pengutronix.de>
+ <20200504083734.GA5989@lion.mk-sys.cz>
+ <20200504085556.rzkvn47q2k5iqyap@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504085556.rzkvn47q2k5iqyap@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maximum allowed bandwidth  has no dependency on the type
-of panel used. Hence, cleanup the code to use max_bw_high
-as the threshold value for bandwidth checks.
+On Mon, May 04, 2020 at 10:55:56AM +0200, Oleksij Rempel wrote:
+> On Mon, May 04, 2020 at 10:37:34AM +0200, Michal Kubecek wrote:
+> > On Mon, May 04, 2020 at 10:04:17AM +0200, Oleksij Rempel wrote:
+> > > @Michal,
+> > > 
+> > > i noticed that linkmodes_fill_reply() some times get not enough
+> > > tailroom.
+> > > if data->peer_empty == 0
+> > > linkmodes_reply_size() size: 476
+> > > linkmodes_fill_reply() skb tailroom: 724
+> > > 
+> > > 
+> > > if data->peer_empty == 1
+> > > linkmodes_reply_size() size: 216                                      
+> > > linkmodes_fill_reply() skb tailroom: 212
+> > > 
+> > > In the last case i won't be able to attach master_lave state and cfg
+> > > fields.
+> > > 
+> > > It looks like this issue was not introduced by my patches. May be you
+> > > have idea, what is missing?
+> > 
+> > It's my mistake, I'm just not sure why I never ran into this while
+> > testing. Please try the patch below.
+> 
+> thx! it works now:
+> [   82.754019] linkmodes_reply_size:103 size: 216
+> [   82.758523] linkmodes_fill_reply:117 skb tailroom: 724
+> 
+> [  126.781892] linkmodes_reply_size:103 size: 476
+> [  126.786464] linkmodes_fill_reply:117 skb tailroom: 724
 
-Update the maximum allowed bandwidth as 6.8Gbps for
-SC7180 target.
+Thank you. It seems so far the natural skb padding was always sufficient
+to hide the broken calculation. Some time ago I had a debugging printk
+in place which checked calculated an actual size but that was with an
+older version of the series and the code has been rewritten few times
+before it reached mainline.
 
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c  | 23 +----------------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  4 ++--
- 2 files changed, 3 insertions(+), 24 deletions(-)
+I'll run some tests with additional tracing of estimated and actual
+message size and if I don't find other problem, I'll submit the fix.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-index 11f2beb..7c230f7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-@@ -36,22 +36,6 @@ static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
- 	return to_dpu_kms(priv->kms);
- }
- 
--static bool _dpu_core_video_mode_intf_connected(struct drm_crtc *crtc)
--{
--	struct drm_crtc *tmp_crtc;
--
--	drm_for_each_crtc(tmp_crtc, crtc->dev) {
--		if ((dpu_crtc_get_intf_mode(tmp_crtc) == INTF_MODE_VIDEO) &&
--				tmp_crtc->enabled) {
--			DPU_DEBUG("video interface connected crtc:%d\n",
--				tmp_crtc->base.id);
--			return true;
--		}
--	}
--
--	return false;
--}
--
- static void _dpu_core_perf_calc_crtc(struct dpu_kms *kms,
- 		struct drm_crtc *crtc,
- 		struct drm_crtc_state *state,
-@@ -94,7 +78,6 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
- 	u32 bw, threshold;
- 	u64 bw_sum_of_intfs = 0;
- 	enum dpu_crtc_client_type curr_client_type;
--	bool is_video_mode;
- 	struct dpu_crtc_state *dpu_cstate;
- 	struct drm_crtc *tmp_crtc;
- 	struct dpu_kms *kms;
-@@ -144,11 +127,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
- 		bw = DIV_ROUND_UP_ULL(bw_sum_of_intfs, 1000);
- 		DPU_DEBUG("calculated bandwidth=%uk\n", bw);
- 
--		is_video_mode = dpu_crtc_get_intf_mode(crtc) == INTF_MODE_VIDEO;
--		threshold = (is_video_mode ||
--			_dpu_core_video_mode_intf_connected(crtc)) ?
--			kms->catalog->perf.max_bw_low :
--			kms->catalog->perf.max_bw_high;
-+		threshold = kms->catalog->perf.max_bw_high;
- 
- 		DPU_DEBUG("final threshold bw limit = %d\n", threshold);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index c567917..6ad7472 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -515,8 +515,8 @@
- };
- 
- static const struct dpu_perf_cfg sc7180_perf_data = {
--	.max_bw_low = 3900000,
--	.max_bw_high = 5500000,
-+	.max_bw_low = 6800000,
-+	.max_bw_high = 6800000,
- 	.min_core_ib = 2400000,
- 	.min_llcc_ib = 800000,
- 	.min_dram_ib = 800000,
--- 
-1.9.1
-
+Michal
