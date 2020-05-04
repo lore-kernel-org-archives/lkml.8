@@ -2,109 +2,127 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E446C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870C5C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECD2206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F4E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MrNu1max";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WdhrnaVb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CqeugUNx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgEDJ6g (ORCPT
+        id S1728547AbgEDKBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:58:36 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:55609 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728003AbgEDJ6g (ORCPT
+        Mon, 4 May 2020 06:01:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22183 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728166AbgEDKBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:58:36 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 341E65E3;
-        Mon,  4 May 2020 05:58:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 04 May 2020 05:58:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=llJwF5RXjAJ50M5WNfOLWzPmdbE
-        a7VjH1UwXJhRIvaU=; b=MrNu1maxn7oY3N84dFOqo9koKmc/KSMbkQgYdlnVd13
-        HquzIIq0aF3GFFLjMrMp4TNB+/jv3T8PObBvKkyOdq+unl+m2x7kqJvbzBAlOTjS
-        Xgwrf3vJ2OEkvm71mxn/JK1ZgzFr+rxsXqL4DjmOVrVpvglh43YjEFgRu57xSWYq
-        Gsg97mu/BuYya1nrcB9R1m8Xw5holvhwbOc0ndVmcV8CW85C1tz0LRI4kBmb42DF
-        C4RTanS4DO5DzOqkJ1961GpzTRS+qTkPQNhxAC9I2rutydtutj5i/MupIyL7sgk8
-        04uZeJstjTdLxw72FLH8gxExqk/5/VDfIPjbCUz8sXA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=llJwF5
-        RXjAJ50M5WNfOLWzPmdbEa7VjH1UwXJhRIvaU=; b=WdhrnaVbDT7eETk2pdtG+B
-        83k7n7BQf32p1YVnTD8rGjNscfA8zGrvZHUrKcYQdMQUaaIj/pETR7+WVnq63XGG
-        UlsG5mobD8FZPmM21Qlv93nWtUjCy7ivf9BqJZbLV18g1YYlDcBDH+v/c30Qh76a
-        0Jmdlki9/sRQebVUGCnpMCTGCFNJDJ9N3qBFqJcQ3+rLcYUQV0BlOZOhwmyzXNyy
-        AJceJyw/HMzclq74ryFA4gqVfEB0ZcCqGoDr5K3qjX6Xuye7cAjy836z6lZAr8yw
-        ajYxXxzxLqOgEIMzHYETz08TaCToGeDUIIxawNxTDxMEJZ1DTwBG53r0jjIO8dUA
-        ==
-X-ME-Sender: <xms:SuevXpNfEHNZYX4G9NcZFNzM48O0It40351U3h9MfccS4LWVBefy7g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggddvudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
-    ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
-    pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
-    rdgtohhm
-X-ME-Proxy: <xmx:SuevXi2qh2Q3mXvYjouU3KdzA43thIlSGFMNlF75nHj2fZ6XyipYDw>
-    <xmx:SuevXgl2Njtedkel8PKKbq25lwqbjeFY5ZEFCflTEr1oDHj3iwW0DA>
-    <xmx:SuevXhWCKUgsdgxyAYKb-nDImxqNy5rnNXkZAfhLG2hxdg90bgBAbA>
-    <xmx:SuevXhiIWiwVh1IIKPXMpDqzvIuehHFua7KpzoNwZxfZFuppRGsY7g>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 541F63065FFD;
-        Mon,  4 May 2020 05:58:34 -0400 (EDT)
-Date:   Mon, 4 May 2020 11:58:32 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rmk+kernel@armlinux.org.uk
-Subject: Re: [Patch include request] ARM: dts: imx6qdl-sr-som-ti: indicate
- powering off wifi is safe
-Message-ID: <20200504095832.GA1277837@kroah.com>
-References: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
+        Mon, 4 May 2020 06:01:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588586460;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yJkyvpNgmDmt2g0SlWdBRcilG1I4swf/Cj3EYZFCe0o=;
+        b=CqeugUNxmO1cLBMF6HsKJu/K8hR6+w2ti34cz4NRO/jyleq2lL4C4yTmWhONmldnDOIZ2S
+        IQOtONIk2FnaXlOJ4OHtWy6cj8EHaZ7ONnKn2AMdbVrJVh1LYnmFpyihU5+k4qiVX3VmP9
+        HOnUFYvTcVA3QL0oxZQfKoZx+OQnrpw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-80-H9KJjw06NOWL479MUheNQw-1; Mon, 04 May 2020 06:00:58 -0400
+X-MC-Unique: H9KJjw06NOWL479MUheNQw-1
+Received: by mail-wm1-f71.google.com with SMTP id j5so4595405wmi.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 03:00:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yJkyvpNgmDmt2g0SlWdBRcilG1I4swf/Cj3EYZFCe0o=;
+        b=U7WYVNbKbkX0wowW+blWQhC6Hkgw91XEjc1HD/D1+yz7UxMN9MB7bzPwXBzLI2t7OM
+         ezcdm+S0ZK9YlDiUHjX1F0wMYF/CyU1EOmh6IilaC2iqWk3QDkel432kcxtMt3sEbLiq
+         mr3qN+Z1T8qjUUCnUEDgdG0lTTR75aiWNDGtCEUHc8cse+Z4y6t5uQNeE2fvsIlW6vow
+         AeWHWu0EGsNHRMOdxc27aTGIe9pYdfVYgQ3OvpSZ12keYoH+90jV9+bqNm1G+3uLtKdj
+         pimVJ+FaDxLprPo5YWHlwpUL8zw3MYJiCwqpc9L3Zu9OEzOkpzbF9RQcRgKJ0R3mKiVP
+         5LOA==
+X-Gm-Message-State: AGi0Pua3ZlozxwITsF3dltpTq1cwsl3O2T5uZIS7sPnQY0QnQfFptWRP
+        CmclRMF2nBT3TU4XJU/oEza70RJHkRPB8j1B4awRKQmnQHFylWEnIURhMCTPXNwtgXArjsqCiYe
+        r9B3PbXiYmS9gf9Th7hh4ttG1
+X-Received: by 2002:adf:8169:: with SMTP id 96mr18097873wrm.283.1588586456908;
+        Mon, 04 May 2020 03:00:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLQy5hLsDEnTJRu3PFA8DqRI0Fz/y/rb45ogQc0EtnB3c3GLHDSSMAYlKb28Ib+4V9VlkGOng==
+X-Received: by 2002:adf:8169:: with SMTP id 96mr18097855wrm.283.1588586456718;
+        Mon, 04 May 2020 03:00:56 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id c190sm13003942wme.4.2020.05.04.03.00.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 03:00:56 -0700 (PDT)
+Subject: Re: [PATCH] i2c: cht-wc: Remove superfluous error message in
+ cht_wc_i2c_adap_i2c_probe()
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200503132339.17718-1-aishwaryarj100@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <0605496b-d4f1-c87c-5b45-699c8c3dcaec@redhat.com>
+Date:   Mon, 4 May 2020 12:00:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
+In-Reply-To: <20200503132339.17718-1-aishwaryarj100@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 09:23:49PM +0100, Miguel Borges de Freitas wrote:
-> Dear all,
-> 
-> This is a request to backport b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10
-> (Arm: dts:  imx6qdl-sr-som-ti: indicate powering off wifi is safe),
-> already in Linus tree
-> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi?h=v5.7-rc3&id=b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10)
-> to LTS kernel 5.4 and to stable 5.6.8.
-> 
-> Reasoning:
-> 
-> Changes to the wlcore driver during Kernel 5.x development, made the
-> Cubox-i with the IMX SOM v1.5 (which includes.a TI Wilink 8 wifi
-> chipset) not power the wireless interface on boot leaving it
-> completely unusable. This happens since at least kernel 5.3 (older one
-> I tested) and affects the current stable and LTS latest kernels. The
-> linked commit, already in linux mainline, restores the wifi
-> functionality.
-> 
-> Thanks in advance,
+Hi,
 
-Now queued up, thanks.
+On 5/3/20 3:23 PM, Aishwarya Ramakrishnan wrote:
+> The function platform_get_irq can log an error by itself.
+> This omit a redundant message for exception handling in the
+> calling function.
+> 
+> Suggested by Coccinelle.
+> 
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-greg k-h
+Thank you for the patch, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>   drivers/i2c/busses/i2c-cht-wc.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+> index 35e55feda763..343ae5754e6e 100644
+> --- a/drivers/i2c/busses/i2c-cht-wc.c
+> +++ b/drivers/i2c/busses/i2c-cht-wc.c
+> @@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+>   	int ret, reg, irq;
+>   
+>   	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "Error missing irq resource\n");
+> +	if (irq < 0)
+>   		return -EINVAL;
+> -	}
+>   
+>   	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
+>   	if (!adap)
+> 
+
