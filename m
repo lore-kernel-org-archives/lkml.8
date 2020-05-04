@@ -2,115 +2,108 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFBEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB65C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76BC206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1122073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588586907;
+	bh=SEUEOqsjoer4k2pCLVUZGnBWrdTnfIZTUHr1uR6kYbQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P7C7GBfp3K02319tA/I3MA/epNQEl9D4gR5bUeR+rFLOkC7dy2ec9N3cIOfSomG+D
+	 HJlgHaWc2Dta2Mq4kS9ikp95gk6i6C9mxDOiQbA6poWKr6QePP7clrWV1214aeQSdp
+	 njaVbHiBrc85ZBGd0y/WFSpCNTM61SgIqHwvbpb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgEDKCL convert rfc822-to-8bit (ORCPT
+        id S1728562AbgEDKI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:02:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59560 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbgEDKCK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:02:10 -0400
-Received: from mail-pj1-f72.google.com ([209.85.216.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jVXvM-0001Zo-L8
-        for linux-kernel@vger.kernel.org; Mon, 04 May 2020 10:02:08 +0000
-Received: by mail-pj1-f72.google.com with SMTP id bg6so8791803pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 03:02:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=mwkkUiapeaLKnijBX2GICpmX1c9YuVtWjVfq3t3aBUE=;
-        b=p1QWF+kmyk7njRprIVovq4aFyMElKNl+XeMujMqrCMB2YDtZGFp0XJOdefxrZHGEOP
-         4UaB/Ds+Ejg1VfzhwmB1zGpkEwjT1CcNxkroDk9ItPXl5g7+mGpdnTe0S9bJe4TuCtih
-         h0drg0cPfJOpgBvdxDK3HiLc35Acojr35lok7v/ikcDuFTPRsQnMKeslEH8a6MRG066G
-         n7AMMRf8KokoDd2pekSiNDkKT4yQFJYyTRN55q2icJrLdIOhXbwn2fF0M4tziNEcwbpe
-         dA86sKFahAiL2iA0mN67PHvAdzN44W3pyy17RiGf+OaAt3rbXMcx/imtjXpWsGycwXsh
-         N0lg==
-X-Gm-Message-State: AGi0PuY8iDMZQTudX6R82wfT2PY1siP4+WHqO5YwLME9EJXeG8c2nPbt
-        hdECmZsduL81/h9xtz19QoeSCEhwswBBIcUGIz8PToDYTAccqkbQbvnOHG5aCYei+IbCyh9WSpp
-        Kos5VqRRjZuMpZA2aj4gghzPwTpT5M7n9LTX5ssaZNA==
-X-Received: by 2002:a63:3c0a:: with SMTP id j10mr12952911pga.373.1588586527267;
-        Mon, 04 May 2020 03:02:07 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIu8mDtm9MeCRzvqNEih08I9J+LtybM+hiynuAFMTv20dUUB3DYwEkSydFKCC6oqDYDzWT/yQ==
-X-Received: by 2002:a63:3c0a:: with SMTP id j10mr12952870pga.373.1588586526831;
-        Mon, 04 May 2020 03:02:06 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id p1sm6864214pjf.15.2020.05.04.03.02.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 May 2020 03:02:06 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] xhci: Prevent runtime suspend all the time with
- XHCI_RESET_ON_RESUME quirk
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <1588585655.13662.5.camel@suse.com>
-Date:   Mon, 4 May 2020 18:02:03 +0800
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Mon, 4 May 2020 06:08:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728003AbgEDKI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 06:08:26 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4A0320721;
+        Mon,  4 May 2020 10:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588586905;
+        bh=SEUEOqsjoer4k2pCLVUZGnBWrdTnfIZTUHr1uR6kYbQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s8qWgABDlen8Jac9q20c1YllmktbBgQLwXvc8TBGFNLZ2MO1yY4Ec1y361P0/V74B
+         I1neWkTKuG7sNhzZqWsXbJ6hnkIKSKwGvLVKRk8tXi/nQ5Jmadvr9Uiykfd916GshI
+         PbRZU1DH16iq28zmb1/RCo2z6rsKEhwjbInxx6VU=
+Date:   Mon, 4 May 2020 11:08:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jyri Sarha <jsarha@ti.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Olivier Moysan <olivier.moysan@st.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <88A0FF32-C7D7-4E49-8470-FE23401371BD@canonical.com>
-References: <20200504091952.15820-1-kai.heng.feng@canonical.com>
- <1588585655.13662.5.camel@suse.com>
-To:     Oliver Neukum <oneukum@suse.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
+Message-ID: <20200504100822.GA5491@sirena.org.uk>
+References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Content-Disposition: inline
+In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+X-Cookie: My life is a patio of fun!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On May 4, 2020, at 17:47, Oliver Neukum <oneukum@suse.com> wrote:
-> 
-> Am Montag, den 04.05.2020, 17:19 +0800 schrieb Kai-Heng Feng:
->> Etron EJ168 USB 3.0 Host Controller stops working after S3, if it was
->> runtime suspended previously:
->> [  370.080359] pci 0000:02:00.0: can't change power state from D3cold to D0 (config space inaccessible)
-> 
-> Apparently this controller has issues with D3cold
-> 
->> [  370.080477] xhci_hcd 0000:04:00.0: can't change power state from D3cold to D0 (config space inaccessible)
->> [  370.080532] pcieport 0000:00:1c.0: DPC: containment event, status:0x1f05 source:0x0200
->> [  370.080533] pcieport 0000:00:1c.0: DPC: ERR_FATAL detected
->> [  370.080536] xhci_hcd 0000:04:00.0: can't change power state from D3hot to D0 (config space inaccessible)
->> [  370.080552] xhci_hcd 0000:04:00.0: AER: can't recover (no error_detected callback)
->> [  370.080566] usb usb3: root hub lost power or was reset
->> [  370.080566] usb usb4: root hub lost power or was reset
->> [  370.080572] xhci_hcd 0000:04:00.0: Host halt failed, -19
->> [  370.080574] xhci_hcd 0000:04:00.0: Host not accessible, reset failed.
->> [  370.080575] xhci_hcd 0000:04:00.0: PCI post-resume error -19!
->> [  370.080586] xhci_hcd 0000:04:00.0: HC died; cleaning up
->> 
->> This can be fixed by not runtime suspend the controller at all.
->> 
->> So instead of conditionally runtime suspend the controller, always
->> prevent runtime suspend with XHCI_RESET_ON_RESUME quirk.
-> 
-> What does that do to other controllers that can do runtime suspend
-> under the current scheme?
+On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
+> There are some new broken doc links due to yaml renames
+> at DT. Developers should really run:
 
-Ok, I'll add a new quirk specific to this controller.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Kai-Heng
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> 	Regards
-> 		Oliver
-> 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6v6ZIACgkQJNaLcl1U
+h9Aaywf9G/ypPAVhxAZkzN0IYu6e43sydvSull/M+q3UIdY9VmDdIhUXVgXoOCOh
+ltmOBr9lM8MTLi7nYRlTCsC7mmSE9EMyF3AlPAwCzT9Y9gffa33run0/3I2SDvJZ
+pUXeobj10+FRhp4iWUSpCkUrMEO8SzGHVXCbLZBLUYkvPWdsaMchNpj2iuy/IIMg
+TW9jzMHLeZGsGR/6OgEBbyKegSqC8r3BHT6xfLGtEzoji30kwnPAHvx2D75DBbHH
+dMN+lrHBjpgpaLZWPYHVf5yVjqrH77LcpGqpvTdoP4ckdZZfHyu2ZmFZiyl5yXJV
+56POKfO+q6cm0wiAfAZyg41Om6tanA==
+=2+iq
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
