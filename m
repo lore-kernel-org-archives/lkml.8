@@ -2,86 +2,99 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8766DC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E44CC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7122073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588621906;
-	bh=9K36pHDaFa4f5Txo2MFwEjDlHewIT6hq5ufrcEESr9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GHFHPk5KacFrZrj2xwh11EcyFZBSEzhwxVOHI40hmpQkEjUS7xD+BPcS6l3ccxsRE
-	 hPMRBoTrfsslDritqY3M/3weJZG4kcDnt/9qEt1LDoWc9Gvkfh2etdmqOyJhU2KsmD
-	 AFCxyqB+rqEA7zBXiwzy4CoJdTmcGIv9XIHnFVCc=
+	by mail.kernel.org (Postfix) with ESMTP id 28C55206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U2ubukdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgEDTvp (ORCPT
+        id S1726627AbgEDT4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:51:45 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:46063 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDTvp (ORCPT
+        Mon, 4 May 2020 15:56:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgEDT4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:51:45 -0400
-Received: by mail-oo1-f66.google.com with SMTP id 190so2675677ooa.12;
-        Mon, 04 May 2020 12:51:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kTLGnv8cHLkJNeKGrYbsMBKwEzpFrwnlRZi0qh+VmkQ=;
-        b=KecKXEucfCFOaEv3wPlZkdbVyPKFl/jPFIaI8choBtkFx9okFKLq4IOQpQ9KufO8Bk
-         BK7xwD9rAEwtBzPizwKKWdtBv27ej1JNHh1J8JWKU+BdnkId8U8urIsKjkfZf4/iBm4R
-         CB775FkFHiwoXI6sin+8cVXtKVKe1TnK10JxkIk5jkFJZp/9iGST+4RY2DAIOBhb1X8O
-         u6RXkn4czw5p2AVWbMMuEDZxExcvL/HtJIV8EcosMX9KzhoznStAXZmKvfIU2BJyvVoY
-         fn7k2ntP1+UdoKfWlGAR50isZ7Jho8J5LRAMeU6zYTTar4j2N1tlcl2jvIkOBlXLWspx
-         XcFw==
-X-Gm-Message-State: AGi0PuatpWmuqUkotJhEle7B6euBtSnT6u6+HSDWygR4MY3wp+CVG/rW
-        DslEpogfNDzb87hync99ug==
-X-Google-Smtp-Source: APiQypKWcNfegIl3LfRI5pjK/dZmUaCOvDV57LPNEZELGNO0eTGx2sUvOoW4yNeccsnAUCEfaJMqQw==
-X-Received: by 2002:a4a:4442:: with SMTP id o63mr7868ooa.0.1588621904225;
-        Mon, 04 May 2020 12:51:44 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 186sm3548725ooi.30.2020.05.04.12.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:51:43 -0700 (PDT)
-Received: (nullmailer pid 15522 invoked by uid 1000);
-        Mon, 04 May 2020 19:51:42 -0000
-Date:   Mon, 4 May 2020 14:51:42 -0500
-From:   Rob Herring <robh@kernel.org>
+        Mon, 4 May 2020 15:56:49 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8DAC061A0E;
+        Mon,  4 May 2020 12:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=fRTAxMt+wwPpjAy5FUGbHC1yS2mrXc5N6zswIhz2qFU=; b=U2ubukdfAiDbK2ZjfknkSdIZZj
+        AjopC+jkvMrXQ9FVjXXnq53WZIm9n3N/S2YQJnm/RKG/G+EQXXmsgzYD8d/VGzsFRGW6pbOTUSkis
+        r5/Y2LaI40jPhkDuA357fVfgK3JufLYz/3iKIUWzdpi4apH2qJXL1DazqpydEoq1ixm2HuCjWAcAx
+        /o+oh/BUZjVvqQgv0o6VmJggTTbI/eCgxIJ0OJZ592aAU5rNH3lcnY1bFd+JYoRIHEi5MpwxdtC1D
+        N3crodKkBqcxylqmYqSVgaBvnUIxJqQnh7XoF4NWM2ikctoH4dUqcptCDvUTtK/FY0aIdAXirGDRy
+        +MGsWUGQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVhCm-0007RJ-5H; Mon, 04 May 2020 19:56:44 +0000
+Subject: Re: [v2 PATCH 1/2] drivers: drm: panel: Add ASUS TM5P5 NT35596 panel
+ driver
 To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     skrzynka@konradybcio.pl, Konrad Dybcio <konradybcio@gmail.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: tsens: qcom: Document MSM8939 compatible
-Message-ID: <20200504195142.GA15440@bogus>
-References: <20200501203311.143934-1-konradybcio@gmail.com>
- <20200501203311.143934-3-konradybcio@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200504193816.126299-1-konradybcio@gmail.com>
+ <20200504193816.126299-2-konradybcio@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a9a381eb-6d85-5c6e-f377-0b9815bd36a5@infradead.org>
+Date:   Mon, 4 May 2020 12:56:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501203311.143934-3-konradybcio@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200504193816.126299-2-konradybcio@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 22:33:11 +0200, Konrad Dybcio wrote:
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On 5/4/20 12:38 PM, Konrad Dybcio wrote:
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index a1723c1b5fbf8..3aa57a927c4bd 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -18,6 +18,16 @@ config DRM_PANEL_ARM_VERSATILE
+>  	  reference designs. The panel is detected using special registers
+>  	  in the Versatile family syscon registers.
+>  
+> +config DRM_PANEL_ASUS_Z00T_TM5P5_NT35596
+> +        tristate "ASUS Z00T TM5P5 NT35596 panel"
+> +        depends on GPIOLIB && OF
+> +        depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +        help
+> +          Say Y here if you want to enable support for the ASUS TMP5P5
+> +          NT35596 1080x1920 video mode panel as found in some Asus
+> +          Zenfone 2 Laser Z00T devices.
+> +
+>  config DRM_PANEL_BOE_HIMAX8279D
+>  	tristate "Boe Himax8279d panel"
+>  	depends on OF
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hi,
+
+Please clean up the config entry indentation.
+The keywords (tristate, depends, help) should all be indented with
+one tab (not spaces) and the help text should be indented with
+one tab + 2 spaces.
+
+thanks.
+-- 
+~Randy
