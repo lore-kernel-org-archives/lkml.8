@@ -2,109 +2,112 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BC0C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6085AC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E987206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FEB2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:08:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oxvtDDfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgEDVHP (ORCPT
+        id S1727890AbgEDVId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:07:15 -0400
-Received: from www62.your-server.de ([213.133.104.62]:32810 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgEDVHP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:07:15 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jViIn-0001Gq-FV; Mon, 04 May 2020 23:07:01 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jViIm-000G0e-PC; Mon, 04 May 2020 23:07:00 +0200
-Subject: Re: [PATCH 05/15] bpf: avoid gcc-10 stringop-overflow warning
-To:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Brad Spengler <spender@grsecurity.net>,
-        Daniel Borkmann <dborkman@redhat.com>,
-        Alexei Starovoitov <ast@plumgrid.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-References: <20200430213101.135134-1-arnd@arndb.de>
- <20200430213101.135134-6-arnd@arndb.de>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <f1ffd814-538b-1913-5b67-266060abfa7a@iogearbox.net>
-Date:   Mon, 4 May 2020 23:06:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 4 May 2020 17:08:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:42111 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbgEDVId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 17:08:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49GFnp29n5z9sRf;
+        Tue,  5 May 2020 07:08:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588626511;
+        bh=LWc7WDFCEe4/CqRdxD8y0ASLGpoEli6mYUnBjW2ojek=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oxvtDDfTAmGhZsiDyeSkaPzxqc5R4JAushqgSvEozm+8m60vD5NXplkXq0IKnkiTL
+         ZyebJTrEvSmlc/KmNRPkhjmYCcoqIAcS551O/Re48sR0dSV9ng3LSBZf+rFOcoWUM3
+         mfGzX3GOAN7xKZaC73P3l6jcgUkVDcbPNLgT39mrOYowtjHZRvV4JPOq6xC0BmFCBN
+         L9Cg1Yt2NTlaIFU3JtBij2eIESyuqVjoCrkVCtdZ2t5GbMB2y2g7pm3Xhk2QQNl89V
+         RXhd6foSKeYTxpn47ev8FRFs4uojxJsymCScx4fHBEg5UL6sN2ycyGZChHjmb0cjOo
+         wS7ywR8zcazBw==
+Date:   Tue, 5 May 2020 07:08:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: linux-next: Tree for May 4 --> mm: free_area_init: allow
+ defining max_zone_pfn in descending order does increase memory use
+Message-ID: <20200505070828.20fd21af@canb.auug.org.au>
+In-Reply-To: <20200504154410.GF342687@linux.ibm.com>
+References: <20200504173547.2cdd83bf@canb.auug.org.au>
+        <9e9edd1e-6653-a585-0e22-69930a07dce1@de.ibm.com>
+        <20200504154410.GF342687@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200430213101.135134-6-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25802/Mon May  4 14:12:31 2020)
+Content-Type: multipart/signed; boundary="Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/20 11:30 PM, Arnd Bergmann wrote:
-> gcc-10 warns about accesses to zero-length arrays:
-> 
-> kernel/bpf/core.c: In function 'bpf_patch_insn_single':
-> cc1: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
-> In file included from kernel/bpf/core.c:21:
-> include/linux/filter.h:550:20: note: at offset 0 to object 'insnsi' with size 0 declared here
->    550 |   struct bpf_insn  insnsi[0];
->        |                    ^~~~~~
-> 
-> In this case, we really want to have two flexible-array members,
-> but that is not possible. Removing the union to make insnsi a
-> flexible-array member while leaving insns as a zero-length array
-> fixes the warning, as nothing writes to the other one in that way.
-> 
-> This trick only works on linux-3.18 or higher, as older versions
-> had additional members in the union.
-> 
-> Fixes: 60a3b2253c41 ("net: bpf: make eBPF interpreter images read-only")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Not pretty but looks okay to me, both have the same offset afterwards
-in the pahole dump as well.
+Hi Mike,
 
-struct bpf_prog {
-[...]
-         unsigned int               (*bpf_func)(const void  *, const struct bpf_insn  *); /*    48     8 */
-         struct sock_filter         insns[0];             /*    56     0 */
-         struct bpf_insn            insnsi[];             /*    56     0 */
+On Mon, 4 May 2020 18:44:10 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> Ho Christian,
+>=20
+> On Mon, May 04, 2020 at 04:50:06PM +0200, Christian Borntraeger wrote:
+> > Mike,
+> > commit 51a2f644fd020d5f090044825c388444d11029d ("mm: free_area_init: al=
+low defining max_zone_pfn in descending order")
+> > does increase the memory use on s390 (e.g. 700 MB vs.1.8 GB).
+> >=20
+> > Something is odd in this patch. Any idea? =20
+>=20
+> Yeah, this patch is buggy. In short, it breaks zone size calculation on
+> s390 and some other architectures.
+>=20
+> I've just replied at [1] with more details and a fix.
+>=20
+> [1] https://lore.kernel.org/linux-mm/20200504153901.GM14260@kernel.org/
 
-         /* size: 56, cachelines: 1, members: 21 */
-         /* sum members: 50, holes: 1, sum holes: 4 */
-         /* sum bitfield members: 10 bits, bit holes: 1, sum bit holes: 6 bits */
-         /* last cacheline: 56 bytes */
-};
+I have added that to linux-next for today.
 
-Applied to bpf-next, thanks!
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6whEwACgkQAVBC80lX
+0GzmWwf+JTR9NVgZ198HKHx7MTJLK6YQL0hAXJV5Dz/0wmzoL2UDKclFwic2HZv9
+wK9ztJaqX20Vdxq6zbQMB/xvTiItLdbe8EosmrPdG46BeocBOKX0AInV/zRb9K9P
+GgJPZemdo3HJqLPqY4Djw/CWTewa6g21M5xg5HMy5EbnTRSitEotZuHt69EHmJKo
+nuPEFRG/cn8xXel/4963dNTFfTESCFOPs++wooDHFQ0mQzAnsR3nKMcEVZYFb1Br
+T7wSanues09dSqhsC+lJDe37tyMwcU5N/y2NusDKahBn63aZEz/q/qXNrbBDhYgE
+RqXCWfPt+gliNxsihqbuk5o9lYk/pQ==
+=1Mmd
+-----END PGP SIGNATURE-----
+
+--Sig_/EC8ktDc27Ll0Q6ltM8Z62Nm--
