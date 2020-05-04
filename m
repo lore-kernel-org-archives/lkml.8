@@ -2,132 +2,155 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2E5C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A6FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E742063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2EE206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRa8YNTV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bJTaTiHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgEDUt6 (ORCPT
+        id S1727923AbgEDUuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgEDUt6 (ORCPT
+        Mon, 4 May 2020 16:50:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:61355 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726338AbgEDUuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:49:58 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBE5C061A0E;
-        Mon,  4 May 2020 13:49:56 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id d16so14827280edv.8;
-        Mon, 04 May 2020 13:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q7L4B/gaHgFnBxED0brVOKXanT1Bbb8OHNvzGehf/HY=;
-        b=pRa8YNTVAoMCIiHLagX6utqSDmIjZ6LkSA6LaoNS28G484lIPlbtAvo5VBmaXwzwCE
-         cPE6QonvLeSTG/X5uRj8OcMXJNogyvxvYx5Az1eNFZ7TdANIQrAkMpeHylN12qS8OaYR
-         Sj7HSFw37DwuujRAQKCn+F/4EWg9QmwZLGcBe2tj8S1hmDcE/DbcXfe59ekfx7FE6gUo
-         8I/t1WubAlJPtGiX/JEd3mNmeVFRxziOLpuGamOTgQ+grdjcld82YsDC7/frH2J48bTG
-         MRNO4XBrWrutq5NMzCdqyfesG0iW0+wJ9n1Ldgfqfyzu14miFEwkOvAJc77Bm0oakLTO
-         M/MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q7L4B/gaHgFnBxED0brVOKXanT1Bbb8OHNvzGehf/HY=;
-        b=qTDIydbChH4FxUVpA+fnX+kFurFbush9/zM7oTAw92iDb74A7ltY2PFphLoOK8SQqm
-         OiXmr8dodW5oyH3z/2p6FHdYik12fSSENBQzqIA3UcWvtuDmNxDqD6JBm2zbO69XVIu5
-         oPm0ReZ8P8rohirBBBZm6EY9r3ewJk6ac2KprsquuKI+dx2pN1sLIrmi4NRLZTInfgvr
-         UtO8kT4V6khrS/JVCjzwM94K6XDxQhr8Iqvi8zIFKhYl3XnKQBi3gOD8fYTkYtYpIehO
-         0IB3kCQX+9FeTFTiBsJ2tr8NP+FMeu9+1B4hs7B9vmb+9sUuqbCx+P+J1mE5DgDCbp+f
-         yuLQ==
-X-Gm-Message-State: AGi0PubpGsnEYX7Mb8FYOHgdFUyBqTTQ3lZ3Fqh4yPxQLj4Lh0Oez3Lw
-        Jj29G9nQDVTyWJFzzhMV0nbZcG0w2/+3RNKOCFA=
-X-Google-Smtp-Source: APiQypJmnREIeOlbNsDjt6heZ3r3doPjenzdbFCihgL1iyJHHO9R/sqhDz60Org12nkqRsfKqbLzQzcxrDNhkzBpDPQ=
-X-Received: by 2002:a05:6402:6c4:: with SMTP id n4mr16683368edy.368.1588625395124;
- Mon, 04 May 2020 13:49:55 -0700 (PDT)
+        Mon, 4 May 2020 16:50:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588625450; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=bcYfoncDFBuQvvrc9fHsqwOFMUFX3Nud1sv0zHvJPHs=;
+ b=bJTaTiHp90P3nx8rF4hTC6p1pfFlEJ5jntD+vfd1JHXrruURnN0q1qePHsyfTK/wm0u4iV0h
+ 3elsU/A/6LPpo7YfIBqo0Em8uPDEe5f2AhAJgvPvuECAO5vncIcGdBvvOTTdhBO6nWniZCa7
+ avnK8wLG2jjY5yVI2QHQANqu03g=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb08027.7fae535a61f0-smtp-out-n05;
+ Mon, 04 May 2020 20:50:47 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 29FF3C44788; Mon,  4 May 2020 20:50:47 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63A03C433D2;
+        Mon,  4 May 2020 20:50:46 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200504201806.27192-1-f.fainelli@gmail.com> <CA+h21ho50twA=D=kZYxVuE=C6gf=8JeXmTEHhV30p_30oQZjjA@mail.gmail.com>
- <b32f205a-6ff3-e1db-33d1-6518091f90b4@gmail.com>
-In-Reply-To: <b32f205a-6ff3-e1db-33d1-6518091f90b4@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 4 May 2020 23:49:44 +0300
-Message-ID: <CA+h21hpObEHt04igBBbX40niuqON=41=f35zTgYNOTZZscbivQ@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: Do not leave DSA master with NULL netdev_ops
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>, allen.pais@oracle.com,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 May 2020 02:20:46 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
+        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
+        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
+        evgreen@chromium.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 7/7] cpufreq: dt: Add support for interconnect
+ bandwidth scaling
+In-Reply-To: <20200424155404.10746-8-georgi.djakov@linaro.org>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-8-georgi.djakov@linaro.org>
+Message-ID: <be1020b835a2b6a2a5d1e23d39aa0f95@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 at 23:40, Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 5/4/2020 1:34 PM, Vladimir Oltean wrote:
-> > Hi Florian,
-> >
-> > On Mon, 4 May 2020 at 23:19, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>
-> >> When ndo_get_phys_port_name() for the CPU port was added we introduced
-> >> an early check for when the DSA master network device in
-> >> dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
-> >> we perform the teardown operation in dsa_master_ndo_teardown() we would
-> >> not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
-> >> non-NULL initialized.
-> >>
-> >> With network device drivers such as virtio_net, this leads to a NPD as
-> >> soon as the DSA switch hanging off of it gets torn down because we are
-> >> now assigning the virtio_net device's netdev_ops a NULL pointer.
-> >>
-> >> Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
-> >> Reported-by: Allen Pais <allen.pais@oracle.com>
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >
-> > The fix makes complete sense.
-> > But on another note, if we don't overlay an ndo_get_phys_port_name if
-> > the master already has one, doesn't that render the entire mechanism
-> > of having a reliable way for user space to determine the CPU port
-> > number pointless?
->
-> For the CPU port I would consider ndo_get_phys_port_name() to be more
-> best effort than an absolute need unlike the user facing ports, where
-> this is necessary for a variety of actions (e.g.: determining
-> queues/port numbers etc.) which is why there was no overlay being done
-> in that case. There is not a good way to cascade the information other
-> than do something like pX.Y and defining what the X and Y are, what do
-> you think?
-> --
-> Florian
+Hey Georgi,
 
-For the CPU/master port I am not actually sure who is the final
-consumer of the ndo_get_phys_port_name, I thought it is simply
-informational, with the observation that it may be unreliable in
-transmitting that information over.
-Speaking of which, if "informational" is the only purpose, could this
-not be used?
+On 2020-04-24 21:24, Georgi Djakov wrote:
+> In addition to clocks and regulators, some devices can scale the 
+> bandwidth
+> of their on-chip interconnect - for example between CPU and DDR memory. 
+> Add
+> support for that, so that platforms which support it can make use of 
+> it.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+> v7:
+> * Drop using dev_pm_opp_set_paths(), as it has been removed.
+> * Add Kconfig dependency on INTERCONNECT, as it can be module.
+> 
+> 
+> v2: 
+> https://lore.kernel.org/r/20190423132823.7915-6-georgi.djakov@linaro.org
+> 
+>  drivers/cpufreq/Kconfig      |  1 +
+>  drivers/cpufreq/cpufreq-dt.c | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> index c3e6bd59e920..db2ad54ee67f 100644
+> --- a/drivers/cpufreq/Kconfig
+> +++ b/drivers/cpufreq/Kconfig
+> @@ -217,6 +217,7 @@ config CPUFREQ_DT
+> 
+>  config CPUFREQ_DT_PLATDEV
+>  	bool
+> +	depends on INTERCONNECT || !INTERCONNECT
+>  	help
+>  	  This adds a generic DT based cpufreq platdev driver for frequency
+>  	  management.  This creates a 'cpufreq-dt' platform device, on the
+> diff --git a/drivers/cpufreq/cpufreq-dt.c 
+> b/drivers/cpufreq/cpufreq-dt.c
+> index 26fe8dfb9ce6..4ecef3257532 100644
+> --- a/drivers/cpufreq/cpufreq-dt.c
+> +++ b/drivers/cpufreq/cpufreq-dt.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/cpufreq.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/err.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/pm_opp.h>
+> @@ -95,6 +96,7 @@ static int resources_available(void)
+>  	struct device *cpu_dev;
+>  	struct regulator *cpu_reg;
+>  	struct clk *cpu_clk;
+> +	struct icc_path *cpu_path;
+>  	int ret = 0;
+>  	const char *name;
+> 
+> @@ -121,6 +123,19 @@ static int resources_available(void)
+> 
+>  	clk_put(cpu_clk);
+> 
+> +	cpu_path = of_icc_get(cpu_dev, NULL);
+> +	ret = PTR_ERR_OR_ZERO(cpu_path);
 
-devlink port | grep "flavour cpu"
-pci/0000:00:00.5/4: type notset flavour cpu port 4
-spi/spi2.0/4: type notset flavour cpu port 4
-spi/spi2.1/4: type notset flavour cpu port 4
+Wouldn't we want to verify all
+available paths instead of just
+the first path?
 
-Thanks,
--Vladimir
+> +	if (ret) {
+> +		if (ret == -EPROBE_DEFER)
+> +			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
+> +		else
+> +			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
+> +
+> +		return ret;
+> +	}
+> +
+> +	icc_put(cpu_path);
+> +
+>  	name = find_supply_name(cpu_dev);
+>  	/* Platform doesn't require regulator */
+>  	if (!name)
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
