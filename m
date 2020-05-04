@@ -2,72 +2,128 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7026AC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3829C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8732075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07482075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:29:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Esnrn88K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgEDQ2n (ORCPT
+        id S1729612AbgEDQ3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:28:43 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:33518 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbgEDQ2n (ORCPT
+        Mon, 4 May 2020 12:29:00 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41504 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729425AbgEDQ3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:28:43 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jVdxR-0002Ya-MZ; Mon, 04 May 2020 10:28:41 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jVdxF-0002fk-2W; Mon, 04 May 2020 10:28:41 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?utf-8?Q?St=C3=A9phane?= Graber <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org
-References: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
-        <20200504144141.3605533-3-christian.brauner@ubuntu.com>
-Date:   Mon, 04 May 2020 11:25:07 -0500
-In-Reply-To: <20200504144141.3605533-3-christian.brauner@ubuntu.com>
-        (Christian Brauner's message of "Mon, 4 May 2020 16:41:40 +0200")
-Message-ID: <87h7wvoefw.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jVdxF-0002fk-2W;;;mid=<87h7wvoefw.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19fC77YDZ/s6OgFRdJGwh3qJWiJoBgKLuI=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v3 2/3] nsproxy: attach to namespaces via pidfds
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Mon, 4 May 2020 12:29:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588609739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=vyYYYfDE98dZ74NRX6gFiGAARZEAda2ko5w/z7U1TOY=;
+        b=Esnrn88KsElsfJxD8Dn6pk1Cca7jpfOPsFAUv15nAzf5BVB3R6aHtNDIiqfqRT7dDHInw8
+        wxtXHwC3DSR3o/BMdKv1qanOOdLqUqD4VcAhaM0gzCFa590ya9NN+UYoJxbHfRIBtecxtG
+        CM0hcoHH7dtayFyy4sED4xAoyS0zW5I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-desGePx4MY68frG5i3_GMQ-1; Mon, 04 May 2020 12:28:55 -0400
+X-MC-Unique: desGePx4MY68frG5i3_GMQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23F818014D5;
+        Mon,  4 May 2020 16:28:54 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A1FDA60C81;
+        Mon,  4 May 2020 16:28:53 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: [PATCH] kvm: ioapic: Restrict lazy EOI update to edge-triggered interrupts
+Date:   Mon,  4 May 2020 12:28:52 -0400
+Message-Id: <20200504162852.404422-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit f458d039db7e ("kvm: ioapic: Lazy update IOAPIC EOI") introduces
+the following infinite loop:
 
-I am not thrilled about treating nstype as a flags fields when it is not
-currently.  It was my hope when I designed the interface that not
-treating nstype as a flags field would save us from the problem of bits
-running out.
+BUG: stack guard page was hit at 000000008f595917 \
+(stack is 00000000bdefe5a4..00000000ae2b06f5)
+kernel stack overflow (double-fault): 0000 [#1] SMP NOPTI
+RIP: 0010:kvm_set_irq+0x51/0x160 [kvm]
+Call Trace:
+ irqfd_resampler_ack+0x32/0x90 [kvm]
+ kvm_notify_acked_irq+0x62/0xd0 [kvm]
+ kvm_ioapic_update_eoi_one.isra.0+0x30/0x120 [kvm]
+ ioapic_set_irq+0x20e/0x240 [kvm]
+ kvm_ioapic_set_irq+0x5c/0x80 [kvm]
+ kvm_set_irq+0xbb/0x160 [kvm]
+ ? kvm_hv_set_sint+0x20/0x20 [kvm]
+ irqfd_resampler_ack+0x32/0x90 [kvm]
+ kvm_notify_acked_irq+0x62/0xd0 [kvm]
+ kvm_ioapic_update_eoi_one.isra.0+0x30/0x120 [kvm]
+ ioapic_set_irq+0x20e/0x240 [kvm]
+ kvm_ioapic_set_irq+0x5c/0x80 [kvm]
+ kvm_set_irq+0xbb/0x160 [kvm]
+ ? kvm_hv_set_sint+0x20/0x20 [kvm]
+....
 
-That aside.  It would be very good if the default version of setting
-everything from a pidfd would set the root directory from the process it
-is copying everything else from.
+The re-entrancy happens because the irq state is the OR of
+the interrupt state and the resamplefd state.  That is, we don't
+want to show the state as 0 until we've had a chance to set the
+resamplefd.  But if the interrupt has _not_ gone low then
+ioapic_set_irq is invoked again, causing an infinite loop.
 
-Eric
+This can only happen for a level-triggered interrupt, otherwise
+irqfd_inject would immediately set the KVM_USERSPACE_IRQ_SOURCE_ID high
+and then low.  Fortunately, in the case of level-triggered interrupts the VMEXIT already happens because
+TMR is set.  Thus, fix the bug by restricting the lazy invocation
+of the ack notifier to edge-triggered interrupts, the only ones that
+need it.
+
+Tested-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Reported-by: borisvk@bstnet.org
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://www.spinics.net/lists/kvm/msg213512.html
+Fixes: f458d039db7e ("kvm: ioapic: Lazy update IOAPIC EOI")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207489
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+---
+ arch/x86/kvm/ioapic.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+index 750ff0b29404..d057376bd3d3 100644
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -225,12 +225,12 @@ static int ioapic_set_irq(struct kvm_ioapic *ioapic, unsigned int irq,
+ 	}
+ 
+ 	/*
+-	 * AMD SVM AVIC accelerate EOI write and do not trap,
+-	 * in-kernel IOAPIC will not be able to receive the EOI.
+-	 * In this case, we do lazy update of the pending EOI when
+-	 * trying to set IOAPIC irq.
++	 * AMD SVM AVIC accelerate EOI write iff the interrupt is edge
++	 * triggered, in which case the in-kernel IOAPIC will not be able
++	 * to receive the EOI.  In this case, we do a lazy update of the
++	 * pending EOI when trying to set IOAPIC irq.
+ 	 */
+-	if (kvm_apicv_activated(ioapic->kvm))
++	if (edge && kvm_apicv_activated(ioapic->kvm))
+ 		ioapic_lazy_update_eoi(ioapic, irq);
+ 
+ 	/*
+-- 
+2.18.2
+
