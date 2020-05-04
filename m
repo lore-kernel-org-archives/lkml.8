@@ -2,131 +2,175 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AF9C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF3FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D903120735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1AD2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gFnT5jo6"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="URgCbDrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgEDPBC (ORCPT
+        id S1729387AbgEDPBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:01:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51266 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729355AbgEDPBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:01:00 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044ElbqT116461;
-        Mon, 4 May 2020 14:59:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=6TPxMgWmQtH64Bn23GV/AftZjSew5g3GNKLiViW6Iy4=;
- b=gFnT5jo6XL/vq8JpP48I0AftEHAaN8XlSDr4W8ZpfRzhx8JGBr6tAK6D0mKyk6E58rF/
- oquWByjYyxEMe8qAeG3v2f8p2pZd287Oj6ua7SZNIyRvuvZpfGzbCZyrniOX3aP/g6lz
- xa/80tQTPFYDbmomam+cMU5Y4F+X84v0DhJvRDSsSK4AWeX8mgkSklKaIzWS8wviZF1A
- eDLA3CHAPTcjVjrnS8QKReCGLjvHEExbZbjNTmAFKpWDdCGfIhidrMsMHzlfnVfardgg
- A7rOcl5YOGUB+9GxY5xya5LOf7jnVERNWH2eM8++6AzZvbq7Z91KbFGnaH9on9GUpIRn BQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30s09qyfp4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 14:59:35 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044EkfUs094736;
-        Mon, 4 May 2020 14:59:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 30sjdqq5u8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 14:59:34 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044ExWnw027298;
-        Mon, 4 May 2020 14:59:32 GMT
-Received: from linux-1.home.com (/10.175.9.166)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 07:59:32 -0700
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
-        kuzuno@gmail.com, mgross@linux.intel.com,
-        alexandre.chartre@oracle.com
-Subject: [RFC v4][PATCH part-2 00/13] ASI - Part II (Decorated Page-Table)
-Date:   Mon,  4 May 2020 16:57:57 +0200
-Message-Id: <20200504145810.11882-1-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 2.18.2
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=859 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=948 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040123
+        Mon, 4 May 2020 11:01:14 -0400
+Received: from mout.web.de ([217.72.192.78]:45637 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728165AbgEDPBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:01:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588604443;
+        bh=t0Fhy+TbkKQdUlUiQQWRSsl/lwJ1Qmb1XkVpr9bmbOk=;
+        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
+        b=URgCbDrsCfZ8VQtUhqfIH3SEOvXjb5SnYkF/tnmmjXEtKTt2MwFCDDRGtjmdQYDpF
+         uGDoGseD/fQvHZSQjqzSJIUIh5F//AoT9VqzvUpCp5BjdiK1qbDNm1dc6r4DNQltRC
+         cYwEnfPqqDY2gX3HK8fi55uuJed6PWY63x4/KWcw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MQvkQ-1jiI3Z0M4U-00UMxJ; Mon, 04
+ May 2020 17:00:43 +0200
+Subject: Re: [PATCH] net: rtw88: fix an issue about leak system resources
+To:     Dejin Zheng <zhengdejin5@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+References: <79591cab-fe3e-0597-3126-c251d41d492b@web.de>
+ <20200504144206.GA5409@nuc8i5>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>
+Message-ID: <882eacd1-1cbf-6aef-06c5-3ed6d402c0f5@web.de>
+Date:   Mon, 4 May 2020 17:00:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200504144206.GA5409@nuc8i5>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:a0BUZE4f+oVWjdLKKU/Q1IptQqypiXinFpRhF8BapHAJeM85yPv
+ MIhMHpkKKaTlkQ47VA0itg/JZ5OCzf+70/zEbaTmcMz9VOBEn6ar6nsknusXNAPTbFHm2AF
+ jgXt6JKRebNL9iAL351vsS9t/8du2Y9xop1uHQQKnqQZ306XPnErT3b215U/T9ygrx+1dWA
+ 8YM+dGeEBmDDQbUJeGCIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NdE/1pgD8Xs=:LnxbXX0Xus26yfL2TBaM+W
+ doYUryQNy7UJV3boA4xcbtMZBOMzMCgW7U8Pmg0AlTjwDRZEwWY0UFiforifcSba9ezSo83Df
+ yc2aAGH39WbP8Zh59F5ZDZf01t38GcQKgGynkEA+vcymifyO/+30BqD1uK+7O5Zi8Zbhc5Y+D
+ Kz3TWkPRT0MjKPBMGak/StClVux1OK0ZF30gTs0lVC/hz++s8O9Muv6YT/6JjnYZhevUDPop/
+ 7peFLwLJkRchtjWTIT7gl4iFyR/Xmzw0MN/Wm2mSdz+bRBNz2rvHRqROwutHz2yJcmcjmnBY4
+ KefByhKVk2cKrEWDjJibCccD8wNwhc6eBZhdxPkhDCpAgtNBTmcs4i3Ld6+pTBxuZgrH0VxJu
+ Psh+Egy/kzHHrkSLQjP7ieN+8sBgt08i3zmT+KNQozq7QQuyTR6uq1wgkjAV92G/4qPE1LVbX
+ 8HMFPA+kXQzWrJQbJr2pbf3He8lx7NVqgR5TA4qGEKKNeacVgCO9NKbR0PCkMCFhbl6ltKzpV
+ FxAauqJFg6izLUvvx12a5ifoaXokvso3cPHqxAa3EIlcVc3X2D5lcqsRfrYGCk3Iiv0Y1TLNY
+ 5z0WerhpuP3wISjvj88S3Opq5aGbTc739oAf7rJjiY/AEccfBfeSX++nd2Sp8ECH+UOWgknBz
+ ZOXwxF5UpOl4Ut4QHSedYfHh7vGp3ZTpQCNNbiTLLKJ47O/RHrpwe72QZ83w9vgE5oofNlI4L
+ Pqgwxh7VRbuWtfRCBQTFBS1LpDQKomJeJBetEMy8VInpzOSwpNvqwHXfAk+zb6SkOuRTJB9LP
+ 4VpkMwh9nXWq/563232YmYCFF6kSwPDnBDV6+b7X2lylll7f11GAloc5wsn32okkU+ZddRGrU
+ O5lZzqFdPRPF+ILQta2kRbt/KL1KBJVwqc90XNiXFMvuhEtAl3jxMTCW3dhA5xjqRjI/JXw0Z
+ jjuYKOH+kIvYzFIUGaD9zwGox8LxIP2y9fXSnIchZV8vrogMQdI6RsElg6n8mf/feuZCrOgUo
+ hsqz38Snb7mR8BsZfOkUcRGKulm3TVu4+HRj/ueZQk3EgakwpmA9Z8NCSV54dV6KcK9J3uU3H
+ vkGRSjKkUQI/0lQL9OCya+1CvwfcBypg8oDrWPN73r9mUJ4s9gkqWFJ8akhAJao5TO/xD4qYu
+ Ssm3jqtLOU5hsAdSeOWHv2DcS3kfCrFzv7YcShkTS0olhSJvHerLIHqudWWgMX0V75BilBwyw
+ SHvSglWdIq/DEanKv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is part II of ASI RFC v4. Please refer to the cover letter of
-part I for an overview the ASI RFC.
+>>> the related system resources were not released when pci_iomap() return
+>>> error in the rtw_pci_io_mapping() function. add pci_release_regions() =
+to
+>>> fix it.
+>>
+>> How do you think about a wording variant like the following?
+>>
+>>    Subject:
+>>    [PATCH v2] net: rtw88: Complete exception handling in rtw_pci_io_map=
+ping()
+>>
+>>    Change description:
+>>    A call of the function =E2=80=9Cpci_request_regions=E2=80=9D can fai=
+l here.
+>>    The corresponding system resources were not released then.
+>>    Thus add a call of the function =E2=80=9Cpci_release_regions=E2=80=
+=9D.
+>>
+>>
+> Markus, I think my commit comments is a sufficiently clear description
+> for this patch.
 
-  https://lore.kernel.org/lkml/20200504144939.11318-1-alexandre.chartre@oracle.com/
+I got an other impression for specific aspects.
 
-This part introduces decorated page-table which encapsulate native page
-table (e.g. a PGD) in order to provide convenient page-table management
-functions, such as tracking address range mapped in a page-table or
-safely handling references to another page-table.
 
-Decorated page-table can then be used to easily create and manage page
-tables to be used with ASI. It will be used by the ASI test driver (see
-part III) and later by KVM ASI.
+> Someone has told me not to send commit comments again and again
+> when it is enough clear.
 
-Decorated page-table is independent of ASI, and can potentially be used
-anywhere a page-table is needed.
+My patch review tries should give you hints where I noticed wording weakne=
+sses.
+The corresponding change tolerance can vary by involved contributors.
 
-Thanks,
 
-alex.
+> Because it only wastes the precious time of the maintainer
+> and very very little help for patch improvement.
 
------
+I hope that also your commit messages will improve.
 
-Alexandre Chartre (13):
-  mm/x86: Introduce decorated page-table (dpt)
-  mm/dpt: Track buffers allocated for a decorated page-table
-  mm/dpt: Add decorated page-table entry offset functions
-  mm/dpt: Add decorated page-table entry allocation functions
-  mm/dpt: Add decorated page-table entry set functions
-  mm/dpt: Functions to populate a decorated page-table from a VA range
-  mm/dpt: Helper functions to map module into a decorated page-table
-  mm/dpt: Keep track of VA ranges mapped in a decorated page-table
-  mm/dpt: Functions to clear decorated page-table entries for a VA range
-  mm/dpt: Function to copy page-table entries for percpu buffer
-  mm/dpt: Add decorated page-table remap function
-  mm/dpt: Handle decorated page-table mapped range leaks and overlaps
-  mm/asi: Function to init decorated page-table with ASI core mappings
 
- arch/x86/include/asm/asi.h |    2 +
- arch/x86/include/asm/dpt.h |   89 +++
- arch/x86/mm/Makefile       |    2 +-
- arch/x86/mm/asi.c          |   57 ++
- arch/x86/mm/dpt.c          | 1051 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 1200 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/include/asm/dpt.h
- create mode 100644 arch/x86/mm/dpt.c
+> BTW, In the past week, you asked me to change the commit comments in my
+> 6 patches like this one. Let me return to the essence of patch, point
+> out the code problems and better solutions will be more popular.
 
--- 
-2.18.2
+I would appreciate if various update suggestions would become nicer someho=
+w.
 
+Regards,
+Markus
