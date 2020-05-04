@@ -2,163 +2,179 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2E7C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9EBC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8B220735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC6C20752
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588552018;
+	bh=W6t3E4EZJAnQ4nVRYsdBeojJbKvYJRy93rI6IDIiy4c=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=D5Q3xgeMvHPSVYkWVyootBMaokhlQx3CIEaq0GYAXQeG5gR7k5pCslQh2YEedjy/N
+	 MhmCRDPxP18CfQOZKeIBUhY7CU+BOzbz9XpedAJWKbwk5zA7SKu8RRpSgQLKSnj2eX
+	 S1Qj4fACGe8LaBoZoFN4rFp21sVYP8V8QhnyCgiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgEDAZb (ORCPT
+        id S1726842AbgEDA06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 20:25:31 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3314 "EHLO mga17.intel.com"
+        Sun, 3 May 2020 20:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbgEDAZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 20:25:31 -0400
-IronPort-SDR: sjCE19S3GHl4ZJ2nNglSm5xGNFVlUadqn6UxDQUSCh49u2sydvpvYjFG0C+cKXyRnCoHcrZz3g
- 5shLJ8w/S68g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 17:25:30 -0700
-IronPort-SDR: brpGf6YOXbEiaJ5u/jdtv1LzsE30+9enUNeIpNQ7635oSAodFRTy7A78KoBtp1FXaDlFJm3nHb
- 8k1Wj+osPKrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
-   d="scan'208";a="406317151"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.212.197.87]) ([10.212.197.87])
-  by orsmga004.jf.intel.com with ESMTP; 03 May 2020 17:25:29 -0700
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
- <20200423201118.GA29567@ziepe.ca>
- <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
- <20200503222513.GS26002@ziepe.ca>
- <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
- <20200503224659.GU26002@ziepe.ca>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
-Date:   Sun, 3 May 2020 17:25:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726420AbgEDA05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 20:26:57 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A9A20735;
+        Mon,  4 May 2020 00:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588552016;
+        bh=W6t3E4EZJAnQ4nVRYsdBeojJbKvYJRy93rI6IDIiy4c=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=cWo5gYokFtgi+jPhd48Yh9ZFJ5Jf2Pc5T4QxayhrbPoo4GFSLIaqfMxwHLQC3Vt9k
+         dn3GUV3GHT2HI39opOpDmuv+HwbawDxMAVlCd7layBR95viYKAiV3r1R76otGHXl+j
+         zVOxAoO6sCo7enlCIjtAlGQbXmQaWIXp8nItjFQk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 416433520D7D; Sun,  3 May 2020 17:26:56 -0700 (PDT)
+Date:   Sun, 3 May 2020 17:26:56 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 03/24] rcu/tree: Use consistent style for comments
+Message-ID: <20200504002656.GE2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-4-urezki@gmail.com>
+ <20200501190555.GB7560@paulmck-ThinkPad-P72>
+ <20200503235213.GC197097@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200503224659.GU26002@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200503235213.GC197097@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 03, 2020 at 07:52:13PM -0400, Joel Fernandes wrote:
+> On Fri, May 01, 2020 at 12:05:55PM -0700, Paul E. McKenney wrote:
+> > On Tue, Apr 28, 2020 at 10:58:42PM +0200, Uladzislau Rezki (Sony) wrote:
+> > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > > 
+> > > Simple clean up of comments in kfree_rcu() code to keep it consistent
+> > > with majority of commenting styles.
+> > > 
+> > > Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > 
+> > Hmmm...
+> > 
+> > Exactly why is three additional characters per line preferable?  Or in
+> > the case of block comments, either one or two additional lines, depending
+> > on /* */ style?
+> 
+> I prefer to keep the code consistent and then bulk convert it later. Its a
+> bit ugly to read when its mixed up with "//" and "/* */" right now. We can
+> convert it to // all at once later but until then it'll be good to keep it
+> consistent in this file IMO. When I checked the kfree_rcu() code, it had more
+> "/* */" than not, so this small change is less churn for now.
 
+Please just drop this patch along with the other "//"-to-"/* */"
+regressions.
 
-On 5/3/2020 3:46 PM, Jason Gunthorpe wrote:
-> On Sun, May 03, 2020 at 03:40:44PM -0700, Dey, Megha wrote:
->> On 5/3/2020 3:25 PM, Jason Gunthorpe wrote:
->>> On Fri, May 01, 2020 at 03:30:02PM -0700, Dey, Megha wrote:
->>>> Hi Jason,
->>>>
->>>> On 4/23/2020 1:11 PM, Jason Gunthorpe wrote:
->>>>> On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
->>>>>> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
->>>>>> new file mode 100644
->>>>>> index 000000000000..738f6d153155
->>>>>> +++ b/drivers/base/ims-msi.c
->>>>>> @@ -0,0 +1,100 @@
->>>>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>>>> +/*
->>>>>> + * Support for Device Specific IMS interrupts.
->>>>>> + *
->>>>>> + * Copyright © 2019 Intel Corporation.
->>>>>> + *
->>>>>> + * Author: Megha Dey <megha.dey@intel.com>
->>>>>> + */
->>>>>> +
->>>>>> +#include <linux/dmar.h>
->>>>>> +#include <linux/irq.h>
->>>>>> +#include <linux/mdev.h>
->>>>>> +#include <linux/pci.h>
->>>>>> +
->>>>>> +/*
->>>>>> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
->>>>>> + * Return mdev's parent dev if success.
->>>>>> + */
->>>>>> +static inline struct device *mdev_to_parent(struct device *dev)
->>>>>> +{
->>>>>> +	struct device *ret = NULL;
->>>>>> +	struct device *(*fn)(struct device *dev);
->>>>>> +	struct bus_type *bus = symbol_get(mdev_bus_type);
->>>>>> +
->>>>>> +	if (bus && dev->bus == bus) {
->>>>>> +		fn = symbol_get(mdev_dev_to_parent_dev);
->>>>>> +		ret = fn(dev);
->>>>>> +		symbol_put(mdev_dev_to_parent_dev);
->>>>>> +		symbol_put(mdev_bus_type);
->>>>>
->>>>> No, things like this are not OK in the drivers/base
->>>>>
->>>>> Whatever this is doing needs to be properly architected in some
->>>>> generic way.
->>>>
->>>> Basically what I am trying to do here is to determine if the device is an
->>>> mdev device or not.
->>>
->>> Why? mdev devices are virtual they don't have HW elements.
->>
->> Hmm yeah exactly, since they are virtual, they do not have an associated IRQ
->> domain right? So they use the irq domain of the parent device..
->>
->>>
->>> The caller should use the concrete pci_device to allocate
->>> platform_msi? What is preventing this?
->>
->> hmmm do you mean to say all platform-msi adhere to the rules of a PCI
->> device?
-> 
-> I mean where a platform-msi can work should be defined by the arch,
-> and probably is related to things like having an irq_domain attached
-> 
-> So, like pci, drivers must only try to do platfor_msi stuff on
-> particular devices. eg on pci_device and platform_device types.
-> 
-> Even so it may not even work, but I can't think of any reason why it
-> should be made to work on a virtual device like mdev.
-> 
->> The use case if when we have a device assigned to a guest and we
->> want to allocate IMS(platform-msi) interrupts for that
->> guest-assigned device. Currently, this is abstracted through a mdev
->> interface.
-> 
-> And the mdev has the pci_device internally, so it should simply pass
-> that pci_device to the platform_msi machinery.
+If you want to convert more comments to "//" within the confines of the
+kfree_rcu() code, I am probably OK with that.  But again, a big-bang
+change of this sort often causes problems due to lots of potential
+rebase/merge conflicts.
 
-hmm i am not sure I follow this. mdev has a pci_device internally? which 
-struct are you referring to here?
+							Thanx, Paul
 
-mdev is merely a micropartitioned PCI device right, which no real PCI 
-resource backing. I am not how else we can find the IRQ domain 
-associated with an mdev..
-
+> thanks,
 > 
-> This is no different from something like pci_iomap() which must be
-> used with the pci_device.
+>  - Joel
 > 
-> Jason
-> 
+> > 
+> > I am (slowly) moving RCU to "//" for those reasons.  ;-)
+> > 
+> > 							Thanx, Paul
+> > 
+> > > ---
+> > >  kernel/rcu/tree.c | 16 ++++++++--------
+> > >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index cd61649e1b00..1487af8e11e8 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3043,15 +3043,15 @@ static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
+> > >  static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
+> > >  					  unsigned long flags)
+> > >  {
+> > > -	// Attempt to start a new batch.
+> > > +	/* Attempt to start a new batch. */
+> > >  	krcp->monitor_todo = false;
+> > >  	if (queue_kfree_rcu_work(krcp)) {
+> > > -		// Success! Our job is done here.
+> > > +		/* Success! Our job is done here. */
+> > >  		raw_spin_unlock_irqrestore(&krcp->lock, flags);
+> > >  		return;
+> > >  	}
+> > >  
+> > > -	// Previous RCU batch still in progress, try again later.
+> > > +	/* Previous RCU batch still in progress, try again later. */
+> > >  	krcp->monitor_todo = true;
+> > >  	schedule_delayed_work(&krcp->monitor_work, KFREE_DRAIN_JIFFIES);
+> > >  	raw_spin_unlock_irqrestore(&krcp->lock, flags);
+> > > @@ -3151,14 +3151,14 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > >  	unsigned long flags;
+> > >  	struct kfree_rcu_cpu *krcp;
+> > >  
+> > > -	local_irq_save(flags);	// For safely calling this_cpu_ptr().
+> > > +	local_irq_save(flags);	/* For safely calling this_cpu_ptr(). */
+> > >  	krcp = this_cpu_ptr(&krc);
+> > >  	if (krcp->initialized)
+> > >  		raw_spin_lock(&krcp->lock);
+> > >  
+> > > -	// Queue the object but don't yet schedule the batch.
+> > > +	/* Queue the object but don't yet schedule the batch. */
+> > >  	if (debug_rcu_head_queue(head)) {
+> > > -		// Probable double kfree_rcu(), just leak.
+> > > +		/* Probable double kfree_rcu(), just leak. */
+> > >  		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+> > >  			  __func__, head);
+> > >  		goto unlock_return;
+> > > @@ -3176,7 +3176,7 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > >  
+> > >  	WRITE_ONCE(krcp->count, krcp->count + 1);
+> > >  
+> > > -	// Set timer to drain after KFREE_DRAIN_JIFFIES.
+> > > +	/* Set timer to drain after KFREE_DRAIN_JIFFIES. */
+> > >  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
+> > >  	    !krcp->monitor_todo) {
+> > >  		krcp->monitor_todo = true;
+> > > @@ -3722,7 +3722,7 @@ int rcutree_offline_cpu(unsigned int cpu)
+> > >  
+> > >  	rcutree_affinity_setting(cpu, cpu);
+> > >  
+> > > -	// nohz_full CPUs need the tick for stop-machine to work quickly
+> > > +	/* nohz_full CPUs need the tick for stop-machine to work quickly */
+> > >  	tick_dep_set(TICK_DEP_BIT_RCU);
+> > >  	return 0;
+> > >  }
+> > > -- 
+> > > 2.20.1
+> > > 
