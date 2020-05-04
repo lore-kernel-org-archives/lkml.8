@@ -2,130 +2,110 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DCFC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA55CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84533206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AC3206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omfljF0d"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="JtB9E0VA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgEDQQR (ORCPT
+        id S1729595AbgEDQQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
+        Mon, 4 May 2020 12:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgEDQQQ (ORCPT
+        with ESMTP id S1729581AbgEDQQn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:16:16 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC2EC061A0E;
-        Mon,  4 May 2020 09:16:16 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a32so3986pje.5;
-        Mon, 04 May 2020 09:16:16 -0700 (PDT)
+        Mon, 4 May 2020 12:16:43 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669BFC061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:16:42 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id c18so11811235ile.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mJxATeoW9r1Ijzs0Cv12TCPDgNZzSbmxIdXoWB9J3wU=;
-        b=omfljF0dC/ATvmTsC2aJI+kHBhsxfZzHuKUdvPV/DvDvlRI/fZO15ItSIynzHh8WQ5
-         bbH7N1bQL2FjjPAEIrEd0PFWOz8TBebD0eBDMXALia6+1uXwoCkCVV+uX1/gi1jZHP2z
-         OGSFKCTO881EK7uqpI1LWSBPKKz3A4hHD7y4W4PAbbuwAb5/WlOnF2MxmaKNiQel42ZG
-         eRZSeaz3GqZDN5Mz76/vMH5GDJKd6nGUwDo2o/AUfrXkZ+qIkvN9oMVNVlUd0hjv/Cnl
-         PXQnP2kYOYpLYIc4NXyguUo6khYx8Yzkb3qeP6sWEgYTKcCU10jAgwRJCaS3O5Hyk/KT
-         SSNg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O2NAB+HJ6UzNB91gndqrDrOBWBRRYdtXc0RXwgVqjIU=;
+        b=JtB9E0VAIJLFoltqJ/EHP5uJ1L/CC5gPEHBmZzWmKIrxbjl26Ne5XpvBSLm41xSBIg
+         t1xVdmJvdqBHaspjtVCP0vgnGV8j2MBTNBjG6GfJcM4fXOhB5+xGf03i727pyog2NP6D
+         GccF27GbRs4QZX7lndDIpxFVeOCoMgIl3dOrXZVf+VRPY7WwOdamJ/8xOXsiov24FI4J
+         cg7O0CG65PADdLp8q2dvOrT5ZwuaButnO4gv0VIES92fKah6Zco3/qNsmkTYiehcGMU9
+         Q2MWvAeM0Qng2AHkE9aLevizkhC1L0KUTdxlOLZZymREU3y6Lz7t6E+UeIP0pi9e0AJ9
+         6new==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mJxATeoW9r1Ijzs0Cv12TCPDgNZzSbmxIdXoWB9J3wU=;
-        b=EQHJJhgWysNJ6/rQjKChZEgXad57ZHVPLcDPT1TIw3FFAa77zyeNVJbDB1nlciUvzk
-         4FNPr9RaPXqyanEOLZKRKlNUUa84+RuWYIILHOCFUy7TAyzm3NhObMPpyRU3lUxedMmZ
-         IWCzA9Zqo02gjoXTEMzZvuPGCwYQ0PvB/RqoD/D7cxehHEiqH/3WBcPRcZbN9aJT0TzD
-         i9yzDDk4OzouA1rCOv04ZjTrstv7vjypKE8FP6/EiMj5L4F7+lnX66mzxE9YUnE+6XyJ
-         zVNOM1VfSvhGvC8hdjJCS5T796liOVAaJJKNRAphQCdnYlHKw41tl8s2vXiEDObRgq8w
-         MtHg==
-X-Gm-Message-State: AGi0Puahozn6ZJPkMyroCIzr7pgujMNvPhihdyOW+EwDle1tP4X2+Jdn
-        FdBPmJzGvZ3PySD8//+U/qA=
-X-Google-Smtp-Source: APiQypKyG4mJ/QDG3KcoaV0DVI3jvg+MGkPaCDGlrIosbApPc0EPrPqH0uGoRpOpc+3ULNyzpJbiVg==
-X-Received: by 2002:a17:90a:4ce5:: with SMTP id k92mr71565pjh.192.1588608975646;
-        Mon, 04 May 2020 09:16:15 -0700 (PDT)
-Received: from localhost.localdomain ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id 4sm9515257pff.18.2020.05.04.09.16.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 09:16:14 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] fs: xfs: fix a possible data race in xfs_inode_set_reclaim_tag()
-Date:   Tue,  5 May 2020 00:15:30 +0800
-Message-Id: <20200504161530.14059-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O2NAB+HJ6UzNB91gndqrDrOBWBRRYdtXc0RXwgVqjIU=;
+        b=LOR40ihhQ00vD/KvaA63vtlWHj5BCtqxb+BIlOBVzEbNh89Q6fJrfh0up436RLzCqr
+         dlS3YgdC3MqsAqgSFKuayzzJUZ1nSH6zZXpyfLyNWU46ilkiuY94eg3PB6/MUwtfijwS
+         TA66VASfHqQhX7TLWKkrkHtPIJfgaGIaYkgDYuLlaBF/eT7kDMQdo04Y7AMs6iqDOOuZ
+         QK1sOWmk3yHPJFp/F/Rd1u3Exqt2DlJ8AtGeVC3T+Pk/aT4ls0T01z+8ekao6G6pgVTm
+         iyA9k9znzP+m6dHFwWkeEbOnqfILgU2+wQoBRnTyV18iw+MIjM5B3V0fEZSH6LXa6kop
+         /5GQ==
+X-Gm-Message-State: AGi0PuZUlzvgOmBtqChowi2LUOkiNaKXZVf++ofC/ulYGmRgCz3JlNC5
+        jB+iE8yJVX7wIVjpWp6/Ujb6cg==
+X-Google-Smtp-Source: APiQypLOM7ihGkQHTNt/pKRC46v+xHKsvR0zC0Gq/TKe4vXwyBmsBEqqQDWLYSJ6GF4HlBlFg2BYoQ==
+X-Received: by 2002:a92:d6c6:: with SMTP id z6mr16340696ilp.32.1588609001697;
+        Mon, 04 May 2020 09:16:41 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id m22sm4250384iow.35.2020.05.04.09.16.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 09:16:41 -0700 (PDT)
+Subject: Re: [PATCH 5/7] hfsplus: stop using ioctl_by_bdev
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
+        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>
+References: <20200425075706.721917-1-hch@lst.de>
+ <20200425075706.721917-6-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6c47f731-7bff-f186-da55-7ce6cffacdc3@kernel.dk>
+Date:   Mon, 4 May 2020 10:16:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200425075706.721917-6-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We find that xfs_inode_set_reclaim_tag() and xfs_reclaim_inode() are
-concurrently executed at runtime in the following call contexts:
+On 4/25/20 1:57 AM, Christoph Hellwig wrote:
+>  	if (HFSPLUS_SB(sb)->session >= 0) {
+> +		struct cdrom_tocentry te;
+> +
+> +		if (!cdi)
+> +			return -EINVAL;
+> +
+>  		te.cdte_track = HFSPLUS_SB(sb)->session;
+>  		te.cdte_format = CDROM_LBA;
+> -		res = ioctl_by_bdev(sb->s_bdev,
+> -			CDROMREADTOCENTRY, (unsigned long)&te);
+> -		if (!res && (te.cdte_ctrl & CDROM_DATA_TRACK) == 4) {
+> -			*start = (sector_t)te.cdte_addr.lba << 2;
+> -			return 0;
+> +		if (cdrom_read_tocentry(cdi, &te) ||
+> +		    (te.cdte_ctrl & CDROM_DATA_TRACK) != 4) {
+> +			pr_err("invalid session number or type of track\n");
+> +			return -EINVAL;
+>  		}
 
-Thread1:
-  xfs_fs_put_super()
-    xfs_unmountfs()
-      xfs_rtunmount_inodes()
-        xfs_irele()
-          xfs_fs_destroy_inode()
-            xfs_inode_set_reclaim_tag()
+I must be missing something obvious from just looking over the patches,
+but how does this work if cdrom is modular and hfsplus is builtin?
 
-Thread2:
-  xfs_reclaim_worker()
-    xfs_reclaim_inodes()
-      xfs_reclaim_inodes_ag()
-        xfs_reclaim_inode()
-
-In xfs_inode_set_reclaim_tag():
-  pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
-  ...
-  spin_lock(&ip->i_flags_lock);
-
-In xfs_reclaim_inode():
-  spin_lock(&ip->i_flags_lock);
-  ...
-  ip->i_ino = 0;
-  spin_unlock(&ip->i_flags_lock);
-
-Thus, a data race can occur for ip->i_ino.
-
-To fix this data race, the spinlock ip->i_flags_lock is used to protect
-the access to ip->i_ino in xfs_inode_set_reclaim_tag().
-
-This data race is found by our concurrency fuzzer.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- fs/xfs/xfs_icache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 8bf1d15be3f6..a2de08222ff5 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -229,9 +229,9 @@ xfs_inode_set_reclaim_tag(
- 	struct xfs_mount	*mp = ip->i_mount;
- 	struct xfs_perag	*pag;
- 
-+	spin_lock(&ip->i_flags_lock);
- 	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
- 	spin_lock(&pag->pag_ici_lock);
--	spin_lock(&ip->i_flags_lock);
- 
- 	radix_tree_tag_set(&pag->pag_ici_root, XFS_INO_TO_AGINO(mp, ip->i_ino),
- 			   XFS_ICI_RECLAIM_TAG);
 -- 
-2.17.1
+Jens Axboe
 
