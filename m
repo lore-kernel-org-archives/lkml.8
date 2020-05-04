@@ -2,93 +2,98 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D80C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF19FC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC17206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A269D2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588619121;
+	bh=aCv1F6E9QThI8vva9EtdscBCQGKHO0zt1VxPt/iOnuQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DWJvwe+wKlx7JUMfkp18dh/uZ7VFWtBej64peZD+16JZZqFmVCl/oTcZe7MxuGu4Q
+	 +TRGpQ4uQdlI+IjORaVLyPg6iuMcpTVIkVWoDP3t6UYS7gpAit71AacM99e/Z4GK/n
+	 HIFKnqySs4Jo+65Be485NDysqwVKxX3bWxqGrKkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgEDTEN (ORCPT
+        id S1726756AbgEDTFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:04:13 -0400
-Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:45406 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727866AbgEDTEJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:04:09 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 90A1018022F46;
-        Mon,  4 May 2020 19:04:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: scarf42_6021543c5600
-X-Filterd-Recvd-Size: 2806
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 May 2020 19:04:01 +0000 (UTC)
-Message-ID: <7af4a2979fb5c060af769a996d3e5917b4d265d0.camel@perches.com>
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-From:   Joe Perches <joe@perches.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Sam Ravnborg <sam@ravnborg.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        alsa-devel@alsa-project.org,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, Jyri Sarha <jsarha@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Sandy Huang <hjc@rock-chips.com>, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Date:   Mon, 04 May 2020 12:04:00 -0700
-In-Reply-To: <20200504175553.jdm7a7aabloevxba@pengutronix.de>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
-         <20200504174522.GA3383@ravnborg.org>
-         <20200504175553.jdm7a7aabloevxba@pengutronix.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Mon, 4 May 2020 15:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbgEDTFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:05:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE090206B8;
+        Mon,  4 May 2020 19:05:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588619120;
+        bh=aCv1F6E9QThI8vva9EtdscBCQGKHO0zt1VxPt/iOnuQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FM+39DPfhYzon6z5jHCkAmHn44SVhQMQMIZTUIzPmQV7C0U8JxiW2XBN9i/Wiqn7M
+         WVPuiNL0DsifwbVEh8alUx2v9umGlJ1VyJE0BTk0KwADG4X/l0ESsmYUytivx9TKHp
+         04XIccgKGT+ABFSBYqNCPimn6tDZbzCDNrZD+e5M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sanjay K <sanjay.k.kumar@intel.com>
+Subject: [PATCH 5.6 61/73] iommu/vt-d: Use right Kconfig option name
+Date:   Mon,  4 May 2020 19:58:04 +0200
+Message-Id: <20200504165509.860520707@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-04 at 19:55 +0200, Uwe Kleine-König wrote:
-> Hi Sam,
-> 
-> On Mon, May 04, 2020 at 07:45:22PM +0200, Sam Ravnborg wrote:
-> > On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> > > There are some new broken doc links due to yaml renames
-> > > at DT. Developers should really run:
-> > > 
-> > > 	./scripts/documentation-file-ref-check
-> > > 
-> > > in order to solve those issues while submitting patches.
-> > Would love if some bot could do this for me on any patches that creates
-> > .yaml files or so.
-> > I know I will forget this and it can be automated.
-> > If I get a bot mail that my patch would broke a link I would
-> > have it fixed before it hits any tree.
-> 
-> What about adding a check to check_patch?
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-There's already a checkpatch warning when a patch renames
-a file without a MAINTAINERS update.
+commit ba61c3da00f4a5bf8805aeca1ba5ac3c9bd82e96 upstream.
+
+The CONFIG_ prefix should be added in the code.
+
+Fixes: 046182525db61 ("iommu/vt-d: Add Kconfig option to enable/disable scalable mode")
+Reported-and-tested-by: Kumar, Sanjay K <sanjay.k.kumar@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Link: https://lore.kernel.org/r/20200501072427.14265-1-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/iommu/intel-iommu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -371,11 +371,11 @@ int dmar_disabled = 0;
+ int dmar_disabled = 1;
+ #endif /* CONFIG_INTEL_IOMMU_DEFAULT_ON */
+ 
+-#ifdef INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
++#ifdef CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
+ int intel_iommu_sm = 1;
+ #else
+ int intel_iommu_sm;
+-#endif /* INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
++#endif /* CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
+ 
+ int intel_iommu_enabled = 0;
+ EXPORT_SYMBOL_GPL(intel_iommu_enabled);
+
 
