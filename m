@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A317C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03964C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143302073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B3E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615284;
-	bh=O+pe16/+gV0M76A3Vsa3Q7B4gbmA/KjhrvvTiB3+uLg=;
+	s=default; t=1588615289;
+	bh=7/qnSfUBs+1jIHe1HqF94F0r4bVp2HssIChY1dp/Xlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hqft3x5WTbMOz7WtGG01kUOdiE7YFCxvGqK1JQSrN2EFYDBi41FiSF69eGkIqVlBw
-	 mQClJ2T8MC0wSpl/7zf8ePZSFk8sed8ILqxN1PbuC/g0WYsJH3NC+Ygn6a2tubmPNl
-	 KAndGSveOYR7iqN2pDwEy7C1pemX8vV09FkfUBe4=
+	b=GrXcs/TebsLGCKMY/zu1jCPrfwm8/JrFs6uabKUPmMBKA5Wmd33lEYTzCJUOJzois
+	 dcQBYIO5ZRgvkxjrNeR/4eVV84Z0Y3SBxPebIE8dF+PdQUzikmZwYcFDrFTQ7ZKH0E
+	 szB4zCppPU+a0+HGrsihXvXVP93qeUDWN77e8c5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbgEDSBX (ORCPT
+        id S1731165AbgEDSB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56576 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731123AbgEDSBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:13 -0400
+        id S1731145AbgEDSBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47A6924958;
-        Mon,  4 May 2020 18:01:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A1B0206B8;
+        Mon,  4 May 2020 18:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615272;
-        bh=O+pe16/+gV0M76A3Vsa3Q7B4gbmA/KjhrvvTiB3+uLg=;
+        s=default; t=1588615282;
+        bh=7/qnSfUBs+1jIHe1HqF94F0r4bVp2HssIChY1dp/Xlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Trwkf96ATumDOoHBFFSRHMWnBLXWc8OIGgiU+93zk/IfjVhiUWZp7OiHPGi17Xui/
-         FyMBLv7DHyfD/yGDPauWdjP4QwlC92EMc5+oX92aoiEH2Rfs8NPeqVV4mPTZw17sN4
-         JS2JnQqc+MOFzQDQi43BKaTbO/wuFCrFHyv9JS1M=
+        b=s2nHX4Kv3XYWnhjj3vHyfo+bFvThHBrmr22VFqqavo825xCQHHybF7BS0p9iskshZ
+         nksGHQG3AbmGny8mycG9TYqm+n8nTfA9Japrj02UJct5i83PECSRqHXw2FIuVK3Ajo
+         m5A3YiL5rUC2JPcz/t1XhHl9rRQJBT+t4k09C/Kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>
-Subject: [PATCH 4.19 01/37] drm/edid: Fix off-by-one in DispID DTD pixel clock
-Date:   Mon,  4 May 2020 19:57:14 +0200
-Message-Id: <20200504165448.531491727@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 13/37] dm writecache: fix data corruption when reloading the target
+Date:   Mon,  4 May 2020 19:57:26 +0200
+Message-Id: <20200504165449.916465238@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,39 +59,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 6292b8efe32e6be408af364132f09572aed14382 upstream.
+commit 31b22120194b5c0d460f59e0c98504de1d3f1f14 upstream.
 
-The DispID DTD pixel clock is documented as:
-"00 00 00 h → FF FF FF h | Pixel clock ÷ 10,000 0.01 → 167,772.16 Mega Pixels per Sec"
-Which seems to imply that we to add one to the raw value.
+The dm-writecache reads metadata in the target constructor. However, when
+we reload the target, there could be another active instance running on
+the same device. This is the sequence of operations when doing a reload:
 
-Reality seems to agree as there are tiled displays in the wild
-which currently show a 10kHz difference in the pixel clock
-between the tiles (one tile gets its mode from the base EDID,
-the other from the DispID block).
+1. construct new target
+2. suspend old target
+3. resume new target
+4. destroy old target
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200423151743.18767-1-ville.syrjala@linux.intel.com
-Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+Metadata that were written by the old target between steps 1 and 2 would
+not be visible by the new target.
+
+Fix the data corruption by loading the metadata in the resume handler.
+
+Also, validate block_size is at least as large as both the devices'
+logical block size and only read 1 block from the metadata during
+target constructor -- no need to read entirety of metadata now that it
+is done during resume.
+
+Fixes: 48debafe4f2f ("dm: add writecache target")
+Cc: stable@vger.kernel.org # v4.18+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-writecache.c |   52 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 37 insertions(+), 15 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -4706,7 +4706,7 @@ static struct drm_display_mode *drm_mode
- 	struct drm_display_mode *mode;
- 	unsigned pixel_clock = (timings->pixel_clock[0] |
- 				(timings->pixel_clock[1] << 8) |
--				(timings->pixel_clock[2] << 16));
-+				(timings->pixel_clock[2] << 16)) + 1;
- 	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
- 	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
- 	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -884,6 +884,24 @@ static int writecache_alloc_entries(stru
+ 	return 0;
+ }
+ 
++static int writecache_read_metadata(struct dm_writecache *wc, sector_t n_sectors)
++{
++	struct dm_io_region region;
++	struct dm_io_request req;
++
++	region.bdev = wc->ssd_dev->bdev;
++	region.sector = wc->start_sector;
++	region.count = n_sectors;
++	req.bi_op = REQ_OP_READ;
++	req.bi_op_flags = REQ_SYNC;
++	req.mem.type = DM_IO_VMA;
++	req.mem.ptr.vma = (char *)wc->memory_map;
++	req.client = wc->dm_io;
++	req.notify.fn = NULL;
++
++	return dm_io(&req, 1, &region, NULL);
++}
++
+ static void writecache_resume(struct dm_target *ti)
+ {
+ 	struct dm_writecache *wc = ti->private;
+@@ -894,8 +912,18 @@ static void writecache_resume(struct dm_
+ 
+ 	wc_lock(wc);
+ 
+-	if (WC_MODE_PMEM(wc))
++	if (WC_MODE_PMEM(wc)) {
+ 		persistent_memory_invalidate_cache(wc->memory_map, wc->memory_map_size);
++	} else {
++		r = writecache_read_metadata(wc, wc->metadata_sectors);
++		if (r) {
++			size_t sb_entries_offset;
++			writecache_error(wc, r, "unable to read metadata: %d", r);
++			sb_entries_offset = offsetof(struct wc_memory_superblock, entries);
++			memset((char *)wc->memory_map + sb_entries_offset, -1,
++			       (wc->metadata_sectors << SECTOR_SHIFT) - sb_entries_offset);
++		}
++	}
+ 
+ 	wc->tree = RB_ROOT;
+ 	INIT_LIST_HEAD(&wc->lru);
+@@ -1978,6 +2006,12 @@ static int writecache_ctr(struct dm_targ
+ 		ti->error = "Invalid block size";
+ 		goto bad;
+ 	}
++	if (wc->block_size < bdev_logical_block_size(wc->dev->bdev) ||
++	    wc->block_size < bdev_logical_block_size(wc->ssd_dev->bdev)) {
++		r = -EINVAL;
++		ti->error = "Block size is smaller than device logical block size";
++		goto bad;
++	}
+ 	wc->block_size_bits = __ffs(wc->block_size);
+ 
+ 	wc->max_writeback_jobs = MAX_WRITEBACK_JOBS;
+@@ -2066,8 +2100,6 @@ invalid_optional:
+ 			goto bad;
+ 		}
+ 	} else {
+-		struct dm_io_region region;
+-		struct dm_io_request req;
+ 		size_t n_blocks, n_metadata_blocks;
+ 		uint64_t n_bitmap_bits;
+ 
+@@ -2124,19 +2156,9 @@ invalid_optional:
+ 			goto bad;
+ 		}
+ 
+-		region.bdev = wc->ssd_dev->bdev;
+-		region.sector = wc->start_sector;
+-		region.count = wc->metadata_sectors;
+-		req.bi_op = REQ_OP_READ;
+-		req.bi_op_flags = REQ_SYNC;
+-		req.mem.type = DM_IO_VMA;
+-		req.mem.ptr.vma = (char *)wc->memory_map;
+-		req.client = wc->dm_io;
+-		req.notify.fn = NULL;
+-
+-		r = dm_io(&req, 1, &region, NULL);
++		r = writecache_read_metadata(wc, wc->block_size >> SECTOR_SHIFT);
+ 		if (r) {
+-			ti->error = "Unable to read metadata";
++			ti->error = "Unable to read first block of metadata";
+ 			goto bad;
+ 		}
+ 	}
 
 
