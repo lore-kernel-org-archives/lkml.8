@@ -2,136 +2,163 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4F3C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2E7C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1F92073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:24:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="vpgZTmS7"
+	by mail.kernel.org (Postfix) with ESMTP id 6A8B220735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgEDAYk (ORCPT
+        id S1726889AbgEDAZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 20:24:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726377AbgEDAYj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 20:24:39 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B776EC061A0F
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 17:24:39 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id g185so1527317qke.7
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 17:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xI7Qm85+J9yYa3BECz1PpAq35SrAJXBLbUl+ywDnfIo=;
-        b=vpgZTmS7D85XFaWuubB35aigMgPfNH5vS1YnNRzviB7wv/20FlsbirhRkjg9zOgEEA
-         7iLGF4H8xJvd1bNUd0FCIkaDFGVwxN3nHI38lr3P/K/eOgye89BTBZzGIz5jaXEjes/a
-         NIGFyOoAYZFX4lZRDVkIolGMfeBq08naC9rLE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xI7Qm85+J9yYa3BECz1PpAq35SrAJXBLbUl+ywDnfIo=;
-        b=I/tdqiLzLdQutN22tr+X9ZdOWG/H9myba40Dg8RJH79DqHgcceINKOUUVZegV5QIcF
-         uHozuCTQka2bbbjTaCreyA24KuIWWUGcf5vOkqQBVu/AJAdND+OH7vKElLuCmUPaLg98
-         Fo9o8ZynwE9aLD+RIdY52nJwD9W9CbDCrLQ4DN/RssrkZsZUsCuMRzWVBXyX0Co4uxRM
-         5U7IN29/gt+Rqai8kD8ULLIv6DOaunBiJMpUA1BorfxR9diFUyw11TYEXCw/+p2fCE6q
-         gRZ7UgJfh2WWzKR/lEwVb2SJFBvSU8DMzkNP/gqfFXycusqN57vMlYROmFeaPaocaneb
-         aJeg==
-X-Gm-Message-State: AGi0PuaUN9J+YY4twZRsAsehyvL9KNoPoOOhMdsifcgsQoKvpvgdKHIM
-        yWjak28DKJQPppc4exc2yslwgQ==
-X-Google-Smtp-Source: APiQypLzxAGctzs8HcSpHXiYBWEZS0iGP3Ge6vZbGNZgWlf7z6MAH+MfKEicRMukpaZPrAXHEY5pGg==
-X-Received: by 2002:a05:620a:89c:: with SMTP id b28mr1490696qka.380.1588551878821;
-        Sun, 03 May 2020 17:24:38 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d69sm7491203qkc.106.2020.05.03.17.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 17:24:38 -0700 (PDT)
-Date:   Sun, 3 May 2020 20:24:37 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 20/24] rcu/tree: Make kvfree_rcu() tolerate any alignment
-Message-ID: <20200504002437.GA212435@google.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-21-urezki@gmail.com>
- <20200501230052.GG7560@paulmck-ThinkPad-P72>
+        Sun, 3 May 2020 20:25:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3314 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbgEDAZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 20:25:31 -0400
+IronPort-SDR: sjCE19S3GHl4ZJ2nNglSm5xGNFVlUadqn6UxDQUSCh49u2sydvpvYjFG0C+cKXyRnCoHcrZz3g
+ 5shLJ8w/S68g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 17:25:30 -0700
+IronPort-SDR: brpGf6YOXbEiaJ5u/jdtv1LzsE30+9enUNeIpNQ7635oSAodFRTy7A78KoBtp1FXaDlFJm3nHb
+ 8k1Wj+osPKrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
+   d="scan'208";a="406317151"
+Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.212.197.87]) ([10.212.197.87])
+  by orsmga004.jf.intel.com with ESMTP; 03 May 2020 17:25:29 -0700
+Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+ <20200423201118.GA29567@ziepe.ca>
+ <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
+ <20200503222513.GS26002@ziepe.ca>
+ <1ededeb8-deff-4db7-40e5-1d5e8a800f52@linux.intel.com>
+ <20200503224659.GU26002@ziepe.ca>
+From:   "Dey, Megha" <megha.dey@linux.intel.com>
+Message-ID: <8ff2aace-0697-b8ef-de68-1bcc49d6727f@linux.intel.com>
+Date:   Sun, 3 May 2020 17:25:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501230052.GG7560@paulmck-ThinkPad-P72>
+In-Reply-To: <20200503224659.GU26002@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 04:00:52PM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 28, 2020 at 10:58:59PM +0200, Uladzislau Rezki (Sony) wrote:
-> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > 
-> > Handle cases where the the object being kvfree_rcu()'d is not aligned by
-> > 2-byte boundaries.
-> > 
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  kernel/rcu/tree.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 501cac02146d..649bad7ad0f0 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -2877,6 +2877,9 @@ struct kvfree_rcu_bulk_data {
-> >  #define KVFREE_BULK_MAX_ENTR \
-> >  	((PAGE_SIZE - sizeof(struct kvfree_rcu_bulk_data)) / sizeof(void *))
-> >  
-> > +/* Encoding the offset of a fake rcu_head to indicate the head is a wrapper. */
-> > +#define RCU_HEADLESS_KFREE BIT(31)
-> 
-> Did I miss the check for freeing something larger than 2GB?  Or is this
-> impossible, even on systems with many terabytes of physical memory?
-> Even if it is currently impossible, what prevents it from suddenly
-> becoming all too possible at some random point in the future?  If you
-> think that this will never happen, please keep in mind that the first
-> time I heard "640K ought to be enough for anybody", it sounded eminently
-> reasonable to me.
-> 
-> Besides...
-> 
-> Isn't the offset in question the offset of an rcu_head struct within
-> the enclosing structure? If so, why not keep the current requirement
-> that this be at least 16-bit aligned, especially given that some work
-> is required to make that alignment less than pointer sized?  Then you
-> can continue using bit 0.
-> 
-> This alignment requirement is included in the RCU requirements
-> documentation and is enforced within the __call_rcu() function.
-> 
-> So let's leave this at bit 0.
 
-This patch is needed only if we are growing the fake rcu_head. Since you
-mentioned in a previous patch in this series that you don't want to do that,
-and just rely on availability of the array of pointers or synchronize_rcu(),
-we can drop this patch. If we are not dropping that earlier patch, let us
-discuss more.
 
-thanks,
+On 5/3/2020 3:46 PM, Jason Gunthorpe wrote:
+> On Sun, May 03, 2020 at 03:40:44PM -0700, Dey, Megha wrote:
+>> On 5/3/2020 3:25 PM, Jason Gunthorpe wrote:
+>>> On Fri, May 01, 2020 at 03:30:02PM -0700, Dey, Megha wrote:
+>>>> Hi Jason,
+>>>>
+>>>> On 4/23/2020 1:11 PM, Jason Gunthorpe wrote:
+>>>>> On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
+>>>>>> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..738f6d153155
+>>>>>> +++ b/drivers/base/ims-msi.c
+>>>>>> @@ -0,0 +1,100 @@
+>>>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>>>> +/*
+>>>>>> + * Support for Device Specific IMS interrupts.
+>>>>>> + *
+>>>>>> + * Copyright © 2019 Intel Corporation.
+>>>>>> + *
+>>>>>> + * Author: Megha Dey <megha.dey@intel.com>
+>>>>>> + */
+>>>>>> +
+>>>>>> +#include <linux/dmar.h>
+>>>>>> +#include <linux/irq.h>
+>>>>>> +#include <linux/mdev.h>
+>>>>>> +#include <linux/pci.h>
+>>>>>> +
+>>>>>> +/*
+>>>>>> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
+>>>>>> + * Return mdev's parent dev if success.
+>>>>>> + */
+>>>>>> +static inline struct device *mdev_to_parent(struct device *dev)
+>>>>>> +{
+>>>>>> +	struct device *ret = NULL;
+>>>>>> +	struct device *(*fn)(struct device *dev);
+>>>>>> +	struct bus_type *bus = symbol_get(mdev_bus_type);
+>>>>>> +
+>>>>>> +	if (bus && dev->bus == bus) {
+>>>>>> +		fn = symbol_get(mdev_dev_to_parent_dev);
+>>>>>> +		ret = fn(dev);
+>>>>>> +		symbol_put(mdev_dev_to_parent_dev);
+>>>>>> +		symbol_put(mdev_bus_type);
+>>>>>
+>>>>> No, things like this are not OK in the drivers/base
+>>>>>
+>>>>> Whatever this is doing needs to be properly architected in some
+>>>>> generic way.
+>>>>
+>>>> Basically what I am trying to do here is to determine if the device is an
+>>>> mdev device or not.
+>>>
+>>> Why? mdev devices are virtual they don't have HW elements.
+>>
+>> Hmm yeah exactly, since they are virtual, they do not have an associated IRQ
+>> domain right? So they use the irq domain of the parent device..
+>>
+>>>
+>>> The caller should use the concrete pci_device to allocate
+>>> platform_msi? What is preventing this?
+>>
+>> hmmm do you mean to say all platform-msi adhere to the rules of a PCI
+>> device?
+> 
+> I mean where a platform-msi can work should be defined by the arch,
+> and probably is related to things like having an irq_domain attached
+> 
+> So, like pci, drivers must only try to do platfor_msi stuff on
+> particular devices. eg on pci_device and platform_device types.
+> 
+> Even so it may not even work, but I can't think of any reason why it
+> should be made to work on a virtual device like mdev.
+> 
+>> The use case if when we have a device assigned to a guest and we
+>> want to allocate IMS(platform-msi) interrupts for that
+>> guest-assigned device. Currently, this is abstracted through a mdev
+>> interface.
+> 
+> And the mdev has the pci_device internally, so it should simply pass
+> that pci_device to the platform_msi machinery.
 
- - Joel
+hmm i am not sure I follow this. mdev has a pci_device internally? which 
+struct are you referring to here?
 
+mdev is merely a micropartitioned PCI device right, which no real PCI 
+resource backing. I am not how else we can find the IRQ domain 
+associated with an mdev..
+
+> 
+> This is no different from something like pci_iomap() which must be
+> used with the pci_device.
+> 
+> Jason
+> 
