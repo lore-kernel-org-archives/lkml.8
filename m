@@ -2,108 +2,169 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AB7C47259
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77495C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9B90206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58DD4206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlXQPhgz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z9NzLadp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgEDRyk (ORCPT
+        id S1730498AbgEDRzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:54:40 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45598 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730142AbgEDRyj (ORCPT
+        Mon, 4 May 2020 13:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730215AbgEDRzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:54:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588614877;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+o4SdY0w3UouF91y2gLQuR1sVRgD2BPdPwIappEYt/U=;
-        b=RlXQPhgzh3gsilovZehVqYRsakFgZ6Pe7x9oLVqBETYyJ9pS8HJmW9EL29O741nN9aiza7
-        6ttt4WCuyL+HVeGs2t8GJTudfQwNiAhVitQ1orQCw6+XfTd11I8p0yRWPljUDRAz4S0fCG
-        n5AxVilHmDDaxRpnr6IwqrPQXZq9IGg=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-119-f5OQJsV5Mdyj6CtlSNE6dw-1; Mon, 04 May 2020 13:54:36 -0400
-X-MC-Unique: f5OQJsV5Mdyj6CtlSNE6dw-1
-Received: by mail-qk1-f200.google.com with SMTP id j12so133872qkl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:54:36 -0700 (PDT)
+        Mon, 4 May 2020 13:55:09 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF33C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:55:08 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id u12so235653vsq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y/gQPiK17suTq6DuWJoy9CBpFSu8hTHVI3iRDs2LpJo=;
+        b=Z9NzLadpYL6ZcaMH8/UG7+m0Is3JRgBpqDvu0N+weEfhTLO4xOv4bkPY7JC32O0chR
+         uaZw/ZHjB92vj9dcV/KOk9raMH9IwyPJS6TtHalY0UWnBRRcxCJ92zgKH3v2OrH/kkOz
+         Qudc2N/RPNQTufP/DoNvsRmw23xnTPWkfgoes=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=+o4SdY0w3UouF91y2gLQuR1sVRgD2BPdPwIappEYt/U=;
-        b=B8YL8cy9rdPDh0d3/aYjdR1C068CiuFkZpVWvu6ob5gZOSh/A8Yt4/3E1cFgHFXzQL
-         xKIpLmuL3yA995ubDSLbLd3+zWvmcL1yVevKyHeEePRVmqBWEDT02eto1mD0Y4SIWTDV
-         nxymkTFjGyX1a0JzPjV8YJ6EIee73SwsaGhoxNnw+ClskQN9qucR5exAfJ/J+A5bD6tO
-         ZyRqXxIpe8V2fBKYFqJJm7LiFUNjVLgupix3n9QJ4T4wq9Clh/1lTC8g/d39EjNAE+GT
-         utuJnrC3y4B8rh3LuYObFSdIW6blyjbFdxkq0O7HRvQkCeOuBYMNnwxeddsXYax17YFO
-         y0CA==
-X-Gm-Message-State: AGi0Pua5SoK94nB4dx6wNr7v2hxHJ70SuiqFeYdw8gORU+wBbDopyyru
-        DSeZoMDIq6O15KE4vovAB+eiph3uk1qusdOuRjbCuLAWC4nEGfSpQ56twwKoQ8SuTERtLjNp7si
-        zo8oMXd/DR1kNSG+HXggMRExJ
-X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr370213qkb.131.1588614875626;
-        Mon, 04 May 2020 10:54:35 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK3uCi6lFkdGRP90/JqMNVl2EPo4jU4+vUXICbUKWh5Z7zHzwK3PWjYZaZSl3+osjCddPgO1g==
-X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr370193qkb.131.1588614875436;
-        Mon, 04 May 2020 10:54:35 -0700 (PDT)
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id q32sm12123066qta.13.2020.05.04.10.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 10:54:34 -0700 (PDT)
-Message-ID: <63498a6eedc7994b1e96a59d12468bfd15e15ef4.camel@redhat.com>
-Subject: Re: [RFC PATCH 00/61] fscache, cachefiles: Rewrite the I/O
- interface in terms of kiocb/iov_iter
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 May 2020 13:54:33 -0400
-In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y/gQPiK17suTq6DuWJoy9CBpFSu8hTHVI3iRDs2LpJo=;
+        b=gdE+vXNpdBQbujAL3nnvmuRjidhhAeqy7E7d8esgttoZ10pxgolS/Of80y3mWx14K7
+         X+VuPZTX8g1Pat6wxP6Q7xfozyyEnStJXJYFjsS17YyHGXtdmBd3JtGLYaIJG9jskBvZ
+         L7iVLHznBFsrEK1RZpvCtuzkrQ42oy6+CRUfTD5MWimN+l5JJxAlhNp2kv2E4nq9VsJX
+         2nGyDdkTnlcu5TwN1LjCCdD+rm2AvG0ekKQBBRjZx/SYyMfAxy0fyPo6BKXauMMl+ibt
+         zlTethONxfabd8JlPpI7icm5R1SQmRNAejbwmu3H0j4cYhkt6Vq6Znk6N+IoVzL1TygB
+         pcfw==
+X-Gm-Message-State: AGi0PuZsL9VUoA6RmPYiQ51OdKJJuSLFPvskePp00UWTy2vRwpvdPTFN
+        VQxUDP8GhC0u/T0hzQsWw0ozAByHmGU=
+X-Google-Smtp-Source: APiQypIhw/aRIfEz5eDikfeNZPnwPN8gv0p9zmvEsz4l8NCoCGM9x5OiTXbcbTyFFdKwf0iR8qNMSg==
+X-Received: by 2002:a05:6102:208f:: with SMTP id h15mr314525vsr.69.1588614906758;
+        Mon, 04 May 2020 10:55:06 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id u85sm4945147vsu.22.2020.05.04.10.55.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 10:55:06 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id l25so206651vso.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:55:06 -0700 (PDT)
+X-Received: by 2002:a67:fc46:: with SMTP id p6mr308066vsq.169.1588614905535;
+ Mon, 04 May 2020 10:55:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+ <e8310c51-d7b1-ac88-cd6b-0965804eb754@codeaurora.org>
+In-Reply-To: <e8310c51-d7b1-ac88-cd6b-0965804eb754@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 4 May 2020 10:54:54 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WF4=4ZgeBE8WYysW1HevynMrPqv6oU4a=hZMQ_z9juiA@mail.gmail.com>
+Message-ID: <CAD=FV=WF4=4ZgeBE8WYysW1HevynMrPqv6oU4a=hZMQ_z9juiA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] soc: qcom: rpmh-rsc: Correctly ignore
+ CPU_CLUSTER_PM notifications
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-04 at 18:07 +0100, David Howells wrote:
-> 
->  (3) Make NFS, CIFS, Ceph, 9P work with it.  I'm hoping that Jeff Layton will
->      do Ceph.  As mentioned, I'm having a crack at NFS, but it's evolved a bit
->      since I last looked at it and it might be easier if I can palm that off
->      to someone more current in the NFS I/O code.
-> 
-> 
+Hi,
 
-[...]
+On Sun, May 3, 2020 at 10:19 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> Hi,
+>
+> On 4/24/2020 10:16 PM, Douglas Anderson wrote:
+> > Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
+> > CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
+> > a default.  This means that we'll try to do a flush in those cases but
+> > we won't necessarily be the last CPU down.  That's not so ideal since
+> > our (lack of) locking assumes we're on the last CPU.
+> >
+> > Luckily this isn't as big a problem as you'd think since (at least on
+> > the SoC I tested) we don't get these notifications except on full
+> > system suspend.  ...and on full system suspend we get them on the last
+> > CPU down.  That means that the worst problem we hit is flushing twice.
+> > Still, it's good to make it correct.
+> >
+> > Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
+> > Reported-by: Stephen Boyd <swboyd@chromium.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >
+> > Changes in v5:
+> > - Corrently => Correctly
+> >
+> > Changes in v4:
+> > - ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
+> >
+> > Changes in v3: None
+> > Changes in v2: None
+> >
+> >   drivers/soc/qcom/rpmh-rsc.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> > index a9e15699f55f..3571a99fc839 100644
+> > --- a/drivers/soc/qcom/rpmh-rsc.c
+> > +++ b/drivers/soc/qcom/rpmh-rsc.c
+> > @@ -806,6 +806,8 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
+> >       case CPU_PM_EXIT:
+> >               cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
+> >               goto exit;
+> > +     default:
+> > +             return NOTIFY_DONE;
+>
+> I noticed a bug here,
+>
+> Either need to unlock and return here.
 
-This looks like a really nice overhaul. I particularly love the
-diffstat. Net removal of ~4000 lines!
+Dang it!  Thank you very much for noticing.  v6 sent.  I removed both
+yours and Stephen's "Reviewed-by" tags.  Please re-review to make sure
+I didn't do anything else stuid.
 
-I'll plan to draft up a patch for Ceph in the near future. The new API
-seems to be quite different, so I imagine this will more or less be a
-rip and replace on the old code.
--- 
-Jeff Layton <jlayton@redhat.com>
 
+> +       default:
+> +               ret = NOTIFY_DONE;
+> +               goto exit;
+>
+> Or
+>
+> If you move this patch at the end of series, it should will work fine as is.
+> Since in patch 5 of this series,  pm_lock is removed, so return
+> NOTIFY_DONE; do not any unlock.
+
+Right.  It used to be part of the last patch but Stephen requested I
+move the bugfixes first so they could land sooner even if we aren't
+ready to land the "remove the pm_lock" patch.
+
+
+> When i pulled in only first two changes in this series i got spinlock
+> recursion during suspend-resume.
+> Back when i pull in entire series for validation, the issue do not come
+> because last patch removes pm_lock.
+
+OK, v6 is sent out.
+
+-Doug
