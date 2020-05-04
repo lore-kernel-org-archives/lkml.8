@@ -2,350 +2,244 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC23C4725B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42CBC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C483E2068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914CE2068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDG+JSXk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l+g0cdu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbgEDRRF (ORCPT
+        id S1730701AbgEDRRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:17:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22578 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729645AbgEDRRC (ORCPT
+        Mon, 4 May 2020 13:17:20 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51780 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729714AbgEDRRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:17:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588612620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lkhriDR9F1rTct6MC2yWfGXDgXzrKohoMCG19+XqaXY=;
-        b=WDG+JSXkVUX53d4G6AKg2MLkj8nNSJiSVWvoYfSCnv8IxPH8UfiMpV4HILUdR0rkYJSYR5
-        MqhwGfTX0Dmz5J1OPacBcqVtlcOJjMi1uHpOAzJX1Z8yjyZmq5DKng8UIHqUxwZjDGBRSP
-        cyY30wNzeoNHUTmu1YyeqE9nEnfysOw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-2U_mJ75IPvKu-w7RL6yRoQ-1; Mon, 04 May 2020 13:16:54 -0400
-X-MC-Unique: 2U_mJ75IPvKu-w7RL6yRoQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E868107B288;
-        Mon,  4 May 2020 17:16:52 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC3DB60E1C;
-        Mon,  4 May 2020 17:16:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 61/61] fscache: Document the rewritten cache backend API
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Jeff Layton <jlayton@redhat.com>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 May 2020 18:16:49 +0100
-Message-ID: <158861260900.340223.17584394318899057798.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Mon, 4 May 2020 13:17:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044HHHJp086798;
+        Mon, 4 May 2020 12:17:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588612637;
+        bh=5HkS3LXYDb7FAZsgCE8f3t5PScofPnie5Sj76ZrQ+os=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=l+g0cdu5ta2o3KZhui48hM+F5oqQrJm4EBMoSrRoN1+phRW9Fa+qz8L3cSi/IKH2V
+         /pqMHGZEZu8QLp+2lbUNCOknFn0oIpveovFuoOnQMVJbMppFuFBdMZcD1N1I6xXEfx
+         FGX1n0DtQ6aj+wHn0I75BwJIOBafyvPvYbunfKgk=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044HHH8i005817;
+        Mon, 4 May 2020 12:17:17 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 12:17:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 12:17:17 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044HHHLP050906;
+        Mon, 4 May 2020 12:17:17 -0500
+Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
+To:     "Andrew F. Davis" <afd@ti.com>, <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+References: <20200504164156.21469-1-dmurphy@ti.com>
+ <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
+ <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1bd44e87-dc61-f38d-63ad-9a783b36569c@ti.com>
+Date:   Mon, 4 May 2020 12:08:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the rewritten cache backend API.
+Andrew
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+On 5/4/20 12:08 PM, Andrew F. Davis wrote:
+> On 5/4/20 12:44 PM, Dan Murphy wrote:
+>> Adding Andrew in manually.
+>>
+>> On 5/4/20 11:41 AM, Dan Murphy wrote:
+>>> Convert the bq27xxx.txt to yaml format
+>>>
+>>> CC: Pali Rohár <pali@kernel.org>
+>>> CC: Andrew F. Davis" <afd@ti.com>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>    .../bindings/power/supply/bq27xxx.txt         | 56 -----------
+>>>    .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
+>>>    2 files changed, 95 insertions(+), 56 deletions(-)
+>>>    delete mode 100644
+>>> Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>>>    create mode 100644
+>>> Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>>> b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>>> deleted file mode 100644
+>>> index 4fa8e08df2b6..000000000000
+>>> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>>> +++ /dev/null
+>>> @@ -1,56 +0,0 @@
+>>> -TI BQ27XXX fuel gauge family
+>>> -
+>>> -Required properties:
+>>> -- compatible: contains one of the following:
+>>> - * "ti,bq27200" - BQ27200
+>>> - * "ti,bq27210" - BQ27210
+>>> - * "ti,bq27500" - deprecated, use revision specific property below
+>>> - * "ti,bq27510" - deprecated, use revision specific property below
+>>> - * "ti,bq27520" - deprecated, use revision specific property below
+>>> - * "ti,bq27500-1" - BQ27500/1
+>>> - * "ti,bq27510g1" - BQ27510-g1
+>>> - * "ti,bq27510g2" - BQ27510-g2
+>>> - * "ti,bq27510g3" - BQ27510-g3
+>>> - * "ti,bq27520g1" - BQ27520-g1
+>>> - * "ti,bq27520g2" - BQ27520-g2
+>>> - * "ti,bq27520g3" - BQ27520-g3
+>>> - * "ti,bq27520g4" - BQ27520-g4
+>>> - * "ti,bq27521" - BQ27521
+>>> - * "ti,bq27530" - BQ27530
+>>> - * "ti,bq27531" - BQ27531
+>>> - * "ti,bq27541" - BQ27541
+>>> - * "ti,bq27542" - BQ27542
+>>> - * "ti,bq27546" - BQ27546
+>>> - * "ti,bq27742" - BQ27742
+>>> - * "ti,bq27545" - BQ27545
+>>> - * "ti,bq27411" - BQ27411
+>>> - * "ti,bq27421" - BQ27421
+>>> - * "ti,bq27425" - BQ27425
+>>> - * "ti,bq27426" - BQ27426
+>>> - * "ti,bq27441" - BQ27441
+>>> - * "ti,bq27621" - BQ27621
+>>> -- reg: integer, I2C address of the fuel gauge.
+>>> -
+>>> -Optional properties:
+>>> -- monitored-battery: phandle of battery characteristics node
+>>> -    The fuel gauge uses the following battery properties:
+>>> -    + energy-full-design-microwatt-hours
+>>> -    + charge-full-design-microamp-hours
+>>> -    + voltage-min-design-microvolt
+>>> -  Both or neither of the *-full-design-*-hours properties must be set.
+>>> -  See Documentation/devicetree/bindings/power/supply/battery.txt
+>>> -
+>>> -Example:
+>>> -
+>>> -    bat: battery {
+>>> -        compatible = "simple-battery";
+>>> -        voltage-min-design-microvolt = <3200000>;
+>>> -        energy-full-design-microwatt-hours = <5290000>;
+>>> -        charge-full-design-microamp-hours = <1430000>;
+>>> -    };
+>>> -
+>>> -    bq27510g3: fuel-gauge@55 {
+>>> -        compatible = "ti,bq27510g3";
+>>> -        reg = <0x55>;
+>>> -        monitored-battery = <&bat>;
+>>> -    };
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>>> b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>>> new file mode 100644
+>>> index 000000000000..6c53ee849004
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>>> @@ -0,0 +1,95 @@
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +# Copyright (C) 2020 Texas Instruments Incorporated
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
+>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>> +
+>>> +title: TI BQ27XXX fuel gauge family
+>>> +
+>>> +maintainers:
+>>> +  - Pali Rohár <pali@kernel.org>
+>>> +  - Andrew F. Davis" <afd@ti.com>
+>
+> Extra " at end of name.
+>
+Ack
 
- Documentation/filesystems/caching/backend-api.txt |  172 ++++++++++++++++++---
- 1 file changed, 148 insertions(+), 24 deletions(-)
 
-diff --git a/Documentation/filesystems/caching/backend-api.txt b/Documentation/filesystems/caching/backend-api.txt
-index 710d10408fcb..9af6f9618576 100644
---- a/Documentation/filesystems/caching/backend-api.txt
-+++ b/Documentation/filesystems/caching/backend-api.txt
-@@ -42,7 +42,7 @@ previously initialised cache definition to:
- 			      struct fscache_object *fsdef,
- 			      const char *tagname);
- 
--Two extra arguments should also be supplied:
-+Two further arguments should also be supplied:
- 
-  (*) "fsdef" which should point to the object representation for the FS-Cache
-      master index in this cache.  Netfs primary index entries will be created
-@@ -50,9 +50,7 @@ Two extra arguments should also be supplied:
-      successful and will release it upon withdrawal of the cache.
- 
-  (*) "tagname" which, if given, should be a text string naming this cache.  If
--     this is NULL, the identifier will be used instead.  For CacheFS, the
--     identifier is set to name the underlying block device and the tag can be
--     supplied by mount.
-+     this is NULL, the identifier will be used instead.
- 
- This function may return -ENOMEM if it ran out of memory or -EEXIST if the tag
- is already in use.  0 will be returned on success.
-@@ -156,28 +154,45 @@ performed on the denizens of the cache.  These are held in a structure of type:
-  (*) Allocate a new object [mandatory]:
- 
- 	struct fscache_object *(*alloc_object)(struct fscache_cache *cache,
--					       struct fscache_cookie *cookie)
-+					       struct fscache_cookie *cookie,
-+					       struct fscache_object *parent)
- 
-      This method is used to allocate a cache object representation to back a
-      cookie in a particular cache.  fscache_object_init() should be called on
-      the object to initialise it prior to returning.
- 
-+ (*) Prepare lookup data [mandatory]:
- 
-- (*) Look up and create object [mandatory]:
-+	void *(*prepare_lookup_data)(struct fscache_object *object);
- 
--	void (*lookup_object)(struct fscache_object *object)
-+     This method is used to prepare lookup data that can be passed to the
-+     lookup_object and create_object methods.
-+
-+
-+ (*) Look up an object [mandatory]:
-+
-+	void (*lookup_object)(struct fscache_object *object,
-+			      void *lookup_data);
- 
-      This method is used to look up an object, given that the object is already
--     allocated and attached to the cookie.  This should instantiate that object
--     in the cache if it can.
-+     allocated and attached to the cookie.
-+
-+
-+ (*) Create an object [mandatory]:
-+
-+	void (*create_object)(struct fscache_object *object,
-+			      void *lookup_data);
-+
-+     This method is used to create an object that has previously been looked
-+     up.
- 
- 
-  (*) Release lookup data [mandatory]:
- 
--	void (*lookup_complete)(struct fscache_object *object)
-+	void (*free_lookup_data)(struct fscache_object *object,
-+				 void *lookup_data);
- 
--     This method is called to ask the cache to release any resources it was
--     using to perform a lookup.
-+     This method is called to clean up the lookup data.
- 
- 
-  (*) Increment object refcount [mandatory]:
-@@ -202,23 +217,27 @@ performed on the denizens of the cache.  These are held in a structure of type:
- 
- 	int (*update_object)(struct fscache_object *object)
- 
--     This is called to update the index entry for the specified object.  The
--     new information should be in object->cookie->aux and ->object_size.
-+     This is called to update the coherency for the specified object and to
-+     trim the cache object to size.  The cache should use the information
-+     stored in object->cookie->aux and ->object_size for this purpose.
- 
- 
-  (*) Invalidate data object [mandatory]:
- 
--	int (*invalidate_object)(struct fscache_operation *op)
-+	int (*invalidate_object)(struct fscache_operation *op,
-+				 unsigned int flags)
- 
-      This is called to invalidate a data object.
- 
- 
-  (*) Discard object [mandatory]:
- 
--	void (*drop_object)(struct fscache_object *object)
-+	void (*drop_object)(struct fscache_object *object,
-+			    bool invalidate)
- 
-      This method is called to indicate that an object has been unbound from its
--     cookie.
-+     cookie.  If invalidate is true, the object should be removed from the
-+     cache.
- 
-      This method should not attempt to release any references held by the
-      caller.  The caller will invoke the put_object() method as appropriate.
-@@ -228,8 +247,16 @@ performed on the denizens of the cache.  These are held in a structure of type:
- 
- 	void (*put_object)(struct fscache_object *object)
- 
--     This method is used to discard a reference to an object.  The object may
--     be freed when all the references to it are released.
-+     This method is used to discard a reference to an object.  The object
-+     should be freeable when all the references to it are released.
-+
-+
-+ (*) Get object reference count [mandatory]:
-+
-+	unsigned int (*get_object_usage)(const struct fscache_object *object);
-+
-+     This method is used to read the reference count on an object for display
-+     purposes.
- 
- 
-  (*) Synchronise a cache [mandatory]:
-@@ -258,12 +285,85 @@ performed on the denizens of the cache.  These are held in a structure of type:
-      size if larger than that already.
- 
- 
-+ (*) Shape request extent [mandatory]:
-+
-+	unsigned int (*shape_extent)(struct fscache_object *object,
-+				     struct fscache_extent *extent,
-+				     loff_t i_size, bool for_write);
-+
-+     This method is called to shape a request according to the granularity of
-+     the cache's content tracking.  The cache may expand and contract the
-+     extent, but it is required to keep the start page within the shaped
-+     extent.
-+
-+ (*) Read data from the cache [mandatory]:
-+
-+	int (*read)(struct fscache_object *object,
-+		    struct fscache_io_request *req,
-+		    struct iov_iter *iter);
-+
-+     This method is called to read data from the cache into the buffer
-+     specified by 'iter'.  The location and length of the read are specified in
-+     the request descriptor.  The operation must be synchronous if req->io_done
-+     is not set.  req->io_done() must be called if provided, though this may be
-+     deferred if asynchronous I/O is used and -EIOCBQUEUED returned.
-+
-+     The netfs is expected to have rounded its request to units of
-+     dio_block_size as returned by ->shape_extent().
-+
-+     req->error, req->transferred and req->data_from_cache should be updated as
-+     appropriate and fscache_end_io_operation() and fscache_put_io_request()
-+     called.  If the operation didn't read all the data, -ENODATA should be
-+     set.
-+
-+ (*) Write data to the cache [mandatory]:
-+
-+	int (*write)(struct fscache_object *object,
-+		     struct fscache_io_request *req,
-+		     struct iov_iter *iter);
-+
-+     This method is called to write data from the buffer specified by 'iter'
-+     into the cache.  The location and length of the write are specified in the
-+     request descriptor.  The operation must be synchronous if req->io_done is
-+     not set.  req->io_done() must be called if provided, though this may be
-+     deferred if asynchronous I/O is used and -EIOCBQUEUED returned.
-+
-+     The netfs is expected to have rounded its request to units of
-+     dio_block_size as returned by ->shape_extent().
-+
-+     req->error should be updated as appropriate and fscache_end_io_operation()
-+     and fscache_put_io_request() called.  If the operation didn't write all
-+     the data, -ENOBUFS should be set.
-+
-+ (*) Prepare to write to a live cache object [mandatory]:
-+
-+	int (*prepare_to_write)(struct fscache_object *object);
-+
-+     This method is called when fscache_use_object() is called on an object
-+     that already exists and will_modify is true and FSCACHE_OBJECT_LOCAL_WRITE
-+     was not yet set on the object.  This allows the cache to mark the object
-+     as being dirty prior to writing data to it, or to take a local copy.
-+
-+ (*) Display object info [mandatory]:
-+
-+	int (*display_object)(struct seq_file *m, struct fscache_object *object);
-+
-+     This method is called to summarise an object in /proc/fs/fscache/objects.
-+
-+
- ==================
- FS-CACHE UTILITIES
- ==================
- 
- FS-Cache provides some utilities that a cache backend may make use of:
- 
-+ (*) The filesystem index cookie:
-+
-+	struct fscache_cookie fscache_fsdef_index
-+
-+     This is the cookie to which the object passed to fscache_add_cache() are
-+     bound.
-+
-  (*) Note occurrence of an I/O error in a cache:
- 
- 	void fscache_io_error(struct fscache_cache *cache)
-@@ -283,14 +383,13 @@ FS-Cache provides some utilities that a cache backend may make use of:
-      This initialises all the fields in an object representation.
- 
- 
-- (*) Indicate the destruction of an object:
-+ (*) Bracket the destruction of an object.
- 
-+	void fscache_object_destroy(struct fscache_object *object);
- 	void fscache_object_destroyed(struct fscache_cache *cache);
- 
--     This must be called to inform FS-Cache that an object that belonged to a
--     cache has been destroyed and deallocated.  This will allow continuation
--     of the cache withdrawal process when it is stopped pending destruction of
--     all the objects.
-+     These must be called on either side of object destruction to clean up the
-+     FS-Cache parts of an object and do the accounting.
- 
- 
-  (*) Indicate that a stale object was found and discarded:
-@@ -314,3 +413,28 @@ FS-Cache provides some utilities that a cache backend may make use of:
- 	FSCACHE_OBJECT_NO_SPACE - there was insufficient cache space
- 	FSCACHE_OBJECT_WAS_RETIRED - the object was retired when relinquished.
- 	FSCACHE_OBJECT_WAS_CULLED - the object was culled to make space.
-+
-+
-+ (*) Get pointers to the cookie index key and coherency data buffers:
-+
-+	void *fscache_get_key(struct fscache_cookie *cookie);
-+	void *fscache_get_aux(struct fscache_cookie *cookie);
-+
-+     These handle the switching between internal buffering for small data and
-+     kmalloc'd buffering for larger data.
-+
-+
-+ (*) End an I/O operation:
-+
-+	void fscache_end_io_operation(struct fscache_cookie *cookie);
-+
-+     This is call to manage the accounting at the end of an I/O operation.
-+
-+
-+ (*) Get/put references on I/O request descriptors.
-+
-+	void fscache_get_io_request(struct fscache_io_request *req);
-+	void fscache_put_io_request(struct fscache_io_request *req);
-+
-+     Manage references on I/O request descriptors.  These may be called in
-+     softirq context.
+>>> +  - Sebastian Reichel <sre@kernel.org>
+>>> +
+>>> +description: |
+>>> +  Support various Texas Instruments fuel gauge devices that share
+>>> similar
+>>> +  register maps and power supply properties
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - ti,bq27200 - BQ27200
+>>> +      - ti,bq27210 - BQ27210
+>>> +      - ti,bq27500 - deprecated, use revision specific property below
+>>> +      - ti,bq27510 - deprecated, use revision specific property below
+>>> +      - ti,bq27520 - deprecated, use revision specific property below
+>>> +      - ti,bq27500-1 - BQ27500/1
+>>> +      - ti,bq27510g1 - BQ27510-g1
+>>> +      - ti,bq27510g2 - BQ27510-g2
+>>> +      - ti,bq27510g3 - BQ27510-g3
+>>> +      - ti,bq27520g1 - BQ27520-g1
+>>> +      - ti,bq27520g2 - BQ27520-g2
+>>> +      - ti,bq27520g3 - BQ27520-g3
+>>> +      - ti,bq27520g4 - BQ27520-g4
+>>> +      - ti,bq27521 - BQ27521
+>>> +      - ti,bq27530 - BQ27530
+>>> +      - ti,bq27531 - BQ27531
+>>> +      - ti,bq27541 - BQ27541
+>>> +      - ti,bq27542 - BQ27542
+>>> +      - ti,bq27546 - BQ27546
+>>> +      - ti,bq27742 - BQ27742
+>>> +      - ti,bq27545 - BQ27545
+>>> +      - ti,bq27411 - BQ27411
+>>> +      - ti,bq27421 - BQ27421
+>>> +      - ti,bq27425 - BQ27425
+>>> +      - ti,bq27426 - BQ27426
+>>> +      - ti,bq27441 - BQ27441
+>>> +      - ti,bq27621 - BQ27621
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +    description: integer, I2C address of the fuel gauge.
+>>> +
+>>> +  monitored-battery:
+>>> +    description: phandle of battery characteristics node
+>>> +
+>>> +  energy-full-design-microwatt-hours:
+>>> +    description: |
+>>> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
+>>> +      If this property is set then charge-full-design-microamp-hours
+>>> must be
+>>> +      set as well.
+>
+> These are properties of the battery node and should be described in
+> their binding, they are not part of the fuel gauge node here.
+
+OK.  I will add the explanation back from the original text file that 
+these are used by the fuel gauge from the battery node.
+
+Dan
 
 
