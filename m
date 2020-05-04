@@ -2,230 +2,129 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6D2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA493C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D77C205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615787;
-	bh=UEsvsLFY7/HtXESKZ/Exh6Pru9+fDNYrBHmBwGsyn5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBu30pbdYOCxrMuuu6CETMoZmckjgc3zonLp+6KVrkd+epty7t4ibQzMzQ30nLZO2
-	 tsUX0HVq3VE4o3IuH42qq7KuFs0jQfZSyEs4sVNETW1MR0/YAsbMT8tuGZ35QLMfK9
-	 TRC9j7CADAexMgLcGyqqPYyACSuLuHwe5yeeLBTs=
+	by mail.kernel.org (Postfix) with ESMTP id BB685205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VfjjNs3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbgEDSJq (ORCPT
+        id S1731926AbgEDSGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731943AbgEDSGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71CA2206B8;
-        Mon,  4 May 2020 18:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615579;
-        bh=UEsvsLFY7/HtXESKZ/Exh6Pru9+fDNYrBHmBwGsyn5A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jPjP6RwRclPi4AwUY2iER14MUhFpzBzRookvrz2p2dc4NpMGOVDQ+KHfCtS6NLjYr
-         hDrJOtSJEvFaZDwLbVEFehwFQIIzOrrbb5iuNOToQo8rLvBIvShiuJvWsBSpL+rmfx
-         Gqad5/ufl207Byhht4yEramHCuaHUJYKABWITvq0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.6 05/73] drm/amd/display: Fix green screen issue after suspend
-Date:   Mon,  4 May 2020 19:57:08 +0200
-Message-Id: <20200504165502.808824161@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
-References: <20200504165501.781878940@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 May 2020 14:06:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731274AbgEDSGI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:08 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B10EC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:06:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l12so116947pgr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:06:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5H5y0GT0IX1bjv46W43wTOmcN/3DzOsesayYr+f385c=;
+        b=VfjjNs3D1ejtb+5tDVnv4xIxeWbWw/o38mrHwOZ5Gwkc82EKTZ7pb9asTgtjF5BOl5
+         Zqs4vbc5AMjqxgNOipERymQfeg78d3WB44sQWSCPyzc8fjFCFil4qhPuqg1dVU2c7TEV
+         A6XlZfrUYCmdVmssHy2yO3uNUZUiSM/Gfc3ko=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5H5y0GT0IX1bjv46W43wTOmcN/3DzOsesayYr+f385c=;
+        b=pCY06IDTYRgyoDxy0wjxEh0CNEAAeMY1iDZ3fy/0VvohBWG2dggqgKrXOyEujs2dba
+         S0ODXCuMWL/t+fwzod+kFAeHMv9okpZ3J/mPv+SgZxbVsyrepPN2aJnN1Dk0+JZ/2Qsg
+         p2e0hBzXokX1NfheALiZFXmR01T8xaTKyKjqQNWrDY3kMnd7eRW34WOHYGyE3GgMKzh6
+         PXeUh2OtG1Qm7Q2yOHvybAYD/L++QfHTVq78HnHp3h3anb3cXbkomFjCwvTEK8TW74hZ
+         kz+tFFTDxzyrQ8WDDtQ0pLGMJqm9RUR/C/NAiA7xe1MLU5pB2mpkV2CDQsEUuOSNFK9M
+         f7fg==
+X-Gm-Message-State: AGi0PualbcKml3rY+zmxWLDi7AO5f332W+bL3x8I4JVMp4NmNiRm2XK1
+        ErNLyjESFiiRY4W9tbCd3rtkMQ==
+X-Google-Smtp-Source: APiQypIlcStIRBl6cHaGQp3N0+X9MfO14Oi4jnSZEiTTEcv+6ntBV7uerro/crzxcPaqm3zz3v5luA==
+X-Received: by 2002:a65:4c83:: with SMTP id m3mr201796pgt.128.1588615568087;
+        Mon, 04 May 2020 11:06:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p2sm8099142pgh.25.2020.05.04.11.06.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 11:06:07 -0700 (PDT)
+Date:   Mon, 4 May 2020 11:06:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 01/12] add support for Clang's Shadow Call Stack (SCS)
+Message-ID: <202005041050.7E29A56637@keescook>
+References: <20200416161245.148813-1-samitolvanen@google.com>
+ <20200416161245.148813-2-samitolvanen@google.com>
+ <20200420171727.GB24386@willie-the-truck>
+ <20200420211830.GA5081@google.com>
+ <20200422173938.GA3069@willie-the-truck>
+ <20200422235134.GA211149@google.com>
+ <202004231121.A13FDA100@keescook>
+ <20200424112113.GC21141@willie-the-truck>
+ <20200427204546.GA80713@google.com>
+ <20200504165227.GB1833@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504165227.GB1833@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+On Mon, May 04, 2020 at 05:52:28PM +0100, Will Deacon wrote:
+> On Mon, Apr 27, 2020 at 01:45:46PM -0700, Sami Tolvanen wrote:
+> > On Fri, Apr 24, 2020 at 12:21:14PM +0100, Will Deacon wrote:
+> > > The vmap version that I asked Sami to drop
+> > > is at least better in this regard, although the guard page is at the wrong
+> > > end of the stack and we just hope that the allocation below us didn't pass
+> > > VM_NO_GUARD. Looks like the same story for vmap stack :/
+> > 
+> > SCS grows up and the guard page is after the allocation, so how is it at
+> > the wrong end? Am I missing something here?
+> 
+> Sorry, I'd got the SCS upside-down in my head (hey, that second 'S' stands
+> for 'Stack'!). But I think I'm right about vmap stack, which feels a
+> little fragile even though it seems to work out today with the very limited
+> uses of VM_NO_GUARD.
 
-commit 87b7ebc2e16c14d32a912f18206a4d6cc9abc3e8 upstream.
+Yeah, when VMAP_STACK was originally being developed, IIRC, there was
+an effort made to eliminate all the users of VM_NO_GUARD, and it looks
+like it's mostly there. Really the only use left is arm64's kernel image
+mapping routines, and then it's not actually used in the traditional
+sense -- it's just a boolean for whether to toss in a guard page at the
+end of the data section, and the VMAs are built manually. I think that
+code could actually be refactored to drop it too and then the only user
+would be KASAN, which, IIUC, wants to build consecutive vmap areas.
 
-[why]
-We have seen a green screen after resume from suspend in a Raven system
-connected with two displays (HDMI and DP) on X based system. We noticed
-that this issue is related to bad DCC metadata from user space which may
-generate hangs and consequently an underflow on HUBP. After taking a
-deep look at the code path we realized that after resume we try to
-restore the commit with the DCC enabled framebuffer but the framebuffer
-is no longer valid.
-
-[how]
-This problem was only reported on Raven based system and after suspend,
-for this reason, this commit adds a new parameter on
-fill_plane_dcc_attributes() to give the option of disabling DCC
-programmatically. In summary, for disabling DCC we first verify if is a
-Raven system and if it is in suspend; if both conditions are true we
-disable DCC temporarily, otherwise, it is enabled.
-
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1099
-Co-developed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   38 ++++++++++++++++------
- 1 file changed, 29 insertions(+), 9 deletions(-)
-
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -3212,7 +3212,8 @@ fill_plane_dcc_attributes(struct amdgpu_
- 			  const union dc_tiling_info *tiling_info,
- 			  const uint64_t info,
- 			  struct dc_plane_dcc_param *dcc,
--			  struct dc_plane_address *address)
-+			  struct dc_plane_address *address,
-+			  bool force_disable_dcc)
- {
- 	struct dc *dc = adev->dm.dc;
- 	struct dc_dcc_surface_param input;
-@@ -3224,6 +3225,9 @@ fill_plane_dcc_attributes(struct amdgpu_
- 	memset(&input, 0, sizeof(input));
- 	memset(&output, 0, sizeof(output));
- 
-+	if (force_disable_dcc)
-+		return 0;
-+
- 	if (!offset)
- 		return 0;
- 
-@@ -3273,7 +3277,8 @@ fill_plane_buffer_attributes(struct amdg
- 			     union dc_tiling_info *tiling_info,
- 			     struct plane_size *plane_size,
- 			     struct dc_plane_dcc_param *dcc,
--			     struct dc_plane_address *address)
-+			     struct dc_plane_address *address,
-+			     bool force_disable_dcc)
- {
- 	const struct drm_framebuffer *fb = &afb->base;
- 	int ret;
-@@ -3379,7 +3384,8 @@ fill_plane_buffer_attributes(struct amdg
- 
- 		ret = fill_plane_dcc_attributes(adev, afb, format, rotation,
- 						plane_size, tiling_info,
--						tiling_flags, dcc, address);
-+						tiling_flags, dcc, address,
-+						force_disable_dcc);
- 		if (ret)
- 			return ret;
- 	}
-@@ -3471,7 +3477,8 @@ fill_dc_plane_info_and_addr(struct amdgp
- 			    const struct drm_plane_state *plane_state,
- 			    const uint64_t tiling_flags,
- 			    struct dc_plane_info *plane_info,
--			    struct dc_plane_address *address)
-+			    struct dc_plane_address *address,
-+			    bool force_disable_dcc)
- {
- 	const struct drm_framebuffer *fb = plane_state->fb;
- 	const struct amdgpu_framebuffer *afb =
-@@ -3550,7 +3557,8 @@ fill_dc_plane_info_and_addr(struct amdgp
- 					   plane_info->rotation, tiling_flags,
- 					   &plane_info->tiling_info,
- 					   &plane_info->plane_size,
--					   &plane_info->dcc, address);
-+					   &plane_info->dcc, address,
-+					   force_disable_dcc);
- 	if (ret)
- 		return ret;
- 
-@@ -3573,6 +3581,7 @@ static int fill_dc_plane_attributes(stru
- 	struct dc_plane_info plane_info;
- 	uint64_t tiling_flags;
- 	int ret;
-+	bool force_disable_dcc = false;
- 
- 	ret = fill_dc_scaling_info(plane_state, &scaling_info);
- 	if (ret)
-@@ -3587,9 +3596,11 @@ static int fill_dc_plane_attributes(stru
- 	if (ret)
- 		return ret;
- 
-+	force_disable_dcc = adev->asic_type == CHIP_RAVEN && adev->in_suspend;
- 	ret = fill_dc_plane_info_and_addr(adev, plane_state, tiling_flags,
- 					  &plane_info,
--					  &dc_plane_state->address);
-+					  &dc_plane_state->address,
-+					  force_disable_dcc);
- 	if (ret)
- 		return ret;
- 
-@@ -5171,6 +5182,7 @@ static int dm_plane_helper_prepare_fb(st
- 	uint64_t tiling_flags;
- 	uint32_t domain;
- 	int r;
-+	bool force_disable_dcc = false;
- 
- 	dm_plane_state_old = to_dm_plane_state(plane->state);
- 	dm_plane_state_new = to_dm_plane_state(new_state);
-@@ -5229,11 +5241,13 @@ static int dm_plane_helper_prepare_fb(st
- 			dm_plane_state_old->dc_state != dm_plane_state_new->dc_state) {
- 		struct dc_plane_state *plane_state = dm_plane_state_new->dc_state;
- 
-+		force_disable_dcc = adev->asic_type == CHIP_RAVEN && adev->in_suspend;
- 		fill_plane_buffer_attributes(
- 			adev, afb, plane_state->format, plane_state->rotation,
- 			tiling_flags, &plane_state->tiling_info,
- 			&plane_state->plane_size, &plane_state->dcc,
--			&plane_state->address);
-+			&plane_state->address,
-+			force_disable_dcc);
- 	}
- 
- 	return 0;
-@@ -6514,7 +6528,12 @@ static void amdgpu_dm_commit_planes(stru
- 		fill_dc_plane_info_and_addr(
- 			dm->adev, new_plane_state, tiling_flags,
- 			&bundle->plane_infos[planes_count],
--			&bundle->flip_addrs[planes_count].address);
-+			&bundle->flip_addrs[planes_count].address,
-+			false);
-+
-+		DRM_DEBUG_DRIVER("plane: id=%d dcc_en=%d\n",
-+				 new_plane_state->plane->index,
-+				 bundle->plane_infos[planes_count].dcc.enable);
- 
- 		bundle->surface_updates[planes_count].plane_info =
- 			&bundle->plane_infos[planes_count];
-@@ -7935,7 +7954,8 @@ dm_determine_update_type_for_commit(stru
- 				ret = fill_dc_plane_info_and_addr(
- 					dm->adev, new_plane_state, tiling_flags,
- 					plane_info,
--					&flip_addr->address);
-+					&flip_addr->address,
-+					false);
- 				if (ret)
- 					goto cleanup;
- 
-
-
+-- 
+Kees Cook
