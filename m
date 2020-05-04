@@ -2,141 +2,184 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F2C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FA0C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B122524956
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0AB20735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DoLS6r/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgEDLlM (ORCPT
+        id S1728616AbgEDLo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:41:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57390 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgEDLlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:41:11 -0400
-IronPort-SDR: SQuyBrnTNt/XjkAq/e7HnsbwGtIBWgOWFBKaSarp61eXXnHU9GKjwB9Atffxlgh+N/xT8lVnIR
- Dq4P9W+1LzXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 04:41:10 -0700
-IronPort-SDR: nK1XVmEP/7h0Dz9nRq3BHsCwEWqIAqIaOYKzPSsL9UGWuseFvAxw0CBmTaJZwhBHb/MKLwbX/x
- FvpEWpGlLdfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="248193832"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 04 May 2020 04:41:06 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jVZTB-004bjy-4p; Mon, 04 May 2020 14:41:09 +0300
-Date:   Mon, 4 May 2020 14:41:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
-        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        yamada.masahiro@socionext.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 0/4] Introduce the for_each_set_clump macro
-Message-ID: <20200504114109.GE185537@smile.fi.intel.com>
-References: <cover.1588460322.git.syednwaris@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588460322.git.syednwaris@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Mon, 4 May 2020 07:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726782AbgEDLo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:44:26 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29F2C061A0E;
+        Mon,  4 May 2020 04:44:26 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 207so2712383pgc.6;
+        Mon, 04 May 2020 04:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=KE1E6Qa3R2pfEpOWk7MxtXJqUgD9w91BRweLgLc6m/I=;
+        b=DoLS6r/Y/Yq6S/rgQycBopx94B6CehgYivKU/+UXsQu2n+Uc9RJCBf7ol4yyYHbq8l
+         eRoI1QVG4NX6LNePy+OFPSHt6VKWjZ5y2n/pYcEZ40Zd1IfXpaJf51sjo0kgzaOYeOwE
+         KPrxp7VlGPXk7fyFzfsBg+zEO9HOgdHJSk7DfWrj1FUN4s1hEYODkk5yeDBV4SWH9g7M
+         bsuIEBwLFuILx130410g3bk8j381PnOoletAhT7YvmGTJp57ce5JMBPZ5R4mv+3GNYdS
+         Tfd5ksb26j28n6oOQW2VtoXlmb0VudzdbkwG1Qm8P376KjSDXrV4JPlaRqRqEh/t9aI/
+         4FXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=KE1E6Qa3R2pfEpOWk7MxtXJqUgD9w91BRweLgLc6m/I=;
+        b=VS1Mhtm5N0TRIW72+7C4uG74RRnkoacBPPRnHkM63HeMPVVhPKQssH7lOtuI66oOBz
+         ppbsmaxQaOF/+D3gWPFh5udXJxIaYq7B/7FTJdfu9noYI4DFdVZ4Pusq2oii8JL3Na1f
+         xFu8UoNJigxxJq6S/Dk9Uu1wvN/ZECcgOlCSGQms+6PdX399P/Vmp+7r6PwmYUAS6svG
+         53h4CIfHFBqBzYQJ9XIaZQ/gGQHg8uY0dGKwo6RAg+PqtHopvbmpaSLHJxMDgy743zfU
+         6jEz/k/K/47r9xXioV+ScQ1iRqVNQ9AZy4UCgNjKZ6UbSfdea5MTD0udMr4SLDhCbRe0
+         YfcQ==
+X-Gm-Message-State: AGi0Pua02tMab97jasZhWtOgo7IVHN8WUEAHurr10FsjhZyNQtkQ600R
+        NcworBuaQNjf6MQ1GSlfhKo=
+X-Google-Smtp-Source: APiQypK6Y0ETyZi/tK8Fo012jOB3XHEpY8XYWd7UJbcUvZpongTD58JgYc0v6ieSgnN+Z4hU8KnDxQ==
+X-Received: by 2002:a63:7b42:: with SMTP id k2mr10622412pgn.299.1588592666223;
+        Mon, 04 May 2020 04:44:26 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:20a:c836:7c28:bcca:10e4:5523])
+        by smtp.gmail.com with ESMTPSA id w30sm8646930pfj.25.2020.05.04.04.44.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 04:44:25 -0700 (PDT)
+From:   Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] i2c: drivers: Remove superfluous error message
+Date:   Mon,  4 May 2020 17:14:06 +0530
+Message-Id: <20200504114408.9128-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200503120847.13528-1-aishwaryarj100@gmail.com>
+References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 04:38:36AM +0530, Syed Nayyar Waris wrote:
-> This patchset introduces a new generic version of for_each_set_clump. 
-> The previous version of for_each_set_clump8 used a fixed size 8-bit
-> clump, but the new generic version can work with clump of any size but
-> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
-> in several GPIO drivers.
-> 
-> The earlier 8-bit for_each_set_clump8 facilitated a
-> for-loop syntax that iterates over a memory region entire groups of set
-> bits at a time.
-> 
-> For example, suppose you would like to iterate over a 32-bit integer 8
-> bits at a time, skipping over 8-bit groups with no set bit, where
-> XXXXXXXX represents the current 8-bit group:
-> 
->     Example:        10111110 00000000 11111111 00110011
->     First loop:     10111110 00000000 11111111 XXXXXXXX
->     Second loop:    10111110 00000000 XXXXXXXX 00110011
->     Third loop:     XXXXXXXX 00000000 11111111 00110011
-> 
-> Each iteration of the loop returns the next 8-bit group that has at
-> least one set bit.
-> 
-> But with the new for_each_set_clump the clump size can be different from 8 bits.
-> Moreover, the clump can be split at word boundary in situations where word 
-> size is not multiple of clump size. Following are examples showing the working 
-> of new macro for clump sizes of 24 bits and 6 bits.
-> 
-> Example 1:
-> clump size: 24 bits, Number of clumps (or ports): 10
-> bitmap stores the bit information from where successive clumps are retrieved.
-> 
->      /* bitmap memory region */
->         0x00aa0000ff000000;  /* Most significant bits */
->         0xaaaaaa0000ff0000;
->         0x000000aa000000aa;
->         0xbbbbabcdeffedcba;  /* Least significant bits */
-> 
-> Different iterations of for_each_set_clump:-
-> 'offset' is the bit position and 'clump' is the 24 bit clump from the
-> above bitmap.
-> Iteration first:        offset: 0 clump: 0xfedcba
-> Iteration second:       offset: 24 clump: 0xabcdef
-> Iteration third:        offset: 48 clump: 0xaabbbb
-> Iteration fourth:       offset: 96 clump: 0xaa
-> Iteration fifth:        offset: 144 clump: 0xff
-> Iteration sixth:        offset: 168 clump: 0xaaaaaa
-> Iteration seventh:      offset: 216 clump: 0xff
-> Loop breaks because in the end the remaining bits (0x00aa) size was less
-> than clump size of 24 bits.
-> 
-> In above example it can be seen that in iteration third, the 24 bit clump
-> that was retrieved was split between bitmap[0] and bitmap[1]. This example 
-> also shows that 24 bit zeroes if present in between, were skipped (preserving
-> the previous for_each_set_macro8 behaviour). 
-> 
-> Example 2:
-> clump size = 6 bits, Number of clumps (or ports) = 3.
-> 
->      /* bitmap memory region */
->         0x00aa0000ff000000;  /* Most significant bits */
->         0xaaaaaa0000ff0000;
->         0x0f00000000000000;
->         0x0000000000000ac0;  /* Least significant bits */
-> 
-> Different iterations of for_each_set_clump:
-> 'offset' is the bit position and 'clump' is the 6 bit clump from the
-> above bitmap.
-> Iteration first:        offset: 6 clump: 0x2b
-> Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
-> Here 6 * 3 is clump size * no. of clumps.
+The function platform_get_irq can log an error by itself.
+This omit a redundant message for exception handling in the
+calling function.
 
-Looking into the last patches where we have examples I still do not see a
-benefit of variadic clump sizes. power of 2 sizes would make sense (and be
-optimized accordingly (64-bit, 32-bit).
+Suggested by Coccinelle.
 
+Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+---
+ drivers/i2c/busses/i2c-altera.c   | 4 +---
+ drivers/i2c/busses/i2c-cht-wc.c   | 4 +---
+ drivers/i2c/busses/i2c-img-scb.c  | 4 +---
+ drivers/i2c/busses/i2c-lpc2k.c    | 4 +---
+ drivers/i2c/busses/i2c-uniphier.c | 4 +---
+ 5 files changed, 5 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index f5c00f903df3..af6985f0ae63 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -395,10 +395,8 @@ static int altr_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(idev->base);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "missing interrupt resource\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	idev->i2c_clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(idev->i2c_clk)) {
+diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+index 35e55feda763..343ae5754e6e 100644
+--- a/drivers/i2c/busses/i2c-cht-wc.c
++++ b/drivers/i2c/busses/i2c-cht-wc.c
+@@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+ 	int ret, reg, irq;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "Error missing irq resource\n");
++	if (irq < 0)
+ 		return -EINVAL;
+-	}
+ 
+ 	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
+ 	if (!adap)
+diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+index 422097a31c95..2f6de763816a 100644
+--- a/drivers/i2c/busses/i2c-img-scb.c
++++ b/drivers/i2c/busses/i2c-img-scb.c
+@@ -1344,10 +1344,8 @@ static int img_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->base);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "can't get irq number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+ 	if (IS_ERR(i2c->sys_clk)) {
+diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
+index 13b0c12e2dba..43dc9b7043e4 100644
+--- a/drivers/i2c/busses/i2c-lpc2k.c
++++ b/drivers/i2c/busses/i2c-lpc2k.c
+@@ -362,10 +362,8 @@ static int i2c_lpc2k_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c->base);
+ 
+ 	i2c->irq = platform_get_irq(pdev, 0);
+-	if (i2c->irq < 0) {
+-		dev_err(&pdev->dev, "can't get interrupt resource\n");
++	if (i2c->irq < 0)
+ 		return i2c->irq;
+-	}
+ 
+ 	init_waitqueue_head(&i2c->wait);
+ 
+diff --git a/drivers/i2c/busses/i2c-uniphier.c b/drivers/i2c/busses/i2c-uniphier.c
+index 668b1fa2b0ef..ee00a44bf4c7 100644
+--- a/drivers/i2c/busses/i2c-uniphier.c
++++ b/drivers/i2c/busses/i2c-uniphier.c
+@@ -324,10 +324,8 @@ static int uniphier_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->membase);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "failed to get IRQ number\n");
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
+ 		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
