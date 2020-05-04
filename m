@@ -2,122 +2,114 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6E8C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D056C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BED3206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1E62073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UHnf72ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgEDTGg convert rfc822-to-8bit (ORCPT
+        id S1727799AbgEDTGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:06:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CF4C061A0E;
-        Mon,  4 May 2020 12:06:36 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E22D52A0C98;
-        Mon,  4 May 2020 20:06:33 +0100 (BST)
-Date:   Mon, 4 May 2020 21:06:30 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
-Message-ID: <20200504210630.1489df6e@collabora.com>
-In-Reply-To: <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
-References: <20200410115113.31728-1-ezequiel@collabora.com>
-        <20200410115113.31728-3-ezequiel@collabora.com>
-        <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
-        <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
-        <20200502203707.402ea3cd@collabora.com>
-        <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
-        <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 4 May 2020 15:06:40 -0400
+Received: from mout.gmx.net ([212.227.15.15]:56527 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgEDTGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:06:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1588619183;
+        bh=C+isCjntLYt9kqlli5LSKtDu8IdWLHTZ5RJUWs7zbXM=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=UHnf72akfI+ig976rUPUvYEE/g44QCfj5/+G+3sMt1sXdGrPRWSKofoPKDgiRn3TA
+         tdv1hD0HR7F2fWWNDS8EQJgF5EG3sTw7fzdUjDHyEmeXsjSohNFYAcNaH1rdu55SEv
+         M6X8XMRxOATlr337Obt4+JEARXw50d88WQOTFb64=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.164] ([37.4.249.134]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MF3DW-1jKfvL1y9Y-00FSFH; Mon, 04
+ May 2020 21:06:23 +0200
+Subject: Re: [PATCH v7 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, helgaas@kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, f.fainelli@gmail.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, RayJui <rjui@broadcom.com>,
+        ScottBranden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200429164734.21506-1-nsaenzjulienne@suse.de>
+ <20200429164734.21506-3-nsaenzjulienne@suse.de>
+ <5fce05ca-5d7e-f4cc-be34-0764fbe4edff@gmx.net>
+ <d105712418b93ebce7c0498d05eea77171892366.camel@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <b9b02ec0-0cb7-995a-40ce-ed38b78dfe46@gmx.net>
+Date:   Mon, 4 May 2020 21:06:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <d105712418b93ebce7c0498d05eea77171892366.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:JZFObt6Lk3DQRXt5KLfTd6EmGQIybewYIU19LjW8nO9jbS567Pa
+ shT7uvbZLy3upf6B2GVztaX/RCAkdmnOiLCzmrl3dxPY7dM8awJ2+2Ue1OgQiCinNqEP5Gz
+ 805JHhEefUDbD+u8N5NXVpu03EunuqFgq0HDp2DmoDmnQ0dxyNfBGX5Ph5LLD7I+dKrrqfV
+ 32Uh4GWXZ7afJ7HmSpVUw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8ctWgi5jAtY=:Ir/e6Xdi2cSRtGMJ+KSoIy
+ c+oPGotCSd0Sh3VpUue+y1jolaLc3f5equZDJwXF5RHsf+veLkJN0dVkRULMEjhpPIpYunJKQ
+ FaGks40bInyiWe0DCFP0dZr/gYgh2TKrOlI7Z3p4DUxsCr59sUqzAo47sBDoufvVNGUYB+Fcx
+ tbtelpQq8+z/WYP8jWUnxOrMn1IYrV7YtxkN3lhyGtEju5EAceu9I8owFdujj5+dNpibJmbIy
+ lyNbQ5FHdjmS0xjIHdW1NndW7Vy4NSatxaub6o76E4wbwSQdOy2QjZCHuUXEOswJGPL22TcIw
+ xAsRYX+BCyyZvyOuF5ig3zammnavIh8Zp5Fb5yAM2Slt2bJAKk29WZ39jfo9ySCdO2mT4l9eb
+ 1I8Ecenbf3o1oTS7gwTp4ePwzlgVYSbai4izB6UkcHRPLgZ0dNlgMSiY5zwiPT9/qTgsxEiaM
+ FqymPDrZ3otiNCiMvfQ4+YTBKxDhgqbR9QoL+1KTwc91NT0JcvPfCC8rkiKB5ZchGaW+sPNBB
+ /RafI4PpXK/WZfHwHnknsFg2xu0hsgrfi/2uF3T9WF8swwkpTz7D+9A/L4Iuc2n/lNy9gx89j
+ +M9S414OEW4rTuwdu1IF/QpmXfO8u8B7TnWcOErLu5NbRmmJmyqQ5232TeM4RKhJ7CiUSrnhC
+ h9Bv8x+WMNAjBuuhA2yj4+Ca5WgyaX7/ZsizkMEw4WZQHoW1VOuznymeRe0DVLzgb9UYLV5jx
+ 2RoOoWDfRi5ersuUxfCWJIokjthUGi9Do+cEmK32bquozqQOY7peSM1/ziNOztk/Clfno5BwW
+ vRvzjAr7/MflYO+DT7lw3o5CmXKJdN7E9UGyxAjkpH/DDJgs2cHkcXfyV72Fxy8hSCU1K4npg
+ r8x/hbhmo+kGGmUgFI5bThflHMsURunQ/uoMle9lzEW1YTfv2BDwJG4N1ZqAIv0GC8LtHnLvr
+ kbHk4dZkWw/30g90Q+KntOMpeCO2lyEdKKGRpaOOSAYdIrOyblvKwWaIfdj3YerwKdjUab0hm
+ PlA8UyYVWrumqZCgirbAo+uqgS11j0oWj0vspgVk9Qjf9vUNZwx0LGvK0kqH2gXpHWDv4+/2S
+ CKa/bdzMXbOLbTjoIu3Fv0Ai45WIz/M3WGPBr1lGzXH/zPFP9oTqdfyCCDlP5BVyyFexaL9h8
+ 61kbkM8Q6vNhfWK2fU/dLsIiUkJF8RHrzjwD0jv/SvlowqtX2skClroSweUYx0ROsNc20O1y0
+ yP+28L1sA+veTCg9S
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 04 May 2020 14:01:32 -0400
-Nicolas Dufresne <nicolas.dufresne@collabora.com> wrote:
+Hi Nicolas,
 
-> Le samedi 02 mai 2020 à 19:55 -0300, Ezequiel Garcia a écrit :
-> > +Nicolas
-> > 
-> > On Sat, 2020-05-02 at 20:37 +0200, Boris Brezillon wrote:  
-> > > On Fri, 01 May 2020 13:57:49 -0300
-> > > Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > >   
-> > > > > > +
-> > > > > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > > > > > +
-> > > > > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
-> > > > > > +    :header-rows:  0
-> > > > > > +    :stub-columns: 0
-> > > > > > +    :widths:       1 2
-> > > > > > +
-> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
-> > > > > > +      - Do not reset any frame context.
-> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
-> > > > > > +      - Do not reset any frame context. This is an alternative value for
-> > > > > > +        V4L2_VP9_RESET_FRAME_CTX_NONE.    
-> > > > > 
-> > > > > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
-> > > > >     
-> > > > 
-> > > > Hm, now that I look closer, what's the point
-> > > > of having the NONE_ALT in our uAPI if it
-> > > > has same meaning as NONE?
-> > > > 
-> > > > I think it can be removed.  
-> > > 
-> > > The intent was to match the spec so that one can pass the value
-> > > extracted from the bitstream directly.  
-> 
-> reset_frame_contextspecifies whether the frame context should be reset
-> to default values:
->   − 0 or 1 means do not reset any frame context
->   − 2 resets just the context specified in the frame header
->   − 3 resets all cont
-> 
-> But aren't we going too far by making this an emum ?
+Am 04.05.20 um 10:59 schrieb Nicolas Saenz Julienne:
+> Hi Stefan, thanks for the review!
+>
+> On Sat, 2020-05-02 at 11:05 +0200, Stefan Wahren wrote:
+>>> +	if (version)
+>>> +		goto exit;
+>>> +
+>>> +	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
+>>> +		   PCI_FUNC(pdev->devfn) << 12;
+>>> +
+>>> +	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
+>>> +				    &dev_addr, sizeof(dev_addr));
+>>> +	/* Wait for vl805 to startup */
+>>> +	udelay(200);
+>> I know, it makes it harder to read but do we really want to wait
+>> unnecessarily if rpi_firmware_property failed?
+> Yes, I figured that it wouldn't hurt much at that faulty state, and you'll be
+> waiting some extra 5s further down the line in quirk_usb_handoff_xhci().
+>
+> But if you feel it's more correct I'll be happy to change it.
 
-I like to not have to constantly go back to the spec when I read code,
-and having constant values defined through enums definitely helps in
-this regard, but maybe it's just me.
+no, i don't insist on that.
 
-> In Microsfot DXVA,
-> we pass that value without interpreting it in userspace. For the
-> following RKVDEC, it is (suspiciously ?) ignored.
+Best regards
+Stefan
 
-IIRC, the prob context has to be kept in userspace anyway (and reset
-when needed), and the rkvdec engine does not have any hardware context.
-That's probably why this value is ignored here.
-
-> Maybe just passing
-> over the value would make more sense, less work ?
-
-I don't see how adding an enum adds more work, given the enum values
-match the ones defined VP 9 spec, but maybe I'm missing something.
