@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83921C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ECFC47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58F9E20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C67320721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b3WfzdZM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Wovy85Nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgEDPGp (ORCPT
+        id S1729571AbgEDPGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:06:45 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53364 "EHLO
+        Mon, 4 May 2020 11:06:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53526 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729055AbgEDPGp (ORCPT
+        with ESMTP id S1729055AbgEDPGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:06:45 -0400
+        Mon, 4 May 2020 11:06:53 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044En9fS024718;
-        Mon, 4 May 2020 15:06:23 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044En94t024657;
+        Mon, 4 May 2020 15:06:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=GdpSgFkEZ+Ur+ACfjLTgXfvY2O4IFXjjIbm/9Da3I/U=;
- b=b3WfzdZMrbDnbmyd5xFgV2+BKRnWt5HgHioOzu3QHzViYK85ZAPRmsyfspWC8h6K4I0p
- KK8P43R8WJg+ECSwDg1e2Jggg8+Zph7kmTJQ9qLwLmMN0GBV2DpHDaZRsk9gFIxpqvjI
- YlD1HnMjYvQvyHkNZEtcnygNDw+Ni6GaSvIWwvW+OKxEdQCVJsJIluAjc4Qe2bWSUsEi
- 1BrhbiIQGpQt4bIGmnbc60+ravI29lRgjTA7U7B0YSDiY5EJX5ltLDsrw8gW5yhC33nC
- 7pGoBevJMsXbtID7LfM8j08e/aKEhzi3ql9IXOwZ96DBwPTLRM5ckNXdeoMUVLd39cag Mw== 
+ bh=TsfNA6aorPpafB8fClYecJanumAnNS8Ljhz97+DWLfM=;
+ b=Wovy85NuyHmmWJoauriI36ih1f7o8Ert7+xdsH6Zch/sMmwRlCbUOvbMDctNouZ17f0H
+ cv+14keFS1whMe9xfLtUT8dzbcSfDsRMIxC5CWik/kzekWxcKQn3YVzEI0rEaOQAZZWL
+ 4TaI0pY3Rvj0b6/yHtSh9OoN1KtWFf+8Y/8mvom+FGkeWbWf1asMuafQUhkQfG7pKWCV
+ g26cawiO9uaiA5zq5d9HGMVhl7oX8O8QUPiI4iFf5Mw03lIdaFoR+tgCOhVzqMpELeiK
+ RvSZSi0ps9aY/skd/1ZftQtyKFnFmaKG8QXvW3da01F5sRObIURqM3OvSvoWncOBnCaG SQ== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 30s0tm7f8a-1
+        by aserp2120.oracle.com with ESMTP id 30s0tm7f91-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 15:06:23 +0000
+        Mon, 04 May 2020 15:06:28 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044Ekfvq094713;
-        Mon, 4 May 2020 15:04:23 GMT
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044Eke6u094674;
+        Mon, 4 May 2020 15:04:28 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30sjdqqnra-1
+        by aserp3030.oracle.com with ESMTP id 30sjdqqp38-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 15:04:23 +0000
+        Mon, 04 May 2020 15:04:28 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044F4LKe025185;
-        Mon, 4 May 2020 15:04:21 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044F4PfF025248;
+        Mon, 4 May 2020 15:04:26 GMT
 Received: from linux-1.home.com (/10.175.9.166)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 08:04:20 -0700
+        with ESMTP ; Mon, 04 May 2020 08:04:25 -0700
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
         dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
@@ -60,9 +60,9 @@ Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
         junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
         kuzuno@gmail.com, mgross@linux.intel.com,
         alexandre.chartre@oracle.com
-Subject: [RFC v4][PATCH part-3 04/14] asidrv: Sequence to test ASI access to mapped/unmapped memory
-Date:   Mon,  4 May 2020 17:02:25 +0200
-Message-Id: <20200504150235.12171-5-alexandre.chartre@oracle.com>
+Subject: [RFC v4][PATCH part-3 05/14] asidrv: Sequence to test interrupt on ASI
+Date:   Mon,  4 May 2020 17:02:26 +0200
+Message-Id: <20200504150235.12171-6-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200504150235.12171-1-alexandre.chartre@oracle.com>
 References: <20200504150235.12171-1-alexandre.chartre@oracle.com>
@@ -82,145 +82,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a sequence to test if ASI exit or not when accessing a mapped
-or unmapped memory buffer.
+Add a sequence to test if an ASI remains active after receiving
+an interrupt.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- drivers/staging/asi/asidrv.c | 70 ++++++++++++++++++++++++++++++++++++
- drivers/staging/asi/asidrv.h |  3 ++
- 2 files changed, 73 insertions(+)
+ drivers/staging/asi/asidrv.c | 144 +++++++++++++++++++++++++++++++++--
+ drivers/staging/asi/asidrv.h |   5 ++
+ 2 files changed, 144 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/staging/asi/asidrv.c b/drivers/staging/asi/asidrv.c
-index 4f0548edb2f9..4231b56db167 100644
+index 4231b56db167..a3c7da2bf16e 100644
 --- a/drivers/staging/asi/asidrv.c
 +++ b/drivers/staging/asi/asidrv.c
-@@ -14,9 +14,21 @@
+@@ -7,6 +7,7 @@
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
++#include <linux/workqueue.h>
  
- #include "asidrv.h"
+ #include <asm/asi.h>
+ #include <asm/dpt.h>
+@@ -19,6 +20,12 @@
+ /* Number of read for mem/memmap test sequence */
+ #define ASIDRV_MEM_READ_COUNT		1000
  
-+#define ASIDRV_TEST_BUFFER_SIZE	PAGE_SIZE
++/* Timeout for target to be ready to receive an interrupt */
++#define ASIDRV_TIMEOUT_TARGET_READY	1
 +
-+/* Number of read for mem/memmap test sequence */
-+#define ASIDRV_MEM_READ_COUNT		1000
++/* Timeout for receiving an interrupt */
++#define ASIDRV_TIMEOUT_INTERRUPT	5
 +
-+enum asidrv_state {
-+	ASIDRV_STATE_NONE,
-+	ASIDRV_STATE_INTR_WAITING,
-+	ASIDRV_STATE_INTR_RECEIVED,
-+};
-+
- struct asidrv_test {
+ enum asidrv_state {
+ 	ASIDRV_STATE_NONE,
+ 	ASIDRV_STATE_INTR_WAITING,
+@@ -29,6 +36,13 @@ struct asidrv_test {
  	struct asi		*asi;	/* ASI for testing */
  	struct dpt		*dpt;	/* ASI decorated page-table */
-+	char			*buffer; /* buffer for testing */
+ 	char			*buffer; /* buffer for testing */
++
++	/* runtime */
++	atomic_t		state;	/* runtime state */
++	int			cpu;	/* cpu the test is running on */
++	struct work_struct	work;	/* work for other cpu */
++	bool			work_set;
++	enum asidrv_run_error	run_error;
  };
  
  struct asidrv_sequence {
-@@ -42,6 +54,10 @@ static struct asidrv_test *asidrv_test_create(void)
- 	if (!test)
- 		return NULL;
- 
-+	test->buffer = kzalloc(ASIDRV_TEST_BUFFER_SIZE, GFP_KERNEL);
-+	if (!test->buffer)
-+		goto error;
-+
- 	/*
- 	 * Create and fill a decorator page-table to be used with the ASI.
- 	 */
-@@ -96,6 +112,7 @@ static void asidrv_test_destroy(struct asidrv_test *test)
- 	if (test->asi)
- 		asi_destroy(test->asi);
- 
-+	kfree(test->buffer);
- 	kfree(test);
- }
- 
-@@ -143,6 +160,51 @@ static int asidrv_asi_is_active(struct asi *asi)
+@@ -160,6 +174,107 @@ static int asidrv_asi_is_active(struct asi *asi)
  	return false;
  }
  
 +/*
-+ * Memory Buffer Access Test Sequences
++ * Wait for an atomic value to be set or the timeout to expire.
++ * Return 0 if the value is set, or -1 if the timeout expires.
 + */
-+
-+#define OPTNONE __attribute__((optimize(0)))
-+
-+static enum asidrv_run_error OPTNONE asidrv_mem_run(struct asidrv_test *test)
++static enum asidrv_run_error asidrv_wait(struct asidrv_test *test,
++					 int value, unsigned int timeout)
 +{
-+	char c;
-+	int i, index;
++	cycles_t start = get_cycles();
++	cycles_t stop = start + timeout * tsc_khz * 1000;
 +
-+	/*
-+	 * Do random reads in the test buffer, and return if the ASI
-+	 * becomes inactive.
-+	 */
-+	for (i = 0; i < ASIDRV_MEM_READ_COUNT; i++) {
-+		index = get_cycles() % ASIDRV_TEST_BUFFER_SIZE;
-+		c = test->buffer[index];
-+		if (!asidrv_asi_is_active(test->asi)) {
-+			pr_warn("ASI inactive after reading byte %d at %d\n",
-+				i + 1, index);
-+			break;
-+		}
++	while (get_cycles() < stop) {
++		if (atomic_read(&test->state) == value ||
++		    test->run_error != ASIDRV_RUN_ERR_NONE)
++			return test->run_error;
++		cpu_relax();
 +	}
 +
++	/* timeout reached */
++	return ASIDRV_RUN_ERR_TIMEOUT;
++}
++
++/*
++ * Wait for an atomic value to transition from the initial value (set
++ * on entry) to the final value, or to timeout. Return 0 if the transition
++ * was done, or -1 if the timeout expires.
++ */
++static enum asidrv_run_error asidrv_wait_transition(struct asidrv_test *test,
++						    int initial, int final,
++						    unsigned int timeout)
++{
++	/* set the initial state value */
++	atomic_set(&test->state, initial);
++
++	/* do an active wait for the state changes */
++	return asidrv_wait(test, final, timeout);
++}
++
++/*
++ * Interrupt Test Sequence
++ */
++
++static void asidrv_intr_handler(void *info)
++{
++	struct asidrv_test *test = info;
++
++	/* ASI should be interrupted by the interrupt */
++	if (asidrv_asi_is_active(test->asi)) {
++		test->run_error = ASIDRV_RUN_ERR_INTR_ASI_ACTIVE;
++		atomic_set(&test->state, ASIDRV_STATE_INTR_RECEIVED);
++		return;
++	}
++
++	pr_debug("Received interrupt\n");
++	atomic_set(&test->state, ASIDRV_STATE_INTR_RECEIVED);
++}
++
++static void asidrv_intr_send(struct work_struct *work)
++{
++	struct asidrv_test *test = container_of(work, struct asidrv_test, work);
++	enum asidrv_run_error err;
++
++	/* wait for cpu target to be ready, then send an interrupt */
++	err = asidrv_wait(test,
++			  ASIDRV_STATE_INTR_WAITING,
++			  ASIDRV_TIMEOUT_TARGET_READY);
++	if (err) {
++		pr_debug("Target cpu %d not ready, interrupt not sent: error %d\n",
++			 test->cpu, err);
++		return;
++	}
++
++	pr_debug("Sending interrupt to cpu %d\n", test->cpu);
++	smp_call_function_single(test->cpu, asidrv_intr_handler,
++				 test, false);
++}
++
++static enum asidrv_run_error asidrv_intr_setup(struct asidrv_test *test)
++{
++	/* set work to have another cpu to send us an interrupt */
++	INIT_WORK(&test->work, asidrv_intr_send);
++	test->work_set = true;
 +	return ASIDRV_RUN_ERR_NONE;
 +}
 +
-+static enum asidrv_run_error asidrv_memmap_setup(struct asidrv_test *test)
++static enum asidrv_run_error asidrv_intr_run(struct asidrv_test *test)
 +{
-+	int err;
++	enum asidrv_run_error err;
 +
-+	pr_debug("mapping test buffer %px\n", test->buffer);
-+	err = dpt_map(test->dpt, test->buffer, ASIDRV_TEST_BUFFER_SIZE);
-+	if (err)
-+		return ASIDRV_RUN_ERR_MAP_BUFFER;
++	/* wait for state changes indicating that an interrupt was received */
++	err = asidrv_wait_transition(test,
++				     ASIDRV_STATE_INTR_WAITING,
++				     ASIDRV_STATE_INTR_RECEIVED,
++				     ASIDRV_TIMEOUT_INTERRUPT);
++	if (err == ASIDRV_RUN_ERR_TIMEOUT) {
++		pr_debug("Interrupt wait timeout\n");
++		err = ASIDRV_RUN_ERR_INTR;
++	}
 +
-+	return ASIDRV_RUN_ERR_NONE;
-+}
-+
-+static void asidrv_memmap_cleanup(struct asidrv_test *test)
-+{
-+	dpt_unmap(test->dpt, test->buffer);
++	return err;
 +}
 +
  /*
-  * Printk Test Sequence
+  * Memory Buffer Access Test Sequences
   */
-@@ -161,6 +223,14 @@ struct asidrv_sequence asidrv_sequences[] = {
- 		"printk",
- 		NULL, asidrv_printk_run, NULL,
+@@ -231,12 +346,18 @@ struct asidrv_sequence asidrv_sequences[] = {
+ 		"memmap",
+ 		asidrv_memmap_setup, asidrv_mem_run, asidrv_memmap_cleanup,
  	},
-+	[ASIDRV_SEQ_MEM] = {
-+		"mem",
-+		NULL, asidrv_mem_run, NULL,
-+	},
-+	[ASIDRV_SEQ_MEMMAP] = {
-+		"memmap",
-+		asidrv_memmap_setup, asidrv_mem_run, asidrv_memmap_cleanup,
++	[ASIDRV_SEQ_INTERRUPT] = {
++		"interrupt",
++		asidrv_intr_setup, asidrv_intr_run, NULL,
 +	},
  };
  
  static enum asidrv_run_error asidrv_run_init(struct asidrv_test *test)
+ {
+ 	int err;
+ 
++	test->run_error = ASIDRV_RUN_ERR_NONE;
++
+ 	/*
+ 	 * Map the current stack, we need it to enter ASI.
+ 	 */
+@@ -272,18 +393,31 @@ static void asidrv_run_fini(struct asidrv_test *test)
+ static enum asidrv_run_error asidrv_run_setup(struct asidrv_test *test,
+ 					      struct asidrv_sequence *sequence)
+ {
+-	int run_err = ASIDRV_RUN_ERR_NONE;
++	unsigned int other_cpu;
++	int run_err;
++
++	test->work_set = false;
+ 
+ 	if (sequence->setup) {
+ 		run_err = sequence->setup(test);
+ 		if (run_err)
+-			goto failed;
++			return run_err;
+ 	}
+ 
+-	return ASIDRV_RUN_ERR_NONE;
++	if (test->work_set) {
++		other_cpu = cpumask_any_but(cpu_online_mask, test->cpu);
++		if (other_cpu == test->cpu) {
++			pr_debug("Sequence %s requires an extra online cpu\n",
++				 sequence->name);
++			asidrv_run_cleanup(test, sequence);
++			return ASIDRV_RUN_ERR_NCPUS;
++		}
+ 
+-failed:
+-	return run_err;
++		atomic_set(&test->state, ASIDRV_STATE_NONE);
++		schedule_work_on(other_cpu, &test->work);
++	}
++
++	return ASIDRV_RUN_ERR_NONE;
+ }
+ 
+ static void asidrv_run_cleanup(struct asidrv_test *test,
 diff --git a/drivers/staging/asi/asidrv.h b/drivers/staging/asi/asidrv.h
-index 33acb058c443..1e820cc64f13 100644
+index 1e820cc64f13..8055d96a0058 100644
 --- a/drivers/staging/asi/asidrv.h
 +++ b/drivers/staging/asi/asidrv.h
-@@ -8,6 +8,8 @@
- enum asidrv_seqnum {
- 	ASIDRV_SEQ_NOP,		/* empty sequence */
+@@ -10,6 +10,7 @@ enum asidrv_seqnum {
  	ASIDRV_SEQ_PRINTK,	/* printk sequence */
-+	ASIDRV_SEQ_MEM,		/* access unmapped memory */
-+	ASIDRV_SEQ_MEMMAP,	/* access mapped memory */
+ 	ASIDRV_SEQ_MEM,		/* access unmapped memory */
+ 	ASIDRV_SEQ_MEMMAP,	/* access mapped memory */
++	ASIDRV_SEQ_INTERRUPT,	/* interrupt sequence */
  };
  
  enum asidrv_run_error {
-@@ -17,6 +19,7 @@ enum asidrv_run_error {
- 	ASIDRV_RUN_ERR_MAP_TASK, /* failed to map current task */
+@@ -20,6 +21,10 @@ enum asidrv_run_error {
  	ASIDRV_RUN_ERR_ENTER,	/* failed to enter ASI */
  	ASIDRV_RUN_ERR_ACTIVE,	/* ASI is not active after entering ASI */
-+	ASIDRV_RUN_ERR_MAP_BUFFER, /* failed to map buffer */
+ 	ASIDRV_RUN_ERR_MAP_BUFFER, /* failed to map buffer */
++	ASIDRV_RUN_ERR_NCPUS,	/* not enough active cpus */
++	ASIDRV_RUN_ERR_INTR,	/* no interrupt received */
++	ASIDRV_RUN_ERR_INTR_ASI_ACTIVE, /* ASI active in interrupt handler */
++	ASIDRV_RUN_ERR_TIMEOUT,
  };
  
  #define ASIDRV_IOCTL_RUN_SEQUENCE	_IOWR('a', 1, struct asidrv_run_param)
