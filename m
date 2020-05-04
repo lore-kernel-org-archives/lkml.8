@@ -2,114 +2,99 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D9AC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E350CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D462075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588601725;
-	bh=4OTUs88V5+gAe8AdiZH5K55ttinyK7tBrbq3axVmxJQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0LsI1TzxF3WaqSJvqXRFxFohVG5AsCa1TDcdG2Zs9RE9PQrwnJrTIC/M34hMRyBNL
-	 42CSYD4aQCXaROxmkgrCqlGNMT9sDwdT5zmj29bwn0IEFfkxMgbr7TeFb4Bx/AfMcz
-	 mTEhWsFXEMbTtCSxTRSgSm9ZI7hPucARrJnHVS4o=
+	by mail.kernel.org (Postfix) with ESMTP id C022B20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgEDOPY (ORCPT
+        id S1728641AbgEDOR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbgEDOPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:15:24 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B49D20721;
-        Mon,  4 May 2020 14:15:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588601723;
-        bh=4OTUs88V5+gAe8AdiZH5K55ttinyK7tBrbq3axVmxJQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fGXiVH0q/KUvrxK42bzRAxzmJOFAsOoDQVM38AWNfJBALZLc6EFTe+Fe5E4YxQxLC
-         f5aeCU1VezyuosRVGtnSe1nhjeuYQM7ict83sr0OXOz5TppI0T7qY/88eBLQgy7E1n
-         BYytZM4Q9+JVCfY6MH/isb5D9FyARpgyuF0TPBfI=
-Date:   Mon, 4 May 2020 09:15:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        Mon, 4 May 2020 10:17:58 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:44283 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728075AbgEDOR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:17:57 -0400
+Received: (qmail 13977 invoked by uid 500); 4 May 2020 10:17:56 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 4 May 2020 10:17:56 -0400
+Date:   Mon, 4 May 2020 10:17:56 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
 To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+cc:     mathias.nyman@intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Enable ASPM L1 on TI PCIe-to-PCI bridge
-Message-ID: <20200504141521.GA265122@bjorn-Precision-5520>
+Subject: Re: [PATCH v2] xhci: Prevent runtime suspend on Etron EJ168
+In-Reply-To: <20200504113622.20361-1-kai.heng.feng@canonical.com>
+Message-ID: <Pine.LNX.4.44L0.2005041015570.11213-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504070259.6034-1-kai.heng.feng@canonical.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 03:02:59PM +0800, Kai-Heng Feng wrote:
-> The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
-> state deeper than PC3, consumes lots of unnecessary power.
+On Mon, 4 May 2020, Kai-Heng Feng wrote:
+
+> Etron EJ168 USB 3.0 Host Controller stops working after S3, if it was
+> runtime suspended previously:
+> [  370.080359] pci 0000:02:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+> [  370.080477] xhci_hcd 0000:04:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+> [  370.080532] pcieport 0000:00:1c.0: DPC: containment event, status:0x1f05 source:0x0200
+> [  370.080533] pcieport 0000:00:1c.0: DPC: ERR_FATAL detected
+> [  370.080536] xhci_hcd 0000:04:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+> [  370.080552] xhci_hcd 0000:04:00.0: AER: can't recover (no error_detected callback)
+> [  370.080566] usb usb3: root hub lost power or was reset
+> [  370.080566] usb usb4: root hub lost power or was reset
+> [  370.080572] xhci_hcd 0000:04:00.0: Host halt failed, -19
+> [  370.080574] xhci_hcd 0000:04:00.0: Host not accessible, reset failed.
+> [  370.080575] xhci_hcd 0000:04:00.0: PCI post-resume error -19!
+> [  370.080586] xhci_hcd 0000:04:00.0: HC died; cleaning up
 > 
-> On Windows ASPM L1 is enabled on the device and its upstream bridge,
-> so it can make the Intel SoC reach PC8 or PC10 to save lots of power.
-
-Does this work around some kind of hardware or firmware defect?  If
-ASPM on this device works correctly, the generic code in aspm.c should
-enable L1 automatically as it does for all other devices.
-
-I don't think we should add quirks to set the ASPM configuration
-directly for random devices.
-
-> So enable ASPM L1 like Windows does, to save additional power.
+> This can be fixed by not runtime suspend the controller at all.
 > 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+> So disable runtime suspend for EJ168 xHCI device.
+> 
 > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/pci/quirks.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+> v2:
+>  - Use a new quirk to avoid changing existing behavior.
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index ca9ed5774eb1..ac7eccf34f87 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2330,6 +2330,27 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
+>  drivers/usb/host/xhci-pci.c | 4 +++-
+>  drivers/usb/host/xhci.h     | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index 766b74723e64..1658fa4c3e4e 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -227,6 +227,7 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  		xhci->quirks |= XHCI_RESET_ON_RESUME;
+>  		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
+>  		xhci->quirks |= XHCI_BROKEN_STREAMS;
+> +		xhci->quirks |= XHCI_DISABLE_RUNTIME_SUSPEND;
+>  	}
+>  	if (pdev->vendor == PCI_VENDOR_ID_RENESAS &&
+>  	    pdev->device == 0x0014) {
+> @@ -371,7 +372,8 @@ static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  		xhci->shared_hcd->can_do_streams = 1;
 >  
-> +static void quirk_enable_aspm_l1(struct pci_dev *dev)
-> +{
-> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
-> +	u16 lnkctl;
-> +
-> +	pci_info(dev, "Enabling L1\n");
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
-> +	if (!(lnkctl & PCI_EXP_LNKCTL_ASPM_L1))
-> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
-> +					   lnkctl | PCI_EXP_LNKCTL_ASPM_L1);
-> +
-> +	if (!bridge)
-> +		return;
-> +
-> +	pcie_capability_read_word(bridge, PCI_EXP_LNKCTL, &lnkctl);
-> +	if (!(lnkctl & PCI_EXP_LNKCTL_ASPM_L1))
-> +		pcie_capability_write_word(bridge, PCI_EXP_LNKCTL,
-> +					   lnkctl | PCI_EXP_LNKCTL_ASPM_L1);
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_TI, 0x8240, quirk_enable_aspm_l1);
-> +
->  /*
->   * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
->   * Link bit cleared after starting the link retrain process to allow this
-> -- 
-> 2.17.1
-> 
+>  	/* USB-2 and USB-3 roothubs initialized, allow runtime pm suspend */
+> -	pm_runtime_put_noidle(&dev->dev);
+> +	if (!(xhci->quirks & XHCI_DISABLE_RUNTIME_SUSPEND))
+> +		pm_runtime_put_noidle(&dev->dev);
+
+This cannot possibly be correct.  You have changed an unconditional 
+runtime-put to a conditional one, but you have not made the 
+corresponding change to the matching runtime-get.  Every runtime-PM 
+put must be balanced by a get, and vice versa.
+
+Alan Stern
+
