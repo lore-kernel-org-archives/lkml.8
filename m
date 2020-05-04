@@ -2,96 +2,97 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C17C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583BBC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2592F20707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EqlAYXmr"
+	by mail.kernel.org (Postfix) with ESMTP id 205C620707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:18:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588609123;
+	bh=M54VjNTZhNFKXJ1H8k/Td/2NU3VjKN5+TvO6qS3wjcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EnHnUDpMaLiDg1vJ0WTa+5PJo2ZIEznXyAR+5R2rEdUF3rO+aV1NNGubxrcef8dQz
+	 FfhnWpF181IntMFZYEpIsT9ARR5p2Wyd+SSzX+8O4hNje55t7VIqcXNe7zEJFWhh5S
+	 CtTQowdSf8/RbMPxl8skZ2/GwRDX3STg+Eyyt4w8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgEDQRL (ORCPT
+        id S1729617AbgEDQSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:17:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24138 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729352AbgEDQRK (ORCPT
+        Mon, 4 May 2020 12:18:42 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:54753 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729352AbgEDQSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:17:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588609029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uMOpMY0YQQxDGE9f6bszjh9mdyqywyqBT/HdaZYhvVA=;
-        b=EqlAYXmrxWqot2LQ9TT9OBdFm9LuKtwh3XBXEB94qI7I6NslaSCb/9Owby/YsHF/54Evpp
-        RJ0XGAnKbEMUTzEpzttqBOZ1hG/r8EcIpnkVWseBaQbQa9oWYX0aJo9Mayh//sMKfRxFRh
-        8zreZTxI+SqGhdCv+MvoXBa3UDUISrk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-119-wqsaPLuwPhunJaN1IQENAg-1; Mon, 04 May 2020 12:17:07 -0400
-X-MC-Unique: wqsaPLuwPhunJaN1IQENAg-1
-Received: by mail-wm1-f69.google.com with SMTP id h184so47145wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:17:07 -0700 (PDT)
+        Mon, 4 May 2020 12:18:42 -0400
+Received: by mail-pj1-f68.google.com with SMTP id y6so15871pjc.4;
+        Mon, 04 May 2020 09:18:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uMOpMY0YQQxDGE9f6bszjh9mdyqywyqBT/HdaZYhvVA=;
-        b=DLholr7pJSAsIjQph3f4WqULVqLEsyO+qJfL1ztgRoiUg29Zce3ntjm9osGV7izudk
-         hnomvHzUbtOId8dkJlpNkvtZVmMTF8BXKRFItDLREuJTAi81ZKnP10GKMWh8cO/rcl2f
-         ioLRuWv7yfaU4Oo8fnR4UiY4mVg3iFFJLJlyrB5k0jJIr1gU5U0UyPUk2zXXftToPO3y
-         6Ns8gkRyGTm52iuSqZDzcclaAIexSnu6Scl8Ran11zN6rFWh5nSfSPN2gO0SrUe9vqZr
-         7koy0//yWNxQQhue8K0gP7KzKKfVKvZqT36Fg514WLqHnFof8ATtlxI2G52UnzmXpACd
-         utNw==
-X-Gm-Message-State: AGi0Pubsv8I8XDExeWGPYeIJiDd7QxTfFbkhwJSQUU+ZfU3Lkhr7aYb9
-        AQ6s3yPezUBAPmWygRd0ZlvqWQiOA4LzkazHVEClNxspteX9AYeLFCDwupBFGFs8PSBhQOq6hz8
-        POz48LC4CfclRfq5OMXCWzH9E
-X-Received: by 2002:a1c:b70a:: with SMTP id h10mr15654223wmf.172.1588609026564;
-        Mon, 04 May 2020 09:17:06 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKgIfENMjeXHov4dgLFDc1YKZsuljv/48zhE5QEqaw20gEpOMUq1qWoZAx/yY2/qjyGTCgIlA==
-X-Received: by 2002:a1c:b70a:: with SMTP id h10mr15654201wmf.172.1588609026315;
-        Mon, 04 May 2020 09:17:06 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id a205sm14990800wmh.29.2020.05.04.09.17.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:17:05 -0700 (PDT)
-Subject: Re: [PATCH] KVM: x86: Fixes posted interrupt check for IRQs delivery
- modes
-To:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     joro@8bytes.org, jon.grimm@amd.com,
-        Alexander Graf <graf@amazon.com>
-References: <1586239989-58305-1-git-send-email-suravee.suthikulpanit@amd.com>
- <35c7c404406729dc05d0977c9d322655f2b1c4a9.camel@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <7b9e8091-d55b-5676-d5bf-c8bbe7ae171f@redhat.com>
-Date:   Mon, 4 May 2020 18:17:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UcAes9dKbhDmITA6s1NANGpIuREAaX05wcOATAsEP80=;
+        b=pJS/yV71GHbU8tcmcKHP5GO5gebehXT+ADQYy1OjCKpfghPJUtgNHF/Yv5JZ8dkliO
+         K5XhoNinpRKpaaBE4CG1OUOzdP5XkAAhhP3v6Tb9uAMXkXBOTEICurR/cV1v8UJ3GJ04
+         i2PAAUe6RiM9W4mR34/Ffxqrh4Qwb2AIbOUJc4K0qgkLmBmbRo+D79mJhHRbPRfAoqOi
+         q+gtdIZPISxunU2CrvY5FJOXH2HInMerJbQjAHJqwsDfTFGfEHsCvtqCNAwRGDlUSjzP
+         4/m00CMW4MrtJ56JVZT1LzLYoiqjj1tp4xVZUR6wSf//xMY4ILRPEXHzhptCt6LiDjBm
+         9nvQ==
+X-Gm-Message-State: AGi0PuY+gUopi4/77musSdHH1Y+FRI5XcuWHerWP7N5FLj8BuZYKck4w
+        cEr2UYGrFh2g6sqlmIcXmks=
+X-Google-Smtp-Source: APiQypIv/J90mnsPJN65xf0xV0HC1YW0vCs74bDiiHPXvyMF1oLWZjZWNKSxRycaJe/7fs7j1AMBbg==
+X-Received: by 2002:a17:902:b78b:: with SMTP id e11mr18437920pls.311.1588609120522;
+        Mon, 04 May 2020 09:18:40 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 1sm9345233pff.180.2020.05.04.09.18.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:18:39 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id AAE17403EA; Mon,  4 May 2020 16:18:38 +0000 (UTC)
+Date:   Mon, 4 May 2020 16:18:38 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, akpm@linux-foundation.org,
+        mhocko@suse.com, yukuai3@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v3 1/6] block: revert back to synchronous request_queue
+ removal
+Message-ID: <20200504161838.GR11244@42.do-not-panic.com>
+References: <20200429074627.5955-1-mcgrof@kernel.org>
+ <20200429074627.5955-2-mcgrof@kernel.org>
+ <a2c64413-d0a4-e5c8-e0fa-904285a1189e@acm.org>
+ <20200503103245.GG29705@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <35c7c404406729dc05d0977c9d322655f2b1c4a9.camel@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200503103245.GG29705@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/20 15:13, Maxim Levitsky wrote:
-> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-> Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
+On Sun, May 03, 2020 at 03:32:45AM -0700, Matthew Wilcox wrote:
+> On Fri, May 01, 2020 at 05:22:12PM -0700, Bart Van Assche wrote:
+> > > expected behaviour before and it now fails as the device is still present
+> >            ^^^^^^^^^
+> >            behavior?
+> 
+> That's UK/US spelling.  We do not "correct" one to the other.
+> 
+> Documentation/doc-guide/contributing.rst: - Both American and British English spellings are allowed within the
+> Documentation/doc-guide/contributing.rst-   kernel documentation.  There is no need to fix one by replacing it with
+> Documentation/doc-guide/contributing.rst-   the other.
 
-Queued, thanks.
+I already changed it at Bart's request. I'll leave at like that to honor
+US as being the leader in COVID19 cases.
 
-Paolo
-
+  Luis
