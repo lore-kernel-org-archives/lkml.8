@@ -2,142 +2,115 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C537EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3021FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9178206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056C5206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pzLzkbHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgEDPMm (ORCPT
+        id S1729313AbgEDPOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:12:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54782 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgEDPMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:12:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 14AF5ABBD;
-        Mon,  4 May 2020 15:12:41 +0000 (UTC)
-Date:   Mon, 4 May 2020 17:12:36 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Subject: [PATCH] percpu: Sync vmalloc mappings in pcpu_alloc() and
- free_percpu()
-Message-ID: <20200504151236.GI8135@suse.de>
-References: <20200429054857.66e8e333@oasis.local.home>
- <20200429105941.GQ30814@suse.de>
- <20200429082854.6e1796b5@oasis.local.home>
- <20200429100731.201312a9@gandalf.local.home>
- <20200430141120.GA8135@suse.de>
- <20200430121136.6d7aeb22@gandalf.local.home>
- <20200430191434.GC8135@suse.de>
- <20200430211308.74a994dc@oasis.local.home>
- <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
- <20200430223919.50861011@gandalf.local.home>
+        Mon, 4 May 2020 11:14:49 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:22385 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726509AbgEDPOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:14:48 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 26059FFD2A
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:14:48 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VcnwjK9aHEfyqVcnwj8Akx; Mon, 04 May 2020 10:14:48 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0aRQZfEcxHyBj7xnDiHsle71WyIV/i7sE6OjfEdSZt4=; b=pzLzkbHmwXQ0GeUH5+6kvnEZha
+        ZteJlMux6TZSH/AikoPvYp7CfasYeff9LU8ME9UZabFJYAmM7iDAk7Dtzd1vcIfYWHlGDQY9xj3GQ
+        5RQhnx3brUKeJUoSly0atiiJYFBRueb3lIe9AnwHP3GZhpKpOkex+UUG7cURDZKkkyZSOGI34bbT+
+        sMAWxPOItDndSR3yBtlBp4nQrF6rnfpHM92U0XDIxpf0NELlZFcENRtKk5veV6UZSCEUExxMFhIkX
+        3+fCN6loSsmy2E8ZSbIySndGn2+G7B46iRqgNRMUeAzgUzoe/VZDGtBaJKHJpAgPBPYX3K56srXBL
+        OLWqf/Qg==;
+Received: from [189.207.59.248] (port=60896 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jVcnv-003tgs-Q8; Mon, 04 May 2020 10:14:47 -0500
+Date:   Mon, 4 May 2020 10:19:12 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] io_uring: Remove logically dead code in io_splice
+Message-ID: <20200504151912.GA22779@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430223919.50861011@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jVcnv-003tgs-Q8
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.207.59.248]:60896
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 16
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:39:19PM -0400, Steven Rostedt wrote:
-> What's so damn special about alloc_percpu()? It's definitely not a fast
-> path. And it's not used often.
+In case force_nonblock happens to be true, the function returns
+at:
 
-Okay, I fixed it in the percpu code. It is definitly not a nice
-solution, but having to call vmalloc_sync_mappings/unmappings() is not a
-nice solution at any place in the code. Here is the patch which fixes
-this issue for me. I am also not sure what to put in the Fixes tag, as
-it is related to tracing code accessing per-cpu data from the page-fault
-handler, not sure when this got introduced. Maybe someone else can
-provide a meaningful Fixes- or stable tag.
+ 2779         if (force_nonblock)
+ 2780                 return -EAGAIN;
 
-I also have an idea in mind how to make this all more robust and get rid
-of the vmalloc_sync_mappings/unmappings() interface, will show more when
-I know it works the way I think it does.
+before reaching this line of code. So, the null check on force_nonblock
+at 2785, is never actually being executed.
 
-Regards,
-
-	Joerg
-
-From c616a9a09499f9c9d682775767d3de7db81fb2ed Mon Sep 17 00:00:00 2001
-From: Joerg Roedel <jroedel@suse.de>
-Date: Mon, 4 May 2020 17:11:41 +0200
-Subject: [PATCH] percpu: Sync vmalloc mappings in pcpu_alloc() and
- free_percpu()
-
-Sync the vmalloc mappings for all page-tables in the system when
-allocating and freeing per-cpu memory. This is necessary for
-architectures which use page-faults on vmalloc areas.
-
-The page-fault handlers accesses per-cpu data when tracing is enabled,
-and fauling again in the page-fault handler on a vmalloc'ed per-cpu area
-will result in a recursive fault.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Addresses-Coverity-ID: 1492838 ("Logically dead code")
+Fixes: 2fb3e82284fc ("io_uring: punt splice async because of inode mutex")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- mm/percpu.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/percpu.c b/mm/percpu.c
-index d7e3bc649f4e..6ab035bc6977 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -1710,6 +1710,20 @@ static void __percpu *pcpu_alloc(size_t size, size_t align, bool reserved,
- 	trace_percpu_alloc_percpu(reserved, is_atomic, size, align,
- 			chunk->base_addr, off, ptr);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index e5dfbbd2aa34..4b1efb062f7f 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2782,7 +2782,7 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
+ 	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
+ 	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
+ 	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
+-	if (force_nonblock && ret == -EAGAIN)
++	if (ret == -EAGAIN)
+ 		return -EAGAIN;
  
-+	/*
-+	 * The per-cpu buffers might be allocated in the vmalloc area of the
-+	 * address space. When the architecture allows faulting on the vmalloc
-+	 * area and the memory allocated here is accessed in the page-fault
-+	 * handler, the vmalloc area fault may be recursive and could never be
-+	 * resolved.
-+	 * This happens for example in the tracing code which allocates per-cpu
-+	 * and accesses them when tracing page-faults.
-+	 * To prevent this, make sure the per-cpu buffers allocated here are
-+	 * mapped in all PGDs so that the page-fault handler will never fault
-+	 * again on them.
-+	 */
-+	vmalloc_sync_mappings();
-+
- 	return ptr;
- 
- fail_unlock:
-@@ -1958,6 +1972,12 @@ void free_percpu(void __percpu *ptr)
- 
- 	trace_percpu_free_percpu(chunk->base_addr, off, ptr);
- 
-+	/*
-+	 * See comment at the vmalloc_sync_mappings() call in pcpu_alloc() for
-+	 * why this is necessary.
-+	 */
-+	vmalloc_sync_unmappings();
-+
- 	spin_unlock_irqrestore(&pcpu_lock, flags);
- 
- 	if (need_balance)
+ 	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
 -- 
-2.12.3
+2.26.0
 
