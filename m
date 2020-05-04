@@ -2,113 +2,100 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D13C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B4BC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD00206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AEE2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F5cGr1LA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgEDBfY (ORCPT
+        id S1726649AbgEDBqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 21:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44922 "EHLO
+        Sun, 3 May 2020 21:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726377AbgEDBfY (ORCPT
+        by vger.kernel.org with ESMTP id S1726282AbgEDBqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 21:35:24 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83FBC061A0E;
-        Sun,  3 May 2020 18:35:23 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVQ0j-000SR4-3a; Mon, 04 May 2020 01:35:09 +0000
-Date:   Mon, 4 May 2020 02:35:09 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
-Message-ID: <20200504013509.GU23230@ZenIV.linux.org.uk>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
+        Sun, 3 May 2020 21:46:31 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F015DC061A0E;
+        Sun,  3 May 2020 18:46:30 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Fm0z0TS2z9sRf;
+        Mon,  4 May 2020 11:46:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588556787;
+        bh=ZxUBL/qLwErnf8v44IGSLO1quuhJfxSBOxnciMTtAZk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=F5cGr1LAqWQN3rNqF3WuvqPcZgXerrZAyJp1lZFlkSB1/ncyVdH1V7J9NVhc+u6lx
+         swA8yLHK5u7L2TMWAiXdDqA0aVzQTpX7+evsj5bn4elxWZYQzQYq7pu1cUP0VtVTPz
+         LOq5CXhfXp64rPqNIu50WhqVTP4PKA06ZfmXm4YXfngq7QaNZucliKZzWjIjCFXa3H
+         L5ZHM5mnMyHBBcpQw49SgDY4J5jgtOI8hnqZjA4CbcQddWbklzwJGhGkLsUTW5ri95
+         XTWDn1DiypB3V1n+nkrt8WRwRFsQxYtguNsROxoSwgWRVKanE7Y1lWBn6X3KjvLN9k
+         iDccSC6IluZLw==
+Date:   Mon, 4 May 2020 11:46:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>
+Subject: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20200504114625.1de2c54d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504010912.982044-1-ira.weiny@intel.com>
+Content-Type: multipart/signed; boundary="Sig_/=SQxWHq3j4vo5/n=rXSYzbg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 03, 2020 at 06:09:01PM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The kmap infrastructure has been copied almost verbatim to every architecture.
-> This series consolidates obvious duplicated code by defining core functions
-> which call into the architectures only when needed.
-> 
-> Some of the k[un]map_atomic() implementations have some similarities but the
-> similarities were not sufficient to warrant further changes.
-> 
-> In addition we remove a duplicate implementation of kmap() in DRM.
-> 
-> Testing was done by 0day to cover all the architectures I can't readily
-> build/test.
+--Sig_/=SQxWHq3j4vo5/n=rXSYzbg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-OK...  Looking through my old notes on kmap unification (this winter, never
-went anywhere),
+Hi all,
 
-* arch/mips/mm/cache.c ought to use linux/highmem.h, not asm/highmem.h
-I suspect that your series doesn't build on some configs there.  Hadn't
-verified that, though.
+After merging the char-misc tree, Friday's linux-next build (arm64
+allmodconfig) failed like this:
 
-* kmap_atomic_to_page() is dead, but not quite gone - csky and nds32 brought
-the damn thing back (nds32 - only an extern).  It needs killin'...
+ERROR: modpost: "zynqmp_pm_fpga_get_status" [drivers/fpga/zynqmp-fpga.ko] u=
+ndefined!
+ERROR: modpost: "zynqmp_pm_fpga_load" [drivers/fpga/zynqmp-fpga.ko] undefin=
+ed!
 
-* parisc is (arguably) abusing kunmap()/kunmap_atomic() for cache flushing.
-Replace the bulk of its highmem.h with
-#define ARCH_HAS_FLUSH_ON_KUNMAP
-#define arch_before_kunmap flush_kernel_dcache_page_addr
-and have default kunmap()/kunmap_atomic() do
-#ifdef ARCH_HAS_FLUSH_ON_KUNMAP
-	arch_before_kunmap(page_address(page));
-#endif
-and
-#ifdef ARCH_HAS_FLUSH_ON_KUNMAP
-	arch_before_kunmap(addr);
-#endif
-resp.  Kills ARCH_HAS_KMAP along with ifdefs on it, makes parisc use somewhat
-less hacky.
+Presumably caused by commit
 
-I'd suggest checking various configs on mips - that's likely to cause headache.
-Said that, my analysis of include chains back then is pretty much worthless
-by now - I really hate the amount of indirect include chains leading to that
-sucker on some, but not all configs ;-/  IIRC, the proof that everything
-using kmap*/kunmap* would pull linux/highmem.h regardless of config took several
-hours of digging, ran for several pages and had been hopelessly brittle.
-arch/mips/mm/cache.c was the only exception caught by it, but these days
-there might be more.
+  4db8180ffe7c ("firmware: xilinx: Remove eemi ops for fpga related APIs")
+
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/=SQxWHq3j4vo5/n=rXSYzbg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6vc/EACgkQAVBC80lX
+0GwRdwf9ERx9PIHh92T0Wli8C4JGfg6ZvgwaQhFdupeJC/zEnxWIHD/jeFDhtCY4
+p+YPnE5jDaYUMPo4dvq62Hxticrym6UYKblFgpe4QYwEA4auvyfS7vtbM8pjH3bV
+iyjn8+cSos5A2MM4agSpHtloEHdNWgeiPrHyDITN84gIg1wghoha0yCdnWOr2zjC
+qGGPo73lASUXeFEPlO+qGB2pNW6BwyADLnyNjeOkFZ7il7FhWq+6e2lx5pJNgz3E
+MTkFvJ+3Jw6hzK74/haZ9n0s4tJD5i0BUlSXQiIM8HKSdmH3HDNpRVMEaaVxO+Mb
+UD5XKY7SpgWUu12rnIc0byyHP0QLkw==
+=F1oZ
+-----END PGP SIGNATURE-----
+
+--Sig_/=SQxWHq3j4vo5/n=rXSYzbg--
