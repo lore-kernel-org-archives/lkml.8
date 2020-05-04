@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4B4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19807C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F873205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF22206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615477;
-	bh=MQS8+nTmhmm2Q150ULmKPcV1bXHSwsuoTev62VM611o=;
+	s=default; t=1588615480;
+	bh=5dCP/Gb0YTMsyzKSqzDCdkXmTEkcfDYj7iiRizgRm3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ff38PeaBBvcYaf4TObh+qzn0mvvnrY5HGI/jgVu3njbQl4w+q8rd7AVTiZQsw7Vw+
-	 /I9jUKMdAZ9q1deiP6yuIpcWLxRyDHXW1nLKwndbgvgR3GaCn2YYo4vICWNwAv5DNJ
-	 i6b1wVd60zXJJDD7KyLL5eL8M2PxcijDRzvDqqQ8=
+	b=DBmkQNtO4MdsASj1fRl8IIO57eE0+qrKOPR5gMr08VOo0YhvR2MpjFXbCSYb8F76e
+	 rG6kMCGrfXa3dLOWjFDQw6DMG3pwPj1Sp7ifDCXQxgF16ZI1rvBwN5MQE09G1nZVz9
+	 WXVRA/drVyKrZqnc6ssbJXSct/8cQLcA9G5IxYPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbgEDSEg (ORCPT
+        id S1731692AbgEDSEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33952 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:04:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731672AbgEDSEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:31 -0400
+        id S1730391AbgEDSE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DAAB206B8;
-        Mon,  4 May 2020 18:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99B51205ED;
+        Mon,  4 May 2020 18:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615471;
-        bh=MQS8+nTmhmm2Q150ULmKPcV1bXHSwsuoTev62VM611o=;
+        s=default; t=1588615469;
+        bh=5dCP/Gb0YTMsyzKSqzDCdkXmTEkcfDYj7iiRizgRm3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H7wq6lbXscAdKg/Dv4R1CAWGPSSjpTqOjhD08CRLcLpxAGrdA9AuA3py489pN9I/A
-         Q7JIcd1fo12jy9jZ8Dy028URuzhzDeRqwWDyjIZBJkAe5Q/AeyN5+3eBycvWKR1KCs
-         bXVwH4SuOYerIGYhQfWgGmTFfjGd9fqdSONSioR0=
+        b=EYFIJ+QSrPhMzK8mzqTON0okLQr/kVzmvixeW0Fla2bDIFO6c44FG6yGulUE5CYol
+         LUV6NT+3S0X/jC5k7/OWAaKUIfJf55lOkFcsDqTjHhAXukfJs9xkc2eN9iQ7wNdYJt
+         fANf0gbPgHwt5I18euBE530yih5XUlHgliW3oJsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.4 52/57] nvme: prevent double free in nvme_alloc_ns() error handling
-Date:   Mon,  4 May 2020 19:57:56 +0200
-Message-Id: <20200504165501.233875915@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 51/57] Fix use after free in get_tree_bdev()
+Date:   Mon,  4 May 2020 19:57:55 +0200
+Message-Id: <20200504165501.103417676@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -59,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@wdc.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 132be62387c7a72a38872676c18b0dfae264adb8 upstream.
+commit dd7bc8158b413e0b580c491e8bd18cb91057c7c2 upstream.
 
-When jumping to the out_put_disk label, we will call put_disk(), which will
-trigger a call to disk_release(), which calls blk_put_queue().
+Commit 6fcf0c72e4b9, a fix to get_tree_bdev() put a missing blkdev_put() in
+the wrong place, before a warnf() that displays the bdev under
+consideration rather after it.
 
-Later in the cleanup code, we do blk_cleanup_queue(), which will also call
-blk_put_queue().
+This results in a silent lockup in printk("%pg") called via warnf() from
+get_tree_bdev() under some circumstances when there's a race with the
+blockdev being frozen.  This can be caused by xfstests/tests/generic/085 in
+combination with Lukas Czerner's ext4 mount API conversion patchset.  It
+looks like it ought to occur with other users of get_tree_bdev() such as
+XFS, but apparently doesn't.
 
-Putting the queue twice is incorrect, and will generate a KASAN splat.
+Fix this by switching the order of the lines.
 
-Set the disk->queue pointer to NULL, before calling put_disk(), so that the
-first call to blk_put_queue() will not free the queue.
-
-The second call to blk_put_queue() uses another pointer to the same queue,
-so this call will still free the queue.
-
-Fixes: 85136c010285 ("lightnvm: simplify geometry enumeration")
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 6fcf0c72e4b9 ("vfs: add missing blkdev_put() in get_tree_bdev()")
+Reported-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Ian Kent <raven@themaw.net>
+cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/super.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3566,6 +3566,8 @@ static int nvme_alloc_ns(struct nvme_ctr
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1302,8 +1302,8 @@ int get_tree_bdev(struct fs_context *fc,
+ 	mutex_lock(&bdev->bd_fsfreeze_mutex);
+ 	if (bdev->bd_fsfreeze_count > 0) {
+ 		mutex_unlock(&bdev->bd_fsfreeze_mutex);
+-		blkdev_put(bdev, mode);
+ 		warnf(fc, "%pg: Can't mount, blockdev is frozen", bdev);
++		blkdev_put(bdev, mode);
+ 		return -EBUSY;
+ 	}
  
- 	return 0;
-  out_put_disk:
-+	/* prevent double queue cleanup */
-+	ns->disk->queue = NULL;
- 	put_disk(ns->disk);
-  out_unlink_ns:
- 	mutex_lock(&ctrl->subsys->lock);
 
 
