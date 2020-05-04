@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EB9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20529C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6078620663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A822078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616002;
-	bh=QJ0rWBAoFE5MoYuFJCDgwB55xyI0vhTojmmngfGzXCE=;
+	s=default; t=1588616007;
+	bh=+uHnYeckTZ/b/1RoIw0t+qHts3oKfYXWET/DSt23zbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4NgxBAOuW8Yz9j62JbBYvEbhApW/ilcxdqZedtgLmc07ASsWB+RIT31de3hdYD7E
-	 OcQrOLUWrBzzFtSU7hI1O2ZS1GEzGnK0B1USfiW7QDV2we1H8DEwyaZIfo+PeMmpsq
-	 L9Xtv/hog1+SNdexVg5O1etYOADkUyHhgWU+aBzM=
+	b=pD0ImZSVacKVXeayvDkO+ZqC8FLclEVsbYZkoEYuyXthOcZtUVDS6p+g5MW0wMZeO
+	 xxxYt8InWwyUvMKgDzK3vSiAOdrlzRu43fopz9zDbuzl2TsQPZYz5XgEdR17EYfL2Z
+	 kbPS4N6hzvfPqZRGxi0BErfGOX+AxjjETtwa89eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732309AbgEDSNV (ORCPT
+        id S1732313AbgEDSN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57286 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730622AbgEDSBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:37 -0400
+        id S1731168AbgEDSBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 748ED2073B;
-        Mon,  4 May 2020 18:01:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 165E520707;
+        Mon,  4 May 2020 18:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615296;
-        bh=QJ0rWBAoFE5MoYuFJCDgwB55xyI0vhTojmmngfGzXCE=;
+        s=default; t=1588615294;
+        bh=+uHnYeckTZ/b/1RoIw0t+qHts3oKfYXWET/DSt23zbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MDBM3vDHAkpZXJP9uUO3GK0FpZNTEJhpAJNxq8klCMpVAsBb3DWJvbmD1DydZboTA
-         S7n87alPdSI0fjopUafuPeCU117Lj+uLO9sMjaitEU6wRp6428N8GKwpkaNKX8awQE
-         yDPnIYPfImQLzv6MBfb5N6qNd/enPNWC75FydXnw=
+        b=Ui7iHAAyYSGP4SBB3EDXNbWP7L7nwG/v96SJZ6RlvrJJNGVkQb4vieC61zzrfiXBZ
+         yiWZezlmEC26Q4cGrzAnsswwlSdn/Hkf7ofOSG98+h0qubkoU2jIbPqzwk6h9F3RjV
+         JSm4tSVW0pYDHnkf7C3Y2zrH9Q0jcvPn/g9DB0n4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 06/37] ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
-Date:   Mon,  4 May 2020 19:57:19 +0200
-Message-Id: <20200504165449.283669241@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 05/37] btrfs: fix block group leak when removing fails
+Date:   Mon,  4 May 2020 19:57:18 +0200
+Message-Id: <20200504165449.199649237@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,33 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit ef0b3203c758b6b8abdb5dca651880347eae6b8c upstream.
+commit f6033c5e333238f299c3ae03fac8cc1365b23b77 upstream.
 
-This new Lenovo ThinkCenter has two front mics which can't be handled
-by PA so far, so apply the fixup ALC283_FIXUP_HEADSET_MIC to change
-the location for one of the mics.
+btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+returns a local reference of the block group that contains the given
+bytenr to "block_group" with increased refcount.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Link: https://lore.kernel.org/r/20200427030039.10121-1-hui.wang@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in several exception handling paths
+of btrfs_remove_block_group(). When those error scenarios occur such as
+btrfs_alloc_path() returns NULL, the function forgets to decrease its
+refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+leak.
+
+Fix this issue by jumping to "out_put_group" label and calling
+btrfs_put_block_group() when those error scenarios occur.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/extent-tree.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6991,6 +6991,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1558, 0x8561, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
-+	SND_PCI_QUIRK(0x17aa, 0x1048, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
- 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10286,7 +10286,7 @@ int btrfs_remove_block_group(struct btrf
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_put_group;
+ 	}
+ 
+ 	/*
+@@ -10323,7 +10323,7 @@ int btrfs_remove_block_group(struct btrf
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out;
++			goto out_put_group;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -10346,13 +10346,13 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out;
++		goto out_put_group;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out;
++			goto out_put_group;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -10494,9 +10494,9 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = remove_block_group_free_space(trans, block_group);
+ 	if (ret)
+-		goto out;
++		goto out_put_group;
+ 
+-	btrfs_put_block_group(block_group);
++	/* Once for the block groups rbtree */
+ 	btrfs_put_block_group(block_group);
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+@@ -10524,6 +10524,10 @@ int btrfs_remove_block_group(struct btrf
+ 		/* once for the tree */
+ 		free_extent_map(em);
+ 	}
++
++out_put_group:
++	/* Once for the lookup reference */
++	btrfs_put_block_group(block_group);
+ out:
+ 	btrfs_free_path(path);
+ 	return ret;
 
 
