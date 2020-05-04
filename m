@@ -2,120 +2,124 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7163C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661FDC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D35F320707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44008206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:50:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mpd4GwJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730474AbgEDRuW (ORCPT
+        id S1730486AbgEDRum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:50:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46040 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728158AbgEDRuW (ORCPT
+        Mon, 4 May 2020 13:50:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728158AbgEDRul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:50:22 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jVfEQ-0001IG-BA; Mon, 04 May 2020 17:50:18 +0000
-Date:   Mon, 4 May 2020 19:50:17 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Jann Horn <jannh@google.com>, linux-api@vger.kernel.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Michael Kerrisk <mtk.manpages@gmail.com>
-Subject: Re: [PATCH v3 2/3] nsproxy: attach to namespaces via pidfds
-Message-ID: <20200504175017.ry2qhoeq3q45k2my@wittgenstein>
-References: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
- <20200504144141.3605533-3-christian.brauner@ubuntu.com>
- <87h7wvoefw.fsf@x220.int.ebiederm.org>
- <20200504163907.jjgqe7qnnjpw4uwo@wittgenstein>
- <87ftcfmxt1.fsf@x220.int.ebiederm.org>
+        Mon, 4 May 2020 13:50:41 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C274CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:50:41 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id b6so12107plz.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=COJ4St1lQrIdf4dsEVKhZiSK4khVz5kd/fC7gBtBbkM=;
+        b=Mpd4GwJqCn6fs3imO0KHhzS3awEBa2J8gV5GcyQYNUazC5gy/M0qVgDmTLbaWH/ezn
+         Tb2Xeee7qR1lNT2zrjV3BN/ErkWgmtSPBkLoNINZke5cvXcJ4DmB6bjnXJddexYSgFBN
+         faD9o/qrTGYKpFeQcE6EKbkeSR4/vpJx3uFJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=COJ4St1lQrIdf4dsEVKhZiSK4khVz5kd/fC7gBtBbkM=;
+        b=dbMIZ/ONDxxONmkwTNDVjJtlcXPj9Dcpj2IjR7N6bRAyy6IQF5Th4fF7SlMPxtuPkd
+         m7T+/jbKgL8msVMznUCyjNwdI895Edd3snoMMbn20XNtWCeNREj42XqTOop3BQ5KF3H+
+         HuRRv8rV3oBM2AaQTHgzpPe3Rgb26alj6pxKeAOR2SGMfyBqS5l+7Lq7QQycF8I3v5kZ
+         fzlEqG12GrDbe1W6DcMkDEX5tX6olsiY2Qqxfzv0X7ecI6jOZr6aHIJJrBy4iY/xJR2s
+         lRxj322LU2FiFDH7LjcnQI/esLaLKbnzVntooMZbAMY3a0xf9jpoOyll90W21pTp1TXu
+         goxQ==
+X-Gm-Message-State: AGi0PuZFaQfAYKRPbR47+erYqMrvI3yaxtP5zz2g1V0hYBjI5XP0K4vI
+        0fg0QPnM9+W6eoDhHwYyAuMHMw==
+X-Google-Smtp-Source: APiQypLDJBkzSpF+EsZ9GrUQlZE0DsT6W/QXtW8cnRp491M8t8tm7a6yuuNSA0A6B5WZ/k7oh57AlA==
+X-Received: by 2002:a17:90a:5648:: with SMTP id d8mr115639pji.163.1588614641276;
+        Mon, 04 May 2020 10:50:41 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id t3sm9402062pfq.110.2020.05.04.10.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 10:50:40 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     evgreen@chromium.org, swboyd@chromium.org, mka@chromium.org,
+        mkshah@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 1/5] soc: qcom: rpmh-rsc: Correctly ignore CPU_CLUSTER_PM notifications
+Date:   Mon,  4 May 2020 10:50:15 -0700
+Message-Id: <20200504104917.v6.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87ftcfmxt1.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 12:09:46PM -0500, Eric W. Biederman wrote:
-> Christian Brauner <christian.brauner@ubuntu.com> writes:
-> 
-> > On Mon, May 04, 2020 at 11:25:07AM -0500, Eric W. Biederman wrote:
-> >> 
-> >> I am not thrilled about treating nstype as a flags fields when it is not
-> >> currently.  It was my hope when I designed the interface that not
-> >> treating nstype as a flags field would save us from the problem of bits
-> >> running out.
-> >
-> > Hm, I researched the setns() syscall history before that and I didn't
-> > see that reasoning anywhere. The "nstype" arg was originally advertised
-> > on the list as "having a flags field is useful in general".
-> 
-> Take a look at the code.  At the end of the day nstype is not treated at
-> all like a flags field.
+Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
+CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
+a default.  This means that we'll try to do a flush in those cases but
+we won't necessarily be the last CPU down.  That's not so ideal since
+our (lack of) locking assumes we're on the last CPU.
 
-Oh, I wasn't trying to dispute that. I was just pointing at the history
-where using it as a flags field in the future wasn't in principle out of
-the question.
+Luckily this isn't as big a problem as you'd think since (at least on
+the SoC I tested) we don't get these notifications except on full
+system suspend.  ...and on full system suspend we get them on the last
+CPU down.  That means that the worst problem we hit is flushing twice.
+Still, it's good to make it correct.
 
-> 
-> It isn't a very important point.  And it was certainly easier to use
-> the existing bits for essentially their existing meanings.  But it was
-> certainly something I was thinking at the time.
-> 
-> I think I left it as we can see either way, depending on how things
-> evolve.
-> 
-> I can imagine a use for a nstype being a single namespace from a pidfd.
-> Do you have any actual usecases for setting some but not all of the
-> namespaces from a pidfd?  If we don't have a compelling reason
-> I would like to kick that can down the road a ways farther.
+Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Yeah, I think so. We already have a few use-cases. The syscall
-interception stuff selectively attaches to subsets of namespaces
-depending on what namespaces are needed to emulate a given syscall. And
-the exec logic let's users select what namespaces to attach to. It's
-common to setns to a subset of namespaces to perform operations with
-privilege and then later attach others (often the userns).
+Changes in v6:
+- Release the lock on cluster notifications.
 
-> 
-> I am also remembering that that setns freed the low 8 bits.  Which gave
-> some freedom beyond clone.
-> 
-> >> That aside.  It would be very good if the default version of setting
-> >> everything from a pidfd would set the root directory from the process it
-> >> is copying everything else from.
-> >
-> > I'm not sure I follow completely. If you specify CLONE_NEWNS then we do
-> > set the root directory with set_fs_root() in commit_nsset(). Or are you
-> > saying we should always do that independent of whether or not
-> > CLONE_NEWNS is specified? And if so could you explain why we'd want
-> > that? I'm sure I'm missing something!
-> 
-> I am suggesting that when we do:
-> 
-> "setns(pidfd, 0)" or "setns(pidfd, SETNS_PIDFD)"
-> 
-> That the result is not just the namespaces changing but also the root
-> directory changing to the pids root directory.  Something where the
-> whole is greater than the parts.
+Changes in v5:
+- Corrently => Correctly
 
-Ok, I can see that being useful. But If we do this, then a new flag
-would be quite helpful. (I also think Michael had some reservations
-against re-using 0 for something like this.)
-But let me suggest moving your phrase from above down to here and
-say that we could kick that can down the road for a follow-up extension?
+Changes in v4:
+- ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
 
-Christian
+Changes in v3: None
+Changes in v2: None
+
+ drivers/soc/qcom/rpmh-rsc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index a9e15699f55f..8c338335fc21 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -806,6 +806,9 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
+ 	case CPU_PM_EXIT:
+ 		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
+ 		goto exit;
++	default:
++		ret = NOTIFY_DONE;
++		goto exit;
+ 	}
+ 
+ 	ret = rpmh_rsc_ctrlr_is_busy(drv);
+-- 
+2.26.2.526.g744177e7f7-goog
+
