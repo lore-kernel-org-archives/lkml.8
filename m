@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B043C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C58C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6013A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BB2E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615630;
-	bh=fLIVL3sjse+37SzZ0JN8pjVguV51V/e7QehVdNR5FHU=;
+	s=default; t=1588615632;
+	bh=gGXcu90sfVkJx/BJqDr/e/JHVencP3rdv+IKK6gJMzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bvc9lKo6zvGswJ+TVimSlVOxY1Bf2oebGAYLYTLEhBNcbozK6OpAfgEZCTPadKxfV
-	 DKX+aOgq4oTKEtCC6BUo597TEsB2D9cMcy0sOsQZj7Tnm17dlrjd+Eim2Y3EJRgP6T
-	 Tz/d/9ofR1SfeB1WgBXJj9zkdxKdc8Uka+hkopIo=
+	b=F6kghFj6mqhPQgnKMJR9dBTYDxHqb0bJDbDonKkrgcUOwswutiRDNNeADZf58kF/v
+	 oVEpD8ebdmVb2eeZQci5rpBlueLJqYuPh3+FS8zRpJYmDtM9cPPVS1SF7msu80auQ9
+	 bibPTRn0CvAiqHHOKz/7Dcn1FH+MST72mp+kJSxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbgEDSHI (ORCPT
+        id S1732095AbgEDSHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37716 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732069AbgEDSHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:05 -0400
+        id S1732075AbgEDSHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EB520721;
-        Mon,  4 May 2020 18:07:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91BF32073E;
+        Mon,  4 May 2020 18:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615625;
-        bh=fLIVL3sjse+37SzZ0JN8pjVguV51V/e7QehVdNR5FHU=;
+        s=default; t=1588615623;
+        bh=gGXcu90sfVkJx/BJqDr/e/JHVencP3rdv+IKK6gJMzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NqAZCIXSpqrlfa2VKwh346yokR0Do1KovWfB+RdlzqdusMqd4IR9AuH9XcASqBOZi
-         AlgK3MOKzgb/vZqLey478JZ5+PzC2fmL3YeTEuknQKj6X7JD7i/5/u1J0zyF33eyX/
-         MsiJN6TOmGoNcTIVOS7yXwhS+HPgPG1pFPi0c5BY=
+        b=uCGvCZPr1LbSpvA1JcV13UHkRodhVJWg4To2dd3GPWYL2ylwawVTtvRo1nhPvbppD
+         vF9OecM+Nny9vlY9KsF9mVTAttI3qKscwJzkMMzSaguy0GWhn3ocwjh+Iqg+fit6PZ
+         hUNPzOeq77RwBVmet/BeQO4oGghliSbmrOMsFAgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.6 57/73] dmaengine: ti: k3-psil: fix deadlock on error path
-Date:   Mon,  4 May 2020 19:58:00 +0200
-Message-Id: <20200504165509.601260333@linuxfoundation.org>
+        stable@vger.kernel.org, Tang Bin <tangbin@cmss.chinamobile.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.6 56/73] iommu/qcom: Fix local_base status check
+Date:   Mon,  4 May 2020 19:57:59 +0200
+Message-Id: <20200504165509.536330675@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,33 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-commit 172d59ecd61b89f535ad99a7e531c0f111453b9a upstream.
+commit b52649aee6243ea661905bdc5fbe28cc5f6dec76 upstream.
 
-The mutex_unlock() is missed on error path of psil_get_ep_config()
-which causes deadlock, so add missed mutex_unlock().
+The function qcom_iommu_device_probe() does not perform sufficient
+error checking after executing devm_ioremap_resource(), which can
+result in crashes if a critical error path is encountered.
 
-Fixes: 8c6bb62f6b4a ("dmaengine: ti: k3 PSI-L remote endpoint configuration")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200408185501.30776-1-grygorii.strashko@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200418134703.1760-1-tangbin@cmss.chinamobile.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/ti/k3-psil.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/qcom_iommu.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/dma/ti/k3-psil.c
-+++ b/drivers/dma/ti/k3-psil.c
-@@ -27,6 +27,7 @@ struct psil_endpoint_config *psil_get_ep
- 			soc_ep_map = &j721e_ep_map;
- 		} else {
- 			pr_err("PSIL: No compatible machine found for map\n");
-+			mutex_unlock(&ep_map_mutex);
- 			return ERR_PTR(-ENOTSUPP);
- 		}
- 		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -813,8 +813,11 @@ static int qcom_iommu_device_probe(struc
+ 	qcom_iommu->dev = dev;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (res)
++	if (res) {
+ 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(qcom_iommu->local_base))
++			return PTR_ERR(qcom_iommu->local_base);
++	}
+ 
+ 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
+ 	if (IS_ERR(qcom_iommu->iface_clk)) {
 
 
