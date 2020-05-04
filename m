@@ -2,70 +2,162 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CCDC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEC2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3140205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588617516;
-	bh=nzCS/0VeEVnFZKSnvBrdWW9tNCygeSVuj0l6SJQjV7o=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=YfLgZShs2A6Jz2McfnFtt6+mFGE+lFcYZqgClACTQEdoPhH/+uiT65ojCBovvTBUY
-	 abkjVE6dGW8nPiA7Kd8Zojw++VPF3fKAvuWx+haTNWDU3agGM1gf05Zml1EZPWgbhJ
-	 nKnR96H4ULs+TSObj17N/fb8ORKQe3JjkDhV0JRs=
+	by mail.kernel.org (Postfix) with ESMTP id BBFCC206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgEDSia (ORCPT
+        id S1726930AbgEDSio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 4 May 2020 14:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726580AbgEDSia (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 14:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbgEDSi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:38:29 -0400
-Subject: Re: [GIT PULL] gcc-plugins fixes for v5.7-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588617305;
-        bh=nzCS/0VeEVnFZKSnvBrdWW9tNCygeSVuj0l6SJQjV7o=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=BKWja+0cIhhqmHJl2smmQeBYDrzaV+JcOrb667Z4iXtu+tKyPNyyPnrS7gsWnYgwo
-         jYA7YST+/14SOYCvYKqnaK2s26UZicnsBp3HBOXpLZVqF6GB4NZHAPeTWkhAoq+r2H
-         btbehkscE9Ri573TW/QnSIh90RPgYDfEWnoTVs3g=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <202005041045.BC2557B6@keescook>
-References: <202005041045.BC2557B6@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202005041045.BC2557B6@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
- tags/gcc-plugins-v5.7-rc5
-X-PR-Tracked-Commit-Id: c7527373fe28f97d8a196ab562db5589be0d34b9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9851a0dee7c28514f149f7e4f60ec1b06286cc1b
-Message-Id: <158861730546.3296.9511173151431427293.pr-tracker-bot@kernel.org>
-Date:   Mon, 04 May 2020 18:35:05 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Pierret 
-        <frederic.pierret@qubes-os.org>
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16257C061A0F;
+        Mon,  4 May 2020 11:38:30 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: nicolas)
+        with ESMTPSA id 53FE82A0773
+Message-ID: <98946a03023451d44c2ebb2da719fa7dd3e530f6.camel@collabora.com>
+Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
+From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>
+Date:   Mon, 04 May 2020 14:38:23 -0400
+In-Reply-To: <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
+References: <20200410115113.31728-1-ezequiel@collabora.com>
+         <20200410115113.31728-3-ezequiel@collabora.com>
+         <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
+         <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
+         <20200502203707.402ea3cd@collabora.com>
+         <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
+         <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
+Organization: Collabora
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-EyYe3EysLdTBugQZatPp"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 4 May 2020 10:46:49 -0700:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/gcc-plugins-v5.7-rc5
+--=-EyYe3EysLdTBugQZatPp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9851a0dee7c28514f149f7e4f60ec1b06286cc1b
+Le lundi 04 mai 2020 =C3=A0 14:01 -0400, Nicolas Dufresne a =C3=A9crit :
+> Le samedi 02 mai 2020 =C3=A0 19:55 -0300, Ezequiel Garcia a =C3=A9crit :
+> > +Nicolas
+> >=20
+> > On Sat, 2020-05-02 at 20:37 +0200, Boris Brezillon wrote:
+> > > On Fri, 01 May 2020 13:57:49 -0300
+> > > Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > >=20
+> > > > > > +
+> > > > > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> > > > > > +
+> > > > > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
+> > > > > > +    :header-rows:  0
+> > > > > > +    :stub-columns: 0
+> > > > > > +    :widths:       1 2
+> > > > > > +
+> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
+> > > > > > +      - Do not reset any frame context.
+> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
+> > > > > > +      - Do not reset any frame context. This is an alternative=
+ value for
+> > > > > > +        V4L2_VP9_RESET_FRAME_CTX_NONE. =20
+> > > > >=20
+> > > > > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
+> > > > >  =20
+> > > >=20
+> > > > Hm, now that I look closer, what's the point
+> > > > of having the NONE_ALT in our uAPI if it
+> > > > has same meaning as NONE?
+> > > >=20
+> > > > I think it can be removed.
+> > >=20
+> > > The intent was to match the spec so that one can pass the value
+> > > extracted from the bitstream directly.
+>=20
+> reset_frame_contextspecifies whether the frame context should be reset
+> to default values:
+>   =E2=88=92 0 or 1 means do not reset any frame context
+>   =E2=88=92 2 resets just the context specified in the frame header
+>   =E2=88=92 3 resets all cont
+>=20
+> But aren't we going too far by making this an emum ? In Microsfot DXVA,
+> we pass that value without interpreting it in userspace. For the
+> following RKVDEC, it is (suspiciously ?) ignored. Maybe just passing
+> over the value would make more sense, less work ?
 
-Thank you!
+I have looked deeper. So basically when 2 and 3, that needs to be done
+by userspace is set back the associated probs arrays to their default
+values (see section 10.5 or the spec).
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+https://github.com/rockchip-linux/mpp/blob/develop/mpp/codec/dec/vp9/vp9d_p=
+arser.c#L1021
+
+It seems that for both VAAPI And DXVA, the drivers takes care of that
+reset. So I'd like to ask, shall we code these defaults inside the
+driver ? I think we do similar things in JPEG side. But if we keep it
+the way it is, this should be strictly documented, otherwise anyone
+porting from DXVA or VAAPI will be tricked by this.
+
+>=20
+> > > > > I got several smatch warnings:
+> > > > >=20
+> > > > > smatch: ERRORS
+> > > > > drivers/media/v4l2-core/v4l2-ctrls.c:1880 validate_vp9_frame_deco=
+de_params() warn: was && intended here instead of ||?
+> > > > >=20
+> > > > > (Commented on this ^^^ one above)
+> > > > >=20
+> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:426 init_intra_only_pro=
+bs() error: buffer overflow 'ptr' 9 <=3D 69
+> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1478 rkvdec_vp9_done() =
+error: potentially dereferencing uninitialized 'ctrl'.
+> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1483 rkvdec_vp9_done() =
+error: uninitialized symbol 'dec_dst_buf'.
+> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:941:6: warning: variabl=
+e 'ret' set but not used [-Wunused-but-set-variable]
+> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1466:40: warning: varia=
+ble 'fctx' set but not used [-Wunused-but-set-variable]
+> > > > >  =20
+> > > >=20
+> > > > Oh, I'll run smatch and fix them all.
+> > >=20
+> > > Oops!
+
+--=-EyYe3EysLdTBugQZatPp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXrBhHwAKCRBxUwItrAao
+HH8LAJ9aosLvF3M9LdhkX81jDPOwCl6TeACgsfbMRb5H7BOUvQ1h1XZSCTi02FY=
+=j3aC
+-----END PGP SIGNATURE-----
+
+--=-EyYe3EysLdTBugQZatPp--
+
