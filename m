@@ -2,314 +2,325 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6D3C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7A8C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00063206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E13206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Unr8Ozbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgEDAMB (ORCPT
+        id S1726683AbgEDANB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 20:12:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:56733 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbgEDAMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 20:12:00 -0400
-IronPort-SDR: BUb1wmwrTteHMwS9G1BIQAkZltLofAjTbzrWHyfEAbuGmPWjKq4Du4wdanHS4Vw3BNQL9clfBx
- mrIsyKnXKjpg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 17:11:59 -0700
-IronPort-SDR: HZTe/X6Tg1DxjC1F9bf8cTnUoxZDpelHbxlDYUgI1U8rb2ct1wKyoUDgjrSkiuqkqQTRuuJzuJ
- l4Du9YT4PuOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,349,1583222400"; 
-   d="scan'208";a="406315407"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.212.197.87]) ([10.212.197.87])
-  by orsmga004.jf.intel.com with ESMTP; 03 May 2020 17:11:58 -0700
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
- <87pnbvtfdc.fsf@nanos.tec.linutronix.de>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <53df1de7-ca25-e1be-b31c-e57bd95f0564@linux.intel.com>
-Date:   Sun, 3 May 2020 17:11:58 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sun, 3 May 2020 20:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726377AbgEDANB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 20:13:01 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25883C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 17:13:00 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id s30so12737378qth.2
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 17:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ghdWSl7GQTrvrN+55CRfpk4KU3zB5OI12AXtmu1TVEE=;
+        b=Unr8OzbweOgm66PNumJr98lRs0Z6tM4CiQleY5hsdSOmNDFzl466TOslaY3RqcV/KE
+         PdvwKAHea+Do8T6j13OcDOATQaAdXDK2X6WH1IA+XvwihxI8fXO8R1LkyqcBT3wQBEhW
+         vC5zAKfA4EWlxiwSBiBdnhn7fohSNjeWttP2Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ghdWSl7GQTrvrN+55CRfpk4KU3zB5OI12AXtmu1TVEE=;
+        b=N/RQZylRx7iVdWpLJgfo6vG+/imhwn9lNKggRhEV9v7wphB/iaVy5qD0kEq3V6IBuf
+         wpHb8gxYH7d3CN9mDKFavlKNYaOzQvnarsOLqDdS+jLA4seAztei+/ShjpWLC/d2IAo/
+         joOhUmi2/hBQI9E9B/BC1Y92nayhgUvo+qkTHAWiDMw8eqD7GFpi/Ax4jJ9wvM9Jd7TD
+         YGzqR6NdezwssilexG1+GqFYloQtZJ81wP3MdxteUkgMERq1w0DIhAk8ABqIppKm2Myy
+         TL7fPJqcAf1XBt3T/s0NmrmySWy/qJ/2itD1JzdqNZ4LkKaDyqcq3KYy3W6Q5JwR3tAa
+         +u9Q==
+X-Gm-Message-State: AGi0Pua/kBrSYcgWztgBcBPsJGFQvlnopsMsUjQ/X3k2B2dQJQ/IrclB
+        JD3GLtcy4TaOX9Q9Vw+pmGbTpA==
+X-Google-Smtp-Source: APiQypLcGgYJ9aym64Byrny52r2CS/8oOiXoxTrk584x7pgN0q7SYJBxfGz4E0yaGYyqOJcyMTBC4A==
+X-Received: by 2002:ac8:19f5:: with SMTP id s50mr15026462qtk.186.1588551179190;
+        Sun, 03 May 2020 17:12:59 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d207sm4866475qkc.49.2020.05.03.17.12.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 May 2020 17:12:58 -0700 (PDT)
+Date:   Sun, 3 May 2020 20:12:58 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 19/24] rcu/tree: Support reclaim for head-less object
+Message-ID: <20200504001258.GD197097@google.com>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-20-urezki@gmail.com>
+ <20200501223909.GF7560@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <87pnbvtfdc.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501223909.GF7560@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Fri, May 01, 2020 at 03:39:09PM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 28, 2020 at 10:58:58PM +0200, Uladzislau Rezki (Sony) wrote:
+> > Update the kvfree_call_rcu() with head-less support, it
+> > means an object without any rcu_head structure can be
+> > reclaimed after GP.
+> > 
+> > To store pointers there are two chain-arrays maintained
+> > one for SLAB and another one is for vmalloc. Both types
+> > of objects(head-less variant and regular one) are placed
+> > there based on the type.
+> > 
+> > It can be that maintaining of arrays becomes impossible
+> > due to high memory pressure. For such reason there is an
+> > emergency path. In that case objects with rcu_head inside
+> > are just queued building one way list. Later on that list
+> > is drained.
+> > 
+> > As for head-less variant. Such objects do not have any
+> > rcu_head helper inside. Thus it is dynamically attached.
+> > As a result an object consists of back-pointer and regular
+> > rcu_head. It implies that emergency path can detect such
+> > object type, therefore they are tagged. So a back-pointer
+> > could be freed as well as dynamically attached wrapper.
+> > 
+> > Even though such approach requires dynamic memory it needs
+> > only sizeof(unsigned long *) + sizeof(struct rcu_head) bytes,
+> > thus SLAB is used to obtain it. Finally if attaching of the
+> > rcu_head and queuing get failed, the current context has
+> > to follow might_sleep() annotation, thus below steps could
+> > be applied:
+> >    a) wait until a grace period has elapsed;
+> >    b) direct inlining of the kvfree() call.
+> > 
+> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> >  kernel/rcu/tree.c | 102 ++++++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 98 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 51726e4c3b4d..501cac02146d 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -3072,15 +3072,31 @@ static void kfree_rcu_work(struct work_struct *work)
+> >  	 */
+> >  	for (; head; head = next) {
+> >  		unsigned long offset = (unsigned long)head->func;
+> > -		void *ptr = (void *)head - offset;
+> > +		bool headless;
+> > +		void *ptr;
+> >  
+> >  		next = head->next;
+> > +
+> > +		/* We tag the headless object, if so adjust offset. */
+> > +		headless = (((unsigned long) head - offset) & BIT(0));
+> > +		if (headless)
+> > +			offset -= 1;
+> > +
+> > +		ptr = (void *) head - offset;
+> > +
+> >  		debug_rcu_head_unqueue((struct rcu_head *)ptr);
+> >  		rcu_lock_acquire(&rcu_callback_map);
+> >  		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
+> >  
+> > -		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset)))
+> > +		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset))) {
+> > +			/*
+> > +			 * If headless free the back-pointer first.
+> > +			 */
+> > +			if (headless)
+> > +				kvfree((void *) *((unsigned long *) ptr));
+> > +
+> >  			kvfree(ptr);
+> > +		}
+> >  
+> >  		rcu_lock_release(&rcu_callback_map);
+> >  		cond_resched_tasks_rcu_qs();
+> > @@ -3221,6 +3237,13 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+> >  			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> >  				return false;
+> >  
+> > +			/*
+> > +			 * TODO: For one argument of kvfree_rcu() we can
+> > +			 * drop the lock and get the page in sleepable
+> > +			 * context. That would allow to maintain an array
+> > +			 * for the CONFIG_PREEMPT_RT as well. Thus we could
+> > +			 * get rid of dynamic rcu_head attaching code.
+> > +			 */
+> >  			bnode = (struct kvfree_rcu_bulk_data *)
+> >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+> >  		}
+> > @@ -3244,6 +3267,23 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+> >  	return true;
+> >  }
+> >  
+> > +static inline struct rcu_head *
+> > +attach_rcu_head_to_object(void *obj)
+> > +{
+> > +	unsigned long *ptr;
+> > +
+> > +	ptr = kmalloc(sizeof(unsigned long *) +
+> > +			sizeof(struct rcu_head), GFP_NOWAIT |
+> > +				__GFP_RECLAIM |	/* can do direct reclaim. */
+> > +				__GFP_NORETRY |	/* only lightweight one.  */
+> > +				__GFP_NOWARN);	/* no failure reports. */
+> 
+> Again, let's please not do this single-pointer-sized allocation.  If
+> a full page is not available and this is a single-argument kfree_rcu(),
+> just call synchronize_rcu() and then free the object directly.
 
-On 4/25/2020 2:38 PM, Thomas Gleixner wrote:
-> Dave Jiang <dave.jiang@intel.com> writes:
->> From: Megha Dey <megha.dey@linux.intel.com>
->>
->> Add support for the creation of a new IMS irq domain. It creates a new
->> irq chip associated with the IMS domain and adds the necessary domain
->> operations to it.
-> 
-> And how is a X86 specific thingy related to drivers/base?
+With the additional caching, lack of full page should not be very likely. I
+agree we can avoid doing any allocation and just straight to
+synchroize_rcu().
 
-Well, clearly this file has both arch independent sand dependent code 
-which is incorrect. From various discussions, we have now concluded that 
-IMS is after all not a X86 specific thingy after all. IMS is just a name 
-intel came up with, all it really means is device managed addr/data 
-writes to generate interrupts.
+> It should not be -that- hard to adjust locking for CONFIG_PREEMPT_RT!
+> For example, have some kind of reservation protocol so that a task
+> that drops the lock can retry the page allocation and be sure of having
+> a place to put it.  This might entail making CONFIG_PREEMPT_RT reserve
+> more pages per CPU.  Or maybe that would not be necessary.
 
-> 
->> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-> 
-> This sits in drivers base because IMS is architecture independent, right?
+If we are not doing single-pointer allocation, then that would also eliminate
+entering the low-level page allocator for single-pointer allocations.
 
-Per my above comment, technically we can call something IMS even if 
-device has its own location to store interrupts in non-pci standard 
-mechanism, much like platform-msi indeed. We simply need to extend 
-platform-msi to its address some of its shortcomings: increase number of 
-interrupts to > 2048, enable dynamic allocation of interrupts, add 
-mask/unmask callbacks in addition to write_msg etc.
+Or did you mean entry into the allocator for the full-page allocations
+related to the pointer array for PREEMPT_RT? Even if we skip entry into the
+allocator for those, we will still have additional caching which further
+reduces chances of getting a full page. In the event of such failure, we can
+simply queue the rcu_head.
 
-I will be sending out an email shortly outlining the new design for IMS 
-and what are the improvements we want to add to the already exisitng 
-platform-msi infrastructure.
+Thoughts?
 
-> 
->> new file mode 100644
->> index 000000000000..738f6d153155
->> --- /dev/null
->> +++ b/drivers/base/ims-msi.c
->> @@ -0,0 +1,100 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Support for Device Specific IMS interrupts.
->> + *
->> + * Copyright © 2019 Intel Corporation.
->> + *
->> + * Author: Megha Dey <megha.dey@intel.com>
->> + */
->> +
->> +#include <linux/dmar.h>
->> +#include <linux/irq.h>
->> +#include <linux/mdev.h>
->> +#include <linux/pci.h>
->> +
->> +/*
->> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
->> + * Return mdev's parent dev if success.
->> + */
->> +static inline struct device *mdev_to_parent(struct device *dev)
->> +{
->> +	struct device *ret = NULL;
->> +	struct device *(*fn)(struct device *dev);
->> +	struct bus_type *bus = symbol_get(mdev_bus_type);
-> 
-> symbol_get()?
+thanks,
 
-mdev_bus_type is defined in driver/vfio/mdev/ directory. The entire 
-vfio-mdev can be compiled as a module and if so, then this symbol is not 
-visible outside of that directory and there are some linker errors. 
-Currently, there these symbols sare self-contained and are not used 
-outside of the directory where they are defined. I did not know earlier 
-that is not advisible to use symbol_get() for this. I will try to come 
-up with a better approach.
-
-> 
->> +
->> +	if (bus && dev->bus == bus) {
->> +		fn = symbol_get(mdev_dev_to_parent_dev);
-> 
-> What's wrong with simple function calls?
-
-Hmmm, same reason as above..
-> 
->> +		ret = fn(dev);
->> +		symbol_put(mdev_dev_to_parent_dev);
->> +		symbol_put(mdev_bus_type);
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static irq_hw_number_t dev_ims_get_hwirq(struct msi_domain_info *info,
->> +					 msi_alloc_info_t *arg)
->> +{
->> +	return arg->ims_hwirq;
->> +}
->> +
->> +static int dev_ims_prepare(struct irq_domain *domain, struct device *dev,
->> +			   int nvec, msi_alloc_info_t *arg)
->> +{
->> +	if (dev_is_mdev(dev))
->> +		dev = mdev_to_parent(dev);
-> 
-> This makes absolutely no sense. Somewhere you claimed that this is
-> solely for mdev. Now this interface takes both a regular device and mdev.
-> 
-> Lack of explanation seems to be a common scheme here.
-
-IMS can be used for mdev or a regular device. I do not think it is 
-claimed anywhere that IMS is solely for mdev. In the current use case 
-for DSA, IMS is used only by the guest (mdev) although it can very well 
-be used by the host driver as well.
-
-> 
->> +	init_irq_alloc_info(arg, NULL);
->> +	arg->dev = dev;
->> +	arg->type = X86_IRQ_ALLOC_TYPE_IMS;
->> +
->> +	return 0;
->> +}
->> +
->> +static void dev_ims_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->> +{
->> +	arg->ims_hwirq = platform_msi_calc_hwirq(desc);
->> +}
->> +
->> +static struct msi_domain_ops dev_ims_domain_ops = {
->> +	.get_hwirq	= dev_ims_get_hwirq,
->> +	.msi_prepare	= dev_ims_prepare,
->> +	.set_desc	= dev_ims_set_desc,
->> +};
->> +
->> +static struct irq_chip dev_ims_ir_controller = {
->> +	.name			= "IR-DEV-IMS",
->> +	.irq_ack		= irq_chip_ack_parent,
->> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
->> +	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
->> +	.flags			= IRQCHIP_SKIP_SET_WAKE,
->> +	.irq_write_msi_msg	= platform_msi_write_msg,
->> +};
->> +
->> +static struct msi_domain_info ims_ir_domain_info = {
->> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
->> +	.ops		= &dev_ims_domain_ops,
->> +	.chip		= &dev_ims_ir_controller,
->> +	.handler	= handle_edge_irq,
->> +	.handler_name	= "edge",
->> +};
->> +
->> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
->> +					      const char *name)
-> 
-> arch_create_ ???? In drivers/base ???
-
-Needs to go away. On second thought, per Jason Gunthorpe's comment, this 
-is not even required. We can simply use the existing 
-platform_msi_create_irq_domain API itself.
-> 
->> +{
->> +	struct fwnode_handle *fn;
->> +	struct irq_domain *domain;
->> +
->> +	fn = irq_domain_alloc_named_fwnode(name);
->> +	if (!fn)
->> +		return NULL;
->> +
->> +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
->> +	if (!domain)
->> +		return NULL;
->> +
->> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
->> +	irq_domain_free_fwnode(fn);
->> +
->> +	return domain;
->> +}
->> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
->> index 2696aa75983b..59160e8cbfb1 100644
->> --- a/drivers/base/platform-msi.c
->> +++ b/drivers/base/platform-msi.c
->> @@ -31,12 +31,11 @@ struct platform_msi_priv_data {
->>   /* The devid allocator */
->>   static DEFINE_IDA(platform_msi_devid_ida);
->>   
->> -#ifdef GENERIC_MSI_DOMAIN_OPS
->>   /*
->>    * Convert an msi_desc to a globaly unique identifier (per-device
->>    * devid + msi_desc position in the msi_list).
->>    */
->> -static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
->> +irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
->>   {
->>   	u32 devid;
->>   
->> @@ -45,6 +44,7 @@ static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
->>   	return (devid << (32 - DEV_ID_SHIFT)) | desc->platform.msi_index;
->>   }
->>   
->> +#ifdef GENERIC_MSI_DOMAIN_OPS
->>   static void platform_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->>   {
->>   	arg->desc = desc;
->> @@ -76,7 +76,7 @@ static void platform_msi_update_dom_ops(struct msi_domain_info *info)
->>   		ops->set_desc = platform_msi_set_desc;
->>   }
->>   
->> -static void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
->> +void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
->>   {
->>   	struct msi_desc *desc = irq_data_get_msi_desc(data);
->>   	struct platform_msi_priv_data *priv_data;
->> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
->> index b558d4cfd082..cecc6a6bdbef 100644
->> --- a/drivers/vfio/mdev/mdev_core.c
->> +++ b/drivers/vfio/mdev/mdev_core.c
->> @@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
->>   }
->>   EXPORT_SYMBOL(mdev_parent_dev);
->>   
->> +struct device *mdev_dev_to_parent_dev(struct device *dev)
->> +{
->> +	return to_mdev_device(dev)->parent->dev;
->> +}
->> +EXPORT_SYMBOL(mdev_dev_to_parent_dev);
-> 
-> And this needs to be EXPORT_SYMBOL because this is designed to support
-> non GPL drivers from the very beginning, right? Ditto for the other
-> exports in this file.
-
-Hmm, I followed the same convention as the other exports here. Guess I 
-would have to change all other exports to EXPORT_SYMBOL_GPL as well.
+ - Joel
 
 > 
->> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
->> index 7d922950caaf..c21f1305a76b 100644
->> --- a/drivers/vfio/mdev/mdev_private.h
->> +++ b/drivers/vfio/mdev/mdev_private.h
->> @@ -36,7 +36,6 @@ struct mdev_device {
->>   };
->>   
->>   #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
->> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+> 							Thanx, Paul
 > 
-> Moving stuff around 3 patches later makes tons of sense.
-
-ok will add it earlier then.
->    
-> Thanks,
-> 
->          tglx
-> 
+> > +	if (!ptr)
+> > +		return NULL;
+> > +
+> > +	ptr[0] = (unsigned long) obj;
+> > +	return ((struct rcu_head *) ++ptr);
+> > +}
+> > +
+> >  /*
+> >   * Queue a request for lazy invocation of appropriate free routine after a
+> >   * grace period. Please note there are three paths are maintained, two are the
+> > @@ -3260,16 +3300,34 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> >  {
+> >  	unsigned long flags;
+> >  	struct kfree_rcu_cpu *krcp;
+> > +	bool success;
+> >  	void *ptr;
+> >  
+> > +	if (head) {
+> > +		ptr = (void *) head - (unsigned long) func;
+> > +	} else {
+> > +		/*
+> > +		 * Please note there is a limitation for the head-less
+> > +		 * variant, that is why there is a clear rule for such
+> > +		 * objects:
+> > +		 *
+> > +		 * it can be used from might_sleep() context only. For
+> > +		 * other places please embed an rcu_head to your data.
+> > +		 */
+> > +		might_sleep();
+> > +		ptr = (unsigned long *) func;
+> > +	}
+> > +
+> >  	krcp = krc_this_cpu_lock(&flags);
+> > -	ptr = (void *)head - (unsigned long)func;
+> >  
+> >  	/* Queue the object but don't yet schedule the batch. */
+> >  	if (debug_rcu_head_queue(ptr)) {
+> >  		/* Probable double kfree_rcu(), just leak. */
+> >  		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
+> >  			  __func__, head);
+> > +
+> > +		/* Mark as success and leave. */
+> > +		success = true;
+> >  		goto unlock_return;
+> >  	}
+> >  
+> > @@ -3277,10 +3335,34 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> >  	 * Under high memory pressure GFP_NOWAIT can fail,
+> >  	 * in that case the emergency path is maintained.
+> >  	 */
+> > -	if (unlikely(!kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr))) {
+> > +	success = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr);
+> > +	if (!success) {
+> > +		if (head == NULL) {
+> > +			/*
+> > +			 * Headless(one argument kvfree_rcu()) can sleep.
+> > +			 * Drop the lock and tack it back. So it can do
+> > +			 * direct lightweight reclaim.
+> > +			 */
+> > +			krc_this_cpu_unlock(krcp, flags);
+> > +			head = attach_rcu_head_to_object(ptr);
+> > +			krcp = krc_this_cpu_lock(&flags);
+> > +
+> > +			if (head == NULL)
+> > +				goto unlock_return;
+> > +
+> > +			/*
+> > +			 * Tag the headless object. Such objects have a
+> > +			 * back-pointer to the original allocated memory,
+> > +			 * that has to be freed as well as dynamically
+> > +			 * attached wrapper/head.
+> > +			 */
+> > +			func = (rcu_callback_t) (sizeof(unsigned long *) + 1);
+> > +		}
+> > +
+> >  		head->func = func;
+> >  		head->next = krcp->head;
+> >  		krcp->head = head;
+> > +		success = true;
+> >  	}
+> >  
+> >  	WRITE_ONCE(krcp->count, krcp->count + 1);
+> > @@ -3294,6 +3376,18 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> >  
+> >  unlock_return:
+> >  	krc_this_cpu_unlock(krcp, flags);
+> > +
+> > +	/*
+> > +	 * High memory pressure, so inline kvfree() after
+> > +	 * synchronize_rcu(). We can do it from might_sleep()
+> > +	 * context only, so the current CPU can pass the QS
+> > +	 * state.
+> > +	 */
+> > +	if (!success) {
+> > +		debug_rcu_head_unqueue(ptr);
+> > +		synchronize_rcu();
+> > +		kvfree(ptr);
+> > +	}
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvfree_call_rcu);
+> >  
+> > -- 
+> > 2.20.1
+> > 
