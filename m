@@ -2,323 +2,152 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D4C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81FBC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C129206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2AFD205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="SrGhxhrp"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="k933aCWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbgEDQ5k (ORCPT
+        id S1729907AbgEDQ6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729553AbgEDQ5j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:57:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95791C061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:57:38 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r4so24267pgg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daemons-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Z3NYsHy1jFVKuIx89+E5z9qZ8TEJd1dMXiM1ctxfJr8=;
-        b=SrGhxhrpClXsV4bk9050WnnTCzBEH7KG4lJPbuHhjHiDUaYWSZOx0lbW+gfJA4agDq
-         Co6Pbdn5mafwPdBMo3V69+Eaj0oXv+mCAhhGmNa5Dojnwrt54nUeIenVdxdTeqI1fsNI
-         cm5/15mFX2Xb8UUmViasjD0FTycx5vKgUiI7CLP5IvROEWIWB0jARW0psYcvdT1DIauF
-         8Qzczj+p7TzWUaYl7Z23XM5LuHJnurAXnfAyAoHjPOgg6oZv6AFMes2hzT8wTZzv6bTL
-         LuIzKuQgBIO22z19qdM6Z7q8+qUpvTohN7ELvCcO3VKplo4yIB331LXCvJ/Zp/HXZjnL
-         ZAUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z3NYsHy1jFVKuIx89+E5z9qZ8TEJd1dMXiM1ctxfJr8=;
-        b=nVH47lUCMi28hH3xEWCIW/iGS2FTeyWQltlaBsH5l3yUFw2dKX2YPJs/f+uUk9t+qG
-         hLiS0lNgojSftYn3bP+5rysHcESmPLM7srO4iwBO2rqwOcsBJhXi0wLtOx9xthiUCEcJ
-         m5YXOPcctSVsONc0xMhrDhE0/gBdTlaNSPZnFyfoprKucmAbENXUwBdZj7uod+Ytk2xT
-         FSuglhweYZ7mvVqx004ZZjIH6e3hPiDUjmM+NpXX0niU+l9/CLbbRrdb6PLKPeqlziOg
-         hH2D6qqifUpvfXR4MwrpGpPhg0gX3/yC2AnGy0R1fX0j7Ab10r7x/AcffvoWo3bZdEww
-         3rVA==
-X-Gm-Message-State: AGi0PuY9XdbthBavxVajnaigr5ZLCvRPTgAg+NzQ3OhU/T1s59kK4ZD/
-        n18lZg6H5XB9mylMWTxl6H36
-X-Google-Smtp-Source: APiQypJcRwf080OF3IvaiRv8wJ6azWOpiCEl8NhtMhRtaJITJnJ3hbJv/bs+i33Zm6IW8Lszw/H0Sw==
-X-Received: by 2002:a63:220a:: with SMTP id i10mr18699976pgi.364.1588611457784;
-        Mon, 04 May 2020 09:57:37 -0700 (PDT)
-Received: from localhost.localdomain ([47.156.151.166])
-        by smtp.googlemail.com with ESMTPSA id fh18sm332462pjb.0.2020.05.04.09.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 09:57:36 -0700 (PDT)
-From:   Clay McClure <clay@daemons.net>
-Cc:     Clay McClure <clay@daemons.net>, Arnd Bergmann <arnd@arndb.de>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        kbuild test robot <lkp@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2] net: ethernet: ti: Remove TI_CPTS_MOD workaround
-Date:   Mon,  4 May 2020 09:57:05 -0700
-Message-Id: <20200504165711.5621-1-clay@daemons.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
-References: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
+        Mon, 4 May 2020 12:58:37 -0400
+Received: from mout.web.de ([212.227.17.12]:53257 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729549AbgEDQ6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588611486;
+        bh=9yu6Koqp5kh2GqpJE2jIEtvtR3k1ocsgVchyI/5xi/0=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=k933aCWE9/HQwymsAt5vN7QOhkcRBVCyhXlN+iD1wpiu8p+T+PYALfQwCicSS27R2
+         tcYJNlA4W6wjRN989pKyAzbt5Ngrqzu5v+Gxu8xo9QkDEGM97CoQKDma3htrEjSUMP
+         EjI2PG6WXlQzzV+rxpqN9+wWCd4SpjZkPQcsLJQk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LylnX-1j2u3l1mTv-01644E; Mon, 04
+ May 2020 18:58:06 +0200
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Subject: Re: [PATCH] drm/i915/gem: Fix inconsistent IS_ERR and PTR_ERR
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <dfe752dc-6833-2b08-7e7c-6c52ffc81626@web.de>
+Date:   Mon, 4 May 2020 18:58:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:V7ZLoki0zw30xXuJHbKuYRHN/r2pN25QK+eWkWFJY1gkCecft4S
+ jirT2hs4ZPfMjaM0OmDtx4LX5iOHPotiZWDC1rEKehRp8iFDK5aw7gN5aQT9kI6oz3fkZ8g
+ HsLybDzSuEQhHVVEd/YXO0BKC7XPPphK1bll8ql10XO0VYUfM9bSPjIRI/wAouoAdTZss8h
+ M0QbR9dLi0VoQEoijvv9A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tRrN58lWQu0=:A4u/Tu+sMvbhE7L5nBiE79
+ zvtjBRFNOTtJOJgE7TQ28EbEdu/2tUpK0X6BBv/CUq2BmyIckrRGh2qYzHCSh74NeToj87sAF
+ LZnfADB3e/q3u36XaOrFli7/PK8aKjOKWNcZne6e+lsgBBI6C6IucM04trkhp0z08ChgVu71h
+ hHISpbhlP9hV6HnhLQY1Zs0DDIpq2nwCPyZ2yfoiwZCtHUJcNhWEmZR71q8Erm1tnTQ3I+3S5
+ 62LAdg19BLgVV3WSljBSjtJmEmUoGJLvpzqMwZDvtedRo+LgPIGU3D2wqTYNCDsgQXct8vJ5E
+ MVRR8xMYdVtWWpg4ZehELxnTo48lU85y9jxCdNtdbsacrSCBX9f8qw7RLnPGJkEBr0/Xy+fYX
+ 1mpIiZOSxVj6678lWPP7O+Aqz7Xj8XQxZzRkN/5UeUWpGbMFJ3yTFi+6dqtTffZofIxpBn1lA
+ Lr6S5f8N8Ki+7F43ZdCfWDxLPZYc3VAhoxz8m/OrIWINK14L9dovLLRvFesmsg5vr3PIOrUTS
+ JMlal8hQ33/v4EEvyVC/n6vg/H57BJy6K2qJxw3J8iqZf7h86IwYdpZkcHBzyQTIYmuC2nFg0
+ 1kqZ508lviGRHJhbGCkqHjWj54vA+S8LzyDGG/knfp2yHDpnOnB1i3W/0fDXF1jcEvA9zTcA8
+ sv2bSiyDxJgxGaAbWkKl4Lr15t4oaWWr2d50HBxiz7P+qHaswXU03R0pxzXgKu3l2vBRe875n
+ K7zx1Qld5kYB2dfpFWo7YzGYrDlQMaOBTed4wDLdHeaS/n6M3tlrhNBazFhsfH6sBOhehdbO7
+ Yt1vhA35BVWo2py8o3p236JRc217QmzqnkYkt8CdDt2pos9boP0S4P4Ea39L9UG+KRLGnhve5
+ VhM1LAa4IPsEGw63GYQsN8dcXBURlOPrtSXanBKiBYdImA5pgfpul9+lZYZjj7Lw2YW4HhNV0
+ neJSRRkAkVzqrKH+fg7OkMrokUFyOYI+Zi1W6zwH2JTFZ7keT15TWjSL4IywWCSwuUlkY7TS0
+ yiqJSE5v1uJk5E7VtxnhTNT25BsftfLPYRrM/KH7IGBlQjFTdBGYuuTbtiFTiD5QlII1i329v
+ P5qnWMnvMBXzxI5UVeTWWMNJW1l0zhJQnEU3cxLYTFWpgg96d/jXLMSj31D3gIBMFWILLQv9T
+ 4LGGJNTUlMqCATiqupWESPwHXAQ6RWtlZDfpg8bx/mUG7HZmMFDTkOnG0w6YmS2himOHaQ+TW
+ jG7eEp3VKLOkhhLV3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
-exposes a missing dependency in defconfigs that select TI_CPTS without
-selecting PTP_1588_CLOCK, leading to linker errors of the form:
-
-drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
-cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
-drivers/net/ethernet/ti/cpsw.o: in function `cpsw_remove':
-cpsw.c:(.text+0x81c): undefined reference to `cpts_release'
-drivers/net/ethernet/ti/cpsw.o: in function `cpsw_rx_handler':
-cpsw.c:(.text+0x1324): undefined reference to `cpts_rx_timestamp'
-drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_open':
-cpsw.c:(.text+0x15ec): undefined reference to `cpts_register'
-drivers/net/ethernet/ti/cpsw.o: in function `cpsw_probe':
-cpsw.c:(.text+0x2468): undefined reference to `cpts_release'
-
-That's because TI_CPTS_MOD (which is the symbol gating the _compilation_
-of cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
-configurations, but TI_CPTS (which is the symbol gating _calls_ to the
-cpts functions) _is_ enabled. So we end up compiling calls to functions
-that don't exist, resulting in the linker errors.
-
-The reason we have two symbols (TI_CPTS and TI_CPTS_MOD) for the same
-driver is due to commit be9ca0d33c85 ("cpsw/netcp: work around reverse
-cpts dependency"), which introduced TI_CPTS_MOD because (quoting the
-commit message):
-
-> The dependency is reversed: cpsw and netcp call into cpts,
-> but cpts depends on the other two in Kconfig. This can lead
-> to cpts being a loadable module and its callers built-in:
+=E2=80=A6
+> The proper pointer to be passed as argument is ce.
 >
-> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_remove':
-> cpsw.c:(.text.cpsw_remove+0xd0): undefined reference to `cpts_release'
-> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_rx_handler':
-> cpsw.c:(.text.cpsw_rx_handler+0x2dc): undefined reference to `cpts_rx_timestamp'
-> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_tx_handler':
-> cpsw.c:(.text.cpsw_tx_handler+0x7c): undefined reference to `cpts_tx_timestamp'
-> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_ndo_stop':
+> This bug was detected with the help of Coccinelle.
 
-Both forms of linker error -- those caused by defconfigs that select
-TI_CPTS without PTP_1588_CLOCK and those caused by configuring TI_CPSW
-as a built-in and TI_CPTS as a module -- can be avoided by using the
-IS_REACHABLE() macro to gate calls to cpts functions, and using the
-TI_CPTS symbol to gate compilation of cpts.c. cpts.h already provides
-the no-op stub implementations of the cpts functions required to make
-this work, we just need to change the existing IS_ENABLED(TI_CPTS)
-guards to IS_REACHABLE(TI_CPTS).
+My software development attention was caught also by your commit message.
 
-With this change there is no longer any need for the TI_CPTS_MOD symbol,
-so we can remove it.
 
-To preserve the existing behavior of defconfigs that select TI_CPTS, we
-must also select PTP_1588_CLOCK so that the dependency is satisfied.
+=E2=80=A6
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
+> @@ -1325,7 +1325,7 @@ static int __reloc_gpu_alloc(struct i915_execbuffe=
+r *eb,
+>
+>  		ce =3D intel_context_create(engine);
+>  		if (IS_ERR(ce)) {
+> -			err =3D PTR_ERR(rq);
+> +			err =3D PTR_ERR(ce);
+>  			goto err_unpin;
+>  		}
+>
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Clay McClure <clay@daemons.net>
----
-Changes in v2:
+Are you looking for any more questionable identifier (or expression) combi=
+nations
+also at other places by the means of advanced source code analysis?
 
-- Don't regenerate the defconfigs, just add PTP_1588_CLOCK.
-
- arch/arm/configs/keystone_defconfig    |  1 +
- arch/arm/configs/omap2plus_defconfig   |  1 +
- drivers/net/ethernet/ti/Kconfig        | 13 ++++---------
- drivers/net/ethernet/ti/Makefile       |  2 +-
- drivers/net/ethernet/ti/cpsw_ethtool.c |  2 +-
- drivers/net/ethernet/ti/cpts.h         |  3 +--
- drivers/net/ethernet/ti/netcp_ethss.c  | 10 +++++-----
- 7 files changed, 14 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index 11e2211f9007..84a3b055f253 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -147,6 +147,7 @@ CONFIG_I2C_DAVINCI=y
- CONFIG_SPI=y
- CONFIG_SPI_DAVINCI=y
- CONFIG_SPI_SPIDEV=y
-+CONFIG_PTP_1588_CLOCK=y
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_GPIOLIB=y
- CONFIG_GPIO_SYSFS=y
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 3cc3ca5fa027..8b83d4a5d309 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -274,6 +274,7 @@ CONFIG_SPI_TI_QSPI=m
- CONFIG_HSI=m
- CONFIG_OMAP_SSI=m
- CONFIG_SSI_PROTOCOL=m
-+CONFIG_PTP_1588_CLOCK=y
- CONFIG_PINCTRL_SINGLE=y
- CONFIG_DEBUG_GPIO=y
- CONFIG_GPIO_SYSFS=y
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index 8e348780efb6..f3f8bb724294 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -77,23 +77,18 @@ config TI_CPSW_SWITCHDEV
- 	  will be called cpsw_new.
- 
- config TI_CPTS
--	bool "TI Common Platform Time Sync (CPTS) Support"
-+	tristate "TI Common Platform Time Sync (CPTS) Support"
- 	depends on TI_CPSW || TI_KEYSTONE_NETCP || TI_CPSW_SWITCHDEV || COMPILE_TEST
- 	depends on COMMON_CLK
--	depends on POSIX_TIMERS
-+	depends on PTP_1588_CLOCK
-+	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
-+	default m
- 	---help---
- 	  This driver supports the Common Platform Time Sync unit of
- 	  the CPSW Ethernet Switch and Keystone 2 1g/10g Switch Subsystem.
- 	  The unit can time stamp PTP UDP/IPv4 and Layer 2 packets, and the
- 	  driver offers a PTP Hardware Clock.
- 
--config TI_CPTS_MOD
--	tristate
--	depends on TI_CPTS
--	depends on PTP_1588_CLOCK
--	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
--	default m
--
- config TI_K3_AM65_CPSW_NUSS
- 	tristate "TI K3 AM654x/J721E CPSW Ethernet driver"
- 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
-diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
-index 53792190e9c2..cb26a9d21869 100644
---- a/drivers/net/ethernet/ti/Makefile
-+++ b/drivers/net/ethernet/ti/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
- ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
- obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
- obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
--obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
-+obj-$(CONFIG_TI_CPTS) += cpts.o
- obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
- ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o cpsw_priv.o cpsw_sl.o cpsw_ethtool.o
- obj-$(CONFIG_TI_CPSW_SWITCHDEV) += ti_cpsw_new.o
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index fa54efe3be63..19a7370a4188 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -709,7 +709,7 @@ int cpsw_set_ringparam(struct net_device *ndev,
- 	return ret;
- }
- 
--#if IS_ENABLED(CONFIG_TI_CPTS)
-+#if IS_REACHABLE(CONFIG_TI_CPTS)
- int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
- {
- 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
-diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
-index bb997c11ee15..782e24c78e7a 100644
---- a/drivers/net/ethernet/ti/cpts.h
-+++ b/drivers/net/ethernet/ti/cpts.h
-@@ -8,7 +8,7 @@
- #ifndef _TI_CPTS_H_
- #define _TI_CPTS_H_
- 
--#if IS_ENABLED(CONFIG_TI_CPTS)
-+#if IS_REACHABLE(CONFIG_TI_CPTS)
- 
- #include <linux/clk.h>
- #include <linux/clkdev.h>
-@@ -171,5 +171,4 @@ static inline bool cpts_can_timestamp(struct cpts *cpts, struct sk_buff *skb)
- }
- #endif
- 
--
- #endif
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index fb36115e9c51..3de1d25128b7 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -181,7 +181,7 @@
- 
- #define HOST_TX_PRI_MAP_DEFAULT			0x00000000
- 
--#if IS_ENABLED(CONFIG_TI_CPTS)
-+#if IS_REACHABLE(CONFIG_TI_CPTS)
- /* Px_TS_CTL register fields */
- #define TS_RX_ANX_F_EN				BIT(0)
- #define TS_RX_VLAN_LT1_EN			BIT(1)
-@@ -2000,7 +2000,7 @@ static int keystone_set_link_ksettings(struct net_device *ndev,
- 	return phy_ethtool_ksettings_set(phy, cmd);
- }
- 
--#if IS_ENABLED(CONFIG_TI_CPTS)
-+#if IS_REACHABLE(CONFIG_TI_CPTS)
- static int keystone_get_ts_info(struct net_device *ndev,
- 				struct ethtool_ts_info *info)
- {
-@@ -2532,7 +2532,7 @@ static int gbe_del_vid(void *intf_priv, int vid)
- 	return 0;
- }
- 
--#if IS_ENABLED(CONFIG_TI_CPTS)
-+#if IS_REACHABLE(CONFIG_TI_CPTS)
- 
- static void gbe_txtstamp(void *context, struct sk_buff *skb)
- {
-@@ -2977,7 +2977,7 @@ static int gbe_close(void *intf_priv, struct net_device *ndev)
- 	return 0;
- }
- 
--#if IS_ENABLED(CONFIG_TI_CPTS)
-+#if IS_REACHABLE(CONFIG_TI_CPTS)
- static void init_slave_ts_ctl(struct gbe_slave *slave)
- {
- 	slave->ts_ctl.uni = 1;
-@@ -3718,7 +3718,7 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
- 
- 	gbe_dev->cpts = cpts_create(gbe_dev->dev, gbe_dev->cpts_reg, cpts_node);
- 	of_node_put(cpts_node);
--	if (IS_ENABLED(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
-+	if (IS_REACHABLE(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
- 		ret = PTR_ERR(gbe_dev->cpts);
- 		goto free_sec_ports;
- 	}
--- 
-2.20.1
-
+Regards,
+Markus
