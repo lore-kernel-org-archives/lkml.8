@@ -6,126 +6,98 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01F4C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FD8C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA06B20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD08C20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgEDJxJ convert rfc822-to-8bit (ORCPT
+        id S1728425AbgEDJxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:53:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8288 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728339AbgEDJxJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:53:09 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0449Wevn154538;
-        Mon, 4 May 2020 05:52:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s50fcewg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 05:52:00 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0449Y0Fw161848;
-        Mon, 4 May 2020 05:51:59 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s50fcew4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 05:51:59 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0449ofx1028861;
-        Mon, 4 May 2020 09:51:57 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 30s0g5ht3w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 09:51:57 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0449ptPp10682730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 May 2020 09:51:55 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B19B52050;
-        Mon,  4 May 2020 09:51:55 +0000 (GMT)
-Received: from localhost (unknown [9.85.127.4])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EE3F75204F;
-        Mon,  4 May 2020 09:51:54 +0000 (GMT)
-Date:   Mon, 04 May 2020 15:21:53 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH 12/14] docs: move remaining stuff under
- Documentation/*.txt to Documentation/staging
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?iso-8859-1?q?Greg=0A?= Kroah-Hartman 
-        <gregkh@linuxfoundation.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        linux-arch@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        =?iso-8859-1?q?Sameer=0A?= Rahmani <lxsameer@gnu.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        tee-dev@lists.linaro.org, Thomas Gleixner <tglx@linutronix.de>
-References: <cover.1588345503.git.mchehab+huawei@kernel.org>
-        <28687056965ff46c0e6c81663a419bc59cfb94b4.1588345503.git.mchehab+huawei@kernel.org>
-        <20200504085415.db8e0e3b40e795f2fb4af009@kernel.org>
-In-Reply-To: <20200504085415.db8e0e3b40e795f2fb4af009@kernel.org>
-MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Message-Id: <1588585777.904qzycqcn.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_05:2020-05-01,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 impostorscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040078
+        Mon, 4 May 2020 05:53:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35914 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgEDJxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:53:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4E576AEF9;
+        Mon,  4 May 2020 09:53:46 +0000 (UTC)
+Date:   Mon, 04 May 2020 11:53:44 +0200
+Message-ID: <s5hk11sf2l3.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     <perex@perex.cz>, <tiwai@suse.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: [PATCH 0/3] Tegra194 HW Fixes
+In-Reply-To: <2828495a-d27a-a69b-37f5-fd3fb714188b@nvidia.com>
+References: <1588580176-2801-1-git-send-email-spujar@nvidia.com>
+        <s5ho8r4f6hx.wl-tiwai@suse.de>
+        <124d4a5c-e198-d8c0-5fb7-65d008852e32@nvidia.com>
+        <2828495a-d27a-a69b-37f5-fd3fb714188b@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masami Hiramatsu wrote:
-> On Fri,  1 May 2020 17:37:56 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+On Mon, 04 May 2020 10:48:46 +0200,
+Sameer Pujar wrote:
 > 
->> There are several files that I was unable to find a proper place
->> for them, and 3 ones that are still in plain old text format.
->> 
->> Let's place those stuff behind the carpet, as we'd like to keep the
->> root directory clean.
->> 
->> We can later discuss and move those into better places.
 > 
-> Hi Mauro,
 > 
-> Thanks for cleaning it up! Tentatively moving kprobes.txt under
-> staging/ is good to me.
+> On 5/4/2020 2:05 PM, Sameer Pujar wrote:
+> >
+> >
+> > On 5/4/2020 1:59 PM, Takashi Iwai wrote:
+> >> External email: Use caution opening links or attachments
+> >>
+> >>
+> >> On Mon, 04 May 2020 10:16:13 +0200,
+> >> Sameer Pujar wrote:
+> >>> This series proposes SW workarounds for Tegra194 HDA HW bugs.
+> >>> Following are the two issues seen:
+> >>>   1. GCAP register does not reflect true capability.
+> >>>      The actual number of SDO lines is "4", where as it reflects "2".
+> >>>   2. With 4 SDO line configuration playback fails for,
+> >>>      44.1K/48K, 2-channel, 16-bps audio stream.
+> >>>
+> >>> After fixing [1], issue [2] is uncovered.
+> >>> As per recommendation by Tegra HW team the workarounds are pushed.
+> >>>
+> >>> Testing done
+> >>> ============
+> >>>   * Verify GCAP register after registering HDA sound card
+> >>>   * Verify audio playback for 44.1K/48K, 2-channel, 16-bps.
+> >>>
+> >>> Sameer Pujar (3):
+> >>>    ALSA: hda/tegra: correct number of SDO lines for Tegra194
+> >>>    ALSA: hda: add member to store ratio for stripe control
+> >>>    ALSA: hda/tegra: workaround playback failure on Tegra194
+> >> Through a quick glance, all changes look good.
+> >>
+> >> Is the device already in market, i.e. it had hit users?  If yes, I'm
+> >> going to merge for 5.7, otherwise for 5.8.
+> >
+> > Yes the device is in the market. But has not been reported by end users.
+> > During internal resting this has been discovered. I am fine with
+> > merging this to 5.8.
 > 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> 
-> BTW, I think kprobes.txt is under trace/ or we may be better
-> making a new core-api/events/ directory and prepare other event
-> systems (PMU, uprobes, and hw_breakpoint.) 
+> To add, end users currently won't see this problem because things work
+> fine with 2-SDO lines. The issue is seen when Tegra194 is allowed to
+> utilize its actual capability of 4-SDO lines.
 
-I think it would be good to move kprobes.txt under trace/ -- all other 
-tracing bits are already present there, including uprobes.
+Thanks for the information.  Then I queued all three patches now to
+for-next branch destined for 5.8.
 
 
-- Naveen
-
+Takashi
