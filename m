@@ -2,243 +2,3720 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527F3C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED4AC47259
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9CF206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5442073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fnUNBFaC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dHx3Vocm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgEDSoj (ORCPT
+        id S1727869AbgEDSpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35736 "EHLO
+        Mon, 4 May 2020 14:45:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726467AbgEDSoi (ORCPT
+        by vger.kernel.org with ESMTP id S1726641AbgEDSpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:44:38 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE52C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:44:37 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b188so594568qkd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:44:37 -0700 (PDT)
+        Mon, 4 May 2020 14:45:01 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8668CC061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:44:59 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id w3so103358plz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:44:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eFQctCe/dUZcz9pj+1iw+95XaaxxZkwekF/8gFv+X+I=;
-        b=fnUNBFaCK4+a91BpF02wWvgKcp8W/gk5WMYI+uqoJSKsOzN3jnpWZmUt5zplVm6N6i
-         ANzUs52EYdWhOesq1Dld/5Q9Ij6hz/oiOwnbfBcFyar978eH11GpO8ahNKkcrJYLm6KU
-         7HJaxrtIVA/NciTcmqcohCpLPnd98S8pJxLtATLoEiDTPXO6Z9Qvl54ecyMg5w+AWSVU
-         k1I+D/M0NQ09KtjgMlpxnu/TjsepQ2wJTS6DjYBwwqXdXrVPavk5shrHEbvrLdYCMFYB
-         wr/939Jp9Ju6OeiQDl70haAvvtG0cAbFzOf/MyAJOC9xEre4OzLMoyYU9aAKQF6H4wQa
-         jh4g==
+         :content-disposition:in-reply-to;
+        bh=4/tRBmIEebHTXWJ2Vaxh0HcKxTcBP+w8LCiF/zTXzlA=;
+        b=dHx3VocmePamWb+CMyatb3iNDrgpgdCS2RgVAL99h6u0dv9F9BXMLAY3JRyj4oUlHo
+         PUC4GT91Nf+zvuADPLNrxzHpa2EN25lq6N2Yd52lDtVs63dfYieOI69EJpIaWTTrHuf0
+         HmFG7/zwiORuZz6mCUaIYXQNkBiycFWOUS5dQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eFQctCe/dUZcz9pj+1iw+95XaaxxZkwekF/8gFv+X+I=;
-        b=n+KggRkzQmKWFHQpWsxdlH9n4lSHCB9rHFMTiLEEVBfOo997c7gCQW/7T2gK1FbPDb
-         WGAkUTx8aDMD7NStiPnYCDOB9Uo8Fczf0jV/VPIbENhCmPnXx8XBvt8CYmD/opnZKZIR
-         jUtLwYU0rHORu0nH0SYxEkupO3ElpfAPI04KXY9gyFxR7zhFU7GiyoRhezuHdoK5JR5m
-         wyQbwPkrgLoOFGu7j8QUwTgInzEOsRiXG5d8nu81oQp7jxZL6tmVk8bImqdSPigcbh8u
-         SU00Hi7WbooR7xrkeffmPgUCFztEtEDsTWQjZDk082b+vX+mXku3lpgW4I78mC6UpBkz
-         JtnA==
-X-Gm-Message-State: AGi0PuZhGjDZvHzdOmo1v8AbD8o1xG+4rUEw2qkOgrhn4e0tpaRJnwh3
-        TBk3oKjKLLRLPRjsrIrIbLoAAQ==
-X-Google-Smtp-Source: APiQypLiC/JxSnNk15n3xK+Aa5cf5pPTYGXyYyNqnACTvOvqJ+2FJphkUMAJpCpXShloqlbeCGQCRA==
-X-Received: by 2002:a37:a753:: with SMTP id q80mr641311qke.492.1588617877043;
-        Mon, 04 May 2020 11:44:37 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n23sm4011594qtk.12.2020.05.04.11.44.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 11:44:36 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jVg4y-0001qE-4G; Mon, 04 May 2020 15:44:36 -0300
-Date:   Mon, 4 May 2020 15:44:36 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, peterx@redhat.com
-Subject: Re: [PATCH 3/3] vfio-pci: Invalidate mmaps and block MMIO access on
- disabled memory
-Message-ID: <20200504184436.GZ26002@ziepe.ca>
-References: <158836742096.8433.685478071796941103.stgit@gimli.home>
- <158836917028.8433.13715345616117345453.stgit@gimli.home>
- <20200501234849.GQ26002@ziepe.ca>
- <20200504122643.52267e44@x1.home>
+         :mime-version:content-disposition:in-reply-to;
+        bh=4/tRBmIEebHTXWJ2Vaxh0HcKxTcBP+w8LCiF/zTXzlA=;
+        b=IuJ5eVC4KaRAMzslTkrI7DXLvueGwTo8iFDLJma1MtMV4lB+sPR37GHkGAtqviMcAJ
+         bU+Uhm/zh/D5uUfLLqrIZnS7EZs6ThU7+S7rumUPLtbz1X4q1mnOmmxE2VyiL5JVCODL
+         X4Nwp7/OC+a3z3WF7NtCTi3u8Q0AgJO8kvF/G4gH4HXHFSTLHg9mBUe6/i/Gqg2wHCH0
+         0s1VsAdnI+OcOOR9aiyrTnosHZsGB9yuY+LjbiLeh3VEQWMS/oUsZ629lmxj/iJ9JPxY
+         FrCqZ6WBPKEsRge6YWUbOVxLL47tMSTQFDBIu283DOXsfJfwOnTHIDOA0MjubDEX+W4Q
+         BIdg==
+X-Gm-Message-State: AGi0PubfYEDw1MUxbptmziG/u7L4P6fuJiAM0YA+gJO8PiK033ODZ/3P
+        OOUx/QVQml7pig1ZiMNeOkzJBw==
+X-Google-Smtp-Source: APiQypK/Sn79ljmF9VweMTFpFprPRT+DBNUepNW5TwsEZsqioqos2XTYv9P/GPx0ANkwsqm51P6XNw==
+X-Received: by 2002:a17:90a:80c2:: with SMTP id k2mr476585pjw.6.1588617898346;
+        Mon, 04 May 2020 11:44:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b1sm9492089pfi.140.2020.05.04.11.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 11:44:57 -0700 (PDT)
+Date:   Mon, 4 May 2020 11:44:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 4/5] sysctl: avoid forward declarations
+Message-ID: <202005041144.DF8F30F@keescook>
+References: <20200424064338.538313-1-hch@lst.de>
+ <20200424064338.538313-5-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504122643.52267e44@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200424064338.538313-5-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 12:26:43PM -0600, Alex Williamson wrote:
-> On Fri, 1 May 2020 20:48:49 -0300
-> Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On Fri, Apr 24, 2020 at 08:43:37AM +0200, Christoph Hellwig wrote:
+> Move the sysctl tables to the end of the file to avoid lots of pointless
+> forward declarations.
 > 
-> > On Fri, May 01, 2020 at 03:39:30PM -0600, Alex Williamson wrote:
-> > 
-> > >  static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
-> > >  			    struct vm_area_struct *vma)
-> > >  {
-> > > @@ -1346,15 +1450,49 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-> > >  {
-> > >  	struct vm_area_struct *vma = vmf->vma;
-> > >  	struct vfio_pci_device *vdev = vma->vm_private_data;
-> > > +	vm_fault_t ret = VM_FAULT_NOPAGE;
-> > >  
-> > > -	if (vfio_pci_add_vma(vdev, vma))
-> > > -		return VM_FAULT_OOM;
-> > > +	/*
-> > > +	 * Zap callers hold memory_lock and acquire mmap_sem, we hold
-> > > +	 * mmap_sem and need to acquire memory_lock to avoid races with
-> > > +	 * memory bit settings.  Release mmap_sem, wait, and retry, or fail.
-> > > +	 */
-> > > +	if (unlikely(!down_read_trylock(&vdev->memory_lock))) {
-> > > +		if (vmf->flags & FAULT_FLAG_ALLOW_RETRY) {
-> > > +			if (vmf->flags & FAULT_FLAG_RETRY_NOWAIT)
-> > > +				return VM_FAULT_RETRY;
-> > > +
-> > > +			up_read(&vma->vm_mm->mmap_sem);
-> > > +
-> > > +			if (vmf->flags & FAULT_FLAG_KILLABLE) {
-> > > +				if (!down_read_killable(&vdev->memory_lock))
-> > > +					up_read(&vdev->memory_lock);
-> > > +			} else {
-> > > +				down_read(&vdev->memory_lock);
-> > > +				up_read(&vdev->memory_lock);
-> > > +			}
-> > > +			return VM_FAULT_RETRY;
-> > > +		}
-> > > +		return VM_FAULT_SIGBUS;
-> > > +	}  
-> > 
-> > So, why have the wait? It isn't reliable - if this gets faulted from a
-> > call site that can't handle retry then it will SIGBUS anyhow?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  kernel/sysctl.c | 3565 +++++++++++++++++++++++------------------------
+>  1 file changed, 1764 insertions(+), 1801 deletions(-)
 > 
-> Do such call sites exist?  My assumption was that half of the branch
-> was unlikely to ever occur.
-
-hmm_range_fault() for instance doesn't set ALLOW_RETRY, I assume there
-are enough other case to care about, but am not so sure
-
-> > The weird use of a rwsem as a completion suggest that perhaps using
-> > wait_event might improve things:
-> > 
-> > disable:
-> >   // Clean out the vma list with zap, then:
-> > 
-> >   down_read(mm->mmap_sem)
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 31b934865ebc3..511543d238794 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -176,79 +176,13 @@ enum sysctl_writes_mode {
+>  };
+>  
+>  static enum sysctl_writes_mode sysctl_writes_strict = SYSCTL_WRITES_STRICT;
+> -
+> -static int proc_do_cad_pid(struct ctl_table *table, int write,
+> -		  void __user *buffer, size_t *lenp, loff_t *ppos);
+> -static int proc_taint(struct ctl_table *table, int write,
+> -			       void __user *buffer, size_t *lenp, loff_t *ppos);
+> -#ifdef CONFIG_COMPACTION
+> -static int proc_dointvec_minmax_warn_RT_change(struct ctl_table *table,
+> -					       int write, void __user *buffer,
+> -					       size_t *lenp, loff_t *ppos);
+> -#endif
+> -#endif
+> -
+> -#ifdef CONFIG_PRINTK
+> -static int proc_dointvec_minmax_sysadmin(struct ctl_table *table, int write,
+> -				void __user *buffer, size_t *lenp, loff_t *ppos);
+> -#endif
+> -
+> -static int proc_dointvec_minmax_coredump(struct ctl_table *table, int write,
+> -		void __user *buffer, size_t *lenp, loff_t *ppos);
+> -#ifdef CONFIG_COREDUMP
+> -static int proc_dostring_coredump(struct ctl_table *table, int write,
+> -		void __user *buffer, size_t *lenp, loff_t *ppos);
+> -#endif
+> -static int proc_dopipe_max_size(struct ctl_table *table, int write,
+> -		void __user *buffer, size_t *lenp, loff_t *ppos);
+> -
+> -#ifdef CONFIG_MAGIC_SYSRQ
+> -static int sysrq_sysctl_handler(struct ctl_table *table, int write,
+> -			void __user *buffer, size_t *lenp, loff_t *ppos);
+> -#endif
+> -
+> -static struct ctl_table kern_table[];
+> -static struct ctl_table vm_table[];
+> -static struct ctl_table fs_table[];
+> -static struct ctl_table debug_table[];
+> -static struct ctl_table dev_table[];
+> +#endif /* CONFIG_PROC_SYSCTL */
+>  
+>  #if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+>      defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>  int sysctl_legacy_va_layout;
+>  #endif
+>  
+> -/* The default sysctl tables: */
+> -
+> -static struct ctl_table sysctl_base_table[] = {
+> -	{
+> -		.procname	= "kernel",
+> -		.mode		= 0555,
+> -		.child		= kern_table,
+> -	},
+> -	{
+> -		.procname	= "vm",
+> -		.mode		= 0555,
+> -		.child		= vm_table,
+> -	},
+> -	{
+> -		.procname	= "fs",
+> -		.mode		= 0555,
+> -		.child		= fs_table,
+> -	},
+> -	{
+> -		.procname	= "debug",
+> -		.mode		= 0555,
+> -		.child		= debug_table,
+> -	},
+> -	{
+> -		.procname	= "dev",
+> -		.mode		= 0555,
+> -		.child		= dev_table,
+> -	},
+> -	{ }
+> -};
+> -
+>  #ifdef CONFIG_SCHED_DEBUG
+>  static int min_sched_granularity_ns = 100000;		/* 100 usecs */
+>  static int max_sched_granularity_ns = NSEC_PER_SEC;	/* 1 second */
+> @@ -265,1676 +199,12 @@ static int min_extfrag_threshold;
+>  static int max_extfrag_threshold = 1000;
+>  #endif
+>  
+> -static struct ctl_table kern_table[] = {
+> -	{
+> -		.procname	= "sched_child_runs_first",
+> -		.data		= &sysctl_sched_child_runs_first,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#ifdef CONFIG_SCHED_DEBUG
+> -	{
+> -		.procname	= "sched_min_granularity_ns",
+> -		.data		= &sysctl_sched_min_granularity,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_proc_update_handler,
+> -		.extra1		= &min_sched_granularity_ns,
+> -		.extra2		= &max_sched_granularity_ns,
+> -	},
+> -	{
+> -		.procname	= "sched_latency_ns",
+> -		.data		= &sysctl_sched_latency,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_proc_update_handler,
+> -		.extra1		= &min_sched_granularity_ns,
+> -		.extra2		= &max_sched_granularity_ns,
+> -	},
+> -	{
+> -		.procname	= "sched_wakeup_granularity_ns",
+> -		.data		= &sysctl_sched_wakeup_granularity,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_proc_update_handler,
+> -		.extra1		= &min_wakeup_granularity_ns,
+> -		.extra2		= &max_wakeup_granularity_ns,
+> -	},
+> -#ifdef CONFIG_SMP
+> -	{
+> -		.procname	= "sched_tunable_scaling",
+> -		.data		= &sysctl_sched_tunable_scaling,
+> -		.maxlen		= sizeof(enum sched_tunable_scaling),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_proc_update_handler,
+> -		.extra1		= &min_sched_tunable_scaling,
+> -		.extra2		= &max_sched_tunable_scaling,
+> -	},
+> -	{
+> -		.procname	= "sched_migration_cost_ns",
+> -		.data		= &sysctl_sched_migration_cost,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "sched_nr_migrate",
+> -		.data		= &sysctl_sched_nr_migrate,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#ifdef CONFIG_SCHEDSTATS
+> -	{
+> -		.procname	= "sched_schedstats",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_schedstats,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif /* CONFIG_SCHEDSTATS */
+> -#endif /* CONFIG_SMP */
+> -#ifdef CONFIG_NUMA_BALANCING
+> -	{
+> -		.procname	= "numa_balancing_scan_delay_ms",
+> -		.data		= &sysctl_numa_balancing_scan_delay,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "numa_balancing_scan_period_min_ms",
+> -		.data		= &sysctl_numa_balancing_scan_period_min,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "numa_balancing_scan_period_max_ms",
+> -		.data		= &sysctl_numa_balancing_scan_period_max,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "numa_balancing_scan_size_mb",
+> -		.data		= &sysctl_numa_balancing_scan_size,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "numa_balancing",
+> -		.data		= NULL, /* filled in by handler */
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_numa_balancing,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif /* CONFIG_NUMA_BALANCING */
+> -#endif /* CONFIG_SCHED_DEBUG */
+> -	{
+> -		.procname	= "sched_rt_period_us",
+> -		.data		= &sysctl_sched_rt_period,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_rt_handler,
+> -	},
+> -	{
+> -		.procname	= "sched_rt_runtime_us",
+> -		.data		= &sysctl_sched_rt_runtime,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_rt_handler,
+> -	},
+> -	{
+> -		.procname	= "sched_rr_timeslice_ms",
+> -		.data		= &sysctl_sched_rr_timeslice,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_rr_handler,
+> -	},
+> -#ifdef CONFIG_UCLAMP_TASK
+> -	{
+> -		.procname	= "sched_util_clamp_min",
+> -		.data		= &sysctl_sched_uclamp_util_min,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_sched_uclamp_handler,
+> -	},
+> -	{
+> -		.procname	= "sched_util_clamp_max",
+> -		.data		= &sysctl_sched_uclamp_util_max,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_sched_uclamp_handler,
+> -	},
+> -#endif
+> -#ifdef CONFIG_SCHED_AUTOGROUP
+> -	{
+> -		.procname	= "sched_autogroup_enabled",
+> -		.data		= &sysctl_sched_autogroup_enabled,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_CFS_BANDWIDTH
+> -	{
+> -		.procname	= "sched_cfs_bandwidth_slice_us",
+> -		.data		= &sysctl_sched_cfs_bandwidth_slice,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> -	{
+> -		.procname	= "sched_energy_aware",
+> -		.data		= &sysctl_sched_energy_aware,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sched_energy_aware_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_PROVE_LOCKING
+> -	{
+> -		.procname	= "prove_locking",
+> -		.data		= &prove_locking,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_LOCK_STAT
+> -	{
+> -		.procname	= "lock_stat",
+> -		.data		= &lock_stat,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "panic",
+> -		.data		= &panic_timeout,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#ifdef CONFIG_COREDUMP
+> -	{
+> -		.procname	= "core_uses_pid",
+> -		.data		= &core_uses_pid,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "core_pattern",
+> -		.data		= core_pattern,
+> -		.maxlen		= CORENAME_MAX_SIZE,
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dostring_coredump,
+> -	},
+> -	{
+> -		.procname	= "core_pipe_limit",
+> -		.data		= &core_pipe_limit,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_PROC_SYSCTL
+> -	{
+> -		.procname	= "tainted",
+> -		.maxlen 	= sizeof(long),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_taint,
+> -	},
+> -	{
+> -		.procname	= "sysctl_writes_strict",
+> -		.data		= &sysctl_writes_strict,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &neg_one,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_LATENCYTOP
+> -	{
+> -		.procname	= "latencytop",
+> -		.data		= &latencytop_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_latencytop,
+> -	},
+> -#endif
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -	{
+> -		.procname	= "real-root-dev",
+> -		.data		= &real_root_dev,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "print-fatal-signals",
+> -		.data		= &print_fatal_signals,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#ifdef CONFIG_SPARC
+> -	{
+> -		.procname	= "reboot-cmd",
+> -		.data		= reboot_command,
+> -		.maxlen		= 256,
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dostring,
+> -	},
+> -	{
+> -		.procname	= "stop-a",
+> -		.data		= &stop_a_enabled,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "scons-poweroff",
+> -		.data		= &scons_pwroff,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_SPARC64
+> -	{
+> -		.procname	= "tsb-ratio",
+> -		.data		= &sysctl_tsb_ratio,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_PARISC
+> -	{
+> -		.procname	= "soft-power",
+> -		.data		= &pwrsw_enabled,
+> -		.maxlen		= sizeof (int),
+> -	 	.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW
+> -	{
+> -		.procname	= "unaligned-trap",
+> -		.data		= &unaligned_enabled,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "ctrl-alt-del",
+> -		.data		= &C_A_D,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#ifdef CONFIG_FUNCTION_TRACER
+> -	{
+> -		.procname	= "ftrace_enabled",
+> -		.data		= &ftrace_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= ftrace_enable_sysctl,
+> -	},
+> -#endif
+> -#ifdef CONFIG_STACK_TRACER
+> -	{
+> -		.procname	= "stack_tracer_enabled",
+> -		.data		= &stack_tracer_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= stack_trace_sysctl,
+> -	},
+> -#endif
+> -#ifdef CONFIG_TRACING
+> -	{
+> -		.procname	= "ftrace_dump_on_oops",
+> -		.data		= &ftrace_dump_on_oops,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "traceoff_on_warning",
+> -		.data		= &__disable_trace_on_warning,
+> -		.maxlen		= sizeof(__disable_trace_on_warning),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "tracepoint_printk",
+> -		.data		= &tracepoint_printk,
+> -		.maxlen		= sizeof(tracepoint_printk),
+> -		.mode		= 0644,
+> -		.proc_handler	= tracepoint_printk_sysctl,
+> -	},
+> -#endif
+> -#ifdef CONFIG_KEXEC_CORE
+> -	{
+> -		.procname	= "kexec_load_disabled",
+> -		.data		= &kexec_load_disabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		/* only handle a transition from default "0" to "1" */
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_MODULES
+> -	{
+> -		.procname	= "modprobe",
+> -		.data		= &modprobe_path,
+> -		.maxlen		= KMOD_PATH_LEN,
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dostring,
+> -	},
+> -	{
+> -		.procname	= "modules_disabled",
+> -		.data		= &modules_disabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		/* only handle a transition from default "0" to "1" */
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_UEVENT_HELPER
+> -	{
+> -		.procname	= "hotplug",
+> -		.data		= &uevent_helper,
+> -		.maxlen		= UEVENT_HELPER_PATH_LEN,
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dostring,
+> -	},
+> -#endif
+> -#ifdef CONFIG_CHR_DEV_SG
+> -	{
+> -		.procname	= "sg-big-buff",
+> -		.data		= &sg_big_buff,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_BSD_PROCESS_ACCT
+> -	{
+> -		.procname	= "acct",
+> -		.data		= &acct_parm,
+> -		.maxlen		= 3*sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_MAGIC_SYSRQ
+> -	{
+> -		.procname	= "sysrq",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysrq_sysctl_handler,
+> -	},
+> -#endif
+> -#ifdef CONFIG_PROC_SYSCTL
+> -	{
+> -		.procname	= "cad_pid",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_do_cad_pid,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "threads-max",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_max_threads,
+> -	},
+> -	{
+> -		.procname	= "random",
+> -		.mode		= 0555,
+> -		.child		= random_table,
+> -	},
+> -	{
+> -		.procname	= "usermodehelper",
+> -		.mode		= 0555,
+> -		.child		= usermodehelper_table,
+> -	},
+> -#ifdef CONFIG_FW_LOADER_USER_HELPER
+> -	{
+> -		.procname	= "firmware_config",
+> -		.mode		= 0555,
+> -		.child		= firmware_config_table,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "overflowuid",
+> -		.data		= &overflowuid,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &minolduid,
+> -		.extra2		= &maxolduid,
+> -	},
+> -	{
+> -		.procname	= "overflowgid",
+> -		.data		= &overflowgid,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &minolduid,
+> -		.extra2		= &maxolduid,
+> -	},
+> -#ifdef CONFIG_S390
+> -	{
+> -		.procname	= "userprocess_debug",
+> -		.data		= &show_unhandled_signals,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "pid_max",
+> -		.data		= &pid_max,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &pid_max_min,
+> -		.extra2		= &pid_max_max,
+> -	},
+> -	{
+> -		.procname	= "panic_on_oops",
+> -		.data		= &panic_on_oops,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "panic_print",
+> -		.data		= &panic_print,
+> -		.maxlen		= sizeof(unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -#if defined CONFIG_PRINTK
+> -	{
+> -		.procname	= "printk",
+> -		.data		= &console_loglevel,
+> -		.maxlen		= 4*sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "printk_ratelimit",
+> -		.data		= &printk_ratelimit_state.interval,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_jiffies,
+> -	},
+> -	{
+> -		.procname	= "printk_ratelimit_burst",
+> -		.data		= &printk_ratelimit_state.burst,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "printk_delay",
+> -		.data		= &printk_delay_msec,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &ten_thousand,
+> -	},
+> -	{
+> -		.procname	= "printk_devkmsg",
+> -		.data		= devkmsg_log_str,
+> -		.maxlen		= DEVKMSG_STR_MAX_SIZE,
+> -		.mode		= 0644,
+> -		.proc_handler	= devkmsg_sysctl_set_loglvl,
+> -	},
+> -	{
+> -		.procname	= "dmesg_restrict",
+> -		.data		= &dmesg_restrict,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax_sysadmin,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "kptr_restrict",
+> -		.data		= &kptr_restrict,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax_sysadmin,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &two,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "ngroups_max",
+> -		.data		= &ngroups_max,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "cap_last_cap",
+> -		.data		= (void *)&cap_last_cap,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#if defined(CONFIG_LOCKUP_DETECTOR)
+> -	{
+> -		.procname       = "watchdog",
+> -		.data		= &watchdog_user_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler   = proc_watchdog,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "watchdog_thresh",
+> -		.data		= &watchdog_thresh,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_watchdog_thresh,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &sixty,
+> -	},
+> -	{
+> -		.procname       = "nmi_watchdog",
+> -		.data		= &nmi_watchdog_user_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= NMI_WATCHDOG_SYSCTL_PERM,
+> -		.proc_handler   = proc_nmi_watchdog,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "watchdog_cpumask",
+> -		.data		= &watchdog_cpumask_bits,
+> -		.maxlen		= NR_CPUS,
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_watchdog_cpumask,
+> -	},
+> -#ifdef CONFIG_SOFTLOCKUP_DETECTOR
+> -	{
+> -		.procname       = "soft_watchdog",
+> -		.data		= &soft_watchdog_user_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler   = proc_soft_watchdog,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "softlockup_panic",
+> -		.data		= &softlockup_panic,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#ifdef CONFIG_SMP
+> -	{
+> -		.procname	= "softlockup_all_cpu_backtrace",
+> -		.data		= &sysctl_softlockup_all_cpu_backtrace,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif /* CONFIG_SMP */
+> -#endif
+> -#ifdef CONFIG_HARDLOCKUP_DETECTOR
+> -	{
+> -		.procname	= "hardlockup_panic",
+> -		.data		= &hardlockup_panic,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#ifdef CONFIG_SMP
+> -	{
+> -		.procname	= "hardlockup_all_cpu_backtrace",
+> -		.data		= &sysctl_hardlockup_all_cpu_backtrace,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif /* CONFIG_SMP */
+> -#endif
+> -#endif
+> -
+> -#if defined(CONFIG_X86_LOCAL_APIC) && defined(CONFIG_X86)
+> -	{
+> -		.procname       = "unknown_nmi_panic",
+> -		.data           = &unknown_nmi_panic,
+> -		.maxlen         = sizeof (int),
+> -		.mode           = 0644,
+> -		.proc_handler   = proc_dointvec,
+> -	},
+> -#endif
+> -#if defined(CONFIG_X86)
+> -	{
+> -		.procname	= "panic_on_unrecovered_nmi",
+> -		.data		= &panic_on_unrecovered_nmi,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "panic_on_io_nmi",
+> -		.data		= &panic_on_io_nmi,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#ifdef CONFIG_DEBUG_STACKOVERFLOW
+> -	{
+> -		.procname	= "panic_on_stackoverflow",
+> -		.data		= &sysctl_panic_on_stackoverflow,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "bootloader_type",
+> -		.data		= &bootloader_type,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "bootloader_version",
+> -		.data		= &bootloader_version,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "io_delay_type",
+> -		.data		= &io_delay_type,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#if defined(CONFIG_MMU)
+> -	{
+> -		.procname	= "randomize_va_space",
+> -		.data		= &randomize_va_space,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#if defined(CONFIG_S390) && defined(CONFIG_SMP)
+> -	{
+> -		.procname	= "spin_retry",
+> -		.data		= &spin_retry,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#if	defined(CONFIG_ACPI_SLEEP) && defined(CONFIG_X86)
+> -	{
+> -		.procname	= "acpi_video_flags",
+> -		.data		= &acpi_realmode_flags,
+> -		.maxlen		= sizeof (unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -#endif
+> -#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN
+> -	{
+> -		.procname	= "ignore-unaligned-usertrap",
+> -		.data		= &no_unaligned_warning,
+> -		.maxlen		= sizeof (int),
+> -	 	.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_IA64
+> -	{
+> -		.procname	= "unaligned-dump-stack",
+> -		.data		= &unaligned_dump_stack,
+> -		.maxlen		= sizeof (int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_DETECT_HUNG_TASK
+> -	{
+> -		.procname	= "hung_task_panic",
+> -		.data		= &sysctl_hung_task_panic,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "hung_task_check_count",
+> -		.data		= &sysctl_hung_task_check_count,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "hung_task_timeout_secs",
+> -		.data		= &sysctl_hung_task_timeout_secs,
+> -		.maxlen		= sizeof(unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dohung_task_timeout_secs,
+> -		.extra2		= &hung_task_timeout_max,
+> -	},
+> -	{
+> -		.procname	= "hung_task_check_interval_secs",
+> -		.data		= &sysctl_hung_task_check_interval_secs,
+> -		.maxlen		= sizeof(unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dohung_task_timeout_secs,
+> -		.extra2		= &hung_task_timeout_max,
+> -	},
+> -	{
+> -		.procname	= "hung_task_warnings",
+> -		.data		= &sysctl_hung_task_warnings,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &neg_one,
+> -	},
+> -#endif
+> -#ifdef CONFIG_RT_MUTEXES
+> -	{
+> -		.procname	= "max_lock_depth",
+> -		.data		= &max_lock_depth,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "poweroff_cmd",
+> -		.data		= &poweroff_cmd,
+> -		.maxlen		= POWEROFF_CMD_PATH_LEN,
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dostring,
+> -	},
+> -#ifdef CONFIG_KEYS
+> -	{
+> -		.procname	= "keys",
+> -		.mode		= 0555,
+> -		.child		= key_sysctls,
+> -	},
+> -#endif
+> -#ifdef CONFIG_PERF_EVENTS
+> -	/*
+> -	 * User-space scripts rely on the existence of this file
+> -	 * as a feature check for perf_events being enabled.
+> -	 *
+> -	 * So it's an ABI, do not remove!
+> -	 */
+> -	{
+> -		.procname	= "perf_event_paranoid",
+> -		.data		= &sysctl_perf_event_paranoid,
+> -		.maxlen		= sizeof(sysctl_perf_event_paranoid),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "perf_event_mlock_kb",
+> -		.data		= &sysctl_perf_event_mlock,
+> -		.maxlen		= sizeof(sysctl_perf_event_mlock),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "perf_event_max_sample_rate",
+> -		.data		= &sysctl_perf_event_sample_rate,
+> -		.maxlen		= sizeof(sysctl_perf_event_sample_rate),
+> -		.mode		= 0644,
+> -		.proc_handler	= perf_proc_update_handler,
+> -		.extra1		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "perf_cpu_time_max_percent",
+> -		.data		= &sysctl_perf_cpu_time_max_percent,
+> -		.maxlen		= sizeof(sysctl_perf_cpu_time_max_percent),
+> -		.mode		= 0644,
+> -		.proc_handler	= perf_cpu_time_max_percent_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_hundred,
+> -	},
+> -	{
+> -		.procname	= "perf_event_max_stack",
+> -		.data		= &sysctl_perf_event_max_stack,
+> -		.maxlen		= sizeof(sysctl_perf_event_max_stack),
+> -		.mode		= 0644,
+> -		.proc_handler	= perf_event_max_stack_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &six_hundred_forty_kb,
+> -	},
+> -	{
+> -		.procname	= "perf_event_max_contexts_per_stack",
+> -		.data		= &sysctl_perf_event_max_contexts_per_stack,
+> -		.maxlen		= sizeof(sysctl_perf_event_max_contexts_per_stack),
+> -		.mode		= 0644,
+> -		.proc_handler	= perf_event_max_stack_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_thousand,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "panic_on_warn",
+> -		.data		= &panic_on_warn,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+> -	{
+> -		.procname	= "timer_migration",
+> -		.data		= &sysctl_timer_migration,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= timer_migration_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_BPF_SYSCALL
+> -	{
+> -		.procname	= "unprivileged_bpf_disabled",
+> -		.data		= &sysctl_unprivileged_bpf_disabled,
+> -		.maxlen		= sizeof(sysctl_unprivileged_bpf_disabled),
+> -		.mode		= 0644,
+> -		/* only handle a transition from default "0" to "1" */
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "bpf_stats_enabled",
+> -		.data		= &bpf_stats_enabled_key.key,
+> -		.maxlen		= sizeof(bpf_stats_enabled_key),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_do_static_key,
+> -	},
+> -#endif
+> -#if defined(CONFIG_TREE_RCU)
+> -	{
+> -		.procname	= "panic_on_rcu_stall",
+> -		.data		= &sysctl_panic_on_rcu_stall,
+> -		.maxlen		= sizeof(sysctl_panic_on_rcu_stall),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_STACKLEAK_RUNTIME_DISABLE
+> -	{
+> -		.procname	= "stack_erasing",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0600,
+> -		.proc_handler	= stack_erasing_sysctl,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -	{ }
+> -};
+> -
+> -static struct ctl_table vm_table[] = {
+> -	{
+> -		.procname	= "overcommit_memory",
+> -		.data		= &sysctl_overcommit_memory,
+> -		.maxlen		= sizeof(sysctl_overcommit_memory),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &two,
+> -	},
+> -	{
+> -		.procname	= "panic_on_oom",
+> -		.data		= &sysctl_panic_on_oom,
+> -		.maxlen		= sizeof(sysctl_panic_on_oom),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &two,
+> -	},
+> -	{
+> -		.procname	= "oom_kill_allocating_task",
+> -		.data		= &sysctl_oom_kill_allocating_task,
+> -		.maxlen		= sizeof(sysctl_oom_kill_allocating_task),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "oom_dump_tasks",
+> -		.data		= &sysctl_oom_dump_tasks,
+> -		.maxlen		= sizeof(sysctl_oom_dump_tasks),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -	{
+> -		.procname	= "overcommit_ratio",
+> -		.data		= &sysctl_overcommit_ratio,
+> -		.maxlen		= sizeof(sysctl_overcommit_ratio),
+> -		.mode		= 0644,
+> -		.proc_handler	= overcommit_ratio_handler,
+> -	},
+> -	{
+> -		.procname	= "overcommit_kbytes",
+> -		.data		= &sysctl_overcommit_kbytes,
+> -		.maxlen		= sizeof(sysctl_overcommit_kbytes),
+> -		.mode		= 0644,
+> -		.proc_handler	= overcommit_kbytes_handler,
+> -	},
+> -	{
+> -		.procname	= "page-cluster", 
+> -		.data		= &page_cluster,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "dirty_background_ratio",
+> -		.data		= &dirty_background_ratio,
+> -		.maxlen		= sizeof(dirty_background_ratio),
+> -		.mode		= 0644,
+> -		.proc_handler	= dirty_background_ratio_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_hundred,
+> -	},
+> -	{
+> -		.procname	= "dirty_background_bytes",
+> -		.data		= &dirty_background_bytes,
+> -		.maxlen		= sizeof(dirty_background_bytes),
+> -		.mode		= 0644,
+> -		.proc_handler	= dirty_background_bytes_handler,
+> -		.extra1		= &one_ul,
+> -	},
+> -	{
+> -		.procname	= "dirty_ratio",
+> -		.data		= &vm_dirty_ratio,
+> -		.maxlen		= sizeof(vm_dirty_ratio),
+> -		.mode		= 0644,
+> -		.proc_handler	= dirty_ratio_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_hundred,
+> -	},
+> -	{
+> -		.procname	= "dirty_bytes",
+> -		.data		= &vm_dirty_bytes,
+> -		.maxlen		= sizeof(vm_dirty_bytes),
+> -		.mode		= 0644,
+> -		.proc_handler	= dirty_bytes_handler,
+> -		.extra1		= &dirty_bytes_min,
+> -	},
+> -	{
+> -		.procname	= "dirty_writeback_centisecs",
+> -		.data		= &dirty_writeback_interval,
+> -		.maxlen		= sizeof(dirty_writeback_interval),
+> -		.mode		= 0644,
+> -		.proc_handler	= dirty_writeback_centisecs_handler,
+> -	},
+> -	{
+> -		.procname	= "dirty_expire_centisecs",
+> -		.data		= &dirty_expire_interval,
+> -		.maxlen		= sizeof(dirty_expire_interval),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "dirtytime_expire_seconds",
+> -		.data		= &dirtytime_expire_interval,
+> -		.maxlen		= sizeof(dirtytime_expire_interval),
+> -		.mode		= 0644,
+> -		.proc_handler	= dirtytime_interval_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "swappiness",
+> -		.data		= &vm_swappiness,
+> -		.maxlen		= sizeof(vm_swappiness),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_hundred,
+> -	},
+> -#ifdef CONFIG_HUGETLB_PAGE
+> -	{
+> -		.procname	= "nr_hugepages",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof(unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= hugetlb_sysctl_handler,
+> -	},
+> -#ifdef CONFIG_NUMA
+> -	{
+> -		.procname       = "nr_hugepages_mempolicy",
+> -		.data           = NULL,
+> -		.maxlen         = sizeof(unsigned long),
+> -		.mode           = 0644,
+> -		.proc_handler   = &hugetlb_mempolicy_sysctl_handler,
+> -	},
+> -	{
+> -		.procname		= "numa_stat",
+> -		.data			= &sysctl_vm_numa_stat,
+> -		.maxlen			= sizeof(int),
+> -		.mode			= 0644,
+> -		.proc_handler	= sysctl_vm_numa_stat_handler,
+> -		.extra1			= SYSCTL_ZERO,
+> -		.extra2			= SYSCTL_ONE,
+> -	},
+> -#endif
+> -	 {
+> -		.procname	= "hugetlb_shm_group",
+> -		.data		= &sysctl_hugetlb_shm_group,
+> -		.maxlen		= sizeof(gid_t),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	 },
+> -	{
+> -		.procname	= "nr_overcommit_hugepages",
+> -		.data		= NULL,
+> -		.maxlen		= sizeof(unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= hugetlb_overcommit_handler,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "lowmem_reserve_ratio",
+> -		.data		= &sysctl_lowmem_reserve_ratio,
+> -		.maxlen		= sizeof(sysctl_lowmem_reserve_ratio),
+> -		.mode		= 0644,
+> -		.proc_handler	= lowmem_reserve_ratio_sysctl_handler,
+> -	},
+> -	{
+> -		.procname	= "drop_caches",
+> -		.data		= &sysctl_drop_caches,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0200,
+> -		.proc_handler	= drop_caches_sysctl_handler,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= &four,
+> -	},
+> -#ifdef CONFIG_COMPACTION
+> -	{
+> -		.procname	= "compact_memory",
+> -		.data		= &sysctl_compact_memory,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0200,
+> -		.proc_handler	= sysctl_compaction_handler,
+> -	},
+> -	{
+> -		.procname	= "extfrag_threshold",
+> -		.data		= &sysctl_extfrag_threshold,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &min_extfrag_threshold,
+> -		.extra2		= &max_extfrag_threshold,
+> -	},
+> -	{
+> -		.procname	= "compact_unevictable_allowed",
+> -		.data		= &sysctl_compact_unevictable_allowed,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax_warn_RT_change,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -
+> -#endif /* CONFIG_COMPACTION */
+> -	{
+> -		.procname	= "min_free_kbytes",
+> -		.data		= &min_free_kbytes,
+> -		.maxlen		= sizeof(min_free_kbytes),
+> -		.mode		= 0644,
+> -		.proc_handler	= min_free_kbytes_sysctl_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "watermark_boost_factor",
+> -		.data		= &watermark_boost_factor,
+> -		.maxlen		= sizeof(watermark_boost_factor),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "watermark_scale_factor",
+> -		.data		= &watermark_scale_factor,
+> -		.maxlen		= sizeof(watermark_scale_factor),
+> -		.mode		= 0644,
+> -		.proc_handler	= watermark_scale_factor_sysctl_handler,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= &one_thousand,
+> -	},
+> -	{
+> -		.procname	= "percpu_pagelist_fraction",
+> -		.data		= &percpu_pagelist_fraction,
+> -		.maxlen		= sizeof(percpu_pagelist_fraction),
+> -		.mode		= 0644,
+> -		.proc_handler	= percpu_pagelist_fraction_sysctl_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#ifdef CONFIG_MMU
+> -	{
+> -		.procname	= "max_map_count",
+> -		.data		= &sysctl_max_map_count,
+> -		.maxlen		= sizeof(sysctl_max_map_count),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#else
+> -	{
+> -		.procname	= "nr_trim_pages",
+> -		.data		= &sysctl_nr_trim_pages,
+> -		.maxlen		= sizeof(sysctl_nr_trim_pages),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "laptop_mode",
+> -		.data		= &laptop_mode,
+> -		.maxlen		= sizeof(laptop_mode),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_jiffies,
+> -	},
+> -	{
+> -		.procname	= "block_dump",
+> -		.data		= &block_dump,
+> -		.maxlen		= sizeof(block_dump),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "vfs_cache_pressure",
+> -		.data		= &sysctl_vfs_cache_pressure,
+> -		.maxlen		= sizeof(sysctl_vfs_cache_pressure),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+> -    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+> -	{
+> -		.procname	= "legacy_va_layout",
+> -		.data		= &sysctl_legacy_va_layout,
+> -		.maxlen		= sizeof(sysctl_legacy_va_layout),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#endif
+> -#ifdef CONFIG_NUMA
+> -	{
+> -		.procname	= "zone_reclaim_mode",
+> -		.data		= &node_reclaim_mode,
+> -		.maxlen		= sizeof(node_reclaim_mode),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -	{
+> -		.procname	= "min_unmapped_ratio",
+> -		.data		= &sysctl_min_unmapped_ratio,
+> -		.maxlen		= sizeof(sysctl_min_unmapped_ratio),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_min_unmapped_ratio_sysctl_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_hundred,
+> -	},
+> -	{
+> -		.procname	= "min_slab_ratio",
+> -		.data		= &sysctl_min_slab_ratio,
+> -		.maxlen		= sizeof(sysctl_min_slab_ratio),
+> -		.mode		= 0644,
+> -		.proc_handler	= sysctl_min_slab_ratio_sysctl_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &one_hundred,
+> -	},
+> -#endif
+> -#ifdef CONFIG_SMP
+> -	{
+> -		.procname	= "stat_interval",
+> -		.data		= &sysctl_stat_interval,
+> -		.maxlen		= sizeof(sysctl_stat_interval),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_jiffies,
+> -	},
+> -	{
+> -		.procname	= "stat_refresh",
+> -		.data		= NULL,
+> -		.maxlen		= 0,
+> -		.mode		= 0600,
+> -		.proc_handler	= vmstat_refresh,
+> -	},
+> -#endif
+> -#ifdef CONFIG_MMU
+> -	{
+> -		.procname	= "mmap_min_addr",
+> -		.data		= &dac_mmap_min_addr,
+> -		.maxlen		= sizeof(unsigned long),
+> -		.mode		= 0644,
+> -		.proc_handler	= mmap_min_addr_handler,
+> -	},
+> -#endif
+> -#ifdef CONFIG_NUMA
+> -	{
+> -		.procname	= "numa_zonelist_order",
+> -		.data		= &numa_zonelist_order,
+> -		.maxlen		= NUMA_ZONELIST_ORDER_LEN,
+> -		.mode		= 0644,
+> -		.proc_handler	= numa_zonelist_order_handler,
+> -	},
+> -#endif
+> -#if (defined(CONFIG_X86_32) && !defined(CONFIG_UML))|| \
+> -   (defined(CONFIG_SUPERH) && defined(CONFIG_VSYSCALL))
+> -	{
+> -		.procname	= "vdso_enabled",
+> -#ifdef CONFIG_X86_32
+> -		.data		= &vdso32_enabled,
+> -		.maxlen		= sizeof(vdso32_enabled),
+> -#else
+> -		.data		= &vdso_enabled,
+> -		.maxlen		= sizeof(vdso_enabled),
+> -#endif
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#endif
+> -#ifdef CONFIG_HIGHMEM
+> -	{
+> -		.procname	= "highmem_is_dirtyable",
+> -		.data		= &vm_highmem_is_dirtyable,
+> -		.maxlen		= sizeof(vm_highmem_is_dirtyable),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -#ifdef CONFIG_MEMORY_FAILURE
+> -	{
+> -		.procname	= "memory_failure_early_kill",
+> -		.data		= &sysctl_memory_failure_early_kill,
+> -		.maxlen		= sizeof(sysctl_memory_failure_early_kill),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "memory_failure_recovery",
+> -		.data		= &sysctl_memory_failure_recovery,
+> -		.maxlen		= sizeof(sysctl_memory_failure_recovery),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "user_reserve_kbytes",
+> -		.data		= &sysctl_user_reserve_kbytes,
+> -		.maxlen		= sizeof(sysctl_user_reserve_kbytes),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -	{
+> -		.procname	= "admin_reserve_kbytes",
+> -		.data		= &sysctl_admin_reserve_kbytes,
+> -		.maxlen		= sizeof(sysctl_admin_reserve_kbytes),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -#ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
+> -	{
+> -		.procname	= "mmap_rnd_bits",
+> -		.data		= &mmap_rnd_bits,
+> -		.maxlen		= sizeof(mmap_rnd_bits),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= (void *)&mmap_rnd_bits_min,
+> -		.extra2		= (void *)&mmap_rnd_bits_max,
+> -	},
+> -#endif
+> -#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
+> -	{
+> -		.procname	= "mmap_rnd_compat_bits",
+> -		.data		= &mmap_rnd_compat_bits,
+> -		.maxlen		= sizeof(mmap_rnd_compat_bits),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= (void *)&mmap_rnd_compat_bits_min,
+> -		.extra2		= (void *)&mmap_rnd_compat_bits_max,
+> -	},
+> -#endif
+> -#ifdef CONFIG_USERFAULTFD
+> -	{
+> -		.procname	= "unprivileged_userfaultfd",
+> -		.data		= &sysctl_unprivileged_userfaultfd,
+> -		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -	{ }
+> -};
+> -
+> -static struct ctl_table fs_table[] = {
+> -	{
+> -		.procname	= "inode-nr",
+> -		.data		= &inodes_stat,
+> -		.maxlen		= 2*sizeof(long),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_nr_inodes,
+> -	},
+> -	{
+> -		.procname	= "inode-state",
+> -		.data		= &inodes_stat,
+> -		.maxlen		= 7*sizeof(long),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_nr_inodes,
+> -	},
+> -	{
+> -		.procname	= "file-nr",
+> -		.data		= &files_stat,
+> -		.maxlen		= sizeof(files_stat),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_nr_files,
+> -	},
+> -	{
+> -		.procname	= "file-max",
+> -		.data		= &files_stat.max_files,
+> -		.maxlen		= sizeof(files_stat.max_files),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -		.extra1		= &zero_ul,
+> -		.extra2		= &long_max,
+> -	},
+> -	{
+> -		.procname	= "nr_open",
+> -		.data		= &sysctl_nr_open,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &sysctl_nr_open_min,
+> -		.extra2		= &sysctl_nr_open_max,
+> -	},
+> -	{
+> -		.procname	= "dentry-state",
+> -		.data		= &dentry_stat,
+> -		.maxlen		= 6*sizeof(long),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_nr_dentry,
+> -	},
+> -	{
+> -		.procname	= "overflowuid",
+> -		.data		= &fs_overflowuid,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &minolduid,
+> -		.extra2		= &maxolduid,
+> -	},
+> -	{
+> -		.procname	= "overflowgid",
+> -		.data		= &fs_overflowgid,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= &minolduid,
+> -		.extra2		= &maxolduid,
+> -	},
+> -#ifdef CONFIG_FILE_LOCKING
+> -	{
+> -		.procname	= "leases-enable",
+> -		.data		= &leases_enable,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_DNOTIFY
+> -	{
+> -		.procname	= "dir-notify-enable",
+> -		.data		= &dir_notify_enable,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_MMU
+> -#ifdef CONFIG_FILE_LOCKING
+> -	{
+> -		.procname	= "lease-break-time",
+> -		.data		= &lease_break_time,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -	},
+> -#endif
+> -#ifdef CONFIG_AIO
+> -	{
+> -		.procname	= "aio-nr",
+> -		.data		= &aio_nr,
+> -		.maxlen		= sizeof(aio_nr),
+> -		.mode		= 0444,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -	{
+> -		.procname	= "aio-max-nr",
+> -		.data		= &aio_max_nr,
+> -		.maxlen		= sizeof(aio_max_nr),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -#endif /* CONFIG_AIO */
+> -#ifdef CONFIG_INOTIFY_USER
+> -	{
+> -		.procname	= "inotify",
+> -		.mode		= 0555,
+> -		.child		= inotify_table,
+> -	},
+> -#endif	
+> -#ifdef CONFIG_EPOLL
+> -	{
+> -		.procname	= "epoll",
+> -		.mode		= 0555,
+> -		.child		= epoll_table,
+> -	},
+> -#endif
+> -#endif
+> -	{
+> -		.procname	= "protected_symlinks",
+> -		.data		= &sysctl_protected_symlinks,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "protected_hardlinks",
+> -		.data		= &sysctl_protected_hardlinks,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -	{
+> -		.procname	= "protected_fifos",
+> -		.data		= &sysctl_protected_fifos,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &two,
+> -	},
+> -	{
+> -		.procname	= "protected_regular",
+> -		.data		= &sysctl_protected_regular,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0600,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &two,
+> -	},
+> -	{
+> -		.procname	= "suid_dumpable",
+> -		.data		= &suid_dumpable,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax_coredump,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= &two,
+> -	},
+> -#if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+> -	{
+> -		.procname	= "binfmt_misc",
+> -		.mode		= 0555,
+> -		.child		= sysctl_mount_point,
+> -	},
+> -#endif
+> -	{
+> -		.procname	= "pipe-max-size",
+> -		.data		= &pipe_max_size,
+> -		.maxlen		= sizeof(pipe_max_size),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dopipe_max_size,
+> -	},
+> -	{
+> -		.procname	= "pipe-user-pages-hard",
+> -		.data		= &pipe_user_pages_hard,
+> -		.maxlen		= sizeof(pipe_user_pages_hard),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -	{
+> -		.procname	= "pipe-user-pages-soft",
+> -		.data		= &pipe_user_pages_soft,
+> -		.maxlen		= sizeof(pipe_user_pages_soft),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_doulongvec_minmax,
+> -	},
+> -	{
+> -		.procname	= "mount-max",
+> -		.data		= &sysctl_mount_max,
+> -		.maxlen		= sizeof(unsigned int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -	},
+> -	{ }
+> -};
+> -
+> -static struct ctl_table debug_table[] = {
+> -#ifdef CONFIG_SYSCTL_EXCEPTION_TRACE
+> -	{
+> -		.procname	= "exception-trace",
+> -		.data		= &show_unhandled_signals,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec
+> -	},
+> -#endif
+> -#if defined(CONFIG_OPTPROBES)
+> -	{
+> -		.procname	= "kprobes-optimization",
+> -		.data		= &sysctl_kprobes_optimization,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_kprobes_optimization_handler,
+> -		.extra1		= SYSCTL_ZERO,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+> -	{ }
+> -};
+> -
+> -static struct ctl_table dev_table[] = {
+> -	{ }
+> -};
+> -
+> -int __init sysctl_init(void)
+> -{
+> -	struct ctl_table_header *hdr;
+> -
+> -	hdr = register_sysctl_table(sysctl_base_table);
+> -	kmemleak_not_leak(hdr);
+> -	return 0;
+> -}
+> -
+> -#endif /* CONFIG_SYSCTL */
+> -
+> -/*
+> - * /proc/sys support
+> - */
+> -
+> +#endif /* CONFIG_SYSCTL */
+> +
+> +/*
+> + * /proc/sys support
+> + */
+> +
+>  #ifdef CONFIG_PROC_SYSCTL
+>  
+>  static int _proc_do_string(char *data, int maxlen, int write,
+> @@ -3307,95 +1577,1788 @@ int proc_dointvec(struct ctl_table *table, int write,
+>  	return -ENOSYS;
+>  }
+>  
+> -int proc_douintvec(struct ctl_table *table, int write,
+> -		  void __user *buffer, size_t *lenp, loff_t *ppos)
+> +int proc_douintvec(struct ctl_table *table, int write,
+> +		  void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +int proc_dointvec_minmax(struct ctl_table *table, int write,
+> +		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +int proc_douintvec_minmax(struct ctl_table *table, int write,
+> +			  void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +int proc_dointvec_jiffies(struct ctl_table *table, int write,
+> +		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
+> +		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +int proc_dointvec_ms_jiffies(struct ctl_table *table, int write,
+> +			     void __user *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>  	return -ENOSYS;
+>  }
+>  
+> -int proc_dointvec_minmax(struct ctl_table *table, int write,
+> +int proc_doulongvec_minmax(struct ctl_table *table, int write,
+>  		    void __user *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>  	return -ENOSYS;
+>  }
+>  
+> -int proc_douintvec_minmax(struct ctl_table *table, int write,
+> -			  void __user *buffer, size_t *lenp, loff_t *ppos)
+> +int proc_doulongvec_ms_jiffies_minmax(struct ctl_table *table, int write,
+> +				      void __user *buffer,
+> +				      size_t *lenp, loff_t *ppos)
+>  {
+> -	return -ENOSYS;
+> +    return -ENOSYS;
+>  }
+>  
+> -int proc_dointvec_jiffies(struct ctl_table *table, int write,
+> -		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> +int proc_do_large_bitmap(struct ctl_table *table, int write,
+> +			 void __user *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>  	return -ENOSYS;
+>  }
+>  
+> -int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
+> -		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> -{
+> -	return -ENOSYS;
+> -}
+> +#endif /* CONFIG_PROC_SYSCTL */
+> +
+> +#if defined(CONFIG_SYSCTL)
+> +int proc_do_static_key(struct ctl_table *table, int write,
+> +		       void __user *buffer, size_t *lenp,
+> +		       loff_t *ppos)
+> +{
+> +	struct static_key *key = (struct static_key *)table->data;
+> +	static DEFINE_MUTEX(static_key_mutex);
+> +	int val, ret;
+> +	struct ctl_table tmp = {
+> +		.data   = &val,
+> +		.maxlen = sizeof(val),
+> +		.mode   = table->mode,
+> +		.extra1 = SYSCTL_ZERO,
+> +		.extra2 = SYSCTL_ONE,
+> +	};
+> +
+> +	if (write && !capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
+> +	mutex_lock(&static_key_mutex);
+> +	val = static_key_enabled(key);
+> +	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
+> +	if (write && !ret) {
+> +		if (val)
+> +			static_key_enable(key);
+> +		else
+> +			static_key_disable(key);
+> +	}
+> +	mutex_unlock(&static_key_mutex);
+> +	return ret;
+> +}
+> +
+> +static struct ctl_table kern_table[] = {
+> +	{
+> +		.procname	= "sched_child_runs_first",
+> +		.data		= &sysctl_sched_child_runs_first,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#ifdef CONFIG_SCHED_DEBUG
+> +	{
+> +		.procname	= "sched_min_granularity_ns",
+> +		.data		= &sysctl_sched_min_granularity,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_proc_update_handler,
+> +		.extra1		= &min_sched_granularity_ns,
+> +		.extra2		= &max_sched_granularity_ns,
+> +	},
+> +	{
+> +		.procname	= "sched_latency_ns",
+> +		.data		= &sysctl_sched_latency,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_proc_update_handler,
+> +		.extra1		= &min_sched_granularity_ns,
+> +		.extra2		= &max_sched_granularity_ns,
+> +	},
+> +	{
+> +		.procname	= "sched_wakeup_granularity_ns",
+> +		.data		= &sysctl_sched_wakeup_granularity,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_proc_update_handler,
+> +		.extra1		= &min_wakeup_granularity_ns,
+> +		.extra2		= &max_wakeup_granularity_ns,
+> +	},
+> +#ifdef CONFIG_SMP
+> +	{
+> +		.procname	= "sched_tunable_scaling",
+> +		.data		= &sysctl_sched_tunable_scaling,
+> +		.maxlen		= sizeof(enum sched_tunable_scaling),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_proc_update_handler,
+> +		.extra1		= &min_sched_tunable_scaling,
+> +		.extra2		= &max_sched_tunable_scaling,
+> +	},
+> +	{
+> +		.procname	= "sched_migration_cost_ns",
+> +		.data		= &sysctl_sched_migration_cost,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "sched_nr_migrate",
+> +		.data		= &sysctl_sched_nr_migrate,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#ifdef CONFIG_SCHEDSTATS
+> +	{
+> +		.procname	= "sched_schedstats",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_schedstats,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif /* CONFIG_SCHEDSTATS */
+> +#endif /* CONFIG_SMP */
+> +#ifdef CONFIG_NUMA_BALANCING
+> +	{
+> +		.procname	= "numa_balancing_scan_delay_ms",
+> +		.data		= &sysctl_numa_balancing_scan_delay,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "numa_balancing_scan_period_min_ms",
+> +		.data		= &sysctl_numa_balancing_scan_period_min,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "numa_balancing_scan_period_max_ms",
+> +		.data		= &sysctl_numa_balancing_scan_period_max,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "numa_balancing_scan_size_mb",
+> +		.data		= &sysctl_numa_balancing_scan_size,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "numa_balancing",
+> +		.data		= NULL, /* filled in by handler */
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_numa_balancing,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif /* CONFIG_NUMA_BALANCING */
+> +#endif /* CONFIG_SCHED_DEBUG */
+> +	{
+> +		.procname	= "sched_rt_period_us",
+> +		.data		= &sysctl_sched_rt_period,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_rt_handler,
+> +	},
+> +	{
+> +		.procname	= "sched_rt_runtime_us",
+> +		.data		= &sysctl_sched_rt_runtime,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_rt_handler,
+> +	},
+> +	{
+> +		.procname	= "sched_rr_timeslice_ms",
+> +		.data		= &sysctl_sched_rr_timeslice,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_rr_handler,
+> +	},
+> +#ifdef CONFIG_UCLAMP_TASK
+> +	{
+> +		.procname	= "sched_util_clamp_min",
+> +		.data		= &sysctl_sched_uclamp_util_min,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_sched_uclamp_handler,
+> +	},
+> +	{
+> +		.procname	= "sched_util_clamp_max",
+> +		.data		= &sysctl_sched_uclamp_util_max,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_sched_uclamp_handler,
+> +	},
+> +#endif
+> +#ifdef CONFIG_SCHED_AUTOGROUP
+> +	{
+> +		.procname	= "sched_autogroup_enabled",
+> +		.data		= &sysctl_sched_autogroup_enabled,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_CFS_BANDWIDTH
+> +	{
+> +		.procname	= "sched_cfs_bandwidth_slice_us",
+> +		.data		= &sysctl_sched_cfs_bandwidth_slice,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+> +	{
+> +		.procname	= "sched_energy_aware",
+> +		.data		= &sysctl_sched_energy_aware,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sched_energy_aware_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_PROVE_LOCKING
+> +	{
+> +		.procname	= "prove_locking",
+> +		.data		= &prove_locking,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_LOCK_STAT
+> +	{
+> +		.procname	= "lock_stat",
+> +		.data		= &lock_stat,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "panic",
+> +		.data		= &panic_timeout,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#ifdef CONFIG_COREDUMP
+> +	{
+> +		.procname	= "core_uses_pid",
+> +		.data		= &core_uses_pid,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "core_pattern",
+> +		.data		= core_pattern,
+> +		.maxlen		= CORENAME_MAX_SIZE,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dostring_coredump,
+> +	},
+> +	{
+> +		.procname	= "core_pipe_limit",
+> +		.data		= &core_pipe_limit,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_PROC_SYSCTL
+> +	{
+> +		.procname	= "tainted",
+> +		.maxlen 	= sizeof(long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_taint,
+> +	},
+> +	{
+> +		.procname	= "sysctl_writes_strict",
+> +		.data		= &sysctl_writes_strict,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &neg_one,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_LATENCYTOP
+> +	{
+> +		.procname	= "latencytop",
+> +		.data		= &latencytop_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_latencytop,
+> +	},
+> +#endif
+> +#ifdef CONFIG_BLK_DEV_INITRD
+> +	{
+> +		.procname	= "real-root-dev",
+> +		.data		= &real_root_dev,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "print-fatal-signals",
+> +		.data		= &print_fatal_signals,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#ifdef CONFIG_SPARC
+> +	{
+> +		.procname	= "reboot-cmd",
+> +		.data		= reboot_command,
+> +		.maxlen		= 256,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dostring,
+> +	},
+> +	{
+> +		.procname	= "stop-a",
+> +		.data		= &stop_a_enabled,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "scons-poweroff",
+> +		.data		= &scons_pwroff,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_SPARC64
+> +	{
+> +		.procname	= "tsb-ratio",
+> +		.data		= &sysctl_tsb_ratio,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_PARISC
+> +	{
+> +		.procname	= "soft-power",
+> +		.data		= &pwrsw_enabled,
+> +		.maxlen		= sizeof (int),
+> +	 	.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW
+> +	{
+> +		.procname	= "unaligned-trap",
+> +		.data		= &unaligned_enabled,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "ctrl-alt-del",
+> +		.data		= &C_A_D,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#ifdef CONFIG_FUNCTION_TRACER
+> +	{
+> +		.procname	= "ftrace_enabled",
+> +		.data		= &ftrace_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= ftrace_enable_sysctl,
+> +	},
+> +#endif
+> +#ifdef CONFIG_STACK_TRACER
+> +	{
+> +		.procname	= "stack_tracer_enabled",
+> +		.data		= &stack_tracer_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= stack_trace_sysctl,
+> +	},
+> +#endif
+> +#ifdef CONFIG_TRACING
+> +	{
+> +		.procname	= "ftrace_dump_on_oops",
+> +		.data		= &ftrace_dump_on_oops,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "traceoff_on_warning",
+> +		.data		= &__disable_trace_on_warning,
+> +		.maxlen		= sizeof(__disable_trace_on_warning),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "tracepoint_printk",
+> +		.data		= &tracepoint_printk,
+> +		.maxlen		= sizeof(tracepoint_printk),
+> +		.mode		= 0644,
+> +		.proc_handler	= tracepoint_printk_sysctl,
+> +	},
+> +#endif
+> +#ifdef CONFIG_KEXEC_CORE
+> +	{
+> +		.procname	= "kexec_load_disabled",
+> +		.data		= &kexec_load_disabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_MODULES
+> +	{
+> +		.procname	= "modprobe",
+> +		.data		= &modprobe_path,
+> +		.maxlen		= KMOD_PATH_LEN,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dostring,
+> +	},
+> +	{
+> +		.procname	= "modules_disabled",
+> +		.data		= &modules_disabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_UEVENT_HELPER
+> +	{
+> +		.procname	= "hotplug",
+> +		.data		= &uevent_helper,
+> +		.maxlen		= UEVENT_HELPER_PATH_LEN,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dostring,
+> +	},
+> +#endif
+> +#ifdef CONFIG_CHR_DEV_SG
+> +	{
+> +		.procname	= "sg-big-buff",
+> +		.data		= &sg_big_buff,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_BSD_PROCESS_ACCT
+> +	{
+> +		.procname	= "acct",
+> +		.data		= &acct_parm,
+> +		.maxlen		= 3*sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_MAGIC_SYSRQ
+> +	{
+> +		.procname	= "sysrq",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysrq_sysctl_handler,
+> +	},
+> +#endif
+> +#ifdef CONFIG_PROC_SYSCTL
+> +	{
+> +		.procname	= "cad_pid",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_do_cad_pid,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "threads-max",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_max_threads,
+> +	},
+> +	{
+> +		.procname	= "random",
+> +		.mode		= 0555,
+> +		.child		= random_table,
+> +	},
+> +	{
+> +		.procname	= "usermodehelper",
+> +		.mode		= 0555,
+> +		.child		= usermodehelper_table,
+> +	},
+> +#ifdef CONFIG_FW_LOADER_USER_HELPER
+> +	{
+> +		.procname	= "firmware_config",
+> +		.mode		= 0555,
+> +		.child		= firmware_config_table,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "overflowuid",
+> +		.data		= &overflowuid,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &minolduid,
+> +		.extra2		= &maxolduid,
+> +	},
+> +	{
+> +		.procname	= "overflowgid",
+> +		.data		= &overflowgid,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &minolduid,
+> +		.extra2		= &maxolduid,
+> +	},
+> +#ifdef CONFIG_S390
+> +	{
+> +		.procname	= "userprocess_debug",
+> +		.data		= &show_unhandled_signals,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "pid_max",
+> +		.data		= &pid_max,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &pid_max_min,
+> +		.extra2		= &pid_max_max,
+> +	},
+> +	{
+> +		.procname	= "panic_on_oops",
+> +		.data		= &panic_on_oops,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "panic_print",
+> +		.data		= &panic_print,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +#if defined CONFIG_PRINTK
+> +	{
+> +		.procname	= "printk",
+> +		.data		= &console_loglevel,
+> +		.maxlen		= 4*sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "printk_ratelimit",
+> +		.data		= &printk_ratelimit_state.interval,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_jiffies,
+> +	},
+> +	{
+> +		.procname	= "printk_ratelimit_burst",
+> +		.data		= &printk_ratelimit_state.burst,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "printk_delay",
+> +		.data		= &printk_delay_msec,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &ten_thousand,
+> +	},
+> +	{
+> +		.procname	= "printk_devkmsg",
+> +		.data		= devkmsg_log_str,
+> +		.maxlen		= DEVKMSG_STR_MAX_SIZE,
+> +		.mode		= 0644,
+> +		.proc_handler	= devkmsg_sysctl_set_loglvl,
+> +	},
+> +	{
+> +		.procname	= "dmesg_restrict",
+> +		.data		= &dmesg_restrict,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax_sysadmin,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "kptr_restrict",
+> +		.data		= &kptr_restrict,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax_sysadmin,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &two,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "ngroups_max",
+> +		.data		= &ngroups_max,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "cap_last_cap",
+> +		.data		= (void *)&cap_last_cap,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#if defined(CONFIG_LOCKUP_DETECTOR)
+> +	{
+> +		.procname       = "watchdog",
+> +		.data		= &watchdog_user_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler   = proc_watchdog,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "watchdog_thresh",
+> +		.data		= &watchdog_thresh,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_watchdog_thresh,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &sixty,
+> +	},
+> +	{
+> +		.procname       = "nmi_watchdog",
+> +		.data		= &nmi_watchdog_user_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= NMI_WATCHDOG_SYSCTL_PERM,
+> +		.proc_handler   = proc_nmi_watchdog,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "watchdog_cpumask",
+> +		.data		= &watchdog_cpumask_bits,
+> +		.maxlen		= NR_CPUS,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_watchdog_cpumask,
+> +	},
+> +#ifdef CONFIG_SOFTLOCKUP_DETECTOR
+> +	{
+> +		.procname       = "soft_watchdog",
+> +		.data		= &soft_watchdog_user_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler   = proc_soft_watchdog,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "softlockup_panic",
+> +		.data		= &softlockup_panic,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#ifdef CONFIG_SMP
+> +	{
+> +		.procname	= "softlockup_all_cpu_backtrace",
+> +		.data		= &sysctl_softlockup_all_cpu_backtrace,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif /* CONFIG_SMP */
+> +#endif
+> +#ifdef CONFIG_HARDLOCKUP_DETECTOR
+> +	{
+> +		.procname	= "hardlockup_panic",
+> +		.data		= &hardlockup_panic,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#ifdef CONFIG_SMP
+> +	{
+> +		.procname	= "hardlockup_all_cpu_backtrace",
+> +		.data		= &sysctl_hardlockup_all_cpu_backtrace,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif /* CONFIG_SMP */
+> +#endif
+> +#endif
+> +
+> +#if defined(CONFIG_X86_LOCAL_APIC) && defined(CONFIG_X86)
+> +	{
+> +		.procname       = "unknown_nmi_panic",
+> +		.data           = &unknown_nmi_panic,
+> +		.maxlen         = sizeof (int),
+> +		.mode           = 0644,
+> +		.proc_handler   = proc_dointvec,
+> +	},
+> +#endif
+> +#if defined(CONFIG_X86)
+> +	{
+> +		.procname	= "panic_on_unrecovered_nmi",
+> +		.data		= &panic_on_unrecovered_nmi,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "panic_on_io_nmi",
+> +		.data		= &panic_on_io_nmi,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#ifdef CONFIG_DEBUG_STACKOVERFLOW
+> +	{
+> +		.procname	= "panic_on_stackoverflow",
+> +		.data		= &sysctl_panic_on_stackoverflow,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "bootloader_type",
+> +		.data		= &bootloader_type,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "bootloader_version",
+> +		.data		= &bootloader_version,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "io_delay_type",
+> +		.data		= &io_delay_type,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#if defined(CONFIG_MMU)
+> +	{
+> +		.procname	= "randomize_va_space",
+> +		.data		= &randomize_va_space,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#if defined(CONFIG_S390) && defined(CONFIG_SMP)
+> +	{
+> +		.procname	= "spin_retry",
+> +		.data		= &spin_retry,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#if	defined(CONFIG_ACPI_SLEEP) && defined(CONFIG_X86)
+> +	{
+> +		.procname	= "acpi_video_flags",
+> +		.data		= &acpi_realmode_flags,
+> +		.maxlen		= sizeof (unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +#endif
+> +#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN
+> +	{
+> +		.procname	= "ignore-unaligned-usertrap",
+> +		.data		= &no_unaligned_warning,
+> +		.maxlen		= sizeof (int),
+> +	 	.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_IA64
+> +	{
+> +		.procname	= "unaligned-dump-stack",
+> +		.data		= &unaligned_dump_stack,
+> +		.maxlen		= sizeof (int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_DETECT_HUNG_TASK
+> +	{
+> +		.procname	= "hung_task_panic",
+> +		.data		= &sysctl_hung_task_panic,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "hung_task_check_count",
+> +		.data		= &sysctl_hung_task_check_count,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "hung_task_timeout_secs",
+> +		.data		= &sysctl_hung_task_timeout_secs,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dohung_task_timeout_secs,
+> +		.extra2		= &hung_task_timeout_max,
+> +	},
+> +	{
+> +		.procname	= "hung_task_check_interval_secs",
+> +		.data		= &sysctl_hung_task_check_interval_secs,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dohung_task_timeout_secs,
+> +		.extra2		= &hung_task_timeout_max,
+> +	},
+> +	{
+> +		.procname	= "hung_task_warnings",
+> +		.data		= &sysctl_hung_task_warnings,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &neg_one,
+> +	},
+> +#endif
+> +#ifdef CONFIG_RT_MUTEXES
+> +	{
+> +		.procname	= "max_lock_depth",
+> +		.data		= &max_lock_depth,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "poweroff_cmd",
+> +		.data		= &poweroff_cmd,
+> +		.maxlen		= POWEROFF_CMD_PATH_LEN,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dostring,
+> +	},
+> +#ifdef CONFIG_KEYS
+> +	{
+> +		.procname	= "keys",
+> +		.mode		= 0555,
+> +		.child		= key_sysctls,
+> +	},
+> +#endif
+> +#ifdef CONFIG_PERF_EVENTS
+> +	/*
+> +	 * User-space scripts rely on the existence of this file
+> +	 * as a feature check for perf_events being enabled.
+> +	 *
+> +	 * So it's an ABI, do not remove!
+> +	 */
+> +	{
+> +		.procname	= "perf_event_paranoid",
+> +		.data		= &sysctl_perf_event_paranoid,
+> +		.maxlen		= sizeof(sysctl_perf_event_paranoid),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "perf_event_mlock_kb",
+> +		.data		= &sysctl_perf_event_mlock,
+> +		.maxlen		= sizeof(sysctl_perf_event_mlock),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "perf_event_max_sample_rate",
+> +		.data		= &sysctl_perf_event_sample_rate,
+> +		.maxlen		= sizeof(sysctl_perf_event_sample_rate),
+> +		.mode		= 0644,
+> +		.proc_handler	= perf_proc_update_handler,
+> +		.extra1		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "perf_cpu_time_max_percent",
+> +		.data		= &sysctl_perf_cpu_time_max_percent,
+> +		.maxlen		= sizeof(sysctl_perf_cpu_time_max_percent),
+> +		.mode		= 0644,
+> +		.proc_handler	= perf_cpu_time_max_percent_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_hundred,
+> +	},
+> +	{
+> +		.procname	= "perf_event_max_stack",
+> +		.data		= &sysctl_perf_event_max_stack,
+> +		.maxlen		= sizeof(sysctl_perf_event_max_stack),
+> +		.mode		= 0644,
+> +		.proc_handler	= perf_event_max_stack_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &six_hundred_forty_kb,
+> +	},
+> +	{
+> +		.procname	= "perf_event_max_contexts_per_stack",
+> +		.data		= &sysctl_perf_event_max_contexts_per_stack,
+> +		.maxlen		= sizeof(sysctl_perf_event_max_contexts_per_stack),
+> +		.mode		= 0644,
+> +		.proc_handler	= perf_event_max_stack_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_thousand,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "panic_on_warn",
+> +		.data		= &panic_on_warn,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+> +	{
+> +		.procname	= "timer_migration",
+> +		.data		= &sysctl_timer_migration,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= timer_migration_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_BPF_SYSCALL
+> +	{
+> +		.procname	= "unprivileged_bpf_disabled",
+> +		.data		= &sysctl_unprivileged_bpf_disabled,
+> +		.maxlen		= sizeof(sysctl_unprivileged_bpf_disabled),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "bpf_stats_enabled",
+> +		.data		= &bpf_stats_enabled_key.key,
+> +		.maxlen		= sizeof(bpf_stats_enabled_key),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_do_static_key,
+> +	},
+> +#endif
+> +#if defined(CONFIG_TREE_RCU)
+> +	{
+> +		.procname	= "panic_on_rcu_stall",
+> +		.data		= &sysctl_panic_on_rcu_stall,
+> +		.maxlen		= sizeof(sysctl_panic_on_rcu_stall),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_STACKLEAK_RUNTIME_DISABLE
+> +	{
+> +		.procname	= "stack_erasing",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0600,
+> +		.proc_handler	= stack_erasing_sysctl,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +	{ }
+> +};
+>  
+> -int proc_dointvec_ms_jiffies(struct ctl_table *table, int write,
+> -			     void __user *buffer, size_t *lenp, loff_t *ppos)
+> -{
+> -	return -ENOSYS;
+> -}
+> +static struct ctl_table vm_table[] = {
+> +	{
+> +		.procname	= "overcommit_memory",
+> +		.data		= &sysctl_overcommit_memory,
+> +		.maxlen		= sizeof(sysctl_overcommit_memory),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &two,
+> +	},
+> +	{
+> +		.procname	= "panic_on_oom",
+> +		.data		= &sysctl_panic_on_oom,
+> +		.maxlen		= sizeof(sysctl_panic_on_oom),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &two,
+> +	},
+> +	{
+> +		.procname	= "oom_kill_allocating_task",
+> +		.data		= &sysctl_oom_kill_allocating_task,
+> +		.maxlen		= sizeof(sysctl_oom_kill_allocating_task),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "oom_dump_tasks",
+> +		.data		= &sysctl_oom_dump_tasks,
+> +		.maxlen		= sizeof(sysctl_oom_dump_tasks),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +	{
+> +		.procname	= "overcommit_ratio",
+> +		.data		= &sysctl_overcommit_ratio,
+> +		.maxlen		= sizeof(sysctl_overcommit_ratio),
+> +		.mode		= 0644,
+> +		.proc_handler	= overcommit_ratio_handler,
+> +	},
+> +	{
+> +		.procname	= "overcommit_kbytes",
+> +		.data		= &sysctl_overcommit_kbytes,
+> +		.maxlen		= sizeof(sysctl_overcommit_kbytes),
+> +		.mode		= 0644,
+> +		.proc_handler	= overcommit_kbytes_handler,
+> +	},
+> +	{
+> +		.procname	= "page-cluster", 
+> +		.data		= &page_cluster,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "dirty_background_ratio",
+> +		.data		= &dirty_background_ratio,
+> +		.maxlen		= sizeof(dirty_background_ratio),
+> +		.mode		= 0644,
+> +		.proc_handler	= dirty_background_ratio_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_hundred,
+> +	},
+> +	{
+> +		.procname	= "dirty_background_bytes",
+> +		.data		= &dirty_background_bytes,
+> +		.maxlen		= sizeof(dirty_background_bytes),
+> +		.mode		= 0644,
+> +		.proc_handler	= dirty_background_bytes_handler,
+> +		.extra1		= &one_ul,
+> +	},
+> +	{
+> +		.procname	= "dirty_ratio",
+> +		.data		= &vm_dirty_ratio,
+> +		.maxlen		= sizeof(vm_dirty_ratio),
+> +		.mode		= 0644,
+> +		.proc_handler	= dirty_ratio_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_hundred,
+> +	},
+> +	{
+> +		.procname	= "dirty_bytes",
+> +		.data		= &vm_dirty_bytes,
+> +		.maxlen		= sizeof(vm_dirty_bytes),
+> +		.mode		= 0644,
+> +		.proc_handler	= dirty_bytes_handler,
+> +		.extra1		= &dirty_bytes_min,
+> +	},
+> +	{
+> +		.procname	= "dirty_writeback_centisecs",
+> +		.data		= &dirty_writeback_interval,
+> +		.maxlen		= sizeof(dirty_writeback_interval),
+> +		.mode		= 0644,
+> +		.proc_handler	= dirty_writeback_centisecs_handler,
+> +	},
+> +	{
+> +		.procname	= "dirty_expire_centisecs",
+> +		.data		= &dirty_expire_interval,
+> +		.maxlen		= sizeof(dirty_expire_interval),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "dirtytime_expire_seconds",
+> +		.data		= &dirtytime_expire_interval,
+> +		.maxlen		= sizeof(dirtytime_expire_interval),
+> +		.mode		= 0644,
+> +		.proc_handler	= dirtytime_interval_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "swappiness",
+> +		.data		= &vm_swappiness,
+> +		.maxlen		= sizeof(vm_swappiness),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_hundred,
+> +	},
+> +#ifdef CONFIG_HUGETLB_PAGE
+> +	{
+> +		.procname	= "nr_hugepages",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= hugetlb_sysctl_handler,
+> +	},
+> +#ifdef CONFIG_NUMA
+> +	{
+> +		.procname       = "nr_hugepages_mempolicy",
+> +		.data           = NULL,
+> +		.maxlen         = sizeof(unsigned long),
+> +		.mode           = 0644,
+> +		.proc_handler   = &hugetlb_mempolicy_sysctl_handler,
+> +	},
+> +	{
+> +		.procname		= "numa_stat",
+> +		.data			= &sysctl_vm_numa_stat,
+> +		.maxlen			= sizeof(int),
+> +		.mode			= 0644,
+> +		.proc_handler	= sysctl_vm_numa_stat_handler,
+> +		.extra1			= SYSCTL_ZERO,
+> +		.extra2			= SYSCTL_ONE,
+> +	},
+> +#endif
+> +	 {
+> +		.procname	= "hugetlb_shm_group",
+> +		.data		= &sysctl_hugetlb_shm_group,
+> +		.maxlen		= sizeof(gid_t),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	 },
+> +	{
+> +		.procname	= "nr_overcommit_hugepages",
+> +		.data		= NULL,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= hugetlb_overcommit_handler,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "lowmem_reserve_ratio",
+> +		.data		= &sysctl_lowmem_reserve_ratio,
+> +		.maxlen		= sizeof(sysctl_lowmem_reserve_ratio),
+> +		.mode		= 0644,
+> +		.proc_handler	= lowmem_reserve_ratio_sysctl_handler,
+> +	},
+> +	{
+> +		.procname	= "drop_caches",
+> +		.data		= &sysctl_drop_caches,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0200,
+> +		.proc_handler	= drop_caches_sysctl_handler,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= &four,
+> +	},
+> +#ifdef CONFIG_COMPACTION
+> +	{
+> +		.procname	= "compact_memory",
+> +		.data		= &sysctl_compact_memory,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0200,
+> +		.proc_handler	= sysctl_compaction_handler,
+> +	},
+> +	{
+> +		.procname	= "extfrag_threshold",
+> +		.data		= &sysctl_extfrag_threshold,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &min_extfrag_threshold,
+> +		.extra2		= &max_extfrag_threshold,
+> +	},
+> +	{
+> +		.procname	= "compact_unevictable_allowed",
+> +		.data		= &sysctl_compact_unevictable_allowed,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax_warn_RT_change,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +
+> +#endif /* CONFIG_COMPACTION */
+> +	{
+> +		.procname	= "min_free_kbytes",
+> +		.data		= &min_free_kbytes,
+> +		.maxlen		= sizeof(min_free_kbytes),
+> +		.mode		= 0644,
+> +		.proc_handler	= min_free_kbytes_sysctl_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "watermark_boost_factor",
+> +		.data		= &watermark_boost_factor,
+> +		.maxlen		= sizeof(watermark_boost_factor),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "watermark_scale_factor",
+> +		.data		= &watermark_scale_factor,
+> +		.maxlen		= sizeof(watermark_scale_factor),
+> +		.mode		= 0644,
+> +		.proc_handler	= watermark_scale_factor_sysctl_handler,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= &one_thousand,
+> +	},
+> +	{
+> +		.procname	= "percpu_pagelist_fraction",
+> +		.data		= &percpu_pagelist_fraction,
+> +		.maxlen		= sizeof(percpu_pagelist_fraction),
+> +		.mode		= 0644,
+> +		.proc_handler	= percpu_pagelist_fraction_sysctl_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +#ifdef CONFIG_MMU
+> +	{
+> +		.procname	= "max_map_count",
+> +		.data		= &sysctl_max_map_count,
+> +		.maxlen		= sizeof(sysctl_max_map_count),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +#else
+> +	{
+> +		.procname	= "nr_trim_pages",
+> +		.data		= &sysctl_nr_trim_pages,
+> +		.maxlen		= sizeof(sysctl_nr_trim_pages),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "laptop_mode",
+> +		.data		= &laptop_mode,
+> +		.maxlen		= sizeof(laptop_mode),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_jiffies,
+> +	},
+> +	{
+> +		.procname	= "block_dump",
+> +		.data		= &block_dump,
+> +		.maxlen		= sizeof(block_dump),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "vfs_cache_pressure",
+> +		.data		= &sysctl_vfs_cache_pressure,
+> +		.maxlen		= sizeof(sysctl_vfs_cache_pressure),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+> +    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+> +	{
+> +		.procname	= "legacy_va_layout",
+> +		.data		= &sysctl_legacy_va_layout,
+> +		.maxlen		= sizeof(sysctl_legacy_va_layout),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +#endif
+> +#ifdef CONFIG_NUMA
+> +	{
+> +		.procname	= "zone_reclaim_mode",
+> +		.data		= &node_reclaim_mode,
+> +		.maxlen		= sizeof(node_reclaim_mode),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +	{
+> +		.procname	= "min_unmapped_ratio",
+> +		.data		= &sysctl_min_unmapped_ratio,
+> +		.maxlen		= sizeof(sysctl_min_unmapped_ratio),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_min_unmapped_ratio_sysctl_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_hundred,
+> +	},
+> +	{
+> +		.procname	= "min_slab_ratio",
+> +		.data		= &sysctl_min_slab_ratio,
+> +		.maxlen		= sizeof(sysctl_min_slab_ratio),
+> +		.mode		= 0644,
+> +		.proc_handler	= sysctl_min_slab_ratio_sysctl_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &one_hundred,
+> +	},
+> +#endif
+> +#ifdef CONFIG_SMP
+> +	{
+> +		.procname	= "stat_interval",
+> +		.data		= &sysctl_stat_interval,
+> +		.maxlen		= sizeof(sysctl_stat_interval),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_jiffies,
+> +	},
+> +	{
+> +		.procname	= "stat_refresh",
+> +		.data		= NULL,
+> +		.maxlen		= 0,
+> +		.mode		= 0600,
+> +		.proc_handler	= vmstat_refresh,
+> +	},
+> +#endif
+> +#ifdef CONFIG_MMU
+> +	{
+> +		.procname	= "mmap_min_addr",
+> +		.data		= &dac_mmap_min_addr,
+> +		.maxlen		= sizeof(unsigned long),
+> +		.mode		= 0644,
+> +		.proc_handler	= mmap_min_addr_handler,
+> +	},
+> +#endif
+> +#ifdef CONFIG_NUMA
+> +	{
+> +		.procname	= "numa_zonelist_order",
+> +		.data		= &numa_zonelist_order,
+> +		.maxlen		= NUMA_ZONELIST_ORDER_LEN,
+> +		.mode		= 0644,
+> +		.proc_handler	= numa_zonelist_order_handler,
+> +	},
+> +#endif
+> +#if (defined(CONFIG_X86_32) && !defined(CONFIG_UML))|| \
+> +   (defined(CONFIG_SUPERH) && defined(CONFIG_VSYSCALL))
+> +	{
+> +		.procname	= "vdso_enabled",
+> +#ifdef CONFIG_X86_32
+> +		.data		= &vdso32_enabled,
+> +		.maxlen		= sizeof(vdso32_enabled),
+> +#else
+> +		.data		= &vdso_enabled,
+> +		.maxlen		= sizeof(vdso_enabled),
+> +#endif
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +#endif
+> +#ifdef CONFIG_HIGHMEM
+> +	{
+> +		.procname	= "highmem_is_dirtyable",
+> +		.data		= &vm_highmem_is_dirtyable,
+> +		.maxlen		= sizeof(vm_highmem_is_dirtyable),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +#ifdef CONFIG_MEMORY_FAILURE
+> +	{
+> +		.procname	= "memory_failure_early_kill",
+> +		.data		= &sysctl_memory_failure_early_kill,
+> +		.maxlen		= sizeof(sysctl_memory_failure_early_kill),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "memory_failure_recovery",
+> +		.data		= &sysctl_memory_failure_recovery,
+> +		.maxlen		= sizeof(sysctl_memory_failure_recovery),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "user_reserve_kbytes",
+> +		.data		= &sysctl_user_reserve_kbytes,
+> +		.maxlen		= sizeof(sysctl_user_reserve_kbytes),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +	{
+> +		.procname	= "admin_reserve_kbytes",
+> +		.data		= &sysctl_admin_reserve_kbytes,
+> +		.maxlen		= sizeof(sysctl_admin_reserve_kbytes),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +#ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
+> +	{
+> +		.procname	= "mmap_rnd_bits",
+> +		.data		= &mmap_rnd_bits,
+> +		.maxlen		= sizeof(mmap_rnd_bits),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= (void *)&mmap_rnd_bits_min,
+> +		.extra2		= (void *)&mmap_rnd_bits_max,
+> +	},
+> +#endif
+> +#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
+> +	{
+> +		.procname	= "mmap_rnd_compat_bits",
+> +		.data		= &mmap_rnd_compat_bits,
+> +		.maxlen		= sizeof(mmap_rnd_compat_bits),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= (void *)&mmap_rnd_compat_bits_min,
+> +		.extra2		= (void *)&mmap_rnd_compat_bits_max,
+> +	},
+> +#endif
+> +#ifdef CONFIG_USERFAULTFD
+> +	{
+> +		.procname	= "unprivileged_userfaultfd",
+> +		.data		= &sysctl_unprivileged_userfaultfd,
+> +		.maxlen		= sizeof(sysctl_unprivileged_userfaultfd),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +	{ }
+> +};
+>  
+> -int proc_doulongvec_minmax(struct ctl_table *table, int write,
+> -		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> -{
+> -	return -ENOSYS;
+> -}
+> +static struct ctl_table fs_table[] = {
+> +	{
+> +		.procname	= "inode-nr",
+> +		.data		= &inodes_stat,
+> +		.maxlen		= 2*sizeof(long),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_inodes,
+> +	},
+> +	{
+> +		.procname	= "inode-state",
+> +		.data		= &inodes_stat,
+> +		.maxlen		= 7*sizeof(long),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_inodes,
+> +	},
+> +	{
+> +		.procname	= "file-nr",
+> +		.data		= &files_stat,
+> +		.maxlen		= sizeof(files_stat),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_files,
+> +	},
+> +	{
+> +		.procname	= "file-max",
+> +		.data		= &files_stat.max_files,
+> +		.maxlen		= sizeof(files_stat.max_files),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +		.extra1		= &zero_ul,
+> +		.extra2		= &long_max,
+> +	},
+> +	{
+> +		.procname	= "nr_open",
+> +		.data		= &sysctl_nr_open,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &sysctl_nr_open_min,
+> +		.extra2		= &sysctl_nr_open_max,
+> +	},
+> +	{
+> +		.procname	= "dentry-state",
+> +		.data		= &dentry_stat,
+> +		.maxlen		= 6*sizeof(long),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_dentry,
+> +	},
+> +	{
+> +		.procname	= "overflowuid",
+> +		.data		= &fs_overflowuid,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &minolduid,
+> +		.extra2		= &maxolduid,
+> +	},
+> +	{
+> +		.procname	= "overflowgid",
+> +		.data		= &fs_overflowgid,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &minolduid,
+> +		.extra2		= &maxolduid,
+> +	},
+> +#ifdef CONFIG_FILE_LOCKING
+> +	{
+> +		.procname	= "leases-enable",
+> +		.data		= &leases_enable,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_DNOTIFY
+> +	{
+> +		.procname	= "dir-notify-enable",
+> +		.data		= &dir_notify_enable,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_MMU
+> +#ifdef CONFIG_FILE_LOCKING
+> +	{
+> +		.procname	= "lease-break-time",
+> +		.data		= &lease_break_time,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +#endif
+> +#ifdef CONFIG_AIO
+> +	{
+> +		.procname	= "aio-nr",
+> +		.data		= &aio_nr,
+> +		.maxlen		= sizeof(aio_nr),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +	{
+> +		.procname	= "aio-max-nr",
+> +		.data		= &aio_max_nr,
+> +		.maxlen		= sizeof(aio_max_nr),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +#endif /* CONFIG_AIO */
+> +#ifdef CONFIG_INOTIFY_USER
+> +	{
+> +		.procname	= "inotify",
+> +		.mode		= 0555,
+> +		.child		= inotify_table,
+> +	},
+> +#endif	
+> +#ifdef CONFIG_EPOLL
+> +	{
+> +		.procname	= "epoll",
+> +		.mode		= 0555,
+> +		.child		= epoll_table,
+> +	},
+> +#endif
+> +#endif
+> +	{
+> +		.procname	= "protected_symlinks",
+> +		.data		= &sysctl_protected_symlinks,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "protected_hardlinks",
+> +		.data		= &sysctl_protected_hardlinks,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{
+> +		.procname	= "protected_fifos",
+> +		.data		= &sysctl_protected_fifos,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &two,
+> +	},
+> +	{
+> +		.procname	= "protected_regular",
+> +		.data		= &sysctl_protected_regular,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0600,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &two,
+> +	},
+> +	{
+> +		.procname	= "suid_dumpable",
+> +		.data		= &suid_dumpable,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax_coredump,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= &two,
+> +	},
+> +#if defined(CONFIG_BINFMT_MISC) || defined(CONFIG_BINFMT_MISC_MODULE)
+> +	{
+> +		.procname	= "binfmt_misc",
+> +		.mode		= 0555,
+> +		.child		= sysctl_mount_point,
+> +	},
+> +#endif
+> +	{
+> +		.procname	= "pipe-max-size",
+> +		.data		= &pipe_max_size,
+> +		.maxlen		= sizeof(pipe_max_size),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dopipe_max_size,
+> +	},
+> +	{
+> +		.procname	= "pipe-user-pages-hard",
+> +		.data		= &pipe_user_pages_hard,
+> +		.maxlen		= sizeof(pipe_user_pages_hard),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +	{
+> +		.procname	= "pipe-user-pages-soft",
+> +		.data		= &pipe_user_pages_soft,
+> +		.maxlen		= sizeof(pipe_user_pages_soft),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +	},
+> +	{
+> +		.procname	= "mount-max",
+> +		.data		= &sysctl_mount_max,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +	},
+> +	{ }
+> +};
+>  
+> -int proc_doulongvec_ms_jiffies_minmax(struct ctl_table *table, int write,
+> -				      void __user *buffer,
+> -				      size_t *lenp, loff_t *ppos)
+> -{
+> -    return -ENOSYS;
+> -}
+> +static struct ctl_table debug_table[] = {
+> +#ifdef CONFIG_SYSCTL_EXCEPTION_TRACE
+> +	{
+> +		.procname	= "exception-trace",
+> +		.data		= &show_unhandled_signals,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec
+> +	},
+> +#endif
+> +#if defined(CONFIG_OPTPROBES)
+> +	{
+> +		.procname	= "kprobes-optimization",
+> +		.data		= &sysctl_kprobes_optimization,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_kprobes_optimization_handler,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif
+> +	{ }
+> +};
+>  
+> -int proc_do_large_bitmap(struct ctl_table *table, int write,
+> -			 void __user *buffer, size_t *lenp, loff_t *ppos)
+> -{
+> -	return -ENOSYS;
+> -}
+> +static struct ctl_table dev_table[] = {
+> +	{ }
+> +};
+>  
+> -#endif /* CONFIG_PROC_SYSCTL */
+> +static struct ctl_table sysctl_base_table[] = {
+> +	{
+> +		.procname	= "kernel",
+> +		.mode		= 0555,
+> +		.child		= kern_table,
+> +	},
+> +	{
+> +		.procname	= "vm",
+> +		.mode		= 0555,
+> +		.child		= vm_table,
+> +	},
+> +	{
+> +		.procname	= "fs",
+> +		.mode		= 0555,
+> +		.child		= fs_table,
+> +	},
+> +	{
+> +		.procname	= "debug",
+> +		.mode		= 0555,
+> +		.child		= debug_table,
+> +	},
+> +	{
+> +		.procname	= "dev",
+> +		.mode		= 0555,
+> +		.child		= dev_table,
+> +	},
+> +	{ }
+> +};
+>  
+> -#if defined(CONFIG_SYSCTL)
+> -int proc_do_static_key(struct ctl_table *table, int write,
+> -		       void __user *buffer, size_t *lenp,
+> -		       loff_t *ppos)
+> +int __init sysctl_init(void)
+>  {
+> -	struct static_key *key = (struct static_key *)table->data;
+> -	static DEFINE_MUTEX(static_key_mutex);
+> -	int val, ret;
+> -	struct ctl_table tmp = {
+> -		.data   = &val,
+> -		.maxlen = sizeof(val),
+> -		.mode   = table->mode,
+> -		.extra1 = SYSCTL_ZERO,
+> -		.extra2 = SYSCTL_ONE,
+> -	};
+> -
+> -	if (write && !capable(CAP_SYS_ADMIN))
+> -		return -EPERM;
+> +	struct ctl_table_header *hdr;
+>  
+> -	mutex_lock(&static_key_mutex);
+> -	val = static_key_enabled(key);
+> -	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
+> -	if (write && !ret) {
+> -		if (val)
+> -			static_key_enable(key);
+> -		else
+> -			static_key_disable(key);
+> -	}
+> -	mutex_unlock(&static_key_mutex);
+> -	return ret;
+> +	hdr = register_sysctl_table(sysctl_base_table);
+> +	kmemleak_not_leak(hdr);
+> +	return 0;
+>  }
+> -#endif
+> +#endif /* CONFIG_SYSCTL */
+>  /*
+>   * No sense putting this after each symbol definition, twice,
+>   * exception granted :-)
+> -- 
+> 2.26.1
 > 
-> I assume this is simplifying the dance we do in zapping to first take
-> vma_lock in order to walk vma_list, to find a vma from which we can
-> acquire the mm, drop vma_lock, get mmap_sem, then re-get vma_lock
-> below.  
 
-No, that has to stay..
-
-> Also accounting that vma_list might be empty and we might need
-> to drop and re-acquire vma_lock to get to another mm, so we really
-> probably want to set pause_faults at the start rather than at the end.
-
-New vmas should not created/faulted while vma_lock is held, so the
-order shouldn't matter..
-
-> >   mutex_lock(vma_lock);
-> >   list_for_each_entry_safe()
-> >      // zap and remove all vmas
-> > 
-> >   pause_faults = true;
-> >   mutex_write(vma_lock);
-> > 
-> > fault:
-> >   // Already have down_read(mmap_sem)
-> >   mutex_lock(vma_lock);
-> >   while (pause_faults) {
-> >      mutex_unlock(vma_lock)
-> >      wait_event(..., !pause_faults)
-> >      mutex_lock(vma_lock)
-> >   }
-> 
-> Nit, we need to test the memory enable bit setting somewhere under this
-> lock since it seems to be the only thing protecting it now.
-
-I was thinking you'd keep the same locking for the memory enable bit,
-the pause_faults is a shadow of that bit with locking connected to
-vma_lock..
-
-> >   list_add()
-> >   remap_pfn()
-> >   mutex_unlock(vma_lock)
-> 
-> The read and write file ops would need similar mechanisms.
-
-Keep using the rwsem?
-
-> > enable:
-> >   pause_faults = false
-> >   wake_event()
-> 
-> Hmm, vma_lock was dropped above and not re-acquired here.
-
-I was thinking this would be under a continous rwlock
-
-> I'm not sure if it was an oversight that pause_faults was not tested
-> in the disable path, but this combination appears to lead to
-> concurrent writers and serialized readers??
-
-? pause_faults only exists to prevent the vm_ops fault callback from
-progressing to a fault. I don't think any concurrancy is lost
-
-> > The only requirement here is that while inside the write side of
-> > memory_lock you cannot touch user pages (ie no copy_from_user/etc)
-> 
-> I'm lost at this statement, I can only figure the above works if we
-> remove memory_lock.  Are you referring to a different lock?  Thanks,
-
-No
-
-This is just an approach to avoid the ABBA deadlock problem when using
-a rwsem by using a looser form of lock combined witih the already
-correctly nested vma_lock.
-
-Stated another way, you can keep the existing memory_lock as is, if it
-is structured like this:
-
-disable:
- down_read(mmap_sem)
- mutex_lock(vma_lock)
- list_for_each_entry_safe()
-      // zap and remove all vmas
- down_write(memory_lock)   // Now inside vma_lock!
- mutex_unlock(vma_lock)
- up_read(mmap_sem
-
- [ do the existing stuff under memory_lock ]
-
-
-fault:
-  mutex_lock(vma_lock)
-  down_write(memory_lock)
-  remap_pfn
-  up_write(memory_lock)
-  mutex_unlock(vma_lock)
-
-enable:
-  up_write(memory_lock)
-
-Ie the key is to organize things to move the down_write(memory_lock)
-to be under the mmap_sem/vma_lock
-
-Jason
+-- 
+Kees Cook
