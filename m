@@ -2,241 +2,215 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4741C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940C0C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFEC206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680142073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQlIlB3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgEDMFx (ORCPT
+        id S1728701AbgEDMIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:05:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48380 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgEDMFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:05:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 83554ADD3;
-        Mon,  4 May 2020 12:05:51 +0000 (UTC)
-Message-ID: <c9a7e50f88022179ef913fc6dfd066ec44b27988.camel@suse.de>
-Subject: Re: [PATCH v2 20/91] clk: bcm: rpi: Discover the firmware clocks
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Maxime Ripard <maxime@cerno.tech>, Eric Anholt <eric@anholt.net>
-Cc:     Tim Gover <tim.gover@raspberrypi.com>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 04 May 2020 14:05:47 +0200
-In-Reply-To: <1a25b4f079dcdc669d4b29d3658ef0b72be2651e.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
-         <1a25b4f079dcdc669d4b29d3658ef0b72be2651e.1587742492.git-series.maxime@cerno.tech>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ieEAbJrdTr7tzv3p9LmQ"
-User-Agent: Evolution 3.36.2 
+        Mon, 4 May 2020 08:08:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45818 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726445AbgEDMIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 08:08:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588594079;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zuWx6hYJPqBsfZstC+jiYoXlJxIPt/6nxHsL/0OEzrQ=;
+        b=ZQlIlB3V91GqRKHN5zyI8JBx+JPwmwyYz4RY7Zj7QFiE7Lef+fh59exMULOmk2PPHQk0wX
+        SakplujAMuf2yFdwY6j/FJ8gaaROFDixocJ8kck+SFBDJf7oNo7x0QPzMbVsKYi48y2nFL
+        1cWp+bGJYXEFNIyBtpY2A76I14Y5s8Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-230-A5-GwE_qM5O5y-LJEzdqKg-1; Mon, 04 May 2020 08:07:58 -0400
+X-MC-Unique: A5-GwE_qM5O5y-LJEzdqKg-1
+Received: by mail-wr1-f71.google.com with SMTP id m5so10612360wru.15
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:07:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zuWx6hYJPqBsfZstC+jiYoXlJxIPt/6nxHsL/0OEzrQ=;
+        b=O76n4QyFYHj3E2wSWNtcDcAsXDmwOrlN+q8lmhF4EXrdmmjP/0ASVl/4jq8F5JDNOR
+         ut/vn4kOuRTbZ/vOaU3p6rbHx7q31CxexkgRVhG0HqgUCh3I5fCBvsQLnPuhtafiIdIq
+         Bwq0LNiv98eErceGaiADZ8oIcnyaU5AmGNVUiiw8/3HtTOxniADC3T0TqjZITOJTFDAW
+         ack6BUszZ7Yqv0qRYgiz4CREhmIyoa8Ci/NVg78icvytDY9Fnjug/wQcJn8dwGLAYjsz
+         nLD8nm5L+LOCFHO2cFj0upH8oUgV5XzGzTiMdu7Gt7oy7ZkjJnziZZFIXBqqlX18v8Iv
+         Y2Vw==
+X-Gm-Message-State: AGi0PuZ0blDT+SAzrF1aZ3Rf5q2v7uYM+LiZrtOsH2rn5Xi3t+0ypGgU
+        8oLfVKFqTknrD8fkVwHeykozTxKj+Ed3wz/eJm77AZ9BsFClL88m3p3AfVLRmlBRBLy+EQ/dUJs
+        XKxmncXjEDwJL2tA8Ul27kvL/
+X-Received: by 2002:a1c:2d14:: with SMTP id t20mr14947261wmt.28.1588594076271;
+        Mon, 04 May 2020 05:07:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLUNAOyHQ+Ax63ipDZ/jnigbHjmtPK4Ang2nqUkewZhGUrLHWVJon9T6jXVtqmF9BPomAwMPg==
+X-Received: by 2002:a1c:2d14:: with SMTP id t20mr14947236wmt.28.1588594075981;
+        Mon, 04 May 2020 05:07:55 -0700 (PDT)
+Received: from redhat.com (bzq-109-66-7-121.red.bezeqint.net. [109.66.7.121])
+        by smtp.gmail.com with ESMTPSA id u188sm13562493wmg.37.2020.05.04.05.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 05:07:55 -0700 (PDT)
+Date:   Mon, 4 May 2020 08:07:52 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Lance Digby <ldigby@redhat.com>
+Subject: Re: [PATCH v4] virtio-blk: handle block_device_operations callbacks
+ after hot unplug
+Message-ID: <20200504080731-mutt-send-email-mst@kernel.org>
+References: <20200430140442.171016-1-stefanha@redhat.com>
+ <20200504134834.423eb89e.cohuck@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504134834.423eb89e.cohuck@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-ieEAbJrdTr7tzv3p9LmQ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Maxime, as always, thanks for the series!
-Some extra context, and comments below.
-
-On Fri, 2020-04-24 at 17:34 +0200, Maxime Ripard wrote:
-> The RaspberryPi4 firmware actually exposes more clocks than are currently
-> handled by the driver and we will need to change some of them directly
-> based on the pixel rate for the display related clocks, or the load for t=
-he
-> GPU.
->=20
-> This rate change can have a number of side-effects, including adjusting t=
-he
-> various PLL voltages or the PLL parents. The firmware will also update
-> those clocks by itself for example if the SoC runs too hot.
-
-To complete this:
-
-RPi4's firmware implements DVFS. Clock frequency and SoC voltage are
-correlated, if you can determine all clocks are running below a maximum the=
-n it
-should be safe to lower the voltage. Currently, firmware actively monitors =
-arm,
-core, h264, v3d, isp and hevc to determine what voltage can be reduced to, =
-and
-if arm increases any of those clocks behind the firmware's back, when it ha=
-s a
-lowered voltage, a crash is highly likely.
-
-As pointed out to me by RPi foundation engineers hsm/pixel aren't currently
-being monitored, as driving a high resolution display also requires a high =
-core
-clock, which already sets an acceptable min voltage threshold. But that mig=
-ht
-change if needed.
-
-Ultimately, from the DVFS, the safe way to change clocks from arm would be =
-to
-always use the firmware interface, which we're far from doing right now. On=
- the
-other hand, AFAIK not all clocks have a firmware counterpart.
-
-Note that we could also have a word with the RPi foundation and see if
-disabling DVFS is possible (AFAIK it's not an option right now). Although I
-personally prefer to support this upstream, aside from the obvious benefits=
- to
-battery powered use cases, not consuming power unnecessarily is always big
-plus.
-
-> In order to make Linux play as nice as possible with those constraints, i=
-t
-> makes sense to rely on the firmware clocks as much as possible.
-
-As I comment above, not as simple as it seems. I suggest, for now, we only
-register the clocks we're going to use and that are likely to be affected b=
-y
-DVFS. hsm being a contender here.
-
-As we'd be settling on a hybrid solution here, which isn't ideal to say the
-least, I'd like to gather some opinions on whether pushing towards a fully
-firmware based solution is something you'd like to see.
-
-> Fortunately,t he firmware has an interface to discover the clocks it
-> exposes.
-
-nit: wrongly placed space
-
-> Let's use it to discover, register the clocks in the clocks framework and
-> then expose them through the device tree for consumers to use them.
->
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/clk/bcm/clk-raspberrypi.c          | 104 +++++++++++++++++++---
-
-[...]
-
-> +static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *r=
-pi,
-> +					       unsigned int parent,
-> +					       unsigned int id)
-> +{
-> +	struct raspberrypi_clk_data *data;
-> +	struct clk_init_data init =3D {};
-> +	int ret;
-> +
-> +	if (id =3D=3D RPI_FIRMWARE_ARM_CLK_ID) {
-> +		struct clk_hw *hw;
-> +
-> +		hw =3D raspberrypi_register_pllb(rpi);
-> +		if (IS_ERR(hw)) {
-> +			dev_err(rpi->dev, "Failed to initialize pllb, %ld\n",
-> +				PTR_ERR(hw));
-> +			return hw;
-> +		}
-> +
-> +		return raspberrypi_register_pllb_arm(rpi);
-> +	}
-
-We shouldn't create a special case for pllb. My suggestion here is that we
-revert the commit that removed pllb from the mmio driver, in order to maint=
-ain a
-nice view of the clock tree, and register this as a regular fw-clk.
-
-The only user to this is RPi's the cpufreq driver, which shouldn't mind the
-change as long as you maintain the clk lookup creation.
-
-On that topic, now that the clocks are available in DT we could even move
-raspberrypi-cpufreq's registration there. But that's out of the scope of th=
-is
-series.
-
-> +
-> +	data =3D devm_kzalloc(rpi->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return ERR_PTR(-ENOMEM);
-> +	data->rpi =3D rpi;
-> +	data->id =3D id;
-> +
-> +	init.name =3D devm_kasprintf(rpi->dev, GFP_KERNEL, "fw-clk-%u", id);
-
-I'd really like more descriptive names here, sadly the firmware interface
-doesn't provide them, but they are set in stone nonetheless. Something like
-'fw-clk-arm' and 'fw-clk-hsm' comes to mind (SCMI does provide naming BTW).
-
-See here for a list of all clocks:
-https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface#clo=
-cks
-
-> +	init.ops =3D &raspberrypi_firmware_clk_ops;
-> +	init.flags =3D CLK_GET_RATE_NOCACHE;
-> +
-> +	data->hw.init =3D &init;
-> +
-> +	ret =3D devm_clk_hw_register(rpi->dev, &data->hw);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	return &data->hw;
-> +}
-> +
-> +static int raspberrypi_discover_clocks(struct raspberrypi_clk *rpi,
-> +				       struct clk_hw_onecell_data *data)
-> +{
-> +	struct rpi_firmware_get_clocks_response *clks;
-> +	int ret;
-> +
-> +	clks =3D devm_kcalloc(rpi->dev, sizeof(*clks), NUM_FW_CLKS, GFP_KERNEL)=
-;
-> +	if (!clks)
-> +		return -ENOMEM;
-> +
-> +	ret =3D rpi_firmware_property(rpi->firmware, RPI_FIRMWARE_GET_CLOCKS,
-> +				    clks, sizeof(*clks) * NUM_FW_CLKS);
-> +	if (ret)
-> +		return ret;
-> +
-> +	while (clks->id) {
-> +		struct clk_hw *hw;
-
-Se my comment above WRT registering all clocks.
-
-Regards,
-Nicolas
+On Mon, May 04, 2020 at 01:48:34PM +0200, Cornelia Huck wrote:
+> On Thu, 30 Apr 2020 15:04:42 +0100
+> Stefan Hajnoczi <stefanha@redhat.com> wrote:
+> 
+> > A userspace process holding a file descriptor to a virtio_blk device can
+> > still invoke block_device_operations after hot unplug.  This leads to a
+> > use-after-free accessing vblk->vdev in virtblk_getgeo() when
+> > ioctl(HDIO_GETGEO) is invoked:
+> > 
+> >   BUG: unable to handle kernel NULL pointer dereference at 0000000000000090
+> >   IP: [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
+> >   PGD 800000003a92f067 PUD 3a930067 PMD 0
+> >   Oops: 0000 [#1] SMP
+> >   CPU: 0 PID: 1310 Comm: hdio-getgeo Tainted: G           OE  ------------   3.10.0-1062.el7.x86_64 #1
+> >   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+> >   task: ffff9be5fbfb8000 ti: ffff9be5fa890000 task.ti: ffff9be5fa890000
+> >   RIP: 0010:[<ffffffffc00e5450>]  [<ffffffffc00e5450>] virtio_check_driver_offered_feature+0x10/0x90 [virtio]
+> >   RSP: 0018:ffff9be5fa893dc8  EFLAGS: 00010246
+> >   RAX: ffff9be5fc3f3400 RBX: ffff9be5fa893e30 RCX: 0000000000000000
+> >   RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff9be5fbc10b40
+> >   RBP: ffff9be5fa893dc8 R08: 0000000000000301 R09: 0000000000000301
+> >   R10: 0000000000000000 R11: 0000000000000000 R12: ffff9be5fdc24680
+> >   R13: ffff9be5fbc10b40 R14: ffff9be5fbc10480 R15: 0000000000000000
+> >   FS:  00007f1bfb968740(0000) GS:ffff9be5ffc00000(0000) knlGS:0000000000000000
+> >   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >   CR2: 0000000000000090 CR3: 000000003a894000 CR4: 0000000000360ff0
+> >   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> >   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> >   Call Trace:
+> >    [<ffffffffc016ac37>] virtblk_getgeo+0x47/0x110 [virtio_blk]
+> >    [<ffffffff8d3f200d>] ? handle_mm_fault+0x39d/0x9b0
+> >    [<ffffffff8d561265>] blkdev_ioctl+0x1f5/0xa20
+> >    [<ffffffff8d488771>] block_ioctl+0x41/0x50
+> >    [<ffffffff8d45d9e0>] do_vfs_ioctl+0x3a0/0x5a0
+> >    [<ffffffff8d45dc81>] SyS_ioctl+0xa1/0xc0
+> > 
+> > A related problem is that virtblk_remove() leaks the vd_index_ida index
+> > when something still holds a reference to vblk->disk during hot unplug.
+> > This causes virtio-blk device names to be lost (vda, vdb, etc).
+> > 
+> > Fix these issues by protecting vblk->vdev with a mutex and reference
+> > counting vblk so the vd_index_ida index can be removed in all cases.
+> > 
+> > Fixes: 48e4043d4529523cbc7fa8dd745bd8e2c45ce1d3
+> >        ("virtio: add virtio disk geometry feature")
+> 
+> Should be
+> 
+> Fixes: 48e4043d4529 ("virtio: add virtio disk geometry feature")
 
 
---=-ieEAbJrdTr7tzv3p9LmQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Yes - it was reported on linux-next so I fixed it up when applying.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl6wBRsACgkQlfZmHno8
-x/5lKAgAgSuCdpTozRnwf4eTgqPosSqclq9h93uvCBl/X/FWDZBuR2OYX9/VaboG
-q1eVupIjj6gF8WUDTSnfnn2fhhBY2szQ48N5QV5mB/D4Ib82BFUr99ku/d6eD7+L
-v4nqt2x/hVobt83ZRYcqpuRfstmQdWvAwV6Jbh/21ccLtFQHZwKRFRo1SMUOZ7S4
-gja02Ew3CiFtgagsL1uJcKw7xkygIDmXTeGP4tGRxWWdVZq/2PaJlXpWpF0HPx9d
-V5S/1nwtMSsUJvO7qE4e+x9JtpALlGv+KrDGOb/5PusNly5AfIoRErwji16DxIB6
-Ax1abz8s7nfALwDZSdaxNVVJyF3Org==
-=R00X
------END PGP SIGNATURE-----
-
---=-ieEAbJrdTr7tzv3p9LmQ--
+> > Reported-by: Lance Digby <ldigby@redhat.com>
+> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > ---
+> > v4:
+> >  * Clarify vdev_mutex usage [Stefano and Michael]
+> > 
+> >  drivers/block/virtio_blk.c | 86 ++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 78 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> > index 93468b7c6701..9d21bf0f155e 100644
+> > --- a/drivers/block/virtio_blk.c
+> > +++ b/drivers/block/virtio_blk.c
+> > @@ -33,6 +33,15 @@ struct virtio_blk_vq {
+> >  } ____cacheline_aligned_in_smp;
+> >  
+> >  struct virtio_blk {
+> > +	/*
+> > +	 * This mutex must be held by anything that may run after
+> > +	 * virtblk_remove() sets vblk->vdev to NULL.
+> > +	 *
+> > +	 * blk-mq, virtqueue processing, and sysfs attribute code paths are
+> > +	 * shut down before vblk->vdev is set to NULL and therefore do not need
+> > +	 * to hold this mutex.
+> > +	 */
+> > +	struct mutex vdev_mutex;
+> >  	struct virtio_device *vdev;
+> >  
+> >  	/* The disk structure for the kernel. */
+> > @@ -44,6 +53,13 @@ struct virtio_blk {
+> >  	/* Process context for config space updates */
+> >  	struct work_struct config_work;
+> >  
+> > +	/*
+> > +	 * Tracks references from block_device_operations open/release and
+> > +	 * virtio_driver probe/remove so this object can be freed once no
+> > +	 * longer in use.
+> > +	 */
+> > +	refcount_t refs;
+> 
+> Using a struct kref might be more idiomatic.
+> 
+> > +
+> >  	/* What host tells us, plus 2 for header & tailer. */
+> >  	unsigned int sg_elems;
+> >  
+> > @@ -295,10 +311,55 @@ static int virtblk_get_id(struct gendisk *disk, char *id_str)
+> >  	return err;
+> >  }
+> >  
+> > +static void virtblk_get(struct virtio_blk *vblk)
+> > +{
+> > +	refcount_inc(&vblk->refs);
+> 
+> Should the code even be able to grab a ref if !vblk->vdev?
+> 
+> > +}
+> > +
+> > +static void virtblk_put(struct virtio_blk *vblk)
+> > +{
+> > +	if (refcount_dec_and_test(&vblk->refs)) {
+> > +		ida_simple_remove(&vd_index_ida, vblk->index);
+> > +		mutex_destroy(&vblk->vdev_mutex);
+> > +		kfree(vblk);
+> 
+> I think that's where putting these cleanups into a release() funtion
+> would be more idiomatic.
+> 
+> > +	}
+> > +}
+> 
+> (...)
+> 
+> Looks sane to me.
 
