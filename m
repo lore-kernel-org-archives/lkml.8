@@ -2,110 +2,97 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA55CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A9AC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9AC3206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="JtB9E0VA"
+	by mail.kernel.org (Postfix) with ESMTP id C1F532073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgEDQQp (ORCPT
+        id S1729604AbgEDQRE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729581AbgEDQQn (ORCPT
+        Mon, 4 May 2020 12:17:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:51463 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729207AbgEDQRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:16:43 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669BFC061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:16:42 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c18so11811235ile.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:16:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O2NAB+HJ6UzNB91gndqrDrOBWBRRYdtXc0RXwgVqjIU=;
-        b=JtB9E0VAIJLFoltqJ/EHP5uJ1L/CC5gPEHBmZzWmKIrxbjl26Ne5XpvBSLm41xSBIg
-         t1xVdmJvdqBHaspjtVCP0vgnGV8j2MBTNBjG6GfJcM4fXOhB5+xGf03i727pyog2NP6D
-         GccF27GbRs4QZX7lndDIpxFVeOCoMgIl3dOrXZVf+VRPY7WwOdamJ/8xOXsiov24FI4J
-         cg7O0CG65PADdLp8q2dvOrT5ZwuaButnO4gv0VIES92fKah6Zco3/qNsmkTYiehcGMU9
-         Q2MWvAeM0Qng2AHkE9aLevizkhC1L0KUTdxlOLZZymREU3y6Lz7t6E+UeIP0pi9e0AJ9
-         6new==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O2NAB+HJ6UzNB91gndqrDrOBWBRRYdtXc0RXwgVqjIU=;
-        b=LOR40ihhQ00vD/KvaA63vtlWHj5BCtqxb+BIlOBVzEbNh89Q6fJrfh0up436RLzCqr
-         dlS3YgdC3MqsAqgSFKuayzzJUZ1nSH6zZXpyfLyNWU46ilkiuY94eg3PB6/MUwtfijwS
-         TA66VASfHqQhX7TLWKkrkHtPIJfgaGIaYkgDYuLlaBF/eT7kDMQdo04Y7AMs6iqDOOuZ
-         QK1sOWmk3yHPJFp/F/Rd1u3Exqt2DlJ8AtGeVC3T+Pk/aT4ls0T01z+8ekao6G6pgVTm
-         iyA9k9znzP+m6dHFwWkeEbOnqfILgU2+wQoBRnTyV18iw+MIjM5B3V0fEZSH6LXa6kop
-         /5GQ==
-X-Gm-Message-State: AGi0PuZUlzvgOmBtqChowi2LUOkiNaKXZVf++ofC/ulYGmRgCz3JlNC5
-        jB+iE8yJVX7wIVjpWp6/Ujb6cg==
-X-Google-Smtp-Source: APiQypLOM7ihGkQHTNt/pKRC46v+xHKsvR0zC0Gq/TKe4vXwyBmsBEqqQDWLYSJ6GF4HlBlFg2BYoQ==
-X-Received: by 2002:a92:d6c6:: with SMTP id z6mr16340696ilp.32.1588609001697;
-        Mon, 04 May 2020 09:16:41 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id m22sm4250384iow.35.2020.05.04.09.16.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:16:41 -0700 (PDT)
-Subject: Re: [PATCH 5/7] hfsplus: stop using ioctl_by_bdev
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
-        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>
-References: <20200425075706.721917-1-hch@lst.de>
- <20200425075706.721917-6-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6c47f731-7bff-f186-da55-7ce6cffacdc3@kernel.dk>
-Date:   Mon, 4 May 2020 10:16:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200425075706.721917-6-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
+        Mon, 4 May 2020 12:17:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-39-uzlKmwNAOK6q6QlcHfY66Q-1; Mon, 04 May 2020 17:15:42 +0100
+X-MC-Unique: uzlKmwNAOK6q6QlcHfY66Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 4 May 2020 17:15:41 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 4 May 2020 17:15:41 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@infradead.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+CC:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "bigeasy@linutronix.de" <bigeasy@linutronix.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] drm/i915: check to see if SIMD registers are available
+ before using SIMD
+Thread-Topic: [PATCH] drm/i915: check to see if SIMD registers are available
+ before using SIMD
+Thread-Index: AQHWIi2IJD6S33S1cEGYb8jR4+2/zKiYGMQA
+Date:   Mon, 4 May 2020 16:15:41 +0000
+Message-ID: <cb9e8125a94e4efc8733967a5b47be88@AcuMS.aculab.com>
+References: <20200430221016.3866-1-Jason@zx2c4.com>
+ <20200501180731.GA2485@infradead.org>
+ <158853721918.8377.18286963845226122104@build.alporthouse.com>
+ <20200504160314.GA26373@infradead.org>
+In-Reply-To: <20200504160314.GA26373@infradead.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/25/20 1:57 AM, Christoph Hellwig wrote:
->  	if (HFSPLUS_SB(sb)->session >= 0) {
-> +		struct cdrom_tocentry te;
-> +
-> +		if (!cdi)
-> +			return -EINVAL;
-> +
->  		te.cdte_track = HFSPLUS_SB(sb)->session;
->  		te.cdte_format = CDROM_LBA;
-> -		res = ioctl_by_bdev(sb->s_bdev,
-> -			CDROMREADTOCENTRY, (unsigned long)&te);
-> -		if (!res && (te.cdte_ctrl & CDROM_DATA_TRACK) == 4) {
-> -			*start = (sector_t)te.cdte_addr.lba << 2;
-> -			return 0;
-> +		if (cdrom_read_tocentry(cdi, &te) ||
-> +		    (te.cdte_ctrl & CDROM_DATA_TRACK) != 4) {
-> +			pr_err("invalid session number or type of track\n");
-> +			return -EINVAL;
->  		}
+From: Christoph Hellwig
+> Sent: 04 May 2020 17:03
+> 
+> On Sun, May 03, 2020 at 09:20:19PM +0100, Chris Wilson wrote:
+> > > Err, why does i915 implements its own uncached memcpy instead of relying
+> > > on core functionality to start with?
+> >
+> > What is this core functionality that provides movntqda?
+> 
+> A sensible name might be memcpy_uncached or mempcy_nontemporal.
+> But the important point is that this should be arch code with a common
+> fallback rather than hacking it up in drivers.
 
-I must be missing something obvious from just looking over the patches,
-but how does this work if cdrom is modular and hfsplus is builtin?
+More the point, you are trying to do a copy where:
+1) The kernel isn't expected to read the data - so can bypass the cache.
+and maybe:
+2) The data needs flushing from the cache to actual memory.
+and maybe:
+3) The cache lines need invalidating.
 
--- 
-Jens Axboe
+The fallbacks depend on the required behaviour.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
