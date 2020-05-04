@@ -2,107 +2,202 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9539CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14D4C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 790392063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F04E2063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n2AewZD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgEDPsO (ORCPT
+        id S1729087AbgEDPsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:48:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:47696 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgEDPsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:48:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E5CB1FB;
-        Mon,  4 May 2020 08:48:13 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1856A3F68F;
-        Mon,  4 May 2020 08:48:11 -0700 (PDT)
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ> <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peng Liu <iwtbavbm@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-In-reply-to: <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
-Date:   Mon, 04 May 2020 16:48:06 +0100
-Message-ID: <jhjtv0vd7m1.mognet@arm.com>
+        Mon, 4 May 2020 11:48:21 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:32702 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbgEDPsV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:48:21 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FfANr013282;
+        Mon, 4 May 2020 10:47:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=1Ggk2BIJytvJuALTrGUMfblqMAMj1YflKy4YfvgqcPQ=;
+ b=n2AewZD5Wc4WhZ69UF17/fCenMKW3D6g6UCJ4ugMiVvDTusTHGBsmyQkMTjGkIlMpnbB
+ +tpQmM7/ff8hS5MSB5rVKGdleqJn9oXPxMN/FOQ4ffaaGUR/GnKZjnFrATfH5tD/z0TY
+ minvOisL/n8+U5U5khZR0HegEdfNSyeN7trnVUUzEFlCuL75AFAcx97uMlI0s8vaMavd
+ OLplRL14UGSMj/J32lTQgmstKyCXrCTlZB2MPjie8W7jBJzRPt9nyBOTm6IACi4dOZ88
+ pnhCpFptVQ0ts7F8mHGCTAexIjkapNXEor5O9hfbknAk9ce9us6m5hPdWElRHUrHrNNV rQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pkefj-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 04 May 2020 10:47:59 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 4 May 2020
+ 16:47:57 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Mon, 4 May 2020 16:47:57 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2FA282C8;
+        Mon,  4 May 2020 15:47:57 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH v2 2/5] ASoC: lochnagar: Move binding over to dtschema
+Date:   Mon, 4 May 2020 16:47:54 +0100
+Message-ID: <20200504154757.17519-2-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
+References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ clxscore=1015 phishscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
-On 04/05/20 16:17, Vincent Guittot wrote:
-> On Sun, 3 May 2020 at 10:34, Peng Liu <iwtbavbm@gmail.com> wrote:
->>
->> commit c5afb6a87f23 ("sched/fair: Fix nohz.next_balance update")
->> During idle load balance, this_cpu(ilb) do load balance for the other
->> idle CPUs, also gather the earliest (nohz.)next_balance.
->>
->> Since commit:
->>   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
->>
->> We update nohz.next_balance like this:
->>
->>   _nohz_idle_balance() {
->>       for_each_cpu(nohz.idle_cpus_mask) {
->>           rebalance_domains() {
->>               update nohz.next_balance <-- compare and update
->>           }
->>       }
->>       rebalance_domains(this_cpu) {
->>           update nohz.next_balance <-- compare and update
->>       }
->>       update nohz.next_balance <-- unconditionally update
->>   }
->>
->> For instance, nohz.idle_cpus_mask spans {cpu2,3,5,8}, and this_cpu is
->> cpu5. After the above loop we could gather the earliest *next_balance*
->> among {cpu2,3,8}, then rebalance_domains(this_cpu) update
->> nohz.next_balance with this_rq->next_balance, but finally overwrite
->> nohz.next_balance with the earliest *next_balance* among {cpu2,3,8},
->> we may end up with not getting the earliest next_balance.
->>
->> Since we can gather all the updated rq->next_balance, including this_cpu,
->> in _nohz_idle_balance(), it's safe to remove the extra lines in
->> rebalance_domains() which are originally intended for this_cpu. And
->> finally the updating only happen in _nohz_idle_balance().
->
-> I'm not sure that's always true. Nothing prevents nohz_idle_balance()
-> to return false . Then run_rebalance_domains() calls
-> rebalance_domains(this_rq ,SCHED_IDLE) outside _nohz_idle_balance().
-> In this case we must keep the code in rebalance_domains().
->
-> For example when the tick is not stopped when entering idle. Or when
-> need_resched() returns true.
->
+Changes since v1:
+ - Moved sub-node into MFD file leaving just the properties in here
+ - Removed contains on the compatible
+ - Removed some pointless descriptions
 
-I had missed that, good points.
+Thanks,
+Charles
 
-> So instead of removing the code from rebalance_domains, you should
-> move the one in _nohz_idle_balance() to make sure that the "if
-> (likely(update_next_balance)) ..." is called before calling
-> rebalance_domains for the local cpu
->
+ .../devicetree/bindings/sound/cirrus,lochnagar.txt | 39 ----------------
+ .../bindings/sound/cirrus,lochnagar.yaml           | 52 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
 
-Why not just get rid of the update in _nohz_idle_balance() entirely then?
-The nohz.next_balance update in rebalance_domains() will always happen if
-it is required (and we have idle == CPU_IDLE), so the extra update in
-_nohz_idle_balance() doesn't seem to be any useful.
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+deleted file mode 100644
+index 41ae2699f07a9..0000000000000
+--- a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Cirrus Logic Lochnagar Audio Development Board
+-
+-Lochnagar is an evaluation and development board for Cirrus Logic
+-Smart CODEC and Amp devices. It allows the connection of most Cirrus
+-Logic devices on mini-cards, as well as allowing connection of
+-various application processor systems to provide a full evaluation
+-platform.  Audio system topology, clocking and power can all be
+-controlled through the Lochnagar, allowing the device under test
+-to be used in a variety of possible use cases.
+-
+-This binding document describes the binding for the audio portion
+-of the driver.
+-
+-This binding must be part of the Lochnagar MFD binding:
+-  [4] ../mfd/cirrus,lochnagar.txt
+-
+-Required properties:
+-
+-  - compatible : One of the following strings:
+-                 "cirrus,lochnagar2-soundcard"
+-
+-  - #sound-dai-cells : Must be set to 1.
+-
+-  - clocks : Contains an entry for each entry in clock-names.
+-  - clock-names : Must include the following clocks:
+-      "mclk" Master clock source for the sound card, should normally
+-      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
+-      clock driver.
+-
+-Example:
+-
+-lochnagar-sc {
+-	compatible = "cirrus,lochnagar2-soundcard";
+-
+-	#sound-dai-cells = <1>;
+-
+-	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
+-	clock-names = "mclk";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+new file mode 100644
+index 0000000000000..cea612d3d4a7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,lochnagar.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cirrus Logic Lochnagar Audio Development Board
++
++maintainers:
++  - patches@opensource.cirrus.com
++
++description: |
++  Lochnagar is an evaluation and development board for Cirrus Logic
++  Smart CODEC and Amp devices. It allows the connection of most Cirrus
++  Logic devices on mini-cards, as well as allowing connection of various
++  application processor systems to provide a full evaluation platform.
++  Audio system topology, clocking and power can all be controlled through
++  the Lochnagar, allowing the device under test to be used in a variety of
++  possible use cases.
++
++  This binding document describes the binding for the audio portion of the
++  driver.
++
++  This binding must be part of the Lochnagar MFD binding:
++    [1] ../mfd/cirrus,lochnagar.yaml
++
++properties:
++  compatible:
++    enum:
++      - cirrus,lochnagar2-soundcard
++
++  '#sound-dai-cells':
++    description:
++      The first cell indicating the audio interface.
++    const: 1
++
++  clocks:
++    description:
++      Master clock source for the sound card, should normally be set to
++      LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar clock driver.
++    maxItems: 1
++
++  clock-names:
++    const: mclk
++
++required:
++  - compatible
++  - '#sound-dai-cells'
++  - clocks
++  - clock-names
++
++additionalProperties: false
+-- 
+2.11.0
+
