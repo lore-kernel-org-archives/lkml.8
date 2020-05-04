@@ -2,178 +2,109 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325BEC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1841EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 118E6206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB87A206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAh8Ld/j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fze/N73a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbgEDRs2 (ORCPT
+        id S1730426AbgEDRsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55100 "EHLO
+        Mon, 4 May 2020 13:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728158AbgEDRs1 (ORCPT
+        by vger.kernel.org with ESMTP id S1728158AbgEDRsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:48:27 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6A1C061A0E;
-        Mon,  4 May 2020 10:48:27 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id w14so10567081lfk.3;
-        Mon, 04 May 2020 10:48:27 -0700 (PDT)
+        Mon, 4 May 2020 13:48:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50BA9C061A0E;
+        Mon,  4 May 2020 10:48:41 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u22so18325plq.12;
+        Mon, 04 May 2020 10:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ufpIeFmcKaIEVY6FRQ1/+O0Pn/Xjsjbz3pEhyns+6jw=;
-        b=ZAh8Ld/jlx1jmmCPIeCJ2rRIos8a28KH8H/Hrer+1tyMica5znVSMEwwO+OBBIC118
-         AmsTqZyFLfNTy1AOmddTyJ+moXb+7dL8miYOHqkVf/52UC3Xa6oEDUKGEBwhpo5ZC9a+
-         VDHRMAsK2QUnNIQyxPuesRC6DS7l96p96vDP/gIHTxlljh3CfX+p8hzv8mE0Dp8aH+pi
-         3vJfOmSQWMpvetNst/kEbw8cHuHV9Zh6DR/lMAZhmyh+pyA8Y7Sr1oeBsLSX5QSoUIN7
-         8XLvymEJggFvYiMN7t3D4X/1ldL3MiZIE4Zl9Di/a5FvBHfHaNvR3zbedERWypJmyrQ0
-         ZntA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0YqP8VecB2UmToDpnEaiYt/EjUvvCgEGjmA2T6HOWIA=;
+        b=fze/N73aF0T0xDDZ9EvDTavgTrx7OOs9+P8+jDDYp/iG7xAbRoPZZgYjiHrNRftuqi
+         gxBfqiF55Jt43mLXDIoZxgMMW2hGd08bO8E8vjxTjnxOkykodaVdfVWS2ievBhDjJ3Hm
+         XVKvsUBfBb/eP1VwzntNMkKjgGlDoxyQFd4yngkMmFkHGeLBYG6f+1s/zQK0k4AkCcqD
+         WSORyabSj14nrudCoPiC10dEh7zBx49ywPouXJOBIX6FzL8fGZKGIa0dVVFSK4IsRc0E
+         SZo8SnUUVlLNk3UnUpN+zSEssVjxbPIyf+tzU8VIh41eu+gjko5qJYLtmz0blKW9MEZl
+         4qJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ufpIeFmcKaIEVY6FRQ1/+O0Pn/Xjsjbz3pEhyns+6jw=;
-        b=DyWCm1+a5t5hUrV3j256baBRHjt6JIZClJwTSK6zH0qAVH2MX9r0fAL9XbycZr5EyH
-         a2v8hM9KhQF4eSYMFWmcg+wWdkP+kfVqhLgk4mBnqvSvvsswzeSOUXi3x5p83HcRK9an
-         oKPSMDghklNXluNn6l9G4cEqqZoRCCPZex+Sv4cYfquEKHS3sFPZlGGfdu0KNYzaGVuV
-         NkrGm2PfTUAg8PQm1VKf12Zin0/BN4/kpmYXhc9Zzjczdr05OwCGOO8GJTy429ftDxVx
-         ohQTc4cu30SxpcU7hDy7398uX63K7EeJMkSn1oqr05eI9PcFyLixPaNvPddW45ndQdwB
-         ZFlg==
-X-Gm-Message-State: AGi0PuYUwQqIHcJJqc7gi6AYUsdO54L3c6NOcndZp+7r9HQbw9DkkACL
-        gcppD/omxo7coyTAe7cHqAk=
-X-Google-Smtp-Source: APiQypIn9k+BgZSHofdoK+xEoluwCmPe+zJr6r5AGYebAphv3YmqBkABK1xXyqd/fIQaBVPC/Bow8w==
-X-Received: by 2002:ac2:53af:: with SMTP id j15mr251493lfh.191.1588614505736;
-        Mon, 04 May 2020 10:48:25 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id n7sm11138476ljj.72.2020.05.04.10.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 10:48:25 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 4 May 2020 19:48:22 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-Message-ID: <20200504174822.GA20446@pc636>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-10-urezki@gmail.com>
- <20200501212749.GD7560@paulmck-ThinkPad-P72>
- <20200504124323.GA17577@pc636>
- <20200504152437.GK2869@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0YqP8VecB2UmToDpnEaiYt/EjUvvCgEGjmA2T6HOWIA=;
+        b=SMsg5LaidiQ/RhsbPhekIYC1NDMbXkbGRtM9+Ctta3+0sV9W03FjNpXzpQgi7XMjhb
+         9ken2B+gXxkY7pgtuNk5WwONkVtkg1fOOEicTS/SROsuwB35QVM4FAlMWljaIwgk+9La
+         tdb9WFVn+ysQe2UbGF5DWeu97eZbmuw+vGkO+8CyW/0y8IbeEmI75+KL2rsFaysVqfkB
+         QvX8+6/n1M7VQE1OpLNRAaSZj6bD+q/x7ktN2UDCQ7d7GbR6KwCyDr2J7hts3OhATFGE
+         ZMoYlwCEX0GrPQDcyfxi+S6/twOc2MArD0pgoXsbmHYxu76mB6rmYkdZnnQGrnV+YLdB
+         c2jQ==
+X-Gm-Message-State: AGi0PuYlJEEIxwjuxaSkgVgeW7IhvR6gdSNfQRwaJDVISQYcIwJ0/i7Y
+        rTWNm71/ssqyMAnIehLqhvg=
+X-Google-Smtp-Source: APiQypLr2jwuAnm1jNRaW+Ddm4ybkhMe5FmAfgXl619Lj25y3qbkURxTMQdu/z08bXQtKrtADpCv+g==
+X-Received: by 2002:a17:902:fe03:: with SMTP id g3mr380567plj.28.1588614520869;
+        Mon, 04 May 2020 10:48:40 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i9sm9403353pfk.199.2020.05.04.10.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 10:48:40 -0700 (PDT)
+Subject: Re: [PATCH RESEND net-next] net: dsa: felix: allow the device to be
+ disabled
+To:     Michael Walle <michael@walle.cc>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+References: <20200504165228.12787-1-michael@walle.cc>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a2284212-bc13-5221-acf0-188c2965416d@gmail.com>
+Date:   Mon, 4 May 2020 10:48:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504152437.GK2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200504165228.12787-1-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 08:24:37AM -0700, Paul E. McKenney wrote:
-> On Mon, May 04, 2020 at 02:43:23PM +0200, Uladzislau Rezki wrote:
-> > On Fri, May 01, 2020 at 02:27:49PM -0700, Paul E. McKenney wrote:
-> > > On Tue, Apr 28, 2020 at 10:58:48PM +0200, Uladzislau Rezki (Sony) wrote:
-> > > > Cache some extra objects per-CPU. During reclaim process
-> > > > some pages are cached instead of releasing by linking them
-> > > > into the list. Such approach provides O(1) access time to
-> > > > the cache.
-> > > > 
-> > > > That reduces number of requests to the page allocator, also
-> > > > that makes it more helpful if a low memory condition occurs.
-> > > > 
-> > > > A parameter reflecting the minimum allowed pages to be
-> > > > cached per one CPU is propagated via sysfs, it is read
-> > > > only, the name is "rcu_min_cached_objs".
-> > > > 
-> > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > > ---
-> > > >  kernel/rcu/tree.c | 64 ++++++++++++++++++++++++++++++++++++++++++++---
-> > > >  1 file changed, 60 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > index 89e9ca3f4e3e..d8975819b1c9 100644
-> > > > --- a/kernel/rcu/tree.c
-> > > > +++ b/kernel/rcu/tree.c
-> > > > @@ -178,6 +178,14 @@ module_param(gp_init_delay, int, 0444);
-> > > >  static int gp_cleanup_delay;
-> > > >  module_param(gp_cleanup_delay, int, 0444);
-> > > >  
-> > > > +/*
-> > > > + * This rcu parameter is read-only, but can be write also.
-> > > 
-> > > You mean that although the parameter is read-only, you see no reason
-> > > why it could not be converted to writeable?
-> > > 
-> > I added just a note. If it is writable, then we can change the size of the
-> > per-CPU cache dynamically, i.e. "echo 5 > /sys/.../rcu_min_cached_objs"
-> > would cache 5 pages. But i do not have a strong opinion if it should be
-> > writable.
-> > 
-> > > If it was writeable, and a given CPU had the maximum numbr of cached
-> > > objects, the rcu_min_cached_objs value was decreased, but that CPU never
-> > > saw another kfree_rcu(), would the number of cached objects change?
-> > > 
-> > No. It works the way: unqueue the page from cache in the kfree_rcu(),
-> > whereas "rcu work" will put it back if number of objects < rcu_min_cached_objs,
-> > if >= will free the page.
-> 
-> Just to make sure I understand...  If someone writes a smaller number to
-> the sysfs variable, the per-CPU caches will be decreased at that point,
-> immediately during that sysfs write?  Or are you saying something else?
-> 
-This patch defines it as read-only. It defines the minimum threshold that
-controls number of elements in the per-CPU cache. If we decide to make it
-write also, then we will have full of freedom how to define its behavior,
-i.e. it is not defined because it is read only.
 
 
-> > > Presumably the list can also be accessed without holding this lock,
-> > > because otherwise we shouldn't need llist...
-> > > 
-> > Hm... We increase the number of elements in cache, therefore it is not
-> > lockless. From the other hand i used llist_head to maintain the cache
-> > because it is single linked list, we do not need "*prev" link. Also
-> > we do not need to init the list.
-> > 
-> > But i can change it to list_head. Please let me know if i need :)
+On 5/4/2020 9:52 AM, Michael Walle wrote:
+> If there is no specific configuration of the felix switch in the device
+> tree, but only the default configuration (ie. given by the SoCs dtsi
+> file), the probe fails because no CPU port has been set. On the other
+> hand you cannot set a default CPU port because that depends on the
+> actual board using the switch.
 > 
-> Hmmm...  Maybe it is time for a non-atomic singly linked list?  In the RCU
-> callback processing, the operations were open-coded, but they have been
-> pushed into include/linux/rcu_segcblist.h and kernel/rcu/rcu_segcblist.*.
+> [    2.701300] DSA: tree 0 has no CPU port
+> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
 > 
-> Maybe some non-atomic/protected/whatever macros in the llist.h file?
-> Or maybe just open-code the singly linked list?  (Probably not the
-> best choice, though.)  Add comments stating that the atomic properties
-> of the llist functions aren't neded?  Something else?
->
-In order to keep it simple i can replace llist_head by the list_head?
+> Thus let the device tree disable this device entirely, like it is also
+> done with the enetc driver of the same SoC.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-> 
-> The comments would be a good start.  Just to take pity on people seeing
-> the potential for concurrency and wondering how the concurrent accesses
-> actually happen.  ;-)
-> 
-Sounds like you are kidding me :) 
-
---
-Vlad Rezki
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
