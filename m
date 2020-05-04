@@ -2,166 +2,134 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C0BC28CBC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64052C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFAA20643
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428F524956
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dpDGMeyJ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jQB9jCv6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgEDDNz (ORCPT
+        id S1727790AbgEDDRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 23:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgEDDNz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 23:13:55 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72B3C061A0E;
-        Sun,  3 May 2020 20:13:54 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x2so4886730pfx.7;
-        Sun, 03 May 2020 20:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QnqKa4NQZ9uOHOh6AZE0XOBDXfa05SAZBiRq2Vs574w=;
-        b=dpDGMeyJ3c+m+FkuSbJVfUNO3WlmABtDuJ/hneCSaqYChrn91oUQeGwP3FURTAQ/x0
-         qRhS90U+4LtxZFDtgfu5yuxbYARsaSCDZJaoszEtyd2Gx1bCSCGiusLEqmiXo1F+h/MV
-         AYwIXEWBQMH/5AFZuSJhy5Sh2Lu05aoGSRp3bJ6YpVoPJQbx7DToOblWL7qFL5e1rLT1
-         j1RslGiSRcDZiWwgF3GEEWExxD7rOrckadhlMqhpdrPx7/j4Y+SP43Hrkl1S6iY1ab8K
-         JYHQaNraS6OZQEMoBHpNJJnYui4/SYlHrHV9nnTPtE7yt/5whuKQkwnzGOld/3E+FxJm
-         P+qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QnqKa4NQZ9uOHOh6AZE0XOBDXfa05SAZBiRq2Vs574w=;
-        b=Fbf7GmQlQGMuP7Ol9IgXq/BgVFCFyS2ird6fCKCmsPzDGGBW0Q5B+IBFj0xMKfod1A
-         05UIxGt0pcwL3euy1BKcd/IVk00b/OJRREcj7Wcnpz/ZAnq+bz2FJWX70/QKVervVywi
-         gjsLHipn1YMxJH+13zbAB5HVj6cfT6qrTjzEvZ0MWFK70/oJ74SWQhrmsKPi6RUkxUxt
-         snkVIKKRS9RLnJW/vIuwzKFJJMwx1R0xbE8Hg5HUypBcbYEO22Z7gNjLSTYg8SaYZ3JF
-         9N3TILcRk+nWdfE1MQTnBeSUwwzwzo2fMdYWe7bDrTC2W7dzgH5NlAAr6mpoD3Wq1wfU
-         iGaQ==
-X-Gm-Message-State: AGi0Pub0d9vgNWGiv91K0VbGGn7qS602DiLNYPgS1Xm/Ycoact8/s6eB
-        /gI5NusAlHl2hM0hig6jA7U=
-X-Google-Smtp-Source: APiQypKRP33f02lFtJSXV9Qaed+QbVxqgbcHSNyOWxpGQYPXdwC3ysBY3epGAQ+sIcQj/Nt/wn4zhQ==
-X-Received: by 2002:a63:d06:: with SMTP id c6mr7068285pgl.2.1588562034241;
-        Sun, 03 May 2020 20:13:54 -0700 (PDT)
-Received: from localhost.localdomain (23-121-157-107.lightspeed.sntcca.sbcglobal.net. [23.121.157.107])
-        by smtp.googlemail.com with ESMTPSA id p62sm7400376pfb.93.2020.05.03.20.13.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 20:13:53 -0700 (PDT)
-From:   Nick Desaulniers <nick.desaulniers@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] Makefile: support compressed debug info
-Date:   Sun,  3 May 2020 20:13:39 -0700
-Message-Id: <20200504031340.7103-1-nick.desaulniers@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 3 May 2020 23:17:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34239 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726768AbgEDDRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 23:17:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Fp1P2k33z9sSc;
+        Mon,  4 May 2020 13:16:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588562218;
+        bh=a+ttMQKbSioaW+iYDoWPPjbv3dl/UC1eoPEK4WRzOWE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jQB9jCv6WTuE+f+X6IWhaVSRCHd4Ov/d1TdjPBnKH4FZcDKjA+CK+aOramYk7E+io
+         0zgIHCa1o/MTs3hSZiEv3IpYU0MUWbYeKffO8sJe8UVHNDwEImPcxppMcOA42TVNUW
+         RKBqST+BiihpFeEQSq9CmlKAsfa7e4+04decfrwSZfCLBaJDeuB+NQGOf3b3DG9tcv
+         3CJ5JX8yBrH/pTX47lUzN5jt6uMLibm5iNxQnOXAiVAXHpDLLQk44YYpQId65306rF
+         lriSst+iUT6hfqiyLL3PeamX6fxlS4+YsvT64gGrLb4vo0xOzpDpLNeEpbZGQ+S5Wl
+         i2b6+k8wIEr9A==
+Date:   Mon, 4 May 2020 13:16:55 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the keys tree with the kbuild tree
+Message-ID: <20200504131655.2820b437@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/t/6ht2gRIBCIjel.xaXqDGC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As debug information gets larger and larger, it helps significantly save
-the size of vmlinux images to compress the information in the debug
-information sections. Note: this debug info is typically split off from
-the final compressed kernel image, which is why vmlinux is what's used
-in conjunction with GDB. Minimizing the debug info size should have no
-impact on boot times, or final compressed kernel image size.
+--Sig_/t/6ht2gRIBCIjel.xaXqDGC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-All of the debug sections will have a `C` flag set.
-$ readelf -S <object file>
+Hi all,
 
-$ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
-    vmlinux.gcc75.uncompressed.dwarf4
+Today's linux-next merge of the keys tree got conflicts in:
 
-    FILE SIZE        VM SIZE
- --------------  --------------
-  +0.0%     +18  [ = ]       0    [Unmapped]
- -73.3%  -114Ki  [ = ]       0    .debug_aranges
- -76.2% -2.01Mi  [ = ]       0    .debug_frame
- -73.6% -2.89Mi  [ = ]       0    .debug_str
- -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
- -82.9% -4.88Mi  [ = ]       0    .debug_ranges
- -70.5% -9.04Mi  [ = ]       0    .debug_line
- -79.3% -10.9Mi  [ = ]       0    .debug_loc
- -39.5% -88.6Mi  [ = ]       0    .debug_info
- -18.2%  -123Mi  [ = ]       0    TOTAL
+  samples/Kconfig
+  samples/Makefile
 
-$ bloaty vmlinux.clang11.compressed.dwarf4 -- \
-    vmlinux.clang11.uncompressed.dwarf4
+between commit:
 
-    FILE SIZE        VM SIZE
- --------------  --------------
-  +0.0%     +23  [ = ]       0    [Unmapped]
- -65.6%    -871  [ = ]       0    .debug_aranges
- -77.4% -1.84Mi  [ = ]       0    .debug_frame
- -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
- -73.1% -2.43Mi  [ = ]       0    .debug_str
- -84.8% -3.07Mi  [ = ]       0    .debug_ranges
- -65.9% -8.62Mi  [ = ]       0    .debug_line
- -86.2% -40.0Mi  [ = ]       0    .debug_loc
- -42.0% -64.1Mi  [ = ]       0    .debug_info
- -22.1%  -122Mi  [ = ]       0    TOTAL
+  3ba9c29d1877 ("samples: watchdog: use 'userprogs' syntax")
 
-Suggested-by: David Blaikie <blakie@google.com>
-Signed-off-by: Nick Desaulniers <nick.desaulniers@gmail.com>
----
- Makefile          | 5 +++++
- lib/Kconfig.debug | 9 +++++++++
- 2 files changed, 14 insertions(+)
+from the kbuild tree and commit:
 
-diff --git a/Makefile b/Makefile
-index 981eb902384b..313a054e5dc6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -825,6 +825,11 @@ ifdef CONFIG_DEBUG_INFO_REDUCED
- DEBUG_CFLAGS	+= $(call cc-option, -femit-struct-debug-baseonly) \
- 		   $(call cc-option,-fno-var-tracking)
- endif
-+
-+ifdef CONFIG_DEBUG_INFO_COMPRESSED
-+DEBUG_CFLAGS	+= -gz=zlib
-+KBUILD_LDFLAGS	+= --compress-debug-sections=zlib
-+endif
- endif
- 
- KBUILD_CFLAGS += $(DEBUG_CFLAGS)
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index f6f9a039f736..1f4a47ba6c1b 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -213,6 +213,15 @@ config DEBUG_INFO_REDUCED
- 	  DEBUG_INFO build and compile times are reduced too.
- 	  Only works with newer gcc versions.
- 
-+config DEBUG_INFO_COMPRESSED
-+	bool "Compressed debugging information"
-+	depends on DEBUG_INFO
-+	depends on $(cc-option,-gz=zlib)
-+	depends on $(ld-option,--compress-debug-sections=zlib)
-+	help
-+	  Compress the debug information using zlib.  Requires GCC 5.0+ or Clang
-+	  5.0+.
-+
- config DEBUG_INFO_SPLIT
- 	bool "Produce split debuginfo in .dwo files"
- 	depends on DEBUG_INFO
--- 
-2.17.1
+  631ec151fd96 ("Add sample notification program")
 
+from the keys tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc samples/Kconfig
+index 5005f74ac0eb,5c31971a5745..000000000000
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@@ -205,8 -190,11 +205,15 @@@ config SAMPLE_INTEL_ME
+  	help
+  	  Build a sample program to work with mei device.
+ =20
+ +config SAMPLE_WATCHDOG
+ +	bool "watchdog sample"
+ +	depends on CC_CAN_LINK
+ +
++ config SAMPLE_WATCH_QUEUE
++ 	bool "Build example /dev/watch_queue notification consumer"
++ 	depends on HEADERS_INSTALL
++ 	help
++ 	  Build example userspace program to use the new mount_notify(),
++ 	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
++=20
+  endif # SAMPLES
+diff --cc samples/Makefile
+index 29c66aadd954,8617edf7f19a..000000000000
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@@ -26,4 -24,4 +26,5 @@@ obj-$(CONFIG_VIDEO_PCI_SKELETON)	+=3D v4l
+  obj-y					+=3D vfio-mdev/
+  subdir-$(CONFIG_SAMPLE_VFS)		+=3D vfs
+  obj-$(CONFIG_SAMPLE_INTEL_MEI)		+=3D mei/
+ +subdir-$(CONFIG_SAMPLE_WATCHDOG)	+=3D watchdog
++ subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+=3D watch_queue
+
+--Sig_/t/6ht2gRIBCIjel.xaXqDGC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6viScACgkQAVBC80lX
+0GyXoAf/U2Jn2xuTuExUKtiDKn5WSLcDDfmgjaiDjEBfJxjwq7Jf+R6KUNl0p5Jx
+jdMHSywosUPaw3qC5LWo+sxyQLGEgMn9ihvVW77N8qZ9jsz5b7M6Trdct7ff2Lh+
+lsKrPi9dUT/lKNJon6A2gEn5FZ0/FBq7tUt58EH6hhcp7lgISvCkN41hgQVkjSBD
+3kSbOdZKfgsJaiY9AKEPGsoFVXtkkN3kijrWghdURYZU7YMa1UNwWy8cQW+2ZGDb
+0GbdjDxZ/xhUJqCz5c60HO9tA6F51/mWU3U0XLYbXAzODWmbfh0lJp9Opocj4KNf
+CXU/PTZMzCsvgsirGlX43xSpyMacPw==
+=KLMP
+-----END PGP SIGNATURE-----
+
+--Sig_/t/6ht2gRIBCIjel.xaXqDGC--
