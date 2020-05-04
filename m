@@ -2,159 +2,319 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D55C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F69C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2720206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75F820721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588587654;
+	bh=An3ohXfoTOxXuLezMvBIxU/TU88HBBlH9orhXN4erJ4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=OZ60XJ7Gas7oG5q+4mRmKni6z4IP5lY/BANmmw/cjGx5qo1PJDOJiMwNT5DpS2s0e
+	 Zy18nOIxfss5T1KgTiYoA/3F58w5y//90mIeJstUqqVWV17WepOi6Th5vV9hQVfmz0
+	 CZuhKvIkPTnVaHbPLWQwdW0cg7IqpkwflD7fj6LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgEDKUt (ORCPT
+        id S1728248AbgEDKUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:20:49 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36177 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgEDKUs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:20:48 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t3so4583219otp.3;
-        Mon, 04 May 2020 03:20:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aGRMnuTg/l5w0maHVGEcneYHQFdFGNPfiCYfIWkTR0o=;
-        b=JDi7a1+k4nDIQ2X2u7vfsWkL8tk/b85acH4ZTdmB1bwLUQNKhJfb//dPxIPNcgljhm
-         jOTigMo6x1Q5lEAD7ZYe8RvzVrD5gxmJVBT4HdxH2/GfjjOO7pdK2W7nxiSzaQy+FBN2
-         9npqFZe7t5nM4HsGGHyGb34zmXkN85egcixHyEtHSk4vnOEzAJEIjB5ZA9rYCijfGoGo
-         pfCHnTdi3gJZxDk64F0uW4fDZj0N9Zta0SjT0bzkKV4R817Fi21w0QWPWcqkYL4TSTlI
-         kJpuJQMc1HxwzuxCWoqjdKKwZ8ClEVc5HnnBnau4oEK2ZzAbDhuLvPLvVirzCvpn7Mz0
-         IQQw==
-X-Gm-Message-State: AGi0PubxR6DnC7gYGJtUCTCQGM/dXeVBj5JslidJOUZvwO/hrIYM7yr4
-        W23D8Z4SZGcHzxnb43AZySrW7wmi/hgiPJwwuWE=
-X-Google-Smtp-Source: APiQypKI/tnpEasz9c6NjgVI5Zv53OBORTXWD6v5yxAV42kvA/cHTjT9UpDrC7tAkI9k8UoXntXphLbQKxc99tQWof8=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr12887666otn.107.1588587644541;
- Mon, 04 May 2020 03:20:44 -0700 (PDT)
+        Mon, 4 May 2020 06:20:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgEDKUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 06:20:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CA8E20721;
+        Mon,  4 May 2020 10:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588587650;
+        bh=An3ohXfoTOxXuLezMvBIxU/TU88HBBlH9orhXN4erJ4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=V4igDQBXEtAAbKqQb9TV5QAyFZ/Leu56+tAWBXKl9tUH2rfVOAK0fu7GEvnpfpvXQ
+         0QnD79ZHdUre0mPZmLPTnjHcgHpGBH3TbPy2+Q7+W8i5x27AaYwlrcZegGb6r9qGY/
+         0q45JvPKONJ3lW98SQgQWROy7kg6KnlDHbFksn8c=
+Date:   Mon, 4 May 2020 12:20:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.4.221
+Message-ID: <20200504102048.GA1432206@kroah.com>
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 12:20:33 +0200
-Message-ID: <CAMuHMdXruqw2pb3pfXNfxNgtc24FmVA376DLBQgubEYSGO7LSA@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+I'm announcing the release of the 4.4.221 kernel.
 
-Thanks for the update!
+All users of the 4.4 kernel series must upgrade.
 
-On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790),
-> however it doesn't have several automotive specific peripherals. Add
-> a r8a7790 specific pin groups/functions along with common pin
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-s/a r8a7790/automotive/?
+thanks,
 
-> groups/functions for supporting both r8a7790 and r8a7742 SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+greg k-h
 
-> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+------------
 
-> @@ -5736,6 +5750,7 @@ static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
->         .pin_to_pocctrl = r8a7790_pin_to_pocctrl,
->  };
->
-> +#ifdef CONFIG_PINCTRL_PFC_R8A7790
->  const struct sh_pfc_soc_info r8a7790_pinmux_info = {
->         .name = "r8a77900_pfc",
->         .ops = &r8a7790_pinmux_ops,
-> @@ -5745,13 +5760,38 @@ const struct sh_pfc_soc_info r8a7790_pinmux_info = {
->
->         .pins = pinmux_pins,
->         .nr_pins = ARRAY_SIZE(pinmux_pins),
-> -       .groups = pinmux_groups,
-> -       .nr_groups = ARRAY_SIZE(pinmux_groups),
-> -       .functions = pinmux_functions,
-> -       .nr_functions = ARRAY_SIZE(pinmux_functions),
-> +       .groups = pinmux_groups.common,
-> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common) +
-> +               ARRAY_SIZE(pinmux_groups.automotive),
-> +       .functions = pinmux_functions.common,
-> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common) +
-> +               ARRAY_SIZE(pinmux_functions.automotive),
-> +
-> +       .cfg_regs = pinmux_config_regs,
-> +
-> +       .pinmux_data = pinmux_data,
-> +       .pinmux_data_size = ARRAY_SIZE(pinmux_data),
-> +};
-> +#endif
-> +
-> +#ifdef CONFIG_PINCTRL_PFC_R8A7742
-> +const struct sh_pfc_soc_info r8a7742_pinmux_info = {
-> +       .name = "r8a77420_pfc",
-> +       .ops = &r8a7790_pinmux_ops,
-> +       .unlock_reg = 0xe6060000, /* PMMR */
-> +
-> +       .function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-> +
-> +       .pins = pinmux_pins,
-> +       .nr_pins = ARRAY_SIZE(pinmux_pins),
-> +       .groups = pinmux_groups.common,
-> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common),
-> +       .functions = pinmux_functions.common,
-> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common),
->
->         .cfg_regs = pinmux_config_regs,
->
->         .pinmux_data = pinmux_data,
->         .pinmux_data_size = ARRAY_SIZE(pinmux_data),
->  };
-> +#endif
+ Makefile                                   |    2 
+ arch/arm/mach-imx/Makefile                 |    2 
+ arch/x86/kvm/vmx.c                         |    2 
+ arch/x86/net/bpf_jit_comp.c                |   18 +++++++-
+ drivers/crypto/mxs-dcp.c                   |    4 -
+ drivers/iio/adc/xilinx-xadc-core.c         |   17 ++++++--
+ drivers/mtd/chips/cfi_cmdset_0002.c        |    6 ++
+ drivers/net/ethernet/chelsio/cxgb4/t4_hw.c |    2 
+ drivers/net/macvlan.c                      |    2 
+ drivers/net/team/team.c                    |    4 +
+ drivers/pwm/pwm-bcm2835.c                  |    1 
+ drivers/pwm/pwm-rcar.c                     |   10 +++-
+ drivers/pwm/pwm-renesas-tpu.c              |    9 +---
+ drivers/remoteproc/remoteproc_core.c       |    2 
+ drivers/s390/cio/device.c                  |   13 ++++--
+ drivers/scsi/lpfc/lpfc_sli.c               |    2 
+ drivers/scsi/scsi_transport_iscsi.c        |    4 +
+ drivers/staging/comedi/comedi_fops.c       |    4 +
+ drivers/staging/comedi/drivers/dt2815.c    |    3 +
+ drivers/staging/vt6656/int.c               |    3 -
+ drivers/staging/vt6656/main_usb.c          |    9 ++--
+ drivers/target/target_core_fabric_lib.c    |    2 
+ drivers/tty/hvc/hvc_console.c              |   23 ++++++-----
+ drivers/tty/rocket.c                       |   25 ++++++------
+ drivers/usb/core/hub.c                     |   14 ++++++
+ drivers/usb/core/message.c                 |   53 +++++++++++++-------------
+ drivers/usb/core/quirks.c                  |    4 +
+ drivers/usb/gadget/function/f_fs.c         |    4 +
+ drivers/usb/gadget/udc/bdc/bdc_ep.c        |    2 
+ drivers/usb/misc/sisusbvga/sisusb.c        |   20 ++++-----
+ drivers/usb/misc/sisusbvga/sisusb_init.h   |   14 +++---
+ drivers/usb/storage/uas.c                  |   46 +++++++++++++++++++++-
+ drivers/usb/storage/unusual_devs.h         |    7 +++
+ drivers/xen/xenbus/xenbus_client.c         |    9 +++-
+ fs/ceph/caps.c                             |    8 ++-
+ fs/ceph/export.c                           |    5 ++
+ fs/ext4/block_validity.c                   |   54 ++++++++++++++++++++++++++
+ fs/ext4/ext4.h                             |   15 ++++++-
+ fs/ext4/extents.c                          |   59 +++++++++++++++++------------
+ fs/ext4/ialloc.c                           |    2 
+ fs/ext4/inode.c                            |   48 +++++++++++++++++------
+ fs/ext4/ioctl.c                            |    2 
+ fs/ext4/mballoc.c                          |    6 +-
+ fs/ext4/namei.c                            |    4 -
+ fs/ext4/resize.c                           |    5 +-
+ fs/ext4/super.c                            |   28 ++++---------
+ fs/fuse/dev.c                              |   12 ++++-
+ fs/namespace.c                             |    2 
+ fs/pnode.c                                 |    9 +---
+ include/linux/kvm_host.h                   |    2 
+ include/net/tcp.h                          |    2 
+ ipc/util.c                                 |    2 
+ kernel/audit.c                             |    3 +
+ kernel/events/core.c                       |   13 ++++--
+ kernel/gcov/fs.c                           |    2 
+ net/ipv4/ip_vti.c                          |    4 -
+ net/ipv4/raw.c                             |    4 +
+ net/ipv4/route.c                           |    3 -
+ net/ipv4/xfrm4_output.c                    |    2 
+ net/ipv6/ipv6_sockglue.c                   |   13 ++----
+ net/ipv6/xfrm6_output.c                    |    2 
+ net/netrom/nr_route.c                      |    1 
+ net/sctp/socket.c                          |    6 +-
+ net/x25/x25_dev.c                          |    4 +
+ sound/pci/hda/hda_intel.c                  |    1 
+ sound/pci/hda/patch_realtek.c              |    2 
+ sound/soc/intel/atom/sst-atom-controls.c   |    2 
+ sound/soc/soc-dapm.c                       |   20 ++++++++-
+ sound/usb/format.c                         |   52 +++++++++++++++++++++++++
+ sound/usb/mixer_quirks.c                   |   12 +++--
+ sound/usb/usx2y/usbusx2yaudio.c            |    2 
+ 71 files changed, 542 insertions(+), 213 deletions(-)
 
-The r8a7742 section should be inserted before the r8a7790 section,
-to preserve sort order.
+Ahmad Fatoum (1):
+      ARM: imx: provide v7_cpu_resume() only on ARM_CPU_SUSPEND=y
 
-No need to resend, will fix up while applying.
+Al Viro (1):
+      propagate_one(): mnt_set_mountpoint() needs mount_lock
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in sh-pfc-for-v5.8.
+Alan Stern (3):
+      USB: core: Fix free-while-in-use bug in the USB S-Glibrary
+      USB: hub: Fix handling of connect changes during sleep
+      usb-storage: Add unusual_devs entry for JMicron JMS566
 
-Gr{oetje,eeting}s,
+Alexander Tsoy (1):
+      ALSA: usb-audio: Filter out unsupported sample rates on Focusrite devices
 
-                        Geert
+Andrew Melnychenko (1):
+      tty: hvc: fix buffer overflow during hvc_alloc().
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Arnd Bergmann (1):
+      net: ipv4: avoid unused variable warning for sysctl
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bodo Stroesser (1):
+      scsi: target: fix PR IN / READ FULL STATUS for FC
+
+Changming Liu (1):
+      USB: sisusbvga: Change port variable from signed to unsigned
+
+Clement Leger (1):
+      remoteproc: Fix wrong rvring index computation
+
+Colin Ian King (1):
+      ext4: unsigned int compared against zero
+
+Cornelia Huck (1):
+      s390/cio: avoid duplicated 'ADD' uevents
+
+David Ahern (1):
+      xfrm: Always set XFRM_TRANSFORMED in xfrm{4,6}_output_finish
+
+David Mosberger (2):
+      drivers: usb: core: Don't disable irqs in usb_sg_wait() during URB submit.
+      drivers: usb: core: Minimize irq disabling in usb_sg_cancel()
+
+Dmitry Monakhov (1):
+      ext4: fix extent_status fragmentation for plain files
+
+Eric Dumazet (1):
+      tcp: cache line align MAX_TCP_HEADER
+
+Florian Fainelli (1):
+      pwm: bcm2835: Dynamically allocate base
+
+Geert Uytterhoeven (2):
+      pwm: rcar: Fix late Runtime PM enablement
+      pwm: renesas-tpu: Fix late Runtime PM enablement
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.221
+
+Gyeongtaek Lee (1):
+      ASoC: dapm: fixup dapm kcontrol widget
+
+Hans de Goede (1):
+      ASoC: Intel: atom: Take the drv->lock mutex before calling sst_send_slot_map()
+
+Ian Abbott (1):
+      staging: comedi: dt2815: fix writing hi byte of analog output
+
+Ian Rogers (1):
+      perf/core: fix parent pid/tid in task exit events
+
+James Smart (1):
+      scsi: lpfc: Fix kasan slab-out-of-bounds error in lpfc_unreg_login
+
+Jason Gunthorpe (1):
+      net/cxgb4: Check the return from t4_query_params properly
+
+Jeremy Sowden (1):
+      vti4: removed duplicate log message.
+
+Jiri Slaby (1):
+      tty: rocket, avoid OOB access
+
+John Haxby (1):
+      ipv6: fix restrict IPV6_ADDRFORM operation
+
+Jonathan Cox (1):
+      USB: Add USB_QUIRK_DELAY_CTRL_MSG and USB_QUIRK_DELAY_INIT for Corsair K70 RGB RAPIDFIRE
+
+Juergen Gross (1):
+      xen/xenbus: ensure xenbus_map_ring_valloc() returns proper grant status
+
+Lars-Peter Clausen (3):
+      iio: xilinx-xadc: Fix ADC-B powerdown
+      iio: xilinx-xadc: Fix clearing interrupt when enabling trigger
+      iio: xilinx-xadc: Fix sequencer configuration for aux channels in simultaneous mode
+
+Liu Jian (1):
+      mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer
+
+Luke Nelson (1):
+      bpf, x86: Fix encoding for lower 8-bit registers in BPF_STX BPF_B
+
+Malcolm Priestley (2):
+      staging: vt6656: Fix drivers TBTT timing counter.
+      staging: vt6656: Power save stop wake_up_count wrap around.
+
+Miklos Szeredi (1):
+      fuse: fix possibly missed wake-up after abort
+
+Nathan Chancellor (1):
+      usb: gadget: udc: bdc: Remove unnecessary NULL checks in bdc_req_complete
+
+Nicolai Stange (1):
+      net: ipv4: emulate READ_ONCE() on ->hdrincl bit-field in raw_sendmsg()
+
+Oliver Neukum (2):
+      UAS: no use logging any details in case of ENODEV
+      UAS: fix deadlock in error handling and PM flushing work
+
+Paul Moore (1):
+      audit: check the length of userspace generated audit records
+
+Piotr Krysiuk (1):
+      fs/namespace.c: fix mountpoint reference counter race
+
+Qiujun Huang (1):
+      ceph: return ceph_mdsc_do_request() errors from __get_parent()
+
+Sean Christopherson (1):
+      KVM: Check validity of resolved slot when searching memslots
+
+Taehee Yoo (2):
+      macvlan: fix null dereference in macvlan_device_event()
+      team: fix hang in team_mode_get()
+
+Takashi Iwai (3):
+      ALSA: hda - Fix incorrect usage of IS_REACHABLE()
+      ALSA: hda: Remove ASUS ROG Zenith from the blacklist
+      ALSA: usx2y: Fix potential NULL dereference
+
+Theodore Ts'o (5):
+      ext4: convert BUG_ON's to WARN_ON's in mballoc.c
+      ext4: avoid declaring fs inconsistent due to invalid file handles
+      ext4: protect journal inode's blocks using block_validity
+      ext4: don't perform block validity checks on the journal inode
+      ext4: fix block validity checks for journal inodes using indirect blocks
+
+Udipto Goswami (1):
+      usb: f_fs: Clear OS Extended descriptor counts to zero in ffs_data_reset()
+
+Uros Bizjak (1):
+      KVM: VMX: Enable machine check support for 32bit targets
+
+Vasily Averin (2):
+      kernel/gcov/fs.c: gcov_seq_next() should increase position index
+      ipc/util.c: sysvipc_find_ipc() should increase position index
+
+Wei Yongjun (1):
+      crypto: mxs-dcp - make symbols 'sha1_null_hash' and 'sha256_null_hash' static
+
+Wu Bo (1):
+      scsi: iscsi: Report unbind session event when the target has been removed
+
+Xin Long (1):
+      sctp: use right member as the param of list_for_each_entry
+
+Xiyu Yang (4):
+      net: netrom: Fix potential nr_neigh refcnt leak in nr_add_node
+      net/x25: Fix x25_neigh refcnt leak when receiving frame
+      ALSA: usb-audio: Fix usb audio refcnt leak when getting spdif
+      staging: comedi: Fix comedi_device refcnt leak in comedi_open
+
+Yan, Zheng (1):
+      ceph: don't skip updating wanted caps when cap is stale
+
