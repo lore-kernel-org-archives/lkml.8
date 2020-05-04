@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA69C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1275C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7130C205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC08A206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615487;
-	bh=Ics9sg11UVNE6IzrEy6Dxtn4/1sV+IZozK9ffGF+YH8=;
+	s=default; t=1588615490;
+	bh=sbRypDigKclKa92P4hT4T8OtlZ/9B4gGcCFTCSRH/Cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yA8ZX7TNz+q8HUrGEjgY6vP9mv9GkB3dj4N5NpSeP7vCraD1bMgqKHbw0ah04AN0a
-	 HzMR2ctTgN6ECXTwvqduGfm0SLiDMiqmYNskbSgAftY7/dwrfozABClO8cqsWkgj6p
-	 xGbm/J8iIPwPwyIPuHDSNlTqY4LaMj9PfEKoDnEo=
+	b=oPgWJUQhLpelRaUbkEVTPQJBKWG5wuYXEVPwrQLScmv+/65MPrishzpcJXLtHroCy
+	 G8YAHBX6zaA4/AX7w7OOiRL8DKbGZIb11emOzjvfdy2qqWV8hfpiV/Rdzc2LwNjbU3
+	 FIOL0Y/SiiRVs85lA+Tds7lVKHjLT0R0MAbfm6O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731714AbgEDSEq (ORCPT
+        id S1731720AbgEDSEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34230 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:04:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbgEDSEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:42 -0400
+        id S1731124AbgEDSEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BC8A2087E;
-        Mon,  4 May 2020 18:04:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC08E2073E;
+        Mon,  4 May 2020 18:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615481;
-        bh=Ics9sg11UVNE6IzrEy6Dxtn4/1sV+IZozK9ffGF+YH8=;
+        s=default; t=1588615486;
+        bh=sbRypDigKclKa92P4hT4T8OtlZ/9B4gGcCFTCSRH/Cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EI8psk3CJoc9CkdRgJLoOr1KWf066z308ZT1EgFX/GNbgfbipmYA4ySQKPe27AZUt
-         RP4XbiDDYH3CA3RgQMIkO0Ga4yDq+pp3ujFNnrQ9DbhCmN/rju5mx6laK/zKTjD51P
-         lyVw5kWXR9Fm/zN/6uGX4zrK+ibDrYhu0Hckgd9s=
+        b=ltA2ReOxYJzLvciMnat/7Tpk7CAnLIDz9agtEMu1wDdzRUnmDdvI6ptXvwqP1sCTR
+         NMX5xDbs8ilEGsFsDHWzT5O5caW28rgcl3x10C9p6bgkPoCdvTX0txRQkiSsRT9r1E
+         KkDyLx5IS3JH9jsplIBGZoETtbKfXWfGj9jXffZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 29/57] PM: hibernate: Freeze kernel threads in software_resume()
-Date:   Mon,  4 May 2020 19:57:33 +0200
-Message-Id: <20200504165458.869037589@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 5.4 57/57] selinux: properly handle multiple messages in selinux_netlink_send()
+Date:   Mon,  4 May 2020 19:58:01 +0200
+Message-Id: <20200504165501.852418737@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -59,46 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Paul Moore <paul@paul-moore.com>
 
-commit 2351f8d295ed63393190e39c2f7c1fee1a80578f upstream.
+commit fb73974172ffaaf57a7c42f35424d9aece1a5af6 upstream.
 
-Currently the kernel threads are not frozen in software_resume(), so
-between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
-system_freezable_power_efficient_wq can still try to submit SCSI
-commands and this can cause a panic since the low level SCSI driver
-(e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
-any SCSI commands: https://lkml.org/lkml/2020/4/10/47
+Fix the SELinux netlink_send hook to properly handle multiple netlink
+messages in a single sk_buff; each message is parsed and subject to
+SELinux access control.  Prior to this patch, SELinux only inspected
+the first message in the sk_buff.
 
-At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
-to resolve the issue from hv_storvsc, but with the help of
-Bart Van Assche, I realized it's better to fix software_resume(),
-since this looks like a generic issue, not only pertaining to SCSI.
-
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/power/hibernate.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ security/selinux/hooks.c |   70 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 45 insertions(+), 25 deletions(-)
 
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -898,6 +898,13 @@ static int software_resume(void)
- 	error = freeze_processes();
- 	if (error)
- 		goto Close_Finish;
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -5521,40 +5521,60 @@ static int selinux_tun_dev_open(void *se
+ 
+ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
+ {
+-	int err = 0;
+-	u32 perm;
++	int rc = 0;
++	unsigned int msg_len;
++	unsigned int data_len = skb->len;
++	unsigned char *data = skb->data;
+ 	struct nlmsghdr *nlh;
+ 	struct sk_security_struct *sksec = sk->sk_security;
++	u16 sclass = sksec->sclass;
++	u32 perm;
+ 
+-	if (skb->len < NLMSG_HDRLEN) {
+-		err = -EINVAL;
+-		goto out;
+-	}
+-	nlh = nlmsg_hdr(skb);
++	while (data_len >= nlmsg_total_size(0)) {
++		nlh = (struct nlmsghdr *)data;
+ 
+-	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
+-	if (err) {
+-		if (err == -EINVAL) {
++		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
++		 *       users which means we can't reject skb's with bogus
++		 *       length fields; our solution is to follow what
++		 *       netlink_rcv_skb() does and simply skip processing at
++		 *       messages with length fields that are clearly junk
++		 */
++		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
++			return 0;
 +
-+	error = freeze_kernel_threads();
-+	if (error) {
-+		thaw_processes();
-+		goto Close_Finish;
-+	}
-+
- 	error = load_image_and_restore();
- 	thaw_processes();
-  Finish:
++		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
++		if (rc == 0) {
++			rc = sock_has_perm(sk, perm);
++			if (rc)
++				return rc;
++		} else if (rc == -EINVAL) {
++			/* -EINVAL is a missing msg/perm mapping */
+ 			pr_warn_ratelimited("SELinux: unrecognized netlink"
+-			       " message: protocol=%hu nlmsg_type=%hu sclass=%s"
+-			       " pig=%d comm=%s\n",
+-			       sk->sk_protocol, nlh->nlmsg_type,
+-			       secclass_map[sksec->sclass - 1].name,
+-			       task_pid_nr(current), current->comm);
+-			if (!enforcing_enabled(&selinux_state) ||
+-			    security_get_allow_unknown(&selinux_state))
+-				err = 0;
++				" message: protocol=%hu nlmsg_type=%hu sclass=%s"
++				" pid=%d comm=%s\n",
++				sk->sk_protocol, nlh->nlmsg_type,
++				secclass_map[sclass - 1].name,
++				task_pid_nr(current), current->comm);
++			if (enforcing_enabled(&selinux_state) &&
++			    !security_get_allow_unknown(&selinux_state))
++				return rc;
++			rc = 0;
++		} else if (rc == -ENOENT) {
++			/* -ENOENT is a missing socket/class mapping, ignore */
++			rc = 0;
++		} else {
++			return rc;
+ 		}
+ 
+-		/* Ignore */
+-		if (err == -ENOENT)
+-			err = 0;
+-		goto out;
++		/* move to the next message after applying netlink padding */
++		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
++		if (msg_len >= data_len)
++			return 0;
++		data_len -= msg_len;
++		data += msg_len;
+ 	}
+ 
+-	err = sock_has_perm(sk, perm);
+-out:
+-	return err;
++	return rc;
+ }
+ 
+ #ifdef CONFIG_NETFILTER
 
 
