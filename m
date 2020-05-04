@@ -2,83 +2,101 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADAAC47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90C6C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785DE2071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F5220757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJSWK3Fx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgEDMoL (ORCPT
+        id S1728898AbgEDMoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:44:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4802 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEDMoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:44:11 -0400
-IronPort-SDR: pTnbN3NxNuMJrVASEPkhGquB6BELgJtENOfCe5qjU6cd2h09OXXtsYdgU6OSMu4AzT/2Rh053D
- z44Zlq8FGVdg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 05:44:11 -0700
-IronPort-SDR: KhqKDB+iYXA1TW4urdP/SgxrIP6f3/fC+8/32rcZlxiVDgJWWofN7Aq/Rw3tQdAOwiriXUzUuY
- QeEBl1QfGwIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="434089333"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 04 May 2020 05:44:07 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jVaS9-004cHw-To; Mon, 04 May 2020 15:44:09 +0300
-Date:   Mon, 4 May 2020 15:44:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
-Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] i2c: drivers: Remove superfluous error message
-Message-ID: <20200504124409.GG185537@smile.fi.intel.com>
-References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
- <20200504114408.9128-1-aishwaryarj100@gmail.com>
- <20200504124256.GF185537@smile.fi.intel.com>
+        Mon, 4 May 2020 08:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728875AbgEDMoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 08:44:20 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8B3C061A0F;
+        Mon,  4 May 2020 05:44:18 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id w20so9539215ljj.0;
+        Mon, 04 May 2020 05:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/F4NjM3U9kxbREFxopp8An9SFYvql40/vSs62JTddHE=;
+        b=BJSWK3FxnlFrT8zrKm7gs/qkb/VjtJ4Cg44AcbRaZx+gew5JuAWmu19nOK/F6+DBKw
+         k0HrT9+yimSfjSuSS+TlkFrVJOXsoyr7flhNKTmUgkdfavmFmRgiqmEUQdbEjUhu1gJA
+         3wQKEJ5WyYHqlUFdcQpzZQwfMfYHnt0rv5idAsn4EMGzeM6ZLfsoBlMMxQhIc1mSvRpL
+         qYWpwG1KQ4YTtOUZ7plCHFWxIQOWivDOpyfi4b9orOdkeHtsQml8wuiVy9YUszcRTpkO
+         jwLm9b9ERAByJ7z/x2tjeLFIJShIzDbox/x3Iro89LXGBFlwqZRWN44iShMrlTD0JJMV
+         Y21A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/F4NjM3U9kxbREFxopp8An9SFYvql40/vSs62JTddHE=;
+        b=erzknn/UR7i2b72P1s9Fv7JrU+Ktu5+ktYnTOcbUABQBV5P+5vCSLgKDn8qp+Uh36Y
+         Hctk7Jm/fExLakmTAdPSPc+FJ6cPDQKsIhss/De0Sn9Q7YSTGnn0P9kSN+IK8876zBas
+         iCax+9rXvCMG0NnwQGbqEWK9vs/GFdWUJlVXkUz8DwUDxDmPxous2f/FFWt9irHW9oXU
+         6l5N1EldO0haRnnwI3FNYf9B/i5WHlCMf4KMptnGxegjj1XxojlkEeyvXQ74U6WbyAC3
+         MCERr52CM7hcO3dfNKyQxeEf6ttkwGV68mW+T8psU0Ff5dPGsSZn8XSHT0ciB/Lm0vR2
+         eDnw==
+X-Gm-Message-State: AGi0PuZ+TEY74FTvGkUSYzjdNU+pzY3S5P5oXtkpcR/PgoHk0RchX0fO
+        hn32USekBykDBta0UB1NBtc=
+X-Google-Smtp-Source: APiQypKAhhmzg+orF2c36cc8VXnxMP8aj3luTgAUh+eKp3ptrapFXQnwOlWT+Bw32IVhxgPSHb697g==
+X-Received: by 2002:a2e:b162:: with SMTP id a2mr10125818ljm.25.1588596257115;
+        Mon, 04 May 2020 05:44:17 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id n14sm9553004lfe.31.2020.05.04.05.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 05:44:16 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 4 May 2020 14:44:14 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 10/24] rcu/tree: add rcutree.rcu_min_cached_objs
+ description
+Message-ID: <20200504124414.GB17577@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-11-urezki@gmail.com>
+ <20200501222524.GA6283@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504124256.GF185537@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200501222524.GA6283@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 03:42:56PM +0300, Andy Shevchenko wrote:
-> On Mon, May 04, 2020 at 05:14:06PM +0530, Aishwarya Ramakrishnan wrote:
-> > The function platform_get_irq can log an error by itself.
-> > This omit a redundant message for exception handling in the
-> > calling function.
+On Fri, May 01, 2020 at 03:25:24PM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 28, 2020 at 10:58:49PM +0200, Uladzislau Rezki (Sony) wrote:
+> > Document the rcutree.rcu_min_cached_objs sysfs kernel parameter.
+> > 
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 > 
-> FWIW,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Could you please combine this wtih the patch that created this sysfs
+> parameter?
+> 
+Will combine them.
 
-Wolfram, I didn't notice any updates in your public tree. Do you have plans to
-push them this week?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--
+Vlad Rezki
