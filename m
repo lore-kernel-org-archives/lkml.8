@@ -2,165 +2,105 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B35C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35844C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15CBE206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09DDF2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615664;
-	bh=qSSPanwBoB9/JQpMTRvAt64HeB1Nngc7+wt849hUqt8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=jH36CEADeCe+jh+xyT857Zw3lPpVxuNuCvUFJCIgdUtB7IMfApq0qgHa06FKm9TYe
-	 cLhtIuyUoIT0X4MO1cngZLNRVA9M/ZymTUXyhYBLYCvb9LvwFozgtzkRnbI2FCzD7n
-	 felpLpIishI62/AURowIlu/m/bQ1A5IYiSGhVOrg=
+	s=default; t=1588615670;
+	bh=tUHjouMIe2y5rFbeb+MgvQF2ue4Iw8BcFWPGcw8xtv8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1uWq72P39iXjyVVFwApva3ERDxTYQE0n/h8QioMPlhXI0hQmQFIUyYenwxmcuYguE
+	 z4KOK6qxHMbulHKh6AjhLogV8B2TN+vp2YZ/g62ATATPE3tDzezITAg1ZB1P/OXPp1
+	 qqJk1aKuPTQjTj1msgxXDuQmQa3vkeIMC0Wcp/u8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732179AbgEDSHn (ORCPT
+        id S1732193AbgEDSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38524 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbgEDSHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:38 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1732181AbgEDSHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620EA206B8;
-        Mon,  4 May 2020 18:07:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871F62073B;
+        Mon,  4 May 2020 18:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615657;
-        bh=qSSPanwBoB9/JQpMTRvAt64HeB1Nngc7+wt849hUqt8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gOJg6N0Wp5t9LhWqGYLQdlvrM4KGIMDVXHt5MuhbymoZ/3c9ufbSMdZ4v7ElfUGP2
-         bk4lSTe5mv4yys6Jv2pdJpujGo7i2Mv6UTmnts5leniCOTcyRKUWKg+dq0yhHyBISZ
-         AGUsWGxPfyMCmb4hywnL0NSJq1KaBwv2pWOsU0ww=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 437E535226F4; Mon,  4 May 2020 11:07:37 -0700 (PDT)
-Date:   Mon, 4 May 2020 11:07:37 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-Message-ID: <20200504180737.GT2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-10-urezki@gmail.com>
- <20200501212749.GD7560@paulmck-ThinkPad-P72>
- <20200504124323.GA17577@pc636>
- <20200504152437.GK2869@paulmck-ThinkPad-P72>
- <20200504174822.GA20446@pc636>
+        s=default; t=1588615664;
+        bh=tUHjouMIe2y5rFbeb+MgvQF2ue4Iw8BcFWPGcw8xtv8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=afeLKSU3z5SQAd8kNAk5o1W/GaHSiigp17uFYldQB3TpZ6HmGD6G2m/P9dkmxxTAJ
+         r+yQoyZjyjhAPbmIc3nCmo8g+wF2pucvYhYv+PnRTKA5O9lPvK/s0JI2/CJt3QxV8D
+         9bPm715nwkrlYfQKblkkXn6wJWHf6AUKhizfyGiQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.6 72/73] arm64: vdso: Add -fasynchronous-unwind-tables to cflags
+Date:   Mon,  4 May 2020 19:58:15 +0200
+Message-Id: <20200504165510.575729659@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504174822.GA20446@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 07:48:22PM +0200, Uladzislau Rezki wrote:
-> On Mon, May 04, 2020 at 08:24:37AM -0700, Paul E. McKenney wrote:
-> > On Mon, May 04, 2020 at 02:43:23PM +0200, Uladzislau Rezki wrote:
-> > > On Fri, May 01, 2020 at 02:27:49PM -0700, Paul E. McKenney wrote:
-> > > > On Tue, Apr 28, 2020 at 10:58:48PM +0200, Uladzislau Rezki (Sony) wrote:
-> > > > > Cache some extra objects per-CPU. During reclaim process
-> > > > > some pages are cached instead of releasing by linking them
-> > > > > into the list. Such approach provides O(1) access time to
-> > > > > the cache.
-> > > > > 
-> > > > > That reduces number of requests to the page allocator, also
-> > > > > that makes it more helpful if a low memory condition occurs.
-> > > > > 
-> > > > > A parameter reflecting the minimum allowed pages to be
-> > > > > cached per one CPU is propagated via sysfs, it is read
-> > > > > only, the name is "rcu_min_cached_objs".
-> > > > > 
-> > > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > > > ---
-> > > > >  kernel/rcu/tree.c | 64 ++++++++++++++++++++++++++++++++++++++++++++---
-> > > > >  1 file changed, 60 insertions(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > index 89e9ca3f4e3e..d8975819b1c9 100644
-> > > > > --- a/kernel/rcu/tree.c
-> > > > > +++ b/kernel/rcu/tree.c
-> > > > > @@ -178,6 +178,14 @@ module_param(gp_init_delay, int, 0444);
-> > > > >  static int gp_cleanup_delay;
-> > > > >  module_param(gp_cleanup_delay, int, 0444);
-> > > > >  
-> > > > > +/*
-> > > > > + * This rcu parameter is read-only, but can be write also.
-> > > > 
-> > > > You mean that although the parameter is read-only, you see no reason
-> > > > why it could not be converted to writeable?
-> > > > 
-> > > I added just a note. If it is writable, then we can change the size of the
-> > > per-CPU cache dynamically, i.e. "echo 5 > /sys/.../rcu_min_cached_objs"
-> > > would cache 5 pages. But i do not have a strong opinion if it should be
-> > > writable.
-> > > 
-> > > > If it was writeable, and a given CPU had the maximum numbr of cached
-> > > > objects, the rcu_min_cached_objs value was decreased, but that CPU never
-> > > > saw another kfree_rcu(), would the number of cached objects change?
-> > > > 
-> > > No. It works the way: unqueue the page from cache in the kfree_rcu(),
-> > > whereas "rcu work" will put it back if number of objects < rcu_min_cached_objs,
-> > > if >= will free the page.
-> > 
-> > Just to make sure I understand...  If someone writes a smaller number to
-> > the sysfs variable, the per-CPU caches will be decreased at that point,
-> > immediately during that sysfs write?  Or are you saying something else?
-> > 
-> This patch defines it as read-only. It defines the minimum threshold that
-> controls number of elements in the per-CPU cache. If we decide to make it
-> write also, then we will have full of freedom how to define its behavior,
-> i.e. it is not defined because it is read only.
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-And runtime-read-only sounds like an excellent state for it.
+commit 1578e5d03112e3e9d37e1c4d95b6dfb734c73955 upstream.
 
-> > > > Presumably the list can also be accessed without holding this lock,
-> > > > because otherwise we shouldn't need llist...
-> > > > 
-> > > Hm... We increase the number of elements in cache, therefore it is not
-> > > lockless. From the other hand i used llist_head to maintain the cache
-> > > because it is single linked list, we do not need "*prev" link. Also
-> > > we do not need to init the list.
-> > > 
-> > > But i can change it to list_head. Please let me know if i need :)
-> > 
-> > Hmmm...  Maybe it is time for a non-atomic singly linked list?  In the RCU
-> > callback processing, the operations were open-coded, but they have been
-> > pushed into include/linux/rcu_segcblist.h and kernel/rcu/rcu_segcblist.*.
-> > 
-> > Maybe some non-atomic/protected/whatever macros in the llist.h file?
-> > Or maybe just open-code the singly linked list?  (Probably not the
-> > best choice, though.)  Add comments stating that the atomic properties
-> > of the llist functions aren't neded?  Something else?
-> >
-> In order to keep it simple i can replace llist_head by the list_head?
+On arm64 linux gcc uses -fasynchronous-unwind-tables -funwind-tables
+by default since gcc-8, so now the de facto platform ABI is to allow
+unwinding from async signal handlers.
 
-Fine by me!
+However on bare metal targets (aarch64-none-elf), and on old gcc,
+async and sync unwind tables are not enabled by default to avoid
+runtime memory costs.
 
-> > The comments would be a good start.  Just to take pity on people seeing
-> > the potential for concurrency and wondering how the concurrent accesses
-> > actually happen.  ;-)
-> > 
-> Sounds like you are kidding me :) 
+This means if linux is built with a baremetal toolchain the vdso.so
+may not have unwind tables which breaks the gcc platform ABI guarantee
+in userspace.
 
-"Only those who have gone too far can possibly tell you how far you
-can go!"  ;-)
+Add -fasynchronous-unwind-tables explicitly to the vgettimeofday.o
+cflags to address the ABI change.
 
-							Thanx, Paul
+Fixes: 28b1a824a4f4 ("arm64: vdso: Substitute gettimeofday() with C implementation")
+Cc: Will Deacon <will@kernel.org>
+Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm64/kernel/vdso/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -32,7 +32,7 @@ UBSAN_SANITIZE			:= n
+ OBJECT_FILES_NON_STANDARD	:= y
+ KCOV_INSTRUMENT			:= n
+ 
+-CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny
++CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -fasynchronous-unwind-tables
+ 
+ ifneq ($(c-gettimeofday-y),)
+   CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
+
+
