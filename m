@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F45DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF1C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50102085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A832075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615652;
-	bh=azMOu8EjMGDrE0P+u3NYrkPUjjB/EnRM97c2/Lsix7Y=;
+	s=default; t=1588615657;
+	bh=CKAyMzgdGXCoYpRCj3cr2sVbSPR+LqD5jd9a361D360=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ANfe2qBbaTTh1+6VJF35Xu4sefPV7WItwyHvPHB1VmmKZQeJ0Y4ZPjeAb/Gi/jSaa
-	 ZL2brfizjYeA+2WNi0hzeebCUzGRq0Hl/QaiGypNNx77PkmcjCjNt/M+kyz0kM3u16
-	 5JtQ3RZvCOTwzAl6OhbBRw3mcQniBwb7BuWdMWqc=
+	b=SA31cxNySOq8P7sKvp8I6nB1wRrtpEDTd6VoXwWdIIlOq4KZ4T1rCkofwsanRLRUw
+	 qyF2lbHl49KusYbsO/Ihzss9XIH+5b6+outYDDznirmTAg3zRmLzxAkH3TbuQGesLF
+	 a26ykzzOQFdYb0Yyp11rOqmwWDcd9XcaHIvd4Yc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731841AbgEDSHc (ORCPT
+        id S1731845AbgEDSHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgEDSH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:27 -0400
+        id S1731176AbgEDSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CBBD206B8;
-        Mon,  4 May 2020 18:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73665206B8;
+        Mon,  4 May 2020 18:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615646;
-        bh=azMOu8EjMGDrE0P+u3NYrkPUjjB/EnRM97c2/Lsix7Y=;
+        s=default; t=1588615651;
+        bh=CKAyMzgdGXCoYpRCj3cr2sVbSPR+LqD5jd9a361D360=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BKLFIep++/qIE5wlYDAm8MEpdNKHsFWCe/xUEaEYNHe1FZuSdn4GIvBoTxvc/Asxn
-         24VQtAfGQaBeQgaon8zF1pDLtderO3HfI/z+ckoZdAb8/DBzCVLg4p8OcX85X5ASYv
-         SNoN1GkXBl0iylNLPZmN/zO62e6fHS0zfT6N3PLU=
+        b=q2hAvP5B3zm7KtDW0hEMayfCmHahpQGHU5NhXvWbkN9sutsJDvbc1jvJOQpoqxuGL
+         +9rWJygzQCNERe4FUnWpR7GASwhYVX5h8WFebzsBFT7N3Lsn8wQ2jOs59HdWLfQ3fo
+         IFFF0ac7/QqIDi8OcEBx73NL/jR/87jxtpX5n1pM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-Subject: [PATCH 5.6 39/73] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi is safe
-Date:   Mon,  4 May 2020 19:57:42 +0200
-Message-Id: <20200504165507.928931479@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.6 67/73] drm/i915/selftests: Fix i915_address_space refcnt leak
+Date:   Mon,  4 May 2020 19:58:10 +0200
+Message-Id: <20200504165510.250076900@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,36 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10 upstream.
+commit 5d5e100a20348c336e56df604b353b978f8adbb9 upstream.
 
-We need to indicate that powering off the TI WiFi is safe, to avoid:
+igt_ppgtt_pin_update() invokes i915_gem_context_get_vm_rcu(), which
+returns a reference of the i915_address_space object to "vm" with
+increased refcount.
 
-wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
-wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
+When igt_ppgtt_pin_update() returns, "vm" becomes invalid, so the
+refcount should be decreased to keep refcount balanced.
 
-which prevents the WiFi being functional.
+The reference counting issue happens in two exception handling paths of
+igt_ppgtt_pin_update(). When i915_gem_object_create_internal() returns
+IS_ERR, the refcnt increased by i915_gem_context_get_vm_rcu() is not
+decreased, causing a refcnt leak.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Cc: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Fix this issue by jumping to "out_vm" label when
+i915_gem_object_create_internal() returns IS_ERR.
+
+Fixes: a4e7ccdac38e ("drm/i915: Move context management under GEM")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/1587361342-83494-1-git-send-email-xiyuyang19@fudan.edu.cn
+(cherry picked from commit e07c7606a00c4361bad72ff4e72ed0dfbefa23b0)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/i915/gem/selftests/huge_pages.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
-@@ -153,6 +153,7 @@
- 	bus-width = <4>;
- 	keep-power-in-suspend;
- 	mmc-pwrseq = <&pwrseq_ti_wifi>;
-+	cap-power-off-card;
- 	non-removable;
- 	vmmc-supply = <&vcc_3v3>;
- 	/* vqmmc-supply = <&nvcc_sd1>; - MMC layer doesn't like it! */
+--- a/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
++++ b/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
+@@ -1578,8 +1578,10 @@ static int igt_ppgtt_pin_update(void *ar
+ 		unsigned int page_size = BIT(first);
+ 
+ 		obj = i915_gem_object_create_internal(dev_priv, page_size);
+-		if (IS_ERR(obj))
+-			return PTR_ERR(obj);
++		if (IS_ERR(obj)) {
++			err = PTR_ERR(obj);
++			goto out_vm;
++		}
+ 
+ 		vma = i915_vma_instance(obj, vm, NULL);
+ 		if (IS_ERR(vma)) {
+@@ -1632,8 +1634,10 @@ static int igt_ppgtt_pin_update(void *ar
+ 	}
+ 
+ 	obj = i915_gem_object_create_internal(dev_priv, PAGE_SIZE);
+-	if (IS_ERR(obj))
+-		return PTR_ERR(obj);
++	if (IS_ERR(obj)) {
++		err = PTR_ERR(obj);
++		goto out_vm;
++	}
+ 
+ 	vma = i915_vma_instance(obj, vm, NULL);
+ 	if (IS_ERR(vma)) {
 
 
