@@ -2,244 +2,118 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42CBC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1030C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914CE2068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l+g0cdu5"
+	by mail.kernel.org (Postfix) with ESMTP id B78972073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588612653;
+	bh=9pXUHvRwCWJxoSP3RKEJ7NWKpIC6W7C2MfnDvVAMReo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=P5kycdqwrnHAH/BDwaypx4AJwESij3flj1D6xmVc4Jy/9+ynlH41WHS+lI1rouGEd
+	 iQKSaXoxCq39snrsXrlqyRy8hUnjRny0YbrFz29gIJz52/qqEt7vt56m0VsVFJUcir
+	 e8g58M7zRcb6pO0S1o8dfM4cuYN5EOQCABsK3eaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgEDRRU (ORCPT
+        id S1730726AbgEDRRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:17:20 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:51780 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729714AbgEDRRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:17:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044HHHJp086798;
-        Mon, 4 May 2020 12:17:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588612637;
-        bh=5HkS3LXYDb7FAZsgCE8f3t5PScofPnie5Sj76ZrQ+os=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=l+g0cdu5ta2o3KZhui48hM+F5oqQrJm4EBMoSrRoN1+phRW9Fa+qz8L3cSi/IKH2V
-         /pqMHGZEZu8QLp+2lbUNCOknFn0oIpveovFuoOnQMVJbMppFuFBdMZcD1N1I6xXEfx
-         FGX1n0DtQ6aj+wHn0I75BwJIOBafyvPvYbunfKgk=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044HHH8i005817;
-        Mon, 4 May 2020 12:17:17 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 12:17:17 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 12:17:17 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044HHHLP050906;
-        Mon, 4 May 2020 12:17:17 -0500
-Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     "Andrew F. Davis" <afd@ti.com>, <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-References: <20200504164156.21469-1-dmurphy@ti.com>
- <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
- <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1bd44e87-dc61-f38d-63ad-9a783b36569c@ti.com>
-Date:   Mon, 4 May 2020 12:08:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 13:17:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730638AbgEDRPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:15:33 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C1324955;
+        Mon,  4 May 2020 17:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588612533;
+        bh=9pXUHvRwCWJxoSP3RKEJ7NWKpIC6W7C2MfnDvVAMReo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CJFE86LLo7HrZ/Cb8xgKQLYO4YB6+uxFw3PLO7THErV6hbMP4gn9tINu67rI1fTLl
+         VOpoSXaWKyH6e/fHrATcWAs0SmcB/RDoNwuV90mYb/8KXq54gxVpvj8585lqyaE6UP
+         R/gPOj1XwCVznv4jF02ZtGd2ToYXyvONG2+nHmPI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B512735226F4; Mon,  4 May 2020 10:15:32 -0700 (PDT)
+Date:   Mon, 4 May 2020 10:15:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        madhuparnabhowmik04@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        peterz@infradead.org, Petr Mladek <pmladek@suse.com>,
+        rcu@vger.kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
+        vpillai@digitalocean.com
+Subject: Re: [PATCH v3 0/5] RCU dyntick nesting counter cleanups for rcu -dev
+Message-ID: <20200504171532.GR2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200504120505.89351-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-In-Reply-To: <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504120505.89351-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On Mon, May 04, 2020 at 08:05:00AM -0400, Joel Fernandes (Google) wrote:
+> These patches clean up the usage of dynticks nesting counters simplifying the
+> code, while preserving the usecases.
+> 
+> It is a much needed simplification, makes the code less confusing, and prevents
+> future bugs such as those that arise from forgetting that the
+> dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
+> common situations.
+> 
+> rcutorture testing with all TREE RCU configurations succeed with
+> CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
+> 
+> v1->v2:
+> - Rebase on v5.6-rc6
+> 
+> v2->v3:
+> - Rebase on rcu/dev with adjustments for tasks-RCU.
 
-On 5/4/20 12:08 PM, Andrew F. Davis wrote:
-> On 5/4/20 12:44 PM, Dan Murphy wrote:
->> Adding Andrew in manually.
->>
->> On 5/4/20 11:41 AM, Dan Murphy wrote:
->>> Convert the bq27xxx.txt to yaml format
->>>
->>> CC: Pali Rohár <pali@kernel.org>
->>> CC: Andrew F. Davis" <afd@ti.com>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>    .../bindings/power/supply/bq27xxx.txt         | 56 -----------
->>>    .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
->>>    2 files changed, 95 insertions(+), 56 deletions(-)
->>>    delete mode 100644
->>> Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>>    create mode 100644
->>> Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>> b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>> deleted file mode 100644
->>> index 4fa8e08df2b6..000000000000
->>> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>> +++ /dev/null
->>> @@ -1,56 +0,0 @@
->>> -TI BQ27XXX fuel gauge family
->>> -
->>> -Required properties:
->>> -- compatible: contains one of the following:
->>> - * "ti,bq27200" - BQ27200
->>> - * "ti,bq27210" - BQ27210
->>> - * "ti,bq27500" - deprecated, use revision specific property below
->>> - * "ti,bq27510" - deprecated, use revision specific property below
->>> - * "ti,bq27520" - deprecated, use revision specific property below
->>> - * "ti,bq27500-1" - BQ27500/1
->>> - * "ti,bq27510g1" - BQ27510-g1
->>> - * "ti,bq27510g2" - BQ27510-g2
->>> - * "ti,bq27510g3" - BQ27510-g3
->>> - * "ti,bq27520g1" - BQ27520-g1
->>> - * "ti,bq27520g2" - BQ27520-g2
->>> - * "ti,bq27520g3" - BQ27520-g3
->>> - * "ti,bq27520g4" - BQ27520-g4
->>> - * "ti,bq27521" - BQ27521
->>> - * "ti,bq27530" - BQ27530
->>> - * "ti,bq27531" - BQ27531
->>> - * "ti,bq27541" - BQ27541
->>> - * "ti,bq27542" - BQ27542
->>> - * "ti,bq27546" - BQ27546
->>> - * "ti,bq27742" - BQ27742
->>> - * "ti,bq27545" - BQ27545
->>> - * "ti,bq27411" - BQ27411
->>> - * "ti,bq27421" - BQ27421
->>> - * "ti,bq27425" - BQ27425
->>> - * "ti,bq27426" - BQ27426
->>> - * "ti,bq27441" - BQ27441
->>> - * "ti,bq27621" - BQ27621
->>> -- reg: integer, I2C address of the fuel gauge.
->>> -
->>> -Optional properties:
->>> -- monitored-battery: phandle of battery characteristics node
->>> -    The fuel gauge uses the following battery properties:
->>> -    + energy-full-design-microwatt-hours
->>> -    + charge-full-design-microamp-hours
->>> -    + voltage-min-design-microvolt
->>> -  Both or neither of the *-full-design-*-hours properties must be set.
->>> -  See Documentation/devicetree/bindings/power/supply/battery.txt
->>> -
->>> -Example:
->>> -
->>> -    bat: battery {
->>> -        compatible = "simple-battery";
->>> -        voltage-min-design-microvolt = <3200000>;
->>> -        energy-full-design-microwatt-hours = <5290000>;
->>> -        charge-full-design-microamp-hours = <1430000>;
->>> -    };
->>> -
->>> -    bq27510g3: fuel-gauge@55 {
->>> -        compatible = "ti,bq27510g3";
->>> -        reg = <0x55>;
->>> -        monitored-battery = <&bat>;
->>> -    };
->>> diff --git
->>> a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>> b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>> new file mode 100644
->>> index 000000000000..6c53ee849004
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>> @@ -0,0 +1,95 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +# Copyright (C) 2020 Texas Instruments Incorporated
->>> +%YAML 1.2
->>> +---
->>> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
->>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->>> +
->>> +title: TI BQ27XXX fuel gauge family
->>> +
->>> +maintainers:
->>> +  - Pali Rohár <pali@kernel.org>
->>> +  - Andrew F. Davis" <afd@ti.com>
->
-> Extra " at end of name.
->
-Ack
+Thank you!
 
+But this does not apply to any of v5.6-rc6, v5.7-rc1, or v5.7-rc2.
 
->>> +  - Sebastian Reichel <sre@kernel.org>
->>> +
->>> +description: |
->>> +  Support various Texas Instruments fuel gauge devices that share
->>> similar
->>> +  register maps and power supply properties
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - ti,bq27200 - BQ27200
->>> +      - ti,bq27210 - BQ27210
->>> +      - ti,bq27500 - deprecated, use revision specific property below
->>> +      - ti,bq27510 - deprecated, use revision specific property below
->>> +      - ti,bq27520 - deprecated, use revision specific property below
->>> +      - ti,bq27500-1 - BQ27500/1
->>> +      - ti,bq27510g1 - BQ27510-g1
->>> +      - ti,bq27510g2 - BQ27510-g2
->>> +      - ti,bq27510g3 - BQ27510-g3
->>> +      - ti,bq27520g1 - BQ27520-g1
->>> +      - ti,bq27520g2 - BQ27520-g2
->>> +      - ti,bq27520g3 - BQ27520-g3
->>> +      - ti,bq27520g4 - BQ27520-g4
->>> +      - ti,bq27521 - BQ27521
->>> +      - ti,bq27530 - BQ27530
->>> +      - ti,bq27531 - BQ27531
->>> +      - ti,bq27541 - BQ27541
->>> +      - ti,bq27542 - BQ27542
->>> +      - ti,bq27546 - BQ27546
->>> +      - ti,bq27742 - BQ27742
->>> +      - ti,bq27545 - BQ27545
->>> +      - ti,bq27411 - BQ27411
->>> +      - ti,bq27421 - BQ27421
->>> +      - ti,bq27425 - BQ27425
->>> +      - ti,bq27426 - BQ27426
->>> +      - ti,bq27441 - BQ27441
->>> +      - ti,bq27621 - BQ27621
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +    description: integer, I2C address of the fuel gauge.
->>> +
->>> +  monitored-battery:
->>> +    description: phandle of battery characteristics node
->>> +
->>> +  energy-full-design-microwatt-hours:
->>> +    description: |
->>> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->>> +      If this property is set then charge-full-design-microamp-hours
->>> must be
->>> +      set as well.
->
-> These are properties of the battery node and should be described in
-> their binding, they are not part of the fuel gauge node here.
+Where should I be trying to apply it?
 
-OK.  I will add the explanation back from the original text file that 
-these are used by the fuel gauge from the battery node.
+							Thanx, Paul
 
-Dan
-
-
+> Joel Fernandes (Google) (4):
+> Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of
+> ->dynticks counter")
+> rcu/tree: Add better tracing for dyntick-idle
+> rcu/tree: Clean up dynticks counter usage
+> rcu/tree: Remove dynticks_nmi_nesting counter
+> 
+> Madhuparna Bhowmik (1):
+> trace: events: rcu: Change description of rcu_dyntick trace event
+> 
+> .../Data-Structures/Data-Structures.rst       |  31 +--
+> Documentation/RCU/stallwarn.rst               |   6 +-
+> include/linux/rcutiny.h                       |   3 -
+> include/trace/events/rcu.h                    |  29 +--
+> kernel/rcu/rcu.h                              |   4 -
+> kernel/rcu/tree.c                             | 199 +++++++-----------
+> kernel/rcu/tree.h                             |   4 +-
+> kernel/rcu/tree_stall.h                       |   4 +-
+> 8 files changed, 110 insertions(+), 170 deletions(-)
+> 
+> --
+> 2.26.2.526.g744177e7f7-goog
+> 
