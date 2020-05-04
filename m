@@ -2,78 +2,86 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97714C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B645BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D6720705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fczfe/r+"
+	by mail.kernel.org (Postfix) with ESMTP id 9F1B620705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729579AbgEDP4G (ORCPT
+        id S1729490AbgEDP5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:56:06 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53306 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729486AbgEDP4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:56:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588607763;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=eX+GzNLLoLRdY/7Oo9fQjZpifFeDPG106etXnTI+oh4=;
-        b=Fczfe/r+NwIA7oY0COu/wLtPWNQzZEQtvPLIDs9UswDQAfNydgm+wSZBOX1JxbaEIqgVdU
-        7Zh10GemvR8bM0eS8agNpkMkO+kTwyAHYiXqSVi5LlyiMCv8xEkeRTfFyZojQ8aGDKqiqD
-        2U+XxrEpdAdATeJ6Wl7gkjgpD5gulUE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-221-Hn7cpswBOnSw0swXlGpKDw-1; Mon, 04 May 2020 11:56:00 -0400
-X-MC-Unique: Hn7cpswBOnSw0swXlGpKDw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06585107AFD4;
-        Mon,  4 May 2020 15:55:59 +0000 (UTC)
-Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C1D96FF1A;
-        Mon,  4 May 2020 15:55:58 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 0/3] KVM: x86: cleanup and fixes for debug register accesses
-Date:   Mon,  4 May 2020 11:55:55 -0400
-Message-Id: <20200504155558.401468-1-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Mon, 4 May 2020 11:57:19 -0400
+Received: from elvis.franken.de ([193.175.24.41]:39442 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727929AbgEDP5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:57:15 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jVdSx-0004JX-00; Mon, 04 May 2020 17:57:11 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 8632DC036C; Mon,  4 May 2020 17:46:13 +0200 (CEST)
+Date:   Mon, 4 May 2020 17:46:13 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit
+ kernel
+Message-ID: <20200504154613.GA14031@alpha.franken.de>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
+ <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
+ <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
+ <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com>
+ <alpine.LFD.2.21.2004241316360.851719@eddie.linux-mips.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.2004241316360.851719@eddie.linux-mips.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this series is to get rid of the get_dr6 accessor
-and, on Intel, of set_dr6 as well.  This is done mostly in patch 2,
-since patch 3 is only the resulting cleanup.  Patch 1 is a related
-bug fix that I found while inspecting the code.
+On Fri, Apr 24, 2020 at 01:22:30PM +0100, Maciej W. Rozycki wrote:
+> On Thu, 23 Apr 2020, Jiaxun Yang wrote:
+> 
+> > > Alternatively, have you made any attempt to verify if actually replacing 
+> > >the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over its use 
+> > >there do not appear to be many places.
+> > 
+> > Limited experiments showed it should be fine...
+> > 
+> > But MIPS kernel has some design I'm not really familiar with like SYM32 for
+> > 64-bit kernel and special address space design for Trap-and-emul KVM.
+> 
+>  This only affects CONFIG_32BIT kernels, so SYM32 does not apply; I can't 
+> comment on KVM.  There's still that bunch of:
+> 
+> $(shell expr $(...) \< 0xffffffff80000000)
+> 
+> constructs I mentioned before, so let's leave your change as it stands at 
+> this time.  Please do rename the variable as I suggested though, I hope 
+> that's not a big deal.
 
-A guest debugging selftest is sorely needed if anyone wants to take
-a look!
+Jiaxun, are you going to send an update with this change ?
 
-Paolo
-
-Paolo Bonzini (3):
-  KVM: SVM: fill in kvm_run->debug.arch.dr[67]
-  KVM: SVM: keep DR6 synchronized with vcpu->arch.dr6
-  KVM: x86: simplify dr6 accessors in kvm_x86_ops
-
- arch/x86/include/asm/kvm_host.h |  1 -
- arch/x86/kvm/svm/svm.c          | 11 ++++-------
- arch/x86/kvm/vmx/vmx.c          | 11 -----------
- arch/x86/kvm/x86.c              |  8 +++-----
- 4 files changed, 7 insertions(+), 24 deletions(-)
+Thomas.
 
 -- 
-2.18.2
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
