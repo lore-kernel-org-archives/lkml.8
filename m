@@ -2,196 +2,176 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612B1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC920C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A184206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AA720705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nklJoaws"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge7/ZzHd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgEDUPD (ORCPT
+        id S1727863AbgEDUPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49910 "EHLO
+        Mon, 4 May 2020 16:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgEDUPC (ORCPT
+        with ESMTP id S1726111AbgEDUPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:15:02 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACD3C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2TcUtaWp3wFabHdWXfNuBqhbDKwLRDZ1qlu164S8104=; b=nklJoawsAZGZx7AdRPkW4ueTHX
-        YctFzrXdBB0Hcnir3g6OcptY66IYheo/JYaGIZSbz6sNHq2SDXvYyPPsrLSyFbj9dt2V6IMVIN6C8
-        uzg2C67WR09xrlifdkI1Jm+EatwEsKj/jeaIj9CPHiWE+MVHOy7Jf+3HZ2kLiXMpgCeYwUxcn+cFZ
-        66W9orhlUxciSU/2swWNjPVDod1PzEK1U1CdhaTozZwiaYH4g9gUgT1s2p2Luqf3AuCYzjB8ItjPa
-        lkSgOK4upLABVZlbJ7bzus64M6JZ1oz/YiHRfk/Js+iGi5Z/IeFOTUCO4AU3FshLpIjSPAP6KuEyt
-        h1vlTO4A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVhUG-0004Uy-Sh; Mon, 04 May 2020 20:14:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 955D2304B7F;
-        Mon,  4 May 2020 22:14:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 61D882B135165; Mon,  4 May 2020 22:14:45 +0200 (CEST)
-Date:   Mon, 4 May 2020 22:14:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
-Message-ID: <20200504201445.GQ3762@hirez.programming.kicks-ass.net>
-References: <20200501202849.647891881@infradead.org>
- <20200501202944.593400184@infradead.org>
- <1238787e-d97d-f09b-d76d-2df2dc273f4b@rasmusvillemoes.dk>
- <20200503125813.GL3762@hirez.programming.kicks-ass.net>
- <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk>
+        Mon, 4 May 2020 16:15:32 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F57C061A0E;
+        Mon,  4 May 2020 13:15:31 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s8so10309wrt.9;
+        Mon, 04 May 2020 13:15:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:references:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i+RbthjxFM69yETzo2H0vFLgAF3qI0S5kE5s/KINk2o=;
+        b=Ge7/ZzHdrTSgcP4mmTUGts8VnUNeciffJcfbr2qYA7+Y5UVx3UYdVHl2kQ3KRTB6K7
+         l13PvwD/ng/zkLnMUFScRkKE378fQnVthUL9rT2VGWAKbB2tcJe+3/Ieu2E98IldiGJU
+         g5wVII4Fc5TZYWE7EQUoPBqhU8cvLsOLSr2Qc1+Lm1eQdpk1NqdMtkfYSLUU8zolMX34
+         oy1XsjBg+oR+z5zu12zWlooVEBvR3erDTGA0yVq4jIfdOnLsHzG+YMoe4PxXc46pf2FF
+         lFKZElW7brRPj8froiPqiyScsbKAS5fMqmjuJIExdsoUh5OZKedVYCxWlUCS4O/Y8dNo
+         eeLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:references:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i+RbthjxFM69yETzo2H0vFLgAF3qI0S5kE5s/KINk2o=;
+        b=Rqi8AxrOBFFH1JhRNxuHeaR0m3G7Sf+H7FnGPS6yDb6yO9PjqqZ2O5uGFfOrF12CJz
+         kobMKEhyuGAECXAnFI7uKpf1VV0wIalXSmPEb0DEdcMhScrkhDPHZVltGjSt57G61yBY
+         YxzYFd5Fij8XWbYvwc5poxaXybm1PZG4jJ2QmbUhtexaBPY9Z79PwK6MYb/jLQl3qKqu
+         AbN9wKcHcVvtTUekalvLkutDTxTHok48p2bNwTMgeCCaiiSBpEcjzTfBGTPsOuWkPvbU
+         Y2/cGc3X7eWWK80HsoM6SDmTSTpFfZflmul52J/jTLQltatiRWoNNn8kCkRfHmjwTZzt
+         UTJg==
+X-Gm-Message-State: AGi0PuZ7ZTB/NKtHRQEy/Ec1lHVBmghjH8T42K5hYXKpbcE9WCyKnv/z
+        KBqmOkRPClXQAkhnPe+POnxvWm70
+X-Google-Smtp-Source: APiQypLz8vk8hJf0nq3F12fm++iFM2tz6T6ZZ3EjufS3kTZgXajO6JWKOFcQ2i6oxb2zsZVzBPocUA==
+X-Received: by 2002:adf:dc81:: with SMTP id r1mr1246575wrj.0.1588623330087;
+        Mon, 04 May 2020 13:15:30 -0700 (PDT)
+Received: from [192.168.43.168] ([109.126.133.135])
+        by smtp.gmail.com with ESMTPSA id e21sm21847971wrc.1.2020.05.04.13.15.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 13:15:29 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>,
+        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH for-5.7] io_uring: fix zero len do_splice()
+Message-ID: <136e55c8-b28f-a987-d1c7-8e888cc1439a@gmail.com>
+Date:   Mon, 4 May 2020 23:14:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk>
+In-Reply-To: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 09:20:03AM +0200, Rasmus Villemoes wrote:
+On 04/05/2020 23:00, Pavel Begunkov wrote:
+> do_splice() doesn't expect len to be 0. Just always return 0 in this
+> case as splice(2) do.
 
-> > So there is something utterly terrible we can do to address both:
-> > 
-> > void __static_call_nop(void)
-> > {
-> > }
-> > 
-> > #define __static_cond_call(name) \
-> > ({ \
-> > 	void *func = READ_ONCE(STATIC_CALL_KEY(name).func); \
-> > 	if (!func) \
-> > 		func = &__static_call_nop; \
-> > 	(typeof(STATIC_CALL_TRAMP(name))*)func; \
-> > })
-> > 
-> > #define static_cond_call(name) (void)__static_cond_call(name)
-> > 
-> > This gets us into Undefined Behaviour territory, but it ought to work.
-> > 
-> > It adds the READ_ONCE(), and it cures the argument evaluation issue.
+There is a thing, splice/tee will always return success on len=0 even with
+invalid fds. Fast return for len=0, should really has been done after basic
+validation, but I don't want to break userspace.
+
+Any ideas?
+
 > 
-> Indeed, that is horrible. And it "fixes" the argument evaluation by
-> changing the !HAVE_STATIC_CALL case to match the HAVE_STATIC_CALL, not
-> the other way around,
-
-Correct; making it the other way is far more 'interesting'. It would
-basically mean combining the static_branch and static_call, but that
-would also make it less optimal for simple forwarding cases.
-
-> which means that it is not a direct equivalent to the
+> Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
+> Reported-by: Jann Horn <jannh@google.com>
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>  fs/io_uring.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
->   if (foo)
->      foo(a, b, c)
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 65458eda2127..d53a1ef2a205 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2772,16 +2772,19 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
+>  	struct file *out = sp->file_out;
+>  	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
+>  	loff_t *poff_in, *poff_out;
+> -	long ret;
+> +	long ret = 0;
+>  
+>  	if (force_nonblock)
+>  		return -EAGAIN;
+>  
+>  	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
+>  	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
+> -	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
+> -	if (force_nonblock && ret == -EAGAIN)
+> -		return -EAGAIN;
+> +
+> +	if (sp->len) {
+> +		ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
+> +		if (force_nonblock && ret == -EAGAIN)
+> +			return -EAGAIN;
+> +	}
+>  
+>  	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
+>  	req->flags &= ~REQ_F_NEED_CLEANUP;
 > 
-> [which pattern of course has the READ_ONCE issue, but each individual
-> existing site with that may be ok for various reasons].
-> 
-> Is gcc smart enough to change the if (!func) to a jump across the
-> function call (but still evaluting side effects in args), or is
-> __static_call_nop actually emitted and called?
 
-I was hoping it would be clever, but I just tried (find below) and it is
-not -- although there's always hoping a newer version / clang might be
-smarter.
-
-It does indeed emit the nop function :/
-
-> If the latter, then one
-> might as well patch the write-side to do "WRITE_ONCE(foo, func ? :
-> __static_call_nop)" and elide the test from __static_cond_call() - in
-> fact, that just becomes a single READ_ONCE. [There's probably some
-> annoying issue with making sure static initialization of foo points at
-> __static_call_nop].
-
-But that would not give a more clever compiler the ability to do the
-'right' thing here..
-
-> And that brings me to the other issue I raised - do you have a few
-> examples of call sites that could use this, so we can see disassembly
-> before/after?
-
-Patch 17 has a few -- which is why I wrote the support in the first
-place. Obviously those will never ever hit the !HAVE_STATIC_BRANCH case.
-
-> I'm still concerned that, even if there are no
-> side-effects in the arguments, you still force the compiler to
-> spill/shuffle registers for call/restore unconditionally, whereas with a
-> good'ol if(), all that work is guarded by the load+test.
-
-https://godbolt.org/z/SDRG2q
-
----
-#include <stddef.h>
-
-
-#define READ_ONCE(var)		(*((volatile typeof(var) *)&(var)))
-#define WRITE_ONCE(var, val)	(*((volatile typeof(var) *)&(var)) = (val))
-
-struct static_call_key {
-	void *func;
-};
-
-#define DECLARE_STATIC_CALL(name, func)	\
-	extern struct static_call_key name; \
-	extern typeof(func) __SCT__##name;
-
-#define DEFINE_STATIC_COND_CALL(name, _func) \
-	DECLARE_STATIC_CALL(name, _func) \
-	struct static_call_key name = { \
-		.func = NULL, \
-	}
-
-static void __static_call_nop(void)
-{
-}
-
-#define __static_cond_call(name) \
-({ \
-	void *func = READ_ONCE(name.func); \
-	if (!func) \
-		func = &__static_call_nop; \
-	(typeof(__SCT__##name)*)func; \
-})
-
-#define static_cond_call(name) (void)__static_cond_call(name)
-
-static void inline static_call_update(struct static_call_key *call, void *func)
-{
-	WRITE_ONCE(call->func, func);
-}
-
-volatile int _x;
-
-void bar(int x)
-{
-	_x = x;
-}
-
-DEFINE_STATIC_COND_CALL(foo, bar);
-
-void ponies(int x)
-{
-	static_cond_call(foo)(x);
-}
+-- 
+Pavel Begunkov
