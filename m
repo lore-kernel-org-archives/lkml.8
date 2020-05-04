@@ -2,92 +2,147 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF912C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FCFC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B574E20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A425B20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:34:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ZcYngXLR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vaJNJgNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgEDTdD (ORCPT
+        id S1727094AbgEDTeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
+        Mon, 4 May 2020 15:34:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTdC (ORCPT
+        by vger.kernel.org with ESMTP id S1725956AbgEDTea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:33:02 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE8C7C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:33:00 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id u6so10908672ljl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:33:00 -0700 (PDT)
+        Mon, 4 May 2020 15:34:30 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E12C061A0E;
+        Mon,  4 May 2020 12:34:30 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id j8so9393326iog.13;
+        Mon, 04 May 2020 12:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+tdFYvcT41YTzDNkVNPYHdUeYPdsLJc2p6xhg5qcub4=;
-        b=ZcYngXLRhMQTpLXO72cOeMJqVDo7zn5U+X30jFwooH99mYem72aqdll6QcOUOdolf1
-         yZ2Nw1UT5jrg3DuyEjncVGxoizLKmC/DdOaZ1wK9181qeWP04byoxNFMI6AfdXGKrlIf
-         bdh+9WykdVshHWpexorcenm6Pk8eK9pH7PvgonOmco+g2AnCZHAlvQjBACS0RWebJ2Nc
-         3NzDgJ5swnjBSZSrLFr7bBZgo523Nr+2sAGgtLmqKrtwQjypJuiOlm6B6OvZBZ6uYzMI
-         aRxUQfxBnTuEu/je27gvbezsso5Hpvpf8YjK6ziAGiJIIpkuugzwl2VuRCdE42+OxM9e
-         F1Kg==
+         :content-transfer-encoding;
+        bh=VLedveHRjOWzxQFafIfJM9vIF9bwIvP2E6cViDidxC0=;
+        b=vaJNJgNcxrb1V5Ckol5RMcTftci6iMEwDqjBnwg7I9WEAjRh9OiwFGM1XEAF9FFeFB
+         TwTgyft86VFfbUnMYpmPxCfITWODOtjcvxiVdLsdtn/V7Mgb7iHrEOYEHNWkBobsIRJM
+         cJpt09Z/GjDpK/iBDC14QsKMe8Y+bOfQmMKDsDe8XofsTdqihOsSRFZwhocx7VgajxY9
+         ZAB+ToZsSEVpJzV3lGVsUNRfmktcvgncHQEbmz0Swp3YKoMOByPG8I205KNBzv1Eors6
+         PHCPbMmVEUQ0gRcaClkxLC9inREdEBwepLrV9LmsSAHZAZ3O7OW/A8Kt1/bz1TB0Di9c
+         JXCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+tdFYvcT41YTzDNkVNPYHdUeYPdsLJc2p6xhg5qcub4=;
-        b=fhrH18cR5ejN7PxFMD2M6E/QLd0szWLht+2h/c6KlN220fZiran7zmfZby1zvFsM77
-         hhjS9agjTCCBttNGhafsnIpikFpYvaZCS8Ci/W3H5fzQT+hDCsmI3JUpVPpiI3gbciH3
-         Jlx+fph/i5VscQhUpcXlT9Kd/nF2R7lZ4Cpx11bVeN9u+XDg+In4CiWYMEywOcNHb00V
-         j2Efxf0dnK9LpZRGUijvwhQ7rPKmMKIBjUzQj0eCVhjDSQpUOS9vELJmf+T5vuipdG4R
-         OcJWgn0Aqok9X6dpk721OGogGe08NC3b5+6nMhXPBqXoa+rj0W69VTZR+BK/3Da8agJb
-         X12Q==
-X-Gm-Message-State: AGi0PuZ8b6mR1L8LvE1I8zMHQe4yCv9YDgrV8MO9lXRO+g4ILXpdWB9W
-        DeabL0I9SlDXhAX2aTJboUk+WpGOq9m7wyb7wIXNFA==
-X-Google-Smtp-Source: APiQypJu4Wc5TNYHL7fFHBQGROIySU294VVImxL3I24hySbhKnWnxQmTtqGmH5Sad8lXifiP/QcTsVhMmn0uJmvSP00=
-X-Received: by 2002:a2e:8e98:: with SMTP id z24mr11422070ljk.134.1588620778130;
- Mon, 04 May 2020 12:32:58 -0700 (PDT)
+         :message-id:subject:to:content-transfer-encoding;
+        bh=VLedveHRjOWzxQFafIfJM9vIF9bwIvP2E6cViDidxC0=;
+        b=qIrMv+SxgBsjfSjmB/AfXyRgeB/c8vvzjuBzBq0yaQuot5NHMleiPKPUxGzfb6LyXz
+         GxM5aogsca2Dsq+XpvbZ5souMbiUIssTfcDDLPmMM4I0638nHH24g9lHr5s57Y7QY7Cp
+         iiTURBxOKql3mIRtEB8ZOxSSSLXaeRbgFeWeOmXWfSe2Cy5IBq7wU/Vq5YPvnEPOgZfX
+         /2+/NDPfSRykMAAMLJDvX4GHi/WW4tgNP2Vzvrf2atl7+bl87Eb3Nf0NN4a4CDps7+x0
+         0MmhZq/BfsH2SbjQoYL4t9N6MMtihuJTnXTsv8QToHy/JBVdU9rtoTrq40TgdwpehNkE
+         3Evg==
+X-Gm-Message-State: AGi0PuaFZQ3zLV5V5QAXzKJEYgzNBj/Z8oqGWEMCN3fLssz/GwGKwe9A
+        57lD74GcnpY6HwFv95BoFqbsr/YTOTaS/QQkXiLGDdHn
+X-Google-Smtp-Source: APiQypK9Olv8kCXFxHfdydxi6Zo3gzKdeDYOEOWdBFjLcGrNydDzLvq6rm7R+os2X1oVOh/CZoO1TcZcz7TI7xUtcgY=
+X-Received: by 2002:a02:a004:: with SMTP id a4mr34524jah.18.1588620869486;
+ Mon, 04 May 2020 12:34:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200331114116.21642-1-maco@android.com> <3cd82069-0ed6-688f-0d7c-bb0c5ccb0e5b@acm.org>
-In-Reply-To: <3cd82069-0ed6-688f-0d7c-bb0c5ccb0e5b@acm.org>
-From:   Martijn Coenen <maco@android.com>
-Date:   Mon, 4 May 2020 21:32:47 +0200
-Message-ID: <CAB0TPYHMF0rMkVryEW0oshbdkjdjGhfL_Z5E-Dy0vnYK8m2KNQ@mail.gmail.com>
-Subject: Re: [PATCH] loop: Call loop_config_discard() only after new config is applied.
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com,
-        Bart Van Assche <bvanassche@acm.org>
+References: <20200428142629.8950-1-peron.clem@gmail.com> <20200504122742.er2jd67bvrn2rfgp@core.my.home>
+In-Reply-To: <20200504122742.er2jd67bvrn2rfgp@core.my.home>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 May 2020 21:34:17 +0200
+Message-ID: <CAJiuCcdSmgp75ByEDDtH0AtqGsUyc9QrAcD9xqLZduh2ijnrqQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2] arm64: dts: allwinner: h6: Use dummy
+ regulator for Tanix TX6
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Piotr Oniszczuk <warpme@o2.pl>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+Hi Ondrej,
 
-Are you ok with this one? One of my later series depends on it, but so
-far I've kept it separate because it's a bug fix.
-
-Thanks,
-Martijn
-
-On Sat, Apr 18, 2020 at 5:46 PM Bart Van Assche <bvanassche@acm.org> wrote:
+On Mon, 4 May 2020 at 14:27, Ond=C5=99ej Jirman <megous@megous.com> wrote:
 >
-> On 2020-03-31 04:41, Martijn Coenen wrote:
-> > loop_set_status() calls loop_config_discard() to configure discard for
-> > the loop device; however, the discard configuration depends on whether
-> > the loop device uses encryption, and when we call it the encryption
-> > configuration has not been updated yet. Move the call down so we apply
-> > the correct discard configuration based on the new configuration.
+> Hi Cl=C3=A9ment,
 >
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+
+<snip>
+
+>
+> So I guess ignoring the voltage and not disabling this OPP may or may not=
+ work
+> based on SoC bin.
+>
+> On Orange Pi One, there's a regulator that supports two voltages (that ca=
+n't
+> support all the listed OPPs for H3), and cpufreq-dt can deal with that
+> automagically, if you specify OPP voltages via a tripplet of [prefered mi=
+n max].
+> Kernell will log this in dmesg on boot:
+>
+> [    0.672440] core: _opp_supported_by_regulators: OPP minuV: 1320000 max=
+uV: 1320000, not supported by regulator
+> [    0.672454] cpu cpu0: _opp_add: OPP not supported by regulators (11040=
+00000)
+> [    0.672523] core: _opp_supported_by_regulators: OPP minuV: 1320000 max=
+uV: 1320000, not supported by regulator
+> [    0.672530] cpu cpu0: _opp_add: OPP not supported by regulators (12000=
+00000)
+> [    0.672621] core: _opp_supported_by_regulators: OPP minuV: 1340000 max=
+uV: 1340000, not supported by regulator
+> [    0.672628] cpu cpu0: _opp_add: OPP not supported by regulators (12960=
+00000)
+> [    0.672712] core: _opp_supported_by_regulators: OPP minuV: 1400000 max=
+uV: 1400000, not supported by regulator
+> [    0.672719] cpu cpu0: _opp_add: OPP not supported by regulators (13680=
+00000)
+>
+> And the list of available OPPs will be reduced at runtime to a supportabl=
+e
+> set by the CPU regulator.
+>
+> If you look at:
+>
+>   https://megous.com/git/linux/commit/?h=3Dths-5.7&id=3Dd231770195913cf54=
+3c0cf9539deee2ecec06680
+>
+> you'll see a bunch of OPPs for H3 that are specified as a range. So
+> for example if you want 480MHz, and your regulator can't produce
+> 1.04V exactly, cpufreq will set the voltage to something supportable
+> in the range.
+>
+> I think the proper fix is to fix the OPP table for H6, so that it uses
+> voltage ranges for each OPP and not a single fixed voltage, to support
+> boards that don't have the standard PMIC that goes with H6.
+
+Thanks for the suggestion and I agree with you, this is a good way to
+keep the same OPP table for all the H6 devices and handle both board
+with PMIC and with fixed regulator.
+
+I will propose a patch.
+
+Thanks clement
+
+>
+> regards,
+>         o.
