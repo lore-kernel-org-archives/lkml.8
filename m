@@ -2,109 +2,323 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C225C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D4C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A2F206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C129206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Il1J6gnY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=daemons-net.20150623.gappssmtp.com header.i=@daemons-net.20150623.gappssmtp.com header.b="SrGhxhrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgEDQ5I (ORCPT
+        id S1729900AbgEDQ5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:57:08 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57159 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729669AbgEDQ5H (ORCPT
+        Mon, 4 May 2020 12:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729553AbgEDQ5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:57:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588611426;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cA54hjMXQwu2Lvqq0IfxR+bA86FjlLo/DYJm0KvwWBE=;
-        b=Il1J6gnYJXJPNlNFmIuYFatwT8uMd6xX3sqyDhrTEPs9Wpka8Y/78EoglEBkup0cMGMtNV
-        gVPIW8uicDpx4rArlUXAyUiuH0UiUNzICG5lDoEbiRfr6SZ7Z7egn56ynfxrQYN62O5q07
-        l4zjD+ObpIGScEkxgTuSoJbGlb6nDnQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-ff3kMVPiOB-mnP4FWqbJCQ-1; Mon, 04 May 2020 12:57:04 -0400
-X-MC-Unique: ff3kMVPiOB-mnP4FWqbJCQ-1
-Received: by mail-wm1-f72.google.com with SMTP id u11so104816wmc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:57:03 -0700 (PDT)
+        Mon, 4 May 2020 12:57:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95791C061A10
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:57:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r4so24267pgg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daemons-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Z3NYsHy1jFVKuIx89+E5z9qZ8TEJd1dMXiM1ctxfJr8=;
+        b=SrGhxhrpClXsV4bk9050WnnTCzBEH7KG4lJPbuHhjHiDUaYWSZOx0lbW+gfJA4agDq
+         Co6Pbdn5mafwPdBMo3V69+Eaj0oXv+mCAhhGmNa5Dojnwrt54nUeIenVdxdTeqI1fsNI
+         cm5/15mFX2Xb8UUmViasjD0FTycx5vKgUiI7CLP5IvROEWIWB0jARW0psYcvdT1DIauF
+         8Qzczj+p7TzWUaYl7Z23XM5LuHJnurAXnfAyAoHjPOgg6oZv6AFMes2hzT8wTZzv6bTL
+         LuIzKuQgBIO22z19qdM6Z7q8+qUpvTohN7ELvCcO3VKplo4yIB331LXCvJ/Zp/HXZjnL
+         ZAUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cA54hjMXQwu2Lvqq0IfxR+bA86FjlLo/DYJm0KvwWBE=;
-        b=PKB1ycCfl6agmqcyGaDb774ggFYXdh4grjb/0jns7VjE4wb8kV4hxay7O23ieoSiGq
-         cY+D4TuB29BTyr1CFP4o6CBOyij5qlYIH4fEEDUuPHf8yPVetUFuEAMZL5GTM/MdyArd
-         cq7t+m7p3/gtWCGQKuxOvt76xbmzXkLHG/vc5TXxzql7X+LYmQqRKH/i1JMAXDgWHSz3
-         gpriDPrOlmI10hcpamWuXrU2L3FWz6oZCv+3kxz65Jydi9SY+kR4c/I7QB+aPQlrab6D
-         Rr+k0mzEoKi4/PSesjmC/RRiHJOyUG6iPuA7DVIw0f78u8bfsJsPo8Qd2JIqnXAVNTJQ
-         1MJQ==
-X-Gm-Message-State: AGi0PuZRLtzjGv7EeLSvczm+Eo0EQGkRkM1yhIB44n+m0K9jZIA9Zl6G
-        kbPF8RrONHk/jdLZoScw8YgxofaA8Z8kGrtL3hphugmx9DiqFkPGl91XIOg7AfX/4oF/PKVzx+k
-        rjp+NY8uYlFoe5sJ/eEuHFeYb
-X-Received: by 2002:a1c:7416:: with SMTP id p22mr16405977wmc.80.1588611422615;
-        Mon, 04 May 2020 09:57:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLfpkBvwAD0WlLP09KJEHHrrBHKkgnUHm4rVDiq9YqMhWUzzIs80/IV4XB8GGW3iWPsax4ENw==
-X-Received: by 2002:a1c:7416:: with SMTP id p22mr16405959wmc.80.1588611422393;
-        Mon, 04 May 2020 09:57:02 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id u2sm17818146wrd.40.2020.05.04.09.57.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:57:01 -0700 (PDT)
-Subject: Re: [RESEND PATCH] KVM: x86/pmu: Support full width counting
-To:     Like Xu <like.xu@linux.intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200427071922.86257-1-like.xu@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <aa182eec-3d0b-1452-19cc-20654190a2ae@redhat.com>
-Date:   Mon, 4 May 2020 18:57:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Z3NYsHy1jFVKuIx89+E5z9qZ8TEJd1dMXiM1ctxfJr8=;
+        b=nVH47lUCMi28hH3xEWCIW/iGS2FTeyWQltlaBsH5l3yUFw2dKX2YPJs/f+uUk9t+qG
+         hLiS0lNgojSftYn3bP+5rysHcESmPLM7srO4iwBO2rqwOcsBJhXi0wLtOx9xthiUCEcJ
+         m5YXOPcctSVsONc0xMhrDhE0/gBdTlaNSPZnFyfoprKucmAbENXUwBdZj7uod+Ytk2xT
+         FSuglhweYZ7mvVqx004ZZjIH6e3hPiDUjmM+NpXX0niU+l9/CLbbRrdb6PLKPeqlziOg
+         hH2D6qqifUpvfXR4MwrpGpPhg0gX3/yC2AnGy0R1fX0j7Ab10r7x/AcffvoWo3bZdEww
+         3rVA==
+X-Gm-Message-State: AGi0PuY9XdbthBavxVajnaigr5ZLCvRPTgAg+NzQ3OhU/T1s59kK4ZD/
+        n18lZg6H5XB9mylMWTxl6H36
+X-Google-Smtp-Source: APiQypJcRwf080OF3IvaiRv8wJ6azWOpiCEl8NhtMhRtaJITJnJ3hbJv/bs+i33Zm6IW8Lszw/H0Sw==
+X-Received: by 2002:a63:220a:: with SMTP id i10mr18699976pgi.364.1588611457784;
+        Mon, 04 May 2020 09:57:37 -0700 (PDT)
+Received: from localhost.localdomain ([47.156.151.166])
+        by smtp.googlemail.com with ESMTPSA id fh18sm332462pjb.0.2020.05.04.09.57.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:57:36 -0700 (PDT)
+From:   Clay McClure <clay@daemons.net>
+Cc:     Clay McClure <clay@daemons.net>, Arnd Bergmann <arnd@arndb.de>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        kbuild test robot <lkp@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wingman Kwok <w-kwok2@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2] net: ethernet: ti: Remove TI_CPTS_MOD workaround
+Date:   Mon,  4 May 2020 09:57:05 -0700
+Message-Id: <20200504165711.5621-1-clay@daemons.net>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
+References: <CAK8P3a1m-zmiTx0_KJb-9PTW0iK+Zkh10gKsaBzge0OJALBFmQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200427071922.86257-1-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/04/20 09:19, Like Xu wrote:
-> +	if (vmx_supported_perf_capabilities())
-> +		kvm_cpu_cap_check_and_set(X86_FEATURE_PDCM);
+My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
+exposes a missing dependency in defconfigs that select TI_CPTS without
+selecting PTP_1588_CLOCK, leading to linker errors of the form:
 
-I think we can always set it, worst case it will be zero.
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_remove':
+cpsw.c:(.text+0x81c): undefined reference to `cpts_release'
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_rx_handler':
+cpsw.c:(.text+0x1324): undefined reference to `cpts_rx_timestamp'
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_open':
+cpsw.c:(.text+0x15ec): undefined reference to `cpts_register'
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_probe':
+cpsw.c:(.text+0x2468): undefined reference to `cpts_release'
 
-However, blocking intel_pmu_set_msr altogether is incorrect.  Instead,
-you need to:
+That's because TI_CPTS_MOD (which is the symbol gating the _compilation_
+of cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+configurations, but TI_CPTS (which is the symbol gating _calls_ to the
+cpts functions) _is_ enabled. So we end up compiling calls to functions
+that don't exist, resulting in the linker errors.
 
-- list the MSR in msr_based_features_all so that it appears in
-KVM_GET_MSR_FEATURE_INDEX_LIST
+The reason we have two symbols (TI_CPTS and TI_CPTS_MOD) for the same
+driver is due to commit be9ca0d33c85 ("cpsw/netcp: work around reverse
+cpts dependency"), which introduced TI_CPTS_MOD because (quoting the
+commit message):
 
-- return the supported bits in vmx_get_msr_feature
+> The dependency is reversed: cpsw and netcp call into cpts,
+> but cpts depends on the other two in Kconfig. This can lead
+> to cpts being a loadable module and its callers built-in:
+>
+> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_remove':
+> cpsw.c:(.text.cpsw_remove+0xd0): undefined reference to `cpts_release'
+> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_rx_handler':
+> cpsw.c:(.text.cpsw_rx_handler+0x2dc): undefined reference to `cpts_rx_timestamp'
+> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_tx_handler':
+> cpsw.c:(.text.cpsw_tx_handler+0x7c): undefined reference to `cpts_tx_timestamp'
+> drivers/net/ethernet/ti/cpsw.o: In function `cpsw_ndo_stop':
 
-- allow host-initiated writes (as long as they only set supported bits)
-of the MSR in intel_pmu_set_msr.
+Both forms of linker error -- those caused by defconfigs that select
+TI_CPTS without PTP_1588_CLOCK and those caused by configuring TI_CPSW
+as a built-in and TI_CPTS as a module -- can be avoided by using the
+IS_REACHABLE() macro to gate calls to cpts functions, and using the
+TI_CPTS symbol to gate compilation of cpts.c. cpts.h already provides
+the no-op stub implementations of the cpts functions required to make
+this work, we just need to change the existing IS_ENABLED(TI_CPTS)
+guards to IS_REACHABLE(TI_CPTS).
 
-Thanks,
+With this change there is no longer any need for the TI_CPTS_MOD symbol,
+so we can remove it.
 
-Paolo
+To preserve the existing behavior of defconfigs that select TI_CPTS, we
+must also select PTP_1588_CLOCK so that the dependency is satisfied.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Clay McClure <clay@daemons.net>
+---
+Changes in v2:
+
+- Don't regenerate the defconfigs, just add PTP_1588_CLOCK.
+
+ arch/arm/configs/keystone_defconfig    |  1 +
+ arch/arm/configs/omap2plus_defconfig   |  1 +
+ drivers/net/ethernet/ti/Kconfig        | 13 ++++---------
+ drivers/net/ethernet/ti/Makefile       |  2 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c |  2 +-
+ drivers/net/ethernet/ti/cpts.h         |  3 +--
+ drivers/net/ethernet/ti/netcp_ethss.c  | 10 +++++-----
+ 7 files changed, 14 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index 11e2211f9007..84a3b055f253 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -147,6 +147,7 @@ CONFIG_I2C_DAVINCI=y
+ CONFIG_SPI=y
+ CONFIG_SPI_DAVINCI=y
+ CONFIG_SPI_SPIDEV=y
++CONFIG_PTP_1588_CLOCK=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_GPIOLIB=y
+ CONFIG_GPIO_SYSFS=y
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 3cc3ca5fa027..8b83d4a5d309 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -274,6 +274,7 @@ CONFIG_SPI_TI_QSPI=m
+ CONFIG_HSI=m
+ CONFIG_OMAP_SSI=m
+ CONFIG_SSI_PROTOCOL=m
++CONFIG_PTP_1588_CLOCK=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_DEBUG_GPIO=y
+ CONFIG_GPIO_SYSFS=y
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 8e348780efb6..f3f8bb724294 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -77,23 +77,18 @@ config TI_CPSW_SWITCHDEV
+ 	  will be called cpsw_new.
+ 
+ config TI_CPTS
+-	bool "TI Common Platform Time Sync (CPTS) Support"
++	tristate "TI Common Platform Time Sync (CPTS) Support"
+ 	depends on TI_CPSW || TI_KEYSTONE_NETCP || TI_CPSW_SWITCHDEV || COMPILE_TEST
+ 	depends on COMMON_CLK
+-	depends on POSIX_TIMERS
++	depends on PTP_1588_CLOCK
++	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
++	default m
+ 	---help---
+ 	  This driver supports the Common Platform Time Sync unit of
+ 	  the CPSW Ethernet Switch and Keystone 2 1g/10g Switch Subsystem.
+ 	  The unit can time stamp PTP UDP/IPv4 and Layer 2 packets, and the
+ 	  driver offers a PTP Hardware Clock.
+ 
+-config TI_CPTS_MOD
+-	tristate
+-	depends on TI_CPTS
+-	depends on PTP_1588_CLOCK
+-	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
+-	default m
+-
+ config TI_K3_AM65_CPSW_NUSS
+ 	tristate "TI K3 AM654x/J721E CPSW Ethernet driver"
+ 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 53792190e9c2..cb26a9d21869 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
+ ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+-obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
++obj-$(CONFIG_TI_CPTS) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+ ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o cpsw_priv.o cpsw_sl.o cpsw_ethtool.o
+ obj-$(CONFIG_TI_CPSW_SWITCHDEV) += ti_cpsw_new.o
+diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
+index fa54efe3be63..19a7370a4188 100644
+--- a/drivers/net/ethernet/ti/cpsw_ethtool.c
++++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
+@@ -709,7 +709,7 @@ int cpsw_set_ringparam(struct net_device *ndev,
+ 	return ret;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ int cpsw_get_ts_info(struct net_device *ndev, struct ethtool_ts_info *info)
+ {
+ 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
+index bb997c11ee15..782e24c78e7a 100644
+--- a/drivers/net/ethernet/ti/cpts.h
++++ b/drivers/net/ethernet/ti/cpts.h
+@@ -8,7 +8,7 @@
+ #ifndef _TI_CPTS_H_
+ #define _TI_CPTS_H_
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ 
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+@@ -171,5 +171,4 @@ static inline bool cpts_can_timestamp(struct cpts *cpts, struct sk_buff *skb)
+ }
+ #endif
+ 
+-
+ #endif
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index fb36115e9c51..3de1d25128b7 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -181,7 +181,7 @@
+ 
+ #define HOST_TX_PRI_MAP_DEFAULT			0x00000000
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ /* Px_TS_CTL register fields */
+ #define TS_RX_ANX_F_EN				BIT(0)
+ #define TS_RX_VLAN_LT1_EN			BIT(1)
+@@ -2000,7 +2000,7 @@ static int keystone_set_link_ksettings(struct net_device *ndev,
+ 	return phy_ethtool_ksettings_set(phy, cmd);
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ static int keystone_get_ts_info(struct net_device *ndev,
+ 				struct ethtool_ts_info *info)
+ {
+@@ -2532,7 +2532,7 @@ static int gbe_del_vid(void *intf_priv, int vid)
+ 	return 0;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ 
+ static void gbe_txtstamp(void *context, struct sk_buff *skb)
+ {
+@@ -2977,7 +2977,7 @@ static int gbe_close(void *intf_priv, struct net_device *ndev)
+ 	return 0;
+ }
+ 
+-#if IS_ENABLED(CONFIG_TI_CPTS)
++#if IS_REACHABLE(CONFIG_TI_CPTS)
+ static void init_slave_ts_ctl(struct gbe_slave *slave)
+ {
+ 	slave->ts_ctl.uni = 1;
+@@ -3718,7 +3718,7 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 
+ 	gbe_dev->cpts = cpts_create(gbe_dev->dev, gbe_dev->cpts_reg, cpts_node);
+ 	of_node_put(cpts_node);
+-	if (IS_ENABLED(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
++	if (IS_REACHABLE(CONFIG_TI_CPTS) && IS_ERR(gbe_dev->cpts)) {
+ 		ret = PTR_ERR(gbe_dev->cpts);
+ 		goto free_sec_ports;
+ 	}
+-- 
+2.20.1
 
