@@ -2,282 +2,130 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DDDC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31DFC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3572620721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86253206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VE9+J/pG"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="F+2NEE8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbgEDSat (ORCPT
+        id S1730615AbgEDSd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
+        Mon, 4 May 2020 14:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729937AbgEDSat (ORCPT
+        by vger.kernel.org with ESMTP id S1729762AbgEDSd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:30:49 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CA6C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:30:48 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w3so87756plz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:30:48 -0700 (PDT)
+        Mon, 4 May 2020 14:33:59 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC82DC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:33:58 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id b20so3104603ejg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:33:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RUuhz5xBXoG/K++UXih0s5Rf57mKbAsAQqA2QvzhMX0=;
-        b=VE9+J/pGfedeUYNhxncR25PbyH2KgXLb9iFqS2vrp+LhM9Ldl6j6fvdCx/cuy0lJ+Z
-         o05/fWn274uca1WTTjfHHFIkpO3OZOiv2m0chUE4mDek9D2tf/iMzqpq0mLyC1Qim9gx
-         l84kxHl02tcw8Tw85j9yg/ozTLkMNpegnvK7h9nxAR+dYMhdmD995G8RVzczrhu7i3ak
-         oYgtdubob2IUAYsAn4pcsuwluwRF/hy6B3oXbW8w7LbctMbZ2gMiemVGIjPb8yRVY3O2
-         sySiD+hY3FNSWUmhovFdK4eKYqP3nASRfLfNjrPG7pZSfisImDGqerAqeN42sUqMo98K
-         KgzA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Glau+s6Q6iM76mHi/QXePg8xF2snTXD5otz87ESSu8A=;
+        b=F+2NEE8n0+6a2Uxkq3oo+gK/iDs1gXhBaBtJu3It7O83YXrMkKTw/j5R5KqU4cLb1I
+         vlOYdG8d6H2sSQjfFpkieMLY+KM5edr1MbbCXsj+B9wkYlXKMNdfSGw1CJFXf7fx5Q7C
+         nLx7CYq5rjomyrqgHsVmp6vku6f3HeDmYZpPHsh7ka8b5Df1pXeivwm1iUG0Tio8BF4o
+         ZS585n3JOtRJMk45ZcupX+D3R94fYlWZsYjSr5wbogW/u9eqdMEat4pDnASo56oFKvzS
+         7tnb7wc1b4OhUfvjaDeX366gFmfgoP2fFKltlwAvd8N31RZXbHNtbqksmP+ogCEDB/JL
+         SgwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RUuhz5xBXoG/K++UXih0s5Rf57mKbAsAQqA2QvzhMX0=;
-        b=YD2t1OGMUu66qHCB5P+/ZYbq+bte1ILsfLVqlNCeikitsWjETGZoxSW3/vqJEl6rRe
-         tXNN7ZVgACnP9soQFQRXk4sYHWNow3raxGntVvvDQXLumEcxhcOnWoK9atKlUKj5r2SF
-         LTVw8LqX9i3FUCtK36Hck5uD9AtnXv5JFPysz6sfaE+1qSJg2rYO88AXBO9tFdriSSt3
-         F+0sCdmj9E/kFBOYE6ryiUlQWT+Amsm09cMjjycMlHfmPZSxNs3bjs2rk6/c1S3K5sbo
-         j2hpNSRyQs+JFMuMV+1i/vx2MgKBZEn8jKxQ7FLi0v2Ih6AP1OWxgdOrTeIuUs7Lzg9M
-         THQw==
-X-Gm-Message-State: AGi0PuYE9HmHZRlJZU+7kL9vRVuSy8lU+EUlyAPdZig7kOj0q94RYaVD
-        0L96jr4dszpjEkSL5gLkTYkQUA==
-X-Google-Smtp-Source: APiQypIh26Lt/DvfPRknImxFEZNPZCn4JiJiuLq0Z6UhZb81SXNl/e3axflzPok9SfvAt0pT0eCEnw==
-X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr521992plb.94.1588617048311;
-        Mon, 04 May 2020 11:30:48 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a142sm9325183pfa.6.2020.05.04.11.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 11:30:47 -0700 (PDT)
-Date:   Mon, 4 May 2020 11:31:31 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     davem@davemloft.net, evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/4] net: ipa: redefine struct ipa_mem_data
-Message-ID: <20200504183131.GE20625@builder.lan>
-References: <20200504175859.22606-1-elder@linaro.org>
- <20200504175859.22606-3-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Glau+s6Q6iM76mHi/QXePg8xF2snTXD5otz87ESSu8A=;
+        b=pjeQnXMlqFlHksMlBi6DAg+CFtuWeOLT3j6SBPLMQKhTjbhW0BcfyJbXAscCRD0sDV
+         wkc56fxUJxH02mTzy4QHh0ZcIiueBbSSfrCFuVeaAEWatJjEGRbGmSwISIrFHLqsegER
+         5UlSEz5o6jyQmw65jvA1pU4NB30ebyhX3dAmUf2vsHN6MCUf7QeAQunUdUKpuqrwYPT0
+         S6qIPoizNVl3BS6h3AlB6IOxgsAlBEjrtyNiiLhXkf5twO05eXotDwhhiNzrMbl7nELa
+         PG463/txh9itNifxA0+ortFadMyJ4+auVvdxOca1pFsCEhRGvgdIuu1tfQXG6M/CeO8O
+         uNJg==
+X-Gm-Message-State: AGi0Pub0HZPEmNK75tK9ea3JSyRGRfKpf6VjnPTPuqLOiRk5JeSeYz+W
+        242qAfdAw1nzIxPOlgwuk35WkM87DKTXeiqT631ADA==
+X-Google-Smtp-Source: APiQypKMZgww2SWaJ3dlnMp45iEyQic5CmZ0rEfuzBZzZC+1C4Op+IwopR9sfyLSwESK4to/xI+WLCvGiTO9JNWKJqE=
+X-Received: by 2002:a17:907:9e5:: with SMTP id ce5mr15759967ejc.123.1588617237480;
+ Mon, 04 May 2020 11:33:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504175859.22606-3-elder@linaro.org>
+References: <158823509800.2094061.9683997333958344535.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAHk-=wh6d59KAG_6t+NrCLBz-i0OUSJrqurric=m0ZG850Ddkw@mail.gmail.com>
+ <CALCETrVP5k25yCfknEPJm=XX0or4o2b2mnzmevnVHGNLNOXJ2g@mail.gmail.com>
+ <CAHk-=widQfxhWMUN3bGxM_zg3az0fRKYvFoP8bEhqsCtaEDVAA@mail.gmail.com>
+ <CALCETrVq11YVqGZH7J6A=tkHB1AZUWXnKwAfPUQ-m9qXjWfZtg@mail.gmail.com>
+ <20200430192258.GA24749@agluck-desk2.amr.corp.intel.com> <CAHk-=wg0Sza8uzQHzJbdt7FFc7bRK+o1BB=VBUGrQEvVv6+23w@mail.gmail.com>
+ <CAPcyv4g0a406X9-=NATJZ9QqObim9Phdkb_WmmhsT9zvXsGSpw@mail.gmail.com>
+ <CAHk-=wiMs=A90np0Hv5WjHY8HXQWpgtuq-xrrJvyk7_pNB4meg@mail.gmail.com>
+ <CAPcyv4jvgCGU700x_U6EKyGsHwQBoPkJUF+6gP4YDPupjdViyQ@mail.gmail.com>
+ <CAHk-=wiPkwF2+y6wZd=VD9BooKxHRWhSVW8dr+WSeeSPkJk7kQ@mail.gmail.com> <a4aabe6f2ca649779a772a5f0365af6f@AcuMS.aculab.com>
+In-Reply-To: <a4aabe6f2ca649779a772a5f0365af6f@AcuMS.aculab.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 4 May 2020 11:33:46 -0700
+Message-ID: <CAPcyv4i8V9FCuTHZG2RG9o3vjrMmLkv40-41MwLBO8tZWUsZ5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Replace and improve "mcsafe" with copy_safe()
+To:     David Laight <David.Laight@aculab.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        stable <stable@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 04 May 10:58 PDT 2020, Alex Elder wrote:
+On Sun, May 3, 2020 at 5:57 AM David Laight <David.Laight@aculab.com> wrote:
+>
+> From: Linus Torvalds
+> > Sent: 01 May 2020 19:29
+> ...
+> > And as DavidL pointed out - if you ever have "iomem" as a source or
+> > destination, you need yet another case. Not because they can take
+> > another kind of fault (although on some platforms you have the machine
+> > checks for that too), but because they have *very* different
+> > performance profiles (and the ERMS "rep movsb" sucks baby donkeys
+> > through a straw).
+>
+>
+> I was actually thinking that the nvdimm accesses need to be treated
+> much more like (cached) memory mapped io space than normal system
+> memory.
+> So treating them the same as "iomem" and then having access functions
+> that report access failures (which the current readq() doesn't)
+> might make sense.
 
-> The ipa_mem_data structure type was never actually used.  Instead,
-> the IPA memory regions were defined using the ipa_mem structure.
-> 
-> Redefine struct ipa_mem_data so it encapsulates the array of IPA-local
-> memory region descriptors along with the count of entries in that
-> array.  Pass just an ipa_mem structure pointer to ipa_mem_init().
-> 
-> Rename the ipa_mem_data[] array ipa_mem_local_data[] to emphasize
-> that the memory regions it defines are IPA-local memory.
-> 
-> Signed-off-by: Alex Elder <elder@linaro.org>
+While I agree that something like copy_mc_iomem_to_{user,kernel} could
+have users, nvdimm is not one of them.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> If you are using memory that 'might fail' for kernel code or data
+> you really get what you deserve.
 
-Regards,
-Bjorn
+nvdimms are no less "might fail" than DRAM, recall that some nvdimms
+are just DRAM with a platform promise that their contents are battery
+backed.
 
-> ---
->  drivers/net/ipa/ipa_data-sc7180.c | 10 +++++++---
->  drivers/net/ipa/ipa_data-sdm845.c | 10 +++++++---
->  drivers/net/ipa/ipa_data.h        | 13 +++++--------
->  drivers/net/ipa/ipa_main.c        |  2 +-
->  drivers/net/ipa/ipa_mem.c         |  9 +++++----
->  drivers/net/ipa/ipa_mem.h         |  3 ++-
->  6 files changed, 27 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/net/ipa/ipa_data-sc7180.c b/drivers/net/ipa/ipa_data-sc7180.c
-> index 042b5fc3c135..f97e7e4e61c1 100644
-> --- a/drivers/net/ipa/ipa_data-sc7180.c
-> +++ b/drivers/net/ipa/ipa_data-sc7180.c
-> @@ -193,7 +193,7 @@ static const struct ipa_resource_data ipa_resource_data = {
->  };
->  
->  /* IPA-resident memory region configuration for the SC7180 SoC. */
-> -static const struct ipa_mem ipa_mem_data[] = {
-> +static const struct ipa_mem ipa_mem_local_data[] = {
->  	[IPA_MEM_UC_SHARED] = {
->  		.offset		= 0x0000,
->  		.size		= 0x0080,
-> @@ -296,12 +296,16 @@ static const struct ipa_mem ipa_mem_data[] = {
->  	},
->  };
->  
-> +static struct ipa_mem_data ipa_mem_data = {
-> +	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-> +	.local		= ipa_mem_local_data,
-> +};
-> +
->  /* Configuration data for the SC7180 SoC. */
->  const struct ipa_data ipa_data_sc7180 = {
->  	.version	= IPA_VERSION_4_2,
->  	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
->  	.endpoint_data	= ipa_gsi_endpoint_data,
->  	.resource_data	= &ipa_resource_data,
-> -	.mem_count	= ARRAY_SIZE(ipa_mem_data),
-> -	.mem_data	= ipa_mem_data,
-> +	.mem_data	= &ipa_mem_data,
->  };
-> diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
-> index 0d9c36e1e806..c55507e94559 100644
-> --- a/drivers/net/ipa/ipa_data-sdm845.c
-> +++ b/drivers/net/ipa/ipa_data-sdm845.c
-> @@ -235,7 +235,7 @@ static const struct ipa_resource_data ipa_resource_data = {
->  };
->  
->  /* IPA-resident memory region configuration for the SDM845 SoC. */
-> -static const struct ipa_mem ipa_mem_data[] = {
-> +static const struct ipa_mem ipa_mem_local_data[] = {
->  	[IPA_MEM_UC_SHARED] = {
->  		.offset		= 0x0000,
->  		.size		= 0x0080,
-> @@ -318,12 +318,16 @@ static const struct ipa_mem ipa_mem_data[] = {
->  	},
->  };
->  
-> +static struct ipa_mem_data ipa_mem_data = {
-> +	.local_count	= ARRAY_SIZE(ipa_mem_local_data),
-> +	.local		= ipa_mem_local_data,
-> +};
-> +
->  /* Configuration data for the SDM845 SoC. */
->  const struct ipa_data ipa_data_sdm845 = {
->  	.version	= IPA_VERSION_3_5_1,
->  	.endpoint_count	= ARRAY_SIZE(ipa_gsi_endpoint_data),
->  	.endpoint_data	= ipa_gsi_endpoint_data,
->  	.resource_data	= &ipa_resource_data,
-> -	.mem_count	= ARRAY_SIZE(ipa_mem_data),
-> -	.mem_data	= ipa_mem_data,
-> +	.mem_data	= &ipa_mem_data,
->  };
-> diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-> index 7110de2de817..51d8e5a6f23a 100644
-> --- a/drivers/net/ipa/ipa_data.h
-> +++ b/drivers/net/ipa/ipa_data.h
-> @@ -246,14 +246,12 @@ struct ipa_resource_data {
->  
->  /**
->   * struct ipa_mem - IPA-local memory region description
-> - * @offset:		offset in IPA memory space to base of the region
-> - * @size:		size in bytes base of the region
-> - * @canary_count:	number of 32-bit "canary" values that precede region
-> + * @local_count:	number of regions defined in the local[] array
-> + * @local:		array of IPA-local memory region descriptors
->   */
->  struct ipa_mem_data {
-> -	u32 offset;
-> -	u16 size;
-> -	u16 canary_count;
-> +	u32 local_count;
-> +	const struct ipa_mem *local;
->  };
->  
->  /**
-> @@ -270,8 +268,7 @@ struct ipa_data {
->  	u32 endpoint_count;	/* # entries in endpoint_data[] */
->  	const struct ipa_gsi_endpoint_data *endpoint_data;
->  	const struct ipa_resource_data *resource_data;
-> -	u32 mem_count;		/* # entries in mem_data[] */
-> -	const struct ipa_mem *mem_data;
-> +	const struct ipa_mem_data *mem_data;
->  };
->  
->  extern const struct ipa_data ipa_data_sdm845;
-> diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-> index 28998dcce3d2..9295a9122e8e 100644
-> --- a/drivers/net/ipa/ipa_main.c
-> +++ b/drivers/net/ipa/ipa_main.c
-> @@ -778,7 +778,7 @@ static int ipa_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_kfree_ipa;
->  
-> -	ret = ipa_mem_init(ipa, data->mem_count, data->mem_data);
-> +	ret = ipa_mem_init(ipa, data->mem_data);
->  	if (ret)
->  		goto err_reg_exit;
->  
-> diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-> index 42d2c29d9f0c..fb4de2a12796 100644
-> --- a/drivers/net/ipa/ipa_mem.c
-> +++ b/drivers/net/ipa/ipa_mem.c
-> @@ -12,6 +12,7 @@
->  
->  #include "ipa.h"
->  #include "ipa_reg.h"
-> +#include "ipa_data.h"
->  #include "ipa_cmd.h"
->  #include "ipa_mem.h"
->  #include "ipa_data.h"
-> @@ -266,15 +267,15 @@ int ipa_mem_zero_modem(struct ipa *ipa)
->  }
->  
->  /* Perform memory region-related initialization */
-> -int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
-> +int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data)
->  {
->  	struct device *dev = &ipa->pdev->dev;
->  	struct resource *res;
->  	int ret;
->  
-> -	if (count > IPA_MEM_COUNT) {
-> +	if (mem_data->local_count > IPA_MEM_COUNT) {
->  		dev_err(dev, "to many memory regions (%u > %u)\n",
-> -			count, IPA_MEM_COUNT);
-> +			mem_data->local_count, IPA_MEM_COUNT);
->  		return -EINVAL;
->  	}
->  
-> @@ -302,7 +303,7 @@ int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem)
->  	ipa->mem_size = resource_size(res);
->  
->  	/* The ipa->mem[] array is indexed by enum ipa_mem_id values */
-> -	ipa->mem = mem;
-> +	ipa->mem = mem_data->local;
->  
->  	return 0;
->  }
-> diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
-> index 065cb499ebe5..f99180f84f0d 100644
-> --- a/drivers/net/ipa/ipa_mem.h
-> +++ b/drivers/net/ipa/ipa_mem.h
-> @@ -7,6 +7,7 @@
->  #define _IPA_MEM_H_
->  
->  struct ipa;
-> +struct ipa_mem_data;
->  
->  /**
->   * DOC: IPA Local Memory
-> @@ -84,7 +85,7 @@ void ipa_mem_teardown(struct ipa *ipa);
->  
->  int ipa_mem_zero_modem(struct ipa *ipa);
->  
-> -int ipa_mem_init(struct ipa *ipa, u32 count, const struct ipa_mem *mem);
-> +int ipa_mem_init(struct ipa *ipa, const struct ipa_mem_data *mem_data);
->  void ipa_mem_exit(struct ipa *ipa);
->  
->  #endif /* _IPA_MEM_H_ */
-> -- 
-> 2.20.1
-> 
+> OTOH system response to PCIe errors is currently rather problematic.
+> Mostly reads time out and return ~0u.
+> This can be checked for and, if possibly valid, a second location read.
+
+Yes, the ambiguous ~0u return needs careful handling.
