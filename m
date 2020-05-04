@@ -2,142 +2,90 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20476C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C95C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF802073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pwiarWv/"
+	by mail.kernel.org (Postfix) with ESMTP id A61EE2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgEDNFf (ORCPT
+        id S1727911AbgEDNKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:05:35 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60351 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgEDNFe (ORCPT
+        Mon, 4 May 2020 09:10:10 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:36566 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgEDNKJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:05:34 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200504130531euoutp01abb9038ff20fd046ba33888b353f4d06~L1QnfO33K0505105051euoutp01a
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:05:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200504130531euoutp01abb9038ff20fd046ba33888b353f4d06~L1QnfO33K0505105051euoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1588597531;
-        bh=JTGetjNNq15iV79KzXV6+w93fh/gPnivI8fE5xYxYzg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=pwiarWv/0YYqPuDtY/qQTJyG8WGkjvB0Loz1MWPh12ooAuvleG/CqSwCRdS5UIl1s
-         PozwIl7jGRzcF8qXCvQMRE+g0TgLESH+cBkS3nRAQIlgocbOcL8QO+Xb1b+EThUkU+
-         3gYzaSays9S31SMucCmt6ZtwBSf+5S/bCS3+RkKY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200504130531eucas1p1099e600c4d2365791507a0dfd8dc7d6f~L1Qm_IG8C3232132321eucas1p1T;
-        Mon,  4 May 2020 13:05:31 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 3D.94.60679.B1310BE5; Mon,  4
-        May 2020 14:05:31 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200504130530eucas1p26a54459b7d646533997f344f80fa9c19~L1QmmMUTe1623416234eucas1p2H;
-        Mon,  4 May 2020 13:05:30 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200504130530eusmtrp1e498827cd53b5885bd7ef4f387315eb7~L1QmliJIj0044500445eusmtrp1N;
-        Mon,  4 May 2020 13:05:30 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-64-5eb0131b5d42
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E6.1B.08375.A1310BE5; Mon,  4
-        May 2020 14:05:30 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200504130530eusmtip225abacbe652fb54ff90c8cf8216f668e~L1QmABCzF1170111701eusmtip2U;
-        Mon,  4 May 2020 13:05:30 +0000 (GMT)
-Subject: Re: [PATCH v2 00/21] DRM: fix struct sg_table nents vs. orig_nents
- misuse
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <b257279c-4138-b28e-584d-92bd15571ae1@samsung.com>
-Date:   Mon, 4 May 2020 15:05:30 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.7.0
+        Mon, 4 May 2020 09:10:09 -0400
+Received: by mail-oo1-f66.google.com with SMTP id x17so2363554ooa.3;
+        Mon, 04 May 2020 06:10:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m45ix2jo0oJBT4CyJlzZkH39XD04I9G5DajC3f1FfT8=;
+        b=SI1kRq9X/TdIMm/Z+OhHQPnD/LRDj1xsaD/GCYLbeDLYJ3IehlkY6XnTZbixGPf4qI
+         32uykv5mK6k+iKfozRPMDmaGjReEOtlsZZh5aw7/gPhBLPmc1PEo3SuxUAb1Vl4fVGVc
+         bXZT/tDfup0DaLMoVOYiFy9+5ur2KRC5JYO5tpV1plm4JFli3sCZfG6yWivzhH+cbVUR
+         usbqrH/wM3NBGJkkIqyM6aSj6SfJ5fdT5zc7e2LkYUnVVhephzHLCYfADuDHn6Up7b12
+         ZgTMWfQMss8UFBFJ/B0y3VluxtZ7oBsbsm2tF+AA8pO6moEyMsKVULncIqgkhEX4ulo9
+         o9cA==
+X-Gm-Message-State: AGi0PubTfCqTbiMt7eoI83EpBU1+AWu1K03/5ozacr5sSasDaB0iymqf
+        p4/S1jeVliZ56cstgMerU07Pirrj3vwvMxFtG8o=
+X-Google-Smtp-Source: APiQypLpzZE2IvYXqH6gz6imKGnp8FyeyBLm3+HacZ75gaAc1r2MHwwKq/DQyIzoTSsqIBSxXXNNqHjyLyhzp3T+hPc=
+X-Received: by 2002:a4a:e8db:: with SMTP id h27mr14970818ooe.40.1588597807924;
+ Mon, 04 May 2020 06:10:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200504125212.GA17241@lst.de>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7djP87rSwhviDNr3i1r0njvJZLFxxnpW
-        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hszj44QmrA5fHmnlrGD32flvA
-        4rH92wNWj/vdx5k8Ni+p97j97zGzx+Qbyxk9dt9sYPPo27KK0ePzJrkArigum5TUnMyy1CJ9
-        uwSujNOHNjIWbGCtWLx4I2sD4wyWLkZODgkBE4m7myaygthCAisYJe7sj+1i5AKyvzBKtBy6
-        ywrhfGaUaF10lgmm48eR5ywQieWMEr1zNzBCOO8ZJd79e84IUiUsECLx/fxuZhBbREBJ4umr
-        s2BFzALnmCRm9V8CW84mYCjR9baLDcTmFbCTmDn7FZjNIqAi8blxDlADB4eoQKzE9GshECWC
-        EidnPgFr5RTQkTg47RjYfGYBeYntb+dA2eISt57MZwLZJSHwkl1i9c4TjBBnu0hc6fkB9bSw
-        xKvjW9ghbBmJ05N7WCAamhklHp5byw7h9DBKXG6aAdVtLXHn3C82kIuYBTQl1u/Shwg7Shx9
-        3M0OEpYQ4JO48VYQ4gg+iUnbpjNDhHklOtqEIKrVJGYdXwe39uCFS8wTGJVmIXltFpJ3ZiF5
-        ZxbC3gWMLKsYxVNLi3PTU4uN8lLL9YoTc4tL89L1kvNzNzECE9rpf8e/7GDc9SfpEKMAB6MS
-        D2/E5/VxQqyJZcWVuYcYJTiYlUR4d7QAhXhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQ
-        nliSmp2aWpBaBJNl4uCUamBcM3fdcxXpV72G5/gY2H5EKvEelPJ9Xl5/Yk0cwyHVzaeTzd7y
-        Wx/+X5gSNSVx31OXD9Gn+1dH1CTu+VLyv1+mNJ5ZtO9mpwLPm6jr2knFxg+blC7rd+Qwne9N
-        sVv0461s60rBVpWo4wu7Wli5NB5mq37dcDvNSGt5yHqFZu4jp24x3Ht8e5ESS3FGoqEWc1Fx
-        IgAXjwr8ZAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xe7pSwhviDLbOtLToPXeSyWLjjPWs
-        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZnHwwxNWBy6PNfPWMHrs/baA
-        xWP7twesHve7jzN5bF5S73H732Nmj8k3ljN67L7ZwObRt2UVo8fnTXIBXFF6NkX5pSWpChn5
-        xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZllqUX6dgl6GacPbWQs2MBasXjxRtYG
-        xhksXYycHBICJhI/jjwHsrk4hASWMkrMm3weKiEjcXJaAyuELSzx51oXG4gtJPCWUeLOWx0Q
-        W1ggROL7+d3MILaIgJLE01dnGUEGMQtcYJK4sfMoM0TDJkaJ/7uyQGw2AUOJrrcQg3gF7CRm
-        zn4FZrMIqEh8bpwD1MzBISoQK9FyUROiRFDi5MwnYPdwCuhIHJx2DGwks4CZxLzND6FseYnt
-        b+dA2eISt57MZ5rAKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4m
-        RmD8bjv2c/MOxksbgw8xCnAwKvHwRnxeHyfEmlhWXJl7iFGCg1lJhHdHC1CINyWxsiq1KD++
-        qDQntfgQoynQbxOZpUST84GpJa8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoR
-        TB8TB6dUAyOfws/I+UnGq+6y5E/6///HPfaFT35kNjfJKbS8rmQz/u/y6dvr9m9VfCosf7ay
-        7Yx3dbTkdK0wNOi211GMsdxiUMdzx7Rsu8fRw9u2pi+/UaZ4ReTOnQSTc7EzJ99QST01efUC
-        4bNvVa+uj/rb43w3m5Mj1VUsJTJ0X87WP8H7+C4cnPbq6lQlluKMREMt5qLiRACU7P2j9QIA
-        AA==
-X-CMS-MailID: 20200504130530eucas1p26a54459b7d646533997f344f80fa9c19
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200504125032eucas1p2eeaf22690e6b557d69c834cc9dd75855
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200504125032eucas1p2eeaf22690e6b557d69c834cc9dd75855
-References: <CGME20200504125032eucas1p2eeaf22690e6b557d69c834cc9dd75855@eucas1p2.samsung.com>
-        <20200504125017.5494-1-m.szyprowski@samsung.com>
-        <20200504125212.GA17241@lst.de>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 15:09:56 +0200
+Message-ID: <CAMuHMdVa63kgKtb616vsjis1qmwsPoye-wDUe6YcXf6Lc=CjBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] ARM: dts: r8a7742-iwg21d-q7: Add support for
+ iWave G21D-Q7 board based on RZ/G1H
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for iWave RainboW-G21D-Qseven board based on RZ/G1H.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-On 04.05.2020 14:52, Christoph Hellwig wrote:
-> On Mon, May 04, 2020 at 02:50:17PM +0200, Marek Szyprowski wrote:
->> v2:
->> - dropped most of the changes to drm/i915
->> - added fixes for rcar-du, xen, media and ion
->> - fixed a few issues pointed by kbuild test robot
->> - added wide cc: list for each patch
-> Didn't you plan to add dma_map_sgbuf and co helper?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Yes, I have a followup patches for that, but I wanted to fix the 
-existing code in the first step. Then I wanted to send a wrappers and 
-their application. Do you think I should do everything at once, in one 
-patchset?
+Gr{oetje,eeting}s,
 
-Best regards
+                        Geert
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
