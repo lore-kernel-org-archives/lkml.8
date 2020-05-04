@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77966C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CD9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF7720707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7E520707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615407;
-	bh=2CO5k6vD6czG69Ma7ay0a21TfHP8pfcgA+9/BvVhWII=;
+	s=default; t=1588615410;
+	bh=/R8XU+BggqfQRFq8PBhn4i1kXq57E1OzkleW7rEp2U8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QA1MdUTN0JcE8Z4iO5R9hbGRQ7BA3i6YIJgq4OZntHjThPlqm4nqUJUTrjaetECnT
-	 /JPX2ODNBFFLc7mdAx6NLofEfJBXQOp6qKPdcuQJeO5Uk0bZDhpX9Aen8qNIjgjGuG
-	 EHyZPhfuXG6WDGBgVhEcNNvGX0wqME1C9M5US6nY=
+	b=mwktm50TEsfbAfB+wLobEnMt2zyLq2f6RXw+YGqkFLdjR9m15H/vzep72OL+CRYEB
+	 nqZ/0acXqXZVoIrZFv7Ahodvt9vbJegtFhbDEolUiCYnZgh+3S1DNmirDL2PETdzkF
+	 7VTaaEn872G4/fOrvK5QdSy6GfZGhSFCYCQ3ooQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731513AbgEDSD0 (ORCPT
+        id S1731525AbgEDSD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731501AbgEDSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:24 -0400
+        id S1731511AbgEDSD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342CC24958;
-        Mon,  4 May 2020 18:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95E8624959;
+        Mon,  4 May 2020 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615403;
-        bh=2CO5k6vD6czG69Ma7ay0a21TfHP8pfcgA+9/BvVhWII=;
+        s=default; t=1588615406;
+        bh=/R8XU+BggqfQRFq8PBhn4i1kXq57E1OzkleW7rEp2U8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vw8dIc+q9ATiB3tceLYXjF1sLR7YpAixuPvsu60XmdtQov4au/23F7bBrV/erDW3C
-         CCqF0BRBdKm6bbLAZj+bThLgFIat38gRUKtAS/L0otyy6R0CwLHBIdXykjPtDaM7yu
-         LSBqzCLcbR8czJNgeDGucZAsErw3Bm3ZlzXT+LKU=
+        b=sgLuCGysbMhnwFyYXP9e7oBSY4GQi/zIX9Ufph6F1i4jZN7VCFifQlHJ/A9nuS6Nr
+         NhScYpfXrV8Mwj2ZjiUZTiaGw0mdg3IYlVMZGTTaWk4f1GSWfIiY39qhQTbbVZ0UsG
+         Ru/ceJXsmJdwRhn/QkxvT60mioLfFBqa/WdISRsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 5.4 24/57] i2c: amd-mp2-pci: Fix Oops in amd_mp2_pci_init() error handling
-Date:   Mon,  4 May 2020 19:57:28 +0200
-Message-Id: <20200504165458.452156495@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH 5.4 25/57] Drivers: hv: vmbus: Fix Suspend-to-Idle for Generation-2 VM
+Date:   Mon,  4 May 2020 19:57:29 +0200
+Message-Id: <20200504165458.526901749@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -59,41 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit ac2b0813fceaf7cb3d8d46c7b33c90bae9fa49db upstream.
+commit 1a06d017fb3f388734ffbe5dedee6f8c3af5f2db upstream.
 
-The problem is that we dereference "privdata->pci_dev" when we print
-the error messages in amd_mp2_pci_init():
+Before the hibernation patchset (e.g. f53335e3289f), in a Generation-2
+Linux VM on Hyper-V, the user can run "echo freeze > /sys/power/state" to
+freeze the system, i.e. Suspend-to-Idle. The user can press the keyboard
+or move the mouse to wake up the VM.
 
-	dev_err(ndev_dev(privdata), "Failed to enable MP2 PCI device\n");
-		^^^^^^^^^^^^^^^^^
+With the hibernation patchset, Linux VM on Hyper-V can hibernate to disk,
+but Suspend-to-Idle is broken: when the synthetic keyboard/mouse are
+suspended, there is no way to wake up the VM.
 
-Fixes: 529766e0a011 ("i2c: Add drivers for the AMD PCIe MP2 I2C controller")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Fix the issue by not suspending and resuming the vmbus devices upon
+Suspend-to-Idle.
+
+Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
+Cc: stable@vger.kernel.org
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Link: https://lore.kernel.org/r/1586663435-36243-1-git-send-email-decui@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-amd-mp2-pci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hv/vmbus_drv.c |   43 ++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
---- a/drivers/i2c/busses/i2c-amd-mp2-pci.c
-+++ b/drivers/i2c/busses/i2c-amd-mp2-pci.c
-@@ -349,12 +349,12 @@ static int amd_mp2_pci_probe(struct pci_
- 	if (!privdata)
- 		return -ENOMEM;
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -978,6 +978,9 @@ static int vmbus_resume(struct device *c
  
-+	privdata->pci_dev = pci_dev;
- 	rc = amd_mp2_pci_init(privdata, pci_dev);
- 	if (rc)
- 		return rc;
+ 	return drv->resume(dev);
+ }
++#else
++#define vmbus_suspend NULL
++#define vmbus_resume NULL
+ #endif /* CONFIG_PM_SLEEP */
  
- 	mutex_init(&privdata->c2p_lock);
--	privdata->pci_dev = pci_dev;
+ /*
+@@ -995,11 +998,22 @@ static void vmbus_device_release(struct
+ }
  
- 	pm_runtime_set_autosuspend_delay(&pci_dev->dev, 1000);
- 	pm_runtime_use_autosuspend(&pci_dev->dev);
+ /*
+- * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
+- * SET_SYSTEM_SLEEP_PM_OPS: see the comment before vmbus_bus_pm.
++ * Note: we must use the "noirq" ops: see the comment before vmbus_bus_pm.
++ *
++ * suspend_noirq/resume_noirq are set to NULL to support Suspend-to-Idle: we
++ * shouldn't suspend the vmbus devices upon Suspend-to-Idle, otherwise there
++ * is no way to wake up a Generation-2 VM.
++ *
++ * The other 4 ops are for hibernation.
+  */
++
+ static const struct dev_pm_ops vmbus_pm = {
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_suspend, vmbus_resume)
++	.suspend_noirq	= NULL,
++	.resume_noirq	= NULL,
++	.freeze_noirq	= vmbus_suspend,
++	.thaw_noirq	= vmbus_resume,
++	.poweroff_noirq	= vmbus_suspend,
++	.restore_noirq	= vmbus_resume,
+ };
+ 
+ /* The one and only one */
+@@ -2280,6 +2294,9 @@ static int vmbus_bus_resume(struct devic
+ 
+ 	return 0;
+ }
++#else
++#define vmbus_bus_suspend NULL
++#define vmbus_bus_resume NULL
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static const struct acpi_device_id vmbus_acpi_device_ids[] = {
+@@ -2290,16 +2307,24 @@ static const struct acpi_device_id vmbus
+ MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
+ 
+ /*
+- * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
+- * SET_SYSTEM_SLEEP_PM_OPS, otherwise NIC SR-IOV can not work, because the
+- * "pci_dev_pm_ops" uses the "noirq" callbacks: in the resume path, the
+- * pci "noirq" restore callback runs before "non-noirq" callbacks (see
++ * Note: we must use the "no_irq" ops, otherwise hibernation can not work with
++ * PCI device assignment, because "pci_dev_pm_ops" uses the "noirq" ops: in
++ * the resume path, the pci "noirq" restore op runs before "non-noirq" op (see
+  * resume_target_kernel() -> dpm_resume_start(), and hibernation_restore() ->
+  * dpm_resume_end()). This means vmbus_bus_resume() and the pci-hyperv's
+- * resume callback must also run via the "noirq" callbacks.
++ * resume callback must also run via the "noirq" ops.
++ *
++ * Set suspend_noirq/resume_noirq to NULL for Suspend-to-Idle: see the comment
++ * earlier in this file before vmbus_pm.
+  */
++
+ static const struct dev_pm_ops vmbus_bus_pm = {
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
++	.suspend_noirq	= NULL,
++	.resume_noirq	= NULL,
++	.freeze_noirq	= vmbus_bus_suspend,
++	.thaw_noirq	= vmbus_bus_resume,
++	.poweroff_noirq	= vmbus_bus_suspend,
++	.restore_noirq	= vmbus_bus_resume
+ };
+ 
+ static struct acpi_driver vmbus_acpi_driver = {
 
 
