@@ -2,105 +2,122 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C084C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6E8C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEEE3206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RNKVBW/k"
+	by mail.kernel.org (Postfix) with ESMTP id 0BED3206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgEDTFe (ORCPT
+        id S1727086AbgEDTGg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:05:34 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41800 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgEDTFc (ORCPT
+        Mon, 4 May 2020 15:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725956AbgEDTGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:05:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588619131;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=qIVg0JQeyCu7kn+dY+lPaTgPQT/NdBxPgGWYbUJIIXA=;
-        b=RNKVBW/kf7N18LPuDJNpGkbK9WE5VtNg0xVlxj1q4mBz8Z2Wwy39VN83wxFqrrwh0omSZ+
-        +lX7zlbBu6BogIXPURUhAtkGJ42z5lfG0DO7TA7Vml21aMeDDRxoJFpOmN/OGgCIBMV3LW
-        LErSltT83vlvN/kmg1Fu9Iu4abS1L8Y=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-V6PG8ecQOqGs8JRyPorgbQ-1; Mon, 04 May 2020 15:05:29 -0400
-X-MC-Unique: V6PG8ecQOqGs8JRyPorgbQ-1
-Received: by mail-qk1-f199.google.com with SMTP id i2so356809qkl.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:05:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qIVg0JQeyCu7kn+dY+lPaTgPQT/NdBxPgGWYbUJIIXA=;
-        b=V7m/KfAmV02Y4I0h9/O13AJKWvWrT2pd3YXDUu7Z9r4s0LDVc2Xe6K7nSJjKLd0VbQ
-         hUv/AxWk9CO5+jJKPyMFasvkuDwYVaIWA3RzOb111Umpu/GrIq4Iv2NhWGGS8B0rdVah
-         4BEJIO4QN/rnanGKxdAS9jzCDEWKsX+ufesUWZ9kbmXKkrjVpRM86maYBgTmJ8rEQUH8
-         RDIuPoFop66bsq75wiXEiA2QJbwpVasqneB0l9aoyzxXtlZDjfibR9ytqr8juSjHvDbQ
-         8y++KAoBiqmfnjuJ8MWlB1A4tMOejltyXlj8MmbGKr2DP7J//Dcn74r6R1uGcFksffp1
-         5aOQ==
-X-Gm-Message-State: AGi0PubNvnYOzJrNdPc/EEU2o9Z8dz26VvB3nkbVb0e5G02lGXeuu7H/
-        U5j/ymCe5+Xl6U02IohLk6FhnaTfH/BrLsJXLlEtrOGoL3eL6Rpza6CPi9BAlGcA/XeZtvl0qcG
-        viqZJgAmDdmGUF5BYWGT8nXSm
-X-Received: by 2002:ac8:44d6:: with SMTP id b22mr640165qto.366.1588619128934;
-        Mon, 04 May 2020 12:05:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypICFt1DWmxwrFZqvsi6oraH8Ztk1a0hOa6r+UUKVpePo5HU+yUDiugMPSKG00KJ7y+T26omxQ==
-X-Received: by 2002:ac8:44d6:: with SMTP id b22mr640146qto.366.1588619128682;
-        Mon, 04 May 2020 12:05:28 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id p22sm12111549qte.2.2020.05.04.12.05.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:05:27 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, peterx@redhat.com
-Subject: [PATCH] KVM: Fix a warning in __kvm_gfn_to_hva_cache_init()
-Date:   Mon,  4 May 2020 15:05:26 -0400
-Message-Id: <20200504190526.84456-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 4 May 2020 15:06:36 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CF4C061A0E;
+        Mon,  4 May 2020 12:06:36 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E22D52A0C98;
+        Mon,  4 May 2020 20:06:33 +0100 (BST)
+Date:   Mon, 4 May 2020 21:06:30 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>
+Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
+Message-ID: <20200504210630.1489df6e@collabora.com>
+In-Reply-To: <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
+References: <20200410115113.31728-1-ezequiel@collabora.com>
+        <20200410115113.31728-3-ezequiel@collabora.com>
+        <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
+        <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
+        <20200502203707.402ea3cd@collabora.com>
+        <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
+        <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC 10.0.1 gives me this warning when building KVM:
+On Mon, 04 May 2020 14:01:32 -0400
+Nicolas Dufresne <nicolas.dufresne@collabora.com> wrote:
 
-  warning: ‘nr_pages_avail’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-  2442 |  for ( ; start_gfn <= end_gfn; start_gfn += nr_pages_avail) {
+> Le samedi 02 mai 2020 à 19:55 -0300, Ezequiel Garcia a écrit :
+> > +Nicolas
+> > 
+> > On Sat, 2020-05-02 at 20:37 +0200, Boris Brezillon wrote:  
+> > > On Fri, 01 May 2020 13:57:49 -0300
+> > > Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > >   
+> > > > > > +
+> > > > > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
+> > > > > > +
+> > > > > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
+> > > > > > +    :header-rows:  0
+> > > > > > +    :stub-columns: 0
+> > > > > > +    :widths:       1 2
+> > > > > > +
+> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
+> > > > > > +      - Do not reset any frame context.
+> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
+> > > > > > +      - Do not reset any frame context. This is an alternative value for
+> > > > > > +        V4L2_VP9_RESET_FRAME_CTX_NONE.    
+> > > > > 
+> > > > > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
+> > > > >     
+> > > > 
+> > > > Hm, now that I look closer, what's the point
+> > > > of having the NONE_ALT in our uAPI if it
+> > > > has same meaning as NONE?
+> > > > 
+> > > > I think it can be removed.  
+> > > 
+> > > The intent was to match the spec so that one can pass the value
+> > > extracted from the bitstream directly.  
+> 
+> reset_frame_contextspecifies whether the frame context should be reset
+> to default values:
+>   − 0 or 1 means do not reset any frame context
+>   − 2 resets just the context specified in the frame header
+>   − 3 resets all cont
+> 
+> But aren't we going too far by making this an emum ?
 
-It should not happen, but silent it.
+I like to not have to constantly go back to the spec when I read code,
+and having constant values defined through enums definitely helps in
+this regard, but maybe it's just me.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> In Microsfot DXVA,
+> we pass that value without interpreting it in userspace. For the
+> following RKVDEC, it is (suspiciously ?) ignored.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 74bdb7bf3295..2da293885a67 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2425,7 +2425,7 @@ static int __kvm_gfn_to_hva_cache_init(struct kvm_memslots *slots,
- 	gfn_t start_gfn = gpa >> PAGE_SHIFT;
- 	gfn_t end_gfn = (gpa + len - 1) >> PAGE_SHIFT;
- 	gfn_t nr_pages_needed = end_gfn - start_gfn + 1;
--	gfn_t nr_pages_avail;
-+	gfn_t nr_pages_avail = 0;
- 
- 	/* Update ghc->generation before performing any error checks. */
- 	ghc->generation = slots->generation;
--- 
-2.26.2
+IIRC, the prob context has to be kept in userspace anyway (and reset
+when needed), and the rkvdec engine does not have any hardware context.
+That's probably why this value is ignored here.
 
+> Maybe just passing
+> over the value would make more sense, less work ?
+
+I don't see how adding an enum adds more work, given the enum values
+match the ones defined VP 9 spec, but maybe I'm missing something.
