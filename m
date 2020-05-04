@@ -2,236 +2,149 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B86C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9AEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244512075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7A82075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:04:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nSNYyMa0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJE41Hxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgEDXDg (ORCPT
+        id S1728351AbgEDXEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:03:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728182AbgEDXDf (ORCPT
+        Mon, 4 May 2020 19:04:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48284 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728182AbgEDXEB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:03:35 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521C0C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:03:34 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id w12so5566qto.19
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=riJtF6wnIn/7Sr6BY03T361JLi5EWFboyLscUDM7chc=;
-        b=nSNYyMa0Ag3IGJnIHcETMoofQRjf/uWCB3a1UEuCsnmr2sovLYdjfRQZ+qj89nWrgg
-         gpSRpqvvDAhNuzl+vZhHDzNm03hPwFuJTaEl5ewyOEHCnXrRCV4ca9h8GVKRwkc0AhUk
-         6saCDJPR7AU2DxvR+RT0mXFsnVLSjh+k1tmdbdVqVHOEF9wpuw7QZJp5rwGQZJcBHaMH
-         KHYof6HN0q2S/jbiquH6KNObdD3gNh/8bNPvjM6gQFIZT0lZgZ9cDouRVQ7TktyA95kd
-         tgewVf0TPWAE/KtCrmbUZnVQF0OWf6KTZD5h8jbZwqHpfiOfAejwil16Qt3Kktuf7IFK
-         f1HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=riJtF6wnIn/7Sr6BY03T361JLi5EWFboyLscUDM7chc=;
-        b=gDA3yEPrDlggGZ053aCCSuuQVkgyw+h7zNP6kVcWS6qWM1Pxfj6vwDN1Jse5nXKaTd
-         MurJhVh/3fFfpo0/yDN4R4KOObsidXYgwYek6HsCMJ05Y0EkA03TPO60An3rEnvzYbu1
-         e7A6/dz5DdfdCyay5AZOCsL+ptaxBLqAZKEAKs+2+5m+tsspt7my/UHyECk+eOgawJ/q
-         S/dBAuqkGdmM5UfCf/SIGPF/6dXhLDQ9aE0Elsgs60POm8e3WrySmaC2gM4Su7sWBrKy
-         kr4ZDLWuBeigmlHXbW0WcVrlj0DY3zWVld64EUYNTRWtVA6hBGe37LvVZ/ZV/SX7LTQQ
-         Yk7g==
-X-Gm-Message-State: AGi0PuY8zY5fdTfU5SHfROBWXk126w1JV8Yc4wo5tfY45HevM8/VYSv+
-        eviYAweYRMneoGWDLrOkGeR8JJgIO4pF+dQyppg=
-X-Google-Smtp-Source: APiQypKKbbGIodBbmoNg+Bd3UCuudEFWI3amAwwTE7q4jyHkz+LOcM90+Fwj4xlOvneGVL1IDm7bbqoA5ZWEY6G3X/w=
-X-Received: by 2002:a05:6214:1242:: with SMTP id q2mr354063qvv.198.1588633412455;
- Mon, 04 May 2020 16:03:32 -0700 (PDT)
-Date:   Mon,  4 May 2020 16:03:08 -0700
-Message-Id: <20200504230309.237398-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
-Subject: [PATCH] x86: support i386 with Clang
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dmitry Golovin <dima@golovin.in>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 May 2020 19:04:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588633440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QSlf+Qz/0aXB5FUlpmtAof2u7cyHXWyIIR1U62jjyo0=;
+        b=cJE41HxsVM/0ZxDCDYiZ+ICTz+aWycQZW605pfrJp3W4ZghiZfyOi4DgK+ZnHRDZ84m8d/
+        3k+D7mz5NIkPBuQuzK0BMN7crL8+432wPoqbI/c/Bq1k/gql70MSISzUEcDWJ/rQLb0lQJ
+        wLW/Hmo1y7qICR8YwtPTz5tvwXBVyGQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-qYJNbqg_Nj-8HSHHSTy4JQ-1; Mon, 04 May 2020 19:03:55 -0400
+X-MC-Unique: qYJNbqg_Nj-8HSHHSTy4JQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F22011005510;
+        Mon,  4 May 2020 23:03:54 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A163763F81;
+        Mon,  4 May 2020 23:03:54 +0000 (UTC)
+Date:   Mon, 4 May 2020 17:03:54 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Neo Jia <cjia@nvidia.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vfio-pci: Mask cap zero
+Message-ID: <20200504170354.3b49d07b@x1.home>
+In-Reply-To: <20200504220804.GA22939@nvidia.com>
+References: <158836927527.9272.16785800801999547009.stgit@gimli.home>
+        <20200504180916.0e90cad9.cohuck@redhat.com>
+        <20200504125253.3d5f9cbf@x1.home>
+        <20200504220804.GA22939@nvidia.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCC and Clang are architecturally different, which leads to subtle
-issues for code that's invalid but clearly dead. This can happen with
-code that emulates polymorphism with the preprocessor and sizeof.
+On Mon, 4 May 2020 15:08:08 -0700
+Neo Jia <cjia@nvidia.com> wrote:
 
-GCC will perform semantic analysis after early inlining and dead code
-elimination, so it will not warn on invalid code that's dead. Clang
-strictly performs optimizations after semantic analysis, so it will warn
-for dead code.
+> On Mon, May 04, 2020 at 12:52:53PM -0600, Alex Williamson wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > On Mon, 4 May 2020 18:09:16 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
+> >   
+> > > On Fri, 01 May 2020 15:41:24 -0600
+> > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > >  
+> > > > There is no PCI spec defined capability with ID 0, therefore we don't
+> > > > expect to find it in a capability chain and we use this index in an
+> > > > internal array for tracking the sizes of various capabilities to handle
+> > > > standard config space.  Therefore if a device does present us with a
+> > > > capability ID 0, we mark our capability map with nonsense that can
+> > > > trigger conflicts with other capabilities in the chain.  Ignore ID 0
+> > > > when walking the capability chain, handling it as a hidden capability.
+> > > >
+> > > > Seen on an NVIDIA Tesla T4.
+> > > >
+> > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > > ---
+> > > >  drivers/vfio/pci/vfio_pci_config.c |    2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > > > index 87d0cc8c86ad..5935a804cb88 100644
+> > > > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > > > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > > > @@ -1487,7 +1487,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+> > > >             if (ret)
+> > > >                     return ret;
+> > > >
+> > > > -           if (cap <= PCI_CAP_ID_MAX) {  
+> > >
+> > > Maybe add a comment:
+> > >
+> > > /* no PCI spec defined capability with ID 0: hide it */  
+> 
+> Hi Alex,
+> 
+> I think this is NULL Capability defined in Codes and IDs spec, probably we
+> should just add a new enum to represent that?
 
-Neither Clang nor GCC like this very much with -m32:
+Yes, it looks like the 1.1 version of that specification from June 2015
+changed ID 0 from reserved to a NULL capability.  So my description and
+this comment are wrong, but I wonder if we should did anything
+different with the handling of this capability.  It's specified to
+contain only the ID and next pointer, so I'd expect it's primarily a
+mechanism for hardware vendors to blow fuses in config space to
+maintain a capability chain while maybe hiding a feature not supported
+by the product sku.  Hiding the capability in vfio is trivial, exposing
+it implies some changes to our config space map that might be more
+subtle.  I'm inclined to stick with this solution for now.  Thanks,
 
-long long ret;
-asm ("movb $5, %0" : "=q" (ret));
+Alex
 
-However, GCC can tolerate this variant:
-
-long long ret;
-switch (sizeof(ret)) {
-case 1:
-        asm ("movb $5, %0" : "=q" (ret));
-        break;
-case 8:;
-}
-
-Clang, on the other hand, won't accept that because it validates the
-inline asm for the '1' case *before* the optimisation phase where it
-realises that it wouldn't have to emit it anyway.
-
-If LLVM (Clang's "back end") fails such as during instruction selection
-or register allocation, it cannot provide accurate diagnostics
-(warnings/errors) that contain line information, as the AST has been
-discarded from memory at that point.
-
-While there have been early discussions about having C/C++ specific
-language optimizations in Clang via the use of MLIR, which would enable
-such earlier optimizations, such work is not scoped and likely a
-multi-year endeavor.
-
-We also don't want to swap the use of "=q" with "=r". For 64b, it
-doesn't matter. For 32b, it's possible that a 32b register without a 8b
-lower alias (i.e. ESI, EDI, EBP) is selected which the assembler will
-then reject.
-
-With this, Clang can finally build an i386 defconfig.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Reported-by: David Woodhouse <dwmw2@infradead.org>
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://bugs.llvm.org/show_bug.cgi?id=33587
-Link: https://github.com/ClangBuiltLinux/linux/issues/3
-Link: https://github.com/ClangBuiltLinux/linux/issues/194
-Link: https://github.com/ClangBuiltLinux/linux/issues/781
-Link: https://lore.kernel.org/lkml/20180209161833.4605-1-dwmw2@infradead.org/
-Link: https://lore.kernel.org/lkml/CAK8P3a1EBaWdbAEzirFDSgHVJMtWjuNt2HGG8z+vpXeNHwETFQ@mail.gmail.com/
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-Note: this is a resend of:
-https://lore.kernel.org/lkml/20180209161833.4605-1-dwmw2@infradead.org/
-rebased on today's Linux next, and with the additional change to
-uaccess.h.
-
-I'm happy to resend with authorship and reported by tags changed to
-suggested by's or whatever, just let me know.
-
-Part of the commit message is stolen from David, and part from Linus.
-Shall I resend with David's authorship and
-[Nick: reworded]
-???
-
-I don't really care, I just don't really want to carry this out of tree
-for our CI, which is green for i386 otherwise.
-
-
- arch/x86/include/asm/percpu.h  | 12 ++++++++----
- arch/x86/include/asm/uaccess.h |  4 +++-
- 2 files changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 2278797c769d..826d086f71c9 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -99,7 +99,7 @@ do {							\
- 	case 1:						\
- 		asm qual (op "b %1,"__percpu_arg(0)	\
- 		    : "+m" (var)			\
--		    : "qi" ((pto_T__)(val)));		\
-+		    : "qi" ((unsigned char)(unsigned long)(val))); \
- 		break;					\
- 	case 2:						\
- 		asm qual (op "w %1,"__percpu_arg(0)	\
-@@ -144,7 +144,7 @@ do {									\
- 		else							\
- 			asm qual ("addb %1, "__percpu_arg(0)		\
- 			    : "+m" (var)				\
--			    : "qi" ((pao_T__)(val)));			\
-+			    : "qi" ((unsigned char)(unsigned long)(val))); \
- 		break;							\
- 	case 2:								\
- 		if (pao_ID__ == 1)					\
-@@ -182,12 +182,14 @@ do {									\
- 
- #define percpu_from_op(qual, op, var)			\
- ({							\
-+	unsigned char pfo_u8__;				\
- 	typeof(var) pfo_ret__;				\
- 	switch (sizeof(var)) {				\
- 	case 1:						\
- 		asm qual (op "b "__percpu_arg(1)",%0"	\
--		    : "=q" (pfo_ret__)			\
-+		    : "=q" (pfo_u8__)			\
- 		    : "m" (var));			\
-+		pfo_ret__ = (typeof(var))(unsigned long)pfo_u8__;	\
- 		break;					\
- 	case 2:						\
- 		asm qual (op "w "__percpu_arg(1)",%0"	\
-@@ -211,12 +213,14 @@ do {									\
- 
- #define percpu_stable_op(op, var)			\
- ({							\
-+	unsigned char pfo_u8__;				\
- 	typeof(var) pfo_ret__;				\
- 	switch (sizeof(var)) {				\
- 	case 1:						\
- 		asm(op "b "__percpu_arg(P1)",%0"	\
--		    : "=q" (pfo_ret__)			\
-+		    : "=q" (pfo_u8__)			\
- 		    : "p" (&(var)));			\
-+		pfo_ret__ = (typeof(var))(unsigned long)pfo_u8__;	\
- 		break;					\
- 	case 2:						\
- 		asm(op "w "__percpu_arg(P1)",%0"	\
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index d8f283b9a569..cf8483cd80e1 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -314,11 +314,13 @@ do {									\
- 
- #define __get_user_size(x, ptr, size, retval)				\
- do {									\
-+	unsigned char x_u8__;						\
- 	retval = 0;							\
- 	__chk_user_ptr(ptr);						\
- 	switch (size) {							\
- 	case 1:								\
--		__get_user_asm(x, ptr, retval, "b", "=q");		\
-+		__get_user_asm(x_u8__, ptr, retval, "b", "=q");		\
-+		(x) = x_u8__;						\
- 		break;							\
- 	case 2:								\
- 		__get_user_asm(x, ptr, retval, "w", "=r");		\
--- 
-2.26.2.526.g744177e7f7-goog
+> > 
+> > Sure.
+> >   
+> > >  
+> > > > +           if (cap && cap <= PCI_CAP_ID_MAX) {
+> > > >                     len = pci_cap_length[cap];
+> > > >                     if (len == 0xFF) { /* Variable length */
+> > > >                             len = vfio_cap_len(vdev, cap, pos);
+> > > >  
+> > >
+> > > Is there a requirement for caps to be strictly ordered? If not, could
+> > > len hold a residual value from a previous iteration?  
+> > 
+> > There is no ordering requirement for capabilities, but len is declared
+> > non-static with an initial value within the scope of the loop, it's
+> > reset every iteration.  Thanks,
+> > 
+> > Alex
+> >   
+> 
 
