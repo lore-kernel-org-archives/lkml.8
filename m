@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF18EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD506C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF3E2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7B4206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615205;
-	bh=BkzwvDJlqsTTEB9XFdtRjhRaxiHIQXYB+xJukHzcDzU=;
+	s=default; t=1588615212;
+	bh=v0t4xSectOQpTQZlghGbLv7g9vjKTSwNQDaT/pg9gRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cV/Vt4/7FHV6fgZ1J/aUbX+XsIZu94Sc59wLxMnPDxt93h8ZD9I/d6kS9mDcBGJOq
-	 bi5J1avNWU2sQvut/jsT/GsjkQA+kC8v/KC+3Vx6/8k/nn6d+CujjqFsroX+bdZjR1
-	 CXmQUecwkbgLhfVy2bIcNqz8CYf8+GDNctjGpidU=
+	b=0P4+QJniubZq1ryxRfLl4QV9vtZwB20Fumlv0sM/OyTgnV3Pp1IMvnG0TOdpzG5z8
+	 Q7X5y7hT0eJno4d2C0Gh+EIMCEmrv6vEUskauJ5sw5oobEyF8MAkKr93mPLBc9oc/z
+	 RbXVZPAxdjegB4JnMoKmV8ZnB0UVMG8NnMqOqDco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgEDSAE (ORCPT
+        id S1730941AbgEDSAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:00:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730912AbgEDSAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:01 -0400
+        id S1730921AbgEDSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F89620663;
-        Mon,  4 May 2020 17:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47C820707;
+        Mon,  4 May 2020 18:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615199;
-        bh=BkzwvDJlqsTTEB9XFdtRjhRaxiHIQXYB+xJukHzcDzU=;
+        s=default; t=1588615202;
+        bh=v0t4xSectOQpTQZlghGbLv7g9vjKTSwNQDaT/pg9gRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1pRtleXkeQCTh5T/nHFjVc/vwlerBFcGFQl6VB4IRxqjIfzaiSJbKGoz0wiCVWsOe
-         Dode9KLNFJEQChc4U1aFb48aca7NFfQUit7UvAsoo9Njox81aOGTCRAEhsZDz9komL
-         JsguVwLKM5bqgWuL1L6yxump880dAYlk4p2gc2ZU=
+        b=irZczGmDbiQeymXZhJJ4rhp+pNOmAbwJzT/L/d8XKlNJKWywIrG0adEaDUA9/GO2Y
+         UMCMK0iTSxNs/G9M/0jTFpRhtp/387BYjLRjjIM2WjBN1fWnvurVl4NX45A4YWu8yd
+         pjKOo9n5g6QuTUVqk6mQmrO7jJ1z4GOKgWpAcI/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.9 17/18] selinux: properly handle multiple messages in selinux_netlink_send()
-Date:   Mon,  4 May 2020 19:57:27 +0200
-Message-Id: <20200504165445.840542114@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 4.9 18/18] drm/qxl: qxl_release use after free
+Date:   Mon,  4 May 2020 19:57:28 +0200
+Message-Id: <20200504165445.977315153@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
@@ -60,110 +59,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit fb73974172ffaaf57a7c42f35424d9aece1a5af6 upstream.
+commit 933db73351d359f74b14f4af095808260aff11f9 upstream.
 
-Fix the SELinux netlink_send hook to properly handle multiple netlink
-messages in a single sk_buff; each message is parsed and subject to
-SELinux access control.  Prior to this patch, SELinux only inspected
-the first message in the sk_buff.
+qxl_release should not be accesses after qxl_push_*_ring_release() calls:
+userspace driver can process submitted command quickly, move qxl_release
+into release_ring, generate interrupt and trigger garbage collector.
 
-Cc: stable@vger.kernel.org
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+It can lead to crashes in qxl driver or trigger memory corruption
+in some kmalloc-192 slab object
+
+Gerd Hoffmann proposes to swap the qxl_release_fence_buffer_objects() +
+qxl_push_{cursor,command}_ring_release() calls to close that race window.
+
+cc: stable@vger.kernel.org
+Fixes: f64122c1f6ad ("drm: add new QXL driver. (v1.4)")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/fa17b338-66ae-f299-68fe-8d32419d9071@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+[backported to v4.9-stable]
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- security/selinux/hooks.c |   68 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 44 insertions(+), 24 deletions(-)
+ drivers/gpu/drm/qxl/qxl_cmd.c     |    5 ++---
+ drivers/gpu/drm/qxl/qxl_display.c |    8 ++++----
+ drivers/gpu/drm/qxl/qxl_draw.c    |    8 ++++----
+ drivers/gpu/drm/qxl/qxl_ioctl.c   |    5 +----
+ 4 files changed, 11 insertions(+), 15 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5002,39 +5002,59 @@ static int selinux_tun_dev_open(void *se
+--- a/drivers/gpu/drm/qxl/qxl_cmd.c
++++ b/drivers/gpu/drm/qxl/qxl_cmd.c
+@@ -529,8 +529,8 @@ int qxl_hw_surface_alloc(struct qxl_devi
+ 	/* no need to add a release to the fence for this surface bo,
+ 	   since it is only released when we ask to destroy the surface
+ 	   and it would never signal otherwise */
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
  
- static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
- {
--	int err = 0;
--	u32 perm;
-+	int rc = 0;
-+	unsigned int msg_len;
-+	unsigned int data_len = skb->len;
-+	unsigned char *data = skb->data;
- 	struct nlmsghdr *nlh;
- 	struct sk_security_struct *sksec = sk->sk_security;
-+	u16 sclass = sksec->sclass;
-+	u32 perm;
+ 	surf->hw_surf_alloc = true;
+ 	spin_lock(&qdev->surf_id_idr_lock);
+@@ -572,9 +572,8 @@ int qxl_hw_surface_dealloc(struct qxl_de
+ 	cmd->surface_id = id;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
  
--	if (skb->len < NLMSG_HDRLEN) {
--		err = -EINVAL;
--		goto out;
--	}
--	nlh = nlmsg_hdr(skb);
-+	while (data_len >= nlmsg_total_size(0)) {
-+		nlh = (struct nlmsghdr *)data;
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+-
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
  
--	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
--	if (err) {
--		if (err == -EINVAL) {
-+		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
-+		 *       users which means we can't reject skb's with bogus
-+		 *       length fields; our solution is to follow what
-+		 *       netlink_rcv_skb() does and simply skip processing at
-+		 *       messages with length fields that are clearly junk
-+		 */
-+		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
-+			return 0;
-+
-+		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
-+		if (rc == 0) {
-+			rc = sock_has_perm(current, sk, perm);
-+			if (rc)
-+				return rc;
-+		} else if (rc == -EINVAL) {
-+			/* -EINVAL is a missing msg/perm mapping */
- 			pr_warn_ratelimited("SELinux: unrecognized netlink"
--			       " message: protocol=%hu nlmsg_type=%hu sclass=%s"
--			       " pig=%d comm=%s\n",
--			       sk->sk_protocol, nlh->nlmsg_type,
--			       secclass_map[sksec->sclass - 1].name,
--			       task_pid_nr(current), current->comm);
--			if (!selinux_enforcing || security_get_allow_unknown())
--				err = 0;
-+				" message: protocol=%hu nlmsg_type=%hu sclass=%s"
-+				" pid=%d comm=%s\n",
-+				sk->sk_protocol, nlh->nlmsg_type,
-+				secclass_map[sclass - 1].name,
-+				task_pid_nr(current), current->comm);
-+			if (selinux_enforcing && !security_get_allow_unknown())
-+				return rc;
-+			rc = 0;
-+		} else if (rc == -ENOENT) {
-+			/* -ENOENT is a missing socket/class mapping, ignore */
-+			rc = 0;
-+		} else {
-+			return rc;
- 		}
+ 	return 0;
+ }
+--- a/drivers/gpu/drm/qxl/qxl_display.c
++++ b/drivers/gpu/drm/qxl/qxl_display.c
+@@ -292,8 +292,8 @@ qxl_hide_cursor(struct qxl_device *qdev)
+ 	cmd->type = QXL_CURSOR_HIDE;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
  
--		/* Ignore */
--		if (err == -ENOENT)
--			err = 0;
--		goto out;
-+		/* move to the next message after applying netlink padding */
-+		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
-+		if (msg_len >= data_len)
-+			return 0;
-+		data_len -= msg_len;
-+		data += msg_len;
- 	}
- 
--	err = sock_has_perm(current, sk, perm);
--out:
--	return err;
-+	return rc;
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	return 0;
  }
  
- #ifdef CONFIG_NETFILTER
+@@ -333,8 +333,8 @@ static int qxl_crtc_apply_cursor(struct
+ 	cmd->u.set.visible = 1;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+ 
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 
+ 	return ret;
+ 
+@@ -436,8 +436,8 @@ static int qxl_crtc_cursor_set2(struct d
+ 	cmd->u.set.visible = 1;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+ 
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 
+ 	/* finish with the userspace bo */
+ 	ret = qxl_bo_reserve(user_bo, false);
+@@ -497,8 +497,8 @@ static int qxl_crtc_cursor_move(struct d
+ 	cmd->u.position.y = qcrtc->cur_y + qcrtc->hot_spot_y;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+ 
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 
+ 	return 0;
+ }
+--- a/drivers/gpu/drm/qxl/qxl_draw.c
++++ b/drivers/gpu/drm/qxl/qxl_draw.c
+@@ -241,8 +241,8 @@ void qxl_draw_opaque_fb(const struct qxl
+ 		qxl_bo_physical_address(qdev, dimage->bo, 0);
+ 	qxl_release_unmap(qdev, release, &drawable->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_free_palette:
+ 	if (palette_bo)
+@@ -382,8 +382,8 @@ void qxl_draw_dirty_fb(struct qxl_device
+ 	}
+ 	qxl_bo_kunmap(clips_bo);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_release_backoff:
+ 	if (ret)
+@@ -433,8 +433,8 @@ void qxl_draw_copyarea(struct qxl_device
+ 	drawable->u.copy_bits.src_pos.y = sy;
+ 	qxl_release_unmap(qdev, release, &drawable->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_free_release:
+ 	if (ret)
+@@ -477,8 +477,8 @@ void qxl_draw_fill(struct qxl_draw_fill
+ 
+ 	qxl_release_unmap(qdev, release, &drawable->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_free_release:
+ 	if (ret)
+--- a/drivers/gpu/drm/qxl/qxl_ioctl.c
++++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
+@@ -256,11 +256,8 @@ static int qxl_process_single_command(st
+ 			apply_surf_reloc(qdev, &reloc_info[i]);
+ 	}
+ 
++	qxl_release_fence_buffer_objects(release);
+ 	ret = qxl_push_command_ring_release(qdev, release, cmd->type, true);
+-	if (ret)
+-		qxl_release_backoff_reserve_list(release);
+-	else
+-		qxl_release_fence_buffer_objects(release);
+ 
+ out_free_bos:
+ out_free_release:
 
 
