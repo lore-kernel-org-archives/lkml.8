@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528FEC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA117C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A34520663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDF720663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615953;
-	bh=veOsvRPlrvyCtf3q8/NNzUyaYKGJ9L/RP453UntgzHc=;
+	s=default; t=1588615956;
+	bh=2zBnnkOM1H+7bmygsb3P9WY2HQU87sUn/VQp+GBLkTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CnRbeZ/fdvak2DGpMb0/jXU/SBmrfTorP/KyUJfU4dxxHTzpd3q29Inf+UyYDtJfM
-	 oTPrJIcEEfKp87JHS0gZc6Ehlk/YqxpDLUh5oaXpmr4605Se64OG4Oqf6hdC20WD3j
-	 +1UO/ozkMwn7ucsmEGC8rsNd5L7KZCgqexKFIdA0=
+	b=Kx0Yu7UYahMoj0+XSeMLWpfEmQSsiz3l816X7hflygeiEBOTf3+LBBa18UkfJ/jUx
+	 w3cyRcx6eTM5nso8qeMuHeC19iE9csEKUyFS4QrGHkID2hafsnbqL9uUADE+OILU6k
+	 3sWCGDO2HAaJFfGnQE/loUSd+apnefDCFtRA+nWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbgEDSMc (ORCPT
+        id S1732247AbgEDSMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:12:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59186 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731350AbgEDSCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:40 -0400
+        id S1731345AbgEDSCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AEE9206B8;
-        Mon,  4 May 2020 18:02:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4ABD0206B8;
+        Mon,  4 May 2020 18:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615359;
-        bh=veOsvRPlrvyCtf3q8/NNzUyaYKGJ9L/RP453UntgzHc=;
+        s=default; t=1588615352;
+        bh=2zBnnkOM1H+7bmygsb3P9WY2HQU87sUn/VQp+GBLkTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7rVKuR1zxu+rjgjiyjDgp1Dcsg7yf9ED0396Lj8wXNPGKUmE2ovge5DRehAUObjG
-         obkVhU5Ah5kw/8CLmQ4OGAagVZq5WoiKH3TPsZ/rxA9b9zuyqZCpj3+kIi6FpmUOQE
-         D6RythWsE/pYCnZuiCWos6bW8ESfcUAp3rSaK3RY=
+        b=atJj59x7jeYaPPWcjJu9LMq9EN2EuMTJxkejTmiJ5ePzxPImS3u+XJvHnAOiMtqG8
+         JRK4Q75Ms5s4ZOgL1/B4esYiRP9BoUmhp6G7jM6Npof3kjX7wX+AG0h/a4mORzbxrF
+         Zfrk7ZRe6rsn3PFLAEHO7alDU05IWJZ4JMbVmzio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        David Disseldorp <ddiss@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 24/37] scsi: target/iblock: fix WRITE SAME zeroing
-Date:   Mon,  4 May 2020 19:57:37 +0200
-Message-Id: <20200504165450.921397685@linuxfoundation.org>
+        stable@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 4.19 21/37] vfio: avoid possible overflow in vfio_iommu_type1_pin_pages
+Date:   Mon,  4 May 2020 19:57:34 +0200
+Message-Id: <20200504165450.604878640@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,44 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-commit 1d2ff149b263c9325875726a7804a0c75ef7112e upstream.
+commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 upstream.
 
-SBC4 specifies that WRITE SAME requests with the UNMAP bit set to zero
-"shall perform the specified write operation to each LBA specified by the
-command".  Commit 2237498f0b5c ("target/iblock: Convert WRITE_SAME to
-blkdev_issue_zeroout") modified the iblock backend to call
-blkdev_issue_zeroout() when handling WRITE SAME requests with UNMAP=0 and a
-zero data segment.
+add parentheses to avoid possible vaddr overflow.
 
-The iblock blkdev_issue_zeroout() call incorrectly provides a flags
-parameter of 0 (bool false), instead of BLKDEV_ZERO_NOUNMAP.  The bool
-false parameter reflects the blkdev_issue_zeroout() API prior to commit
-ee472d835c26 ("block: add a flags argument to (__)blkdev_issue_zeroout")
-which was merged shortly before 2237498f0b5c.
-
-Link: https://lore.kernel.org/r/20200419163109.11689-1-ddiss@suse.de
-Fixes: 2237498f0b5c ("target/iblock: Convert WRITE_SAME to blkdev_issue_zeroout")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/target_core_iblock.c |    2 +-
+ drivers/vfio/vfio_iommu_type1.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -445,7 +445,7 @@ iblock_execute_zero_out(struct block_dev
- 				target_to_linux_sector(dev, cmd->t_task_lba),
- 				target_to_linux_sector(dev,
- 					sbc_get_write_same_sectors(cmd)),
--				GFP_KERNEL, false);
-+				GFP_KERNEL, BLKDEV_ZERO_NOUNMAP);
- 	if (ret)
- 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -598,7 +598,7 @@ static int vfio_iommu_type1_pin_pages(vo
+ 			continue;
+ 		}
  
+-		remote_vaddr = dma->vaddr + iova - dma->iova;
++		remote_vaddr = dma->vaddr + (iova - dma->iova);
+ 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
+ 					     do_accounting);
+ 		if (ret)
 
 
