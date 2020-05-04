@@ -2,84 +2,105 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF70C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA16C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1B820746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D65D20735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588577373;
+	bh=RVrLaZjhLOD6uwD5aubD0n/GFXSYLoQc9WAUH62n6gA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HTq9Thmq82Mc9MG+ybWWmOaGrhPKM8PfMjFRefumup39+ceXpUua2aI81ZRgk9hF9
+	 HnKb5xqkm8vvmYBkjni4AMQIvyMW+Qa99RKZFHVLme2qSL+dSoZMIvPLcmEnv6iFm5
+	 c2nA5lCeCeR3mNJG7yWMyVlqwTMsMNJ7Qj3ywwVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgEDH2G (ORCPT
+        id S1728039AbgEDH3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:28:06 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:49983 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgEDH2G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:28:06 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65eafc3f4f75-fd170; Mon, 04 May 2020 15:27:49 +0800 (CST)
-X-RM-TRANSID: 2ee65eafc3f4f75-fd170
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.3.182.180])
-        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35eafc3f2125-99285;
-        Mon, 04 May 2020 15:27:49 +0800 (CST)
-X-RM-TRANSID: 2ee35eafc3f2125-99285
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org,
-        perex@perex.cz
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] ASoC: qcom: Use devm_platform_ioremap_resource_byname() to simplify code
-Date:   Mon,  4 May 2020 15:28:20 +0800
-Message-Id: <20200504072820.5328-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Mon, 4 May 2020 03:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbgEDH3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 03:29:32 -0400
+Received: from localhost (unknown [171.76.84.84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 281522075B;
+        Mon,  4 May 2020 07:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588577371;
+        bh=RVrLaZjhLOD6uwD5aubD0n/GFXSYLoQc9WAUH62n6gA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vOTaLk5xOoJcVIpzluCt8uxCroCS7M7qK5Fj4Yt6KaHGYUldVFsJO+fpnfSwOZ/tb
+         q4ZymWNMGM7aOQdS58RmzZRaAVyuS1/KYrOnY8vKIrAVZlmEib+fDC22uGzIqE81hs
+         ak8CKQKIADfbCGPwf8iwSKo/F8/jtDVqEqPX2iGA=
+Date:   Mon, 4 May 2020 12:59:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de,
+        robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+Subject: Re: [PATCH v7 3/3] phy: intel: Add driver support for ComboPhy
+Message-ID: <20200504072923.GN1375924@vkoul-mobl>
+References: <cover.1588230494.git.eswara.kota@linux.intel.com>
+ <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af8a7d7025990d22f6062953247cf80e64c6fd2f.1588230494.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource_byname() instead of
-platform_get_resource_byname() + devm_ioremap_resource().
+On 30-04-20, 15:15, Dilip Kota wrote:
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- sound/soc/qcom/lpass-cpu.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> +enum {
+> +	PHY_0,
+> +	PHY_1,
+> +	PHY_MAX_NUM
 
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index dbce7e92b..885c1f2e7 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -417,7 +417,6 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- {
- 	struct lpass_data *drvdata;
- 	struct device_node *dsp_of_node;
--	struct resource *res;
- 	struct lpass_variant *variant;
- 	struct device *dev = &pdev->dev;
- 	const struct of_device_id *match;
-@@ -442,9 +441,8 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 	drvdata->variant = (struct lpass_variant *)match->data;
- 	variant = drvdata->variant;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
--
--	drvdata->lpaif = devm_ioremap_resource(&pdev->dev, res);
-+	drvdata->lpaif = devm_platform_ioremap_resource_byname(pdev,
-+						"lpass-lpaif")
- 	if (IS_ERR((void const __force *)drvdata->lpaif)) {
- 		dev_err(&pdev->dev, "error mapping reg resource: %ld\n",
- 				PTR_ERR((void const __force *)drvdata->lpaif));
+PHY_MAX_NUM = PHY_1?
+
+> +static inline void combo_phy_w32_off_mask(void __iomem *base, unsigned int reg,
+> +					  u32 mask, u32 val)
+> +{
+> +	u32 reg_val;
+> +
+> +	reg_val = readl(base + reg);
+> +	reg_val &= ~mask;
+> +	reg_val |= FIELD_PREP(mask, val);
+> +	writel(reg_val, base + reg);
+
+bypassing regmap here... why?
+
+> +static int intel_cbphy_calibrate(struct phy *phy)
+> +{
+> +	struct intel_cbphy_iphy *iphy = phy_get_drvdata(phy);
+> +	struct intel_combo_phy *cbphy = iphy->parent;
+> +	void __iomem *cr_base = cbphy->cr_base;
+> +	int val, ret, id;
+> +
+> +	if (cbphy->phy_mode != PHY_XPCS_MODE)
+> +		return 0;
+> +
+> +	id = PHY_ID(iphy);
+> +
+> +	/* trigger auto RX adaptation */
+> +	combo_phy_w32_off_mask(cr_base, CR_ADDR(PCS_XF_ATE_OVRD_IN_2, id),
+> +			       ADAPT_REQ_MSK, 3);
+> +	/* Wait RX adaptation to finish */
+> +	ret = readl_poll_timeout(cr_base + CR_ADDR(PCS_XF_RX_ADAPT_ACK, id),
+> +				 val, val & RX_ADAPT_ACK_BIT, 10, 5000);
+> +	if (ret)
+> +		dev_err(cbphy->dev, "RX Adaptation failed!\n");
+
+you want to continue her and not return error?
 -- 
-2.20.1.windows.1
-
-
-
+~Vinod
