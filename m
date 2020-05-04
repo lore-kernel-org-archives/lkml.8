@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D3BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FBBC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8367C205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC632075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615571;
-	bh=NlVxoTjNVIj7k425iDGce3uuUKxG2Mo4IPPMlgN5liw=;
+	s=default; t=1588615576;
+	bh=tTx+X6ofM/0dXOC1QY/hOoerybTx5eC+WY95hSicXC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ak2T2i6zrb4VX4k5mKa0JC2Uq6awtQCn7doMv8ltZlKaXcMcuv6RYeqJcXVJZi34K
-	 VSWG879k8ezfBj5MJ67DKvfwV3CiMaVOD/CEd9W4crEbT4oOArL7hcbEoMiLXD0bzc
-	 IOnBIkpyz6p0NcwkSJrJz0Knt6V3+1+KM1XVadac=
+	b=NlagakS66HKbv0c5zXSFkbV+2kVmhh/yHonC8jBDXjCPHO3MJEjkVPKTyLlA5Mt7T
+	 EVzkKez1ob/cIe5tthtCujUztq4JXg6WUeYevS4juWl5PXAPjq6Njh+p8J7WXcAucd
+	 RsWUEIlf/v7O1Ct1y64ShjBZJSoLa7fld8FHmElo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbgEDSGK (ORCPT
+        id S1730456AbgEDSGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731024AbgEDSGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:05 -0400
+        id S1731918AbgEDSGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB39E206B8;
-        Mon,  4 May 2020 18:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF2420746;
+        Mon,  4 May 2020 18:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615565;
-        bh=NlVxoTjNVIj7k425iDGce3uuUKxG2Mo4IPPMlgN5liw=;
+        s=default; t=1588615570;
+        bh=tTx+X6ofM/0dXOC1QY/hOoerybTx5eC+WY95hSicXC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RmXOJ/f3ppbdyUAv6U6Ya+ICfmuEAGT8x+0N5n6Fzhk0BCaSY6KWwg22JwqR8CMvR
-         EYhKEkE6YCLI/u+ehDs79VEVpOEB2XVqPxrKFXrsdZAgPelr6jMJmpylgBnVNVwZ08
-         hbPRLqvw2RKdCDGPRADV88deiYDgVft6aIKKyy7g=
+        b=nKuY/cgu3RxBZ5frPvBK+rJBujLdRd42MiEP6fYxw7DQoD5vyxjGbhAu6dqyuqHhR
+         r7UeFhXLxyuKyxIGuVABiEFqBbbtQtIDk/yiyp66hpqPQ0YFuDhmNkUyOyEkjdEHeW
+         +Eaa5gSGLLRrpgnMd7uoVrcuVz++HGSidWniG6n0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.6 31/73] dlmfs_file_write(): fix the bogosity in handling non-zero *ppos
-Date:   Mon,  4 May 2020 19:57:34 +0200
-Message-Id: <20200504165507.332146380@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.6 33/73] IB/rdmavt: Always return ERR_PTR from rvt_create_mmap_info()
+Date:   Mon,  4 May 2020 19:57:36 +0200
+Message-Id: <20200504165507.472436514@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -58,75 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-commit 3815f1be546e752327b5868af103ccdddcc4db77 upstream.
+commit 47c370c1a5eea9b2f6f026d49e060c3748c89667 upstream.
 
-'count' is how much you want written, not the final position.
-Moreover, it can legitimately be less than the current position...
+The commit below modified rvt_create_mmap_info() to return ERR_PTR's but
+didn't update the callers to handle them. Modify rvt_create_mmap_info() to
+only return ERR_PTR and fix all error checking after
+rvt_create_mmap_info() was called.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: ff23dfa13457 ("IB: Pass only ib_udata in function prototypes")
+Link: https://lore.kernel.org/r/20200424173146.10970-1-sudipm.mukherjee@gmail.com
+Cc: stable@vger.kernel.org [5.4+]
+Tested-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Acked-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/dlmfs/dlmfs.c |   27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ drivers/infiniband/sw/rdmavt/cq.c   |    4 ++--
+ drivers/infiniband/sw/rdmavt/mmap.c |    4 ++--
+ drivers/infiniband/sw/rdmavt/qp.c   |    4 ++--
+ drivers/infiniband/sw/rdmavt/srq.c  |    4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/fs/ocfs2/dlmfs/dlmfs.c
-+++ b/fs/ocfs2/dlmfs/dlmfs.c
-@@ -275,7 +275,6 @@ static ssize_t dlmfs_file_write(struct f
- 				loff_t *ppos)
- {
- 	int bytes_left;
--	ssize_t writelen;
- 	char *lvb_buf;
- 	struct inode *inode = file_inode(filp);
+--- a/drivers/infiniband/sw/rdmavt/cq.c
++++ b/drivers/infiniband/sw/rdmavt/cq.c
+@@ -248,8 +248,8 @@ int rvt_create_cq(struct ib_cq *ibcq, co
+ 	 */
+ 	if (udata && udata->outlen >= sizeof(__u64)) {
+ 		cq->ip = rvt_create_mmap_info(rdi, sz, udata, u_wc);
+-		if (!cq->ip) {
+-			err = -ENOMEM;
++		if (IS_ERR(cq->ip)) {
++			err = PTR_ERR(cq->ip);
+ 			goto bail_wc;
+ 		}
  
-@@ -285,32 +284,30 @@ static ssize_t dlmfs_file_write(struct f
- 	if (*ppos >= i_size_read(inode))
- 		return -ENOSPC;
+--- a/drivers/infiniband/sw/rdmavt/mmap.c
++++ b/drivers/infiniband/sw/rdmavt/mmap.c
+@@ -154,7 +154,7 @@ done:
+  * @udata: user data (must be valid!)
+  * @obj: opaque pointer to a cq, wq etc
+  *
+- * Return: rvt_mmap struct on success
++ * Return: rvt_mmap struct on success, ERR_PTR on failure
+  */
+ struct rvt_mmap_info *rvt_create_mmap_info(struct rvt_dev_info *rdi, u32 size,
+ 					   struct ib_udata *udata, void *obj)
+@@ -166,7 +166,7 @@ struct rvt_mmap_info *rvt_create_mmap_in
  
-+	/* don't write past the lvb */
-+	if (count > i_size_read(inode) - *ppos)
-+		count = i_size_read(inode) - *ppos;
-+
- 	if (!count)
- 		return 0;
+ 	ip = kmalloc_node(sizeof(*ip), GFP_KERNEL, rdi->dparms.node);
+ 	if (!ip)
+-		return ip;
++		return ERR_PTR(-ENOMEM);
  
- 	if (!access_ok(buf, count))
- 		return -EFAULT;
+ 	size = PAGE_ALIGN(size);
  
--	/* don't write past the lvb */
--	if ((count + *ppos) > i_size_read(inode))
--		writelen = i_size_read(inode) - *ppos;
--	else
--		writelen = count - *ppos;
--
--	lvb_buf = kmalloc(writelen, GFP_NOFS);
-+	lvb_buf = kmalloc(count, GFP_NOFS);
- 	if (!lvb_buf)
- 		return -ENOMEM;
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -1244,8 +1244,8 @@ struct ib_qp *rvt_create_qp(struct ib_pd
  
--	bytes_left = copy_from_user(lvb_buf, buf, writelen);
--	writelen -= bytes_left;
--	if (writelen)
--		user_dlm_write_lvb(inode, lvb_buf, writelen);
-+	bytes_left = copy_from_user(lvb_buf, buf, count);
-+	count -= bytes_left;
-+	if (count)
-+		user_dlm_write_lvb(inode, lvb_buf, count);
+ 			qp->ip = rvt_create_mmap_info(rdi, s, udata,
+ 						      qp->r_rq.wq);
+-			if (!qp->ip) {
+-				ret = ERR_PTR(-ENOMEM);
++			if (IS_ERR(qp->ip)) {
++				ret = ERR_CAST(qp->ip);
+ 				goto bail_qpn;
+ 			}
  
- 	kfree(lvb_buf);
+--- a/drivers/infiniband/sw/rdmavt/srq.c
++++ b/drivers/infiniband/sw/rdmavt/srq.c
+@@ -111,8 +111,8 @@ int rvt_create_srq(struct ib_srq *ibsrq,
+ 		u32 s = sizeof(struct rvt_rwq) + srq->rq.size * sz;
  
--	*ppos = *ppos + writelen;
--	mlog(0, "wrote %zd bytes\n", writelen);
--	return writelen;
-+	*ppos = *ppos + count;
-+	mlog(0, "wrote %zu bytes\n", count);
-+	return count;
- }
+ 		srq->ip = rvt_create_mmap_info(dev, s, udata, srq->rq.wq);
+-		if (!srq->ip) {
+-			ret = -ENOMEM;
++		if (IS_ERR(srq->ip)) {
++			ret = PTR_ERR(srq->ip);
+ 			goto bail_wq;
+ 		}
  
- static void dlmfs_init_once(void *foo)
 
 
