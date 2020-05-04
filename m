@@ -2,280 +2,96 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64715C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2790C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA1B206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B965920705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:39:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sA0vmTKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AynCMGGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgEDVhz (ORCPT
+        id S1727842AbgEDVjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:37:55 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:54860 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgEDVhy (ORCPT
+        Mon, 4 May 2020 17:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726338AbgEDVjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:37:54 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LX60u129315;
-        Mon, 4 May 2020 21:37:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=nWn8CM6j4depyT+fw7GSCS2G+hPhtJf3Hn378vZfqYw=;
- b=sA0vmTKTGdp/JlpFC0zTR2BZlYXqrZQA2lgvxt82VHPB1f467Gvtup3KieLL+iD6uYH7
- VCwo3WXwPORrVD64NNhk1weX9QdYwh1nz9V4GEcAOH72+f/GjuAJjr5OZdw39VLHWEqT
- XIpuzWNIviJ9uUQ5IRZLXJSy7ZqFgcRbzEbJS2bh5HoEBS+InxGhdf993q9lCLHJQrA9
- DUsyc8UWDgs9sfyfoZTtFtm8LueW6SooN0Eb1iguWXak/zwB2ckLo23sqqJDmiWg7yDW
- 3Vp+vjFbBoFfyGnYb9qXhCpFGm+XxD8nXBtTd+vFovhKjehoyZUUTIsCd6nIAeipukIv Sg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30s0tm9fpf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 21:37:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LbMCl021790;
-        Mon, 4 May 2020 21:37:33 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30sjnc1kep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 21:37:32 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044LbPkt006374;
-        Mon, 4 May 2020 21:37:26 GMT
-Received: from vbusired-dt (/10.39.235.150)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 14:37:25 -0700
-Date:   Mon, 4 May 2020 16:37:24 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srutherford@google.com,
-        rientjes@google.com, brijesh.singh@amd.com
-Subject: Re: [PATCH v7 04/18] KVM: SVM: Add support for KVM_SEV_RECEIVE_START
- command
-Message-ID: <20200504213724.GA1700255@vbusired-dt>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
- <c446e7802559c3b274b174769814369ed1d5e912.1588234824.git.ashish.kalra@amd.com>
+        Mon, 4 May 2020 17:39:42 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2435C061A0E;
+        Mon,  4 May 2020 14:39:42 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id v2so312759plp.9;
+        Mon, 04 May 2020 14:39:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dnKlsTHwnnFXazn7zzxGnzLza7yEGHj+jI4fWn0tS74=;
+        b=AynCMGGq0W5VEIeiqAdRi99uVamrPcFWpeWEkJSSFpofFC9z+cTdg2BqY7IQs4bIPZ
+         GSqk0NDj1De6v3E6B8hD69oAQTlbDvt1Lx9cjx93XUcfEwcebbSsgHRMtF4qhLb0jzZX
+         itI0Q8Kr1odj5D/nJN/BpvPDndUDGVSMkPUzjR5fkCIsZ0cHYIyF0GBIi0buzkkIVTYX
+         vyMUc8KMOGVroi9h+Rt1Zocd5gnzZOxcPjMnShu3prz33cm7yAKqGlvhXPLfJHUQyMp3
+         L/RalKi4lfErm0MP9laMKgQi1WBfOL73oLxLBoIMe2Umoj52vUyX7Fb2Vn9QenyLud+5
+         JzTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dnKlsTHwnnFXazn7zzxGnzLza7yEGHj+jI4fWn0tS74=;
+        b=iV3tvBC1dV3jeoNR/aGEjrtX1IfcrmutBIRHbyiK4h676Qi7geqNU4IGGQ7/Rk81xc
+         oUAHpzsNTVl3hWV1Xjd6q40acDqCI0LOA/kPofODUss+vw5dkXNBIOX+djzhrlDFNkz+
+         tK3RQ0AkKv/npFSYG9O6/SqxUZFmPfoxolT0fCnPAnM+55Q1b9HpJu1txbdkjEuUjQHf
+         2yaVzdQQ4L9s2dAaPmWIo9KWnBg5MuNvTxpTChgbixhQgp1MFf83KAoaXXv7sEBiJhg6
+         mkqlmh/jvVCJcknZwib+v89uQ84qWtduEUAWEefWiBeXqh0JmFpaAZfRPM0wymEZm5P2
+         r6WA==
+X-Gm-Message-State: AGi0PublvgyIwp1syPYhSCTmgHVbtw+G88uLFET6PPKGPC4h4Z5JNUQq
+        KbU/iyGExz+3hyrumy5MBkg=
+X-Google-Smtp-Source: APiQypJ0HAeQTPu2DzaLtYV63srcvAmn2r4FeBJuSk32vuYutJBixLjLmYsfLjkggFKUUIZHiN62KQ==
+X-Received: by 2002:a17:90b:3017:: with SMTP id hg23mr171014pjb.150.1588628381874;
+        Mon, 04 May 2020 14:39:41 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id a12sm44947pfr.28.2020.05.04.14.39.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 14:39:41 -0700 (PDT)
+Date:   Mon, 4 May 2020 14:39:05 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ASoC: fsl_esai: introduce SoC specific data
+Message-ID: <20200504213905.GA21292@Asurada-Nvidia>
+References: <cover.1588320655.git.shengjiu.wang@nxp.com>
+ <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c446e7802559c3b274b174769814369ed1d5e912.1588234824.git.ashish.kalra@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040169
+In-Reply-To: <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-30 08:42:02 +0000, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
+On Fri, May 01, 2020 at 04:12:04PM +0800, Shengjiu Wang wrote:
+> Introduce a SoC specific data structure which contains the
+> differences between the different SoCs.
+> This makes it easier to support more differences without having
+> to introduce a new if/else each time.
 > 
-> The command is used to create the encryption context for an incoming
-> SEV guest. The encryption context can be later used by the hypervisor
-> to import the incoming data into the SEV guest memory space.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Steve Rutherford <srutherford@google.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  .../virt/kvm/amd-memory-encryption.rst        | 29 +++++++
->  arch/x86/kvm/svm/sev.c                        | 81 +++++++++++++++++++
->  include/uapi/linux/kvm.h                      |  9 +++
->  3 files changed, 119 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index a45dcb5f8687..ef1f1f3a5b40 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -322,6 +322,35 @@ issued by the hypervisor to delete the encryption context.
->  
->  Returns: 0 on success, -negative on error
->  
-> +13. KVM_SEV_RECEIVE_START
-> +------------------------
-> +
-> +The KVM_SEV_RECEIVE_START command is used for creating the memory encryption
-> +context for an incoming SEV guest. To create the encryption context, the user must
-> +provide a guest policy, the platform public Diffie-Hellman (PDH) key and session
-> +information.
-> +
-> +Parameters: struct  kvm_sev_receive_start (in/out)
-> +
-> +Returns: 0 on success, -negative on error
-> +
-> +::
-> +
-> +        struct kvm_sev_receive_start {
-> +                __u32 handle;           /* if zero then firmware creates a new handle */
-> +                __u32 policy;           /* guest's policy */
-> +
-> +                __u64 pdh_uaddr;         /* userspace address pointing to the PDH key */
-> +                __u32 dh_len;
-> +
-> +                __u64 session_addr;     /* userspace address which points to the guest session information */
-> +                __u32 session_len;
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Can you address my comments in v6?
-(https://lore.kernel.org/kvm/20200402213520.GA658288@vbusired-dt/)
+Though the 2nd patch is having comments to address, this one
+looks fine to me and should be able to merge as long as Mark
+is okay with this too:
 
-> +        };
-> +
-> +On success, the 'handle' field contains a new handle and on error, a negative value.
-> +
-> +For more details, see SEV spec Section 6.12.
-> +
->  References
->  ==========
->  
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 81d661706d31..74a847c9106d 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -1173,6 +1173,84 @@ static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> +static int sev_receive_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_receive_start *start;
-> +	struct kvm_sev_receive_start params;
-> +	int *error = &argp->error;
-> +	void *session_data;
-> +	void *pdh_data;
-> +	int ret;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	/* Get parameter from the userspace */
-> +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> +			sizeof(struct kvm_sev_receive_start)))
-> +		return -EFAULT;
-> +
-> +	/* some sanity checks */
-> +	if (!params.pdh_uaddr || !params.pdh_len ||
-> +	    !params.session_uaddr || !params.session_len)
-> +		return -EINVAL;
-> +
-> +	pdh_data = psp_copy_user_blob(params.pdh_uaddr, params.pdh_len);
-> +	if (IS_ERR(pdh_data))
-> +		return PTR_ERR(pdh_data);
-> +
-> +	session_data = psp_copy_user_blob(params.session_uaddr,
-> +			params.session_len);
-> +	if (IS_ERR(session_data)) {
-> +		ret = PTR_ERR(session_data);
-> +		goto e_free_pdh;
-> +	}
-> +
-> +	ret = -ENOMEM;
-> +	start = kzalloc(sizeof(*start), GFP_KERNEL);
-> +	if (!start)
-> +		goto e_free_session;
-> +
-> +	start->handle = params.handle;
-> +	start->policy = params.policy;
-> +	start->pdh_cert_address = __psp_pa(pdh_data);
-> +	start->pdh_cert_len = params.pdh_len;
-> +	start->session_address = __psp_pa(session_data);
-> +	start->session_len = params.session_len;
-> +
-> +	/* create memory encryption context */
-> +	ret = __sev_issue_cmd(argp->sev_fd, SEV_CMD_RECEIVE_START, start,
-> +				error);
-> +	if (ret)
-> +		goto e_free;
-> +
-> +	/* Bind ASID to this guest */
-> +	ret = sev_bind_asid(kvm, start->handle, error);
-> +	if (ret)
-> +		goto e_free;
-> +
-> +	params.handle = start->handle;
-> +	if (copy_to_user((void __user *)(uintptr_t)argp->data,
-> +			 &params, sizeof(struct kvm_sev_receive_start))) {
-> +		ret = -EFAULT;
-> +		sev_unbind_asid(kvm, start->handle);
-> +		goto e_free;
-> +	}
-> +
-> +	sev->handle = start->handle;
-> +	sev->fd = argp->sev_fd;
-> +
-> +e_free:
-> +	kfree(start);
-> +e_free_session:
-> +	kfree(session_data);
-> +e_free_pdh:
-> +	kfree(pdh_data);
-> +
-> +	return ret;
-> +}
-> +
->  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  {
->  	struct kvm_sev_cmd sev_cmd;
-> @@ -1226,6 +1304,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  	case KVM_SEV_SEND_FINISH:
->  		r = sev_send_finish(kvm, &sev_cmd);
->  		break;
-> +	case KVM_SEV_RECEIVE_START:
-> +		r = sev_receive_start(kvm, &sev_cmd);
-> +		break;
->  	default:
->  		r = -EINVAL;
->  		goto out;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 7aaed8ee33cf..24ac57151d53 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1619,6 +1619,15 @@ struct kvm_sev_send_update_data {
->  	__u32 trans_len;
->  };
->  
-> +struct kvm_sev_receive_start {
-> +	__u32 handle;
-> +	__u32 policy;
-> +	__u64 pdh_uaddr;
-> +	__u32 pdh_len;
-> +	__u64 session_uaddr;
-> +	__u32 session_len;
-> +};
-> +
->  #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
->  #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
->  #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
-> -- 
-> 2.17.1
-> 
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
