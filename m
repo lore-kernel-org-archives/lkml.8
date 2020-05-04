@@ -2,137 +2,209 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F79C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE3DC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513A920661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616035;
-	bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2tQXeCQY/4DpmLTrIy9Eff96RQAZ1XsOyV4z/OV4aG6YuvS1yaE3rpv/nmi4JodS
-	 djQsnZyQ86O5bmbTArrKX0U/siZF+Ou/ZEJjes91HXln0tEaq6Kp7js3m3aKr028xU
-	 8S8Ly7E7wYetP9+kQvxY5fIfY5d+5IUAhk7hRigA=
+	by mail.kernel.org (Postfix) with ESMTP id A4A1A20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732322AbgEDSNy (ORCPT
+        id S1730264AbgEDSBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:13:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731104AbgEDSBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDCC2073B;
-        Mon,  4 May 2020 18:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615263;
-        bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zl5obtgwKEPZtqCOYIpHuoY2KfZukm+2XcV1jD8PaN6MZaw6h8qaW5JwFLGMRpAJQ
-         J0j0sYtev4Ll5HiemMM4/uBpaNtmoInQtmu/OaDcdPN91LjEZ9RmvYkoefazlMfCGu
-         CJ9Q+Uk0DVYIRbzk1yuWz7K4HrNm8peSEyFPGjzc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.14 24/26] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Mon,  4 May 2020 19:57:38 +0200
-Message-Id: <20200504165447.897342672@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
-References: <20200504165442.494398840@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 May 2020 14:01:00 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:47478 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731069AbgEDSAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:52 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 67F4E1C0220; Mon,  4 May 2020 20:00:49 +0200 (CEST)
+Date:   Mon, 4 May 2020 20:00:49 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     nikitos.tr@gmail.com
+Cc:     dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/3] leds: add aw2013 driver
+Message-ID: <20200504180049.GA5067@duo.ucw.cz>
+References: <20200504162934.4693-1-nikitos.tr@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
+Content-Disposition: inline
+In-Reply-To: <20200504162934.4693-1-nikitos.tr@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit 7648f939cb919b9d15c21fff8cd9eba908d595dc upstream.
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+Hi!
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +#define AW2013_NAME "aw2013"
 
----
- fs/nfs/nfs3acl.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+That's.... not really useful define. Make it NAME? Drop it?
 
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inod
- 
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
- {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
- 
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
- 
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
- 			break;
- 		}
- 	}
- 
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
- 
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
- 
- const struct xattr_handler *nfs3_xattr_handlers[] = {
+> +#define AW2013_TIME_STEP 130
 
+I'd add comment with /* units */.
 
+> +#define STATE_OFF 0
+> +#define STATE_KEEP 1
+> +#define STATE_ON 2
+
+We should add enum into core for this...
+
+> +static int aw2013_chip_init(struct aw2013 *chip)
+> +{
+> +	int i, ret;
+> +
+> +	ret =3D regmap_write(chip->regmap, AW2013_GCR, AW2013_GCR_ENABLE);
+> +	if (ret) {
+> +		dev_err(&chip->client->dev, "Failed to enable the chip: %d\n",
+> +			ret);
+> +		goto error;
+> +	}
+> +
+> +	for (i =3D 0; i < chip->num_leds; i++) {
+> +		ret =3D regmap_update_bits(chip->regmap,
+> +					 AW2013_LCFG(chip->leds[i].num),
+> +					 AW2013_LCFG_IMAX_MASK,
+> +					 chip->leds[i].imax);
+> +		if (ret) {
+> +			dev_err(&chip->client->dev,
+> +				"Failed to set maximum current for led %d: %d\n",
+> +				chip->leds[i].num, ret);
+> +			goto error;
+> +		}
+> +	}
+> +
+> +error:
+> +	return ret;
+> +}
+
+No need for goto if you are just returning.
+
+> +static bool aw2013_chip_in_use(struct aw2013 *chip)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < chip->num_leds; i++)
+> +		if (chip->leds[i].cdev.brightness)
+> +			return true;
+> +
+> +	return false;
+> +}
+
+How is this going to interact with ledstate =3D=3D KEEP?
+
+> +static int aw2013_brightness_set(struct led_classdev *cdev,
+> +				 enum led_brightness brightness)
+> +{
+> +	struct aw2013_led *led =3D container_of(cdev, struct aw2013_led, cdev);
+> +	int ret, num;
+> +
+> +	mutex_lock(&led->chip->mutex);
+> +
+> +	if (aw2013_chip_in_use(led->chip)) {
+> +		ret =3D aw2013_chip_enable(led->chip);
+> +		if (ret)
+> +			return ret;
+> +	}
+
+You are returning with mutex held.
+
+> +	/* Never on - just set to off */
+> +	if (!*delay_on)
+> +		return aw2013_brightness_set(&led->cdev, LED_OFF);
+> +
+> +	/* Never off - just set to brightness */
+> +	if (!*delay_off)
+> +		return aw2013_brightness_set(&led->cdev, led->cdev.brightness);
+
+Is this dance neccessary? Should we do it in the core somewhere?
+
+> +		} else {
+> +			led->imax =3D 1; // 5mA
+> +			dev_info(&client->dev,
+> +				 "DT property led-max-microamp is missing!\n");
+> +		}
+
+Lets remove the exclamation mark.
+
+> +		led->num =3D source;
+> +		led->chip =3D chip;
+> +		led->fwnode =3D of_fwnode_handle(child);
+> +
+> +		if (!of_property_read_string(child, "default-state", &str)) {
+> +			if (!strcmp(str, "on"))
+> +				led->default_state =3D STATE_ON;
+> +			else if (!strcmp(str, "keep"))
+> +				led->default_state =3D STATE_KEEP;
+> +			else
+> +				led->default_state =3D STATE_OFF;
+> +		}
+
+We should really have something in core for this. Should we support
+arbitrary brightness there?
+
+> +static void aw2013_read_current_state(struct aw2013 *chip)
+> +{
+> +	int i, led_on;
+> +
+> +	regmap_read(chip->regmap, AW2013_LCTR, &led_on);
+> +
+> +	for (i =3D 0; i < chip->num_leds; i++) {
+> +		if (!(led_on & AW2013_LCTR_LE(chip->leds[i].num))) {
+> +			chip->leds[i].cdev.brightness =3D LED_OFF;
+> +			continue;
+> +		}
+> +		regmap_read(chip->regmap, AW2013_REG_PWM(chip->leds[i].num),
+> +			    &chip->leds[i].cdev.brightness);
+> +	}
+> +}
+> +
+> +static void aw2013_init_default_state(struct aw2013_led *led)
+> +{
+> +	switch (led->default_state) {
+> +	case STATE_ON:
+> +		led->cdev.brightness =3D LED_FULL;
+> +		break;
+> +	case STATE_OFF:
+> +		led->cdev.brightness =3D LED_OFF;
+> +	} /* On keep - just set brightness that was retrieved previously */
+> +
+> +	aw2013_brightness_set(&led->cdev, led->cdev.brightness);
+> +}
+
+Aha; I guess this makes "keeping" the state to work. Do you really
+need that functionality?
+
+Pretty nice driver, thanks.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrBYUQAKCRAw5/Bqldv6
+8vgWAJ9WeR5dGSlwHlUTp6MxPEwVtyx+6wCgj7lyJGhIoXq2ucnLkhPzBdInxUU=
+=U8CV
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
