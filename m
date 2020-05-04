@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020AAC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF18EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4AB920721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF3E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615202;
-	bh=zpmXzaO6P1PeBJPtMvXhh7XEmu0fLIE1OTqr7nC/dcw=;
+	s=default; t=1588615205;
+	bh=BkzwvDJlqsTTEB9XFdtRjhRaxiHIQXYB+xJukHzcDzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yfbS34y//wiMjmBB3fQu/9ez9EClemYhJeP21lXlq9O1mOKZpJuuWeci7c81DfEId
-	 ivEcQY4SBNesCvBA25QOKe1aL2SYN3t49Tm1s1Rwn9DEubuqcz1rQxiBE9QeVKe5Tg
-	 R1C7wF1RPplSeJmFRbv0JdeaAw/cLtx3y7P2zMzY=
+	b=cV/Vt4/7FHV6fgZ1J/aUbX+XsIZu94Sc59wLxMnPDxt93h8ZD9I/d6kS9mDcBGJOq
+	 bi5J1avNWU2sQvut/jsT/GsjkQA+kC8v/KC+3Vx6/8k/nn6d+CujjqFsroX+bdZjR1
+	 CXmQUecwkbgLhfVy2bIcNqz8CYf8+GDNctjGpidU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbgEDSAC (ORCPT
+        id S1730929AbgEDSAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54184 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730902AbgEDR76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:58 -0400
+        id S1730912AbgEDSAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B69EC20663;
-        Mon,  4 May 2020 17:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F89620663;
+        Mon,  4 May 2020 17:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615197;
-        bh=zpmXzaO6P1PeBJPtMvXhh7XEmu0fLIE1OTqr7nC/dcw=;
+        s=default; t=1588615199;
+        bh=BkzwvDJlqsTTEB9XFdtRjhRaxiHIQXYB+xJukHzcDzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0g/2xQG/HSd3Pf+/JlXJ/sZ0ZvRiAZGq8xa1+VwPp4MuPBnApFPcq/ls2d837MT0f
-         aPSUJ3dcPP2i+KkBSBSdE5qcyuB0Awzr1ctEMZsog3Hsmqekk4LGC9VBm8wBJKkb/g
-         kBzvOw2uBh3/3yICs4KR4Iq7RX3pAGpG4diVair0=
+        b=1pRtleXkeQCTh5T/nHFjVc/vwlerBFcGFQl6VB4IRxqjIfzaiSJbKGoz0wiCVWsOe
+         Dode9KLNFJEQChc4U1aFb48aca7NFfQUit7UvAsoo9Njox81aOGTCRAEhsZDz9komL
+         JsguVwLKM5bqgWuL1L6yxump880dAYlk4p2gc2ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.9 16/18] dmaengine: dmatest: Fix iteration non-stop logic
-Date:   Mon,  4 May 2020 19:57:26 +0200
-Message-Id: <20200504165445.574061312@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.9 17/18] selinux: properly handle multiple messages in selinux_netlink_send()
+Date:   Mon,  4 May 2020 19:57:27 +0200
+Message-Id: <20200504165445.840542114@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
@@ -61,61 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Paul Moore <paul@paul-moore.com>
 
-commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
+commit fb73974172ffaaf57a7c42f35424d9aece1a5af6 upstream.
 
-Under some circumstances, i.e. when test is still running and about to
-time out and user runs, for example,
+Fix the SELinux netlink_send hook to properly handle multiple netlink
+messages in a single sk_buff; each message is parsed and subject to
+SELinux access control.  Prior to this patch, SELinux only inspected
+the first message in the sk_buff.
 
-	grep -H . /sys/module/dmatest/parameters/*
-
-the iterations parameter is not respected and test is going on and on until
-user gives
-
-	echo 0 > /sys/module/dmatest/parameters/run
-
-This is not what expected.
-
-The history of this bug is interesting. I though that the commit
-  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-is a culprit, but looking closer to the code I think it simple revealed the
-broken logic from the day one, i.e. in the commit
-  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
-which adds iterations parameter.
-
-So, to the point, the conditional of checking the thread to be stopped being
-first part of conjunction logic prevents to check iterations. Thus, we have to
-always check both conditions to be able to stop after given iterations.
-
-Since it wasn't visible before second commit appeared, I add a respective
-Fixes tag.
-
-Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: stable@vger.kernel.org
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dmatest.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ security/selinux/hooks.c |   68 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 44 insertions(+), 24 deletions(-)
 
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -505,8 +505,8 @@ static int dmatest_func(void *data)
- 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -5002,39 +5002,59 @@ static int selinux_tun_dev_open(void *se
  
- 	ktime = ktime_get();
--	while (!kthread_should_stop()
--	       && !(params->iterations && total_tests >= params->iterations)) {
-+	while (!(kthread_should_stop() ||
-+	       (params->iterations && total_tests >= params->iterations))) {
- 		struct dma_async_tx_descriptor *tx = NULL;
- 		struct dmaengine_unmap_data *um;
- 		dma_addr_t srcs[src_cnt];
+ static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
+ {
+-	int err = 0;
+-	u32 perm;
++	int rc = 0;
++	unsigned int msg_len;
++	unsigned int data_len = skb->len;
++	unsigned char *data = skb->data;
+ 	struct nlmsghdr *nlh;
+ 	struct sk_security_struct *sksec = sk->sk_security;
++	u16 sclass = sksec->sclass;
++	u32 perm;
+ 
+-	if (skb->len < NLMSG_HDRLEN) {
+-		err = -EINVAL;
+-		goto out;
+-	}
+-	nlh = nlmsg_hdr(skb);
++	while (data_len >= nlmsg_total_size(0)) {
++		nlh = (struct nlmsghdr *)data;
+ 
+-	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
+-	if (err) {
+-		if (err == -EINVAL) {
++		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
++		 *       users which means we can't reject skb's with bogus
++		 *       length fields; our solution is to follow what
++		 *       netlink_rcv_skb() does and simply skip processing at
++		 *       messages with length fields that are clearly junk
++		 */
++		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
++			return 0;
++
++		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
++		if (rc == 0) {
++			rc = sock_has_perm(current, sk, perm);
++			if (rc)
++				return rc;
++		} else if (rc == -EINVAL) {
++			/* -EINVAL is a missing msg/perm mapping */
+ 			pr_warn_ratelimited("SELinux: unrecognized netlink"
+-			       " message: protocol=%hu nlmsg_type=%hu sclass=%s"
+-			       " pig=%d comm=%s\n",
+-			       sk->sk_protocol, nlh->nlmsg_type,
+-			       secclass_map[sksec->sclass - 1].name,
+-			       task_pid_nr(current), current->comm);
+-			if (!selinux_enforcing || security_get_allow_unknown())
+-				err = 0;
++				" message: protocol=%hu nlmsg_type=%hu sclass=%s"
++				" pid=%d comm=%s\n",
++				sk->sk_protocol, nlh->nlmsg_type,
++				secclass_map[sclass - 1].name,
++				task_pid_nr(current), current->comm);
++			if (selinux_enforcing && !security_get_allow_unknown())
++				return rc;
++			rc = 0;
++		} else if (rc == -ENOENT) {
++			/* -ENOENT is a missing socket/class mapping, ignore */
++			rc = 0;
++		} else {
++			return rc;
+ 		}
+ 
+-		/* Ignore */
+-		if (err == -ENOENT)
+-			err = 0;
+-		goto out;
++		/* move to the next message after applying netlink padding */
++		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
++		if (msg_len >= data_len)
++			return 0;
++		data_len -= msg_len;
++		data += msg_len;
+ 	}
+ 
+-	err = sock_has_perm(current, sk, perm);
+-out:
+-	return err;
++	return rc;
+ }
+ 
+ #ifdef CONFIG_NETFILTER
 
 
