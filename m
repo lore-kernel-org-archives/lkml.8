@@ -2,118 +2,141 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73297C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810BAC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5D420661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9D320661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NpY8F90B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcA9NxlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgEDMpF (ORCPT
+        id S1728559AbgEDMp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35700 "EHLO
+        Mon, 4 May 2020 08:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728108AbgEDMoz (ORCPT
+        by vger.kernel.org with ESMTP id S1726467AbgEDMpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:44:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 597FEC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 05:44:54 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id a4so1816248pgc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:44:54 -0700 (PDT)
+        Mon, 4 May 2020 08:45:25 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDFFC061A0E;
+        Mon,  4 May 2020 05:45:24 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id j3so9472366ljg.8;
+        Mon, 04 May 2020 05:45:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6xeLFFRxjayddvBRhnid9ILi0KvAvgA9E5JIow98J+k=;
-        b=NpY8F90BRltGb4GXWEpu15PIYA39hWgN/vjRE9Ek/b/9GW9wzoD3cKzg1ORQbVdpzg
-         efo1I3GN7J7X33UTFoMJ/eu2PsADoTAYvDaOMlTjW8elrMi4BiFGa8nRmECVckYCnT1C
-         7KCADcckuDMNWkx0X4b8cBJVDqkY/JjcvnQio=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cObmNJWQhpMjg4TLyfHtW5v/IhhmWX2FOHpf6uHBZHo=;
+        b=jcA9NxlZ6L0c9hBTeHkL+6ZWV3WMvNq5hmd5o3BKUGFT05J4wSfTVkPPtd7ZPMKrRb
+         N1WKJ93oae9Huxf1IDfhSLAOl0onP+QuYfXmUjBTbCWGse19Rf6dklWp3v8QO+yyavv4
+         u9edXDa+OdxM1SqSN0p7s1hlD2aWJSaRRhDBkU4HEsbVhbzioCoC+so3+2mBSnq3XY2m
+         rDSsEMllnnMybQ0nUpGYpyhowW33Z2u/8MgCu6jo6edb12QXklFdjpkiaVit8/vvOvUB
+         VkfkoBoG4ouFI9vbOsu+S6voPhEvjlbOoW9ixlYs5tDAipPT+1glfqBJz+g9jhUy5+h0
+         0XrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6xeLFFRxjayddvBRhnid9ILi0KvAvgA9E5JIow98J+k=;
-        b=WwTXzfVnqXznGYZ3ml9C5Ha4MFAwcKTKrUmSEyh4//20gwAn8gMvc+r+nhEjyDdYdp
-         cSCPqmcpOGr7oGy+8JH0ZFD229Gz9s1SMW8B8BuSlStSvnGE4GS9HtsfJmyE3l3eoUlX
-         k6rV+xYcPMA5Y6S6+knO90P0CN1cd3Q6acf7t/T1VtavNe8VuuBlcdY8aklu9yoyz6N/
-         nUJrqELJYm+YIhW8WRZMiuYPTcTFJY+1UO/pxTJQes3+KrzSVqdsdGPDRe4oClKyC+CW
-         jn6eOIz3nd3Z0ZJSVCfyJNsglxhOXGPe1Hgox5/j1vBcOP8a7A3EXxFWMGxZV7bvDf23
-         XOEA==
-X-Gm-Message-State: AGi0PubaCMx/gxNUbx66ZOZaVgwgr+kZ7sXD4U54/tA+17I6Xp3UI6NA
-        7aie9iEuXuBnsxQP3yWg8fcRmA==
-X-Google-Smtp-Source: APiQypIsMuPoACD4kDg+3c6GSsELr2TwlWwMVfHmHQccbvWxqpghPB7vzmBRwg1sRRP95stLAqZs3A==
-X-Received: by 2002:a63:1e18:: with SMTP id e24mr16016160pge.296.1588596293785;
-        Mon, 04 May 2020 05:44:53 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id a99sm7154563pje.35.2020.05.04.05.44.51
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cObmNJWQhpMjg4TLyfHtW5v/IhhmWX2FOHpf6uHBZHo=;
+        b=e8YpF0P1iVm7TeLVjr1YrhIQKS6XuEL7Eo4iEsFlN3NFktqJW/YPwF0XPIqtEUuvov
+         PXy/wA6dKkQGPTGoRagY/olhBLnizc7qIZTqzg6EL1TdYZzI48QktgiT0gFXt4gfWCWl
+         jIQ2SP8WLdcDqzkhUS2RC9rvlcIp99OYReuZRAbP+EVgBqHrmqvXlzhKoZGVQWtYiLVb
+         MLhN0oqrErgImJhBCiFm/aPqGcRvtmlFCEQnkTb0GRAWrO6fSpWTvsgMSewsrLVNXGmP
+         UwcxuZ8DlTzLcVzesYXqsCduGb186j8yO9H7JLKqZiA6LjjI6zVpkcZ3g1HMH0cVwx97
+         p5PA==
+X-Gm-Message-State: AGi0PuZmHsCbZ/QCOjrmed/nreScLfQLr2NB5jWp9U7GSVGdeCIw2HfH
+        NjHL3nqPzHXroITbZgWhj1d0jk9CnEMPbQ==
+X-Google-Smtp-Source: APiQypJXhT/ViTAl6h4ti7rqTDMwxGMrUxUDQkVVA6TeUrECI9C7Ng7Ry4jNrt/7FS9j+EVuatustw==
+X-Received: by 2002:a05:651c:3c6:: with SMTP id f6mr10141274ljp.229.1588596323191;
+        Mon, 04 May 2020 05:45:23 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id l8sm8096189ljo.5.2020.05.04.05.45.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 05:44:53 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Qianqian Yan <qianqian.yan@mediatek.com>,
-        devicetree@vger.kernel.org, gtk_ruiwang <gtk_ruiwang@mediatek.com>,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: mt8173: fix vcodec-enc clock
-Date:   Mon,  4 May 2020 20:44:43 +0800
-Message-Id: <20200504124442.208004-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+        Mon, 04 May 2020 05:45:22 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 4 May 2020 14:45:20 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 21/24] rcu/tiny: move kvfree_call_rcu() out of header
+Message-ID: <20200504124520.GC17577@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-22-urezki@gmail.com>
+ <20200501230359.GH7560@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200501230359.GH7560@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the assigned-clock-parents to higher frequency clock to avoid h264
-encode timeout:
+On Fri, May 01, 2020 at 04:03:59PM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 28, 2020 at 10:59:00PM +0200, Uladzislau Rezki (Sony) wrote:
+> > Move inlined kvfree_call_rcu() function out of the
+> > header file. This step is a preparation for head-less
+> > support.
+> > 
+> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  include/linux/rcutiny.h | 6 +-----
+> >  kernel/rcu/tiny.c       | 6 ++++++
+> >  2 files changed, 7 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+> > index 0c6315c4a0fe..7eb66909ae1b 100644
+> > --- a/include/linux/rcutiny.h
+> > +++ b/include/linux/rcutiny.h
+> > @@ -34,11 +34,7 @@ static inline void synchronize_rcu_expedited(void)
+> >  	synchronize_rcu();
+> >  }
+> >  
+> > -static inline void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > -{
+> > -	call_rcu(head, func);
+> > -}
+> > -
+> > +void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func);
+> >  void rcu_qs(void);
+> >  
+> >  static inline void rcu_softirq_qs(void)
+> > diff --git a/kernel/rcu/tiny.c b/kernel/rcu/tiny.c
+> > index aa897c3f2e92..508c82faa45c 100644
+> > --- a/kernel/rcu/tiny.c
+> > +++ b/kernel/rcu/tiny.c
+> > @@ -177,6 +177,12 @@ void call_rcu(struct rcu_head *head, rcu_callback_t func)
+> >  }
+> >  EXPORT_SYMBOL_GPL(call_rcu);
+> >  
+> > +void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+> > +{
+> > +	call_rcu(head, func);
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvfree_call_rcu);
+> 
+> This increases the size of Tiny RCU.  Plus in Tiny RCU, the overhead of
+> synchronize_rcu() is exactly zero.  So why not make the single-argument
+> kvfree_call_rcu() just unconditionally do synchronize_rcu() followed by
+> kvfree() or whatever?  That should go just fine into the header file.
+> 
+I was thinking about it. That makes sense. Let me rework it then :)
 
-[  134.763465] mtk_vpu 10020000.vpu: vpu ipi 4 ack time out !
-[  134.769008] [MTK_VCODEC][ERROR][18]: vpu_enc_send_msg() vpu_ipi_send msg_id c002 len 32 fail -5
-[  134.777707] [MTK_VCODEC][ERROR][18]: vpu_enc_encode() AP_IPIMSG_ENC_ENCODE 0 fail
-
-venc_sel is the clock used by h264 encoder, and venclt_sel is the clock
-used by vp8 encoder. Assign venc_sel to vcodecpll_ck and venclt_sel to
-vcodecpll_370p5.
-
-    vcodecpll                         1482000000
-       vcodecpll_ck                    494000000
-          venc_sel                     494000000
-...
-       vcodecpll_370p5                 370500000
-          venclt_sel                   370500000
-
-Fixes: fbbad0287cec ("arm64: dts: Using standard CCF interface to set vcodec clk")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index a212bf124e81..d0e9a2aada2e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -1422,8 +1422,8 @@ vcodec_enc: vcodec@18002000 {
- 				      "venc_lt_sel";
- 			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
- 					  <&topckgen CLK_TOP_VENC_LT_SEL>;
--			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
--						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL>,
-+						 <&topckgen CLK_TOP_VCODECPLL_370P5>;
- 		};
- 
- 		jpegdec: jpegdec@18004000 {
--- 
-2.26.2.526.g744177e7f7-goog
-
+--
+Vlad Rezki
