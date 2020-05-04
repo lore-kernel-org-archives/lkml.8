@@ -2,332 +2,399 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B62C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFEFC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D8E20735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:25:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKywlSXb"
+	by mail.kernel.org (Postfix) with ESMTP id C458D21973
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgEDJZ6 (ORCPT
+        id S1728344AbgEDJ2y convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727781AbgEDJZ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:25:58 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2231C061A0E;
-        Mon,  4 May 2020 02:25:57 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id y25so5249408pfn.5;
-        Mon, 04 May 2020 02:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ea18K0DMezNwLMWTfgjkrhJicREvZu/yFWsVCCJgBrQ=;
-        b=AKywlSXb+yrf+BhyZNb6iYUpBDyrMFbuhtkK9H+iaJi/AWA376Sl03UcnLSY0JSxHW
-         VkOhPCvYSn15m+MfINsY03f1sW7KtsIEgO2kXGpAgIdXQZ9ruAYVNOdv2hqZF2DxCQaW
-         ImaPaaq0/3VfuL/xl5RpqN6W+NupZsRJ9CUDUvr6+iOycAQjrTN7esVmuyOBAUxWWG22
-         PAQsU4qq+orkSZqBOygc8bIfcbnsbax+NaDjLO4d0uYmF4x7GmJeLn2Ymmktm+IoKs2G
-         jV9WwS8vBgAGQqryj+l7sS4Kc94i9cdyJCN+UWkIF2cHRQYb3Kpu519m2zwm4Rqtcxh6
-         96hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ea18K0DMezNwLMWTfgjkrhJicREvZu/yFWsVCCJgBrQ=;
-        b=XHI15k2xHTvO8MdkSXK8TquEqEGRHDur9YcxvlO2IXrnCNdeCMVozZu3NhteGs4Qrd
-         Ekw55pO9DDBpyyL2FwbCJRD0+j/4Vgv5FO/lSlqe+b58oo38sgR/vZqxzcc6iJXjEmIb
-         x46pzh6Wpmasugr5imkZsupFwySwfGHpgB1kQvneFp4u25aazBMpTTIt/IeqQShsuk6K
-         ZQitHj4lMAaO0GNAHwDkDDsy8sTN24sq5Tnfw/hJylHMv9E7aCEYr/tnXtJJ8ETX2/6p
-         7UWSS3HcaxhDbYjoJPMd8H+podpA4n4cRPJazn1tkfdLOalaK6OE9qNOEUNhn1QiHAIn
-         UmZw==
-X-Gm-Message-State: AGi0Pub9xTtxg6rcCXRZhIocWkPtB3a8o+laaR9lx6l5We/ZaRtyyyr9
-        WQgmTb4AqNQclEA61hD3iGA=
-X-Google-Smtp-Source: APiQypLeGtjpawjlkKUhjFUAAoH0J+fsaebDb2DeLIynf2+b/bno+FFCITjDUUmlzU92Deeq3qMGlg==
-X-Received: by 2002:a63:b11:: with SMTP id 17mr16153058pgl.3.1588584357352;
-        Mon, 04 May 2020 02:25:57 -0700 (PDT)
-Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id e2sm6260691pjt.2.2020.05.04.02.25.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 02:25:56 -0700 (PDT)
-Subject: Re: [PATCH 00/14] Move the ReST files from Documentation/*.txt
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-arch@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        David Howells <dhowells@redhat.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joe Perches <joe@perches.com>
-References: <cover.1588345503.git.mchehab+huawei@kernel.org>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <9f79e15a-4e36-3747-51fc-ca2d8ab616b7@gmail.com>
-Date:   Mon, 4 May 2020 18:25:51 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 05:28:54 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2151 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726906AbgEDJ2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:28:53 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id C39C977FE7328CAC9F84;
+        Mon,  4 May 2020 10:28:51 +0100 (IST)
+Received: from localhost (10.47.88.153) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 4 May 2020
+ 10:28:51 +0100
+Date:   Mon, 4 May 2020 10:28:31 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [RFC PATCH 4/4] iio: Track enabled channels on a per channel
+ basis
+Message-ID: <20200504102831.00003c7e@Huawei.com>
+In-Reply-To: <BN6PR03MB3347E50B683800B249C04AFE99A60@BN6PR03MB3347.namprd03.prod.outlook.com>
+References: <20200424051818.6408-1-alexandru.ardelean@analog.com>
+        <20200424051818.6408-5-alexandru.ardelean@analog.com>
+        <CY4PR03MB33506FD8C2BF3921FE9BA2DD99D00@CY4PR03MB3350.namprd03.prod.outlook.com>
+        <20200426115031.2eb0bb3c@archlinux>
+        <CY4PR03MB3350C865423E5FF97834BD3F99AF0@CY4PR03MB3350.namprd03.prod.outlook.com>
+        <20200502181929.2409dcde@archlinux>
+        <BN6PR03MB3347E50B683800B249C04AFE99A60@BN6PR03MB3347.namprd03.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <cover.1588345503.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.47.88.153]
+X-ClientProxiedBy: lhreml739-chm.china.huawei.com (10.201.108.189) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(CC to documentation, get_maintainer, and LKMM maintainers)
+On Mon, 4 May 2020 08:24:35 +0000
+"Sa, Nuno" <Nuno.Sa@analog.com> wrote:
 
-Hi Mauro,
+> > From: Jonathan Cameron <jic23@kernel.org>
+> > Sent: Samstag, 2. Mai 2020 19:19
+> > To: Sa, Nuno <Nuno.Sa@analog.com>
+> > Cc: Ardelean, Alexandru <alexandru.Ardelean@analog.com>; linux-
+> > iio@vger.kernel.org; linux-kernel@vger.kernel.org; lars@metafoo.de
+> > Subject: Re: [RFC PATCH 4/4] iio: Track enabled channels on a per channel
+> > basis
+> > 
+> > [External]
+> > 
+> > On Mon, 27 Apr 2020 12:09:18 +0000
+> > "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+> >   
+> > > > From: linux-iio-owner@vger.kernel.org <linux-iio-  
+> > owner@vger.kernel.org>  
+> > > > On Behalf Of Jonathan Cameron
+> > > > Sent: Sonntag, 26. April 2020 12:51
+> > > > To: Sa, Nuno <Nuno.Sa@analog.com>
+> > > > Cc: Ardelean, Alexandru <alexandru.Ardelean@analog.com>; linux-
+> > > > iio@vger.kernel.org; linux-kernel@vger.kernel.org; lars@metafoo.de
+> > > > Subject: Re: [RFC PATCH 4/4] iio: Track enabled channels on a per channel
+> > > > basis
+> > > >
+> > > > On Fri, 24 Apr 2020 07:51:05 +0000
+> > > > "Sa, Nuno" <Nuno.Sa@analog.com> wrote:
+> > > >  
+> > > > > > From: linux-iio-owner@vger.kernel.org <linux-iio-  
+> > > > owner@vger.kernel.org>  
+> > > > > > On Behalf Of Alexandru Ardelean
+> > > > > > Sent: Freitag, 24. April 2020 07:18
+> > > > > > To: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > > > > Cc: jic23@kernel.org; lars@metafoo.de; Ardelean, Alexandru
+> > > > > > <alexandru.Ardelean@analog.com>
+> > > > > > Subject: [RFC PATCH 4/4] iio: Track enabled channels on a per channel  
+> > > > basis  
+> > > > > >
+> > > > > > From: Lars-Peter Clausen <lars@metafoo.de>
+> > > > > >
+> > > > > > Now that we support multiple channels with the same scan index we  
+> > can  
+> > > > no  
+> > > > > > longer use the scan mask to track which channels have been enabled.
+> > > > > > Otherwise it is not possible to enable channels with the same scan  
+> > index  
+> > > > > > independently.
+> > > > > >
+> > > > > > Introduce a new channel mask which is used instead of the scan mask  
+> > to  
+> > > > > > track which channels are enabled. Whenever the channel mask is  
+> > > > changed a  
+> > > > > > new scan mask is computed based on it.
+> > > > > >
+> > > > > > Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> > > > > > Signed-off-by: Alexandru Ardelean  
+> > <alexandru.ardelean@analog.com>  
+> > > > > > ---
+> > > > > >  drivers/iio/industrialio-buffer.c | 62 +++++++++++++++++++++-------  
+> > ---  
+> > > > > >  drivers/iio/inkern.c              | 19 +++++++++-
+> > > > > >  include/linux/iio/buffer_impl.h   |  3 ++
+> > > > > >  include/linux/iio/consumer.h      |  2 +
+> > > > > >  4 files changed, 64 insertions(+), 22 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-  
+> > > > buffer.c  
+> > > > > > index c06691281287..1821a3e32fb3 100644
+> > > > > > --- a/drivers/iio/industrialio-buffer.c
+> > > > > > +++ b/drivers/iio/industrialio-buffer.c
+> > > > > > @@ -216,12 +216,20 @@ int iio_buffer_alloc_scanmask(struct  
+> > iio_buffer  
+> > > > > > *buffer,
+> > > > > >  	if (buffer->scan_mask == NULL)
+> > > > > >  		return -ENOMEM;
+> > > > > >
+> > > > > > +	buffer->channel_mask = bitmap_zalloc(indio_dev-  
+> > >num_channels,  
+> > > > > > +					     GFP_KERNEL);
+> > > > > > +	if (buffer->channel_mask == NULL) {
+> > > > > > +		bitmap_free(buffer->scan_mask);
+> > > > > > +		return -ENOMEM;
+> > > > > > +	}
+> > > > > > +
+> > > > > >  	return 0;
+> > > > > >  }
+> > > > > >  EXPORT_SYMBOL_GPL(iio_buffer_alloc_scanmask);
+> > > > > >
+> > > > > >  void iio_buffer_free_scanmask(struct iio_buffer *buffer)
+> > > > > >  {
+> > > > > > +	bitmap_free(buffer->channel_mask);
+> > > > > >  	bitmap_free(buffer->scan_mask);
+> > > > > >  }
+> > > > > >  EXPORT_SYMBOL_GPL(iio_buffer_free_scanmask);
+> > > > > > @@ -285,7 +293,7 @@ static ssize_t iio_scan_el_show(struct device  
+> > > > *dev,  
+> > > > > >
+> > > > > >  	/* Ensure ret is 0 or 1. */
+> > > > > >  	ret = !!test_bit(to_iio_dev_attr(attr)->address,
+> > > > > > -		       indio_dev->buffer->scan_mask);
+> > > > > > +		       indio_dev->buffer->channel_mask);
+> > > > > >
+> > > > > >  	return sprintf(buf, "%d\n", ret);
+> > > > > >  }
+> > > > > > @@ -330,11 +338,12 @@ static bool iio_validate_scan_mask(struct  
+> > > > iio_dev  
+> > > > > > *indio_dev,
+> > > > > >   * buffers might request, hence this code only verifies that the
+> > > > > >   * individual buffers request is plausible.
+> > > > > >   */
+> > > > > > -static int iio_scan_mask_set(struct iio_dev *indio_dev,
+> > > > > > -		      struct iio_buffer *buffer, int bit)
+> > > > > > +static int iio_channel_mask_set(struct iio_dev *indio_dev,
+> > > > > > +				struct iio_buffer *buffer, int bit)
+> > > > > >  {
+> > > > > >  	const unsigned long *mask;
+> > > > > >  	unsigned long *trialmask;
+> > > > > > +	unsigned int ch;
+> > > > > >
+> > > > > >  	trialmask = bitmap_zalloc(indio_dev->masklength,  
+> > GFP_KERNEL);  
+> > > > > >  	if (trialmask == NULL)
+> > > > > > @@ -343,8 +352,11 @@ static int iio_scan_mask_set(struct iio_dev
+> > > > > > *indio_dev,
+> > > > > >  		WARN(1, "Trying to set scanmask prior to registering
+> > > > > > buffer\n");
+> > > > > >  		goto err_invalid_mask;
+> > > > > >  	}
+> > > > > > -	bitmap_copy(trialmask, buffer->scan_mask, indio_dev-  
+> > > > > > >masklength);  
+> > > > > > -	set_bit(bit, trialmask);
+> > > > > > +
+> > > > > > +	set_bit(bit, buffer->channel_mask);
+> > > > > > +
+> > > > > > +	for_each_set_bit(ch, buffer->channel_mask, indio_dev-  
+> > > > > > >num_channels)  
+> > > > > > +		set_bit(indio_dev->channels[ch].scan_index,  
+> > trialmask);  
+> > > > >
+> > > > > So, here if the channels all have the same scan_index, we will end up  
+> > with a  
+> > > > scan_mask which is  
+> > > > > different that channel_mask, right? I saw that in our internal driver's we  
+> > > > then just access the  
+> > > > > channel_mask field directly to know what pieces/channels do we need  
+> > to  
+> > > > enable prior to  
+> > > > > buffering, which implies including buffer_impl.h.  
+> > > > Given that we handle the demux only at the level of scan elements that
+> > > > won't work in general
+> > > > (even if it wasn't a horrible layering issue).  
+> > >
+> > > Yes, and the driver just adds 16 channels and points all of them to  
+> > scan_index 0. It then  
+> > > sets real_bits and the shift so that userspace can get the right channel bit.  
+> > So, in the end  
+> > > we have just one buffer/scan element with 16bits. My problem here is  
+> > more architectural...  
+> > > We should not directly include "buffer_impl.h" in drivers...
+> > >  
+> > > > >
+> > > > > So, for me it would make sense to compute scan_mask so that it will be  
+> > the  
+> > > > same as channel_mask  
+> > > > > (hmm but that would be a problem when computing the buffer size...)  
+> > and  
+> > > > drivers can correctly use  
+> > > > > ` validate_scan_mask ()` cb. Alternatively, we need to expose  
+> > > > channel_mask either on a new cb or  
+> > > > > change the ` validate_scan_mask ()` footprint.  
+> > > >
+> > > > Excellent points. We need to address support for:
+> > > >
+> > > > 1) available_scan_mask - if we have complicated rules on mixtures of
+> > > > channels inside
+> > > >    a given buffer element.  
+> > >
+> > > Maybe one solution to expose channel mask is to check if channel_mask !=  
+> > scan_mask  
+> > > before calling the ` validate_scan_mask()`. If it is, we pass channel_mask to  
+> > the callback.  
+> > > Driver's should then know what to do with it...  
+> > 
+> > That's liable to be flakey as there is no requirement for the scan_mask to
+> > be ordered or indeed not have holes.
+> >   
+> 
+> Yes, but the patch is adding this code:
+> 
+> `
+> for_each_set_bit(ch, buffer->channel_mask, indio_dev-  
+> 		num_channels)  
+> 	set_bit(indio_dev->channels[ch].scan_index, trialmask);  
+> `
+> 
+> So, As I'm understanding we always enable the scan element on which a channel is inserted.
+> In the end, for a traditional driver with all different scan indexes, the resulting scan mask will
+> be the same as the channel mask if I'm not missing any subtlety here...
 
-As I didn't receive "[PATCH 12/14] docs: move remaining stuff under
-Documentation/*.txt to Documentation/staging", I'm replying to
-[PATCH 00/14].
+The bits for scan mask are provided by the driver, channel mask elements are simply done
+in order of the channel array as we parse it.  Hence scan_mask can have gaps, whereas
+channel_mask can't.  I think it's actually more complex than that because not all channels
+are in the scan_mask at all.  Now we don't add channels that aren't to either scan_mask or
+channel mask (as they have no buffer attributes) but they will change the bit locations
+for the channel_mask.
 
-On Fri, 1 May 2020 17:37:44 +0200, Mauro Carvalho Chehab wrote:
-> The main goal of this series is to cleanup the Documentation/
-> directory.
-> 
-> Most of the files under Documentation/*.txt are already in ReST format.
-> They just need to be moved to some place. So, most of the work here is
-> to just move files for them to generate an output using the docs building
-> system.
-> 
-> After this change, the  Documentation/ dir will contain:
-> 
-> - the main ReST file:
-> 	- index.rst
-> 
-> - TUX and its copyright:
-> 	- logo.gif and COPYING-logo
-> 
-> - Files required to do ReST builds:
-> 	- .gitignore, Makefile,  conf.py,  docutils.conf,  Kconfig
-> 
-> - A pre-git file used to generate patches:
-> 	- dontdiff
->   (I guess we should get rid of it, as I doubt this is useful those days).
-> 
-> -
-> 
-> Besides the above rightful files, the Documentation/ dir will also
-> contain some left-overs:
-> 
-> - two somewhat new ReST files that should be moved to somewhere:
-> 	- asm-annotations.rst and watch_queue.rst
-> 
-> - Two files that helps people looking for some well known documents
->   that are referenced at the web, pointing to their new location inside
->   the process/ dir:
-> 	- SubmittingPatches and CodingStyle
-> 
-> - Three .txt files that weren't converted to ReST:
-> 	- atomic_bitops.txt, memory-barriers.txt, atomic_t.txt
-> 
-> It should be noticed that I'm in doubt about the location of some files,
-> and some stuff may well belong to a trash can. So, this series create
-> a temporary place for orphaned documents in the form of a
-> Documentation/staging directory.
-> 
-> This series is also on my development git tree, at:
-> 
-> 	https://git.linuxtv.org/mchehab/experimental.git/log/?h=rename-main-docs
-> 
-> The built output documentation on html format is at:
-> 
-> 	https://www.infradead.org/~mchehab/kernel_docs/
-> 
-> (it contains also other documents I converted to ReST)
-> 
-> 
-> Mauro Carvalho Chehab (14):
->   docs: move DMA kAPI to Documentation/core-api
->   docs: add bus-virt-phys-mapping.txt to core-api
->   docs: fix references for DMA*.txt files
->   docs: move IPMI.txt to the driver API book
->   docs: fix references for ipmi.rst file
->   docs: debugging-via-ohci1394.txt: add it to the core-api book
->   docs: add IRQ documentation at the core-api book
->   docs: move kobject and kref docs into the core-api book
->   docs: move digsig docs to the security book
->   docs: move locking-specific documenta to locking/ directory
->   docs: move other kAPI documents to core-api
->   docs: move remaining stuff under Documentation/*.txt to
->     Documentation/staging
->   docs: staging: don't use literalinclude
->   docs: staging: use small font for literal includes
-> 
->  Documentation/PCI/pci.rst                     |  6 +-
->  Documentation/admin-guide/hw-vuln/l1tf.rst    |  2 +-
->  .../admin-guide/kernel-parameters.txt         |  2 +-
->  .../admin-guide/kernel-per-CPU-kthreads.rst   |  2 +-
->  Documentation/admin-guide/sysctl/vm.rst       |  2 +-
->  Documentation/block/biodoc.rst                |  2 +-
->  .../bus-virt-phys-mapping.rst}                |  2 +-
->  .../debugging-via-ohci1394.rst}               |  0
->  .../dma-api-howto.rst}                        |  0
->  .../{DMA-API.txt => core-api/dma-api.rst}     |  6 +-
->  .../dma-attributes.rst}                       |  0
->  .../dma-isa-lpc.rst}                          |  2 +-
->  Documentation/core-api/index.rst              | 14 +++++
->  .../{IRQ.txt => core-api/irq/concepts.rst}    |  0
->  Documentation/core-api/irq/index.rst          | 11 ++++
->  .../irq/irq-affinity.rst}                     |  0
->  .../irq/irq-domain.rst}                       |  3 +-
->  .../irq/irqflags-tracing.rst}                 |  0
->  Documentation/core-api/kobject.rst            |  2 +-
->  Documentation/{kref.txt => core-api/kref.rst} |  0
->  .../{mailbox.txt => core-api/mailbox.rst}     |  0
->  .../nommu-mmap.rst}                           |  0
->  .../this_cpu_ops.rst}                         |  0
->  .../unaligned-memory-access.rst}              |  0
->  Documentation/driver-api/index.rst            |  1 +
->  .../{IPMI.txt => driver-api/ipmi.rst}         |  0
->  Documentation/driver-api/usb/dma.rst          |  6 +-
->  Documentation/gpu/drm-mm.rst                  |  2 +-
->  Documentation/ia64/irq-redir.rst              |  2 +-
->  Documentation/index.rst                       | 13 ++++
->  .../futex-requeue-pi.rst}                     |  0
->  .../hwspinlock.rst}                           |  0
->  Documentation/locking/index.rst               |  7 +++
->  .../percpu-rw-semaphore.rst}                  |  0
->  .../{pi-futex.txt => locking/pi-futex.rst}    |  0
->  .../preempt-locking.rst}                      |  0
->  .../robust-futex-ABI.rst}                     |  0
->  .../robust-futexes.rst}                       |  0
->  Documentation/locking/rt-mutex.rst            |  2 +-
->  Documentation/memory-barriers.txt             |  6 +-
->  Documentation/networking/scaling.rst          |  4 +-
->  .../{digsig.txt => security/digsig.rst}       |  0
->  Documentation/security/index.rst              |  1 +
->  .../{crc32.txt => staging/crc32.rst}          |  0
->  Documentation/staging/index.rst               | 59 +++++++++++++++++++
->  .../{kprobes.txt => staging/kprobes.rst}      |  0
->  Documentation/{lzo.txt => staging/lzo.rst}    |  0
->  .../remoteproc.rst}                           |  2 +-
->  .../{rpmsg.txt => staging/rpmsg.rst}          |  0
->  .../speculation.rst}                          |  8 ++-
->  .../static-keys.rst}                          |  0
->  Documentation/{tee.txt => staging/tee.rst}    |  1 +
->  Documentation/{xz.txt => staging/xz.rst}      |  0
->  Documentation/trace/kprobetrace.rst           |  2 +-
->  .../translations/ko_KR/memory-barriers.txt    |  6 +-
->  Documentation/translations/zh_CN/IRQ.txt      |  4 +-
->  MAINTAINERS                                   | 20 +++----
->  arch/Kconfig                                  |  2 +-
->  arch/ia64/hp/common/sba_iommu.c               | 12 ++--
->  arch/parisc/kernel/pci-dma.c                  |  2 +-
->  arch/x86/include/asm/dma-mapping.h            |  4 +-
->  arch/x86/kernel/amd_gart_64.c                 |  2 +-
->  drivers/char/ipmi/Kconfig                     |  2 +-
->  drivers/char/ipmi/ipmi_si_hotmod.c            |  2 +-
->  drivers/char/ipmi/ipmi_si_intf.c              |  2 +-
->  drivers/parisc/sba_iommu.c                    | 14 ++---
->  include/asm-generic/bitops/atomic.h           |  2 +-
->  include/linux/dma-mapping.h                   |  2 +-
->  include/linux/jump_label.h                    |  2 +-
->  include/media/videobuf-dma-sg.h               |  2 +-
->  init/Kconfig                                  |  2 +-
->  kernel/dma/debug.c                            |  2 +-
->  lib/Kconfig.debug                             |  2 +-
->  lib/crc32.c                                   |  2 +-
->  lib/lzo/lzo1x_decompress_safe.c               |  2 +-
->  lib/xz/Kconfig                                |  2 +-
->  mm/Kconfig                                    |  2 +-
->  mm/nommu.c                                    |  2 +-
->  samples/kprobes/kprobe_example.c              |  2 +-
->  samples/kprobes/kretprobe_example.c           |  2 +-
->  80 files changed, 191 insertions(+), 81 deletions(-)
->  rename Documentation/{bus-virt-phys-mapping.txt => core-api/bus-virt-phys-mapping.rst} (99%)
->  rename Documentation/{debugging-via-ohci1394.txt => core-api/debugging-via-ohci1394.rst} (100%)
->  rename Documentation/{DMA-API-HOWTO.txt => core-api/dma-api-howto.rst} (100%)
->  rename Documentation/{DMA-API.txt => core-api/dma-api.rst} (99%)
->  rename Documentation/{DMA-attributes.txt => core-api/dma-attributes.rst} (100%)
->  rename Documentation/{DMA-ISA-LPC.txt => core-api/dma-isa-lpc.rst} (98%)
->  rename Documentation/{IRQ.txt => core-api/irq/concepts.rst} (100%)
->  create mode 100644 Documentation/core-api/irq/index.rst
->  rename Documentation/{IRQ-affinity.txt => core-api/irq/irq-affinity.rst} (100%)
->  rename Documentation/{IRQ-domain.txt => core-api/irq/irq-domain.rst} (99%)
->  rename Documentation/{irqflags-tracing.txt => core-api/irq/irqflags-tracing.rst} (100%)
->  rename Documentation/{kref.txt => core-api/kref.rst} (100%)
->  rename Documentation/{mailbox.txt => core-api/mailbox.rst} (100%)
->  rename Documentation/{nommu-mmap.txt => core-api/nommu-mmap.rst} (100%)
->  rename Documentation/{this_cpu_ops.txt => core-api/this_cpu_ops.rst} (100%)
->  rename Documentation/{unaligned-memory-access.txt => core-api/unaligned-memory-access.rst} (100%)
->  rename Documentation/{IPMI.txt => driver-api/ipmi.rst} (100%)
->  rename Documentation/{futex-requeue-pi.txt => locking/futex-requeue-pi.rst} (100%)
->  rename Documentation/{hwspinlock.txt => locking/hwspinlock.rst} (100%)
->  rename Documentation/{percpu-rw-semaphore.txt => locking/percpu-rw-semaphore.rst} (100%)
->  rename Documentation/{pi-futex.txt => locking/pi-futex.rst} (100%)
->  rename Documentation/{preempt-locking.txt => locking/preempt-locking.rst} (100%)
->  rename Documentation/{robust-futex-ABI.txt => locking/robust-futex-ABI.rst} (100%)
->  rename Documentation/{robust-futexes.txt => locking/robust-futexes.rst} (100%)
->  rename Documentation/{digsig.txt => security/digsig.rst} (100%)
->  rename Documentation/{crc32.txt => staging/crc32.rst} (100%)
->  create mode 100644 Documentation/staging/index.rst
->  rename Documentation/{kprobes.txt => staging/kprobes.rst} (100%)
->  rename Documentation/{lzo.txt => staging/lzo.rst} (100%)
->  rename Documentation/{remoteproc.txt => staging/remoteproc.rst} (99%)
->  rename Documentation/{rpmsg.txt => staging/rpmsg.rst} (100%)
->  rename Documentation/{speculation.txt => staging/speculation.rst} (97%)
->  rename Documentation/{static-keys.txt => staging/static-keys.rst} (100%)
->  rename Documentation/{tee.txt => staging/tee.rst} (99%)
->  rename Documentation/{xz.txt => staging/xz.rst} (100%)
->
+Look at how iio_buffer_add_channel_sysfs is called.
 
-diff stat above shows you are not moving Documentation/atomic_bitops.txt in
-this series. However, PATCH 12/14 contains the following hunks:
+> 
+> > >  
+> > > > 2) channel enabling though I'm sort of inclined to say that if you are using  
+> > this  
+> > > > approach
+> > > >    you only get information on channels that make up a scan mask  
+> > element.  
+> > > > Tough luck you
+> > > >    may end up enabling more than you'd like.  
+> > >
+> > > Not sure if I'm fully understanding this point. I believe with this approach  
+> > channel  
+> > > enablement works as before since the core is kind of mapping  
+> > channel_mask to  
+> > > scan_mask. So if we have 16 channels using only 1 scan_element we can  
+> > still  
+> > > enable/disable all 16 channels.  
+> > 
+> > Its more subtle than that.  Because of the mux, a number of different
+> > channels can
+> > be enabled by different consumers, but all that is exposed to the driver is
+> > the resulting fused scan_mask across all consumers.  It has no idea what
+> > channels
+> > have been enabled if they lie within a scan_mask element.
+> > 
+> > Hence, whilst there can be individual channel enable and disable attributes
+> > they driver only seems enable and disable of scan mask elements. That
+> > means
+> > it needs to turn on ALL of the channels within one scan mask element.
+> > To do anything more complex requires us to carry all the following to the
+> > demux
+> > calculator
+> > 
+> > 1) scan_mask
+> > 2) channel_mask
+> > 3) mapping from channel mask to scan mask
+> > 
+> > It could be done, but it's potentially nasty.  Even then we don't want to
+> > get into breaking out particular elements within a scan mask element so we'd
+> > end up providing all enabled channels (within each scan mask element)
+> > to the all consumers who are after any of them.
+> > 
+> > We'd also have to expose the fused channel mask as well as scan mask
+> > to the driver which is not exactly elegant.
+> > 
+> > That's why I'd suggest initial work uses scan mask as the fundamental
+> > unit of enable / disable, not the channel mask.
+> > 
+> > Nothing stops then improving that later to deal with the channel mask
+> > fusion needed to work out the enables, but it's not something I'd do
+> > for step 1.
+> >   
+> > >
+> > > In the end, if we have a traditional driver with one channel per scan_index,  
+> > channel_mask  
+> > > should be equal to scan_mask. As we start to have more than one channel  
+> > pointing to the  
+> > > same scan_index, these masks will be different.
+> > >  
+> > > > It might be possible to make switch to using a channel mask but given the
+> > > > channel index is
+> > > > implicit that is going to be at least a little bit nasty.
+> > > >
+> > > > How much does it hurt to not have the ability to separately control  
+> > channels  
+> > > > within
+> > > > a given buffer element?   Userspace can enable / disable them but reality  
+> > is  
+> > > > you'll  
+> > >
+> > > As long as we are "ok" with the extra amount of allocated memory, I think  
+> > it would work.  
+> > > Though drivers will have to replicate the same data trough all the enabled  
+> > scan elements...
+> > 
+> > Hmm. I think we are talking about different things.  Let me give an example.
+> > 
+> > 8 channels in scan mask element 0 size 8 bits, 8 channels in scan mask
+> > element 1
+> > 
+> > Enable a channel in scan mask element 0 on consumer 0, and a
+> > different one on consumer 1.  If they were in different scan mask elements
+> > we'd deliver the first element only to consumer 0 and the second element
+> > only to consumer 1 (that's what the demux does for us)
+> > 
+> > Here, in what I would suggest for the initial implementation, channel mask
+> > is not exposed at all to buffer setup op (update_scan_mask) - so we
+> > don't know which channels in that scan mask element are needed.
+> > Only answer, turn all 8 on.
+> > 
+> > In this case we would deliver one 8 bit buffer element to each of the
+> > consumers
+> > but it would include the values for all 8 channels (but none from the 8
+> > channels
+> > in our second scan mask element).
+> > 
+> > This keeps the channel mask logic (for now) separate from the demux
+> > and the buffered capture setup logic, but at the cost of sampling channels
+> > no one cares about.  Note we often do that anyway as a lot of hardware does
+> > not have per channel enables, or is more efficient if we grab all the channels
+> > in a single transaction.
+> >   
+> 
+> Hmm, I see your point now. Looking at the patchset, it also looks like that there's
+> no intention of doing the demux at the channel/bit level. I also agree on keeping the
+> granularity at the scan_element level otherwise it can be really unpleasant to implement
+> and "read" the demux code.
+> 
+> I was more looking for the possibility of passing the channel_mask to the drivers instead
+> of the scan_mask (when it makes sense to do so) so we can only sample the channels we
+> are interested in. In the end, we would push the complete scan_element to the iio_buffer
+> only with the bits we are interested in...
+To do that you'd have to deal with fusing the channel masks from multiple consumers and
+checking that's possible each time we enable a channel (so channel_mask_available etc)
+> 
+> That being sad, I'm also not seeing a big problem in just enabling all the channels for a given
+> scan element but I might be missing something.
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1aa6e89e7424..8aa8f7c0db93 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-[...]
-> @@ -9855,7 +9855,7 @@ L:	linux-kernel@vger.kernel.org
->  L:	linux-arch@vger.kernel.org
->  S:	Supported
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
-> -F:	Documentation/atomic_bitops.txt
-> +F:	Documentation/staging/atomic_bitops.txt
->  F:	Documentation/atomic_t.txt
->  F:	Documentation/core-api/atomic_ops.rst
->  F:	Documentation/core-api/refcount-vs-atomic.rst
+Definitely easier for a 'first pass'.  We can be more clever later - the result of
+adding fine grained control should have no impact on the perceived output - it's just
+an efficiency improvement.
+> 
+> - Nuno Sá
 
-[...]
+Thanks,
 
-> diff --git a/include/asm-generic/bitops/atomic.h b/include/asm-generic/bitops/atomic.h
-> index dd90c9792909..edeeb8375006 100644
-> --- a/include/asm-generic/bitops/atomic.h
-> +++ b/include/asm-generic/bitops/atomic.h
-> @@ -8,7 +8,7 @@
->  
->  /*
->   * Implementation of atomic bitops using atomic-fetch ops.
-> - * See Documentation/atomic_bitops.txt for details.
-> + * See Documentation/staging/atomic_bitops.txt for details.
->   */
->  
->  static inline void set_bit(unsigned int nr, volatile unsigned long *p)
+Jonathan
 
-Please drop them.
 
-        Thanks, Akira
 
