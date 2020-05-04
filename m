@@ -2,56 +2,55 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBB1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957E4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F8120663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3A020663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:26:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HL9sjNfK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NlQn2TyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgEDXZ0 (ORCPT
+        id S1728367AbgEDX0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:25:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:35850 "EHLO
+        Mon, 4 May 2020 19:26:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36430 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbgEDXZZ (ORCPT
+        with ESMTP id S1727982AbgEDX0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:25:25 -0400
+        Mon, 4 May 2020 19:26:08 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NNnwo100523;
-        Mon, 4 May 2020 23:24:59 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NO4hX112494;
+        Mon, 4 May 2020 23:25:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=NiarZKa69oUi1NvVuk0h+UlmNa0jOEv+wrs0Cjog1e4=;
- b=HL9sjNfKZL1iZUZmh/Y3orCMLs2epS0sakfuqaEKRoYLJLsk7UvypkDGvjDQB4s3475B
- G9d/VpiwfRR4EB40DCPo8KuHNUldlsM3vUlQbfaV53FI9gW/llMVzJv/9q7FyntkDn7F
- avflE/TtKMuwGCeTF1zsGd+/1WIiFwxUlTq1WGkqJlNngz6rbI/lmK/oQDaYwt+lZ7YY
- c1+Z8jYr4P8seZwR2qTJK/9cMzJtsn65jg7dlWAdlpB5hFQsTeimVMqx5Lslu94rL275
- 30g/vBLyu0AwVq1Xe3wlvkdL5OlK4bkXumNTGBMXDinDKEOI6Y6dLzpXUdwCxFCDMrE7 OQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 30s1gn1naw-1
+ bh=UMauR9wCPD+vZls0Dp7BF4um3Se/ohVdcdc24gym8OI=;
+ b=NlQn2TyEk+PidnGAoNFwzykVdR0/rU3yI8Dcx7EwgxBYpV97E0MH4QJNoD1G0v7s8vTs
+ TTEsKRPHs1G25fbBVvun+sMiv9oD0PftrySlolE6GQJhwhK0ZiUeTbWPqvemGSohOJdW
+ LAnZPYTEKjixijPMfo0GMCbiCL0s9nEKBo1u8oXVxYiaH+dcUafOaGz0OWKNA1tC6KpR
+ 2wg1WagubwLTFzoo1sUCmDG6ozLgDbZ50TdX+W4o5p93H6trSpqtqa13Z4DlN3eSuOFA
+ uRvAoPIA1y06eTgj6njYuF4xLm7UZuNu015TydxH4ecGmhAm+r8TG30+9REbErHHcUN+ dA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30s1gn1nc8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 23:24:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NMm5Q092911;
-        Mon, 4 May 2020 23:22:59 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30sjdrpev1-1
+        Mon, 04 May 2020 23:25:22 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NNLEx040553;
+        Mon, 4 May 2020 23:23:21 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30sjncbd4n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 23:22:58 +0000
+        Mon, 04 May 2020 23:23:21 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044NMvom010711;
-        Mon, 4 May 2020 23:22:57 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044NNCBH001751;
+        Mon, 4 May 2020 23:23:12 GMT
 Received: from tomti.i.net-space.pl (/10.175.189.148)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 16:22:56 -0700
+        with ESMTP ; Mon, 04 May 2020 16:23:11 -0700
 From:   Daniel Kiper <daniel.kiper@oracle.com>
 To:     grub-devel@gnu.org, linux-kernel@vger.kernel.org,
         trenchboot-devel@googlegroups.com, x86@kernel.org
@@ -62,19 +61,19 @@ Cc:     alexander.burmashev@oracle.com, andrew.cooper3@citrix.com,
         krystian.hebel@3mdeb.com, lukasz.hawrylko@linux.intel.com,
         michal.zygowski@3mdeb.com, mjg59@google.com, phcoder@gmail.com,
         pirot.krol@3mdeb.com, pjones@redhat.com, ross.philipson@oracle.com
-Subject: [GRUB PATCH RFC 12/18] i386/efi: Report UEFI Secure Boot status to the Linux kernel
-Date:   Tue,  5 May 2020 01:21:26 +0200
-Message-Id: <20200504232132.23570-13-daniel.kiper@oracle.com>
+Subject: [GRUB PATCH RFC 15/18] i386/txt: Add Intel TXT core implementation
+Date:   Tue,  5 May 2020 01:21:29 +0200
+Message-Id: <20200504232132.23570-16-daniel.kiper@oracle.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200504232132.23570-1-daniel.kiper@oracle.com>
 References: <20200504232132.23570-1-daniel.kiper@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=2 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005040182
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
  spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
  impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
@@ -84,166 +83,934 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise the kernel does not know its state and cannot enable various
-security features depending on UEFI Secure Boot.
+From: Ross Philipson <ross.philipson@oracle.com>
 
-Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- grub-core/loader/i386/linux.c | 86 ++++++++++++++++++++++++++++++++++++++++++-
- include/grub/i386/linux.h     | 14 ++++++-
- 2 files changed, 97 insertions(+), 3 deletions(-)
+ grub-core/loader/i386/txt/txt.c | 887 ++++++++++++++++++++++++++++++++++++++++
+ include/grub/i386/memory.h      |   5 +
+ 2 files changed, 892 insertions(+)
+ create mode 100644 grub-core/loader/i386/txt/txt.c
 
-diff --git a/grub-core/loader/i386/linux.c b/grub-core/loader/i386/linux.c
-index ac1fae72e..952eb1191 100644
---- a/grub-core/loader/i386/linux.c
-+++ b/grub-core/loader/i386/linux.c
-@@ -397,6 +397,87 @@ grub_linux_boot_mmap_fill (grub_uint64_t addr, grub_uint64_t size,
-   return 0;
- }
- 
-+#ifdef GRUB_MACHINE_EFI
+diff --git a/grub-core/loader/i386/txt/txt.c b/grub-core/loader/i386/txt/txt.c
+new file mode 100644
+index 000000000..3e25890c3
+--- /dev/null
++++ b/grub-core/loader/i386/txt/txt.c
+@@ -0,0 +1,887 @@
 +/*
-+ * Determine whether we're in secure boot mode.
++ * txt.c: Intel(r) TXT support functions, including initiating measured
++ *        launch, post-launch, AP wakeup, etc.
 + *
-+ * Please keep the logic in sync with the Linux kernel,
-+ * drivers/firmware/efi/libstub/secureboot.c:efi_get_secureboot().
++ * Copyright (c) 2003-2011, Intel Corporation
++ * All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ *
++ *   * Redistributions of source code must retain the above copyright
++ *     notice, this list of conditions and the following disclaimer.
++ *   * Redistributions in binary form must reproduce the above
++ *     copyright notice, this list of conditions and the following
++ *     disclaimer in the documentation and/or other materials provided
++ *     with the distribution.
++ *   * Neither the name of the Intel Corporation nor the names of its
++ *     contributors may be used to endorse or promote products derived
++ *     from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
++ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
++ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
++ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
 + */
-+static grub_uint8_t
-+grub_efi_get_secureboot (void)
++
++/*
++ *  GRUB  --  GRand Unified Bootloader
++ *  Copyright (C) 2020  Oracle and/or its affiliates.
++ *
++ *  GRUB is free software: you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation, either version 3 of the License, or
++ *  (at your option) any later version.
++ *
++ *  GRUB is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <grub/loader.h>
++#include <grub/memory.h>
++#include <grub/normal.h>
++#include <grub/err.h>
++#include <grub/misc.h>
++#include <grub/types.h>
++#include <grub/dl.h>
++#include <grub/acpi.h>
++#include <grub/cpu/relocator.h>
++#include <grub/i386/cpuid.h>
++#include <grub/i386/msr.h>
++#include <grub/i386/crfr.h>
++#include <grub/i386/txt.h>
++#include <grub/i386/linux.h>
++#include <grub/i386/memory.h>
++#include <grub/i386/slaunch.h>
++#include <grub/i386/tpm.h>
++
++#define OS_SINIT_DATA_TPM_12_VER	6
++#define OS_SINIT_DATA_TPM_20_VER	7
++
++#define OS_SINIT_DATA_MIN_VER		OS_SINIT_DATA_TPM_12_VER
++
++static grub_err_t
++enable_smx_mode (void)
 +{
-+  grub_efi_guid_t efi_variable_guid = GRUB_EFI_GLOBAL_VARIABLE_GUID;
-+  grub_efi_guid_t efi_shim_lock_guid = GRUB_EFI_SHIM_LOCK_GUID;
-+  grub_efi_status_t status;
-+  grub_efi_uint32_t attr = 0;
-+  grub_size_t size = 0;
-+  grub_uint8_t *secboot = NULL;
-+  grub_uint8_t *setupmode = NULL;
-+  grub_uint8_t *moksbstate = NULL;
-+  grub_uint8_t secureboot = GRUB_LINUX_EFI_SECUREBOOT_MODE_UNKNOWN;
-+  const char *secureboot_str = "UNKNOWN";
++  grub_uint32_t caps;
 +
-+  status = grub_efi_get_variable ("SecureBoot", &efi_variable_guid,
-+				  &size, (void **) &secboot);
++  /* Enable SMX mode. */
++  grub_write_cr4 (grub_read_cr4 () | GRUB_CR4_X86_SMXE);
 +
-+  if (status == GRUB_EFI_NOT_FOUND)
++  caps = grub_txt_getsec_capabilities (0);
++
++  if (!(caps & GRUB_SMX_CAPABILITY_CHIPSET_PRESENT))
 +    {
-+      secureboot = GRUB_LINUX_EFI_SECUREBOOT_MODE_DISABLED;
-+      goto out;
++      grub_error (GRUB_ERR_BAD_DEVICE, N_("TXT-capable chipset is not present"));
++      goto fail;
 +    }
 +
-+  if (status != GRUB_EFI_SUCCESS)
-+    goto out;
-+
-+  status = grub_efi_get_variable ("SetupMode", &efi_variable_guid,
-+				  &size, (void **) &setupmode);
-+
-+  if (status != GRUB_EFI_SUCCESS)
-+    goto out;
-+
-+  if ((*secboot == 0) || (*setupmode == 1))
++  if (!(caps & GRUB_SMX_CAPABILITY_SENTER))
 +    {
-+      secureboot = GRUB_LINUX_EFI_SECUREBOOT_MODE_DISABLED;
-+      goto out;
++      grub_error (GRUB_ERR_BAD_DEVICE, N_("GETSEC[SENTER] is not available"));
++      goto fail;
++    }
++
++  if (!(caps & GRUB_SMX_CAPABILITY_PARAMETERS))
++    {
++      grub_error (GRUB_ERR_BAD_DEVICE, N_("GETSEC[PARAMETERS] is not available"));
++      goto fail;
++    }
++
++  return GRUB_ERR_NONE;
++
++ fail:
++  /* Disable SMX mode on failure. */
++  grub_write_cr4 (grub_read_cr4 () & ~GRUB_CR4_X86_SMXE);
++
++  return grub_errno;
++}
++
++static void
++grub_txt_smx_parameters (struct grub_smx_parameters *params)
++{
++  grub_uint32_t index = 0, eax, ebx, ecx, param_type;
++
++  grub_memset (params, 0, sizeof(struct grub_smx_supported_versions));
++
++  params->max_acm_size = GRUB_SMX_DEFAULT_MAX_ACM_SIZE;
++  params->acm_memory_types = GRUB_SMX_DEFAULT_ACM_MEMORY_TYPE;
++  params->senter_controls = GRUB_SMX_DEFAULT_SENTER_CONTROLS;
++
++  do
++    {
++      grub_txt_getsec_parameters (index, &eax, &ebx, &ecx);
++      param_type = eax & GRUB_SMX_PARAMETER_TYPE_MASK;
++
++      switch (param_type)
++        {
++        case GRUB_SMX_PARAMETER_NULL:
++          break; /* This means done. */
++
++        case GRUB_SMX_PARAMETER_ACM_VERSIONS:
++          if (params->version_count == GRUB_SMX_PARAMETER_MAX_VERSIONS)
++            {
++	      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("Too many ACM versions"));
++	      break;
++            }
++          params->versions[params->version_count].mask = ebx;
++          params->versions[params->version_count++].version = ecx;
++          break;
++
++      case GRUB_SMX_PARAMETER_MAX_ACM_SIZE:
++        params->max_acm_size = GRUB_SMX_GET_MAX_ACM_SIZE (eax);
++        break;
++
++      case GRUB_SMX_PARAMETER_ACM_MEMORY_TYPES:
++        params->acm_memory_types = GRUB_SMX_GET_ACM_MEMORY_TYPES (eax);
++        break;
++
++      case GRUB_SMX_PARAMETER_SENTER_CONTROLS:
++        params->senter_controls = GRUB_SMX_GET_SENTER_CONTROLS (eax);
++        break;
++
++      case GRUB_SMX_PARAMETER_TXT_EXTENSIONS:
++        params->txt_feature_ext_flags = GRUB_SMX_GET_TXT_EXT_FEATURES (eax);
++        break;
++
++      default:
++	grub_error (GRUB_ERR_BAD_ARGUMENT, N_("Unknown SMX parameter"));
++	param_type = GRUB_SMX_PARAMETER_NULL;
++    }
++
++    ++index;
++
++  } while (param_type != GRUB_SMX_PARAMETER_NULL);
++
++  /* If no ACM versions were found, set the default one. */
++  if (!params->version_count)
++    {
++      params->versions[0].mask = GRUB_SMX_DEFAULT_VERSION_MASK;
++      params->versions[0].version = GRUB_SMX_DEFAULT_VERSION;
++      params->version_count++;
++    }
++}
++
++grub_err_t
++grub_txt_prepare_cpu (void)
++{
++  struct grub_smx_parameters params;
++  grub_uint32_t i;
++  grub_uint64_t mcg_cap, mcg_stat;
++  unsigned long cr0;
++
++  cr0 = grub_read_control_register (GRUB_CR0);
++
++  /* Cache must be enabled (CR0.CD = CR0.NW = 0). */
++  cr0 &= ~(GRUB_CR0_X86_CD | GRUB_CR0_X86_NW);
++
++  /* Native FPU error reporting must be enabled for proper interaction behavior. */
++  cr0 |= GRUB_CR0_X86_NE;
++
++  grub_write_control_register (GRUB_CR0, cr0);
++
++  /* Disable virtual-8086 mode (EFLAGS.VM = 0). */
++  grub_write_flags_register (grub_read_flags_register () & ~GRUB_EFLAGS_X86_VM);
++
++  /*
++   * Verify all machine check status registers are clear (unless
++   * support preserving them).
++   */
++
++  /* Is machine check in progress? */
++  if ( grub_rdmsr (GRUB_MSR_X86_MCG_STATUS) & GRUB_MSR_MCG_STATUS_MCIP )
++    return grub_error (GRUB_ERR_BAD_DEVICE,
++		       N_("machine check in progress during secure launch"));
++
++  grub_txt_smx_parameters (&params);
++
++  if (params.txt_feature_ext_flags & GRUB_SMX_PROCESSOR_BASE_SCRTM)
++    grub_dprintf ("slaunch", "CPU supports processor-based S-CRTM\n");
++
++  if (params.txt_feature_ext_flags & GRUB_SMX_MACHINE_CHECK_HANLDING)
++    grub_dprintf ("slaunch", "CPU supports preserving machine check errors\n");
++  else
++    {
++      grub_dprintf ("slaunch", "CPU does not support preserving machine check errors\n");
++
++      /* Check if all machine check registers are clear. */
++      mcg_cap = grub_rdmsr (GRUB_MSR_X86_MCG_CAP);
++      for (i = 0; i < (mcg_cap & GRUB_MSR_MCG_BANKCNT_MASK); ++i)
++	{
++	  mcg_stat = grub_rdmsr (GRUB_MSR_X86_MC0_STATUS + i * 4);
++	  if (mcg_stat & (1ULL << 63))
++	    return grub_error (GRUB_ERR_BAD_DEVICE,
++			       N_("secure launch MCG[%u] = %Lx ERROR"), i, mcg_stat);
++        }
++    }
++
++  return GRUB_ERR_NONE;
++}
++
++static void
++save_mtrrs (struct grub_txt_os_mle_data *os_mle_data)
++{
++  grub_uint64_t i;
++
++  os_mle_data->saved_bsp_mtrrs.default_mem_type =
++    grub_rdmsr (GRUB_MSR_X86_MTRR_DEF_TYPE);
++
++  os_mle_data->saved_bsp_mtrrs.mtrr_vcnt =
++    grub_rdmsr (GRUB_MSR_X86_MTRRCAP) & GRUB_MSR_X86_VCNT_MASK;
++
++  if (os_mle_data->saved_bsp_mtrrs.mtrr_vcnt > GRUB_SL_MAX_VARIABLE_MTRRS)
++    {
++      /* Print warning but continue saving what we can... */
++      grub_printf ("WARNING: Actual number of variable MTRRs (%" PRIuGRUB_UINT64_T
++		   ") > GRUB_SL_MAX_VARIABLE_MTRRS (%d)\n",
++		   os_mle_data->saved_bsp_mtrrs.mtrr_vcnt,
++		   GRUB_SL_MAX_VARIABLE_MTRRS);
++      os_mle_data->saved_bsp_mtrrs.mtrr_vcnt = GRUB_SL_MAX_VARIABLE_MTRRS;
++    }
++
++  for (i = 0; i < os_mle_data->saved_bsp_mtrrs.mtrr_vcnt; ++i)
++    {
++      os_mle_data->saved_bsp_mtrrs.mtrr_pair[i].mtrr_physmask =
++        grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + i * 2);
++      os_mle_data->saved_bsp_mtrrs.mtrr_pair[i].mtrr_physbase =
++        grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSBASE0 + i * 2);
++    }
++}
++
++static void
++set_all_mtrrs (int enable)
++{
++  grub_uint64_t mtrr_def_type;
++
++  mtrr_def_type = grub_rdmsr (GRUB_MSR_X86_MTRR_DEF_TYPE);
++
++  if ( enable )
++    mtrr_def_type |= GRUB_MSR_X86_MTRR_ENABLE;
++  else
++    mtrr_def_type &= ~GRUB_MSR_X86_MTRR_ENABLE;
++
++  grub_wrmsr (GRUB_MSR_X86_MTRR_DEF_TYPE, mtrr_def_type);
++}
++
++#define SINIT_MTRR_MASK         0xFFFFFF  /* SINIT requires 36b mask */
++
++union mtrr_physbase_t
++{
++  grub_uint64_t raw;
++  struct
++  {
++    grub_uint64_t type      : 8;
++    grub_uint64_t reserved1 : 4;
++    grub_uint64_t base      : 52; /* Define as max width and mask w/ */
++                                  /* MAXPHYADDR when using */
++  };
++} GRUB_PACKED;
++
++union mtrr_physmask_t
++{
++  grub_uint64_t raw;
++  struct
++  {
++    grub_uint64_t reserved1 : 11;
++    grub_uint64_t v         : 1;      /* valid */
++    grub_uint64_t mask      : 52;     /* define as max width and mask w/ */
++                                      /* MAXPHYADDR when using */
++  };
++} GRUB_PACKED;
++
++static inline grub_uint32_t
++bsrl (grub_uint32_t mask)
++{
++  grub_uint32_t result;
++
++  asm ("bsrl %1,%0" : "=r" (result) : "rm" (mask) : "cc");
++
++  return result;
++}
++
++static inline int
++fls (int mask)
++{
++  return (mask == 0 ? mask : (int)bsrl ((grub_uint32_t)mask) + 1);
++}
++
++/*
++ * set the memory type for specified range (base to base+size)
++ * to mem_type and everything else to UC
++ */
++static grub_err_t
++set_mtrr_mem_type (const grub_uint8_t *base, grub_uint32_t size,
++                   grub_uint32_t mem_type)
++{
++  grub_uint64_t mtrr_def_type;
++  grub_uint64_t mtrr_cap;
++  union mtrr_physbase_t mtrr_physbase;
++  union mtrr_physmask_t mtrr_physmask;
++  grub_uint32_t vcnt, pages_in_range;
++  unsigned long ndx, base_v;
++  int i = 0, j, num_pages, mtrr_s;
++
++  /* Disable all fixed MTRRs, set default type to UC */
++  mtrr_def_type = grub_rdmsr (GRUB_MSR_X86_MTRR_DEF_TYPE);
++  mtrr_def_type &= ~(GRUB_MSR_X86_MTRR_ENABLE_FIXED | GRUB_MSR_X86_DEF_TYPE_MASK);
++  mtrr_def_type |= GRUB_MTRR_MEMORY_TYPE_UC;
++  grub_wrmsr (GRUB_MSR_X86_MTRR_DEF_TYPE, mtrr_def_type);
++
++  /* Initially disable all variable MTRRs (we'll enable the ones we use) */
++  mtrr_cap = grub_rdmsr (GRUB_MSR_X86_MTRRCAP);
++  vcnt = (mtrr_cap & GRUB_MSR_X86_VCNT_MASK);
++
++  for ( ndx = 0; ndx < vcnt; ndx++ )
++    {
++      mtrr_physmask.raw = grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + ndx*2);
++      mtrr_physmask.v = 0;
++      grub_wrmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + ndx*2, mtrr_physmask.raw);
++    }
++
++  /* Map all AC module pages as mem_type */
++  num_pages = GRUB_PAGE_UP(size) >> GRUB_PAGE_SHIFT;
++
++  grub_dprintf ("slaunch", "setting MTRRs for acmod: base=%p, size=%x, num_pages=%d\n",
++           base, size, num_pages);
++
++  /* Each VAR MTRR base must be a multiple if that MTRR's Size */
++  base_v = (unsigned long)base;
++  /* MTRR size in pages */
++  mtrr_s = 1;
++
++  while ( (base_v & 0x01) == 0 )
++    {
++      i++;
++      base_v = base_v >> 1;
++    }
++
++  for (j = i - 12; j > 0; j--)
++     mtrr_s = mtrr_s*2; /* mtrr_s = mtrr_s << 1 */
++
++  grub_dprintf ("slaunch", "The maximum allowed MTRR range size=%d Pages \n", mtrr_s);
++
++  ndx = 0;
++
++  while ( num_pages >= mtrr_s )
++    {
++      mtrr_physbase.raw = grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSBASE0 + ndx*2);
++      mtrr_physbase.base = ((unsigned long)base >> GRUB_PAGE_SHIFT) &
++	                     SINIT_MTRR_MASK;
++      mtrr_physbase.type = mem_type;
++      grub_wrmsr (GRUB_MSR_X86_MTRR_PHYSBASE0 + ndx*2, mtrr_physbase.raw);
++
++      mtrr_physmask.raw = grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + ndx*2);
++      mtrr_physmask.mask = ~(mtrr_s - 1) & SINIT_MTRR_MASK;
++      mtrr_physmask.v = 1;
++      grub_wrmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + ndx*2, mtrr_physmask.raw);
++
++      base += (mtrr_s * GRUB_PAGE_SIZE);
++      num_pages -= mtrr_s;
++      ndx++;
++      if ( ndx == vcnt )
++          return grub_error (GRUB_ERR_BAD_DEVICE,
++			     N_("exceeded number of var MTRRs when mapping range"));
++    }
++
++  ndx = 0;
++
++  while ( num_pages > 0 )
++    {
++      /* Set the base of the current MTRR */
++      mtrr_physbase.raw = grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSBASE0 + ndx*2);
++      mtrr_physbase.base = ((unsigned long)base >> GRUB_PAGE_SHIFT) &
++                            SINIT_MTRR_MASK;
++      mtrr_physbase.type = mem_type;
++      grub_wrmsr (GRUB_MSR_X86_MTRR_PHYSBASE0 + ndx*2, mtrr_physbase.raw);
++
++      /*
++       * Calculate MTRR mask
++       * MTRRs can map pages in power of 2
++       * may need to use multiple MTRRS to map all of region
++       */
++      pages_in_range = 1 << (fls (num_pages) - 1);
++
++      mtrr_physmask.raw = grub_rdmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + ndx*2);
++      mtrr_physmask.mask = ~(pages_in_range - 1) & SINIT_MTRR_MASK;
++      mtrr_physmask.v = 1;
++      grub_wrmsr (GRUB_MSR_X86_MTRR_PHYSMASK0 + ndx*2, mtrr_physmask.raw);
++
++      /*
++       * Prepare for the next loop depending on number of pages
++       * We figure out from the above how many pages could be used in this
++       * mtrr. Then we decrement the count, increment the base,
++       * increment the mtrr we are dealing with, and if num_pages is
++       * still not zero, we do it again.
++       */
++      base += (pages_in_range * GRUB_PAGE_SIZE);
++      num_pages -= pages_in_range;
++      ndx++;
++      if ( ndx == vcnt )
++          return grub_error (GRUB_ERR_BAD_DEVICE,
++			     N_("exceeded number of var MTRRs when mapping range"));
++    }
++
++  return GRUB_ERR_NONE;
++}
++
++/*
++ * this must be done for each processor so that all have the same
++ * memory types
++ */
++static grub_err_t
++set_mtrrs_for_acmod (struct grub_txt_acm_header *hdr)
++{
++  unsigned long eflags;
++  unsigned long cr0, cr4;
++  grub_err_t err;
++
++  /*
++   * need to do some things before we start changing MTRRs
++   *
++   * since this will modify some of the MTRRs, they should be saved first
++   * so that they can be restored once the AC mod is done
++   */
++
++  /* Disable interrupts */
++  eflags = grub_read_flags_register ();
++  grub_write_flags_register (eflags & ~GRUB_EFLAGS_X86_IF);
++
++  /* Save CR0 then disable cache (CRO.CD=1, CR0.NW=0) */
++  cr0 = grub_read_control_register (GRUB_CR0);
++  grub_write_control_register (GRUB_CR0,
++                               (cr0 & ~GRUB_CR0_X86_NW) | GRUB_CR0_X86_CD);
++
++  /* Flush caches */
++  asm volatile ("wbinvd");
++
++  /* Save CR4 and disable global pages (CR4.PGE=0) */
++  cr4 = grub_read_control_register (GRUB_CR4);
++  grub_write_control_register (GRUB_CR4, cr4 & ~GRUB_CR4_X86_PGE);
++
++  /* Disable MTRRs */
++  set_all_mtrrs (0);
++
++  /* Set MTRRs for AC mod and rest of memory */
++  err = set_mtrr_mem_type ((grub_uint8_t*)hdr, hdr->size*4,
++                           GRUB_MTRR_MEMORY_TYPE_WB);
++  if ( err )
++    return err;
++
++  /* Undo some of earlier changes and enable our new settings */
++
++  /* Flush caches */
++  asm volatile ("wbinvd");
++
++  /* Enable MTRRs */
++  set_all_mtrrs (1);
++
++  /* Restore CR0 (cacheing) */
++  grub_write_control_register (GRUB_CR0, cr0);
++
++  /* Restore CR4 (global pages) */
++  grub_write_control_register (GRUB_CR4, cr4);
++
++  /* Restore flags */
++  grub_write_flags_register (eflags);
++
++  return GRUB_ERR_NONE;
++}
++
++static grub_err_t
++init_txt_heap (struct grub_slaunch_params *slparams, struct grub_txt_acm_header *sinit)
++{
++  grub_uint8_t *txt_heap;
++  grub_uint32_t os_sinit_data_ver, sinit_caps;
++  grub_uint64_t *size;
++  struct grub_txt_os_mle_data *os_mle_data;
++  struct grub_txt_os_sinit_data *os_sinit_data;
++  struct grub_txt_heap_end_element *heap_end_element;
++  struct grub_txt_heap_event_log_pointer2_1_element *heap_event_log_pointer2_1_element;
++#ifdef GRUB_MACHINE_EFI
++  struct grub_acpi_rsdp_v20 *rsdp;
++#endif
++
++  /* BIOS data already verified in grub_txt_verify_platform(). */
++
++  txt_heap = grub_txt_get_heap ();
++
++  /* OS/loader to MLE data. */
++
++  os_mle_data = grub_txt_os_mle_data_start (txt_heap);
++  size = (grub_uint64_t *) ((grub_addr_t) os_mle_data - sizeof (grub_uint64_t));
++  *size = sizeof (*os_mle_data) + sizeof (grub_uint64_t);
++
++  grub_memset (os_mle_data, 0, sizeof (*os_mle_data));
++
++  os_mle_data->version = GRUB_SL_OS_MLE_STRUCT_VERSION;
++  os_mle_data->zero_page_addr = (grub_uint32_t)(grub_addr_t) slparams->params;
++  os_mle_data->saved_misc_enable_msr = grub_rdmsr (GRUB_MSR_X86_MISC_ENABLE);
++
++  os_mle_data->ap_wake_block = slparams->ap_wake_block;
++
++  save_mtrrs (os_mle_data);
++
++  /* OS/loader to SINIT data. */
++
++  os_sinit_data_ver = grub_txt_supported_os_sinit_data_ver (sinit);
++
++  if (os_sinit_data_ver < OS_SINIT_DATA_MIN_VER)
++    return grub_error (GRUB_ERR_BAD_DEVICE,
++		       N_("unsupported OS to SINIT data version in SINIT ACM: %d"
++		       " expected >= %d"), os_sinit_data_ver, OS_SINIT_DATA_MIN_VER);
++
++  os_sinit_data = grub_txt_os_sinit_data_start (txt_heap);
++  size = (grub_uint64_t *) ((grub_addr_t) os_sinit_data - sizeof (grub_uint64_t));
++
++  *size = sizeof(grub_uint64_t) + sizeof (struct grub_txt_os_sinit_data) +
++	  sizeof (struct grub_txt_heap_end_element);
++
++  if (grub_get_tpm_ver () == GRUB_TPM_12)
++    *size += sizeof (struct grub_txt_heap_tpm_event_log_element);
++  else if (grub_get_tpm_ver () == GRUB_TPM_20)
++    *size += sizeof (struct grub_txt_heap_event_log_pointer2_1_element);
++  else
++    return grub_error (GRUB_ERR_BAD_DEVICE, N_("unsupported TPM version"));
++
++  grub_memset (os_sinit_data, 0, *size);
++
++#ifdef GRUB_MACHINE_EFI
++  rsdp = grub_acpi_get_rsdpv2 ();
++
++  if (rsdp == NULL)
++    return grub_printf ("WARNING: ACPI RSDP 2.0 missing\n");
++
++  os_sinit_data->efi_rsdt_ptr = (grub_uint64_t)(grub_addr_t) rsdp;
++#endif
++
++  os_sinit_data->mle_ptab = slparams->mle_ptab_target;
++  os_sinit_data->mle_size = slparams->mle_size;
++
++  os_sinit_data->mle_hdr_base = slparams->mle_header_offset;
++
++  /* TODO: Check low PMR with RMRR. Look at relevant tboot code too. */
++  /* TODO: Kernel should not allocate any memory outside of PMRs regions!!! */
++  os_sinit_data->vtd_pmr_lo_base = 0;
++  os_sinit_data->vtd_pmr_lo_size = ALIGN_DOWN (grub_mmap_get_highest (0x100000000),
++					       GRUB_TXT_PMR_ALIGN);
++
++  os_sinit_data->vtd_pmr_hi_base = ALIGN_UP (grub_mmap_get_lowest (0x100000000),
++					     GRUB_TXT_PMR_ALIGN);
++  os_sinit_data->vtd_pmr_hi_size = ALIGN_DOWN (grub_mmap_get_highest (0xffffffffffffffff),
++					       GRUB_TXT_PMR_ALIGN);
++  os_sinit_data->vtd_pmr_hi_size -= os_sinit_data->vtd_pmr_hi_base;
++
++  grub_dprintf ("slaunch",
++		"vtd_pmr_lo_base: 0x%" PRIxGRUB_UINT64_T " vtd_pmr_lo_size: 0x%"
++		PRIxGRUB_UINT64_T " vtd_pmr_hi_base: 0x%" PRIxGRUB_UINT64_T
++		" vtd_pmr_hi_size: 0x%" PRIxGRUB_UINT64_T "\n",
++		os_sinit_data->vtd_pmr_lo_base, os_sinit_data->vtd_pmr_lo_size,
++		os_sinit_data->vtd_pmr_hi_base, os_sinit_data->vtd_pmr_hi_size);
++
++  sinit_caps = grub_txt_get_sinit_capabilities (sinit);
++
++  /* CBnT bits 5:4 must be 11b, since D/A mapping is the only one supported. */
++  os_sinit_data->capabilities = GRUB_TXT_CAPS_TPM_12_NO_LEGACY_PCR_USAGE |
++				GRUB_TXT_CAPS_TPM_12_AUTH_PCR_USAGE;
++
++  /* Choose monitor RLP wakeup mechanism first. */
++  if (sinit_caps & GRUB_TXT_CAPS_MONITOR_SUPPORT)
++    os_sinit_data->capabilities |= GRUB_TXT_CAPS_MONITOR_SUPPORT;
++  else if (sinit_caps & GRUB_TXT_CAPS_GETSEC_WAKE_SUPPORT)
++    os_sinit_data->capabilities |= GRUB_TXT_CAPS_GETSEC_WAKE_SUPPORT;
++  else
++    return grub_error (GRUB_ERR_BAD_ARGUMENT, N_("lack of RLP wakeup mechanism"));
++
++  if (sinit_caps & GRUB_TXT_CAPS_ECX_PT_SUPPORT)
++    os_sinit_data->capabilities |= GRUB_TXT_CAPS_ECX_PT_SUPPORT;
++
++  if (grub_get_tpm_ver () == GRUB_TPM_12)
++    return grub_error (GRUB_ERR_BAD_DEVICE, N_("TPM 1.2 is not supported"));
++  else
++    {
++      if (!(sinit_caps & GRUB_TXT_CAPS_TPM_20_EVTLOG_SUPPORT))
++	return grub_error (GRUB_ERR_BAD_ARGUMENT,
++			   N_("original TXT TPM 2.0 event log format is not supported"));
++
++      os_sinit_data->capabilities |= GRUB_TXT_CAPS_TPM_20_EVTLOG_SUPPORT;
++
++      os_sinit_data->flags = GRUB_TXT_PCR_EXT_MAX_PERF_POLICY;
++
++      os_sinit_data->version = OS_SINIT_DATA_TPM_20_VER;
++
++      heap_event_log_pointer2_1_element =
++	(struct grub_txt_heap_event_log_pointer2_1_element *) os_sinit_data->ext_data_elts;
++      heap_event_log_pointer2_1_element->type = GRUB_TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1;
++      heap_event_log_pointer2_1_element->size = sizeof (*heap_event_log_pointer2_1_element);
++      heap_event_log_pointer2_1_element->phys_addr = slparams->tpm_evt_log_base;
++      heap_event_log_pointer2_1_element->allocated_event_container_size = slparams->tpm_evt_log_size;
++
++      heap_end_element = (struct grub_txt_heap_end_element *)
++	((grub_addr_t) heap_event_log_pointer2_1_element + heap_event_log_pointer2_1_element->size);
++      heap_end_element->type = GRUB_TXT_HEAP_EXTDATA_TYPE_END;
++      heap_end_element->size = sizeof (*heap_end_element);
 +    }
 +
 +  /*
-+   * See if a user has put the shim into insecure mode. If so, and if the
-+   * variable doesn't have the runtime attribute set, we might as well
-+   * honor that.
++   * TODO: TXT spec: Note: BiosDataSize + OsMleDataSize + OsSinitDataSize + SinitMleDataSize
++   * must be less than or equal to TXT.HEAP.SIZE, TXT spec, p. 102.
 +   */
-+  status = grub_efi_get_variable_with_attributes ("MokSBState", &efi_shim_lock_guid,
-+						  &size, (void **) &moksbstate, &attr);
 +
-+  /* If it fails, we don't care why. Default to secure. */
-+  if (status != GRUB_EFI_SUCCESS)
++  return GRUB_ERR_NONE;
++}
++
++/*
++ * TODO: Why 1 GiB limit? It does not seem that it is required by TXT spec.
++ * If there is a limit then it should be checked before allocation and image load.
++ *
++ * If enough room is available in front of the MLE, the maximum size of an
++ * MLE that can be covered is 1G. This is due to having 512 PDEs pointing
++ * to 512 page tables with 512 PTEs each.
++ */
++grub_uint32_t
++grub_txt_get_mle_ptab_size (grub_uint32_t mle_size)
++{
++  /*
++   * #PT + 1 PT + #PD + 1 PD + 1 PDT
++   *
++   * Why do we need 2 extra PTEs and PDEs? Yes, because MLE image may not
++   * start and end at PTE (page) and PDE (2 MiB) boundary...
++   */
++  return ((((mle_size / GRUB_PAGE_SIZE) + 2) / 512) + 1 +
++	  (((mle_size / (512 * GRUB_PAGE_SIZE)) + 2) / 512) + 1 + 1) * GRUB_PAGE_SIZE;
++}
++
++/* Page directory and table entries only need Present set */
++#define MAKE_PT_MLE_ENTRY(addr)  (((grub_uint64_t)(grub_addr_t)(addr) & GRUB_PAGE_MASK) | 0x01)
++
++/*
++ * The MLE page tables have to be below the MLE and have no special regions in
++ * between them and the MLE (this is a bit of an unwritten rule).
++ * 20 pages are carved out of memory below the MLE. That leave 18 page table
++ * pages that can cover up to 36M .
++ * can only contain 4k pages
++ *
++ * TODO: TXT Spec p.32; List section name and number with PT MLE requirments here.
++ *
++ * TODO: This function is not able to cover MLEs larger than 1 GiB. Fix it!!!
++ * After fixing inrease GRUB_TXT_MLE_MAX_SIZE too.
++ */
++void
++grub_txt_setup_mle_ptab (struct grub_slaunch_params *slparams)
++{
++  grub_uint8_t *pg_dir, *pg_dir_ptr_tab = slparams->mle_ptab_mem, *pg_tab;
++  grub_uint32_t mle_off = 0, pd_off = 0;
++  grub_uint64_t *pde, *pte;
++
++  grub_memset (pg_dir_ptr_tab, 0, slparams->mle_ptab_size);
++
++  pg_dir         = pg_dir_ptr_tab + GRUB_PAGE_SIZE;
++  pg_tab         = pg_dir + GRUB_PAGE_SIZE;
++
++  /* Only use first entry in page dir ptr table */
++  *(grub_uint64_t *)pg_dir_ptr_tab = MAKE_PT_MLE_ENTRY(pg_dir);
++
++  /* Start with first entry in page dir */
++  *(grub_uint64_t *)pg_dir = MAKE_PT_MLE_ENTRY(pg_tab);
++
++  pte = (grub_uint64_t *)pg_tab;
++  pde = (grub_uint64_t *)pg_dir;
++
++  do
 +    {
-+      secureboot = GRUB_LINUX_EFI_SECUREBOOT_MODE_ENABLED;
-+      goto out;
++      *pte = MAKE_PT_MLE_ENTRY(slparams->mle_start + mle_off);
++
++      pte++;
++      mle_off += GRUB_PAGE_SIZE;
++
++      if (!(++pd_off % 512))
++        {
++          /* Break if we don't need any additional page entries */
++          if (mle_off >= slparams->mle_size)
++            break;
++          pde++;
++          *pde = MAKE_PT_MLE_ENTRY(pte);
++        }
++    } while (mle_off < slparams->mle_size);
++}
++
++grub_err_t
++grub_txt_init (void)
++{
++  grub_err_t err;
++
++  err = grub_txt_verify_platform ();
++
++  if (err != GRUB_ERR_NONE)
++    return err;
++
++  err = enable_smx_mode ();
++
++  if (err != GRUB_ERR_NONE)
++    return err;
++
++  return GRUB_ERR_NONE;
++}
++
++void
++grub_txt_shutdown (void)
++{
++  /* Disable SMX mode. */
++  grub_write_cr4 (grub_read_cr4 () & ~GRUB_CR4_X86_SMXE);
++}
++
++void
++grub_txt_state_show (void)
++{
++  grub_uint64_t data;
++  grub_uint8_t *data8 = (grub_uint8_t *) &data;
++  int i;
++
++  data = grub_txt_reg_pub_readq (GRUB_TXT_STS);
++  grub_printf ("  TXT.STS: 0x%016" PRIxGRUB_UINT64_T "\n"
++	       "    SENTER.DONE.STS:        %d\n"
++	       "    SEXIT.DONE.STS:         %d\n"
++	       "    MEM-CONFIGLOCK.STS:     %d\n"
++	       "    PRIVATEOPEN.STS:        %d\n"
++	       "    TXT.LOCALITY1.OPEN.STS: %d\n"
++	       "    TXT.LOCALITY2.OPEN.STS: %d\n",
++	       data, !!(data & GRUB_TXT_STS_SENTER_DONE),
++	       !!(data & GRUB_TXT_STS_SEXIT_DONE),
++	       !!(data & GRUB_TXT_STS_MEM_CONFIG_LOCK),
++	       !!(data & GRUB_TXT_STS_PRIVATE_OPEN),
++	       !!(data & GRUB_TXT_STS_LOCALITY1_OPEN),
++	       !!(data & GRUB_TXT_STS_LOCALITY2_OPEN));
++
++  /* Only least significant byte has a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_ESTS) & 0x00000000000000ff;
++  grub_printf ("  TXT.ESTS: 0x%02" PRIxGRUB_UINT64_T "\n"
++	       "    TXT_RESET.STS: %d\n", data,
++	       !!(data & GRUB_TXT_ESTS_TXT_RESET));
++
++  data = grub_txt_reg_pub_readq (GRUB_TXT_E2STS);
++  grub_printf ("  TXT.E2STS: 0x%016" PRIxGRUB_UINT64_T "\n"
++	       "    SECRETS.STS: %d\n", data,
++	       !!(data & GRUB_TXT_E2STS_SECRETS));
++
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_ERRORCODE) & 0x00000000ffffffff;
++  grub_printf ("  TXT.ERRORCODE: 0x%08" PRIxGRUB_UINT64_T "\n", data);
++
++  data = grub_txt_reg_pub_readq (GRUB_TXT_DIDVID);
++  grub_printf ("  TXT.DIDVID: 0x%016" PRIxGRUB_UINT64_T "\n"
++	       "    VID:    0x%04" PRIxGRUB_UINT64_T "\n"
++	       "    DID:    0x%04" PRIxGRUB_UINT64_T "\n"
++	       "    RID:    0x%04" PRIxGRUB_UINT64_T "\n"
++	       "    ID-EXT: 0x%04" PRIxGRUB_UINT64_T "\n",
++	       data, data & 0x000000000000ffff,
++	       (data & 0x00000000ffff0000) >> 16,
++	       (data & 0x0000ffff00000000) >> 32, data >> 48);
++
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_VER_FSBIF) & 0x00000000ffffffff;
++  grub_printf ("  TXT.VER.FSBIF: 0x%08" PRIxGRUB_UINT64_T "\n", data);
++
++  if ((data != 0x00000000) && (data != 0xffffffff))
++    grub_printf ("    DEBUG.FUSE: %d\n", !!(data & GRUB_TXT_VER_FSBIF_DEBUG_FUSE));
++  else
++    {
++      /* Only least significant 4 bytes have a meaning. */
++      data = grub_txt_reg_pub_readq (GRUB_TXT_VER_QPIIF) & 0x00000000ffffffff;
++      grub_printf ("  TXT.VER.QPIIF: 0x%08" PRIxGRUB_UINT64_T "\n"
++		   "    DEBUG.FUSE: %d\n", data,
++		   !!(data & GRUB_TXT_VER_QPIIF_DEBUG_FUSE));
 +    }
 +
-+  if (!(attr & GRUB_EFI_VARIABLE_RUNTIME_ACCESS) && *moksbstate == 1)
-+    secureboot = GRUB_LINUX_EFI_SECUREBOOT_MODE_DISABLED;
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_SINIT_BASE) & 0x00000000ffffffff;
++  grub_printf ("  TXT.SINIT.BASE: 0x%08" PRIxGRUB_UINT64_T "\n", data);
 +
-+  secureboot = GRUB_LINUX_EFI_SECUREBOOT_MODE_ENABLED;
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_SINIT_SIZE) & 0x00000000ffffffff;
++  grub_printf ("  TXT.SINIT.SIZE: %" PRIuGRUB_UINT64_T
++	       " B (0x%" PRIxGRUB_UINT64_T ")\n", data, data);
 +
-+ out:
-+  grub_free (moksbstate);
-+  grub_free (setupmode);
-+  grub_free (secboot);
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_HEAP_BASE) & 0x00000000ffffffff;
++  grub_printf ("  TXT.HEAP.BASE: 0x%08" PRIxGRUB_UINT64_T "\n", data);
 +
-+  if (secureboot == GRUB_LINUX_EFI_SECUREBOOT_MODE_DISABLED)
-+    secureboot_str = "Disabled";
-+  else if (secureboot == GRUB_LINUX_EFI_SECUREBOOT_MODE_ENABLED)
-+    secureboot_str = "Enabled";
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_HEAP_SIZE) & 0x00000000ffffffff;
++  grub_printf ("  TXT.HEAP.SIZE: %" PRIuGRUB_UINT64_T
++	       " B (0x%" PRIxGRUB_UINT64_T ")\n", data, data);
 +
-+  grub_dprintf ("linux", "UEFI Secure Boot state: %s\n", secureboot_str);
++  /* Only least significant 4 bytes have a meaning. */
++  data = grub_txt_reg_pub_readq (GRUB_TXT_DPR) & 0x00000000ffffffff;
++  grub_printf ("  TXT.DPR: 0x%08" PRIxGRUB_UINT64_T "\n"
++	       "    LOCK: %d\n"
++	       "    TOP:  0x%08" PRIxGRUB_UINT64_T "\n"
++	       "    SIZE: %" PRIuGRUB_UINT64_T " MiB\n",
++	       data, !!(data & (1 << 0)), (data & 0xfff00000),
++	       (data & 0x00000ff0) >> 4);
 +
-+  return secureboot;
++  grub_printf ("  TXT.PUBLIC.KEY:\n");
++
++  for (i = 0; i < 4; ++i)
++    {
++      /* TODO: Check relevant MSRs on SGX platforms. */
++      data = grub_txt_reg_pub_readq (GRUB_TXT_PUBLIC_KEY + i * sizeof (grub_uint64_t));
++      grub_printf ("    %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x%s", data8[0], data8[1],
++		   data8[2], data8[3], data8[4], data8[5], data8[6], data8[7],
++		   (i < 3) ? ":\n" : "\n");
++    }
 +}
-+#endif
 +
- static grub_err_t
- grub_linux_boot (void)
++grub_err_t
++grub_txt_boot_prepare (struct grub_slaunch_params *slparams)
++{
++  grub_err_t err;
++  struct grub_txt_mle_header *mle_header;
++  struct grub_txt_acm_header *sinit_base;
++
++  sinit_base = grub_txt_sinit_select (grub_slaunch_module ());
++
++  if (sinit_base == NULL)
++    return grub_errno;
++
++  err = init_txt_heap (slparams, sinit_base);
++
++  if (err != GRUB_ERR_NONE)
++    return err;
++
++  /* Update the MLE header. */
++  mle_header = (struct grub_txt_mle_header *)(grub_addr_t) (slparams->mle_start + slparams->mle_header_offset);
++  mle_header->first_valid_page = 0;
++  mle_header->mle_end = slparams->mle_size;
++
++  slparams->sinit_acm_base = (grub_uint32_t)(grub_addr_t) sinit_base;
++  slparams->sinit_acm_size = sinit_base->size * 4;
++
++  grub_tpm_relinquish_lcl (0);
++
++  err = set_mtrrs_for_acmod (sinit_base);
++  if (err)
++    return grub_error (err, N_("secure launch failed to set MTRRs for ACM"));
++
++  err = grub_txt_prepare_cpu ();
++  if ( err )
++    return err;
++
++  if (!(grub_rdmsr (GRUB_MSR_X86_APICBASE) & GRUB_MSR_X86_APICBASE_BSP))
++    return grub_error (GRUB_ERR_BAD_DEVICE, N_("secure launch must run on BSP"));
++
++  return GRUB_ERR_NONE;
++}
+diff --git a/include/grub/i386/memory.h b/include/grub/i386/memory.h
+index c64529630..56f64855b 100644
+--- a/include/grub/i386/memory.h
++++ b/include/grub/i386/memory.h
+@@ -22,6 +22,7 @@
+ 
+ #define GRUB_PAGE_SHIFT		12
+ #define GRUB_PAGE_SIZE		(1UL << GRUB_PAGE_SHIFT)
++#define GRUB_PAGE_MASK		(~(GRUB_PAGE_SIZE - 1))
+ 
+ /* The flag for protected mode.  */
+ #define GRUB_MEMORY_CPU_CR0_PE_ON		0x1
+@@ -43,8 +44,12 @@
+ 
+ #define GRUB_MMAP_MALLOC_LOW 1
+ 
++#include <grub/misc.h>
+ #include <grub/types.h>
+ 
++#define GRUB_PAGE_UP(p)		ALIGN_UP (p, GRUB_PAGE_SIZE)
++#define GRUB_PAGE_DOWN(p)	ALIGN_DOWN (p, GRUB_PAGE_SIZE)
++
+ struct grub_e820_mmap_entry
  {
-@@ -579,6 +660,9 @@ grub_linux_boot (void)
-     grub_efi_uintn_t efi_desc_size;
-     grub_size_t efi_mmap_target;
-     grub_efi_uint32_t efi_desc_version;
-+
-+    ctx.params->secure_boot = grub_efi_get_secureboot ();
-+
-     err = grub_efi_finish_boot_services (&efi_mmap_size, efi_mmap_buf, NULL,
- 					 &efi_desc_size, &efi_desc_version);
-     if (err)
-@@ -790,7 +874,7 @@ grub_cmd_linux (grub_command_t cmd __attribute__ ((unused)),
- 
-   linux_params.code32_start = prot_mode_target + lh.code32_start - GRUB_LINUX_BZIMAGE_ADDR;
-   linux_params.kernel_alignment = (1 << align);
--  linux_params.ps_mouse = linux_params.padding10 = 0;
-+  linux_params.ps_mouse = linux_params.padding11 = 0;
-   linux_params.type_of_loader = GRUB_LINUX_BOOT_LOADER_TYPE;
- 
-   /* These two are used (instead of cmd_line_ptr) by older versions of Linux,
-diff --git a/include/grub/i386/linux.h b/include/grub/i386/linux.h
-index ce30e7fb0..6aea73ddb 100644
---- a/include/grub/i386/linux.h
-+++ b/include/grub/i386/linux.h
-@@ -49,6 +49,12 @@
- /* Maximum number of MBR signatures to store. */
- #define EDD_MBR_SIG_MAX			16
- 
-+/* Possible values for Linux secure_boot kernel parameter. */
-+#define GRUB_LINUX_EFI_SECUREBOOT_MODE_UNSET	0
-+#define GRUB_LINUX_EFI_SECUREBOOT_MODE_UNKNOWN	1
-+#define GRUB_LINUX_EFI_SECUREBOOT_MODE_DISABLED	2
-+#define GRUB_LINUX_EFI_SECUREBOOT_MODE_ENABLED	3
-+
- #ifdef __x86_64__
- 
- #define GRUB_LINUX_EFI_SIGNATURE	\
-@@ -275,7 +281,11 @@ struct linux_kernel_params
- 
-   grub_uint8_t mmap_size;		/* 1e8 */
- 
--  grub_uint8_t padding9[0x1f1 - 0x1e9];
-+  grub_uint8_t padding9[0x1ec - 0x1e9];
-+
-+  grub_uint8_t secure_boot;             /* 1ec */
-+
-+  grub_uint8_t padding10[0x1f1 - 0x1ed];
- 
-   /* Linux setup header copy - BEGIN. */
-   grub_uint8_t setup_sects;		/* The size of the setup in sectors */
-@@ -286,7 +296,7 @@ struct linux_kernel_params
-   grub_uint16_t vid_mode;		/* Video mode control */
-   grub_uint16_t root_dev;		/* Default root device number */
- 
--  grub_uint8_t padding10;		/* 1fe */
-+  grub_uint8_t padding11;		/* 1fe */
-   grub_uint8_t ps_mouse;		/* 1ff */
- 
-   grub_uint16_t jump;			/* Jump instruction */
+   grub_uint64_t addr;
 -- 
 2.11.0
 
