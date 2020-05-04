@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFBDC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0580C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 808D82073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DA920663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615826;
-	bh=N4i6e4VsODP2CW1mwqCEy5GnptRmE9Pa1G3YDTPyGAc=;
+	s=default; t=1588615834;
+	bh=F12sOzFhwshjn4Oeh291QGzCcqyC0yJAeCyNKWEJfK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0P0Ds43viThV4+ONl7uveVuIeyR31I3Eur0HkJlDfezrZIGgDRpiR/h7bxR4IFnnc
-	 d8kpmnHoWk4P2sYGfUyhPF8BSyGE7VQ7yMzX88ER8gsHHVZsTcHpTv9yDo0UXBhLfT
-	 cMkv63lebcCfsYUG1Gn6/2cAxKwklkHl4fGJRcA4=
+	b=M0/Httjm53NSjHSWU+mbPBlqEG99yVKMP1Cy6IplfbkyXHar2i4Vox+kHHSnYBLUJ
+	 Z+oYzNNvlT33UXWqO5jRVNa4eRX/jOuskCPlPzxrv5yhAooyINnPfq9Pn6vu9IB5PM
+	 OG7TfbaGiZJH1aY9+ukK0bznhRIn+eKpMuxljzUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732264AbgEDSKZ (ORCPT
+        id S1732337AbgEDSKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbgEDSFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:34 -0400
+        id S1731031AbgEDSFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:05:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E9B206B8;
-        Mon,  4 May 2020 18:05:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76248206B8;
+        Mon,  4 May 2020 18:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615533;
-        bh=N4i6e4VsODP2CW1mwqCEy5GnptRmE9Pa1G3YDTPyGAc=;
+        s=default; t=1588615518;
+        bh=F12sOzFhwshjn4Oeh291QGzCcqyC0yJAeCyNKWEJfK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4u+y8YJ9bX6d9WDqeSG8tux7Z6MY/7mhKV4Xma6DF6w6Hoqha4LrWtw3BIHK0f2m
-         gSu/upXVb33+DAcfh2gbhWGF6TZa7Ld6DFa+WELlbtihVrapIiv4I9ChZ7tBVtWheB
-         sscq8YBJ3uqvm2DK5TvONKhIKRQ2QAZWk/SOJvZM=
+        b=xBf/LGTy50kQ8ERbnC/9cnLUdVOhDYsAA8aYSfmnwOcaK79z06a/H3wOsXfAvAIIC
+         EEXC6CMHyxc3UdTxh1jpi815ccW6M6Oob/Bmo1byy4z9sr4MDRVLfIzUpvTxV6RL4Q
+         OhLdtrvgmtORrhP7MV3o6rSsB6OWDvIkE8TUb6bE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        minchan@kernel.org, surenb@google.com, jenhaochen@google.com,
-        Martin Liu <liumartin@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5.6 02/73] dma-buf: Fix SET_NAME ioctl uapi
-Date:   Mon,  4 May 2020 19:57:05 +0200
-Message-Id: <20200504165502.155875888@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.6 14/73] btrfs: fix partial loss of prealloc extent past i_size after fsync
+Date:   Mon,  4 May 2020 19:57:17 +0200
+Message-Id: <20200504165504.577657162@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -65,69 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@intel.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit a5bff92eaac45bdf6221badf9505c26792fdf99e upstream.
+commit f135cea30de5f74d5bfb5116682073841fb4af8f upstream.
 
-The uapi is the same on 32 and 64 bit, but the number isn't. Everyone
-who botched this please re-read:
+When we have an inode with a prealloc extent that starts at an offset
+lower than the i_size and there is another prealloc extent that starts at
+an offset beyond i_size, we can end up losing part of the first prealloc
+extent (the part that starts at i_size) and have an implicit hole if we
+fsync the file and then have a power failure.
 
-https://www.kernel.org/doc/html/v5.4-preprc-cpu/ioctl/botching-up-ioctls.html
+Consider the following example with comments explaining how and why it
+happens.
 
-Also, the type argument for the ioctl macros is for the type the void
-__user *arg pointer points at, which in this case would be the
-variable-sized char[] of a 0 terminated string. So this was botched in
-more than just the usual ways.
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
 
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Greg Hackmann <ghackmann@google.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: linux-media@vger.kernel.org
-Cc: linaro-mm-sig@lists.linaro.org
-Cc: minchan@kernel.org
-Cc: surenb@google.com
-Cc: jenhaochen@google.com
-Cc: Martin Liu <liumartin@google.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Tested-by: Martin Liu <liumartin@google.com>
-Reviewed-by: Martin Liu <liumartin@google.com>
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-  [sumits: updated some checkpatch fixes, corrected author email]
-Link: https://patchwork.freedesktop.org/patch/msgid/20200407133002.3486387-1-daniel.vetter@ffwll.ch
+  # Create our test file with 2 consecutive prealloc extents, each with a
+  # size of 128Kb, and covering the range from 0 to 256Kb, with a file
+  # size of 0.
+  $ xfs_io -f -c "falloc -k 0 128K" /mnt/foo
+  $ xfs_io -c "falloc -k 128K 128K" /mnt/foo
+
+  # Fsync the file to record both extents in the log tree.
+  $ xfs_io -c "fsync" /mnt/foo
+
+  # Now do a redudant extent allocation for the range from 0 to 64Kb.
+  # This will merely increase the file size from 0 to 64Kb. Instead we
+  # could also do a truncate to set the file size to 64Kb.
+  $ xfs_io -c "falloc 0 64K" /mnt/foo
+
+  # Fsync the file, so we update the inode item in the log tree with the
+  # new file size (64Kb). This also ends up setting the number of bytes
+  # for the first prealloc extent to 64Kb. This is done by the truncation
+  # at btrfs_log_prealloc_extents().
+  # This means that if a power failure happens after this, a write into
+  # the file range 64Kb to 128Kb will not use the prealloc extent and
+  # will result in allocation of a new extent.
+  $ xfs_io -c "fsync" /mnt/foo
+
+  # Now set the file size to 256K with a truncate and then fsync the file.
+  # Since no changes happened to the extents, the fsync only updates the
+  # i_size in the inode item at the log tree. This results in an implicit
+  # hole for the file range from 64Kb to 128Kb, something which fsck will
+  # complain when not using the NO_HOLES feature if we replay the log
+  # after a power failure.
+  $ xfs_io -c "truncate 256K" -c "fsync" /mnt/foo
+
+So instead of always truncating the log to the inode's current i_size at
+btrfs_log_prealloc_extents(), check first if there's a prealloc extent
+that starts at an offset lower than the i_size and with a length that
+crosses the i_size - if there is one, just make sure we truncate to a
+size that corresponds to the end offset of that prealloc extent, so
+that we don't lose the part of that extent that starts at i_size if a
+power failure happens.
+
+A test case for fstests follows soon.
+
+Fixes: 31d11b83b96f ("Btrfs: fix duplicate extents after fsync of file with prealloc extents")
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma-buf/dma-buf.c    |    3 ++-
- include/uapi/linux/dma-buf.h |    6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ fs/btrfs/tree-log.c |   43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -388,7 +388,8 @@ static long dma_buf_ioctl(struct file *f
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4211,6 +4211,9 @@ static int btrfs_log_prealloc_extents(st
+ 	const u64 ino = btrfs_ino(inode);
+ 	struct btrfs_path *dst_path = NULL;
+ 	bool dropped_extents = false;
++	u64 truncate_offset = i_size;
++	struct extent_buffer *leaf;
++	int slot;
+ 	int ins_nr = 0;
+ 	int start_slot;
+ 	int ret;
+@@ -4225,9 +4228,43 @@ static int btrfs_log_prealloc_extents(st
+ 	if (ret < 0)
+ 		goto out;
  
- 		return ret;
- 
--	case DMA_BUF_SET_NAME:
-+	case DMA_BUF_SET_NAME_A:
-+	case DMA_BUF_SET_NAME_B:
- 		return dma_buf_set_name(dmabuf, (const char __user *)arg);
- 
- 	default:
---- a/include/uapi/linux/dma-buf.h
-+++ b/include/uapi/linux/dma-buf.h
-@@ -39,6 +39,12 @@ struct dma_buf_sync {
- 
- #define DMA_BUF_BASE		'b'
- #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
++	/*
++	 * We must check if there is a prealloc extent that starts before the
++	 * i_size and crosses the i_size boundary. This is to ensure later we
++	 * truncate down to the end of that extent and not to the i_size, as
++	 * otherwise we end up losing part of the prealloc extent after a log
++	 * replay and with an implicit hole if there is another prealloc extent
++	 * that starts at an offset beyond i_size.
++	 */
++	ret = btrfs_previous_item(root, path, ino, BTRFS_EXTENT_DATA_KEY);
++	if (ret < 0)
++		goto out;
 +
-+/* 32/64bitness of this uapi was botched in android, there's no difference
-+ * between them in actual uapi, they're just different numbers.
-+ */
- #define DMA_BUF_SET_NAME	_IOW(DMA_BUF_BASE, 1, const char *)
-+#define DMA_BUF_SET_NAME_A	_IOW(DMA_BUF_BASE, 1, u32)
-+#define DMA_BUF_SET_NAME_B	_IOW(DMA_BUF_BASE, 1, u64)
++	if (ret == 0) {
++		struct btrfs_file_extent_item *ei;
++
++		leaf = path->nodes[0];
++		slot = path->slots[0];
++		ei = btrfs_item_ptr(leaf, slot, struct btrfs_file_extent_item);
++
++		if (btrfs_file_extent_type(leaf, ei) ==
++		    BTRFS_FILE_EXTENT_PREALLOC) {
++			u64 extent_end;
++
++			btrfs_item_key_to_cpu(leaf, &key, slot);
++			extent_end = key.offset +
++				btrfs_file_extent_num_bytes(leaf, ei);
++
++			if (extent_end > i_size)
++				truncate_offset = extent_end;
++		}
++	} else {
++		ret = 0;
++	}
++
+ 	while (true) {
+-		struct extent_buffer *leaf = path->nodes[0];
+-		int slot = path->slots[0];
++		leaf = path->nodes[0];
++		slot = path->slots[0];
  
- #endif
+ 		if (slot >= btrfs_header_nritems(leaf)) {
+ 			if (ins_nr > 0) {
+@@ -4265,7 +4302,7 @@ static int btrfs_log_prealloc_extents(st
+ 				ret = btrfs_truncate_inode_items(trans,
+ 							 root->log_root,
+ 							 &inode->vfs_inode,
+-							 i_size,
++							 truncate_offset,
+ 							 BTRFS_EXTENT_DATA_KEY);
+ 			} while (ret == -EAGAIN);
+ 			if (ret)
 
 
