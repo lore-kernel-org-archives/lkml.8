@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A631FC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2F3C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A488205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143D8205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615796;
-	bh=E4u7xH45/jlO1EBws73tdhHlwPB/QyI0cMl8bdPV9Uw=;
+	s=default; t=1588615801;
+	bh=Mua+sMQzr3POhYCOn5RPotb5tnVTDlzYZE2WaBFwzFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOB8ZZsnRWKxltQb+9jUPXyhWgzAATw68IxLJX8daHNWkNAUYDi9/YoxNBBtgH73N
-	 byOFuiRPzX0P8F1He4tjBYJ2nOz06x+bMtcfk2TgIPucS2PIBv6UMtwWmIrhlFNgsK
-	 RgHnFpeATRJdLuDFOa3K3R9TknzUNBvqZZ6eTcPs=
+	b=1UXNx6hVQbr+E3TPKrffkl6ltQT6tvBnqo4H7Hu1Qm6ugUkdyzqTBjrdIJHAH9t5G
+	 bVndr/XbFlLZpDmrfm0H4jjBcVmfBDu49R0P/t3j5HsMdcX40Zg3rWf6pYt23WF3X/
+	 9hlO2vGRrMhU5wtloTztfeNxLOi0V/psF6nLvs6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbgEDSJz (ORCPT
+        id S1731994AbgEDSKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:09:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731910AbgEDSGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:08 -0400
+        id S1730810AbgEDSGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23DA1205ED;
-        Mon,  4 May 2020 18:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5651A205ED;
+        Mon,  4 May 2020 18:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615567;
-        bh=E4u7xH45/jlO1EBws73tdhHlwPB/QyI0cMl8bdPV9Uw=;
+        s=default; t=1588615562;
+        bh=Mua+sMQzr3POhYCOn5RPotb5tnVTDlzYZE2WaBFwzFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ArToTF0yiuO7b+Nn7DHEOxOpchcJm5oaovOGszMt3nFjlRSHFqUeSMiKsteEec4kv
-         t+9F314s0MpisiFI/oHQcXLcKkx44BVFkSQdRSf0eu2K2e5zghXS5E7+Hl7ncPcj2E
-         3P6u3AyJd2Uw6ZK1g7zyGE7elFTKC/y9sJIW5B0o=
+        b=UZJaOsinusU20Ac3/LkXHY6DMULo9YO8bFqnDkpFQABRZPgFEttdaK5Z5C0m2OQew
+         5992MSaNVK4cKAdUeYIcHAzhSkE5s4sZx1gBT7To4SkfmH6V23SPJ4dDlEA6By8k03
+         WJSyxSb0BMdtUMmh623girSzoNUQp3EtWB2TT/u8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.6 32/73] selinux: properly handle multiple messages in selinux_netlink_send()
-Date:   Mon,  4 May 2020 19:57:35 +0200
-Message-Id: <20200504165507.399686778@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>
+Subject: [PATCH 5.6 30/73] Drivers: hv: vmbus: Fix Suspend-to-Idle for Generation-2 VM
+Date:   Mon,  4 May 2020 19:57:33 +0200
+Message-Id: <20200504165507.267516405@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -60,112 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit fb73974172ffaaf57a7c42f35424d9aece1a5af6 upstream.
+commit 1a06d017fb3f388734ffbe5dedee6f8c3af5f2db upstream.
 
-Fix the SELinux netlink_send hook to properly handle multiple netlink
-messages in a single sk_buff; each message is parsed and subject to
-SELinux access control.  Prior to this patch, SELinux only inspected
-the first message in the sk_buff.
+Before the hibernation patchset (e.g. f53335e3289f), in a Generation-2
+Linux VM on Hyper-V, the user can run "echo freeze > /sys/power/state" to
+freeze the system, i.e. Suspend-to-Idle. The user can press the keyboard
+or move the mouse to wake up the VM.
 
+With the hibernation patchset, Linux VM on Hyper-V can hibernate to disk,
+but Suspend-to-Idle is broken: when the synthetic keyboard/mouse are
+suspended, there is no way to wake up the VM.
+
+Fix the issue by not suspending and resuming the vmbus devices upon
+Suspend-to-Idle.
+
+Fixes: f53335e3289f ("Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation")
 Cc: stable@vger.kernel.org
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Link: https://lore.kernel.org/r/1586663435-36243-1-git-send-email-decui@microsoft.com
+Signed-off-by: Wei Liu <wei.liu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/selinux/hooks.c |   70 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 45 insertions(+), 25 deletions(-)
+ drivers/hv/vmbus_drv.c |   43 ++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5829,40 +5829,60 @@ static unsigned int selinux_ipv6_postrou
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -978,6 +978,9 @@ static int vmbus_resume(struct device *c
  
- static int selinux_netlink_send(struct sock *sk, struct sk_buff *skb)
- {
--	int err = 0;
--	u32 perm;
-+	int rc = 0;
-+	unsigned int msg_len;
-+	unsigned int data_len = skb->len;
-+	unsigned char *data = skb->data;
- 	struct nlmsghdr *nlh;
- 	struct sk_security_struct *sksec = sk->sk_security;
-+	u16 sclass = sksec->sclass;
-+	u32 perm;
+ 	return drv->resume(dev);
+ }
++#else
++#define vmbus_suspend NULL
++#define vmbus_resume NULL
+ #endif /* CONFIG_PM_SLEEP */
  
--	if (skb->len < NLMSG_HDRLEN) {
--		err = -EINVAL;
--		goto out;
--	}
--	nlh = nlmsg_hdr(skb);
-+	while (data_len >= nlmsg_total_size(0)) {
-+		nlh = (struct nlmsghdr *)data;
- 
--	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
--	if (err) {
--		if (err == -EINVAL) {
-+		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
-+		 *       users which means we can't reject skb's with bogus
-+		 *       length fields; our solution is to follow what
-+		 *       netlink_rcv_skb() does and simply skip processing at
-+		 *       messages with length fields that are clearly junk
-+		 */
-+		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
-+			return 0;
-+
-+		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
-+		if (rc == 0) {
-+			rc = sock_has_perm(sk, perm);
-+			if (rc)
-+				return rc;
-+		} else if (rc == -EINVAL) {
-+			/* -EINVAL is a missing msg/perm mapping */
- 			pr_warn_ratelimited("SELinux: unrecognized netlink"
--			       " message: protocol=%hu nlmsg_type=%hu sclass=%s"
--			       " pid=%d comm=%s\n",
--			       sk->sk_protocol, nlh->nlmsg_type,
--			       secclass_map[sksec->sclass - 1].name,
--			       task_pid_nr(current), current->comm);
--			if (!enforcing_enabled(&selinux_state) ||
--			    security_get_allow_unknown(&selinux_state))
--				err = 0;
-+				" message: protocol=%hu nlmsg_type=%hu sclass=%s"
-+				" pid=%d comm=%s\n",
-+				sk->sk_protocol, nlh->nlmsg_type,
-+				secclass_map[sclass - 1].name,
-+				task_pid_nr(current), current->comm);
-+			if (enforcing_enabled(&selinux_state) &&
-+			    !security_get_allow_unknown(&selinux_state))
-+				return rc;
-+			rc = 0;
-+		} else if (rc == -ENOENT) {
-+			/* -ENOENT is a missing socket/class mapping, ignore */
-+			rc = 0;
-+		} else {
-+			return rc;
- 		}
- 
--		/* Ignore */
--		if (err == -ENOENT)
--			err = 0;
--		goto out;
-+		/* move to the next message after applying netlink padding */
-+		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
-+		if (msg_len >= data_len)
-+			return 0;
-+		data_len -= msg_len;
-+		data += msg_len;
- 	}
- 
--	err = sock_has_perm(sk, perm);
--out:
--	return err;
-+	return rc;
+ /*
+@@ -997,11 +1000,22 @@ static void vmbus_device_release(struct
  }
  
- static void ipc_init_security(struct ipc_security_struct *isec, u16 sclass)
+ /*
+- * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
+- * SET_SYSTEM_SLEEP_PM_OPS: see the comment before vmbus_bus_pm.
++ * Note: we must use the "noirq" ops: see the comment before vmbus_bus_pm.
++ *
++ * suspend_noirq/resume_noirq are set to NULL to support Suspend-to-Idle: we
++ * shouldn't suspend the vmbus devices upon Suspend-to-Idle, otherwise there
++ * is no way to wake up a Generation-2 VM.
++ *
++ * The other 4 ops are for hibernation.
+  */
++
+ static const struct dev_pm_ops vmbus_pm = {
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_suspend, vmbus_resume)
++	.suspend_noirq	= NULL,
++	.resume_noirq	= NULL,
++	.freeze_noirq	= vmbus_suspend,
++	.thaw_noirq	= vmbus_resume,
++	.poweroff_noirq	= vmbus_suspend,
++	.restore_noirq	= vmbus_resume,
+ };
+ 
+ /* The one and only one */
+@@ -2281,6 +2295,9 @@ static int vmbus_bus_resume(struct devic
+ 
+ 	return 0;
+ }
++#else
++#define vmbus_bus_suspend NULL
++#define vmbus_bus_resume NULL
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static const struct acpi_device_id vmbus_acpi_device_ids[] = {
+@@ -2291,16 +2308,24 @@ static const struct acpi_device_id vmbus
+ MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
+ 
+ /*
+- * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
+- * SET_SYSTEM_SLEEP_PM_OPS, otherwise NIC SR-IOV can not work, because the
+- * "pci_dev_pm_ops" uses the "noirq" callbacks: in the resume path, the
+- * pci "noirq" restore callback runs before "non-noirq" callbacks (see
++ * Note: we must use the "no_irq" ops, otherwise hibernation can not work with
++ * PCI device assignment, because "pci_dev_pm_ops" uses the "noirq" ops: in
++ * the resume path, the pci "noirq" restore op runs before "non-noirq" op (see
+  * resume_target_kernel() -> dpm_resume_start(), and hibernation_restore() ->
+  * dpm_resume_end()). This means vmbus_bus_resume() and the pci-hyperv's
+- * resume callback must also run via the "noirq" callbacks.
++ * resume callback must also run via the "noirq" ops.
++ *
++ * Set suspend_noirq/resume_noirq to NULL for Suspend-to-Idle: see the comment
++ * earlier in this file before vmbus_pm.
+  */
++
+ static const struct dev_pm_ops vmbus_bus_pm = {
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
++	.suspend_noirq	= NULL,
++	.resume_noirq	= NULL,
++	.freeze_noirq	= vmbus_bus_suspend,
++	.thaw_noirq	= vmbus_bus_resume,
++	.poweroff_noirq	= vmbus_bus_suspend,
++	.restore_noirq	= vmbus_bus_resume
+ };
+ 
+ static struct acpi_driver vmbus_acpi_driver = {
 
 
