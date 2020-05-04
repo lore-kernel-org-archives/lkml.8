@@ -2,101 +2,95 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A980FC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794CBC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8531021655
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:13:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CmgNscbf"
+	by mail.kernel.org (Postfix) with ESMTP id 56C2E206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:15:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgEDKNm (ORCPT
+        id S1727991AbgEDKPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgEDKNl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:13:41 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E24C061A0E;
-        Mon,  4 May 2020 03:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HYr4jMG5Fx8z45ehq19JE5BB1pRtcqVpSSdsC2AjlhY=; b=CmgNscbfFaxys2H8sNgXEM5V5
-        OrhtGd/K3U7qiBY+teHpl2a1hL2ClrCNSK0sQ04G4yVN41oGPagC7WvFygQF0xfJGOBTvS/+MI0p0
-        Q9II8asQ3BfG/CVqj852mZXqJiIsyDfRVdauhJa3EYXQXpfubYmDrAsGoSxell4VJsZG6SMjFOHrE
-        1kW50x39XaHBdZBlGFqP0HMSqw8aDCiuEqcDlyZLgZnUbRXpuX1JnpuI9bYkv96s685LjcSnUkrPl
-        QDTcaDO8UONoJKSPLQnyE061fP56muBZ1+oYCkIOlTtTAQdq7vUzag30rgIOVM0v3WDHa0DD9BOvJ
-        6uTFYxwwA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:35838)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jVY6L-0003zf-FE; Mon, 04 May 2020 11:13:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jVY6K-00063o-Fg; Mon, 04 May 2020 11:13:28 +0100
-Date:   Mon, 4 May 2020 11:13:28 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Greg KH <greg@kroah.com>
-Cc:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch include request] ARM: dts: imx6qdl-sr-som-ti: indicate
- powering off wifi is safe
-Message-ID: <20200504101328.GC1551@shell.armlinux.org.uk>
-References: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
- <20200504095832.GA1277837@kroah.com>
+        Mon, 4 May 2020 06:15:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:39941 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727786AbgEDKPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 06:15:53 -0400
+IronPort-SDR: zac0n6+mH4OGwqJlyJPhQ8YUboM1GZLbOwg4U5I+xGCy8OfgwLujC5hTbHqPAywYMUP6V/BMIf
+ XiwcgJm7sOzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 03:15:52 -0700
+IronPort-SDR: kWzOexmE9gA9GHIa+C/aOVrhX7sZAgooMMGkA7wWet4plCES6C0LHJKpk/ebmQ5jghUQWYWDmf
+ qla8KiukKhPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
+   d="scan'208";a="277483002"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 04 May 2020 03:15:51 -0700
+Received: from [10.215.163.15] (ekotax-mobl.gar.corp.intel.com [10.215.163.15])
+        by linux.intel.com (Postfix) with ESMTP id 2E749580609;
+        Mon,  4 May 2020 03:15:48 -0700 (PDT)
+Subject: Re: [PATCH 1/4] spi: lantiq: Synchronize interrupt handlers and
+ transfers
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>, robh@kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hauke@hauke-m.de,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1587702428.git.eswara.kota@linux.intel.com>
+ <3bf88d24b9cad9f3df1da8ed65bf55c05693b0f2.1587702428.git.eswara.kota@linux.intel.com>
+ <310ca761-e7ae-1192-99fd-a1960697806b@gmail.com>
+ <46f31699-e781-ae33-3ee5-d51e6940ee43@linux.intel.com>
+ <20200429121310.GH4201@sirena.org.uk>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <28f6511e-fe85-a834-1652-fd70def9ca88@linux.intel.com>
+Date:   Mon, 4 May 2020 18:15:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504095832.GA1277837@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200429121310.GH4201@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 11:58:32AM +0200, Greg KH wrote:
-> On Fri, May 01, 2020 at 09:23:49PM +0100, Miguel Borges de Freitas wrote:
-> > Dear all,
-> > 
-> > This is a request to backport b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10
-> > (Arm: dts:  imx6qdl-sr-som-ti: indicate powering off wifi is safe),
-> > already in Linus tree
-> > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi?h=v5.7-rc3&id=b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10)
-> > to LTS kernel 5.4 and to stable 5.6.8.
-> > 
-> > Reasoning:
-> > 
-> > Changes to the wlcore driver during Kernel 5.x development, made the
-> > Cubox-i with the IMX SOM v1.5 (which includes.a TI Wilink 8 wifi
-> > chipset) not power the wireless interface on boot leaving it
-> > completely unusable. This happens since at least kernel 5.3 (older one
-> > I tested) and affects the current stable and LTS latest kernels. The
-> > linked commit, already in linux mainline, restores the wifi
-> > functionality.
-> > 
-> > Thanks in advance,
-> 
-> Now queued up, thanks.
 
-Just be aware that there's a good reason the patch was never marked
-with a Fixes: tag - that is because no one seems to know exactly which
-commit broke it, and hence it hasn't been clear which stable kernels
-it should be backported to.
+On 4/29/2020 8:13 PM, Mark Brown wrote:
+> On Wed, Apr 29, 2020 at 04:20:53PM +0800, Dilip Kota wrote:
+>> On 4/28/2020 7:10 PM, Daniel Schwierzeck wrote:
+>>> actually there is no real bottom half. Reading or writing the FIFOs is
+>>> fast and is therefore be done in hard IRQ context. But as the comment
+>> Doing FIFO r/w in threaded irqs shouldn't cause any impact on maximum
+>> transfer rate i think.
+> Have you actually tested this?  Generally adding extra latency is going
+> to lead to some opportunity for the hardware to idle and the longer the
+> hardware is idle the lower the throughput.
+>
+>> Also the ISR should be quick enough, doing FIFO r/w in ISR adds up more
+>> latency to ISR.
+>> Handling the FIFOs r/w in threaded irq will be a better way.
+> Consider what happens on a heavily loaded system - the threaded
+> interrupt will have to be scheduled along with other tasks.
+>
+>>> for lantiq_ssc_bussy_work() state, the driver needs some busy-waiting
+>>> after the last interrupt. I don't think it's worth to replace this with
+>>> threaded interrupts which add more runtime overhead and likely decrease
+>>> the maximum transfer speed.
+>> Workqueue has a higher chances of causing SPI transfers timedout.
+> because...?
+I just tried to get the history of removing workqueue in SPI driver, on 
+GRX500 (earlier chipset of LGM) the SPI transfers got timedout with 
+workqueues during regression testing. Once changed to threaded IRQs 
+transfers are working successfully.
 
-So, it's good that someone has put up this backport request.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Regards,
+Dilip
