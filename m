@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90E9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F6BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6B5520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AEC2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615583;
-	bh=opWHiN36bSBUCMubKH5BnZnE+4487/van9i2mC6Pzns=;
+	s=default; t=1588615587;
+	bh=KI8UUERRC4LRXwgXgNTEKhVbTCFwZRX7Mps+usd1pC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqt/Ba6Pkw9E6wMGXu4nSX9r7sIQm+dBUAR6mt8eNvPqwCoy+b436iZVC5to37U8L
-	 ec+k5Owy9GJTHu+d7NQhHhH3yPp6/fy5stjmOp2mw7rCyrzd3F2v2dG7BZ9+C8hcJO
-	 2c25ydWDynPTghkZgfeColHhoECThRyKyJDZuyKA=
+	b=vZJxNiQNU2krWhQiMEITz8iPp8xZsCmwOHXaDXf3zpdhMPS1N3pmM67oEBB4smbJI
+	 o39brEKmUNRwird+UunePsrPGi4O6Ogkqpfg9tVhqmVc05MB96MHuUCS0sXv/+YuMO
+	 neM2pd8Xianw5mbxukYG63semfwuP2bEzKaTLOiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgEDSGX (ORCPT
+        id S1731967AbgEDSG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:06:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36580 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731939AbgEDSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:18 -0400
+        id S1731954AbgEDSGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EF87206B8;
-        Mon,  4 May 2020 18:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4DFC206B8;
+        Mon,  4 May 2020 18:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615577;
-        bh=opWHiN36bSBUCMubKH5BnZnE+4487/van9i2mC6Pzns=;
+        s=default; t=1588615582;
+        bh=KI8UUERRC4LRXwgXgNTEKhVbTCFwZRX7Mps+usd1pC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PdKYjviX1nKqPabf8887UG3AegFh0XVu2Sm9O3Zl1L+/K/fLCb/+R8U0tnl8NZ2IJ
-         1dQ4aIugZQ6GH0+GcvZ7Vbw94/Ak5Gpj7ee/BLFTS2cMI5OkOh8RTxEMyIGb7aBEfm
-         CywG85vVJ8NgIaO9vY9TUbqWTkl7Yf3+38UWYWrQ=
+        b=Gog0SdfR8pGSVUm6h7bOXeCrQooc2o1MkRU+mk32UvtGw0TuGgWMrwQftuZt4rXXQ
+         akLnlFP4IyQiKfbkUntdsqW8k6ZlEC+AvoTepD21z3M6BYu37lT2ODwelqkp5d62Y4
+         5J0BcCZqcTTe8w/nBn9VknxGh2Hc2fTa7jfUzO0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>
-Subject: [PATCH 5.6 04/73] drm/edid: Fix off-by-one in DispID DTD pixel clock
-Date:   Mon,  4 May 2020 19:57:07 +0200
-Message-Id: <20200504165502.570021512@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Airlie <airlied@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.6 06/73] drm/i915/gem: Hold obj->vma.lock over for_each_ggtt_vma()
+Date:   Mon,  4 May 2020 19:57:09 +0200
+Message-Id: <20200504165503.088299523@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,39 +61,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 6292b8efe32e6be408af364132f09572aed14382 upstream.
+commit f524a774a4ff702bdfbfc094c9dd463ee623252b upstream.
 
-The DispID DTD pixel clock is documented as:
-"00 00 00 h → FF FF FF h | Pixel clock ÷ 10,000 0.01 → 167,772.16 Mega Pixels per Sec"
-Which seems to imply that we to add one to the raw value.
+While the ggtt vma are protected by their object lifetime, the list
+continues until it hits a non-ggtt vma, and that vma is not protected
+and may be freed as we inspect it. Hence, we require the obj->vma.lock
+to protect the list as we iterate.
 
-Reality seems to agree as there are tiled displays in the wild
-which currently show a 10kHz difference in the pixel clock
-between the tiles (one tile gets its mode from the base EDID,
-the other from the DispID block).
+An example of forgetting to hold the obj->vma.lock is
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200423151743.18767-1-ville.syrjala@linux.intel.com
-Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+[1642834.464973] general protection fault, probably for non-canonical address 0xdead000000000122: 0000 [#1] SMP PTI
+[1642834.464977] CPU: 3 PID: 1954 Comm: Xorg Not tainted 5.6.0-300.fc32.x86_64 #1
+[1642834.464979] Hardware name: LENOVO 20ARS25701/20ARS25701, BIOS GJET94WW (2.44 ) 09/14/2017
+[1642834.465021] RIP: 0010:i915_gem_object_set_tiling+0x2c0/0x3e0 [i915]
+[1642834.465024] Code: 8b 84 24 18 01 00 00 f6 c4 80 74 59 49 8b 94 24 a0 00 00 00 49 8b 84 24 e0 00 00 00 49 8b 74 24 10 48 8b 92 30 01 00 00 89 c7 <80> ba 0a 06 00 00 03 0f 87 86 00 00 00 ba 00 00 08 00 b9 00 00 10
+[1642834.465025] RSP: 0018:ffffa98780c77d60 EFLAGS: 00010282
+[1642834.465028] RAX: ffff8d232bfb2578 RBX: 0000000000000002 RCX: ffff8d25873a0000
+[1642834.465029] RDX: dead000000000122 RSI: fffff0af8ac6e408 RDI: 000000002bfb2578
+[1642834.465030] RBP: ffff8d25873a0000 R08: ffff8d252bfb5638 R09: 0000000000000000
+[1642834.465031] R10: 0000000000000000 R11: ffff8d252bfb5640 R12: ffffa987801cb8f8
+[1642834.465032] R13: 0000000000001000 R14: ffff8d233e972e50 R15: ffff8d233e972d00
+[1642834.465034] FS:  00007f6a3d327f00(0000) GS:ffff8d25926c0000(0000) knlGS:0000000000000000
+[1642834.465036] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[1642834.465037] CR2: 00007f6a2064d000 CR3: 00000002fb57c001 CR4: 00000000001606e0
+[1642834.465038] Call Trace:
+[1642834.465083]  i915_gem_set_tiling_ioctl+0x122/0x230 [i915]
+[1642834.465121]  ? i915_gem_object_set_tiling+0x3e0/0x3e0 [i915]
+[1642834.465151]  drm_ioctl_kernel+0x86/0xd0 [drm]
+[1642834.465156]  ? avc_has_perm+0x3b/0x160
+[1642834.465178]  drm_ioctl+0x206/0x390 [drm]
+[1642834.465216]  ? i915_gem_object_set_tiling+0x3e0/0x3e0 [i915]
+[1642834.465221]  ? selinux_file_ioctl+0x122/0x1c0
+[1642834.465226]  ? __do_munmap+0x24b/0x4d0
+[1642834.465231]  ksys_ioctl+0x82/0xc0
+[1642834.465235]  __x64_sys_ioctl+0x16/0x20
+[1642834.465238]  do_syscall_64+0x5b/0xf0
+[1642834.465243]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[1642834.465245] RIP: 0033:0x7f6a3d7b047b
+[1642834.465247] Code: 0f 1e fa 48 8b 05 1d aa 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ed a9 0c 00 f7 d8 64 89 01 48
+[1642834.465249] RSP: 002b:00007ffe71adba28 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+[1642834.465251] RAX: ffffffffffffffda RBX: 000055f99048fa40 RCX: 00007f6a3d7b047b
+[1642834.465253] RDX: 00007ffe71adba30 RSI: 00000000c0106461 RDI: 000000000000000e
+[1642834.465254] RBP: 0000000000000002 R08: 000055f98f3f1798 R09: 0000000000000002
+[1642834.465255] R10: 0000000000001000 R11: 0000000000000246 R12: 0000000000000080
+[1642834.465257] R13: 000055f98f3f1690 R14: 00000000c0106461 R15: 00007ffe71adba30
+
+Now to take the spinlock during the list iteration, we need to break it
+down into two phases. In the first phase under the lock, we cannot sleep
+and so must defer the actual work to a second list, protected by the
+ggtt->mutex.
+
+We also need to hold the spinlock during creation of a new vma to
+serialise with updates of the tiling on the object.
+
+Reported-by: Dave Airlie <airlied@redhat.com>
+Fixes: 2850748ef876 ("drm/i915: Pull i915_vma_pin under the vm->mutex")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: <stable@vger.kernel.org> # v5.5+
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200422072805.17340-1-chris@chris-wilson.co.uk
+(cherry picked from commit cb593e5d2b6d3ad489669914d9fd1c64c7a4a6af)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_edid.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gem/i915_gem_tiling.c |   20 ++++++++++++++++++--
+ drivers/gpu/drm/i915/i915_vma.c            |   10 ++++++----
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -5009,7 +5009,7 @@ static struct drm_display_mode *drm_mode
- 	struct drm_display_mode *mode;
- 	unsigned pixel_clock = (timings->pixel_clock[0] |
- 				(timings->pixel_clock[1] << 8) |
--				(timings->pixel_clock[2] << 16));
-+				(timings->pixel_clock[2] << 16)) + 1;
- 	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
- 	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
- 	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;
+--- a/drivers/gpu/drm/i915/gem/i915_gem_tiling.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_tiling.c
+@@ -183,21 +183,35 @@ i915_gem_object_fence_prepare(struct drm
+ 			      int tiling_mode, unsigned int stride)
+ {
+ 	struct i915_ggtt *ggtt = &to_i915(obj->base.dev)->ggtt;
+-	struct i915_vma *vma;
++	struct i915_vma *vma, *vn;
++	LIST_HEAD(unbind);
+ 	int ret = 0;
+ 
+ 	if (tiling_mode == I915_TILING_NONE)
+ 		return 0;
+ 
+ 	mutex_lock(&ggtt->vm.mutex);
++
++	spin_lock(&obj->vma.lock);
+ 	for_each_ggtt_vma(vma, obj) {
++		GEM_BUG_ON(vma->vm != &ggtt->vm);
++
+ 		if (i915_vma_fence_prepare(vma, tiling_mode, stride))
+ 			continue;
+ 
++		list_move(&vma->vm_link, &unbind);
++	}
++	spin_unlock(&obj->vma.lock);
++
++	list_for_each_entry_safe(vma, vn, &unbind, vm_link) {
+ 		ret = __i915_vma_unbind(vma);
+-		if (ret)
++		if (ret) {
++			/* Restore the remaining vma on an error */
++			list_splice(&unbind, &ggtt->vm.bound_list);
+ 			break;
++		}
+ 	}
++
+ 	mutex_unlock(&ggtt->vm.mutex);
+ 
+ 	return ret;
+@@ -269,6 +283,7 @@ i915_gem_object_set_tiling(struct drm_i9
+ 	}
+ 	mutex_unlock(&obj->mm.lock);
+ 
++	spin_lock(&obj->vma.lock);
+ 	for_each_ggtt_vma(vma, obj) {
+ 		vma->fence_size =
+ 			i915_gem_fence_size(i915, vma->size, tiling, stride);
+@@ -279,6 +294,7 @@ i915_gem_object_set_tiling(struct drm_i9
+ 		if (vma->fence)
+ 			vma->fence->dirty = true;
+ 	}
++	spin_unlock(&obj->vma.lock);
+ 
+ 	obj->tiling_and_stride = tiling | stride;
+ 	i915_gem_object_unlock(obj);
+--- a/drivers/gpu/drm/i915/i915_vma.c
++++ b/drivers/gpu/drm/i915/i915_vma.c
+@@ -158,16 +158,18 @@ vma_create(struct drm_i915_gem_object *o
+ 
+ 	GEM_BUG_ON(!IS_ALIGNED(vma->size, I915_GTT_PAGE_SIZE));
+ 
++	spin_lock(&obj->vma.lock);
++
+ 	if (i915_is_ggtt(vm)) {
+ 		if (unlikely(overflows_type(vma->size, u32)))
+-			goto err_vma;
++			goto err_unlock;
+ 
+ 		vma->fence_size = i915_gem_fence_size(vm->i915, vma->size,
+ 						      i915_gem_object_get_tiling(obj),
+ 						      i915_gem_object_get_stride(obj));
+ 		if (unlikely(vma->fence_size < vma->size || /* overflow */
+ 			     vma->fence_size > vm->total))
+-			goto err_vma;
++			goto err_unlock;
+ 
+ 		GEM_BUG_ON(!IS_ALIGNED(vma->fence_size, I915_GTT_MIN_ALIGNMENT));
+ 
+@@ -179,8 +181,6 @@ vma_create(struct drm_i915_gem_object *o
+ 		__set_bit(I915_VMA_GGTT_BIT, __i915_vma_flags(vma));
+ 	}
+ 
+-	spin_lock(&obj->vma.lock);
+-
+ 	rb = NULL;
+ 	p = &obj->vma.tree.rb_node;
+ 	while (*p) {
+@@ -225,6 +225,8 @@ vma_create(struct drm_i915_gem_object *o
+ 
+ 	return vma;
+ 
++err_unlock:
++	spin_unlock(&obj->vma.lock);
+ err_vma:
+ 	i915_vma_free(vma);
+ 	return ERR_PTR(-E2BIG);
 
 
