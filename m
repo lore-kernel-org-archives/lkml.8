@@ -2,173 +2,101 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065A4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB15C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA1532087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9203F20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616175;
-	bh=Ftxti7lop+KcEeLsEEWDtpC4IVlenhFXF+tNff1LMgg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UUl/BiVtl0820n3YRIZOqgm3sh9CXbAiMwGOW2EwUkgeyQajeZzaCEI0HPKJJ5cP3
-	 41OMZpqoLB6f3OKYEPjcCXSJWoLqKiuJVRr3zea5a8onSjmH+apZ/f81U0FVwIPR1R
-	 /MvS7aJu7IOujTEtkYP+8yEni4tEeaQQ3kLedh+Q=
+	s=default; t=1588616180;
+	bh=Ch+9jydRbx+Y2XO2w7/HHuybV5IpP4ly0FO6bfnAURw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tykSi4+3gE1dtYXcg/nb33i0GAyGPfrz2PRIOgTgdklVrJQJE4V3taAfaHejrXS/t
+	 MIrxXwPGm8DWEM3fi+gvaAS+mi32kRM3v93odUak08nU0WcCFUTpEqD7dyEChGq0bT
+	 vHqjSiZGLub1GxiOva5dFec0NpdwckAhEb7ObYMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbgEDR67 (ORCPT
+        id S1730489AbgEDR6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:58:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51922 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 13:58:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730608AbgEDR64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:58:56 -0400
+        id S1730445AbgEDR6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:58:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93BD1206B8;
-        Mon,  4 May 2020 17:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0C9920707;
+        Mon,  4 May 2020 17:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615136;
-        bh=Ftxti7lop+KcEeLsEEWDtpC4IVlenhFXF+tNff1LMgg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=2LB97toUFV/ybq/kgEhwWtst7qzSFXog9KSUN4KyeYZEvoF75R+RW/XbP07HCYpQn
-         1OLBAuiAZ8zEtKNKhEQJef1kiUko0JzznSdc5OV7aLFgZU+JtVX0I96lHHpZ4BflKU
-         KJS+zE7D6f4uUKDnZvzXpDAJWvbZuTUONEAoECvg=
+        s=default; t=1588615121;
+        bh=Ch+9jydRbx+Y2XO2w7/HHuybV5IpP4ly0FO6bfnAURw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mtfCD39gS5XQJYaagu+FU9XH9cMzgUvSvkBbv88BLmuOpFHSrm0BdyEKaumVlFAVH
+         TRmcjC7Mrp9jIjs/IDgWn9YplIzi4cwK0RY1OIvKMAOv7/poVz4BJedoSBBu0zTj7C
+         hFSECPq7aNCQkxJkDt6sby/8Qy0Eus8PF1VBiFE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/18] 4.4.222-rc1 review
-Date:   Mon,  4 May 2020 19:56:58 +0200
-Message-Id: <20200504165441.533160703@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 04/18] PM: ACPI: Output correct message on target power state
+Date:   Mon,  4 May 2020 19:57:02 +0200
+Message-Id: <20200504165442.587185825@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
+In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
+References: <20200504165441.533160703@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.222-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.222-rc1
-X-KernelTest-Deadline: 2020-05-06T16:54+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.222 release.
-There are 18 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-Anything received after that time might be too late.
+commit a9b760b0266f563b4784f695bbd0e717610dc10a upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.222-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
+Transitioned power state logged at the end of setting ACPI power.
 
-thanks,
+However, D3cold won't be in the message because state can only be
+D3hot at most.
 
-greg k-h
+Use target_state to corretly report when power state is D3cold.
 
--------------
-Pseudo-Shortlog of commits:
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.222-rc1
+---
+ drivers/acpi/device_pm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Paul Moore <paul@paul-moore.com>
-    selinux: properly handle multiple messages in selinux_netlink_send()
-
-Olivier Matz <olivier.matz@6wind.com>
-    ipv6: use READ_ONCE() for inet->hdrincl as in ipv4
-
-Lars-Peter Clausen <lars@metafoo.de>
-    ASoC: imx-spdif: Fix crash on suspend
-
-Stuart Henderson <stuart.henderson@cirrus.com>
-    ASoC: wm8960: Fix WM8960_SYSCLK_PLL mode
-
-Rasmus Villemoes <linux@rasmusvillemoes.dk>
-    exynos4-is: fix a format string bug
-
-Peter Zijlstra <peterz@infradead.org>
-    perf/x86: Fix uninitialized value usage
-
-Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-    powerpc/perf: Remove PPMU_HAS_SSLOT flag for Power8
-
-Jiri Olsa <jolsa@kernel.org>
-    perf hists: Fix HISTC_MEM_DCACHELINE width setting
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    i2c: designware-pci: use IRQF_COND_SUSPEND flag
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    dmaengine: dmatest: Fix iteration non-stop logic
-
-Andreas Gruenbacher <agruenba@redhat.com>
-    nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-
-Arnd Bergmann <arnd@arndb.de>
-    ALSA: opti9xx: shut up gcc-10 range warning
-
-Sean Christopherson <sean.j.christopherson@intel.com>
-    vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
-
-Alaa Hleihel <alaa@mellanox.com>
-    RDMA/mlx4: Initialize ib_spec on the stack
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    PM: ACPI: Output correct message on target power state
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
-
-Vasily Averin <vvs@virtuozzo.com>
-    drm/qxl: qxl_release leak in qxl_hw_surface_alloc()
-
-Theodore Ts'o <tytso@mit.edu>
-    ext4: fix special inode number checks in __ext4_iget()
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/powerpc/perf/power8-pmu.c                     |  2 +-
- arch/x86/kernel/cpu/perf_event_intel.c             |  3 +-
- drivers/acpi/device_pm.c                           |  4 +-
- drivers/dma/dmatest.c                              |  4 +-
- drivers/gpu/drm/qxl/qxl_cmd.c                      |  5 +-
- drivers/i2c/busses/i2c-designware-core.c           |  3 +-
- drivers/infiniband/hw/mlx4/main.c                  |  3 +-
- drivers/media/platform/exynos4-is/fimc-isp-video.c |  4 +-
- drivers/vfio/vfio_iommu_type1.c                    |  4 +-
- fs/ext4/inode.c                                    |  2 +-
- fs/nfs/nfs3acl.c                                   | 22 ++++---
- net/ipv6/raw.c                                     | 12 +++-
- security/selinux/hooks.c                           | 69 ++++++++++++++--------
- sound/core/oss/pcm_plugin.c                        | 20 ++++---
- sound/isa/opti9xx/miro.c                           |  9 ++-
- sound/isa/opti9xx/opti92x-ad1848.c                 |  9 ++-
- sound/soc/codecs/wm8960.c                          | 32 +++++-----
- sound/soc/fsl/imx-spdif.c                          |  2 -
- tools/perf/util/hist.c                             |  2 +
- 20 files changed, 134 insertions(+), 81 deletions(-)
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -225,13 +225,13 @@ int acpi_device_set_power(struct acpi_de
+  end:
+ 	if (result) {
+ 		dev_warn(&device->dev, "Failed to change power state to %s\n",
+-			 acpi_power_state_string(state));
++			 acpi_power_state_string(target_state));
+ 	} else {
+ 		device->power.state = target_state;
+ 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 				  "Device [%s] transitioned to %s\n",
+ 				  device->pnp.bus_id,
+-				  acpi_power_state_string(state)));
++				  acpi_power_state_string(target_state)));
+ 	}
+ 
+ 	return result;
 
 
