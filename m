@@ -2,50 +2,55 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050F1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB12C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC855206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437CB206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588630722;
-	bh=MW0nrCAK8Zv2S7BwVMRrLBNr4vxsKP89dvxowLz8qj8=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=n98VJzQImWNabjm4wW+LbnunRFvaQ35OxrVXpTxuvYdCHjoDV+W9PSP8YG8DK71K3
-	 ZmALOhwz6rHZio9qlE/0185xgfhYZO37q1bXuFjqMjwxf11TlH1ZTPwRecPFWNg7po
-	 zMFijnPu5HCxB3eZAOiUwkjK8hUcwYCK8yZel/BU=
+	s=default; t=1588630840;
+	bh=cvKz/TW55lC8yvXi3iR0AU74dO/R1dsn6RuW11AKRvc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IYRm0s+c0eW2Ub4zktYdKJlOC4VXhpFjfGD7eI/WMgs59cyzKfM080pWlguoYeZeI
+	 kvbjIuLbHXn2CWM81X9CSGL0HKAqtYBhoxE+95Quvjob4Ab8a/UqOOnUxwKUYiyCqh
+	 jVb0vFKa9ut6xQtmm/3Rpzh29LjkIyiAhtqC8uXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgEDWSm (ORCPT
+        id S1728125AbgEDWUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35376 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 18:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgEDWSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:18:41 -0400
+        id S1726291AbgEDWUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:20:38 -0400
 Received: from pobox.suse.cz (unknown [195.250.132.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23C44206A4;
-        Mon,  4 May 2020 22:18:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1514206A4;
+        Mon,  4 May 2020 22:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588630721;
-        bh=MW0nrCAK8Zv2S7BwVMRrLBNr4vxsKP89dvxowLz8qj8=;
-        h=Date:From:To:cc:Subject:From;
-        b=aJzxShxVM/DuFSossjFq+6t0i06Br+h6m+lB0uEpoZYFcz5jklHuhqMAimRUPX2Rn
-         Ae+8gQx6xpod9Pw60K4nkJR51rooLvh37yHjHNkrxIoiTtuUnVWwED0UT68weMcRsh
-         QWyGlVX0iTSmqxveftkwIkl75be5RPrUX/IP6oo0=
-Date:   Tue, 5 May 2020 00:18:38 +0200 (CEST)
+        s=default; t=1588630838;
+        bh=cvKz/TW55lC8yvXi3iR0AU74dO/R1dsn6RuW11AKRvc=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=gJKG6J+q/xog0qE2Xn+NjR7z/SEHm8XkPKTHfuecDO3i+xViaVIPvmcFKmSG4mGuZ
+         +iEZdm8G4+sSjArWGnEGs+vqdKH5+dNBk8+TWL+YJilEBqyL/2ebjCGYnnAGzsUIlw
+         41+lRL9dAmeDeo3Qbv9/s7oIxlb72C75LK4+7IYU=
+Date:   Tue, 5 May 2020 00:20:34 +0200 (CEST)
 From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-kernel@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [GIT PULL] HID subsystem fixes
-Message-ID: <nycvar.YFH.7.76.2005050016220.19713@cbobk.fhfr.pm>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH v4 00/11] livepatch,module: Remove .klp.arch and
+ module_disable_ro()
+In-Reply-To: <cover.1588173720.git.jpoimboe@redhat.com>
+Message-ID: <nycvar.YFH.7.76.2005050019060.19713@cbobk.fhfr.pm>
+References: <cover.1588173720.git.jpoimboe@redhat.com>
 User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,64 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
 
-please pull from
+> v4:
+> - Fixed rebase bisection regression [Miroslav]
+> - Made module_enable_ro() static [Jessica]
+> - Added Acked-by's
+> 
+> v3:
+> - klp: split klp_write_relocations() into object/section specific
+>   functions [joe]
+> - s390: fix plt/got writes [joe]
+> - s390: remove text_mutex usage [mbenes]
+> - x86: do text_poke_sync() before releasing text_mutex [peterz]
+> - split x86 text_mutex changes into separate patch [mbenes]
+> 
+> v2:
+> - add vmlinux.ko check [peterz]
+> - remove 'klp_object' forward declaration [mbenes]
+> - use text_mutex [jeyu]
+> - fix documentation TOC [jeyu]
+> - fix s390 issues [mbenes]
+> - upstream kpatch-build now supports this
+>   (though it's only enabled for Linux >= 5.8)
+> 
+> These patches add simplifications and improvements for some issues Peter
+> found six months ago, as part of his non-writable text code (W^X)
+> cleanups.
+> 
+> Highlights:
+> 
+> - Remove the livepatch arch-specific .klp.arch sections, which were used
+>   to do paravirt patching and alternatives patching for livepatch
+>   replacement code.
+> 
+> - Add support for jump labels in patched code (only for static keys
+>   which live in vmlinux).
+> 
+> - Remove the last module_disable_ro() usage.
+> 
+> For more background, see this thread:
+> 
+>   https://lkml.kernel.org/r/20191021135312.jbbxsuipxldocdjk@treble
+> 
+> This has been tested with kpatch-build integration tests and klp-convert
+> selftests.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+So I think this should best go through livepatching.git for 5.8. Unless 
+anyone has a better idea or objects heavily, I'll queue it tomorrow.
 
-to receive HID subsytem fixes.
-
-=====
-- Wacom driver functional and regression fixes from Jason Gerecke
-- race condition fix in usbhid, found by syzbot and fixed by Alan Stern
-- a few device-specific quirks and ID additions
-=====
-
-Thanks.
-
-----------------------------------------------------------------
-Alan Stern (1):
-      HID: usbhid: Fix race between usbhid_close() and usbhid_stop()
-
-Arnd Bergmann (1):
-      HID: mcp2221: add gpiolib dependency
-
-Artem Borisov (1):
-      HID: alps: Add AUI1657 device ID
-
-Daniel Playfair Cal (1):
-      HID: i2c-hid: reset Synaptics SYNA2393 on resume
-
-Fabian Schindlatz (1):
-      HID: logitech: Add support for Logitech G11 extra keys
-
-Hans de Goede (1):
-      HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
-
-Jason Gerecke (3):
-      HID: wacom: Read HID_DG_CONTACTMAX directly for non-generic devices
-      Revert "HID: wacom: generic: read the number of expected touches on a per collection basis"
-      HID: wacom: Report 2nd-gen Intuos Pro S center button status over BT
-
-Jiri Kosina (1):
-      HID: alps: ALPS_1657 is too specific; use U1_UNICORN_LEGACY instead
-
-Sebastian Reichel (1):
-      HID: multitouch: add eGalaxTouch P80H84 support
-
- drivers/hid/Kconfig                |  1 +
- drivers/hid/hid-alps.c             |  1 +
- drivers/hid/hid-ids.h              |  8 +++-
- drivers/hid/hid-lg-g15.c           |  4 ++
- drivers/hid/hid-multitouch.c       |  3 ++
- drivers/hid/hid-quirks.c           |  1 +
- drivers/hid/i2c-hid/i2c-hid-core.c |  2 +
- drivers/hid/usbhid/hid-core.c      | 37 ++++++++++++----
- drivers/hid/usbhid/usbhid.h        |  1 +
- drivers/hid/wacom_sys.c            |  4 +-
- drivers/hid/wacom_wac.c            | 88 ++++++++++----------------------------
- 11 files changed, 74 insertions(+), 76 deletions(-)
+Thanks,
 
 -- 
 Jiri Kosina
