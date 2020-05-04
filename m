@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35844C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B011C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09DDF2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C972073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615670;
-	bh=tUHjouMIe2y5rFbeb+MgvQF2ue4Iw8BcFWPGcw8xtv8=;
+	s=default; t=1588615671;
+	bh=5Hg05jQx9fKm4esxgnrhIs8kDmBvvcdpoQ+ZqfQAQVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1uWq72P39iXjyVVFwApva3ERDxTYQE0n/h8QioMPlhXI0hQmQFIUyYenwxmcuYguE
-	 z4KOK6qxHMbulHKh6AjhLogV8B2TN+vp2YZ/g62ATATPE3tDzezITAg1ZB1P/OXPp1
-	 qqJk1aKuPTQjTj1msgxXDuQmQa3vkeIMC0Wcp/u8=
+	b=rAkdGPpo0o+SPSG1fVbJQhK6gTQ3mZongUTYwf0aC1xDDZlzx2tmKvz9Yd/mvB7h/
+	 Ra0iRTEwZhFkLrHRSFsO1xDcSZfc2diodpz/dR/rNrmBrk2h1CH4l5TQ0Jn6UbtMIQ
+	 7Ham+bsSqpXoCC3BIo9zeNpzn7uEr8/9RjFEH234=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732193AbgEDSHt (ORCPT
+        id S1732201AbgEDSHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732181AbgEDSHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:44 -0400
+        id S1732192AbgEDSHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871F62073B;
-        Mon,  4 May 2020 18:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63C3A20721;
+        Mon,  4 May 2020 18:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615664;
-        bh=tUHjouMIe2y5rFbeb+MgvQF2ue4Iw8BcFWPGcw8xtv8=;
+        s=default; t=1588615668;
+        bh=5Hg05jQx9fKm4esxgnrhIs8kDmBvvcdpoQ+ZqfQAQVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=afeLKSU3z5SQAd8kNAk5o1W/GaHSiigp17uFYldQB3TpZ6HmGD6G2m/P9dkmxxTAJ
-         r+yQoyZjyjhAPbmIc3nCmo8g+wF2pucvYhYv+PnRTKA5O9lPvK/s0JI2/CJt3QxV8D
-         9bPm715nwkrlYfQKblkkXn6wJWHf6AUKhizfyGiQ=
+        b=CSmmExwGUz9Dm8TBiDGJBKr0K5uTRc8axRDLqAYmYhUe1GHKJeEBfg2MTTrd7J+nx
+         x3iP1eBCumZlT5hTGiappfxrVyFfYlTov3zPdlbDfAnXB3SR+9X4aVt4vAE064Dym9
+         QAM2SpBzRVVOn993nBH4XqW3I9DqQ6bDUi32r4qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.6 72/73] arm64: vdso: Add -fasynchronous-unwind-tables to cflags
-Date:   Mon,  4 May 2020 19:58:15 +0200
-Message-Id: <20200504165510.575729659@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.6 40/73] block: remove the bd_openers checks in blk_drop_partitions
+Date:   Mon,  4 May 2020 19:57:43 +0200
+Message-Id: <20200504165508.013010361@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,46 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 1578e5d03112e3e9d37e1c4d95b6dfb734c73955 upstream.
+commit 10c70d95c0f2f9a6f52d0e33243d2877370cef51 upstream.
 
-On arm64 linux gcc uses -fasynchronous-unwind-tables -funwind-tables
-by default since gcc-8, so now the de facto platform ABI is to allow
-unwinding from async signal handlers.
+When replacing the bd_super check with a bd_openers I followed a logical
+conclusion, which turns out to be utterly wrong.  When a block device has
+bd_super sets it has a mount file system on it (although not every
+mounted file system sets bd_super), but that also implies it doesn't even
+have partitions to start with.
 
-However on bare metal targets (aarch64-none-elf), and on old gcc,
-async and sync unwind tables are not enabled by default to avoid
-runtime memory costs.
+So instead of trying to come up with a logical check for all openers,
+just remove the check entirely.
 
-This means if linux is built with a baremetal toolchain the vdso.so
-may not have unwind tables which breaks the gcc platform ABI guarantee
-in userspace.
-
-Add -fasynchronous-unwind-tables explicitly to the vgettimeofday.o
-cflags to address the ABI change.
-
-Fixes: 28b1a824a4f4 ("arm64: vdso: Substitute gettimeofday() with C implementation")
-Cc: Will Deacon <will@kernel.org>
-Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: d3ef5536274f ("block: fix busy device checking in blk_drop_partitions")
+Fixes: cb6b771b05c3 ("block: fix busy device checking in blk_drop_partitions again")
+Reported-by: Michal Koutný <mkoutny@suse.com>
+Reported-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/vdso/Makefile |    2 +-
+ block/partition-generic.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kernel/vdso/Makefile
-+++ b/arch/arm64/kernel/vdso/Makefile
-@@ -32,7 +32,7 @@ UBSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- KCOV_INSTRUMENT			:= n
+--- a/block/partition-generic.c
++++ b/block/partition-generic.c
+@@ -468,7 +468,7 @@ int blk_drop_partitions(struct gendisk *
  
--CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny
-+CFLAGS_vgettimeofday.o = -O2 -mcmodel=tiny -fasynchronous-unwind-tables
- 
- ifneq ($(c-gettimeofday-y),)
-   CFLAGS_vgettimeofday.o += -include $(c-gettimeofday-y)
+ 	if (!disk_part_scan_enabled(disk))
+ 		return 0;
+-	if (bdev->bd_part_count || bdev->bd_openers > 1)
++	if (bdev->bd_part_count)
+ 		return -EBUSY;
+ 	res = invalidate_partition(disk, 0);
+ 	if (res)
 
 
