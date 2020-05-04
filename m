@@ -2,109 +2,118 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EAAC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30C5C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E99206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAC9206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588608378;
+	bh=j9K/Nz2f64Gu6Trw3AzI9carqSeCZ7T73MNsRkGwxVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KCdGuh9jP/8v8OuR1QKG1AYNfe1WrrlPjS5xZ9AANX/eSGgssxMxC+TLn53292R6F
+	 01BIo8Md0TaPdKxz7YwKqH3VKU0dFHm4WjCbVMXlhQGnVNmpQzXyOdIly+0G1TlFSQ
+	 94kaHMGLQhI7sFD8NRtM/2sj/NoDf57FPPbKrNns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgEDQF6 (ORCPT
+        id S1729499AbgEDQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:05:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:48030 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbgEDQF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:05:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54F09101E;
-        Mon,  4 May 2020 09:05:57 -0700 (PDT)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFDA83F68F;
-        Mon,  4 May 2020 09:05:55 -0700 (PDT)
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Valentin Schneider <valentin.schneider@arm.com>
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
- <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <29e99235-71c3-8e15-b9ab-263fa70fd861@arm.com>
-Date:   Mon, 4 May 2020 18:05:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 12:06:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34631 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729141AbgEDQGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:06:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y3so2589956wrt.1;
+        Mon, 04 May 2020 09:06:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gz77ioJv/9dXqW2LTks1m6BbwjIcuICrqOvb8PaySYQ=;
+        b=iQKwJjj3+0ie9fpeFWGs8T1C+Lq8Qxc4ct/wLyo6VI4DvFxe833gQhPHKslE+mGtnl
+         +f/GWr4qhw25/FGvcvn4nPhjgMgM6nre/fF6Yjh9jmDrACDD5l70GfrJKXAuxzWpXK2c
+         yT9cBtr9qmk8cNYinWqAfEltshBhQ87Y9D1E/GflkPIVjuNL//K27ju4cnsFxAf+xMaW
+         sA0xVZU7u6gc0udjEMxYB5UJP6+3qerbSCJ7/OeD4rnmPckvugPy/nszlHbHSbeRYwdy
+         pP9cV2pkZ+z/VDOmj5n7pcV0fi7v4RyVwgUvK0tCrHpJlyYDPpZxnAtSyvgKFh4b1QAT
+         vS+Q==
+X-Gm-Message-State: AGi0Puadn+6ehpSEE1xHajTkV3/3gEmeI9OIDxkyTgqFIAo39LMFHESE
+        DOHoq9JyJ2Qq6nuDrc+rimU=
+X-Google-Smtp-Source: APiQypL3n2ecP7nnkYr0BLQZTWMzDfU3njXWsN19/uQWkLzxn3+828cKXcT1957AXYHlfWLL9ElbXw==
+X-Received: by 2002:adf:f091:: with SMTP id n17mr30070wro.200.1588608375283;
+        Mon, 04 May 2020 09:06:15 -0700 (PDT)
+Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
+        by smtp.gmail.com with ESMTPSA id s8sm16137860wrt.69.2020.05.04.09.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:06:14 -0700 (PDT)
+Date:   Mon, 4 May 2020 18:06:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+Message-ID: <20200504160613.GU22838@dhcp22.suse.cz>
+References: <20200430182712.237526-1-shakeelb@google.com>
+ <20200504065600.GA22838@dhcp22.suse.cz>
+ <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
+ <20200504141136.GR22838@dhcp22.suse.cz>
+ <CALvZod7Ls7rTDOr5vXwEiPneLqbq3JoxfFBxZZ71YWgvLkNr5A@mail.gmail.com>
+ <20200504150052.GT22838@dhcp22.suse.cz>
+ <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 17:17, Vincent Guittot wrote:
-> On Sun, 3 May 2020 at 10:34, Peng Liu <iwtbavbm@gmail.com> wrote:
->>
->> commit c5afb6a87f23 ("sched/fair: Fix nohz.next_balance update")
->> During idle load balance, this_cpu(ilb) do load balance for the other
->> idle CPUs, also gather the earliest (nohz.)next_balance.
->>
->> Since commit:
->>   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
->>
->> We update nohz.next_balance like this:
->>
->>   _nohz_idle_balance() {
->>       for_each_cpu(nohz.idle_cpus_mask) {
->>           rebalance_domains() {
->>               update nohz.next_balance <-- compare and update
->>           }
->>       }
->>       rebalance_domains(this_cpu) {
->>           update nohz.next_balance <-- compare and update
->>       }
->>       update nohz.next_balance <-- unconditionally update
->>   }
->>
->> For instance, nohz.idle_cpus_mask spans {cpu2,3,5,8}, and this_cpu is
->> cpu5. After the above loop we could gather the earliest *next_balance*
->> among {cpu2,3,8}, then rebalance_domains(this_cpu) update
->> nohz.next_balance with this_rq->next_balance, but finally overwrite
->> nohz.next_balance with the earliest *next_balance* among {cpu2,3,8},
->> we may end up with not getting the earliest next_balance.
->>
->> Since we can gather all the updated rq->next_balance, including this_cpu,
->> in _nohz_idle_balance(), it's safe to remove the extra lines in
->> rebalance_domains() which are originally intended for this_cpu. And
->> finally the updating only happen in _nohz_idle_balance().
-> 
-> I'm not sure that's always true. Nothing prevents nohz_idle_balance()
-> to return false . Then run_rebalance_domains() calls
-> rebalance_domains(this_rq ,SCHED_IDLE) outside _nohz_idle_balance().
-> In this case we must keep the code in rebalance_domains().
-
-I came to the same conclusion. It was done like this till v4.0 and IMHO
-c5afb6a87f23 fixed it in v4.4.
-
-> For example when the tick is not stopped when entering idle. Or when
-> need_resched() returns true.
-> 
-> So instead of removing the code from rebalance_domains, you should
-> move the one in _nohz_idle_balance() to make sure that the "if
-> (likely(update_next_balance)) ..." is called before calling
-> rebalance_domains for the local cpu
-
-Makes sense, to avoid that we possibly override nohz.next_balance
-wrongly (in case time_after(next_balance, this_rq->next_balance);
-
+On Mon 04-05-20 08:35:57, Shakeel Butt wrote:
+> On Mon, May 4, 2020 at 8:00 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 04-05-20 07:53:01, Shakeel Butt wrote:
 [...]
+> > > I am trying to see if "no eligible task" is really an issue and should
+> > > be warned for the "other use cases". The only real use-case I can
+> > > think of are resource managers adjusting the limit dynamically. I
+> > > don't see "no eligible task" a concerning reason for such use-case.
+> >
+> > It is very much a concerning reason to notify about like any other OOM
+> > situation due to hard limit breach. In this case it is worse in some
+> > sense because the limit cannot be trimmed down because there is no
+> > directly reclaimable memory at all. Such an oom situation is
+> > effectivelly conserved.
+> > --
+> 
+> Let me make a more precise statement and tell me if you agree. The "no
+> eligible task" is concerning for the charging path but not for the
+> writer of memory.max. The writer can read the usage and
+> cgroup.[procs|events] to figure out the situation if needed.
+
+I really hate to repeat myself but this is no different from a regular
+oom situation. Admin sets the hard limit and the kernel tries to act
+upon that.
+
+You cannot make any assumption about what admin wanted or didn't want
+to see. We simply trigger the oom killer on memory.max and this is a
+documented behavior. No eligible task or no task at all is a simply a
+corner case when the kernel cannot act and mentions that along with the
+oom report so that whoever consumes that information can debug or act on
+that fact.
+
+Silencing the oom report is simply removing a potentially useful
+aid to debug further a potential problem. But let me repeat this is not
+reallly any different from a regular oom situation when the oom killer
+is able to act.
+
+-- 
+Michal Hocko
+SUSE Labs
