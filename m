@@ -6,33 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BE0C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D99C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30638206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD83920752
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgEDLdm (ORCPT
+        id S1728682AbgEDLdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:33:42 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3404 "EHLO huawei.com"
+        Mon, 4 May 2020 07:33:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56686 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728630AbgEDLdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:33:40 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4B935F381415832D31C8;
-        Mon,  4 May 2020 19:33:26 +0800 (CST)
+        id S1728655AbgEDLdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:33:49 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9C7ADFC07102EA98B7C6;
+        Mon,  4 May 2020 19:33:46 +0800 (CST)
 Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
  (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
- 19:33:17 +0800
+ 19:33:37 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
+To:     <kvalo@codeaurora.org>, <davem@davemloft.net>,
+        <tglx@linutronix.de>, <linux-wireless@vger.kernel.org>,
+        <b43-dev@lists.infradead.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] drm/nouveau/mmu: remove unneeded semicolon
-Date:   Mon, 4 May 2020 19:32:40 +0800
-Message-ID: <20200504113240.40683-1-yanaijie@huawei.com>
+Subject: [PATCH] b43: remove Comparison of 0/1 to bool variable in phy_n.c
+Date:   Mon, 4 May 2020 19:33:00 +0800
+Message-ID: <20200504113300.40895-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -46,43 +47,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following coccicheck warning:
 
-drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h:307:2-3: Unneeded
-semicolon
-drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c:583:2-3: Unneeded
-semicolon
+drivers/net/wireless/broadcom/b43/phy_n.c:5510:19-32: WARNING:
+Comparison of 0/1 to bool variable
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c | 2 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/broadcom/b43/phy_n.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-index 41640e0584ac..199f94e15c5f 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-@@ -580,7 +580,7 @@ nvkm_vmm_iter(struct nvkm_vmm *vmm, const struct nvkm_vmm_page *page,
- 				it.pte[it.lvl]++;
+diff --git a/drivers/net/wireless/broadcom/b43/phy_n.c b/drivers/net/wireless/broadcom/b43/phy_n.c
+index d3c001fa8eb4..c33b4235839d 100644
+--- a/drivers/net/wireless/broadcom/b43/phy_n.c
++++ b/drivers/net/wireless/broadcom/b43/phy_n.c
+@@ -5507,7 +5507,7 @@ static int b43_nphy_cal_tx_iq_lo(struct b43_wldev *dev,
+ 			core = (cmd & 0x3000) >> 12;
+ 			type = (cmd & 0x0F00) >> 8;
+ 
+-			if (phy6or5x && updated[core] == 0) {
++			if (phy6or5x && !updated[core]) {
+ 				b43_nphy_update_tx_cal_ladder(dev, core);
+ 				updated[core] = true;
  			}
- 		}
--	};
-+	}
- 
- 	nvkm_vmm_flush(&it);
- 	return ~0ULL;
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
-index 5e55ecbd8005..d3f8f916d0db 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.h
-@@ -304,7 +304,7 @@ int tu102_vmm_new(struct nvkm_mmu *, bool, u64, u64, void *, u32,
- 		FILL(VMM, PT, PTEI, _ptes, MAP, _addr);                        \
- 		PTEI += _ptes;                                                 \
- 		PTEN -= _ptes;                                                 \
--	};                                                                     \
-+	}                                                                      \
- 	nvkm_done((PT)->memory);                                               \
- } while(0)
- 
 -- 
 2.21.1
 
