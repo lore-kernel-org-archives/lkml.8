@@ -2,132 +2,160 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9544AC47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC6CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72AC220705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F5F206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CgtScQaY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OC6caKKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgEDXtM (ORCPT
+        id S1728359AbgEDXvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:49:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28430 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbgEDXtL (ORCPT
+        Mon, 4 May 2020 19:51:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47710 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728182AbgEDXvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:49:11 -0400
+        Mon, 4 May 2020 19:51:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588636149;
+        s=mimecast20190719; t=1588636269;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ZkeyqFAL3/DJbDVDMhDFSBl4H5QRa6a+zc27WJ/8Chw=;
-        b=CgtScQaYceYJEHHcGZQDrpDq9TQzIizrLwrJQ8gDEKlwJGl2m3I+4r1g/R7lodfYjZ5wjb
-        cKs5IZneTswryRaxqh2drYduKKx4oNtK3QJH1dfulEoS0diBdo6M4BnTjZPvvY4i0pyIvD
-        M2xaj8OvTfLjGNKjxpmV6JWOTGXgIjk=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-_MPclpnUPUmHx_XxnOGVeA-1; Mon, 04 May 2020 19:49:07 -0400
-X-MC-Unique: _MPclpnUPUmHx_XxnOGVeA-1
-Received: by mail-qk1-f200.google.com with SMTP id z8so419828qki.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:49:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZkeyqFAL3/DJbDVDMhDFSBl4H5QRa6a+zc27WJ/8Chw=;
-        b=fi8u2b2E/REaMvYwUQ40HIXCQpJHGbzSwwUM5clxiuspmc1ezEqbGLFn3QO/EqadKo
-         yh0414klVH7J5x7XdmVtf8xbIct6WTUicS9y522vIIm1LjRW7+uodZhzShLRH7XNWulJ
-         ivP12tvT320KCFvhp8aca0dwWRdn5eavGQl10lcNe3Dumg9u+Yeg5FT5fVsPA9aw3YRg
-         3SETg3ln1/INWT+4dJabLd6BRfVWIHwrn+c02sMbDk1ie/po0lp1BjESIpTEz+tSaYpS
-         O/z05A2Z2gMXYh1q5YFSs/BJXICXPrpUjv306WPS8an8eTl7fjKyB2Zxt1edSWICz2rT
-         7kNw==
-X-Gm-Message-State: AGi0PubkxO63qjt9IwouFmBprUkaDUAvbxEMdQSpuMuAPpr2/lcFUIUd
-        dDKfReePOFNAp3EsISTjYP79ev87Az0ctw7vXptCoWF7NpAdh5J96Rbnb++xD3tY/IXJhf6FMrz
-        XheI/ByxvHMFc8REKYva0kOWh
-X-Received: by 2002:a05:620a:16aa:: with SMTP id s10mr940479qkj.216.1588636147150;
-        Mon, 04 May 2020 16:49:07 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKoCmo8gaqMseWeGmZz7Dc0qcLoeE3sC8IOP0DtMBxSJM5IQXCouFJFJIvwkOebC9rKa07efQ==
-X-Received: by 2002:a05:620a:16aa:: with SMTP id s10mr940458qkj.216.1588636146822;
-        Mon, 04 May 2020 16:49:06 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id w69sm484937qka.75.2020.05.04.16.49.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 16:49:06 -0700 (PDT)
-Date:   Mon, 4 May 2020 19:49:04 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 0/3] KVM: x86: cleanup and fixes for debug register
- accesses
-Message-ID: <20200504234904.GG6299@xz-x1>
-References: <20200504155558.401468-1-pbonzini@redhat.com>
- <20200504185530.GE6299@xz-x1>
- <06dcafe8-8278-a818-ad76-36f3bbbcc0a2@redhat.com>
+        bh=CdR+TTzrR6kmaYEcFh2fDuqfwQzbdiS6f0cc5j3IfEw=;
+        b=OC6caKKqNCvw6N7+2jj8hDI1ELA1ZH+K2IVqapqqFc6GCXR1ON27uq7YGdFmYBpXuln1hv
+        JKNm3C5Q7oGuqERmSdoFLZ3I9lwkYt62APWdS93EaMqg7zNIlCoUfrr0RZdGlj50OcANPO
+        kBalGJNyWN9zgq5PgJR/ofIKcPOSq0g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-DOz1SbIqNl6y6r2MNZbr6w-1; Mon, 04 May 2020 19:51:05 -0400
+X-MC-Unique: DOz1SbIqNl6y6r2MNZbr6w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EB85106B24A;
+        Mon,  4 May 2020 23:51:04 +0000 (UTC)
+Received: from krava (unknown [10.40.192.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F06BC66062;
+        Mon,  4 May 2020 23:51:01 +0000 (UTC)
+Date:   Tue, 5 May 2020 01:50:59 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2 1/2] perf evsel: Create counts for collecting summary
+ data
+Message-ID: <20200504235059.GG1916255@krava>
+References: <20200502020705.19295-1-yao.jin@linux.intel.com>
+ <20200502020705.19295-2-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06dcafe8-8278-a818-ad76-36f3bbbcc0a2@redhat.com>
+In-Reply-To: <20200502020705.19295-2-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 09:20:05PM +0200, Paolo Bonzini wrote:
-> On 04/05/20 20:55, Peter Xu wrote:
-> > On Mon, May 04, 2020 at 11:55:55AM -0400, Paolo Bonzini wrote:
-> >> The purpose of this series is to get rid of the get_dr6 accessor
-> >> and, on Intel, of set_dr6 as well.  This is done mostly in patch 2,
-> >> since patch 3 is only the resulting cleanup.  Patch 1 is a related
-> >> bug fix that I found while inspecting the code.
-> > 
-> > Reviewed-by: Peter Xu <peterx@redhat.com>
-> > 
-> > (Btw, the db_interception() change in patch 2 seems to be a real fix to me)
+On Sat, May 02, 2020 at 10:07:04AM +0800, Jin Yao wrote:
+> It would be useful to support the overall statistics for perf-stat
+> interval mode. For example, report the summary at the end of
+> "perf-stat -I" output.
 > 
-> It should be okay because vcpu->arch.dr6 is not used on AMD.
+> But since perf-stat can support many aggregation modes, such as
+> --per-thread, --per-socket, -M and etc, we need a solution which
+> doesn't bring much complexity.
 > 
-> However I think a kvm_update_dr6 call is missing in
-> kvm_deliver_exception_payload, and kvm_vcpu_check_breakpoint should use
-> kvm_queue_exception_p.
-
-Seems correct.  Maybe apply the same thing to handle_exception_nmi() and
-handle_dr()?  It's probably not a problem because VMX does not have set_dr6(),
-however it's still cleaner to avoid clearing DR_TRAP_BITS and set DR6_RTM
-manually before calling kvm_queue_exception() every time in VMX code.
-
-> I'll fix all of those.
+> The idea is to create new 'evsel->summary_counts' which sums up the
+> counts delta per interval. Before reporting the summary, we copy the
+> data from evsel->summary_counts to evsel->counts, and next we just
+> follow current code.
 > 
-> > I have that in my list, but I don't know it's "sorely" needed. :) It was low
-> > after I knew the fact that we've got one test in kvm-unit-test, but I can for
-> > sure do that earlier.
-> > 
-> > I am wondering whether we still want a test in selftests if there's a similar
-> > test in kvm-unit-test already.  For this one I guess at least the guest debug
-> > test is still missing.
+>  v2:
+>  ---
+>  Rebase to perf/core branch
 > 
-> The guest debugging test would basically cover the gdbstub case, which
-> is different from kvm-unit-tests.  It would run similar tests to
-> kvm-unit-tests, but #DB and #BP exceptions would be replaced by
-> KVM_EXIT_DEBUG, and MOVs to DR would be replaced by KVM_SET_GUEST_DEBUG.
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/util/evsel.c | 10 ++++++++--
+>  tools/perf/util/evsel.h |  1 +
+>  tools/perf/util/stat.c  | 20 ++++++++++++++++++++
+>  3 files changed, 29 insertions(+), 2 deletions(-)
 > 
-> It could also cover exception payload support in KVM_GET_VCPU_EVENTS,
-> but that is more complicated because it would require support for
-> exceptions in the selftests.
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a75bcb95bf23..abc503dd6eda 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1280,22 +1280,28 @@ void evsel__delete(struct evsel *evsel)
+>  void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
+>  			   struct perf_counts_values *count)
+>  {
+> -	struct perf_counts_values tmp;
+> +	struct perf_counts_values tmp, *summary;
+>  
+> -	if (!evsel->prev_raw_counts)
+> +	if (!evsel->prev_raw_counts || !evsel->summary_counts)
+>  		return;
+>  
+>  	if (cpu == -1) {
+>  		tmp = evsel->prev_raw_counts->aggr;
+>  		evsel->prev_raw_counts->aggr = *count;
+> +		summary = &evsel->summary_counts->aggr;
+>  	} else {
+>  		tmp = *perf_counts(evsel->prev_raw_counts, cpu, thread);
+>  		*perf_counts(evsel->prev_raw_counts, cpu, thread) = *count;
+> +		summary = perf_counts(evsel->summary_counts, cpu, thread);
 
-Yep, I guess the in-guest debug test will still need the exception support,
-though I also guess we don't need that when we have the kvm unit test, and
-anyway I'll start with the simple (KVM_SET_GUEST_DEBUG).
+shouldn't this be enough?
 
-Thanks,
+		perf_counts(evsel->summary_counts, cpu, thread) = *count
 
--- 
-Peter Xu
+without the code below.. and similar for aggr case
+
+however I still wonder if we should count this in
+perf_stat_process_counter and only for interval mode
+
+>  	}
+>  
+>  	count->val = count->val - tmp.val;
+>  	count->ena = count->ena - tmp.ena;
+>  	count->run = count->run - tmp.run;
+> +
+> +	summary->val += count->val;
+> +	summary->ena += count->ena;
+> +	summary->run += count->run;
+>  }
+>  
+>  void perf_counts_values__scale(struct perf_counts_values *count,
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 783246bf8d0d..430639c99d04 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -46,6 +46,7 @@ struct evsel {
+>  	char			*filter;
+>  	struct perf_counts	*counts;
+>  	struct perf_counts	*prev_raw_counts;
+> +	struct perf_counts	*summary_counts;
+
+'sum_counts' might be better
+
+jirka
+
+>  	int			idx;
+>  	unsigned long		max_events;
+>  	unsigned long		nr_events_printed;
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 774468341851..c3fd008b4e84 100644
+> --- a/tools/perf/util/stat.c
+
+SNIP
 
