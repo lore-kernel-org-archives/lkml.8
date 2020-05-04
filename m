@@ -2,118 +2,93 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05374C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8B2D20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:31:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="m6p5BqYd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L4OcCxIE"
+	by mail.kernel.org (Postfix) with ESMTP id 1B21120735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgEDHbm (ORCPT
+        id S1728009AbgEDHck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:31:42 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43555 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726411AbgEDHbl (ORCPT
+        Mon, 4 May 2020 03:32:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44152 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgEDHcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:31:41 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 955D75C00EC;
-        Mon,  4 May 2020 03:31:40 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 04 May 2020 03:31:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=QkLzSMTHeoZLIZu12MQB23Bppyp
-        pRPzbceduSb0gG/I=; b=m6p5BqYd48bEDFBH9otxKTog0ifKfWMz4AJAbiIdb1L
-        BU4kDas243e2cAxWcGzGE5tz9GaNEdj+4EQ9D3JIH5IQ2gSr9Pt7bXwmR9UxKnIT
-        r9edS0UbAhgAcTAbUWQr04Enm4iXjg3KNw6QjorJkPFBjfbO6NBqoulkxUpk7lVx
-        a8E4cbJUhPMZdXqvzBu4sdHVm0Pm7ww5pFviTkogmhgM16v6g4kKgJY7jv03oklz
-        Ic+0gRTc9HC3tnfLz92DiVJyW5GVJokOPO0XbfJAfWDKBPpg3NE9v/Bdw1hhaVvb
-        sfStCVcr3mVOfGfnpsH14+dLgs2utLesbCqALs0u8KA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=QkLzSM
-        THeoZLIZu12MQB23BppyppRPzbceduSb0gG/I=; b=L4OcCxIE65Csq0aM4gZrN/
-        Jr6BwoolBLp1UpAVJlzyxbh76AfakkCWYKZoXayWYE1YhExxQ4QuC92shHnA/TvP
-        nboOEHQ2bmtgbvJ8XGs/bipMcl3nSPOOi8pK5IR7VEGAHhO2fdhBiPYQ4BdmZi+a
-        vec8pd6YPySC2O5djFLO+5h3JCBAZEKnjkh00JUzWj5VBID8KwklahRiuPZZ5q9l
-        8aGgkBo43PcCCq3InGm8fDnZSd9Cmnc9WNkyNQcA12bRql69164mePERx+qOEOdR
-        fO6qbUywIobvDDuNxr37HQj7uXJT3KAuPajzSSf64FpRLHdGblppMYAFUFGc4+1g
-        ==
-X-ME-Sender: <xms:28SvXi2oGNW4OaNQc5gXNbdF_K7TWb4QF0ORWHY4Cm3Tg1rrxiZVUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeefgdduudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeekkedtue
-    elveeuudehjeevleeggfeftdetteelkeetgfevieduteetieekffffffenucffohhmrghi
-    nhepuggrrhhinhhgfhhirhgvsggrlhhlrdhnvghtnecukfhppeekfedrkeeirdekledrud
-    dtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehg
-    rhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:28SvXgHCZmImg3CqPTLQifcO69uFcXhGzYCaVUZsbv5a0PhmO9yKHw>
-    <xmx:28SvXvUVvfB4HGUECGbVA5iMPisN7F0YyuvuqMONbcLj1QNqvxZ1uA>
-    <xmx:28SvXkUhY7O_YcaTk-uwRBw6pJDobW_0dTxxxnrjmQsnO8DjgbZgDw>
-    <xmx:3MSvXuaPXwK-TJ9MV984_-l8hT_wkHGhzKPDBnCOfh1OLty0GBlLOA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8E8103066007;
-        Mon,  4 May 2020 03:31:39 -0400 (EDT)
-Date:   Mon, 4 May 2020 09:31:34 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Rajan Vaja <RAJANV@xilinx.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jolly Shah <JOLLYS@xilinx.com>,
-        "kernelci.org bot" <bot@kernelci.org>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20200504073134.GA855714@kroah.com>
-References: <20200504114625.1de2c54d@canb.auug.org.au>
- <20200504114756.37a4948a@canb.auug.org.au>
- <BYAPR02MB394115C2C80B1169D282A646B7A60@BYAPR02MB3941.namprd02.prod.outlook.com>
+        Mon, 4 May 2020 03:32:39 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a2so5833221oia.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 00:32:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ooc31C0HVG+wuFWk6i8TyXlbS7UT7v67DJlPvfFWyqk=;
+        b=cjB0pkijA7DLujj6UwkHKz0TGN5Guq35XcfdvBOK/zh8PF+1JeqUjPS8QLyjYAYLvB
+         THF2C6/pukN2PCuAQcWn8OlWht1r+suSJsp8tgdBGMYojzGt7ndv6Asz0ajSAKKDfNZr
+         jze4cnvY72eIIdCQj5bzYvf2AiL5PfxEE7vfbtuJ+Je5jWWlfhatkyimpYWT6rrsMumV
+         IE/aGw7a00A9yqPamiu/xMpQmfK9fnud8zn+7mEP7KFw3xLyMgy0jFslqmRTYoeQ0QNS
+         +WvMr+Q5pSFCE3HX/ALzLQH7EeXPLnIJCHWE2xL5dnH2VasY/D4Xt6Ec995DlO9vTEKi
+         icmA==
+X-Gm-Message-State: AGi0Puas3M8XZlRi4Q1YFMFVZkThaGRIDlf6Nyd+rUzgxbLn0jUCNrz+
+        FnuCSH6dTyiZt9LML5UBQXJ2GAhW+UFauQAjrPcSNJOr
+X-Google-Smtp-Source: APiQypLEE+zhkdSnfmZtRrT0AndiKSIR8Yc7ujLR9NAOfft9X24jtxxKzLyC0ok06W7mvA6Q4E3ASrRaa3/UBThdJ1c=
+X-Received: by 2002:aca:895:: with SMTP id 143mr7666525oii.153.1588577558483;
+ Mon, 04 May 2020 00:32:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR02MB394115C2C80B1169D282A646B7A60@BYAPR02MB3941.namprd02.prod.outlook.com>
+References: <20200504072229.31214-1-geert@linux-m68k.org>
+In-Reply-To: <20200504072229.31214-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 09:32:27 +0200
+Message-ID: <CAMuHMdV3mWTcrVhut01Tt3j58QY5-UqaDYh4SSQwgk-=7TX80A@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.7-rc4
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Timothy Pearson <tpearson@raptorengineering.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 07:05:50AM +0000, Rajan Vaja wrote:
-> Hi Greg,
+On Mon, May 4, 2020 at 9:24 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> JFYI, when comparing v5.7-rc4[1] to v5.7-rc3[3], the summaries are:
+>   - build errors: +3/-123
 
+> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0e698dfa282211e414076f9dc7e83c1c288314fd/ (all 239 configs)
+> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/6a8b55ed4056ea5559ebe4f6a4b247f627870d4c/ (all 239 configs)
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+It's back:
 
-A: No.
-Q: Should I include quotations after my reply?
+  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:
+error: implicit declaration of function 'cpu_has_feature'
+[-Werror=implicit-function-declaration]:  => 626:2
+  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:
+error: implicit declaration of function 'disable_kernel_vsx'
+[-Werror=implicit-function-declaration]:  => 662:2
+  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:
+error: implicit declaration of function 'enable_kernel_vsx'
+[-Werror=implicit-function-declaration]:  => 626:2
 
-http://daringfireball.net/2007/07/on_top
+powerpc-gcc4.6/ppc64_book3e_allmodconfig
 
-> Nathan Chancellor <natechancellor@gmail.com> have already submitted
-> patch "[PATCH] firmware: xilinx: Export
-> zynqmp_pm_fpga_{get_status,load}". Will you take it directly or should
-> I merge this change in my patch series and submit a new series?
+powerpc-gcc9/ppc64_book3e_allmodconfig builds fine, as it doesn't have
+DRM_AMD_DC_DCN, enabled due to:
 
-I just merged that patch a few minutes ago, no need to do anything.
+    select DRM_AMD_DC_DCN if (X86 || PPC64) && !(KCOV_INSTRUMENT_ALL
+&& KCOV_ENABLE_COMPARISONS)
 
-I will note that this is the 2nd problem in this patch series that was
-found.  I had to drop this series previously for these same types of
-issues, which I thought were fixed this time.  I think you all need to
-do a bit more build testing on your end when submitting patches please.
+Gr{oetje,eeting}s,
 
-thanks,
+                        Geert
 
-greg k-h
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
