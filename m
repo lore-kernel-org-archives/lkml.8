@@ -2,106 +2,147 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D33F7C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA4DC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB882206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pNv8Cq6z"
+	by mail.kernel.org (Postfix) with ESMTP id 68BD32073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgEDBsA (ORCPT
+        id S1726743AbgEDByn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 21:48:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:59581 "EHLO ozlabs.org"
+        Sun, 3 May 2020 21:54:43 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62186 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgEDBr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 21:47:59 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Fm2j5L5Xz9sSx;
-        Mon,  4 May 2020 11:47:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588556878;
-        bh=2ZTBXZDmHXy4KG+AhqQ96xPcUfeTK1aQz5xcNwcaAu0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pNv8Cq6z1mpG6KGhdHl2Qh96IPw/pZS6RMjlpgUAEJmHEmD4/d+XPwT1B3lWEoEE1
-         72p6lAtLlJhb1CzQBi8z+NJ1VCxw0i0HURiBvcfY836E6r5vqMcnoIY1NjblsYdTPo
-         Rmgbk2f6gWQ6GVis8NjTVCs24Dte+htH0rkd9FjkEVI+G6Xoq/cSfmgs5d9hIVfrkY
-         XPqiXj4e/jzfE8ZAxakNGXaz7fBmX7T7zkVKURfr8uQ8sGQnePEj7encs2HgHLaPyb
-         25pw4/WofLmBXAJa5qTSrXPZVlU4uXKz16kjKl4Hsb9yHkfe0beSMxCoesc4B+9OoA
-         lObrNKgmfuILQ==
-Date:   Mon, 4 May 2020 11:47:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        "kernelci.org bot" <bot@kernelci.org>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20200504114756.37a4948a@canb.auug.org.au>
-In-Reply-To: <20200504114625.1de2c54d@canb.auug.org.au>
-References: <20200504114625.1de2c54d@canb.auug.org.au>
+        id S1726377AbgEDByn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 21:54:43 -0400
+IronPort-SDR: LKRWbktZm4LjLrc3HahdnRh2AOVK2a4OTDAOfTqubr0Kkk201CocLxBZvcgPJx6CYf243sd0r3
+ ZwBadxpRvxxA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 18:54:41 -0700
+IronPort-SDR: +K6sCkShmZESFUbbo2klA7BEdPF5P/FaeDoasO6Y2gHWSiiVI3NSo2It6Y6D5VPKZ2L0R5xHi+
+ ImAPHKkfLjTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
+   d="scan'208";a="277393423"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 03 May 2020 18:54:41 -0700
+Received: from [10.214.154.10] (vramuthx-mobl1.gar.corp.intel.com [10.214.154.10])
+        by linux.intel.com (Postfix) with ESMTP id DBD83580646;
+        Sun,  3 May 2020 18:54:36 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
+ LGM SoC
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     qi-ming.wu@intel.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        cheol.yong.kim@intel.com, hauke.mehrtens@intel.com,
+        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
+        richard@nod.at, brendanhiggins@google.com,
+        linux-mips@vger.kernel.org, robh+dt@kernel.org,
+        miquel.raynal@bootlin.com, tglx@linutronix.de,
+        masonccyang@mxic.com.tw, andriy.shevchenko@intel.com
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200429162249.55d38ee8@collabora.com>
+ <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+ <20200429164832.6800fc70@collabora.com>
+ <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+ <20200429173107.5c6d2f55@collabora.com>
+ <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
+ <20200430102114.29b6552f@collabora.com>
+ <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
+ <20200430103658.4b0b979e@collabora.com>
+ <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
+ <20200430143600.27031639@collabora.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <eed59a7a-b91d-84cd-add0-31e108d87e6f@linux.intel.com>
+Date:   Mon, 4 May 2020 09:54:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/imELpKR2Fv_3sAw7QIfcvPa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200430143600.27031639@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/imELpKR2Fv_3sAw7QIfcvPa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Boris,
 
-Hi all,
+   Thank you very much for the review comments and giving inputs...
 
-[Just adding cc]
+On 30/4/2020 8:36 pm, Boris Brezillon wrote:
+> On Thu, 30 Apr 2020 17:07:03 +0800
+> "Ramuthevar, Vadivel MuruganX"
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> 
+>>>>> The question is, is it the same value we have in nand_pa or it is
+>>>>> different?
+>>>>>       
+>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.
+>>>
+>>> Then why didn't you tell me they didn't match when I suggested to pass
+>>
+>> sorry, because you keep asking nand_pa after that only I realized that.
+>>
+>>> nand_pa? So now the question is, what does this address represent?
+>>
+>>                  EBU-MODULE
+>>    _________     _______________________
+>> |         |   |            |NAND CTRL  |
+>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
+>> |_________|   |_CS1(0x17C)_|__________ |
+>>
+>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
+>> HSNAND_BASE: 0xE100_0000
+>> NAND_CS0: 0xE140_0000
+>> NAND_CS1: 0xE1C0_0000
+>>
+>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
+>> MEM_REGION_BASE_CS1: 0x17C00
+>>
+> 
+> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
+> address translation. Something like
+> 
+> 	ebu@xxx {
+> 		ranges = <0x17400000 0xe1400000 0x1000>,
+> 			 <0x17c00000 0xe1c00000 0x1000>;
+> 		reg = <0x17400000>, <0x17c00000>;
+> 		reg-names = "cs-0", "cs-1";
+> 	}
+> 
+> The translated address (0xE1X00000) will be available in res->start,
+> and the non-translated one (0x17X00000) can be retrieved with
+> of_get_address(). All you'd have to do then would be calculate the
+> mask:
+> 
+> 	mask = (translated_address & original_address) >> 22;
+> 	num_comp_bits = fls(mask);
+> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
+> 
+> Which allows you to properly set the ADDR_SEL() register without
+> relying on some hardcoded values:
+> 
+> 	writel(original_address | EBU_ADDR_SEL_REGEN |
+> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
+> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
+> 
+> That's quite important if we want to merge the xway NAND driver with
+> this one.
 
-On Mon, 4 May 2020 11:46:25 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Hi all,
->=20
-> After merging the char-misc tree, Friday's linux-next build (arm64
-> allmodconfig) failed like this:
->=20
-> ERROR: modpost: "zynqmp_pm_fpga_get_status" [drivers/fpga/zynqmp-fpga.ko]=
- undefined!
-> ERROR: modpost: "zynqmp_pm_fpga_load" [drivers/fpga/zynqmp-fpga.ko] undef=
-ined!
->=20
-> Presumably caused by commit
->=20
->   4db8180ffe7c ("firmware: xilinx: Remove eemi ops for fpga related APIs")
->=20
-> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Thanks! , for the optimized and made it generic way, will update in the 
+next patch-set.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/imELpKR2Fv_3sAw7QIfcvPa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6vdE0ACgkQAVBC80lX
-0Gz/rQgAluC36gCZ6TxV2TcfXSukD9usSV59t7ToE7WKHGBx/JDMn5N7YV8vkktv
-FrrTZsSt2gVx+6jCm+6IIHfK0QAqAPoz94idSF0E5CsVfVc8cdilaHnSOCN+iBbi
-xqFCOXOcLgBB4aWeq0eCL8vOjgEKThgDpH/iIxO6SCHuksWJQEW2GKbq+0bstJN/
-Z+miv+7fW/oVlb+Olj9j0p3vXy2dBhVtzXoAzTwPNWWn8XHg81l21x4XNaq42Fq4
-F5/8ZLv68iGjBUiX/jWE2E17mPqYHNObg0Ja55AshE14K+2gZjV1MSXWcYS6WGob
-97lCdc+sygdVVEmrCp/sL+OMoMO8fQ==
-=GvEu
------END PGP SIGNATURE-----
-
---Sig_/imELpKR2Fv_3sAw7QIfcvPa--
+Regards
+Vadivel
+> 
