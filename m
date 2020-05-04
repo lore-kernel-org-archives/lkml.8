@@ -2,107 +2,143 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD83C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FED9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D8221582
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D603C2078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="H+GI6QH7"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pAg+iBXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgEDNsA (ORCPT
+        id S1728238AbgEDNw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:48:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726404AbgEDNr7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:47:59 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3794BC061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 06:47:59 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id z6so6779281plk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 06:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Rg9UJJZ2W+/6S6MT1yhRF1ts3Ydv5puORxZkSnYHZRI=;
-        b=H+GI6QH7GVmDJt9eR5e3WijVO2f2YgUQwIhVzCHRTk48F9Zye6P94vp8XXB6uvbUFZ
-         qb7kz6M0lu8AjoQ0nx42BHznddNfwoCWOvaurhJJ6WbIZTX6RUZaBpeuKaFv6+Qvwqpd
-         6BPL4gJqV6q3lrNiUJY1c6ccc46SW8R8FERPrNPiyfQyedEj9QSpDi7VxAxjB9FSTkDF
-         H0sx8Qbo8EkV/QZM9xhttl8qeCYARH2Tr5pibQ3Y6MGB9Ew590BRnWO/zzIcAOb2ZS4n
-         T/SNCgDp4ZxIszIldbtusRlvPZNOlCqBmsQWwTlLuFYiN04oLaOv+tWLQpHwAuMx4IVF
-         k0qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rg9UJJZ2W+/6S6MT1yhRF1ts3Ydv5puORxZkSnYHZRI=;
-        b=LGQsDNr4aFdsyHXu2T+HbBRxNu+5MWbFq2Rq5rJfSSmiXqFPfq7sZNAcr6fvGENneU
-         aGh95F+TO+/fMv2XPPJ2dUILKsLmIvlJClK/WybVYdFimtdFHSHcVulgC1TCuYVZrQsK
-         09axzaxkY6aK4BGcZDyCgjIGOlehSJ1kw3aFew42UfndoKg+9l2M8+dngKuFTrcKmyg1
-         HEVlTW9eCiRYr8L4erkg/OEav5irn9wYJNFUT+uGH01UVcx81Zvdu9k4x/Z7ULO7h9Bj
-         W1HGXaQuJSsQMnQG+iwoeGMPowDPRMO/3CkOLJIGOe3JjkyN2Y5La32ITx+0IhLLZwQo
-         Thnw==
-X-Gm-Message-State: AGi0PuYtRyL7FHvZWyzP1Y7U5+Uj+nb+OFQiLMY+SAApcnMG2QQrYpbs
-        3etAf5MWwGxy9G9vojSIHxZrfazNpmOSiQ==
-X-Google-Smtp-Source: APiQypLp6xInEdHrkCM7w6jc80BQxPrij8GCaCtwruE5LFklNlcGU79ZnBD6dQ7m0iXCPMxhm3LB8A==
-X-Received: by 2002:a17:90a:8d01:: with SMTP id c1mr17221288pjo.170.1588600078528;
-        Mon, 04 May 2020 06:47:58 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id r78sm8909979pfr.10.2020.05.04.06.47.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 06:47:58 -0700 (PDT)
-Subject: Re: linux-5.7-rc4/fs/io_uring.c:2786: bad if test ?
-To:     David Binderman <dcb314@hotmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <DB7PR08MB3801F4B9DD818545A8DA6CC99CA60@DB7PR08MB3801.eurprd08.prod.outlook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <529ea928-88a6-2cbe-ba8c-72b4c68cc7e8@kernel.dk>
-Date:   Mon, 4 May 2020 07:47:54 -0600
+        Mon, 4 May 2020 09:52:29 -0400
+Received: from mout.web.de ([212.227.17.11]:60733 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbgEDNw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 09:52:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588600322;
+        bh=cFVXkRUk6UJaSpBI/VIx/GR5RITKsiriExba2uaETAY=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=pAg+iBXh0v63DQOToH1XqZ2WGSAZJVnl2bNg5TIFIuTvdPeelMGVgvtQ+2J1tckkt
+         H0WJirV38uqObQfpgnDfXMtdUogMnbWiYudFjiG9tWm2xk8FJjPJ13dIANqtXGjRZ1
+         G/JCoFo95Wp7a+egu7ab39P2WbdiUe6bzUw+RPo4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MUnUe-1jdNRW10to-00YAvs; Mon, 04
+ May 2020 15:52:02 +0200
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>
+Subject: Re: [PATCH] net: rtw88: fix an issue about leak system resources
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Dejin Zheng <zhengdejin5@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Message-ID: <79591cab-fe3e-0597-3126-c251d41d492b@web.de>
+Date:   Mon, 4 May 2020 15:51:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <DB7PR08MB3801F4B9DD818545A8DA6CC99CA60@DB7PR08MB3801.eurprd08.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3Q0yOt/oAiOS1O7c3Hdjl6qzdo3m20XKBVz2bJ1oMCAYp2iCjlx
+ rJr+ctoTrrpjOWCOBR4qS/pp3uguwcSdYI9yyZGUZSrPyGEBYHyH67lBcPDkqFJCKW7NCHR
+ i/M8iUiPnK3XsYJv3guI4juC3Eh9zJ9lOu5B7zy3IKUKwjsKKndMqi9gu6P1MQk7PAndUUx
+ DWsJcWpt01Sz8g6UK0sCg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aKSvsNpMAO4=:Ly1KZx6a7fIU7UFehGSu26
+ A2g+9d+R9MloGS9A8NA872lGFp5B3dkgdYiX2FTso9K58NSva65uiJguKSQNh0e9lSCzc0nAw
+ XQGb96c5cBo1IlvwvKOH63edxpSEcFQOFJyzEWOVJBfC4S54ZmPXT6xJdKJrfnQxyqYo0KQVG
+ KSsuHCEayPJCkHxqQuWGFPIKOFrUj26Lfql01hhZiXJN14EO7FRIYwkKyRYJ4UYeLkjhMHXZ1
+ iuQeAR1ZgqOdjZIwDPnKqPBHbiwpSuSjtbC0I52iccJSfUQpsERWSzZgFFESIVGEcq0jwgD0m
+ dg5pkQN8W315BEWM6k+QuDCGOydrol5L2MSndOnBAhYy/xJzm7aWohiUo0VNb1YTmL0vxRmZ/
+ KXBnOk5iyIq9VMfaF4MR1JN/jc1IwM9FKWB+UGbAhi1wbT4Wey0jZ3dkZIjbsyOqZGFJnst3W
+ Ah7W7Ky6An39OuWH9RBcNokHAzO/hm08FpPc+4hRoDqOnyExMmOJt7xzypYVlIlkxHl1xX0UG
+ KDe9VbhZ8CZyQNm4RbPnynMTDPQmQHywuF9bJ3EB9X0rS7C/1PFHLvIJejfWqUR4SypJiFA30
+ dpgnH+Fh8o7jqt6Smjb0ZNGgf2yHafibI3cluOtTKQkEq8h7blh2LAK6Vs9Mp1s7kkOpUR6TC
+ y382ZPFJEpmQ/sqzRNuio9lpIpcnJ1LzL6N6B5+B2rjMiTTE4dRCldRPwcTDDVDoqHHChzN3E
+ 5TArfC6y4tQ1EZE6QbUI1mnJ6F/aKpUybTy3K9aBPrmlj1f+UrQK+O8CqfsEBeyAg0+z7jqDz
+ eCFFyES2cytUZ8Dp7wdjjhebyx6HgoK7vcB6hTqje+v19CkJvDBBOWGppfQ5+6Ji5pc7QkMt6
+ PwkoxJifG2lu6srxnlIImGp+u9NONKetXY8IREOgvzV4KRHJzgfJRW/9BNhRDNBA3n3bzVPiy
+ mitrO4QXOrDFaIJ5fHemqjEeaLhS57dZ7oKwXy53VhiDwgLPxm8wJJzPeaTxnOvZNq9Fj7xqy
+ cpcoV9U/fn4kJzBpkmcFmxx04LcTR0ePft544egb2adfspYW1VwVDHakNXszzbl6Raf/W5Ow/
+ fQVicdFxHWoioJJxft7PmTP9DYySmkiiRiad0GthuWwEgDGOoQZ4cU/GTW9L41S9SgnAx0FvB
+ u8MhZjJjfrrNT5UzVZncn3e3PzVmt6J2yh7tBttqvf7IyJwP7Et72GLkZNG3Jok4jtZUp8a8m
+ piH24JV1diC8x5KPj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 2:12 AM, David Binderman wrote:
-> Hello there,
-> 
-> linux-5.7-rc4/fs/io_uring.c:2786:6: warning: Identical condition 'force_nonblock', second condition is always false [identicalConditionAfterEarlyExit]
-> 
-> Source code is
-> 
->     if (force_nonblock)
->         return -EAGAIN;
-> 
->     poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
->     poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
->     ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
->     if (force_nonblock && ret == -EAGAIN)
->         return -EAGAIN;
-> 
-> So the second return can never execute. Suggest code rework.
+> the related system resources were not released when pci_iomap() return
+> error in the rtw_pci_io_mapping() function. add pci_release_regions() to
+> fix it.
 
-Looks like that's a leftover of the "only punt sometimes" code. That
-second one is indeed dead now, Pavel is re-working the async punt
-for 5.8 anyway so I don't think it's worth touching at this point.
+How do you think about a wording variant like the following?
 
--- 
-Jens Axboe
+   Subject:
+   [PATCH v2] net: rtw88: Complete exception handling in rtw_pci_io_mappin=
+g()
 
+   Change description:
+   A call of the function =E2=80=9Cpci_request_regions=E2=80=9D can fail h=
+ere.
+   The corresponding system resources were not released then.
+   Thus add a call of the function =E2=80=9Cpci_release_regions=E2=80=9D.
+
+
+Regards,
+Markus
