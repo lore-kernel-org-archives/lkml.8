@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34187C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3D5C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1152520705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B10020705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OoQjpj5X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MVJG1YAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgEDOA1 (ORCPT
+        id S1728790AbgEDOAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47416 "EHLO
+        Mon, 4 May 2020 10:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728165AbgEDN74 (ORCPT
+        by vger.kernel.org with ESMTP id S1728191AbgEDN74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 09:59:56 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E808C0610D6;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3742BC03C1A7;
         Mon,  4 May 2020 06:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=WjxZKoRIKfO4ZrZvf/DLMSa0ugerjjYcPKsjotVpyb0=; b=OoQjpj5XgRMCw9fvjUr+p7wIPS
-        0mI54aJz14KheaZBW6dbWbZOfHxvTofwPA9GtYEbAlfA+2qzUh04S9tXrOmnms6/cZ5SEs1CmepbU
-        qaTU6lF6dE1n72pfIJYPAUn8upmFFrzs/90j9G90zKNfsL3XUk3GL9op1gTyyXhVCSDuIHODmq1wO
-        41OwwXIs1uXmIHwUEKFZ18gj2XgVEoOM2XzZRul9Um0SBPVjzdWdG6abYwgq2rHVUYRIb+5fIjVM3
-        Dk8MgMzrO28ISVrwwOqFcfC8tZL9o1lDudh+X6HbYg00n9SoQO4GOyV7HehP2ZTK14yskP8k1Bxrz
-        unEDh2RQ==;
+        bh=ufRuX5PQbB2jqqbHHg7fvKBAMJcv5Za1TaoOkXdfMXY=; b=MVJG1YAtRinzkEzc77kDCgeBH9
+        E2TBXf7FyyOaRa3T6kJ3Qsyh5BKtEJUDAtTLZlVlO5WuS64bXuyPsePY3iWasACFbZ7Nknf8r3CKu
+        tI4t0xd4bbybZGgj5DWRrcm/2+lJf1IUJ6fFSftIh59RTMhBkvpQFXmiJf+LkIYBWRlxWjNBQZwKT
+        yrV1tsh3pV9MvgsiBOTmL585hMxnuHO9NlgdZ/IXGxMshmRRIH9sTSCS2mma7NaCqFvkMlYwxuc1o
+        bbVFOS/lSiabwEvptHLgwwQAOkQRm7VoN8WleGgZ+ZKD28bQxkiGGteiZAUkAIliy0Nn+/Tx+w/fC
+        pQs+kKYQ==;
 Received: from [2001:4bb8:18c:10bd:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVbdF-0007Za-5t; Mon, 04 May 2020 13:59:41 +0000
+        id 1jVbdM-0007aP-Dn; Mon, 04 May 2020 13:59:48 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
         Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
         linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@wdc.com>
-Subject: [PATCH 4/8] cdrom: factor out a cdrom_multisession helper
-Date:   Mon,  4 May 2020 15:59:23 +0200
-Message-Id: <20200504135927.2835750-5-hch@lst.de>
+        Jan Kara <jack@suse.cz>, Damien Le Moal <damien.lemoal@wdc.com>
+Subject: [PATCH 7/8] isofs: stop using ioctl_by_bdev
+Date:   Mon,  4 May 2020 15:59:26 +0200
+Message-Id: <20200504135927.2835750-8-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504135927.2835750-1-hch@lst.de>
 References: <20200504135927.2835750-1-hch@lst.de>
@@ -60,96 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out a version of the CDROMMULTISESSION ioctl handler that can
-be called directly from kernel space.
+Instead just call the CDROM layer functionality directly, and turn the
+hot mess in isofs_get_last_session into remotely readable code.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
 Reviewed-by: Hannes Reinecke <hare@suse.de
 ---
- drivers/cdrom/cdrom.c | 41 +++++++++++++++++++++++++----------------
- include/linux/cdrom.h |  2 ++
- 2 files changed, 27 insertions(+), 16 deletions(-)
+ fs/isofs/inode.c | 54 +++++++++++++++++++++++-------------------------
+ 1 file changed, 26 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index c91d1e1382142..06896c07b1333 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -2295,37 +2295,46 @@ static int cdrom_read_cdda(struct cdrom_device_info *cdi, __u8 __user *ubuf,
- 	return cdrom_read_cdda_old(cdi, ubuf, lba, nframes);	
- }
+diff --git a/fs/isofs/inode.c b/fs/isofs/inode.c
+index 62c0462dc89f3..276107cdaaf13 100644
+--- a/fs/isofs/inode.c
++++ b/fs/isofs/inode.c
+@@ -544,43 +544,41 @@ static int isofs_show_options(struct seq_file *m, struct dentry *root)
  
--static int cdrom_ioctl_multisession(struct cdrom_device_info *cdi,
--		void __user *argp)
-+int cdrom_multisession(struct cdrom_device_info *cdi,
-+		struct cdrom_multisession *info)
+ static unsigned int isofs_get_last_session(struct super_block *sb, s32 session)
  {
 -	struct cdrom_multisession ms_info;
- 	u8 requested_format;
- 	int ret;
+-	unsigned int vol_desc_start;
+-	struct block_device *bdev = sb->s_bdev;
+-	int i;
++	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
++	unsigned int vol_desc_start = 0;
  
--	cd_dbg(CD_DO_IOCTL, "entering CDROMMULTISESSION\n");
--
- 	if (!(cdi->ops->capability & CDC_MULTI_SESSION))
- 		return -ENOSYS;
- 
--	if (copy_from_user(&ms_info, argp, sizeof(ms_info)))
--		return -EFAULT;
--
--	requested_format = ms_info.addr_format;
-+	requested_format = info->addr_format;
- 	if (requested_format != CDROM_MSF && requested_format != CDROM_LBA)
- 		return -EINVAL;
--	ms_info.addr_format = CDROM_LBA;
-+	info->addr_format = CDROM_LBA;
- 
--	ret = cdi->ops->get_last_session(cdi, &ms_info);
--	if (ret)
--		return ret;
-+	ret = cdi->ops->get_last_session(cdi, info);
-+	if (!ret)
-+		sanitize_format(&info->addr, &info->addr_format,
-+				requested_format);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(cdrom_multisession);
- 
--	sanitize_format(&ms_info.addr, &ms_info.addr_format, requested_format);
-+static int cdrom_ioctl_multisession(struct cdrom_device_info *cdi,
-+		void __user *argp)
-+{
-+	struct cdrom_multisession info;
-+	int ret;
+-	vol_desc_start=0;
+-	ms_info.addr_format=CDROM_LBA;
+ 	if (session > 0) {
+-		struct cdrom_tocentry Te;
+-		Te.cdte_track=session;
+-		Te.cdte_format=CDROM_LBA;
+-		i = ioctl_by_bdev(bdev, CDROMREADTOCENTRY, (unsigned long) &Te);
+-		if (!i) {
++		struct cdrom_tocentry te;
 +
-+	cd_dbg(CD_DO_IOCTL, "entering CDROMMULTISESSION\n");
++		if (!cdi)
++			return 0;
++
++		te.cdte_track = session;
++		te.cdte_format = CDROM_LBA;
++		if (cdrom_read_tocentry(cdi, &te) == 0) {
+ 			printk(KERN_DEBUG "ISOFS: Session %d start %d type %d\n",
+-				session, Te.cdte_addr.lba,
+-				Te.cdte_ctrl&CDROM_DATA_TRACK);
+-			if ((Te.cdte_ctrl&CDROM_DATA_TRACK) == 4)
+-				return Te.cdte_addr.lba;
++				session, te.cdte_addr.lba,
++				te.cdte_ctrl & CDROM_DATA_TRACK);
++			if ((te.cdte_ctrl & CDROM_DATA_TRACK) == 4)
++				return te.cdte_addr.lba;
+ 		}
  
--	if (copy_to_user(argp, &ms_info, sizeof(ms_info)))
-+	if (copy_from_user(&info, argp, sizeof(info)))
-+		return -EFAULT;
-+	ret = cdrom_multisession(cdi, &info);
-+	if (ret)
-+		return ret;
-+	if (copy_to_user(argp, &info, sizeof(info)))
- 		return -EFAULT;
- 
- 	cd_dbg(CD_DO_IOCTL, "CDROMMULTISESSION successful\n");
--	return 0;
-+	return ret;
+ 		printk(KERN_ERR "ISOFS: Invalid session number or type of track\n");
+ 	}
+-	i = ioctl_by_bdev(bdev, CDROMMULTISESSION, (unsigned long) &ms_info);
+-	if (session > 0)
+-		printk(KERN_ERR "ISOFS: Invalid session number\n");
+-#if 0
+-	printk(KERN_DEBUG "isofs.inode: CDROMMULTISESSION: rc=%d\n",i);
+-	if (i==0) {
+-		printk(KERN_DEBUG "isofs.inode: XA disk: %s\n",ms_info.xa_flag?"yes":"no");
+-		printk(KERN_DEBUG "isofs.inode: vol_desc_start = %d\n", ms_info.addr.lba);
+-	}
+-#endif
+-	if (i==0)
++
++	if (cdi) {
++		struct cdrom_multisession ms_info;
++
++		ms_info.addr_format = CDROM_LBA;
++		if (cdrom_multisession(cdi, &ms_info) == 0) {
+ #if WE_OBEY_THE_WRITTEN_STANDARDS
+-		if (ms_info.xa_flag) /* necessary for a valid ms_info.addr */
++			/* necessary for a valid ms_info.addr */
++			if (ms_info.xa_flag)
+ #endif
+-			vol_desc_start=ms_info.addr.lba;
++				vol_desc_start = ms_info.addr.lba;
++		}
++	}
++
+ 	return vol_desc_start;
  }
- 
- static int cdrom_ioctl_eject(struct cdrom_device_info *cdi)
-diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h
-index 008c4d79fa332..8543fa59da720 100644
---- a/include/linux/cdrom.h
-+++ b/include/linux/cdrom.h
-@@ -94,6 +94,8 @@ struct cdrom_device_ops {
- 			       struct packet_command *);
- };
- 
-+int cdrom_multisession(struct cdrom_device_info *cdi,
-+		struct cdrom_multisession *info);
- int cdrom_read_tocentry(struct cdrom_device_info *cdi,
- 		struct cdrom_tocentry *entry);
  
 -- 
 2.26.2
