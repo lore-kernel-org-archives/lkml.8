@@ -2,160 +2,161 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC6CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A046DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13F5F206EB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7369220757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OC6caKKq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BtzWkZxy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgEDXvL (ORCPT
+        id S1728430AbgEDXxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:51:11 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47710 "EHLO
+        Mon, 4 May 2020 19:53:00 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41862 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728182AbgEDXvL (ORCPT
+        by vger.kernel.org with ESMTP id S1728364AbgEDXw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:51:11 -0400
+        Mon, 4 May 2020 19:52:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588636269;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        s=mimecast20190719; t=1588636378;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CdR+TTzrR6kmaYEcFh2fDuqfwQzbdiS6f0cc5j3IfEw=;
-        b=OC6caKKqNCvw6N7+2jj8hDI1ELA1ZH+K2IVqapqqFc6GCXR1ON27uq7YGdFmYBpXuln1hv
-        JKNm3C5Q7oGuqERmSdoFLZ3I9lwkYt62APWdS93EaMqg7zNIlCoUfrr0RZdGlj50OcANPO
-        kBalGJNyWN9zgq5PgJR/ofIKcPOSq0g=
+        bh=aMMkAii//hOjjah/wFry8XI5JrN/TtYxtkhOj6HfRi0=;
+        b=BtzWkZxyI0Nt+up6hKu6HMwpPVUR4LnawwbtbETO3gR1spry1BG+ORVaOUW2w3It7wNTr1
+        w+LhIl95BJpv8j5o5ornSC7s3z+nXfCOD5Ku7wrB5sLxUXhSFlR7m4L7em98XUZsdRq0s2
+        0y4VY/mI/FQkIIDuxd9blKliMBK9Ur8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-DOz1SbIqNl6y6r2MNZbr6w-1; Mon, 04 May 2020 19:51:05 -0400
-X-MC-Unique: DOz1SbIqNl6y6r2MNZbr6w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-295-DWmS5O72MsepFRv42TrOaA-1; Mon, 04 May 2020 19:52:55 -0400
+X-MC-Unique: DWmS5O72MsepFRv42TrOaA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EB85106B24A;
-        Mon,  4 May 2020 23:51:04 +0000 (UTC)
-Received: from krava (unknown [10.40.192.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F06BC66062;
-        Mon,  4 May 2020 23:51:01 +0000 (UTC)
-Date:   Tue, 5 May 2020 01:50:59 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 1/2] perf evsel: Create counts for collecting summary
- data
-Message-ID: <20200504235059.GG1916255@krava>
-References: <20200502020705.19295-1-yao.jin@linux.intel.com>
- <20200502020705.19295-2-yao.jin@linux.intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D07C835B4F;
+        Mon,  4 May 2020 23:52:53 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-132.bne.redhat.com [10.64.54.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5856962486;
+        Mon,  4 May 2020 23:52:48 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH RFC 2/6] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
+ token info
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200429093634.1514902-1-vkuznets@redhat.com>
+ <20200429093634.1514902-3-vkuznets@redhat.com>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <409b802c-0abe-0cb4-92fe-925733bfd612@redhat.com>
+Date:   Tue, 5 May 2020 09:52:45 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200502020705.19295-2-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200429093634.1514902-3-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 10:07:04AM +0800, Jin Yao wrote:
-> It would be useful to support the overall statistics for perf-stat
-> interval mode. For example, report the summary at the end of
-> "perf-stat -I" output.
+Hi Vitaly,
+
+On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
+> Currently, APF mechanism relies on the #PF abuse where the token is being
+> passed through CR2. If we switch to using interrupts to deliver page-ready
+> notifications we need a different way to pass the data. Extent the existing
+> 'struct kvm_vcpu_pv_apf_data' with token information.
 > 
-> But since perf-stat can support many aggregation modes, such as
-> --per-thread, --per-socket, -M and etc, we need a solution which
-> doesn't bring much complexity.
-> 
-> The idea is to create new 'evsel->summary_counts' which sums up the
-> counts delta per interval. Before reporting the summary, we copy the
-> data from evsel->summary_counts to evsel->counts, and next we just
-> follow current code.
-> 
->  v2:
->  ---
->  Rebase to perf/core branch
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
->  tools/perf/util/evsel.c | 10 ++++++++--
->  tools/perf/util/evsel.h |  1 +
->  tools/perf/util/stat.c  | 20 ++++++++++++++++++++
->  3 files changed, 29 insertions(+), 2 deletions(-)
+>   arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
+>   arch/x86/kvm/x86.c                   | 10 ++++++----
+>   2 files changed, 8 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index a75bcb95bf23..abc503dd6eda 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1280,22 +1280,28 @@ void evsel__delete(struct evsel *evsel)
->  void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
->  			   struct perf_counts_values *count)
->  {
-> -	struct perf_counts_values tmp;
-> +	struct perf_counts_values tmp, *summary;
->  
-> -	if (!evsel->prev_raw_counts)
-> +	if (!evsel->prev_raw_counts || !evsel->summary_counts)
->  		return;
->  
->  	if (cpu == -1) {
->  		tmp = evsel->prev_raw_counts->aggr;
->  		evsel->prev_raw_counts->aggr = *count;
-> +		summary = &evsel->summary_counts->aggr;
->  	} else {
->  		tmp = *perf_counts(evsel->prev_raw_counts, cpu, thread);
->  		*perf_counts(evsel->prev_raw_counts, cpu, thread) = *count;
-> +		summary = perf_counts(evsel->summary_counts, cpu, thread);
+> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
+> index 2a8e0b6b9805..df2ba34037a2 100644
+> --- a/arch/x86/include/uapi/asm/kvm_para.h
+> +++ b/arch/x86/include/uapi/asm/kvm_para.h
+> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
+>   
+>   struct kvm_vcpu_pv_apf_data {
+>   	__u32 reason;
+> -	__u8 pad[60];
+> +	__u32 token;
+> +	__u8 pad[56];
+>   	__u32 enabled;
+>   };
+>   
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index b93133ee07ba..7c21c0cf0a33 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2662,7 +2662,7 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>   	}
+>   
+>   	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
+> -					sizeof(u32)))
+> +					sizeof(u64)))
+>   		return 1;
+>   
+>   	vcpu->arch.apf.send_user_only = !(data & KVM_ASYNC_PF_SEND_ALWAYS);
+> @@ -10352,8 +10352,9 @@ static void kvm_del_async_pf_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
+>   	}
+>   }
+>   
+> -static int apf_put_user(struct kvm_vcpu *vcpu, u32 val)
+> +static int apf_put_user(struct kvm_vcpu *vcpu, u32 reason, u32 token)
+>   {
+> +	u64 val = (u64)token << 32 | reason;
+>   
+>   	return kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.apf.data, &val,
+>   				      sizeof(val));
+> @@ -10405,7 +10406,8 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+>   	kvm_add_async_pf_gfn(vcpu, work->arch.gfn);
+>   
+>   	if (kvm_can_deliver_async_pf(vcpu) &&
+> -	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
+> +	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT,
+> +			  work->arch.token)) {
+>   		fault.vector = PF_VECTOR;
+>   		fault.error_code_valid = true;
+>   		fault.error_code = 0;
+> @@ -10438,7 +10440,7 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
+>   	trace_kvm_async_pf_ready(work->arch.token, work->cr2_or_gpa);
+>   
+>   	if (vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED &&
+> -	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_READY)) {
+> +	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_READY, work->arch.token)) {
+>   			fault.vector = PF_VECTOR;
+>   			fault.error_code_valid = true;
+>   			fault.error_code = 0;
+> 
 
-shouldn't this be enough?
+It would be as below based on two facts: (1) token is more important than reason;
+(2) token will be put into high word of @val. I think apf_{get,put}_user() might
+be worthy to be inline. However, it's not a big deal.
 
-		perf_counts(evsel->summary_counts, cpu, thread) = *count
+    static inline int apf_put_user(struct kvm_vcpu *vcpu, u32 token, u32 reason)
 
-without the code below.. and similar for aggr case
-
-however I still wonder if we should count this in
-perf_stat_process_counter and only for interval mode
-
->  	}
->  
->  	count->val = count->val - tmp.val;
->  	count->ena = count->ena - tmp.ena;
->  	count->run = count->run - tmp.run;
-> +
-> +	summary->val += count->val;
-> +	summary->ena += count->ena;
-> +	summary->run += count->run;
->  }
->  
->  void perf_counts_values__scale(struct perf_counts_values *count,
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 783246bf8d0d..430639c99d04 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -46,6 +46,7 @@ struct evsel {
->  	char			*filter;
->  	struct perf_counts	*counts;
->  	struct perf_counts	*prev_raw_counts;
-> +	struct perf_counts	*summary_counts;
-
-'sum_counts' might be better
-
-jirka
-
->  	int			idx;
->  	unsigned long		max_events;
->  	unsigned long		nr_events_printed;
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 774468341851..c3fd008b4e84 100644
-> --- a/tools/perf/util/stat.c
-
-SNIP
+Thanks,
+Gavin
+    
 
