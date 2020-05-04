@@ -2,103 +2,119 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A90C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D197C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA7220721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9522073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ON7kbrtB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dO208hOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgEDTvV (ORCPT
+        id S1727793AbgEDTve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
+        Mon, 4 May 2020 15:51:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726111AbgEDTvU (ORCPT
+        by vger.kernel.org with ESMTP id S1726111AbgEDTve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:51:20 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11036C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:51:19 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id i10so522487wrv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:51:18 -0700 (PDT)
+        Mon, 4 May 2020 15:51:34 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2610C061A0E;
+        Mon,  4 May 2020 12:51:33 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f18so10939494lja.13;
+        Mon, 04 May 2020 12:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vh444uXRAgRXgT6rgkMAr0JYfUHIeqhqHIUGvOQ7pc0=;
-        b=ON7kbrtBoT7MWLLUIuP7TZ3htQOPLVWFBTBZ+UKghdA0FRitoBixlUWJqfqpSKwwVs
-         oJQ/qMcfVZgbrULsnztljOBZU6liqQdGRj+NbCMtQJmABc/uXwnPQwcI8boc14vQpTR9
-         ZCm3CuLdREKuXR5WgCj/NrYEphF2fDtpZOGnlm42G09T84ytf3uWhUqmoiTlTLfuMqpA
-         IdQ7F3mHSbjUy+yzX77uVe/4BkuAvgzlquliu+uKz1Nvy6dlabkeRgZSjZ0NQxiKJjqv
-         3bj94Bm3zfFwgI5T6NnKJH86UaYxlAT5w4IVwUs5qZBxnvYm99gWVWjiA/vT+paWf9jl
-         30lQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J91U/M/ZEHah2SHGhHU5m9wEosn67ktuzmfNHVCfVJM=;
+        b=dO208hOUAs5fuz+vEGGNXmVX8Fu9D62O9DqTcWUINtzEuVAgJxJbFKOE2GLym3cnmC
+         aFIWpX7Vxo9YaQlneZmRXKtY7LLmxtYRRiP9e68pPrYtBPCbnBB9uqHfeieFhDHq3tta
+         Lb91czUIIX6XzTh/lOyEyfdzYEduZpzmi2YzKc8vO3Myp9FiT5wgHyIi8c0srCvVPkMC
+         Z7zGCZFRCA3aru4JTFp9fhgeJDYa/49Lq3F+cEaopH9YM2YXDOC0EA8UWAiRqiLcciJ4
+         u4iFyFJ9YsWv0rPifCQ+TGOsmp3H7BPayIFeYicXPQ8MhwSqAU+h68B3royW0iCxcdRo
+         rEMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vh444uXRAgRXgT6rgkMAr0JYfUHIeqhqHIUGvOQ7pc0=;
-        b=awG4JT2826qfgUsGjJMY3/0wzMV2jFEMT0+RmG5cBp9BgqOJnE74QIRYrKRTV6cVod
-         NmUzOo5nOQKBBZJqX4aCDQn6OOL4j91NaSvupUykbcPbM/fPMh6/ZzDMIBInQ7GjPQA6
-         Qid3MHEIiOpCsNLXpz7omk9axsbh7JWROc/e27jQAE2OupsBOH8pZZRFGpK7rEWXOqss
-         YlWXDmyygm17hvLuBASnfuJ3uHwtQzKDp53qsODQ2kDCxL86XER/lWT/HW87qL84KvOC
-         9lg9taikRwuNxBYd3KlY9hQyd9MFdByYQR9OouU7wday6YO80vQAB4Z3loSE+yuQqOWZ
-         T1ZQ==
-X-Gm-Message-State: AGi0PuZn/Qzt9aQFiNxL/GbjopyNPN4q4fEs02IdFkTe1wAQ20JYcaQF
-        mL5hEUbE1DOm6Qm9pHYaabk=
-X-Google-Smtp-Source: APiQypJILD6MKPAye5JlbWy5uG3IwH9ogJIS9ceuBRa79erV4+lC5JGQL1Cqz9Df/SLLdF7ilxIMKw==
-X-Received: by 2002:adf:cc89:: with SMTP id p9mr743414wrj.269.1588621877710;
-        Mon, 04 May 2020 12:51:17 -0700 (PDT)
-Received: from localhost.localdomain (p200300F137142E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3714:2e00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id f83sm696042wmf.42.2020.05.04.12.51.16
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J91U/M/ZEHah2SHGhHU5m9wEosn67ktuzmfNHVCfVJM=;
+        b=X4IKdDw+hrTMCHPl+MWMC+Dabdx0hAuK48B/RAnKjwQFHldvPCcnDu6T6g7Lw/OliD
+         niEoIRu6nyLGiGViFrnfqDsPJNtzTXDTiAliTfvJUvTLi4bTcqhJzFc+dqSPcip4Xrs3
+         5/7qy36GVwsXMQVGBvORwIGxVXgGViUSpejrRbhBABYB22H5i0WxxK8oDC4cRBBxHr6M
+         RD5eFL/LNfpTnz4HAzyboe1t1N8OjAq7HjPs19Z0NJrcAvAdMdFD6bHnkyI/RTsBDSFy
+         0HGKSRGGAzbiMVrb/df1maq5bjXf0e6Fa8NhtGkhN12W8/tJGSmN1bttNGMto8OA6J9Y
+         zgWw==
+X-Gm-Message-State: AGi0PuaWyQd1vINZrOyMATbVUHSX3Op45fRrmlCTyxP6t/YQKX54PLwb
+        jbgSSC1haNs9MS3M16rW8r4=
+X-Google-Smtp-Source: APiQypKdqsxPo5O8L2/GpPQRr2NHGKK2RbQPb8x+UpFQVrNQldSNws+cMDCcu9Tak8RSHfCGZyR7qQ==
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr11093873lji.117.1588621892146;
+        Mon, 04 May 2020 12:51:32 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id m23sm9065936ljb.87.2020.05.04.12.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:51:17 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] ARM: dts: meson: add the gadget mode properties to the USB0 controller
-Date:   Mon,  4 May 2020 21:51:05 +0200
-Message-Id: <20200504195105.2909711-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 04 May 2020 12:51:31 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 4 May 2020 21:51:28 +0200
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
+Message-ID: <20200504195128.GA21830@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-10-urezki@gmail.com>
+ <20200501212749.GD7560@paulmck-ThinkPad-P72>
+ <20200504124323.GA17577@pc636>
+ <20200504152437.GK2869@paulmck-ThinkPad-P72>
+ <20200504174822.GA20446@pc636>
+ <20200504180805.GA172409@google.com>
+ <20200504190138.GU2869@paulmck-ThinkPad-P72>
+ <CAEXW_YQmrfbaDocsc7bLULRR1yUv4=MMMEw3b0s1mXM8sEVVzQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEXW_YQmrfbaDocsc7bLULRR1yUv4=MMMEw3b0s1mXM8sEVVzQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Testing with a USB RNDIS connection and iperf3 gives the following
-results:
-- From the host computer to the device at ~250Mbit/s
-- From the device to the host computer at ~76Mbit/s
+> > > Since we don't care about traversing backwards, isn't it better to use llist
+> > > for this usecase?
+> > >
+> > > I think Vlad is using locking as we're also tracking the size of the llist to
+> > > know when to free pages. This tracking could suffer from the lost-update
+> > > problem without any locking, 2 lockless llist_add happened simulatenously.
+> > >
+> > > Also if list_head is used, it will take more space and still use locking.
+> >
+> > Indeed, it would be best to use a non-concurrent singly linked list.
+> 
+> Ok cool :-)
+> 
+> Is it safe to say something like the following is ruled out? ;-) :-D
+> #define kfree_rcu_list_add llist_add
+> 
+In that case i think it is better just to add a comment about using
+llist_head. To state that it used as a singular list to save space
+and the access is synchronized by the lock :)
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+IMHO.
 
-diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
-index 5d198309058a..ae89deaa8c9c 100644
---- a/arch/arm/boot/dts/meson.dtsi
-+++ b/arch/arm/boot/dts/meson.dtsi
-@@ -229,6 +229,9 @@ usb0: usb@c9040000 {
- 			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&usb0_phy>;
- 			phy-names = "usb2-phy";
-+			g-rx-fifo-size = <512>;
-+			g-np-tx-fifo-size = <500>;
-+			g-tx-fifo-size = <256 192 128 128 128>;
- 			dr_mode = "host";
- 			status = "disabled";
- 		};
--- 
-2.26.2
-
+--
+Vlad Rezki
