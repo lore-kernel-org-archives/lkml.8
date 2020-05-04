@@ -2,174 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648A2C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86A9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35C592075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E9920752
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xcitaMAX"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="B1gaVhmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729218AbgEDOnL (ORCPT
+        id S1729232AbgEDOni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgEDOnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:43:11 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E9CC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 07:43:10 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f13so21226259wrm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 07:43:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IRCeHkqSilUjU3FHunFBHRyW1Y2SXfHm0MWEUqYs4/A=;
-        b=xcitaMAX9gw+29GendB+8mdnWfteLl6Rm11E72yMhQbVlvTkMInBBYhb4kQT/E0Ee2
-         RpgEOuBQ9xT8A4YL7gTNTKJ5zh+TWrGPNuLh64057pVrkt7H7DWcmVQrKFXjQeDH3Z1G
-         YCFsMQC8kQ9CMB/oF2OxkJCUhr8/5PDqbAhJ4ks+5YxBltonIWm/PSuzLJD4lbO5C8/X
-         IVOJFT4D78B16tVPI1OguBr0sC8OyIjijzRgZWEz0zkNTW/iglAwowEqku4oyIjAVbwL
-         ownV/fwyJUskK7lI4VXncd03/fUtqP6ly+MFZn69UW2qU+OO761P5e16fgXuwmKiQawd
-         5f1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IRCeHkqSilUjU3FHunFBHRyW1Y2SXfHm0MWEUqYs4/A=;
-        b=J/aNrP9B6rn/lWJExIHTwymaAtVkahgFgdRs0ZDaW72xAWPhhx92R5Jp8llXbkkUTa
-         F+zFsQrO52mg45tqAGPmVJ79szGFina4JF81Jgp5Qz4iCjzhwpAmu1niSH3FBJMmHf4E
-         L7MVgV6d/40MNWxE5/F5sUG9ewF9yeUdA//teHknBy4LbjwaW3tpf608NiNPGKfg2l+V
-         yG3i8CHo88HakNUpU3UGEF3EMfw80zgGyJoDtWfOpFT7hrBwQ87zT7G4qoPilhJ2gIy1
-         i+DeWF5WGrc9+1/p4CB7sxbpgvhQZs9zpnXKuzuHRa/ONkN+2KbR9GKTk7pxNzam4GDq
-         1+5A==
-X-Gm-Message-State: AGi0PubUtAk1bfaLrnCpeT+5DV6eq4ZMmvnBXTWXsvslCae7Z0PZSgnL
-        W+o1Q2+p10rcW1x7wxYIxtRS6Q==
-X-Google-Smtp-Source: APiQypI9FXPMW4DbDRyPEO7LTd72jUgL9qg/5tOovENDnJ/SlF3XQVeCCTh4GFIUY0luJFYiAVo+KA==
-X-Received: by 2002:a5d:658c:: with SMTP id q12mr21086345wru.128.1588603388730;
-        Mon, 04 May 2020 07:43:08 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id t17sm18896607wro.2.2020.05.04.07.43.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 07:43:08 -0700 (PDT)
-Date:   Mon, 4 May 2020 15:43:06 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, bp@alien8.de,
-        linux-serial@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [Kgdb-bugreport] [PATCH v3 04/11] kgdb: Delay "kgdbwait" to
- dbg_late_init() by default
-Message-ID: <20200504144306.zwac2jdlltvhekqm@holly.lan>
-References: <20200428211351.85055-1-dianders@chromium.org>
- <20200428141218.v3.4.I3113aea1b08d8ce36dc3720209392ae8b815201b@changeid>
- <20200430154927.vhkhoffqwirb2fmm@holly.lan>
- <CAD=FV=Ut7kHr+V_+Yyk=+NC5qBrKEQ+O6Ra4HRHs5XoAHFcWeA@mail.gmail.com>
+        Mon, 4 May 2020 10:43:38 -0400
+Received: from mout.gmx.net ([212.227.15.19]:59039 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728399AbgEDOni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:43:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1588603410;
+        bh=rhIgO8knhk5KrlNGr7M8hfHM41dFa9/8X/4InpEenSg=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=B1gaVhmyZyPDdbVLXr5Ifrmiw46DQtjxWE99RRUd72YfouBe3BSMmMY1C1vU2PdLp
+         oKhAOPu+vEleC8Gyazt1+4k6qnww0rlStbErUggsU6lC/Lm7kcYbO9H4bPNE8ESgV2
+         O3eNQ6dXDcvKJoqGl7tlY42lri+m/NC5T17neavA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mqs0R-1ijcJs48NV-00mrnC; Mon, 04
+ May 2020 16:43:30 +0200
+Date:   Mon, 4 May 2020 16:43:13 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Joe Perches <joe@perches.com>, Ajay.Kathat@microchip.com,
+        adham.abozaeid@microchip.com
+Cc:     Oscar Carter <oscar.carter@gmx.com>, gregkh@linuxfoundation.org,
+        rachel.kim@atmel.com, johnny.kim@atmel.com, chris.park@atmel.com,
+        dean.lee@atmel.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] staging: wilc1000: Increase the size of wid_list array
+Message-ID: <20200504144313.GA3213@ubuntu>
+References: <20200503075145.4563-1-oscar.carter@gmx.com>
+ <d75b7f64-0ba0-65e9-ea4c-cc87b3a51a10@microchip.com>
+ <d3e07dfd0efe21192d172b2e4e7d4a489a4fcc62.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Ut7kHr+V_+Yyk=+NC5qBrKEQ+O6Ra4HRHs5XoAHFcWeA@mail.gmail.com>
+In-Reply-To: <d3e07dfd0efe21192d172b2e4e7d4a489a4fcc62.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:WaZhZUrSWFeiDdnjwq+IVE7oWmd1xxkdZbdW99c6kzggZTPRiNv
+ QUdZfn0Ngh91lWlISAwTQukgGeprj/C+AQzp4OqAMeTojVIgJslagmrfBMTeyAXLgV0rBP+
+ etq6ZKEXPE8zx66U7MCDUgEcnxqrmxw3gbidHj66bcWncITAGQYh18DkHmP7D/ISkwRBkN1
+ Jvb6R15eMZeV7sJ3Hs0hA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:53f5jrXMiwo=:9TYZyTRs4aL6kPTOUX/+in
+ 3o0rl7+SJ2oxyNkLC1uk+41FIl5A+vDAur93nDr45RJdENFhmvjiRKJkNo1xinoicPsrk6rZx
+ QvSSerQxyys4GBhXGBSLklMOLCF7CyNkz1kK7RRid7v5i58LPIfJGscy/daOmfkyi7/VNibGd
+ 2RX0JsFS1MSO3trlJgN2TkqbXgmwJYM3WYJmBJSAxdXcq6MxYZUldiSHRsiEn1L2XWFnHQba6
+ YzyjBdhu7Zq6lyezflEaGkZ95IZqL/06J/PLDYdhOMBZdzhlsWzfpBV6Q3zdDdL2q97w7YtqQ
+ DmzYpPpuvdnmhuM/WqV3hm+/FMkMNjAH0aIhkjl0btLiDqzaize10BIMw+c4h7GRO2ysU9wU2
+ mGj4GN8WxZ1I6mxEngb5DOEbADDmD5+H+Dx+INpU3IFG5LDC7w2aIYK9CEiSZWVG9bekW0f0e
+ OiobrDCazsJjqxqnmqd+3fwYxTHT0jWWkBR56fsS5J8tUaenuZPT5t4yI5Zmvtvy4s43YI97G
+ dr9imm0ob6pYq3T+5at+1HYWof9M3kzTskJG1H4ZfoT2c1T01Iyj5eTlJ+XkaYVjyq0ZNYTcJ
+ 0GZlRdUdpEkly8rnxbi8HsEC1ZPaoZVZyUQ0X+XSDXf4Yp+yXSkG8x+Flrmvh4ZTYV7PGZ0MW
+ Q7Vz+KHRBqNzd/2XFZmXVXn6BLzpmxZ2DpJz/5Jvf3xe2v2+6rCTZSIDfmfNJ3GX4Huu6RSjD
+ yGUuE7jTPTz8nqYji8wN/pem//zdC9/kJWj5VNmetqa+mBCBF8I3v429Ma5kVhY2Ktp+faAvT
+ 1FuUN0VBWgADF4ws2quAEJSa30rPI9koa0z7/cJ9FV13A1jYXIXV4hVRSegy0H90Up5N7lYr9
+ H4f7cMbDkKdMq5h7cIG0M40E9nM4LzK/oMqRVBQskB28ufQocESpIq5cfayEY77gnsYhg8vjv
+ W/NZoeGzZZy6tA9HgcC7nar8c6j36UJ32+0tV7VC73rt7yyqLUH0jNM92yKGR5iIcvcXNGzWf
+ RWKfQCHEbJPwKavEbBQa+NzcLSab6qbfmimZiir3/gC8R1pu5bY3CsI2sAjqFtdE4WzLDp2MA
+ mpsAYgyl3pXlgXf2hEJYGLCw9e9Xu8hJMB7aLyJm5pfTqwaWQKv1goAmKF/Mb2DUaw9Wy3tlt
+ YZQFnKCmQbKFVNzgKxWcK2fspbyPTZFEmZQ8qLyvBAspG1ucBAYVlcBLJ9pdY4yA40e7o19Hi
+ DqX8meZuUttwphwlu
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:35:30AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Apr 30, 2020 at 8:49 AM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 02:13:44PM -0700, Douglas Anderson wrote:
-> > > Using kgdb requires at least some level of architecture-level
-> > > initialization.  If nothing else, it relies on the architecture to
-> > > pass breakpoints / crashes onto kgdb.
+On Sun, May 03, 2020 at 04:29:53PM -0700, Joe Perches wrote:
+> On Sun, 2020-05-03 at 14:52 +0000, Ajay.Kathat@microchip.com wrote:
+> > On 03/05/20 1:21 pm, Oscar Carter wrote:
+> > > EXTERNAL EMAIL: Do not click links or open attachments unless you kn=
+ow the content is safe
 > > >
-> > > On some architectures this all works super early, specifically it
-> > > starts working at some point in time before Linux parses
-> > > early_params's.  On other architectures it doesn't.  A survey of a few
-> > > platforms:
+> > > Increase by one the size of wid_list array as index variable can rea=
+ch a
+> > > value of 5. If this happens, an out-of-bounds access is performed.
 > > >
-> > > a) x86: Presumably it all works early since "ekgdboc" is documented to
-> > >    work here.
-> > > b) arm64: Catching crashes works; with a simple patch breakpoints can
-> > >    also be made to work.
-> > > c) arm: Nothing in kgdb works until
-> > >    paging_init() -> devicemaps_init() -> early_trap_init()
-> > >
-> > > Let's be conservative and, by default, process "kgdbwait" (which tells
-> > > the kernel to drop into the debugger ASAP at boot) a bit later at
-> > > dbg_late_init() time.  If an architecture has tested it and wants to
-> > > re-enable super early debugging, they can select the
-> > > ARCH_HAS_EARLY_DEBUG KConfig option.  We'll do this for x86 to start.
-> > > It should be noted that dbg_late_init() is still called quite early in
-> > > the system.
-> > >
-> > > Note that this patch doesn't affect when kgdb runs its init.  If kgdb
-> > > is set to initialize early it will still initialize when parsing
-> > > early_param's.  This patch _only_ inhibits the initial breakpoint from
-> > > "kgdbwait".  This means:
-> > >
-> > > * Without any extra patches arm64 platforms will at least catch
-> > >   crashes after kgdb inits.
-> > > * arm platforms will catch crashes (and could handle a hardcoded
-> > >   kgdb_breakpoint()) any time after early_trap_init() runs, even
-> > >   before dbg_late_init().
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Borislav Petkov <bp@alien8.de>
-> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > It looks like this patch is triggering some warnings from the existing
-> > defconfigs (both x86 and arm64). It looks like this:
-> >
-> > ---
-> > wychelm$ make defconfig
-> >   GEN     Makefile
-> > *** Default configuration is based on 'x86_64_defconfig'
-> >
-> > WARNING: unmet direct dependencies detected for ARCH_HAS_EARLY_DEBUG
-> >   Depends on [n]: KGDB [=n]
-> >   Selected by [y]:
-> >   - X86 [=y]
-> >
-> > WARNING: unmet direct dependencies detected for ARCH_HAS_EARLY_DEBUG
-> >   Depends on [n]: KGDB [=n]
-> >   Selected by [y]:
-> >   - X86 [=y]
-> 
-> Ah, thanks!  I hadn't noticed those.  I think it'd be easy to just
-> change the relevant patches to just "select ARCH_HAS_EARLY_DEBUG if
-> KGDB".  If you agree that's a good fix and are willing, I'd be happy
-> if you just added it to the relevant patches when applying.  If not, I
-> can post a v4.
+> > > Addresses-Coverity-ID: 1451981 ("Out-of-bounds access")
+> > > Fixes: f5a3cb90b802d ("staging: wilc1000: add passive scan support")
+> > > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> []
+> > > diff --git a/drivers/staging/wilc1000/hif.c b/drivers/staging/wilc10=
+00/hif.c
+> []
+> > > @@ -151,7 +151,7 @@ int wilc_scan(struct wilc_vif *vif, u8 scan_sour=
+ce, u8 scan_type,
+> > >               void *user_arg, struct cfg80211_scan_request *request)
+> > >  {
+> > >         int result =3D 0;
+> > > -       struct wid wid_list[5];
+> > > +       struct wid wid_list[6];
+>
+> This looks like it should be using a #define instead of
+> a hard-coded number.
 
-Happy with the approach to fix this.
+I agree. I will make the changes you suggested and I will resend a new ver=
+sion.
 
-Given the follow on discussion from the end of last week I suspect there
-probably needs to be a v4 anyway so perhaps the last question is
-applying a fix up is moot at this point?
-
-
-Daniel.
+> > >         u32 index =3D 0;
+> > >         u32 i, scan_timeout;
+> > >         u8 *buffer;
+> > > --
+> > > 2.20.1
+>
+Thanks,
+Oscar Carter
