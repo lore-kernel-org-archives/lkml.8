@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75583C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA0AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1572073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C2B206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615640;
-	bh=cjiA2aoQ7vAk0PIsUJfA2z0tb4C6nX3WRSRkZbu7TFs=;
+	s=default; t=1588615643;
+	bh=GlMvvMMAYJ2KBnvuyjfSwm5W5H+wal8W/8Z6T9uPoJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2sJQskTpniLA3zYCshji8yhmCqXNE4HiXe7xsy1TkHqSvZY0wrwRft+uXf0n7jaz
-	 OORoBAtWJQeGyXTa5J1FMwcqChAaY2vQP/cFaL4Y7mIsfth5flYqcDYG7FKayQmpsR
-	 /UzXDbeAq1pEmnlBBEQKLR6LkfZJdJwXOjhbURHE=
+	b=fxyACJ7v/nVSaZJKkyNkXmN/CpNvmOSGnMp3wcDPy9veTHQJRjmuLtwyLKnCBlmjZ
+	 0ZMd3IhN3LbpUFwRxD3sAFzrnNBMA/If47C39eUFrThnZ7pxUL5WUzMUAPEo9eAqOs
+	 WYHWdarBo8RFFV+0nF9i++RYRkciHrT4FkmctG8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732121AbgEDSHT (ORCPT
+        id S1732131AbgEDSHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732104AbgEDSHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:13 -0400
+        id S1732117AbgEDSHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74534207DD;
-        Mon,  4 May 2020 18:07:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5B55205ED;
+        Mon,  4 May 2020 18:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615632;
-        bh=cjiA2aoQ7vAk0PIsUJfA2z0tb4C6nX3WRSRkZbu7TFs=;
+        s=default; t=1588615637;
+        bh=GlMvvMMAYJ2KBnvuyjfSwm5W5H+wal8W/8Z6T9uPoJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RP6oYUOaJ6Ija9ChTr0vMsq9sv3nvrRYuYY2u6dXEICqYj8ZNkh2YRQKpymdFeaBd
-         UutHnBkGB8twA3XmFCZRoaNQcYbXnR8VuTbiI4R8AyV7aeJ0/CXLLMuRMBTlJUXcYR
-         Mz4LUaajnNn4qz4hxGtvdNvhpM9vbcehEpdCDj20=
+        b=DqZEiteF6sI2HvCMP+B8GvBhTe0mpfuikZkQXhCZcDtn7hW+up+EfXujFzaCznMAG
+         qaNz3Tmbjo8aiUvsg+OlZwhT45k62AVw0jeOTv+VP3Nn2f+iz3X4ok+NA1v5yBP2U4
+         U6GlifuS+qVezh/nJfsCwv0FQLzZMzUaM36RfThQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 5.6 60/73] iommu: Properly export iommu_group_get_for_dev()
-Date:   Mon,  4 May 2020 19:58:03 +0200
-Message-Id: <20200504165509.795667242@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.6 62/73] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
+Date:   Mon,  4 May 2020 19:58:05 +0200
+Message-Id: <20200504165509.925573177@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -60,39 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-commit ae74c19faa7d7996e857e13165bd40fc4a285e0d upstream.
+commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 upstream.
 
-In commit a7ba5c3d008d ("drivers/iommu: Export core IOMMU API symbols to
-permit modular drivers") a bunch of iommu symbols were exported, all
-with _GPL markings except iommu_group_get_for_dev().  That export should
-also be _GPL like the others.
+Currently, system fails to boot because the legacy interrupt remapping
+mode does not enable 128-bit IRTE (GA), which is required for x2APIC
+support.
 
-Fixes: a7ba5c3d008d ("drivers/iommu: Export core IOMMU API symbols to permit modular drivers")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200430120120.2948448-1-gregkh@linuxfoundation.org
+Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
+kernel option amd_iommu_intr=legacy instead. The initialization
+logic will check GASup and automatically fallback to using
+AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
+
+Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/iommu.c |    2 +-
+ drivers/iommu/amd_iommu_init.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1428,7 +1428,7 @@ struct iommu_group *iommu_group_get_for_
- 
- 	return group;
- }
--EXPORT_SYMBOL(iommu_group_get_for_dev);
-+EXPORT_SYMBOL_GPL(iommu_group_get_for_dev);
- 
- struct iommu_domain *iommu_group_default_domain(struct iommu_group *group)
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -2936,7 +2936,7 @@ static int __init parse_amd_iommu_intr(c
  {
+ 	for (; *str; ++str) {
+ 		if (strncmp(str, "legacy", 6) == 0) {
+-			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
++			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
+ 			break;
+ 		}
+ 		if (strncmp(str, "vapic", 5) == 0) {
 
 
