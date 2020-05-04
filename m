@@ -2,188 +2,182 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBF2C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2548C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFFB20746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB170206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KWVqGrSz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WV8XvfPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgEDVXW (ORCPT
+        id S1728307AbgEDVYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:23:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57868 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726433AbgEDVWf (ORCPT
+        Mon, 4 May 2020 17:24:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:40564 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgEDVYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:22:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044LMTWC104243;
-        Mon, 4 May 2020 16:22:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588627349;
-        bh=9VhwbEA312S5jn2e02G3zURBnKiTzVYqGi5OHCo+NQo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KWVqGrSzDuyAK52PvRbOwh3pOmh9cIO58zS+zs9oSKo85Rqk26v7WpEYHWGBRTsEX
-         4xgjFW6XtaGf2+cyDF8KajeHN60FXzliGvnggil82agbBMIA0+/TXbUu62xyuPYo2b
-         QVAU491RbkG8Gb+d9v1UaV21Yogq0zRse3muoQFg=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044LMTOj052665
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 16:22:29 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 16:22:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 16:22:29 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044LMSUK098256;
-        Mon, 4 May 2020 16:22:28 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings documention
-Date:   Mon, 4 May 2020 16:13:29 -0500
-Message-ID: <20200504211344.13221-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200504211344.13221-1-dmurphy@ti.com>
-References: <20200504211344.13221-1-dmurphy@ti.com>
+        Mon, 4 May 2020 17:24:07 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LNlpG004033;
+        Mon, 4 May 2020 21:23:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=v8bZfrKUd3qwtF/Kh9/wL9ZXJjJGiI1UmvKJcW7vQvQ=;
+ b=WV8XvfPoJT80Y2r/XvMnN9ypfZsMl1/qn0YsbgCDEMWUYCg8ei6cVBsKA/fzUfEhTkSp
+ wDfEyrmi/Le5+xghN92yuFIXJKXSUUXL6GgmDHb3x+5n4o+Lnl2RztaKTNQ2s52yDgzg
+ p/2Lf0ef+95w+ajWmaH4xKAM0zK4w9oSOu4OBcaOW5excCEHxAr4PILxR/d9Td5UHNPA
+ mNSddvjDdA6QLcJ6oDEn96nvG9ewBfdj1kTe5LmNHsp0xwM8WlX6qDCIoTkCnJ9bLHIu
+ 7ihOhT/HwG9ZjedXlufoh4tdz7j4s+Ut0VlSHzgn8XAQtyUxbA5DHOCeHGj2JkUZH4qX Cw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 30s09r1g09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 21:23:46 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LGgCp168945;
+        Mon, 4 May 2020 21:21:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30sjdrev8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 21:21:45 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044LLhsI021293;
+        Mon, 4 May 2020 21:21:43 GMT
+Received: from vbusired-dt (/10.39.235.150)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 14:21:42 -0700
+Date:   Mon, 4 May 2020 16:21:41 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srutherford@google.com,
+        rientjes@google.com, brijesh.singh@amd.com
+Subject: Re: [PATCH v7 03/18] KVM: SVM: Add KVM_SEV_SEND_FINISH command
+Message-ID: <20200504212141.GA1699981@vbusired-dt>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+ <c0cd07661be8c0ce6f395a386401289a0f362765.1588234824.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <c0cd07661be8c0ce6f395a386401289a0f362765.1588234824.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the LEDs multicolor class framework.
-Add multicolor ID to the color ID list for device tree bindings.
+On 2020-04-30 08:41:08 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
+> 
+> The command is used to finailize the encryption context created with
+> KVM_SEV_SEND_START command.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Steve Rutherford <srutherford@google.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+>  arch/x86/kvm/svm/sev.c                        | 23 +++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> index f46817ef7019..a45dcb5f8687 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
 
-CC: Rob Herring <robh@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
- drivers/leds/led-core.c                       |  1 +
- include/dt-bindings/leds/common.h             |  3 +-
- 3 files changed, 74 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+As I commented in the v6 patches
+(see https://lore.kernel.org/kvm/20200402181710.GA655710@vbusired-dt/),
+there are multiple occurrences of the word "-negative" in
+amd-memory-encryption.rst. Can these be changed to either "negative" or
+"less than 0"?
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-new file mode 100644
-index 000000000000..fa6ea8e5c46b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common properties for the multicolor LED class.
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+
-+description: |
-+  Bindings for multi color LEDs show how to describe current outputs of
-+  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-+  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-+  modules. This is achieved by adding multi-led nodes layer to the
-+  monochrome LED bindings.
-+  The nodes and properties defined in this document are unique to the multicolor
-+  LED class.  Common LED nodes and properties are inherited from the common.txt
-+  within this documentation directory.
-+
-+properties:
-+  color:
-+    description: |
-+      For multicolor LED support this property should be defined as
-+      LED_COLOR_ID_MULTI and further definition can be found in
-+      include/linux/leds/common.h.
-+
-+required:
-+  - color
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@14 {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          compatible = "ti,lp5009";
-+          reg = <0x14>;
-+
-+          multi-led@1 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <1>;
-+            color = <LED_COLOR_ID_MULTI>;
-+            function = LED_FUNCTION_CHARGING;
-+
-+            led@0 {
-+              reg = <0>;
-+              color = <LED_COLOR_ID_RED>;
-+            };
-+
-+            led@1 {
-+              reg = <1>;
-+              color = <LED_COLOR_ID_GREEN>;
-+            };
-+
-+            led@2 {
-+              reg = <2>;
-+              color = <LED_COLOR_ID_BLUE>;
-+            };
-+          };
-+        };
-+    };
-+
-+additionalProperties: false
-+...
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f1f718dbe0f8..846248a0693d 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
- 	[LED_COLOR_ID_VIOLET] = "violet",
- 	[LED_COLOR_ID_YELLOW] = "yellow",
- 	[LED_COLOR_ID_IR] = "ir",
-+	[LED_COLOR_ID_MULTI] = "multicolor",
- };
- EXPORT_SYMBOL_GPL(led_colors);
- 
-diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-index 0ce7dfc00dcb..a463ce6a8794 100644
---- a/include/dt-bindings/leds/common.h
-+++ b/include/dt-bindings/leds/common.h
-@@ -30,7 +30,8 @@
- #define LED_COLOR_ID_VIOLET	5
- #define LED_COLOR_ID_YELLOW	6
- #define LED_COLOR_ID_IR		7
--#define LED_COLOR_ID_MAX	8
-+#define LED_COLOR_ID_MULTI	8
-+#define LED_COLOR_ID_MAX	9
- 
- /* Standard LED functions */
- /* Keyboard LEDs, usually it would be input4::capslock etc. */
--- 
-2.25.1
 
+>                  __u32 trans_len;
+>          };
+>  
+> +12. KVM_SEV_SEND_FINISH
+> +------------------------
+> +
+> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
+> +issued by the hypervisor to delete the encryption context.
+> +
+> +Returns: 0 on success, -negative on error
+> +
+>  References
+>  ==========
+>  
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 0c92c16505ab..81d661706d31 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -1153,6 +1153,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  	return ret;
+>  }
+>  
+> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_send_finish *data;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->handle = sev->handle;
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
+> +
+> +	kfree(data);
+> +	return ret;
+> +}
+> +
+>  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -1203,6 +1223,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  	case KVM_SEV_SEND_UPDATE_DATA:
+>  		r = sev_send_update_data(kvm, &sev_cmd);
+>  		break;
+> +	case KVM_SEV_SEND_FINISH:
+> +		r = sev_send_finish(kvm, &sev_cmd);
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		goto out;
+> -- 
+> 2.17.1
+> 
