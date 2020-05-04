@@ -2,245 +2,101 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868ABC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A980FC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7EB20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8531021655
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:13:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CmgNscbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgEDKKj convert rfc822-to-8bit (ORCPT
+        id S1727893AbgEDKNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
+        Mon, 4 May 2020 06:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726531AbgEDKKi (ORCPT
+        by vger.kernel.org with ESMTP id S1726531AbgEDKNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:10:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2478EC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 03:10:38 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVY3U-0007Sj-N1; Mon, 04 May 2020 12:10:32 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVY3R-00029q-Ko; Mon, 04 May 2020 12:10:29 +0200
-Date:   Mon, 4 May 2020 12:10:29 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     netdev@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        kernel@pengutronix.de, David Jander <david@protonic.nl>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Herber <christian.herber@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v5 1/2] ethtool: provide UAPI for PHY master/slave
- configuration.
-Message-ID: <20200504101029.zt3eu7jsywdiq4tu@pengutronix.de>
-References: <20200504071214.5890-1-o.rempel@pengutronix.de>
- <20200504071214.5890-2-o.rempel@pengutronix.de>
- <20200504091044.GA8237@lion.mk-sys.cz>
+        Mon, 4 May 2020 06:13:41 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E24C061A0E;
+        Mon,  4 May 2020 03:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HYr4jMG5Fx8z45ehq19JE5BB1pRtcqVpSSdsC2AjlhY=; b=CmgNscbfFaxys2H8sNgXEM5V5
+        OrhtGd/K3U7qiBY+teHpl2a1hL2ClrCNSK0sQ04G4yVN41oGPagC7WvFygQF0xfJGOBTvS/+MI0p0
+        Q9II8asQ3BfG/CVqj852mZXqJiIsyDfRVdauhJa3EYXQXpfubYmDrAsGoSxell4VJsZG6SMjFOHrE
+        1kW50x39XaHBdZBlGFqP0HMSqw8aDCiuEqcDlyZLgZnUbRXpuX1JnpuI9bYkv96s685LjcSnUkrPl
+        QDTcaDO8UONoJKSPLQnyE061fP56muBZ1+oYCkIOlTtTAQdq7vUzag30rgIOVM0v3WDHa0DD9BOvJ
+        6uTFYxwwA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:35838)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jVY6L-0003zf-FE; Mon, 04 May 2020 11:13:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jVY6K-00063o-Fg; Mon, 04 May 2020 11:13:28 +0100
+Date:   Mon, 4 May 2020 11:13:28 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Greg KH <greg@kroah.com>
+Cc:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch include request] ARM: dts: imx6qdl-sr-som-ti: indicate
+ powering off wifi is safe
+Message-ID: <20200504101328.GC1551@shell.armlinux.org.uk>
+References: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
+ <20200504095832.GA1277837@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200504091044.GA8237@lion.mk-sys.cz>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:42:37 up 171 days,  1:01, 187 users,  load average: 0.16, 0.08,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200504095832.GA1277837@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 11:10:44AM +0200, Michal Kubecek wrote:
-> On Mon, May 04, 2020 at 09:12:13AM +0200, Oleksij Rempel wrote:
-> > This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
-> > auto-negotiation support, we needed to be able to configure the
-> > MASTER-SLAVE role of the port manually or from an application in user
-> > space.
+On Mon, May 04, 2020 at 11:58:32AM +0200, Greg KH wrote:
+> On Fri, May 01, 2020 at 09:23:49PM +0100, Miguel Borges de Freitas wrote:
+> > Dear all,
 > > 
-> > The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
-> > force MASTER or SLAVE role. See IEEE 802.3-2018:
-> > 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
-> > 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
-> > 40.5.2 MASTER-SLAVE configuration resolution
-> > 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
-> > 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> > This is a request to backport b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10
+> > (Arm: dts:  imx6qdl-sr-som-ti: indicate powering off wifi is safe),
+> > already in Linus tree
+> > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi?h=v5.7-rc3&id=b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10)
+> > to LTS kernel 5.4 and to stable 5.6.8.
 > > 
-> > The MASTER-SLAVE role affects the clock configuration:
+> > Reasoning:
 > > 
-> > -------------------------------------------------------------------------------
-> > When the  PHY is configured as MASTER, the PMA Transmit function shall
-> > source TX_TCLK from a local clock source. When configured as SLAVE, the
-> > PMA Transmit function shall source TX_TCLK from the clock recovered from
-> > data stream provided by MASTER.
+> > Changes to the wlcore driver during Kernel 5.x development, made the
+> > Cubox-i with the IMX SOM v1.5 (which includes.a TI Wilink 8 wifi
+> > chipset) not power the wireless interface on boot leaving it
+> > completely unusable. This happens since at least kernel 5.3 (older one
+> > I tested) and affects the current stable and LTS latest kernels. The
+> > linked commit, already in linux mainline, restores the wifi
+> > functionality.
 > > 
-> > iMX6Q                     KSZ9031                XXX
-> > ------\                /-----------\        /------------\
-> >       |                |           |        |            |
-> >  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
-> >       |<--- 125 MHz ---+-<------/  |        | \          |
-> > ------/                \-----------/        \------------/
-> >                                                ^
-> >                                                 \-TX_TCLK
-> > 
-> > -------------------------------------------------------------------------------
-> > 
-> > Since some clock or link related issues are only reproducible in a
-> > specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
-> > to provide generic (not 100BASE-T1 specific) interface to the user space
-> > for configuration flexibility and trouble shooting.
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> > index ac2784192472f..42dda9d2082ee 100644
-> > --- a/drivers/net/phy/phy_device.c
-> > +++ b/drivers/net/phy/phy_device.c
-> > @@ -1768,6 +1768,90 @@ int genphy_setup_forced(struct phy_device *phydev)
-> >  }
-> >  EXPORT_SYMBOL(genphy_setup_forced);
-> >  
-> > +static int genphy_setup_master_slave(struct phy_device *phydev)
-> > +{
-> > +	u16 ctl = 0;
-> > +
-> > +	if (!phydev->is_gigabit_capable)
-> > +		return 0;
+> > Thanks in advance,
 > 
-> Why did you revert to silently ignoring requests in this case?
+> Now queued up, thanks.
 
-genphy_setup_forced() is called by __genphy_config_aneg() and this can
-be called by a PHY driver after configuring master slave mode locally by
-PHY driver. See tja11xx patch. Same can be potentially done in the phy/realtek.c
-driver.
+Just be aware that there's a good reason the patch was never marked
+with a Fixes: tag - that is because no one seems to know exactly which
+commit broke it, and hence it hasn't been clear which stable kernels
+it should be backported to.
 
-Currently my imagination is not caffeanized enough to
-provide a better solution. Do you have ideas?
-
-> On the
-> other hand, we might rather want to do a more generic check which would
-> handle all drivers not supporting the feature, see below.
-
-> [...]
-> > @@ -287,14 +308,37 @@ static bool ethnl_auto_linkmodes(struct ethtool_link_ksettings *ksettings,
-> >  			     __ETHTOOL_LINK_MODE_MASK_NBITS);
-> >  }
-> >  
-> > +static int ethnl_validate_master_slave_cfg(u8 cfg)
-> > +{
-> > +	switch (cfg) {
-> > +	case MASTER_SLAVE_CFG_MASTER_PREFERRED:
-> > +	case MASTER_SLAVE_CFG_SLAVE_PREFERRED:
-> > +	case MASTER_SLAVE_CFG_MASTER_FORCE:
-> > +	case MASTER_SLAVE_CFG_SLAVE_FORCE:
-> > +		return 1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> Nitpick: bool would be more appropriate as return value.
-
-ok
-
-> > +
-> >  static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
-> >  				  struct ethtool_link_ksettings *ksettings,
-> >  				  bool *mod)
-> >  {
-> >  	struct ethtool_link_settings *lsettings = &ksettings->base;
-> >  	bool req_speed, req_duplex;
-> > +	const struct nlattr *master_slave_cfg;
-> >  	int ret;
-> >  
-> > +	master_slave_cfg = tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG];
-> > +	if (master_slave_cfg) {
-> > +		u8 cfg = nla_get_u8(master_slave_cfg);
-> > +		if (!ethnl_validate_master_slave_cfg(cfg)) {
-> > +			GENL_SET_ERR_MSG(info, "LINKMODES_MASTER_SLAVE_CFG contains not valid value");
-> > +			return -EOPNOTSUPP;
-> > +		}
-> > +	}
-> 
-> Please set also the "bad attribute" in extack, it may help
-> non-interactive clients.
-> 
-> Also, it would be nice to report error if client wants to set master/slave but
-> driver does not support it. How about this?
-> 
-> 	if (master_slave_cfg) {
-> 		u8 cfg = nla_get_u8(master_slave_cfg);
-> 
-> 		if (lsettings->master_slave_cfg == MASTER_SLAVE_CFG_UNSUPPORTED) {
-> 			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
-> 					    "master/slave configuration not supported by device");
-> 			return -EOPNOTSUPP;
-> 		}
-> 		if (!ethnl_validate_master_slave_cfg(cfg)) {
-> 			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
-> 					    "master/slave value is invalid");
-> 			return -EOPNOTSUPP;
-> 		}
-> 	}
-> 
-
-looks good. thx!
-
-> 
-> Do you plan to allow handling master/slave also via ioctl()?
-
-no.
-
-> If yes, we should
-> also add the sanity checks to ioctl code path. If not, we should prevent
-> passing non-zero values from userspace to driver.
-
-What is the best place to add this sanity check?
-
-> Other than this, the patch looks good to me.
-> 
-> Michal
-> 
-> >  	*mod = false;
-> >  	req_speed = tb[ETHTOOL_A_LINKMODES_SPEED];
-> >  	req_duplex = tb[ETHTOOL_A_LINKMODES_DUPLEX];
-> > @@ -311,6 +355,7 @@ static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
-> >  			 mod);
-> >  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
-> >  			mod);
-> > +	ethnl_update_u8(&lsettings->master_slave_cfg, master_slave_cfg, mod);
-> >  
-> >  	if (!tb[ETHTOOL_A_LINKMODES_OURS] && lsettings->autoneg &&
-> >  	    (req_speed || req_duplex) &&
-> > -- 
-> > 2.26.2
-> > 
-> 
-> 
+So, it's good that someone has put up this backport request.
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
