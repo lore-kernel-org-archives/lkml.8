@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A489C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB0FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BBD420663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9AF20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615977;
-	bh=sKd4IOOd+1Slt8yImQ9WOxQZC4UE/kImsmCfjq/0hBQ=;
+	s=default; t=1588615982;
+	bh=EYGiP80ckm0hgyhK37euN31ArZTwB5jDope/198K8Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tHUfXGgUAA/IuyQbsRnKbUfxtgFlpFuMaUnE/h+ikW2xBsX2iARZk1FGq+LYtvNgi
-	 ao6E9rT7dPuTKqgABWSxJcemxRQMB0pJBqBqyMwnVY69tUF02b30UIrsWdKKdsFQfv
-	 cfRvjBgeLOHJzXy0qqug/HOj2J7ZOxNCfrgmZOcw=
+	b=Ws7FyV5Bx3ih454XH/miGg0MqbeWpRsT4FUPK5xtv7/2q+qyNZ23klNuGoKegNmfM
+	 /bvQ3DFK8Dh95QmZRZZXkDuEecKwQjAxGphQsChoO+BkOJ5Fu2gstv6qMp6vxxyNy3
+	 CwyYEijD0FVRfAMQq9YqI5rnFh1LCrbByAJC+Suw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbgEDSM4 (ORCPT
+        id S1732307AbgEDSNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731284AbgEDSCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:09 -0400
+        id S1731250AbgEDSB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF61F20721;
-        Mon,  4 May 2020 18:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D52552073B;
+        Mon,  4 May 2020 18:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615328;
-        bh=sKd4IOOd+1Slt8yImQ9WOxQZC4UE/kImsmCfjq/0hBQ=;
+        s=default; t=1588615316;
+        bh=EYGiP80ckm0hgyhK37euN31ArZTwB5jDope/198K8Bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUlNZuPdXQQdTDr5sWeDdhS9wdSACuCEuMMecZ4efz6NjrB5QOq3E3IeVOEJLTwyd
-         kBHtPByFTQpBoH+LEg0Gu+FF9oiBC5SRgd9SC0E7ZhLBioVK7GXs6QtUYoSz2kgpUO
-         k/dorYnfnYPQOP3mxl5BZDIdVL0zLEVU4vQRnfVM=
+        b=hnugWNUHORbl6ZRBUQ4CtB/4f12LQhaT0E0Yw0D2iTg9YAwMI6oZYFfPvLtzjaEqD
+         9emEs+09kYvqkaHq0r0N+prDaUZvxDEFntrgSWIAUWJwwuP8aFGaHTCmXXnTHHUBeC
+         +E/2jWappszWqGP2Sc/AhErG9wvqXUFsKrlmS6Fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 32/37] mmc: cqhci: Avoid false "cqhci: CQE stuck on" by not open-coding timeout loop
-Date:   Mon,  4 May 2020 19:57:45 +0200
-Message-Id: <20200504165451.529374240@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 4.19 27/37] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon,  4 May 2020 19:57:40 +0200
+Message-Id: <20200504165451.248823635@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,85 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit b1ac62a7ac386d76968af5f374a4a7a82a35fe31 upstream.
+commit 7648f939cb919b9d15c21fff8cd9eba908d595dc upstream.
 
-Open-coding a timeout loop invariably leads to errors with handling
-the timeout properly in one corner case or another.  In the case of
-cqhci we might report "CQE stuck on" even if it wasn't stuck on.
-You'd just need this sequence of events to happen in cqhci_off():
+nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acls
+that differ from the acl originally passed into nfs3_set_acl.
 
-1. Call ktime_get().
-2. Something happens to interrupt the CPU for > 100 us (context switch
-   or interrupt).
-3. Check time and; set "timed_out" to true since > 100 us.
-4. Read CQHCI_CTL.
-5. Both "reg & CQHCI_HALT" and "timed_out" are true, so break.
-6. Since "timed_out" is true, falsely print the error message.
-
-Rather than fixing the polling loop, use readx_poll_timeout() like
-many people do.  This has been time tested to handle the corner cases.
-
-Fixes: a4080225f51d ("mmc: cqhci: support for command queue enabled host")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200413162717.1.Idece266f5c8793193b57a1ddb1066d030c6af8e0@changeid
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/cqhci.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ fs/nfs/nfs3acl.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
---- a/drivers/mmc/host/cqhci.c
-+++ b/drivers/mmc/host/cqhci.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/highmem.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/dma-mapping.h>
- #include <linux/slab.h>
-@@ -351,12 +352,16 @@ static int cqhci_enable(struct mmc_host
- /* CQHCI is idle and should halt immediately, so set a small timeout */
- #define CQHCI_OFF_TIMEOUT 100
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -255,37 +255,45 @@ int nfs3_proc_setacls(struct inode *inod
  
-+static u32 cqhci_read_ctl(struct cqhci_host *cq_host)
-+{
-+	return cqhci_readl(cq_host, CQHCI_CTL);
-+}
-+
- static void cqhci_off(struct mmc_host *mmc)
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
  {
- 	struct cqhci_host *cq_host = mmc->cqe_private;
--	ktime_t timeout;
--	bool timed_out;
- 	u32 reg;
-+	int err;
+-	struct posix_acl *alloc = NULL, *dfacl = NULL;
++	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
+ 	int status;
  
- 	if (!cq_host->enabled || !mmc->cqe_on || cq_host->recovery_halt)
- 		return;
-@@ -366,15 +371,9 @@ static void cqhci_off(struct mmc_host *m
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = alloc;
+ 			break;
  
- 	cqhci_writel(cq_host, CQHCI_HALT, CQHCI_CTL);
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl = acl;
+-			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
++			alloc = get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = acl;
++			acl = alloc;
+ 			break;
+ 		}
+ 	}
  
--	timeout = ktime_add_us(ktime_get(), CQHCI_OFF_TIMEOUT);
--	while (1) {
--		timed_out = ktime_compare(ktime_get(), timeout) > 0;
--		reg = cqhci_readl(cq_host, CQHCI_CTL);
--		if ((reg & CQHCI_HALT) || timed_out)
--			break;
--	}
--
--	if (timed_out)
-+	err = readx_poll_timeout(cqhci_read_ctl, cq_host, reg,
-+				 reg & CQHCI_HALT, 0, CQHCI_OFF_TIMEOUT);
-+	if (err < 0)
- 		pr_err("%s: cqhci: CQE stuck on\n", mmc_hostname(mmc));
- 	else
- 		pr_debug("%s: cqhci: CQE off\n", mmc_hostname(mmc));
+ 	if (acl == NULL) {
+-		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl = alloc;
+ 	}
+ 	status = __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl != orig)
++		posix_acl_release(acl);
++	if (dfacl != orig)
++		posix_acl_release(dfacl);
+ 	return status;
+ 
+ fail:
+-	return PTR_ERR(alloc);
++	status = PTR_ERR(alloc);
++	goto out;
+ }
+ 
+ const struct xattr_handler *nfs3_xattr_handlers[] = {
 
 
