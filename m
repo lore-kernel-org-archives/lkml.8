@@ -2,168 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DFBC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24092C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14941206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EB2206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="hQy9jhSS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EQUz5wlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgEDPF7 (ORCPT
+        id S1729487AbgEDPGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726551AbgEDPF6 (ORCPT
+        Mon, 4 May 2020 11:06:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42000 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728437AbgEDPGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:05:58 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD41C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 08:05:58 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id l18so3719598qtp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 08:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W9SfBfk/u14rl2gH53J+GCo3+J3XKQlUdBUevAtgsvg=;
-        b=hQy9jhSSW/Ku+IvObuEN+74pDIyl494WQ3X87xYprHIOt8NXWmSVnGSc3RT3eOD2BM
-         3L5xnD/n3wrksd/OOtLeNfEtW7pEC5YybNtOI5aZtP26PhWfzFuxE5G3KV+w6wyK6S1N
-         OllFS1VbcAfROvmzpJVr9vhxOACAm7jjtxvSjhB2z8VG0ZBsCdSaZ7L85inRw7H7OQaj
-         ZpjhjI2MawebL+SsjUYZG//o1Xv5fTACocobMH7y7ACBlLqayobAQW1oQpV0v0bVjHV8
-         n8E3fYv7EF16OQ7kk0VL8eW73lDAKGSlcZkbVuhFSHJb+NmZQ3YGvoM1uUzYSxmcPVy1
-         YILQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W9SfBfk/u14rl2gH53J+GCo3+J3XKQlUdBUevAtgsvg=;
-        b=Z6MNOh+KkCUEtT58SKcRJtf64Wr7xVXI27oyc2KzwtjLBl1I2RqwtDRX4tmEDJl9ik
-         XesoisJ/aZVSs3+4qw6OjikWogJ+q24ltx7O/vRB7QbjlrH7NyhbRL9FSoyF8BbtLXKC
-         ky4/OHTiydVl+AKsAyWayxiOfsKb3DFRjJAXPszGSe88f2v4cGw2k065vsQa121nzOY6
-         nUfMYAAPr1UPz06QriJnPIoMCfs8DYZ3IHfEKR5KkiNqq4ATPqFjkMyCySn76Y24V+5S
-         UEYf0ID1ToiayD1RPTMbJshc+DsNr7EFT6rzKbmzRZEj/x7hhpa6iInGRoRgnfh4sGSY
-         MI3A==
-X-Gm-Message-State: AGi0PuZieaYnXZ3mj28UptjjFfxMG3K+ghEXoN9tzIvYAn5JreMCU6Aj
-        /5dqDCuUAF+ieOWjA33pztvacA==
-X-Google-Smtp-Source: APiQypL5Sg4OJm1P2mb7CDrW9ftmb7zH1hc234vBHyttVYZLd71RZJd513T2KlxdS697uXkd6I+R1A==
-X-Received: by 2002:ac8:6f6c:: with SMTP id u12mr219677qtv.103.1588604757260;
-        Mon, 04 May 2020 08:05:57 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 193sm5659558qkl.42.2020.05.04.08.05.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 08:05:56 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jVcfM-0000LM-1C; Mon, 04 May 2020 12:05:56 -0300
-Date:   Mon, 4 May 2020 12:05:56 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, peterx@redhat.com
-Subject: Re: [PATCH 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Message-ID: <20200504150556.GX26002@ziepe.ca>
-References: <158836742096.8433.685478071796941103.stgit@gimli.home>
- <158836915917.8433.8017639758883869710.stgit@gimli.home>
- <20200501232550.GP26002@ziepe.ca>
- <20200504082055.0faeef8b@x1.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504082055.0faeef8b@x1.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 4 May 2020 11:06:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044ElhAv024581;
+        Mon, 4 May 2020 15:04:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=t0Jfg7lDKwZXvqE1qLiEmLz1WGtmClHHRzVrFx22SYw=;
+ b=EQUz5wlBjxHzin0fdQMWm/gLowQ2XNmEkmnv0kG6v61Vx/UA8l03x7T8NXYgfqltQL0h
+ G7UKvBCFfdx9GBmEIcRwqykfBQfj+MQIrGjZzdTgYYMpEIFcHO8ppfwx1Vrfyh2Bku2T
+ ZOh/dhDH84LssVuz4kj2OSRr7agAIrZ/68mWqbfKB/F2mf98jKz46lOaP0cQ+FbZgeuc
+ JnXcZIyr4iwKlHhTMXF3D6wlG01LiKiCvl4yEsJ1Q8Qv1/fktoEhYD/GD8fVmIWFlwqY
+ ctum47iV/E7YV5Hx/gusvhXqIw4cXv2zdCHqlBkC2X4NGw/6LxHkvrTDKakTfbPpcUpo /A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 30s1gmy9rg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 15:04:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044ElNYI034147;
+        Mon, 4 May 2020 15:04:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 30sjnaws5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 15:04:54 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044F4rcu028874;
+        Mon, 4 May 2020 15:04:53 GMT
+Received: from linux-1.home.com (/10.175.9.166)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 08:04:53 -0700
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
+        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
+        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
+        kuzuno@gmail.com, mgross@linux.intel.com,
+        alexandre.chartre@oracle.com
+Subject: [RFC v4][PATCH part-3 12/14] asidrv/asicmd: Add more test sequences for testing ASI
+Date:   Mon,  4 May 2020 17:02:33 +0200
+Message-Id: <20200504150235.12171-13-alexandre.chartre@oracle.com>
+X-Mailer: git-send-email 2.18.2
+In-Reply-To: <20200504150235.12171-1-alexandre.chartre@oracle.com>
+References: <20200504150235.12171-1-alexandre.chartre@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 08:20:55AM -0600, Alex Williamson wrote:
-> On Fri, 1 May 2020 20:25:50 -0300
-> Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> 
-> > On Fri, May 01, 2020 at 03:39:19PM -0600, Alex Williamson wrote:
-> > > Rather than calling remap_pfn_range() when a region is mmap'd, setup
-> > > a vm_ops handler to support dynamic faulting of the range on access.
-> > > This allows us to manage a list of vmas actively mapping the area that
-> > > we can later use to invalidate those mappings.  The open callback
-> > > invalidates the vma range so that all tracking is inserted in the
-> > > fault handler and removed in the close handler.
-> > > 
-> > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > >  drivers/vfio/pci/vfio_pci.c         |   76 ++++++++++++++++++++++++++++++++++-
-> > >  drivers/vfio/pci/vfio_pci_private.h |    7 +++
-> > >  2 files changed, 81 insertions(+), 2 deletions(-)  
-> > 
-> > > +static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-> > > +{
-> > > +	struct vm_area_struct *vma = vmf->vma;
-> > > +	struct vfio_pci_device *vdev = vma->vm_private_data;
-> > > +
-> > > +	if (vfio_pci_add_vma(vdev, vma))
-> > > +		return VM_FAULT_OOM;
-> > > +
-> > > +	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> > > +			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
-> > > +		return VM_FAULT_SIGBUS;
-> > > +
-> > > +	return VM_FAULT_NOPAGE;
-> > > +}
-> > > +
-> > > +static const struct vm_operations_struct vfio_pci_mmap_ops = {
-> > > +	.open = vfio_pci_mmap_open,
-> > > +	.close = vfio_pci_mmap_close,
-> > > +	.fault = vfio_pci_mmap_fault,
-> > > +};
-> > > +
-> > >  static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> > >  {
-> > >  	struct vfio_pci_device *vdev = device_data;
-> > > @@ -1357,8 +1421,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> > >  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> > >  	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
-> > >  
-> > > -	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> > > -			       req_len, vma->vm_page_prot);
-> > > +	/*
-> > > +	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
-> > > +	 * change vm_flags within the fault handler.  Set them now.
-> > > +	 */
-> > > +	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-> > > +	vma->vm_ops = &vfio_pci_mmap_ops;  
-> > 
-> > Perhaps do the vfio_pci_add_vma & remap_pfn_range combo here if the
-> > BAR is activated ? That way a fully populated BAR is presented in the
-> > common case and avoids taking a fault path?
-> > 
-> > But it does seem OK as is
-> 
-> Thanks for reviewing.  There's also an argument that we defer
-> remap_pfn_range() until the device is actually touched, which might
-> reduce the startup latency.
+Add more options to the asicmd command to test access to map
+or unmapped memory buffer, interrupt, NMI, scheduling while
+using ASI.
 
-But not startup to a functional VM as that will now have to take the
-slower fault path.
+Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+---
+ drivers/staging/asi/asicmd.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> It's also a bit inconsistent with the vm_ops.open() path where I
-> can't return error, so I can't call vfio_pci_add_vma(), I can only
-> zap the vma so that the fault handler can return an error if
-> necessary.
+diff --git a/drivers/staging/asi/asicmd.c b/drivers/staging/asi/asicmd.c
+index 4d6a347a6d29..849fa09423e6 100644
+--- a/drivers/staging/asi/asicmd.c
++++ b/drivers/staging/asi/asicmd.c
+@@ -26,6 +26,20 @@ struct asidrv_test {
+ struct asidrv_test test_list[] = {
+ 	{ "nop", ASIDRV_SEQ_NOP, true,
+ 	  "enter/exit ASI and nothing else" },
++	{ "mem", ASIDRV_SEQ_MEM, false,
++	  "enter ASI and accessed an unmapped buffer" },
++	{ "memmap", ASIDRV_SEQ_MEMMAP, true,
++	  "enter ASI and accessed a mapped buffer" },
++	{ "intr", ASIDRV_SEQ_INTERRUPT, true,
++	  "receive an interruption while running with ASI" },
++	{ "nmi", ASIDRV_SEQ_NMI, true,
++	  "receive a NMI while running with ASI" },
++	{ "intrnmi", ASIDRV_SEQ_INTRNMI, true,
++	  "receive a NMI in an interrupt received while running with ASI" },
++	{ "sched", ASIDRV_SEQ_SCHED, true,
++	  "call schedule() while running with ASI" },
++	{ "printk", ASIDRV_SEQ_PRINTK, true,
++	  "call printk() while running with ASI" },
+ };
+ 
+ #define	TEST_LIST_SIZE	(sizeof(test_list) / sizeof(test_list[0]))
+-- 
+2.18.2
 
-open could allocate memory so the zap isn't needed. If allocation
-fails then do the zap and take the slow path.
-
-> handler.  If there's a good reason to do otherwise, I can make the
-> change, but I doubt I'd have encountered the dma mapping of an
-> unfaulted vma issue had I done it this way, so maybe there's a test
-> coverage argument as well.  Thanks,
-
-This test is best done by having one thread disable the other bar
-while another thread is trying to map it
-
-Jason
