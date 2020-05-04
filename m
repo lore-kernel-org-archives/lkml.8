@@ -2,150 +2,99 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9092C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0A8C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67BB206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1F6206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TNRnNkT9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DRtwU0Tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgEDIwp (ORCPT
+        id S1728197AbgEDIx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:52:45 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59540 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgEDIwo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:52:44 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0448qbRg096817;
-        Mon, 4 May 2020 03:52:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588582357;
-        bh=oLNWH+X1hs3YnhUrSb8y01crQB5nXm4tFtkF+k5FD4A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TNRnNkT9hx70ILqFW/Q7mk9b2zIIubTuhpnHg7oChBKB6JrodiPD96P54cRiqLSUE
-         gPYnzX2Xshh63zGJWQNXqM3H3B0jVK4jcI+vC5IEiov/yewuoj/wEIU+EQoaxBejqI
-         5ERCtICIgMrEdTFnUsu6h8jC8mdIefkBq39C+Z+0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0448qa3W047269;
-        Mon, 4 May 2020 03:52:36 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 03:52:36 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 03:52:36 -0500
-Received: from [10.250.150.106] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0448qVrN036997;
-        Mon, 4 May 2020 03:52:32 -0500
-Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
- ID property from DT
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-5-kishon@ti.com>
- <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
-Date:   Mon, 4 May 2020 14:22:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 04:53:29 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41553 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726515AbgEDIx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 04:53:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49FxTg1kpfz9sP7;
+        Mon,  4 May 2020 18:53:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588582407;
+        bh=NIf3PRFXdOizXjV+9ztZcgWcYX+AbXqSiJ8swGG6MtI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DRtwU0Tr/1+6SFdC/evgnZ0o9s+hkpWnDhDSJROzYmAi5GFOprKtjBTbAICvKQqu8
+         /aYwtpFewL6zTo21MMmRbnWA7AJ9QRx+wA/MttKCQ6eAJWLV4O8si9J58U69v6XIzF
+         /GFZ5WP/iCk7XqBLrajHPAjwjlT+OJL4sqZD7Jcf0eGpMzjWE4ogesXoL49zUVKXGy
+         wNvrejf3wJlQYEKAU5ihgjcN6gqQgd/1F0sFCEPag31s+zSKP2gRh2YwknHCrZWd8V
+         bevpG2TunXRMvdRi7Ttuew8ImevGSTzFKDIuHl9edQ1AC8KhfdnUD0cPX6gL+eMgwg
+         8Nt7W7oL4eLIA==
+Date:   Mon, 4 May 2020 18:53:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Subject: linux-next: Fixes tag needs some work in the slave-dma-fixes tree
+Message-ID: <20200504185326.6c50e387@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; boundary="Sig_/jbBtHwd1qYGSuNnnzHj32GM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+--Sig_/jbBtHwd1qYGSuNnnzHj32GM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/1/2020 8:41 PM, Lorenzo Pieralisi wrote:
-> On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
->> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
->> defines both Vendor ID and Device ID to be 32-bits. Fix
->> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
->> properties from device tree.
->>
->> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
->>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
->>  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> I don't see how you would use a 32-bit value for a 16-bit register so
-> certainly the struct cdns_pcie_rc fields size is questionable anyway.
-> 
-> I *assume* you are referring to 4.1.2.1 and the property list
-> encoded as "encode-int".
-> 
-> I would like to get RobH's opinion on this - I don't know myself
-> whether the PCI OF bindings you added are still relevant and how
-> they should be interpreted.
+Hi all,
 
-This change was made due to RobH's comment below [1]
+In commit
 
-[1] ->
-https://lore.kernel.org/r/CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com/
+  c76d6569de67 ("dmaengine: owl: Use correct lock in owl_dma_get_pchan()")
 
-Thanks
-Kishon
+Fixes tag
 
-> 
-> Thanks
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 8f72967f298f..31e67c9c88cf 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  	}
->>  
->>  	rc->vendor_id = 0xffff;
->> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
->> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
->>  
->>  	rc->device_id = 0xffff;
->> -	of_property_read_u16(np, "device-id", &rc->device_id);
->> +	of_property_read_u32(np, "device-id", &rc->device_id);
->>  
->>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
->>  	pcie->reg_base = devm_ioremap_resource(dev, res);
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index 6bd89a21bb1c..df14ad002fe9 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
->>  	struct resource		*bus_range;
->>  	void __iomem		*cfg_base;
->>  	u32			no_bar_nbits;
->> -	u16			vendor_id;
->> -	u16			device_id;
->> +	u32			vendor_id;
->> +	u32			device_id;
->>  };
->>  
->>  /**
->> -- 
->> 2.17.1
->>
+  Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+Also, please keep all the commit message tags together at the end of
+the commit message.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/jbBtHwd1qYGSuNnnzHj32GM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6v2AYACgkQAVBC80lX
+0GxA9Qf/dxS6yYyPueidIeQvXpThibMk/dV0ahIhtLZgUngL5+DTKZxywga1MERS
+iVirG7jQtF4FctNhK+SLOzMWYE36g4yNncevjvl1YwvKydBs6M+SjlAP0AsUTONv
+5eguBZTnb8lUSHTEHQy90atdM9Z4Ylzlb8B1huxlpJ2esZ8wX+AeGQHg9hmn5ff/
+Wj9fR2X1uYAabdr+x115tlG8zm6yZNXEaP+s+ZZu4OWRK/wjK6+3eRvzDDl0cg/u
+nOeCyI8ei081Wd9PbFe6SeVqi+abscEPWGH+b1EvW/QrOZk/hbFgjKyQt/xtvshH
++UUohomECzwdcMh5jwnw46ayNFTW1w==
+=3jgx
+-----END PGP SIGNATURE-----
+
+--Sig_/jbBtHwd1qYGSuNnnzHj32GM--
