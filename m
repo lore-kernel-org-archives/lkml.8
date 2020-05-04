@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C21CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EB9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E5B20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6078620663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615997;
-	bh=PyIQ4kK76SdPKTkL4N7bmlzScORWQ5LQBKoJEDlI3Rc=;
+	s=default; t=1588616002;
+	bh=QJ0rWBAoFE5MoYuFJCDgwB55xyI0vhTojmmngfGzXCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wT3lRYD7tqbq0FsGZkc1l+9tm4VyxdWwznyMa2IDeYH/pE8j89JEQWvx1pnvLoK6+
-	 Hqk+XLts6rVWdHutieYBQUQFy7fMZqkrNHumU22lMOSNjjCejXScYpusdPaLa7MdEA
-	 Se3rQnWt72XBewVydaNKkWvvsx8FIKp0xgOfJxGo=
+	b=g4NgxBAOuW8Yz9j62JbBYvEbhApW/ilcxdqZedtgLmc07ASsWB+RIT31de3hdYD7E
+	 OcQrOLUWrBzzFtSU7hI1O2ZS1GEzGnK0B1USfiW7QDV2we1H8DEwyaZIfo+PeMmpsq
+	 L9Xtv/hog1+SNdexVg5O1etYOADkUyHhgWU+aBzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732175AbgEDSNQ (ORCPT
+        id S1732309AbgEDSNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731193AbgEDSBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:39 -0400
+        id S1730622AbgEDSBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2BA206B8;
-        Mon,  4 May 2020 18:01:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 748ED2073B;
+        Mon,  4 May 2020 18:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615299;
-        bh=PyIQ4kK76SdPKTkL4N7bmlzScORWQ5LQBKoJEDlI3Rc=;
+        s=default; t=1588615296;
+        bh=QJ0rWBAoFE5MoYuFJCDgwB55xyI0vhTojmmngfGzXCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erIAyu8CC901XdRictSRhuAAQcSVdbkdsoR7f1T3Xt6j65O1FQOrB4VY/WlGGtnZf
-         LjxtL4By+cAhoMhx3ekk8DHZl1X2s3MDCBagl0tosiQub6p5lhv6YB+D+Plf99tZ4R
-         tAUWWosg5RlFjqemKQVC+fVgBsPnhQ2CWEaCLcn8=
+        b=MDBM3vDHAkpZXJP9uUO3GK0FpZNTEJhpAJNxq8klCMpVAsBb3DWJvbmD1DydZboTA
+         S7n87alPdSI0fjopUafuPeCU117Lj+uLO9sMjaitEU6wRp6428N8GKwpkaNKX8awQE
+         yDPnIYPfImQLzv6MBfb5N6qNd/enPNWC75FydXnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 07/37] ALSA: usb-audio: Correct a typo of NuPrime DAC-10 USB ID
-Date:   Mon,  4 May 2020 19:57:20 +0200
-Message-Id: <20200504165449.465263927@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 06/37] ALSA: hda/realtek - Two front mics on a Lenovo ThinkCenter
+Date:   Mon,  4 May 2020 19:57:19 +0200
+Message-Id: <20200504165449.283669241@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -58,32 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 547d2c9cf4f1f72adfecacbd5b093681fb0e8b3e upstream.
+commit ef0b3203c758b6b8abdb5dca651880347eae6b8c upstream.
 
-The USB vendor ID of NuPrime DAC-10 is not 16b0 but 16d0.
+This new Lenovo ThinkCenter has two front mics which can't be handled
+by PA so far, so apply the fixup ALC283_FIXUP_HEADSET_MIC to change
+the location for one of the mics.
 
-Fixes: f656891c6619 ("ALSA: usb-audio: add more quirks for DSD interfaces")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200430124755.15940-1-tiwai@suse.de
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Link: https://lore.kernel.org/r/20200427030039.10121-1-hui.wang@canonical.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/quirks.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1385,7 +1385,7 @@ u64 snd_usb_interface_dsd_format_quirks(
- 
- 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
- 	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
--	case USB_ID(0x16b0, 0x06b2): /* NuPrime DAC-10 */
-+	case USB_ID(0x16d0, 0x06b2): /* NuPrime DAC-10 */
- 	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
- 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
- 	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6991,6 +6991,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1558, 0x8560, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1558, 0x8561, "System76 Gazelle (gaze14)", ALC269_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x1036, "Lenovo P520", ALC233_FIXUP_LENOVO_MULTI_CODECS),
++	SND_PCI_QUIRK(0x17aa, 0x1048, "ThinkCentre Station", ALC283_FIXUP_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x20f2, "Thinkpad SL410/510", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x215e, "Thinkpad L512", ALC269_FIXUP_SKU_IGNORE),
+ 	SND_PCI_QUIRK(0x17aa, 0x21b8, "Thinkpad Edge 14", ALC269_FIXUP_SKU_IGNORE),
 
 
