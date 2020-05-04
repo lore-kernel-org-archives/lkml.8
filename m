@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22528C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E870CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025CF20746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30E624954
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VLbijv2h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VbcWCICn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgEDR27 (ORCPT
+        id S1730337AbgEDR3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52010 "EHLO
+        Mon, 4 May 2020 13:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730297AbgEDR25 (ORCPT
+        by vger.kernel.org with ESMTP id S1730297AbgEDR3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:28:57 -0400
+        Mon, 4 May 2020 13:29:00 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48171C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:28:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E767EC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=S9xgYPRZeAUT/6brILVPMeaqyLuWOvNMi6ClAEL63v4=; b=VLbijv2h/KMTMPfGPxqMPYYMin
-        /loKyUb5rERrzvYmQwjHteMrIddIE7dB29fuXxcRKksm55UQwlGL/+j0NAGF7lMRY5P79gFJOGwiQ
-        mhobhXFQXpKKqll4s3st1IEbfDXv52TWQsrCOmkWUdKnxPp3t+78aJzKHsegOBcgpznL8WhN3KEzR
-        WgwjShh336gbsH/ZyXZ6QgpfzChtBRieDiEKY2StRSzc9cANk67oLRakZeLR0+EaLhNuVC5b7kVJm
-        oz8rOhCZcxmv4FUndZj122aFGXSbToM2FOKBkmXPg85OXNUfNipLtvT0WzDzP5f7gqAICTLw7jO5L
-        jo00jitw==;
+        bh=wpAchFK0XXJsltEJOn1VsdwOaYFdXnj1scPu0+J57Lo=; b=VbcWCICn0hvvFdqlYReNYNLHGa
+        cQO/1GeA2/l8wGw3JUCCOVH14qmZTxXELlp1RRUJ9HGwIgbEZOB3UKXJ/wfrqW9WZmi1Z7/fFN3iD
+        Npz8RXGZJE1heGN4le9AvBj/xXGEdJuvh3BN6h5ed+xbuBXIFPyfWnvBrelcljcf3L+dmG1E+Bf14
+        CEmHh4Af0EXQYDuCXNmO1IPNjSngDmlepa5ldbkdY9uhEWhSaDdEkqKJuxug8nQEYjfyTHyZfA6Wu
+        DujHynL4FaYAbnx1z0PosIERkoMwlHIyaT0rQcvvZLoQQvRmTmPeKknJJGdBU2gYxeG4uhN0ID+EN
+        ocEpGuPw==;
 Received: from [2001:4bb8:18c:10bd:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVetk-0004Hq-Au; Mon, 04 May 2020 17:28:56 +0000
+        id 1jVetn-0004IE-2c; Mon, 04 May 2020 17:28:59 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     x86@kernel.org
 Cc:     Mike Travis <mike.travis@hpe.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/11] x86/uv: Simplify uv_send_IPI_one
-Date:   Mon,  4 May 2020 19:15:24 +0200
-Message-Id: <20200504171527.2845224-9-hch@lst.de>
+Subject: [PATCH 09/11] x86/uv: Remove _uv_hub_info_check
+Date:   Mon,  4 May 2020 19:15:25 +0200
+Message-Id: <20200504171527.2845224-10-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504171527.2845224-1-hch@lst.de>
 References: <20200504171527.2845224-1-hch@lst.de>
@@ -56,76 +56,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge two helpers only used by uv_send_IPI_one into the main function.
+Neither this functions not the helpers used to implement it are used
+anywhere in the kernel tree.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/include/asm/uv/uv_hub.h   | 20 --------------------
- arch/x86/kernel/apic/x2apic_uv_x.c | 19 ++++++++++++++-----
- 2 files changed, 14 insertions(+), 25 deletions(-)
+ arch/x86/include/asm/uv/uv_hub.h   | 14 --------------
+ arch/x86/kernel/apic/x2apic_uv_x.c |  6 ------
+ 2 files changed, 20 deletions(-)
 
 diff --git a/arch/x86/include/asm/uv/uv_hub.h b/arch/x86/include/asm/uv/uv_hub.h
-index a998e65e6a584..8a25d95cdf200 100644
+index 8a25d95cdf200..9eabd7e52fd15 100644
 --- a/arch/x86/include/asm/uv/uv_hub.h
 +++ b/arch/x86/include/asm/uv/uv_hub.h
-@@ -837,26 +837,6 @@ static inline void uv_set_cpu_scir_bits(int cpu, unsigned char value)
+@@ -219,20 +219,6 @@ static inline struct uv_hub_info_s *uv_cpu_hub_info(int cpu)
+ 	return (struct uv_hub_info_s *)uv_cpu_info_per(cpu)->p_uv_hub_info;
  }
  
- extern unsigned int uv_apicid_hibits;
--static unsigned long uv_hub_ipi_value(int apicid, int vector, int mode)
+-#define	UV_HUB_INFO_VERSION	0x7150
+-extern int uv_hub_info_version(void);
+-static inline int uv_hub_info_check(int version)
 -{
--	apicid |= uv_apicid_hibits;
--	return (1UL << UVH_IPI_INT_SEND_SHFT) |
--			((apicid) << UVH_IPI_INT_APIC_ID_SHFT) |
--			(mode << UVH_IPI_INT_DELIVERY_MODE_SHFT) |
--			(vector << UVH_IPI_INT_VECTOR_SHFT);
+-	if (uv_hub_info_version() == version)
+-		return 0;
+-
+-	pr_crit("UV: uv_hub_info version(%x) mismatch, expecting(%x)\n",
+-		uv_hub_info_version(), version);
+-
+-	BUG();	/* Catastrophic - cannot continue on unknown UV system */
 -}
+-#define	_uv_hub_info_check()	uv_hub_info_check(UV_HUB_INFO_VERSION)
 -
--static inline void uv_hub_send_ipi(int pnode, int apicid, int vector)
--{
--	unsigned long val;
--	unsigned long dmode = dest_Fixed;
--
--	if (vector == NMI_VECTOR)
--		dmode = dest_NMI;
--
--	val = uv_hub_ipi_value(apicid, vector, dmode);
--	uv_write_global_mmr64(pnode, UVH_IPI_INT, val);
--}
- 
  /*
-  * Get the minimum revision number of the hub chips within the partition.
+  * HUB revision ranges for each UV HUB architecture.
+  * This is a software convention - NOT the hardware revision numbers in
 diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index f1a0142e27319..3830538095e6a 100644
+index 3830538095e6a..8cf0e24cf8835 100644
 --- a/arch/x86/kernel/apic/x2apic_uv_x.c
 +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -588,12 +588,21 @@ static int uv_wakeup_secondary(int phys_apicid, unsigned long start_rip)
+@@ -415,12 +415,6 @@ static __initdata struct uv_gam_range_s		*_gr_table;
  
- static void uv_send_IPI_one(int cpu, int vector)
- {
--	unsigned long apicid;
--	int pnode;
-+	unsigned long apicid = per_cpu(x86_cpu_to_apicid, cpu);
-+	int pnode = uv_apicid_to_pnode(apicid);
-+	unsigned long dmode, val;
-+
-+	if (vector == NMI_VECTOR)
-+		dmode = dest_NMI;
-+	else
-+		dmode = dest_Fixed;
+ #define	SOCK_EMPTY	((unsigned short)~0)
  
--	apicid = per_cpu(x86_cpu_to_apicid, cpu);
--	pnode = uv_apicid_to_pnode(apicid);
--	uv_hub_send_ipi(pnode, apicid, vector);
-+	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
-+		((apicid | uv_apicid_hibits) << UVH_IPI_INT_APIC_ID_SHFT) |
-+		(dmode << UVH_IPI_INT_DELIVERY_MODE_SHFT) |
-+		(vector << UVH_IPI_INT_VECTOR_SHFT);
-+
-+	uv_write_global_mmr64(pnode, UVH_IPI_INT, val);
- }
+-extern int uv_hub_info_version(void)
+-{
+-	return UV_HUB_INFO_VERSION;
+-}
+-EXPORT_SYMBOL(uv_hub_info_version);
+-
+ /* Default UV memory block size is 2GB */
+ static unsigned long mem_block_size __initdata = (2UL << 30);
  
- static void uv_send_IPI_mask(const struct cpumask *mask, int vector)
 -- 
 2.26.2
 
