@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC00C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83921C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D81D2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F9E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yORRV0oY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b3WfzdZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbgEDPGd (ORCPT
+        id S1729541AbgEDPGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:06:33 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53160 "EHLO
+        Mon, 4 May 2020 11:06:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53364 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729511AbgEDPGd (ORCPT
+        with ESMTP id S1729055AbgEDPGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:06:33 -0400
+        Mon, 4 May 2020 11:06:45 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044EnCJ6024811;
-        Mon, 4 May 2020 15:06:11 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044En9fS024718;
+        Mon, 4 May 2020 15:06:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=3HTd6a/kkIIAOtF/XlS6dHGOCc3Mh+Pqrk2elGvT+Tk=;
- b=yORRV0oYlMSn935vfd2pC0Z1Mje0vWHKOJTjBC+EdVNPPXcRUdvCTawt3JP3GLhN3AHD
- Hhmmq3uWs8uyfU6Tl5w0IjP3dFNBiEdb473+e+A3mrZe7rLvhq3nHkafYB4tva+QiW8H
- WW6CRNuPimlGg0q6umF/F+doaFLznl0HOHh2DxJCd709f8blfHqFybRqxw1vBqw1lOzx
- ywZeB3+RCe81OTiB64xQzp4t7BuoitQODBsmBgbONYSN47tXHUjfaqtHdkz1AD/cysDx
- mlfIwhpbtZ07FuagtA4OgI/3pHMaVeV7cLUfMm+IJgRkGnZv3RzTz9/+6hc6JBUhzO+y pg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 30s0tm7f5y-1
+ bh=GdpSgFkEZ+Ur+ACfjLTgXfvY2O4IFXjjIbm/9Da3I/U=;
+ b=b3WfzdZMrbDnbmyd5xFgV2+BKRnWt5HgHioOzu3QHzViYK85ZAPRmsyfspWC8h6K4I0p
+ KK8P43R8WJg+ECSwDg1e2Jggg8+Zph7kmTJQ9qLwLmMN0GBV2DpHDaZRsk9gFIxpqvjI
+ YlD1HnMjYvQvyHkNZEtcnygNDw+Ni6GaSvIWwvW+OKxEdQCVJsJIluAjc4Qe2bWSUsEi
+ 1BrhbiIQGpQt4bIGmnbc60+ravI29lRgjTA7U7B0YSDiY5EJX5ltLDsrw8gW5yhC33nC
+ 7pGoBevJMsXbtID7LfM8j08e/aKEhzi3ql9IXOwZ96DBwPTLRM5ckNXdeoMUVLd39cag Mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 30s0tm7f8a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 15:06:11 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044ElaHf053343;
-        Mon, 4 May 2020 15:04:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 30t1r2f5ph-1
+        Mon, 04 May 2020 15:06:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044Ekfvq094713;
+        Mon, 4 May 2020 15:04:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 30sjdqqnra-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 15:04:10 +0000
+        Mon, 04 May 2020 15:04:23 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044F49Ml028395;
-        Mon, 4 May 2020 15:04:09 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044F4LKe025185;
+        Mon, 4 May 2020 15:04:21 GMT
 Received: from linux-1.home.com (/10.175.9.166)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 08:04:08 -0700
+        with ESMTP ; Mon, 04 May 2020 08:04:20 -0700
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
         dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
@@ -60,15 +60,15 @@ Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
         junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
         kuzuno@gmail.com, mgross@linux.intel.com,
         alexandre.chartre@oracle.com
-Subject: [RFC v4][PATCH part-3 01/14] mm/asi: Define the test ASI type
-Date:   Mon,  4 May 2020 17:02:22 +0200
-Message-Id: <20200504150235.12171-2-alexandre.chartre@oracle.com>
+Subject: [RFC v4][PATCH part-3 04/14] asidrv: Sequence to test ASI access to mapped/unmapped memory
+Date:   Mon,  4 May 2020 17:02:25 +0200
+Message-Id: <20200504150235.12171-5-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 2.18.2
 In-Reply-To: <20200504150235.12171-1-alexandre.chartre@oracle.com>
 References: <20200504150235.12171-1-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005040123
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9610 signatures=668687
@@ -82,57 +82,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the test ASI type which can be used for testing or experimenting
-ASI.
+Add a sequence to test if ASI exit or not when accessing a mapped
+or unmapped memory buffer.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/include/asm/asi.h | 2 ++
- arch/x86/mm/asi.c          | 1 +
- drivers/staging/Makefile   | 1 +
- 3 files changed, 4 insertions(+)
+ drivers/staging/asi/asidrv.c | 70 ++++++++++++++++++++++++++++++++++++
+ drivers/staging/asi/asidrv.h |  3 ++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/arch/x86/include/asm/asi.h b/arch/x86/include/asm/asi.h
-index eafed750e07f..de4f790c630b 100644
---- a/arch/x86/include/asm/asi.h
-+++ b/arch/x86/include/asm/asi.h
-@@ -66,6 +66,7 @@ struct asi_tlb_state {
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- #define ASI_PCID_PREFIX_USER		0x80	/* user ASI */
- #endif
-+#define ASI_PCID_PREFIX_TEST		0xff	/* test ASI */
+diff --git a/drivers/staging/asi/asidrv.c b/drivers/staging/asi/asidrv.c
+index 4f0548edb2f9..4231b56db167 100644
+--- a/drivers/staging/asi/asidrv.c
++++ b/drivers/staging/asi/asidrv.c
+@@ -14,9 +14,21 @@
  
- struct asi_type {
- 	int			pcid_prefix;	/* PCID prefix */
-@@ -156,6 +157,7 @@ extern int asi_init_dpt(struct dpt *dpt);
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- DECLARE_ASI_TYPE(user);
- #endif
-+DECLARE_ASI_TYPE(test);
+ #include "asidrv.h"
  
- static inline void asi_set_log_policy(struct asi *asi, int policy)
- {
-diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-index 8b670ed13729..e0b0d70415d7 100644
---- a/arch/x86/mm/asi.c
-+++ b/arch/x86/mm/asi.c
-@@ -17,6 +17,7 @@
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- DEFINE_ASI_TYPE(user, ASI_PCID_PREFIX_USER, false);
- #endif
-+DEFINE_ASI_TYPE(test, ASI_PCID_PREFIX_TEST, true);
++#define ASIDRV_TEST_BUFFER_SIZE	PAGE_SIZE
++
++/* Number of read for mem/memmap test sequence */
++#define ASIDRV_MEM_READ_COUNT		1000
++
++enum asidrv_state {
++	ASIDRV_STATE_NONE,
++	ASIDRV_STATE_INTR_WAITING,
++	ASIDRV_STATE_INTR_RECEIVED,
++};
++
+ struct asidrv_test {
+ 	struct asi		*asi;	/* ASI for testing */
+ 	struct dpt		*dpt;	/* ASI decorated page-table */
++	char			*buffer; /* buffer for testing */
+ };
  
- static void asi_log_fault(struct asi *asi, struct pt_regs *regs,
- 			   unsigned long error_code, unsigned long address,
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index 4d34198151b3..fb50e669579b 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -50,3 +50,4 @@ obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
- obj-$(CONFIG_KPC2000)		+= kpc2000/
- obj-$(CONFIG_QLGE)		+= qlge/
- obj-$(CONFIG_WFX)		+= wfx/
-+obj-$(CONFIG_ADDRESS_SPACE_ISOLATION) += asi/
+ struct asidrv_sequence {
+@@ -42,6 +54,10 @@ static struct asidrv_test *asidrv_test_create(void)
+ 	if (!test)
+ 		return NULL;
+ 
++	test->buffer = kzalloc(ASIDRV_TEST_BUFFER_SIZE, GFP_KERNEL);
++	if (!test->buffer)
++		goto error;
++
+ 	/*
+ 	 * Create and fill a decorator page-table to be used with the ASI.
+ 	 */
+@@ -96,6 +112,7 @@ static void asidrv_test_destroy(struct asidrv_test *test)
+ 	if (test->asi)
+ 		asi_destroy(test->asi);
+ 
++	kfree(test->buffer);
+ 	kfree(test);
+ }
+ 
+@@ -143,6 +160,51 @@ static int asidrv_asi_is_active(struct asi *asi)
+ 	return false;
+ }
+ 
++/*
++ * Memory Buffer Access Test Sequences
++ */
++
++#define OPTNONE __attribute__((optimize(0)))
++
++static enum asidrv_run_error OPTNONE asidrv_mem_run(struct asidrv_test *test)
++{
++	char c;
++	int i, index;
++
++	/*
++	 * Do random reads in the test buffer, and return if the ASI
++	 * becomes inactive.
++	 */
++	for (i = 0; i < ASIDRV_MEM_READ_COUNT; i++) {
++		index = get_cycles() % ASIDRV_TEST_BUFFER_SIZE;
++		c = test->buffer[index];
++		if (!asidrv_asi_is_active(test->asi)) {
++			pr_warn("ASI inactive after reading byte %d at %d\n",
++				i + 1, index);
++			break;
++		}
++	}
++
++	return ASIDRV_RUN_ERR_NONE;
++}
++
++static enum asidrv_run_error asidrv_memmap_setup(struct asidrv_test *test)
++{
++	int err;
++
++	pr_debug("mapping test buffer %px\n", test->buffer);
++	err = dpt_map(test->dpt, test->buffer, ASIDRV_TEST_BUFFER_SIZE);
++	if (err)
++		return ASIDRV_RUN_ERR_MAP_BUFFER;
++
++	return ASIDRV_RUN_ERR_NONE;
++}
++
++static void asidrv_memmap_cleanup(struct asidrv_test *test)
++{
++	dpt_unmap(test->dpt, test->buffer);
++}
++
+ /*
+  * Printk Test Sequence
+  */
+@@ -161,6 +223,14 @@ struct asidrv_sequence asidrv_sequences[] = {
+ 		"printk",
+ 		NULL, asidrv_printk_run, NULL,
+ 	},
++	[ASIDRV_SEQ_MEM] = {
++		"mem",
++		NULL, asidrv_mem_run, NULL,
++	},
++	[ASIDRV_SEQ_MEMMAP] = {
++		"memmap",
++		asidrv_memmap_setup, asidrv_mem_run, asidrv_memmap_cleanup,
++	},
+ };
+ 
+ static enum asidrv_run_error asidrv_run_init(struct asidrv_test *test)
+diff --git a/drivers/staging/asi/asidrv.h b/drivers/staging/asi/asidrv.h
+index 33acb058c443..1e820cc64f13 100644
+--- a/drivers/staging/asi/asidrv.h
++++ b/drivers/staging/asi/asidrv.h
+@@ -8,6 +8,8 @@
+ enum asidrv_seqnum {
+ 	ASIDRV_SEQ_NOP,		/* empty sequence */
+ 	ASIDRV_SEQ_PRINTK,	/* printk sequence */
++	ASIDRV_SEQ_MEM,		/* access unmapped memory */
++	ASIDRV_SEQ_MEMMAP,	/* access mapped memory */
+ };
+ 
+ enum asidrv_run_error {
+@@ -17,6 +19,7 @@ enum asidrv_run_error {
+ 	ASIDRV_RUN_ERR_MAP_TASK, /* failed to map current task */
+ 	ASIDRV_RUN_ERR_ENTER,	/* failed to enter ASI */
+ 	ASIDRV_RUN_ERR_ACTIVE,	/* ASI is not active after entering ASI */
++	ASIDRV_RUN_ERR_MAP_BUFFER, /* failed to map buffer */
+ };
+ 
+ #define ASIDRV_IOCTL_RUN_SEQUENCE	_IOWR('a', 1, struct asidrv_run_param)
 -- 
 2.18.2
 
