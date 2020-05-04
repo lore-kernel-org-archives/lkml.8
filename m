@@ -2,143 +2,109 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7135C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8D4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D15C3206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA7C206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rqNi/B7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgEDKyh (ORCPT
+        id S1728388AbgEDKyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:54:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:41690 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgEDKy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:54:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 651541FB;
-        Mon,  4 May 2020 03:54:27 -0700 (PDT)
-Received: from [10.57.39.240] (unknown [10.57.39.240])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0209B3F71F;
-        Mon,  4 May 2020 03:54:25 -0700 (PDT)
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
-Date:   Mon, 4 May 2020 11:54:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 06:54:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726756AbgEDKyv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 06:54:51 -0400
+X-Greylist: delayed 7673 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 04 May 2020 03:54:51 PDT
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D57C061A0E;
+        Mon,  4 May 2020 03:54:51 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F08AF00A9258889345EFBFA.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:af00:a925:8889:345e:fbfa])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 186691EC01B7;
+        Mon,  4 May 2020 12:54:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1588589689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=w0w3Aijj1ra8KuzYyt1lCImYJX1LTveNb8GK18SLIV8=;
+        b=rqNi/B7JopqCWzjGwcJ5p0oW/TBH05ZbVhoihYn39t8uzH1svqnE+WbsRjmueARw0snG9X
+        g8MoCy2QqIO3W8ZY1BmYKAHZBQHonH+4BnHd+hGZBog4Jj0/Eb2jL6peqM/RZWpBF5P28q
+        bc0obY45bX1B8fyESNsvitlXbp6EVts=
+Date:   Mon, 4 May 2020 12:54:45 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 13/75] x86/boot/compressed/64: Add IDT Infrastructure
+Message-ID: <20200504105445.GE15046@zn.tnic>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-14-joro@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200428151725.31091-14-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
-> Hi Robin,
-> 
-> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>> [+Robin - to check on dma-ranges intepretation]
->>>
->>> I would need RobH and Robin to review this.
->>>
->>> Also, An ACK from Tom is required - for the whole series.
->>>
->>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>> property to configure the number of bits passed through from PCIe
->>>> address to internal address in Inbound Address Translation register.
->>>>
->>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>> describe the address range accessible by PCIe controller. Parse
->>>> "dma-ranges" property to configure the number of bits passed
->>>> through from PCIe address to internal address in Inbound Address
->>>> Translation register.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> index 9b1c3966414b..60f912a657b9 100644
->>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>        struct device *dev = rc->pcie.dev;
->>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>        struct device_node *np = dev->of_node;
->>>> +    struct of_pci_range_parser parser;
->>>>        struct pci_host_bridge *bridge;
->>>>        struct list_head resources;
->>>> +    struct of_pci_range range;
->>>>        struct cdns_pcie *pcie;
->>>>        struct resource *res;
->>>>        int ret;
->>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>        rc->max_regions = 32;
->>>>        of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->>>>    -    rc->no_bar_nbits = 32;
->>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>> +            rc->no_bar_nbits = ilog2(range.size);
->>
->> You probably want "range.pci_addr + range.size" here just in case the bottom of
->> the window is ever non-zero. Is there definitely only ever a single inbound
->> window to consider?
-> 
-> Cadence IP has 3 inbound address translation registers, however we use only 1
-> inbound address translation register to map the entire 32 bit or 64 bit address
-> region.
+On Tue, Apr 28, 2020 at 05:16:23PM +0200, Joerg Roedel wrote:
+> diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+> new file mode 100644
+> index 000000000000..f86ea872d860
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/idt_handlers_64.S
+> @@ -0,0 +1,69 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Early IDT handler entry points
+> + *
+> + * Copyright (C) 2019 SUSE
+> + *
+> + * Author: Joerg Roedel <jroedel@suse.de>
+> + */
+> +
+> +#include <asm/segment.h>
+> +
+> +#include "../../entry/calling.h"
 
-OK, if anything that further strengthens the argument for deprecating a 
-single "number of bits" property in favour of ranges that accurately 
-describe the window(s). However it also suggests that other users in 
-future might have some expectation that specifying "dma-ranges" with up 
-to 3 entries should work to allow a more restrictive inbound 
-configuration. Thus it would be desirable to make the code a little more 
-robust here - even if we don't support multiple windows straight off, it 
-would still be better to implement it in a way that can be cleanly 
-extended later, and at least say something if more ranges are specified 
-rather than just silently ignoring them.
+Leftover from something? Commenting it out doesn't break the build here.
 
->> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
->> for you, but I suppose plumbing that in plus processing the resulting
->> dma_ranges resource probably ends up a bit messier than the concise open-coding
->> here.
-> 
-> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
-> for outbound configuration, whereas here we parse "dma-ranges" property and is
-> used for inbound configuration.
+If needed, then we need to lift stuff in a separate header and share it
+or so. I want to include as less as possible crap from kernel proper and
+eventually untangle arch/x86/boot/ because include/linux/ definitions
+are a real pain.
 
-If you give it a valid third argument it *also* parses "dma-ranges" into 
-a list of inbound regions. This is already used by various other drivers 
-for equivalent inbound window setup, which is what I was hinting at 
-before, but given the extensibility argument above I'm now going to 
-actively suggest following that pattern for consistency.
+Thx.
 
-Robin.
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
