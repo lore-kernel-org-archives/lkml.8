@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55117C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97657C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C01020721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1812073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615346;
-	bh=Bj1E5/3UsUGDMcOAQK6uor3oP4xH+/iETM/gr4OMax4=;
+	s=default; t=1588615349;
+	bh=xAhcyASkKJoXAxQ5uQWDxeqCnS2LV7E91ZihB8sCoOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8LDhf27+2L4BxIpm2NgK3L+S5N1siUsCWNRRfaI/g6L2rMEYHd8KH1ukIuSnSyDX
-	 6sKjGqkdx0PxDG82+z6IYIfjOA6HRBv0i0iD7ACuziBybpo3oT54BJiu7eh0WmOweK
-	 qSl7Nf7ES7vlfKoL9NfNSctaMKMqitLjsgusk5Uk=
+	b=Z7f8hTjs+IZA9xMXSzLF5tsLybd0p8vqMJH8vFkig6LfoJECab5br9RYZdbUJXpot
+	 6PO1uddstr7R2417NJ0E+YAtFu6gH4OyNneBcXw82Hxr5yxfRVa4+FZEU+D6nThbQK
+	 Hd1u0qFxFLsZtB73qrnOJLvTCjE5Es/t8P3HwMhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbgEDSCZ (ORCPT
+        id S1731334AbgEDSC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58650 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731315AbgEDSCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:21 -0400
+        id S1730810AbgEDSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53167206B8;
-        Mon,  4 May 2020 18:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD0E206B8;
+        Mon,  4 May 2020 18:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615340;
-        bh=Bj1E5/3UsUGDMcOAQK6uor3oP4xH+/iETM/gr4OMax4=;
+        s=default; t=1588615345;
+        bh=xAhcyASkKJoXAxQ5uQWDxeqCnS2LV7E91ZihB8sCoOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2F283gC3C0eRRtrI6pbLBFHEH/JZnKLUHP8dCYMgW+6g96gGFUDtPrnf7Tzscb7w
-         I6JKgd2JUEnekgcgHU+O/iM8Y2rE/9wFwuU+BP1ODh4v/r3KtMspQ5lbuXMt7Jl/0d
-         FdD/HF3TSDnm8R3INoemLc3Wmviqvjbh7owiW8Pg=
+        b=2t5EOsUoQXkN80OahgNInVeynBW360JpZlEcwonXwFy6o0sPjz6yBgCSodtIX7Kgr
+         Tn6qZfeP3E76jeFu6d7uKUzMT7tseSs0erKWCBMroT5RZBf8+3WmwgkPYAjLh9mQz/
+         SDOvYRW4nBfKOQvWi4MUju7MdCKOJvWSN9l9I+Fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 36/37] mmc: meson-mx-sdio: Set MMC_CAP_WAIT_WHILE_BUSY
-Date:   Mon,  4 May 2020 19:57:49 +0200
-Message-Id: <20200504165451.960863147@linuxfoundation.org>
+        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 18/37] RDMA/mlx4: Initialize ib_spec on the stack
+Date:   Mon,  4 May 2020 19:57:31 +0200
+Message-Id: <20200504165450.276430232@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,38 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Alaa Hleihel <alaa@mellanox.com>
 
-commit e53b868b3cf5beeaa2f851ec6740112bf4d6a8cb upstream.
+commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c upstream.
 
-The Meson SDIO controller uses the DAT0 lane for hardware busy
-detection. Set MMC_CAP_WAIT_WHILE_BUSY accordingly. This fixes
-the following error observed with Linux 5.7 (pre-rc-1):
-  mmc1: Card stuck being busy! __mmc_poll_for_busy
-  blk_update_request: I/O error, dev mmcblk1, sector 17111080 op
-   0x3:(DISCARD) flags 0x0 phys_seg 1 prio class 0
+Initialize ib_spec on the stack before using it, otherwise we will have
+garbage values that will break creating default rules with invalid parsing
+error.
 
-Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200416183513.993763-2-martin.blumenstingl@googlemail.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
+Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/meson-mx-sdio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx4/main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/meson-mx-sdio.c
-+++ b/drivers/mmc/host/meson-mx-sdio.c
-@@ -573,7 +573,7 @@ static int meson_mx_mmc_add_host(struct
- 	mmc->f_max = clk_round_rate(host->cfg_div_clk,
- 				    clk_get_rate(host->parent_clk));
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1606,8 +1606,9 @@ static int __mlx4_ib_create_default_rule
+ 	int i;
  
--	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23;
-+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_CMD23 | MMC_CAP_WAIT_WHILE_BUSY;
- 	mmc->ops = &meson_mx_mmc_ops;
- 
- 	ret = mmc_of_parse(mmc);
+ 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
++		union ib_flow_spec ib_spec = {};
+ 		int ret;
+-		union ib_flow_spec ib_spec;
++
+ 		switch (pdefault_rules->rules_create_list[i]) {
+ 		case 0:
+ 			/* no rule */
 
 
