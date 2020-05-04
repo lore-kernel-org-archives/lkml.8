@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A016C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4556BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B4A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2689A2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615535;
-	bh=bDrhjzhTskjV7kPXv5v9McXEoLe8VDFr0GW1kaT3njM=;
+	s=default; t=1588615538;
+	bh=e6ccMfhxtpK7sTocC+QkoGt/nt9t13JWpEXbmbDlFks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h7dAE64//5aAXlXf5qITpWa2tTPAkSmpdXJPPclAE7ILzEMOSobncO7Qd8SmpG2GK
-	 VwtfJZoGI/LIpBTq/3OYwkmmPggAD60nfdw28z5fJ+hTPvFZtRi1p+vlxxoV/u3XPM
-	 jrrJ1P2cKATneffIXUL9jBR3kEE58ehOs44GncZE=
+	b=Jt5tZYpQhaV3DeBa8CjHJM7gaViV2k6vGPV1sCJCNPjdA+L/rztiAryrKKTe9UaZG
+	 TGzBUq/PcaEN2q02/A/foOaCEBG2QzK8E4aj67E6C04zO0ievylM6ElsK/J+66INcq
+	 aIRigGWFQb+bdBT4n5UGrJnhrwvhBG15/0uCYtPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731859AbgEDSFe (ORCPT
+        id S1731869AbgEDSFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731817AbgEDSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:28 -0400
+        id S1731828AbgEDSF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:05:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C86D206B8;
-        Mon,  4 May 2020 18:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B9E32073B;
+        Mon,  4 May 2020 18:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615526;
-        bh=bDrhjzhTskjV7kPXv5v9McXEoLe8VDFr0GW1kaT3njM=;
+        s=default; t=1588615528;
+        bh=e6ccMfhxtpK7sTocC+QkoGt/nt9t13JWpEXbmbDlFks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5p8PIEcDvAAJnJ1SFXFtupV754GQrJp7V1nokR2Af1sleQif55KEKdAMIhedn+kk
-         MlU5JmJk4U66uUiZh9ytrwlIY1uCOme4Jkx883Nyx9QJpcB9haRAXkOTWV3q5cDqK3
-         usThdjeRBA54e720pLpTJM4inhWl64ayn61apDq0=
+        b=iGn8zbbQPuPompI2z1VhB6esQZB1bBMRIEJQkSy2gspx3Cq8z9Bpo7Sr2rcr2ScyH
+         Z1wBD3sY5R1fm8/stRr77cN7VZLF2pO8le9NhYN6OSyhrcbIIwbe/d2PCwsfI3ITU1
+         RQbRRSHE3D9Oxr619aUchPfTw+RPcX2t9i7ggpdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 17/73] mmc: sdhci-xenon: fix annoying 1.8V regulator warning
-Date:   Mon,  4 May 2020 19:57:20 +0200
-Message-Id: <20200504165505.044101855@linuxfoundation.org>
+Subject: [PATCH 5.6 18/73] mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers
+Date:   Mon,  4 May 2020 19:57:21 +0200
+Message-Id: <20200504165505.189933665@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -60,55 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit bb32e1987bc55ce1db400faf47d85891da3c9b9f upstream.
+commit 1a8eb6b373c2af6533c13d1ea11f504e5010ed9a upstream.
 
-For some reason the Host Control2 register of the Xenon SDHCI controller
-sometimes reports the bit representing 1.8V signaling as 0 when read
-after it was written as 1. Subsequent read reports 1.
+BIOS writers have begun the practice of setting 40 ohm eMMC driver strength
+even though the eMMC may not support it, on the assumption that the kernel
+will validate the value against the eMMC (Extended CSD DRIVER_STRENGTH
+[offset 197]) and revert to the default 50 ohm value if 40 ohm is invalid.
 
-This causes the sdhci_start_signal_voltage_switch function to report
-  1.8V regulator output did not become stable
+This is done to avoid changing the value for different boards.
 
-When CONFIG_PM is enabled, the host is suspended and resumend many
-times, and in each resume the switch to 1.8V is called, and so the
-kernel log reports this message annoyingly often.
+Putting aside the merits of this approach, it is clear the eMMC's mask
+of supported driver strengths is more reliable than the value provided
+by BIOS. Add validation accordingly.
 
-Do an empty read of the Host Control2 register in Xenon's
-.voltage_switch method to circumvent this.
-
-This patch fixes this particular problem on Turris MOX.
-
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Fixes: 8d876bf472db ("mmc: sdhci-xenon: wait 5ms after set 1.8V...")
-Cc: stable@vger.kernel.org # v4.16+
-Link: https://lore.kernel.org/r/20200420080444.25242-1-marek.behun@nic.cz
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 51ced59cc02e ("mmc: sdhci-pci: Use ACPI DSM to get driver strength for some Intel devices")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200422111629.4899-1-adrian.hunter@intel.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-xenon.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mmc/host/sdhci-pci-core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -235,6 +235,16 @@ static void xenon_voltage_switch(struct
- {
- 	/* Wait for 5ms after set 1.8V signal enable bit */
- 	usleep_range(5000, 5500);
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -601,6 +601,9 @@ static int intel_select_drive_strength(s
+ 	struct sdhci_pci_slot *slot = sdhci_priv(host);
+ 	struct intel_host *intel_host = sdhci_pci_priv(slot);
+ 
++	if (!(mmc_driver_type_mask(intel_host->drv_strength) & card_drv))
++		return 0;
 +
-+	/*
-+	 * For some reason the controller's Host Control2 register reports
-+	 * the bit representing 1.8V signaling as 0 when read after it was
-+	 * written as 1. Subsequent read reports 1.
-+	 *
-+	 * Since this may cause some issues, do an empty read of the Host
-+	 * Control2 register here to circumvent this.
-+	 */
-+	sdhci_readw(host, SDHCI_HOST_CONTROL2);
+ 	return intel_host->drv_strength;
  }
  
- static const struct sdhci_ops sdhci_xenon_ops = {
 
 
