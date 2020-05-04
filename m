@@ -2,99 +2,182 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0A8C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB2AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1F6206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DRtwU0Tr"
+	by mail.kernel.org (Postfix) with ESMTP id 5F3D720735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgEDIx3 (ORCPT
+        id S1728383AbgEDI4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:53:29 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41553 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgEDIx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:53:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49FxTg1kpfz9sP7;
-        Mon,  4 May 2020 18:53:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588582407;
-        bh=NIf3PRFXdOizXjV+9ztZcgWcYX+AbXqSiJ8swGG6MtI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DRtwU0Tr/1+6SFdC/evgnZ0o9s+hkpWnDhDSJROzYmAi5GFOprKtjBTbAICvKQqu8
-         /aYwtpFewL6zTo21MMmRbnWA7AJ9QRx+wA/MttKCQ6eAJWLV4O8si9J58U69v6XIzF
-         /GFZ5WP/iCk7XqBLrajHPAjwjlT+OJL4sqZD7Jcf0eGpMzjWE4ogesXoL49zUVKXGy
-         wNvrejf3wJlQYEKAU5ihgjcN6gqQgd/1F0sFCEPag31s+zSKP2gRh2YwknHCrZWd8V
-         bevpG2TunXRMvdRi7Ttuew8ImevGSTzFKDIuHl9edQ1AC8KhfdnUD0cPX6gL+eMgwg
-         8Nt7W7oL4eLIA==
-Date:   Mon, 4 May 2020 18:53:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the slave-dma-fixes tree
-Message-ID: <20200504185326.6c50e387@canb.auug.org.au>
+        Mon, 4 May 2020 04:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727951AbgEDI4E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 04:56:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C64C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 01:56:04 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVWtL-0005qz-OJ; Mon, 04 May 2020 10:55:59 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVWtI-0006jc-S6; Mon, 04 May 2020 10:55:56 +0200
+Date:   Mon, 4 May 2020 10:55:56 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v5 1/2] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200504085556.rzkvn47q2k5iqyap@pengutronix.de>
+References: <20200504071214.5890-1-o.rempel@pengutronix.de>
+ <20200504071214.5890-2-o.rempel@pengutronix.de>
+ <20200504080417.i3d2jsjjpu2zjk4z@pengutronix.de>
+ <20200504083734.GA5989@lion.mk-sys.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jbBtHwd1qYGSuNnnzHj32GM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bksnti5tacwemepx"
+Content-Disposition: inline
+In-Reply-To: <20200504083734.GA5989@lion.mk-sys.cz>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:53:13 up 171 days, 11 min, 184 users,  load average: 0.04, 0.07,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jbBtHwd1qYGSuNnnzHj32GM
-Content-Type: text/plain; charset=US-ASCII
+
+--bksnti5tacwemepx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Mon, May 04, 2020 at 10:37:34AM +0200, Michal Kubecek wrote:
+> On Mon, May 04, 2020 at 10:04:17AM +0200, Oleksij Rempel wrote:
+> > @Michal,
+> >=20
+> > i noticed that linkmodes_fill_reply() some times get not enough
+> > tailroom.
+> > if data->peer_empty =3D=3D 0
+> > linkmodes_reply_size() size: 476
+> > linkmodes_fill_reply() skb tailroom: 724
+> >=20
+> >=20
+> > if data->peer_empty =3D=3D 1
+> > linkmodes_reply_size() size: 216                                     =
+=20
+> > linkmodes_fill_reply() skb tailroom: 212
+> >=20
+> > In the last case i won't be able to attach master_lave state and cfg
+> > fields.
+> >=20
+> > It looks like this issue was not introduced by my patches. May be you
+> > have idea, what is missing?
+>=20
+> It's my mistake, I'm just not sure why I never ran into this while
+> testing. Please try the patch below.
 
-In commit
+thx! it works now:
+[   82.754019] linkmodes_reply_size:103 size: 216
+[   82.758523] linkmodes_fill_reply:117 skb tailroom: 724
 
-  c76d6569de67 ("dmaengine: owl: Use correct lock in owl_dma_get_pchan()")
+[  126.781892] linkmodes_reply_size:103 size: 476
+[  126.786464] linkmodes_fill_reply:117 skb tailroom: 724
 
-Fixes tag
 
-  Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA
-
-has these problem(s):
-
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
-
-Please do not split Fixes tags over more than one line.
-
-Also, please keep all the commit message tags together at the end of
-the commit message.
+> Michal
+>=20
+> diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+> index 0c772318c023..ed5357210193 100644
+> --- a/net/ethtool/netlink.c
+> +++ b/net/ethtool/netlink.c
+> @@ -342,7 +342,7 @@ static int ethnl_default_doit(struct sk_buff *skb, st=
+ruct genl_info *info)
+>  	ret =3D ops->reply_size(req_info, reply_data);
+>  	if (ret < 0)
+>  		goto err_cleanup;
+> -	reply_len =3D ret;
+> +	reply_len =3D ret + ethnl_reply_header_size();
+>  	ret =3D -ENOMEM;
+>  	rskb =3D ethnl_reply_init(reply_len, req_info->dev, ops->reply_cmd,
+>  				ops->hdr_attr, info, &reply_payload);
+> @@ -588,7 +588,7 @@ static void ethnl_default_notify(struct net_device *d=
+ev, unsigned int cmd,
+>  	ret =3D ops->reply_size(req_info, reply_data);
+>  	if (ret < 0)
+>  		goto err_cleanup;
+> -	reply_len =3D ret;
+> +	reply_len =3D ret + ethnl_reply_header_size();
+>  	ret =3D -ENOMEM;
+>  	skb =3D genlmsg_new(reply_len, GFP_KERNEL);
+>  	if (!skb)
+> diff --git a/net/ethtool/strset.c b/net/ethtool/strset.c
+> index 95eae5c68a52..0eed4e4909ab 100644
+> --- a/net/ethtool/strset.c
+> +++ b/net/ethtool/strset.c
+> @@ -324,7 +324,6 @@ static int strset_reply_size(const struct ethnl_req_i=
+nfo *req_base,
+>  	int len =3D 0;
+>  	int ret;
+> =20
+> -	len +=3D ethnl_reply_header_size();
+>  	for (i =3D 0; i < ETH_SS_COUNT; i++) {
+>  		const struct strset_info *set_info =3D &data->sets[i];
+> =20
+>=20
+>=20
 
 --=20
-Cheers,
-Stephen Rothwell
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
---Sig_/jbBtHwd1qYGSuNnnzHj32GM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--bksnti5tacwemepx
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6v2AYACgkQAVBC80lX
-0GxA9Qf/dxS6yYyPueidIeQvXpThibMk/dV0ahIhtLZgUngL5+DTKZxywga1MERS
-iVirG7jQtF4FctNhK+SLOzMWYE36g4yNncevjvl1YwvKydBs6M+SjlAP0AsUTONv
-5eguBZTnb8lUSHTEHQy90atdM9Z4Ylzlb8B1huxlpJ2esZ8wX+AeGQHg9hmn5ff/
-Wj9fR2X1uYAabdr+x115tlG8zm6yZNXEaP+s+ZZu4OWRK/wjK6+3eRvzDDl0cg/u
-nOeCyI8ei081Wd9PbFe6SeVqi+abscEPWGH+b1EvW/QrOZk/hbFgjKyQt/xtvshH
-+UUohomECzwdcMh5jwnw46ayNFTW1w==
-=3jgx
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6v2JMACgkQ4omh9DUa
+UbMzAQ/+NPU9rgdcXp+gU0iaEdIsUV67ifbNwyxojASyy3YBRTQQ8EZ60UpvGWUK
+bRFDESEvMqEbweePhladfsBbFlCfmAmkOkUB3O6R8J3faIsgNZQlxVy6gBSHnbQA
+H/FI66ZHk6cbZUWkHq5cn/n9ItuijxodjYj84MTjSPj0HDGv9Jo5NyXjz6A3Ymt6
+es58+fJJRt4wrKLqrtx4AbhRRNun4ZRbXR9cA3qzbd24e3/MqV4+zpI8+YIk/xx+
+FRTOqACrT5+83HLvSXDvryBomC3GuICab0anfLbjsjbxCv798oS+J6R5EgX/Thnq
+O/nsIRwAb0BeKQFb+ys5BjGStFAEjvCrFBiRfnzHilDS8mc9lN8ON3mZ6OBnLZpv
+jJAz/U3+gp23YJFNAPZhVsdBl1T2zSCRSv38mUW+lKDINxuwywmyzaNBGnZ1z92H
+yk8myyK0V6Kpd+o3JEuDAAVS9pGbh8OpBzWHcMc8+g/x4DkegdqaKnRdsq71WIs1
+B4qRfLSipyKlDrB8lRToCsy3UIZnCgwkhySXk+yf5S8fQQp8phvSaQZmgzUB5AnP
+Bf0dtQVZ48xgs8aO1QwvCpQiXfFMJHVaFDZNqQc+/ZF4LYA7t5IZH01pGma/MGz6
+rE1kAQf6Ior2iw5vOL6v5HRMDxlfTG57BsGFFDA/yeKYffqtJuA=
+=BdJy
 -----END PGP SIGNATURE-----
 
---Sig_/jbBtHwd1qYGSuNnnzHj32GM--
+--bksnti5tacwemepx--
