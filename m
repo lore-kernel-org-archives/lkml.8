@@ -2,273 +2,843 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3C4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CEFC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1356206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AC5206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AP45xlSH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ajWP63LW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgEDRIh (ORCPT
+        id S1730088AbgEDRIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:08:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49576 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730045AbgEDRIe (ORCPT
+        Mon, 4 May 2020 13:08:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58366 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730074AbgEDRIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:08:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044H8VUI107102;
-        Mon, 4 May 2020 12:08:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588612111;
-        bh=fTHJjpx4bupRTL5L94b8QMWCLvInZLnMjDmw2sCBOcM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=AP45xlSH5Y7vCVLvkwH24FWU8yaVnHXwtWr6+Nlik5lbDrgRdyECaiMVYYC8aNxTj
-         Hk4lbUOjFZyYLnoKFxoYqr5K0qu00+YUf8m+xN+tJFaIBfDXsePjGopxer+cVJf4Jn
-         +qZR8v3rQxLC/AMPU1UqanH83Pp4ge87yBPVB0Sg=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044H8VMF038732
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 12:08:31 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 12:08:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 12:08:30 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044H8Uch026598;
-        Mon, 4 May 2020 12:08:30 -0500
-Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     Dan Murphy <dmurphy@ti.com>, <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-References: <20200504164156.21469-1-dmurphy@ti.com>
- <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <5a7220c7-6c0b-6997-f773-e4b1133d628b@ti.com>
-Date:   Mon, 4 May 2020 13:08:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 13:08:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588612118;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HN8bpXIGGpH85ZB7gLaqllaADaw5Ox/J4Xc2v7rK1hw=;
+        b=ajWP63LWfectmzjsrfAtc++Ple0YVVWfZsqBkRbVKW2tHXhAN4vEkhjGc+idaczf+pUoAe
+        u9hpxJ8wwM6sFHh6O/Raopqpb7SBo+Po55BGDHomCRmEpD4PW/QhX9xZD9rEyJu6ODMKbg
+        HQ3i7jPOGNMsv8wQYaVGbtkWZqsyAyI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-jIPHP7jpPbWy9ro6CXLPRQ-1; Mon, 04 May 2020 13:08:35 -0400
+X-MC-Unique: jIPHP7jpPbWy9ro6CXLPRQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C4881005510;
+        Mon,  4 May 2020 17:08:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C15A063F61;
+        Mon,  4 May 2020 17:08:30 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 07/61] fscache: Add a cookie debug ID and use that in
+ traces
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 04 May 2020 18:08:29 +0100
+Message-ID: <158861210988.340223.11688464116498247790.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-In-Reply-To: <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 12:44 PM, Dan Murphy wrote:
-> Adding Andrew in manually.
-> 
-> On 5/4/20 11:41 AM, Dan Murphy wrote:
->> Convert the bq27xxx.txt to yaml format
->>
->> CC: Pali Rohár <pali@kernel.org>
->> CC: Andrew F. Davis" <afd@ti.com>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/power/supply/bq27xxx.txt         | 56 -----------
->>   .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
->>   2 files changed, 95 insertions(+), 56 deletions(-)
->>   delete mode 100644
->> Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->>   create mode 100644
->> Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->>
->> diff --git
->> a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->> b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->> deleted file mode 100644
->> index 4fa8e08df2b6..000000000000
->> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->> +++ /dev/null
->> @@ -1,56 +0,0 @@
->> -TI BQ27XXX fuel gauge family
->> -
->> -Required properties:
->> -- compatible: contains one of the following:
->> - * "ti,bq27200" - BQ27200
->> - * "ti,bq27210" - BQ27210
->> - * "ti,bq27500" - deprecated, use revision specific property below
->> - * "ti,bq27510" - deprecated, use revision specific property below
->> - * "ti,bq27520" - deprecated, use revision specific property below
->> - * "ti,bq27500-1" - BQ27500/1
->> - * "ti,bq27510g1" - BQ27510-g1
->> - * "ti,bq27510g2" - BQ27510-g2
->> - * "ti,bq27510g3" - BQ27510-g3
->> - * "ti,bq27520g1" - BQ27520-g1
->> - * "ti,bq27520g2" - BQ27520-g2
->> - * "ti,bq27520g3" - BQ27520-g3
->> - * "ti,bq27520g4" - BQ27520-g4
->> - * "ti,bq27521" - BQ27521
->> - * "ti,bq27530" - BQ27530
->> - * "ti,bq27531" - BQ27531
->> - * "ti,bq27541" - BQ27541
->> - * "ti,bq27542" - BQ27542
->> - * "ti,bq27546" - BQ27546
->> - * "ti,bq27742" - BQ27742
->> - * "ti,bq27545" - BQ27545
->> - * "ti,bq27411" - BQ27411
->> - * "ti,bq27421" - BQ27421
->> - * "ti,bq27425" - BQ27425
->> - * "ti,bq27426" - BQ27426
->> - * "ti,bq27441" - BQ27441
->> - * "ti,bq27621" - BQ27621
->> -- reg: integer, I2C address of the fuel gauge.
->> -
->> -Optional properties:
->> -- monitored-battery: phandle of battery characteristics node
->> -    The fuel gauge uses the following battery properties:
->> -    + energy-full-design-microwatt-hours
->> -    + charge-full-design-microamp-hours
->> -    + voltage-min-design-microvolt
->> -  Both or neither of the *-full-design-*-hours properties must be set.
->> -  See Documentation/devicetree/bindings/power/supply/battery.txt
->> -
->> -Example:
->> -
->> -    bat: battery {
->> -        compatible = "simple-battery";
->> -        voltage-min-design-microvolt = <3200000>;
->> -        energy-full-design-microwatt-hours = <5290000>;
->> -        charge-full-design-microamp-hours = <1430000>;
->> -    };
->> -
->> -    bq27510g3: fuel-gauge@55 {
->> -        compatible = "ti,bq27510g3";
->> -        reg = <0x55>;
->> -        monitored-battery = <&bat>;
->> -    };
->> diff --git
->> a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->> b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->> new file mode 100644
->> index 000000000000..6c53ee849004
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->> @@ -0,0 +1,95 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +# Copyright (C) 2020 Texas Instruments Incorporated
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI BQ27XXX fuel gauge family
->> +
->> +maintainers:
->> +  - Pali Rohár <pali@kernel.org>
->> +  - Andrew F. Davis" <afd@ti.com>
+Add a cookie debug ID and use that in traces and in procfiles rather than
+displaying the (hashed) pointer to the cookie.  This is easier to correlate
+and we don't lose anything when interpreting oops output since that shows
+unhashed addresses and registers that aren't comparable to the hashed
+values.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/fscache/cookie.c               |   29 ++++++---
+ fs/fscache/fsdef.c                |    1 
+ fs/fscache/object-list.c          |   14 ++--
+ include/linux/fscache.h           |    1 
+ include/trace/events/cachefiles.h |   68 +++++++++++-----------
+ include/trace/events/fscache.h    |  116 +++++++++++++++++++------------------
+ 6 files changed, 121 insertions(+), 108 deletions(-)
+
+diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
+index 0ce39658a620..b94e3995011e 100644
+--- a/fs/fscache/cookie.c
++++ b/fs/fscache/cookie.c
+@@ -29,21 +29,29 @@ static int fscache_attach_object(struct fscache_cookie *cookie,
+ 
+ static void fscache_print_cookie(struct fscache_cookie *cookie, char prefix)
+ {
+-	struct hlist_node *object;
++	struct fscache_object *object;
++	struct hlist_node *o;
+ 	const u8 *k;
+ 	unsigned loop;
+ 
+-	pr_err("%c-cookie c=%p [p=%p fl=%lx nc=%u na=%u]\n",
+-	       prefix, cookie, cookie->parent, cookie->flags,
++	pr_err("%c-cookie c=%08x [p=%08x fl=%lx nc=%u na=%u]\n",
++	       prefix,
++	       cookie->debug_id,
++	       cookie->parent ? cookie->parent->debug_id : 0,
++	       cookie->flags,
+ 	       atomic_read(&cookie->n_children),
+ 	       atomic_read(&cookie->n_active));
+-	pr_err("%c-cookie d=%p n=%p\n",
+-	       prefix, cookie->def, cookie->netfs_data);
++	pr_err("%c-cookie d=%p{%s} n=%p\n",
++	       prefix,
++	       cookie->def,
++	       cookie->def ? cookie->def->name : "?",
++	       cookie->netfs_data);
+ 
+-	object = READ_ONCE(cookie->backing_objects.first);
+-	if (object)
+-		pr_err("%c-cookie o=%p\n",
+-		       prefix, hlist_entry(object, struct fscache_object, cookie_link));
++	o = READ_ONCE(cookie->backing_objects.first);
++	if (o) {
++		object = hlist_entry(o, struct fscache_object, cookie_link);
++		pr_err("%c-cookie o=%u\n", prefix, object->debug_id);
++	}
+ 
+ 	pr_err("%c-key=[%u] '", prefix, cookie->key_len);
+ 	k = (cookie->key_len <= sizeof(cookie->inline_key)) ?
+@@ -129,6 +137,8 @@ static long fscache_compare_cookie(const struct fscache_cookie *a,
+ 	return memcmp(ka, kb, a->key_len);
+ }
+ 
++static atomic_t fscache_cookie_debug_id = ATOMIC_INIT(1);
++
+ /*
+  * Allocate a cookie.
+  */
+@@ -163,6 +173,7 @@ struct fscache_cookie *fscache_alloc_cookie(
+ 
+ 	atomic_set(&cookie->usage, 1);
+ 	atomic_set(&cookie->n_children, 0);
++	cookie->debug_id = atomic_inc_return(&fscache_cookie_debug_id);
+ 
+ 	/* We keep the active count elevated until relinquishment to prevent an
+ 	 * attempt to wake up every time the object operations queue quiesces.
+diff --git a/fs/fscache/fsdef.c b/fs/fscache/fsdef.c
+index 09ed8795ad86..5f8f6fe243fe 100644
+--- a/fs/fscache/fsdef.c
++++ b/fs/fscache/fsdef.c
+@@ -45,6 +45,7 @@ static struct fscache_cookie_def fscache_fsdef_index_def = {
+ };
+ 
+ struct fscache_cookie fscache_fsdef_index = {
++	.debug_id	= 1,
+ 	.usage		= ATOMIC_INIT(1),
+ 	.n_active	= ATOMIC_INIT(1),
+ 	.lock		= __SPIN_LOCK_UNLOCKED(fscache_fsdef_index.lock),
+diff --git a/fs/fscache/object-list.c b/fs/fscache/object-list.c
+index e106a1a1600d..1a0dc32c0a33 100644
+--- a/fs/fscache/object-list.c
++++ b/fs/fscache/object-list.c
+@@ -170,7 +170,7 @@ static int fscache_objlist_show(struct seq_file *m, void *v)
+ 	if ((unsigned long) v == 1) {
+ 		seq_puts(m, "OBJECT   PARENT   STAT CHLDN OPS OOP IPR EX READS"
+ 			 " EM EV FL S"
+-			 " | NETFS_COOKIE_DEF TY FL NETFS_DATA");
++			 " | COOKIE   NETFS_COOKIE_DEF TY FL NETFS_DATA");
+ 		if (config & (FSCACHE_OBJLIST_CONFIG_KEY |
+ 			      FSCACHE_OBJLIST_CONFIG_AUX))
+ 			seq_puts(m, "       ");
+@@ -189,7 +189,7 @@ static int fscache_objlist_show(struct seq_file *m, void *v)
+ 	if ((unsigned long) v == 2) {
+ 		seq_puts(m, "======== ======== ==== ===== === === === == ====="
+ 			 " == == == ="
+-			 " | ================ == == ================");
++			 " | ======== ================ == === ================");
+ 		if (config & (FSCACHE_OBJLIST_CONFIG_KEY |
+ 			      FSCACHE_OBJLIST_CONFIG_AUX))
+ 			seq_puts(m, " ================");
+@@ -231,9 +231,9 @@ static int fscache_objlist_show(struct seq_file *m, void *v)
+ 	}
+ 
+ 	seq_printf(m,
+-		   "%8x %8x %s %5u %3u %3u %3u %2u %5u %2lx %2lx %2lx %1x | ",
++		   "%08x %08x %s %5u %3u %3u %3u %2u %5u %2lx %2lx %2lx %1x | ",
+ 		   obj->debug_id,
+-		   obj->parent ? obj->parent->debug_id : -1,
++		   obj->parent ? obj->parent->debug_id : UINT_MAX,
+ 		   obj->state->short_name,
+ 		   obj->n_children,
+ 		   obj->n_ops,
+@@ -246,7 +246,7 @@ static int fscache_objlist_show(struct seq_file *m, void *v)
+ 		   obj->flags,
+ 		   work_busy(&obj->work));
+ 
+-	if (fscache_use_cookie(obj)) {
++	if (obj->cookie) {
+ 		uint16_t keylen = 0, auxlen = 0;
+ 
+ 		switch (cookie->type) {
+@@ -263,7 +263,8 @@ static int fscache_objlist_show(struct seq_file *m, void *v)
+ 			break;
+ 		}
+ 
+-		seq_printf(m, "%-16s %s %2lx %16p",
++		seq_printf(m, "%08x %-16s %s %3lx %16p",
++			   cookie->debug_id,
+ 			   cookie->def->name,
+ 			   type,
+ 			   cookie->flags,
+@@ -292,7 +293,6 @@ static int fscache_objlist_show(struct seq_file *m, void *v)
+ 		}
+ 
+ 		seq_puts(m, "\n");
+-		fscache_unuse_cookie(obj);
+ 	} else {
+ 		seq_puts(m, "<no_netfs>\n");
+ 	}
+diff --git a/include/linux/fscache.h b/include/linux/fscache.h
+index ad044c0cb1f3..0229bb80b73c 100644
+--- a/include/linux/fscache.h
++++ b/include/linux/fscache.h
+@@ -134,6 +134,7 @@ struct fscache_cookie {
+ 	atomic_t			usage;		/* number of users of this cookie */
+ 	atomic_t			n_children;	/* number of children of this cookie */
+ 	atomic_t			n_active;	/* number of active users of netfs ptrs */
++	unsigned int			debug_id;
+ 	spinlock_t			lock;
+ 	spinlock_t			stores_lock;	/* lock on page store tree */
+ 	struct hlist_head		backing_objects; /* object(s) backing this file/index */
+diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
+index 5d9de24cb9c0..9a448fe9355d 100644
+--- a/include/trace/events/cachefiles.h
++++ b/include/trace/events/cachefiles.h
+@@ -78,20 +78,20 @@ TRACE_EVENT(cachefiles_ref,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,		obj		)
+-		    __field(struct fscache_cookie *,		cookie		)
++		    __field(unsigned int,			obj		)
++		    __field(unsigned int,			cookie		)
+ 		    __field(enum cachefiles_obj_ref_trace,	why		)
+ 		    __field(int,				usage		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
+-		    __entry->cookie	= cookie;
++		    __entry->obj	= obj->fscache.debug_id;
++		    __entry->cookie	= cookie->debug_id;
+ 		    __entry->usage	= usage;
+ 		    __entry->why	= why;
+ 			   ),
+ 
+-	    TP_printk("c=%p o=%p u=%d %s",
++	    TP_printk("c=%08x o=%08x u=%d %s",
+ 		      __entry->cookie, __entry->obj, __entry->usage,
+ 		      __print_symbolic(__entry->why, cachefiles_obj_ref_traces))
+ 	    );
+@@ -104,18 +104,18 @@ TRACE_EVENT(cachefiles_lookup,
+ 	    TP_ARGS(obj, de, inode),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj	)
++		    __field(unsigned int,		obj	)
+ 		    __field(struct dentry *,		de	)
+ 		    __field(struct inode *,		inode	)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->inode	= inode;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p i=%p",
++	    TP_printk("o=%08x d=%p i=%p",
+ 		      __entry->obj, __entry->de, __entry->inode)
+ 	    );
+ 
+@@ -126,18 +126,18 @@ TRACE_EVENT(cachefiles_mkdir,
+ 	    TP_ARGS(obj, de, ret),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj	)
++		    __field(unsigned int,		obj	)
+ 		    __field(struct dentry *,		de	)
+ 		    __field(int,			ret	)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->ret	= ret;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p r=%u",
++	    TP_printk("o=%08x d=%p r=%u",
+ 		      __entry->obj, __entry->de, __entry->ret)
+ 	    );
+ 
+@@ -148,18 +148,18 @@ TRACE_EVENT(cachefiles_create,
+ 	    TP_ARGS(obj, de, ret),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj	)
++		    __field(unsigned int,		obj	)
+ 		    __field(struct dentry *,		de	)
+ 		    __field(int,			ret	)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->ret	= ret;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p r=%u",
++	    TP_printk("o=%08x d=%p r=%u",
+ 		      __entry->obj, __entry->de, __entry->ret)
+ 	    );
+ 
+@@ -172,18 +172,18 @@ TRACE_EVENT(cachefiles_unlink,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj		)
++		    __field(unsigned int,		obj		)
+ 		    __field(struct dentry *,		de		)
+ 		    __field(enum fscache_why_object_killed, why		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->why	= why;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p w=%s",
++	    TP_printk("o=%08x d=%p w=%s",
+ 		      __entry->obj, __entry->de,
+ 		      __print_symbolic(__entry->why, cachefiles_obj_kill_traces))
+ 	    );
+@@ -198,20 +198,20 @@ TRACE_EVENT(cachefiles_rename,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj		)
++		    __field(unsigned int,		obj		)
+ 		    __field(struct dentry *,		de		)
+ 		    __field(struct dentry *,		to		)
+ 		    __field(enum fscache_why_object_killed, why		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->to		= to;
+ 		    __entry->why	= why;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p t=%p w=%s",
++	    TP_printk("o=%08x d=%p t=%p w=%s",
+ 		      __entry->obj, __entry->de, __entry->to,
+ 		      __print_symbolic(__entry->why, cachefiles_obj_kill_traces))
+ 	    );
+@@ -224,16 +224,16 @@ TRACE_EVENT(cachefiles_mark_active,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj		)
++		    __field(unsigned int,		obj		)
+ 		    __field(struct dentry *,		de		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p",
++	    TP_printk("o=%08x d=%p",
+ 		      __entry->obj, __entry->de)
+ 	    );
+ 
+@@ -246,22 +246,22 @@ TRACE_EVENT(cachefiles_wait_active,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj		)
++		    __field(unsigned int,		obj		)
++		    __field(unsigned int,		xobj		)
+ 		    __field(struct dentry *,		de		)
+-		    __field(struct cachefiles_object *,	xobj		)
+ 		    __field(u16,			flags		)
+ 		    __field(u16,			fsc_flags	)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+-		    __entry->xobj	= xobj;
++		    __entry->xobj	= xobj->fscache.debug_id;
+ 		    __entry->flags	= xobj->flags;
+ 		    __entry->fsc_flags	= xobj->fscache.flags;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p wo=%p wf=%x wff=%x",
++	    TP_printk("o=%08x d=%p wo=%08x wf=%x wff=%x",
+ 		      __entry->obj, __entry->de, __entry->xobj,
+ 		      __entry->flags, __entry->fsc_flags)
+ 	    );
+@@ -275,18 +275,18 @@ TRACE_EVENT(cachefiles_mark_inactive,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj		)
++		    __field(unsigned int,		obj		)
+ 		    __field(struct dentry *,		de		)
+ 		    __field(struct inode *,		inode		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->inode	= inode;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p i=%p",
++	    TP_printk("o=%08x d=%p i=%p",
+ 		      __entry->obj, __entry->de, __entry->inode)
+ 	    );
+ 
+@@ -299,18 +299,18 @@ TRACE_EVENT(cachefiles_mark_buried,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(struct cachefiles_object *,	obj		)
++		    __field(unsigned int,		obj		)
+ 		    __field(struct dentry *,		de		)
+ 		    __field(enum fscache_why_object_killed, why		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->obj	= obj;
++		    __entry->obj	= obj->fscache.debug_id;
+ 		    __entry->de		= de;
+ 		    __entry->why	= why;
+ 			   ),
+ 
+-	    TP_printk("o=%p d=%p w=%s",
++	    TP_printk("o=%08x d=%p w=%s",
+ 		      __entry->obj, __entry->de,
+ 		      __print_symbolic(__entry->why, cachefiles_obj_kill_traces))
+ 	    );
+diff --git a/include/trace/events/fscache.h b/include/trace/events/fscache.h
+index d16fe6ed78a2..0b9e058aba4d 100644
+--- a/include/trace/events/fscache.h
++++ b/include/trace/events/fscache.h
+@@ -167,8 +167,8 @@ TRACE_EVENT(fscache_cookie,
+ 	    TP_ARGS(cookie, where, usage),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
+-		    __field(struct fscache_cookie *,	parent		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		parent		)
+ 		    __field(enum fscache_cookie_trace,	where		)
+ 		    __field(int,			usage		)
+ 		    __field(int,			n_children	)
+@@ -177,8 +177,8 @@ TRACE_EVENT(fscache_cookie,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie	= cookie;
+-		    __entry->parent	= cookie->parent;
++		    __entry->cookie	= cookie->debug_id;
++		    __entry->parent	= cookie->parent ? cookie->parent->debug_id : 0;
+ 		    __entry->where	= where;
+ 		    __entry->usage	= usage;
+ 		    __entry->n_children	= atomic_read(&cookie->n_children);
+@@ -186,7 +186,7 @@ TRACE_EVENT(fscache_cookie,
+ 		    __entry->flags	= cookie->flags;
+ 			   ),
+ 
+-	    TP_printk("%s c=%p u=%d p=%p Nc=%d Na=%d f=%02x",
++	    TP_printk("%s c=%08x u=%d p=%08x Nc=%d Na=%d f=%02x",
+ 		      __print_symbolic(__entry->where, fscache_cookie_traces),
+ 		      __entry->cookie, __entry->usage,
+ 		      __entry->parent, __entry->n_children, __entry->n_active,
+@@ -199,17 +199,17 @@ TRACE_EVENT(fscache_netfs,
+ 	    TP_ARGS(netfs),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
+ 		    __array(char,			name, 8		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= netfs->primary_index;
++		    __entry->cookie		= netfs->primary_index->debug_id;
+ 		    strncpy(__entry->name, netfs->name, 8);
+ 		    __entry->name[7]		= 0;
+ 			   ),
+ 
+-	    TP_printk("c=%p n=%s",
++	    TP_printk("c=%08x n=%s",
+ 		      __entry->cookie, __entry->name)
+ 	    );
+ 
+@@ -219,8 +219,8 @@ TRACE_EVENT(fscache_acquire,
+ 	    TP_ARGS(cookie),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
+-		    __field(struct fscache_cookie *,	parent		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		parent		)
+ 		    __array(char,			name, 8		)
+ 		    __field(int,			p_usage		)
+ 		    __field(int,			p_n_children	)
+@@ -228,8 +228,8 @@ TRACE_EVENT(fscache_acquire,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
+-		    __entry->parent		= cookie->parent;
++		    __entry->cookie		= cookie->debug_id;
++		    __entry->parent		= cookie->parent->debug_id;
+ 		    __entry->p_usage		= atomic_read(&cookie->parent->usage);
+ 		    __entry->p_n_children	= atomic_read(&cookie->parent->n_children);
+ 		    __entry->p_flags		= cookie->parent->flags;
+@@ -237,7 +237,7 @@ TRACE_EVENT(fscache_acquire,
+ 		    __entry->name[7]		= 0;
+ 			   ),
+ 
+-	    TP_printk("c=%p p=%p pu=%d pc=%d pf=%02x n=%s",
++	    TP_printk("c=%08x p=%08x pu=%d pc=%d pf=%02x n=%s",
+ 		      __entry->cookie, __entry->parent, __entry->p_usage,
+ 		      __entry->p_n_children, __entry->p_flags, __entry->name)
+ 	    );
+@@ -248,8 +248,8 @@ TRACE_EVENT(fscache_relinquish,
+ 	    TP_ARGS(cookie, retire),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
+-		    __field(struct fscache_cookie *,	parent		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		parent		)
+ 		    __field(int,			usage		)
+ 		    __field(int,			n_children	)
+ 		    __field(int,			n_active	)
+@@ -258,8 +258,8 @@ TRACE_EVENT(fscache_relinquish,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie	= cookie;
+-		    __entry->parent	= cookie->parent;
++		    __entry->cookie	= cookie->debug_id;
++		    __entry->parent	= cookie->parent->debug_id;
+ 		    __entry->usage	= atomic_read(&cookie->usage);
+ 		    __entry->n_children	= atomic_read(&cookie->n_children);
+ 		    __entry->n_active	= atomic_read(&cookie->n_active);
+@@ -267,7 +267,7 @@ TRACE_EVENT(fscache_relinquish,
+ 		    __entry->retire	= retire;
+ 			   ),
+ 
+-	    TP_printk("c=%p u=%d p=%p Nc=%d Na=%d f=%02x r=%u",
++	    TP_printk("c=%08x u=%d p=%08x Nc=%d Na=%d f=%02x r=%u",
+ 		      __entry->cookie, __entry->usage,
+ 		      __entry->parent, __entry->n_children, __entry->n_active,
+ 		      __entry->flags, __entry->retire)
+@@ -279,7 +279,7 @@ TRACE_EVENT(fscache_enable,
+ 	    TP_ARGS(cookie),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
+ 		    __field(int,			usage		)
+ 		    __field(int,			n_children	)
+ 		    __field(int,			n_active	)
+@@ -287,14 +287,14 @@ TRACE_EVENT(fscache_enable,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie	= cookie;
++		    __entry->cookie	= cookie->debug_id;
+ 		    __entry->usage	= atomic_read(&cookie->usage);
+ 		    __entry->n_children	= atomic_read(&cookie->n_children);
+ 		    __entry->n_active	= atomic_read(&cookie->n_active);
+ 		    __entry->flags	= cookie->flags;
+ 			   ),
+ 
+-	    TP_printk("c=%p u=%d Nc=%d Na=%d f=%02x",
++	    TP_printk("c=%08x u=%d Nc=%d Na=%d f=%02x",
+ 		      __entry->cookie, __entry->usage,
+ 		      __entry->n_children, __entry->n_active, __entry->flags)
+ 	    );
+@@ -305,7 +305,7 @@ TRACE_EVENT(fscache_disable,
+ 	    TP_ARGS(cookie),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
+ 		    __field(int,			usage		)
+ 		    __field(int,			n_children	)
+ 		    __field(int,			n_active	)
+@@ -313,14 +313,14 @@ TRACE_EVENT(fscache_disable,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie	= cookie;
++		    __entry->cookie	= cookie->debug_id;
+ 		    __entry->usage	= atomic_read(&cookie->usage);
+ 		    __entry->n_children	= atomic_read(&cookie->n_children);
+ 		    __entry->n_active	= atomic_read(&cookie->n_active);
+ 		    __entry->flags	= cookie->flags;
+ 			   ),
+ 
+-	    TP_printk("c=%p u=%d Nc=%d Na=%d f=%02x",
++	    TP_printk("c=%08x u=%d Nc=%d Na=%d f=%02x",
+ 		      __entry->cookie, __entry->usage,
+ 		      __entry->n_children, __entry->n_active, __entry->flags)
+ 	    );
+@@ -333,8 +333,8 @@ TRACE_EVENT(fscache_osm,
+ 	    TP_ARGS(object, state, wait, oob, event_num),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
+-		    __field(struct fscache_object *,	object		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		object		)
+ 		    __array(char,			state, 8	)
+ 		    __field(bool,			wait		)
+ 		    __field(bool,			oob		)
+@@ -342,15 +342,15 @@ TRACE_EVENT(fscache_osm,
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= object->cookie;
+-		    __entry->object		= object;
++		    __entry->cookie		= object->cookie->debug_id;
++		    __entry->object		= object->debug_id;
+ 		    __entry->wait		= wait;
+ 		    __entry->oob		= oob;
+ 		    __entry->event_num		= event_num;
+ 		    memcpy(__entry->state, state->short_name, 8);
+ 			   ),
+ 
+-	    TP_printk("c=%p o=%p %s %s%sev=%d",
++	    TP_printk("c=%08x o=%08d %s %s%sev=%d",
+ 		      __entry->cookie,
+ 		      __entry->object,
+ 		      __entry->state,
+@@ -370,18 +370,18 @@ TRACE_EVENT(fscache_page,
+ 	    TP_ARGS(cookie, page, why),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
+ 		    __field(pgoff_t,			page		)
+ 		    __field(enum fscache_page_trace,	why		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
++		    __entry->cookie		= cookie->debug_id;
+ 		    __entry->page		= page->index;
+ 		    __entry->why		= why;
+ 			   ),
+ 
+-	    TP_printk("c=%p %s pg=%lx",
++	    TP_printk("c=%08x %s pg=%lx",
+ 		      __entry->cookie,
+ 		      __print_symbolic(__entry->why, fscache_page_traces),
+ 		      __entry->page)
+@@ -394,20 +394,20 @@ TRACE_EVENT(fscache_check_page,
+ 	    TP_ARGS(cookie, page, val, n),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
+ 		    __field(void *,			page		)
+ 		    __field(void *,			val		)
+ 		    __field(int,			n		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
++		    __entry->cookie		= cookie->debug_id;
+ 		    __entry->page		= page;
+ 		    __entry->val		= val;
+ 		    __entry->n			= n;
+ 			   ),
+ 
+-	    TP_printk("c=%p pg=%p val=%p n=%d",
++	    TP_printk("c=%08x pg=%p val=%p n=%d",
+ 		      __entry->cookie, __entry->page, __entry->val, __entry->n)
+ 	    );
+ 
+@@ -417,14 +417,14 @@ TRACE_EVENT(fscache_wake_cookie,
+ 	    TP_ARGS(cookie),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
++		    __entry->cookie		= cookie->debug_id;
+ 			   ),
+ 
+-	    TP_printk("c=%p", __entry->cookie)
++	    TP_printk("c=%08x", __entry->cookie)
+ 	    );
+ 
+ TRACE_EVENT(fscache_op,
+@@ -434,18 +434,18 @@ TRACE_EVENT(fscache_op,
+ 	    TP_ARGS(cookie, op, why),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
+-		    __field(struct fscache_operation *,	op		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		op		)
+ 		    __field(enum fscache_op_trace,	why		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
+-		    __entry->op			= op;
++		    __entry->cookie		= cookie->debug_id;
++		    __entry->op			= op->debug_id;
+ 		    __entry->why		= why;
+ 			   ),
+ 
+-	    TP_printk("c=%p op=%p %s",
++	    TP_printk("c=%08x op=%08x %s",
+ 		      __entry->cookie, __entry->op,
+ 		      __print_symbolic(__entry->why, fscache_op_traces))
+ 	    );
+@@ -457,20 +457,20 @@ TRACE_EVENT(fscache_page_op,
+ 	    TP_ARGS(cookie, page, op, what),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		op		)
+ 		    __field(pgoff_t,			page		)
+-		    __field(struct fscache_operation *,	op		)
+ 		    __field(enum fscache_page_op_trace,	what		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
++		    __entry->cookie		= cookie->debug_id;
+ 		    __entry->page		= page ? page->index : 0;
+-		    __entry->op			= op;
++		    __entry->op			= op->debug_id;
+ 		    __entry->what		= what;
+ 			   ),
+ 
+-	    TP_printk("c=%p %s pg=%lx op=%p",
++	    TP_printk("c=%08x %s pg=%lx op=%08x",
+ 		      __entry->cookie,
+ 		      __print_symbolic(__entry->what, fscache_page_op_traces),
+ 		      __entry->page, __entry->op)
+@@ -483,20 +483,20 @@ TRACE_EVENT(fscache_wrote_page,
+ 	    TP_ARGS(cookie, page, op, ret),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		op		)
+ 		    __field(pgoff_t,			page		)
+-		    __field(struct fscache_operation *,	op		)
+ 		    __field(int,			ret		)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
++		    __entry->cookie		= cookie->debug_id;
+ 		    __entry->page		= page->index;
+-		    __entry->op			= op;
++		    __entry->op			= op->debug_id;
+ 		    __entry->ret		= ret;
+ 			   ),
+ 
+-	    TP_printk("c=%p pg=%lx op=%p ret=%d",
++	    TP_printk("c=%08x pg=%lx op=%08x ret=%d",
+ 		      __entry->cookie, __entry->page, __entry->op, __entry->ret)
+ 	    );
+ 
+@@ -507,22 +507,22 @@ TRACE_EVENT(fscache_gang_lookup,
+ 	    TP_ARGS(cookie, op, results, n, store_limit),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(struct fscache_cookie *,	cookie		)
+-		    __field(struct fscache_operation *,	op		)
++		    __field(unsigned int,		cookie		)
++		    __field(unsigned int,		op		)
+ 		    __field(pgoff_t,			results0	)
+ 		    __field(int,			n		)
+ 		    __field(pgoff_t,			store_limit	)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+-		    __entry->cookie		= cookie;
+-		    __entry->op			= op;
++		    __entry->cookie		= cookie->debug_id;
++		    __entry->op			= op->debug_id;
+ 		    __entry->results0		= results[0] ? ((struct page *)results[0])->index : (pgoff_t)-1;
+ 		    __entry->n			= n;
+ 		    __entry->store_limit	= store_limit;
+ 			   ),
+ 
+-	    TP_printk("c=%p op=%p r0=%lx n=%d sl=%lx",
++	    TP_printk("c=%08x op=%08x r0=%lx n=%d sl=%lx",
+ 		      __entry->cookie, __entry->op, __entry->results0, __entry->n,
+ 		      __entry->store_limit)
+ 	    );
 
 
-Extra " at end of name.
-
-
->> +  - Sebastian Reichel <sre@kernel.org>
->> +
->> +description: |
->> +  Support various Texas Instruments fuel gauge devices that share
->> similar
->> +  register maps and power supply properties
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,bq27200 - BQ27200
->> +      - ti,bq27210 - BQ27210
->> +      - ti,bq27500 - deprecated, use revision specific property below
->> +      - ti,bq27510 - deprecated, use revision specific property below
->> +      - ti,bq27520 - deprecated, use revision specific property below
->> +      - ti,bq27500-1 - BQ27500/1
->> +      - ti,bq27510g1 - BQ27510-g1
->> +      - ti,bq27510g2 - BQ27510-g2
->> +      - ti,bq27510g3 - BQ27510-g3
->> +      - ti,bq27520g1 - BQ27520-g1
->> +      - ti,bq27520g2 - BQ27520-g2
->> +      - ti,bq27520g3 - BQ27520-g3
->> +      - ti,bq27520g4 - BQ27520-g4
->> +      - ti,bq27521 - BQ27521
->> +      - ti,bq27530 - BQ27530
->> +      - ti,bq27531 - BQ27531
->> +      - ti,bq27541 - BQ27541
->> +      - ti,bq27542 - BQ27542
->> +      - ti,bq27546 - BQ27546
->> +      - ti,bq27742 - BQ27742
->> +      - ti,bq27545 - BQ27545
->> +      - ti,bq27411 - BQ27411
->> +      - ti,bq27421 - BQ27421
->> +      - ti,bq27425 - BQ27425
->> +      - ti,bq27426 - BQ27426
->> +      - ti,bq27441 - BQ27441
->> +      - ti,bq27621 - BQ27621
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: integer, I2C address of the fuel gauge.
->> +
->> +  monitored-battery:
->> +    description: phandle of battery characteristics node
->> +
->> +  energy-full-design-microwatt-hours:
->> +    description: |
->> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->> +      If this property is set then charge-full-design-microamp-hours
->> must be
->> +      set as well.
-
-
-These are properties of the battery node and should be described in
-their binding, they are not part of the fuel gauge node here.
-
-Andrew
-
-
->> +
->> +  charge-full-design-microamp-hours:
->> +    description: |
->> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->> +      If this property is set then energy-full-design-microwatt-hours
->> must be
->> +      set as well.
->> +
->> +  voltage-min-design-microvolt:
->> +    description: |
->> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c0 {
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +      bat: battery {
->> +        compatible = "simple-battery";
->> +        voltage-min-design-microvolt = <3200000>;
->> +        energy-full-design-microwatt-hours = <5290000>;
->> +        charge-full-design-microamp-hours = <1430000>;
->> +      };
->> +
->> +      bq27510g3: fuel-gauge@55 {
->> +        compatible = "ti,bq27510g3";
->> +        reg = <0x55>;
->> +        monitored-battery = <&bat>;
->> +      };
->> +    };
