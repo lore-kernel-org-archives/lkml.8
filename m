@@ -2,124 +2,63 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C2DC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06273C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2AA206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB390206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yi8sXLZj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCjrVY7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgEDP7U (ORCPT
+        id S1729455AbgEDQAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:59:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24724 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725941AbgEDP7T (ORCPT
+        Mon, 4 May 2020 12:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726578AbgEDQAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:59:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588607958;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ddTUPWkbJZYVFUnajNbkHHVyfS6o34xZoLIhU7FW+jg=;
-        b=Yi8sXLZjyxTsML+zKt5EODuouNcbfUCwAJ9/0rT25hNqCjY5t3iIaxbvF2TdMnm5YpW+SN
-        kZtvRL8FRNhaAy+5JpbT1YqVuKeCdQ4dkNmtW/XUBZsfkYd8hq7oNN9Fgj9fd4EUwD3+T+
-        FuJeM7Ytp3lM7TPXXdvPEHhq3wvVEno=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-dJUi2UMwNs-6gc6SsWfoVQ-1; Mon, 04 May 2020 11:59:16 -0400
-X-MC-Unique: dJUi2UMwNs-6gc6SsWfoVQ-1
-Received: by mail-wr1-f70.google.com with SMTP id h12so476968wrr.19
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 08:59:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ddTUPWkbJZYVFUnajNbkHHVyfS6o34xZoLIhU7FW+jg=;
-        b=nPmpXq1o70dbae+MJ8Tlf6AkII6c2RHgTkGxmQYgqHm1nZh9uHzCcJdgFjE1xMqrIg
-         jbSBn5RYvJq5ieAOJWz5XbJ4bVWfN/cw7TWAfozf6sxmI3mgnN8D0Ief0YT3UGqez2DA
-         M5IElTQqAxp5YTDbP29J2j3k9Vn15Va++Rdmf906ucqGuUN4hl3GAwqp37JiHXtQKU/i
-         7agoPGaGTp8a1AbDoaAMhQl0u0eX6EyNPS0EeqKeJ8LXbiwd5t+Zmv6txtfNpRbB3zWF
-         wnZ6tOD5CGW9mackmAWIiGNc9LvaO0m7ZOI7gfg7ROkvqSVz/SGeVhGOx6P0y9XuoXNl
-         f5ag==
-X-Gm-Message-State: AGi0PubwGiYFxJBdBKVnDFCG4jQkoQnZ/BVrENXxFUukDC9uNUqAEikV
-        X44YXHCcEEuUW2CntpSDMHLi7zDql/GI0g/Tr/SoyaK4mViNb9ZDiPI0S81OPP0bMirvLD7Bw9L
-        EcGFCBI6z86ZAG7qsgpJ/eefs
-X-Received: by 2002:adf:978c:: with SMTP id s12mr19581301wrb.312.1588607955105;
-        Mon, 04 May 2020 08:59:15 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKUqGAxLl3kZdLQFzFsFd2o5zy5mB1ZhUTdut7W7BydbWo04mR7HS8DgBwu2lrAv8x64l5OJw==
-X-Received: by 2002:adf:978c:: with SMTP id s12mr19581276wrb.312.1588607954889;
-        Mon, 04 May 2020 08:59:14 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id f7sm18140805wrt.10.2020.05.04.08.59.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 08:59:14 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: Replace a BUG_ON(1) with BUG() to squash clang
- warning
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-References: <20200504153506.28898-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5bf03dc1-c5b1-8264-6361-e85c523a2fa4@redhat.com>
-Date:   Mon, 4 May 2020 17:59:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 4 May 2020 12:00:52 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC281C061A0E;
+        Mon,  4 May 2020 09:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BATpBtqBqL4zI1OrI7zzNo1CuDBthfYTyMzJ5Nwkppw=; b=vCjrVY7PzjjoLJQH9+P/guoOle
+        GrYcFfLKsNvFqzN1KYQ8FDpBZ3Jxiohzi4no+ZSVaO+7aSHe7yErUWm4DlQQuvchC3QAY6Yq7pR0V
+        4CRpk2v5o9GOoriXl1Wzzsjv3d24Mfjbt+V28gkD/op2PwfzRVb9USqaWllYakU3KHS01OBAEhUkT
+        rd+s8T8W3WSZ3BXzilwq2Oa3ehrG7E2yWLtjsKeGUgE3bO+4kgR5hqCjdfOtL0IUgoPh/xN1jQxT+
+        JWgoaHd++ntw8dQY5m45Pe50JjWRDzIaqQqDBZgl7AfeOaHsTMgFSBxKxpXZezVWOsozjktxKzqYm
+        gkSJ5P5A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVdWW-0006dS-LY; Mon, 04 May 2020 16:00:52 +0000
+Date:   Mon, 4 May 2020 09:00:52 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH RFC 1/2] fs/iomap/direct-io: pass NOWAIT to bio flags
+Message-ID: <20200504160052.GA8625@infradead.org>
+References: <158860769311.32485.8003552176738816448.stgit@buzz>
 MIME-Version: 1.0
-In-Reply-To: <20200504153506.28898-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158860769311.32485.8003552176738816448.stgit@buzz>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/20 17:35, Sean Christopherson wrote:
-> Use BUG() in the impossible-to-hit default case when switching on the
-> scope of INVEPT to squash a warning with clang 11 due to clang treating
-> the BUG_ON() as conditional.
+On Mon, May 04, 2020 at 06:54:53PM +0300, Konstantin Khlebnikov wrote:
+> This is required to avoid waiting in lower layers.
 > 
->   >> arch/x86/kvm/vmx/nested.c:5246:3: warning: variable 'roots_to_free'
->      is used uninitialized whenever 'if' condition is false
->      [-Wsometimes-uninitialized]
->                    BUG_ON(1);
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: ce8fe7b77bd8 ("KVM: nVMX: Free only the affected contexts when emulating INVEPT")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 2c36f3f53108..669445136144 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5249,7 +5249,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
->  		roots_to_free = KVM_MMU_ROOTS_ALL;
->  		break;
->  	default:
-> -		BUG_ON(1);
-> +		BUG();
->  		break;
->  	}
->  
-> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Queued, thanks.
-
-Paolo
-
+This looks sensible.  Did you run this through xfstests?
