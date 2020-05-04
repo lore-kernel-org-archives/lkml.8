@@ -2,217 +2,117 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7320EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC5C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5842E206EB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742382078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588575786;
+	bh=K10liEDKvo43/rjRR/x8/2QYEQYOsRSvIGJJty3CdVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xaN6dxh+Tyq1fN+WMfGhydqeX3gmr3LjFDv6Z3qZIvGqG6Rnfr9T4Sc5dSfMbhqj+
+	 2b7eM0XkryKfkNRLg6ZwkL7Q2lpKUKpB/IY2L9FlYWKd3HhzfpJIz90bq2aIzopLQv
+	 NbcqlOsIXrl9bykVsSklaIRkE3AdK2tJI1VCghDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgEDHAO (ORCPT
+        id S1727925AbgEDHDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:00:14 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:3518 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgEDHAO (ORCPT
+        Mon, 4 May 2020 03:03:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35684 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgEDHDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:00:14 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee55eafbd46cfd-fd0ef; Mon, 04 May 2020 14:59:18 +0800 (CST)
-X-RM-TRANSID: 2ee55eafbd46cfd-fd0ef
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.3.182.180])
-        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5eafbd4152c-0599b;
-        Mon, 04 May 2020 14:59:17 +0800 (CST)
-X-RM-TRANSID: 2eea5eafbd4152c-0599b
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        lgirdwood@gmail.com, bgoswami@codeaurora.org, plai@codeaurora.org
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] ASoC: qcom: Use the defined variable to simplify code
-Date:   Mon,  4 May 2020 14:59:47 +0800
-Message-Id: <20200504065947.12172-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Mon, 4 May 2020 03:03:05 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x18so19562674wrq.2;
+        Mon, 04 May 2020 00:03:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jjVK3IGY3lofxgky6MANKIlS/RTE1msGdHN8C79gtRA=;
+        b=cDu0EMjdG1BtJjN4HCuS28n3gPTbwkKPK2RIj58kca605qvsMMTY4BhGtTPA9FtIxm
+         QYR/YtS5LXlmfivcxJtqOHFnt3i1k8LRh+M5GepZRjjfuaP+1oGi6OssYo92axHFW5AI
+         lFC1lN7Bxm88uKyP5duSTRs+jD5sH2aYy7/0B5aRHGPONd+ekGOOuMRZN6OrCPPgwUm3
+         KQWl2n1kOzEk88zM2Q/9ls7e1f9RyIwyu7Yu6FPC0tBpWXc90M+59+23ZYQoj0GoyqnC
+         ZY2fZLv+76ZFwOMKmniaweuN3p1MB/pqqdD3NR016jHpGL4uIIt/vAb0dbSyEImbGpD1
+         CObQ==
+X-Gm-Message-State: AGi0PubQOFyxWr5BSJjJtKmkJDzyvUuFSOwwYOFvK0hsaKFfrPLtEXJF
+        eBFZTsbnbsKoQLECDYTYdQs=
+X-Google-Smtp-Source: APiQypL1DoXx6w0TGJSBvgI/zBJ2RIwW2P/T7NsRocZrPXDloYOn7lqwJM5NQOxDkI/4wpi4dbdQkg==
+X-Received: by 2002:adf:f40b:: with SMTP id g11mr18764892wro.178.1588575783322;
+        Mon, 04 May 2020 00:03:03 -0700 (PDT)
+Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
+        by smtp.gmail.com with ESMTPSA id r3sm18434951wrx.72.2020.05.04.00.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 00:03:02 -0700 (PDT)
+Date:   Mon, 4 May 2020 09:03:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+Message-ID: <20200504070301.GC22838@dhcp22.suse.cz>
+References: <20200430182712.237526-1-shakeelb@google.com>
+ <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the defined variable "dev" to make the code cleaner.
+On Fri 01-05-20 09:39:24, Yafang Shao wrote:
+> On Fri, May 1, 2020 at 2:27 AM Shakeel Butt <shakeelb@google.com> wrote:
+> >
+> > Lowering memory.max can trigger an oom-kill if the reclaim does not
+> > succeed. However if oom-killer does not find a process for killing, it
+> > dumps a lot of warnings.
+> >
+> 
+> I have been confused by this behavior for several months and I think
+> it will confuse more memcg users.
 
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- sound/soc/qcom/lpass-apq8016.c |  9 ++++----
- sound/soc/qcom/lpass-cpu.c     | 39 ++++++++++++++++------------------
- 2 files changed, 22 insertions(+), 26 deletions(-)
+Could you be more specific what has caused the confusion?
 
-diff --git a/sound/soc/qcom/lpass-apq8016.c b/sound/soc/qcom/lpass-apq8016.c
-index 6575da549..b3610d05b 100644
---- a/sound/soc/qcom/lpass-apq8016.c
-+++ b/sound/soc/qcom/lpass-apq8016.c
-@@ -166,28 +166,27 @@ static int apq8016_lpass_init(struct platform_device *pdev)
- 
- 	drvdata->pcnoc_mport_clk = devm_clk_get(dev, "pcnoc-mport-clk");
- 	if (IS_ERR(drvdata->pcnoc_mport_clk)) {
--		dev_err(&pdev->dev, "error getting pcnoc-mport-clk: %ld\n",
-+		dev_err(dev, "error getting pcnoc-mport-clk: %ld\n",
- 			PTR_ERR(drvdata->pcnoc_mport_clk));
- 		return PTR_ERR(drvdata->pcnoc_mport_clk);
- 	}
- 
- 	ret = clk_prepare_enable(drvdata->pcnoc_mport_clk);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error enabling pcnoc-mport-clk: %d\n",
--			ret);
-+		dev_err(dev, "Error enabling pcnoc-mport-clk: %d\n", ret);
- 		return ret;
- 	}
- 
- 	drvdata->pcnoc_sway_clk = devm_clk_get(dev, "pcnoc-sway-clk");
- 	if (IS_ERR(drvdata->pcnoc_sway_clk)) {
--		dev_err(&pdev->dev, "error getting pcnoc-sway-clk: %ld\n",
-+		dev_err(dev, "error getting pcnoc-sway-clk: %ld\n",
- 			PTR_ERR(drvdata->pcnoc_sway_clk));
- 		return PTR_ERR(drvdata->pcnoc_sway_clk);
- 	}
- 
- 	ret = clk_prepare_enable(drvdata->pcnoc_sway_clk);
- 	if (ret) {
--		dev_err(&pdev->dev, "Error enabling pcnoc_sway_clk: %d\n", ret);
-+		dev_err(dev, "Error enabling pcnoc_sway_clk: %d\n", ret);
- 		return ret;
- 	}
- 
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index dbce7e92b..c6d26395f 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -425,12 +425,11 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 
- 	dsp_of_node = of_parse_phandle(pdev->dev.of_node, "qcom,adsp", 0);
- 	if (dsp_of_node) {
--		dev_err(&pdev->dev, "DSP exists and holds audio resources\n");
-+		dev_err(dev, "DSP exists and holds audio resources\n");
- 		return -EBUSY;
- 	}
- 
--	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct lpass_data),
--			GFP_KERNEL);
-+	drvdata = devm_kzalloc(dev, sizeof(struct lpass_data), GFP_KERNEL);
- 	if (!drvdata)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, drvdata);
-@@ -444,9 +443,9 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
- 
--	drvdata->lpaif = devm_ioremap_resource(&pdev->dev, res);
-+	drvdata->lpaif = devm_ioremap_resource(dev, res);
- 	if (IS_ERR((void const __force *)drvdata->lpaif)) {
--		dev_err(&pdev->dev, "error mapping reg resource: %ld\n",
-+		dev_err(dev, "error mapping reg resource: %ld\n",
- 				PTR_ERR((void const __force *)drvdata->lpaif));
- 		return PTR_ERR((void const __force *)drvdata->lpaif);
- 	}
-@@ -455,10 +454,10 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 						variant->wrdma_channels +
- 						variant->wrdma_channel_start);
- 
--	drvdata->lpaif_map = devm_regmap_init_mmio(&pdev->dev, drvdata->lpaif,
-+	drvdata->lpaif_map = devm_regmap_init_mmio(dev, drvdata->lpaif,
- 			&lpass_cpu_regmap_config);
- 	if (IS_ERR(drvdata->lpaif_map)) {
--		dev_err(&pdev->dev, "error initializing regmap: %ld\n",
-+		dev_err(dev, "error initializing regmap: %ld\n",
- 			PTR_ERR(drvdata->lpaif_map));
- 		return PTR_ERR(drvdata->lpaif_map);
- 	}
-@@ -468,10 +467,10 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < variant->num_dai; i++) {
- 		dai_id = variant->dai_driver[i].id;
--		drvdata->mi2s_osr_clk[dai_id] = devm_clk_get(&pdev->dev,
-+		drvdata->mi2s_osr_clk[dai_id] = devm_clk_get(dev,
- 					     variant->dai_osr_clk_names[i]);
- 		if (IS_ERR(drvdata->mi2s_osr_clk[dai_id])) {
--			dev_warn(&pdev->dev,
-+			dev_warn(dev,
- 				"%s() error getting optional %s: %ld\n",
- 				__func__,
- 				variant->dai_osr_clk_names[i],
-@@ -480,10 +479,10 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 			drvdata->mi2s_osr_clk[dai_id] = NULL;
- 		}
- 
--		drvdata->mi2s_bit_clk[dai_id] = devm_clk_get(&pdev->dev,
-+		drvdata->mi2s_bit_clk[dai_id] = devm_clk_get(dev,
- 						variant->dai_bit_clk_names[i]);
- 		if (IS_ERR(drvdata->mi2s_bit_clk[dai_id])) {
--			dev_err(&pdev->dev,
-+			dev_err(dev,
- 				"error getting %s: %ld\n",
- 				variant->dai_bit_clk_names[i],
- 				PTR_ERR(drvdata->mi2s_bit_clk[dai_id]));
-@@ -491,41 +490,39 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	drvdata->ahbix_clk = devm_clk_get(&pdev->dev, "ahbix-clk");
-+	drvdata->ahbix_clk = devm_clk_get(dev, "ahbix-clk");
- 	if (IS_ERR(drvdata->ahbix_clk)) {
--		dev_err(&pdev->dev, "error getting ahbix-clk: %ld\n",
-+		dev_err(dev, "error getting ahbix-clk: %ld\n",
- 			PTR_ERR(drvdata->ahbix_clk));
- 		return PTR_ERR(drvdata->ahbix_clk);
- 	}
- 
- 	ret = clk_set_rate(drvdata->ahbix_clk, LPASS_AHBIX_CLOCK_FREQUENCY);
- 	if (ret) {
--		dev_err(&pdev->dev, "error setting rate on ahbix_clk: %d\n",
--			ret);
-+		dev_err(dev, "error setting rate on ahbix_clk: %d\n", ret);
- 		return ret;
- 	}
--	dev_dbg(&pdev->dev, "set ahbix_clk rate to %lu\n",
-+	dev_dbg(dev, "set ahbix_clk rate to %lu\n",
- 		clk_get_rate(drvdata->ahbix_clk));
- 
- 	ret = clk_prepare_enable(drvdata->ahbix_clk);
- 	if (ret) {
--		dev_err(&pdev->dev, "error enabling ahbix_clk: %d\n", ret);
-+		dev_err(dev, "error enabling ahbix_clk: %d\n", ret);
- 		return ret;
- 	}
- 
--	ret = devm_snd_soc_register_component(&pdev->dev,
-+	ret = devm_snd_soc_register_component(dev,
- 					      &lpass_cpu_comp_driver,
- 					      variant->dai_driver,
- 					      variant->num_dai);
- 	if (ret) {
--		dev_err(&pdev->dev, "error registering cpu driver: %d\n", ret);
-+		dev_err(dev, "error registering cpu driver: %d\n", ret);
- 		goto err_clk;
- 	}
- 
- 	ret = asoc_qcom_lpass_platform_register(pdev);
- 	if (ret) {
--		dev_err(&pdev->dev, "error registering platform driver: %d\n",
--			ret);
-+		dev_err(dev, "error registering platform driver: %d\n", ret);
- 		goto err_clk;
- 	}
- 
+> We should keep the memcg oom behavior consistent with system oom - no
+> oom kill if no process.
+
+This is not the global mmemcg behavior. We do complain loud on no
+eligible tasks and actually panic the system. Memcg cannot simply
+do the same by default for obvious reasons.
+
+> What about bellow change ?
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index e28098e13f1c..25fbc37a747f 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6086,6 +6086,9 @@ static ssize_t memory_max_write(struct
+> kernfs_open_file *of,
+>                         continue;
+>                 }
+> 
+> +               if (!cgroup_is_populated(memcg->css.cgroup))
+> +                       break;
+> +
+>                 memcg_memory_event(memcg, MEMCG_OOM);
+>                 if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
+>                         break;
+
+I am not a great fan to be honest. The warning might be useful for other
+usecases when it is not clear that the memcg is empty.
+
 -- 
-2.20.1.windows.1
-
-
-
+Michal Hocko
+SUSE Labs
