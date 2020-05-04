@@ -2,227 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59DEC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7F1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A092420721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588605879;
-	bh=MzNiVO8MVdci6uJ3eTJQ2QquqS+q1KU5qC3zotobsgU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=tWx0xsmVE3XEYCwmmlSknicWj0ZnQCQUP1vlc9Z/Ot96XrG76WTtqbxetVldHyyKt
-	 gLKYvheP+uBvF5QdycpgHNgMmj9zGlRgddTR33PEKgzKPCaJ9JjkuszO2Y5TmVEbZU
-	 usCy+rQZ7Z843aLYVIc/y8/+aze9r/+hWnjv2GG8=
+	by mail.kernel.org (Postfix) with ESMTP id 8A566206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:25:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vpCJWCcI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbgEDPYj (ORCPT
+        id S1729312AbgEDPZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgEDPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:24:38 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6258206D9;
-        Mon,  4 May 2020 15:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588605877;
-        bh=MzNiVO8MVdci6uJ3eTJQ2QquqS+q1KU5qC3zotobsgU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=iKyQy2S9W7xUonlWX2EvnoprGb7t1/U0JR5DNbgCp3J8300h8ihPmw5xaobu3gUc+
-         xjiVh2F8aVSbO/fU3l+Whp6JAlCWD3fQAZJiWZLyU2N3Fijk5/UtjEGrvQubn0q5pk
-         vKBTDos/HQ/K6c1H1ZpWrK5YTunXhWl4B+1yX1ok=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9474D3522C68; Mon,  4 May 2020 08:24:37 -0700 (PDT)
-Date:   Mon, 4 May 2020 08:24:37 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-Message-ID: <20200504152437.GK2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-10-urezki@gmail.com>
- <20200501212749.GD7560@paulmck-ThinkPad-P72>
- <20200504124323.GA17577@pc636>
+        Mon, 4 May 2020 11:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729217AbgEDPZb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:25:31 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F2CC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 08:25:29 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id e8so11613881ilm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 08:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1D6ZTlzAS5HkUezZq1d69+4ZI9fkn6KXF485uBa6Wb4=;
+        b=vpCJWCcIJezmGQ/p3n8j3sNcRcaIqyVKXOJ7w7db8gP/UBvO5jIYrQE8TmB+ZbrVJ4
+         yt7WQB29zl923U4tE4aW2wXa+oJILUBPFeI+PZ3Cc1MMK7Hrlnuz4v2s21a9fgXRrL91
+         lsKc/wBzNJp7NV7lUp+hbdmHzTeT8TWzRbf42I9CfncjpZvyAq13woPfTGZvPaXbLsFg
+         1Ypd6SD1Dln2/KB30PQcMJWtse0ybZgNIlCf9gDpbLMc7hZs9AE5skkqHbav6t8gwO9R
+         bS5DfvH6DuhDoo/iRSGy2SimyuYdqWnVYwuK1yMBI3XWM0rMWz/0GqBoj673fbXVr/ZC
+         fY3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1D6ZTlzAS5HkUezZq1d69+4ZI9fkn6KXF485uBa6Wb4=;
+        b=Ntfw5TeB2IimDwOc0Pl+ziWuvdZa9xbQmPrp4pRfuZSS4IQ7pdmfqTC+LQa9b/xZ/Z
+         aU9/NodfgTtjhkp7jcIxqegoc/m0zoPimHZjlOqsadhJpsYagY/Uuo/uvW7uIC9v1LsU
+         Jg9v0uUgek6JdBLFe2AA+BKhVlj8Qm0cQFcLTmF8XvmR+7UKZqKOz3d6uQH7WcL+cAiW
+         uKvcFn2urZjz0OI4sfd7KYk6q3t/tPBAod7gb4VXB7tHOyfFhedlVM0ev5lUzWvnlyQW
+         Ky3uxEx7zqDYymEjr8k81AKW8HvooGFnkXMq+Ku7fkL8HNSCfTkOeWBuQ0mQDvPCBE9j
+         CLvQ==
+X-Gm-Message-State: AGi0Pubz8wKD511z5GJ4i1ZmoWo19OAuR/pW7ViXKz6UgcRdOvhATUeC
+        1tJODin85YuFKTyfmwMjFh8k0helHMgxnw==
+X-Google-Smtp-Source: APiQypJvJRK186D9XWYvVBKoUDgGWOQugwpDAZB2tbbwlSi7OBFGdZTUwIibCv0T3/bRtM9QcnRvew==
+X-Received: by 2002:a92:898c:: with SMTP id w12mr17264192ilk.139.1588605928210;
+        Mon, 04 May 2020 08:25:28 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l14sm4084365ioj.12.2020.05.04.08.25.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 08:25:27 -0700 (PDT)
+Subject: Re: [PATCH][next] io_uring: Remove logically dead code in io_splice
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200504151912.GA22779@embeddedor>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b26c33c8-e636-edf6-3d43-7b3394850d7a@kernel.dk>
+Date:   Mon, 4 May 2020 09:25:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504124323.GA17577@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200504151912.GA22779@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 02:43:23PM +0200, Uladzislau Rezki wrote:
-> On Fri, May 01, 2020 at 02:27:49PM -0700, Paul E. McKenney wrote:
-> > On Tue, Apr 28, 2020 at 10:58:48PM +0200, Uladzislau Rezki (Sony) wrote:
-> > > Cache some extra objects per-CPU. During reclaim process
-> > > some pages are cached instead of releasing by linking them
-> > > into the list. Such approach provides O(1) access time to
-> > > the cache.
-> > > 
-> > > That reduces number of requests to the page allocator, also
-> > > that makes it more helpful if a low memory condition occurs.
-> > > 
-> > > A parameter reflecting the minimum allowed pages to be
-> > > cached per one CPU is propagated via sysfs, it is read
-> > > only, the name is "rcu_min_cached_objs".
-> > > 
-> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > ---
-> > >  kernel/rcu/tree.c | 64 ++++++++++++++++++++++++++++++++++++++++++++---
-> > >  1 file changed, 60 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > index 89e9ca3f4e3e..d8975819b1c9 100644
-> > > --- a/kernel/rcu/tree.c
-> > > +++ b/kernel/rcu/tree.c
-> > > @@ -178,6 +178,14 @@ module_param(gp_init_delay, int, 0444);
-> > >  static int gp_cleanup_delay;
-> > >  module_param(gp_cleanup_delay, int, 0444);
-> > >  
-> > > +/*
-> > > + * This rcu parameter is read-only, but can be write also.
-> > 
-> > You mean that although the parameter is read-only, you see no reason
-> > why it could not be converted to writeable?
-> > 
-> I added just a note. If it is writable, then we can change the size of the
-> per-CPU cache dynamically, i.e. "echo 5 > /sys/.../rcu_min_cached_objs"
-> would cache 5 pages. But i do not have a strong opinion if it should be
-> writable.
+On 5/4/20 9:19 AM, Gustavo A. R. Silva wrote:
+> In case force_nonblock happens to be true, the function returns
+> at:
 > 
-> > If it was writeable, and a given CPU had the maximum numbr of cached
-> > objects, the rcu_min_cached_objs value was decreased, but that CPU never
-> > saw another kfree_rcu(), would the number of cached objects change?
-> > 
-> No. It works the way: unqueue the page from cache in the kfree_rcu(),
-> whereas "rcu work" will put it back if number of objects < rcu_min_cached_objs,
-> if >= will free the page.
-
-Just to make sure I understand...  If someone writes a smaller number to
-the sysfs variable, the per-CPU caches will be decreased at that point,
-immediately during that sysfs write?  Or are you saying something else?
-
-> > (Just curious, not asking for a change in functionality.)
-> > 
-> > > + * It reflects the minimum allowed number of objects which
-> > > + * can be cached per-CPU. Object size is equal to one page.
-> > > + */
-> > > +int rcu_min_cached_objs = 2;
-> > > +module_param(rcu_min_cached_objs, int, 0444);
-> > > +
-> > >  /* Retrieve RCU kthreads priority for rcutorture */
-> > >  int rcu_get_gp_kthreads_prio(void)
-> > >  {
-> > > @@ -2887,7 +2895,6 @@ struct kfree_rcu_cpu_work {
-> > >   * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
-> > >   * @head: List of kfree_rcu() objects not yet waiting for a grace period
-> > >   * @bhead: Bulk-List of kfree_rcu() objects not yet waiting for a grace period
-> > > - * @bcached: Keeps at most one object for later reuse when build chain blocks
-> > >   * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
-> > >   * @lock: Synchronize access to this structure
-> > >   * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
-> > > @@ -2902,7 +2909,6 @@ struct kfree_rcu_cpu_work {
-> > >  struct kfree_rcu_cpu {
-> > >  	struct rcu_head *head;
-> > >  	struct kfree_rcu_bulk_data *bhead;
-> > > -	struct kfree_rcu_bulk_data *bcached;
-> > >  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
-> > >  	raw_spinlock_t lock;
-> > >  	struct delayed_work monitor_work;
-> > > @@ -2910,6 +2916,15 @@ struct kfree_rcu_cpu {
-> > >  	bool initialized;
-> > >  	// Number of objects for which GP not started
-> > >  	int count;
-> > > +
-> > > +	/*
-> > > +	 * Number of cached objects which are queued into
-> > > +	 * the lock-less list. This cache is used by the
-> > > +	 * kvfree_call_rcu() function and as of now its
-> > > +	 * size is static.
-> > > +	 */
-> > > +	struct llist_head bkvcache;
-> > > +	int nr_bkv_objs;
-> > >  };
-> > >  
-> > >  static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc) = {
-> > > @@ -2946,6 +2961,31 @@ krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
-> > >  	local_irq_restore(flags);
-> > >  }
-> > >  
-> > > +static inline struct kfree_rcu_bulk_data *
-> > > +get_cached_bnode(struct kfree_rcu_cpu *krcp)
-> > > +{
-> > > +	if (!krcp->nr_bkv_objs)
-> > > +		return NULL;
-> > > +
-> > > +	krcp->nr_bkv_objs--;
-> > > +	return (struct kfree_rcu_bulk_data *)
-> > > +		llist_del_first(&krcp->bkvcache);
-> > > +}
-> > > +
-> > > +static inline bool
-> > > +put_cached_bnode(struct kfree_rcu_cpu *krcp,
-> > > +	struct kfree_rcu_bulk_data *bnode)
-> > > +{
-> > > +	/* Check the limit. */
-> > > +	if (krcp->nr_bkv_objs >= rcu_min_cached_objs)
-> > > +		return false;
-> > > +
-> > > +	llist_add((struct llist_node *) bnode, &krcp->bkvcache);
-> > > +	krcp->nr_bkv_objs++;
-> > > +	return true;
-> > > +
-> > > +}
-> > > +
-> > >  /*
-> > >   * This function is invoked in workqueue context after a grace period.
-> > >   * It frees all the objects queued on ->bhead_free or ->head_free.
-> > > @@ -2981,7 +3021,12 @@ static void kfree_rcu_work(struct work_struct *work)
-> > >  		kfree_bulk(bhead->nr_records, bhead->records);
-> > >  		rcu_lock_release(&rcu_callback_map);
-> > >  
-> > > -		if (cmpxchg(&krcp->bcached, NULL, bhead))
-> > > +		krcp = krc_this_cpu_lock(&flags);
-> > 
-> > Presumably the list can also be accessed without holding this lock,
-> > because otherwise we shouldn't need llist...
-> > 
-> Hm... We increase the number of elements in cache, therefore it is not
-> lockless. From the other hand i used llist_head to maintain the cache
-> because it is single linked list, we do not need "*prev" link. Also
-> we do not need to init the list.
+>  2779         if (force_nonblock)
+>  2780                 return -EAGAIN;
 > 
-> But i can change it to list_head. Please let me know if i need :)
+> before reaching this line of code. So, the null check on force_nonblock
+> at 2785, is never actually being executed.
+> 
+> Addresses-Coverity-ID: 1492838 ("Logically dead code")
+> Fixes: 2fb3e82284fc ("io_uring: punt splice async because of inode mutex")
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  fs/io_uring.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index e5dfbbd2aa34..4b1efb062f7f 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -2782,7 +2782,7 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
+>  	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
+>  	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
+>  	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
+> -	if (force_nonblock && ret == -EAGAIN)
+> +	if (ret == -EAGAIN)
+>  		return -EAGAIN;
 
-Hmmm...  Maybe it is time for a non-atomic singly linked list?  In the RCU
-callback processing, the operations were open-coded, but they have been
-pushed into include/linux/rcu_segcblist.h and kernel/rcu/rcu_segcblist.*.
+This isn't right, it should just remove the two lines completely. But
+also see:
 
-Maybe some non-atomic/protected/whatever macros in the llist.h file?
-Or maybe just open-code the singly linked list?  (Probably not the
-best choice, though.)  Add comments stating that the atomic properties
-of the llist functions aren't neded?  Something else?
+https://lore.kernel.org/io-uring/529ea928-88a6-2cbe-ba8c-72b4c68cc7e8@kernel.dk/T/#u
 
-The comments would be a good start.  Just to take pity on people seeing
-the potential for concurrency and wondering how the concurrent accesses
-actually happen.  ;-)
+-- 
+Jens Axboe
 
-							Thanx, Paul
