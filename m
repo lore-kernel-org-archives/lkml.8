@@ -2,104 +2,122 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D7EC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11F30206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E541A206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dmetl9QO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EC2a+3lQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgEDIev (ORCPT
+        id S1728169AbgEDIf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725941AbgEDIeu (ORCPT
+        Mon, 4 May 2020 04:35:26 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:7313 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgEDIfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:34:50 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968D6C061A0E;
-        Mon,  4 May 2020 01:34:50 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d22so2983456pgk.3;
-        Mon, 04 May 2020 01:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=59iokotS8iIDb+gGu6n274MbuIuRWgjxTwxL1qAA8wM=;
-        b=dmetl9QONWoXGhv00gP8OPuyWeS0oeJPBBtLGuqgRYBpTTz+Z7DNQsYN5C1NttrEkx
-         aIidf/us1Aj7cPNlxo4qqIYxv9Ebn9XR/yg/07LtO/62s0FVzr5ZZ41yhanUN2ybmBIv
-         4DnlyZbMMQroW2yKPkyfCAin+/ZyHh0KerJYGvJ0X2VNa41CEwsX8VEbdBjfss/E4AOM
-         Jt7zqi3P8/p83waC6+9gtp1nJLsLhw8hR0rGKNcdj1FiKvIS1PLFxMvKN4r4tQ+S/+nX
-         WYS60PwBvKIFEEHO2J+ixAlX05UqrRylIh9RCJMh6OSOMJAsRiVn01s8KhNm7iHzroCM
-         9SPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=59iokotS8iIDb+gGu6n274MbuIuRWgjxTwxL1qAA8wM=;
-        b=MYtP5imPNlLnAMpO1THYfkL+T1XaR3xi+ZBDze5Y1g+m0RzFHOoYm4DjDUZqP9HJqd
-         3CQoMB7IhyL/2e7+rcdc2IN+j8AKyxqaEtEddNttaH8go6Zy12/xlRbUHe9OaqS0QSbf
-         7Or9nVNBJo3ijZOg8W8Qc8RLu0wO8ThoK1HiWUwVk2x6niWPd7bqsU+hmaG6tIqu0Tkf
-         iY03Y2+zuon41OkM9kJenSxctrg1Im/D9l7mJGA0VT8rkaoYUQO6KzsOdEMW5AAuc05z
-         KLbYiqVWFyCDTEvZHTdDiDE+SH2017lzkgW2fYdGLckb6EI1bEwlqUR0Vr0Iz+9UhS+x
-         0MZg==
-X-Gm-Message-State: AGi0PuZ3/hpCQEWzwiNpMBlu+WTeIpSwQTY1yv/E4Jo3hEVbtV/Ol3DS
-        MWW1ZxB/8YA1UGMyU/RI4n4=
-X-Google-Smtp-Source: APiQypLatKpf6OjZyANdh3E9QSCOXHw4Mjs6j1NkKSePjYcjdyDDdPm34oam03X81IYGwmdbINehGQ==
-X-Received: by 2002:a63:ea18:: with SMTP id c24mr16252820pgi.62.1588581289997;
-        Mon, 04 May 2020 01:34:49 -0700 (PDT)
-Received: from localhost ([89.208.244.169])
-        by smtp.gmail.com with ESMTPSA id j5sm7252650pgi.5.2020.05.04.01.34.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 01:34:49 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     yhchuang@realtek.com, kvalo@codeaurora.org, davem@davemloft.net,
-        sgruszka@redhat.com, briannorris@chromium.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH net v1] net: rtw88: fix an issue about leak system resources
-Date:   Mon,  4 May 2020 16:34:42 +0800
-Message-Id: <20200504083442.3033-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 4 May 2020 04:35:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eafd34e0000>; Mon, 04 May 2020 01:33:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 May 2020 01:35:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 01:35:25 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
+ 2020 08:35:25 +0000
+Received: from [10.25.97.23] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
+ 08:35:14 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>
+Subject: Re: [PATCH 0/3] Tegra194 HW Fixes
+To:     Takashi Iwai <tiwai@suse.de>
+References: <1588580176-2801-1-git-send-email-spujar@nvidia.com>
+ <s5ho8r4f6hx.wl-tiwai@suse.de>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <124d4a5c-e198-d8c0-5fb7-65d008852e32@nvidia.com>
+Date:   Mon, 4 May 2020 14:05:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <s5ho8r4f6hx.wl-tiwai@suse.de>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588581198; bh=LxS7ZfO41qCLpMhFUX0mFEgCD+fiFILtv0nazI/gBKY=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=EC2a+3lQ6ViudY5YFmLk7lQv+Sl4n/1ojJfqN56+K9adPBtWQM8jxiX2PZokGyZ3W
+         J3Mc6uTlS1j0isTYlOFSW4e3fDuORqun5bNUlmUcsO//FfIpTVGOZZEj9AvwXSkL5+
+         tXDApbU2d9BGio+Kg9l1fETPTQOthbOwAaIR7VjKAEw8CIyVp/WU8Qk0aOobKoyt6B
+         dDzONGILUPCQkgy/EpxfNPgPQelV0CyCYhj/v8X0L7NJWQMT+JcxFhta2UDVUX/+8H
+         ht4oAzS6pgXJGGNnILWyBBvrlzHUPDYmEN88pEReoviZCROY+PQJSJ4grPPjAaL40l
+         Vd6d8Pbo1NIbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the related system resources were not released when pci_iomap() return
-error in the rtw_pci_io_mapping() function. add pci_release_regions() to
-fix it.
 
-Fixes: e3037485c68ec1a ("rtw88: new Realtek 802.11ac driver")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/net/wireless/realtek/rtw88/pci.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 695c2c0d64b0..a9752c34c9d8 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -1102,6 +1102,7 @@ static int rtw_pci_io_mapping(struct rtw_dev *rtwdev,
- 	len = pci_resource_len(pdev, bar_id);
- 	rtwpci->mmap = pci_iomap(pdev, bar_id, len);
- 	if (!rtwpci->mmap) {
-+		pci_release_regions(pdev);
- 		rtw_err(rtwdev, "failed to map pci memory\n");
- 		return -ENOMEM;
- 	}
--- 
-2.25.0
+On 5/4/2020 1:59 PM, Takashi Iwai wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Mon, 04 May 2020 10:16:13 +0200,
+> Sameer Pujar wrote:
+>> This series proposes SW workarounds for Tegra194 HDA HW bugs.
+>> Following are the two issues seen:
+>>   1. GCAP register does not reflect true capability.
+>>      The actual number of SDO lines is "4", where as it reflects "2".
+>>   2. With 4 SDO line configuration playback fails for,
+>>      44.1K/48K, 2-channel, 16-bps audio stream.
+>>
+>> After fixing [1], issue [2] is uncovered.
+>> As per recommendation by Tegra HW team the workarounds are pushed.
+>>
+>> Testing done
+>> ============
+>>   * Verify GCAP register after registering HDA sound card
+>>   * Verify audio playback for 44.1K/48K, 2-channel, 16-bps.
+>>
+>> Sameer Pujar (3):
+>>    ALSA: hda/tegra: correct number of SDO lines for Tegra194
+>>    ALSA: hda: add member to store ratio for stripe control
+>>    ALSA: hda/tegra: workaround playback failure on Tegra194
+> Through a quick glance, all changes look good.
+>
+> Is the device already in market, i.e. it had hit users?  If yes, I'm
+> going to merge for 5.7, otherwise for 5.8.
+
+Yes the device is in the market. But has not been reported by end users.
+During internal resting this has been discovered. I am fine with merging 
+this to 5.8.
+
+Thanks,
+Sameer.
+>
+>
+> thanks,
+>
+> Takashi
 
