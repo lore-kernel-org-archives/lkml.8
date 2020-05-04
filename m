@@ -2,104 +2,167 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC538C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E23C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5DE208DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221D9207DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="MmB3Bq0S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MunwQTK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgEDWKP (ORCPT
+        id S1728105AbgEDWLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39636 "EHLO
+        Mon, 4 May 2020 18:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726419AbgEDWKO (ORCPT
+        by vger.kernel.org with ESMTP id S1726419AbgEDWK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:10:14 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D572EC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 15:10:12 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id b6so323851plz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 15:10:12 -0700 (PDT)
+        Mon, 4 May 2020 18:10:59 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED8CC061A0E;
+        Mon,  4 May 2020 15:10:58 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id w6so429353ilg.1;
+        Mon, 04 May 2020 15:10:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jZLyHH0FOwiw9uaFhugdV/Ka8e6kSYMG1voxw4n6zE4=;
-        b=MmB3Bq0Svs+rjKoFS/i+2LTtsnNZGfywx63UfiAkbK3FtnIoF8p6fmj2XjUiW4bUb6
-         R8YZEMWFy5WnJTtNGzSql1UoGmkMYGd5IxZd2tzhGtnXIfgsgstUTckYT01tdRSqWn++
-         mE4FIZRFIEQYZtldnyT6vlylljYv+EXsOfX592bKErbvK9ynfEThFGY0j8+v9yL5+AYn
-         2L8UtEV8btm8yMsHYX41rEU4NZWACwluL1ZQEUck3x1d7WUsJVlADU7tkSZPVlOqRfbF
-         zWt6tyEH9zFe0oc93kh+0ghawzhaIp4RGYUaOCMuidQUWyUUfKEqoe0qMA5/9tnalteu
-         swHg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZk7KO7iCLuHsBzIYCsHCdT3vf2qALdqqTIYGdX8DrM=;
+        b=MunwQTK/oZEY08VH24oKY2sqbh9YFifGKbMgAwqtSvL51Uff/DmC7w6GxZGvW1JDj7
+         r7qhZeyUfSluCoFmNFKERno/XgtP1/AIy87C8SGX9cRBwrZmGl5N65aQWCTwoklxOaNF
+         Y2BWYETGpOZGY9mn7NnJWFFx18tWPwyOdevCtdOxcedFSKMo+fqEFxsCWUT0pQgYfHYP
+         g4xOw5797xu9M8YcRUN9pdmj++icvaMIrNy0RqJuw3Q3J1kREak946j1UXw6gmKAeXdy
+         wZR/zuqInAvY9IARbZTNFhq/UVT42ura0EQcSwnDBSSS8Ga0fpMV6O8LGx5X35VZlXIC
+         aooA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=jZLyHH0FOwiw9uaFhugdV/Ka8e6kSYMG1voxw4n6zE4=;
-        b=hlvk7JRC81/xR+uy4wiZDndnYtYudXUZUCS7atkumrehW8Z7S+3sF4Gs/Zgh4HgFvE
-         MZHcyCmm3QLmCWZRQedeHDbe5hfNrRceNxDTnrB0T8T0arb5zJgisGqFJFQnWWR+dkDN
-         6lXYZH+9DzW3R13lvgmJmDgvY0YdgHURR3kY0iA8OtX4MJ2HEzh0PX2DFNbMzW3aklxh
-         5Fhk1U/2D1C4Vy7jAtYJULJ1e5InHzKyQr5AVq5701/hJuK2IwZLiZY5ozyGO2fwrVoL
-         Bi3zChGD/jUlZGkkfwlSv+2yccFd4mQfe4uf57X58a3eH/G5vTgyw92ICPC46ide1TCM
-         ZetA==
-X-Gm-Message-State: AGi0PuaC4WqyoqJ/ARcgbM8eko8M7jD0cBTj1Dbd9Anta+EwO1glvvGV
-        iY5z8yF4c4BlyphVMWxghB5Bvg==
-X-Google-Smtp-Source: APiQypJJPcF0dlqI2sacmykdGez1Z2nDV2mUtw2uVa6WLfP1A1vNVDcBNDSbyg81qVrCEIJS07OSsA==
-X-Received: by 2002:a17:90b:46c2:: with SMTP id jx2mr296161pjb.67.1588630212239;
-        Mon, 04 May 2020 15:10:12 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id 14sm86208pfy.38.2020.05.04.15.10.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 15:10:11 -0700 (PDT)
-Date:   Mon, 04 May 2020 15:10:11 -0700 (PDT)
-X-Google-Original-Date: Mon, 04 May 2020 15:09:13 PDT (-0700)
-Subject:     Re: [PATCH 1/2] riscv: defconfig: enable spi nor on Hifive Unleashed A00 board.
-In-Reply-To: <1588240732-13905-2-git-send-email-sagar.kadam@sifive.com>
-CC:     tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, sagar.kadam@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     sagar.kadam@sifive.com
-Message-ID: <mhng-ccfe9c83-41d6-47a0-b7bc-347573973fec@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZk7KO7iCLuHsBzIYCsHCdT3vf2qALdqqTIYGdX8DrM=;
+        b=WtoAykUnzYUr4MdQlhvXqhU6keqSnXc2AJdUfV+dRkUOOe1r3K8Spy8//jP8xy/l5K
+         A9FJ3YiH3/wKXfYPXLahYgriYxoR7y1SrTI3ojk3UX2Uz3rS6jMXpJ5ytvB4rbEhmz7Z
+         ibK+KuFFdvcS6kOxTOJoNuuU4uvampA9NQFuY9k0B/0mqw1i5aZxnhreqBBvpg42eFF9
+         jCiuAJDjqgG6Up54BQdTK9dOo2KQpOqIUkyr+D0grxLR9JDcx87BzxqyIOJ4kbvbyJ1r
+         5+T9HHAHfLNCISQvRZwhkdn0oV7USCOOjw7Kulmc8KtWXnemutSQvm8cmoCLNktIBou8
+         lV6A==
+X-Gm-Message-State: AGi0Pua7uEJEuwzsL4u+cFD40KZ5WcEgbvh+/E2d38xtHY+jWrLqcuTq
+        x2vKIVSqqK9rST9u1wd3b86vMaRI/31fn/pvczc=
+X-Google-Smtp-Source: APiQypL1oez+uCR9IA4zSBbP8a3jRvUQS3fagi3oYEjM2vFLBDiVuuEvbgDc6vyXatMIS6T7sq3m4OW5DAhBoDuQVMg=
+X-Received: by 2002:a92:5f46:: with SMTP id t67mr590358ilb.64.1588630257228;
+ Mon, 04 May 2020 15:10:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200430201125.532129-1-daniel.m.jordan@oracle.com>
+ <20200430201125.532129-6-daniel.m.jordan@oracle.com> <deadac9a-fbef-6c66-207c-83d251d2ef50@linux.intel.com>
+ <20200501024539.tnjuybydwe3r4u2x@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20200501024539.tnjuybydwe3r4u2x@ca-dmjordan1.us.oracle.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 4 May 2020 15:10:46 -0700
+Message-ID: <CAKgT0Uctro3+PWeJTi=O3Yc2qUF8Oy+HrypzCUzkaCt=XH0Lkg@mail.gmail.com>
+Subject: Re: [PATCH 5/7] mm: move zone iterator outside of deferred_init_maxorder()
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 02:58:51 PDT (-0700), sagar.kadam@sifive.com wrote:
-> Enable MTD based SPI-NOR framework in order to use spi flash
-> available on HiFive Unleashed A00 board.
+On Thu, Apr 30, 2020 at 7:45 PM Daniel Jordan
+<daniel.m.jordan@oracle.com> wrote:
 >
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> ---
->  arch/riscv/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
+> Hi Alex,
 >
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 4da4886..970580b 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -80,6 +80,8 @@ CONFIG_USB_STORAGE=y
->  CONFIG_USB_UAS=y
->  CONFIG_MMC=y
->  CONFIG_MMC_SPI=y
-> +CONFIG_MTD=y
-> +CONFIG_MTD_SPI_NOR=y
->  CONFIG_RTC_CLASS=y
->  CONFIG_VIRTIO_PCI=y
->  CONFIG_VIRTIO_BALLOON=y
+> On Thu, Apr 30, 2020 at 02:43:28PM -0700, Alexander Duyck wrote:
+> > On 4/30/2020 1:11 PM, Daniel Jordan wrote:
+> > > padata will soon divide up pfn ranges between threads when parallelizing
+> > > deferred init, and deferred_init_maxorder() complicates that by using an
+> > > opaque index in addition to start and end pfns.  Move the index outside
+> > > the function to make splitting the job easier, and simplify the code
+> > > while at it.
+> > >
+> > > deferred_init_maxorder() now always iterates within a single pfn range
+> > > instead of potentially multiple ranges, and advances start_pfn to the
+> > > end of that range instead of the max-order block so partial pfn ranges
+> > > in the block aren't skipped in a later iteration.  The section alignment
+> > > check in deferred_grow_zone() is removed as well since this alignment is
+> > > no longer guaranteed.  It's not clear what value the alignment provided
+> > > originally.
+> > >
+> > > Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> >
+> > So part of the reason for splitting it up along section aligned boundaries
+> > was because we already had an existing functionality in deferred_grow_zone
+> > that was going in and pulling out a section aligned chunk and processing it
+> > to prepare enough memory for other threads to keep running. I suspect that
+> > the section alignment was done because normally I believe that is also the
+> > alignment for memory onlining.
+>
+> I think Pavel added that functionality, maybe he could confirm.
+>
+> My impression was that the reason deferred_grow_zone aligned the requested
+> order up to a section was to make enough memory available to avoid being called
+> on every allocation.
+>
+> > With this already breaking things up over multiple threads how does this
+> > work with deferred_grow_zone? Which thread is it trying to allocate from if
+> > it needs to allocate some memory for itself?
+>
+> I may not be following your question, but deferred_grow_zone doesn't allocate
+> memory during the multithreading in deferred_init_memmap because the latter
+> sets first_deferred_pfn so that deferred_grow_zone bails early.
 
-From the second patch's description I'm assuming that MTD still functions
-correctly without that change?
+It has been a while since I looked at this code so I forgot that
+deferred_grow_zone is essentially blocked out once we start the
+per-node init.
+
+> > Also what is to prevent a worker from stop deferred_grow_zone from bailing
+> > out in the middle of a max order page block if there is a hole in the middle
+> > of the block?
+>
+> deferred_grow_zone remains singlethreaded.  It could stop in the middle of a
+> max order block, but it can't run concurrently with deferred_init_memmap, as
+> per above, so if deferred_init_memmap were to init 'n free the remaining part
+> of the block, the previous portion would have already been initialized.
+
+So we cannot stop in the middle of a max order block. That shouldn't
+be possible as part of the issue is that the buddy allocator will
+attempt to access the buddy for the page which could cause issues if
+it tries to merge the page with one that is not initialized. So if
+your code supports that then it is definitely broken. That was one of
+the reasons for all of the variable weirdness in
+deferred_init_maxorder. I was going through and making certain that
+while we were initializing the range we were freeing the pages in
+MAX_ORDER aligned blocks and skipping over whatever reserved blocks
+were there. Basically it was handling the case where a single
+MAX_ORDER block could span multiple ranges.
+
+On x86 this was all pretty straightforward and I don't believe we
+needed the code, but I seem to recall there were some other
+architectures that had more complex memory layouts at the time and
+that was one of the reasons why I had to be careful to wait until I
+had processed the full MAX_ORDER block before I could start freeing
+the pages, otherwise it would start triggering memory corruptions.
