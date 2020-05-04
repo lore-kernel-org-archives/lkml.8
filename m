@@ -2,100 +2,119 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6544FC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E369FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0C02085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588618351;
-	bh=3Ha52XgoS8/4Yl319juPJCrmPW0Ttr1geD7MdSO8LIE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=n//bCbMpPF5u0puK0tAJrhcaum2ZPOUylbbvwJflaCcopoWXsqu572+4XWWWBZxpq
-	 TlZqvzSOABjXIiJKURLwPKrQSa79ItdQnez5HMvRYSTUikuYfiMP6gy3jGPKezn3Ft
-	 TBCnudyq2zAzcKGd5eU1DYEtrVEYcVS7ftq/KYUw=
+	by mail.kernel.org (Postfix) with ESMTP id BCAF620661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIqBWDWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgEDSwa (ORCPT
+        id S1726627AbgEDSw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:52:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbgEDSwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:52:30 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 4 May 2020 14:52:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39704 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725981AbgEDSw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:52:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588618377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nL6lAvx0PZBs0tR/mUzSs6IrJPt6ZBwzzVz2VqiOHPM=;
+        b=FIqBWDWfiNnrJAyhpBKaV4q9+mQnOA7mxKA9H8JVEUWpAUOxd7np6AR22Eib+4MFVWRzTG
+        gWk3P7PPWXhlWeX0Jj9jpDpnyXwJyktFoXjzSjs7oMs5JArLutbOS8Gb/YDNAN/0qT/v2K
+        La7THV/7Y2E011VMMcin/Tn9x27sZiY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-c41xC3eyMaO8N3yQTQUKsA-1; Mon, 04 May 2020 14:52:55 -0400
+X-MC-Unique: c41xC3eyMaO8N3yQTQUKsA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 100102073E;
-        Mon,  4 May 2020 18:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588618349;
-        bh=3Ha52XgoS8/4Yl319juPJCrmPW0Ttr1geD7MdSO8LIE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XLSwU/Qf0ogTE0CtscTX5f6VBjWOx2GHPz/nrM/uaXYsnFyVNJw0uS9yz3IMupLFL
-         eXG7oip5dn0LiQh4mKbZWQqMuMvlaVGB+BOoanqiAbtmBln2dKsPuUJf3EqcfBAurl
-         tiXyeUeav9GizHRf/XhQXTUC5s7YkFuEPh0UKaa8=
-Received: by mail-oi1-f181.google.com with SMTP id o7so7617825oif.2;
-        Mon, 04 May 2020 11:52:29 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZEKizU2SRSTj+8FXU9CcQa5dPWfEwSHt0h3RvfgkuogELP45As
-        cmqaIqVIJAQmx60ss9F3zBvNTfn8rVY9bmnt/w==
-X-Google-Smtp-Source: APiQypLERbCjXmAD9kScXWp+0jLyUa/wK6ffbmYWXz4/VHjupVQvQVBEQSBvA5Wg6mUwQJ+1TlFFTO/AGTkgyn+G/pE=
-X-Received: by 2002:aca:1904:: with SMTP id l4mr10035883oii.106.1588618348223;
- Mon, 04 May 2020 11:52:28 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BB60107ACCD;
+        Mon,  4 May 2020 18:52:54 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A55A60C80;
+        Mon,  4 May 2020 18:52:54 +0000 (UTC)
+Date:   Mon, 4 May 2020 12:52:53 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio-pci: Mask cap zero
+Message-ID: <20200504125253.3d5f9cbf@x1.home>
+In-Reply-To: <20200504180916.0e90cad9.cohuck@redhat.com>
+References: <158836927527.9272.16785800801999547009.stgit@gimli.home>
+        <20200504180916.0e90cad9.cohuck@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200504175859.22606-1-elder@linaro.org> <20200504175859.22606-2-elder@linaro.org>
-In-Reply-To: <20200504175859.22606-2-elder@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 May 2020 13:52:15 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLY2iuJHXEEx41eEVPgkwmHbngOB53sFgF1e079uLOOqQ@mail.gmail.com>
-Message-ID: <CAL_JsqLY2iuJHXEEx41eEVPgkwmHbngOB53sFgF1e079uLOOqQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 1/4] dt-bindings: net: add IPA iommus property
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Evan Green <evgreen@chromium.org>, subashab@codeaurora.org,
-        cpratapa@codeaurora.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 12:59 PM Alex Elder <elder@linaro.org> wrote:
->
-> The IPA accesses "IMEM" and main system memory through an SMMU, so
-> its DT node requires an iommus property to define range of stream IDs
-> it uses.
->
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  Documentation/devicetree/bindings/net/qcom,ipa.yaml | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> index 140f15245654..7b749fc04c32 100644
-> --- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> @@ -20,7 +20,10 @@ description:
->    The GSI is an integral part of the IPA, but it is logically isolated
->    and has a distinct interrupt and a separately-defined address space.
->
-> -  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
-> +  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.  See
-> +  iommu/iommu.txt and iommu/arm,smmu.yaml for more information about SMMU
-> +  bindings.
+On Mon, 4 May 2020 18:09:16 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-I'd drop this. We don't need every binding to reference back to common
-bindings. And in theory, this binding is unrelated to the Arm SMMU.
-Any IOMMU could be used.
+> On Fri, 01 May 2020 15:41:24 -0600
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+> 
+> > There is no PCI spec defined capability with ID 0, therefore we don't
+> > expect to find it in a capability chain and we use this index in an
+> > internal array for tracking the sizes of various capabilities to handle
+> > standard config space.  Therefore if a device does present us with a
+> > capability ID 0, we mark our capability map with nonsense that can
+> > trigger conflicts with other capabilities in the chain.  Ignore ID 0
+> > when walking the capability chain, handling it as a hidden capability.
+> > 
+> > Seen on an NVIDIA Tesla T4.
+> > 
+> > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > ---
+> >  drivers/vfio/pci/vfio_pci_config.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index 87d0cc8c86ad..5935a804cb88 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -1487,7 +1487,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
+> >  		if (ret)
+> >  			return ret;
+> >  
+> > -		if (cap <= PCI_CAP_ID_MAX) {  
+> 
+> Maybe add a comment:
+> 
+> /* no PCI spec defined capability with ID 0: hide it */
+> 
 
-With that,
+Sure.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> > +		if (cap && cap <= PCI_CAP_ID_MAX) {
+> >  			len = pci_cap_length[cap];
+> >  			if (len == 0xFF) { /* Variable length */
+> >  				len = vfio_cap_len(vdev, cap, pos);
+> >   
+> 
+> Is there a requirement for caps to be strictly ordered? If not, could
+> len hold a residual value from a previous iteration?
+
+There is no ordering requirement for capabilities, but len is declared
+non-static with an initial value within the scope of the loop, it's
+reset every iteration.  Thanks,
+
+Alex
+
