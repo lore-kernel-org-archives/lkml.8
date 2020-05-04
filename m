@@ -7,147 +7,144 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D32C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA06CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A077520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B192073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ezrZLJcN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNx1QSaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbgEDQpn (ORCPT
+        id S1729692AbgEDQrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:45:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729703AbgEDQpn (ORCPT
+        Mon, 4 May 2020 12:47:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48710 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728158AbgEDQrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:45:43 -0400
+        Mon, 4 May 2020 12:47:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588610742;
+        s=mimecast20190719; t=1588610857;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YNaKyAb40B6LULT3lpo1a7elAdvzYxfJwezsPfhvc1o=;
-        b=ezrZLJcNS0haVvvTqGDCP9nVMwY1NFQN+2wVCmjipqHalMawuTdHfzRMHk/wn1yd+Y2JTj
-        +/qEpS0tetVcTsW9sbIz/bfCFVREF++0ZinSQHhmEXsJNdrQNsso3PVuyZVq1zfPJwxu0W
-        giATFSFKak1QPX3AOIYoAc9zdzEImt4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-yue-JkJAPtSeu6PxEM2N_Q-1; Mon, 04 May 2020 12:45:40 -0400
-X-MC-Unique: yue-JkJAPtSeu6PxEM2N_Q-1
-Received: by mail-wr1-f70.google.com with SMTP id r11so11082166wrx.21
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:45:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YNaKyAb40B6LULT3lpo1a7elAdvzYxfJwezsPfhvc1o=;
-        b=osVH4yIOdpNc0Xf5XlC6OuTnpLYZcKuEl5PubVGZ4eSP0NZmowox21qK40SEn8CKig
-         t9pTAPS5BRPbucFLFcRpYZLc3E8bYWONMT7Wf4SxkPp5FgASlAjCzVKKO999dO19MUAd
-         C8Yf7SLST3giXV7rQKkpokNlJCacBk30EVH75lBQvj4gmqQ+fqWmvTU+Dy99UPfqBKqw
-         u1kQkJeqNPld1NLVPc+/0wTBWkQ3IiniIMSzet5QkElNTEkpikyR9VTQnCPk3bP04d7X
-         wNoLYyUkizW+anCbtJXrJHtt/0K/O1+Lv4ZnOXeKUIpJg62FmapzeU9RZmsHpaROJLZi
-         B+5g==
-X-Gm-Message-State: AGi0Pub5xpxfGjBd5U+cZKmMmL/JYqnhXKUyu/XkKDdtV5DdL2X0cpme
-        sDruIBDzdqFjRfwITqzNVaN+Rpn4TWpelaoC6p+Ff6f9yHpMe9UEJZnbinILxVadCjCfNVuv+gf
-        YzawcvY/70eLsujeMOIqWoqwA
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr184358wrt.270.1588610739680;
-        Mon, 04 May 2020 09:45:39 -0700 (PDT)
-X-Google-Smtp-Source: APiQypITUk7jCTj5Hm092AEZmgMQAQgzYeMQr4Zkt6Tf8ONMprMl7bKLDdzpLGNVy/Fusr3loI9/8A==
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr184342wrt.270.1588610739428;
-        Mon, 04 May 2020 09:45:39 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id d18sm16408590wrv.14.2020.05.04.09.45.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:45:38 -0700 (PDT)
-Subject: Re: [PATCH] kvm: x86: Cleanup vcpu->arch.guest_xstate_size
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        bh=0GnVOv94s2n2zYsm2ueX9ofNqcRgzeaSeRXj0ocqapY=;
+        b=VNx1QSaUsnKqZ0moYqopE5CR4zSiyXmjSflRnyC+ctJUWqja37VKCKxQYqAHugEoNkf+9n
+        PuHcv42DNKofZDw+y4LTKxUTunrxILV1kPtlJl4rB0easdnuPpC4DxNxTmnj5ZHmz+Jh/U
+        9FkZ6ET2P4PkE+DQi/wJECGJPjWCMmY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-PuiF9JeFPTKUorqp96nZDQ-1; Mon, 04 May 2020 12:47:33 -0400
+X-MC-Unique: PuiF9JeFPTKUorqp96nZDQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB966835B42;
+        Mon,  4 May 2020 16:47:30 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.182])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 47D041002389;
+        Mon,  4 May 2020 16:47:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon,  4 May 2020 18:47:30 +0200 (CEST)
+Date:   Mon, 4 May 2020 18:47:25 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Guo Ren <guoren@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Security Officers <security@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org
-References: <20200429154312.1411-1-xiaoyao.li@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e6371255-b3ce-b86e-a317-058740e4bf3e@redhat.com>
-Date:   Mon, 4 May 2020 18:45:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: [PATCH] uprobes: ensure that uprobe->offset and ->ref_ctr_offset are
+ properly aligned
+Message-ID: <20200504164724.GA28697@redhat.com>
+References: <CAHk-=whQt69ApMkZF8b2Q2idMDgPpPETZeeOuZg59CrOO4025w@mail.gmail.com>
+ <20200428091149.GB19958@linux.vnet.ibm.com>
+ <20200428123914.GA27920@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429154312.1411-1-xiaoyao.li@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428123914.GA27920@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/04/20 17:43, Xiaoyao Li wrote:
-> vcpu->arch.guest_xstate_size lost its only user since commit df1daba7d1cb
-> ("KVM: x86: support XSAVES usage in the host"), so clean it up.
-> 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 1 -
->  arch/x86/kvm/cpuid.c            | 8 ++------
->  arch/x86/kvm/x86.c              | 2 --
->  3 files changed, 2 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 7cd68d1d0627..34a05ca3c904 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -654,7 +654,6 @@ struct kvm_vcpu_arch {
->  
->  	u64 xcr0;
->  	u64 guest_supported_xcr0;
-> -	u32 guest_xstate_size;
->  
->  	struct kvm_pio_request pio;
->  	void *pio_data;
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 6828be99b908..f3eb4f171d3d 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -84,15 +84,11 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->  				   kvm_read_cr4_bits(vcpu, X86_CR4_PKE));
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 0);
-> -	if (!best) {
-> +	if (!best)
->  		vcpu->arch.guest_supported_xcr0 = 0;
-> -		vcpu->arch.guest_xstate_size = XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET;
-> -	} else {
-> +	else
->  		vcpu->arch.guest_supported_xcr0 =
->  			(best->eax | ((u64)best->edx << 32)) & supported_xcr0;
-> -		vcpu->arch.guest_xstate_size = best->ebx =
-> -			xstate_required_size(vcpu->arch.xcr0, false);
-> -	}
->  
->  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
->  	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 856b6fc2c2ba..7cd51a3acc43 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9358,8 +9358,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  	}
->  	fx_init(vcpu);
->  
-> -	vcpu->arch.guest_xstate_size = XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET;
-> -
->  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
->  
->  	vcpu->arch.pat = MSR_IA32_CR_PAT_DEFAULT;
-> 
+uprobe_write_opcode() must not cross page boundary; prepare_uprobe()
+relies on arch_uprobe_analyze_insn() which should validate "vaddr" but
+some architectures (csky, s390, and sparc) don't do this.
 
-Queued, thanks.
+We can remove the BUG_ON() check in prepare_uprobe() and validate the
+offset early in __uprobe_register(). The new IS_ALIGNED() check matches
+the alignment check in arch_prepare_kprobe() on supported architectures,
+so I think that all insns must be aligned to UPROBE_SWBP_INSN_SIZE.
 
-Paolo
+Another problem is __update_ref_ctr() which was wrong from the very
+beginning, it can read/write outside of kmap'ed page unless "vaddr" is
+aligned to sizeof(short), __uprobe_register() should check this too.
+
+Cc: stable@vger.kernel.org
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/events/uprobes.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index ece7e13f6e4a..cc2095607c74 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -867,10 +867,6 @@ static int prepare_uprobe(struct uprobe *uprobe, struct file *file,
+ 	if (ret)
+ 		goto out;
+ 
+-	/* uprobe_write_opcode() assumes we don't cross page boundary */
+-	BUG_ON((uprobe->offset & ~PAGE_MASK) +
+-			UPROBE_SWBP_INSN_SIZE > PAGE_SIZE);
+-
+ 	smp_wmb(); /* pairs with the smp_rmb() in handle_swbp() */
+ 	set_bit(UPROBE_COPY_INSN, &uprobe->flags);
+ 
+@@ -1166,6 +1162,15 @@ static int __uprobe_register(struct inode *inode, loff_t offset,
+ 	if (offset > i_size_read(inode))
+ 		return -EINVAL;
+ 
++	/*
++	 * This ensures that copy_from_page(), copy_to_page() and
++	 * __update_ref_ctr() can't cross page boundary.
++	 */
++	if (!IS_ALIGNED(offset, UPROBE_SWBP_INSN_SIZE))
++		return -EINVAL;
++	if (!IS_ALIGNED(ref_ctr_offset, sizeof(short)))
++		return -EINVAL;
++
+  retry:
+ 	uprobe = alloc_uprobe(inode, offset, ref_ctr_offset);
+ 	if (!uprobe)
+@@ -2014,6 +2019,9 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
+ 	uprobe_opcode_t opcode;
+ 	int result;
+ 
++	if (WARN_ON_ONCE(!IS_ALIGNED(vaddr, UPROBE_SWBP_INSN_SIZE)))
++		return -EINVAL;
++
+ 	pagefault_disable();
+ 	result = __get_user(opcode, (uprobe_opcode_t __user *)vaddr);
+ 	pagefault_enable();
+-- 
+2.25.1.362.g51ebf55
+
 
