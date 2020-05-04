@@ -2,308 +2,109 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E73C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E446C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040102071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECD2206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LpBYT9KZ"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="MrNu1max";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WdhrnaVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgEDJ5j (ORCPT
+        id S1728520AbgEDJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:57:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42780 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728079AbgEDJ5h (ORCPT
+        Mon, 4 May 2020 05:58:36 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:55609 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728003AbgEDJ6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:57:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588586254;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=duzcKOL+clYMFWvtQmG1hWE1PDdpjEpPG5bALVD7E4M=;
-        b=LpBYT9KZDyrOh9wCLjnAf13jYBr1lJq50qzPVuq43ZLxLfh3t4UEAQqJvIauY611Na6oJO
-        oRshw4op4tITiGIwk0bjArmJXG+SCm0CWtZD5ST4JhmfaW73A6JhxX2PEsNjWR+mz7HUfk
-        n1/wWvGcpKWcHK2E6/8Dw7uVs/jrPbs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-AIN_GDUTNwO-uG3eW8dcRA-1; Mon, 04 May 2020 05:57:33 -0400
-X-MC-Unique: AIN_GDUTNwO-uG3eW8dcRA-1
-Received: by mail-wm1-f70.google.com with SMTP id f17so3222902wmm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 02:57:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=duzcKOL+clYMFWvtQmG1hWE1PDdpjEpPG5bALVD7E4M=;
-        b=JPsNWo/QdT84SzCx4wUmW/rrgqzVYQnOdp6BTZhbpiDUMCb+BfIkpwBRcliI1bvw0X
-         vQ67xi7jAKDIBh+OufM1yTOFFQh95oF1oc/sY8A4KlMR/KdXMEPYCTMJJSxMogkaZaWG
-         /ZTpEfJlaW7rCSRC58UL1559led1ZNa33f2MXB1Wc2SQhmqQy+MfejbhrfsYeGUO/KaH
-         0tOjrfJRz4/VKnTWUYfQY2hCDPunXKZIAWIUyTfEAMsSEstIxnFiJAKbjiSxF4MEo3vR
-         xL7ib9KBwZKk0Ozv0DIl9tAA+jV19H0xJGoN//ykD4p2Y/5LMrRjFWusrR63UlNrdXro
-         Dt/A==
-X-Gm-Message-State: AGi0PuZvHShRstxMokG9izsGsvePCz/7z9z/trdJXoEOkOGmMrMHTmpv
-        NjbuIMp8vZGLB5d27lg8SMXShysIzE6hAvZeDFbrZj3jZc/3L2cr5wwv8fnXWyLfLi4T3v0baDL
-        +om9FnswGvDuGwhQDx2hSVSAA
-X-Received: by 2002:a1c:f20f:: with SMTP id s15mr13135772wmc.114.1588586251825;
-        Mon, 04 May 2020 02:57:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI9NIOO7zq7z+wfpId4cCkZOfl2NWIgFJBJaj03kXgs1WsWzLPwY4so37bdEHIB8L8uXpceWQ==
-X-Received: by 2002:a1c:f20f:: with SMTP id s15mr13135741wmc.114.1588586251519;
-        Mon, 04 May 2020 02:57:31 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id q18sm12054672wmj.11.2020.05.04.02.57.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 02:57:30 -0700 (PDT)
-Subject: Re: [PATCH v3 10/11] iio: light: cm32181: Add support for parsing
- CPM0 and CPM1 ACPI tables
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20200428172923.567806-1-hdegoede@redhat.com>
- <20200428172923.567806-10-hdegoede@redhat.com>
- <20200503122237.4af34181@archlinux>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d72cda48-79cd-8f73-066e-e5ef7a2e9ee1@redhat.com>
-Date:   Mon, 4 May 2020 11:57:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 4 May 2020 05:58:36 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 341E65E3;
+        Mon,  4 May 2020 05:58:35 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 04 May 2020 05:58:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=llJwF5RXjAJ50M5WNfOLWzPmdbE
+        a7VjH1UwXJhRIvaU=; b=MrNu1maxn7oY3N84dFOqo9koKmc/KSMbkQgYdlnVd13
+        HquzIIq0aF3GFFLjMrMp4TNB+/jv3T8PObBvKkyOdq+unl+m2x7kqJvbzBAlOTjS
+        Xgwrf3vJ2OEkvm71mxn/JK1ZgzFr+rxsXqL4DjmOVrVpvglh43YjEFgRu57xSWYq
+        Gsg97mu/BuYya1nrcB9R1m8Xw5holvhwbOc0ndVmcV8CW85C1tz0LRI4kBmb42DF
+        C4RTanS4DO5DzOqkJ1961GpzTRS+qTkPQNhxAC9I2rutydtutj5i/MupIyL7sgk8
+        04uZeJstjTdLxw72FLH8gxExqk/5/VDfIPjbCUz8sXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=llJwF5
+        RXjAJ50M5WNfOLWzPmdbEa7VjH1UwXJhRIvaU=; b=WdhrnaVbDT7eETk2pdtG+B
+        83k7n7BQf32p1YVnTD8rGjNscfA8zGrvZHUrKcYQdMQUaaIj/pETR7+WVnq63XGG
+        UlsG5mobD8FZPmM21Qlv93nWtUjCy7ivf9BqJZbLV18g1YYlDcBDH+v/c30Qh76a
+        0Jmdlki9/sRQebVUGCnpMCTGCFNJDJ9N3qBFqJcQ3+rLcYUQV0BlOZOhwmyzXNyy
+        AJceJyw/HMzclq74ryFA4gqVfEB0ZcCqGoDr5K3qjX6Xuye7cAjy836z6lZAr8yw
+        ajYxXxzxLqOgEIMzHYETz08TaCToGeDUIIxawNxTDxMEJZ1DTwBG53r0jjIO8dUA
+        ==
+X-ME-Sender: <xms:SuevXpNfEHNZYX4G9NcZFNzM48O0It40351U3h9MfccS4LWVBefy7g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggddvudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
+    ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
+    pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
+    rdgtohhm
+X-ME-Proxy: <xmx:SuevXi2qh2Q3mXvYjouU3KdzA43thIlSGFMNlF75nHj2fZ6XyipYDw>
+    <xmx:SuevXgl2Njtedkel8PKKbq25lwqbjeFY5ZEFCflTEr1oDHj3iwW0DA>
+    <xmx:SuevXhWCKUgsdgxyAYKb-nDImxqNy5rnNXkZAfhLG2hxdg90bgBAbA>
+    <xmx:SuevXhiIWiwVh1IIKPXMpDqzvIuehHFua7KpzoNwZxfZFuppRGsY7g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 541F63065FFD;
+        Mon,  4 May 2020 05:58:34 -0400 (EDT)
+Date:   Mon, 4 May 2020 11:58:32 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rmk+kernel@armlinux.org.uk
+Subject: Re: [Patch include request] ARM: dts: imx6qdl-sr-som-ti: indicate
+ powering off wifi is safe
+Message-ID: <20200504095832.GA1277837@kroah.com>
+References: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200503122237.4af34181@archlinux>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAC4G8N75VkqDug9AmhvMQnXr8bOvC9cu_jUwZVUKwpvWr6pO5A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 5/3/20 1:22 PM, Jonathan Cameron wrote:
-> On Tue, 28 Apr 2020 19:29:22 +0200
-> Hans de Goede <hdegoede@redhat.com> wrote:
+On Fri, May 01, 2020 at 09:23:49PM +0100, Miguel Borges de Freitas wrote:
+> Dear all,
 > 
->> On ACPI based systems the CPLM3218 ACPI device node describing the
->> CM3218[1] sensor typically will have some extra tables with register
->> init values for initializing the sensor and calibration info.
->>
->> This is based on a newer version of cm32181.c, with a copyright of:
->>
->>   * Copyright (C) 2014 Capella Microsystems Inc.
->>   * Author: Kevin Tsai <ktsai@capellamicro.com>
->>   *
->>   * This program is free software; you can redistribute it and/or modify it
->>   * under the terms of the GNU General Public License version 2, as published
->>   * by the Free Software Foundation.
->>
->> Which is floating around on the net in various places, but the changes
->> from this newer version never made it upstream.
->>
->> This was tested on the following models: Acer Switch 10 SW5-012 (CM32181)
->> Asus T100TA (CM3218), Asus T100CHI (CM3218) and HP X2 10-n000nd (CM32181).
+> This is a request to backport b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10
+> (Arm: dts:  imx6qdl-sr-som-ti: indicate powering off wifi is safe),
+> already in Linus tree
+> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi?h=v5.7-rc3&id=b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10)
+> to LTS kernel 5.4 and to stable 5.6.8.
 > 
-> I assume it's far too much to hope this CPM0 / CPM1 stuff is actually defined
-> in a spec anywhere?
+> Reasoning:
 > 
-> There are standard way of adding vendor specific data blobs to ACPI and this
-> isn't one of them (unless I'm missing something).  People need to beat
-> up vendors earlier about this stuff.
-
-To be fair, most devices with these sensors are quite old, the T100TA
-was released in 2013. I have adding support for these on my todo list
-for quite some time now (years really), but I never got around to it until
-now.
-
-Surprisingly enough, the recent released Chuwi Hi 13 device is also using
-a CM32181 sensor though, so even though these are old they are still
-being used.
-
-Anyways what I'm trying to say is that the CPM0 / CPM1 objects predate
-specs for doing this in a more standardized ways by many years.
-
-Also the specs to do this in a standardized way are mostly being driven
-from the ARM side of things and x86 hardware/firmware developers are
-used to just doing there own things for decades now, so I would not
-expect them to pick this up anytime soon, sorry.
-
-Regards,
-
-Hans
-
-
-
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v2:
->> - Factor out the parsing into a separate helper function
->> ---
->>   drivers/iio/light/cm32181.c | 101 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 101 insertions(+)
->>
->> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
->> index cae2264e4336..d8b128286527 100644
->> --- a/drivers/iio/light/cm32181.c
->> +++ b/drivers/iio/light/cm32181.c
->> @@ -4,6 +4,7 @@
->>    * Author: Kevin Tsai <ktsai@capellamicro.com>
->>    */
->>   
->> +#include <linux/acpi.h>
->>   #include <linux/delay.h>
->>   #include <linux/err.h>
->>   #include <linux/i2c.h>
->> @@ -53,6 +54,15 @@
->>   
->>   #define SMBUS_ALERT_RESPONSE_ADDRESS	0x0c
->>   
->> +/* CPM0 Index 0: device-id (3218 or 32181), 1: Unknown, 2: init_regs_bitmap */
->> +#define CPM0_REGS_BITMAP		2
->> +#define CPM0_HEADER_SIZE		3
->> +
->> +/* CPM1 Index 0: lux_per_bit, 1: calibscale, 2: resolution (100000) */
->> +#define CPM1_LUX_PER_BIT		0
->> +#define CPM1_CALIBSCALE			1
->> +#define CPM1_SIZE			3
->> +
->>   /* CM3218 Family */
->>   static const int cm3218_als_it_bits[] = { 0, 1, 2, 3 };
->>   static const int cm3218_als_it_values[] = { 100000, 200000, 400000, 800000 };
->> @@ -65,6 +75,7 @@ static const int cm32181_als_it_values[] = {
->>   
->>   struct cm32181_chip {
->>   	struct i2c_client *client;
->> +	struct device *dev;
->>   	struct mutex lock;
->>   	u16 conf_regs[CM32181_CONF_REG_NUM];
->>   	unsigned long init_regs_bitmap;
->> @@ -76,6 +87,92 @@ struct cm32181_chip {
->>   	const int *als_it_values;
->>   };
->>   
->> +static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2);
->> +
->> +#ifdef CONFIG_ACPI
->> +/**
->> + * cm32181_acpi_get_cpm() - Get CPM object from ACPI
->> + * @client	pointer of struct i2c_client.
->> + * @obj_name	pointer of ACPI object name.
->> + * @count	maximum size of return array.
->> + * @vals	pointer of array for return elements.
->> + *
->> + * Convert ACPI CPM table to array.
->> + *
->> + * Return: -ENODEV for fail.  Otherwise is number of elements.
->> + */
->> +static int cm32181_acpi_get_cpm(struct device *dev, char *obj_name,
->> +				u64 *values, int count)
->> +{
->> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	union acpi_object *cpm, *elem;
->> +	acpi_handle handle;
->> +	acpi_status status;
->> +	int i;
->> +
->> +	handle = ACPI_HANDLE(dev);
->> +	if (!handle)
->> +		return -ENODEV;
->> +
->> +	status = acpi_evaluate_object(handle, obj_name, NULL, &buffer);
->> +	if (ACPI_FAILURE(status)) {
->> +		dev_err(dev, "object %s not found\n", obj_name);
->> +		return -ENODEV;
->> +	}
->> +
->> +	cpm = buffer.pointer;
->> +	if (cpm->package.count > count)
->> +		dev_warn(dev, "%s table contains %d values, only using first %d values\n",
->> +			 obj_name, cpm->package.count, count);
->> +
->> +	count = min_t(int, cpm->package.count, count);
->> +	for (i = 0; i < count; i++) {
->> +		elem = &(cpm->package.elements[i]);
->> +		values[i] = elem->integer.value;
->> +	}
->> +
->> +	kfree(buffer.pointer);
->> +
->> +	return count;
->> +}
->> +
->> +static void cm32181_acpi_parse_cpm_tables(struct cm32181_chip *cm32181)
->> +{
->> +	u64 vals[CPM0_HEADER_SIZE + CM32181_CONF_REG_NUM];
->> +	struct device *dev = cm32181->dev;
->> +	int i, count;
->> +
->> +	count = cm32181_acpi_get_cpm(dev, "CPM0", vals, ARRAY_SIZE(vals));
->> +	if (count <= CPM0_HEADER_SIZE)
->> +		return;
->> +
->> +	count -= CPM0_HEADER_SIZE;
->> +
->> +	cm32181->init_regs_bitmap = vals[CPM0_REGS_BITMAP];
->> +	cm32181->init_regs_bitmap &= GENMASK(count - 1, 0);
->> +	for_each_set_bit(i, &cm32181->init_regs_bitmap, count)
->> +		cm32181->conf_regs[i] =	vals[CPM0_HEADER_SIZE + i];
->> +
->> +	count = cm32181_acpi_get_cpm(dev, "CPM1", vals, ARRAY_SIZE(vals));
->> +	if (count != CPM1_SIZE)
->> +		return;
->> +
->> +	cm32181->lux_per_bit = vals[CPM1_LUX_PER_BIT];
->> +
->> +	/* Check for uncalibrated devices */
->> +	if (vals[CPM1_CALIBSCALE] == CM32181_CALIBSCALE_DEFAULT)
->> +		return;
->> +
->> +	cm32181->calibscale = vals[CPM1_CALIBSCALE];
->> +	/* CPM1 lux_per_bit is for the current it value */
->> +	cm32181_read_als_it(cm32181, &cm32181->lux_per_bit_base_it);
->> +}
->> +#else
->> +static void cm32181_acpi_parse_cpm_tables(struct cm32181_chip *cm32181)
->> +{
->> +}
->> +#endif /* CONFIG_ACPI */
->> +
->>   /**
->>    * cm32181_reg_init() - Initialize CM32181 registers
->>    * @cm32181:	pointer of struct cm32181.
->> @@ -119,6 +216,9 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
->>   	cm32181->lux_per_bit = CM32181_LUX_PER_BIT;
->>   	cm32181->lux_per_bit_base_it = CM32181_LUX_PER_BIT_BASE_IT;
->>   
->> +	if (ACPI_HANDLE(cm32181->dev))
->> +		cm32181_acpi_parse_cpm_tables(cm32181);
->> +
->>   	/* Initialize registers*/
->>   	for_each_set_bit(i, &cm32181->init_regs_bitmap, CM32181_CONF_REG_NUM) {
->>   		ret = i2c_smbus_write_word_data(client, i,
->> @@ -361,6 +461,7 @@ static int cm32181_probe(struct i2c_client *client)
->>   
->>   	cm32181 = iio_priv(indio_dev);
->>   	cm32181->client = client;
->> +	cm32181->dev = dev;
->>   
->>   	mutex_init(&cm32181->lock);
->>   	indio_dev->dev.parent = dev;
+> Changes to the wlcore driver during Kernel 5.x development, made the
+> Cubox-i with the IMX SOM v1.5 (which includes.a TI Wilink 8 wifi
+> chipset) not power the wireless interface on boot leaving it
+> completely unusable. This happens since at least kernel 5.3 (older one
+> I tested) and affects the current stable and LTS latest kernels. The
+> linked commit, already in linux mainline, restores the wifi
+> functionality.
 > 
+> Thanks in advance,
 
+Now queued up, thanks.
+
+greg k-h
