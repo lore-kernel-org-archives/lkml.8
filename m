@@ -2,325 +2,91 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7A8C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48ABC28CBC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E13206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:13:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Unr8Ozbw"
+	by mail.kernel.org (Postfix) with ESMTP id BC2BC206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588551370;
+	bh=0Tty1V951Gt0QKZwHy3rwBw3E5MgSe0aqGGl80GVTLc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TQ2a6YlBExfXLyHytH4Le5HBz/5RiQgYwgG8BtnohldZMeeN4b/MYNao9QiZ9qDzw
+	 yzvlkeeZj9r6wWgplv9Lvj1DJjx6AIopG6BqF+s1qxwJm4xpl0n+0rWiQzm5ihFF6e
+	 Py75BtGHIRJdtARV+xZXz1ZdtG77PPShROzY09uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgEDANB (ORCPT
+        id S1726587AbgEDAQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 20:13:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726377AbgEDANB (ORCPT
+        Sun, 3 May 2020 20:16:09 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:57476 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726433AbgEDAQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 20:13:01 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25883C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 17:13:00 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id s30so12737378qth.2
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 17:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ghdWSl7GQTrvrN+55CRfpk4KU3zB5OI12AXtmu1TVEE=;
-        b=Unr8OzbweOgm66PNumJr98lRs0Z6tM4CiQleY5hsdSOmNDFzl466TOslaY3RqcV/KE
-         PdvwKAHea+Do8T6j13OcDOATQaAdXDK2X6WH1IA+XvwihxI8fXO8R1LkyqcBT3wQBEhW
-         vC5zAKfA4EWlxiwSBiBdnhn7fohSNjeWttP2Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ghdWSl7GQTrvrN+55CRfpk4KU3zB5OI12AXtmu1TVEE=;
-        b=N/RQZylRx7iVdWpLJgfo6vG+/imhwn9lNKggRhEV9v7wphB/iaVy5qD0kEq3V6IBuf
-         wpHb8gxYH7d3CN9mDKFavlKNYaOzQvnarsOLqDdS+jLA4seAztei+/ShjpWLC/d2IAo/
-         joOhUmi2/hBQI9E9B/BC1Y92nayhgUvo+qkTHAWiDMw8eqD7GFpi/Ax4jJ9wvM9Jd7TD
-         YGzqR6NdezwssilexG1+GqFYloQtZJ81wP3MdxteUkgMERq1w0DIhAk8ABqIppKm2Myy
-         TL7fPJqcAf1XBt3T/s0NmrmySWy/qJ/2itD1JzdqNZ4LkKaDyqcq3KYy3W6Q5JwR3tAa
-         +u9Q==
-X-Gm-Message-State: AGi0Pua/kBrSYcgWztgBcBPsJGFQvlnopsMsUjQ/X3k2B2dQJQ/IrclB
-        JD3GLtcy4TaOX9Q9Vw+pmGbTpA==
-X-Google-Smtp-Source: APiQypLcGgYJ9aym64Byrny52r2CS/8oOiXoxTrk584x7pgN0q7SYJBxfGz4E0yaGYyqOJcyMTBC4A==
-X-Received: by 2002:ac8:19f5:: with SMTP id s50mr15026462qtk.186.1588551179190;
-        Sun, 03 May 2020 17:12:59 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d207sm4866475qkc.49.2020.05.03.17.12.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2020 17:12:58 -0700 (PDT)
-Date:   Sun, 3 May 2020 20:12:58 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 19/24] rcu/tree: Support reclaim for head-less object
-Message-ID: <20200504001258.GD197097@google.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-20-urezki@gmail.com>
- <20200501223909.GF7560@paulmck-ThinkPad-P72>
+        Sun, 3 May 2020 20:16:09 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 0440FoVN019532;
+        Mon, 4 May 2020 09:15:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 0440FoVN019532
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588551351;
+        bh=lq9Uzj7pb5PQFw+VXMD0iM6sIqPMlYMT850vnF71eIo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HsBDug0cOUu+9rxknFugrSdSxYyIwJWW+s7GijIMgAsUFtnpSIoyJrCDiye8j/kPj
+         scqMRUqeJSqFN68aD2vEzf6d6n1Ue6VPpBQaWbCxXrXc4JAICS1nlR4h0brVGviO3Q
+         Um+tGVfkYN2958pvKXwzR8tfx0Ym7BsZebBqyuGvoFFH62xgqv30hVb/KC8qlaRXn/
+         7Sjf0dNVy8Ov6IVcN+Rf3In46YOinVAtXp3APTbL98oo8HNkv5oeYhjbVZ/bBpgcP8
+         v9dbfRvLJB8cy/+S/72yjVB/d678m9ebiBlYDXkKYh4TAshvcuSxQCLS4P9a9zIn9M
+         M9v+0sXHqm50w==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id g2so10088114vsb.4;
+        Sun, 03 May 2020 17:15:51 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYRev+NcrVBUzrKem0r7PRPZGwmGE+3H+7TtOEFMG7iKmZczw3n
+        N9KAQ0aMg7Ihy+WVoalShjaQc8Z2oM//xBmnQCc=
+X-Google-Smtp-Source: APiQypJF8ynSDKYMiOHyG945XHqTJ6m0pJp8ZtLPkrwqgVAa+C06wpn4TeCNBGXLAEEkRYNonO/ieONdJXKxdJY3GoI=
+X-Received: by 2002:a67:e94d:: with SMTP id p13mr9916129vso.215.1588551349876;
+ Sun, 03 May 2020 17:15:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501223909.GF7560@paulmck-ThinkPad-P72>
+References: <20200503120847.13528-1-aishwaryarj100@gmail.com> <20200503132906.GA32207@ninjato>
+In-Reply-To: <20200503132906.GA32207@ninjato>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 4 May 2020 09:15:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASXgD7Y2SToycCLYX2zVN-L5uWRoCzQ3N7MjoT+j0KfkQ@mail.gmail.com>
+Message-ID: <CAK7LNASXgD7Y2SToycCLYX2zVN-L5uWRoCzQ3N7MjoT+j0KfkQ@mail.gmail.com>
+Subject: Re: [PATCH] i2c: uniphier: Remove superfluous error message in uniphier_i2c_probe()
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>,
+        linux-i2c@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:39:09PM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 28, 2020 at 10:58:58PM +0200, Uladzislau Rezki (Sony) wrote:
-> > Update the kvfree_call_rcu() with head-less support, it
-> > means an object without any rcu_head structure can be
-> > reclaimed after GP.
-> > 
-> > To store pointers there are two chain-arrays maintained
-> > one for SLAB and another one is for vmalloc. Both types
-> > of objects(head-less variant and regular one) are placed
-> > there based on the type.
-> > 
-> > It can be that maintaining of arrays becomes impossible
-> > due to high memory pressure. For such reason there is an
-> > emergency path. In that case objects with rcu_head inside
-> > are just queued building one way list. Later on that list
-> > is drained.
-> > 
-> > As for head-less variant. Such objects do not have any
-> > rcu_head helper inside. Thus it is dynamically attached.
-> > As a result an object consists of back-pointer and regular
-> > rcu_head. It implies that emergency path can detect such
-> > object type, therefore they are tagged. So a back-pointer
-> > could be freed as well as dynamically attached wrapper.
-> > 
-> > Even though such approach requires dynamic memory it needs
-> > only sizeof(unsigned long *) + sizeof(struct rcu_head) bytes,
-> > thus SLAB is used to obtain it. Finally if attaching of the
-> > rcu_head and queuing get failed, the current context has
-> > to follow might_sleep() annotation, thus below steps could
-> > be applied:
-> >    a) wait until a grace period has elapsed;
-> >    b) direct inlining of the kvfree() call.
-> > 
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  kernel/rcu/tree.c | 102 ++++++++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 98 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 51726e4c3b4d..501cac02146d 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -3072,15 +3072,31 @@ static void kfree_rcu_work(struct work_struct *work)
-> >  	 */
-> >  	for (; head; head = next) {
-> >  		unsigned long offset = (unsigned long)head->func;
-> > -		void *ptr = (void *)head - offset;
-> > +		bool headless;
-> > +		void *ptr;
-> >  
-> >  		next = head->next;
-> > +
-> > +		/* We tag the headless object, if so adjust offset. */
-> > +		headless = (((unsigned long) head - offset) & BIT(0));
-> > +		if (headless)
-> > +			offset -= 1;
-> > +
-> > +		ptr = (void *) head - offset;
-> > +
-> >  		debug_rcu_head_unqueue((struct rcu_head *)ptr);
-> >  		rcu_lock_acquire(&rcu_callback_map);
-> >  		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
-> >  
-> > -		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset)))
-> > +		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset))) {
-> > +			/*
-> > +			 * If headless free the back-pointer first.
-> > +			 */
-> > +			if (headless)
-> > +				kvfree((void *) *((unsigned long *) ptr));
-> > +
-> >  			kvfree(ptr);
-> > +		}
-> >  
-> >  		rcu_lock_release(&rcu_callback_map);
-> >  		cond_resched_tasks_rcu_qs();
-> > @@ -3221,6 +3237,13 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> >  			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> >  				return false;
-> >  
-> > +			/*
-> > +			 * TODO: For one argument of kvfree_rcu() we can
-> > +			 * drop the lock and get the page in sleepable
-> > +			 * context. That would allow to maintain an array
-> > +			 * for the CONFIG_PREEMPT_RT as well. Thus we could
-> > +			 * get rid of dynamic rcu_head attaching code.
-> > +			 */
-> >  			bnode = (struct kvfree_rcu_bulk_data *)
-> >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> >  		}
-> > @@ -3244,6 +3267,23 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> >  	return true;
-> >  }
-> >  
-> > +static inline struct rcu_head *
-> > +attach_rcu_head_to_object(void *obj)
-> > +{
-> > +	unsigned long *ptr;
-> > +
-> > +	ptr = kmalloc(sizeof(unsigned long *) +
-> > +			sizeof(struct rcu_head), GFP_NOWAIT |
-> > +				__GFP_RECLAIM |	/* can do direct reclaim. */
-> > +				__GFP_NORETRY |	/* only lightweight one.  */
-> > +				__GFP_NOWARN);	/* no failure reports. */
-> 
-> Again, let's please not do this single-pointer-sized allocation.  If
-> a full page is not available and this is a single-argument kfree_rcu(),
-> just call synchronize_rcu() and then free the object directly.
+On Sun, May 3, 2020 at 10:29 PM Wolfram Sang <wsa@kernel.org> wrote:
+>
+> On Sun, May 03, 2020 at 05:38:47PM +0530, Aishwarya Ramakrishnan wrote:
+> > The function platform_get_irq can log an error by itself.
+> > This omit a redundant message for exception handling in the
+> > calling function.
+> >
+> > Suggested by Coccinelle.
+> >
+> > Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+>
+> Please send only one patch for the whole I2C subsystem.
+>
 
-With the additional caching, lack of full page should not be very likely. I
-agree we can avoid doing any allocation and just straight to
-synchroize_rcu().
+Yeah, and then please add my ack to v2.
 
-> It should not be -that- hard to adjust locking for CONFIG_PREEMPT_RT!
-> For example, have some kind of reservation protocol so that a task
-> that drops the lock can retry the page allocation and be sure of having
-> a place to put it.  This might entail making CONFIG_PREEMPT_RT reserve
-> more pages per CPU.  Or maybe that would not be necessary.
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-If we are not doing single-pointer allocation, then that would also eliminate
-entering the low-level page allocator for single-pointer allocations.
 
-Or did you mean entry into the allocator for the full-page allocations
-related to the pointer array for PREEMPT_RT? Even if we skip entry into the
-allocator for those, we will still have additional caching which further
-reduces chances of getting a full page. In the event of such failure, we can
-simply queue the rcu_head.
-
-Thoughts?
-
-thanks,
-
- - Joel
-
-> 
-> 							Thanx, Paul
-> 
-> > +	if (!ptr)
-> > +		return NULL;
-> > +
-> > +	ptr[0] = (unsigned long) obj;
-> > +	return ((struct rcu_head *) ++ptr);
-> > +}
-> > +
-> >  /*
-> >   * Queue a request for lazy invocation of appropriate free routine after a
-> >   * grace period. Please note there are three paths are maintained, two are the
-> > @@ -3260,16 +3300,34 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  {
-> >  	unsigned long flags;
-> >  	struct kfree_rcu_cpu *krcp;
-> > +	bool success;
-> >  	void *ptr;
-> >  
-> > +	if (head) {
-> > +		ptr = (void *) head - (unsigned long) func;
-> > +	} else {
-> > +		/*
-> > +		 * Please note there is a limitation for the head-less
-> > +		 * variant, that is why there is a clear rule for such
-> > +		 * objects:
-> > +		 *
-> > +		 * it can be used from might_sleep() context only. For
-> > +		 * other places please embed an rcu_head to your data.
-> > +		 */
-> > +		might_sleep();
-> > +		ptr = (unsigned long *) func;
-> > +	}
-> > +
-> >  	krcp = krc_this_cpu_lock(&flags);
-> > -	ptr = (void *)head - (unsigned long)func;
-> >  
-> >  	/* Queue the object but don't yet schedule the batch. */
-> >  	if (debug_rcu_head_queue(ptr)) {
-> >  		/* Probable double kfree_rcu(), just leak. */
-> >  		WARN_ONCE(1, "%s(): Double-freed call. rcu_head %p\n",
-> >  			  __func__, head);
-> > +
-> > +		/* Mark as success and leave. */
-> > +		success = true;
-> >  		goto unlock_return;
-> >  	}
-> >  
-> > @@ -3277,10 +3335,34 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  	 * Under high memory pressure GFP_NOWAIT can fail,
-> >  	 * in that case the emergency path is maintained.
-> >  	 */
-> > -	if (unlikely(!kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr))) {
-> > +	success = kvfree_call_rcu_add_ptr_to_bulk(krcp, ptr);
-> > +	if (!success) {
-> > +		if (head == NULL) {
-> > +			/*
-> > +			 * Headless(one argument kvfree_rcu()) can sleep.
-> > +			 * Drop the lock and tack it back. So it can do
-> > +			 * direct lightweight reclaim.
-> > +			 */
-> > +			krc_this_cpu_unlock(krcp, flags);
-> > +			head = attach_rcu_head_to_object(ptr);
-> > +			krcp = krc_this_cpu_lock(&flags);
-> > +
-> > +			if (head == NULL)
-> > +				goto unlock_return;
-> > +
-> > +			/*
-> > +			 * Tag the headless object. Such objects have a
-> > +			 * back-pointer to the original allocated memory,
-> > +			 * that has to be freed as well as dynamically
-> > +			 * attached wrapper/head.
-> > +			 */
-> > +			func = (rcu_callback_t) (sizeof(unsigned long *) + 1);
-> > +		}
-> > +
-> >  		head->func = func;
-> >  		head->next = krcp->head;
-> >  		krcp->head = head;
-> > +		success = true;
-> >  	}
-> >  
-> >  	WRITE_ONCE(krcp->count, krcp->count + 1);
-> > @@ -3294,6 +3376,18 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> >  
-> >  unlock_return:
-> >  	krc_this_cpu_unlock(krcp, flags);
-> > +
-> > +	/*
-> > +	 * High memory pressure, so inline kvfree() after
-> > +	 * synchronize_rcu(). We can do it from might_sleep()
-> > +	 * context only, so the current CPU can pass the QS
-> > +	 * state.
-> > +	 */
-> > +	if (!success) {
-> > +		debug_rcu_head_unqueue(ptr);
-> > +		synchronize_rcu();
-> > +		kvfree(ptr);
-> > +	}
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvfree_call_rcu);
-> >  
-> > -- 
-> > 2.20.1
-> > 
+-- 
+Best Regards
+Masahiro Yamada
