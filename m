@@ -2,79 +2,77 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9717C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A8AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8844D206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0809E206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgEDPJL (ORCPT
+        id S1729513AbgEDPJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:09:11 -0400
-Received: from muru.com ([72.249.23.125]:52774 "EHLO muru.com"
+        Mon, 4 May 2020 11:09:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6395 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728997AbgEDPJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:09:10 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 42AFE8030;
-        Mon,  4 May 2020 15:09:57 +0000 (UTC)
-Date:   Mon, 4 May 2020 08:09:05 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Clay McClure <clay@daemons.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        kbuild test robot <lkp@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wingman Kwok <w-kwok2@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] net: ethernet: ti: Remove TI_CPTS_MOD workaround
-Message-ID: <20200504150905.GJ37466@atomide.com>
-References: <20200502233910.20851-1-clay@daemons.net>
+        id S1726509AbgEDPJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:09:42 -0400
+IronPort-SDR: mrH34a4NnU41VrFjnViFVmgkQf7fPAexd4BPbF00rsihZ+WAUIvFav5VXV14fZ9zMHnIP6X21a
+ RegijQLEwGFQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 08:09:40 -0700
+IronPort-SDR: +rmv6oM9Pv2+DecJHTy97vzZ31ydYiRgTZbcySm3YCgNqSqKxSSFEMxXhiChVTaoJZbfkQKmq3
+ NTqALnAojO8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
+   d="scan'208";a="460696072"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga005.fm.intel.com with ESMTP; 04 May 2020 08:09:40 -0700
+Date:   Mon, 4 May 2020 08:09:40 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] KVM: x86: Misc anti-retpoline optimizations
+Message-ID: <20200504150940.GB16949@linux.intel.com>
+References: <20200502043234.12481-1-sean.j.christopherson@intel.com>
+ <76c2fc30-58e3-4d90-4b66-85b6fb4741b5@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200502233910.20851-1-clay@daemons.net>
+In-Reply-To: <76c2fc30-58e3-4d90-4b66-85b6fb4741b5@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Clay McClure <clay@daemons.net> [200502 23:41]:
-> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> index 3cc3ca5fa027..e00f0d871c53 100644
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@ -57,7 +57,6 @@ CONFIG_CPUFREQ_DT=m
->  CONFIG_ARM_TI_CPUFREQ=y
->  CONFIG_CPU_IDLE=y
->  CONFIG_ARM_CPUIDLE=y
-> -CONFIG_DT_IDLE_STATES=y
->  CONFIG_KERNEL_MODE_NEON=y
->  CONFIG_PM_DEBUG=y
->  CONFIG_ARM_CRYPTO=y
+On Mon, May 04, 2020 at 03:25:58PM +0200, Paolo Bonzini wrote:
+> On 02/05/20 06:32, Sean Christopherson wrote:
+> > A smattering of optimizations geared toward avoiding retpolines, though
+> > IMO most of the patches are worthwhile changes irrespective of retpolines.
+> > I can split this up into separate patches if desired, outside of the
+> > obvious combos there are no dependencies.
+> 
+> Most of them are good stuff anyway, I agree.
+> 
+> Since I like to believe that static calls _are_ close, I queued these:
+> 
+>       KVM: x86: Save L1 TSC offset in 'struct kvm_vcpu_arch'
+>       KVM: nVMX: Unconditionally validate CR3 during nested transitions
+>       KVM: VMX: Add proper cache tracking for CR4
+>       KVM: VMX: Add proper cache tracking for CR0
+>       KVM: VMX: Move nested EPT out of kvm_x86_ops.get_tdp_level() hook
+>       KVM: x86/mmu: Capture TDP level when updating CPUID
+> 
+> and I don't disagree with the DR6 one though it can be even improved a
+> bit so I'll send a patch myself.
 
-Hmm the change above does not look related. Can you please check all the
-defconfig related changes so you are only changing the related options?
-
-Regards,
-
-Tony
+Sounds good, thanks!
