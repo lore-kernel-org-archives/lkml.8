@@ -6,777 +6,326 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC16BC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA12C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C938621582
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4434424974
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgEDUHF (ORCPT
+        id S1726550AbgEDULx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:07:05 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:36504 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDUHE (ORCPT
+        Mon, 4 May 2020 16:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgEDULw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:07:04 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id D973D804C8;
-        Mon,  4 May 2020 22:06:55 +0200 (CEST)
-Date:   Mon, 4 May 2020 22:06:49 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 3/3] drm/bridge: chrontel-ch7033: Add a new driver
-Message-ID: <20200504200649.GC8122@ravnborg.org>
-References: <20200424213539.93157-1-lkundrak@v3.sk>
- <20200424213539.93157-4-lkundrak@v3.sk>
+        Mon, 4 May 2020 16:11:52 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B36C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:11:52 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jVhR6-0002Pb-1u; Mon, 04 May 2020 22:11:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jVhR5-0007po-DD; Mon, 04 May 2020 22:11:31 +0200
+Date:   Mon, 4 May 2020 22:11:31 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sandipan Patra <spatra@nvidia.com>
+Cc:     treding@nvidia.com, robh+dt@kernel.org, jonathanh@nvidia.com,
+        bbasu@nvidia.com, ldewangan@nvidia.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] pwm: tegra: dynamic clk freq configuration by PWM
+ driver
+Message-ID: <20200504201131.l5ofxem3owrl5siv@pengutronix.de>
+References: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200424213539.93157-4-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=_G2uAb-18WruFnNJAWUA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1587398043-18767-1-git-send-email-spatra@nvidia.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lubomir.
+Hello,
 
-Drivers looks good. I look forward to the day we have moved
-connector stuff to the displaydriver - this will simplify this driver
-even more.
-
-One Q in the following.
-
-	Sam
-
-On Fri, Apr 24, 2020 at 11:35:39PM +0200, Lubomir Rintel wrote:
-> This is a driver for video encoder with VGA and DVI/HDMI outputs.
+On Mon, Apr 20, 2020 at 09:24:03PM +0530, Sandipan Patra wrote:
+> Added support for dynamic clock freq configuration in pwm kernel driver.
+> Earlier the pwm driver used to cache boot time clock rate by pwm clock
+> parent during probe. Hence dynamically changing pwm frequency was not
+> possible for all the possible ranges. With this change, dynamic calculation
+> is enabled and it is able to set the requested period from sysfs knob
+> provided the value is supported by clock source.
 > 
-> There is no documentation for the chip -- the operation was guessed from
-> what was sniffed on a Dell Wyse 3020 ThinOS terminal, the register names
-> come from the ch7035 driver in Mediatek's GPL code dump.
+> Changes mainly have 2 parts:
+>   - T186 and later chips [1]
+>   - T210 and prior chips [2]
 > 
-> Only bare minimum is implemented -- no fancy stuff, such as scaling. That
-> would only worsen our misery. We don't load the firmware and we don't need
-> to even bother enabling the MCU.  There are probably no distributable
-> firmware images anyway.
+> For [1] - Changes implemented to set pwm period dynamically and
+>           also checks added to allow only if requested period(ns) is
+>           below or equals to higher range.
 > 
-> Tested with a handful of monitors ranging from 1024x768@75 to 1400x1050@60,
-> with VGA as well as DVI.
+> For [2] - Only checks if the requested period(ns) is below or equals
+>           to higher range defined by max clock limit. The limitation
+>           in T210 or prior chips are due to the reason of having only
+>           one pwm-controller supporting multiple channels. But later
+>           chips have multiple pwm controller instances each having
+> 	  single channel support.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> 
+> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
 > ---
-> Changes since v4:
-> - Removed the registration with the component framework and creation of
->   drm_encoder.
+> V2:
+> 1. Min period_ns calculation is moved to probe.
+> 2. Added descriptioins for PWM register bits and regarding behaviour
+>    of the controller when new configuration is applied or pwm is disabled.
+> 3. Setting period with possible value when supplied period is below limit.
+> 4. Corrected the earlier code comment:
+>    plus 1 instead of minus 1 during pwm calculation
 > 
-> Changes since v3:
-> - Cosmetic changes; drop ch7033_encoder_destroy() and use
->   drm_encoder_cleanup() for drm_encoder_funcs.destroy callback
->   directly.
+>  drivers/pwm/pwm-tegra.c | 110 +++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 94 insertions(+), 16 deletions(-)
 > 
-> Changes since v1:
-> - Sort the includes
-> - Drop a useless model id read
-> - Chain to the bridge-connector instead of dealing with the HPD/EDID
->   readout machinery ourselves
-> - Utilize regmap to access the registers
-> 
->  drivers/gpu/drm/bridge/Kconfig           |  10 +
->  drivers/gpu/drm/bridge/Makefile          |   1 +
->  drivers/gpu/drm/bridge/chrontel-ch7033.c | 620 +++++++++++++++++++++++
->  3 files changed, 631 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/chrontel-ch7033.c
-> 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index aaed2347ace9..0ebc72d62a5b 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -27,6 +27,16 @@ config DRM_CDNS_DSI
->  	  Support Cadence DPI to DSI bridge. This is an internal
->  	  bridge and is meant to be directly embedded in a SoC.
->  
-> +config DRM_CHRONTEL_CH7033
-> +	tristate "Chrontel CH7033 Video Encoder"
-> +	depends on OF
-> +	select DRM_KMS_HELPER
-> +	help
-> +	  Enable support for the Chrontel CH7033 VGA/DVI/HDMI Encoder, as
-> +	  found in the Dell Wyse 3020 thin client.
-> +
-> +	  If in doubt, say "N".
-> +
->  config DRM_DISPLAY_CONNECTOR
->  	tristate "Display connector support"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 6fb062b5b0f0..a844315feddb 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
-> +obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
->  obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
->  obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
->  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
-> diff --git a/drivers/gpu/drm/bridge/chrontel-ch7033.c b/drivers/gpu/drm/bridge/chrontel-ch7033.c
-> new file mode 100644
-> index 000000000000..f8675d82974b
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/chrontel-ch7033.c
-> @@ -0,0 +1,620 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Chrontel CH7033 Video Encoder Driver
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index d26ed8f..7a36325 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -4,8 +4,39 @@
+>   *
+>   * Tegra pulse-width-modulation controller driver
+>   *
+> - * Copyright (c) 2010, NVIDIA Corporation.
+> - * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix.de>
+> + * Copyright (c) 2010-2020, NVIDIA Corporation.
 > + *
-> + * Copyright (C) 2019,2020 Lubomir Rintel
-> + */
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_bridge.h>
-> +#include <drm/drm_edid.h>
-> +#include <drm/drm_of.h>
-> +#include <drm/drm_print.h>
-> +#include <drm/drm_probe_helper.h>
-> +
-> +/* Page 0, Register 0x07 */
-> +enum {
-> +	DRI_PD		= BIT(3),
-> +	IO_PD		= BIT(5),
-> +};
-> +
-> +/* Page 0, Register 0x08 */
-> +enum {
-> +	DRI_PDDRI	= GENMASK(7, 4),
-> +	PDDAC		= GENMASK(3, 1),
-> +	PANEN		= BIT(0),
-> +};
-> +
-> +/* Page 0, Register 0x09 */
-> +enum {
-> +	DPD		= BIT(7),
-> +	GCKOFF		= BIT(6),
-> +	TV_BP		= BIT(5),
-> +	SCLPD		= BIT(4),
-> +	SDPD		= BIT(3),
-> +	VGA_PD		= BIT(2),
-> +	HDBKPD		= BIT(1),
-> +	HDMI_PD		= BIT(0),
-> +};
-> +
-> +/* Page 0, Register 0x0a */
-> +enum {
-> +	MEMINIT		= BIT(7),
-> +	MEMIDLE		= BIT(6),
-> +	MEMPD		= BIT(5),
-> +	STOP		= BIT(4),
-> +	LVDS_PD		= BIT(3),
-> +	HD_DVIB		= BIT(2),
-> +	HDCP_PD		= BIT(1),
-> +	MCU_PD		= BIT(0),
-> +};
-> +
-> +/* Page 0, Register 0x18 */
-> +enum {
-> +	IDF		= GENMASK(7, 4),
-> +	INTEN		= BIT(3),
-> +	SWAP		= GENMASK(2, 0),
-> +};
-> +
-> +enum {
-> +	BYTE_SWAP_RGB	= 0,
-> +	BYTE_SWAP_RBG	= 1,
-> +	BYTE_SWAP_GRB	= 2,
-> +	BYTE_SWAP_GBR	= 3,
-> +	BYTE_SWAP_BRG	= 4,
-> +	BYTE_SWAP_BGR	= 5,
-> +};
-> +
-> +/* Page 0, Register 0x19 */
-> +enum {
-> +	HPO_I		= BIT(5),
-> +	VPO_I		= BIT(4),
-> +	DEPO_I		= BIT(3),
-> +	CRYS_EN		= BIT(2),
-> +	GCLKFREQ	= GENMASK(2, 0),
-> +};
-> +
-> +/* Page 0, Register 0x2e */
-> +enum {
-> +	HFLIP		= BIT(7),
-> +	VFLIP		= BIT(6),
-> +	DEPO_O		= BIT(5),
-> +	HPO_O		= BIT(4),
-> +	VPO_O		= BIT(3),
-> +	TE		= GENMASK(2, 0),
-> +};
-> +
-> +/* Page 0, Register 0x2b */
-> +enum {
-> +	SWAPS		= GENMASK(7, 4),
-> +	VFMT		= GENMASK(3, 0),
-> +};
-> +
-> +/* Page 0, Register 0x54 */
-> +enum {
-> +	COMP_BP		= BIT(7),
-> +	DAC_EN_T	= BIT(6),
-> +	HWO_HDMI_HI	= GENMASK(5, 3),
-> +	HOO_HDMI_HI	= GENMASK(2, 0),
-> +};
-> +
-> +/* Page 0, Register 0x57 */
-> +enum {
-> +	FLDSEN		= BIT(7),
-> +	VWO_HDMI_HI	= GENMASK(5, 3),
-> +	VOO_HDMI_HI	= GENMASK(2, 0),
-> +};
-> +
-> +/* Page 0, Register 0x7e */
-> +enum {
-> +	HDMI_LVDS_SEL	= BIT(7),
-> +	DE_GEN		= BIT(6),
-> +	PWM_INDEX_HI	= BIT(5),
-> +	USE_DE		= BIT(4),
-> +	R_INT		= GENMASK(3, 0),
-> +};
-> +
-> +/* Page 1, Register 0x07 */
-> +enum {
-> +	BPCKSEL		= BIT(7),
-> +	DRI_CMFB_EN	= BIT(6),
-> +	CEC_PUEN	= BIT(5),
-> +	CEC_T		= BIT(3),
-> +	CKINV		= BIT(2),
-> +	CK_TVINV	= BIT(1),
-> +	DRI_CKS2	= BIT(0),
-> +};
-> +
-> +/* Page 1, Register 0x08 */
-> +enum {
-> +	DACG		= BIT(6),
-> +	DACKTST		= BIT(5),
-> +	DEDGEB		= BIT(4),
-> +	SYO		= BIT(3),
-> +	DRI_IT_LVDS	= GENMASK(2, 1),
-> +	DISPON		= BIT(0),
-> +};
-> +
-> +/* Page 1, Register 0x0c */
-> +enum {
-> +	DRI_PLL_CP	= GENMASK(7, 6),
-> +	DRI_PLL_DIVSEL	= BIT(5),
-> +	DRI_PLL_N1_1	= BIT(4),
-> +	DRI_PLL_N1_0	= BIT(3),
-> +	DRI_PLL_N3_1	= BIT(2),
-> +	DRI_PLL_N3_0	= BIT(1),
-> +	DRI_PLL_CKTSTEN = BIT(0),
-> +};
-> +
-> +/* Page 1, Register 0x6b */
-> +enum {
-> +	VCO3CS		= GENMASK(7, 6),
-> +	ICPGBK2_0	= GENMASK(5, 3),
-> +	DRI_VCO357SC	= BIT(2),
-> +	PDPLL2		= BIT(1),
-> +	DRI_PD_SER	= BIT(0),
-> +};
-> +
-> +/* Page 1, Register 0x6c */
-> +enum {
-> +	PLL2N11		= GENMASK(7, 4),
-> +	PLL2N5_4	= BIT(3),
-> +	PLL2N5_TOP	= BIT(2),
-> +	DRI_PLL_PD	= BIT(1),
-> +	PD_I2CM		= BIT(0),
-> +};
-> +
-> +/* Page 3, Register 0x28 */
-> +enum {
-> +	DIFF_EN		= GENMASK(7, 6),
-> +	CORREC_EN	= GENMASK(5, 4),
-> +	VGACLK_BP	= BIT(3),
-> +	HM_LV_SEL	= BIT(2),
-> +	HD_VGA_SEL	= BIT(1),
-> +};
-> +
-> +/* Page 3, Register 0x2a */
-> +enum {
-> +	LVDSCLK_BP	= BIT(7),
-> +	HDTVCLK_BP	= BIT(6),
-> +	HDMICLK_BP	= BIT(5),
-> +	HDTV_BP		= BIT(4),
-> +	HDMI_BP		= BIT(3),
-> +	THRWL		= GENMASK(2, 0),
-> +};
-> +
-> +/* Page 4, Register 0x52 */
-> +enum {
-> +	PGM_ARSTB	= BIT(7),
-> +	MCU_ARSTB	= BIT(6),
-> +	MCU_RETB	= BIT(2),
-> +	RESETIB		= BIT(1),
-> +	RESETDB		= BIT(0),
-> +};
-> +
-> +struct ch7033_priv {
-> +	struct regmap *regmap;
-> +	struct drm_bridge *next_bridge;
-> +	struct drm_bridge bridge;
-> +	struct drm_connector connector;
-> +};
-> +
-> +#define conn_to_ch7033_priv(x) \
-> +	container_of(x, struct ch7033_priv, connector)
-> +#define bridge_to_ch7033_priv(x) \
-> +	container_of(x, struct ch7033_priv, bridge)
-> +
-> +
-> +static enum drm_connector_status ch7033_connector_detect(
-> +	struct drm_connector *connector, bool force)
-> +{
-> +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
-> +
-> +	return drm_bridge_detect(priv->next_bridge);
-> +}
-> +
-> +static const struct drm_connector_funcs ch7033_connector_funcs = {
-> +	.reset = drm_atomic_helper_connector_reset,
-> +	.fill_modes = drm_helper_probe_single_connector_modes,
-> +	.detect = ch7033_connector_detect,
-> +	.destroy = drm_connector_cleanup,
-> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> +};
-> +
-> +static int ch7033_connector_get_modes(struct drm_connector *connector)
-> +{
-> +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
-> +	struct edid *edid;
-> +	int ret;
-> +
-> +	edid = drm_bridge_get_edid(priv->next_bridge, connector);
+> + * Overview of Tegra Pulse Width Modulator Register:
+> + * 1. 13-bit: Frequency division (SCALE)
+> + * 2. 8-bit : Puls division (DUTY)
+> + * 3. 1-bit : Enable bit
+> + *
+> + * The PWM clock frequency is divided by 256 before subdividing it based
+> + * on the programmable frequency division value to generate the required
+> + * frequency for PWM output. The maximum output frequency that can be
+> + * achieved is (max rate of source clock) / 256.
+> + * i.e. if source clock rate is 408 MHz, maximum output frequency cab be:
 
-> +	drm_connector_update_edid_property(connector, edid);
-I have seen that others do drm_connector_update_edid_property()
-in the get_modes operation - but I am yet to understand why that
-is correct in a get operation.
-Maybe you know?
+s/i.e./e.g./, s/cab/can/
 
+> + * 408 MHz/256 = 1.6 MHz.
+> + * This 1.6 MHz frequency can further be divided using SCALE value in PWM.
+> + *
+> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
+> + * To achieve 100% duty cycle, program Bit [24] of this register to
+> + * 1’b1. In which case the other bits [23:16] are set to don't care.
+> + *
+> + * Limitations and known facts:
 
-> +	if (edid) {
-> +		ret = drm_add_edid_modes(connector, edid);
-> +		kfree(edid);
+Please use "Limitations:" here to make this easier greppable.
+
+> + * -	When PWM is disabled, the output is driven to 0.
+
+0 or inactive?
+
+> + * -	It does not allow the current PWM period to complete and
+> + *	stops abruptly.
+> + *
+> + * -	If the register is reconfigured while pwm is running,
+
+s/pwm/PWM/
+
+> + *	It does not let the currently running period to complete.
+
+s/It/it/; s/let/complete/; s/ to complete//
+
+> + *
+> + * -	Pulse width of the pwm can never be out of bound.
+
+I don't understand that one.
+
+> + *	It's taken care at HW and SW
+> + * -	If the user input duty is below limit, then driver sets it to
+> + *	minimum possible value.
+
+that is 0? Do you mean "input period"? If so, better refuse the request.
+
+> + * -	If anything else goes wrong for setting duty or period,
+> + *	-EINVAL is returned.
+
+I wouldn't state this, too trivial. Instead the following are
+interesting:
+
+ - The driver doesn't implement the right rounding rules
+ - The driver needs updating to the atomic API
+
+>   */
+>  
+>  #include <linux/clk.h>
+> @@ -41,6 +72,7 @@ struct tegra_pwm_chip {
+>  	struct reset_control*rst;
+>  
+>  	unsigned long clk_rate;
+> +	unsigned long min_period_ns;
+>  
+>  	void __iomem *regs;
+>  
+> @@ -67,8 +99,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			    int duty_ns, int period_ns)
+>  {
+>  	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+> -	unsigned long long c = duty_ns, hz;
+> -	unsigned long rate;
+> +	unsigned long long p_width = duty_ns, period_hz;
+> +	unsigned long rate, required_clk_rate;
+> +	unsigned long pfm; /* Frequency divider */
+>  	u32 val = 0;
+>  	int err;
+>  
+> @@ -77,37 +110,77 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 * per (1 << PWM_DUTY_WIDTH) cycles and make sure to round to the
+>  	 * nearest integer during division.
+>  	 */
+> -	c *= (1 << PWM_DUTY_WIDTH);
+> -	c = DIV_ROUND_CLOSEST_ULL(c, period_ns);
+> +	p_width *= (1 << PWM_DUTY_WIDTH);
+> +	p_width = DIV_ROUND_CLOSEST_ULL(p_width, period_ns);
+>  
+> -	val = (u32)c << PWM_DUTY_SHIFT;
+> +	val = (u32)p_width << PWM_DUTY_SHIFT;
+> +
+> +	/*
+> +	 *  Period in nano second has to be <= highest allowed period
+> +	 *  based on max clock rate of the pwm controller.
+> +	 *
+> +	 *  higher limit = max clock limit >> PWM_DUTY_WIDTH
+> +	 *  lower limit = min clock limit >> PWM_DUTY_WIDTH >> PWM_SCALE_WIDTH
+> +	 */
+> +	if (period_ns < pc->min_period_ns) {
+> +		period_ns = pc->min_period_ns;
+> +		pr_warn("Period is adjusted to allowed value (%d ns)\n",
+> +				period_ns);
+
+That pr_warn is a bad idea as it spams the kernel log when the
+configuration is changed frequently. Wouldn't it be easier to calculate
+the frequency that is needed to achieve period_ns and check that against
+max_frequency?
+
+> +	}
+>  
+>  	/*
+>  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
+>  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
+>  	 */
+> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+> +	if (pc->soc->num_channels == 1) {
+
+required_clk_rate could be defined here, which is better as it narrows
+its scope.
+
+> +		/*
+> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
+> +		 * with the hieghest applicable rate that the controller can
+
+s/hieghest/highest/
+
+> +		 * provide. Any further lower value can be derived by setting
+> +		 * PFM bits[0:12].
+> +		 * Higher mark is taken since BPMP has round-up mechanism
+> +		 * implemented.
+
+I don't understand the part with the round-up mechanism.
+
+> +		 */
+> +		required_clk_rate =
+> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
+> +
+> +		err = clk_set_rate(pc->clk, required_clk_rate);
+> +		if (err < 0)
+> +			return -EINVAL;
+
+What happens if clk_set_rate configures a higher rate than requested?
+
+> +
+> +		rate = clk_get_rate(pc->clk) >> PWM_DUTY_WIDTH;
 > +	} else {
-> +		ret = drm_add_modes_noedid(connector, 1920, 1080);
-> +		drm_set_preferred_mode(connector, 1024, 768);
+> +		/*
+> +		 * This is the case for SoCs who support multiple channels:
+
+s/who/that/
+
+> +		 *
+> +		 * clk_set_rate() can not be called again in config because
+> +		 * T210 or any prior chip supports one pwm-controller and
+> +		 * multiple channels. Hence in this case cached clock rate
+> +		 * will be considered which was stored during probe.
+> +		 */
+> +		rate = pc->clk_rate >> PWM_DUTY_WIDTH;
 > +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static struct drm_encoder *ch7033_connector_best_encoder(
-> +			struct drm_connector *connector)
-> +{
-> +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
-> +
-> +	return priv->bridge.encoder;
-> +}
-> +
-> +static const struct drm_connector_helper_funcs ch7033_connector_helper_funcs = {
-> +	.get_modes = ch7033_connector_get_modes,
-> +	.best_encoder = ch7033_connector_best_encoder,
-> +};
-> +
-> +static void ch7033_hpd_event(void *arg, enum drm_connector_status status)
-> +{
-> +	struct ch7033_priv *priv = arg;
-> +
-> +	if (priv->bridge.dev)
-> +		drm_helper_hpd_irq_event(priv->connector.dev);
-> +}
-> +
-> +static int ch7033_bridge_attach(struct drm_bridge *bridge,
-> +				enum drm_bridge_attach_flags flags)
-> +{
-> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> +	struct drm_connector *connector = &priv->connector;
-> +	int ret;
-> +
-> +	ret = drm_bridge_attach(bridge->encoder, priv->next_bridge, bridge,
-> +				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
-> +		return 0;
-> +
-> +	if (priv->next_bridge->ops & DRM_BRIDGE_OP_DETECT) {
-> +		connector->polled = DRM_CONNECTOR_POLL_HPD;
-> +	} else {
-> +		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
-> +				    DRM_CONNECTOR_POLL_DISCONNECT;
-> +	}
-> +
-> +	if (priv->next_bridge->ops & DRM_BRIDGE_OP_HPD) {
-> +		drm_bridge_hpd_enable(priv->next_bridge, ch7033_hpd_event,
-> +				      priv);
-> +	}
-> +
-> +	drm_connector_helper_add(connector,
-> +				 &ch7033_connector_helper_funcs);
-> +	ret = drm_connector_init_with_ddc(bridge->dev, &priv->connector,
-> +					  &ch7033_connector_funcs,
-> +					  priv->next_bridge->type,
-> +					  priv->next_bridge->ddc);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to initialize connector\n");
-> +		return ret;
-> +	}
-> +
-> +	return drm_connector_attach_encoder(&priv->connector, bridge->encoder);
-> +}
-> +
-> +static void ch7033_bridge_detach(struct drm_bridge *bridge)
-> +{
-> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> +
-> +	if (priv->next_bridge->ops & DRM_BRIDGE_OP_HPD)
-> +		drm_bridge_hpd_disable(priv->next_bridge);
-> +	drm_connector_cleanup(&priv->connector);
-> +}
-> +
-> +static enum drm_mode_status ch7033_bridge_mode_valid(struct drm_bridge *bridge,
-> +				     const struct drm_display_mode *mode)
-> +{
-> +	if (mode->clock > 165000)
-> +		return MODE_CLOCK_HIGH;
-> +	if (mode->hdisplay >= 1920)
-> +		return MODE_BAD_HVALUE;
-> +	if (mode->vdisplay >= 1080)
-> +		return MODE_BAD_VVALUE;
-> +	return MODE_OK;
-> +}
-> +
-> +static void ch7033_bridge_disable(struct drm_bridge *bridge)
-> +{
-> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> +
-> +	regmap_write(priv->regmap, 0x03, 0x04);
-> +	regmap_update_bits(priv->regmap, 0x52, RESETDB, 0x00);
-> +}
-> +
-> +static void ch7033_bridge_enable(struct drm_bridge *bridge)
-> +{
-> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> +
-> +	regmap_write(priv->regmap, 0x03, 0x04);
-> +	regmap_update_bits(priv->regmap, 0x52, RESETDB, RESETDB);
-> +}
-> +
-> +static void ch7033_bridge_mode_set(struct drm_bridge *bridge,
-> +				   const struct drm_display_mode *mode,
-> +				   const struct drm_display_mode *adjusted_mode)
-> +{
-> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> +	int hbporch = mode->hsync_start - mode->hdisplay;
-> +	int hsynclen = mode->hsync_end - mode->hsync_start;
-> +	int vbporch = mode->vsync_start - mode->vdisplay;
-> +	int vsynclen = mode->vsync_end - mode->vsync_start;
-> +
-> +	/*
-> +	 * Page 4
-> +	 */
-> +	regmap_write(priv->regmap, 0x03, 0x04);
-> +
-> +	/* Turn everything off to set all the registers to their defaults. */
-> +	regmap_write(priv->regmap, 0x52, 0x00);
-> +	/* Bring I/O block up. */
-> +	regmap_write(priv->regmap, 0x52, RESETIB);
-> +
-> +	/*
-> +	 * Page 0
-> +	 */
-> +	regmap_write(priv->regmap, 0x03, 0x00);
-> +
-> +	/* Bring up parts we need from the power down. */
-> +	regmap_update_bits(priv->regmap, 0x07, DRI_PD | IO_PD, 0);
-> +	regmap_update_bits(priv->regmap, 0x08, DRI_PDDRI | PDDAC | PANEN, 0);
-> +	regmap_update_bits(priv->regmap, 0x09, DPD | GCKOFF |
-> +					       HDMI_PD | VGA_PD, 0);
-> +	regmap_update_bits(priv->regmap, 0x0a, HD_DVIB, 0);
-> +
-> +	/* Horizontal input timing. */
-> +	regmap_write(priv->regmap, 0x0b, (mode->htotal >> 8) << 3 |
-> +					 (mode->hdisplay >> 8));
-> +	regmap_write(priv->regmap, 0x0c, mode->hdisplay);
-> +	regmap_write(priv->regmap, 0x0d, mode->htotal);
-> +	regmap_write(priv->regmap, 0x0e, (hsynclen >> 8) << 3 |
-> +					 (hbporch >> 8));
-> +	regmap_write(priv->regmap, 0x0f, hbporch);
-> +	regmap_write(priv->regmap, 0x10, hsynclen);
-> +
-> +	/* Vertical input timing. */
-> +	regmap_write(priv->regmap, 0x11, (mode->vtotal >> 8) << 3 |
-> +					 (mode->vdisplay >> 8));
-> +	regmap_write(priv->regmap, 0x12, mode->vdisplay);
-> +	regmap_write(priv->regmap, 0x13, mode->vtotal);
-> +	regmap_write(priv->regmap, 0x14, ((vsynclen >> 8) << 3) |
-> +					 (vbporch >> 8));
-> +	regmap_write(priv->regmap, 0x15, vbporch);
-> +	regmap_write(priv->regmap, 0x16, vsynclen);
-> +
-> +	/* Input color swap. */
-> +	regmap_update_bits(priv->regmap, 0x18, SWAP, BYTE_SWAP_BGR);
-> +
-> +	/* Input clock and sync polarity. */
-> +	regmap_update_bits(priv->regmap, 0x19, 0x1, mode->clock >> 16);
-> +	regmap_update_bits(priv->regmap, 0x19, HPO_I | VPO_I | GCLKFREQ,
-> +			   (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_I : 0 |
-> +			   (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_I : 0 |
-> +			   mode->clock >> 16);
-> +	regmap_write(priv->regmap, 0x1a, mode->clock >> 8);
-> +	regmap_write(priv->regmap, 0x1b, mode->clock);
-> +
-> +	/* Horizontal output timing. */
-> +	regmap_write(priv->regmap, 0x1f, (mode->htotal >> 8) << 3 |
-> +					 (mode->hdisplay >> 8));
-> +	regmap_write(priv->regmap, 0x20, mode->hdisplay);
-> +	regmap_write(priv->regmap, 0x21, mode->htotal);
-> +
-> +	/* Vertical output timing. */
-> +	regmap_write(priv->regmap, 0x25, (mode->vtotal >> 8) << 3 |
-> +					 (mode->vdisplay >> 8));
-> +	regmap_write(priv->regmap, 0x26, mode->vdisplay);
-> +	regmap_write(priv->regmap, 0x27, mode->vtotal);
-> +
-> +	/* VGA channel bypass */
-> +	regmap_update_bits(priv->regmap, 0x2b, VFMT, 9);
-> +
-> +	/* Output sync polarity. */
-> +	regmap_update_bits(priv->regmap, 0x2e, HPO_O | VPO_O,
-> +			   (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_O : 0 |
-> +			   (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_O : 0);
-> +
-> +	/* HDMI horizontal output timing. */
-> +	regmap_update_bits(priv->regmap, 0x54, HWO_HDMI_HI | HOO_HDMI_HI,
-> +					       (hsynclen >> 8) << 3 |
-> +					       (hbporch >> 8));
-> +	regmap_write(priv->regmap, 0x55, hbporch);
-> +	regmap_write(priv->regmap, 0x56, hsynclen);
-> +
-> +	/* HDMI vertical output timing. */
-> +	regmap_update_bits(priv->regmap, 0x57, VWO_HDMI_HI | VOO_HDMI_HI,
-> +					       (vsynclen >> 8) << 3 |
-> +					       (vbporch >> 8));
-> +	regmap_write(priv->regmap, 0x58, vbporch);
-> +	regmap_write(priv->regmap, 0x59, vsynclen);
-> +
-> +	/* Pick HDMI, not LVDS. */
-> +	regmap_update_bits(priv->regmap, 0x7e, HDMI_LVDS_SEL, HDMI_LVDS_SEL);
-> +
-> +	/*
-> +	 * Page 1
-> +	 */
-> +	regmap_write(priv->regmap, 0x03, 0x01);
-> +
-> +	/* No idea what these do, but VGA is wobbly and blinky without them. */
-> +	regmap_update_bits(priv->regmap, 0x07, CKINV, CKINV);
-> +	regmap_update_bits(priv->regmap, 0x08, DISPON, DISPON);
-> +
-> +	/* DRI PLL */
-> +	regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_DIVSEL, DRI_PLL_DIVSEL);
-> +	if (mode->clock <= 40000) {
-> +		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
-> +						       DRI_PLL_N1_0 |
-> +						       DRI_PLL_N3_1 |
-> +						       DRI_PLL_N3_0,
-> +						       0);
-> +	} else if (mode->clock < 80000) {
-> +		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
-> +						       DRI_PLL_N1_0 |
-> +						       DRI_PLL_N3_1 |
-> +						       DRI_PLL_N3_0,
-> +						       DRI_PLL_N3_0 |
-> +						       DRI_PLL_N1_0);
-> +	} else {
-> +		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
-> +						       DRI_PLL_N1_0 |
-> +						       DRI_PLL_N3_1 |
-> +						       DRI_PLL_N3_0,
-> +						       DRI_PLL_N3_1 |
-> +						       DRI_PLL_N1_1);
-> +	}
-> +
-> +	/* This seems to be color calibration for VGA. */
-> +	regmap_write(priv->regmap, 0x64, 0x29); /* LSB Blue */
-> +	regmap_write(priv->regmap, 0x65, 0x29); /* LSB Green */
-> +	regmap_write(priv->regmap, 0x66, 0x29); /* LSB Red */
-> +	regmap_write(priv->regmap, 0x67, 0x00); /* MSB Blue */
-> +	regmap_write(priv->regmap, 0x68, 0x00); /* MSB Green */
-> +	regmap_write(priv->regmap, 0x69, 0x00); /* MSB Red */
-> +
-> +	regmap_update_bits(priv->regmap, 0x6b, DRI_PD_SER, 0x00);
-> +	regmap_update_bits(priv->regmap, 0x6c, DRI_PLL_PD, 0x00);
-> +
-> +	/*
-> +	 * Page 3
-> +	 */
-> +	regmap_write(priv->regmap, 0x03, 0x03);
-> +
-> +	/* More bypasses and apparently another HDMI/LVDS selector. */
-> +	regmap_update_bits(priv->regmap, 0x28, VGACLK_BP | HM_LV_SEL,
-> +					       VGACLK_BP | HM_LV_SEL);
-> +	regmap_update_bits(priv->regmap, 0x2a, HDMICLK_BP | HDMI_BP,
-> +					       HDMICLK_BP | HDMI_BP);
-> +
-> +	/*
-> +	 * Page 4
-> +	 */
-> +	regmap_write(priv->regmap, 0x03, 0x04);
-> +
-> +	/* Output clock. */
-> +	regmap_write(priv->regmap, 0x10, mode->clock >> 16);
-> +	regmap_write(priv->regmap, 0x11, mode->clock >> 8);
-> +	regmap_write(priv->regmap, 0x12, mode->clock);
-> +}
-> +
-> +static const struct drm_bridge_funcs ch7033_bridge_funcs = {
-> +	.attach = ch7033_bridge_attach,
-> +	.detach = ch7033_bridge_detach,
-> +	.mode_valid = ch7033_bridge_mode_valid,
-> +	.disable = ch7033_bridge_disable,
-> +	.enable = ch7033_bridge_enable,
-> +	.mode_set = ch7033_bridge_mode_set,
-> +};
-> +
-> +static const struct regmap_config ch7033_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = 0x7f,
-> +};
-> +
-> +static int ch7033_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct ch7033_priv *priv;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(dev, priv);
-> +
-> +	ret = drm_of_find_panel_or_bridge(dev->of_node, 1, -1, NULL,
-> +					  &priv->next_bridge);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->regmap = devm_regmap_init_i2c(client, &ch7033_regmap_config);
-> +	if (IS_ERR(priv->regmap)) {
-> +		dev_err(&client->dev, "regmap init failed\n");
-> +		return PTR_ERR(priv->regmap);
-> +	}
-> +
-> +	ret = regmap_read(priv->regmap, 0x00, &val);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "error reading the model id: %d\n", ret);
-> +		return ret;
-> +	}
-> +	if ((val & 0xf7) != 0x56) {
-> +		dev_err(&client->dev, "the device is not a ch7033\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	regmap_write(priv->regmap, 0x03, 0x04);
-> +	ret = regmap_read(priv->regmap, 0x51, &val);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "error reading the model id: %d\n", ret);
-> +		return ret;
-> +	}
-> +	if ((val & 0x0f) != 3) {
-> +		dev_err(&client->dev, "unknown revision %u\n", val);
-> +		return -ENODEV;
-> +	}
-> +
-> +	INIT_LIST_HEAD(&priv->bridge.list);
-> +	priv->bridge.funcs = &ch7033_bridge_funcs;
-> +	priv->bridge.of_node = dev->of_node;
-> +	drm_bridge_add(&priv->bridge);
-> +
-> +	dev_info(dev, "Chrontel CH7033 Video Encoder\n");
-> +	return 0;
-> +}
-> +
-> +static int ch7033_remove(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct ch7033_priv *priv = dev_get_drvdata(dev);
-> +
-> +	drm_bridge_remove(&priv->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ch7033_dt_ids[] = {
-> +	{ .compatible = "chrontel,ch7033", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ch7033_dt_ids);
-> +
-> +static const struct i2c_device_id ch7033_ids[] = {
-> +	{ "ch7033", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ch7033_ids);
-> +
-> +static struct i2c_driver ch7033_driver = {
-> +	.probe = ch7033_probe,
-> +	.remove = ch7033_remove,
-> +	.driver = {
-> +		.name = "ch7033",
-> +		.of_match_table = of_match_ptr(ch7033_dt_ids),
-> +	},
-> +	.id_table = ch7033_ids,
-> +};
-> +
-> +module_i2c_driver(ch7033_driver);
-> +
-> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-> +MODULE_DESCRIPTION("Chrontel CH7033 Video Encoder Driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.26.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  
+>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> -	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> -	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
+> +	period_hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> +	pfm = DIV_ROUND_CLOSEST_ULL(100ULL * rate, period_hz);
+>  
+>  	/*
+>  	 * Since the actual PWM divider is the register's frequency divider
+> -	 * field minus 1, we need to decrement to get the correct value to
+> +	 * field plus 1, we need to decrement to get the correct value to
+>  	 * write to the register.
+>  	 */
+> -	if (rate > 0)
+> -		rate--;
+> +	if (pfm > 0)
+> +		pfm--;
+>  
+>  	/*
+> -	 * Make sure that the rate will fit in the register's frequency
+> +	 * Make sure that pfm will fit in the register's frequency
+>  	 * divider field.
+>  	 */
+> -	if (rate >> PWM_SCALE_WIDTH)
+> +	if (pfm >> PWM_SCALE_WIDTH)
+>  		return -EINVAL;
+>  
+> -	val |= rate << PWM_SCALE_SHIFT;
+> +	val |= pfm << PWM_SCALE_SHIFT;
+>  
+>  	/*
+>  	 * If the PWM channel is disabled, make sure to turn on the clock
+> @@ -205,6 +278,10 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+>  	 */
+>  	pwm->clk_rate = clk_get_rate(pwm->clk);
+>  
+> +	/* Set minimum limit of PWM period for the IP */
+> +	pwm->min_period_ns =
+> +	    (NSEC_PER_SEC / (pwm->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
+
+With my suggestion above, you can drop the min_period_ns field.
+
+> +
+>  	pwm->rst = devm_reset_control_get_exclusive(&pdev->dev, "pwm");
+>  	if (IS_ERR(pwm->rst)) {
+>  		ret = PTR_ERR(pwm->rst);
+> @@ -313,4 +390,5 @@ module_platform_driver(tegra_pwm_driver);
+>  
+>  MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("NVIDIA Corporation");
+> +MODULE_AUTHOR("Sandipan Patra <spatra@nvidia.com>");
+>  MODULE_ALIAS("platform:tegra-pwm");
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
