@@ -2,147 +2,133 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50577C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E958FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D28C206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3542206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:01:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sVUedMQb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AJLldmur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgEDVAN (ORCPT
+        id S1727982AbgEDVBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56940 "EHLO
+        Mon, 4 May 2020 17:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgEDVAN (ORCPT
+        with ESMTP id S1726334AbgEDVBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:00:13 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9314EC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 14:00:11 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r4so390751pgg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 14:00:11 -0700 (PDT)
+        Mon, 4 May 2020 17:01:41 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D469C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 14:01:41 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id b17so50045ooa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 14:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I6H13M7NC/pnWpn3HyPGpJ1fI/ZFJ77tiVfWu3eCvzg=;
-        b=sVUedMQbwmk2viz3tYh78sUuEQ0vMwUPfMeeFNXoe3DvCmTfUEyv5KPfIaVP0OhhIt
-         8Rc1H9lxgdKWWd7aWK9Eete49hK4i7QyKh5gzZ/rbW1YImwFuT1AVNbv+Ksr7V5Lp0Wx
-         9grTa2yVXoTy3P4tckywaQ08ncy6/macZRay5KPvGHLIDX/8rFaIgJm2tgbZzQJ7n4oQ
-         dSyTyG+zF+MvvZyXCirA9sGrMvZ7c/Uc5La3jIWeD0eBMLbRowub9iR9EJXrTq+rjd7w
-         luUrQbdNBw3icVUs/3tsn5eGqLk9k2oxAc0XOwbKL1u2EEV6kddOsa4H9qE5HAjHpfBU
-         /ojQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C4pnmV0c/dm6Nv8LiySYrkrUFrQxVYIQ8/fCCGBj3ME=;
+        b=AJLldmurbaUk/dT5pTvnHr95+OCQHt8f2LcbXyVAtrwxSiXNAzm/jbddivJGTssLQK
+         1CopvPy2PBNrN2MIEP9sJyGs9DhZd7NSglwd3cUDtonBbYbNf6Cx9fs1i2T+K3MshLnr
+         fO9qR2ggQeHF3HcC8d+KrQw5iAdjwrhmmT0evp7/yK4mblrSLMKtc8lmeFNVod55ZDF6
+         pjmsMyEwp2j1uxlQi9F+zAc82hDhVdiOEZ33hyLBFnsvigf1y/3sFQLEUV942RU27/ut
+         Y2ps/n2H8WX8Y5opXM7774yj2JltOgc2e5KX6oy/67ZHDS5uj/pY3ifn37hO8btg1gtq
+         vZIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I6H13M7NC/pnWpn3HyPGpJ1fI/ZFJ77tiVfWu3eCvzg=;
-        b=kD3iF0tStOGp61tEqFMQlcMiP78a6Xl92nge7BBgJbz1xeFuM1gP+IpH1At5BHTqiN
-         6K65U4oQb0X1KeNE84WlcI04UpOH+XbV/KQk041aOw8tIVD6M1Ndupt7kH1uPSKdMnRj
-         +QDGRrDuxK04tNsq4WS8IECTicnmLpi6FOrJV7UTcUPTNdY+KbmkBHi7aJmtWOvkjNjb
-         Cf/vFUIeplzXt3j3uRwfmEbH/0+P2k0kMFqT5jFS3LLVWHMtJLuVzsWIMiQbRZjBjE6D
-         X4wdUEPnBZzo8xsdwZNt6uWdx/+VJbR0Y29e2OQGAlZglUCL/I+ZxFxfy7fbHFg62Zdb
-         jQGw==
-X-Gm-Message-State: AGi0PuZvF1ILebk68echKwp+q8uf/nmLrpke9c/81LZUHT9McBI6q/yq
-        WYpcshJuMaM8WZCzVD/MhG/w8w==
-X-Google-Smtp-Source: APiQypKIwMQ2cmCq2OatFGRT7S/CRUodXEKhVRvliUqq7cRyvTNjBw4OnuCgpUpsCA0tIrs6zGLvSQ==
-X-Received: by 2002:a65:498f:: with SMTP id r15mr94129pgs.345.1588626010476;
-        Mon, 04 May 2020 14:00:10 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id a7sm9718272pfg.157.2020.05.04.14.00.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 14:00:09 -0700 (PDT)
-Date:   Mon, 4 May 2020 14:00:04 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org
-Subject: Re: [PATCH] platform/chrome: cros_usbpd_logger: Add __printf
- annotation to append_str()
-Message-ID: <20200504210004.GB102727@google.com>
-References: <20200414201239.1506922-1-enric.balletbo@collabora.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C4pnmV0c/dm6Nv8LiySYrkrUFrQxVYIQ8/fCCGBj3ME=;
+        b=FZdwI5N05dpzYcgO620sJ+PRm3gGm7UsWYBJ0kCxsmcaxBDn1fpS9Y+9IU4mkqrPdl
+         eFSJs08bK7iZLd2yL/3ENlw2AubluGPnnqwnUGgfJD46+HHsOAqihI6TiCKO9hSXSJRf
+         /gfJWMvXhNwiQlC+rWhZOPWz0hWmByiFnhXekbBDl1B5hLLVjbELYuS2pjDNKx2tOUaq
+         9RyMUpwczFbjBYkR9AK3HGiX93IXq6tUJYD4NmeYo3JdvaATq6oIu/w1lDu34wxs3o6Z
+         EcD6u/6S39MZsZ+0P5IsMv0G/t38+QJ9Z6Rs28jfgXQSmhQhrGip8pBIgpVFfxaXGjP0
+         5dfg==
+X-Gm-Message-State: AGi0PuayftGKXUR5hYltSa4coxmAK0Q/uU3MuK3JUVT1TFcTCj0YBkGI
+        ZgpKuMcZYQQ8nvKI9qsh5pJo8iUU7AkEMHRa4uzw7g==
+X-Google-Smtp-Source: APiQypK8oYJDyP3ObhEIT9SEbws2SoO9/BbsHEmShslZHU9S0WEjfLstz3778FPKfSFcRZWKchUAR+aJlvTfZ7Y/mZo=
+X-Received: by 2002:a4a:ca9a:: with SMTP id x26mr194777ooq.84.1588626098771;
+ Mon, 04 May 2020 14:01:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
-Content-Disposition: inline
-In-Reply-To: <20200414201239.1506922-1-enric.balletbo@collabora.com>
+References: <20200424155404.10746-1-georgi.djakov@linaro.org>
+ <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
+ <20200430060901.j7jjw6soo5h5xoul@vireshk-i7> <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
+ <20200430075356.rjtctfuenirvhxgn@vireshk-i7> <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
+ <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
+In-Reply-To: <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 4 May 2020 14:01:02 -0700
+Message-ID: <CAGETcx_3ZrTigJ+CxJFA+N1xZaG9Vg6m0egew+kb-h4jSMsk2Q@mail.gmail.com>
+Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 3, 2020 at 10:00 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 30-04-20, 09:32, Saravana Kannan wrote:
+> > You are missing the point. This is not about aggregation. This is
+> > about OPP voting for bandwidth on a path when the vote can/should be
+> > 0.
+> >
+> > I'll give another example. Say one of the interconnect paths needs to
+> > be voted only when a particular use case is running. Say, the GPU
+> > needs to vote for bandwidth to L3 only when it's running in cache
+> > coherent mode. But it always needs to vote for bandwidth to DDR. With
+> > the way it's written now, OPP is going to force vote a non-zero
+> > bandwidth to L3 even when it can be zero. Wasting power for no good
+> > reason.
+> >
+> > Just let the drivers/device get the bandwidth values from OPP without
+> > forcing them to vote for the bandwidth when they don't need to. Just
+> > because they decide to use OPP to set their clock doesn't mean they
+> > should lose to ability to control their bandwidth in a more
+> > intelligent fashion.
+>
+> They shouldn't use opp_set_rate() in such a scenario. Why should they?
+>
+> opp_set_rate() was introduced to take care of only the simple cases
+> and the complex ones are left for the drivers to handle. For example,
+> they take care of programming multiple regulators (in case of TI), as
+> OPP core can't know the order in which regulators need to be
+> programmed. But for the simple cases, opp core can program everything
+> the way it is presented in DT.
 
---dTy3Mrz/UPE2dbVg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fair enough. But don't "voltage corner" based devices NEED to use OPP
+framework to set their frequencies?
 
-Hi Enric,
+Because, if voltage corners are only handled through OPP framework,
+then any device that uses voltage corners doesn't get to pick and
+choose when to vote for what path. Also, maybe a one liner helper
+function to enable BW voting using OPP framework by default might be
+another option. Something like:
+dev_pm_opp_enable_bw_voting(struct device *dev)?
 
-On Tue, Apr 14, 2020 at 10:12:39PM +0200, Enric Balletbo i Serra wrote:
-> This allows the compiler to verify the format strings vs the types of
-> the arguments. Also, silence the warning (triggered by W=3D1):
->=20
->   cros_usbpd_logger.c:55:2: warning: function =E2=80=98append_str=E2=80=
-=99 might be a
->   candidate for =E2=80=98gnu_printf=E2=80=99 format attribute [-Wsuggest-=
-attribute=3Dformat]
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+If devices with voltage corners can still do their own
+frequency/voltage corner control without having to use OPP framework,
+then I agree with your point above.
 
-Applied for chrome-platform-5.8. You'll find it in the for-kernelci branch
-very shortly.
-
-Benson
-> ---
->=20
->  drivers/platform/chrome/cros_usbpd_logger.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platfo=
-rm/chrome/cros_usbpd_logger.c
-> index 7de3ea75ef46..d16931203d82 100644
-> --- a/drivers/platform/chrome/cros_usbpd_logger.c
-> +++ b/drivers/platform/chrome/cros_usbpd_logger.c
-> @@ -46,6 +46,7 @@ static const char * const fault_names[] =3D {
->  	"---", "OCP", "fast OCP", "OVP", "Discharge"
->  };
-> =20
-> +__printf(3, 4)
->  static int append_str(char *buf, int pos, const char *fmt, ...)
->  {
->  	va_list args;
-> --=20
-> 2.25.1
->=20
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---dTy3Mrz/UPE2dbVg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXrCCVAAKCRBzbaomhzOw
-wvFAAQDpxP+AJwzAJyQ93hm+19rLTbF39gjmJiWOssobatSetwD+IbIlGF9F2F68
-VZsBbrCHv98+t9VaK+eTihVeTEPpQww=
-=pIYl
------END PGP SIGNATURE-----
-
---dTy3Mrz/UPE2dbVg--
+-Saravana
