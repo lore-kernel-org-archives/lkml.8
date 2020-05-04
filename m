@@ -2,156 +2,84 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFF0C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F5AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0C12071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD71C20658
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WurnOURC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cy3LcYWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgEDJqj (ORCPT
+        id S1728470AbgEDJsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:46:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53991 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727930AbgEDJqj (ORCPT
+        Mon, 4 May 2020 05:48:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:64875 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728339AbgEDJr6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:46:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588585597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=scFFt0BtLPxeOsN+SbAlNTW9udoDL7YI1oVFgdqCTZQ=;
-        b=WurnOURC1FYbTyJL5nrtyHuoUl31wxyR8yW6d3NjIcHrzuWmCL22qLWNBHQj3jTmvo8BAp
-        gSYb7mUZCxFSdwELp0ZMRP7kGmzvBACVgqgSTOUl7N0BN0PG21xQPfw54Y36d854gXoiZu
-        cOC6PZc+xeQJQYE/VBaSU8QdirxzRlI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-gsnRypOVNC-EwqNrJXkNwQ-1; Mon, 04 May 2020 05:46:33 -0400
-X-MC-Unique: gsnRypOVNC-EwqNrJXkNwQ-1
-Received: by mail-wm1-f70.google.com with SMTP id j5so4578616wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 02:46:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=scFFt0BtLPxeOsN+SbAlNTW9udoDL7YI1oVFgdqCTZQ=;
-        b=IODzxvmZvuvY81MhCDe6Yc4dcRoJoB9ooiQRd0bayDPT+BgRNvqsX3jackkvLrO3eH
-         llKgVPR6IyX3EPD1SjfCG3sTArnSOnUBZkhjeO4674iI68E/NbBD7wmnco4RKRd1uqqh
-         F0wl8OgVV4DieZKlyktl09p0lCGlfDnSs76FJ6ENdwGo3B0t0zNJ26HhJCVZoRruv8BM
-         D4zpOpWpfb4cmSEH8ksu8VsnwojQn7O9IjlFbK/1Ps/IRHXOjcGOSyduH+BqB0rOnmzT
-         7H+30GyML9OL2C015M6q3z1fAmauu/Sc1aWbZUngrrWPIQ8O0x/kzgy1GeYiVpdMWg4p
-         nTww==
-X-Gm-Message-State: AGi0PubEFNrL2DtV+9qA/7KcOxdOeXKPmgeehqEDQDeFIMa2DzpQ92VD
-        2YAgCwzh5XgLYy5kLdcRIytXK+dJujZJVGwzwFfR9eUhvNwV9n91CpOXsXhk2Ji6gu3r8JJyFK+
-        GSsCiNkOJSgIpJGvedFxmm4Fs
-X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr10850208wrt.215.1588585592350;
-        Mon, 04 May 2020 02:46:32 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL0l4tMFMDt9Hx6InMV/UDMk+rNzIMkzBVD6Xl95GsMPzXuuyBsYRdcehNHJEPa9EQux5wbsg==
-X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr10850189wrt.215.1588585592165;
-        Mon, 04 May 2020 02:46:32 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id z18sm17330878wrw.41.2020.05.04.02.46.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 02:46:31 -0700 (PDT)
-Subject: Re: [PATCH v3 01/11] iio: light: cm32181: Switch to new style
- i2c-driver probe function
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-References: <20200428172923.567806-1-hdegoede@redhat.com>
- <20200503115456.11a16411@archlinux>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4f6df1df-8c82-c14f-8862-c020d67d3df3@redhat.com>
-Date:   Mon, 4 May 2020 11:46:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 4 May 2020 05:47:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588585678; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=WM9/aRStIaPaqyNPtJJyM+h9b/Ec7TT+ctCUD/qlxj0=;
+ b=cy3LcYWOZJpfMlJQdOkkBgMG26XhM0u6SZ/ICmb6+kK1nThIm7o85RASLadTciv4dX5Rw9jJ
+ 5KzwHODbAqb41SRPf46qNblMwkemChqGksWvifLz5IBMRXBDR7LGkOIBbT6MA4ajnrgbB+Qk
+ IIS/SOAj0ag7MGlhev5Kl3VTEa4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eafe4c5.7f106080c4c8-smtp-out-n02;
+ Mon, 04 May 2020 09:47:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 265EFC433BA; Mon,  4 May 2020 09:47:48 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0311C433D2;
+        Mon,  4 May 2020 09:47:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0311C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200503115456.11a16411@archlinux>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] rtw88: fix spelling mistake "fimrware" ->
+ "firmware"
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200424084733.7716-1-colin.king@canonical.com>
+References: <20200424084733.7716-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200504094748.265EFC433BA@smtp.codeaurora.org>
+Date:   Mon,  4 May 2020 09:47:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Colin King <colin.king@canonical.com> wrote:
 
-On 5/3/20 12:54 PM, Jonathan Cameron wrote:
-> On Tue, 28 Apr 2020 19:29:13 +0200
-> Hans de Goede <hdegoede@redhat.com> wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
->> Switch to the new style i2c-driver probe_new probe function and drop the
->> unnecessary i2c_device_id table (we do not have any old style board files
->> using this).
->>
->> This is a preparation patch for adding ACPI binding support.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v3:
->> - This is a new patch in v3 of this patch-set
->> ---
->>   drivers/iio/light/cm32181.c | 15 +++------------
->>   1 file changed, 3 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
->> index 5f4fb5674fa0..cc57190a24cb 100644
->> --- a/drivers/iio/light/cm32181.c
->> +++ b/drivers/iio/light/cm32181.c
->> @@ -294,8 +294,7 @@ static const struct iio_info cm32181_info = {
->>   	.attrs			= &cm32181_attribute_group,
->>   };
->>   
->> -static int cm32181_probe(struct i2c_client *client,
->> -			const struct i2c_device_id *id)
->> +static int cm32181_probe(struct i2c_client *client)
->>   {
->>   	struct cm32181_chip *cm32181;
->>   	struct iio_dev *indio_dev;
->> @@ -316,7 +315,7 @@ static int cm32181_probe(struct i2c_client *client,
->>   	indio_dev->channels = cm32181_channels;
->>   	indio_dev->num_channels = ARRAY_SIZE(cm32181_channels);
->>   	indio_dev->info = &cm32181_info;
->> -	indio_dev->name = id->name;
->> +	indio_dev->name = dev_name(&client->dev);
+> There are spelling mistakes in two rtw_err error messages. Fix them.
 > 
-> ABI breakage.  The name needs to be unaffected by this patch and I'm
-> fairly sure it just gained the vendor prefix.
-> 
-> So to drop that table, you need to provide the 'clean' part number
-> somewhere else.  Seeing as driver currently only supports one number,
-> you could just provide it directly here. However, as you are
-> going to add support for another part number later, you'll need
-> to do something more clever when you introduce that.
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Ok, I will fix this for the next version.
+Patch applied to wireless-drivers-next.git, thanks.
 
-> I'll make this suggestion in that patch, but I think you should add
-> a chip_info structure for each of the supported chips rather than using
-> a switch to put a number of different elements in place.  The name
-> would then go in there.
+a6336094c3ab rtw88: fix spelling mistake "fimrware" -> "firmware"
 
-Ok, I will add a chip_info structure for the next version (version 4).
+-- 
+https://patchwork.kernel.org/patch/11507317/
 
-Regards,
-
-Hans
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
