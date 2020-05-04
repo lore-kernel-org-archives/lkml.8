@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEC3C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D619206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421AC20746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615506;
-	bh=2r32fugBjwG8T40ehjInEQQbqeH50pAvIpYorokJkRk=;
+	s=default; t=1588615509;
+	bh=azMOu8EjMGDrE0P+u3NYrkPUjjB/EnRM97c2/Lsix7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cxJI3RTLSMXyMGVtkeu0NghuG48YhaSRILAbDtsjxfsXAE99/jMJTAXKhEEkCP2iI
-	 hpLHCRxRKmcyfYyCktjhB6KASQN/watTFVku2ohMLaCoX4OSDYsuXrrQi8jmcO36B8
-	 3yspRzQiO321r8KhGt/e1mB1ThsSVs9TL8Nq1qfQ=
+	b=pO0uaQEX/64OwJizrNs+AjLgHNTwjLr62us1WaSNQlCrFmb5oKjadHXICTBtD1D7y
+	 wPpHOFHYey6oDZrFoYax8vh6/1QwYB+VeZYPy/7F5MN25mJt71pWhuAjcqXPYAGTiV
+	 lWD0V+fXFsUKiY1Q4b+skFzsrlJRYHk+Z0AISXoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbgEDSFF (ORCPT
+        id S1731764AbgEDSFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34662 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbgEDSFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:01 -0400
+        id S1731744AbgEDSE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86816206B8;
-        Mon,  4 May 2020 18:05:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B37FA207DD;
+        Mon,  4 May 2020 18:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615501;
-        bh=2r32fugBjwG8T40ehjInEQQbqeH50pAvIpYorokJkRk=;
+        s=default; t=1588615496;
+        bh=azMOu8EjMGDrE0P+u3NYrkPUjjB/EnRM97c2/Lsix7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLckBcNpyo7oviNpnBLD2VPhqRM7Xmt+bhWGdbCQNmc2izIS2ZoG+/mn1j9w5FQAK
-         10hAggZu2mAudEUU1rfrZh11guD+uJwAFnsO0Yd61kFFYlHHx0eox7eGIh5ciP+Rhh
-         GfIs80BaaBaHMjkauJ7CBqd//gqTdZ7zHArbVI0c=
+        b=P1si1RGvy0/sNE68cnE/5l6ENpRP5w5XhasKB5hgJ9xlkA7d/IS2ZRv5RvVh6yHy6
+         DolYo0VQ47szhaqbPZJs4/GWKvbXRKhAHY7hr3+V6P6vKqWlDdTznJKhNsX9nuv/Ki
+         eef8D2+O/g7J/kbKiVmrGuY6hP45cBne1jjGaS5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Martin Wilck <mwilck@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 35/57] scsi: qla2xxx: check UNLOADING before posting async work
-Date:   Mon,  4 May 2020 19:57:39 +0200
-Message-Id: <20200504165459.394512123@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Subject: [PATCH 5.4 33/57] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi is safe
+Date:   Mon,  4 May 2020 19:57:37 +0200
+Message-Id: <20200504165459.203658645@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -61,43 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 5a263892d7d0b4fe351363f8d1a14c6a75955475 upstream.
+commit b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10 upstream.
 
-qlt_free_session_done() tries to post async PRLO / LOGO, and waits for the
-completion of these async commands. If UNLOADING is set, this is doomed to
-timeout, because the async logout command will never complete.
+We need to indicate that powering off the TI WiFi is safe, to avoid:
 
-The only way to avoid waiting pointlessly is to fail posting these commands
-in the first place if the driver is in UNLOADING state.  In general,
-posting any command should be avoided when the driver is UNLOADING.
+wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
+wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
 
-With this patch, "rmmod qla2xxx" completes without noticeable delay.
+which prevents the WiFi being functional.
 
-Link: https://lore.kernel.org/r/20200421204621.19228-3-mwilck@suse.com
-Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
-Acked-by: Arun Easi <aeasi@marvell.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_os.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -4857,6 +4857,9 @@ qla2x00_alloc_work(struct scsi_qla_host
- 	struct qla_work_evt *e;
- 	uint8_t bail;
- 
-+	if (test_bit(UNLOADING, &vha->dpc_flags))
-+		return NULL;
-+
- 	QLA_VHA_MARK_BUSY(vha, bail);
- 	if (bail)
- 		return NULL;
+--- a/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
+@@ -153,6 +153,7 @@
+ 	bus-width = <4>;
+ 	keep-power-in-suspend;
+ 	mmc-pwrseq = <&pwrseq_ti_wifi>;
++	cap-power-off-card;
+ 	non-removable;
+ 	vmmc-supply = <&vcc_3v3>;
+ 	/* vqmmc-supply = <&nvcc_sd1>; - MMC layer doesn't like it! */
 
 
