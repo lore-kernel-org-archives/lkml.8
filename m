@@ -2,133 +2,121 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E958FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95760C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3542206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AJLldmur"
+	by mail.kernel.org (Postfix) with ESMTP id 7E964206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgEDVBm (ORCPT
+        id S1728036AbgEDVCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
+        Mon, 4 May 2020 17:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgEDVBl (ORCPT
+        with ESMTP id S1726334AbgEDVCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:01:41 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D469C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 14:01:41 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id b17so50045ooa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 14:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C4pnmV0c/dm6Nv8LiySYrkrUFrQxVYIQ8/fCCGBj3ME=;
-        b=AJLldmurbaUk/dT5pTvnHr95+OCQHt8f2LcbXyVAtrwxSiXNAzm/jbddivJGTssLQK
-         1CopvPy2PBNrN2MIEP9sJyGs9DhZd7NSglwd3cUDtonBbYbNf6Cx9fs1i2T+K3MshLnr
-         fO9qR2ggQeHF3HcC8d+KrQw5iAdjwrhmmT0evp7/yK4mblrSLMKtc8lmeFNVod55ZDF6
-         pjmsMyEwp2j1uxlQi9F+zAc82hDhVdiOEZ33hyLBFnsvigf1y/3sFQLEUV942RU27/ut
-         Y2ps/n2H8WX8Y5opXM7774yj2JltOgc2e5KX6oy/67ZHDS5uj/pY3ifn37hO8btg1gtq
-         vZIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C4pnmV0c/dm6Nv8LiySYrkrUFrQxVYIQ8/fCCGBj3ME=;
-        b=FZdwI5N05dpzYcgO620sJ+PRm3gGm7UsWYBJ0kCxsmcaxBDn1fpS9Y+9IU4mkqrPdl
-         eFSJs08bK7iZLd2yL/3ENlw2AubluGPnnqwnUGgfJD46+HHsOAqihI6TiCKO9hSXSJRf
-         /gfJWMvXhNwiQlC+rWhZOPWz0hWmByiFnhXekbBDl1B5hLLVjbELYuS2pjDNKx2tOUaq
-         9RyMUpwczFbjBYkR9AK3HGiX93IXq6tUJYD4NmeYo3JdvaATq6oIu/w1lDu34wxs3o6Z
-         EcD6u/6S39MZsZ+0P5IsMv0G/t38+QJ9Z6Rs28jfgXQSmhQhrGip8pBIgpVFfxaXGjP0
-         5dfg==
-X-Gm-Message-State: AGi0PuayftGKXUR5hYltSa4coxmAK0Q/uU3MuK3JUVT1TFcTCj0YBkGI
-        ZgpKuMcZYQQ8nvKI9qsh5pJo8iUU7AkEMHRa4uzw7g==
-X-Google-Smtp-Source: APiQypK8oYJDyP3ObhEIT9SEbws2SoO9/BbsHEmShslZHU9S0WEjfLstz3778FPKfSFcRZWKchUAR+aJlvTfZ7Y/mZo=
-X-Received: by 2002:a4a:ca9a:: with SMTP id x26mr194777ooq.84.1588626098771;
- Mon, 04 May 2020 14:01:38 -0700 (PDT)
+        Mon, 4 May 2020 17:02:42 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5A5C061A0E;
+        Mon,  4 May 2020 14:02:42 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jViEL-0010Kx-57; Mon, 04 May 2020 21:02:25 +0000
+Date:   Mon, 4 May 2020 22:02:25 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
+Message-ID: <20200504210225.GW23230@ZenIV.linux.org.uk>
+References: <20200504010912.982044-1-ira.weiny@intel.com>
+ <20200504013509.GU23230@ZenIV.linux.org.uk>
+ <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
+ <20200504053357.GV23230@ZenIV.linux.org.uk>
+ <20200504201740.GA985739@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-7-georgi.djakov@linaro.org> <CAGETcx9iAJRW9Y9orHNF-fC53nNob_vZKYUNEpwf_AeAdWCOjw@mail.gmail.com>
- <20200430060901.j7jjw6soo5h5xoul@vireshk-i7> <CAGETcx_zH_KJ7_A7Ofc2M5GfHKX_J__URJB127MSMcTeaqyzjw@mail.gmail.com>
- <20200430075356.rjtctfuenirvhxgn@vireshk-i7> <CAGETcx-W5XjNtgjDz2Ma_miN=cUBb5LFfhzYtKRpf6iAi4bXNw@mail.gmail.com>
- <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
-In-Reply-To: <20200504050017.nsd7fp7gtxxwt3d7@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 4 May 2020 14:01:02 -0700
-Message-ID: <CAGETcx_3ZrTigJ+CxJFA+N1xZaG9Vg6m0egew+kb-h4jSMsk2Q@mail.gmail.com>
-Subject: Re: [PATCH v7 6/7] OPP: Update the bandwidth on OPP frequency changes
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504201740.GA985739@iweiny-DESK2.sc.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 10:00 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 30-04-20, 09:32, Saravana Kannan wrote:
-> > You are missing the point. This is not about aggregation. This is
-> > about OPP voting for bandwidth on a path when the vote can/should be
-> > 0.
-> >
-> > I'll give another example. Say one of the interconnect paths needs to
-> > be voted only when a particular use case is running. Say, the GPU
-> > needs to vote for bandwidth to L3 only when it's running in cache
-> > coherent mode. But it always needs to vote for bandwidth to DDR. With
-> > the way it's written now, OPP is going to force vote a non-zero
-> > bandwidth to L3 even when it can be zero. Wasting power for no good
-> > reason.
-> >
-> > Just let the drivers/device get the bandwidth values from OPP without
-> > forcing them to vote for the bandwidth when they don't need to. Just
-> > because they decide to use OPP to set their clock doesn't mean they
-> > should lose to ability to control their bandwidth in a more
-> > intelligent fashion.
->
-> They shouldn't use opp_set_rate() in such a scenario. Why should they?
->
-> opp_set_rate() was introduced to take care of only the simple cases
-> and the complex ones are left for the drivers to handle. For example,
-> they take care of programming multiple regulators (in case of TI), as
-> OPP core can't know the order in which regulators need to be
-> programmed. But for the simple cases, opp core can program everything
-> the way it is presented in DT.
+On Mon, May 04, 2020 at 01:17:41PM -0700, Ira Weiny wrote:
 
-Fair enough. But don't "voltage corner" based devices NEED to use OPP
-framework to set their frequencies?
+> > || * arm: much, much worse.  We have several files that pull linux/highmem.h:
+> > || arch/arm/mm/cache-feroceon-l2.c, arch/arm/mm/cache-xsc3l2.c,
+> > || arch/arm/mm/copypage-*.c, arch/arm/mm/dma-mapping.c, arch/arm/mm/flush.c,
+> > || arch/arm/mm/highmem.c, arch/arm/probes/uprobes/core.c,
+> > || arch/arm/include/asm/kvm_mmu.h (kmap_atomic_pfn()).
+> > || Those are fine, but we also have this:
+> > || arch/arm/include/asm/pgtable.h:200:#define __pte_map(pmd)               (pte_t *)kmap_atomic(pmd_page(*(pmd)))
+> > || arch/arm/include/asm/pgtable.h:208:#define pte_offset_map(pmd,addr)     (__pte_map(pmd) + pte_index(addr))
+> > || and sure as hell, asm/pgtable.h does *NOT* pull linux/highmem.h.
+> 
+> It does not pull asm/highmem.h either...
 
-Because, if voltage corners are only handled through OPP framework,
-then any device that uses voltage corners doesn't get to pick and
-choose when to vote for what path. Also, maybe a one liner helper
-function to enable BW voting using OPP framework by default might be
-another option. Something like:
-dev_pm_opp_enable_bw_voting(struct device *dev)?
+No, but the users of those macros need to be considered.
 
-If devices with voltage corners can still do their own
-frequency/voltage corner control without having to use OPP framework,
-then I agree with your point above.
+> > || #define pte_offset_map(dir, addr)               \
+> > ||         ((pte_t *) kmap_atomic(pmd_page(*(dir))) + pte_index(addr))
+> > ||         One pte_offset_map user in arch/microblaze:
+> > || arch/microblaze/kernel/signal.c:207:    ptep = pte_offset_map(pmdp, address);
+> > || Messy, but doesn't require any changes (we have asm/pgalloc.h included
+> > || there, and that pull linux/highmem.h).
+> 
+> AFAICS asm/pgtable.h does not include asm/highmem.h here...
+> 
+> So looks like arch/microblaze/kernel/signal.c will need linux/highmem.h
 
--Saravana
+See above - line 39 in there is
+#include <asm/pgalloc.h>
+and line 14 in arch/microblaze/include/asm/pgalloc.h is
+#include <linux/highmem.h>
+It's conditional upon CONFIG_MMU in there, but so's the use of
+pte_offset_map() in arch/microblaze/kernel/signal.c 
+
+So it shouldn't be a problem.
+
+> > || * xtensa: users in arch/xtensa/kernel/pci-dma.c, arch/xtensa/mm/highmem.c,
+> > || arch/xtensa/mm/cache.c and arch/xtensa/platforms/iss/simdisk.c (all pull
+> > || linux/highmem.h).
+> 
+> Actually
+> 
+> arch/xtensa/mm/cache.c gets linux/highmem.h from linux/pagemap.h
+> 
+> arch/xtensa/platforms/iss/simdisk.c may have an issue?
+> 	linux/blkdev.h -> CONFIG_BLOCK -> linux/pagemap.h -> linux/highmem.h
+> 	But simdisk.c requires BLK_DEV_SIMDISK -> CONFIG_BLOCK...
+> 	<sigh>
+
+Yep - see above re major chain of indirect includes conditional upon CONFIG_BLOCK
+and its uses in places that only build with such configs.  There's a plenty of
+similar considerations outside of arch/*, unfortunately...
