@@ -2,119 +2,127 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47DEC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4A1C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0BB1206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c6opjvGM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KX/tQ5X2"
+	by mail.kernel.org (Postfix) with ESMTP id 16B8020757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgEDKyA (ORCPT
+        id S1728139AbgEDKyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:54:00 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:48545 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727051AbgEDKyA (ORCPT
+        Mon, 4 May 2020 06:54:21 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42757 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgEDKyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:54:00 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 409376DB;
-        Mon,  4 May 2020 06:53:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 04 May 2020 06:53:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=zvy14YHR+znGe3t+Hmjo/EjD6Mr
-        ZIZqEI9VaeaWaPVA=; b=c6opjvGMp1R7qBwwuGO5veGzwSInNqfyNFTHkFEqsbX
-        j2Qi2i9Zk+h3W3Ku1zJ+QkmW2OwV5oRKl+Mr7b6dyu+OyjsOXMPTMxqKAdu5e3Dq
-        5tFt+4/glEyVTLkkQvvBZL5DrlAk19DdJki0sNbMlZib5ZakBhISqnkUk9eQ1NsK
-        //De2EGAk39Slc9kYnfpZq13rlQlAFuaILbM2LMIlBbIVbfPYsJJliQIj3XjVu0w
-        lvWDPI/UO+raTNSSBZS2Umgktlu4/cqO/+uwdvMw/XOKRuPFr2AOBKDa4erZJO7c
-        fpbwGHXrzZ3+2mXUh8eOaYmkumm0ZLk8EN8yvrQoPmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zvy14Y
-        HR+znGe3t+Hmjo/EjD6MrZIZqEI9VaeaWaPVA=; b=KX/tQ5X2P4047WY26xXMpN
-        b2CgOT0HlF/mo52lhJp+yhpQsKnu+ibT+PJ1jEtKnZVWRYysBPRFG2YUR4RnmJqw
-        6OBL+cf6T/7Y8HjBrQ399dTvj18V44olYeF0EJOEM+N9wCxqWAynaj6ENjrazRqg
-        luaWfHH0RdFX0DNJcK2qzRkoEgt/6KXQvlUqbRqYSOyL2t2upq4WVS3M88HNFMfg
-        PlRTYq9YiCUjMMxzWA6QVAoMDmfn1j6VAYcZk1OBh9s/T9xOO9oV3XVtaYWkui81
-        tqDrXwaPO15eMDcejU6DMYvoruFYQG5KEWva5E5bfg6f9tngKiNywMcl+8ltPxwA
-        ==
-X-ME-Sender: <xms:QvSvXrqoYQNskZQcQQl8xwEk2H0i7mx16kbdj2CwSsp896PWfE4N9A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeeggdeftdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:QvSvXrz30qCcw3ZnA9cGgvIkheGr5Uv1PDHJ_esRVMc_c9shi1md7g>
-    <xmx:QvSvXtwKchh-vk1ZccyGeZifdTRpqXjrVnzC_ZQwyMegWklxK5dqeQ>
-    <xmx:QvSvXiTlRe_4owVrv-vXfGysxgEDdVepPsQKo1J8bSEjnSDnHqtE5w>
-    <xmx:RvSvXtrr16GO2RI2A-sj8RjTFJMAIassDdgQOLxHpCm5qhcP4UwqGA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5F89F3280064;
-        Mon,  4 May 2020 06:53:54 -0400 (EDT)
-Date:   Mon, 4 May 2020 12:53:52 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: pinetab: Fix cpvdd supply
- name
-Message-ID: <20200504105352.m7x3yo7ne2j2goas@gilmour.lan>
-References: <20200426162353.52465-1-samuel@sholland.org>
+        Mon, 4 May 2020 06:54:19 -0400
+Received: by mail-io1-f71.google.com with SMTP id d188so12738564iof.9
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 03:54:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=FO4xDaIfxTwn2pEyGinZgotdJaQt7RptE2NYxBRHOvw=;
+        b=b2ufw38hELjNcGma8w49wgZmo6lYkBJ5bioMMChUhatUMCKUqHmmMRc8hOm+bgkeK2
+         5VQVTf3r9OX03DbtoCsVXI8tNncmXlQLhZOtFFnoqgKjwTyLsty76ERMANSLk8wVlnJk
+         V0FdS8UkL5MrZ4FS4B8uBVZU6hPrnKUVRVCRdsFTS7yGy1HpZkcehtVlHth7YG10sauk
+         eDdpDx7vBNuNRrcSNkBPDoDm8cAPuz9ZeeoPkc8b2moe7sa1nno6ObTN2GPjgpn5rHnF
+         q11VxHtOWmdCXDluU4GEV8Pm/oEAOWT7piY/mYxHzth3KpLYtaSry0j31ZpiT3NBhM9q
+         khmg==
+X-Gm-Message-State: AGi0PubzPORrK6i/tE2y8eLPRXMKjFwk0lNzC7Cjw/4Bz+XxXLxx2J4c
+        nwR9xRfIN0pxl+kOLVNhO1myzENWGST7Kkq2Ktci3pw3x1eB
+X-Google-Smtp-Source: APiQypKNUiYkaUkrIbkJdG+jJows/ANxR6UAiChp+yhND1WSnh3QJQIkbTt9WpdpD2z79dSG79EbzrBWIs9odt5neWXrrKmTWlvs
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3rgwd3wzs7dmr2rs"
-Content-Disposition: inline
-In-Reply-To: <20200426162353.52465-1-samuel@sholland.org>
+X-Received: by 2002:a02:cbba:: with SMTP id v26mr13967781jap.14.1588589658332;
+ Mon, 04 May 2020 03:54:18 -0700 (PDT)
+Date:   Mon, 04 May 2020 03:54:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000047642c05a4d05ae5@google.com>
+Subject: BUG: unable to handle kernel paging request in syscall_return_slowpath
+From:   syzbot <syzbot+3231e7d48f1538976553@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---3rgwd3wzs7dmr2rs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following crash on:
 
-On Sun, Apr 26, 2020 at 11:23:53AM -0500, Samuel Holland wrote:
-> An older version of the analog codec binding referenced the headphone
-> amplifier binding as "hpvcc". However, by the time it was merged in
-> commit 21dd30200e3d ("ASoC: dt-bindings: sun50i-codec-analog: Add
-> headphone amp regulator supply"), the regulator reference was renamed to
-> "cpvdd". This board's device tree still uses the old name, which fails
-> to work at runtime, and which causes a warning from `make dtbs_check`.
-> Resolve both by fixing the name.
->=20
-> Fixes: 674ef1d0a7b2 ("arm64: dts: allwinner: a64: add support for PineTab=
-")
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+HEAD commit:    f66ed1eb Merge tag 'iomap-5.7-fixes-1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=140f6e60100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1ac152749c11ca54
+dashboard link: https://syzkaller.appspot.com/bug?extid=3231e7d48f1538976553
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1415e23fe00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=146bbc3fe00000
 
-Applied, thanks!
-Maxime
+Bisection is inconclusive: the bug happens on the oldest tested release.
 
---3rgwd3wzs7dmr2rs
-Content-Type: application/pgp-signature; name="signature.asc"
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12955ee4100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11955ee4100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16955ee4100000
 
------BEGIN PGP SIGNATURE-----
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3231e7d48f1538976553@syzkaller.appspotmail.com
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXq/0QAAKCRDj7w1vZxhR
-xfCMAPwKSTdj7Wj0M2iBjxXSpxos0dEHNj3F/XGvsdNIlb16kwEAz/3eiEZHeaVM
-aqGK08WsKBWeCCBX/TXwIfEoD21ruQ8=
-=/g+o
------END PGP SIGNATURE-----
+BUG: unable to handle page fault for address: fffffffff8778570
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 927c067 P4D 927c067 PUD 927e067 PMD 0 
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7070 Comm: syz-executor231 Not tainted 5.7.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0xfffffffff8778570
+Code: Bad RIP value.
+RSP: 0018:ffffc90001627f00 EFLAGS: 00010206
+RAX: 0000000000000000 RBX: 0000000000004000 RCX: ffff888092d64280
+RDX: ffff888092d64280 RSI: 0000000000000200 RDI: 0000000000000000
+RBP: 0000000000000200 R08: ffffffff8100848d R09: fffffbfff16e6e11
+R10: fffffbfff16e6e11 R11: 0000000000000000 R12: 1ffff110125ac850
+R13: dffffc0000000000 R14: ffff888092d64280 R15: ffff888092d64280
+FS:  0000000001be0880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffff8778546 CR3: 00000000a82d6000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ syscall_return_slowpath+0x9b/0x420 arch/x86/entry/common.c:266
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+Modules linked in:
+CR2: fffffffff8778570
+---[ end trace 8e914c2fec746223 ]---
+RIP: 0010:0xfffffffff8778570
+Code: Bad RIP value.
+RSP: 0018:ffffc90001627f00 EFLAGS: 00010206
+RAX: 0000000000000000 RBX: 0000000000004000 RCX: ffff888092d64280
+RDX: ffff888092d64280 RSI: 0000000000000200 RDI: 0000000000000000
+RBP: 0000000000000200 R08: ffffffff8100848d R09: fffffbfff16e6e11
+R10: fffffbfff16e6e11 R11: 0000000000000000 R12: 1ffff110125ac850
+R13: dffffc0000000000 R14: ffff888092d64280 R15: ffff888092d64280
+FS:  0000000001be0880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffff8778546 CR3: 00000000a82d6000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
---3rgwd3wzs7dmr2rs--
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
