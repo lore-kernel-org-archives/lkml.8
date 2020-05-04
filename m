@@ -2,594 +2,132 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E877C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54F4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E18F02078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA6B2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHoa2S5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbgEDOmC (ORCPT
+        id S1729209AbgEDOmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:42:02 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40368 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgEDOl7 (ORCPT
+        Mon, 4 May 2020 10:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728802AbgEDOmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:41:59 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jVcI7-0008Gv-Ls; Mon, 04 May 2020 14:41:55 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v3 3/3] selftests/pidfd: add pidfd setns tests
-Date:   Mon,  4 May 2020 16:41:41 +0200
-Message-Id: <20200504144141.3605533-4-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
-References: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 4 May 2020 10:42:39 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19074C061A0E;
+        Mon,  4 May 2020 07:42:39 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l18so10521605wrn.6;
+        Mon, 04 May 2020 07:42:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9FMwwNQtGFnr1eeDSstc6L1dxV0HnTklGu1OpkfvDCw=;
+        b=EHoa2S5/zTC/wBYwfEWv98eTrPr34B1kgmKlx4BPOY2AQm5EBhIshVFi7QVcakAuSC
+         M6SZTHli0jojNPfoi5yVB5zDpW+EGwKmTBEaBpKrQmH+HI2+f+/rrHh6B3o6/GsyIu1t
+         bhhyJ9hfvEbYEgORPmmbvMQfZTJE/gw2RHJgXXsZrvu4k8cZRiWbUBjYzIMYDR4hRa5k
+         Zb3bH2jO4e94rEe5ImVUBK91y+X8vi01gV7Bl86Dfl1NLJGbmT3rx74WSBMx2H2TrdO9
+         Xdec8oELTWyHllrCZjT+kzK+gA9Rd86fcYUP9ubs8bbXr90fpWg782sV/z+ebwBOvqZN
+         hswg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9FMwwNQtGFnr1eeDSstc6L1dxV0HnTklGu1OpkfvDCw=;
+        b=PWDxYwS6z6M6DwQ+p8DGt9MzW+JJ45Lj4WdgfbNNuCWurUt8hvtbCBedKtY45No5/7
+         E9nclv4avUJA/Ln6Gn4tIxAcaFEreZyg4bqdeK7d/v8CwZ2RGpSA1DVUpDa7zX+n2usp
+         WbVCj6dU90xtYGoAiac8UVILorZuAQCIt3W+qmf8BGeOJlbMdq63zcJiy+uJyLl4hVyw
+         d90P4quBnfZMRWbGteZN8FCNHCRn18sKavb+TK1+OaVB5KycwRfhbEBXzc39X0WzLUEg
+         6S00EHYTkUd56WRd9+SH8PCb5GHvu2xIoPUD/Gto9rzQY0lzPsI1iffFfvoyhYVMZ76I
+         hJZg==
+X-Gm-Message-State: AGi0PuZKCP4kTxuhw5Rme/8dyFUakehYAVuA3Ty7jTtPrHxW64xT0B+t
+        IVXR+Hb3fYjYV88Rmj2Hkao=
+X-Google-Smtp-Source: APiQypJRbQrLFhGZ3k3jfOD97WL6AD9Bq/GOdddDC18ZWCqOfyY+6vEJ8jnAAszB/q0rCbLg3k693w==
+X-Received: by 2002:a5d:4241:: with SMTP id s1mr19110460wrr.250.1588603357853;
+        Mon, 04 May 2020 07:42:37 -0700 (PDT)
+Received: from localhost.localdomain (dynamic-adsl-78-12-12-93.clienti.tiscali.it. [78.12.12.93])
+        by smtp.gmail.com with ESMTPSA id r15sm6566212wrq.93.2020.05.04.07.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:42:37 -0700 (PDT)
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dav.lebrun@gmail.com
+Cc:     Ahmed Abdelsalam <ahabdels@gmail.com>
+Subject: [net] seg6: fix SRH processing to comply with RFC8754
+Date:   Mon,  4 May 2020 14:42:11 +0000
+Message-Id: <20200504144211.5613-1-ahabdels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is basically a test-suite for setns() and as of now contains:
-- test that we can't pass garbage flags
-- test that we can't attach to the namespaces of  task that has already exited
-- test that we can incrementally setns into all namespaces of a target task
-  using a pidfd
-- test that we can setns atomically into all namespaces of a target task
-- test that we can't cross setns into a user namespace outside of our user
-  namespace hierarchy
-- test that we can't setns into namespaces owned by user namespaces over which
-  we are not privileged
+The Segment Routing Header (SRH) which defines the SRv6 dataplane is defined
+in RFC8754.
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+RFC8754 (section 4.1) defines the SR source node behavior which encapsulates
+packets into an outer IPv6 header and SRH. The SR source node encodes the
+full list of Segments that defines the packet path in the SRH. Then, the
+first segment from list of Segments is copied into the Destination address
+of the outer IPv6 header and the packet is sent to the first hop in its path
+towards the destination.
+
+If the Segment list has only one segment, the SR source node can omit the SRH
+as he only segment is added in the destination address.
+
+RFC8754 (section 4.1.1) defines the Reduced SRH, when a source does not
+require the entire SID list to be preserved in the SRH. A reduced SRH does
+not contain the first segment of the related SR Policy (the first segment is
+the one already in the DA of the IPv6 header), and the Last Entry field is
+set to n-2, where n is the number of elements in the SR Policy.
+
+RFC8754 (section 4.3.1.1) defines the SRH processing and the logic to
+validate the SRH (S09, S10, S11) which works for both reduced and
+non-reduced behaviors.
+
+This patch updates seg6_validate_srh() to validate the SRH as per RFC8754.
+
+Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
 ---
-/* v2 */
-patch introduced
+ net/ipv6/seg6.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-/* v3 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
-  - Minor tweaks in variable naming and a few tiny fixes.
----
- tools/testing/selftests/pidfd/.gitignore      |   1 +
- tools/testing/selftests/pidfd/Makefile        |   3 +-
- tools/testing/selftests/pidfd/config          |   6 +
- .../selftests/pidfd/pidfd_setns_test.c        | 473 ++++++++++++++++++
- 4 files changed, 482 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/pidfd/config
- create mode 100644 tools/testing/selftests/pidfd/pidfd_setns_test.c
-
-diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
-index 2d4db5afb142..973198a3ec3d 100644
---- a/tools/testing/selftests/pidfd/.gitignore
-+++ b/tools/testing/selftests/pidfd/.gitignore
-@@ -5,3 +5,4 @@ pidfd_test
- pidfd_wait
- pidfd_fdinfo_test
- pidfd_getfd_test
-+pidfd_setns_test
-diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-index 75a545861375..f4a2f28f926b 100644
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- CFLAGS += -g -I../../../../usr/include/ -pthread
+diff --git a/net/ipv6/seg6.c b/net/ipv6/seg6.c
+index 4c7e0a27fa9c..e37d2b34cacc 100644
+--- a/net/ipv6/seg6.c
++++ b/net/ipv6/seg6.c
+@@ -28,6 +28,7 @@
+ bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len)
+ {
+ 	int trailing;
++	int max_last_entry;
+ 	unsigned int tlv_offset;
  
--TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test pidfd_poll_test pidfd_wait pidfd_getfd_test
-+TEST_GEN_PROGS := pidfd_test pidfd_fdinfo_test pidfd_open_test \
-+	pidfd_poll_test pidfd_wait pidfd_getfd_test pidfd_setns_test
+ 	if (srh->type != IPV6_SRCRT_TYPE_4)
+@@ -36,7 +37,12 @@ bool seg6_validate_srh(struct ipv6_sr_hdr *srh, int len)
+ 	if (((srh->hdrlen + 1) << 3) != len)
+ 		return false;
  
- include ../lib.mk
+-	if (srh->segments_left > srh->first_segment)
++	max_last_entry = (srh->hdrlen / 2) - 1;
++
++	if (srh->first_segment > max_last_entry)
++		return false;
++
++	if (srh->segments_left > srh->first_segment + 1)
+ 		return false;
  
-diff --git a/tools/testing/selftests/pidfd/config b/tools/testing/selftests/pidfd/config
-new file mode 100644
-index 000000000000..bb11de90c0c9
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/config
-@@ -0,0 +1,6 @@
-+CONFIG_UTS_NS=y
-+CONFIG_IPC_NS=y
-+CONFIG_USER_NS=y
-+CONFIG_PID_NS=y
-+CONFIG_NET_NS=y
-+CONFIG_CGROUPS=y
-diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-new file mode 100644
-index 000000000000..133ec5b6cda8
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
-@@ -0,0 +1,473 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <linux/types.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+#include <sys/socket.h>
-+#include <sys/stat.h>
-+#include <linux/kcmp.h>
-+
-+#include "pidfd.h"
-+#include "../clone3/clone3_selftests.h"
-+#include "../kselftest.h"
-+#include "../kselftest_harness.h"
-+
-+enum {
-+	PIDFD_NS_USER,
-+	PIDFD_NS_MNT,
-+	PIDFD_NS_PID,
-+	PIDFD_NS_UTS,
-+	PIDFD_NS_IPC,
-+	PIDFD_NS_NET,
-+	PIDFD_NS_CGROUP,
-+	PIDFD_NS_PIDCLD,
-+	PIDFD_NS_MAX
-+};
-+
-+const struct ns_info {
-+	const char *name;
-+	int flag;
-+} ns_info[] = {
-+	[PIDFD_NS_USER]   = { "user",             CLONE_NEWUSER,   },
-+	[PIDFD_NS_MNT]    = { "mnt",              CLONE_NEWNS,     },
-+	[PIDFD_NS_PID]    = { "pid",              CLONE_NEWPID,    },
-+	[PIDFD_NS_UTS]    = { "uts",              CLONE_NEWUTS,    },
-+	[PIDFD_NS_IPC]    = { "ipc",              CLONE_NEWIPC,    },
-+	[PIDFD_NS_NET]    = { "net",              CLONE_NEWNET,    },
-+	[PIDFD_NS_CGROUP] = { "cgroup",           CLONE_NEWCGROUP, },
-+	[PIDFD_NS_PIDCLD] = { "pid_for_children", 0,               },
-+};
-+
-+FIXTURE(current_nsset)
-+{
-+	pid_t pid;
-+	int pidfd;
-+	int nsfds[PIDFD_NS_MAX];
-+
-+	pid_t child_pid_exited;
-+	int child_pidfd_exited;
-+
-+	pid_t child_pid1;
-+	int child_pidfd1;
-+	int child_nsfds1[PIDFD_NS_MAX];
-+
-+	pid_t child_pid2;
-+	int child_pidfd2;
-+	int child_nsfds2[PIDFD_NS_MAX];
-+};
-+
-+static int sys_waitid(int which, pid_t pid, int options)
-+{
-+	return syscall(__NR_waitid, which, pid, NULL, options, NULL);
-+}
-+
-+pid_t create_child(int *pidfd, unsigned flags)
-+{
-+	struct clone_args args = {
-+		.flags		= CLONE_PIDFD | flags,
-+		.exit_signal	= SIGCHLD,
-+		.pidfd		= ptr_to_u64(pidfd),
-+	};
-+
-+	return sys_clone3(&args, sizeof(struct clone_args));
-+}
-+
-+FIXTURE_SETUP(current_nsset)
-+{
-+	int i, proc_fd, ret;
-+
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		self->nsfds[i]		= -EBADF;
-+		self->child_nsfds1[i]	= -EBADF;
-+		self->child_nsfds2[i]	= -EBADF;
-+	}
-+
-+	proc_fd = open("/proc/self/ns", O_DIRECTORY | O_CLOEXEC);
-+	ASSERT_GE(proc_fd, 0) {
-+		TH_LOG("%m - Failed to open /proc/self/ns");
-+	}
-+
-+	self->pid = getpid();
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+		self->nsfds[i] = openat(proc_fd, info->name, O_RDONLY | O_CLOEXEC);
-+		if (self->nsfds[i] < 0) {
-+			EXPECT_EQ(errno, ENOENT) {
-+				TH_LOG("%m - Failed to open %s namespace for process %d",
-+				       info->name, self->pid);
-+			}
-+		}
-+	}
-+
-+	self->pidfd = sys_pidfd_open(self->pid, 0);
-+	EXPECT_GT(self->pidfd, 0) {
-+		TH_LOG("%m - Failed to open pidfd for process %d", self->pid);
-+	}
-+
-+	/* Create task that exits right away. */
-+	self->child_pid_exited = create_child(&self->child_pidfd_exited,
-+					      CLONE_NEWUSER | CLONE_NEWNET);
-+	EXPECT_GT(self->child_pid_exited, 0);
-+
-+	if (self->child_pid_exited == 0)
-+		_exit(EXIT_SUCCESS);
-+
-+	ASSERT_EQ(sys_waitid(P_PID, self->child_pid_exited, WEXITED | WNOWAIT), 0);
-+
-+	self->pidfd = sys_pidfd_open(self->pid, 0);
-+	EXPECT_GE(self->pidfd, 0) {
-+		TH_LOG("%m - Failed to open pidfd for process %d", self->pid);
-+	}
-+
-+	/* Create tasks that will be stopped. */
-+	self->child_pid1 = create_child(&self->child_pidfd1,
-+					CLONE_NEWUSER | CLONE_NEWNS |
-+					CLONE_NEWCGROUP | CLONE_NEWIPC |
-+					CLONE_NEWUTS | CLONE_NEWPID |
-+					CLONE_NEWNET);
-+	EXPECT_GE(self->child_pid1, 0);
-+
-+	if (self->child_pid1 == 0) {
-+		pause();
-+		_exit(EXIT_SUCCESS);
-+	}
-+
-+	self->child_pid2 = create_child(&self->child_pidfd2,
-+					CLONE_NEWUSER | CLONE_NEWNS |
-+					CLONE_NEWCGROUP | CLONE_NEWIPC |
-+					CLONE_NEWUTS | CLONE_NEWPID |
-+					CLONE_NEWNET);
-+	EXPECT_GE(self->child_pid2, 0);
-+
-+	if (self->child_pid2 == 0) {
-+		pause();
-+		_exit(EXIT_SUCCESS);
-+	}
-+
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		char p[100];
-+
-+		const struct ns_info *info = &ns_info[i];
-+
-+		self->nsfds[i] = openat(proc_fd, info->name, O_RDONLY | O_CLOEXEC);
-+		if (self->nsfds[i] < 0) {
-+			EXPECT_EQ(errno, ENOENT) {
-+				TH_LOG("%m - Failed to open %s namespace for process %d",
-+				       info->name, self->pid);
-+			}
-+		}
-+
-+		ret = snprintf(p, sizeof(p), "/proc/%d/ns/%s",
-+			       self->child_pid1, info->name);
-+		EXPECT_GT(ret, 0);
-+		EXPECT_LT(ret, sizeof(p));
-+
-+		self->child_nsfds1[i] = open(p, O_RDONLY | O_CLOEXEC);
-+		if (self->child_nsfds1[i] < 0) {
-+			EXPECT_EQ(errno, ENOENT) {
-+				TH_LOG("%m - Failed to open %s namespace for process %d",
-+				       info->name, self->child_pid1);
-+			}
-+		}
-+
-+		ret = snprintf(p, sizeof(p), "/proc/%d/ns/%s",
-+			       self->child_pid2, info->name);
-+		EXPECT_GT(ret, 0);
-+		EXPECT_LT(ret, sizeof(p));
-+
-+		self->child_nsfds2[i] = open(p, O_RDONLY | O_CLOEXEC);
-+		if (self->child_nsfds2[i] < 0) {
-+			EXPECT_EQ(errno, ENOENT) {
-+				TH_LOG("%m - Failed to open %s namespace for process %d",
-+				       info->name, self->child_pid1);
-+			}
-+		}
-+	}
-+
-+	close(proc_fd);
-+}
-+
-+FIXTURE_TEARDOWN(current_nsset)
-+{
-+	int i;
-+
-+	ASSERT_EQ(sys_pidfd_send_signal(self->child_pidfd1,
-+					SIGKILL, NULL, 0), 0);
-+	ASSERT_EQ(sys_pidfd_send_signal(self->child_pidfd2,
-+					SIGKILL, NULL, 0), 0);
-+
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		if (self->nsfds[i] >= 0)
-+			close(self->nsfds[i]);
-+		if (self->child_nsfds1[i] >= 0)
-+			close(self->child_nsfds1[i]);
-+		if (self->child_nsfds2[i] >= 0)
-+			close(self->child_nsfds2[i]);
-+	}
-+
-+	if (self->child_pidfd1 >= 0)
-+		EXPECT_EQ(0, close(self->child_pidfd1));
-+	if (self->child_pidfd2 >= 0)
-+		EXPECT_EQ(0, close(self->child_pidfd2));
-+	ASSERT_EQ(sys_waitid(P_PID, self->child_pid_exited, WEXITED), 0);
-+	ASSERT_EQ(sys_waitid(P_PID, self->child_pid1, WEXITED), 0);
-+	ASSERT_EQ(sys_waitid(P_PID, self->child_pid2, WEXITED), 0);
-+}
-+
-+static int preserve_ns(const int pid, const char *ns)
-+{
-+	int ret;
-+	char path[50];
-+
-+	ret = snprintf(path, sizeof(path), "/proc/%d/ns/%s", pid, ns);
-+	if (ret < 0 || (size_t)ret >= sizeof(path))
-+		return -EIO;
-+
-+	return open(path, O_RDONLY | O_CLOEXEC);
-+}
-+
-+static int in_same_namespace(int ns_fd1, pid_t pid2, const char *ns)
-+{
-+	int ns_fd2 = -EBADF;
-+	int ret = -1;
-+	struct stat ns_st1, ns_st2;
-+
-+	ret = fstat(ns_fd1, &ns_st1);
-+	if (ret < 0)
-+		return -1;
-+
-+	ns_fd2 = preserve_ns(pid2, ns);
-+	if (ns_fd2 < 0)
-+		return -1;
-+
-+	ret = fstat(ns_fd2, &ns_st2);
-+	close(ns_fd2);
-+	if (ret < 0)
-+		return -1;
-+
-+	/* processes are in the same namespace */
-+	if ((ns_st1.st_dev == ns_st2.st_dev) &&
-+	    (ns_st1.st_ino == ns_st2.st_ino))
-+		return 1;
-+
-+	/* processes are in different namespaces */
-+	return 0;
-+}
-+
-+/* Test that we can't pass garbage to the kernel. */
-+TEST_F(current_nsset, invalid_flags)
-+{
-+	ASSERT_NE(setns(self->pidfd, 0), 0);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	ASSERT_NE(setns(self->pidfd, -1), 0);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	ASSERT_NE(setns(self->pidfd, CLONE_VM), 0);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	ASSERT_NE(setns(self->pidfd, CLONE_NEWUSER | CLONE_VM), 0);
-+	EXPECT_EQ(errno, EINVAL);
-+}
-+
-+/* Test that we can't attach to a task that has already exited. */
-+TEST_F(current_nsset, pidfd_exited_child)
-+{
-+	int i;
-+	pid_t pid;
-+
-+	ASSERT_NE(setns(self->child_pidfd_exited, CLONE_NEWUSER | CLONE_NEWNET),
-+		  0);
-+	EXPECT_EQ(errno, ESRCH);
-+
-+	pid = getpid();
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+		/* Verify that we haven't changed any namespaces. */
-+		if (self->nsfds[i] >= 0)
-+			ASSERT_EQ(in_same_namespace(self->nsfds[i], pid, info->name), 1);
-+	}
-+}
-+
-+TEST_F(current_nsset, pidfd_incremental_setns)
-+{
-+	int i;
-+	pid_t pid;
-+
-+	pid = getpid();
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+		int nsfd;
-+
-+		if (self->child_nsfds1[i] < 0)
-+			continue;
-+
-+		if (info->flag) {
-+			ASSERT_EQ(setns(self->child_pidfd1, info->flag), 0) {
-+				TH_LOG("%m - Failed to setns to %s namespace of %d via pidfd %d",
-+				       info->name, self->child_pid1,
-+				       self->child_pidfd1);
-+			}
-+		}
-+
-+		/* Verify that we have changed to the correct namespaces. */
-+		if (info->flag == CLONE_NEWPID)
-+			nsfd = self->nsfds[i];
-+		else
-+			nsfd = self->child_nsfds1[i];
-+		ASSERT_EQ(in_same_namespace(nsfd, pid, info->name), 1) {
-+			TH_LOG("setns failed to place us correctly into %s namespace of %d via pidfd %d",
-+			       info->name, self->child_pid1,
-+			       self->child_pidfd1);
-+		}
-+		TH_LOG("Managed to correctly setns to %s namespace of %d via pidfd %d",
-+		       info->name, self->child_pid1, self->child_pidfd1);
-+	}
-+}
-+
-+TEST_F(current_nsset, nsfd_incremental_setns)
-+{
-+	int i;
-+	pid_t pid;
-+
-+	pid = getpid();
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+		int nsfd;
-+
-+		if (self->child_nsfds1[i] < 0)
-+			continue;
-+
-+		if (info->flag) {
-+			ASSERT_EQ(setns(self->child_nsfds1[i], info->flag), 0) {
-+				TH_LOG("%m - Failed to setns to %s namespace of %d via nsfd %d",
-+				       info->name, self->child_pid1,
-+				       self->child_nsfds1[i]);
-+			}
-+		}
-+
-+		/* Verify that we have changed to the correct namespaces. */
-+		if (info->flag == CLONE_NEWPID)
-+			nsfd = self->nsfds[i];
-+		else
-+			nsfd = self->child_nsfds1[i];
-+		ASSERT_EQ(in_same_namespace(nsfd, pid, info->name), 1) {
-+			TH_LOG("setns failed to place us correctly into %s namespace of %d via nsfd %d",
-+			       info->name, self->child_pid1,
-+			       self->child_nsfds1[i]);
-+		}
-+		TH_LOG("Managed to correctly setns to %s namespace of %d via nsfd %d",
-+		       info->name, self->child_pid1, self->child_nsfds1[i]);
-+	}
-+}
-+
-+TEST_F(current_nsset, pidfd_one_shot_setns)
-+{
-+	unsigned flags = 0;
-+	int i;
-+	pid_t pid;
-+
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+
-+		if (self->child_nsfds1[i] < 0)
-+			continue;
-+
-+		flags |= info->flag;
-+		TH_LOG("Adding %s namespace of %d to list of namespaces to attach to",
-+		       info->name, self->child_pid1);
-+	}
-+
-+	ASSERT_EQ(setns(self->child_pidfd1, flags), 0) {
-+		TH_LOG("%m - Failed to setns to namespaces of %d",
-+		       self->child_pid1);
-+	}
-+
-+	pid = getpid();
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+		int nsfd;
-+
-+		if (self->child_nsfds1[i] < 0)
-+			continue;
-+
-+		/* Verify that we have changed to the correct namespaces. */
-+		if (info->flag == CLONE_NEWPID)
-+			nsfd = self->nsfds[i];
-+		else
-+			nsfd = self->child_nsfds1[i];
-+		ASSERT_EQ(in_same_namespace(nsfd, pid, info->name), 1) {
-+			TH_LOG("setns failed to place us correctly into %s namespace of %d",
-+			       info->name, self->child_pid1);
-+		}
-+		TH_LOG("Managed to correctly setns to %s namespace of %d",
-+		       info->name, self->child_pid1);
-+	}
-+}
-+
-+TEST_F(current_nsset, no_foul_play)
-+{
-+	unsigned flags = 0;
-+	int i;
-+
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+
-+		if (self->child_nsfds1[i] < 0)
-+			continue;
-+
-+		flags |= info->flag;
-+		if (info->flag) /* No use logging pid_for_children. */
-+			TH_LOG("Adding %s namespace of %d to list of namespaces to attach to",
-+			       info->name, self->child_pid1);
-+	}
-+
-+	ASSERT_EQ(setns(self->child_pidfd1, flags), 0) {
-+		TH_LOG("%m - Failed to setns to namespaces of %d vid pidfd %d",
-+		       self->child_pid1, self->child_pidfd1);
-+	}
-+
-+	/*
-+	 * Can't setns to a user namespace outside of our hierarchy since we
-+	 * don't have caps in there and didn't create it. That means that under
-+	 * no circumstances should we be able to setns to any of the other
-+	 * ones since they aren't owned by our user namespace.
-+	 */
-+	for (i = 0; i < PIDFD_NS_MAX; i++) {
-+		const struct ns_info *info = &ns_info[i];
-+
-+		if (self->child_nsfds2[i] < 0 || !info->flag)
-+			continue;
-+
-+		ASSERT_NE(setns(self->child_pidfd2, info->flag), 0) {
-+			TH_LOG("Managed to setns to %s namespace of %d via pidfd %d",
-+			       info->name, self->child_pid2,
-+			       self->child_pidfd2);
-+		}
-+		TH_LOG("%m - Correctly failed to setns to %s namespace of %d via pidfd %d",
-+		       info->name, self->child_pid2,
-+		       self->child_pidfd2);
-+
-+		ASSERT_NE(setns(self->child_nsfds2[i], info->flag), 0) {
-+			TH_LOG("Managed to setns to %s namespace of %d via nsfd %d",
-+			       info->name, self->child_pid2,
-+			       self->child_nsfds2[i]);
-+		}
-+		TH_LOG("%m - Correctly failed to setns to %s namespace of %d via nsfd %d",
-+		       info->name, self->child_pid2,
-+		       self->child_nsfds2[i]);
-+	}
-+}
-+
-+TEST_HARNESS_MAIN
+ 	tlv_offset = sizeof(*srh) + ((srh->first_segment + 1) << 4);
 -- 
-2.26.2
+2.17.1
 
