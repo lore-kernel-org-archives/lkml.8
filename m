@@ -2,163 +2,197 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1309EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A75C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0AE82054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:10:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cH+LYADn"
+	by mail.kernel.org (Postfix) with ESMTP id DF50D2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgEDJKW (ORCPT
+        id S1728215AbgEDJKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726467AbgEDJKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:10:21 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70476C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 02:10:21 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j21so216294pgb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 02:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uIbF5zxX6Dw0nqWjJ2TagrefdsSTjGZ8h/iE+ii+4b4=;
-        b=cH+LYADnJpxdzvW2+5Q1jFzZ9L9OyZncRQgoZJsu0phKyHmo/b1tb6JE/KAVmXislx
-         576Ap7opHZUSUi70vyPGcMe0C9p7leyk8cASBIWKAwGsK8Y00lThuiFS3aNw65PsYLTm
-         szhQMtXIBmQ2tAAcHVWgTijiqY0HV7xQgK5xZyE/QR599vulSPnvVwVtjGkKmy/Dtck5
-         oIznVkUPaNZ0LtGj6iS59qmm9P3OHQSvVr5i8oQIHTb7kJ5GJncJ11cB4kee+KdWXypI
-         BLlZ0XKGbYY2XjNxgkp917C15tyTspqX3/ZW8nK4NnjT3ll8+dlQFg8POxb8ZU3v61ad
-         l8Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uIbF5zxX6Dw0nqWjJ2TagrefdsSTjGZ8h/iE+ii+4b4=;
-        b=FoOi/Buu6uc1JBYEzscZdQZzQn34K357hzskehC+84LCdIVKnCpwGhhaxPFBJU+mpA
-         lB9dDpgOqU1R0eqv2WQEeFlrO6yuInwiyNgM49VUoaA9uc0PRKbKK6XtwKtwo30BYzPo
-         ssLoAiFEZ8pLaqYepiAtttzcVjTMYDzJjlrY9GJ19e8dvSaQtLafx2pAu8Ln/zerFEKQ
-         U/p0/p7QnTKHd6c8J9bzdtIoD3MtyJ841PDVsrdDme9lAMwK6wu/mW3d+am8BYE7Q6Q/
-         FZGLJuEG32OgyKGDfSjwT+8n7l5+rOx5FmmgSf/xq1obUwH60zvjZ6rg9/ZmJM3UQ6s5
-         ANGg==
-X-Gm-Message-State: AGi0PuZSsFRR8xTtn6id1oUT945eCAPCIF+PGgo8VKDayK3i0Kd36h4Z
-        l3tKHCeZTICzRG81MhIghLE=
-X-Google-Smtp-Source: APiQypJG/fsOYbUSEQYZkHIQLG4hFpTXov1SCNDc2K85TTECtJawhDDWFsEna1ULkqdmyHpan3Z+ag==
-X-Received: by 2002:aa7:97b2:: with SMTP id d18mr16995522pfq.89.1588583420829;
-        Mon, 04 May 2020 02:10:20 -0700 (PDT)
-Received: from localhost ([49.207.53.0])
-        by smtp.gmail.com with ESMTPSA id gd17sm1461493pjb.21.2020.05.04.02.10.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 02:10:19 -0700 (PDT)
-Date:   Mon, 4 May 2020 14:40:18 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Alan Kao <alankao@andestech.com>,
-        Eric Lin <tesheng@andestech.com>, Gary Guo <gary@garyguo.net>,
-        alex@ghiti.fr, David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>, atish.patra@wdc.com,
-        yash.shah@sifive.com, Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Greentime Hu <green.hu@gmail.com>, zong.li@sifive.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] Highmem support for 32-bit RISC-V
-Message-ID: <20200504091018.GA24897@afzalpc>
-References: <20200331093241.3728-1-tesheng@andestech.com>
- <CAK8P3a3LokurC0n9XiwtPQh9ZgQcswMKY4b+TEsQh1VgYDNeWA@mail.gmail.com>
- <20200408035118.GA1451@andestech.com>
- <CAK8P3a1JS3_2fWrhNTZx0eTWjJa-GTb4AscTPqydpSP5EB15Yw@mail.gmail.com>
- <20200414151748.GA5624@afzalpc>
- <CAK8P3a0JW9x-Wk9Ec3+zLjPHbWAvPQx8MF-xe-PnWUgEjRAuTg@mail.gmail.com>
- <20200415135407.GA6553@afzalpc>
- <20200503145017.GA5074@afzalpc>
- <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
+        Mon, 4 May 2020 05:10:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38692 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgEDJKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:10:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D8EDFAC7D;
+        Mon,  4 May 2020 09:10:46 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 43276604EE; Mon,  4 May 2020 11:10:44 +0200 (CEST)
+Date:   Mon, 4 May 2020 11:10:44 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Jander <david@protonic.nl>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, Marek Vasut <marex@denx.de>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH v5 1/2] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200504091044.GA8237@lion.mk-sys.cz>
+References: <20200504071214.5890-1-o.rempel@pengutronix.de>
+ <20200504071214.5890-2-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <20200504071214.5890-2-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ +linux-arm-kernel
-
-  Context: This is regarding VMSPLIT_4G_4G support for 32-bit ARM as a
-  possible replacement to highmem. For that, initially, it is being
-  attempted to move static kernel mapping from lowmem to vmalloc space.
-
-  in next reply, i will remove everyone/list !ARM related ]
-
-Hi,
-
-On Sun, May 03, 2020 at 10:20:39PM +0200, Arnd Bergmann wrote:
-
-> Which SoC platform are you running this on? Just making
-> sure that this won't conflict with static mappings later.
-
-Versatile Express V2P-CA15 on qemu, qemu options include --smp 2 &
-2GB memory.
-
-BTW, i could not convince myself why, except for DEBUG_LL, static io
-mappings are used.
-
+On Mon, May 04, 2020 at 09:12:13AM +0200, Oleksij Rempel wrote:
+> This UAPI is needed for BroadR-Reach 100BASE-T1 devices. Due to lack of
+> auto-negotiation support, we needed to be able to configure the
+> MASTER-SLAVE role of the port manually or from an application in user
+> space.
 > 
-> One problem I see immediately in arm_memblock_init()
+> The same UAPI can be used for 1000BASE-T or MultiGBASE-T devices to
+> force MASTER or SLAVE role. See IEEE 802.3-2018:
+> 22.2.4.3.7 MASTER-SLAVE control register (Register 9)
+> 22.2.4.3.8 MASTER-SLAVE status register (Register 10)
+> 40.5.2 MASTER-SLAVE configuration resolution
+> 45.2.1.185.1 MASTER-SLAVE config value (1.2100.14)
+> 45.2.7.10 MultiGBASE-T AN control 1 register (Register 7.32)
+> 
+> The MASTER-SLAVE role affects the clock configuration:
+> 
+> -------------------------------------------------------------------------------
+> When the  PHY is configured as MASTER, the PMA Transmit function shall
+> source TX_TCLK from a local clock source. When configured as SLAVE, the
+> PMA Transmit function shall source TX_TCLK from the clock recovered from
+> data stream provided by MASTER.
+> 
+> iMX6Q                     KSZ9031                XXX
+> ------\                /-----------\        /------------\
+>       |                |           |        |            |
+>  MAC  |<----RGMII----->| PHY Slave |<------>| PHY Master |
+>       |<--- 125 MHz ---+-<------/  |        | \          |
+> ------/                \-----------/        \------------/
+>                                                ^
+>                                                 \-TX_TCLK
+> 
+> -------------------------------------------------------------------------------
+> 
+> Since some clock or link related issues are only reproducible in a
+> specific MASTER-SLAVE-role, MAC and PHY configuration, it is beneficial
+> to provide generic (not 100BASE-T1 specific) interface to the user space
+> for configuration flexibility and trouble shooting.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index ac2784192472f..42dda9d2082ee 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -1768,6 +1768,90 @@ int genphy_setup_forced(struct phy_device *phydev)
+>  }
+>  EXPORT_SYMBOL(genphy_setup_forced);
+>  
+> +static int genphy_setup_master_slave(struct phy_device *phydev)
+> +{
+> +	u16 ctl = 0;
+> +
+> +	if (!phydev->is_gigabit_capable)
+> +		return 0;
 
-Earlier it went past arm_memblock_init(), issue was clearing the page
-tables from VMALLOC_START in devicemaps_init() thr' paging_init(),
-which was like cutting the sitting branch of the tree.
+Why did you revert to silently ignoring requests in this case? On the
+other hand, we might rather want to do a more generic check which would
+handle all drivers not supporting the feature, see below.
 
-Now it is crashing at debug_ll_io_init() of devicemap_init(), and
-printascii/earlycon was & is being used to debug :). Things are going
-wrong when it tries to create mapping for debug_ll. It looks like a
-conflict with static mapping, which you mentioned above, at the same
-time i am not seeing kernel static mapping in the same virtual
-address, need to dig deeper.
+[...]
+> @@ -287,14 +308,37 @@ static bool ethnl_auto_linkmodes(struct ethtool_link_ksettings *ksettings,
+>  			     __ETHTOOL_LINK_MODE_MASK_NBITS);
+>  }
+>  
+> +static int ethnl_validate_master_slave_cfg(u8 cfg)
+> +{
+> +	switch (cfg) {
+> +	case MASTER_SLAVE_CFG_MASTER_PREFERRED:
+> +	case MASTER_SLAVE_CFG_SLAVE_PREFERRED:
+> +	case MASTER_SLAVE_CFG_MASTER_FORCE:
+> +	case MASTER_SLAVE_CFG_SLAVE_FORCE:
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
 
-Also tried removing DEBUG_LL, there is a deafening silence in the
-console ;)
+Nitpick: bool would be more appropriate as return value.
 
-> is that it uses
-> __pa() to convert from virtual address in the linear map to physical,
-> but now you actually pass an address that is in vmalloc rather than
-> the linear map.
+> +
+>  static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
+>  				  struct ethtool_link_ksettings *ksettings,
+>  				  bool *mod)
+>  {
+>  	struct ethtool_link_settings *lsettings = &ksettings->base;
+>  	bool req_speed, req_duplex;
+> +	const struct nlattr *master_slave_cfg;
+>  	int ret;
+>  
+> +	master_slave_cfg = tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG];
+> +	if (master_slave_cfg) {
+> +		u8 cfg = nla_get_u8(master_slave_cfg);
+> +		if (!ethnl_validate_master_slave_cfg(cfg)) {
+> +			GENL_SET_ERR_MSG(info, "LINKMODES_MASTER_SLAVE_CFG contains not valid value");
+> +			return -EOPNOTSUPP;
+> +		}
+> +	}
 
-__virt_to_phys_nodebug() which does the actual work on __pa() invocation
-has been modifed to handle that case (ideas lifted from ARM64's
-implementation), though currently it is a hack as below (and applicable
-only for ARM_PATCH_PHYS_VIRT disabled case), other hacks being
-VMALLOC_OFFSET set to 0 and adjusting vmalloc size.
+Please set also the "bad attribute" in extack, it may help
+non-interactive clients.
 
-        static inline phys_addr_t __virt_to_phys_nodebug(unsigned long x)
-        {
-	        phys_addr_t __x = (phys_addr_t)x;
+Also, it would be nice to report error if client wants to set master/slave but
+driver does not support it. How about this?
 
-        	if (__x >= 0xf0000000)
-	        	return __x - KIMAGE_OFFSET + PHYS_OFFSET;
-        	else
-	        	return __x - PAGE_OFFSET + PHYS_OFFSET;
-        }
+	if (master_slave_cfg) {
+		u8 cfg = nla_get_u8(master_slave_cfg);
 
-Regards
-afzal
+		if (lsettings->master_slave_cfg == MASTER_SLAVE_CFG_UNSUPPORTED) {
+			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
+					    "master/slave configuration not supported by device");
+			return -EOPNOTSUPP;
+		}
+		if (!ethnl_validate_master_slave_cfg(cfg)) {
+			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
+					    "master/slave value is invalid");
+			return -EOPNOTSUPP;
+		}
+	}
+
+
+Do you plan to allow handling master/slave also via ioctl()? If yes, we should
+also add the sanity checks to ioctl code path. If not, we should prevent
+passing non-zero values from userspace to driver.
+
+Other than this, the patch looks good to me.
+
+Michal
+
+>  	*mod = false;
+>  	req_speed = tb[ETHTOOL_A_LINKMODES_SPEED];
+>  	req_duplex = tb[ETHTOOL_A_LINKMODES_DUPLEX];
+> @@ -311,6 +355,7 @@ static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
+>  			 mod);
+>  	ethnl_update_u8(&lsettings->duplex, tb[ETHTOOL_A_LINKMODES_DUPLEX],
+>  			mod);
+> +	ethnl_update_u8(&lsettings->master_slave_cfg, master_slave_cfg, mod);
+>  
+>  	if (!tb[ETHTOOL_A_LINKMODES_OURS] && lsettings->autoneg &&
+>  	    (req_speed || req_duplex) &&
+> -- 
+> 2.26.2
+> 
