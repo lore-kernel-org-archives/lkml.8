@@ -2,89 +2,106 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E386C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC7CC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600FC2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381842073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgEDL3E (ORCPT
+        id S1728555AbgEDLcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:29:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60028 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgEDL3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:29:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 70BD8B03B;
-        Mon,  4 May 2020 11:29:03 +0000 (UTC)
-Date:   Mon, 4 May 2020 13:28:59 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 13/75] x86/boot/compressed/64: Add IDT Infrastructure
-Message-ID: <20200504112859.GH8135@suse.de>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-14-joro@8bytes.org>
- <20200504105445.GE15046@zn.tnic>
+        Mon, 4 May 2020 07:32:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3403 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726445AbgEDLcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:32:50 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CAA0FA6325385DFE95C3;
+        Mon,  4 May 2020 19:32:45 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
+ 19:32:38 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <robdclark@gmail.com>, <sean@poorly.run>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <jshekhar@codeaurora.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] drm/msm/dpu: make _dpu_core_perf_crtc_update_bus() void
+Date:   Mon, 4 May 2020 19:32:01 +0800
+Message-ID: <20200504113201.40302-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504105445.GE15046@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 12:54:45PM +0200, Borislav Petkov wrote:
-> On Tue, Apr 28, 2020 at 05:16:23PM +0200, Joerg Roedel wrote:
-> > diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-> > new file mode 100644
-> > index 000000000000..f86ea872d860
-> > --- /dev/null
-> > +++ b/arch/x86/boot/compressed/idt_handlers_64.S
-> > @@ -0,0 +1,69 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Early IDT handler entry points
-> > + *
-> > + * Copyright (C) 2019 SUSE
-> > + *
-> > + * Author: Joerg Roedel <jroedel@suse.de>
-> > + */
-> > +
-> > +#include <asm/segment.h>
-> > +
-> > +#include "../../entry/calling.h"
-> 
-> Leftover from something? Commenting it out doesn't break the build here.
+This function does not need to return an error so make it return void.
+This fixes the following coccicheck warning:
 
-Yes, probably a leftover from when I tried to use the PT_REGS macros
-there. I'll remove it.
+drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c:178:5-8: Unneeded
+variable: "ret". Return "0" on line 193
 
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-Thanks,
-
-	Joerg
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 11f2bebe3869..12df1955b1ef 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -167,7 +167,7 @@ int dpu_core_perf_crtc_check(struct drm_crtc *crtc,
+ 	return 0;
+ }
+ 
+-static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
++static void _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 		struct drm_crtc *crtc)
+ {
+ 	struct dpu_core_perf_params perf = { 0 };
+@@ -175,7 +175,6 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 					= dpu_crtc_get_client_type(crtc);
+ 	struct drm_crtc *tmp_crtc;
+ 	struct dpu_crtc_state *dpu_cstate;
+-	int ret = 0;
+ 
+ 	drm_for_each_crtc(tmp_crtc, crtc->dev) {
+ 		if (tmp_crtc->enabled &&
+@@ -190,7 +189,6 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 					dpu_cstate->new_perf.bw_ctl);
+ 		}
+ 	}
+-	return ret;
+ }
+ 
+ /**
+@@ -335,14 +333,8 @@ int dpu_core_perf_crtc_update(struct drm_crtc *crtc,
+ 	trace_dpu_perf_crtc_update(crtc->base.id, new->bw_ctl,
+ 		new->core_clk_rate, stop_req, update_bus, update_clk);
+ 
+-	if (update_bus) {
+-		ret = _dpu_core_perf_crtc_update_bus(kms, crtc);
+-		if (ret) {
+-			DPU_ERROR("crtc-%d: failed to update bus bw vote\n",
+-				  crtc->base.id);
+-			return ret;
+-		}
+-	}
++	if (update_bus)
++		_dpu_core_perf_crtc_update_bus(kms, crtc);
+ 
+ 	/*
+ 	 * Update the clock after bandwidth vote to ensure
+-- 
+2.21.1
 
