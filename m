@@ -7,350 +7,378 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E28AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46802C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD6620663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD3D20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="YqVMpoOI"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Ji333Otr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgEDWiE (ORCPT
+        id S1728257AbgEDWiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:38:04 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:60755 "EHLO rere.qmqm.pl"
+        Mon, 4 May 2020 18:38:08 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:61795 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbgEDWiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:38:01 -0400
+        id S1726453AbgEDWiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:38:00 -0400
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GHn14BJXzKc;
-        Tue,  5 May 2020 00:37:57 +0200 (CEST)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GHn06SJnzHm;
+        Tue,  5 May 2020 00:37:56 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588631877; bh=vLx1Xz+sVIE1nUQTfmbe/LKbf1KmxNBQ5oGQOEhrzGI=;
+        t=1588631876; bh=PhipMKkVAuB02s31MTIFNoqzeH1P9lTruiM0jA6TTGQ=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=YqVMpoOIeEHijxgDeCc6WsaBR2TxRm9zSkTnkm4GOLe1E3vSCGK5QJcW2YtLRnEmW
-         fWBgruysoXx17wrU1uN3DvRSR70/9bZwOQAM7R7k7imFyr5+N0qiCVo9KuuvAh0E8I
-         nSBlA0PqQx6Gg2CS4Ok2ZfgcD7ZTYaosFbWrabEqgoIxg/kcTM44h584xOPeACUF61
-         MTuS+R0X/c974LG2T01oan+fgw3peixM0mFHGmX11bF2P5Pla8fMgzMJVKtodurN7q
-         I08WzPYFJmKfwEstkJCaWBpmc2o3N4Pgw0d3y8iNbJJ68SVd4PYLe4ft197LjiesZx
-         DM9m7ra9B4Ftw==
+        b=Ji333Otr9mGyQ8LhrmGgm/02NVRev1C75U77wFWvURtUWcMXywGbl9Zprct5szbGG
+         ITEpgChwoCfO3ECpHCWLEGmiXGIp1Q3+REvcHy7/m1h/zrzoQwMa0Of5f5pIA0obg3
+         9nHJ7RXnew/AZ67DMLVfSDrRLlnTd9c3vZJqJnDrVD3Mzts9FgqZv75a73cBUd2wfu
+         +KMfRhHqG/Q0Daz8TSWSAlbhNkD77euAHzHVwRARDTicB8szupTZUlvnUz7dKci/QG
+         eMFIBfR8v028EqF2Ql0hhEz1pt+aly6FsyKKUSUiUCBEyfhdJYZ+oTnvaboRdNSjwz
+         OgVJz/mYhmhLA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Tue, 05 May 2020 00:37:57 +0200
-Message-Id: <fa39cc10dab8341ea4bc2b7152be9217b2cd34a5.1588630999.git.mirq-linux@rere.qmqm.pl>
+Date:   Tue, 05 May 2020 00:37:56 +0200
+Message-Id: <0054532c00163ddf405dad658b32f0d7d97fcc8e.1588630999.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v7 3/3] clk: at91: allow setting all PMC clock parents via DT
+Subject: [PATCH v7 2/3] clk: at91: allow setting PCKx parent via DT
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+        Michael Turquette <mturquette@baylibre.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to have clocks accessible via phandle to select them
-as peripheral clock parent using assigned-clock-parents in DT.
-Add support for PLLACK/PLLBCK/AUDIOPLLCK clocks where available.
+This exposes PROGx clocks for use in assigned-clocks DeviceTree property
+for selecting PCKx parent clock.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
-v2: rebase to clk/clk-at91 branch
-v3: no changes
-v4: extend to whole family
-v5: fix copy-and-paste bugs for SAMA5D3/4
-v6: make AUDIOPLL's id separate to PLLB
-v7: no changes
+v2: rebase and update to clk/clk-at91 branch
+v3: rebase
+v4: no changes
+v5: no changes
+v6: no changes
+v7: push all pmc_data_free() to first patch (fix a rebase artifact)
 ---
- drivers/clk/at91/at91rm9200.c    | 6 +++++-
- drivers/clk/at91/at91sam9260.c   | 6 +++++-
- drivers/clk/at91/at91sam9g45.c   | 4 +++-
- drivers/clk/at91/at91sam9n12.c   | 6 +++++-
- drivers/clk/at91/at91sam9rl.c    | 4 +++-
- drivers/clk/at91/at91sam9x5.c    | 4 +++-
- drivers/clk/at91/sam9x60.c       | 4 +++-
- drivers/clk/at91/sama5d2.c       | 6 +++++-
- drivers/clk/at91/sama5d3.c       | 4 +++-
- drivers/clk/at91/sama5d4.c       | 4 +++-
- include/dt-bindings/clock/at91.h | 3 +++
- 11 files changed, 41 insertions(+), 10 deletions(-)
+ drivers/clk/at91/at91rm9200.c    |  4 +++-
+ drivers/clk/at91/at91sam9260.c   |  5 ++++-
+ drivers/clk/at91/at91sam9g45.c   |  4 +++-
+ drivers/clk/at91/at91sam9n12.c   |  4 +++-
+ drivers/clk/at91/at91sam9rl.c    |  4 +++-
+ drivers/clk/at91/at91sam9x5.c    |  4 +++-
+ drivers/clk/at91/pmc.c           | 12 ++++++++++--
+ drivers/clk/at91/pmc.h           |  5 ++++-
+ drivers/clk/at91/sam9x60.c       |  4 +++-
+ drivers/clk/at91/sama5d2.c       |  4 +++-
+ drivers/clk/at91/sama5d3.c       |  4 +++-
+ drivers/clk/at91/sama5d4.c       |  4 +++-
+ include/dt-bindings/clock/at91.h |  1 +
+ 13 files changed, 46 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-index 8da88e9a95d8..38bdb4981315 100644
+index 6f4e1151553d..8da88e9a95d8 100644
 --- a/drivers/clk/at91/at91rm9200.c
 +++ b/drivers/clk/at91/at91rm9200.c
-@@ -98,7 +98,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
+@@ -100,7 +100,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+ 
+ 	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
+ 					    nck(at91rm9200_systemck),
+-					    nck(at91rm9200_periphck), 0);
++					    nck(at91rm9200_periphck), 0, 4);
+ 	if (!at91rm9200_pmc)
  		return;
  
--	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91rm9200_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					    nck(at91rm9200_systemck),
- 					    nck(at91rm9200_periphck), 0, 4);
- 	if (!at91rm9200_pmc)
-@@ -123,12 +123,16 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91rm9200_pmc->chws[PMC_PLLACK] = hw;
+@@ -159,6 +159,8 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
+ 						    &at91rm9200_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   &at91rm9200_pll_layout,
- 				   &rm9200_pll_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
++		at91rm9200_pmc->pchws[i] = hw;
+ 	}
  
-+	at91rm9200_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slowxtal_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "pllack";
+ 	for (i = 0; i < ARRAY_SIZE(at91rm9200_systemck); i++) {
 diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-index 7e5ff252fffc..6d0723aa8b13 100644
+index 946f03a09858..7e5ff252fffc 100644
 --- a/drivers/clk/at91/at91sam9260.c
 +++ b/drivers/clk/at91/at91sam9260.c
-@@ -352,7 +352,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 	if (IS_ERR(regmap))
+@@ -354,7 +354,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
+ 
+ 	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
+ 					    ndck(data->sck, data->num_sck),
+-					    ndck(data->pck, data->num_pck), 0);
++					    ndck(data->pck, data->num_pck),
++					    0, data->num_progck);
+ 	if (!at91sam9260_pmc)
  		return;
  
--	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9260_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					    ndck(data->sck, data->num_sck),
- 					    ndck(data->pck, data->num_pck),
- 					    0, data->num_progck);
-@@ -399,12 +399,16 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9260_pmc->chws[PMC_PLLACK] = hw;
+@@ -434,6 +435,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
+ 						    &at91rm9200_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   data->pllb_layout,
- 				   data->pllb_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
++		at91sam9260_pmc->pchws[i] = hw;
+ 	}
  
-+	at91sam9260_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slck_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "pllack";
+ 	for (i = 0; i < data->num_sck; i++) {
 diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-index 5d18eb04c218..9873b583c260 100644
+index 53e8252b8a63..5d18eb04c218 100644
 --- a/drivers/clk/at91/at91sam9g45.c
 +++ b/drivers/clk/at91/at91sam9g45.c
-@@ -115,7 +115,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
+@@ -117,7 +117,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
+ 
+ 	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
+ 					    nck(at91sam9g45_systemck),
+-					    nck(at91sam9g45_periphck), 0);
++					    nck(at91sam9g45_periphck), 0, 2);
+ 	if (!at91sam9g45_pmc)
  		return;
  
--	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9g45_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					    nck(at91sam9g45_systemck),
- 					    nck(at91sam9g45_periphck), 0, 2);
- 	if (!at91sam9g45_pmc)
-@@ -143,6 +143,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9g45_pmc->chws[PMC_PLLACK] = hw;
+@@ -182,6 +182,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
+ 						    &at91sam9g45_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
++		at91sam9g45_pmc->pchws[i] = hw;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(at91sam9g45_systemck); i++) {
 diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-index 3a2564c2f724..630dc5d87171 100644
+index f3ae1cd3cb8d..3a2564c2f724 100644
 --- a/drivers/clk/at91/at91sam9n12.c
 +++ b/drivers/clk/at91/at91sam9n12.c
-@@ -128,7 +128,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
+@@ -129,7 +129,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
  		return;
  
--	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9n12_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
- 					   nck(at91sam9n12_systemck), 31, 0, 2);
+ 	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
+-					   nck(at91sam9n12_systemck), 31, 0);
++					   nck(at91sam9n12_systemck), 31, 0, 2);
  	if (!at91sam9n12_pmc)
  		return;
-@@ -162,11 +162,15 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
  
-+	at91sam9n12_pmc->chws[PMC_PLLACK] = hw;
+@@ -198,6 +198,8 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
+ 						    &at91sam9x5_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
- 				   &at91rm9200_pll_layout, &pllb_characteristics);
- 	if (IS_ERR(hw))
- 		goto err_free;
++		at91sam9n12_pmc->pchws[i] = hw;
+ 	}
  
-+	at91sam9n12_pmc->chws[PMC_PLLBCK] = hw;
-+
- 	parent_names[0] = slck_name;
- 	parent_names[1] = "mainck";
- 	parent_names[2] = "plladivck";
+ 	for (i = 0; i < ARRAY_SIZE(at91sam9n12_systemck); i++) {
 diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-index bcf07f6a0e0e..0d1cc44b056f 100644
+index cc739d214ae3..bcf07f6a0e0e 100644
 --- a/drivers/clk/at91/at91sam9rl.c
 +++ b/drivers/clk/at91/at91sam9rl.c
-@@ -87,7 +87,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
+@@ -89,7 +89,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
+ 
+ 	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
+ 					   nck(at91sam9rl_systemck),
+-					   nck(at91sam9rl_periphck), 0);
++					   nck(at91sam9rl_periphck), 0, 2);
+ 	if (!at91sam9rl_pmc)
  		return;
  
--	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9rl_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					   nck(at91sam9rl_systemck),
- 					   nck(at91sam9rl_periphck), 0, 2);
- 	if (!at91sam9rl_pmc)
-@@ -105,6 +105,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	at91sam9rl_pmc->chws[PMC_PLLACK] = hw;
+@@ -138,6 +138,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
+ 						    &at91rm9200_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
++		at91sam9rl_pmc->pchws[i] = hw;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(at91sam9rl_systemck); i++) {
 diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-index f13756b407e2..0ce3da080287 100644
+index aac99d699568..f13756b407e2 100644
 --- a/drivers/clk/at91/at91sam9x5.c
 +++ b/drivers/clk/at91/at91sam9x5.c
-@@ -150,7 +150,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	if (IS_ERR(regmap))
+@@ -151,7 +151,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
  		return;
  
--	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	at91sam9x5_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					   nck(at91sam9x5_systemck), 31, 0, 2);
+ 	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
+-					   nck(at91sam9x5_systemck), 31, 0);
++					   nck(at91sam9x5_systemck), 31, 0, 2);
  	if (!at91sam9x5_pmc)
  		return;
-@@ -184,6 +184,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 	if (IS_ERR(hw))
- 		goto err_free;
  
-+	at91sam9x5_pmc->chws[PMC_PLLACK] = hw;
+@@ -227,6 +227,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
+ 						    &at91sam9x5_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
++		at91sam9x5_pmc->pchws[i] = hw;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(at91sam9x5_systemck); i++) {
+diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
+index ac46ea1b9fda..8a1577e2c2fd 100644
+--- a/drivers/clk/at91/pmc.c
++++ b/drivers/clk/at91/pmc.c
+@@ -67,6 +67,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
+ 		if (idx < pmc_data->ngck)
+ 			return pmc_data->ghws[idx];
+ 		break;
++	case PMC_TYPE_PROGRAMMABLE:
++		if (idx < pmc_data->npck)
++			return pmc_data->pchws[idx];
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -77,9 +81,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
+ }
+ 
+ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+-				   unsigned int nperiph, unsigned int ngck)
++				   unsigned int nperiph, unsigned int ngck,
++				   unsigned int npck)
+ {
+-	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
++	unsigned int num_clks = ncore + nsystem + nperiph + ngck + npck;
+ 	struct pmc_data *pmc_data;
+ 
+ 	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
+@@ -99,6 +104,9 @@ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+ 	pmc_data->ngck = ngck;
+ 	pmc_data->ghws = pmc_data->phws + nperiph;
+ 
++	pmc_data->npck = npck;
++	pmc_data->pchws = pmc_data->ghws + ngck;
++
+ 	return pmc_data;
+ }
+ 
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index fc3ef772b9d9..df616f2937e7 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -24,6 +24,8 @@ struct pmc_data {
+ 	struct clk_hw **phws;
+ 	unsigned int ngck;
+ 	struct clk_hw **ghws;
++	unsigned int npck;
++	struct clk_hw **pchws;
+ 
+ 	struct clk_hw *hwtable[];
+ };
+@@ -96,7 +98,8 @@ struct clk_pcr_layout {
+ #define ndck(a, s) (a[s - 1].id + 1)
+ #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
+ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
+-				   unsigned int nperiph, unsigned int ngck);
++				   unsigned int nperiph, unsigned int ngck,
++				   unsigned int npck);
+ 
+ int of_at91_get_clk_range(struct device_node *np, const char *propname,
+ 			  struct clk_range *range);
 diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index db14e0427c7f..3e20aa68259f 100644
+index a7d4f648db26..db14e0427c7f 100644
 --- a/drivers/clk/at91/sam9x60.c
 +++ b/drivers/clk/at91/sam9x60.c
-@@ -182,7 +182,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	sam9x60_pmc = pmc_data_allocate(PMC_PLLACK + 1,
+@@ -185,7 +185,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
+ 	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
  					nck(sam9x60_systemck),
  					nck(sam9x60_periphck),
- 					nck(sam9x60_gck), 8);
-@@ -214,6 +214,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
+-					nck(sam9x60_gck));
++					nck(sam9x60_gck), 8);
+ 	if (!sam9x60_pmc)
+ 		return;
  
-+	sam9x60_pmc->chws[PMC_PLLACK] = hw;
+@@ -255,6 +255,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
+ 						    &sam9x60_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
- 				      "main_osc", 1, &upll_characteristics);
- 	if (IS_ERR(hw))
++		sam9x60_pmc->pchws[i] = hw;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sam9x60_systemck); i++) {
 diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index ae5e83cadb3d..b3fa2291ccd8 100644
+index b2560670e5af..ae5e83cadb3d 100644
 --- a/drivers/clk/at91/sama5d2.c
 +++ b/drivers/clk/at91/sama5d2.c
-@@ -166,7 +166,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
-+	sama5d2_pmc = pmc_data_allocate(PMC_AUDIOPLLCK + 1,
+@@ -169,7 +169,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
+ 	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
  					nck(sama5d2_systemck),
  					nck(sama5d2_periph32ck),
- 					nck(sama5d2_gck), 3);
-@@ -202,6 +202,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
+-					nck(sama5d2_gck));
++					nck(sama5d2_gck), 3);
+ 	if (!sama5d2_pmc)
+ 		return;
  
-+	sama5d2_pmc->chws[PMC_PLLACK] = hw;
+@@ -267,6 +267,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
+ 						    &sama5d2_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_audio_pll_frac(regmap, "audiopll_fracck",
- 					      "mainck");
- 	if (IS_ERR(hw))
-@@ -217,6 +219,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
++		sama5d2_pmc->pchws[i] = hw;
+ 	}
  
-+	sama5d2_pmc->chws[PMC_AUDIOPLLCK] = hw;
-+
- 	regmap_sfr = syscon_regmap_lookup_by_compatible("atmel,sama5d2-sfr");
- 	if (IS_ERR(regmap_sfr))
- 		regmap_sfr = NULL;
+ 	for (i = 0; i < ARRAY_SIZE(sama5d2_systemck); i++) {
 diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-index 507eef6797f1..5e4e44dd4c37 100644
+index 914e6f225510..507eef6797f1 100644
 --- a/drivers/clk/at91/sama5d3.c
 +++ b/drivers/clk/at91/sama5d3.c
-@@ -125,7 +125,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
+@@ -127,7 +127,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
+ 
+ 	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
+ 					nck(sama5d3_systemck),
+-					nck(sama5d3_periphck), 0);
++					nck(sama5d3_periphck), 0, 3);
+ 	if (!sama5d3_pmc)
  		return;
  
--	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
-+	sama5d3_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sama5d3_systemck),
- 					nck(sama5d3_periphck), 0, 3);
- 	if (!sama5d3_pmc)
-@@ -158,6 +158,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d3_pmc->chws[PMC_PLLACK] = hw;
+@@ -201,6 +201,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
+ 						    &at91sam9x5_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
++		sama5d3_pmc->pchws[i] = hw;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sama5d3_systemck); i++) {
 diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-index 80692902b4e4..662ff5fa6e98 100644
+index 4ca9a4619500..80692902b4e4 100644
 --- a/drivers/clk/at91/sama5d4.c
 +++ b/drivers/clk/at91/sama5d4.c
-@@ -140,7 +140,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
+@@ -142,7 +142,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+ 
+ 	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
+ 					nck(sama5d4_systemck),
+-					nck(sama5d4_periph32ck), 0);
++					nck(sama5d4_periph32ck), 0, 3);
+ 	if (!sama5d4_pmc)
  		return;
  
--	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
-+	sama5d4_pmc = pmc_data_allocate(PMC_PLLACK + 1,
- 					nck(sama5d4_systemck),
- 					nck(sama5d4_periph32ck), 0, 3);
- 	if (!sama5d4_pmc)
-@@ -173,6 +173,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 	if (IS_ERR(hw))
- 		goto err_free;
- 
-+	sama5d4_pmc->chws[PMC_PLLACK] = hw;
+@@ -224,6 +224,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
+ 						    &at91sam9x5_programmable_layout);
+ 		if (IS_ERR(hw))
+ 			goto err_free;
 +
- 	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
- 	if (IS_ERR(hw))
- 		goto err_free;
++		sama5d4_pmc->pchws[i] = hw;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(sama5d4_systemck); i++) {
 diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-index c3f4aa6a2d29..eba17106608b 100644
+index 38b5554153c8..c3f4aa6a2d29 100644
 --- a/include/dt-bindings/clock/at91.h
 +++ b/include/dt-bindings/clock/at91.h
-@@ -21,6 +21,9 @@
- #define PMC_MCK2		4
- #define PMC_I2S0_MUX		5
- #define PMC_I2S1_MUX		6
-+#define PMC_PLLACK		7
-+#define PMC_PLLBCK		8
-+#define PMC_AUDIOPLLCK		9
+@@ -12,6 +12,7 @@
+ #define PMC_TYPE_SYSTEM		1
+ #define PMC_TYPE_PERIPHERAL	2
+ #define PMC_TYPE_GCK		3
++#define PMC_TYPE_PROGRAMMABLE	4
  
- #ifndef AT91_PMC_MOSCS
- #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
+ #define PMC_SLOW		0
+ #define PMC_MCK			1
 -- 
 2.20.1
 
