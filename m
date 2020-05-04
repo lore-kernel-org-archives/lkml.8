@@ -2,107 +2,119 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1B4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CFFC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE00206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11408206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:11:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G3CHwd3N"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="BtRBiszW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgEDQJ1 (ORCPT
+        id S1729481AbgEDQLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:09:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27867 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728294AbgEDQJ1 (ORCPT
+        Mon, 4 May 2020 12:11:42 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17792 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728764AbgEDQLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:09:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588608566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pOI+TMZk0mW52qGvJviHKz87dbXpvjDlm/3+gbp0a/U=;
-        b=G3CHwd3NwXnSwLzZYKtPNyBTRJagaWxZopd1A+I8bzHx8TlEI9XaQeVVkbse0a+puHJFig
-        vFQwM93PtZliy/ESqZhOuCFVrWnryQ2gsSJ+qLhBUOgDzIyp3HWJRpaCfBPmC6LG4ivu41
-        Fxe/nyPjCxJ0SqogSnlHAtdTypcVlYc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-Ar8pQBrtMzebeUSBYqXFJw-1; Mon, 04 May 2020 12:09:23 -0400
-X-MC-Unique: Ar8pQBrtMzebeUSBYqXFJw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0DF88014D5;
-        Mon,  4 May 2020 16:09:22 +0000 (UTC)
-Received: from gondolin (ovpn-112-215.ams2.redhat.com [10.36.112.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D84232DE6B;
-        Mon,  4 May 2020 16:09:18 +0000 (UTC)
-Date:   Mon, 4 May 2020 18:09:16 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio-pci: Mask cap zero
-Message-ID: <20200504180916.0e90cad9.cohuck@redhat.com>
-In-Reply-To: <158836927527.9272.16785800801999547009.stgit@gimli.home>
-References: <158836927527.9272.16785800801999547009.stgit@gimli.home>
-Organization: Red Hat GmbH
+        Mon, 4 May 2020 12:11:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1588608593; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=i1zTiI6vQghvIRHWFVdCr6eMjt1Ty9sIUKZBB/8sWC/Qe60kjhy3CSjWRhYXApUh7r6sT4T7bvAvdOlU12tNkmSzCqYwaabr9xBSF4kR3rCx9cU/ddUAj1v7R5V1C1q40GPZrd5I4r4rJHHwPNo1fbHCkQSP95WVMflchxDnY8g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1588608593; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=Zitcy+9ai3qswjZX8GUqfMPQ7VUOo/hNsYYroSdp8Lg=; 
+        b=EcE/a6whG8qDaLcAKAHNfA7T1m4PJ6zDEs6+/4YgpKO/5j98aD0D9Hk1zGAU91NX99hHLxwB50OCHFAPouagsq9muVi14B7UTSkxr0QdTOF7eD+BEanTp0tNfTQ+oFcgUdUtfuIS1EHXhLut3LEFmBRqiNkwo2Y33LDuXfp2aEw=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1588608593;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=Zitcy+9ai3qswjZX8GUqfMPQ7VUOo/hNsYYroSdp8Lg=;
+        b=BtRBiszWw5dfPcbvDGjHEGdvN+ti3w+bi1DYWMGP3kc/HOOFR+QdPVWaen9sXnB3
+        k6udqdFCFAMPIStrKkIKPix1tCSIoEGmVd/luydwI7jqedolovnbMBlrRvUwSp6oFH3
+        G2gLYr220qIjZkyqWk+8cmOe15XnRwE2JwgYoVZs=
+Received: from [127.0.0.1] (122.235.211.112 [122.235.211.112]) by mx.zoho.com.cn
+        with SMTPS id 1588608590197451.40427373256; Tue, 5 May 2020 00:09:50 +0800 (CST)
+Date:   Tue, 05 May 2020 00:09:46 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+CC:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jouni Hogander <jouni.hogander@unikie.com>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit kernel
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200504154613.GA14031@alpha.franken.de>
+References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com> <20200422143258.1250960-1-jiaxun.yang@flygoat.com> <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org> <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com> <alpine.LFD.2.21.2004241316360.851719@eddie.linux-mips.org> <20200504154613.GA14031@alpha.franken.de>
+Message-ID: <86D4A0AC-59E1-4C82-B66D-6BFC71E08376@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 01 May 2020 15:41:24 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
 
-> There is no PCI spec defined capability with ID 0, therefore we don't
-> expect to find it in a capability chain and we use this index in an
-> internal array for tracking the sizes of various capabilities to handle
-> standard config space.  Therefore if a device does present us with a
-> capability ID 0, we mark our capability map with nonsense that can
-> trigger conflicts with other capabilities in the chain.  Ignore ID 0
-> when walking the capability chain, handling it as a hidden capability.
-> 
-> Seen on an NVIDIA Tesla T4.
-> 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/pci/vfio_pci_config.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index 87d0cc8c86ad..5935a804cb88 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -1487,7 +1487,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
->  		if (ret)
->  			return ret;
->  
-> -		if (cap <= PCI_CAP_ID_MAX) {
 
-Maybe add a comment:
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8811=
+:46:13, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
+=B0:
+>On Fri, Apr 24, 2020 at 01:22:30PM +0100, Maciej W=2E Rozycki wrote:
+>> On Thu, 23 Apr 2020, Jiaxun Yang wrote:
+>>=20
+>> > > Alternatively, have you made any attempt to verify if actually repl=
+acing=20
+>> > >the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over i=
+ts use=20
+>> > >there do not appear to be many places=2E
+>> >=20
+>> > Limited experiments showed it should be fine=2E=2E=2E
+>> >=20
+>> > But MIPS kernel has some design I'm not really familiar with like SYM=
+32 for
+>> > 64-bit kernel and special address space design for Trap-and-emul KVM=
+=2E
+>>=20
+>>  This only affects CONFIG_32BIT kernels, so SYM32 does not apply; I can=
+'t=20
+>> comment on KVM=2E  There's still that bunch of:
+>>=20
+>> $(shell expr $(=2E=2E=2E) \< 0xffffffff80000000)
+>>=20
+>> constructs I mentioned before, so let's leave your change as it stands =
+at=20
+>> this time=2E  Please do rename the variable as I suggested though, I ho=
+pe=20
+>> that's not a big deal=2E
+>
+>Jiaxun, are you going to send an update with this change ?
 
-/* no PCI spec defined capability with ID 0: hide it */
+Sorry my mail server missed Maciej's reply=2E
 
-?
+Should I send another version or you just fix it at apply time?
 
-> +		if (cap && cap <= PCI_CAP_ID_MAX) {
->  			len = pci_cap_length[cap];
->  			if (len == 0xFF) { /* Variable length */
->  				len = vfio_cap_len(vdev, cap, pos);
-> 
+>
+>Thomas=2E
+>
 
-Is there a requirement for caps to be strictly ordered? If not, could
-len hold a residual value from a previous iteration?
-
+--=20
+Jiaxun Yang
