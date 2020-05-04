@@ -2,121 +2,116 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3466C4725F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3D6C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA5552073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8927A206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P+yJzoL4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgEDBKK (ORCPT
+        id S1726661AbgEDBZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 21:10:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56280 "EHLO mga04.intel.com"
+        Sun, 3 May 2020 21:25:59 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60847 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbgEDBJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 21:09:23 -0400
-IronPort-SDR: 9Fib3TsgvOINsLEJXwIFwZNFC+bbu4N04nX2RwsVME7ByXZy++CWx5ggmbFythPHhVk75G/6rJ
- MWmgfDM2D8Cw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 18:09:22 -0700
-IronPort-SDR: 0sfTWrdVl9taYpdiQf4rbNyObgvnrL4HY5A/wwdVowOhzm+BQ1szN8Ld3ck7vtPYcDwAf8cgkk
- odi25qXkZcbQ==
-X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
-   d="scan'208";a="249047740"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 18:09:21 -0700
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Christoph Hellwig <hch@lst.de>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH V2 02/11] arch/xtensa: Move kmap build bug out of the way
-Date:   Sun,  3 May 2020 18:09:03 -0700
-Message-Id: <20200504010912.982044-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200504010912.982044-1-ira.weiny@intel.com>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
+        id S1726421AbgEDBZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 21:25:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49FlYH0HjSz9sSr;
+        Mon,  4 May 2020 11:25:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1588555556;
+        bh=vc2ocq2LVzS7oNXSMpHcVG3xe33e0fBbGhPZyRYagfM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=P+yJzoL4bKmQgxZi1HZa5TPP9rwqF/h2NThx+pjTcMdtdBDNff/3h228jqwzsXE2b
+         NQJQhDYncXGB0zYQeDkYjscr4OF+6Rqxpr31OS5Obez0CGvi8oBiJ3Y2azikMftqQt
+         U+jzCD47pLK/nuTaLkh3aiYDzUWWzf1IbXyuYsgSqVM3RNmpilPBYaN/E+R7RNNqo1
+         WT9ab3XNgwxWwK5N/cas1cph5490Z5afc6RVZtTmbZpHUnnVlwPo1486wsKlO+zmPg
+         yu1OUHXML1YrIkeJQ8m9spCLWXR6FJr3ec9jOEGd6cjZcxZe1mrlNfBUbSa4Vnfgr4
+         ZNwuqxT3rnTxQ==
+Date:   Mon, 4 May 2020 11:25:52 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 3/5] sysctl: remove all extern declaration from sysctl.c
+Message-ID: <20200504112552.4dbdd2a9@canb.auug.org.au>
+In-Reply-To: <20200424064338.538313-4-hch@lst.de>
+References: <20200424064338.538313-1-hch@lst.de>
+        <20200424064338.538313-4-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Ze/S33mgpR/AlQdumg8GhV7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+--Sig_/Ze/S33mgpR/AlQdumg8GhV7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Move the kmap() build bug to kmap_init() to facilitate patches to lift
-kmap() to the core.
+Hi Christoph,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Fri, 24 Apr 2020 08:43:36 +0200 Christoph Hellwig <hch@lst.de> wrote:
+>
+> Extern declarations in .c files are a bad style and can lead to
+> mismatches.  Use existing definitions in headers where they exist,
+> and otherwise move the external declarations to suitable header
+> files.
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/coredump.h |  4 ++++
+>  include/linux/file.h     |  2 ++
+>  include/linux/mm.h       |  2 ++
+>  include/linux/mmzone.h   |  2 ++
+>  include/linux/pid.h      |  3 +++
+>  include/linux/sysctl.h   |  8 +++++++
+>  kernel/sysctl.c          | 45 +++-------------------------------------
+>  7 files changed, 24 insertions(+), 42 deletions(-)
 
----
-Changes from V1:
-	combine code onto 1 line.
----
- arch/xtensa/include/asm/highmem.h | 5 -----
- arch/xtensa/mm/highmem.c          | 4 ++++
- 2 files changed, 4 insertions(+), 5 deletions(-)
+A couple of suggestions for another patch (since this one is in a
+shared branch in Al's tree now):
 
-diff --git a/arch/xtensa/include/asm/highmem.h b/arch/xtensa/include/asm/highmem.h
-index 413848cc1e56..a9587c85be85 100644
---- a/arch/xtensa/include/asm/highmem.h
-+++ b/arch/xtensa/include/asm/highmem.h
-@@ -68,11 +68,6 @@ void kunmap_high(struct page *page);
- 
- static inline void *kmap(struct page *page)
- {
--	/* Check if this memory layout is broken because PKMAP overlaps
--	 * page table.
--	 */
--	BUILD_BUG_ON(PKMAP_BASE <
--		     TLBTEMP_BASE_1 + TLBTEMP_SIZE);
- 	might_sleep();
- 	if (!PageHighMem(page))
- 		return page_address(page);
-diff --git a/arch/xtensa/mm/highmem.c b/arch/xtensa/mm/highmem.c
-index 184ceadccc1a..da734a2ed641 100644
---- a/arch/xtensa/mm/highmem.c
-+++ b/arch/xtensa/mm/highmem.c
-@@ -88,6 +88,10 @@ void __init kmap_init(void)
- {
- 	unsigned long kmap_vstart;
- 
-+	/* Check if this memory layout is broken because PKMAP overlaps
-+	 * page table.
-+	 */
-+	BUILD_BUG_ON(PKMAP_BASE < TLBTEMP_BASE_1 + TLBTEMP_SIZE);
- 	/* cache the first kmap pte */
- 	kmap_vstart = __fix_to_virt(FIX_KMAP_BEGIN);
- 	kmap_pte = kmap_get_fixmap_pte(kmap_vstart);
--- 
-2.25.1
+There is an "extern struct ctl_table random_table[];" in
+drivers/char/random.c which is redundant now (in fact always was).
 
+There is already an "extern struct ctl_table epoll_table[];" in
+include/linux/poll.h, so could have included that in kernel/sysctl.c
+instead of adding the new one in include/linux/sysctl.h
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Ze/S33mgpR/AlQdumg8GhV7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6vbyAACgkQAVBC80lX
+0GxFGwf/WH/cv5RMadV9dmdAfJGI/cu7ozy5lgpWNwTKsdi4ITqe5NGRhPUzU4yW
+G2MRxjhFk0AMvRQWk9cdWriceLeojws2iI4W6ht10nYedCXG70ee+MJ/TEx7VJ5f
++Cff6GVaFu+4/qF04l/XTgi75XrzhNxQx3EptjGJg89jeJoKB219icmdSfwb8lBE
+RzU/qAufZ62wf5ClRmbyMJ0rj0RqdpKI/Jg+gD/rYE9HnveOnyLkFRDY7Zn5s7H8
+k+TPkw9I4xlWwDYr6cp43CX4rfGlZNoByoYat5ExYbvsjtPk9ygEYm9liKVKgIqh
+riEp/3lZakla9sctllvU4m6A6mIQJQ==
+=LZ1e
+-----END PGP SIGNATURE-----
+
+--Sig_/Ze/S33mgpR/AlQdumg8GhV7--
