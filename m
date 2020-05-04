@@ -2,154 +2,319 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B82C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26A3C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5B4720658
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="AhA/17Mv"
+	by mail.kernel.org (Postfix) with ESMTP id 89F6920658
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgEDJpL (ORCPT
+        id S1728425AbgEDJp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:45:11 -0400
-Received: from mout.web.de ([217.72.192.78]:39131 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgEDJpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:45:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588585504;
-        bh=TqKV0o7NRrzkmYgQOjgvKkWtXRaRV+n96KVNMYv+V8Q=;
-        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
-        b=AhA/17Mv3e45iVvMwl3MKrCqdS884byNVsggZtsnITRaxixC/KntGRrQosbNG1Ze5
-         cMuZhxxtTLQ5BVLM06gn/rcQai0kv++dXOxH4QkijUH9dDqwSBnBvTseJTP6X33mHv
-         EgC9reASTi06c9zA6L0+i9tODJtOSQYCDxGyHchY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MQ8ao-1jrUNz3fW4-00MGZn; Mon, 04
- May 2020 11:45:03 +0200
-Subject: Re: [PATCH v6] checkpatch: add support to check 'Fixes:' tag format
-To:     Wang YanQing <udknight@gmail.com>, Joe Perches <joe@perches.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        kernel-janitors@vger.kernel.org
-References: <20200504082002.GA29972@udknight>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>
-Message-ID: <38251b1f-e89b-7b3a-6045-f5ce1dc2596a@web.de>
-Date:   Mon, 4 May 2020 11:45:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 05:45:29 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2153 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726625AbgEDJp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:45:28 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id F344D28FFBBEBC844D6A;
+        Mon,  4 May 2020 10:45:26 +0100 (IST)
+Received: from localhost (10.47.88.153) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 4 May 2020
+ 10:45:26 +0100
+Date:   Mon, 4 May 2020 10:45:07 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+CC:     "jic23@kernel.org" <jic23@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v2 1/2] iio: Move scan mask management to the core
+Message-ID: <20200504104507.00002e5c@Huawei.com>
+In-Reply-To: <5c66a2ac28fd0b0a603393579164b59450f41329.camel@analog.com>
+References: <20200429151740.85917-1-alexandru.ardelean@analog.com>
+        <20200503135117.4cddccfa@archlinux>
+        <5c66a2ac28fd0b0a603393579164b59450f41329.camel@analog.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <20200504082002.GA29972@udknight>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cWhxWqOfXZS3aAPeXGiut3/S25UqYFHgbcxm0tX1X6ECql5E7oG
- zPqVK2BQ6BiodH6pza0ckIyZg7gE6IOF38+PW70H7EAQyIZPfQ5D+QxYZn5JKCWhdaXF97f
- OCWBsFe+lFx20X8MQbhfgtLF3AOJKMywu8BgVxcO8sMvCx13yP2mqa9XxqvzneUcRLpF7Ey
- Sq++yxfFpUaM+gOsICTaA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1+fMiIGTrBM=:cYeyIlvYCxD9DPildae736
- yoIT41HEf9x/S5mwR0FICCrsxSEFCuOQaEYnYIAeKLJ+yFmFH5IGpb4oDisH75+LzLpklcZBl
- ULmUKagn0wuFJoUuKdRYqRXz3aHx6ZODz0rdwxU2Z8tuS/03pvXDXW8mzMsb4RoimJrH7BSuE
- +eFv1OHw9HUPxnIzguZiRlxvhWZxLoDBJFszAQsn3Edlk18yR+incQH4vp/9/chucCfb5/z4b
- +U5rXqyU26tT7pIS3FJfxk0JHZEpX4cMWwQ9LxugdgfZV5xBGLLPtelQOtH4a0BZZ5SdMiUlN
- MuDgAa3pdYqynLFUa9dW9M4UiLWt4aApn8lL0uGeO4YccYs3Soe/FdKdSw5/kwRQIK7thLI4g
- coQCnJzmTKCMWPoi8BBVahtz9kbXHTLtZt4hfQesVmdhRfldspIIZPHm3lE2b555YYl6dybGb
- K+y7sPrTMaiQi0SYRzL4ZqtiQdSGNr2cyEfqyznQaV+LuOY70h3rS/CYG3vmwePbls6eYOjG/
- YsMKA2upF9u/YLUjlXbfmNipHXFyeRfdQ825Fex+tnZ/+E8b71vrfrjwNJHxqULOtqtMUY40/
- IHUnLZUWoOiNF5phz1UUcCyafrtpaphRq+xlp7uL2XmG63ZrK8KduOgN7lLHHAt3iJlU5kP2a
- G2G1NcbAzJIKYqot6bMrjlSpAgTtmLfecxEDTM00lGH+rBLX7JlNqdQMYu1z2BqrU0cghkT/N
- hTLby1dqkzZZmOFtNZcjnyAjnGUcx1Y/zOfvBYyPuMqSugLuW8WaiP1P/EtaJTRF2V6Inq4X8
- 1IJj/bH5N+jxVW6HBR8qa/+J1Y+TO1wm8CJkLv1Da+uZ6h5e69wa3F4s7Sn10+aN8vDznhvC8
- WkWsig+suq3JmTIiJRWvmr6Nddo131aTEesvoNYHHRf9zp+MIO35ahLXLcjR+OScvUD5lDMFf
- gtobmYl7oLbsum3p1NGAuRcZaqXJdwUu0s3vyYMku9TmFT8g2NfqGLsC+xJuox8AUylj1o9Bj
- vzZkqZF/fyckpUmZsW7BpgD+cwFBizUBQSB+fEVrZqEWQIBtnHbxxRW3bJQZizk6pnrE9ZUo0
- fqx+UMLCXdYRN86EoU3z+FTB0hs9ghld2s7YTJKcD+QXCgM7zkdRFa4l3N7wzt+tBcf7nK9kG
- sqoZM5eo8ipOMeUkv8hXXsX9QFS4iPSPnXVc4GXXuWuqQg/S/nVCyNFjJNI1p1vUcU7Xttakn
- nAzCyBuHRL6xuYeQZ
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.88.153]
+X-ClientProxiedBy: lhreml739-chm.china.huawei.com (10.201.108.189) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  v6:
-=E2=80=A6
->  2: Fix a typo issue, reported by =E2=80=A6
->  3: Reword some diagnostics info.
+On Mon, 4 May 2020 06:45:27 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Such small improvements are nice.
+> On Sun, 2020-05-03 at 13:51 +0100, Jonathan Cameron wrote:
+> > On Wed, 29 Apr 2020 18:17:39 +0300
+> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+> >   
+> > > From: Lars-Peter Clausen <lars@metafoo.de>
+> > > 
+> > > Let the core handle the buffer scan mask management including allocation
+> > > and channel selection. Having this handled in a central place rather than
+> > > open-coding it all over the place will make it easier to change the
+> > > implementation (if needed).
+> > > At the very least, this change abstracts scan-mask management away from
+> > > buffer implementations.
+> > > 
+> > > Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>  
+> > 
+> > I'm not 100% happy with including the buffer_impl.h header in the inkern
+> > code, but I can't see a simple way around it.  
+> 
+> I actually also tried to not do it [I suspect Lars may have tried as well].
+> But you end up either having to expose 'struct iio_channel' outside of
+> 'inkern.c' or having to include 'iio/consumer.h' in industrialio-buffer.c
+> 
+> Since there will be a V3, I will probably try to look again at a potential
+> different solution. Maybe there is a better solution I haven't considered.
+> 
+> > 
+> > However, there are some missing statics in here and I'm feeling lazy
+> > so not going to fix them up for you.
+> >   
+> 
+> No problem from my side.
+> I'll fix them up.
+> I prefer it when people don't cleanup after me. Makes me feel less guilty.
+> Though I will admit, it's a double-edged feeling: I am greatful when someone
+> cleans up after me, but I also feel slightly guilty [about it].
+> 
+
+*laughs*.  It's a trade off for the patch applier between
+
+1) Making people feel guilty so they are more careful in future.
+2) Effort to actually make trivial fixes.
+3) Having to get their brain back in gear when they get around to looking
+   at the next version.
+
+Mostly 3 wins out though I like to go with 1 every now and then when
+I'm feeling grump.  Warning for all, lock down makes me grumpy so
+you may all suffer the effects :)
+
+J
+
+> 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > > 
+> > > Changelog v1 -> v2:
+> > > - split away from initial series; the `buffer->channel_mask` attribute
+> > >   requires a bit more dicussion; or may even be dropped; just these 2
+> > >   patches helps with diff-ing 2 trees, as applying patches between my
+> > >   work tree & IIO has fewer conflicts
+> > > - return -EINVAL if masklength is 0 in iio_buffer_alloc_scanmask()
+> > > - convert 2nd parameter to `unsigned int masklength` in
+> > >   iio_buffer_alloc_scanmask()
+> > > 
+> > >  drivers/iio/buffer/industrialio-buffer-cb.c | 17 +++++-----
+> > >  drivers/iio/industrialio-buffer.c           | 36 +++++++++++++++------
+> > >  drivers/iio/inkern.c                        | 15 +++++++++
+> > >  include/linux/iio/consumer.h                | 10 ++++++
+> > >  4 files changed, 59 insertions(+), 19 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/buffer/industrialio-buffer-cb.c
+> > > b/drivers/iio/buffer/industrialio-buffer-cb.c
+> > > index 47c96f7f4976..dc5bb2ab533a 100644
+> > > --- a/drivers/iio/buffer/industrialio-buffer-cb.c
+> > > +++ b/drivers/iio/buffer/industrialio-buffer-cb.c
+> > > @@ -34,7 +34,7 @@ static void iio_buffer_cb_release(struct iio_buffer
+> > > *buffer)
+> > >  {
+> > >  	struct iio_cb_buffer *cb_buff = buffer_to_cb_buffer(buffer);
+> > >  
+> > > -	bitmap_free(cb_buff->buffer.scan_mask);
+> > > +	iio_buffer_free_scanmask(&cb_buff->buffer);
+> > >  	kfree(cb_buff);
+> > >  }
+> > >  
+> > > @@ -72,27 +72,26 @@ struct iio_cb_buffer *iio_channel_get_all_cb(struct
+> > > device *dev,
+> > >  	}
+> > >  
+> > >  	cb_buff->indio_dev = cb_buff->channels[0].indio_dev;
+> > > -	cb_buff->buffer.scan_mask = bitmap_zalloc(cb_buff->indio_dev-  
+> > > >masklength,  
+> > > -						  GFP_KERNEL);
+> > > -	if (cb_buff->buffer.scan_mask == NULL) {
+> > > -		ret = -ENOMEM;
+> > > +
+> > > +	ret = iio_buffer_alloc_scanmask(&cb_buff->buffer,
+> > > +					cb_buff->indio_dev->masklength);
+> > > +	if (ret)
+> > >  		goto error_release_channels;
+> > > -	}
+> > > +
+> > >  	chan = &cb_buff->channels[0];
+> > >  	while (chan->indio_dev) {
+> > >  		if (chan->indio_dev != cb_buff->indio_dev) {
+> > >  			ret = -EINVAL;
+> > >  			goto error_free_scan_mask;
+> > >  		}
+> > > -		set_bit(chan->channel->scan_index,
+> > > -			cb_buff->buffer.scan_mask);
+> > > +		iio_buffer_channel_enable(&cb_buff->buffer, chan);
+> > >  		chan++;
+> > >  	}
+> > >  
+> > >  	return cb_buff;
+> > >  
+> > >  error_free_scan_mask:
+> > > -	bitmap_free(cb_buff->buffer.scan_mask);
+> > > +	iio_buffer_free_scanmask(&cb_buff->buffer);
+> > >  error_release_channels:
+> > >  	iio_channel_release_all(cb_buff->channels);
+> > >  error_free_cb_buff:
+> > > diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-
+> > > buffer.c
+> > > index eae39eaf49af..c6b63f4474ff 100644
+> > > --- a/drivers/iio/industrialio-buffer.c
+> > > +++ b/drivers/iio/industrialio-buffer.c
+> > > @@ -208,6 +208,26 @@ void iio_buffer_init(struct iio_buffer *buffer)
+> > >  }
+> > >  EXPORT_SYMBOL(iio_buffer_init);
+> > >  
+> > > +int iio_buffer_alloc_scanmask(struct iio_buffer *buffer,
+> > > +			      unsigned int masklength)
+> > > +{
+> > > +	if (!masklength)
+> > > +		return -EINVAL;
+> > > +
+> > > +	buffer->scan_mask = bitmap_zalloc(masklength, GFP_KERNEL);
+> > > +	if (buffer->scan_mask == NULL)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(iio_buffer_alloc_scanmask);
+> > > +
+> > > +void iio_buffer_free_scanmask(struct iio_buffer *buffer)
+> > > +{
+> > > +	bitmap_free(buffer->scan_mask);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(iio_buffer_free_scanmask);
+> > > +
+> > >  /**
+> > >   * iio_buffer_set_attrs - Set buffer specific attributes
+> > >   * @buffer: The buffer for which we are setting attributes
+> > > @@ -1306,14 +1326,10 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev
+> > > *indio_dev)
+> > >  				indio_dev->scan_index_timestamp =
+> > >  					channels[i].scan_index;
+> > >  		}
+> > > -		if (indio_dev->masklength && buffer->scan_mask == NULL) {
+> > > -			buffer->scan_mask = bitmap_zalloc(indio_dev->masklength,
+> > > -							  GFP_KERNEL);
+> > > -			if (buffer->scan_mask == NULL) {
+> > > -				ret = -ENOMEM;
+> > > -				goto error_cleanup_dynamic;
+> > > -			}
+> > > -		}
+> > > +
+> > > +		ret = iio_buffer_alloc_scanmask(buffer, indio_dev->masklength);
+> > > +		if (ret)
+> > > +			goto error_cleanup_dynamic;
+> > >  	}
+> > >  
+> > >  	buffer->scan_el_group.name = iio_scan_elements_group_name;
+> > > @@ -1334,7 +1350,7 @@ int iio_buffer_alloc_sysfs_and_mask(struct iio_dev
+> > > *indio_dev)
+> > >  	return 0;
+> > >  
+> > >  error_free_scan_mask:
+> > > -	bitmap_free(buffer->scan_mask);
+> > > +	iio_buffer_free_scanmask(buffer);
+> > >  error_cleanup_dynamic:
+> > >  	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
+> > >  	kfree(buffer->buffer_group.attrs);
+> > > @@ -1349,7 +1365,7 @@ void iio_buffer_free_sysfs_and_mask(struct iio_dev
+> > > *indio_dev)
+> > >  	if (!buffer)
+> > >  		return;
+> > >  
+> > > -	bitmap_free(buffer->scan_mask);
+> > > +	iio_buffer_free_scanmask(buffer);
+> > >  	kfree(buffer->buffer_group.attrs);
+> > >  	kfree(buffer->scan_el_group.attrs);
+> > >  	iio_free_chan_devattr_list(&buffer->scan_el_dev_attr_list);
+> > > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> > > index ede99e0d5371..f35cb9985edc 100644
+> > > --- a/drivers/iio/inkern.c
+> > > +++ b/drivers/iio/inkern.c
+> > > @@ -11,6 +11,7 @@
+> > >  
+> > >  #include <linux/iio/iio.h>
+> > >  #include "iio_core.h"
+> > > +#include <linux/iio/buffer_impl.h>
+> > >  #include <linux/iio/machine.h>
+> > >  #include <linux/iio/driver.h>
+> > >  #include <linux/iio/consumer.h>
+> > > @@ -857,6 +858,20 @@ int iio_write_channel_raw(struct iio_channel *chan, int
+> > > val)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(iio_write_channel_raw);
+> > >  
+> > > +void iio_buffer_channel_enable(struct iio_buffer *buffer,
+> > > +			       const struct iio_channel *chan)
+> > > +{
+> > > +	set_bit(chan->channel->scan_index, buffer->scan_mask);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(iio_buffer_channel_enable);
+> > > +
+> > > +void iio_buffer_channel_disable(struct iio_buffer *buffer,
+> > > +				const struct iio_channel *chan)
+> > > +{
+> > > +	clear_bit(chan->channel->scan_index, buffer->scan_mask);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(iio_buffer_channel_disable);
+> > > +
+> > >  unsigned int iio_get_channel_ext_info_count(struct iio_channel *chan)
+> > >  {
+> > >  	const struct iio_chan_spec_ext_info *ext_info;
+> > > diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> > > index c4118dcb8e05..9fcd320c2fb4 100644
+> > > --- a/include/linux/iio/consumer.h
+> > > +++ b/include/linux/iio/consumer.h
+> > > @@ -12,6 +12,7 @@
+> > >  
+> > >  struct iio_dev;
+> > >  struct iio_chan_spec;
+> > > +struct iio_buffer;
+> > >  struct device;
+> > >  
+> > >  /**
+> > > @@ -342,6 +343,15 @@ int iio_read_channel_scale(struct iio_channel *chan,
+> > > int *val,
+> > >  int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
+> > >  	int *processed, unsigned int scale);
+> > >  
+> > > +void iio_buffer_channel_enable(struct iio_buffer *buffer,
+> > > +			       const struct iio_channel *chan);
+> > > +void iio_buffer_channel_disable(struct iio_buffer *buffer,
+> > > +				const struct iio_channel *chan);
+> > > +
+> > > +int iio_buffer_alloc_scanmask(struct iio_buffer *buffer,
+> > > +			      unsigned int masklength);
+> > > +void iio_buffer_free_scanmask(struct iio_buffer *buffer);
+> > > +
+> > >  /**
+> > >   * iio_get_channel_ext_info_count() - get number of ext_info attributes
+> > >   *				      connected to the channel.  
 
 
->  4: Add support to check and emit sensible diagnostics
->     info for description which spans across more than
->     two lines.
-
-My software concerns are growing also for the preferred dependency managem=
-ent.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D0e698dfa282211e414076f9dc7=
-e83c1c288314fd#n138
-
-
->  5: Avoid the word "acrosses", suggested by =E2=80=A6
-
-Another bit of collateral evolution.
-
-But it seems that further suggestions and ideas need more efforts
-to get the desired software development attention (I hope for a while).
-Will the clarification and integration of possibly remaining open issues
-continue in constructive ways?
-
-Regards,
-Markus
