@@ -2,182 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2548C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5670EC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB170206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3355620721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WV8XvfPo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B98dTBwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgEDVYI (ORCPT
+        id S1728040AbgEDVZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:24:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40564 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgEDVYH (ORCPT
+        Mon, 4 May 2020 17:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726469AbgEDVZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:24:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LNlpG004033;
-        Mon, 4 May 2020 21:23:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=v8bZfrKUd3qwtF/Kh9/wL9ZXJjJGiI1UmvKJcW7vQvQ=;
- b=WV8XvfPoJT80Y2r/XvMnN9ypfZsMl1/qn0YsbgCDEMWUYCg8ei6cVBsKA/fzUfEhTkSp
- wDfEyrmi/Le5+xghN92yuFIXJKXSUUXL6GgmDHb3x+5n4o+Lnl2RztaKTNQ2s52yDgzg
- p/2Lf0ef+95w+ajWmaH4xKAM0zK4w9oSOu4OBcaOW5excCEHxAr4PILxR/d9Td5UHNPA
- mNSddvjDdA6QLcJ6oDEn96nvG9ewBfdj1kTe5LmNHsp0xwM8WlX6qDCIoTkCnJ9bLHIu
- 7ihOhT/HwG9ZjedXlufoh4tdz7j4s+Ut0VlSHzgn8XAQtyUxbA5DHOCeHGj2JkUZH4qX Cw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 30s09r1g09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 21:23:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LGgCp168945;
-        Mon, 4 May 2020 21:21:45 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 30sjdrev8p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 21:21:45 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 044LLhsI021293;
-        Mon, 4 May 2020 21:21:43 GMT
-Received: from vbusired-dt (/10.39.235.150)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 14:21:42 -0700
-Date:   Mon, 4 May 2020 16:21:41 -0500
-From:   Venu Busireddy <venu.busireddy@oracle.com>
-To:     Ashish Kalra <Ashish.Kalra@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, srutherford@google.com,
-        rientjes@google.com, brijesh.singh@amd.com
-Subject: Re: [PATCH v7 03/18] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-Message-ID: <20200504212141.GA1699981@vbusired-dt>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
- <c0cd07661be8c0ce6f395a386401289a0f362765.1588234824.git.ashish.kalra@amd.com>
+        Mon, 4 May 2020 17:25:15 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEBB1C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 14:25:14 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id w6so326551ilg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 14:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=2Zv4G+VzNcrRYGRaLUVhI8DhRnEm8hPxZxVB7VoicFU=;
+        b=B98dTBwlQXRYGsKg56YCnInz+NoQZ5+A4ZtN/Y7PIF4xdwoHLXGyFVpzMHa9dth7YG
+         MeWkTLCm6xl2dtKPboMnsQ8/T+Mnt4GiNk7VXCv45UI6vx4f4zIM8Bw2r897kzenDknO
+         fyDSlqjNMdNC3wg9lLhdr4HP8ZfQ4GckwJrqpappDSjf0JaXkUdBk3mTmhA0QG/UzlzZ
+         mk76oxVMs5w+82K5zekIfahN26epbZoGwoEK7ZSIOJ8q0vzrK6NBGpFUVduJkwUliKcX
+         6vaU7aLhxO4/rRhZUdML/mXK9WjGcRRqZE76iq4zY1u8GOqrmOTWWvmPwG65+rrp41/9
+         E33Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=2Zv4G+VzNcrRYGRaLUVhI8DhRnEm8hPxZxVB7VoicFU=;
+        b=QkvUJHZga9A8cpC1V+ymdS+MVm3Mnz5i/LjIHi9wprXlMvw44xMd10vgaw4OHCAItR
+         3AFFj9kmT+q/x7IH7kJb9KihCSd8P3PkJNboRzvWJ0BD/NVYmYEsfSYFC4EGcnC40mSb
+         g8cVIdgaFc1LmUEm2BkcHZoGfEKMJUEs1xPUjausWfXTGTeAwI4L4p/hNk+f+/8SxEMe
+         TingWBXeKzCFbkD5SximxBa7/Il+w9+aNSClxZ4JMbJrdAjVrz090oHAt9hkEUtIWNK8
+         wCIfbCddFIpQPsmjBAPGVI/Pn7eXSNdIQVdYlqmSIlplgAauT4Am4wjI2QNjP4z7lJ9K
+         I9QA==
+X-Gm-Message-State: AGi0Pua2PnUAz7EIob9k+568+OZMDVF7RxDgkWKilFSXtv5+9Z8Ay0iA
+        08+i7H0xwHMvUGCvvgcfLdmsKHyMfIY=
+X-Google-Smtp-Source: APiQypJw+MuaKqMTHGzwTcZ2ZxqAvmO/FGIkpdUBnRL32Ka73PuGg0F0UUNyL/s3NlIAWa7JTpnHPg==
+X-Received: by 2002:a63:4f0e:: with SMTP id d14mr175207pgb.445.1588627513782;
+        Mon, 04 May 2020 14:25:13 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id gl12sm372771pjb.27.2020.05.04.14.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 14:25:13 -0700 (PDT)
+Date:   Mon, 4 May 2020 14:25:12 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Kevin Hao <haokexin@gmail.com>
+cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v5.6-rt] mm: slub: Always flush the delayed empty slubs
+ in flush_all()
+In-Reply-To: <20200504033407.2385-1-haokexin@gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2005041424590.224786@chino.kir.corp.google.com>
+References: <20200504033407.2385-1-haokexin@gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c0cd07661be8c0ce6f395a386401289a0f362765.1588234824.git.ashish.kalra@amd.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040167
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-30 08:41:08 +0000, Ashish Kalra wrote:
-> From: Brijesh Singh <Brijesh.Singh@amd.com>
-> 
-> The command is used to finailize the encryption context created with
-> KVM_SEV_SEND_START command.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Steve Rutherford <srutherford@google.com>
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
->  arch/x86/kvm/svm/sev.c                        | 23 +++++++++++++++++++
->  2 files changed, 31 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-> index f46817ef7019..a45dcb5f8687 100644
-> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-> @@ -314,6 +314,14 @@ Returns: 0 on success, -negative on error
+On Mon, 4 May 2020, Kevin Hao wrote:
 
-As I commented in the v6 patches
-(see https://lore.kernel.org/kvm/20200402181710.GA655710@vbusired-dt/),
-there are multiple occurrences of the word "-negative" in
-amd-memory-encryption.rst. Can these be changed to either "negative" or
-"less than 0"?
-
-
->                  __u32 trans_len;
->          };
->  
-> +12. KVM_SEV_SEND_FINISH
-> +------------------------
-> +
-> +After completion of the migration flow, the KVM_SEV_SEND_FINISH command can be
-> +issued by the hypervisor to delete the encryption context.
-> +
-> +Returns: 0 on success, -negative on error
-> +
->  References
->  ==========
->  
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 0c92c16505ab..81d661706d31 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -1153,6 +1153,26 @@ static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> +static int sev_send_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_send_finish *data;
-> +	int ret;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->handle = sev->handle;
-> +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_FINISH, data, &argp->error);
-> +
-> +	kfree(data);
-> +	return ret;
-> +}
-> +
->  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  {
->  	struct kvm_sev_cmd sev_cmd;
-> @@ -1203,6 +1223,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
->  	case KVM_SEV_SEND_UPDATE_DATA:
->  		r = sev_send_update_data(kvm, &sev_cmd);
->  		break;
-> +	case KVM_SEV_SEND_FINISH:
-> +		r = sev_send_finish(kvm, &sev_cmd);
-> +		break;
->  	default:
->  		r = -EINVAL;
->  		goto out;
-> -- 
-> 2.17.1
+> After commit f0b231101c94 ("mm/SLUB: delay giving back empty slubs to
+> IRQ enabled regions"), when the free_slab() is invoked with the IRQ
+> disabled, the empty slubs are moved to a per-CPU list and will be
+> freed after IRQ enabled later. But in the current codes, there is
+> a check to see if there really has the cpu slub on a specific cpu
+> before flushing the delayed empty slubs, this may cause a reference
+> of already released kmem_cache in a scenario like below:
+> 	cpu 0				cpu 1
+>   kmem_cache_destroy()
+>     flush_all()
+>                          --->IPI       flush_cpu_slab()
+>                                          flush_slab()
+>                                            deactivate_slab()
+>                                              discard_slab()
+>                                                free_slab()
+>                                              c->page = NULL;
+>       for_each_online_cpu(cpu)
+>         if (!has_cpu_slab(1, s))
+>           continue
+>         this skip to flush the delayed
+>         empty slub released by cpu1
+>     kmem_cache_free(kmem_cache, s)
 > 
+>                                        kmalloc()
+>                                          __slab_alloc()
+>                                             free_delayed()
+>                                             __free_slab()
+>                                             reference to released kmem_cache
+> 
+> Fixes: f0b231101c94 ("mm/SLUB: delay giving back empty slubs to IRQ enabled regions")
+> Signed-off-by: Kevin Hao <haokexin@gmail.com>
+
+Acked-by: David Rientjes <rientjes@google.com>
