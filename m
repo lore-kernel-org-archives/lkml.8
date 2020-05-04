@@ -2,109 +2,133 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A67C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2FBC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA0A20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3101920705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588601502;
+	bh=6hLQWXJLds1GNDSO6QgDUFN5/gXZBqSEKiwnPiaQsCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vH8kRchQCjrdvbu5ciMsjhYfTEnPWmEdXcJh/CpkeyctBGjYzj9wI7kBC/LE3wxbX
+	 xWml+Smp9lKlQFnNPCsiQk2n/qVnasLukiBE2Z+Lc0obGfL0qpp3APZQh5kZqaWIsY
+	 quspSVp2GTCt5wQfUa51GsPXzpMBbpFrV3T59MMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgEDOLR (ORCPT
+        id S1728978AbgEDOLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:11:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:45736 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgEDOLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:11:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FFB71FB;
-        Mon,  4 May 2020 07:11:16 -0700 (PDT)
-Received: from [192.168.1.84] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D9813F305;
-        Mon,  4 May 2020 07:11:14 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] firmware: psci: Add function to fetch SMCCC
- version
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, harb@amperecomputing.com
-References: <20200504092905.10580-1-sudeep.holla@arm.com>
- <20200504092905.10580-5-sudeep.holla@arm.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3554928d-2b7c-a3d3-f16e-20e25e761710@arm.com>
-Date:   Mon, 4 May 2020 15:11:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 10:11:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51708 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgEDOLk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:11:40 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x4so8637425wmj.1;
+        Mon, 04 May 2020 07:11:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Zhg/lpI81ciSxh0fDjxdl8lxOebSyQ78Sv338/w3oPQ=;
+        b=rJIqbzgWbe7JBoG3mO5trfY5HjP8qfYv99u8R1TuD+G+Mj/VL+na024fmiaR9AD742
+         eqc4VfTuEyZrOL9WwFTlGWnONZcwAg1w7fBtcOpeCahYeUBNpQnkbKzPz4y9mDWGgdkC
+         i5FADfLQp6aePQV8OALyoM0djJdiN69kS7XdJIeegEd0jbdETE05FLnWmJ13YUqDWkdY
+         xoRiyxCYG5aol+c9vcQRE7+GcjRJyHM+aLYCsvbiQm1L/1AUP+Jn8k2uYEm/04/9WsPL
+         JCcw5V6A9H1006n5rihoqEm5hsACb2hf+f3yScls98Kc2B6cC74oka0UYPucQeRlrH0+
+         //Cg==
+X-Gm-Message-State: AGi0PuYB+cUheJGVUHYUgUtJlbrc4TpzePDoNKWw7FLs2i+ThCLCarDs
+        ZqykuGT97jQsww1wd/IcBHA=
+X-Google-Smtp-Source: APiQypLBTMdBsqI3e05mfgV9qMZytUOnyP9gk3F560DYzx00KopeXxRT1ghjjg42a4hKAmUBPodayQ==
+X-Received: by 2002:a1c:9e43:: with SMTP id h64mr14579214wme.0.1588601498915;
+        Mon, 04 May 2020 07:11:38 -0700 (PDT)
+Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
+        by smtp.gmail.com with ESMTPSA id i25sm13328487wml.43.2020.05.04.07.11.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:11:38 -0700 (PDT)
+Date:   Mon, 4 May 2020 16:11:36 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+Message-ID: <20200504141136.GR22838@dhcp22.suse.cz>
+References: <20200430182712.237526-1-shakeelb@google.com>
+ <20200504065600.GA22838@dhcp22.suse.cz>
+ <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504092905.10580-5-sudeep.holla@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 10:29, Sudeep Holla wrote:
-> For backward compatibility reasons, PSCI maintains SMCCC version as
-> SMCCC didn't provide ARM_SMCCC_VERSION_FUNC_ID until v1.1
+On Mon 04-05-20 06:54:40, Shakeel Butt wrote:
+> On Sun, May 3, 2020 at 11:56 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Thu 30-04-20 11:27:12, Shakeel Butt wrote:
+> > > Lowering memory.max can trigger an oom-kill if the reclaim does not
+> > > succeed. However if oom-killer does not find a process for killing, it
+> > > dumps a lot of warnings.
+> >
+> > It shouldn't dump much more than the regular OOM report AFAICS. Sure
+> > there is "Out of memory and no killable processes..." message printed as
+> > well but is that a real problem?
+> >
+> > > Deleting a memcg does not reclaim memory from it and the memory can
+> > > linger till there is a memory pressure. One normal way to proactively
+> > > reclaim such memory is to set memory.max to 0 just before deleting the
+> > > memcg. However if some of the memcg's memory is pinned by others, this
+> > > operation can trigger an oom-kill without any process and thus can log a
+> > > lot un-needed warnings. So, ignore all such warnings from memory.max.
+> >
+> > OK, I can see why you might want to use memory.max for that purpose but
+> > I do not really understand why the oom report is a problem here.
 > 
-> Let us provide accessors to fetch the SMCCC version in PSCI so that
-> other SMCCC v1.1+ features can use it.
+> It may not be a problem for an individual or small scale deployment
+> but when "sweep before tear down" is the part of the workflow for
+> thousands of machines cycling through hundreds of thousands of cgroups
+> then we can potentially flood the logs with not useful dumps and may
+> hide (or overflow) any useful information in the logs.
 
-Since it seems there is a good reason for this patch... ;)
+If you are doing this in a large scale and the oom report is really a
+problem then you shouldn't be resetting hard limit to 0 in the first
+place.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
-
-Steve
-
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->   drivers/firmware/psci/psci.c | 5 +++++
->   include/linux/arm-smccc.h    | 9 +++++++++
->   2 files changed, 14 insertions(+)
+> > memory.max can trigger the oom kill and user should be expecting the oom
+> > report under that condition. Why is "no eligible task" so special? Is it
+> > because you know that there won't be any tasks for your particular case?
+> > What about other use cases where memory.max is not used as a "sweep
+> > before tear down"?
 > 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index 6a56d7196697..04426e16fee6 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -65,6 +65,11 @@ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
->   	return psci_ops.conduit;
->   }
->   
-> +u32 arm_smccc_get_version(void)
-> +{
-> +	return psci_ops.smccc_version;
-> +}
-> +
->   typedef unsigned long (psci_fn)(unsigned long, unsigned long,
->   				unsigned long, unsigned long);
->   static psci_fn *invoke_psci_fn;
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index 9d9a2e42e919..d6b0f4acc707 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -98,6 +98,15 @@ enum arm_smccc_conduit {
->    */
->   enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void);
->   
-> +/**
-> + * arm_smccc_get_version()
-> + *
-> + * Returns the version to be used for SMCCCv1.1 or later.
-> + *
-> + * When SMCCCv1.1 or above is not present, assumes and returns SMCCCv1.0.
-> + */
-> +u32 arm_smccc_get_version(void);
-> +
->   /**
->    * struct arm_smccc_res - Result from SMC/HVC call
->    * @a0-a3 result values from registers 0 to 3
-> 
+> What other such use-cases would be? The only use-case I can envision
+> of adjusting limits dynamically of a live cgroup are resource
+> managers. However for cgroup v2, memory.high is the recommended way to
+> limit the usage, so, why would resource managers be changing
+> memory.max instead of memory.high? I am not sure. What do you think?
 
+There are different reasons to use the hard limit. Mostly to contain
+potential runaways. While high limit might be a sufficient measure to
+achieve that as well the hard limit is the last resort. And it clearly
+has the oom killer semantic so I am not really sure why you are
+comparing the two.
+
+> FB is moving away from limits setting, so, not sure if they have
+> thought of these cases.
+> 
+> BTW for such use-cases, shouldn't we be taking the memcg's oom_lock?
+
+This is a good question. I would have to go and double check the code
+but I suspect that this is an omission.
+-- 
+Michal Hocko
+SUSE Labs
