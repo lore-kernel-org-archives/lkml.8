@@ -2,102 +2,63 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2276C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6B9C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C548520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615685;
-	bh=ds1Jxau9BSf+D3cDbxpy7Qio3XbI/M2VHzL83wDBhyg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tUjYREhvPJrwQtPeG/bYiEAxA7wBliLG179hw6Yd9NWhRPMTsIjr3uSp19iYXW6CW
-	 zqH7B6p7RtZMW1tr7RTP8nyeCqJsvRsknx+xOePErNulQ+KOQ6Gk82cbgw8Y1XIGkh
-	 QTDSqBomV6kJYvyBqQ36oi2bOExs/Y3mTRCLSi1c=
+	by mail.kernel.org (Postfix) with ESMTP id 1A96C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731316AbgEDSID (ORCPT
+        id S1732230AbgEDSIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732211AbgEDSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B198520721;
-        Mon,  4 May 2020 18:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615676;
-        bh=ds1Jxau9BSf+D3cDbxpy7Qio3XbI/M2VHzL83wDBhyg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CF27ETN0+K5CB+5/e7HzDA5JQalgr4cY0s6NVjMoLtCSXp31YENK1fDNllkRHqbgt
-         N8k18Vsy1Mefu7xVBge5ZdeL4abVMq9s2Ac5pHvMbOAzKjmT4bangFYPJPi9BcOhvq
-         W7WG0DofW45djX1OmLaUI7xfMkpK0NJbcyNZbsKQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aharon Landau <aharonl@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.6 43/73] RDMA/mlx5: Set GRH fields in query QP on RoCE
-Date:   Mon,  4 May 2020 19:57:46 +0200
-Message-Id: <20200504165508.641327076@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
-References: <20200504165501.781878940@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 4 May 2020 14:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731676AbgEDSH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:57 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37ABBC061A0E;
+        Mon,  4 May 2020 11:07:57 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A766C15D266F6;
+        Mon,  4 May 2020 11:07:54 -0700 (PDT)
+Date:   Mon, 04 May 2020 11:07:53 -0700 (PDT)
+Message-Id: <20200504.110753.1196693099669354507.davem@davemloft.net>
+To:     nicolas.ferre@microchip.com
+Cc:     linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        claudiu.beznea@microchip.com, harini.katakam@xilinx.com,
+        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
+        antoine.tenart@bootlin.com, f.fainelli@gmail.com,
+        linux@armlinux.org.uk, andrew@lunn.ch, michal.simek@xilinx.com
+Subject: Re: [PATCH v3 0/7] net: macb: Wake-on-Lan magic packet fixes and
+ GEM handling
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1588597759.git.nicolas.ferre@microchip.com>
+References: <cover.1588597759.git.nicolas.ferre@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 11:07:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aharon Landau <aharonl@mellanox.com>
+From: <nicolas.ferre@microchip.com>
+Date: Mon, 4 May 2020 15:44:15 +0200
 
-commit 2d7e3ff7b6f2c614eb21d0dc348957a47eaffb57 upstream.
+> Here is the 3rd series to fix WoL magic-packet on the current macb driver.
+> I also add, in the second part of this series the feature to GEM types of IPs.
+> Please tell me if they should be separated; but the two last patches cannot go
+> without the 5 fixes first ones.
 
-GRH fields such as sgid_index, hop limit, et. are set in the QP context
-when QP is created/modified.
-
-Currently, when query QP is performed, we fill the GRH fields only if the
-GRH bit is set in the QP context, but this bit is not set for RoCE. Adjust
-the check so we will set all relevant data for the RoCE too.
-
-Since this data is returned to userspace, the below is an ABI regression.
-
-Fixes: d8966fcd4c25 ("IB/core: Use rdma_ah_attr accessor functions")
-Link: https://lore.kernel.org/r/20200413132028.930109-1-leon@kernel.org
-Signed-off-by: Aharon Landau <aharonl@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/mlx5/qp.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -5545,7 +5545,9 @@ static void to_rdma_ah_attr(struct mlx5_
- 	rdma_ah_set_path_bits(ah_attr, path->grh_mlid & 0x7f);
- 	rdma_ah_set_static_rate(ah_attr,
- 				path->static_rate ? path->static_rate - 5 : 0);
--	if (path->grh_mlid & (1 << 7)) {
-+
-+	if (path->grh_mlid & (1 << 7) ||
-+	    ah_attr->type == RDMA_AH_ATTR_TYPE_ROCE) {
- 		u32 tc_fl = be32_to_cpu(path->tclass_flowlabel);
- 
- 		rdma_ah_set_grh(ah_attr, NULL,
-
-
+Please separate these into a pure bug fix series for 'net', and once that is
+integrated and propagated to 'net-next' you can submit the GEM support.
