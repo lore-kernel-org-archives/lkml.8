@@ -2,121 +2,76 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D45C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78662C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D48A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pAJUFyHb"
+	by mail.kernel.org (Postfix) with ESMTP id 5CC6B20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgEDSTF (ORCPT
+        id S1730737AbgEDSU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59916 "EHLO
+        Mon, 4 May 2020 14:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730105AbgEDSTE (ORCPT
+        by vger.kernel.org with ESMTP id S1729958AbgEDSU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:19:04 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5B6C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:19:03 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id i68so327618qtb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:19:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0S0fzMzsFl0bLgNM+EgMs0aWyomMNYCeZT4Tg2u+zd8=;
-        b=pAJUFyHbiVrJITSEZzA9hI6b/q96M4GFdrxxjD9xGVHb2orF8McDHNK2yfP36R27ka
-         ht5q87wbY4tpgzXb4LrG7LG46QznJ3a+hIXVUsNz1Y1d1QKFpolrWK8cgXDy6sy5mijm
-         S/IrPx35Yji3yvw/uBGTmKRbHVdcJTW74vDm1VjVnroVJRQVQRuICOFvvX3P4hu7jr4c
-         +H5Uex5NKCLtwSF2QDkodqjG19WV7TByYRhfZJ3geJ4+qiiosF7xLBIMg/jv+92ZgeXz
-         3JpEjRxma/MQ0/InwwDRmCWNFH//EPD7JgSr2wZWijcXRDpP9gVtPKrPPMJzc9WI+YIc
-         8shw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0S0fzMzsFl0bLgNM+EgMs0aWyomMNYCeZT4Tg2u+zd8=;
-        b=YX/dbA8M0mtczn4/xC9j/3qpHHc3qNcHZtmMuSBlZ1MkVqBSC1BgbH0W2e3JLfZQvF
-         Xd1g3QB3hzjRKLThgPkAXGHvIw15ejKcoNPXjeML2w1toKzTc5T+JHjDQYjd5r8k1gfp
-         vtNpx1Mvvs3WH1hmHAknnzbA7AF24Uk7EG9oMupuq3hLrtkklRJzJx8A+g4sXgSFgvlu
-         nhPGq/T4pnoOJHG7xrPnrul9EP/u15KY0kvKkOTZuW+6uuV7R+ibbjuYD/v1LWAxt695
-         vhxcQYT4LfHoNxCT0x0T/6QwDAim/JWtmltsFoW0zGkQUrxVii3neIlFkZ4UbvD8Df4Z
-         NHoA==
-X-Gm-Message-State: AGi0PuZj9mWRoUla6ogvV7+7/2IUQRLpO3ekrkcEx3L73COS95i0506S
-        /PsDxzbHYEvjUUmrFFm8WiwRex8CQhM8zc/BDaWHdQ==
-X-Google-Smtp-Source: APiQypKZlVjRXzmmyuk2Ec0vU5DSpLg4TQpbXbv2a5QSXiyKtYq/RX9wh2PZ27Ou2L2GMthOBmz4RYZAYn6SpsLQJw8=
-X-Received: by 2002:ac8:6757:: with SMTP id n23mr412624qtp.304.1588616342624;
- Mon, 04 May 2020 11:19:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200504120505.89351-1-joel@joelfernandes.org>
- <20200504171532.GR2869@paulmck-ThinkPad-P72> <20200504174413.GA8883@paulmck-ThinkPad-P72>
-In-Reply-To: <20200504174413.GA8883@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Mon, 4 May 2020 14:18:50 -0400
-Message-ID: <CAJWu+opxU7Vk1=StVmrbey_WLuCtvjw094oanpai3kuarAi07Q@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] RCU dyntick nesting counter cleanups for rcu -dev
-To:     paulmck@kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 May 2020 14:20:57 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33846C061A0E;
+        Mon,  4 May 2020 11:20:57 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C311711F5F61A;
+        Mon,  4 May 2020 11:20:56 -0700 (PDT)
+Date:   Mon, 04 May 2020 11:20:56 -0700 (PDT)
+Message-Id: <20200504.112056.1400711844642835898.davem@davemloft.net>
+To:     kai.heng.feng@canonical.com
+Cc:     jeffrey.t.kirsher@intel.com, intel-wired-lan@lists.osuosl.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] igb: Report speed and duplex as unknown when device is
+ runtime suspended
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200504173218.1724-1-kai.heng.feng@canonical.com>
+References: <20200504173218.1724-1-kai.heng.feng@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 11:20:57 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 1:44 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Mon, May 04, 2020 at 10:15:32AM -0700, Paul E. McKenney wrote:
-> > On Mon, May 04, 2020 at 08:05:00AM -0400, Joel Fernandes (Google) wrote:
-> > > These patches clean up the usage of dynticks nesting counters simplifying the
-> > > code, while preserving the usecases.
-> > >
-> > > It is a much needed simplification, makes the code less confusing, and prevents
-> > > future bugs such as those that arise from forgetting that the
-> > > dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
-> > > common situations.
-> > >
-> > > rcutorture testing with all TREE RCU configurations succeed with
-> > > CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
-> > >
-> > > v1->v2:
-> > > - Rebase on v5.6-rc6
-> > >
-> > > v2->v3:
-> > > - Rebase on rcu/dev with adjustments for tasks-RCU.
-> >
-> > Thank you!
-> >
-> > But this does not apply to any of v5.6-rc6, v5.7-rc1, or v5.7-rc2.
-> >
-> > Where should I be trying to apply it?
->
-> OK, morning blindness overcome.  I new see the "rcu/dev" in v2->v3.
->
-> Please accept my apologies for the noise.
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Tue,  5 May 2020 01:32:18 +0800
 
-No problem, glad it got resolved. Thanks!
+> igb device gets runtime suspended when there's no link partner. We can't
+> get correct speed under that state:
+> $ cat /sys/class/net/enp3s0/speed
+> 1000
+> 
+> In addition to that, an error can also be spotted in dmesg:
+> [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+> 
+> Since device can only be runtime suspended when there's no link partner,
+> we can directly report the speed and duplex as unknown.
+> 
+> The more generic approach will be wrap get_link_ksettings() with begin()
+> and complete() callbacks. However, for this particular issue, begin()
+> calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+> is already hold by upper ethtool layer.
+> 
+> So let's take this approach until the igb_runtime_resume() no longer
+> needs to hold rtnl_lock.
+> 
+> Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
- - Joel
+I'm assuming I will get this from upstream via Jeff K.
