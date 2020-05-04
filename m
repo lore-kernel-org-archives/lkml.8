@@ -2,114 +2,285 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0372C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB2CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D407D2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E634921835
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:13:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EMrjvzky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbgEDRNP (ORCPT
+        id S1730474AbgEDRNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:13:15 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:41248 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730179AbgEDRNM (ORCPT
+        Mon, 4 May 2020 13:13:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33203 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730025AbgEDRNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:13:12 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jVeeT-000475-56; Mon, 04 May 2020 11:13:09 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jVeeS-0007Cd-8B; Mon, 04 May 2020 11:13:09 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org,
+        Mon, 4 May 2020 13:13:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588612395;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+I7+tjYkt0ap5fvLu7XtxGvLJ9Ld+6cb2lClRNagcug=;
+        b=EMrjvzkyn9pwTc8f1h3M3T4iou3SNKvQIWxcPtfeE+qtqerI/A4SOuMw95RB3V56Ems7PX
+        6Mo3oyk3k+T4nA3qla8/yA/AAxq55g2ie1hsNb4g1SNu2GW1MgtusTYO1YlI9y6lDIIVSy
+        TF2k94gcaD8PYqzi3MdOU1HOtSzSJtU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-NWr7UfiaNaa-yMxFWlUiaw-1; Mon, 04 May 2020 13:13:11 -0400
+X-MC-Unique: NWr7UfiaNaa-yMxFWlUiaw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2C9380B713;
+        Mon,  4 May 2020 17:13:09 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D08770520;
+        Mon,  4 May 2020 17:13:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 37/61] cachefiles: Add I/O tracepoints
+From:   David Howells <dhowells@redhat.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?utf-8?Q?St=C3=A9phane?= Graber <stgraber@ubuntu.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Serge Hallyn <serge@hallyn.com>, Jann Horn <jannh@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, linux-api@vger.kernel.org
-References: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
-        <20200504144141.3605533-3-christian.brauner@ubuntu.com>
-        <87h7wvoefw.fsf@x220.int.ebiederm.org>
-        <20200504163907.jjgqe7qnnjpw4uwo@wittgenstein>
-Date:   Mon, 04 May 2020 12:09:46 -0500
-In-Reply-To: <20200504163907.jjgqe7qnnjpw4uwo@wittgenstein> (Christian
-        Brauner's message of "Mon, 4 May 2020 18:39:07 +0200")
-Message-ID: <87ftcfmxt1.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 04 May 2020 18:13:06 +0100
+Message-ID: <158861238642.340223.8962664382713166792.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jVeeS-0007Cd-8B;;;mid=<87ftcfmxt1.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19bqNapwp8vFn0s3C2ELzsRQSZ1zw8pn/A=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v3 2/3] nsproxy: attach to namespaces via pidfds
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Brauner <christian.brauner@ubuntu.com> writes:
 
-> On Mon, May 04, 2020 at 11:25:07AM -0500, Eric W. Biederman wrote:
->> 
->> I am not thrilled about treating nstype as a flags fields when it is not
->> currently.  It was my hope when I designed the interface that not
->> treating nstype as a flags field would save us from the problem of bits
->> running out.
->
-> Hm, I researched the setns() syscall history before that and I didn't
-> see that reasoning anywhere. The "nstype" arg was originally advertised
-> on the list as "having a flags field is useful in general".
+---
 
-Take a look at the code.  At the end of the day nstype is not treated at
-all like a flags field.
+ fs/cachefiles/interface.c         |   16 +++--
+ fs/cachefiles/io.c                |    2 +
+ include/trace/events/cachefiles.h |  123 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 136 insertions(+), 5 deletions(-)
 
-It isn't a very important point.  And it was certainly easier to use
-the existing bits for essentially their existing meanings.  But it was
-certainly something I was thinking at the time.
+diff --git a/fs/cachefiles/interface.c b/fs/cachefiles/interface.c
+index aa063857272a..feff39dff0f5 100644
+--- a/fs/cachefiles/interface.c
++++ b/fs/cachefiles/interface.c
+@@ -160,7 +160,8 @@ static void cachefiles_update_object(struct fscache_object *_object)
+ 	struct cachefiles_object *object;
+ 	struct cachefiles_cache *cache;
+ 	const struct cred *saved_cred;
+-	loff_t object_size;
++	struct inode *inode;
++	loff_t object_size, i_size;
+ 	int ret;
+ 
+ 	_enter("{OBJ%x}", _object->debug_id);
+@@ -172,12 +173,15 @@ static void cachefiles_update_object(struct fscache_object *_object)
+ 	cachefiles_begin_secure(cache, &saved_cred);
+ 
+ 	object_size = object->fscache.cookie->object_size;
+-	if (i_size_read(d_inode(object->dentry)) > object_size) {
++	inode = d_inode(object->dentry);
++	i_size = i_size_read(inode);
++	if (i_size > object_size) {
+ 		struct path path = {
+ 			.mnt	= cache->mnt,
+ 			.dentry	= object->dentry
+ 		};
+-		_debug("trunc %llx -> %llx", i_size_read(d_inode(object->dentry)), object_size);
++		_debug("trunc %llx -> %llx", i_size, object_size);
++		trace_cachefiles_trunc(object, inode, i_size, object_size);
+ 		ret = vfs_truncate(&path, object_size);
+ 		if (ret < 0) {
+ 			cachefiles_io_error_obj(object, "Trunc-to-size failed");
+@@ -186,8 +190,10 @@ static void cachefiles_update_object(struct fscache_object *_object)
+ 		}
+ 
+ 		object_size = round_up(object_size, CACHEFILES_DIO_BLOCK_SIZE);
+-		_debug("trunc %llx -> %llx", i_size_read(d_inode(object->dentry)), object_size);
+-		if (i_size_read(d_inode(object->dentry)) < object_size) {
++		i_size = i_size_read(inode);
++		_debug("trunc %llx -> %llx", i_size, object_size);
++		if (i_size < object_size) {
++			trace_cachefiles_trunc(object, inode, i_size, object_size);
+ 			ret = vfs_truncate(&path, object_size);
+ 			if (ret < 0) {
+ 				cachefiles_io_error_obj(object, "Trunc-to-dio-size failed");
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+index 42e0d620d778..268e6f69ba9c 100644
+--- a/fs/cachefiles/io.c
++++ b/fs/cachefiles/io.c
+@@ -88,6 +88,7 @@ int cachefiles_read(struct fscache_object *obj,
+ 		goto presubmission_error_free;
+ 
+ 	fscache_get_io_request(req);
++	trace_cachefiles_read(object, file_inode(file), req);
+ 	ret = call_read_iter(file, &ki->iocb, iter);
+ 	switch (ret) {
+ 	case -EIOCBQUEUED:
+@@ -198,6 +199,7 @@ int cachefiles_write(struct fscache_object *obj,
+ 	__sb_writers_release(inode->i_sb, SB_FREEZE_WRITE);
+ 
+ 	fscache_get_io_request(req);
++	trace_cachefiles_write(object, inode, req);
+ 	ret = call_write_iter(file, &ki->iocb, iter);
+ 	switch (ret) {
+ 	case -EIOCBQUEUED:
+diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
+index e7af1d683009..d83568e8fee8 100644
+--- a/include/trace/events/cachefiles.h
++++ b/include/trace/events/cachefiles.h
+@@ -351,6 +351,129 @@ TRACE_EVENT(cachefiles_coherency,
+ 		      __entry->content)
+ 	    );
+ 
++TRACE_EVENT(cachefiles_read,
++	    TP_PROTO(struct cachefiles_object *obj,
++		     struct inode *backer,
++		     struct fscache_io_request *req),
++
++	    TP_ARGS(obj, backer, req),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,			obj	)
++		    __field(unsigned int,			backer	)
++		    __field(unsigned int,			len	)
++		    __field(loff_t,				pos	)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->obj	= obj->fscache.debug_id;
++		    __entry->backer	= backer->i_ino;
++		    __entry->pos	= req->pos;
++		    __entry->len	= req->len;
++			   ),
++
++	    TP_printk("o=%08x b=%08x p=%llx l=%x",
++		      __entry->obj,
++		      __entry->backer,
++		      __entry->pos,
++		      __entry->len)
++	    );
++
++TRACE_EVENT(cachefiles_write,
++	    TP_PROTO(struct cachefiles_object *obj,
++		     struct inode *backer,
++		     struct fscache_io_request *req),
++
++	    TP_ARGS(obj, backer, req),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,			obj	)
++		    __field(unsigned int,			backer	)
++		    __field(unsigned int,			len	)
++		    __field(loff_t,				pos	)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->obj	= obj->fscache.debug_id;
++		    __entry->backer	= backer->i_ino;
++		    __entry->pos	= req->pos;
++		    __entry->len	= req->len;
++			   ),
++
++	    TP_printk("o=%08x b=%08x p=%llx l=%x",
++		      __entry->obj,
++		      __entry->backer,
++		      __entry->pos,
++		      __entry->len)
++	    );
++
++TRACE_EVENT(cachefiles_trunc,
++	    TP_PROTO(struct cachefiles_object *obj, struct inode *backer,
++		     loff_t from, loff_t to),
++
++	    TP_ARGS(obj, backer, from, to),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,			obj	)
++		    __field(unsigned int,			backer	)
++		    __field(loff_t,				from	)
++		    __field(loff_t,				to	)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->obj	= obj->fscache.debug_id;
++		    __entry->backer	= backer->i_ino;
++		    __entry->from	= from;
++		    __entry->to		= to;
++			   ),
++
++	    TP_printk("o=%08x b=%08x l=%llx->%llx",
++		      __entry->obj,
++		      __entry->backer,
++		      __entry->from,
++		      __entry->to)
++	    );
++
++TRACE_EVENT(cachefiles_tmpfile,
++	    TP_PROTO(struct cachefiles_object *obj, struct inode *backer),
++
++	    TP_ARGS(obj, backer),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,			obj	)
++		    __field(unsigned int,			backer	)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->obj	= obj->fscache.debug_id;
++		    __entry->backer	= backer->i_ino;
++			   ),
++
++	    TP_printk("o=%08x b=%08x",
++		      __entry->obj,
++		      __entry->backer)
++	    );
++
++TRACE_EVENT(cachefiles_link,
++	    TP_PROTO(struct cachefiles_object *obj, struct inode *backer),
++
++	    TP_ARGS(obj, backer),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,			obj	)
++		    __field(unsigned int,			backer	)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->obj	= obj->fscache.debug_id;
++		    __entry->backer	= backer->i_ino;
++			   ),
++
++	    TP_printk("o=%08x b=%08x",
++		      __entry->obj,
++		      __entry->backer)
++	    );
++
+ #endif /* _TRACE_CACHEFILES_H */
+ 
+ /* This part must be outside protection */
 
-I think I left it as we can see either way, depending on how things
-evolve.
-
-I can imagine a use for a nstype being a single namespace from a pidfd.
-Do you have any actual usecases for setting some but not all of the
-namespaces from a pidfd?  If we don't have a compelling reason
-I would like to kick that can down the road a ways farther.
-
-I am also remembering that that setns freed the low 8 bits.  Which gave
-some freedom beyond clone.
-
->> That aside.  It would be very good if the default version of setting
->> everything from a pidfd would set the root directory from the process it
->> is copying everything else from.
->
-> I'm not sure I follow completely. If you specify CLONE_NEWNS then we do
-> set the root directory with set_fs_root() in commit_nsset(). Or are you
-> saying we should always do that independent of whether or not
-> CLONE_NEWNS is specified? And if so could you explain why we'd want
-> that? I'm sure I'm missing something!
-
-I am suggesting that when we do:
-
-"setns(pidfd, 0)" or "setns(pidfd, SETNS_PIDFD)"
-
-That the result is not just the namespaces changing but also the root
-directory changing to the pids root directory.  Something where the
-whole is greater than the parts.
-
-Eric
 
