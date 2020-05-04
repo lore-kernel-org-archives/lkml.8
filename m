@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D4C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F45DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B67121974
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50102085B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615649;
-	bh=1odbRtPdovn6YAvSWJSRCoNkGgKfG9Q4/MdEilrMUZ4=;
+	s=default; t=1588615652;
+	bh=azMOu8EjMGDrE0P+u3NYrkPUjjB/EnRM97c2/Lsix7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JZhmarRXZ4heNcQTfhk37SGeBNRMDiIU9ClAVzRlgdXsvSBXjb9GtafD/YM4iNHv9
-	 vtTwnQpIliL/ABqUacwr4WiQsuEAnQ8oO2/CiRG78/GiCaoeupDwmZ9vlNEwe94i3w
-	 qm1nxMfU7H6LQUAwd2GKJUPZV9TDwX3RC4NIpGj8=
+	b=ANfe2qBbaTTh1+6VJF35Xu4sefPV7WItwyHvPHB1VmmKZQeJ0Y4ZPjeAb/Gi/jSaa
+	 ZL2brfizjYeA+2WNi0hzeebCUzGRq0Hl/QaiGypNNx77PkmcjCjNt/M+kyz0kM3u16
+	 5JtQ3RZvCOTwzAl6OhbBRw3mcQniBwb7BuWdMWqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbgEDSH2 (ORCPT
+        id S1731841AbgEDSHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38140 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732129AbgEDSHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:22 -0400
+        id S1731176AbgEDSH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EBE7205ED;
-        Mon,  4 May 2020 18:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CBBD206B8;
+        Mon,  4 May 2020 18:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615642;
-        bh=1odbRtPdovn6YAvSWJSRCoNkGgKfG9Q4/MdEilrMUZ4=;
+        s=default; t=1588615646;
+        bh=azMOu8EjMGDrE0P+u3NYrkPUjjB/EnRM97c2/Lsix7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t6+wqBIiRfPqHnOOhdf+9n2SMR/s4/E+3D9cpIw0NyRF1oLh1SCzdFvuSryhsaqUY
-         PgM6cYRH1+WXQrA3iWvxdczaJL4fuwCqsOVvj22C9mVnXXCB38fz+7vQ1dEE+bsZTJ
-         lvQNgNoZDjCXO7IutLPnzIM+NtscWZH7INyt5db8=
+        b=BKLFIep++/qIE5wlYDAm8MEpdNKHsFWCe/xUEaEYNHe1FZuSdn4GIvBoTxvc/Asxn
+         24VQtAfGQaBeQgaon8zF1pDLtderO3HfI/z+ckoZdAb8/DBzCVLg4p8OcX85X5ASYv
+         SNoN1GkXBl0iylNLPZmN/zO62e6fHS0zfT6N3PLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 64/73] ALSA: opti9xx: shut up gcc-10 range warning
-Date:   Mon,  4 May 2020 19:58:07 +0200
-Message-Id: <20200504165510.054979600@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Subject: [PATCH 5.6 39/73] ARM: dts: imx6qdl-sr-som-ti: indicate powering off wifi is safe
+Date:   Mon,  4 May 2020 19:57:42 +0200
+Message-Id: <20200504165507.928931479@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -59,84 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 5ce00760a84848d008554c693ceb6286f4d9c509 upstream.
+commit b7dc7205b2ae6b6c9d9cfc3e47d6f08da8647b10 upstream.
 
-gcc-10 points out a few instances of suspicious integer arithmetic
-leading to value truncation:
+We need to indicate that powering off the TI WiFi is safe, to avoid:
 
-sound/isa/opti9xx/opti92x-ad1848.c: In function 'snd_opti9xx_configure':
-sound/isa/opti9xx/opti92x-ad1848.c:322:43: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_opti9xx_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
-  322 |   (snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-sound/isa/opti9xx/opti92x-ad1848.c:351:3: note: in expansion of macro 'snd_opti9xx_write_mask'
-  351 |   snd_opti9xx_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
-      |   ^~~~~~~~~~~~~~~~~~~~~~
-sound/isa/opti9xx/miro.c: In function 'snd_miro_configure':
-sound/isa/opti9xx/miro.c:873:40: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_miro_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
-  873 |   (snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-sound/isa/opti9xx/miro.c:1010:3: note: in expansion of macro 'snd_miro_write_mask'
- 1010 |   snd_miro_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
-      |   ^~~~~~~~~~~~~~~~~~~
+wl18xx_driver wl18xx.2.auto: Unbalanced pm_runtime_enable!
+wl1271_sdio mmc0:0001:2: wl12xx_sdio_power_on: failed to get_sync(-13)
 
-These are all harmless here as only the low 8 bit are passed down
-anyway. Change the macros to inline functions to make the code
-more readable and also avoid the warning.
+which prevents the WiFi being functional.
 
-Strictly speaking those functions also need locking to make the
-read/write pair atomic, but it seems unlikely that anyone would
-still run into that issue.
-
-Fixes: 1841f613fd2e ("[ALSA] Add snd-miro driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200429190216.85919-1-arnd@arndb.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/isa/opti9xx/miro.c           |    9 ++++++---
- sound/isa/opti9xx/opti92x-ad1848.c |    9 ++++++---
- 2 files changed, 12 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/isa/opti9xx/miro.c
-+++ b/sound/isa/opti9xx/miro.c
-@@ -867,10 +867,13 @@ static void snd_miro_write(struct snd_mi
- 	spin_unlock_irqrestore(&chip->lock, flags);
- }
- 
-+static inline void snd_miro_write_mask(struct snd_miro *chip,
-+		unsigned char reg, unsigned char value, unsigned char mask)
-+{
-+	unsigned char oldval = snd_miro_read(chip, reg);
- 
--#define snd_miro_write_mask(chip, reg, value, mask)	\
--	snd_miro_write(chip, reg,			\
--		(snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-+	snd_miro_write(chip, reg, (oldval & ~mask) | (value & mask));
-+}
- 
- /*
-  *  Proc Interface
---- a/sound/isa/opti9xx/opti92x-ad1848.c
-+++ b/sound/isa/opti9xx/opti92x-ad1848.c
-@@ -317,10 +317,13 @@ static void snd_opti9xx_write(struct snd
- }
- 
- 
--#define snd_opti9xx_write_mask(chip, reg, value, mask)	\
--	snd_opti9xx_write(chip, reg,			\
--		(snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-+static inline void snd_opti9xx_write_mask(struct snd_opti9xx *chip,
-+		unsigned char reg, unsigned char value, unsigned char mask)
-+{
-+	unsigned char oldval = snd_opti9xx_read(chip, reg);
- 
-+	snd_opti9xx_write(chip, reg, (oldval & ~mask) | (value & mask));
-+}
- 
- static int snd_opti9xx_configure(struct snd_opti9xx *chip,
- 					   long port,
+--- a/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
+@@ -153,6 +153,7 @@
+ 	bus-width = <4>;
+ 	keep-power-in-suspend;
+ 	mmc-pwrseq = <&pwrseq_ti_wifi>;
++	cap-power-off-card;
+ 	non-removable;
+ 	vmmc-supply = <&vcc_3v3>;
+ 	/* vqmmc-supply = <&nvcc_sd1>; - MMC layer doesn't like it! */
 
 
