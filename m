@@ -2,73 +2,173 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00423C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59068C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF2BF20752
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B5220721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:20:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmyLFN/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgEDOUg (ORCPT
+        id S1728867AbgEDOUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:20:36 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59013 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbgEDOUf (ORCPT
+        Mon, 4 May 2020 10:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726922AbgEDOUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:20:35 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 044EKFKP077229;
-        Mon, 4 May 2020 23:20:15 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Mon, 04 May 2020 23:20:15 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 044EK5QJ077039
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 4 May 2020 23:20:15 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200430182712.237526-1-shakeelb@google.com>
- <20200504065600.GA22838@dhcp22.suse.cz>
- <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <939b6744-6556-2733-b83e-bf14e848dabd@I-love.SAKURA.ne.jp>
-Date:   Mon, 4 May 2020 23:20:05 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 10:20:44 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECAEC061A0E;
+        Mon,  4 May 2020 07:20:44 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id i13so6729055oie.9;
+        Mon, 04 May 2020 07:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7dFZhnDWS7Tizxu2OEo0qs58jGqBEpce/n1a/aPfM+M=;
+        b=gmyLFN/nYCg1n7UscEV+5jC9u6q5GYu3AHv3+aU7Fjjw9dTfo4ARG/9m1ro0M5MMEi
+         a6bbASvcxqmY5LPFOrLCWtelWFHBnP8G3vtjnzAvkga9NRi0IL3PeSl35vT8irzanSP7
+         X+adc0ebp2xGHjsH9mb4tf/IzHTWObBo2I2ZP2UjPtUS/4L3KuKXlSnSPiFyQ8Tu9e/Q
+         pudQRvc7xxjSRZOVRJk+Pic34GazJCjrGWIT/nmq0uzN7hZoiMNg9CHV+yOCxHj0ykdo
+         jdd5G56/uWvfqtOWfoDIRb3/KOQuKt2WJCeEQCsPAViF+sp9GuGwQQNKwS+CjKNeyMSA
+         Qqbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7dFZhnDWS7Tizxu2OEo0qs58jGqBEpce/n1a/aPfM+M=;
+        b=sRBmZzi/tNu6/JlWqS5W/yZS+/oqRUqHThbrOoR9GtEWGJHuyKQj0uV2podLIFl54k
+         RKEXCC9KbTWgAX4VuQy00LuQThFAE2cnWClq5YNSuGFN1tqeqacZsxC/Gl2uAlY1V7W1
+         WSry1yfnGDuaEyv9h074zLh6ZbrLjGwnsKthNoi3XlPFa2YCCFn2ngTV5vGr5XTDzefI
+         7/F8lOL4xH8Pc4S7j7DTn48tkybjqkPQdrWxZ3Z7DYBv+HA3F2REMjv98yAft7opRvQ1
+         IbtL3MqHnBMn+GbZJQKl9BMi/Lsvo3lGfngvL9LDIF384T7L8tb10/RCxH3fVVQ5xdyl
+         OVgg==
+X-Gm-Message-State: AGi0PuaVKdTFHfZCW8jBM5Q8Ax3InWv/srlPCuX/FC+GFvMmPJqPYw2R
+        6yJrqAe9OFMgnmTtanuoSycgN1jEa5m5kll0LIU=
+X-Google-Smtp-Source: APiQypJJNLmN9IdSWfIrtoFcumitqYdjMlQ/xm3GpcuUQNKTnSGBHyQMIaQNzSPDuLIDwjYVOaixm5qG87Uq7o+MR6w=
+X-Received: by 2002:aca:b783:: with SMTP id h125mr9088932oif.62.1588602043656;
+ Mon, 04 May 2020 07:20:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
+In-Reply-To: <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 4 May 2020 15:20:17 +0100
+Message-ID: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
+ Qseven SOM
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/04 22:54, Shakeel Butt wrote:
-> It may not be a problem for an individual or small scale deployment
-> but when "sweep before tear down" is the part of the workflow for
-> thousands of machines cycling through hundreds of thousands of cgroups
-> then we can potentially flood the logs with not useful dumps and may
-> hide (or overflow) any useful information in the logs.
+Hi Geert,
 
-I'm proposing a patch which allows configuring which OOM-related messages
-should be sent to consoles at
-https://lkml.kernel.org/r/20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp .
-Will that approach help you?
+Thank you for the review.
+
+On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add support for iWave RZ/G1H Qseven System On Module.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+> > @@ -0,0 +1,53 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include "r8a7742.dtsi"
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +       compatible = "iwave,g21m", "renesas,r8a7742";
+> > +
+> > +       memory@40000000 {
+> > +               device_type = "memory";
+> > +               reg = <0 0x40000000 0 0x40000000>;
+> > +       };
+> > +
+> > +       memory@200000000 {
+> > +               device_type = "memory";
+> > +               reg = <2 0x00000000 0 0x20000000>;
+>
+> According to the schematics, the second bank is also 1 GiB, so the
+> reg length should be 0x40000000.
+>
+Agreed will fix that.
+
+> > +       };
+>
+> > +&pfc {
+> > +       mmc1_pins: mmc1 {
+> > +               groups = "mmc1_data4", "mmc1_ctrl";
+> > +               function = "mmc1";
+> > +       };
+> > +};
+> > +
+> > +&mmcif1 {
+> > +       pinctrl-0 = <&mmc1_pins>;
+> > +       pinctrl-names = "default";
+> > +
+> > +       vmmc-supply = <&reg_3p3v>;
+> > +       bus-width = <4>;
+> > +       non-removable;
+> > +       status = "okay";
+> > +};
+>
+> The eMMC has an 8-bit data path.  Is there any specific reason you use
+> bus-width = <4>, and the "mmc1_data4" pin group?
+>
+MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
+device when using 8-bit just switched to 4bit mode so that both the
+peripherals can be used.
+
+Cheers,
+--Prabhakar
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
