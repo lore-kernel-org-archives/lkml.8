@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68451C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CA7C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38C93206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2432820746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615513;
-	bh=W7UAXwWN98Y7sZvTBZNeOKlsGspGEzBV6VrCaOG4pXg=;
+	s=default; t=1588615517;
+	bh=m4EcSt3zXHUMsSW3fDHvl3oNDX5fcLVwzpe1swlR0eY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvqrK5UGSdppp+JZpI7bxzMIU7k4GUHCEZa1SHhfQLiOCYda8Lif1iWixnFZTKqW/
-	 rtcNLRniZL3e/GFkocRco9/0A2IFpJN/VAhM2pEsaRgPWHCUCen6BkgaK69ggAhUig
-	 6RaWWbKelIevI3H2T5SvbrtxY0/y5efBWl+L9/VQ=
+	b=fz4Ix0LGfleTY/aXR4BQRMPIawSOj7Sm9X7pKm5BB3nXLPJP9DolZC8nuSNHqZhlE
+	 KZVfF1beFR9fmR2Ulnjt5AovEnvO8LMH5H1kT+NWdpdB0Dle9EOmYYZiNPd1ABp8Cb
+	 jPQWe0pudtdH1fClyA/kNKlSrhaagJDyBl7IVRBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbgEDSFM (ORCPT
+        id S1731790AbgEDSFP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731773AbgEDSFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:07 -0400
+        id S1731778AbgEDSFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:05:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C92D2075A;
-        Mon,  4 May 2020 18:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3172C2073E;
+        Mon,  4 May 2020 18:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615506;
-        bh=W7UAXwWN98Y7sZvTBZNeOKlsGspGEzBV6VrCaOG4pXg=;
+        s=default; t=1588615511;
+        bh=m4EcSt3zXHUMsSW3fDHvl3oNDX5fcLVwzpe1swlR0eY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqhFFbmpE5tx5Ij+mENJbTJoodQAoIMGl3eG54Q/Zk0OETw+4v7gGaTtUMWzK/S3u
-         o1GTbKEurkm0Y3uMS9pyNTBeV8nbHxXBWvyc8fOspSnsxmasFEkhZe1csfW70T5F1d
-         F5LQFj2D+djel2ND4M7XkbCR1eQeA77Nqi3VV2eo=
+        b=Cs89Olrnd9P+HLg9sKiTjxSMUJ3y06omoxQp3WCdUPSeJvlAtDqZyOQD6+hQcKO+i
+         Kcq0GvlIblkEOmm1v+bWa/YZalMmezVGx7qXB+KuFKEK22EC6pCfAbrUkiThErmR0y
+         h0hubT7VI1Mt83egYCV4X9oli1xUlm8g+hCPG/KQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Kent Russell <kent.russell@amd.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 01/73] drm/scheduler: fix drm_sched_get_cleanup_job
-Date:   Mon,  4 May 2020 19:57:04 +0200
-Message-Id: <20200504165501.981305028@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.6 11/73] NFSv4.1: fix handling of backchannel binding in BIND_CONN_TO_SESSION
+Date:   Mon,  4 May 2020 19:57:14 +0200
+Message-Id: <20200504165504.007128955@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,34 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-commit 8623b5255ae7ccaf276aac3920787bf575fa6b37 upstream.
+commit dff58530c4ca8ce7ee5a74db431c6e35362cf682 upstream.
 
-We are racing to initialize sched->thread here, just always check the
-current thread.
+Currently, if the client sends BIND_CONN_TO_SESSION with
+NFS4_CDFC4_FORE_OR_BOTH but only gets NFS4_CDFS4_FORE back it ignores
+that it wasn't able to enable a backchannel.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-Reviewed-by: Kent Russell <kent.russell@amd.com>
-Link: https://patchwork.freedesktop.org/patch/361303/
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+To make sure, the client sends BIND_CONN_TO_SESSION as the first
+operation on the connections (ie., no other session compounds haven't
+been sent before), and if the client's request to bind the backchannel
+is not satisfied, then reset the connection and retry.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/scheduler/sched_main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c           |    8 ++++++++
+ include/linux/nfs_xdr.h     |    2 ++
+ include/linux/sunrpc/clnt.h |    5 +++++
+ 3 files changed, 15 insertions(+)
 
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -687,7 +687,7 @@ drm_sched_get_cleanup_job(struct drm_gpu
- 	 */
- 	if ((sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr)) ||
--	    __kthread_should_park(sched->thread))
-+	    kthread_should_park())
- 		return NULL;
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7893,6 +7893,7 @@ static void
+ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
++	struct nfs41_bind_conn_to_session_res *res = task->tk_msg.rpc_resp;
+ 	struct nfs_client *clp = args->client;
  
- 	spin_lock_irqsave(&sched->job_list_lock, flags);
+ 	switch (task->tk_status) {
+@@ -7901,6 +7902,12 @@ nfs4_bind_one_conn_to_session_done(struc
+ 		nfs4_schedule_session_recovery(clp->cl_session,
+ 				task->tk_status);
+ 	}
++	if (args->dir == NFS4_CDFC4_FORE_OR_BOTH &&
++			res->dir != NFS4_CDFS4_BOTH) {
++		rpc_task_close_connection(task);
++		if (args->retries++ < MAX_BIND_CONN_TO_SESSION_RETRIES)
++			rpc_restart_call(task);
++	}
+ }
+ 
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+@@ -7923,6 +7930,7 @@ int nfs4_proc_bind_one_conn_to_session(s
+ 	struct nfs41_bind_conn_to_session_args args = {
+ 		.client = clp,
+ 		.dir = NFS4_CDFC4_FORE_OR_BOTH,
++		.retries = 0,
+ 	};
+ 	struct nfs41_bind_conn_to_session_res res;
+ 	struct rpc_message msg = {
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1307,11 +1307,13 @@ struct nfs41_impl_id {
+ 	struct nfstime4			date;
+ };
+ 
++#define MAX_BIND_CONN_TO_SESSION_RETRIES 3
+ struct nfs41_bind_conn_to_session_args {
+ 	struct nfs_client		*client;
+ 	struct nfs4_sessionid		sessionid;
+ 	u32				dir;
+ 	bool				use_conn_in_rdma_mode;
++	int				retries;
+ };
+ 
+ struct nfs41_bind_conn_to_session_res {
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -236,4 +236,9 @@ static inline int rpc_reply_expected(str
+ 		(task->tk_msg.rpc_proc->p_decode != NULL);
+ }
+ 
++static inline void rpc_task_close_connection(struct rpc_task *task)
++{
++	if (task->tk_xprt)
++		xprt_force_disconnect(task->tk_xprt);
++}
+ #endif /* _LINUX_SUNRPC_CLNT_H */
 
 
