@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C846C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246E2C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B457207DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1B020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615612;
-	bh=nTTT4da67tY6V26UzMba9X5BQOwgU9ZiHTbAOw+bExk=;
+	s=default; t=1588615617;
+	bh=RTv3fe9BdZNIW2EkAR6n7tLvr54BVsc+vkMbD+c/x5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRTyRDG875yTeXJjir9b3CxvHh4c9G7A0ApQsh1MUl6chN+v2syesy3r9je6bEA+1
-	 XDjF9xMw/WOHYEm4LWT6ZkbP7z4hE17jdh3ixApCraGyM67a6UzodlwkGwnTgjiSmA
-	 7aA+sYKLt2fTfGmQStF1ik7JIPPvl0gSEMd48LkQ=
+	b=aireDqiLAUKaQ7TS0OMf4x2DGRVYc/nNt5wWR2JcwSwefIBusmr62jPxm+QdfyCGI
+	 gwRA49I4DoyVkgA/BgP30BRq1adnYRZpqxDAWbuk5zlhGnRnhNc+0aJD2Mf1gcU2Nh
+	 uQgqzZ1K+XHLlJoCpuv5sRsrpOueXOZYNgnJxGfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbgEDSGv (ORCPT
+        id S1732053AbgEDSGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37306 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732016AbgEDSGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:46 -0400
+        id S1731519AbgEDSGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 110BF2073B;
-        Mon,  4 May 2020 18:06:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 962482073B;
+        Mon,  4 May 2020 18:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615606;
-        bh=nTTT4da67tY6V26UzMba9X5BQOwgU9ZiHTbAOw+bExk=;
+        s=default; t=1588615611;
+        bh=RTv3fe9BdZNIW2EkAR6n7tLvr54BVsc+vkMbD+c/x5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oAPoai4Xr82e9vzPDjMkjvLR69lyTTCs2gf0VixXzJFKQa/z+mXuPI1nIyYRDhNsQ
-         6/HGtKgwEmg80veQ2pFj8Y5RahU5xG0GE9zsmKdHbhZ+1KM3RZjwLJEnbfmcZbpTyw
-         MzgqIyT9DJoh6dsa1yvH3TmO6jXwC3CL+oMX5DG0=
+        b=VIlTE51zOAKjCXX6Ny1AA5IJX/lfHGLXPoV86PySC/0uaQl2elB8ph0EtotqrfD/m
+         R0gaz2zIrr4GQlOOWtuS66zMX5uiT06Ub2xFgRcf0F71sDpVpxrcRHsrz77VI6pXRt
+         Hkx8NYvh1mx7v7TJEtGWHmF+BAKDDVI79bCANpBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.6 50/73] RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
-Date:   Mon,  4 May 2020 19:57:53 +0200
-Message-Id: <20200504165509.134278419@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.6 52/73] i2c: iproc: generate stop event for slave writes
+Date:   Mon,  4 May 2020 19:57:55 +0200
+Message-Id: <20200504165509.271153097@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -59,92 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-commit e8dc4e885c459343970b25acd9320fe9ee5492e7 upstream.
+commit 068143a8195fb0fdeea1f3ca430b3db0f6d04a53 upstream.
 
-xa_alloc_cyclic() is a SMP release to be paired with some later acquire
-during xa_load() as part of cm_acquire_id().
+When slave status is I2C_SLAVE_RX_END, generate I2C_SLAVE_STOP
+event to i2c_client.
 
-As such, xa_alloc_cyclic() must be done after the cm_id is fully
-initialized, in particular, it absolutely must be after the
-refcount_set(), otherwise the refcount_inc() in cm_acquire_id() may not
-see the set.
-
-As there are several cases where a reader will be able to use the
-id.local_id after cm_acquire_id in the IB_CM_IDLE state there needs to be
-an unfortunate split into a NULL allocate and a finalizing xa_store.
-
-Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
-Link: https://lore.kernel.org/r/20200310092545.251365-2-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cm.c |   27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ drivers/i2c/busses/i2c-bcm-iproc.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -572,18 +572,6 @@ static int cm_init_av_by_path(struct sa_
- 	return 0;
- }
- 
--static int cm_alloc_id(struct cm_id_private *cm_id_priv)
--{
--	int err;
--	u32 id;
--
--	err = xa_alloc_cyclic_irq(&cm.local_id_table, &id, cm_id_priv,
--			xa_limit_32b, &cm.local_id_next, GFP_KERNEL);
--
--	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
--	return err;
--}
--
- static u32 cm_local_id(__be32 local_id)
- {
- 	return (__force u32) (local_id ^ cm.random_id_operand);
-@@ -825,6 +813,7 @@ struct ib_cm_id *ib_create_cm_id(struct
- 				 void *context)
- {
- 	struct cm_id_private *cm_id_priv;
-+	u32 id;
- 	int ret;
- 
- 	cm_id_priv = kzalloc(sizeof *cm_id_priv, GFP_KERNEL);
-@@ -836,9 +825,6 @@ struct ib_cm_id *ib_create_cm_id(struct
- 	cm_id_priv->id.cm_handler = cm_handler;
- 	cm_id_priv->id.context = context;
- 	cm_id_priv->id.remote_cm_qpn = 1;
--	ret = cm_alloc_id(cm_id_priv);
--	if (ret)
--		goto error;
- 
- 	spin_lock_init(&cm_id_priv->lock);
- 	init_completion(&cm_id_priv->comp);
-@@ -847,11 +833,20 @@ struct ib_cm_id *ib_create_cm_id(struct
- 	INIT_LIST_HEAD(&cm_id_priv->altr_list);
- 	atomic_set(&cm_id_priv->work_count, -1);
- 	refcount_set(&cm_id_priv->refcount, 1);
-+
-+	ret = xa_alloc_cyclic_irq(&cm.local_id_table, &id, NULL, xa_limit_32b,
-+				  &cm.local_id_next, GFP_KERNEL);
-+	if (ret)
-+		goto error;
-+	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
-+	xa_store_irq(&cm.local_id_table, cm_local_id(cm_id_priv->id.local_id),
-+		     cm_id_priv, GFP_KERNEL);
-+
- 	return &cm_id_priv->id;
- 
- error:
- 	kfree(cm_id_priv);
--	return ERR_PTR(-ENOMEM);
-+	return ERR_PTR(ret);
- }
- EXPORT_SYMBOL(ib_create_cm_id);
- 
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -360,6 +360,9 @@ static bool bcm_iproc_i2c_slave_isr(stru
+ 			value = (u8)((val >> S_RX_DATA_SHIFT) & S_RX_DATA_MASK);
+ 			i2c_slave_event(iproc_i2c->slave,
+ 					I2C_SLAVE_WRITE_RECEIVED, &value);
++			if (rx_status == I2C_SLAVE_RX_END)
++				i2c_slave_event(iproc_i2c->slave,
++						I2C_SLAVE_STOP, &value);
+ 		}
+ 	} else if (status & BIT(IS_S_TX_UNDERRUN_SHIFT)) {
+ 		/* Master read other than start */
 
 
