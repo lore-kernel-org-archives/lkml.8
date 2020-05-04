@@ -2,100 +2,128 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1A7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2AEC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840E120707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6579720705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="foRm2c2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgEDUUQ (ORCPT
+        id S1726773AbgEDUYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:20:16 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:37820 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbgEDUUQ (ORCPT
+        Mon, 4 May 2020 16:24:04 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25237 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726338AbgEDUYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:20:16 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 May 2020 16:24:04 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588623843; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=HTXjWdBLrHj7qKXU26YhsxMP+8VY0C42SPBv+HCFlE4=; b=foRm2c2ZYnq/kPLuyV+ZHh97aSmKmLPJJloy/gvI46e+w/7K5M0ReVFP8jXtoJfNuA4kyQk/
+ 7a6O8oPrI0lD3ki3r/j3B9UT8/vFHpu4FDzcpnbMGqVMKfEncT1KbYpxHO3VGHd1v9Cnk3CW
+ wySyiTkVXm6jR7wn3pid+rBJ4xw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eb079cd.7f8bed75ba08-smtp-out-n05;
+ Mon, 04 May 2020 20:23:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 82689C44788; Mon,  4 May 2020 20:23:39 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id ACAFE804C8;
-        Mon,  4 May 2020 22:20:10 +0200 (CEST)
-Date:   Mon, 4 May 2020 22:20:09 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     David Lu <david.lu@bitland.com.cn>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Cc:     scott.chao@bitland.com.cn, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        casper.chang@bitland.com.cn
-Subject: Re: [PATCH] drm/panel: boe-tv101wum-n16: fine tune clock
-Message-ID: <20200504202009.GD8122@ravnborg.org>
-References: <20200428064521.21511-1-david.lu@bitland.com.cn>
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6780DC433CB;
+        Mon,  4 May 2020 20:23:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6780DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        saravanak@google.com, mka@chromium.org
+Cc:     nm@ti.com, agross@kernel.org, david.brown@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v4 00/12] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+Date:   Tue,  5 May 2020 01:52:31 +0530
+Message-Id: <20200504202243.5476-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200428064521.21511-1-david.lu@bitland.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=kj9zAlcOel0A:10 a=iKCrp2iyAAAA:8 a=e5mUnYsNAAAA:8
-        a=USH4Leqcx4jq98t2q1IA:9 a=CjuIK1q_8ugA:10 a=6dnM-gFdnRAg0d82BWIM:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David.
+This patch series aims to extend cpu based scaling support to L3/DDR on
+SDM845 and SC7180 SoCs.
 
-On Tue, Apr 28, 2020 at 02:45:21PM +0800, David Lu wrote:
-> fix boe_tv105wum_nw0 display shift.
-> 
-> Signed-off-by: David Lu <david.lu@bitland.com.cn>
-Added fixes: tag and applied to drm-misc-next.
+Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+Patches [4-8] - Update bw levels based on cpu frequency change
+Patches [9-10] - Add tag setting support to OPP
+Patches [11-12] - Add the cpu opp tables for SDM845 and SC7180 SoCs.
 
-	Sam
+Depends on the following series:
+https://lore.kernel.org/patchwork/cover/1230626/
 
-> ---
->  drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index f89861c8598a..46fe1805c588 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -697,15 +697,15 @@ static const struct panel_desc auo_b101uan08_3_desc = {
->  };
->  
->  static const struct drm_display_mode boe_tv105wum_nw0_default_mode = {
-> -	.clock = 159260,
-> +	.clock = 159916,
->  	.hdisplay = 1200,
->  	.hsync_start = 1200 + 80,
->  	.hsync_end = 1200 + 80 + 24,
->  	.htotal = 1200 + 80 + 24 + 60,
->  	.vdisplay = 1920,
-> -	.vsync_start = 1920 + 10,
-> -	.vsync_end = 1920 + 10 + 2,
-> -	.vtotal = 1920 + 10 + 2 + 14,
-> +	.vsync_start = 1920 + 20,
-> +	.vsync_end = 1920 + 20 + 4,
-> +	.vtotal = 1920 + 20 + 4 + 10,
->  	.vrefresh = 60,
->  	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
->  };
-> -- 
-> 2.17.1
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Georgi,
+ Would it make sense to include tag support patches [9-10] in your next
+ re-spin?
+
+V4:
+ * Migrate to using Georgi's new bindings
+ * Misc fixups based on Matthias comments
+ * API fixups based on Bjorn's comments on v2
+ * Picked up a few R-bs from Matthias
+
+v3:
+ * Migrated to using Saravana's opp-kBps bindings [1]
+ * Fixed some misc comments from Rajendra
+ * Added support for SC7180
+
+v2:
+ * Incorporated Viresh's comments from:
+ https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+ https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+ * Dropped cpufreq-map passive governor
+
+Sibi Sankar (12):
+  arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+  cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+  cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+  OPP: Add and export helper to update voltage
+  OPP: Add and export helper to set bandwidth
+  cpufreq: qcom: Update the bandwidth levels on frequency change
+  OPP: Add and export helper to get icc path count
+  cpufreq: qcom: Disable fast switch when scaling ddr/l3
+  dt-bindings: interconnect: Add interconnect-tags bindings
+  OPP: Add support for setting interconnect-tags
+  arm64: dts: qcom: sdm845: Add cpu OPP tables
+  arm64: dts: qcom: sc7180: Add cpu OPP tables
+
+ .../bindings/interconnect/interconnect.txt    |   5 +
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 168 ++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 258 ++++++++++++++++++
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+ drivers/cpufreq/qcom-cpufreq-hw.c             |  89 +++++-
+ drivers/opp/core.c                            | 114 ++++++++
+ drivers/opp/of.c                              |  25 +-
+ include/linux/pm_opp.h                        |  22 ++
+ 9 files changed, 675 insertions(+), 10 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
