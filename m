@@ -2,98 +2,118 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D4C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05374C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4932075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B2D20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="m6p5BqYd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L4OcCxIE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgEDH3g (ORCPT
+        id S1727951AbgEDHbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:29:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41622 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgEDH3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:29:35 -0400
-IronPort-SDR: /IHtxQzSY5XFbLBgxa2nVHWZbE5MsvliIEukanb50vOnyk3TS6SWL/4fth95te2hZMZS6YV0ld
- yKrV+gtiHbsA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 00:29:34 -0700
-IronPort-SDR: zNtXKyB4w4WjyC6WiVnuuzBAG4T3rPGYx2NUWFTtHfK//89qW4A/ilWT2H0QDxQmJyGU/g28gi
- Lj+lMnDnYtow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="259249561"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga003.jf.intel.com with ESMTP; 04 May 2020 00:29:31 -0700
-Subject: Re: [PATCH] mmc: sdhci-esdhc: update contact email
-To:     Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de, Ulf Hansson <ulf.hansson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-mmc@vger.kernel.org
-References: <20200502142840.19418-1-wsa@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <20f61d5b-74ab-a214-ec36-6e362ba3457b@intel.com>
-Date:   Mon, 4 May 2020 10:29:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 03:31:42 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:43555 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726411AbgEDHbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 03:31:41 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 955D75C00EC;
+        Mon,  4 May 2020 03:31:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 04 May 2020 03:31:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=QkLzSMTHeoZLIZu12MQB23Bppyp
+        pRPzbceduSb0gG/I=; b=m6p5BqYd48bEDFBH9otxKTog0ifKfWMz4AJAbiIdb1L
+        BU4kDas243e2cAxWcGzGE5tz9GaNEdj+4EQ9D3JIH5IQ2gSr9Pt7bXwmR9UxKnIT
+        r9edS0UbAhgAcTAbUWQr04Enm4iXjg3KNw6QjorJkPFBjfbO6NBqoulkxUpk7lVx
+        a8E4cbJUhPMZdXqvzBu4sdHVm0Pm7ww5pFviTkogmhgM16v6g4kKgJY7jv03oklz
+        Ic+0gRTc9HC3tnfLz92DiVJyW5GVJokOPO0XbfJAfWDKBPpg3NE9v/Bdw1hhaVvb
+        sfStCVcr3mVOfGfnpsH14+dLgs2utLesbCqALs0u8KA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=QkLzSM
+        THeoZLIZu12MQB23BppyppRPzbceduSb0gG/I=; b=L4OcCxIE65Csq0aM4gZrN/
+        Jr6BwoolBLp1UpAVJlzyxbh76AfakkCWYKZoXayWYE1YhExxQ4QuC92shHnA/TvP
+        nboOEHQ2bmtgbvJ8XGs/bipMcl3nSPOOi8pK5IR7VEGAHhO2fdhBiPYQ4BdmZi+a
+        vec8pd6YPySC2O5djFLO+5h3JCBAZEKnjkh00JUzWj5VBID8KwklahRiuPZZ5q9l
+        8aGgkBo43PcCCq3InGm8fDnZSd9Cmnc9WNkyNQcA12bRql69164mePERx+qOEOdR
+        fO6qbUywIobvDDuNxr37HQj7uXJT3KAuPajzSSf64FpRLHdGblppMYAFUFGc4+1g
+        ==
+X-ME-Sender: <xms:28SvXi2oGNW4OaNQc5gXNbdF_K7TWb4QF0ORWHY4Cm3Tg1rrxiZVUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeefgdduudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeekkedtue
+    elveeuudehjeevleeggfeftdetteelkeetgfevieduteetieekffffffenucffohhmrghi
+    nhepuggrrhhinhhgfhhirhgvsggrlhhlrdhnvghtnecukfhppeekfedrkeeirdekledrud
+    dtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehg
+    rhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:28SvXgHCZmImg3CqPTLQifcO69uFcXhGzYCaVUZsbv5a0PhmO9yKHw>
+    <xmx:28SvXvUVvfB4HGUECGbVA5iMPisN7F0YyuvuqMONbcLj1QNqvxZ1uA>
+    <xmx:28SvXkUhY7O_YcaTk-uwRBw6pJDobW_0dTxxxnrjmQsnO8DjgbZgDw>
+    <xmx:3MSvXuaPXwK-TJ9MV984_-l8hT_wkHGhzKPDBnCOfh1OLty0GBlLOA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8E8103066007;
+        Mon,  4 May 2020 03:31:39 -0400 (EDT)
+Date:   Mon, 4 May 2020 09:31:34 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rajan Vaja <RAJANV@xilinx.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jolly Shah <JOLLYS@xilinx.com>,
+        "kernelci.org bot" <bot@kernelci.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20200504073134.GA855714@kroah.com>
+References: <20200504114625.1de2c54d@canb.auug.org.au>
+ <20200504114756.37a4948a@canb.auug.org.au>
+ <BYAPR02MB394115C2C80B1169D282A646B7A60@BYAPR02MB3941.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200502142840.19418-1-wsa@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR02MB394115C2C80B1169D282A646B7A60@BYAPR02MB3941.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/05/20 5:28 pm, Wolfram Sang wrote:
-> The 'pengutronix' address is defunct for years. Use the proper contact
-> address.
-> 
-> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+On Mon, May 04, 2020 at 07:05:50AM +0000, Rajan Vaja wrote:
+> Hi Greg,
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> ---
->  drivers/mmc/host/sdhci-esdhc.h              | 2 +-
->  include/linux/platform_data/mmc-esdhc-imx.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-esdhc.h b/drivers/mmc/host/sdhci-esdhc.h
-> index 947212f16bc6..a30796e79b1c 100644
-> --- a/drivers/mmc/host/sdhci-esdhc.h
-> +++ b/drivers/mmc/host/sdhci-esdhc.h
-> @@ -5,7 +5,7 @@
->   * Copyright (c) 2007 Freescale Semiconductor, Inc.
->   * Copyright (c) 2009 MontaVista Software, Inc.
->   * Copyright (c) 2010 Pengutronix e.K.
-> - *   Author: Wolfram Sang <w.sang@pengutronix.de>
-> + *   Author: Wolfram Sang <kernel@pengutronix.de>
->   */
->  
->  #ifndef _DRIVERS_MMC_SDHCI_ESDHC_H
-> diff --git a/include/linux/platform_data/mmc-esdhc-imx.h b/include/linux/platform_data/mmc-esdhc-imx.h
-> index 0434f68eda86..cba1184b364c 100644
-> --- a/include/linux/platform_data/mmc-esdhc-imx.h
-> +++ b/include/linux/platform_data/mmc-esdhc-imx.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0-only */
->  /*
-> - * Copyright 2010 Wolfram Sang <w.sang@pengutronix.de>
-> + * Copyright 2010 Wolfram Sang <kernel@pengutronix.de>
->   */
->  
->  #ifndef __ASM_ARCH_IMX_ESDHC_H
-> 
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
+A: No.
+Q: Should I include quotations after my reply?
+
+http://daringfireball.net/2007/07/on_top
+
+> Nathan Chancellor <natechancellor@gmail.com> have already submitted
+> patch "[PATCH] firmware: xilinx: Export
+> zynqmp_pm_fpga_{get_status,load}". Will you take it directly or should
+> I merge this change in my patch series and submit a new series?
+
+I just merged that patch a few minutes ago, no need to do anything.
+
+I will note that this is the 2nd problem in this patch series that was
+found.  I had to drop this series previously for these same types of
+issues, which I thought were fixed this time.  I think you all need to
+do a bit more build testing on your end when submitting patches please.
+
+thanks,
+
+greg k-h
