@@ -2,97 +2,245 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4252AC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B90C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183AB20735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bOLJK2jI"
+	by mail.kernel.org (Postfix) with ESMTP id 9DB1420746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgEDI6L (ORCPT
+        id S1728447AbgEDI6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:58:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726467AbgEDI6L (ORCPT
+        Mon, 4 May 2020 04:58:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54840 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgEDI6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:58:11 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89AFC061A0E;
-        Mon,  4 May 2020 01:58:10 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 4 May 2020 04:58:35 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Fxb16TLPz9sSd;
-        Mon,  4 May 2020 18:58:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1588582687;
-        bh=EFLzW5EtsM/NU6ka1mG0d9nnQIB7WifNEw9o5jrd4j0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=bOLJK2jIOMRjWfEwpFuY+3NkHAi3VLxZr5EwrLDNpCAnPxvU/b0iW5TSdyJo48sPV
-         Hvhv0FQ30FjVkkLdwkA+QQdOHh67zl+OiDYoGiQrLteTxPqAJcWr0njBUUT2BjMcC0
-         cl6n8S5Mgk9rOzcVLdA10UAZ7ZinLA2MfltfT3yju1bHxEGiyo00ZzCcmlil3ZiWXo
-         sJE7E4AXxPr5SfQYprHJ2ic4ksalraZ35JT/NBQBf+dJyQfBfKF0sag1kVYehvvNxc
-         PaUpy7pD2gsNLKVsaBZ3u8cWQMQlaIj1qEMdUlAhwgITPj1am99aY96aP00OawncfV
-         ESL2Z7LjY1Lng==
-Date:   Mon, 4 May 2020 18:58:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xie XiuQi <xiexiuqi@huawei.com>
-Subject: linux-next: Signed-off-by missing for commit in the tip tree
-Message-ID: <20200504185804.460ab939@canb.auug.org.au>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 784152A0E99;
+        Mon,  4 May 2020 09:58:32 +0100 (BST)
+Date:   Mon, 4 May 2020 10:58:28 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     tglx@linutronix.de, cheol.yong.kim@intel.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
+        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
+        brendanhiggins@google.com, linux-mips@vger.kernel.org,
+        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, qi-ming.wu@intel.com,
+        andriy.shevchenko@intel.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200504105828.72aaf7b8@collabora.com>
+In-Reply-To: <db023399-8b4d-c75c-30c8-b35e38e2e5f8@linux.intel.com>
+References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <20200429162249.55d38ee8@collabora.com>
+        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
+        <20200429164832.6800fc70@collabora.com>
+        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
+        <20200429173107.5c6d2f55@collabora.com>
+        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
+        <20200430102114.29b6552f@collabora.com>
+        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
+        <20200430103658.4b0b979e@collabora.com>
+        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
+        <20200430143600.27031639@collabora.com>
+        <20200430150124.7856d112@collabora.com>
+        <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
+        <20200504090824.1eb16b78@collabora.com>
+        <854521ed-b0f9-0f0f-2cd7-5ad11b2d059a@linux.intel.com>
+        <20200504091755.0d0e73aa@collabora.com>
+        <db023399-8b4d-c75c-30c8-b35e38e2e5f8@linux.intel.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/71W.KGUR+NjGpIV3HJEr1sb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/71W.KGUR+NjGpIV3HJEr1sb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 4 May 2020 16:50:08 +0800
+"Ramuthevar, Vadivel MuruganX"
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
 
-Hi all,
+> Hi Boris,
+> 
+> On 4/5/2020 3:17 pm, Boris Brezillon wrote:
+> > On Mon, 4 May 2020 15:15:08 +0800
+> > "Ramuthevar, Vadivel MuruganX"
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >   
+> >> Hi Boris,
+> >>
+> >>     Thank you very much for the prompt review and suggestions...
+> >>
+> >> On 4/5/2020 3:08 pm, Boris Brezillon wrote:  
+> >>> On Mon, 4 May 2020 10:02:35 +0800
+> >>> "Ramuthevar, Vadivel MuruganX"
+> >>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
+> >>>      
+> >>>> Hi Boris,
+> >>>>
+> >>>> On 30/4/2020 9:01 pm, Boris Brezillon wrote:  
+> >>>>> On Thu, 30 Apr 2020 14:36:00 +0200
+> >>>>> Boris Brezillon<boris.brezillon@collabora.com>  wrote:
+> >>>>>         
+> >>>>>> On Thu, 30 Apr 2020 17:07:03 +0800
+> >>>>>> "Ramuthevar, Vadivel MuruganX"
+> >>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
+> >>>>>>        
+> >>>>>>>>>> The question is, is it the same value we have in nand_pa or it is
+> >>>>>>>>>> different?
+> >>>>>>>>>>                 
+> >>>>>>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.  
+> >>>>>>>> Then why didn't you tell me they didn't match when I suggested to pass  
+> >>>>>>> sorry, because you keep asking nand_pa after that only I realized that.
+> >>>>>>>            
+> >>>>>>>> nand_pa? So now the question is, what does this address represent?  
+> >>>>>>>                    EBU-MODULE
+> >>>>>>>      _________     _______________________
+> >>>>>>> |         |   |            |NAND CTRL  |
+> >>>>>>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
+> >>>>>>> |_________|   |_CS1(0x17C)_|__________ |
+> >>>>>>>
+> >>>>>>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
+> >>>>>>> HSNAND_BASE: 0xE100_0000
+> >>>>>>> NAND_CS0: 0xE140_0000
+> >>>>>>> NAND_CS1: 0xE1C0_0000
+> >>>>>>>
+> >>>>>>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
+> >>>>>>> MEM_REGION_BASE_CS1: 0x17C00
+> >>>>>>>            
+> >>>>>> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
+> >>>>>> address translation. Something like
+> >>>>>>
+> >>>>>> 	ebu@xxx {
+> >>>>>> 		ranges = <0x17400000 0xe1400000 0x1000>,
+> >>>>>> 			 <0x17c00000 0xe1c00000 0x1000>;
+> >>>>>> 		reg = <0x17400000>, <0x17c00000>;
+> >>>>>> 		reg-names = "cs-0", "cs-1";
+> >>>>>> 	}
+> >>>>>>
+> >>>>>> The translated address (0xE1X00000) will be available in res->start,
+> >>>>>> and the non-translated one (0x17X00000) can be retrieved with
+> >>>>>> of_get_address(). All you'd have to do then would be calculate the
+> >>>>>> mask:
+> >>>>>>
+> >>>>>> 	mask = (translated_address & original_address) >> 22;
+> >>>>>> 	num_comp_bits = fls(mask);
+> >>>>>> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
+> >>>>>>
+> >>>>>> Which allows you to properly set the ADDR_SEL() register without
+> >>>>>> relying on some hardcoded values:
+> >>>>>>
+> >>>>>> 	writel(original_address | EBU_ADDR_SEL_REGEN |
+> >>>>>> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
+> >>>>>> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
+> >>>>>>
+> >>>>>> That's quite important if we want to merge the xway NAND driver with
+> >>>>>> this one.  
+> >>>>> Looks like the translation is done at the FPI bus declaration level (see
+> >>>>> [1]). We really need to see the big picture to take a wise decision
+> >>>>> about the bindings. Would you mind pasting your dsti/dts files
+> >>>>> somewhere? It feels like the NAND controller is a sub-part of a more
+> >>>>> generic 'memory' controller, in which case the NAND controller should be
+> >>>>> declared as a child of this generic memory bus (called localbus in [1],
+> >>>>> but maybe EBU is more accurate).
+> >>>>>
+> >>>>> [1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162  
+> >>>>
+> >>>>     ebu_nand: ebu_nand@e0f00000 {
+> >>>>                     compatible = "intel,lgm-ebu-nand";
+> >>>>                     reg = <0xe0f00000 0x100
+> >>>>                     0xe1000000 0x300
+> >>>>                     0xe1400000 0x80000
+> >>>>                     0xe1c00000 0x10000>;
+> >>>>                     reg-names = "ebunand", "hsnand", "nand_cs0", nand_cs1";
+> >>>>                     dmas = <&dma0 8>, <&dma0 9>;
+> >>>>                     dma-names = "ebu_rx", "ebu_tx";
+> >>>>                     clocks =  <&cgu0 LGM_GCLK_EBU>;
+> >>>>             };
+> >>>>
+> >>>>
+> >>>> 	 &ebu_nand {
+> >>>> 	         status = "disabled";
+> >>>> 	        nand,cs = <1>;
+> >>>> 	        nand-ecc-mode = "hw";
+> >>>> 	        pinctrl-names = "default";
+> >>>> 	        pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
+> >>>> 	};
+> >>>>     
+> >>>>>         
+> >>> Ok. If I understand the SoC topology correctly it should actually be
+> >>> something like that:
+> >>>
+> >>> {
+> >>> 	...
+> >>> 	fpi@xxxxx {
+> >>> 		compatible = "intel,lgm-fpi", "simple-bus";
+> >>>
+> >>> 		/* You might have other ranges to define here */
+> >>> 		ranges = <0x16000000 0xe0000000 0x1000000>;
+> >>>
+> >>> 		...  
+> >>
+> >> Sorry, we do not have fpi tree node in our dts/dtsi file instead we have
+> >> the below one.. , that also not included the major peripherals
+> >> controllers node.
+> >>           /* Special part from CPU core */
+> >>           core: core {
+> >>                   compatible = "intel,core", "simple-bus";
+> >>                   #address-cells = <1>;
+> >>                   #size-cells = <1>;
+> >>                   ranges;
+> >>
+> >>                   ioapic1: interrupt-controller@fec00000 {
+> >>                           #interrupt-cells = <2>;
+> >>                           #address-cells = <0>;
+> >>                           compatible = "intel,ce4100-ioapic";
+> >>                           interrupt-controller;
+> >>                           reg = <0xfec00000 0x1000>;
+> >>                           nr_entries = <256>;
+> >>                   };
+> >>
+> >>                   hpet: timer@fed00000 {
+> >>                           compatible = "intel,ce4100-hpet";
+> >>                           reg = <0xfed00000 0x400>;
+> >>                   };
+> >>
+> >>                   lapic0: interrupt-controller@fee00000 {
+> >>                           compatible = "intel,ce4100-lapic";
+> >>                           reg = <0xfee00000 0x1000>;
+> >>                           no_pic_mode;
+> >>                   };
+> >>           };
+> >>
+> >> other than this, rest all in independent node .  
+> > 
+> > But you do have an FPI bus, right? If this is the case it should be
+> > represented.  
+> 
+> Yes, FPI bus is slave to core which connects all the peripherals.
+> 
+>   Or is the "intel,core" bus actually the FPI bus that you
+> > named differently?  
+> 
+> FPI slave bus connects to core bus by OCP bridge, so here it is named 
+> FPI bus, but SW perspective didn't have root tree which has all 
+> sub-nodes, as of now each peripheral has its own node.
 
-Commit
-
-  f080d93e1d41 ("sched/debug: Fix trival print_task() format")
-
-is missing a Signed-off-by from its author.
-
-Also, there should be a blank line before the commit message tags
-(it actually looks like the end of the commit message got truncated -
-probably by leading dahses on a line).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/71W.KGUR+NjGpIV3HJEr1sb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6v2RwACgkQAVBC80lX
-0Gw30Af/fUBNVInZYyj9XuqNR8WspEuAKzqnxxEWtxUkZyRBCoqLAGvOnaRmPMxR
-o3+uSAWj8BKKTD4vlyLQqU/r2uPTgS+1tXOfNqa+5BbX1oCI+O80PaCVMqSZRUjp
-B7CFVFcWdwcNtpdf0brtLfv+xpQ8bgTm9pDzRz8rQzOdHfPqw40NuplMc2GZqtA+
-eY8GDVw5b8dhUo7iR8gLczG7sGgj0SBvV7mMRn5FjabYOC+lTz3DGFZ2yTTRybf4
-nr4yZtYFfW0tbhebDrDp5ZHxS6JBwZ3eyK54Gzow3pNwB2p/deYLAhK4ke0lPoDz
-OpJNNqYw4pKWVBFQ24Cy/p7bCaKHIw==
-=F4aE
------END PGP SIGNATURE-----
-
---Sig_/71W.KGUR+NjGpIV3HJEr1sb--
+Duh, not sure that's a good idea to hide that, especially since you
+have to describe the address translation that happens when crossing the
+FPI bus (the ranges thing I mentioned previously).
