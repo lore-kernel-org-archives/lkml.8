@@ -2,105 +2,90 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E65C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF14C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54BAF206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588622381;
-	bh=4QbCM1DdBd0EmptwIuEt9KVy1YkkeiZxCdileESlzDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZzX0ySganEb1hr6Za/J6AGelqdmwxcXBOyDh4Z7jdClEe85KllqPoBUnvygUqulfx
-	 LtyFRc5Jx4mfUdQ9mnskUrSNRiFnxZEYBojvUgReAH/OlmvQXWQ9d0t8T4P/INbH1E
-	 DzNgkVV8ywLLpC55CLu74U++PfTQ8JyMsE1D1EiY=
+	by mail.kernel.org (Postfix) with ESMTP id 53ACE206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:00:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NmBQj+/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgEDT7k (ORCPT
+        id S1727845AbgEDUA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:59:40 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53902 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDT7k (ORCPT
+        Mon, 4 May 2020 16:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgEDUA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:59:40 -0400
-Received: by mail-pj1-f68.google.com with SMTP id hi11so439230pjb.3;
-        Mon, 04 May 2020 12:59:39 -0700 (PDT)
+        Mon, 4 May 2020 16:00:56 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECC6C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:00:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a2so15064154ejx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 13:00:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yCWAep3g/S7kYu55ffGrHwoUe1KKlRiY8jCjhGfRTrA=;
+        b=NmBQj+/dOtZLHa1FZ/2Vzi4YdEQY+QcB0DmpdxrMU459Sw0tCwj7iWQg2lC/mfKMQo
+         dSSpVaAfTFuTN4w4Eai+oqe+5uDxQIoUNns7XrcRNTs/B50mpJU6WzoinSyQ1VYqKOrQ
+         kSPXMsX92FgyWRUrGuDmNqGzMsdXKBNgP+jFKbFboCcRBMdApPmOxSECYQPkrnXTcvBc
+         hiyMwyNKBTfD9rPPLjFTiN0YFn5g4lt2SscNid+KjRttkh4Lc/4EImyuh1ttpjC2lAce
+         w+CNLVINNgTu9ZIGKY6fFT+Dws752yxb7SSVP2ZusvW25VnFJdoeahk56vdknUYDKrwT
+         IsgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2HN8tcXcP8sTZ5bpyK/yzSNJcHfHQaQMKR7YqmFkps4=;
-        b=JkdTT8ZHdQCAkK6pi2ETmP/+iSXP3XVcSdjpG9iUMPVee9YIAS5XYA6uriWfuqUJnY
-         hx9JvKhaKJ4d3CCf5ZmVGKNSPOj+0E3ciSlp8y6CzkDVJK0ZvGH5KotNbiiWdgZ976gL
-         cQNrz/wEr+UUmdTXHF37aDk02A48CeYUPtEl7j53jOuZYypp0PhTB+AWIp0GqpzJlFtQ
-         eD0XumRgNsVvYKalPoQAk2SflzHVWpm9gaAqpKjIJZN99bKbPOSW81ZowwlHwiSymbQi
-         CWDw58RmtHqdfKVgpopUX16TUHTJ2hUqDGYLx9DRK3wVLIsh0eJA8r6h42WYQ2ReWPgT
-         5qIQ==
-X-Gm-Message-State: AGi0Pua+XTvUwmg1tXoM0bicX4qo3ZSjGXv93i1Q/JhiBtkHDlfCGM13
-        k26aJITd0/MQAwydtERkHdxSuJUPa4c=
-X-Google-Smtp-Source: APiQypKQ32QT2JrrMxB8ivGMiqkf3Ny/hgAQfR22DVkN0RH8YxwDoAr1Z4aoy+5pePZsHy20Hu32cw==
-X-Received: by 2002:a17:902:728f:: with SMTP id d15mr855258pll.285.1588622379392;
-        Mon, 04 May 2020 12:59:39 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j13sm299187pje.1.2020.05.04.12.59.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:59:38 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7416E403EA; Mon,  4 May 2020 19:59:37 +0000 (UTC)
-Date:   Mon, 4 May 2020 19:59:37 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Iurii Zaikin <yzaikin@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sysctl: Make sure proc handlers can't expose heap memory
-Message-ID: <20200504195937.GS11244@42.do-not-panic.com>
-References: <202005041205.C7AF4AF@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yCWAep3g/S7kYu55ffGrHwoUe1KKlRiY8jCjhGfRTrA=;
+        b=GRXpOofPu2nBcIgIdaDxb15ZwR8JS2XwyCFirnakJwGlruT4I1HfBS5JLYUcmX9kIQ
+         ke1+PbZJH7otMKK+yLZ8RDdrFTiMZmD0KBc2w9AE+Y3daMgCETEA/mBn9H+2Q6TIN49E
+         QsNHPsxOh8RdBbOyjdZr4FNdT9BTWXT6GYiigvyDqLMP0/7eZHnei6g1oYtb9w3J5Q+n
+         E4oMX3Xczl8p6SXcfh5b59H4zivP9dTT2KHC7n4jMXPXp9m+jhK737QKvkNIx2VFz7qh
+         dnaQzg2vACdcRLY84jGseK065kYBoP0HcSL6rcNw0huey/youR/0dhfzOEAVuZ3MXzU7
+         /LeQ==
+X-Gm-Message-State: AGi0PuaEhafATcBzPooT/9b0L1h2kPfWtngMH5gNkIrHZ+0Oh2iX5G93
+        WxmgovI/cSZkVsj50VVR54nOWW1byBOQWBVciXbebw==
+X-Google-Smtp-Source: APiQypIKdYLJL6Vtdfg8m2Hm7jVII0Q6HbqUBjDODDYpBrQYl4VmtkkDWkeWyy+1cDzz0nt2P+dHZ/Xwf1pT9FocxQc=
+X-Received: by 2002:a17:906:ce4b:: with SMTP id se11mr17199903ejb.178.1588622454437;
+ Mon, 04 May 2020 13:00:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005041205.C7AF4AF@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-4-pasha.tatashin@soleen.com> <202005041229.D410FE0B1@keescook>
+In-Reply-To: <202005041229.D410FE0B1@keescook>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 16:00:18 -0400
+Message-ID: <CA+CK2bB1=gwaDCcYLLi56oQFS6hdc8wzG-s14rz4q7PDCnLycg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] ramoops: add dump_all optional field to ramoops DT node
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 12:08:55PM -0700, Kees Cook wrote:
-> Just as a precaution, make sure that proc handlers don't accidentally
-> grow "count" beyond the allocated kbuf size.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> This applies to hch's sysctl cleanup tree...
-> ---
->  fs/proc/proc_sysctl.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index 15030784566c..535ab26473af 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -546,6 +546,7 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
->  	struct inode *inode = file_inode(filp);
->  	struct ctl_table_header *head = grab_header(inode);
->  	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
-> +	size_t count_max = count;
->  	void *kbuf;
->  	ssize_t error;
->  
-> @@ -590,6 +591,8 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
->  
->  	if (!write) {
->  		error = -EFAULT;
-> +		if (WARN_ON(count > count_max))
-> +			count = count_max;
+On Mon, May 4, 2020 at 3:29 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sat, May 02, 2020 at 10:35:55AM -0400, Pavel Tatashin wrote:
+> > Currently, it is possible to dump kmesges for panic, or oops.
+> > With dump_all it is possible to dump messages for kmesg_dump events,
+> > for example reboot, halt, shutdown, kexec.
+>
+> Please just collapse this into patch #2.
 
-That crash a system with panic-on-warn. I don't think we want that?
+Will do it.
 
- Luis
+Thank you,
+Pasha
