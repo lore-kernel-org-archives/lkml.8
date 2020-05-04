@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14D4C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD02C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04E2063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F002063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="n2AewZD5"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bBwFeNbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbgEDPsV (ORCPT
+        id S1729229AbgEDPs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:48:21 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:32702 "EHLO
+        Mon, 4 May 2020 11:48:26 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:23708 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725941AbgEDPsV (ORCPT
+        by vger.kernel.org with ESMTP id S1729119AbgEDPsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:48:21 -0400
+        Mon, 4 May 2020 11:48:25 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FfANr013282;
-        Mon, 4 May 2020 10:47:59 -0500
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FfANq013282;
+        Mon, 4 May 2020 10:47:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=PODMain02222019;
- bh=1Ggk2BIJytvJuALTrGUMfblqMAMj1YflKy4YfvgqcPQ=;
- b=n2AewZD5Wc4WhZ69UF17/fCenMKW3D6g6UCJ4ugMiVvDTusTHGBsmyQkMTjGkIlMpnbB
- +tpQmM7/ff8hS5MSB5rVKGdleqJn9oXPxMN/FOQ4ffaaGUR/GnKZjnFrATfH5tD/z0TY
- minvOisL/n8+U5U5khZR0HegEdfNSyeN7trnVUUzEFlCuL75AFAcx97uMlI0s8vaMavd
- OLplRL14UGSMj/J32lTQgmstKyCXrCTlZB2MPjie8W7jBJzRPt9nyBOTm6IACi4dOZ88
- pnhCpFptVQ0ts7F8mHGCTAexIjkapNXEor5O9hfbknAk9ce9us6m5hPdWElRHUrHrNNV rQ== 
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=2653QIWdmqGpjyB9LNnnjexzZnZ/KmCOM+XRdySJZsM=;
+ b=bBwFeNbzfa/69DBJ2Vey2x1cEBnCRAqK8vWMLlmGVN5WnhP1BnJf4a0jnmjF1ZTMiisu
+ lGDBb8A9zTT6NVWTEjvirsozzz6gUCCX129MxhnQCH99KmgxfZm94E54OQZsOy5fShLg
+ qMFVbJwMDWioNA3Pv1UC0h3DZBGUdrm53AyYxddEi98GtjtmouFydj5TvMyLysGD2Rmz
+ Dzk7XaXRd+uCxgPjWREui9Z2/uHpFZFRITZm1N72vaxywIPN/NLiYS/PJwvxb4iu6gUo
+ 8eRxDnd9YZ2Rq1vofxEiAeomJ3frbLwK9wyRnABNiWTkGnwX4mBQAjWWCzUfixhw6RAd cA== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pkefj-2
+        by mx0b-001ae601.pphosted.com with ESMTP id 30s59pkefj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 04 May 2020 10:47:59 -0500
+        Mon, 04 May 2020 10:47:58 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 4 May 2020
@@ -49,7 +48,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Mon, 4 May 2020 16:47:57 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2FA282C8;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 290062C5;
         Mon,  4 May 2020 15:47:57 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
@@ -57,12 +56,10 @@ To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
         <linux@roeck-us.net>, <linus.walleij@linaro.org>
 CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: [PATCH v2 2/5] ASoC: lochnagar: Move binding over to dtschema
-Date:   Mon, 4 May 2020 16:47:54 +0100
-Message-ID: <20200504154757.17519-2-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 1/5] hwmon: lochnagar: Move binding over to dtschema
+Date:   Mon, 4 May 2020 16:47:53 +0100
+Message-ID: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
-References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-SPF-Result: fail
@@ -84,23 +81,22 @@ Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Changes since v1:
  - Moved sub-node into MFD file leaving just the properties in here
  - Removed contains on the compatible
- - Removed some pointless descriptions
 
 Thanks,
 Charles
 
- .../devicetree/bindings/sound/cirrus,lochnagar.txt | 39 ----------------
- .../bindings/sound/cirrus,lochnagar.yaml           | 52 ++++++++++++++++++++++
- 2 files changed, 52 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+ .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ----------------
+ .../bindings/hwmon/cirrus,lochnagar.yaml           | 35 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
 
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
 deleted file mode 100644
-index 41ae2699f07a9..0000000000000
---- a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+index ffb79ccf51ee3..0000000000000
+--- a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
 +++ /dev/null
-@@ -1,39 +0,0 @@
+@@ -1,26 +0,0 @@
 -Cirrus Logic Lochnagar Audio Development Board
 -
 -Lochnagar is an evaluation and development board for Cirrus Logic
@@ -111,8 +107,8 @@ index 41ae2699f07a9..0000000000000
 -controlled through the Lochnagar, allowing the device under test
 -to be used in a variety of possible use cases.
 -
--This binding document describes the binding for the audio portion
--of the driver.
+-This binding document describes the binding for the hardware monitor
+-portion of the driver.
 -
 -This binding must be part of the Lochnagar MFD binding:
 -  [4] ../mfd/cirrus,lochnagar.txt
@@ -120,36 +116,23 @@ index 41ae2699f07a9..0000000000000
 -Required properties:
 -
 -  - compatible : One of the following strings:
--                 "cirrus,lochnagar2-soundcard"
--
--  - #sound-dai-cells : Must be set to 1.
--
--  - clocks : Contains an entry for each entry in clock-names.
--  - clock-names : Must include the following clocks:
--      "mclk" Master clock source for the sound card, should normally
--      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
--      clock driver.
+-                 "cirrus,lochnagar2-hwmon"
 -
 -Example:
 -
--lochnagar-sc {
--	compatible = "cirrus,lochnagar2-soundcard";
--
--	#sound-dai-cells = <1>;
--
--	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
--	clock-names = "mclk";
+-lochnagar-hwmon {
+-	compatible = "cirrus,lochnagar2-hwmon";
 -};
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+diff --git a/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
 new file mode 100644
-index 0000000000000..cea612d3d4a7d
+index 0000000000000..cc00b97a7dace
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
-@@ -0,0 +1,52 @@
++++ b/Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
+@@ -0,0 +1,35 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/sound/cirrus,lochnagar.yaml#
++$id: http://devicetree.org/schemas/hwmon/cirrus,lochnagar.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
 +title: Cirrus Logic Lochnagar Audio Development Board
@@ -166,8 +149,8 @@ index 0000000000000..cea612d3d4a7d
 +  the Lochnagar, allowing the device under test to be used in a variety of
 +  possible use cases.
 +
-+  This binding document describes the binding for the audio portion of the
-+  driver.
++  This binding document describes the binding for the hardware monitor
++  portion of the driver.
 +
 +  This binding must be part of the Lochnagar MFD binding:
 +    [1] ../mfd/cirrus,lochnagar.yaml
@@ -175,27 +158,10 @@ index 0000000000000..cea612d3d4a7d
 +properties:
 +  compatible:
 +    enum:
-+      - cirrus,lochnagar2-soundcard
-+
-+  '#sound-dai-cells':
-+    description:
-+      The first cell indicating the audio interface.
-+    const: 1
-+
-+  clocks:
-+    description:
-+      Master clock source for the sound card, should normally be set to
-+      LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar clock driver.
-+    maxItems: 1
-+
-+  clock-names:
-+    const: mclk
++      - cirrus,lochnagar2-hwmon
 +
 +required:
 +  - compatible
-+  - '#sound-dai-cells'
-+  - clocks
-+  - clock-names
 +
 +additionalProperties: false
 -- 
