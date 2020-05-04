@@ -2,80 +2,148 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0BEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480C6C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE8F20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2224D20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:25:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8dfagxO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jj7aodih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgEDRYW (ORCPT
+        id S1730032AbgEDRZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51284 "EHLO
+        Mon, 4 May 2020 13:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729602AbgEDRYW (ORCPT
+        by vger.kernel.org with ESMTP id S1729549AbgEDRZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:24:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38DBBC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=2aCmnBaqhKxEDPj0Sl3PYBND3G5FDsOAhMdFBN3ZP+U=; b=L8dfagxOoRuwAQumYw5aEs33bY
-        Y++giE4ctIO7ZQzoS+ZhQ0XmZccsJe9u63Sz5K7O5VEwzjaScDLDKM0TqG7pYrX7QYQzJejzJK3CL
-        Co11jATNCPREY2iNbctyLVTRzSbG27IoMOJQ6Mcru3bCWvQNMoopPYjtLmkJHkpeQp1j+oFssrCIX
-        YXavMyEQpgUob5UMiBjuPlNURQjWIKlxwwsHXL4Qdd2Km0Nrq2LTIExHRmSpE6U97Cf9JWh8E48az
-        dKbFUVCnk2YE9HCZCqTiyhc5mzjN6URBZRCPqPp27hTLdmT/UvnLrbkByCgkRyGoeq9wYHNjVkZoH
-        CeWETQtw==;
-Received: from 089144205116.atnat0014.highway.webapn.at ([89.144.205.116] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVepJ-0001BW-4z; Mon, 04 May 2020 17:24:21 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org
-Cc:     Mike Travis <mike.travis@hpe.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/11] x86/uv: Unexport sn_coherency_id
-Date:   Mon,  4 May 2020 19:15:19 +0200
-Message-Id: <20200504171527.2845224-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504171527.2845224-1-hch@lst.de>
-References: <20200504171527.2845224-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 4 May 2020 13:25:49 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFD8C061A0E;
+        Mon,  4 May 2020 10:25:49 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x77so5867664pfc.0;
+        Mon, 04 May 2020 10:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=bxyngs7ScABszWTp3cRRYAAivc+75uL16s+Y0Qohbfk=;
+        b=jj7aodihYRtL/Aw1lPJ/3uTzmW49L9lY1DGjeVBjf7DW9zhTuaG50kqPgjCdGddlKX
+         nlf4DVmygLqa1P85K9FnX7PW9Jw6fPAX2+JXiUDlMp6uYqdJRQLzomxPglLErsPKZDXe
+         i2d9CNFOBPIreCFDWPHUc/cehaHrkwzvQwUDKOnQbtEK+XEPiIM+dgYoK4zB46IbAKMB
+         9KHI9b1Pdwhyrx5iD3glTL+c4Z06Se+zohsKiJVDvdosKhNBtDkGZKdNqSQE62sxPx33
+         V7zUjh/OCmILdDqTEWd94apwGO+nYxWYS/25lD8H9xiBe15VenABslSJ0ngEBiewHr9B
+         6IBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=bxyngs7ScABszWTp3cRRYAAivc+75uL16s+Y0Qohbfk=;
+        b=Yi7Vg/G5ng6q9XQ8ojD+XEAZy6/L+LWyc7XqA4P3lI0vNfpmhmnwjV57vfbBtXgguv
+         /ZOK8R5htzeW4Esg7YAuFOfofskqJSKupYkqLzXCsXq8IlemiLn11L6MSz0ZVuFLXz35
+         rWNj5IHQSIvVI+tzOE18aLmHpjGoA+Au8VIqhCmk9rIiWLc02XpLXOYAe+58v0BMpgPT
+         Ssu7qSWjJRk5kZ+jrjgW7urAwaLoL7EPwrw1WI0n8cgyMSK27e4u+ui8lPqgKFu4K3UQ
+         3hj+Sxg3KfQJePIijJgDLhGQMIrV0ZUxY9zBBr43BR9r/m5MSmFiY7VkntaFEP8GDZAP
+         DnwQ==
+X-Gm-Message-State: AGi0Pubq5ZIitS4Oa0TNfTnuGO/J692NbVm6xYhtKgzb2MYOG3MjNf9Q
+        H2gt2733yS5Re8pE52eNkEIhjqLJcH0=
+X-Google-Smtp-Source: APiQypK8ncf0X4fEweYDbiw4wdqgxEAnU2BJWCdANx6PY/JlaECuMfUPchTUQDqsE1EcG/UEBD4ZJg==
+X-Received: by 2002:a63:7b4e:: with SMTP id k14mr6497pgn.267.1588613149331;
+        Mon, 04 May 2020 10:25:49 -0700 (PDT)
+Received: from localhost.localdomain ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id 6sm6415552pgw.47.2020.05.04.10.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 10:25:48 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     linuxdrivers@attotech.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] scsi: esas2r: reduce the risk of a possible buffer-overflow vulnerability caused by DMA failures/attacks in esas2r_process_vda_ioctl()
+Date:   Tue,  5 May 2020 01:24:12 +0800
+Message-Id: <20200504172412.25985-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sn_coherency_id is only used by x2apic_uv_x.c, and uv_sysfs.c, both
-of which can't be modular.
+The function esas2r_read_vda() uses a DMA value "vi":
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+  struct atto_ioctl_vda *vi =
+			(struct atto_ioctl_vda *)a->vda_buffer;
+
+Then esas2r_read_vda() calls esas2r_process_vda_ioctl() with vi:
+  esas2r_process_vda_ioctl(a, vi, rq, &sgc);
+
+In esas2r_process_vda_ioctl(), the DMA value "vi->function" is 
+used at many places, such as:
+  if (vi->function >= vercnt)
+  ...
+  if (vi->version > esas2r_vdaioctl_versions[vi->function])
+  ...
+
+However, when DMA failures or attacks occur, the value of vi->function 
+can be changed at any time. In this case, vi->function can be
+first smaller than vercnt, and then it can be larger than vercnt when it
+is used as the array index of esas2r_vdaioctl_versions, causing a
+buffer-overflow vulnerability.
+
+To avoid the risk of this vulnerability, vi->function is assigned to a 
+non-DMA local variable at the beginning of esas2r_process_vda_ioctl(), 
+and this variable replaces each use of vi->function in the function.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- arch/x86/platform/uv/bios_uv.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/esas2r/esas2r_vda.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-index ca287554e2342..5d675c4f459b4 100644
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -80,7 +80,6 @@ static s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
- long sn_partition_id;
- EXPORT_SYMBOL_GPL(sn_partition_id);
- long sn_coherency_id;
--EXPORT_SYMBOL_GPL(sn_coherency_id);
- long sn_region_size;
- EXPORT_SYMBOL_GPL(sn_region_size);
- long system_serial_number;
+diff --git a/drivers/scsi/esas2r/esas2r_vda.c b/drivers/scsi/esas2r/esas2r_vda.c
+index 30028e56df63..c3a6811145cf 100644
+--- a/drivers/scsi/esas2r/esas2r_vda.c
++++ b/drivers/scsi/esas2r/esas2r_vda.c
+@@ -70,16 +70,17 @@ bool esas2r_process_vda_ioctl(struct esas2r_adapter *a,
+ 	u32 datalen = 0;
+ 	struct atto_vda_sge *firstsg = NULL;
+ 	u8 vercnt = (u8)ARRAY_SIZE(esas2r_vdaioctl_versions);
++	u8 function = vi->function;
+ 
+ 	vi->status = ATTO_STS_SUCCESS;
+ 	vi->vda_status = RS_PENDING;
+ 
+-	if (vi->function >= vercnt) {
++	if (function >= vercnt) {
+ 		vi->status = ATTO_STS_INV_FUNC;
+ 		return false;
+ 	}
+ 
+-	if (vi->version > esas2r_vdaioctl_versions[vi->function]) {
++	if (vi->version > esas2r_vdaioctl_versions[function]) {
+ 		vi->status = ATTO_STS_INV_VERSION;
+ 		return false;
+ 	}
+@@ -89,14 +90,14 @@ bool esas2r_process_vda_ioctl(struct esas2r_adapter *a,
+ 		return false;
+ 	}
+ 
+-	if (vi->function != VDA_FUNC_SCSI)
++	if (function != VDA_FUNC_SCSI)
+ 		clear_vda_request(rq);
+ 
+-	rq->vrq->scsi.function = vi->function;
++	rq->vrq->scsi.function = function;
+ 	rq->interrupt_cb = esas2r_complete_vda_ioctl;
+ 	rq->interrupt_cx = vi;
+ 
+-	switch (vi->function) {
++	switch (function) {
+ 	case VDA_FUNC_FLASH:
+ 
+ 		if (vi->cmd.flash.sub_func != VDA_FLASH_FREAD
 -- 
-2.26.2
+2.17.1
 
