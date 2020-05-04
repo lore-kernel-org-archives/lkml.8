@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C417C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77966C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDD5206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF7720707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615405;
-	bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
+	s=default; t=1588615407;
+	bh=2CO5k6vD6czG69Ma7ay0a21TfHP8pfcgA+9/BvVhWII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3bOFRNK2tNF/2VKazQt3mFhxU4Nq+EPDqC88aAu50N011lrMF3Hn+CKK5XJr+tYO
-	 tEeCT42iFcv/czbOofBpfVQKY7WqngRsY2bLRZ1jCRdLpljGs0l39mO5yauVnlPBhx
-	 Y2lWyuuUUke8aporFz6gd1ZcwMjD7MT6gEBDAr18=
+	b=QA1MdUTN0JcE8Z4iO5R9hbGRQ7BA3i6YIJgq4OZntHjThPlqm4nqUJUTrjaetECnT
+	 /JPX2ODNBFFLc7mdAx6NLofEfJBXQOp6qKPdcuQJeO5Uk0bZDhpX9Aen8qNIjgjGuG
+	 EHyZPhfuXG6WDGBgVhEcNNvGX0wqME1C9M5US6nY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgEDSDY (ORCPT
+        id S1731513AbgEDSD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbgEDSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:21 -0400
+        id S1731501AbgEDSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA897206B8;
-        Mon,  4 May 2020 18:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342CC24958;
+        Mon,  4 May 2020 18:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615401;
-        bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
+        s=default; t=1588615403;
+        bh=2CO5k6vD6czG69Ma7ay0a21TfHP8pfcgA+9/BvVhWII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1eR8SOmfzn9ZeSRAVw2uJ0zNOM8qnFgIrOanTAsYlCqWApJPJPz0jKkRFmqtZTwXL
-         OSTRX286EUFL3RG2LhJzRO/jwmBRtmPdY3PUiX/0SLZtFirKsp4+tYTIcgS6W4UfX2
-         YFdx/myojj2uRTGc+ef2QLUtIxFwyfZ6//5bC6+E=
+        b=vw8dIc+q9ATiB3tceLYXjF1sLR7YpAixuPvsu60XmdtQov4au/23F7bBrV/erDW3C
+         CCqF0BRBdKm6bbLAZj+bThLgFIat38gRUKtAS/L0otyy6R0CwLHBIdXykjPtDaM7yu
+         LSBqzCLcbR8czJNgeDGucZAsErw3Bm3ZlzXT+LKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 23/57] ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
-Date:   Mon,  4 May 2020 19:57:27 +0200
-Message-Id: <20200504165458.372036648@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
+Subject: [PATCH 5.4 24/57] i2c: amd-mp2-pci: Fix Oops in amd_mp2_pci_init() error handling
+Date:   Mon,  4 May 2020 19:57:28 +0200
+Message-Id: <20200504165458.452156495@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -58,92 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 4285de0725b1bf73608abbcd35ad7fd3ddc0b61e upstream.
+commit ac2b0813fceaf7cb3d8d46c7b33c90bae9fa49db upstream.
 
-The checks of the plugin buffer overflow in the previous fix by commit
-  f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
-are put in the wrong places mistakenly, which leads to the expected
-(repeated) sound when the rate plugin is involved.  Fix in the right
-places.
+The problem is that we dereference "privdata->pci_dev" when we print
+the error messages in amd_mp2_pci_init():
 
-Also, at those right places, the zero check is needed for the
-termination node, so added there as well, and let's get it done,
-finally.
+	dev_err(ndev_dev(privdata), "Failed to enable MP2 PCI device\n");
+		^^^^^^^^^^^^^^^^^
 
-Fixes: f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200424193350.19678-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 529766e0a011 ("i2c: Add drivers for the AMD PCIe MP2 I2C controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/i2c/busses/i2c-amd-mp2-pci.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -211,21 +211,23 @@ static snd_pcm_sframes_t plug_client_siz
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
--			if (check_size && drv_frames > plugin->buf_frames)
--				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-+			if (check_size && plugin->buf_frames &&
-+			    drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_prev;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_first(plug);
- 		while (plugin && drv_frames > 0) {
- 			plugin_next = plugin->next;
-+			if (check_size && plugin->buf_frames &&
-+			    drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
--			if (check_size && drv_frames > plugin->buf_frames)
--				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -251,26 +253,28 @@ static snd_pcm_sframes_t plug_slave_size
- 		plugin = snd_pcm_plug_first(plug);
- 		while (plugin && frames > 0) {
- 			plugin_next = plugin->next;
-+			if (check_size && plugin->buf_frames &&
-+			    frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			if (plugin->dst_frames) {
- 				frames = plugin->dst_frames(plugin, frames);
- 				if (frames < 0)
- 					return frames;
- 			}
--			if (check_size && frames > plugin->buf_frames)
--				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
--			if (check_size && frames > plugin->buf_frames)
--				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (check_size && plugin->buf_frames &&
-+			    frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_prev;
- 		}
- 	} else
+--- a/drivers/i2c/busses/i2c-amd-mp2-pci.c
++++ b/drivers/i2c/busses/i2c-amd-mp2-pci.c
+@@ -349,12 +349,12 @@ static int amd_mp2_pci_probe(struct pci_
+ 	if (!privdata)
+ 		return -ENOMEM;
+ 
++	privdata->pci_dev = pci_dev;
+ 	rc = amd_mp2_pci_init(privdata, pci_dev);
+ 	if (rc)
+ 		return rc;
+ 
+ 	mutex_init(&privdata->c2p_lock);
+-	privdata->pci_dev = pci_dev;
+ 
+ 	pm_runtime_set_autosuspend_delay(&pci_dev->dev, 1000);
+ 	pm_runtime_use_autosuspend(&pci_dev->dev);
 
 
