@@ -2,231 +2,137 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E21C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBD8C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B24206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8AA6206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588631223;
+	bh=gaXNVmp8PLFGyCzzFdCT2QTkMNhSdkffHPKXOLJiVMU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xuIcltgvEWXP8FGntCphpFAFW20jy0SSDOP+Xkzt3KfubDCQ/IZwTuoJt1uEOPugP
+	 q8w3sY5/Yugj9PJxMd4K61XVUW37c3nQ7P5uSqEyiVQ1qPW8hEzhUVptM+o34gL9VR
+	 yvjphDSYOpROlO7dxwjMtjcwbcJy1RwRVqkApCts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgEDWXy (ORCPT
+        id S1728102AbgEDW1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:23:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:32116 "EHLO mga02.intel.com"
+        Mon, 4 May 2020 18:27:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgEDWXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:23:54 -0400
-IronPort-SDR: MVqDdIs72GRwRDtr9vm9B9NO9N3vyUZRYuQUpTs8lpvkLP8Y29JuwfQ3WxorgR+AzG5OJoOe54
- jzFOHmq8hEUA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 15:23:48 -0700
-IronPort-SDR: ltnBlsaG+z5oe6hrvdNGBySTeB+c9uemP2M0WUS3worg7nqG6yHdWWGVoAG1UX5Mr41it7EKO+
- qD2UTlc1v4tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
-   d="scan'208";a="294768639"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 04 May 2020 15:23:46 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jVjV4-000Gks-8f; Tue, 05 May 2020 06:23:46 +0800
-Date:   Tue, 05 May 2020 06:23:05 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/mm] BUILD SUCCESS
- bd1de2a7aace4d1d312fb1be264b8fafdb706208
-Message-ID: <5eb095c9.2uRN4F0OifvYmGuc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726291AbgEDW1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:27:02 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C2B206A5;
+        Mon,  4 May 2020 22:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588631221;
+        bh=gaXNVmp8PLFGyCzzFdCT2QTkMNhSdkffHPKXOLJiVMU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WwaMsNt9CjxpjlNuvE9SoPW61U5Fg1+pXOFoFCQJ2KEupgayuaJPjp9fPyNdHk463
+         WmOXxJXjvHR4h62hIObt93SzJtv6OJeTa1M4u39a/H7j5GxSOHKqTthEbSJiQWUPiK
+         78N3rT1pAOomtNdDGi9pxbvpaCW8x8ZtRuyjEpSg=
+Date:   Mon, 4 May 2020 17:26:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
+ invalid
+Message-ID: <20200504222659.GA296947@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200504190721.GA2810934@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/mm
-branch HEAD: bd1de2a7aace4d1d312fb1be264b8fafdb706208  x86/tlb/uv: Add a forward declaration for struct flush_tlb_info
+On Mon, May 04, 2020 at 09:07:21PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, May 04, 2020 at 01:08:22PM -0500, Bjorn Helgaas wrote:
+> > On Sat, May 02, 2020 at 08:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > > On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
+> > > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > > 
+> > > > These interfaces return a negative error number or an IRQ:
+> > > > 
+> > > >   platform_get_irq()
+> > > >   platform_get_irq_optional()
+> > > >   platform_get_irq_byname()
+> > > >   platform_get_irq_byname_optional()
+> > > > 
+> > > > The function comments suggest checking for error like this:
+> > > > 
+> > > >   irq = platform_get_irq(...);
+> > > >   if (irq < 0)
+> > > >     return irq;
+> > > > 
+> > > > which is what most callers (~900 of 1400) do, so it's implicit
+> > > > that IRQ 0 is invalid.  But some callers check for "irq <= 0",
+> > > > and it's not obvious from the source that we never return an
+> > > > IRQ 0.
+> > > > 
+> > > > Make this more explicit by updating the comments to say that
+> > > > an IRQ number is always non-zero and adding a WARN() if we
+> > > > ever do return zero.  If we do return IRQ 0, it likely
+> > > > indicates a bug in the arch-specific parts of
+> > > > platform_get_irq().
+> > > 
+> > > I worry about adding WARN() as there are systems that do
+> > > panic_on_warn() and syzbot trips over this as well.  I don't
+> > > think that for this issue it would be a problem, but what really
+> > > is this warning about that someone could do anything with?
+> > > 
+> > > Other than that minor thing, this looks good to me, thanks for
+> > > finally clearing this up.
+> > 
+> > What I'm concerned about is an arch that returns 0.  Most drivers
+> > don't check for 0 so they'll just try to use it, and things will
+> > fail in some obscure way.  My assumption is that if there really
+> > is no IRQ, we should return -ENOENT or similar instead of 0.
+> > 
+> > I could be convinced that it's not worth warning about at all, or
+> > we could do something like the following:
+> > 
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 084cf1d23d3f..4afa5875e14d 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -220,7 +220,11 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+> >  	ret = -ENXIO;
+> >  #endif
+> >  out:
+> > -	WARN(ret == 0, "0 is an invalid IRQ number\n");
+> > +	/* Returning zero here is likely a bug in the arch IRQ code */
+> > +	if (ret == 0) {
+> > +		pr_warn("0 is an invalid IRQ number\n");
+> > +		dump_stack();
+> > +	}
+> >  	return ret;
+> >  }
+> > ...
 
-elapsed time: 481m
+> I like that, but you said this is something that the platform people
+> should only see when bringing up a new system, so maybe the WARN() is
+> fine.  It's not user-triggerable, so your original is ok.
 
-configs tested: 164
-configs skipped: 0
+Is that an ack?  Thomas, any thoughts?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I suspect we could see this given a broken DT, too, so I'm not sure
+it's strictly a bringup problem.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-powerpc                             defconfig
-mips                            ar7_defconfig
-riscv                             allnoconfig
-parisc                           allmodconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                       bvme6000_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-xtensa                          iss_defconfig
-h8300                    h8300h-sim_defconfig
-xtensa                       common_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                    amigaone_defconfig
-powerpc                    adder875_defconfig
-powerpc                     ep8248e_defconfig
-powerpc                          g5_defconfig
-powerpc                     mpc512x_defconfig
-powerpc                      chrp32_defconfig
-powerpc                       holly_defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-m68k                 randconfig-a001-20200505
-mips                 randconfig-a001-20200505
-nds32                randconfig-a001-20200505
-parisc               randconfig-a001-20200505
-alpha                randconfig-a001-20200505
-riscv                randconfig-a001-20200505
-h8300                randconfig-a001-20200504
-nios2                randconfig-a001-20200504
-microblaze           randconfig-a001-20200504
-c6x                  randconfig-a001-20200504
-sparc64              randconfig-a001-20200504
-xtensa               randconfig-a001-20200503
-openrisc             randconfig-a001-20200503
-csky                 randconfig-a001-20200503
-s390                 randconfig-a001-20200430
-xtensa               randconfig-a001-20200430
-csky                 randconfig-a001-20200430
-openrisc             randconfig-a001-20200430
-sh                   randconfig-a001-20200430
-x86_64               randconfig-a003-20200505
-x86_64               randconfig-a001-20200505
-i386                 randconfig-a001-20200505
-i386                 randconfig-a003-20200505
-i386                 randconfig-a002-20200505
-x86_64               randconfig-d001-20200503
-i386                 randconfig-d003-20200503
-x86_64               randconfig-d003-20200503
-i386                 randconfig-d001-20200503
-x86_64               randconfig-d002-20200503
-i386                 randconfig-d002-20200503
-x86_64               randconfig-e003-20200503
-x86_64               randconfig-e002-20200503
-i386                 randconfig-e003-20200503
-x86_64               randconfig-e001-20200503
-i386                 randconfig-e002-20200503
-i386                 randconfig-e001-20200503
-ia64                 randconfig-a001-20200503
-arm64                randconfig-a001-20200503
-arc                  randconfig-a001-20200503
-arm                  randconfig-a001-20200503
-sparc                randconfig-a001-20200503
-ia64                 randconfig-a001-20200505
-arc                  randconfig-a001-20200505
-powerpc              randconfig-a001-20200505
-arm                  randconfig-a001-20200505
-sparc                randconfig-a001-20200505
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+I would probably argue that even this case would be an arch defect:
+the kernel should validate data from a DT at least enough to avoid
+giving a bogus, useless IRQ to a driver.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Bjorn
