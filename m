@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD13C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0F9C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD70620661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E7D20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616099;
-	bh=PLcg8nMAWsaFrwBBCy/ig/9EhHyL5vPB69f2ovNqveo=;
+	s=default; t=1588616104;
+	bh=YO4O5qk07yYWKRjbbepMU90BCfrnGSjV8Bk/NcGK8UE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2h2czZ8eow1+qEPCmg0i/s5b3QPlvd5gVq/R6Ytreq/8cxCp/h4mrPp3ZehKfjz+
-	 /lS4ljy9fD0WHqZSPQP5ZLZFEUOXuD9fAHBPvNLny828CjlfXMNlGqD74wh36CNWGh
-	 7qe/Qpfyqn+Tgk+IxpDhMaPkyHXOpJswO5Og1+Zo=
+	b=LR/sMj/5x1Tlo7eF3MAadW24ZpGFmZgzm5W00SuTrbpYgFoemrq8GqnK4p3jr4Imn
+	 LZu72Ct3sOyyGk/yHqa4VCYAfbcHPr/vh+B3vej91n1x+jMYTLd6LtuHUfWuxEqOOX
+	 /ZBZ8F3gDQaWm8ZACSJe2t/7V5/Em54jweparnsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbgEDSO6 (ORCPT
+        id S1730901AbgEDR76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:14:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 13:59:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730912AbgEDSAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:05 -0400
+        id S1730885AbgEDR7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D84220663;
-        Mon,  4 May 2020 18:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE8F420663;
+        Mon,  4 May 2020 17:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615204;
-        bh=PLcg8nMAWsaFrwBBCy/ig/9EhHyL5vPB69f2ovNqveo=;
+        s=default; t=1588615192;
+        bh=YO4O5qk07yYWKRjbbepMU90BCfrnGSjV8Bk/NcGK8UE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0XhUjpKYilYyeMR+qw3ikIzS8qEpa2fdilm2dTz9wpKMznTArXlYgu2N7D8VHLR7a
-         qzl5qXk2vRHNaG2qYHOsd/qC+BZcE9MnMLbS6WYYxX23SwH/p7Hers5rHelt+g5+yP
-         8thaF5tRB1EUiU+z6vqxVQaVG3rEC4cvdjo+8iow=
+        b=uKMfTv7H7Sxrjt/KqzTbAo789/tgdIvWAhyO+FUbMB65Gsye4AiR20VZTeFdlrvu7
+         mcw/nTcWr7fuRb4wT0/rtALrdTuFTs9MyY0qZ/Rgr+R/KMZr8NwJjgCvzHBF3lRsph
+         LSGQ1iRsVlzLfwGwrAHSdCPxNMT7ahf/D0XOyE2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.9 15/18] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Mon,  4 May 2020 19:57:25 +0200
-Message-Id: <20200504165445.398976381@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 09/18] PM: hibernate: Freeze kernel threads in software_resume()
+Date:   Mon,  4 May 2020 19:57:19 +0200
+Message-Id: <20200504165444.062809796@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
@@ -60,79 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit 7648f939cb919b9d15c21fff8cd9eba908d595dc upstream.
+commit 2351f8d295ed63393190e39c2f7c1fee1a80578f upstream.
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+Currently the kernel threads are not frozen in software_resume(), so
+between dpm_suspend_start(PMSG_QUIESCE) and resume_target_kernel(),
+system_freezable_power_efficient_wq can still try to submit SCSI
+commands and this can cause a panic since the low level SCSI driver
+(e.g. hv_storvsc) has quiesced the SCSI adapter and can not accept
+any SCSI commands: https://lkml.org/lkml/2020/4/10/47
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+At first I posted a fix (https://lkml.org/lkml/2020/4/21/1318) trying
+to resolve the issue from hv_storvsc, but with the help of
+Bart Van Assche, I realized it's better to fix software_resume(),
+since this looks like a generic issue, not only pertaining to SCSI.
+
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/nfs3acl.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ kernel/power/hibernate.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -252,37 +252,45 @@ int nfs3_proc_setacls(struct inode *inod
- 
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
- {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
- 
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
- 
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
- 			break;
- 		}
- 	}
- 
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
- 
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
- 
- const struct xattr_handler *nfs3_xattr_handlers[] = {
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -892,6 +892,13 @@ static int software_resume(void)
+ 	error = freeze_processes();
+ 	if (error)
+ 		goto Close_Finish;
++
++	error = freeze_kernel_threads();
++	if (error) {
++		thaw_processes();
++		goto Close_Finish;
++	}
++
+ 	error = load_image_and_restore();
+ 	thaw_processes();
+  Finish:
 
 
