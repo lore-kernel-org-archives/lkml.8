@@ -2,92 +2,97 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB537C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB13C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A9B208DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE73206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="UrbW2A4n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FItz7Hwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgEDKP4 (ORCPT
+        id S1728151AbgEDKRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:15:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:49592 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgEDKPy (ORCPT
+        Mon, 4 May 2020 06:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726531AbgEDKRp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:15:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588587350; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iAMvD4AOFiyNiGQjo6JeJKVv4xAdRKZUMhJN2Epwr2k=;
-        b=UrbW2A4nwL1bFKGDFE1I1i8N7cLMa7po2zmhqGrh0gIeffRnKbjGtVeMJmKGb/NmfJ+iJR
-        JaOk7J0E7m/0i5m17hU6vN2i85jZ+UR098T6tDTNZjhyWsLsPV0gtREwOhptja2SFD343R
-        xnlaraBEZl2T9l0nQSa5Q+voSBByMvI=
-Date:   Mon, 04 May 2020 12:15:37 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, stable@vger.kernel.org
-Message-Id: <1UXS9Q.L3SJ8WOQ2MPT1@crapouillou.net>
-In-Reply-To: <1694a29b7a3449b6b662cec33d1b33f2ee0b174a.1588574111.git.hns@goldelico.com>
-References: <1694a29b7a3449b6b662cec33d1b33f2ee0b174a.1588574111.git.hns@goldelico.com>
+        Mon, 4 May 2020 06:17:45 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C36CC061A0E;
+        Mon,  4 May 2020 03:17:44 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so13055006edv.8;
+        Mon, 04 May 2020 03:17:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=9YLhFsATDF9CQ1Kz7zcFcPQ6ReaZ8MJ/irWvA43Y+c0=;
+        b=FItz7HwlVSu7eS7n7AwPvpHdLcGWnBU6ErB/HRgCMWw8TeAUlfMFmxWjXDnyzgzqbc
+         WSE8rhkeVDiuI9IBCQTMSqrrnfcOV2vfddsJ3KGOdabSsCQFzuDcQuaf5LExyJdzhfb8
+         6BBRYOVRGWECjVxgTzjm2VHNosRK7EjTio6yj1AswTOanWgu3cCTONMhuSolIYbsIh6S
+         eeF2b41Ubkd+t5saU2WZ24BbD5KpIzEnDVanhW2SwARZGX2na7tvfA+Bl9SRKI71XHTp
+         AMudOq7AEjYcqgawIR0tNH8Ume6Ps1DcY+qzbwCwApxxqsQtMVob1MEkgAXGwn2d2oY8
+         h6ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=9YLhFsATDF9CQ1Kz7zcFcPQ6ReaZ8MJ/irWvA43Y+c0=;
+        b=ExscYGXsN9WI3P4S7EXSeZ4BMH/P08iwsbKPboFhuX337H7M6MQTTJKg0uEix8hLZb
+         2C6AWWIWcrZTk148ZIUcQ9ekrgUckAYpFJ/EHtmf0i56/7tVeUUEqQXzPrG4vCTFjJLM
+         PZsvRjYs14Xx6bIOt/NhlekGHlnoffBS+rezKlwsYA51t6ZLsNzKP1Rj9YPXrL6EzVLt
+         CSm95XF9BubLem/tSYQCxVplJJeSQXgdVoYDakVfNBCqzjiTrUjw4IP/n5jPAHFiMfoZ
+         ZZmA/yju+36Q2DlSoPq3JaOFq/rv+1XdRpHdJTBsTxYwHXnnc/SCpA5O4zfNDcWXGAAp
+         aV/g==
+X-Gm-Message-State: AGi0PuaKZXLhjs0wYBczV6Vqytb1jLyZxa0AcPcjlIexohfchr5EBsK3
+        8HYUBw9Id9gVHC86L+iog4510ikzNe7dOTxrhH0=
+X-Google-Smtp-Source: APiQypIwdDOKDpx+1h9+iSL94zUNe8BJguW9reVlsixilagJeowBiCSiwwCY3WMAA+G2UF+rvlg34kzDlOSMNeQ+TtE=
+X-Received: by 2002:a05:6402:7d6:: with SMTP id u22mr13626163edy.149.1588587462974;
+ Mon, 04 May 2020 03:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20200202151907.23587-1-cyphar@cyphar.com> <20200202151907.23587-3-cyphar@cyphar.com>
+ <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com> <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
+ <cd3a6aad-b906-ee57-1b5b-5939b9602ad0@gmail.com> <20200412164943.imwpdj5qgtyfn5de@yavin.dot.cyphar.com>
+ <cd1438ab-cfc6-b286-849e-d7de0d5c7258@gmail.com> <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
+In-Reply-To: <20200414103524.wjhyfobzpjk236o7@yavin.dot.cyphar.com>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Mon, 4 May 2020 12:17:32 +0200
+Message-ID: <CAKgNAkjUssPCeOHQCg5zxjt2b9huRKfZQ3nR7Qtyr9jaizoqsw@mail.gmail.com>
+Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2) syscall
+To:     Aleksa Sarai <asarai@suse.de>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+Hi Aleksa,
 
+Ping on this piece please:
 
-Le lun. 4 mai 2020 =E0 8:35, H. Nikolaus Schaller <hns@goldelico.com> a=20
-=E9crit :
-> so that the driver can load by matching the device tree
-> if compiled as module.
->=20
-> Cc: stable@vger.kernel.org # v5.3+
-> Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx=20
-> SoCs")
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> > > It wouldn't hurt to add a longer description of magic-links in
+> > > symlink(7). I'll send you a small patch to beef up the description (I
+> > > had planned to include a longer rewrite with the O_EMPTYPATH patches but
+> > > those require quite a bit more work to land).
+> >
+> > That would be great. Thank you!
+>
+> I'll cook something up later this week.
 
-Applied, thanks.
+Thanks,
 
--Paul
-
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
-> b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> index 9dfe7cb530e11..1754c05470690 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -843,6 +843,7 @@ static const struct of_device_id=20
-> ingenic_drm_of_match[] =3D {
->  	{ .compatible =3D "ingenic,jz4770-lcd", .data =3D &jz4770_soc_info },
->  	{ /* sentinel */ },
->  };
-> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
->=20
->  static struct platform_driver ingenic_drm_driver =3D {
->  	.driver =3D {
-> --
-> 2.26.2
->=20
-
-
+Michael
