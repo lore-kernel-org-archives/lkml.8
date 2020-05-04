@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF94CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754A7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAFA320663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5594320663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615935;
-	bh=bDrhjzhTskjV7kPXv5v9McXEoLe8VDFr0GW1kaT3njM=;
+	s=default; t=1588615942;
+	bh=YtQEHYARyOrdGFRJN/zgntJn5+hi7Pt8/Yuu+ZrkoMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GrP7et+qoAPoyQTYIENcz5z1zC7PLyLZDRAaFjeUnaIKLTF84CdzufzOWrH4w1/Wj
-	 4Ug3oDPlSntNQDKw7TD7qk8+Vaoo0eMj3gIAOlOSoX/Bwa9n+TtQe34ETgdKx3xD+a
-	 etJ5hL6IDzM+CK6NE5DaiJa7p1kBECr8YN7IJGXw=
+	b=mJbW0V8o3qvkzIWC9pRWnTWayTuSafamC8PCf+8FhBAN2Gq0aL2vbQCYU9HQTitd1
+	 +EmTuMQYyRWnRdPBs8TV/2iF2eJIKE76VZwePj5fAF0ONelmlRyPbaN5YY7jU+zx91
+	 viPKoCrKMGLwG1kh+obZBqFw5bDNk4cUHt8Jn8YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731422AbgEDSC6 (ORCPT
+        id S1732152AbgEDSMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59666 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731410AbgEDSCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:54 -0400
+        id S1731399AbgEDSCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF9BD206B8;
-        Mon,  4 May 2020 18:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B4D2073E;
+        Mon,  4 May 2020 18:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615374;
-        bh=bDrhjzhTskjV7kPXv5v9McXEoLe8VDFr0GW1kaT3njM=;
+        s=default; t=1588615371;
+        bh=YtQEHYARyOrdGFRJN/zgntJn5+hi7Pt8/Yuu+ZrkoMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJ5+AZnB70uX8z4UYbFViJ36WHnYifuj4iSNB5g0CvLG88Ujxw12OCdlULQK49mmq
-         4P7j5zd4MXwvgUCPaMtTt4gMm0L3dwjvE2xWmdkCYQ7ixAs9H7D+GPpdayG8MIUiJV
-         PTqwE/Tt6jl28wY+lV8g/Lx9SDCdVt3uLqiNFFYU=
+        b=aaDyd2GXyaK6UgtOkZqINDOBN2egDuChzvEvRYS31KJIiYXzaOSxfrBwPFZTLbqUX
+         aXfIGXTrtO2AB4liUdv0r0y8NTae3FiLO5AA0udXZ2C/ns6rvDGDB96Ro3aIq0ncRL
+         Ip37mLSU9lXYk3a1igBBGqxHSCdkXOm/VxpF+U/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 13/57] mmc: sdhci-xenon: fix annoying 1.8V regulator warning
-Date:   Mon,  4 May 2020 19:57:17 +0200
-Message-Id: <20200504165457.600703012@linuxfoundation.org>
+Subject: [PATCH 5.4 12/57] mmc: cqhci: Avoid false "cqhci: CQE stuck on" by not open-coding timeout loop
+Date:   Mon,  4 May 2020 19:57:16 +0200
+Message-Id: <20200504165457.514098873@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -60,55 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Behún <marek.behun@nic.cz>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit bb32e1987bc55ce1db400faf47d85891da3c9b9f upstream.
+commit b1ac62a7ac386d76968af5f374a4a7a82a35fe31 upstream.
 
-For some reason the Host Control2 register of the Xenon SDHCI controller
-sometimes reports the bit representing 1.8V signaling as 0 when read
-after it was written as 1. Subsequent read reports 1.
+Open-coding a timeout loop invariably leads to errors with handling
+the timeout properly in one corner case or another.  In the case of
+cqhci we might report "CQE stuck on" even if it wasn't stuck on.
+You'd just need this sequence of events to happen in cqhci_off():
 
-This causes the sdhci_start_signal_voltage_switch function to report
-  1.8V regulator output did not become stable
+1. Call ktime_get().
+2. Something happens to interrupt the CPU for > 100 us (context switch
+   or interrupt).
+3. Check time and; set "timed_out" to true since > 100 us.
+4. Read CQHCI_CTL.
+5. Both "reg & CQHCI_HALT" and "timed_out" are true, so break.
+6. Since "timed_out" is true, falsely print the error message.
 
-When CONFIG_PM is enabled, the host is suspended and resumend many
-times, and in each resume the switch to 1.8V is called, and so the
-kernel log reports this message annoyingly often.
+Rather than fixing the polling loop, use readx_poll_timeout() like
+many people do.  This has been time tested to handle the corner cases.
 
-Do an empty read of the Host Control2 register in Xenon's
-.voltage_switch method to circumvent this.
-
-This patch fixes this particular problem on Turris MOX.
-
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Fixes: 8d876bf472db ("mmc: sdhci-xenon: wait 5ms after set 1.8V...")
-Cc: stable@vger.kernel.org # v4.16+
-Link: https://lore.kernel.org/r/20200420080444.25242-1-marek.behun@nic.cz
+Fixes: a4080225f51d ("mmc: cqhci: support for command queue enabled host")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200413162717.1.Idece266f5c8793193b57a1ddb1066d030c6af8e0@changeid
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-xenon.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mmc/host/cqhci.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -235,6 +235,16 @@ static void xenon_voltage_switch(struct
- {
- 	/* Wait for 5ms after set 1.8V signal enable bit */
- 	usleep_range(5000, 5500);
-+
-+	/*
-+	 * For some reason the controller's Host Control2 register reports
-+	 * the bit representing 1.8V signaling as 0 when read after it was
-+	 * written as 1. Subsequent read reports 1.
-+	 *
-+	 * Since this may cause some issues, do an empty read of the Host
-+	 * Control2 register here to circumvent this.
-+	 */
-+	sdhci_readw(host, SDHCI_HOST_CONTROL2);
- }
+--- a/drivers/mmc/host/cqhci.c
++++ b/drivers/mmc/host/cqhci.c
+@@ -5,6 +5,7 @@
+ #include <linux/delay.h>
+ #include <linux/highmem.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/slab.h>
+@@ -343,12 +344,16 @@ static int cqhci_enable(struct mmc_host
+ /* CQHCI is idle and should halt immediately, so set a small timeout */
+ #define CQHCI_OFF_TIMEOUT 100
  
- static const struct sdhci_ops sdhci_xenon_ops = {
++static u32 cqhci_read_ctl(struct cqhci_host *cq_host)
++{
++	return cqhci_readl(cq_host, CQHCI_CTL);
++}
++
+ static void cqhci_off(struct mmc_host *mmc)
+ {
+ 	struct cqhci_host *cq_host = mmc->cqe_private;
+-	ktime_t timeout;
+-	bool timed_out;
+ 	u32 reg;
++	int err;
+ 
+ 	if (!cq_host->enabled || !mmc->cqe_on || cq_host->recovery_halt)
+ 		return;
+@@ -358,15 +363,9 @@ static void cqhci_off(struct mmc_host *m
+ 
+ 	cqhci_writel(cq_host, CQHCI_HALT, CQHCI_CTL);
+ 
+-	timeout = ktime_add_us(ktime_get(), CQHCI_OFF_TIMEOUT);
+-	while (1) {
+-		timed_out = ktime_compare(ktime_get(), timeout) > 0;
+-		reg = cqhci_readl(cq_host, CQHCI_CTL);
+-		if ((reg & CQHCI_HALT) || timed_out)
+-			break;
+-	}
+-
+-	if (timed_out)
++	err = readx_poll_timeout(cqhci_read_ctl, cq_host, reg,
++				 reg & CQHCI_HALT, 0, CQHCI_OFF_TIMEOUT);
++	if (err < 0)
+ 		pr_err("%s: cqhci: CQE stuck on\n", mmc_hostname(mmc));
+ 	else
+ 		pr_debug("%s: cqhci: CQE off\n", mmc_hostname(mmc));
 
 
