@@ -2,68 +2,70 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6876BC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1360C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48BA920643
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B882073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXdnC+un"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY0BX8QJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgEDDIg (ORCPT
+        id S1727772AbgEDDJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 23:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59286 "EHLO
+        Sun, 3 May 2020 23:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgEDDIf (ORCPT
+        with ESMTP id S1726768AbgEDDJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 23:08:35 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9631CC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 20:08:35 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f83so7933811qke.13
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 20:08:35 -0700 (PDT)
+        Sun, 3 May 2020 23:09:23 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA0E4C061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 20:09:22 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id v18so7697387qvx.9
+        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 20:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=qxxlvs+YEH140nApT4Xf3QR0858RxvcLN+In9z+Kg3k=;
-        b=LXdnC+ung25aN57duHnahyoDG/bRnYKkQSnGQpKbTRGn1KqaPvFKi6fC83m4x0x5fA
-         GxoZ1YzN6BwXJMuKXAG43o8pvI4ruFzQv9X2iNU1EUEl0ufglImj17wCAFbLr7vtqfMA
-         bVJJQRIhVrDkBdOLu98tF4j2N0jcFZd8kWofv4uEyyFzK+1Vk0cy0TOM8pJlgKvgFM2C
-         K8ZpcmaZ7FFw9c7jBgVD0sjVzQZd/JxEHFhNUFx3FSGX8GeY8h2RJCmYnxYRQf9dGMXV
-         4lGkkVcu9gONbXZmJSZESnseETS8BFRodQsekPeewjTJ+2Mi10Rfn761I6N+q2WAHCcL
-         AN5Q==
+        bh=IjhzQ3oHa9nNeIuiLupnxo7YU2u+0fWxdlUhWitx3YU=;
+        b=VY0BX8QJL/Ls8mKkxdOnZWoc/16ZP/mvIQfcoHIcj1h/K2Q2zQh4jUPwqUTBdL0/gf
+         B/V3IiNsa7a7TQFt2egmpLSRf7jrnXzSaQhRP4vAamVcc+66FrZSPEWYVrbYuzcEC126
+         damw8M1AurzoePG5McVEwdfx+HHJ78R3X9+vqJUwrzBP8PW0VmM2UDFvA0LhACCwFWa5
+         ZENGXzZ+BPVX7AgJElbGuJdcFA3A8KksJ9U8cDmfCbVNyEBLTxim+YNdRHfgkjJFHz+Q
+         rCyOz/nrabbolc5/vqm39RXSn6Yy3h00G+9J0rJ0pter4I7xyDYZ0RNdDJM8oMXAF9Bg
+         Wa0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qxxlvs+YEH140nApT4Xf3QR0858RxvcLN+In9z+Kg3k=;
-        b=gKurGMsQmVSaLZ/fYeQIJ8bc+fHdzZR0lksWMVk2IU6sTk2/sYGBvCacymVN6ASuB7
-         rPSmtqVime1e66DJ8D56Eq9DkxOT/xTWXDEjqVc77ULQ1+oBwJ8bILAB17Z+AefJieP2
-         Ycld15pZ/3skXosWOSJYszU8YMOFv7hMUe5cXfYIb+7/fU9qwZY+n8oSwVyrDTHTceg1
-         PPpqVU0Ft8Tx70lyZb2LQfHGHjzAyRelqebgRwg4cT9idh6KYJ9hCmCNDH+dClfSTnE5
-         KTlgaTph+T3yUSisdDTCZV0dGf0IKNEj4lnmjsnUpQZTNwCRI9IdyxQkZZjs5XJcnxO1
-         rD2g==
-X-Gm-Message-State: AGi0PuY29YyK7gbGReBv7WsE6hQ124BfCheanLtTr6Y0LYr1a/Ifgri/
-        izXUXBEg1zZh5c4QV7hiMc1OZLBcyn9wMoft7/o=
-X-Google-Smtp-Source: APiQypJSQ7AnUC4tEEmS5jB9JBL/9zuVylZoB75Jo58DUXvy+7Rt6Qhw4kwyh7crVQlvuRZe0VE3DvgZ2WuMM11vy4Q=
-X-Received: by 2002:a05:620a:138e:: with SMTP id k14mr14477321qki.452.1588561714646;
- Sun, 03 May 2020 20:08:34 -0700 (PDT)
+        bh=IjhzQ3oHa9nNeIuiLupnxo7YU2u+0fWxdlUhWitx3YU=;
+        b=Qg4Gcs3QVyC3wEJnQNa5Kaij9jZoSSARr/VnouOvUA/4f5qdUkT59YaR2GHnsM+FTB
+         1iO5/161r8CUMvyPGc3R+WL7/k1R+NJjh0GTGQP/5xN1D7imPeoxL3v4xBsSCRZNmNnZ
+         vPHEWVQ22Hujtwnc8YNCh/8jZ65Ij7T+7dPFCnFu6u9uSGRQ3GoAtrfanrXBIvJQwJT6
+         iN01Ci5hfGxkk1vuHYIz1q0z0jUGMXw3ADu3Q0P7XT4VVMiBDjA673KEHXOO0GQJ5gh1
+         B0gVCZU+8IDZbqkISxGeJJdfRo2D9QBGKGOUy/rmB26aTf7Hf9Ao75Yh3U7lWpZZ/HFn
+         rvwg==
+X-Gm-Message-State: AGi0Puavg8FqKXGfQ1Mqx0fxV3OIcczQYGuKNyHhf4hWQs7X+fgePB40
+        YDxI/IapD4gBeZbIE5s8CIVb9asuKXnRHC/9n/g=
+X-Google-Smtp-Source: APiQypJZnb1KhKURAZgc+1wjYSttxzA52ie++9Xhfq/pqC2ENO5/rrIWom4CorrSsaCSFMI4ZXJjRxkFSBOB8lhbrz8=
+X-Received: by 2002:a05:6214:7e1:: with SMTP id bp1mr14347599qvb.208.1588561762103;
+ Sun, 03 May 2020 20:09:22 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1588130803-20527-8-git-send-email-iamjoonsoo.kim@lge.com> <20200501123052.GD21897@infradead.org>
-In-Reply-To: <20200501123052.GD21897@infradead.org>
+ <20200429184711.9d603da097fdea80f574f1f1@linux-foundation.org>
+ <CAAmzW4NC4LHXSoU8r6Jrh7WP8fouuaSkM--0gQVWf8G4wkDupg@mail.gmail.com>
+ <20200501105545.GA29460@infradead.org> <CAAmzW4M+EoPqhossgJKxpZ_5=uto1jXK56qYmUd6SNKmbswuJQ@mail.gmail.com>
+ <20200501123429.GA26861@infradead.org>
+In-Reply-To: <20200501123429.GA26861@infradead.org>
 From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 4 May 2020 12:08:23 +0900
-Message-ID: <CAAmzW4OZ9dW0j0f_o2hVCBVbeoLwFWrjAdiw87_dqfE9qvW5yg@mail.gmail.com>
-Subject: Re: [PATCH v2 07/10] mm: separate PageHighMem() and PageHighMemZone()
- use case
+Date:   Mon, 4 May 2020 12:09:11 +0900
+Message-ID: <CAAmzW4Mcar3PfL+_VV66hxJ1H2rMJxskiJ7JYvcbWp4yRYyXvg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/10] change the implementation of the PageHighMem()
 To:     Christoph Hellwig <hch@infradead.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linux Memory Management List <linux-mm@kvack.org>,
@@ -89,85 +91,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 5=EC=9B=94 1=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 9:30, Ch=
+2020=EB=85=84 5=EC=9B=94 1=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 9:34, Ch=
 ristoph Hellwig <hch@infradead.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On Wed, Apr 29, 2020 at 12:26:40PM +0900, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > Until now, PageHighMem() is used for two different cases. One is to che=
-ck
-> > if there is a direct mapping for this page or not. The other is to chec=
-k
-> > the zone of this page, that is, weather it is the highmem type zone or =
-not.
-> >
-> > Now, we have separate functions, PageHighMem() and PageHighMemZone() fo=
-r
-> > each cases. Use appropriate one.
-> >
-> > Note that there are some rules to determine the proper macro.
-> >
-> > 1. If PageHighMem() is called for checking if the direct mapping exists
-> > or not, use PageHighMem().
-> > 2. If PageHighMem() is used to predict the previous gfp_flags for
-> > this page, use PageHighMemZone(). The zone of the page is related to
-> > the gfp_flags.
-> > 3. If purpose of calling PageHighMem() is to count highmem page and
-> > to interact with the system by using this count, use PageHighMemZone().
-> > This counter is usually used to calculate the available memory for an
-> > kernel allocation and pages on the highmem zone cannot be available
-> > for an kernel allocation.
-> > 4. Otherwise, use PageHighMemZone(). It's safe since it's implementatio=
-n
-> > is just copy of the previous PageHighMem() implementation and won't
-> > be changed.
-> >
-> > I apply the rule #3 for this patch.
-> >
-> > Acked-by: Roman Gushchin <guro@fb.com>
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > ---
-> >  mm/memory_hotplug.c | 2 +-
-> >  mm/page_alloc.c     | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> > index 555137b..891c214 100644
-> > --- a/mm/memory_hotplug.c
-> > +++ b/mm/memory_hotplug.c
-> > @@ -593,7 +593,7 @@ void generic_online_page(struct page *page, unsigne=
-d int order)
-> >       __free_pages_core(page, order);
-> >       totalram_pages_add(1UL << order);
-> >  #ifdef CONFIG_HIGHMEM
-> > -     if (PageHighMem(page))
-> > +     if (PageHighMemZone(page))
-> >               totalhigh_pages_add(1UL << order);
-> >  #endif
-> >  }
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index fc5919e..7fe5115 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -7444,7 +7444,7 @@ void adjust_managed_page_count(struct page *page,=
- long count)
-> >       atomic_long_add(count, &page_zone(page)->managed_pages);
-> >       totalram_pages_add(count);
-> >  #ifdef CONFIG_HIGHMEM
-> > -     if (PageHighMem(page))
-> > +     if (PageHighMemZone(page))
-> >               totalhigh_pages_add(count);
-> >  #endif
+> On Fri, May 01, 2020 at 09:15:30PM +0900, Joonsoo Kim wrote:
+> > I think that PageHighMemZone() is long and complicated enough to have
+> > a macro.
 >
-> This function already uses the page_zone structure above, I think
-> life would be easier of you compare against that, as that makes
-> the code more obvious.
+> It is.  But then again it also shouldn't really be used by anything
+> but MM internals.
 
-If I can kill all the PageHighMemZone() macro, I will use page_zone() above=
-.
-However, if it's not possible, I will leave it as it is. It would be
-simpler than
-your suggestion.
+I'm not sure that we can make it MM internal but I will try.
+
+> >
+> > PageHighMemZone(page) =3D is_highmem_idx(zone_idx(page_zone(page))
+> >
+> > Instead of open-code, how about changing the style of macro like as
+> > page_from_highmem()? What PageHighMemZone() represent is derivated
+> > attribute from the page so PageXXX() style may not be appropriate.
+>
+> Maybe page_is_highmem_zone() with a big kerneldoc comment explaining
+> the use case?  Bonus points of killing enough users that it can be
+> in mm/internal.h.
+
+I will try to kill page_is_highmem_zone() as much as possible in next versi=
+on.
 
 Thanks.
