@@ -2,115 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C73C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7163C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECCC4206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S5BasPFc"
+	by mail.kernel.org (Postfix) with ESMTP id D35F320707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbgEDRtk (ORCPT
+        id S1730474AbgEDRuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:49:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729839AbgEDRti (ORCPT
+        Mon, 4 May 2020 13:50:22 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46040 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728158AbgEDRuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:49:38 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FF7C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:49:38 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id b1so261323qtt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9O9pOv93g7JmOc2UpRRs5DUt0jFUPNWmQLQ3nDY1Vjc=;
-        b=S5BasPFcYpNCX02Po60a7tIfWWh50cRfls4aZ8I6Zi7e2YDq8cgTPHA7QqOUNMY7n8
-         8OB8NvLBMMSfoaiCEyDGke/7MZcdrOr/FwiL9Fv4Xyx+BH8Emf7of8pg/T0NyJkl8Esg
-         Nx6bGhzRLerxuGWbM19JNvOvLwa0DA0+QgXzBchAPDrcMbv4aafsq0jXAZA4z26HP+o7
-         iEwhatzAhhZyFg++5gRLUCOxYTL6637TbGHDZdxx48WPSlNWUsNhWUF+awyaEchH8Xgb
-         uWuSeD/GlNCUfHODM0pVP00OJBNe2wq9YXVqbEE82j9u6y8zinuHXtPqpQD4jrg0pP7+
-         Cz8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9O9pOv93g7JmOc2UpRRs5DUt0jFUPNWmQLQ3nDY1Vjc=;
-        b=R1dZQSxLPLmdPqHZg3bHfYlYTEg7836l/2ui64xzHf24Em5DZpU8l88EeDOYtJAxnc
-         iIgrLR6+R3pSk8D55N0MYnSod35BVoHjGaHgDvhX1rrNWAwS0XidmMlSinr5L2oREZmo
-         ClA1oIA0nK6gw8vdw/yRUjqy5bQq/kFG6mqP6OZZQw8mUxxHmwvcJ6lzKaDHR31BpT+u
-         s29nCwnsn8M212jZgMiKfo/JkAb5A/c55uXOv8cifwA5AYg6AiKPYSz/24L4bjNkrknd
-         zD8bcs48tZhmZQF38i/MzAh+NKkx7CtMdxjZCurz0+fwlS6Kd+TALkJPLv9NF3m7lWO0
-         oCVg==
-X-Gm-Message-State: AGi0PubbYsTT5r7FcyP6kUP0JWHs76yfYnjpi2TkmgvCHdnh5CDrA2tG
-        dcU+xBRIRBRwEIAdFZGsb0GWkQ==
-X-Google-Smtp-Source: APiQypITbt1cZYJweE1W6xTp3vnqrk2qUN/sIDoZBQOauDUv68RNU+RbcvLqS/MtFwfEPVmDlPlDRg==
-X-Received: by 2002:ac8:6f0d:: with SMTP id g13mr268950qtv.328.1588614577576;
-        Mon, 04 May 2020 10:49:37 -0700 (PDT)
-Received: from google.com ([2620:0:1003:510:c948:3327:92b6:e959])
-        by smtp.gmail.com with ESMTPSA id k43sm12239311qtk.67.2020.05.04.10.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 10:49:36 -0700 (PDT)
-Date:   Mon, 4 May 2020 13:49:33 -0400
-From:   Richard Yeh <rcy@google.com>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Rob Springer <rspringer@google.com>,
-        Todd Poynor <toddpoynor@google.com>,
-        Ben Chan <benchan@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Simon Que <sque@chromium.org>,
-        John Joseph <jnjoseph@google.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gasket: Check the return value of
- gasket_get_bar_index()
-Message-ID: <20200504174933.GA83381@google.com>
-References: <20200501155118.13380-1-oscar.carter@gmx.com>
+        Mon, 4 May 2020 13:50:22 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jVfEQ-0001IG-BA; Mon, 04 May 2020 17:50:18 +0000
+Date:   Mon, 4 May 2020 19:50:17 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Jann Horn <jannh@google.com>, linux-api@vger.kernel.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Subject: Re: [PATCH v3 2/3] nsproxy: attach to namespaces via pidfds
+Message-ID: <20200504175017.ry2qhoeq3q45k2my@wittgenstein>
+References: <20200504144141.3605533-1-christian.brauner@ubuntu.com>
+ <20200504144141.3605533-3-christian.brauner@ubuntu.com>
+ <87h7wvoefw.fsf@x220.int.ebiederm.org>
+ <20200504163907.jjgqe7qnnjpw4uwo@wittgenstein>
+ <87ftcfmxt1.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200501155118.13380-1-oscar.carter@gmx.com>
+In-Reply-To: <87ftcfmxt1.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 05:51:18PM +0200, Oscar Carter wrote:
-> Check the return value of gasket_get_bar_index function as it can return
-> a negative one (-EINVAL). If this happens, a negative index is used in
-> the "gasket_dev->bar_data" array.
+On Mon, May 04, 2020 at 12:09:46PM -0500, Eric W. Biederman wrote:
+> Christian Brauner <christian.brauner@ubuntu.com> writes:
 > 
-> Addresses-Coverity-ID: 1438542 ("Negative array index read")
-> Fixes: 9a69f5087ccc2 ("drivers/staging: Gasket driver framework + Apex driver")
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/staging/gasket/gasket_core.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> > On Mon, May 04, 2020 at 11:25:07AM -0500, Eric W. Biederman wrote:
+> >> 
+> >> I am not thrilled about treating nstype as a flags fields when it is not
+> >> currently.  It was my hope when I designed the interface that not
+> >> treating nstype as a flags field would save us from the problem of bits
+> >> running out.
+> >
+> > Hm, I researched the setns() syscall history before that and I didn't
+> > see that reasoning anywhere. The "nstype" arg was originally advertised
+> > on the list as "having a flags field is useful in general".
 > 
-> diff --git a/drivers/staging/gasket/gasket_core.c b/drivers/staging/gasket/gasket_core.c
-> index 8e0575fcb4c8..67325fbaf760 100644
-> --- a/drivers/staging/gasket/gasket_core.c
-> +++ b/drivers/staging/gasket/gasket_core.c
-> @@ -925,6 +925,10 @@ do_map_region(const struct gasket_dev *gasket_dev, struct vm_area_struct *vma,
->  		gasket_get_bar_index(gasket_dev,
->  				     (vma->vm_pgoff << PAGE_SHIFT) +
->  				     driver_desc->legacy_mmap_address_offset);
-> +
-> +	if (bar_index < 0)
-> +		return DO_MAP_REGION_INVALID;
-> +
->  	phys_base = gasket_dev->bar_data[bar_index].phys_base + phys_offset;
->  	while (mapped_bytes < map_length) {
->  		/*
-> --
-> 2.20.1
-> 
+> Take a look at the code.  At the end of the day nstype is not treated at
+> all like a flags field.
 
-Reviewed-by: Richard Yeh <rcy@google.com>
+Oh, I wasn't trying to dispute that. I was just pointing at the history
+where using it as a flags field in the future wasn't in principle out of
+the question.
+
+> 
+> It isn't a very important point.  And it was certainly easier to use
+> the existing bits for essentially their existing meanings.  But it was
+> certainly something I was thinking at the time.
+> 
+> I think I left it as we can see either way, depending on how things
+> evolve.
+> 
+> I can imagine a use for a nstype being a single namespace from a pidfd.
+> Do you have any actual usecases for setting some but not all of the
+> namespaces from a pidfd?  If we don't have a compelling reason
+> I would like to kick that can down the road a ways farther.
+
+Yeah, I think so. We already have a few use-cases. The syscall
+interception stuff selectively attaches to subsets of namespaces
+depending on what namespaces are needed to emulate a given syscall. And
+the exec logic let's users select what namespaces to attach to. It's
+common to setns to a subset of namespaces to perform operations with
+privilege and then later attach others (often the userns).
+
+> 
+> I am also remembering that that setns freed the low 8 bits.  Which gave
+> some freedom beyond clone.
+> 
+> >> That aside.  It would be very good if the default version of setting
+> >> everything from a pidfd would set the root directory from the process it
+> >> is copying everything else from.
+> >
+> > I'm not sure I follow completely. If you specify CLONE_NEWNS then we do
+> > set the root directory with set_fs_root() in commit_nsset(). Or are you
+> > saying we should always do that independent of whether or not
+> > CLONE_NEWNS is specified? And if so could you explain why we'd want
+> > that? I'm sure I'm missing something!
+> 
+> I am suggesting that when we do:
+> 
+> "setns(pidfd, 0)" or "setns(pidfd, SETNS_PIDFD)"
+> 
+> That the result is not just the namespaces changing but also the root
+> directory changing to the pids root directory.  Something where the
+> whole is greater than the parts.
+
+Ok, I can see that being useful. But If we do this, then a new flag
+would be quite helpful. (I also think Michael had some reservations
+against re-using 0 for something like this.)
+But let me suggest moving your phrase from above down to here and
+say that we could kick that can down the road for a follow-up extension?
+
+Christian
