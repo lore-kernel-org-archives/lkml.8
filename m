@@ -2,76 +2,87 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DE6C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA61EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D68B52068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D97206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgEDRb6 (ORCPT
+        id S1730381AbgEDRcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:31:58 -0400
-Received: from smtprelay0141.hostedemail.com ([216.40.44.141]:58446 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgEDRb6 (ORCPT
+        Mon, 4 May 2020 13:32:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45601 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729549AbgEDRca (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:31:58 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 9EFCC180A55F0;
-        Mon,  4 May 2020 17:31:56 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: twig62_4aee47edd0d24
-X-Filterd-Recvd-Size: 1976
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 May 2020 17:31:54 +0000 (UTC)
-Message-ID: <28790ee42242ecc0b0050943a27f569dd1aeec16.camel@perches.com>
-Subject: Re: [PATCH 1/6] dt-bindings: phy: meson8b-usb2: Convert to
- json-schema
-From:   Joe Perches <joe@perches.com>
-To:     hex dump <hexdump0815@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     kishon@ti.com, robh+dt@kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 04 May 2020 10:31:53 -0700
-In-Reply-To: <CAKTihDVy6oSuQe4eP87hWO17tBu3=XZ-PM41YOqLVOtXJ8+YeQ@mail.gmail.com>
-References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
-         <20200502114752.1048500-2-martin.blumenstingl@googlemail.com>
-         <CAKTihDVy6oSuQe4eP87hWO17tBu3=XZ-PM41YOqLVOtXJ8+YeQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 4 May 2020 13:32:30 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jVex5-0007yZ-Bd; Mon, 04 May 2020 17:32:23 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jeffrey.t.kirsher@intel.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] igb: Report speed and duplex as unknown when device is runtime suspended
+Date:   Tue,  5 May 2020 01:32:18 +0800
+Message-Id: <20200504173218.1724-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-04 at 12:55 +0200, hex dump wrote:
-> On Sat, May 2, 2020 at 1:48 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> > Now that we have the DT validation in place, let's convert the device
-> > tree bindings for the Amlogic Meson8, Meson8b, Meson8m2 and GXBB USB2
-> > PHY over to a YAML schema.
-> > 
-> > While here, also add the fallback compatible string
-> > "amlogic,meson-gxbb-usb2-phy" which is already used in
-> > arch/arm/boot/dts/meson{,8,8b}.dtsi.
-> > 
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
-> Tested-by: hexdump <hexdump0815@googlemail.com>
+igb device gets runtime suspended when there's no link partner. We can't
+get correct speed under that state:
+$ cat /sys/class/net/enp3s0/speed
+1000
 
-Is the kernel now accepting "Tested-by" lines from robots?
+In addition to that, an error can also be spotted in dmesg:
+[  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
 
-If hexdump0815@googlemail.com is not a robot, can you please use
-your full legal name instead?
+Since device can only be runtime suspended when there's no link partner,
+we can directly report the speed and duplex as unknown.
 
+The more generic approach will be wrap get_link_ksettings() with begin()
+and complete() callbacks. However, for this particular issue, begin()
+calls igb_runtime_resume() , which tries to rtnl_lock() while the lock
+is already hold by upper ethtool layer.
+
+So let's take this approach until the igb_runtime_resume() no longer
+needs to hold rtnl_lock.
+
+Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/ethernet/intel/igb/igb_ethtool.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+index 39d3b76a6f5d..b429bca4aa6a 100644
+--- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
++++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
+@@ -143,6 +143,12 @@ static int igb_get_link_ksettings(struct net_device *netdev,
+ 	u32 speed;
+ 	u32 supported, advertising;
+ 
++	if (pm_runtime_suspended(&adapter->pdev->dev)) {
++		cmd->base.duplex = DUPLEX_UNKNOWN;
++		cmd->base.speed = SPEED_UNKNOWN;
++		return 0;
++	}
++
+ 	status = rd32(E1000_STATUS);
+ 	if (hw->phy.media_type == e1000_media_type_copper) {
+ 
+-- 
+2.17.1
 
