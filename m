@@ -2,146 +2,147 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C809C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC898C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E738720746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:18:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SKVrCXff"
+	by mail.kernel.org (Postfix) with ESMTP id AE2D720735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgEDJSI (ORCPT
+        id S1728231AbgEDJTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:18:08 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28466 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726625AbgEDJSH (ORCPT
+        Mon, 4 May 2020 05:19:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726467AbgEDJTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:18:07 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044978Ts004044;
-        Mon, 4 May 2020 11:17:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=t8yE9JoGl4flloHQYJEWfkrlpSIqoEFqyExGxmwsMx8=;
- b=SKVrCXff3h/xL4m3odmOVBOJUf2qGJNoKtavF7W6Rz0kENh4xvZMCpxwYDsfw58rWIxe
- uHRuHlXRWPeptG3pU39cL8A4BE1d0BtwMYevfaQHB/x2JNqzO9+rv8pP8e/Bm++04prk
- NdRdpi514nAwSf9qy1Vh0haZNOCXBmidZqBMY04DfYc6MFpEo1X2u3FXlifIRn7rEtbt
- SHgnlyxsUf/vuXjEWSG7CZZ98MkRvZu5Ey0Me0w2BRr4wkDbaVHNUqljBSysarYiAjBl
- atBmEB2Osx42GsTLk8y13PzfkW51ioujPXV2+37zvew1lZHY8NySEcot5hhcDaqikLV2 xg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30rx089j7y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 11:17:45 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E65710002A;
-        Mon,  4 May 2020 11:17:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D3AA22BBAA5;
-        Mon,  4 May 2020 11:17:41 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
- 2020 11:17:41 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Mon, 4 May 2020 11:17:41 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mon, 4 May 2020 05:19:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C94C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 02:19:16 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jVXFl-0000mc-RS; Mon, 04 May 2020 11:19:09 +0200
+Message-ID: <97aa62e8aaf8fa1c462c7db117fca9b6ea9bfec0.camel@pengutronix.de>
+Subject: Re: [PATCH] soc: imx: Add power domain driver support for i.mx8m
+ family
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        Patrick Bellasi <patrick.bellasi@arm.com>
-Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
-Thread-Topic: [RFC 0/3] Introduce cpufreq minimum load QoS
-Thread-Index: AQHWGi06wBgeAQBseECYOK/U7Qvw76iQJdAAgAACCYCAAAQ3AIABBseAgAAT0wCAAE7QgIAADU2AgAARzICAAAO9AIAF2zaA
-Date:   Mon, 4 May 2020 09:17:41 +0000
-Message-ID: <b8757472-c973-a32d-d5c9-a584d7d703f8@st.com>
-References: <20200424114058.21199-1-benjamin.gaignard@st.com>
- <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
- <70e743cf-b88e-346a-5114-939b8724c83d@arm.com>
- <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
- <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
- <a234e123-6c15-8e58-8921-614b58ca24ca@st.com> <jhjtv11cabk.mognet@arm.com>
- <a20c5214-211b-1f70-1162-57b32e60549b@st.com> <jhjmu6tc6rz.mognet@arm.com>
-In-Reply-To: <jhjmu6tc6rz.mognet@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F04BFBC11629A34FAC8C983CAC60E3EF@st.com>
-Content-Transfer-Encoding: base64
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 04 May 2020 11:19:08 +0200
+In-Reply-To: <AM6PR04MB504745F6EB1FB17F6DBDD9A387AF0@AM6PR04MB5047.eurprd04.prod.outlook.com>
+References: <1587999532-30006-1-git-send-email-abel.vesa@nxp.com>
+         <0d301ed303faea4895d30b682133ec5c9d44bd8b.camel@pengutronix.de>
+         <AM6PR04MB504745F6EB1FB17F6DBDD9A387AF0@AM6PR04MB5047.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_05:2020-05-01,2020-05-04 signatures=0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvMzAvMjAgNTo1MCBQTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPiBPbiAz
-MC8wNC8yMCAxNjozNywgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+PiBPbiA0LzMwLzIwIDQ6
-MzMgUE0sIFZhbGVudGluIFNjaG5laWRlciB3cm90ZToNCj4+PiBPbiAzMC8wNC8yMCAxNDo0Niwg
-QmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+Pj4+PiBUaGF0J3Mgbm90IHdoYXQgSSBtZWFudC4N
-Cj4+Pj4+DQo+Pj4+PiBJIHN1cHBvc2UgdGhhdCB0aGUgaW50ZXJydXB0IHByb2Nlc3NpbmcgaW4g
-cXVlc3Rpb24gdGFrZXMgcGxhY2UgaW4NCj4+Pj4+IHByb2Nlc3MgY29udGV4dCBhbmQgc28geW91
-IG1heSBzZXQgdGhlIGxvd2VyIGNsYW1wIG9uIHRoZSB1dGlsaXphdGlvbg0KPj4+Pj4gb2YgdGhl
-IHRhc2sgY2FycnlpbmcgdGhhdCBvdXQuDQo+Pj4+IEkgaGF2ZSB0cnkgdG8gYWRkIHRoaXMgY29k
-ZSB3aGVuIHN0YXJ0aW5nIHN0cmVhbWluZyAoYmVmb3JlIHRoZSBmaXJzdA0KPj4+PiBpbnRlcnJ1
-cHQpIHRoZSBmcmFtZXMgZnJvbSB0aGUgc2Vuc29yOg0KPj4+PiBjb25zdCBzdHJ1Y3Qgc2NoZWRf
-YXR0ciBzY2hlZF9hdHRyID0gew0KPj4+PiAgICAgIC5zY2hlZF91dGlsX21pbiA9IDEwMDAwLCAv
-KiAxMDAlIG9mIHVzYWdlICovDQo+Pj4gVW5sZXNzIHlvdSBwbGF5IHdpdGggU0NIRURfQ0FQQUNJ
-VFlfU0hJRlQsIHRoZSBtYXggc2hvdWxkIGJlIDEwMjQgLQ0KPj4+IGkuZS4gU0NIRURfQ0FQQUNJ
-VFlfU0NBTEUuIFRoYXQncyBhIHJlYWxseSBiaWcgYm9vc3QsIGJ1dCB0aGF0J3MgZm9yIHlvdSB0
-bw0KPj4+IGJlbmNobWFyay4NCj4+Pg0KPj4+PiAgICAgIC5zY2hlZF9mbGFncyA9IFNDSEVEX0ZM
-QUdfVVRJTF9DTEFNUF9NSU4sDQo+Pj4+ICAgICB9Ow0KPj4+Pg0KPj4+PiBzY2hlZF9zZXRhdHRy
-KGN1cnJlbnQsICZzY2hlZF9hdHRyKTsNCj4+Pj4NCj4+Pj4gSSBkb24ndCBzZWUgYW55IGJlbmVm
-aWNlcyBtYXliZSB0aGVyZSBpcyBzb21lIGNvbmZpZ3VyYXRpb24gZmxhZ3MgdG8gc2V0Lg0KPj4+
-Pg0KPj4+PiBIb3cgY2hhbmdpbmcgc2NoZWRfdXRpbF9taW4gY291bGQgaW1wYWN0IGNwdWZyZXEg
-b25kZW1hbmQgZ292ZXJub3IgPw0KPj4+PiBEb2VzIGl0IGNoYW5nZSB0aGUgdmFsdWUgcmV0dXJu
-ZWQgd2hlbiB0aGUgZ292ZXJub3IgY2hlY2sgdGhlIGlkbGUgdGltZSA/DQo+Pj4+DQo+Pj4gWW91
-J2xsIGhhdmUgdG8gdXNlIHRoZSBzY2hlZHV0aWwgZ292ZXJub3IgZm9yIHVjbGFtcCB0byBoYXZl
-IGFuIGVmZmVjdC4gQW5kDQo+Pj4gYXJndWFibHkgdGhhdCdzIHdoYXQgeW91IHNob3VsZCBiZSB1
-c2luZywgdW5sZXNzIHNvbWV0aGluZyBleHBsaWNpdGx5DQo+Pj4gcHJldmVudHMgeW91IGZyb20g
-ZG9pbmcgdGhhdC4NCj4+IEV2ZW4gd2l0aCBzY2hlZHV0aWwgYW5kIFNDSEVEX0NBUEFDSVRZX1ND
-QUxFIHRoYXQgaXQgZG9lc24ndCB3b3JrLg0KPj4gY3B1ZnJlcS9jcHVpbmZvX2N1cl9mcmVxIHZh
-bHVlcyBhcmUgYWx3YXlzIG9uIHRoZSBtYXggdmFsdWUgZXZlbiBpZiB0aGUNCj4+IHN0YXRzIHNo
-b3cgdHJhbnNpdGlvbnMgYmV0d2VlbiB0aGUgYXZhaWxhYmxlIGZyZXF1ZW5jaWVzLg0KPj4NCj4+
-IEkgc2VlIHR3byBwb3NzaWJsZXMgcmVhc29ucyB0byBleHBsYWluIHRoYXQ6DQo+PiAtIHNjaGVk
-X3NldGF0dHIoKSBpcyBjYWxsZWQgaW4gdXNlcmxhbmQgcHJvY2VzcyBjb250ZXh0LCBidXQgdGhl
-DQo+PiB0aHJlYWRlZCBpcnEgaGFuZGxlciBpcyBydW5uaW5nIGluIGFub3RoZXIgcHJvY2Vzcy4N
-Cj4gQWggeWVzLCB0aGlzIG9ubHkgd29ya3MgaWYgdGhlIHRhc2sgeW91IGJvb3N0IGlzIHRoZSBv
-bmUgdGhhdCB3aWxsIGhhbmRsZQ0KPiB3aGF0ZXZlciB3b3JrIHlvdSBjYXJlIGFib3V0IChpbiB0
-aGlzIGNhc2UgaGFuZGxpbmcgdGhlIGlycSkuIFRoYXQgc2FpZCwgaWYNCj4geW91IGRvIHVzZSB0
-aHJlYWRlZCBJUlFzLCB0aGF0IHNob3VsZCBnaXZlIHlvdSBhIFNDSEVEX0ZJRk8gdGhyZWFkLCB3
-aGljaA0KPiBzaG91bGQgZHJpdmUgdGhlIGZyZXF1ZW5jeSB0byBpdHMgbWF4IHdoZW4gdXNpbmcg
-c2NoZWR1dGlsICh1bnJlbGF0ZWQgdG8NCj4gdWNsYW1wKS4NCkNhbiBJIGNvbmNsdWRlIHRoYXQg
-c2NoZWRfc2V0YXR0cigpIGlzbid0IHRoZSBnb29kIHdheSB0byBzb2x2ZSB0aGlzIA0KcHJvYmxl
-bSA/DQpEb2VzIG15IHBhdGNoZXMgbWFrZSBzZW5zZSBpbiB0aGlzIGNhc2UgPw0KDQo+PiAtIGJl
-Y2F1c2UgdGhpcyB1c2UgY2FzZSBpcyBhbG1vc3QgcnVubmluZyBhbGwgaW4gaGFyZHdhcmUgdGhl
-IHByb2Nlc3MNCj4+IGlzbid0IGRvaW5nIGFueXRoaW5nIHNvIHRoZSBzY2hlZHVsZXIgZG9lc24n
-dCB0YWtlIGNhcmUgb2YgaXQuDQo+Pg0KPj4+Pj4gQWx0ZXJuYXRpdmVseSwgdGhhdCB0YXNrIG1h
-eSBiZSBhIGRlYWRsaW5lIG9uZS4NCg==
+Am Montag, den 27.04.2020, 15:37 +0000 schrieb Jacky Bai:
+> > -----Original Message-----
+> > From: Lucas Stach <l.stach@pengutronix.de>
+> > Sent: Monday, April 27, 2020 11:11 PM
+> > To: Abel Vesa <abel.vesa@nxp.com>; Jacky Bai <ping.bai@nxp.com>; Shawn
+> > Guo <shawnguo@kernel.org>; Sascha Hauer <kernel@pengutronix.de>; Liam
+> > Girdwood <lgirdwood@gmail.com>; Mark Brown <broonie@kernel.org>
+> > Cc: Aisheng Dong <aisheng.dong@nxp.com>; dl-linux-imx
+> > <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org; Linux Kernel
+> > Mailing List <linux-kernel@vger.kernel.org>
+> > Subject: Re: [PATCH] soc: imx: Add power domain driver support for i.mx8m
+> > family
+> > 
+> > Am Montag, den 27.04.2020, 17:58 +0300 schrieb Abel Vesa:
+> > > From: Jacky Bai <ping.bai@nxp.com>
+> > > 
+> > > The i.MX8M family is a set of NXP product focus on delivering the
+> > > latest and greatest video and audio experience combining
+> > > state-of-the-art media-specific features with high-performance
+> > > processing while optimized for lowest power consumption.
+> > > 
+> > > i.MX8MQ, i.MX8MM, i.MX8MN, even the furture i.MX8MP are all belong to
+> > > this family. A GPC module is used to manage all the PU power domain
+> > > on/off. But the situation is that the number of power domains & the
+> > > power up sequence has significate difference on those SoCs. Even on
+> > > the same SoC. The power up sequence still has big difference. It makes
+> > > us hard to reuse the GPCv2 driver to cover the whole i.MX8M family.
+> > > Each time a new SoC is supported in the mainline kernel, we need to
+> > > modify the GPCv2 driver to support it. We need to add or modify
+> > > hundred lines of code in worst case.
+> > > It is a bad practice for the driver maintainability.
+> > > 
+> > > This driver add a more generic power domain driver that the actual
+> > > power on/off is done by TF-A code. the abstraction give us the
+> > > possibility that using one driver to cover the whole i.MX8M family in
+> > > kernel side.
+> > > 
+> > 
+> > Again: what does this driver bring to the table, other than moving a fraction of
+> > the power domain functionality into the firmware?
+> > 
+> > The discussions on the last submissions of this driver already established that
+> > we can't move all functionality for the power domains into the firmware, as
+> > controlling regulators is probably not easy to do from this context. Also the
+> > TF-A side implementation of this driver is "interesting" IMHO, it does stuff like
+> > accessing the clock controller registers without any locking or other means of
+> > mutual exclusion with the Linux kernel clock controller driver.
+> > 
+> 
+> The clock handling is in kernel side through CCF, not in ATF. See the patch below.
+> 
+> > Why can't we just extend the existing GPCv2 driver with support for the other
+> > i.MX8M family members?
+> > 
+> 
+> The reason that why I don’t like to extend the GPCv2 is that when doing domain on/off,
+> We need to access some special control register in each domain & do some special flow,
+> These control register(mediamix block control, vpumix block control) is not in GPC
+> module's address range. No benefit to reuse the GPCv2. Only bring complexity to the
+> GPCv2 driver each time a new SoC is added.
+> 
+> Yes, the i.MX8M power domain support has been pending for a while. ARM guys rejected this patchset
+> because they suggest us to use SCMI rather than SiP. But SCMI is only partial suitable for our
+> case.
+
+Can you please point me to the most resent version of the TF-A side
+implementation of this? The i.MX8MM implementation in the
+imx_5.4.3_2.0.0 branch in the codeaurora imx-atf repo still contains
+writes to the clock controller register range.
+
+Also I would love to learn why the GPC needs to access Mediamix and
+VPUmix domain registers. If you are talking about the NOC configuration
+I would strongly suggest that those should be handled by a Linux side
+interconnect driver, this has nothing to do with the power domain
+sequencing, it just happens to lose state over the power down and needs
+to be reprogrammed after power on. The NOC configuration though is use-
+case dependent, so this should be properly handled in a rich OS driver.
+
+Sure we needs to extend the Linux side GPC driver for each new SoC
+generation, but that's no different from any other hardware driver in
+Linux. Drivers are the abstraction around the hardware, there is no
+need to invent another one if there are no clear benefits.
+
+Regards,
+Lucas
+
