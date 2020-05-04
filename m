@@ -2,118 +2,134 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF064C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F305C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F11720721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD0820757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tPyV3hPp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIHpH8tC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgEDOVN (ORCPT
+        id S1729146AbgEDOV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
+        Mon, 4 May 2020 10:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgEDOUy (ORCPT
+        with ESMTP id S1728168AbgEDOV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:20:54 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB907C061A10;
-        Mon,  4 May 2020 07:20:53 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g13so21135978wrb.8;
-        Mon, 04 May 2020 07:20:53 -0700 (PDT)
+        Mon, 4 May 2020 10:21:59 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA7AC061A0E;
+        Mon,  4 May 2020 07:21:58 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id s9so4702521lfp.1;
+        Mon, 04 May 2020 07:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NOGahbgFbrGavSQQTAIEOH3ZDeZsbOUYsFMx2n9Uex0=;
-        b=tPyV3hPp0PG8Fx23d8yS8xUZ5PDaRUR7FCwLRt/owPbofFDHZ53HQQgy70LsjVb1KU
-         F1GaHAdwE5yzmePCxutAhrDTC64yAG4AZKQtQ7V/Ft2qMQznN538q07OYVzc6b0IE5Kv
-         hbq/1KQuntYdm2GphNqIIbADnrEjsgL+SjeNrCYwTEWU3xc6nf97BWpxzJjxljtUYFEC
-         5WFbZ40//GlowX/+nbBez7xj/L/MO2/+exoqpkE8/NZ2+EOqJz/jyhpiVHUXNHugt8H1
-         Qfu3Bdnq6/xKII+54dyAsQmZ5tPp5exGEpWqXGN462I7cPpmcNS9G9cMcx5e2gXLhD8l
-         s4Jg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TjQIadq6DfkSuMtzgbVyqx7eozFCGzVHUTUogoGl7xY=;
+        b=jIHpH8tCYXoUS/6yaeKsETWsdPAiDMK0RP02iwGzjzLK/nJ8eRqBiYJJ6etliXLip1
+         8PlROGndEGmJOkQb+GS9LVPB3FjI/MyuzkbiZRHX56/PrN7HKjF2MNK1lcG9iht/JBKj
+         hLlEk94jUha/lV4BWoFcV0WMPSo7uT2Jd/gVUmwmSdtW5KGcs6BhIPFLRhAgiP5Pxv+v
+         BDvR1GlfLHarnpA6VBkpl5OLGpVFPs5Q4OEZHGxcJNpQiO6jXq/ERSTvVesCLxKVONId
+         VMWRwzA4I0+tRUnuEkWEW7ZJY7TQNm00e0rgLEzgjIKJvhmvUgcnnwT8X7qCQfIuQttN
+         ZFaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NOGahbgFbrGavSQQTAIEOH3ZDeZsbOUYsFMx2n9Uex0=;
-        b=T8rlRVaKqWX/eWe69g5T9Q7Nvc4VsZEk9+9Q+ksMPiIwhM1XKOYnu1M4M4VkjWRzEs
-         w9DlE9w59xF+DZcR4RxogvJHbhb84pOImROzCDaW9AcwdiFjkvszi3bndJh1//DACCqR
-         28v6xsujGnupe7xNSddw4SGpPseTNXjLxFnMhGcz4HIv+JnszZUGM5ixs4c4WhRZ+9sc
-         BJlwwMGwiww1YkDGlwFsWgPt3bmjMlXl8CsyUKa21B1sBPrX9lf5YfZQvlc8YHKHwH2g
-         /kd4M5ainKDT9U0sTvBydMMLHr+rrFDLfjZ3GqtzKHcJUdna+vppj/V6/qSPypo9bQ/b
-         sUmA==
-X-Gm-Message-State: AGi0PuZJOrqt+gtxf7WdZ1chdWS0RL3VcInThuxArJKCLrZUpXOGC6+E
-        gYl3D4+PHBX7FJj63RjQiSs=
-X-Google-Smtp-Source: APiQypLBt6FV37S7ZWmd6A1HD4lHdQi5M+Ugq8m8PY3uxaMCcu6Zddyr6PIHhqm5Z+jxzi/2SEYmXQ==
-X-Received: by 2002:a5d:4704:: with SMTP id y4mr12099618wrq.96.1588602052521;
-        Mon, 04 May 2020 07:20:52 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
-        by smtp.gmail.com with ESMTPSA id p7sm19196140wrf.31.2020.05.04.07.20.51
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TjQIadq6DfkSuMtzgbVyqx7eozFCGzVHUTUogoGl7xY=;
+        b=K2frAgdxWXGL0XWJSaUpWGKdrq255SBlQqOoLPOKmmBtA8ZoB/XLqPV7k63SPDlnof
+         mQ7OXCQlh6ZetAQ//79DGSgWE7ov7H+Fw8gIV1R7+1M3lKjb3zNZnl/vLIIfDf2xdZqy
+         +PTuYVRJr0f1gh9na0E2ogYR6ny7dEDupNqdDmyyaL9DI6oIEiY3/eh6B53rPs1WDk1c
+         R9Te8g7jjMxQOlvkQrCFshFGPVu4cxPpD12zq6H78Gr7zUXI6yd5sHm91WtS2UBO0FZj
+         +DjenE47ZW+FxvINZqn52jV++/kRyLkwrGnrHgWncsXVVKXW5x3d+V8XFrF3Kv8RUdqV
+         su9A==
+X-Gm-Message-State: AGi0PuZZoDja/zqWVXue3J0o/xGCemk+Rnt9oarHN38WMhkrq7orlNJ+
+        XxFnbaCjWiEbt0cGi5HqUQVdCNcPxz8e5Q==
+X-Google-Smtp-Source: APiQypILiwgc6kOVf1Dh9xb4iNYqSTwVc8ILuaP2SqMOrOHSXjRr2sAkPPlMPKjIkNV0biK7ivNAUA==
+X-Received: by 2002:a05:6512:31d6:: with SMTP id j22mr11613555lfe.83.1588602117162;
+        Mon, 04 May 2020 07:21:57 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id a2sm8363646ljj.53.2020.05.04.07.21.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 07:20:52 -0700 (PDT)
-From:   huobean@gmail.com
-X-Google-Original-From: beanhuo@micron.com
-To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, rdunlap@infradead.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hch@infradead.org
-Subject: [RESENT PATCH RFC v3 4/5] scsi: ufs: add unit and geometry parameters for HPB
-Date:   Mon,  4 May 2020 16:20:31 +0200
-Message-Id: <20200504142032.16619-5-beanhuo@micron.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504142032.16619-1-beanhuo@micron.com>
-References: <20200504142032.16619-1-beanhuo@micron.com>
+        Mon, 04 May 2020 07:21:55 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 4 May 2020 16:21:53 +0200
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 19/24] rcu/tree: Support reclaim for head-less object
+Message-ID: <20200504142153.GG17577@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-20-urezki@gmail.com>
+ <20200501223909.GF7560@paulmck-ThinkPad-P72>
+ <20200504001258.GD197097@google.com>
+ <20200504002855.GF2869@paulmck-ThinkPad-P72>
+ <20200504003237.GD212435@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504003237.GD212435@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bean Huo <beanhuo@micron.com>
+> > > 
+> > > If we are not doing single-pointer allocation, then that would also eliminate
+> > > entering the low-level page allocator for single-pointer allocations.
+> > > 
+> > > Or did you mean entry into the allocator for the full-page allocations
+> > > related to the pointer array for PREEMPT_RT? Even if we skip entry into the
+> > > allocator for those, we will still have additional caching which further
+> > > reduces chances of getting a full page. In the event of such failure, we can
+> > > simply queue the rcu_head.
+> > > 
+> > > Thoughts?
+> > 
+> > I was just trying to guess why you kept the single-pointer allocation.
+> > It looks like I guessed wrong.  ;-)
+> > 
+> > If, as you say above, you make it go straight to synchronize_rcu()
+> > upon full-page allocation failure, that would be good!
+> 
+> Paul, sounds good. Vlad, are you also Ok with that?
+> 
+OK, let's drop it and keep it simple :)
 
-Add HPB related parameters introduced in Unit Descriptor and
-Geometry Descriptor.
+BTW, for PREEMPT_RT we still can do a page allocation for single
+argument of kvfree_rcu(). In case of double we just revert everything
+to the rcu_head if no cache.
 
-Signed-off-by: Bean Huo <beanhuo@micron.com>
----
- drivers/scsi/ufs/ufs.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+For single argument we can drop the lock before the entry to the page
+allocator. Because it follows might_sleep() anotation we avoid of having
+a situation when spinlock(rt mutex) is taken from any atomic context.
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 1f2d4b4950b8..6210e489d2ce 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -219,6 +219,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_PARAM_HPB_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_PARAM_HPB_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_PARAM_HPB_NUM_PIN_REGIONS             = 0x27,
- };
- 
- /* Device descriptor parameters offsets in bytes*/
-@@ -304,6 +307,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_PARAM_HPB_REGION_SIZE	= 0x48,
-+	GEOMETRY_DESC_PARAM_HPB_NUMBER_LU	= 0x49,
-+	GEOMETRY_DESC_PARAM_HPB_SUBREGION_SIZE  = 0x4A,
-+	GEOMETRY_DESC_PARAM_HPB_MAX_ACTIVE_REGIONS = 0x4B,
- };
- 
- /* Health descriptor parameters offsets in bytes*/
--- 
-2.17.1
+Since the lock is dropped the current context can be interrupted by
+an IRQ which in its turn can also call kvfree_rcu() on current CPU.
+In that case it must be double argument(single is not allowed) kvfree_rcu()
+call. For PREEMPT_RT if no cache everything is reverted to rcu_head usage,
+i.e. the entry to page allocator is bypassed.
 
+It can be addressed as a separate patch and send out later on if we
+are on the same page.
+
+Paul, Joel what are your opinions?
+
+--
+Vlad Rezki
