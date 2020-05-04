@@ -2,108 +2,98 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB65C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5661C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1122073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588586907;
-	bh=SEUEOqsjoer4k2pCLVUZGnBWrdTnfIZTUHr1uR6kYbQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P7C7GBfp3K02319tA/I3MA/epNQEl9D4gR5bUeR+rFLOkC7dy2ec9N3cIOfSomG+D
-	 HJlgHaWc2Dta2Mq4kS9ikp95gk6i6C9mxDOiQbA6poWKr6QePP7clrWV1214aeQSdp
-	 njaVbHiBrc85ZBGd0y/WFSpCNTM61SgIqHwvbpb8=
+	by mail.kernel.org (Postfix) with ESMTP id 8BC8F2071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgEDKI0 (ORCPT
+        id S1727953AbgEDKKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51478 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 06:10:16 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50967 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbgEDKI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:08:26 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4A0320721;
-        Mon,  4 May 2020 10:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588586905;
-        bh=SEUEOqsjoer4k2pCLVUZGnBWrdTnfIZTUHr1uR6kYbQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s8qWgABDlen8Jac9q20c1YllmktbBgQLwXvc8TBGFNLZ2MO1yY4Ec1y361P0/V74B
-         I1neWkTKuG7sNhzZqWsXbJ6hnkIKSKwGvLVKRk8tXi/nQ5Jmadvr9Uiykfd916GshI
-         PbRZU1DH16iq28zmb1/RCo2z6rsKEhwjbInxx6VU=
-Date:   Mon, 4 May 2020 11:08:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-Message-ID: <20200504100822.GA5491@sirena.org.uk>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+        id S1726531AbgEDKKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 06:10:16 -0400
+IronPort-SDR: ABPYJ/XjenKMfjxbrEQIxK3JF3CPB8hjh0B7xWDfIdk4pOmQnwHYKmpBEuLR9Ds0v1rOfFC9vU
+ /q4jZhKxxAKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 03:10:15 -0700
+IronPort-SDR: BDVxcggN+h9n0YU3gnuw2ItbbJHk7bjEHBGfqBJvAw/SBwFBaY5WX2FegrwUyzv76TCVxz263+
+ aBjxWBpodEFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
+   d="scan'208";a="259285901"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga003.jf.intel.com with ESMTP; 04 May 2020 03:10:14 -0700
+Subject: Re: [PATCH] xhci: Prevent runtime suspend all the time with
+ XHCI_RESET_ON_RESUME quirk
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Oliver Neukum <oneukum@suse.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200504091952.15820-1-kai.heng.feng@canonical.com>
+ <1588585655.13662.5.camel@suse.com>
+ <88A0FF32-C7D7-4E49-8470-FE23401371BD@canonical.com>
+From:   Mathias Nyman <mathias.nyman@intel.com>
+Message-ID: <6fca4532-b4a2-9730-bd96-5ac15357f752@intel.com>
+Date:   Mon, 4 May 2020 13:13:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
-In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
-X-Cookie: My life is a patio of fun!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <88A0FF32-C7D7-4E49-8470-FE23401371BD@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4.5.2020 13.02, Kai-Heng Feng wrote:
+> 
+> 
+>> On May 4, 2020, at 17:47, Oliver Neukum <oneukum@suse.com> wrote:
+>>
+>> Am Montag, den 04.05.2020, 17:19 +0800 schrieb Kai-Heng Feng:
+>>> Etron EJ168 USB 3.0 Host Controller stops working after S3, if it was
+>>> runtime suspended previously:
+>>> [  370.080359] pci 0000:02:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>>
+>> Apparently this controller has issues with D3cold
+>>
+>>> [  370.080477] xhci_hcd 0000:04:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>>> [  370.080532] pcieport 0000:00:1c.0: DPC: containment event, status:0x1f05 source:0x0200
+>>> [  370.080533] pcieport 0000:00:1c.0: DPC: ERR_FATAL detected
+>>> [  370.080536] xhci_hcd 0000:04:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+>>> [  370.080552] xhci_hcd 0000:04:00.0: AER: can't recover (no error_detected callback)
+>>> [  370.080566] usb usb3: root hub lost power or was reset
+>>> [  370.080566] usb usb4: root hub lost power or was reset
+>>> [  370.080572] xhci_hcd 0000:04:00.0: Host halt failed, -19
+>>> [  370.080574] xhci_hcd 0000:04:00.0: Host not accessible, reset failed.
+>>> [  370.080575] xhci_hcd 0000:04:00.0: PCI post-resume error -19!
+>>> [  370.080586] xhci_hcd 0000:04:00.0: HC died; cleaning up
+>>>
+>>> This can be fixed by not runtime suspend the controller at all.
+>>>
+>>> So instead of conditionally runtime suspend the controller, always
+>>> prevent runtime suspend with XHCI_RESET_ON_RESUME quirk.
+>>
+>> What does that do to other controllers that can do runtime suspend
+>> under the current scheme?
+> 
+> Ok, I'll add a new quirk specific to this controller.
+> 
+> Kai-Heng
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Host shouldn't runtime suspend by default unless set by userspace, or
+it has XHCI_DEFAULT_PM_RUNTIME_ALLOW quirk set.  
 
-On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> There are some new broken doc links due to yaml renames
-> at DT. Developers should really run:
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6v6ZIACgkQJNaLcl1U
-h9Aaywf9G/ypPAVhxAZkzN0IYu6e43sydvSull/M+q3UIdY9VmDdIhUXVgXoOCOh
-ltmOBr9lM8MTLi7nYRlTCsC7mmSE9EMyF3AlPAwCzT9Y9gffa33run0/3I2SDvJZ
-pUXeobj10+FRhp4iWUSpCkUrMEO8SzGHVXCbLZBLUYkvPWdsaMchNpj2iuy/IIMg
-TW9jzMHLeZGsGR/6OgEBbyKegSqC8r3BHT6xfLGtEzoji30kwnPAHvx2D75DBbHH
-dMN+lrHBjpgpaLZWPYHVf5yVjqrH77LcpGqpvTdoP4ckdZZfHyu2ZmFZiyl5yXJV
-56POKfO+q6cm0wiAfAZyg41Om6tanA==
-=2+iq
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+-Mathias
