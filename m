@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7F5C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C846C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166E62087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B457207DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615608;
-	bh=w+yPL/bVXvDTiFWPzUWODEVmw/6jrMVQG1TYGt8QO3s=;
+	s=default; t=1588615612;
+	bh=nTTT4da67tY6V26UzMba9X5BQOwgU9ZiHTbAOw+bExk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqu80H5W1C8M29djmiGzTZTA88FeDFdLerhyr2+jh4wOh0zwYcp2groeXZP4qZigK
-	 q8DiOv/0LXNCsr48vhiyGO06sT0S4zRItN5IypfhW9rIGQcyDKgGU4xwzm7oBCG3w9
-	 cg+ZGBz4ygYyvvMmtqx/AUKHjr7kcD4nXmJvSXNI=
+	b=dRTyRDG875yTeXJjir9b3CxvHh4c9G7A0ApQsh1MUl6chN+v2syesy3r9je6bEA+1
+	 XDjF9xMw/WOHYEm4LWT6ZkbP7z4hE17jdh3ixApCraGyM67a6UzodlwkGwnTgjiSmA
+	 7aA+sYKLt2fTfGmQStF1ik7JIPPvl0gSEMd48LkQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732022AbgEDSGr (ORCPT
+        id S1732034AbgEDSGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:06:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732010AbgEDSGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:44 -0400
+        id S1732016AbgEDSGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20DB2087E;
-        Mon,  4 May 2020 18:06:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 110BF2073B;
+        Mon,  4 May 2020 18:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615604;
-        bh=w+yPL/bVXvDTiFWPzUWODEVmw/6jrMVQG1TYGt8QO3s=;
+        s=default; t=1588615606;
+        bh=nTTT4da67tY6V26UzMba9X5BQOwgU9ZiHTbAOw+bExk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sah/UtS8oGuKUF2WBmfxkf+XAVobMbiRMf3gNRU4fmcdBzY1373TJqQnJe5S1QFx6
-         I92d0MAnVZTi7IPgfGUxKrUj0JDTqkEJKnXjtHotfWw0buoPdOVoCX7HbmTY7Ksayc
-         HXVzdiOffgez5EW8TupfH3M8+hJ5WoPqGHYZVlGE=
+        b=oAPoai4Xr82e9vzPDjMkjvLR69lyTTCs2gf0VixXzJFKQa/z+mXuPI1nIyYRDhNsQ
+         6/HGtKgwEmg80veQ2pFj8Y5RahU5xG0GE9zsmKdHbhZ+1KM3RZjwLJEnbfmcZbpTyw
+         MzgqIyT9DJoh6dsa1yvH3TmO6jXwC3CL+oMX5DG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH 5.6 49/73] RDMA/core: Fix race between destroy and release FD object
-Date:   Mon,  4 May 2020 19:57:52 +0200
-Message-Id: <20200504165509.066749063@linuxfoundation.org>
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.6 50/73] RDMA/cm: Fix ordering of xa_alloc_cyclic() in ib_create_cm_id()
+Date:   Mon,  4 May 2020 19:57:53 +0200
+Message-Id: <20200504165509.134278419@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -59,55 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-commit f0abc761bbb9418876cc4d1ebc473e4ea6352e42 upstream.
+commit e8dc4e885c459343970b25acd9320fe9ee5492e7 upstream.
 
-The call to ->lookup_put() was too early and it caused an unlock of the
-read/write protection of the uobject after the FD was put. This allows a
-race:
+xa_alloc_cyclic() is a SMP release to be paired with some later acquire
+during xa_load() as part of cm_acquire_id().
 
-     CPU1                                 CPU2
- rdma_lookup_put_uobject()
-   lookup_put_fd_uobject()
-     fput()
-				   fput()
-				     uverbs_uobject_fd_release()
-				       WARN_ON(uverbs_try_lock_object(uobj,
-					       UVERBS_LOOKUP_WRITE));
-   atomic_dec(usecnt)
+As such, xa_alloc_cyclic() must be done after the cm_id is fully
+initialized, in particular, it absolutely must be after the
+refcount_set(), otherwise the refcount_inc() in cm_acquire_id() may not
+see the set.
 
-Fix the code by changing the order, first unlock and call to
-->lookup_put() after that.
+As there are several cases where a reader will be able to use the
+id.local_id after cm_acquire_id in the IB_CM_IDLE state there needs to be
+an unfortunate split into a NULL allocate and a finalizing xa_store.
 
-Fixes: 3832125624b7 ("IB/core: Add support for idr types")
-Link: https://lore.kernel.org/r/20200423060122.6182-1-leon@kernel.org
-Suggested-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: a977049dacde ("[PATCH] IB: Add the kernel CM implementation")
+Link: https://lore.kernel.org/r/20200310092545.251365-2-leon@kernel.org
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/rdma_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/cm.c |   27 +++++++++++----------------
+ 1 file changed, 11 insertions(+), 16 deletions(-)
 
---- a/drivers/infiniband/core/rdma_core.c
-+++ b/drivers/infiniband/core/rdma_core.c
-@@ -678,7 +678,6 @@ void rdma_lookup_put_uobject(struct ib_u
- 			     enum rdma_lookup_mode mode)
- {
- 	assert_uverbs_usecnt(uobj, mode);
--	uobj->uapi_object->type_class->lookup_put(uobj, mode);
- 	/*
- 	 * In order to unlock an object, either decrease its usecnt for
- 	 * read access or zero it in case of exclusive access. See
-@@ -695,6 +694,7 @@ void rdma_lookup_put_uobject(struct ib_u
- 		break;
- 	}
- 
-+	uobj->uapi_object->type_class->lookup_put(uobj, mode);
- 	/* Pairs with the kref obtained by type->lookup_get */
- 	uverbs_uobject_put(uobj);
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -572,18 +572,6 @@ static int cm_init_av_by_path(struct sa_
+ 	return 0;
  }
+ 
+-static int cm_alloc_id(struct cm_id_private *cm_id_priv)
+-{
+-	int err;
+-	u32 id;
+-
+-	err = xa_alloc_cyclic_irq(&cm.local_id_table, &id, cm_id_priv,
+-			xa_limit_32b, &cm.local_id_next, GFP_KERNEL);
+-
+-	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
+-	return err;
+-}
+-
+ static u32 cm_local_id(__be32 local_id)
+ {
+ 	return (__force u32) (local_id ^ cm.random_id_operand);
+@@ -825,6 +813,7 @@ struct ib_cm_id *ib_create_cm_id(struct
+ 				 void *context)
+ {
+ 	struct cm_id_private *cm_id_priv;
++	u32 id;
+ 	int ret;
+ 
+ 	cm_id_priv = kzalloc(sizeof *cm_id_priv, GFP_KERNEL);
+@@ -836,9 +825,6 @@ struct ib_cm_id *ib_create_cm_id(struct
+ 	cm_id_priv->id.cm_handler = cm_handler;
+ 	cm_id_priv->id.context = context;
+ 	cm_id_priv->id.remote_cm_qpn = 1;
+-	ret = cm_alloc_id(cm_id_priv);
+-	if (ret)
+-		goto error;
+ 
+ 	spin_lock_init(&cm_id_priv->lock);
+ 	init_completion(&cm_id_priv->comp);
+@@ -847,11 +833,20 @@ struct ib_cm_id *ib_create_cm_id(struct
+ 	INIT_LIST_HEAD(&cm_id_priv->altr_list);
+ 	atomic_set(&cm_id_priv->work_count, -1);
+ 	refcount_set(&cm_id_priv->refcount, 1);
++
++	ret = xa_alloc_cyclic_irq(&cm.local_id_table, &id, NULL, xa_limit_32b,
++				  &cm.local_id_next, GFP_KERNEL);
++	if (ret)
++		goto error;
++	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
++	xa_store_irq(&cm.local_id_table, cm_local_id(cm_id_priv->id.local_id),
++		     cm_id_priv, GFP_KERNEL);
++
+ 	return &cm_id_priv->id;
+ 
+ error:
+ 	kfree(cm_id_priv);
+-	return ERR_PTR(-ENOMEM);
++	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL(ib_create_cm_id);
+ 
 
 
