@@ -2,434 +2,272 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6ADC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC002C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC9A20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E0720705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:29:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KFI4O7/l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgEDTYe (ORCPT
+        id S1726469AbgEDT3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:24:34 -0400
-Received: from v6.sk ([167.172.42.174]:38354 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgEDTYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:24:32 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id E0456610B2;
-        Mon,  4 May 2020 19:23:58 +0000 (UTC)
-Date:   Mon, 4 May 2020 21:23:54 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mfd: ene-kb3930: Add driver for ENE KB3930
- Embedded Controller
-Message-ID: <20200504192354.GA414543@furthur.local>
-References: <20200424221123.106527-1-lkundrak@v3.sk>
- <20200424221123.106527-3-lkundrak@v3.sk>
- <20200429060037.GT3559@dell>
+        Mon, 4 May 2020 15:29:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725956AbgEDT3V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:29:21 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4BDC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:29:21 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a5so371238pjh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:29:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yu8mvWYIKNthxzoTFx8cveVtLJJpkwIpSM4x6ymM6A0=;
+        b=KFI4O7/llNt/2/Xg9TGQwPu8L+YV3F/5e0Nq8G8ku+Qy0+V+dB856Mdv6VHKIHiQwu
+         15hpWh/v8B9xmnmFtzXDQDNICckhP9gLSw6qd5xar8UcOxsX2Y0ALWLAQkxGldWW24MC
+         3eIQnUtEfg3YNzrlLn0hxjU3amUMmiY14I3gI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yu8mvWYIKNthxzoTFx8cveVtLJJpkwIpSM4x6ymM6A0=;
+        b=UDHthDeseJ24WZnUPLvoyRj8Y2gqvZ3eNgoe95C0CiLGrRrXkl6OE77NPrVJwlWn+Z
+         qqdxfRXl7oHQeM8NXKpHAUiIxeA5VQ2dyJ1OUou8PfZcTAse2Wm4Yo3Vx1lpLVCPpe0S
+         GqdAQWkCpX1Xy7aQgNjEnOHQyNQfrLBJTQSEuAsIR/m+JgNdK60S/lSwvnik2DtqZ+MX
+         wv73r9Fcn1IU/A33lsA9zDP+TX0hzhQtPmnN1MSXVWfvEe3Yg+LE8ZNqmj+efKyIWFT4
+         ZnVkM9SqBbRDvoP+3wOjnI86Cz7D/yLMyDo+MsRWDtlG8zXn5qUj0VOzaPampFUkLyX0
+         jhjA==
+X-Gm-Message-State: AGi0PuYW0bkSCZBye7ZcHD6A90gJLnYbhJCP1XN4Gv+DLI6h371YmzJn
+        YzbHOcVP8zBfWMWOgFf1nptde4HCYso=
+X-Google-Smtp-Source: APiQypJEdaJEp70hkjwt+Grt8d9OToNcVFk0hEfRCKkuAyNnQw7XejbZ5vqYEyZTHPELhn74PH8F7w==
+X-Received: by 2002:a17:90a:1b44:: with SMTP id q62mr590798pjq.79.1588620560320;
+        Mon, 04 May 2020 12:29:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p64sm253162pjp.7.2020.05.04.12.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 12:29:19 -0700 (PDT)
+Date:   Mon, 4 May 2020 12:29:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     jmorris@namei.org, sashal@kernel.org, linux-kernel@vger.kernel.org,
+        pmladek@suse.com, sergey.senozhatsky@gmail.com,
+        rostedt@goodmis.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] pstore/ram: allow to dump kmesg during regular
+ reboot
+Message-ID: <202005041222.4A870DFEC@keescook>
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <20200502143555.543636-3-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429060037.GT3559@dell>
+In-Reply-To: <20200502143555.543636-3-pasha.tatashin@soleen.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, May 02, 2020 at 10:35:54AM -0400, Pavel Tatashin wrote:
+> Currently, ramoops is capable to collect dmesg buffer only during
+> panic and oops events. However, it is desirable to optionally allow
+> collecting dmesg buffers during other events as well: reboot, kexec,
+> emergency reboot etc.
+> 
+> While, a similar functionality is provided by pstore console it is not the
+> same. Often, console message level is reduced in production due to baud
+> rate limitation of serial consoles.  Having a noisy console reduces the
+> boot performance.
+> 
+> Thus, if the shutdown dmesg buffer is needed to study the shutdown
+> performance, it is currently not possible to do so with console as by
+> increasing the console output the shutdown time substantially increases
+> as well.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  fs/pstore/platform.c       |  6 ++++--
+>  fs/pstore/ram.c            | 38 +++++++++++++++++++++++++++-----------
+>  include/linux/pstore.h     |  1 +
+>  include/linux/pstore_ram.h |  1 +
+>  4 files changed, 33 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> index 408277ee3cdb..d0393799fe6c 100644
+> --- a/fs/pstore/platform.c
+> +++ b/fs/pstore/platform.c
+> @@ -476,8 +476,10 @@ static struct kmsg_dumper pstore_dumper = {
+>  /*
+>   * Register with kmsg_dump to save last part of console log on panic.
+>   */
+> -static void pstore_register_kmsg(void)
+> +static void pstore_register_kmsg(int dmesg_all)
+>  {
+> +	if (dmesg_all)
+> +		pstore_dumper.max_reason = KMSG_DUMP_MAX;
 
-thanks for your review. There are some inline responses below. Where I'm not
-responding it means that I'll be just fixing what you've pointed out.
+So, I'd like to avoid any new arguments in the API and instead add a new
+field to struct pstore_info, which will be valid when PSTORE_FLAGS_DMESG
+is set, and the max kdump reason can be set there by the pstore backends.
 
-On Wed, Apr 29, 2020 at 07:00:37AM +0100, Lee Jones wrote:
-> On Sat, 25 Apr 2020, Lubomir Rintel wrote:
-> 
-> > This driver provides access to the EC RAM of said embedded controller
-> > attached to the I2C bus as well as optionally supporting its slightly weird
-> > power-off/restart protocol.
-> > 
-> > A particular implementation of the EC firmware can be identified by a
-> > model byte. If this driver identifies the Dell Ariel platform, it
-> > registers the appropriate cells.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  drivers/mfd/Kconfig      |  10 ++
-> >  drivers/mfd/Makefile     |   1 +
-> >  drivers/mfd/ene-kb3930.c | 209 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 220 insertions(+)
-> >  create mode 100644 drivers/mfd/ene-kb3930.c
-> > 
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 0a59249198d3..dae18a2beab5 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -398,6 +398,16 @@ config MFD_DLN2
-> >  	  etc. must be enabled in order to use the functionality of
-> >  	  the device.
-> >  
-> > +config MFD_ENE_KB3930
-> > +	tristate "ENE KB3930 Embedded Controller support"
-> > +	depends on I2C
-> > +	depends on MACH_MMP3_DT || COMPILE_TEST
-> > +	select MFD_CORE
-> > +	help
-> > +	  This adds support for accessing the registers on ENE KB3930, Embedded
-> > +	  Controller. Additional drivers such as LEDS_ARIEL must be enabled in
-> > +	  order to use the functionality of the device.
-> > +
-> >  config MFD_EXYNOS_LPASS
-> >  	tristate "Samsung Exynos SoC Low Power Audio Subsystem"
-> >  	depends on ARCH_EXYNOS || COMPILE_TEST
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index f935d10cbf0f..2d2f5bc12841 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -14,6 +14,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
-> >  obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
-> >  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
-> >  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
-> > +obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
-> >  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
-> >  
-> >  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
-> > diff --git a/drivers/mfd/ene-kb3930.c b/drivers/mfd/ene-kb3930.c
-> > new file mode 100644
-> > index 000000000000..1123f3a1c816
-> > --- /dev/null
-> > +++ b/drivers/mfd/ene-kb3930.c
-> > @@ -0,0 +1,209 @@
-> > +// SPDX-License-Identifier: BSD-2-Clause OR GPL-2.0-or-later
-> > +/*
-> > + * ENE KB3930 Embedded Controller Driver
-> > + *
-> > + * Copyright (C) 2020 Lubomir Rintel
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/reboot.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/mfd/core.h>
-> 
-> Alphabetical.
-> 
-> > +enum {
-> > +	EC_DATA_IN	= 0x00,
-> > +	EC_RAM_OUT	= 0x80,
-> > +	EC_RAM_IN	= 0x81,
-> > +};
-> 
-> Are these registers?
+>  	kmsg_dump_register(&pstore_dumper);
+>  }
+>  
+> @@ -603,7 +605,7 @@ int pstore_register(struct pstore_info *psi)
+>  		pstore_get_records(0);
+>  
+>  	if (psi->flags & PSTORE_FLAGS_DMESG)
+> -		pstore_register_kmsg();
+> +		pstore_register_kmsg(psi->flags & PSTORE_FLAGS_DMESG_ALL);
+>  	if (psi->flags & PSTORE_FLAGS_CONSOLE)
+>  		pstore_register_console();
+>  	if (psi->flags & PSTORE_FLAGS_FTRACE)
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 795622190c01..9d2d1b299225 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -62,6 +62,12 @@ module_param(dump_oops, int, 0600);
+>  MODULE_PARM_DESC(dump_oops,
+>  		"set to 1 to dump oopses, 0 to only dump panics (default 1)");
+>  
+> +static int dump_all;
+> +module_param(dump_all, int, 0600);
+> +MODULE_PARM_DESC(dump_all,
+> +		 "set to 1 to record all kernel kmesg dump events (default 0) "
+> +		 "otherwise only panics and oops are recorded");
 
-These are I2C registers that are multiplexing access to the EC RAM.
-Should I add a comment or make it clearer in some other way?
+And instead of using a "dump_all" here, let's add a new field that is
+the max reason. When both "max_reason" and "dump_oops" are defined,
+"max_reason" should win.
 
-> > +enum {
-> > +	EC_MODEL_ID	= 0x30,
-> > +	EC_VERSION_MAJ	= 0x31,
-> > +	EC_VERSION_MIN	= 0x32,
-> > +};
-> 
-> As above?
+> +
+>  static int ramoops_ecc;
+>  module_param_named(ecc, ramoops_ecc, int, 0600);
+>  MODULE_PARM_DESC(ramoops_ecc,
+> @@ -82,6 +88,7 @@ struct ramoops_context {
+>  	size_t ftrace_size;
+>  	size_t pmsg_size;
+>  	int dump_oops;
+> +	int dump_all;
+>  	u32 flags;
+>  	struct persistent_ram_ecc_info ecc_info;
+>  	unsigned int max_dump_cnt;
+> @@ -381,17 +388,19 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
+>  	if (record->type != PSTORE_TYPE_DMESG)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * Out of the various dmesg dump types, ramoops is currently designed
+> -	 * to only store crash logs, rather than storing general kernel logs.
+> -	 */
+> -	if (record->reason != KMSG_DUMP_OOPS &&
+> -	    record->reason != KMSG_DUMP_PANIC)
+> -		return -EINVAL;
+> +	if (!cxt->dump_all) {
+> +		/*
+> +		 * By default only store crash logs, rather than storing general
+> +		 * kernel logs.
+> +		 */
+> +		if (record->reason != KMSG_DUMP_OOPS &&
+> +		    record->reason != KMSG_DUMP_PANIC)
+> +			return -EINVAL;
 
-These are the locations in EC RAM, multiplexed via EC_DATA_IN and
-EC_RAM_IN/OUT.
+Then all these tests can be collapsed much more cleanly, etc.
 
-> > +struct kb3930 {
-> > +	struct i2c_client *client;
-> > +	struct regmap *ec_ram;
+>  
+> -	/* Skip Oopes when configured to do so. */
+> -	if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
+> -		return -EINVAL;
+> +		/* Skip Oopes when configured to do so. */
+> +		if (record->reason == KMSG_DUMP_OOPS && !cxt->dump_oops)
+> +			return -EINVAL;
+> +	}
+>  
+>  	/*
+>  	 * Explicitly only take the first part of any new crash.
+> @@ -688,6 +697,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>  	pdata->mem_address = res->start;
+>  	pdata->mem_type = of_property_read_bool(of_node, "unbuffered");
+>  	pdata->dump_oops = !of_property_read_bool(of_node, "no-dump-oops");
+> +	pdata->dump_all = of_property_read_bool(of_node, "dump-all");
+>  
+>  #define parse_size(name, field) {					\
+>  		ret = ramoops_parse_dt_size(pdev, name, &value);	\
+> @@ -786,6 +796,7 @@ static int ramoops_probe(struct platform_device *pdev)
+>  	cxt->ftrace_size = pdata->ftrace_size;
+>  	cxt->pmsg_size = pdata->pmsg_size;
+>  	cxt->dump_oops = pdata->dump_oops;
+> +	cxt->dump_all = pdata->dump_all;
+>  	cxt->flags = pdata->flags;
+>  	cxt->ecc_info = pdata->ecc_info;
+>  
+> @@ -828,8 +839,11 @@ static int ramoops_probe(struct platform_device *pdev)
+>  	 * the single region size is how to check.
+>  	 */
+>  	cxt->pstore.flags = 0;
+> -	if (cxt->max_dump_cnt)
+> +	if (cxt->max_dump_cnt) {
+>  		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
+> +		if (cxt->dump_all)
+> +			cxt->pstore.flags |= PSTORE_FLAGS_DMESG_ALL;
+> +	}
+>  	if (cxt->console_size)
+>  		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+>  	if (cxt->max_ftrace_cnt)
+> @@ -866,6 +880,7 @@ static int ramoops_probe(struct platform_device *pdev)
+>  	mem_address = pdata->mem_address;
+>  	record_size = pdata->record_size;
+>  	dump_oops = pdata->dump_oops;
+> +	dump_all = pdata->dump_all;
+>  	ramoops_console_size = pdata->console_size;
+>  	ramoops_pmsg_size = pdata->pmsg_size;
+>  	ramoops_ftrace_size = pdata->ftrace_size;
+> @@ -949,6 +964,7 @@ static void __init ramoops_register_dummy(void)
+>  	pdata.ftrace_size = ramoops_ftrace_size;
+>  	pdata.pmsg_size = ramoops_pmsg_size;
+>  	pdata.dump_oops = dump_oops;
+> +	pdata.dump_all = dump_all;
+>  	pdata.flags = RAMOOPS_FLAG_FTRACE_PER_CPU;
+>  
+>  	/*
+> diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+> index e779441e6d26..32092c2d7224 100644
+> --- a/include/linux/pstore.h
+> +++ b/include/linux/pstore.h
+> @@ -195,6 +195,7 @@ struct pstore_info {
+>  #define PSTORE_FLAGS_CONSOLE	BIT(1)
+>  #define PSTORE_FLAGS_FTRACE	BIT(2)
+>  #define PSTORE_FLAGS_PMSG	BIT(3)
+> +#define PSTORE_FLAGS_DMESG_ALL	BIT(4)
+>  
+>  extern int pstore_register(struct pstore_info *);
+>  extern void pstore_unregister(struct pstore_info *);
+> diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
+> index 9cb9b9067298..f23c29cbd205 100644
+> --- a/include/linux/pstore_ram.h
+> +++ b/include/linux/pstore_ram.h
+> @@ -134,6 +134,7 @@ struct ramoops_platform_data {
+>  	unsigned long	ftrace_size;
+>  	unsigned long	pmsg_size;
+>  	int		dump_oops;
+> +	int		dump_all;
+>  	u32		flags;
+>  	struct persistent_ram_ecc_info ecc_info;
+>  };
+> -- 
+> 2.25.1
 > 
-> This is usually called 'regmap'.
 
-Yes. But the device has a set of registers directly on the I2C bus as
-well as another set of registers in the RAM access to which is
-multiplexed via a pair of I2C registers.
+Thanks!
 
-This regmap is for the latter register block which is the only one
-exposed currently. I believe it still makes sense to make it obvious
-this is not the I2C registers in case the driver is extended to expose
-those in future.
-
-> > +	struct gpio_descs *off_gpios; 
-> > +};
-> > +
-> > +struct kb3930 *global_kb3930;
-> 
-> Globals are massively frowned upon.  Please move it.
-
-This is necessary for the pm_power_off hook that takes no argument. All
-other MFD drivers that implement power off use a global:
-
-  ab8500-sysctrl.c: static struct device *sysctrl_dev;
-  axp20x.c:         static struct axp20x_dev *axp20x_pm_power_off;
-  dm355evm_msp.c:   static struct i2c_client *msp430;
-  max77620.c:       static struct max77620_chip *max77620_scratch;
-  max8907.c:        static struct max8907 *max8907_pm_off;
-  palmas.c:         static struct palmas *palmas_dev;
-  retu-mfd.c:       static struct retu_dev *retu_pm_power_off;
-  rk808.c:          static struct i2c_client *rk808_i2c_client;
-  rn5t618.c:        static struct rn5t618 *rn5t618_pm_power_off;
-  tps6586x.c:       static struct device *tps6586x_dev;
-  tps65910.c:       static struct i2c_client *tps65910_i2c_client;
-  tps80031.c:       static struct tps80031 *tps80031_power_off_dev;
-  twl-core.c:       static struct twl_private *twl_priv;
-
-> > +static void kb3930_off(struct kb3930 *priv, int poweroff)
-> > +{
-> > +	gpiod_direction_output(priv->off_gpios->desc[1], poweroff);
-> > +
-> > +	while (1) {
-> > +		mdelay(50);
-> 
-> Why 50?
-
-The EC's shutdown protocol requires a 10 MHz wave on one GPIO pin,
-signalling the shutdown mode with the another one. I'll add a comment.
-
-> > +		gpiod_direction_output(priv->off_gpios->desc[0], 0);
-> > +		mdelay(50);
-> > +		gpiod_direction_output(priv->off_gpios->desc[0], 1);
-> > +	}
-> > +}
-> 
-> Please define all of the magic numbers in this function.
-> 
-> > +static int kb3930_restart(struct notifier_block *this,
-> > +			  unsigned long mode, void *cmd)
-> > +{
-> 
-> Put 'struct kb3930_restart_nb' into 'struct kb3930' then use
-> container_of to obtain a pointer to 'struct kb3930_restart_nb'.
-> 
-> See drivers/power/reset/gpio-restart.c for an example.
-
-Is this still worth doing even if we couldn't get rid of the global?
-
-> > +	kb3930_off(global_kb3930, 0);
-> 
-> Define the 0 please.
-> 
-> > +	return NOTIFY_DONE;
-> > +}
-> > +
-> > +static void kb3930_power_off(void)
-> > +{
-> > +	kb3930_off(global_kb3930, 1);
-> 
-> Define the 1 please.
-> 
-> > +}
-> > +
-> > +static struct notifier_block kb3930_restart_nb = {
-> > +	.notifier_call = kb3930_restart,
-> > +	.priority = 128,
-> 
-> Why 128?
-> 
-> > +};
-> > +
-> > +static const struct mfd_cell ariel_ec_cells[] = {
-> > +	{ .name = "dell-wyse-ariel-led", },
-> > +	{ .name = "dell-wyse-ariel-power", },
-> > +};
-> > +
-> > +static int kb3930_ec_ram_reg_write(void *context, unsigned int reg,
-> > +				   unsigned int val)
-> > +{
-> > +	struct kb3930 *priv = context;
-> > +
-> > +	return i2c_smbus_write_word_data(priv->client, EC_RAM_OUT,
-> > +					 (val << 8) | reg);
-> > +}
-> > +
-> > +static int kb3930_ec_ram_reg_read(void *context, unsigned int reg,
-> > +				  unsigned int *val)
-> > +{
-> > +	struct kb3930 *priv = context;
-> > +	int ret;
-> > +
-> > +	ret = i2c_smbus_write_word_data(priv->client, EC_RAM_IN, reg);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = i2c_smbus_read_word_data(priv->client, EC_DATA_IN);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	*val = ret >> 8;
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct regmap_config kb3930_ec_ram_regmap_config = {
-> > +	.name = "ec_ram",
-> > +	.reg_bits = 8,
-> > +	.val_bits = 8,
-> > +	.reg_stride = 1,
-> > +	.max_register = 0xff,
-> 
-> Where are the list of register defines/enums?
-
-EC_MODEL_ID, EC_VERSION_MAJ and EC_VERSION_MIN above.
-The rest is in cell drivers that use them.
-
-> > +	.reg_write = kb3930_ec_ram_reg_write,
-> > +	.reg_read = kb3930_ec_ram_reg_read,
-> > +	.fast_io = false,
-> > +};
-> > +
-> > +static int kb3930_probe(struct i2c_client *client,
-> > +			const struct i2c_device_id *id)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct device_node *np = dev->of_node;
-> > +	struct kb3930 *priv;
-> 
-> Not keen on 'info' or 'priv' for these.
-> 
-> Prefer it if you call this ddata (device/driver data).
-> 
-> > +	unsigned int model_id;
-> 
-> Just 'model' is fine.
-> 
-> > +	int ret;
-> > +
-> > +	if (global_kb3930)
-> > +		return -EEXIST;
-> 
-> Please no!
-> 
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	global_kb3930 = priv;
-> > +	priv->client = client;
-> > +	i2c_set_clientdata(client, priv);
-> > +
-> > +	priv->ec_ram = devm_regmap_init(dev, NULL, priv,
-> > +					&kb3930_ec_ram_regmap_config);
-> > +	if (IS_ERR(priv->ec_ram))
-> > +		return PTR_ERR(priv->ec_ram);
-> > +
-> > +	ret = regmap_read(priv->ec_ram, EC_MODEL_ID, &model_id);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	if (model_id == 'J') {
-> > +		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-> 
-> Why NONE over AUTO?
-> 
-> > +					   ariel_ec_cells,
-> > +					   ARRAY_SIZE(ariel_ec_cells),
-> > +					   NULL, 0, NULL);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	} else {
-> > +		dev_err(dev, "unknown board model: %02x\n", model_id);
-> > +		return -ENODEV;
-> 
-> If you reverse the logic here, you can put this in the if() and omit
-> the else.
-
-It is intentionally structured this way.
-
-Though the driver currently only supports the 'J' version of the EC
-firmware, other versions are possible, with different cells exposed via
-the EC RAM registers.
-
-> 
-> > +	}
-> > +
-> > +	if (of_property_read_bool (np, "system-power-controller")) {
-> 
-> Remove the space before the '('.
-> 
-> > +		priv->off_gpios = devm_gpiod_get_array_optional(dev, "off",
-> > +								GPIOD_IN);
-> 
-> Please try to split the line just after the '='.
-> 
-> > +	}
-> > +	if (IS_ERR(priv->off_gpios))
-> > +		return PTR_ERR(priv->off_gpios);
-> 
-> Shouldn't this be in the if() above?
-> 
-> > +	if (priv->off_gpios->ndescs < 2) {
-> > +		dev_err(dev, "invalid off-gpios property\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> This doesn't seem right.  I thought they were optional?
-> 
-> > +	if (priv->off_gpios) {
-> > +		register_restart_handler(&kb3930_restart_nb);
-> > +		if (pm_power_off == NULL)
-> > +			pm_power_off = kb3930_power_off;
-> > +	}
-> > +
-> > +	dev_info(dev, "ENE KB3930 Embedded Controller\n");
-> 
-> Remove this line please.
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +static int kb3930_remove(struct i2c_client *client)
-> > +{
-> > +	struct kb3930 *priv = i2c_get_clientdata(client);
-> > +
-> > +	if (priv->off_gpios) {
-> > +		if (pm_power_off == kb3930_power_off)
-> > +			pm_power_off = NULL;
-> > +		unregister_restart_handler(&kb3930_restart_nb);
-> > +	}
-> > +	global_kb3930 = NULL;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct i2c_device_id kb3930_ids[] = {
-> > +	{ "kb3930", 0 },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, kb3930_ids);
-> 
-> You can use .probe_new and omit this table.
-> 
-> > +static const struct of_device_id kb3930_dt_ids[] = {
-> > +	{ .compatible = "ene,kb3930" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, kb3930_dt_ids);
-> > +
-> > +static struct i2c_driver kb3930_driver = {
-> > +	.probe = kb3930_probe,
-> > +	.remove = kb3930_remove,
-> > +	.driver = {
-> > +		.name = "ene-kb3930",
-> > +		.of_match_table = of_match_ptr(kb3930_dt_ids),
-> > +	},
-> > +	.id_table = kb3930_ids,
-> > +};
-> > +
-> > +module_i2c_driver(kb3930_driver);
-> > +
-> > +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-> > +MODULE_DESCRIPTION("ENE KB3930 Embedded Controller Driver");
-> > +MODULE_LICENSE("Dual BSD/GPL");
-
-Thanks
-Lubo
+-- 
+Kees Cook
