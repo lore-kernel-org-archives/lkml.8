@@ -2,274 +2,105 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA1AC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6EEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08D902073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CFqblJ4k"
+	by mail.kernel.org (Postfix) with ESMTP id CD29A2073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgEDSnC (ORCPT
+        id S1727820AbgEDSnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727122AbgEDSnB (ORCPT
+        Mon, 4 May 2020 14:43:55 -0400
+Received: from smtprelay0168.hostedemail.com ([216.40.44.168]:54644 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726756AbgEDSny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:43:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32305C061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:43:01 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id a31so320061pje.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZgVOoyRXCTabw8jIdp2I9zB2lcLWR/7fN8WqOc01ya4=;
-        b=CFqblJ4kXlBf1d89N4Mpo9QXzVpyOFlNFmEZe+KvsxZEqrNy6RkQRUUe/1Fiirb0sJ
-         aztExTQM96uZGY2hVXpiFenOO/YjQN/D5xmaWfAeHFP7DGD61eb+ZROpGwbIGxSWyFqv
-         LxmSe1TZf1AhKpsRKh0AYY6b5IVWseyMOMhqU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZgVOoyRXCTabw8jIdp2I9zB2lcLWR/7fN8WqOc01ya4=;
-        b=XRcyygqs1VZNyOtvun53fNLG/jq4PkApAQWcQV9f2J4OmOXqyo0O7s6iNhVccRMWQb
-         6/t0JUJa+iTw8RrgajBIvc8wHRvJ3/0Kq9NJjuaszHpDDf6X901DAv7QEytJ6TjS0Y/0
-         q0pAADOFgIVuizRiwYjiBIIB9l930odLIKTglW2sG2Xw52YNsihb8tQVIe+2sfmRk6kW
-         rq0vxyHEI2mNIAx1u7C6X+nDGX77K1rGVYw+dFLj2b4//U7t8FFsRNLQ9mXpjTAza/Nh
-         8WFR7TRYmfqE1WSAIDlmevunKWE1eF1l/tT8L3ML5KRvHa5aJXBGsQe0o27Ljz8c89oi
-         jbhQ==
-X-Gm-Message-State: AGi0PuYiXmMJvEsO/SwrCNQunIgnbFkPsnRtk9Xt4Q5XuFlWBHzb3foa
-        FeBB/DtX19UlOKsnDDZEs9QXDQ==
-X-Google-Smtp-Source: APiQypJUDqabfBGvu8BKptBGXPeO34OtkFBaa8dD5q27WAMbE6sYqPcTNPDCDHbf7lDaq7zkouaMVQ==
-X-Received: by 2002:a17:902:6b05:: with SMTP id o5mr529458plk.274.1588617780645;
-        Mon, 04 May 2020 11:43:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c2sm9441750pfp.118.2020.05.04.11.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 11:42:59 -0700 (PDT)
-Date:   Mon, 4 May 2020 11:42:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Iurii Zaikin <yzaikin@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 3/5] sysctl: remove all extern declaration from sysctl.c
-Message-ID: <202005041142.27E5242022@keescook>
-References: <20200424064338.538313-1-hch@lst.de>
- <20200424064338.538313-4-hch@lst.de>
+        Mon, 4 May 2020 14:43:54 -0400
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave08.hostedemail.com (Postfix) with ESMTP id 78402182D3ECD;
+        Mon,  4 May 2020 18:34:34 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 4C82019B05;
+        Mon,  4 May 2020 18:34:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: patch84_27b7e2cd6480a
+X-Filterd-Recvd-Size: 3549
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf06.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 May 2020 18:34:32 +0000 (UTC)
+Message-ID: <aaa0a1f9619130293a8d8810fa8de140d5612e45.camel@perches.com>
+Subject: Re: [PATCH v6] checkpatch: add support to check 'Fixes:' tag format
+From:   Joe Perches <joe@perches.com>
+To:     Wang YanQing <udknight@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>, Markus.Elfring@web.de,
+        kernel-janitors@vger.kernel.org
+Date:   Mon, 04 May 2020 11:34:31 -0700
+In-Reply-To: <20200504082002.GA29972@udknight>
+References: <20200504082002.GA29972@udknight>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424064338.538313-4-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 08:43:36AM +0200, Christoph Hellwig wrote:
-> Extern declarations in .c files are a bad style and can lead to
-> mismatches.  Use existing definitions in headers where they exist,
-> and otherwise move the external declarations to suitable header
-> files.
+On Mon, 2020-05-04 at 16:20 +0800, Wang YanQing wrote:
+> According to submitting-patches.rst, 'Fixes:' tag has a little
+> stricter condition about the one line summary than normal git
+> commit description:
+> “...
+> Do not split the tag across multiple lines, tags are exempt from
+> the "wrap at 75 columns" rule in order to simplify parsing scripts
+> ...”
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  include/linux/coredump.h |  4 ++++
->  include/linux/file.h     |  2 ++
->  include/linux/mm.h       |  2 ++
->  include/linux/mmzone.h   |  2 ++
->  include/linux/pid.h      |  3 +++
->  include/linux/sysctl.h   |  8 +++++++
->  kernel/sysctl.c          | 45 +++-------------------------------------
->  7 files changed, 24 insertions(+), 42 deletions(-)
+> And there is no sanity check for 'Fixes:' tag format in checkpatch
+> the same as GIT_COMMIT_ID for git commit description, so let's expand
+> the GIT_COMMIT_ID to add 'Fixes:' tag format check support.
 > 
-> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-> index abf4b4e65dbb9..7a899e83835d5 100644
-> --- a/include/linux/coredump.h
-> +++ b/include/linux/coredump.h
-> @@ -22,4 +22,8 @@ extern void do_coredump(const kernel_siginfo_t *siginfo);
->  static inline void do_coredump(const kernel_siginfo_t *siginfo) {}
->  #endif
->  
-> +extern int core_uses_pid;
-> +extern char core_pattern[];
-> +extern unsigned int core_pipe_limit;
-> +
->  #endif /* _LINUX_COREDUMP_H */
-> diff --git a/include/linux/file.h b/include/linux/file.h
-> index 142d102f285e5..122f80084a3ef 100644
-> --- a/include/linux/file.h
-> +++ b/include/linux/file.h
-> @@ -94,4 +94,6 @@ extern void fd_install(unsigned int fd, struct file *file);
->  extern void flush_delayed_fput(void);
->  extern void __fput_sync(struct file *);
->  
-> +extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
-> +
->  #endif /* __LINUX_FILE_H */
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 5a323422d783d..9c4e7e76deddc 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3140,5 +3140,7 @@ unsigned long wp_shared_mapping_range(struct address_space *mapping,
->  				      pgoff_t first_index, pgoff_t nr);
->  #endif
->  
-> +extern int sysctl_nr_trim_pages;
-> +
->  #endif /* __KERNEL__ */
->  #endif /* _LINUX_MM_H */
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index f37bb8f187fc7..b2af594ef0f7c 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -909,6 +909,7 @@ static inline int is_highmem(struct zone *zone)
->  
->  /* These two functions are used to setup the per zone pages min values */
->  struct ctl_table;
-> +
->  int min_free_kbytes_sysctl_handler(struct ctl_table *, int,
->  					void __user *, size_t *, loff_t *);
->  int watermark_scale_factor_sysctl_handler(struct ctl_table *, int,
-> @@ -925,6 +926,7 @@ int sysctl_min_slab_ratio_sysctl_handler(struct ctl_table *, int,
->  
->  extern int numa_zonelist_order_handler(struct ctl_table *, int,
->  			void __user *, size_t *, loff_t *);
-> +extern int percpu_pagelist_fraction;
->  extern char numa_zonelist_order[];
->  #define NUMA_ZONELIST_ORDER_LEN	16
->  
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index cc896f0fc4e34..93543cbc0e6b3 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -108,6 +108,9 @@ extern void transfer_pid(struct task_struct *old, struct task_struct *new,
->  struct pid_namespace;
->  extern struct pid_namespace init_pid_ns;
->  
-> +extern int pid_max;
-> +extern int pid_max_min, pid_max_max;
-> +
->  /*
->   * look up a PID in the hash table. Must be called with the tasklist_lock
->   * or rcu_read_lock() held.
-> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-> index 02fa84493f237..36143ca40b56b 100644
-> --- a/include/linux/sysctl.h
-> +++ b/include/linux/sysctl.h
-> @@ -207,7 +207,15 @@ void unregister_sysctl_table(struct ctl_table_header * table);
->  
->  extern int sysctl_init(void);
->  
-> +extern int pwrsw_enabled;
-> +extern int unaligned_enabled;
-> +extern int unaligned_dump_stack;
-> +extern int no_unaligned_warning;
-> +
->  extern struct ctl_table sysctl_mount_point[];
-> +extern struct ctl_table random_table[];
-> +extern struct ctl_table firmware_config_table[];
-> +extern struct ctl_table epoll_table[];
->  
->  #else /* CONFIG_SYSCTL */
->  static inline struct ctl_table_header *register_sysctl_table(struct ctl_table * table)
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 99d27acf46465..31b934865ebc3 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -68,6 +68,9 @@
->  #include <linux/bpf.h>
->  #include <linux/mount.h>
->  #include <linux/userfaultfd_k.h>
-> +#include <linux/coredump.h>
-> +#include <linux/latencytop.h>
-> +#include <linux/pid.h>
->  
->  #include "../lib/kstrtox.h"
->  
-> @@ -103,22 +106,6 @@
->  
->  #if defined(CONFIG_SYSCTL)
->  
-> -/* External variables not in a header file. */
-> -extern int suid_dumpable;
-> -#ifdef CONFIG_COREDUMP
-> -extern int core_uses_pid;
-> -extern char core_pattern[];
-> -extern unsigned int core_pipe_limit;
-> -#endif
-> -extern int pid_max;
-> -extern int pid_max_min, pid_max_max;
-> -extern int percpu_pagelist_fraction;
-> -extern int latencytop_enabled;
-> -extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
-> -#ifndef CONFIG_MMU
-> -extern int sysctl_nr_trim_pages;
-> -#endif
-> -
->  /* Constants used for minimum and  maximum */
->  #ifdef CONFIG_LOCKUP_DETECTOR
->  static int sixty = 60;
-> @@ -160,24 +147,6 @@ static unsigned long hung_task_timeout_max = (LONG_MAX/HZ);
->  #ifdef CONFIG_INOTIFY_USER
->  #include <linux/inotify.h>
->  #endif
-> -#ifdef CONFIG_SPARC
-> -#endif
-> -
-> -#ifdef CONFIG_PARISC
-> -extern int pwrsw_enabled;
-> -#endif
-> -
-> -#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_ALLOW
-> -extern int unaligned_enabled;
-> -#endif
-> -
-> -#ifdef CONFIG_IA64
-> -extern int unaligned_dump_stack;
-> -#endif
-> -
-> -#ifdef CONFIG_SYSCTL_ARCH_UNALIGN_NO_WARN
-> -extern int no_unaligned_warning;
-> -#endif
->  
->  #ifdef CONFIG_PROC_SYSCTL
->  
-> @@ -243,14 +212,6 @@ static struct ctl_table vm_table[];
->  static struct ctl_table fs_table[];
->  static struct ctl_table debug_table[];
->  static struct ctl_table dev_table[];
-> -extern struct ctl_table random_table[];
-> -#ifdef CONFIG_EPOLL
-> -extern struct ctl_table epoll_table[];
-> -#endif
-> -
-> -#ifdef CONFIG_FW_LOADER_USER_HELPER
-> -extern struct ctl_table firmware_config_table[];
-> -#endif
->  
->  #if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
->      defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
-> -- 
-> 2.26.1
+> The check supports below formats:
+> Fixes: 54a4f0239f2e ("KVM: MMU: make kvm_mmu_zap_page() return the number of pages it actually freed")
+> Fixes: 85f7cd3a2aad ("Revert "media: Kconfig: better support hybrid TV devices"")
+> Fixes: 878520ac45f9 ("ext4: save the error code which triggered...")
+> Fixes: 878520ac45f9 ("ext4: save the error code which triggered")
+> Fixes: 277f27e2f277 ("SUNRPC/cache: Allow garbage collection ... ")
 > 
+> The check doesn't support below formats and it will emit diagnostics info for them:
+> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
+> Fixes: 6c73698904aa pinctrl: qcom: Introduce readl/writel accessors
+> Fixes: 3fd6e7d9a146 (ASoC: tas571x: New driver for TI TAS571x power amplifiers)
+> Fixes: 55697cbb44e4 ("arm64: dts: renesas: r8a779{65,80,90}: Add IPMMU devices nodes)
+> Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
+> Fixes: cd758a9b57ee "KVM: PPC: Book3S HV: Use __gfn_to_pfn_memslot in HPT page fault handler"
+> Fixes:      9b1640686470 ("scsi: lpfc: Fix use-after-free mailbox cmd completion")
+> Fixes: 03f6fc6de919 ('ASoC: rt5682: Add the soundwire support')
+> Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
+> 
+> Because after GIT_COMMIT_ID supports 'Fixes:' tag format check, it could do
+> the same check as the UNKNOWN_COMMIT_ID, so we don't need UNKNOWN_COMMIT_ID
+> anymore and I decide to delete it.
+> 
+> Note: this patch also fixes double quotation mark issue for normal git
+>       commit description, and now it supports double quotation mark in
+>       title line, for example:
+>       Commit e33e2241e272 ("Revert "cfg80211: Use 5MHz bandwidth by default
+>       when checking usable channels"")
+> 
+> Note: this patch also adds diagnostics info support for normal git commit
+>       description format check.
 
--- 
-Kees Cook
+Thanks YanQing.
+
+All of this seems fine, but perhaps checkpatch's output message content
+could be a bit shorter.  I'll give it a think for a while.
+
+
