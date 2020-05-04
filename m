@@ -2,91 +2,98 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FB7C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802FAC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65204206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZGEyPwV0"
+	by mail.kernel.org (Postfix) with ESMTP id 56F4A20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588615115;
+	bh=2lgtyrcy13/KIsuN0+aBm+tMjlWylUgV/Zkq7C1wZYc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jV+rZz5mXoJ0rTQM164ZlvRbLgtyqtX/cVImbJ2J0+Y4DrTIcxqYLc0lnetBLKHTD
+	 taJUMGy6hdFcsRIhGVYYFYmvUfkphEIzPj/itXaOQ+tWPh/u4f2gvKZOTQqzgtw5zJ
+	 qfy9rdgg7zEwXYpiJ/26i3JLuHRW4AmMe/pGm22g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgEDR4n (ORCPT
+        id S1730105AbgEDR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgEDR4m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:56:42 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDECC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:56:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a2so14715662ejx.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RjIlcnq4yiC6vV5MYzey8j0IMoFyjTKlaFO0D+bQg24=;
-        b=ZGEyPwV03UkmAUrht9/IhvuD1CmRcikPe5XRtd0QZjb6wKtnzvCsvnSu+MS+y0s0Hk
-         z1HUVem0q596xf/xLXiL+6/UR8QQTZBqjWw2gONtaZd2BXEBQqeqovU6O7bheFuu4GCi
-         KxIpqERDZluuFq4GZjuuaEykRni7NJfk88Vc7yMqUe8CrGvk7Gu7xHcVdteGOmCv4dWL
-         eMWILgwESOkvC8pLu2xalTHSzD21cw51yXWPNmaHBeGUvL+2MPeJhiEFr5uNGN1nII4a
-         1JKwBTVD1jV+acMUwVAMfjXEPViCk7JRXleFI2rrsmnOY65xKNg4+K1bIWNxoPYfW44f
-         dOlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RjIlcnq4yiC6vV5MYzey8j0IMoFyjTKlaFO0D+bQg24=;
-        b=b4QOSYeS72Tz6X95Jb8IG2s6a/d90yyCX5uuCr5xj4QUs4/QMhnYx7q4YoyI5FqUhy
-         AhjJTz/UdyJxtVK0XgnBb7z4ihz2Rwxyxq/D10CyPEIzOtH62QdPqUrXN4cFfPthMy0a
-         AlqvI/rGfLLIl+tyHWeZIIn01wYStrrG1gH2FvdE6sWDM/0E/+6k+JRFr9z/Y8YTpTI1
-         k0t4KhcaBZXrm7Q1toSSd85dpZr3XDd6CxFxp9bKNGw87dC+cKcP18LtaXedyBLBfdBy
-         VnHF38C2D8gEofPgo4z+L8IBXDgMP4JpoBJdsR+xf9+9+O63euTjN26/9R5WkhxtZvrm
-         5UMA==
-X-Gm-Message-State: AGi0PuZG9j5JxtLZ0k/MS4jTBFajeJ/Vcekh13SiaEgHC3RGGcm2Izlv
-        qpRS4xlnC4NN3oSZJMkZSmuNhxTVf3D0ci/+TNRthQ==
-X-Google-Smtp-Source: APiQypJulmPEpxcWX1jyXL8BWDiI54NDVxDpnmYWCjC6BTiL2RZDj0Ms+5KHcenqxHDwS47TFsCwyara8rfJrVk9c7U=
-X-Received: by 2002:a17:906:49c7:: with SMTP id w7mr16307878ejv.29.1588615000212;
- Mon, 04 May 2020 10:56:40 -0700 (PDT)
+        Mon, 4 May 2020 13:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728158AbgEDR6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:58:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D67E206B8;
+        Mon,  4 May 2020 17:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588615114;
+        bh=2lgtyrcy13/KIsuN0+aBm+tMjlWylUgV/Zkq7C1wZYc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IjMitgWEJAvloFTMW3whC3UzKLuACtsl656lTo9zytds+TAyGLjbzvzOv05RG3His
+         OuPDiJqv4khRlmPmeRn0O//CfmGeOudAm3K9PrI70Ai/pZPsBKMTJ43VoVYi/6SYvw
+         IDl73Xj3p+4rcAMt4HsBbUzmOreLDnAkJAqlM0M0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Dan Carpenter <dan.carpenter@oracle.com>, stable@kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 01/18] ext4: fix special inode number checks in __ext4_iget()
+Date:   Mon,  4 May 2020 19:56:59 +0200
+Message-Id: <20200504165441.879121107@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
+References: <20200504165441.533160703@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <20200502143555.543636-2-pasha.tatashin@soleen.com> <20200504131500.5f6c8860@gandalf.local.home>
-In-Reply-To: <20200504131500.5f6c8860@gandalf.local.home>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 4 May 2020 13:56:04 -0400
-Message-ID: <CA+CK2bBeBC1T_Bc2gskk90bJogOdg-RK1DHf4odsDj-ck_efyQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] printk: honor the max_reason field in kmsg_dumper
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Kees Cook <keescook@chromium.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hmm, I didn't realize that enums were allowed to have duplicates. That can
-> usually screw up logic. I would recommend making that a define afterward.
->
-> #define KMSG_DUMP_MAX KMSG_DUMP_POWEROFF
->
-> As is done in other locations of the kernel.
->
+From: Theodore Ts'o <tytso@mit.edu>
 
-Hi Steve,
+commit 191ce17876c9367819c4b0a25b503c0f6d9054d8 upstream.
 
-Sure, I will change it to define.
+The check for special (reserved) inode number checks in __ext4_iget()
+was broken by commit 8a363970d1dc: ("ext4: avoid declaring fs
+inconsistent due to invalid file handles").  This was caused by a
+botched reversal of the sense of the flag now known as
+EXT4_IGET_SPECIAL (when it was previously named EXT4_IGET_NORMAL).
+Fix the logic appropriately.
 
-Thank you,
-Pasha
+Fixes: 8a363970d1dc ("ext4: avoid declaring fs inconsistent...")
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable@kernel.org
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ext4/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4233,7 +4233,7 @@ struct inode *__ext4_iget(struct super_b
+ 	uid_t i_uid;
+ 	gid_t i_gid;
+ 
+-	if (((flags & EXT4_IGET_NORMAL) &&
++	if ((!(flags & EXT4_IGET_SPECIAL) &&
+ 	     (ino < EXT4_FIRST_INO(sb) && ino != EXT4_ROOT_INO)) ||
+ 	    (ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(EXT4_SB(sb)->s_es->s_inodes_count))) {
+
+
