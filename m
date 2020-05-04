@@ -2,155 +2,370 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD25C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01CC47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11A0C2064C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k1JJpkLg"
+	by mail.kernel.org (Postfix) with ESMTP id 68EA72064C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588634879;
+	bh=ZXzR09uGuRbjIzhfkDHxYAsP/QvYBcC85V44m3Lykos=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=U5wWEQ04qFXO6AiJ1Rm2Zi+3JdWLAh7D3ThoC88CtSHX7c2h+/TXoVeNyETB8xxWn
+	 unJ5pFZbNNwEToKWJtmRTl/vLjQxvVSHeVj946xQprsLWtWJjdyEh5DB9Y32+FVFwH
+	 VAaE57gc4N77QLe/Ol+4QS7eeJI0XNETD8q1vGkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgEDX1o (ORCPT
+        id S1728419AbgEDX16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        Mon, 4 May 2020 19:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgEDX1n (ORCPT
+        with ESMTP id S1728182AbgEDX16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:27:43 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA5AC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:27:43 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id v9so292276ybq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:27:43 -0700 (PDT)
+        Mon, 4 May 2020 19:27:58 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD40C061A0E;
+        Mon,  4 May 2020 16:27:57 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id f83so505038qke.13;
+        Mon, 04 May 2020 16:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qyKw+ba1yZRkxHkom61742xjtNSrJ6q9h9MnN2GvcMQ=;
-        b=k1JJpkLgOCQT7vcVWkR0e06i3uluqZdrOHdjOPNr839tXFnZGXy35PK3YanQ4srjp6
-         GyXU+dZuQxWhBSwW5Vpr6O8F5ls3Aovn9AmHiF6pQcFcZr82Pr6kcS6aTuU+2DonQUiQ
-         xSOJiKUbFOFrm8XiUizT3yG3CV/Ol/bxbgaC+7e8ny4sf7QRqO/g3rvwQjeeo9EX5/dY
-         9IFhTsmQJISAW8WJQoooHnW+Zz2Qm1BymB/POrsKQd3eJsq/S2I6UQ41rc1DPRPvyku4
-         FD01SVJMXhgV1VFbveszucRmdVXr66CKfgu8xkwDwmxGq2x4i4bTVUUwnUK2PGKI2X46
-         qrEA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=ip3zhTzFNO8GaDSRR5Xv3BK5YgA2YXgYzXwyja3RCNc=;
+        b=uJZyLFH7OYZRQopRfg8qLOZSE+chPXLsRuaPH2UtwWV2adHuHG980H3af9BMlE2Fjb
+         pqyFPQyiG6weqr2LIpMsxpcgeu2rij/dY+GAc7rOWgQasesMzK6EI9RehyqdQq7pUTPQ
+         Z2jAhRNEZxvliEHRbRI0xQ9HNHbj6UI+9hZxr3jFBFFclkzKvoQHyPWuBATQXVpHtSe4
+         +wFeEzG/1uLqh5N/MU4bgmFYBEcr9zYt+FOqSCWZLIATYXo10kR5oFNPZXrnw+OcivOJ
+         P/XTWWbf1kEsdGGHH1X2lBNIKDrnDz8UL/7EWglUibLhiK3QbGi6Wp/97YiKdemTPg1R
+         tXdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qyKw+ba1yZRkxHkom61742xjtNSrJ6q9h9MnN2GvcMQ=;
-        b=GkhHuoCwdRc664jUo/gCVrof4Sn3MCpmdnMBO63Lk5apjf9gSutnNbvbKB9kCDq226
-         4E+QUYlcSJa5jK1WvbfEP7MtjzvutfBXg6/XknBg3gbw3VUBClaSXClhu/EUllxtigzV
-         gwUmp/I3YELlBLgY8z+e3H8DvPFVO85cc39n0LalGUe/Kc4f77jPURVTBisXtQD2v1xi
-         maHBL8LcDwKC+veaq66V9cXnFwECOB0utplXGstjTq89GOr1X6PXttfYUQF9WAc0DLZY
-         UUoGSES6jcKpq7BEM/c7VcWyHYdT39oriaHCIyiO7gxC5b2qWhY4WTSVSso+Fw+I2qJt
-         uOLw==
-X-Gm-Message-State: AGi0PuY7RGof1kW6cOe1WRK5T7QIJtJzBu1HoAu/BYKs1RrokdM0Deu2
-        NzkCt9R5TBowMcOorKc5e835JqGcxbN6pIeRfrn+JQ==
-X-Google-Smtp-Source: APiQypLzQdaZTAf3tan2b48ef88C9A3sYH0CoAvNqXb3SIsAXbOrJfQ7770SgJ3giv82dfHlVwl/W803/NGr32wBjfU=
-X-Received: by 2002:a25:ddc3:: with SMTP id u186mr392795ybg.383.1588634862378;
- Mon, 04 May 2020 16:27:42 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=ip3zhTzFNO8GaDSRR5Xv3BK5YgA2YXgYzXwyja3RCNc=;
+        b=LjV0WBnOYQNfxhrY4ufv/Jp2hoCbRgyh9kAxhQneYBKPkAA/eXmYk6NTOOpes58Kiu
+         cHrvsqoFhhqym/kNoUfs6ihkEPT8LrP1PA7smJcE9SrrfIpVlwCJfLHu92XjmMckeAWX
+         98jqSQxdhgnTXJhDsoXWF5XedbD6fW0mKSBzxKVGCpJ5sNAmySf+FtYIgmLJ4fmvSEwr
+         vZogqx/09i3DLcD15eKTB7Xo2tOp9kg7Yz8BZUlhgn2Wob9Vu3kLEVSXb65mX31ai3Ji
+         IrPVGODkJrC0zTn/qz0p0sztH8+U9OqdYnfxfpgszsk7G/TkrmRUS3hx17hosg9Ixqtz
+         Cgyg==
+X-Gm-Message-State: AGi0PuZNSMLkaJCkLa1JFA+n09Adjw4S2xSYn5GiVV7gqo7VbsffEpdi
+        gQ3uSwa95AB3+AZmBqEG9AOFHLXq4sM=
+X-Google-Smtp-Source: APiQypKcO3GAJ8hdRsEq35pFlniR0GDTRVzDZNCOUE05DlSMcNtW/HXuII4sRaSUy9Xd6HvScaKguA==
+X-Received: by 2002:a05:620a:62c:: with SMTP id 12mr884394qkv.234.1588634876483;
+        Mon, 04 May 2020 16:27:56 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:5ece])
+        by smtp.gmail.com with ESMTPSA id i4sm424538qkh.66.2020.05.04.16.27.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 16:27:55 -0700 (PDT)
+Date:   Mon, 4 May 2020 19:27:54 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org,
+        Vlad Dmitriev <vvd@fb.com>
+Subject: [block/for-5.7] iocost: protect iocg->abs_vdebt with iocg->waitq.lock
+Message-ID: <20200504232754.GB3209250@mtj.thefacebook.com>
 MIME-Version: 1.0
-References: <20200501113448.1809037-1-jolsa@kernel.org> <20200504225325.GE1916255@krava>
-In-Reply-To: <20200504225325.GE1916255@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 4 May 2020 16:27:31 -0700
-Message-ID: <CAP-5=fWK_NuLx57mX-oJDAUZQEcKD+ZSWvYOcb-v8epzySsZtg@mail.gmail.com>
-Subject: Re: [PATCH] perf session: Try to read pipe data from file
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 3:57 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, May 01, 2020 at 01:34:47PM +0200, Jiri Olsa wrote:
-> > From: Jiri Olsa <jolsa@redhat.com>
-> >
-> > Ian came with the idea of having support to read the pipe
-> > data also from file [1]. Currently pipe mode files fails
-> > like:
-> >
-> >   $ perf record -o - sleep 1 > /tmp/perf.pipe.data
-> >   $ perf report -i /tmp/perf.pipe.data
-> >   incompatible file format (rerun with -v to learn more)
-> >
-> > This patch adds the support to do that by trying the pipe
-> > header first, and if its successfully detected, switching
-> > the perf data to pipe mode.
-> >
-> > [1] https://lore.kernel.org/lkml/20200409185744.255881-1-irogers@google.com/
-> > Original-patch-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->
-> actualy.. I found another issue while trying this on tracepoints:
->
->   # ./perf record -g  -e 'raw_syscalls:sys_enter' -o -  true > data
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 0.000 MB - ]
->   # ./perf script -i ./data
->   perf_event__process_tracing_data: tracing data size mismatch0x1034 [0xc]: failed to process type: 66
->
-> it's because some of the pipe synthesize code calls lseek, which
-> fails on pipe, but succeeds on normal file (with pipe data)
->
-> patch below fixes that for me, but I wonder there are other leftovers
-> like this.. I'll check on post it all together
+Subject: iocost: protect iocg->abs_vdebt with iocg->waitq.lock
 
-Thanks for testing! I wonder in the 2nd case whether a comment as to
-why the seek isn't needed in pipe mode would be useful.
+abs_vdebt is an atomic_64 which tracks how much over budget a given cgroup
+is and controls the activation of use_delay mechanism. Once a cgroup goes
+over budget from forced IOs, it has to pay it back with its future budget.
+The progress guarantee on debt paying comes from the iocg being active -
+active iocgs are processed by the periodic timer, which ensures that as time
+passes the debts dissipate and the iocg returns to normal operation.
 
-Ian
+However, both iocg activation and vdebt handling are asynchronous and a
+sequence like the following may happen.
 
-> jirka
->
->
-> ---
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 8ca709f938b8..33e299674121 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -3955,13 +3955,8 @@ int perf_event__process_tracing_data(struct perf_session *session,
->  {
->         ssize_t size_read, padding, size = event->tracing_data.size;
->         int fd = perf_data__fd(session->data);
-> -       off_t offset = lseek(fd, 0, SEEK_CUR);
->         char buf[BUFSIZ];
->
-> -       /* setup for reading amidst mmap */
-> -       lseek(fd, offset + sizeof(struct perf_record_header_tracing_data),
-> -             SEEK_SET);
-> -
->         size_read = trace_report(fd, &session->tevent,
->                                  session->repipe);
->         padding = PERF_ALIGN(size_read, sizeof(u64)) - size_read;
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index c11d89e0ee55..b75df19feaf1 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1543,7 +1543,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
->                 return 0;
->         case PERF_RECORD_HEADER_TRACING_DATA:
->                 /* setup for reading amidst mmap */
-> -               lseek(fd, file_offset, SEEK_SET);
-> +               if (!perf_data__is_pipe(session->data))
-> +                       lseek(fd, file_offset, SEEK_SET);
->                 return tool->tracing_data(session, event);
->         case PERF_RECORD_HEADER_BUILD_ID:
->                 return tool->build_id(session, event);
->
+1. The iocg is in the process of being deactivated by the periodic timer.
+
+2. A bio enters ioc_rqos_throttle(), calls iocg_activate() which returns
+   without anything because it still sees that the iocg is already active.
+
+3. The iocg is deactivated.
+
+4. The bio from #2 is over budget but needs to be forced. It increases
+   abs_vdebt and goes over the threshold and enables use_delay.
+
+5. IO control is enabled for the iocg's subtree and now IOs are attributed
+   to the descendant cgroups and the iocg itself no longer issues IOs.
+
+This leaves the iocg with stuck abs_vdebt - it has debt but inactive and no
+further IOs which can activate it. This can end up unduly punishing all the
+descendants cgroups.
+
+The usual throttling path has the same issue - the iocg must be active while
+throttled to ensure that future event will wake it up - and solves the
+problem by synchronizing the throttling path with a spinlock. abs_vdebt
+handling is another form of overage handling and shares a lot of
+characteristics including the fact that it isn't in the hottest path.
+
+This patch fixes the above and other possible races by strictly
+synchronizing abs_vdebt and use_delay handling with iocg->waitq.lock.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Vlad Dmitriev <vvd@fb.com>
+Cc: stable@vger.kernel.org # v5.4+
+Fixes: e1518f63f246 ("blk-iocost: Don't let merges push vtime into the future")
+---
+ block/blk-iocost.c             |  117 ++++++++++++++++++++++++-----------------
+ tools/cgroup/iocost_monitor.py |    7 ++
+ 2 files changed, 77 insertions(+), 47 deletions(-)
+
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -466,7 +466,7 @@ struct ioc_gq {
+ 	 */
+ 	atomic64_t			vtime;
+ 	atomic64_t			done_vtime;
+-	atomic64_t			abs_vdebt;
++	u64				abs_vdebt;
+ 	u64				last_vtime;
+ 
+ 	/*
+@@ -1142,7 +1142,7 @@ static void iocg_kick_waitq(struct ioc_g
+ 	struct iocg_wake_ctx ctx = { .iocg = iocg };
+ 	u64 margin_ns = (u64)(ioc->period_us *
+ 			      WAITQ_TIMER_MARGIN_PCT / 100) * NSEC_PER_USEC;
+-	u64 abs_vdebt, vdebt, vshortage, expires, oexpires;
++	u64 vdebt, vshortage, expires, oexpires;
+ 	s64 vbudget;
+ 	u32 hw_inuse;
+ 
+@@ -1152,18 +1152,15 @@ static void iocg_kick_waitq(struct ioc_g
+ 	vbudget = now->vnow - atomic64_read(&iocg->vtime);
+ 
+ 	/* pay off debt */
+-	abs_vdebt = atomic64_read(&iocg->abs_vdebt);
+-	vdebt = abs_cost_to_cost(abs_vdebt, hw_inuse);
++	vdebt = abs_cost_to_cost(iocg->abs_vdebt, hw_inuse);
+ 	if (vdebt && vbudget > 0) {
+ 		u64 delta = min_t(u64, vbudget, vdebt);
+ 		u64 abs_delta = min(cost_to_abs_cost(delta, hw_inuse),
+-				    abs_vdebt);
++				    iocg->abs_vdebt);
+ 
+ 		atomic64_add(delta, &iocg->vtime);
+ 		atomic64_add(delta, &iocg->done_vtime);
+-		atomic64_sub(abs_delta, &iocg->abs_vdebt);
+-		if (WARN_ON_ONCE(atomic64_read(&iocg->abs_vdebt) < 0))
+-			atomic64_set(&iocg->abs_vdebt, 0);
++		iocg->abs_vdebt -= abs_delta;
+ 	}
+ 
+ 	/*
+@@ -1219,12 +1216,18 @@ static bool iocg_kick_delay(struct ioc_g
+ 	u64 expires, oexpires;
+ 	u32 hw_inuse;
+ 
++	lockdep_assert_held(&iocg->waitq.lock);
++
+ 	/* debt-adjust vtime */
+ 	current_hweight(iocg, NULL, &hw_inuse);
+-	vtime += abs_cost_to_cost(atomic64_read(&iocg->abs_vdebt), hw_inuse);
++	vtime += abs_cost_to_cost(iocg->abs_vdebt, hw_inuse);
+ 
+-	/* clear or maintain depending on the overage */
+-	if (time_before_eq64(vtime, now->vnow)) {
++	/*
++	 * Clear or maintain depending on the overage. Non-zero vdebt is what
++	 * guarantees that @iocg is online and future iocg_kick_delay() will
++	 * clear use_delay. Don't leave it on when there's no vdebt.
++	 */
++	if (!iocg->abs_vdebt || time_before_eq64(vtime, now->vnow)) {
+ 		blkcg_clear_delay(blkg);
+ 		return false;
+ 	}
+@@ -1258,9 +1261,12 @@ static enum hrtimer_restart iocg_delay_t
+ {
+ 	struct ioc_gq *iocg = container_of(timer, struct ioc_gq, delay_timer);
+ 	struct ioc_now now;
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&iocg->waitq.lock, flags);
+ 	ioc_now(iocg->ioc, &now);
+ 	iocg_kick_delay(iocg, &now, 0);
++	spin_unlock_irqrestore(&iocg->waitq.lock, flags);
+ 
+ 	return HRTIMER_NORESTART;
+ }
+@@ -1368,14 +1374,13 @@ static void ioc_timer_fn(struct timer_li
+ 	 * should have woken up in the last period and expire idle iocgs.
+ 	 */
+ 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
+-		if (!waitqueue_active(&iocg->waitq) &&
+-		    !atomic64_read(&iocg->abs_vdebt) && !iocg_is_idle(iocg))
++		if (!waitqueue_active(&iocg->waitq) && iocg->abs_vdebt &&
++		    !iocg_is_idle(iocg))
+ 			continue;
+ 
+ 		spin_lock(&iocg->waitq.lock);
+ 
+-		if (waitqueue_active(&iocg->waitq) ||
+-		    atomic64_read(&iocg->abs_vdebt)) {
++		if (waitqueue_active(&iocg->waitq) || iocg->abs_vdebt) {
+ 			/* might be oversleeping vtime / hweight changes, kick */
+ 			iocg_kick_waitq(iocg, &now);
+ 			iocg_kick_delay(iocg, &now, 0);
+@@ -1718,28 +1723,49 @@ static void ioc_rqos_throttle(struct rq_
+ 	 * tests are racy but the races aren't systemic - we only miss once
+ 	 * in a while which is fine.
+ 	 */
+-	if (!waitqueue_active(&iocg->waitq) &&
+-	    !atomic64_read(&iocg->abs_vdebt) &&
++	if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
+ 	    time_before_eq64(vtime + cost, now.vnow)) {
+ 		iocg_commit_bio(iocg, bio, cost);
+ 		return;
+ 	}
+ 
+ 	/*
+-	 * We're over budget.  If @bio has to be issued regardless,
+-	 * remember the abs_cost instead of advancing vtime.
+-	 * iocg_kick_waitq() will pay off the debt before waking more IOs.
++	 * We activated above but w/o any synchronization. Deactivation is
++	 * synchronized with waitq.lock and we won't get deactivated as long
++	 * as we're waiting or has debt, so we're good if we're activated
++	 * here. In the unlikely case that we aren't, just issue the IO.
++	 */
++	spin_lock_irq(&iocg->waitq.lock);
++
++	if (unlikely(list_empty(&iocg->active_list))) {
++		spin_unlock_irq(&iocg->waitq.lock);
++		iocg_commit_bio(iocg, bio, cost);
++		return;
++	}
++
++	/*
++	 * We're over budget. If @bio has to be issued regardless, remember
++	 * the abs_cost instead of advancing vtime. iocg_kick_waitq() will pay
++	 * off the debt before waking more IOs.
++	 *
+ 	 * This way, the debt is continuously paid off each period with the
+-	 * actual budget available to the cgroup.  If we just wound vtime,
+-	 * we would incorrectly use the current hw_inuse for the entire
+-	 * amount which, for example, can lead to the cgroup staying
+-	 * blocked for a long time even with substantially raised hw_inuse.
++	 * actual budget available to the cgroup. If we just wound vtime, we
++	 * would incorrectly use the current hw_inuse for the entire amount
++	 * which, for example, can lead to the cgroup staying blocked for a
++	 * long time even with substantially raised hw_inuse.
++	 *
++	 * An iocg with vdebt should stay online so that the timer can keep
++	 * deducting its vdebt and [de]activate use_delay mechanism
++	 * accordingly. We don't want to race against the timer trying to
++	 * clear them and leave @iocg inactive w/ dangling use_delay heavily
++	 * penalizing the cgroup and its descendants.
+ 	 */
+ 	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
+-		atomic64_add(abs_cost, &iocg->abs_vdebt);
++		iocg->abs_vdebt += abs_cost;
+ 		if (iocg_kick_delay(iocg, &now, cost))
+ 			blkcg_schedule_throttle(rqos->q,
+ 					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
++		spin_unlock_irq(&iocg->waitq.lock);
+ 		return;
+ 	}
+ 
+@@ -1756,20 +1782,6 @@ static void ioc_rqos_throttle(struct rq_
+ 	 * All waiters are on iocg->waitq and the wait states are
+ 	 * synchronized using waitq.lock.
+ 	 */
+-	spin_lock_irq(&iocg->waitq.lock);
+-
+-	/*
+-	 * We activated above but w/o any synchronization.  Deactivation is
+-	 * synchronized with waitq.lock and we won't get deactivated as
+-	 * long as we're waiting, so we're good if we're activated here.
+-	 * In the unlikely case that we are deactivated, just issue the IO.
+-	 */
+-	if (unlikely(list_empty(&iocg->active_list))) {
+-		spin_unlock_irq(&iocg->waitq.lock);
+-		iocg_commit_bio(iocg, bio, cost);
+-		return;
+-	}
+-
+ 	init_waitqueue_func_entry(&wait.wait, iocg_wake_fn);
+ 	wait.wait.private = current;
+ 	wait.bio = bio;
+@@ -1801,6 +1813,7 @@ static void ioc_rqos_merge(struct rq_qos
+ 	struct ioc_now now;
+ 	u32 hw_inuse;
+ 	u64 abs_cost, cost;
++	unsigned long flags;
+ 
+ 	/* bypass if disabled or for root cgroup */
+ 	if (!ioc->enabled || !iocg->level)
+@@ -1820,15 +1833,28 @@ static void ioc_rqos_merge(struct rq_qos
+ 		iocg->cursor = bio_end;
+ 
+ 	/*
+-	 * Charge if there's enough vtime budget and the existing request
+-	 * has cost assigned.  Otherwise, account it as debt.  See debt
+-	 * handling in ioc_rqos_throttle() for details.
++	 * Charge if there's enough vtime budget and the existing request has
++	 * cost assigned.
+ 	 */
+ 	if (rq->bio && rq->bio->bi_iocost_cost &&
+-	    time_before_eq64(atomic64_read(&iocg->vtime) + cost, now.vnow))
++	    time_before_eq64(atomic64_read(&iocg->vtime) + cost, now.vnow)) {
+ 		iocg_commit_bio(iocg, bio, cost);
+-	else
+-		atomic64_add(abs_cost, &iocg->abs_vdebt);
++		return;
++	}
++
++	/*
++	 * Otherwise, account it as debt if @iocg is online, which it should
++	 * be for the vast majority of cases. See debt handling in
++	 * ioc_rqos_throttle() for details.
++	 */
++	spin_lock_irqsave(&iocg->waitq.lock, flags);
++	if (likely(!list_empty(&iocg->active_list))) {
++		iocg->abs_vdebt += abs_cost;
++		iocg_kick_delay(iocg, &now, cost);
++	} else {
++		iocg_commit_bio(iocg, bio, cost);
++	}
++	spin_unlock_irqrestore(&iocg->waitq.lock, flags);
+ }
+ 
+ static void ioc_rqos_done_bio(struct rq_qos *rqos, struct bio *bio)
+@@ -1998,7 +2024,6 @@ static void ioc_pd_init(struct blkg_poli
+ 	iocg->ioc = ioc;
+ 	atomic64_set(&iocg->vtime, now.vnow);
+ 	atomic64_set(&iocg->done_vtime, now.vnow);
+-	atomic64_set(&iocg->abs_vdebt, 0);
+ 	atomic64_set(&iocg->active_period, atomic64_read(&ioc->cur_period));
+ 	INIT_LIST_HEAD(&iocg->active_list);
+ 	iocg->hweight_active = HWEIGHT_WHOLE;
+--- a/tools/cgroup/iocost_monitor.py
++++ b/tools/cgroup/iocost_monitor.py
+@@ -159,7 +159,12 @@ class IocgStat:
+         else:
+             self.inflight_pct = 0
+ 
+-        self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
++        # vdebt used to be an atomic64_t and is now u64, support both
++        try:
++            self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
++        except:
++            self.debt_ms = iocg.abs_vdebt.value_() / VTIME_PER_USEC / 1000
++
+         self.use_delay = blkg.use_delay.counter.value_()
+         self.delay_ms = blkg.delay_nsec.counter.value_() / 1_000_000
+ 
