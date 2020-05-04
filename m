@@ -2,149 +2,204 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CB1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69026C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1AF2073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AFE02087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588615306;
+	bh=c4w0F0b0i7PQj7BSqyrSdl1KFEF1ve4kwjIyyETWKwk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oLrDhVB4tnOcv0VrISyr12qu3QcWtttc99YgG5rKNU37jGtsuCDjBXd/NZ0+Hl+nZ
+	 MphA6f76CkzT2zhfWdEgu3zb8H/M77d8fIOQ370OtrKAu0qJn47hV7G74XZEYwCwvP
+	 x5c0ay3LNEWuFN9EAudLWY+qpyhu7c3Qb2c9Kz7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731209AbgEDSBn (ORCPT
+        id S1731201AbgEDSBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731196AbgEDSBk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:40 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2274C061A0E;
-        Mon,  4 May 2020 11:01:39 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id 73E842A0458
-Message-ID: <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
-Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Date:   Mon, 04 May 2020 14:01:32 -0400
-In-Reply-To: <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
-References: <20200410115113.31728-1-ezequiel@collabora.com>
-         <20200410115113.31728-3-ezequiel@collabora.com>
-         <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
-         <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
-         <20200502203707.402ea3cd@collabora.com>
-         <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-OSiYpnCOHGwM5bzGy/T7"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Mon, 4 May 2020 14:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730641AbgEDSBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7D98206B8;
+        Mon,  4 May 2020 18:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588615292;
+        bh=c4w0F0b0i7PQj7BSqyrSdl1KFEF1ve4kwjIyyETWKwk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=clien9T+NksWOW+rWvyb29sN642gd4NlGdc55C1jyBGfpq8GUCyuBoUBLpYT+z8ne
+         XLp/3ZGfKdnULWajC032mFflWF5mBYecu/FKE8W+v6nk5rQ9NzVusHJnaZnPCueyoj
+         sWaqqSknYI358I+kY3kv0v/HzFDw75q4ybQDRn4c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 4.19 04/37] drm/qxl: qxl_release use after free
+Date:   Mon,  4 May 2020 19:57:17 +0200
+Message-Id: <20200504165448.994337529@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
+References: <20200504165448.264746645@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vasily Averin <vvs@virtuozzo.com>
 
---=-OSiYpnCOHGwM5bzGy/T7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+commit 933db73351d359f74b14f4af095808260aff11f9 upstream.
 
-Le samedi 02 mai 2020 =C3=A0 19:55 -0300, Ezequiel Garcia a =C3=A9crit :
-> +Nicolas
->=20
-> On Sat, 2020-05-02 at 20:37 +0200, Boris Brezillon wrote:
-> > On Fri, 01 May 2020 13:57:49 -0300
-> > Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> >=20
-> > > > > +
-> > > > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > > > > +
-> > > > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
-> > > > > +    :header-rows:  0
-> > > > > +    :stub-columns: 0
-> > > > > +    :widths:       1 2
-> > > > > +
-> > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
-> > > > > +      - Do not reset any frame context.
-> > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
-> > > > > +      - Do not reset any frame context. This is an alternative v=
-alue for
-> > > > > +        V4L2_VP9_RESET_FRAME_CTX_NONE. =20
-> > > >=20
-> > > > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
-> > > >  =20
-> > >=20
-> > > Hm, now that I look closer, what's the point
-> > > of having the NONE_ALT in our uAPI if it
-> > > has same meaning as NONE?
-> > >=20
-> > > I think it can be removed.
-> >=20
-> > The intent was to match the spec so that one can pass the value
-> > extracted from the bitstream directly.
+qxl_release should not be accesses after qxl_push_*_ring_release() calls:
+userspace driver can process submitted command quickly, move qxl_release
+into release_ring, generate interrupt and trigger garbage collector.
 
-reset_frame_contextspecifies whether the frame context should be reset
-to default values:
-  =E2=88=92 0 or 1 means do not reset any frame context
-  =E2=88=92 2 resets just the context specified in the frame header
-  =E2=88=92 3 resets all cont
+It can lead to crashes in qxl driver or trigger memory corruption
+in some kmalloc-192 slab object
 
-But aren't we going too far by making this an emum ? In Microsfot DXVA,
-we pass that value without interpreting it in userspace. For the
-following RKVDEC, it is (suspiciously ?) ignored. Maybe just passing
-over the value would make more sense, less work ?
+Gerd Hoffmann proposes to swap the qxl_release_fence_buffer_objects() +
+qxl_push_{cursor,command}_ring_release() calls to close that race window.
 
-> >=20
-> > > > I got several smatch warnings:
-> > > >=20
-> > > > smatch: ERRORS
-> > > > drivers/media/v4l2-core/v4l2-ctrls.c:1880 validate_vp9_frame_decode=
-_params() warn: was && intended here instead of ||?
-> > > >=20
-> > > > (Commented on this ^^^ one above)
-> > > >=20
-> > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:426 init_intra_only_probs=
-() error: buffer overflow 'ptr' 9 <=3D 69
-> > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1478 rkvdec_vp9_done() er=
-ror: potentially dereferencing uninitialized 'ctrl'.
-> > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1483 rkvdec_vp9_done() er=
-ror: uninitialized symbol 'dec_dst_buf'.
-> > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:941:6: warning: variable =
-'ret' set but not used [-Wunused-but-set-variable]
-> > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1466:40: warning: variabl=
-e 'fctx' set but not used [-Wunused-but-set-variable]
-> > > >  =20
-> > >=20
-> > > Oh, I'll run smatch and fix them all.
-> >=20
-> > Oops!
->=20
->=20
+cc: stable@vger.kernel.org
+Fixes: f64122c1f6ad ("drm: add new QXL driver. (v1.4)")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/fa17b338-66ae-f299-68fe-8d32419d9071@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+[backported to v.4.19 stable]
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---=-OSiYpnCOHGwM5bzGy/T7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+---
+ drivers/gpu/drm/qxl/qxl_cmd.c     |    5 ++---
+ drivers/gpu/drm/qxl/qxl_display.c |    6 +++---
+ drivers/gpu/drm/qxl/qxl_draw.c    |    8 ++++----
+ drivers/gpu/drm/qxl/qxl_ioctl.c   |    5 +----
+ 4 files changed, 10 insertions(+), 14 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+--- a/drivers/gpu/drm/qxl/qxl_cmd.c
++++ b/drivers/gpu/drm/qxl/qxl_cmd.c
+@@ -501,8 +501,8 @@ int qxl_hw_surface_alloc(struct qxl_devi
+ 	/* no need to add a release to the fence for this surface bo,
+ 	   since it is only released when we ask to destroy the surface
+ 	   and it would never signal otherwise */
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+ 
+ 	surf->hw_surf_alloc = true;
+ 	spin_lock(&qdev->surf_id_idr_lock);
+@@ -544,9 +544,8 @@ int qxl_hw_surface_dealloc(struct qxl_de
+ 	cmd->surface_id = id;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+-
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+ 
+ 	return 0;
+ }
+--- a/drivers/gpu/drm/qxl/qxl_display.c
++++ b/drivers/gpu/drm/qxl/qxl_display.c
+@@ -532,8 +532,8 @@ static int qxl_primary_apply_cursor(stru
+ 	cmd->u.set.visible = 1;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+ 
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 
+ 	return ret;
+ 
+@@ -694,8 +694,8 @@ static void qxl_cursor_atomic_update(str
+ 	cmd->u.position.y = plane->state->crtc_y + fb->hot_y;
+ 
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 
+ 	if (old_cursor_bo)
+ 		qxl_bo_unref(&old_cursor_bo);
+@@ -740,8 +740,8 @@ static void qxl_cursor_atomic_disable(st
+ 	cmd->type = QXL_CURSOR_HIDE;
+ 	qxl_release_unmap(qdev, release, &cmd->release_info);
+ 
+-	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ }
+ 
+ static int qxl_plane_prepare_fb(struct drm_plane *plane,
+--- a/drivers/gpu/drm/qxl/qxl_draw.c
++++ b/drivers/gpu/drm/qxl/qxl_draw.c
+@@ -241,8 +241,8 @@ void qxl_draw_opaque_fb(const struct qxl
+ 		qxl_bo_physical_address(qdev, dimage->bo, 0);
+ 	qxl_release_unmap(qdev, release, &drawable->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_free_palette:
+ 	if (palette_bo)
+@@ -382,8 +382,8 @@ void qxl_draw_dirty_fb(struct qxl_device
+ 	}
+ 	qxl_bo_kunmap(clips_bo);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_release_backoff:
+ 	if (ret)
+@@ -433,8 +433,8 @@ void qxl_draw_copyarea(struct qxl_device
+ 	drawable->u.copy_bits.src_pos.y = sy;
+ 	qxl_release_unmap(qdev, release, &drawable->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_free_release:
+ 	if (ret)
+@@ -477,8 +477,8 @@ void qxl_draw_fill(struct qxl_draw_fill
+ 
+ 	qxl_release_unmap(qdev, release, &drawable->release_info);
+ 
+-	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 	qxl_release_fence_buffer_objects(release);
++	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
+ 
+ out_free_release:
+ 	if (ret)
+--- a/drivers/gpu/drm/qxl/qxl_ioctl.c
++++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
+@@ -257,11 +257,8 @@ static int qxl_process_single_command(st
+ 			apply_surf_reloc(qdev, &reloc_info[i]);
+ 	}
+ 
++	qxl_release_fence_buffer_objects(release);
+ 	ret = qxl_push_command_ring_release(qdev, release, cmd->type, true);
+-	if (ret)
+-		qxl_release_backoff_reserve_list(release);
+-	else
+-		qxl_release_fence_buffer_objects(release);
+ 
+ out_free_bos:
+ out_free_release:
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXrBYfAAKCRBxUwItrAao
-HEl0AKCsffGNkgR8IRMvRvpqEdfuIJofVACgwecGH6S4+u9ily9wRCE4jpdn++E=
-=ONvy
------END PGP SIGNATURE-----
-
---=-OSiYpnCOHGwM5bzGy/T7--
 
