@@ -2,117 +2,89 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC5C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B04C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742382078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588575786;
-	bh=K10liEDKvo43/rjRR/x8/2QYEQYOsRSvIGJJty3CdVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xaN6dxh+Tyq1fN+WMfGhydqeX3gmr3LjFDv6Z3qZIvGqG6Rnfr9T4Sc5dSfMbhqj+
-	 2b7eM0XkryKfkNRLg6ZwkL7Q2lpKUKpB/IY2L9FlYWKd3HhzfpJIz90bq2aIzopLQv
-	 NbcqlOsIXrl9bykVsSklaIRkE3AdK2tJI1VCghDk=
+	by mail.kernel.org (Postfix) with ESMTP id F39F320757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgEDHDF (ORCPT
+        id S1727981AbgEDHDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:03:05 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35684 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgEDHDF (ORCPT
+        Mon, 4 May 2020 03:03:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55251 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgEDHDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:03:05 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x18so19562674wrq.2;
-        Mon, 04 May 2020 00:03:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jjVK3IGY3lofxgky6MANKIlS/RTE1msGdHN8C79gtRA=;
-        b=cDu0EMjdG1BtJjN4HCuS28n3gPTbwkKPK2RIj58kca605qvsMMTY4BhGtTPA9FtIxm
-         QYR/YtS5LXlmfivcxJtqOHFnt3i1k8LRh+M5GepZRjjfuaP+1oGi6OssYo92axHFW5AI
-         lFC1lN7Bxm88uKyP5duSTRs+jD5sH2aYy7/0B5aRHGPONd+ekGOOuMRZN6OrCPPgwUm3
-         KQWl2n1kOzEk88zM2Q/9ls7e1f9RyIwyu7Yu6FPC0tBpWXc90M+59+23ZYQoj0GoyqnC
-         ZY2fZLv+76ZFwOMKmniaweuN3p1MB/pqqdD3NR016jHpGL4uIIt/vAb0dbSyEImbGpD1
-         CObQ==
-X-Gm-Message-State: AGi0PubQOFyxWr5BSJjJtKmkJDzyvUuFSOwwYOFvK0hsaKFfrPLtEXJF
-        eBFZTsbnbsKoQLECDYTYdQs=
-X-Google-Smtp-Source: APiQypL1DoXx6w0TGJSBvgI/zBJ2RIwW2P/T7NsRocZrPXDloYOn7lqwJM5NQOxDkI/4wpi4dbdQkg==
-X-Received: by 2002:adf:f40b:: with SMTP id g11mr18764892wro.178.1588575783322;
-        Mon, 04 May 2020 00:03:03 -0700 (PDT)
-Received: from localhost (ip-37-188-183-9.eurotel.cz. [37.188.183.9])
-        by smtp.gmail.com with ESMTPSA id r3sm18434951wrx.72.2020.05.04.00.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 00:03:02 -0700 (PDT)
-Date:   Mon, 4 May 2020 09:03:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-Message-ID: <20200504070301.GC22838@dhcp22.suse.cz>
-References: <20200430182712.237526-1-shakeelb@google.com>
- <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbC4WY00yQ46b8CFqVQ3S=JSJxE2HR00TtMqXOWLRPRZ8w@mail.gmail.com>
+        Mon, 4 May 2020 03:03:08 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jVV85-0002cB-SL; Mon, 04 May 2020 07:03:06 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] PCI: Enable ASPM L1 on TI PCIe-to-PCI bridge
+Date:   Mon,  4 May 2020 15:02:59 +0800
+Message-Id: <20200504070259.6034-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 01-05-20 09:39:24, Yafang Shao wrote:
-> On Fri, May 1, 2020 at 2:27 AM Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > Lowering memory.max can trigger an oom-kill if the reclaim does not
-> > succeed. However if oom-killer does not find a process for killing, it
-> > dumps a lot of warnings.
-> >
-> 
-> I have been confused by this behavior for several months and I think
-> it will confuse more memcg users.
+The TI PCIe-to-PCI bridge prevents the Intel SoC from entering power
+state deeper than PC3, consumes lots of unnecessary power.
 
-Could you be more specific what has caused the confusion?
+On Windows ASPM L1 is enabled on the device and its upstream bridge,
+so it can make the Intel SoC reach PC8 or PC10 to save lots of power.
 
-> We should keep the memcg oom behavior consistent with system oom - no
-> oom kill if no process.
+So enable ASPM L1 like Windows does, to save additional power.
 
-This is not the global mmemcg behavior. We do complain loud on no
-eligible tasks and actually panic the system. Memcg cannot simply
-do the same by default for obvious reasons.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/quirks.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-> What about bellow change ?
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index e28098e13f1c..25fbc37a747f 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6086,6 +6086,9 @@ static ssize_t memory_max_write(struct
-> kernfs_open_file *of,
->                         continue;
->                 }
-> 
-> +               if (!cgroup_is_populated(memcg->css.cgroup))
-> +                       break;
-> +
->                 memcg_memory_event(memcg, MEMCG_OOM);
->                 if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
->                         break;
-
-I am not a great fan to be honest. The warning might be useful for other
-usecases when it is not clear that the memcg is empty.
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index ca9ed5774eb1..ac7eccf34f87 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2330,6 +2330,27 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
+ 
++static void quirk_enable_aspm_l1(struct pci_dev *dev)
++{
++	struct pci_dev *bridge = pci_upstream_bridge(dev);
++	u16 lnkctl;
++
++	pci_info(dev, "Enabling L1\n");
++	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
++	if (!(lnkctl & PCI_EXP_LNKCTL_ASPM_L1))
++		pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
++					   lnkctl | PCI_EXP_LNKCTL_ASPM_L1);
++
++	if (!bridge)
++		return;
++
++	pcie_capability_read_word(bridge, PCI_EXP_LNKCTL, &lnkctl);
++	if (!(lnkctl & PCI_EXP_LNKCTL_ASPM_L1))
++		pcie_capability_write_word(bridge, PCI_EXP_LNKCTL,
++					   lnkctl | PCI_EXP_LNKCTL_ASPM_L1);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_TI, 0x8240, quirk_enable_aspm_l1);
++
+ /*
+  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+  * Link bit cleared after starting the link retrain process to allow this
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
