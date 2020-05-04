@@ -2,209 +2,100 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE3DC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8641C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A1A20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D1F20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588616042;
+	bh=u1eRWLzcSsHvN8fzxr/uCnaS7bnXn9sRpbs/0zvLWHM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JPM5kr6BojFfvhoFK21VMK1FVhtnQ2qg2ULwbKL/prc7h/n2J04xWnGTDGDZ2eczK
+	 oC/LwPwhjKZr+Vj28zgkWPjfPOKX1c+wp9tZ7wjgstgInyvxL9k7XUEK9mz1awZckK
+	 WIg968saAVh6Er+MYXGVdh0F9Aa55f01rp485/PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbgEDSBA (ORCPT
+        id S1732327AbgEDSOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:00 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47478 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731069AbgEDSAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:52 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 67F4E1C0220; Mon,  4 May 2020 20:00:49 +0200 (CEST)
-Date:   Mon, 4 May 2020 20:00:49 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     nikitos.tr@gmail.com
-Cc:     dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 1/3] leds: add aw2013 driver
-Message-ID: <20200504180049.GA5067@duo.ucw.cz>
-References: <20200504162934.4693-1-nikitos.tr@gmail.com>
+        Mon, 4 May 2020 14:14:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731084AbgEDSA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7183E2073B;
+        Mon,  4 May 2020 18:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588615255;
+        bh=u1eRWLzcSsHvN8fzxr/uCnaS7bnXn9sRpbs/0zvLWHM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zWCZUQ1m/edPpmXWt6tee3yajjLc7I2aPfl335/fY0pv/QY2lO50Y41WV2knBjKu2
+         U7olG2VwaSr4mLju00SbymHliqM9v5GqHhGEc+oPvJuaNRf5t4lZ7PFqquu0fO/YX5
+         XNGVACKJyCAen7v1hvSvQbVop21o7JqPXwdlYTpg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 09/26] mmc: sdhci-pci: Fix eMMC driver strength for BYT-based controllers
+Date:   Mon,  4 May 2020 19:57:23 +0200
+Message-Id: <20200504165444.899552282@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
+References: <20200504165442.494398840@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Content-Disposition: inline
-In-Reply-To: <20200504162934.4693-1-nikitos.tr@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Adrian Hunter <adrian.hunter@intel.com>
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 1a8eb6b373c2af6533c13d1ea11f504e5010ed9a upstream.
 
-Hi!
+BIOS writers have begun the practice of setting 40 ohm eMMC driver strength
+even though the eMMC may not support it, on the assumption that the kernel
+will validate the value against the eMMC (Extended CSD DRIVER_STRENGTH
+[offset 197]) and revert to the default 50 ohm value if 40 ohm is invalid.
 
-> +#define AW2013_NAME "aw2013"
+This is done to avoid changing the value for different boards.
 
-That's.... not really useful define. Make it NAME? Drop it?
+Putting aside the merits of this approach, it is clear the eMMC's mask
+of supported driver strengths is more reliable than the value provided
+by BIOS. Add validation accordingly.
 
-> +#define AW2013_TIME_STEP 130
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 51ced59cc02e ("mmc: sdhci-pci: Use ACPI DSM to get driver strength for some Intel devices")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200422111629.4899-1-adrian.hunter@intel.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-I'd add comment with /* units */.
+---
+ drivers/mmc/host/sdhci-pci-core.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-> +#define STATE_OFF 0
-> +#define STATE_KEEP 1
-> +#define STATE_ON 2
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -490,6 +490,9 @@ static int intel_select_drive_strength(s
+ 	struct sdhci_pci_slot *slot = sdhci_priv(host);
+ 	struct intel_host *intel_host = sdhci_pci_priv(slot);
+ 
++	if (!(mmc_driver_type_mask(intel_host->drv_strength) & card_drv))
++		return 0;
++
+ 	return intel_host->drv_strength;
+ }
+ 
 
-We should add enum into core for this...
 
-> +static int aw2013_chip_init(struct aw2013 *chip)
-> +{
-> +	int i, ret;
-> +
-> +	ret =3D regmap_write(chip->regmap, AW2013_GCR, AW2013_GCR_ENABLE);
-> +	if (ret) {
-> +		dev_err(&chip->client->dev, "Failed to enable the chip: %d\n",
-> +			ret);
-> +		goto error;
-> +	}
-> +
-> +	for (i =3D 0; i < chip->num_leds; i++) {
-> +		ret =3D regmap_update_bits(chip->regmap,
-> +					 AW2013_LCFG(chip->leds[i].num),
-> +					 AW2013_LCFG_IMAX_MASK,
-> +					 chip->leds[i].imax);
-> +		if (ret) {
-> +			dev_err(&chip->client->dev,
-> +				"Failed to set maximum current for led %d: %d\n",
-> +				chip->leds[i].num, ret);
-> +			goto error;
-> +		}
-> +	}
-> +
-> +error:
-> +	return ret;
-> +}
-
-No need for goto if you are just returning.
-
-> +static bool aw2013_chip_in_use(struct aw2013 *chip)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < chip->num_leds; i++)
-> +		if (chip->leds[i].cdev.brightness)
-> +			return true;
-> +
-> +	return false;
-> +}
-
-How is this going to interact with ledstate =3D=3D KEEP?
-
-> +static int aw2013_brightness_set(struct led_classdev *cdev,
-> +				 enum led_brightness brightness)
-> +{
-> +	struct aw2013_led *led =3D container_of(cdev, struct aw2013_led, cdev);
-> +	int ret, num;
-> +
-> +	mutex_lock(&led->chip->mutex);
-> +
-> +	if (aw2013_chip_in_use(led->chip)) {
-> +		ret =3D aw2013_chip_enable(led->chip);
-> +		if (ret)
-> +			return ret;
-> +	}
-
-You are returning with mutex held.
-
-> +	/* Never on - just set to off */
-> +	if (!*delay_on)
-> +		return aw2013_brightness_set(&led->cdev, LED_OFF);
-> +
-> +	/* Never off - just set to brightness */
-> +	if (!*delay_off)
-> +		return aw2013_brightness_set(&led->cdev, led->cdev.brightness);
-
-Is this dance neccessary? Should we do it in the core somewhere?
-
-> +		} else {
-> +			led->imax =3D 1; // 5mA
-> +			dev_info(&client->dev,
-> +				 "DT property led-max-microamp is missing!\n");
-> +		}
-
-Lets remove the exclamation mark.
-
-> +		led->num =3D source;
-> +		led->chip =3D chip;
-> +		led->fwnode =3D of_fwnode_handle(child);
-> +
-> +		if (!of_property_read_string(child, "default-state", &str)) {
-> +			if (!strcmp(str, "on"))
-> +				led->default_state =3D STATE_ON;
-> +			else if (!strcmp(str, "keep"))
-> +				led->default_state =3D STATE_KEEP;
-> +			else
-> +				led->default_state =3D STATE_OFF;
-> +		}
-
-We should really have something in core for this. Should we support
-arbitrary brightness there?
-
-> +static void aw2013_read_current_state(struct aw2013 *chip)
-> +{
-> +	int i, led_on;
-> +
-> +	regmap_read(chip->regmap, AW2013_LCTR, &led_on);
-> +
-> +	for (i =3D 0; i < chip->num_leds; i++) {
-> +		if (!(led_on & AW2013_LCTR_LE(chip->leds[i].num))) {
-> +			chip->leds[i].cdev.brightness =3D LED_OFF;
-> +			continue;
-> +		}
-> +		regmap_read(chip->regmap, AW2013_REG_PWM(chip->leds[i].num),
-> +			    &chip->leds[i].cdev.brightness);
-> +	}
-> +}
-> +
-> +static void aw2013_init_default_state(struct aw2013_led *led)
-> +{
-> +	switch (led->default_state) {
-> +	case STATE_ON:
-> +		led->cdev.brightness =3D LED_FULL;
-> +		break;
-> +	case STATE_OFF:
-> +		led->cdev.brightness =3D LED_OFF;
-> +	} /* On keep - just set brightness that was retrieved previously */
-> +
-> +	aw2013_brightness_set(&led->cdev, led->cdev.brightness);
-> +}
-
-Aha; I guess this makes "keeping" the state to work. Do you really
-need that functionality?
-
-Pretty nice driver, thanks.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrBYUQAKCRAw5/Bqldv6
-8vgWAJ9WeR5dGSlwHlUTp6MxPEwVtyx+6wCgj7lyJGhIoXq2ucnLkhPzBdInxUU=
-=U8CV
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
