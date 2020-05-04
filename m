@@ -2,70 +2,84 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AE7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B564C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C780206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246F4206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:25:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAmO1aZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgEDJXv (ORCPT
+        id S1728279AbgEDJZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:23:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:18923 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEDJXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:23:50 -0400
-IronPort-SDR: grOczGrqUgd5IdhP8BC+M4sqU7GcnQe4PkoL0SMhSCiFazDQgu97cYu+XTDhEmFVnAG1yHxcZ3
- hYFlxxGtD70w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 02:23:49 -0700
-IronPort-SDR: J1Cu5dy96mFd8lt0e95yC5aH2xOFfUGHqnzHJD6rhtCYkV88/ylCCYoTfZ9K3hG60rnEgIxdrj
- BMqyUlnNnE8g==
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="434044101"
-Received: from aslawinx-mobl1.ger.corp.intel.com (HELO [10.249.151.177]) ([10.249.151.177])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 02:23:45 -0700
-Subject: Re: [PATCH] ASoC: Intel: sst: ipc command timeout
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>
-References: <1586506705-3194-1-git-send-email-brent.lu@intel.com>
- <4f495cf1-4740-cf3b-196f-cc850c503b43@linux.intel.com>
- <BN6PR1101MB21328B6F4147640D07F9E40A97DA0@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <c8309abf-cbfb-a3db-5aa7-2e2f748a6d34@intel.com>
- <BN6PR1101MB21328C54E66082227B9F497A97D50@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <5e84c48c-a5d1-b2ff-c197-5efa478c5916@linux.intel.com>
- <BN6PR1101MB2132D23B042284DDA667642A97AC0@BN6PR1101MB2132.namprd11.prod.outlook.com>
- <9d003948-a651-9920-86b6-307e912dd8ed@linux.intel.com>
- <BN6PR1101MB21325FA4FB1446DC2CAF6C6797AA0@BN6PR1101MB2132.namprd11.prod.outlook.com>
-From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Message-ID: <a0648aff-1c85-cc76-650c-1880381c026f@linux.intel.com>
-Date:   Mon, 4 May 2020 11:23:41 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 05:25:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26927 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726467AbgEDJZh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:25:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588584335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IhMZKmodcmk+06K3VXjP9XK4LVnh0x6xj+7mnQK9NDg=;
+        b=BAmO1aZsIph+L4mx5ymHp5QtrryaulRNeWXCeDBiZee/YyT3HNMn/tQG1XyhPgeWnd30Rs
+        CQ1tBdGSI0QTrSMeV4iKu0S1cPX3TSChrPYeS/GC8+Jk68S/eID3ikSEOmIo42v+KgJOJg
+        tT2rAlkKRf9we6wIS58OS2GZyOIwLF8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-191-fyJYbqcvMJ2RFwtDUg7E1g-1; Mon, 04 May 2020 05:25:34 -0400
+X-MC-Unique: fyJYbqcvMJ2RFwtDUg7E1g-1
+Received: by mail-wm1-f70.google.com with SMTP id d134so7096066wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 02:25:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IhMZKmodcmk+06K3VXjP9XK4LVnh0x6xj+7mnQK9NDg=;
+        b=A404+gv+Yu39wi7A6Cm0YyAVTBppWH/VOBBqxDKHdSa88bqAGsXaTIwo4NEWfdjTTa
+         5+Mpaiom+GfjCutQba0A27o5lTqxFnw8ReAcMd2Gtm8Vw3qikm4znPhkR5TzozRDAcji
+         BSVWatH+U20fSzyPvKeOW99koSnUr6PxUf5o+0vO8wZTgB1VPtie7BX+62g4dfk0/oe7
+         jpKKHP+F3E6nCdFK7SObi+8Xcu7zF4wj+F4D/OKDXM3bTHlNA9ciNw5rJc7/bHFSz9qE
+         JYGuM8kAfX8Ctl9svLO0NpfQT65m3k15zc26cF4mX/VJ+M6hUfZEvCY4Sx+iiZCi/UhI
+         QEeA==
+X-Gm-Message-State: AGi0PuYsLA8hQLIGHEEbQW5vaYAI915YRuoQp6uuXbPfwPGyJxWfe4aH
+        WLG92t5OR7l133tnJvK6orRZZfCAGZrBxxWy+p0BKKug5OQXCmuTGBL7fBsSl4nQlNNDfQdLKz+
+        xPgCYUEaJXua6BM44FnqRksd9
+X-Received: by 2002:a1c:678a:: with SMTP id b132mr13997279wmc.107.1588584333114;
+        Mon, 04 May 2020 02:25:33 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKHPvMe3Mbr6gHvkRKuFJXOkxWHpABpPIV1bkZR41x3K+aCM41VQ3ls/Ci3403M/RgjW4xx9Q==
+X-Received: by 2002:a1c:678a:: with SMTP id b132mr13997258wmc.107.1588584332889;
+        Mon, 04 May 2020 02:25:32 -0700 (PDT)
+Received: from [192.168.178.58] ([151.20.132.175])
+        by smtp.gmail.com with ESMTPSA id a8sm5031002wrg.85.2020.05.04.02.25.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 02:25:32 -0700 (PDT)
+Subject: Re: AVIC related warning in enable_irq_window
+To:     Maxim Levitsky <mlevitsk@redhat.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
+ <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
+ <c5c32371-4b4e-1382-c616-3830ba46bf85@amd.com>
+ <159382e7fdf0f9b50d79e29554842289e92e1ed7.camel@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d22d32de-5d91-662a-bf53-8cfb115dbe8d@redhat.com>
+Date:   Mon, 4 May 2020 11:25:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <BN6PR1101MB21325FA4FB1446DC2CAF6C6797AA0@BN6PR1101MB2132.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <159382e7fdf0f9b50d79e29554842289e92e1ed7.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,74 +87,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/30/2020 5:38 PM, Lu, Brent wrote:
+On 04/05/20 11:13, Maxim Levitsky wrote:
+> On Mon, 2020-05-04 at 15:46 +0700, Suravee Suthikulpanit wrote:
+>> Paolo / Maxim,
 >>
->> Hi,
->> yes that seems bit weird. It is bit better as it does not modify common code,
->> but still... Maybe going back to your original idea of replacing memcpy, try
->> replacing it with readq? It should generate one instruction read (although it is
->> only for x64_64, for 32 bit kernel we would still need to do something else).
+>> On 5/2/20 11:42 PM, Paolo Bonzini wrote:
+>>> On 02/05/20 15:58, Maxim Levitsky wrote:
+>>>> The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
+>>>> kvm_request_apicv_update, which broadcasts the KVM_REQ_APICV_UPDATE vcpu request,
+>>>> however it doesn't broadcast it to CPU on which now we are running, which seems OK,
+>>>> because the code that handles that broadcast runs on each VCPU entry, thus
+>>>> when this CPU will enter guest mode it will notice and disable the AVIC.
+>>>>
+>>>> However later in svm_enable_vintr, there is test 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
+>>>> which is still true on current CPU because of the above.
+>>>
+>>> Good point!  We can just remove the WARN_ON I think.  Can you send a patch?
 >>
->> Thanks,
->> Amadeusz
-> 
-> Hi,
-> 
-> I've compared the assembly to see if there is clue. Both kernels are using 64-bit
-> mov to read register and the only difference is optimized or not. Both
-> implementations are looking good to me. Currently I don't have answer why
-> slower kernel hits the problem while optimized one survived.
-> 
-> 1. Old kernel. Code is optimized and not able to reproduce the issue on this kernel.
-> 
-> (gdb) disas sst_shim32_read64
-> Dump of assembler code for function sst_shim32_read64:
->     0x000000000000096c <+0>:     call   0x971 <sst_shim32_read64+5>
-> => call __fentry__
->     0x0000000000000971 <+5>:     push   rbp
->     0x0000000000000972 <+6>:     mov    rbp,rsp
->     0x0000000000000975 <+9>:     mov    eax,esi
->     0x0000000000000977 <+11>:    mov    rax,QWORD PTR [rdi+rax*1]
-> => perform 64-bit mov
->     0x000000000000097b <+15>:    pop    rbp
->     0x000000000000097c <+16>:    ret
-> End of assembler dump.
-> 
+>> Instead, as an alternative to remove the WARN_ON(), would it be better to just explicitly
+>> calling kvm_vcpu_update_apicv(vcpu) to update the apicv_active flag right after
+>> kvm_request_apicv_update()?
+>>
+> This should work IMHO, other that the fact kvm_vcpu_update_apicv will be called again,
+> when this vcpu is entered since the KVM_REQ_APICV_UPDATE will still be pending on it.
+> It shoudn't be a problem, and we can even add a check to do nothing when it is called
+> while avic is already in target enable state.
 
-Hi,
+I thought about that but I think it's a bit confusing.  If we want to
+keep the WARN_ON, Maxim can add an equivalent one to svm_vcpu_run, which
+is even better because the invariant is clearer.
 
-That's why I would suggest trying with readq, it should also generate 
-one instruction read x86_64 platforms, I looked a bit more and there is 
-fallback to generate two 32 bit reads on 32bit platforms, so my previous 
-concern about having to write separate handling for those platforms was 
-unneeded. So I would recommend checking using it.
+WARN_ON((vmcb->control.int_ctl & (AVIC_ENABLE_MASK | V_IRQ_MASK))
+	== (AVIC_ENABLE_MASK | V_IRQ_MASK));
 
-diff --git a/sound/soc/intel/common/sst-dsp.c 
-b/sound/soc/intel/common/sst-dsp.c
-index ec66be269b69..e96f636387d9 100644
---- a/sound/soc/intel/common/sst-dsp.c
-+++ b/sound/soc/intel/common/sst-dsp.c
-@@ -34,16 +34,13 @@ EXPORT_SYMBOL_GPL(sst_shim32_read);
+Paolo
 
-  void sst_shim32_write64(void __iomem *addr, u32 offset, u64 value)
-  {
--       memcpy_toio(addr + offset, &value, sizeof(value));
-+       writeq(value, addr + offset);
-  }
-  EXPORT_SYMBOL_GPL(sst_shim32_write64);
-
-  u64 sst_shim32_read64(void __iomem *addr, u32 offset)
-  {
--       u64 val;
--
--       memcpy_fromio(&val, addr + offset, sizeof(val));
--       return val;
-+       return readq(addr + offset);
-  }
-  EXPORT_SYMBOL_GPL(sst_shim32_read64);
-
-
-Thanks,
-Amadeusz
