@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0119C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC92C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C305620707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E3320707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615399;
-	bh=EWFFcTEu2u5Wpuly/p+eP+0dSJ8gj+K2GbeLtohLHyI=;
+	s=default; t=1588615403;
+	bh=SsXvhzbB2jWYNJpRGiFkqDvIr0NI17B/xvS9oHi+tsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qo+D5hT/a8M8JzmhUDY39n5nvd78vPNoEI0OXlWXa7oQnOTroYDFtyYUsXhDJeb50
-	 valp+gHYgHRUnhvSJrr0JPLExYt8e2i8t+upRDtn8B56I0TSzNR8GSPBv+yhwomPL4
-	 jVepdo9WgNxfcw1nGkxlrDpeOunBNgR+Zz2jY0zA=
+	b=ggLPy1aMuR1s+Fw7/hF7PskYULZIuK8T/kFP/E8Ps8GPejOAxgLaruimi+DKk8IbH
+	 nZlrJ0IYKO/d/syNuo+oyET9kM6hdviZc+akhaBk2lQ+FigcmYdStba3xVgei6orV1
+	 +rvIvM4fUMuaVlV+3X/JYJmdXqlaRRdzJIKI+zdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbgEDSDS (ORCPT
+        id S1730921AbgEDSDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60310 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731481AbgEDSDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:16 -0400
+        id S1731481AbgEDSDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5D752073E;
-        Mon,  4 May 2020 18:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 597F4206B8;
+        Mon,  4 May 2020 18:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615396;
-        bh=EWFFcTEu2u5Wpuly/p+eP+0dSJ8gj+K2GbeLtohLHyI=;
+        s=default; t=1588615398;
+        bh=SsXvhzbB2jWYNJpRGiFkqDvIr0NI17B/xvS9oHi+tsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYiRpTOJnVINKODHA3SY3qLJOKrb+dvQ6ykC52Ddq59CU2C615x254Cdn90XSZRvx
-         3VTVBq2WA1spBGZm3UAExxyfny3PtipUKBKy9sXZ/nSWnWpFtth5mu2frg3atlNUc7
-         s0RuLywfUCnEAdEozHoRW6rVMMQ8nbkOr0JOtKu0=
+        b=yeUzbN1WANfZTtOO5hVeciHAk92+2+D2mG8VO82OE1bPHRn1Ns+ANks6j4NwLBABn
+         vXuzTvyQx5L6UHid7jeF2QKuN6dVdaBsHuSXjLwSBRfEPztnfOjD2uL32N3Rt59AKR
+         L81jnuyZ5Vs4K4K+IBHd8+OcuS7chWWqQqP8hXwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        stable@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 21/57] ALSA: hda/hdmi: fix without unlocked before return
-Date:   Mon,  4 May 2020 19:57:25 +0200
-Message-Id: <20200504165458.197655876@linuxfoundation.org>
+Subject: [PATCH 5.4 22/57] ALSA: line6: Fix POD HD500 audio playback
+Date:   Mon,  4 May 2020 19:57:26 +0200
+Message-Id: <20200504165458.292374352@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -59,41 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
 
-commit a2f647240998aa49632fb09b01388fdf2b87acfc upstream.
+commit cc18b2f4f3f1d7ed3125ac1840794f9feab0325c upstream.
 
-Fix the following coccicheck warning:
-sound/pci/hda/patch_hdmi.c:1852:2-8: preceding lock on line 1846
+Apparently interface 1 is control interface akin to HD500X,
+setting LINE6_CAP_CONTROL and choosing it as ctrl_if fixes
+audio playback on POD HD500.
 
-After add sanity check to pass klockwork check,
-The spdif_mutex should be unlock before return true
-in check_non_pcm_per_cvt().
-
-Fixes: 960a581e22d9 ("ALSA: hda: fix some klockwork scan warnings")
-Signed-off-by: Wu Bo <wubo40@huawei.com>
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1587907042-694161-1-git-send-email-wubo40@huawei.com
+Link: https://lore.kernel.org/r/20200425201115.3430-1-anarsoul@gmail.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/usb/line6/podhd.c |   22 +++++-----------------
+ 1 file changed, 5 insertions(+), 17 deletions(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1861,8 +1861,10 @@ static bool check_non_pcm_per_cvt(struct
- 	/* Add sanity check to pass klockwork check.
- 	 * This should never happen.
- 	 */
--	if (WARN_ON(spdif == NULL))
-+	if (WARN_ON(spdif == NULL)) {
-+		mutex_unlock(&codec->spdif_mutex);
- 		return true;
-+	}
- 	non_pcm = !!(spdif->status & IEC958_AES0_NONAUDIO);
- 	mutex_unlock(&codec->spdif_mutex);
- 	return non_pcm;
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -21,8 +21,7 @@
+ enum {
+ 	LINE6_PODHD300,
+ 	LINE6_PODHD400,
+-	LINE6_PODHD500_0,
+-	LINE6_PODHD500_1,
++	LINE6_PODHD500,
+ 	LINE6_PODX3,
+ 	LINE6_PODX3LIVE,
+ 	LINE6_PODHD500X,
+@@ -318,8 +317,7 @@ static const struct usb_device_id podhd_
+ 	/* TODO: no need to alloc data interfaces when only audio is used */
+ 	{ LINE6_DEVICE(0x5057),    .driver_info = LINE6_PODHD300 },
+ 	{ LINE6_DEVICE(0x5058),    .driver_info = LINE6_PODHD400 },
+-	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500_0 },
+-	{ LINE6_IF_NUM(0x414D, 1), .driver_info = LINE6_PODHD500_1 },
++	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500 },
+ 	{ LINE6_IF_NUM(0x414A, 0), .driver_info = LINE6_PODX3 },
+ 	{ LINE6_IF_NUM(0x414B, 0), .driver_info = LINE6_PODX3LIVE },
+ 	{ LINE6_IF_NUM(0x4159, 0), .driver_info = LINE6_PODHD500X },
+@@ -352,23 +350,13 @@ static const struct line6_properties pod
+ 		.ep_audio_r = 0x82,
+ 		.ep_audio_w = 0x01,
+ 	},
+-	[LINE6_PODHD500_0] = {
++	[LINE6_PODHD500] = {
+ 		.id = "PODHD500",
+ 		.name = "POD HD500",
+-		.capabilities	= LINE6_CAP_PCM
++		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
+ 				| LINE6_CAP_HWMON,
+ 		.altsetting = 1,
+-		.ep_ctrl_r = 0x81,
+-		.ep_ctrl_w = 0x01,
+-		.ep_audio_r = 0x86,
+-		.ep_audio_w = 0x02,
+-	},
+-	[LINE6_PODHD500_1] = {
+-		.id = "PODHD500",
+-		.name = "POD HD500",
+-		.capabilities	= LINE6_CAP_PCM
+-				| LINE6_CAP_HWMON,
+-		.altsetting = 0,
++		.ctrl_if = 1,
+ 		.ep_ctrl_r = 0x81,
+ 		.ep_ctrl_w = 0x01,
+ 		.ep_audio_r = 0x86,
 
 
