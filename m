@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854DDC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BADC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A61E205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882F0206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y8oe9HHG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PeD0pB0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgEDU3z (ORCPT
+        id S1727976AbgEDU36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52244 "EHLO
+        Mon, 4 May 2020 16:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgEDU3y (ORCPT
+        with ESMTP id S1727884AbgEDU34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:29:54 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C3EC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:29:53 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id d22so358755pgk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 13:29:53 -0700 (PDT)
+        Mon, 4 May 2020 16:29:56 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA12EC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:29:55 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id a4so4826pgc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 13:29:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0QB4162GZsAN1d5fV7HEvP7d2Yurhr7blPN7cTnpSEo=;
-        b=Y8oe9HHGRrJ5KmrQOQxyy1+h2aYbKFjHXwYYCNB6WgwKRnEkaunauvh+kJdvZWXCzk
-         I6s7LzvRsDCE4Q1m1/W3OG/xmsVmZBpXe+7k8rXOx9SCTRVSOFOYKH826V0AmDGfzKcH
-         6+iY0GiHW65bH24DlJBWxrTvWeNR0yNYmBM9E=
+        bh=+wRB5VIfZYKsxL8k93SIKt73dz4lmPO3scxFuSAQj30=;
+        b=PeD0pB0e/n9l4fG8cG6k0mKzO7nh3ASbGXrnrEoEIENp4G61qTS2JVdN6iOkR4sQcQ
+         DzgXFdfz2DVdhU0qfJ5YTDgFj69QK5Pnr9i6D+AnQnUFYjlBtGMaHAJ3puNmTqPRNNQW
+         p6H2YEHgy3CpiPH7ZitGv2Z/rwpHeUinztj14=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0QB4162GZsAN1d5fV7HEvP7d2Yurhr7blPN7cTnpSEo=;
-        b=qUMRP+vIxKU4tAZFvZAuPIosgzxzkywCQQmtGLUH5G56IIJNkqNegiANHN/f3pIhrG
-         iVwd/BL43OrBk9NVMPyQGRUsyGMYfIKXeKjtvgk76pY/nK+ks7PzOCWTJunbLmEYq/8U
-         Fd8brTv7U6ace0GYemVw9ibM44YhBn2pnYz2aHWBMJt9bhEE3Df5uxPqzD0RSedVuL5f
-         IIQf+JCEtSvYmCnyb5GhVg/8Byh/RtiiGa5jGdoPmXtupk2U0XraPLqjsQLPKrMoSkb8
-         QAoCtoXROv0ZZHnkk0iQI4RUA5RhezcfuxnWl1iM1P9+9zaZU2vGfkMTVNthX+qC4LW1
-         tkmw==
-X-Gm-Message-State: AGi0PuYAKK5hyrvkEz7NfaMBMmOZWiO/WNycZgtEzW/iBZbaj7S3z6yy
-        DJHY+h29UDQbdBC3fsoLyyoVR01V1F2nPA==
-X-Google-Smtp-Source: APiQypJX/3gaMy7JNCCzUaXIh/3dugfltFxqKkBMyY8CmFD2XLSyZ++uN7JwKOieOXHNAevOh/5zqg==
-X-Received: by 2002:a63:a358:: with SMTP id v24mr15831pgn.117.1588624192676;
-        Mon, 04 May 2020 13:29:52 -0700 (PDT)
+        bh=+wRB5VIfZYKsxL8k93SIKt73dz4lmPO3scxFuSAQj30=;
+        b=ilp+E9HVAI7q1xBXDuQMb0QNJtw58QaJyCnawi1pm4W0qifqW3ixuB7AEBgvxFtUtE
+         2wjQZEFZn6d60lDZQXb6wdmXgk+y2ABR5HiwAy9JR0vjqO/mdvJ6MkjOq6E9Rxz9y9tk
+         M9Ekn+odkO9QqWpMqxGF5pWjEqy8pSCmk9u/Ujeddgh8b8pX6k4thHLFn2Zl+KrUWe2o
+         vHItMyYpVe4DfpXd+oDYiB5kYNpujcKxRBurHRLVH+Bd+fKMjkM3vksiAywIZRtKDi9R
+         iA9BR41d3kdih8A9l2q8TLpNorsl0HKKotSkfHnaI5OidewmCeFHt2HpTqdBlNjWD2+R
+         yPQA==
+X-Gm-Message-State: AGi0PuYmgnGTZFKGqP+GdN6l+qrZ+eT/QpZnX91STCPqz4uSg5pwtLan
+        DuJUhcX2TIr1dXk3/CmASzE/Lt8jK9agDQ==
+X-Google-Smtp-Source: APiQypLOyqgvtozcPjyYW5OlT5qxl0jz0eewN5V8RpPJP7QqhNTq3SSzCQD+U3OCQkxe31WiFlHeBQ==
+X-Received: by 2002:a63:ff42:: with SMTP id s2mr25874pgk.410.1588624195118;
+        Mon, 04 May 2020 13:29:55 -0700 (PDT)
 Received: from mathewk1.lan ([161.97.192.125])
-        by smtp.gmail.com with ESMTPSA id z23sm9511737pfr.136.2020.05.04.13.29.51
+        by smtp.gmail.com with ESMTPSA id z23sm9511737pfr.136.2020.05.04.13.29.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 13:29:52 -0700 (PDT)
+        Mon, 04 May 2020 13:29:54 -0700 (PDT)
 From:   Mathew King <mathewk@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Mathew King <mathewk@chromium.org>,
         Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH v2 1/4] power_supply: Cleanup power supply sysfs attribute list
-Date:   Mon,  4 May 2020 14:29:27 -0600
-Message-Id: <20200504202930.228453-2-mathewk@chromium.org>
+Subject: [PATCH v2 3/4] power_supply: Add a macro that maps enum properties to text values
+Date:   Mon,  4 May 2020 14:29:29 -0600
+Message-Id: <20200504202930.228453-4-mathewk@chromium.org>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 In-Reply-To: <20200504202930.228453-1-mathewk@chromium.org>
 References: <20200504202930.228453-1-mathewk@chromium.org>
@@ -73,368 +73,281 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the device attribute list used to create sysfs attributes more
-robust by decoupling the list order from order of the enum defined in
-power_supply.h. This is done by using a designated initializer in the
-POWER_SUPPLY_ATTR macro.
+Reduce the number of touch points to add a new enum property to the
+power_supply class by mapping the array of text values to the device
+attribute descriptor. A new enum property can now added by creating an
+array with the text values named POWER_SUPPLY_${PROPNAME}_TEXT and
+adding POWER_SUPPLY_ENUM_ATTR(${PROPNAME}) to the power_supply_attrs
+array.
 
 Signed-off-by: Mathew King <mathewk@chromium.org>
 ---
-v2: - Don't create attributes for unlisted properties
-    - Use a char array for lower case name so no allocations needed
-      in init
+v2: - Fix array name from previous patch
 ---
- drivers/power/supply/power_supply_sysfs.c | 260 +++++++++++-----------
- 1 file changed, 132 insertions(+), 128 deletions(-)
+ drivers/power/supply/power_supply_sysfs.c | 126 +++++++++-------------
+ 1 file changed, 51 insertions(+), 75 deletions(-)
 
 diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4eae60b..69be80b321ea 100644
+index fb4d41c49ae1..8f90daff0003 100644
 --- a/drivers/power/supply/power_supply_sysfs.c
 +++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -18,26 +18,20 @@
- 
- #include "power_supply.h"
- 
--/*
-- * This is because the name "current" breaks the device attr macro.
-- * The "current" word resolves to "(get_current())" so instead of
-- * "current" "(get_current())" appears in the sysfs.
-- *
-- * The source of this definition is the device.h which calls __ATTR
-- * macro in sysfs.h which calls the __stringify macro.
-- *
-- * Only modification that the name is not tried to be resolved
-- * (as a macro let's say).
-- */
-+#define MAX_PROP_NAME_LEN 30
- 
--#define POWER_SUPPLY_ATTR(_name)					\
--{									\
--	.attr = { .name = #_name },					\
--	.show = power_supply_show_property,				\
--	.store = power_supply_store_property,				\
--}
-+struct power_supply_attr {
-+	const char *prop_name;
-+	char attr_name[MAX_PROP_NAME_LEN + 1];
-+	struct device_attribute dev_attr;
-+};
- 
--static struct device_attribute power_supply_attrs[];
-+#define POWER_SUPPLY_ATTR(_name)	\
-+[POWER_SUPPLY_PROP_ ## _name] =		\
-+{					\
-+	.prop_name = #_name,		\
-+	.attr_name = #_name "\0",	\
-+}
- 
- static const char * const power_supply_type_text[] = {
- 	"Unknown", "Battery", "UPS", "Mains", "USB",
-@@ -77,6 +71,91 @@ static const char * const power_supply_scope_text[] = {
- 	"Unknown", "System", "Device"
+@@ -24,16 +24,26 @@ struct power_supply_attr {
+ 	const char *prop_name;
+ 	char attr_name[MAX_PROP_NAME_LEN + 1];
+ 	struct device_attribute dev_attr;
++	const char * const *text_values;
++	int text_values_len;
  };
  
-+static struct power_supply_attr power_supply_attrs[] = {
-+	/* Properties of type `int' */
-+	POWER_SUPPLY_ATTR(STATUS),
-+	POWER_SUPPLY_ATTR(CHARGE_TYPE),
-+	POWER_SUPPLY_ATTR(HEALTH),
-+	POWER_SUPPLY_ATTR(PRESENT),
-+	POWER_SUPPLY_ATTR(ONLINE),
-+	POWER_SUPPLY_ATTR(AUTHENTIC),
-+	POWER_SUPPLY_ATTR(TECHNOLOGY),
-+	POWER_SUPPLY_ATTR(CYCLE_COUNT),
-+	POWER_SUPPLY_ATTR(VOLTAGE_MAX),
-+	POWER_SUPPLY_ATTR(VOLTAGE_MIN),
-+	POWER_SUPPLY_ATTR(VOLTAGE_MAX_DESIGN),
-+	POWER_SUPPLY_ATTR(VOLTAGE_MIN_DESIGN),
-+	POWER_SUPPLY_ATTR(VOLTAGE_NOW),
-+	POWER_SUPPLY_ATTR(VOLTAGE_AVG),
-+	POWER_SUPPLY_ATTR(VOLTAGE_OCV),
-+	POWER_SUPPLY_ATTR(VOLTAGE_BOOT),
-+	POWER_SUPPLY_ATTR(CURRENT_MAX),
-+	POWER_SUPPLY_ATTR(CURRENT_NOW),
-+	POWER_SUPPLY_ATTR(CURRENT_AVG),
-+	POWER_SUPPLY_ATTR(CURRENT_BOOT),
-+	POWER_SUPPLY_ATTR(POWER_NOW),
-+	POWER_SUPPLY_ATTR(POWER_AVG),
-+	POWER_SUPPLY_ATTR(CHARGE_FULL_DESIGN),
-+	POWER_SUPPLY_ATTR(CHARGE_EMPTY_DESIGN),
-+	POWER_SUPPLY_ATTR(CHARGE_FULL),
-+	POWER_SUPPLY_ATTR(CHARGE_EMPTY),
-+	POWER_SUPPLY_ATTR(CHARGE_NOW),
-+	POWER_SUPPLY_ATTR(CHARGE_AVG),
-+	POWER_SUPPLY_ATTR(CHARGE_COUNTER),
-+	POWER_SUPPLY_ATTR(CONSTANT_CHARGE_CURRENT),
-+	POWER_SUPPLY_ATTR(CONSTANT_CHARGE_CURRENT_MAX),
-+	POWER_SUPPLY_ATTR(CONSTANT_CHARGE_VOLTAGE),
-+	POWER_SUPPLY_ATTR(CONSTANT_CHARGE_VOLTAGE_MAX),
-+	POWER_SUPPLY_ATTR(CHARGE_CONTROL_LIMIT),
-+	POWER_SUPPLY_ATTR(CHARGE_CONTROL_LIMIT_MAX),
-+	POWER_SUPPLY_ATTR(CHARGE_CONTROL_START_THRESHOLD),
-+	POWER_SUPPLY_ATTR(CHARGE_CONTROL_END_THRESHOLD),
-+	POWER_SUPPLY_ATTR(INPUT_CURRENT_LIMIT),
-+	POWER_SUPPLY_ATTR(INPUT_VOLTAGE_LIMIT),
-+	POWER_SUPPLY_ATTR(INPUT_POWER_LIMIT),
-+	POWER_SUPPLY_ATTR(ENERGY_FULL_DESIGN),
-+	POWER_SUPPLY_ATTR(ENERGY_EMPTY_DESIGN),
-+	POWER_SUPPLY_ATTR(ENERGY_FULL),
-+	POWER_SUPPLY_ATTR(ENERGY_EMPTY),
-+	POWER_SUPPLY_ATTR(ENERGY_NOW),
-+	POWER_SUPPLY_ATTR(ENERGY_AVG),
-+	POWER_SUPPLY_ATTR(CAPACITY),
-+	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MIN),
-+	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MAX),
-+	POWER_SUPPLY_ATTR(CAPACITY_LEVEL),
-+	POWER_SUPPLY_ATTR(TEMP),
-+	POWER_SUPPLY_ATTR(TEMP_MAX),
-+	POWER_SUPPLY_ATTR(TEMP_MIN),
-+	POWER_SUPPLY_ATTR(TEMP_ALERT_MIN),
-+	POWER_SUPPLY_ATTR(TEMP_ALERT_MAX),
-+	POWER_SUPPLY_ATTR(TEMP_AMBIENT),
-+	POWER_SUPPLY_ATTR(TEMP_AMBIENT_ALERT_MIN),
-+	POWER_SUPPLY_ATTR(TEMP_AMBIENT_ALERT_MAX),
-+	POWER_SUPPLY_ATTR(TIME_TO_EMPTY_NOW),
-+	POWER_SUPPLY_ATTR(TIME_TO_EMPTY_AVG),
-+	POWER_SUPPLY_ATTR(TIME_TO_FULL_NOW),
-+	POWER_SUPPLY_ATTR(TIME_TO_FULL_AVG),
-+	POWER_SUPPLY_ATTR(TYPE),
-+	POWER_SUPPLY_ATTR(USB_TYPE),
-+	POWER_SUPPLY_ATTR(SCOPE),
-+	POWER_SUPPLY_ATTR(PRECHARGE_CURRENT),
-+	POWER_SUPPLY_ATTR(CHARGE_TERM_CURRENT),
-+	POWER_SUPPLY_ATTR(CALIBRATE),
-+	/* Properties of type `const char *' */
-+	POWER_SUPPLY_ATTR(MODEL_NAME),
-+	POWER_SUPPLY_ATTR(MANUFACTURER),
-+	POWER_SUPPLY_ATTR(SERIAL_NUMBER),
-+};
+-#define POWER_SUPPLY_ATTR(_name)	\
+-[POWER_SUPPLY_PROP_ ## _name] =		\
+-{					\
+-	.prop_name = #_name,		\
+-	.attr_name = #_name "\0",	\
++#define _POWER_SUPPLY_ATTR(_name, _text, _len)	\
++[POWER_SUPPLY_PROP_ ## _name] =			\
++{						\
++	.prop_name = #_name,			\
++	.attr_name = #_name "\0",		\
++	.text_values = _text,			\
++	.text_values_len = _len,		\
+ }
+ 
+-static const char * const power_supply_type_text[] = {
++#define POWER_SUPPLY_ATTR(_name) _POWER_SUPPLY_ATTR(_name, NULL, 0)
++#define _POWER_SUPPLY_ENUM_ATTR(_name, _text)	\
++	_POWER_SUPPLY_ATTR(_name, _text, ARRAY_SIZE(_text))
++#define POWER_SUPPLY_ENUM_ATTR(_name)	\
++	_POWER_SUPPLY_ENUM_ATTR(_name, POWER_SUPPLY_ ## _name ## _TEXT)
 +
-+static struct attribute *
-+__power_supply_attrs[ARRAY_SIZE(power_supply_attrs) + 1];
-+
-+static enum power_supply_property dev_attr_psp(struct device_attribute *attr)
++static const char * const POWER_SUPPLY_TYPE_TEXT[] = {
+ 	[POWER_SUPPLY_TYPE_UNKNOWN]		= "Unknown",
+ 	[POWER_SUPPLY_TYPE_BATTERY]		= "Battery",
+ 	[POWER_SUPPLY_TYPE_UPS]			= "UPS",
+@@ -48,7 +58,7 @@ static const char * const power_supply_type_text[] = {
+ 	[POWER_SUPPLY_TYPE_APPLE_BRICK_ID]	= "BrickID",
+ };
+ 
+-static const char * const power_supply_usb_type_text[] = {
++static const char * const POWER_SUPPLY_USB_TYPE_TEXT[] = {
+ 	[POWER_SUPPLY_USB_TYPE_UNKNOWN]		= "Unknown",
+ 	[POWER_SUPPLY_USB_TYPE_SDP]		= "SDP",
+ 	[POWER_SUPPLY_USB_TYPE_DCP]		= "DCP",
+@@ -61,7 +71,7 @@ static const char * const power_supply_usb_type_text[] = {
+ 	[POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID]	= "BrickID",
+ };
+ 
+-static const char * const power_supply_status_text[] = {
++static const char * const POWER_SUPPLY_STATUS_TEXT[] = {
+ 	[POWER_SUPPLY_STATUS_UNKNOWN]		= "Unknown",
+ 	[POWER_SUPPLY_STATUS_CHARGING]		= "Charging",
+ 	[POWER_SUPPLY_STATUS_DISCHARGING]	= "Discharging",
+@@ -69,7 +79,7 @@ static const char * const power_supply_status_text[] = {
+ 	[POWER_SUPPLY_STATUS_FULL]		= "Full",
+ };
+ 
+-static const char * const power_supply_charge_type_text[] = {
++static const char * const POWER_SUPPLY_CHARGE_TYPE_TEXT[] = {
+ 	[POWER_SUPPLY_CHARGE_TYPE_UNKNOWN]	= "Unknown",
+ 	[POWER_SUPPLY_CHARGE_TYPE_NONE]		= "N/A",
+ 	[POWER_SUPPLY_CHARGE_TYPE_TRICKLE]	= "Trickle",
+@@ -79,7 +89,7 @@ static const char * const power_supply_charge_type_text[] = {
+ 	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	= "Custom",
+ };
+ 
+-static const char * const power_supply_health_text[] = {
++static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
+ 	[POWER_SUPPLY_HEALTH_UNKNOWN]		    = "Unknown",
+ 	[POWER_SUPPLY_HEALTH_GOOD]		    = "Good",
+ 	[POWER_SUPPLY_HEALTH_OVERHEAT]		    = "Overheat",
+@@ -92,7 +102,7 @@ static const char * const power_supply_health_text[] = {
+ 	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    = "Over current",
+ };
+ 
+-static const char * const power_supply_technology_text[] = {
++static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
+ 	[POWER_SUPPLY_TECHNOLOGY_UNKNOWN]	= "Unknown",
+ 	[POWER_SUPPLY_TECHNOLOGY_NiMH]		= "NiMH",
+ 	[POWER_SUPPLY_TECHNOLOGY_LION]		= "Li-ion",
+@@ -102,7 +112,7 @@ static const char * const power_supply_technology_text[] = {
+ 	[POWER_SUPPLY_TECHNOLOGY_LiMn]		= "LiMn",
+ };
+ 
+-static const char * const power_supply_capacity_level_text[] = {
++static const char * const POWER_SUPPLY_CAPACITY_LEVEL_TEXT[] = {
+ 	[POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN]	= "Unknown",
+ 	[POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL]	= "Critical",
+ 	[POWER_SUPPLY_CAPACITY_LEVEL_LOW]	= "Low",
+@@ -111,7 +121,7 @@ static const char * const power_supply_capacity_level_text[] = {
+ 	[POWER_SUPPLY_CAPACITY_LEVEL_FULL]	= "Full",
+ };
+ 
+-static const char * const power_supply_scope_text[] = {
++static const char * const POWER_SUPPLY_SCOPE_TEXT[] = {
+ 	[POWER_SUPPLY_SCOPE_UNKNOWN]	= "Unknown",
+ 	[POWER_SUPPLY_SCOPE_SYSTEM]	= "System",
+ 	[POWER_SUPPLY_SCOPE_DEVICE]	= "Device",
+@@ -119,13 +129,13 @@ static const char * const power_supply_scope_text[] = {
+ 
+ static struct power_supply_attr power_supply_attrs[] = {
+ 	/* Properties of type `int' */
+-	POWER_SUPPLY_ATTR(STATUS),
+-	POWER_SUPPLY_ATTR(CHARGE_TYPE),
+-	POWER_SUPPLY_ATTR(HEALTH),
++	POWER_SUPPLY_ENUM_ATTR(STATUS),
++	POWER_SUPPLY_ENUM_ATTR(CHARGE_TYPE),
++	POWER_SUPPLY_ENUM_ATTR(HEALTH),
+ 	POWER_SUPPLY_ATTR(PRESENT),
+ 	POWER_SUPPLY_ATTR(ONLINE),
+ 	POWER_SUPPLY_ATTR(AUTHENTIC),
+-	POWER_SUPPLY_ATTR(TECHNOLOGY),
++	POWER_SUPPLY_ENUM_ATTR(TECHNOLOGY),
+ 	POWER_SUPPLY_ATTR(CYCLE_COUNT),
+ 	POWER_SUPPLY_ATTR(VOLTAGE_MAX),
+ 	POWER_SUPPLY_ATTR(VOLTAGE_MIN),
+@@ -168,7 +178,7 @@ static struct power_supply_attr power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(CAPACITY),
+ 	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MIN),
+ 	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MAX),
+-	POWER_SUPPLY_ATTR(CAPACITY_LEVEL),
++	POWER_SUPPLY_ENUM_ATTR(CAPACITY_LEVEL),
+ 	POWER_SUPPLY_ATTR(TEMP),
+ 	POWER_SUPPLY_ATTR(TEMP_MAX),
+ 	POWER_SUPPLY_ATTR(TEMP_MIN),
+@@ -181,9 +191,9 @@ static struct power_supply_attr power_supply_attrs[] = {
+ 	POWER_SUPPLY_ATTR(TIME_TO_EMPTY_AVG),
+ 	POWER_SUPPLY_ATTR(TIME_TO_FULL_NOW),
+ 	POWER_SUPPLY_ATTR(TIME_TO_FULL_AVG),
+-	POWER_SUPPLY_ATTR(TYPE),
++	POWER_SUPPLY_ENUM_ATTR(TYPE),
+ 	POWER_SUPPLY_ATTR(USB_TYPE),
+-	POWER_SUPPLY_ATTR(SCOPE),
++	POWER_SUPPLY_ENUM_ATTR(SCOPE),
+ 	POWER_SUPPLY_ATTR(PRECHARGE_CURRENT),
+ 	POWER_SUPPLY_ATTR(CHARGE_TERM_CURRENT),
+ 	POWER_SUPPLY_ATTR(CALIBRATE),
+@@ -196,10 +206,14 @@ static struct power_supply_attr power_supply_attrs[] = {
+ static struct attribute *
+ __power_supply_attrs[ARRAY_SIZE(power_supply_attrs) + 1];
+ 
++static struct power_supply_attr *to_ps_attr(struct device_attribute *attr)
 +{
-+	return container_of(attr, struct power_supply_attr, dev_attr) -
-+		power_supply_attrs;
++	return container_of(attr, struct power_supply_attr, dev_attr);
 +}
 +
+ static enum power_supply_property dev_attr_psp(struct device_attribute *attr)
+ {
+-	return container_of(attr, struct power_supply_attr, dev_attr) -
+-		power_supply_attrs;
++	return  to_ps_attr(attr) - power_supply_attrs;
+ }
+ 
  static ssize_t power_supply_show_usb_type(struct device *dev,
- 					  enum power_supply_usb_type *usb_types,
- 					  ssize_t num_usb_types,
-@@ -117,7 +196,7 @@ static ssize_t power_supply_show_property(struct device *dev,
+@@ -218,11 +232,11 @@ static ssize_t power_supply_show_usb_type(struct device *dev,
+ 
+ 		if (value->intval == usb_type) {
+ 			count += sprintf(buf + count, "[%s] ",
+-					 power_supply_usb_type_text[usb_type]);
++					 POWER_SUPPLY_USB_TYPE_TEXT[usb_type]);
+ 			match = true;
+ 		} else {
+ 			count += sprintf(buf + count, "%s ",
+-					 power_supply_usb_type_text[usb_type]);
++					 POWER_SUPPLY_USB_TYPE_TEXT[usb_type]);
+ 		}
+ 	}
+ 
+@@ -242,6 +256,7 @@ static ssize_t power_supply_show_property(struct device *dev,
  					  char *buf) {
  	ssize_t ret;
  	struct power_supply *psy = dev_get_drvdata(dev);
--	enum power_supply_property psp = attr - power_supply_attrs;
-+	enum power_supply_property psp = dev_attr_psp(attr);
++	struct power_supply_attr *ps_attr = to_ps_attr(attr);
+ 	enum power_supply_property psp = dev_attr_psp(attr);
  	union power_supply_propval value;
  
- 	if (psp == POWER_SUPPLY_PROP_TYPE) {
-@@ -186,7 +265,7 @@ static ssize_t power_supply_store_property(struct device *dev,
+@@ -262,39 +277,16 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 		}
+ 	}
+ 
++	if (ps_attr->text_values_len > 0 &&
++	    value.intval < ps_attr->text_values_len && value.intval >= 0) {
++		return sprintf(buf, "%s\n", ps_attr->text_values[value.intval]);
++	}
++
+ 	switch (psp) {
+-	case POWER_SUPPLY_PROP_STATUS:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_status_text[value.intval]);
+-		break;
+-	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_charge_type_text[value.intval]);
+-		break;
+-	case POWER_SUPPLY_PROP_HEALTH:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_health_text[value.intval]);
+-		break;
+-	case POWER_SUPPLY_PROP_TECHNOLOGY:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_technology_text[value.intval]);
+-		break;
+-	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_capacity_level_text[value.intval]);
+-		break;
+-	case POWER_SUPPLY_PROP_TYPE:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_type_text[value.intval]);
+-		break;
+ 	case POWER_SUPPLY_PROP_USB_TYPE:
+ 		ret = power_supply_show_usb_type(dev, psy->desc->usb_types,
+-						 psy->desc->num_usb_types,
+-						 &value, buf);
+-		break;
+-	case POWER_SUPPLY_PROP_SCOPE:
+-		ret = sprintf(buf, "%s\n",
+-			      power_supply_scope_text[value.intval]);
++						psy->desc->num_usb_types,
++						&value, buf);
+ 		break;
+ 	case POWER_SUPPLY_PROP_MODEL_NAME ... POWER_SUPPLY_PROP_SERIAL_NUMBER:
+ 		ret = sprintf(buf, "%s\n", value.strval);
+@@ -311,30 +303,14 @@ static ssize_t power_supply_store_property(struct device *dev,
  					   const char *buf, size_t count) {
  	ssize_t ret;
  	struct power_supply *psy = dev_get_drvdata(dev);
--	enum power_supply_property psp = attr - power_supply_attrs;
-+	enum power_supply_property psp = dev_attr_psp(attr);
++	struct power_supply_attr *ps_attr = to_ps_attr(attr);
+ 	enum power_supply_property psp = dev_attr_psp(attr);
  	union power_supply_propval value;
  
- 	switch (psp) {
-@@ -235,86 +314,6 @@ static ssize_t power_supply_store_property(struct device *dev,
- 	return count;
- }
- 
--/* Must be in the same order as POWER_SUPPLY_PROP_* */
--static struct device_attribute power_supply_attrs[] = {
--	/* Properties of type `int' */
--	POWER_SUPPLY_ATTR(status),
--	POWER_SUPPLY_ATTR(charge_type),
--	POWER_SUPPLY_ATTR(health),
--	POWER_SUPPLY_ATTR(present),
--	POWER_SUPPLY_ATTR(online),
--	POWER_SUPPLY_ATTR(authentic),
--	POWER_SUPPLY_ATTR(technology),
--	POWER_SUPPLY_ATTR(cycle_count),
--	POWER_SUPPLY_ATTR(voltage_max),
--	POWER_SUPPLY_ATTR(voltage_min),
--	POWER_SUPPLY_ATTR(voltage_max_design),
--	POWER_SUPPLY_ATTR(voltage_min_design),
--	POWER_SUPPLY_ATTR(voltage_now),
--	POWER_SUPPLY_ATTR(voltage_avg),
--	POWER_SUPPLY_ATTR(voltage_ocv),
--	POWER_SUPPLY_ATTR(voltage_boot),
--	POWER_SUPPLY_ATTR(current_max),
--	POWER_SUPPLY_ATTR(current_now),
--	POWER_SUPPLY_ATTR(current_avg),
--	POWER_SUPPLY_ATTR(current_boot),
--	POWER_SUPPLY_ATTR(power_now),
--	POWER_SUPPLY_ATTR(power_avg),
--	POWER_SUPPLY_ATTR(charge_full_design),
--	POWER_SUPPLY_ATTR(charge_empty_design),
--	POWER_SUPPLY_ATTR(charge_full),
--	POWER_SUPPLY_ATTR(charge_empty),
--	POWER_SUPPLY_ATTR(charge_now),
--	POWER_SUPPLY_ATTR(charge_avg),
--	POWER_SUPPLY_ATTR(charge_counter),
--	POWER_SUPPLY_ATTR(constant_charge_current),
--	POWER_SUPPLY_ATTR(constant_charge_current_max),
--	POWER_SUPPLY_ATTR(constant_charge_voltage),
--	POWER_SUPPLY_ATTR(constant_charge_voltage_max),
--	POWER_SUPPLY_ATTR(charge_control_limit),
--	POWER_SUPPLY_ATTR(charge_control_limit_max),
--	POWER_SUPPLY_ATTR(charge_control_start_threshold),
--	POWER_SUPPLY_ATTR(charge_control_end_threshold),
--	POWER_SUPPLY_ATTR(input_current_limit),
--	POWER_SUPPLY_ATTR(input_voltage_limit),
--	POWER_SUPPLY_ATTR(input_power_limit),
--	POWER_SUPPLY_ATTR(energy_full_design),
--	POWER_SUPPLY_ATTR(energy_empty_design),
--	POWER_SUPPLY_ATTR(energy_full),
--	POWER_SUPPLY_ATTR(energy_empty),
--	POWER_SUPPLY_ATTR(energy_now),
--	POWER_SUPPLY_ATTR(energy_avg),
--	POWER_SUPPLY_ATTR(capacity),
--	POWER_SUPPLY_ATTR(capacity_alert_min),
--	POWER_SUPPLY_ATTR(capacity_alert_max),
--	POWER_SUPPLY_ATTR(capacity_level),
--	POWER_SUPPLY_ATTR(temp),
--	POWER_SUPPLY_ATTR(temp_max),
--	POWER_SUPPLY_ATTR(temp_min),
--	POWER_SUPPLY_ATTR(temp_alert_min),
--	POWER_SUPPLY_ATTR(temp_alert_max),
--	POWER_SUPPLY_ATTR(temp_ambient),
--	POWER_SUPPLY_ATTR(temp_ambient_alert_min),
--	POWER_SUPPLY_ATTR(temp_ambient_alert_max),
--	POWER_SUPPLY_ATTR(time_to_empty_now),
--	POWER_SUPPLY_ATTR(time_to_empty_avg),
--	POWER_SUPPLY_ATTR(time_to_full_now),
--	POWER_SUPPLY_ATTR(time_to_full_avg),
--	POWER_SUPPLY_ATTR(type),
--	POWER_SUPPLY_ATTR(usb_type),
--	POWER_SUPPLY_ATTR(scope),
--	POWER_SUPPLY_ATTR(precharge_current),
--	POWER_SUPPLY_ATTR(charge_term_current),
--	POWER_SUPPLY_ATTR(calibrate),
--	/* Properties of type `const char *' */
--	POWER_SUPPLY_ATTR(model_name),
--	POWER_SUPPLY_ATTR(manufacturer),
--	POWER_SUPPLY_ATTR(serial_number),
--};
--
--static struct attribute *
--__power_supply_attrs[ARRAY_SIZE(power_supply_attrs) + 1];
--
- static umode_t power_supply_attr_is_visible(struct kobject *kobj,
- 					   struct attribute *attr,
- 					   int attrno)
-@@ -324,6 +323,9 @@ static umode_t power_supply_attr_is_visible(struct kobject *kobj,
- 	umode_t mode = S_IRUSR | S_IRGRP | S_IROTH;
- 	int i;
- 
-+	if (!power_supply_attrs[attrno].prop_name)
-+		return 0;
-+
- 	if (attrno == POWER_SUPPLY_PROP_TYPE)
- 		return mode;
- 
-@@ -352,31 +354,38 @@ static const struct attribute_group *power_supply_attr_groups[] = {
- 	NULL,
- };
- 
--void power_supply_init_attrs(struct device_type *dev_type)
-+static void str_to_lower(char *str)
- {
--	int i;
--
--	dev_type->groups = power_supply_attr_groups;
--
--	for (i = 0; i < ARRAY_SIZE(power_supply_attrs); i++)
--		__power_supply_attrs[i] = &power_supply_attrs[i].attr;
-+	while (*str) {
-+		*str = tolower(*str);
-+		str++;
-+	}
- }
- 
--static char *kstruprdup(const char *str, gfp_t gfp)
-+void power_supply_init_attrs(struct device_type *dev_type)
- {
--	char *ret, *ustr;
-+	int i;
- 
--	ustr = ret = kmalloc(strlen(str) + 1, gfp);
-+	dev_type->groups = power_supply_attr_groups;
- 
--	if (!ret)
--		return NULL;
-+	for (i = 0; i < ARRAY_SIZE(power_supply_attrs); i++) {
-+		struct device_attribute *attr;
- 
--	while (*str)
--		*ustr++ = toupper(*str++);
-+		if (!power_supply_attrs[i].prop_name) {
-+			pr_warn("%s: Property %d skipped because is is missing from power_supply_attrs\n",
-+				__func__, i);
-+			sprintf(power_supply_attrs[i].attr_name, "_err_%d", i);
-+		} else {
-+			str_to_lower(power_supply_attrs[i].attr_name);
-+		}
- 
--	*ustr = 0;
-+		attr = &power_supply_attrs[i].dev_attr;
- 
--	return ret;
-+		attr->attr.name = power_supply_attrs[i].attr_name;
-+		attr->show = power_supply_show_property;
-+		attr->store = power_supply_store_property;
-+		__power_supply_attrs[i] = &attr->attr;
-+	}
- }
- 
- int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
-@@ -384,7 +393,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	struct power_supply *psy = dev_get_drvdata(dev);
- 	int ret = 0, j;
- 	char *prop_buf;
--	char *attrname;
- 
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
-@@ -400,12 +408,14 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		return -ENOMEM;
- 
- 	for (j = 0; j < psy->desc->num_properties; j++) {
--		struct device_attribute *attr;
-+		struct power_supply_attr *pwr_attr;
-+		struct device_attribute *dev_attr;
- 		char *line;
- 
--		attr = &power_supply_attrs[psy->desc->properties[j]];
-+		pwr_attr = &power_supply_attrs[psy->desc->properties[j]];
-+		dev_attr = &pwr_attr->dev_attr;
- 
--		ret = power_supply_show_property(dev, attr, prop_buf);
-+		ret = power_supply_show_property(dev, dev_attr, prop_buf);
- 		if (ret == -ENODEV || ret == -ENODATA) {
- 			/* When a battery is absent, we expect -ENODEV. Don't abort;
- 			   send the uevent with at least the the PRESENT=0 property */
-@@ -420,14 +430,8 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		if (line)
- 			*line = 0;
- 
--		attrname = kstruprdup(attr->attr.name, GFP_KERNEL);
--		if (!attrname) {
--			ret = -ENOMEM;
--			goto out;
--		}
--
--		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
--		kfree(attrname);
-+		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s",
-+				     pwr_attr->prop_name, prop_buf);
- 		if (ret)
- 			goto out;
+-	switch (psp) {
+-	case POWER_SUPPLY_PROP_STATUS:
+-		ret = sysfs_match_string(power_supply_status_text, buf);
+-		break;
+-	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+-		ret = sysfs_match_string(power_supply_charge_type_text, buf);
+-		break;
+-	case POWER_SUPPLY_PROP_HEALTH:
+-		ret = sysfs_match_string(power_supply_health_text, buf);
+-		break;
+-	case POWER_SUPPLY_PROP_TECHNOLOGY:
+-		ret = sysfs_match_string(power_supply_technology_text, buf);
+-		break;
+-	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+-		ret = sysfs_match_string(power_supply_capacity_level_text, buf);
+-		break;
+-	case POWER_SUPPLY_PROP_SCOPE:
+-		ret = sysfs_match_string(power_supply_scope_text, buf);
+-		break;
+-	default:
+-		ret = -EINVAL;
++	ret = -EINVAL;
++	if (ps_attr->text_values_len > 0) {
++		ret = __sysfs_match_string(ps_attr->text_values,
++					   ps_attr->text_values_len, buf);
  	}
+ 
+ 	/*
 -- 
 2.26.2.526.g744177e7f7-goog
 
