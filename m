@@ -2,407 +2,177 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FCCC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA75AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3E220675
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:55:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jI2l2Hwl"
+	by mail.kernel.org (Postfix) with ESMTP id 80BE120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgEDXz3 (ORCPT
+        id S1728412AbgEDX6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:55:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26085 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728380AbgEDXz3 (ORCPT
+        Mon, 4 May 2020 19:58:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6564 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728297AbgEDX6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:55:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588636527; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=YK8xLKRg6EnUn0KElUjOgihsDGpzo2GL/0yDu7lKbm4=; b=jI2l2HwlwJDqROryfPDcCeTBWqDaExjoXixUeMJcyEh/SniWLoKVe6qraT7EzpJMgqTC/qOj
- ydy07Z3sJKXvQ/17ND7F1P0QHBE4G3Zzf8QtTJKbtjyPbF77IfNOi9C41L1ymFKA+oN7UhV5
- Tpnd+/Tyl41MTfiG2SQvsoAnClo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb0ab41.7fc833056768-smtp-out-n03;
- Mon, 04 May 2020 23:54:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 33123C432C2; Mon,  4 May 2020 23:54:40 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6934CC4478C;
-        Mon,  4 May 2020 23:54:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6934CC4478C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, vkoul@kernel.org, sboyd@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jackp@codeaurora.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v8 2/5] phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
-Date:   Mon,  4 May 2020 16:54:24 -0700
-Message-Id: <1588636467-23409-3-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
-References: <1588636467-23409-1-git-send-email-wcheng@codeaurora.org>
+        Mon, 4 May 2020 19:58:01 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044NXW98126925;
+        Mon, 4 May 2020 19:57:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r3epnp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 19:57:59 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 044Nswgr168925;
+        Mon, 4 May 2020 19:57:59 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r3epnm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 19:57:59 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044NnjZ2003723;
+        Mon, 4 May 2020 23:57:58 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02dal.us.ibm.com with ESMTP id 30s0g69tdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 23:57:58 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044Nvumw52691374
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 4 May 2020 23:57:56 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDF00AC059;
+        Mon,  4 May 2020 23:57:56 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63590AC05B;
+        Mon,  4 May 2020 23:57:56 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.179.113])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  4 May 2020 23:57:56 +0000 (GMT)
+Subject: Re: s390 KVM warning in handle_pqap()
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Qian Cai <cailca@icloud.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <ED53E46F-EF53-46F6-B88E-2035965AB20C@icloud.com>
+ <57992d1f-434e-3900-1958-542cd830aad1@de.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <4edb5a70-f416-37c3-a233-c278d4c664ea@linux.ibm.com>
+Date:   Mon, 4 May 2020 19:57:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <57992d1f-434e-3900-1958-542cd830aad1@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-04_13:2020-05-04,2020-05-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=700 clxscore=1015 priorityscore=1501 malwarescore=0
+ impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the SNPS FemtoPHY V2 driver used in QCOM SOCs.  There
-are potentially multiple instances of this UTMI PHY on the
-SOC, all which can utilize this driver.  The V2 driver will
-have a different register map compared to V1.
+I'll check with the z/VM folks.
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Philipp Zabel <pza@pengutronix.de>
-Reviewed-by: Manu Gautam <mgautam@codeaurora.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/phy/qualcomm/Kconfig                  |  10 +
- drivers/phy/qualcomm/Makefile                 |   1 +
- drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 287 ++++++++++++++++++++++++++
- 3 files changed, 298 insertions(+)
- create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
+On 5/4/20 4:59 AM, Christian Borntraeger wrote:
+>
+> On 02.05.20 04:38, Qian Cai wrote:
+>> This line,
+>>
+>> if (WARN_ON_ONCE(fc != 0x03))
+>>
+>> qemu-kvm-2.12.0-99.module+el8.2.0+5827+8c39933c with this kernel config,
+>>
+>> https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
+>>
+>> # /usr/libexec/qemu-kvm -name ubuntu-18.04-server-cloudimg -cpu host -smp 2 -m 2G -hda ubuntu-18.04-server-cloudimg.qcow2 -cdrom ubuntu-18.04-server-cloudimg.iso -nic user,hostfwd=tcp::2222-:22 -nographic
+>>
+>> 00: [  424.578896] WARNING: CPU: 0 PID: 1533 at arch/s390/kvm/priv.c:632 handle_
+>> 00: pqap+0x2b6/0x468 [kvm]
+>> 00: [  424.578934] Modules linked in: kvm ip_tables x_tables xfs dasd_fba_mod da
+>> 00: sd_eckd_mod dm_mirror dm_region_hash dm_log dm_mod
+>> 00: [  424.579026] CPU: 0 PID: 1533 Comm: qemu-kvm Not tainted 5.7.0-rc3-next-20
+>> 00: 200501 #2
+>> 00: [  424.579064] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> You run nested unter z/VM (under LPAR). So it looks like z/VM behaves different to
+> LPAR regarding the interception of the PQAP instruction.
+> Tony, can you talk to your z/VM colleagues about this? I guess we might need to
+> remove the WARN_ON_ONCE(fc != 0x03) and simply return EOPNOTSUPP if our assumption
+> is not right. I guess z/VM has its ECA field set to 0 so the effective ECA field
+> is also 0.
+>
+>
+>
+>> 00: [  424.579101] Krnl PSW : 0704d00180000000 000003ff80440dc2 (handle_pqap+0x2
+>> 00: ba/0x468 [kvm])
+>> 00: [  424.579239]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0
+>> 00:  RI:0 EA:3
+>> 00: [  424.579282] Krnl GPRS: 0000000000000000 0000030000000000 0000030000000000
+>> 00:  00000000e1ca6148
+>> 00: [  424.579320]            0000030000000000 000003ff80440c14 0000000000000000
+>> 00:  00000000822e8520
+>> 00: [  424.579359]            00000000e1ca6000 000000009c79a000 00000000822e8008
+>> 00:  0000007c00877e70
+>> 00: [  424.579399]            000003ff803f5000 000003ff80467528 000003ff80440c14
+>> 00:  000003e0043bf2c8
+>> 00: [  424.579461] Krnl Code: 000003ff80440db6: a774ff5a            brc     7,00
+>> 00: 0003ff80440c6a
+>> 00: [  424.579461]            000003ff80440dba: a7f4ff54            brc     15,0
+>> 00: 00003ff80440c62
+>> 00: [  424.579461]           #000003ff80440dbe: af000000            mc      0,0
+>> 00: [  424.579461]           >000003ff80440dc2: a798ffa1            lhi     %r9,
+>> 00: -95
+>> 00: [  424.579461]            000003ff80440dc6: a51d0300            llihl   %r1,
+>> 00: 768
+>> 00: [  424.579461]            000003ff80440dca: b90800b1            agr     %r11
+>> 00: ,%r1
+>> 00: [  424.579461]            000003ff80440dce: d70bb000b000        xc      0(12
+>> 00: ,%r11),0(%r11)
+>> 00: [  424.579461]            000003ff80440dd4: b9140029            lgfr    %r2,
+>> 00: %r9
+>> 00: [  424.586765] Call Trace:
+>> 00: [  424.586894]  [<000003ff80440dc2>] handle_pqap+0x2ba/0x468 [kvm]
+>> 00: [  424.587026]  [<000003ff80446fa6>] kvm_s390_handle_b2+0x2f6/0x950 [kvm]
+>> 00: [  424.587156]  [<000003ff8042d74c>] kvm_handle_sie_intercept+0x154/0x1db0 [
+>> 00: kvm]
+>> 00: [  424.587287]  [<000003ff80426950>] __vcpu_run+0x1040/0x2150 [kvm]
+>> 00: [  424.587414]  [<000003ff8042941a>] kvm_arch_vcpu_ioctl_run+0x5fa/0x1338 [k
+>> 00: vm]
+>> 00: [  424.587540]  [<000003ff8040195e>] kvm_vcpu_ioctl+0x346/0xa10 [kvm]
+>> 00: [  424.587590]  [<00000001433fbd16>] ksys_ioctl+0x276/0xbb8
+>> 00: [  424.587630]  [<00000001433fc682>] __s390x_sys_ioctl+0x2a/0x38
+>> 00: [  424.587674]  [<000000014393c880>] system_call+0xd8/0x2b4
+>> 00: [  424.587715] 2 locks held by qemu-kvm/1533:
+>> 00: [  424.587748]  #0: 00000000822e80d0 (&vcpu->mutex){+.+.}-{3:3}, at: kvm_vcp
+>> 00: u_ioctl+0x170/0xa10 [kvm]
+>> 00: [  424.587898]  #1: 0000000081fe3980 (&kvm->srcu){....}-{0:0}, at: __vcpu_ru
+>> 00: n+0x60a/0x2150 [kvm]
+>> 00: [  424.588045] Last Breaking-Event-Address:
+>> 00: [  424.588169]  [<000003ff80440c1e>] handle_pqap+0x116/0x468 [kvm]
+>> 00: [  424.588204] irq event stamp: 23141
+>> 00: [  424.588246] hardirqs last  enabled at (23149): [<000000014308f3de>] conso
+>> 00: le_unlock+0x766/0xa20
+>> 00: [  424.588287] hardirqs last disabled at (23156): [<000000014308ee40>] conso
+>> 00: le_unlock+0x1c8/0xa20
+>> 00: [  424.588536] softirqs last  enabled at (22998): [<000000014393e162>] __do_
+>> 00: softirq+0x6e2/0xa48
+>> 00: [  424.588583] softirqs last disabled at (22983): [<0000000142f652dc>] do_so
+>> 00: ftirq_own_stack+0xe4/0x100
+>> 00: [  424.588625] ---[ end trace e420441aa7c001ac ]---
+>>
 
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index b86f955..ca9ce7e 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -92,6 +92,16 @@ config PHY_QCOM_USB_HS
- 	  Support for the USB high-speed ULPI compliant phy on Qualcomm
- 	  chipsets.
- 
-+config PHY_QCOM_USB_SNPS_FEMTO_V2
-+	tristate "Qualcomm SNPS FEMTO USB HS PHY V2 module"
-+	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+	select GENERIC_PHY
-+	help
-+	  Enable support for the USB high-speed SNPS Femto phy on Qualcomm
-+	  chipsets.  This PHY has differences in the register map compared
-+	  to the V1 variants.  The PHY is paired with a Synopsys DWC3 USB
-+	  controller on Qualcomm SOCs.
-+
- config PHY_QCOM_USB_HSIC
- 	tristate "Qualcomm USB HSIC ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-index 4174678..86fb32e 100644
---- a/drivers/phy/qualcomm/Makefile
-+++ b/drivers/phy/qualcomm/Makefile
-@@ -13,3 +13,4 @@ obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
- obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
- obj-$(CONFIG_PHY_QCOM_USB_HS_28NM)	+= phy-qcom-usb-hs-28nm.o
- obj-$(CONFIG_PHY_QCOM_USB_SS)		+= phy-qcom-usb-ss.o
-+obj-$(CONFIG_PHY_QCOM_USB_SNPS_FEMTO_V2)+= phy-qcom-snps-femto-v2.o
-diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-new file mode 100644
-index 0000000..4d74045
---- /dev/null
-+++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-@@ -0,0 +1,287 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL0		(0x3c)
-+#define SLEEPM					BIT(0)
-+#define OPMODE_MASK				GENMASK(4, 3)
-+#define OPMODE_NORMAL				(0x00)
-+#define OPMODE_NONDRIVING			BIT(3)
-+#define TERMSEL					BIT(5)
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL1		(0x40)
-+#define XCVRSEL					BIT(0)
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL5		(0x50)
-+#define POR					BIT(1)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0	(0x54)
-+#define RETENABLEN				BIT(3)
-+#define FSEL_MASK				GENMASK(7, 5)
-+#define FSEL_DEFAULT				(0x3 << 4)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1	(0x58)
-+#define VBUSVLDEXTSEL0				BIT(4)
-+#define PLLBTUNE				BIT(5)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2	(0x5c)
-+#define VREGBYPASS				BIT(0)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL1		(0x60)
-+#define VBUSVLDEXT0				BIT(0)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL2		(0x64)
-+#define USB2_AUTO_RESUME			BIT(0)
-+#define USB2_SUSPEND_N				BIT(2)
-+#define USB2_SUSPEND_N_SEL			BIT(3)
-+
-+#define USB2_PHY_USB_PHY_CFG0			(0x94)
-+#define UTMI_PHY_DATAPATH_CTRL_OVERRIDE_EN	BIT(0)
-+#define UTMI_PHY_CMN_CTRL_OVERRIDE_EN		BIT(1)
-+
-+#define USB2_PHY_USB_PHY_REFCLK_CTRL		(0xa0)
-+#define REFCLK_SEL_MASK				GENMASK(1, 0)
-+#define REFCLK_SEL_DEFAULT			(0x2 << 0)
-+
-+static const char * const qcom_snps_hsphy_vreg_names[] = {
-+	"vdda-pll", "vdda33", "vdda18",
-+};
-+
-+#define SNPS_HS_NUM_VREGS		ARRAY_SIZE(qcom_snps_hsphy_vreg_names)
-+
-+/**
-+ * struct qcom_snps_hsphy - snps hs phy attributes
-+ *
-+ * @phy: generic phy
-+ * @base: iomapped memory space for snps hs phy
-+ *
-+ * @cfg_ahb_clk: AHB2PHY interface clock
-+ * @ref_clk: phy reference clock
-+ * @iface_clk: phy interface clock
-+ * @phy_reset: phy reset control
-+ * @vregs: regulator supplies bulk data
-+ * @phy_initialized: if PHY has been initialized correctly
-+ */
-+struct qcom_snps_hsphy {
-+	struct phy *phy;
-+	void __iomem *base;
-+
-+	struct clk *cfg_ahb_clk;
-+	struct clk *ref_clk;
-+	struct reset_control *phy_reset;
-+	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
-+
-+	bool phy_initialized;
-+};
-+
-+static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
-+						u32 mask, u32 val)
-+{
-+	u32 reg;
-+
-+	reg = readl_relaxed(base + offset);
-+	reg &= ~mask;
-+	reg |= val & mask;
-+	writel_relaxed(reg, base + offset);
-+
-+	/* Ensure above write is completed */
-+	readl_relaxed(base + offset);
-+}
-+
-+static int qcom_snps_hsphy_init(struct phy *phy)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+	int ret;
-+
-+	dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to enable cfg ahb clock, %d\n", ret);
-+		goto poweroff_phy;
-+	}
-+
-+	ret = reset_control_assert(hsphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to assert phy_reset, %d\n", ret);
-+		goto disable_ahb_clk;
-+	}
-+
-+	usleep_range(100, 150);
-+
-+	ret = reset_control_deassert(hsphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to de-assert phy_reset, %d\n", ret);
-+		goto disable_ahb_clk;
-+	}
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
-+					UTMI_PHY_CMN_CTRL_OVERRIDE_EN,
-+					UTMI_PHY_CMN_CTRL_OVERRIDE_EN);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
-+							POR, POR);
-+	qcom_snps_hsphy_write_mask(hsphy->base,
-+					USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0,
-+					FSEL_MASK, 0);
-+	qcom_snps_hsphy_write_mask(hsphy->base,
-+					USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
-+					PLLBTUNE, PLLBTUNE);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_REFCLK_CTRL,
-+					REFCLK_SEL_DEFAULT, REFCLK_SEL_MASK);
-+	qcom_snps_hsphy_write_mask(hsphy->base,
-+					USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
-+					VBUSVLDEXTSEL0, VBUSVLDEXTSEL0);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL1,
-+					VBUSVLDEXT0, VBUSVLDEXT0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base,
-+					USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2,
-+					VREGBYPASS, VREGBYPASS);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N,
-+					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL0,
-+					SLEEPM, SLEEPM);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
-+					POR, 0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+					USB2_SUSPEND_N_SEL, 0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
-+					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
-+
-+	hsphy->phy_initialized = true;
-+
-+	return 0;
-+
-+disable_ahb_clk:
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+poweroff_phy:
-+	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+
-+	return ret;
-+}
-+
-+static int qcom_snps_hsphy_exit(struct phy *phy)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+
-+	reset_control_assert(hsphy->phy_reset);
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+	hsphy->phy_initialized = false;
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_snps_hsphy_gen_ops = {
-+	.init		= qcom_snps_hsphy_init,
-+	.exit		= qcom_snps_hsphy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
-+	{ .compatible	= "qcom,sm8150-usb-hs-phy", },
-+	{ .compatible	= "qcom,usb-snps-hs-7nm-phy", },
-+	{ .compatible	= "qcom,usb-snps-femto-v2-phy",	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
-+
-+static int qcom_snps_hsphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct qcom_snps_hsphy *hsphy;
-+	struct phy_provider *phy_provider;
-+	struct phy *generic_phy;
-+	int ret, i;
-+	int num;
-+
-+	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
-+	if (!hsphy)
-+		return -ENOMEM;
-+
-+	hsphy->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(hsphy->base))
-+		return PTR_ERR(hsphy->base);
-+
-+	hsphy->ref_clk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(hsphy->ref_clk)) {
-+		ret = PTR_ERR(hsphy->ref_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get ref clk, %d\n", ret);
-+		return ret;
-+	}
-+
-+	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-+	if (IS_ERR(hsphy->phy_reset)) {
-+		dev_err(dev, "failed to get phy core reset\n");
-+		return PTR_ERR(hsphy->phy_reset);
-+	}
-+
-+	num = ARRAY_SIZE(hsphy->vregs);
-+	for (i = 0; i < num; i++)
-+		hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get regulator supplies: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
-+	if (IS_ERR(generic_phy)) {
-+		ret = PTR_ERR(generic_phy);
-+		dev_err(dev, "failed to create phy, %d\n", ret);
-+		return ret;
-+	}
-+	hsphy->phy = generic_phy;
-+
-+	dev_set_drvdata(dev, hsphy);
-+	phy_set_drvdata(generic_phy, hsphy);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (!IS_ERR(phy_provider))
-+		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver qcom_snps_hsphy_driver = {
-+	.probe		= qcom_snps_hsphy_probe,
-+	.driver = {
-+		.name	= "qcom-snps-hs-femto-v2-phy",
-+		.of_match_table = qcom_snps_hsphy_of_match_table,
-+	},
-+};
-+
-+module_platform_driver(qcom_snps_hsphy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm SNPS FEMTO USB HS PHY V2 driver");
-+MODULE_LICENSE("GPL v2");
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
