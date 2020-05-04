@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A68C47259
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDF7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E09120663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C1B20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615876;
-	bh=nyuc0UrXFf+Y/rW8iOi/qOX3NRNEicLnLnbSzCvQ8As=;
+	s=default; t=1588615878;
+	bh=eYrmYKmh49XGuiEkc+dFDHjKKaw6CeE70yn+6ruH4pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEcfgOtA3QRbiduFJ0HCtjsmbTDxQ+dBmPz2Wg5xFIJz2n7Ep/dG96mp9e/yy2/+S
-	 5ln/20/BZn2e49BGeGiwLfEbMH186/bGMYnC3ejWJlmsQPP37aOAONrupLyWbQuBJo
-	 XVkj0EAPa11i68lRoagiUG/vCic0KC32vDriA78w=
+	b=MUt5px3NrV0mYlUAyiLjS/Sr9rQ77y0/cKbFxou5XoUpC7w/GKtp0VE/kSop47TuD
+	 3rToFjyj3eTqq265YGovf/CrDaK8Ixvtw+KkyS7m+4d5Ybm3AlLjEraicJdNgfWjvA
+	 7YWI2i865F0TX+bjjx1L78rqvvml86MjmRSeYIuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbgEDSEW (ORCPT
+        id S1731658AbgEDSEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731115AbgEDSEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 14:04:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731632AbgEDSER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F03CE205ED;
-        Mon,  4 May 2020 18:04:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D46B20721;
+        Mon,  4 May 2020 18:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615459;
-        bh=nyuc0UrXFf+Y/rW8iOi/qOX3NRNEicLnLnbSzCvQ8As=;
+        s=default; t=1588615457;
+        bh=eYrmYKmh49XGuiEkc+dFDHjKKaw6CeE70yn+6ruH4pE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U2P2AtbyxKH9KV++v2BirvnB6djETebbWM2Srd98qFGCOj6niEvhXBmAJ6bzgZUgl
-         9wpgWSg0FftHulMj7BerxPMiH1KT3j5mUBoG5ZtA3PikWrb/BeKcQiOkI2ojWG7rQn
-         CZYn8+/mBQmrV7TZZZlXEdYkUBNEXhoIf7QExP/4=
+        b=WKas+1uK/rkGgDqJPWhMwHJAM0hT4puhGL57+M25+OF4666+uP+bvLzZKngXdog9l
+         sRdIBMW/j1swVfmMa4O/3dcRwAQeFkMtjeUtWQaALl5RmdEeqh0a6ssOldtvmOsTAt
+         i2bdO6ycuc0IkAdtjERvxfuRleEf20J7d4J8E6y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        David Disseldorp <ddiss@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 47/57] scsi: target/iblock: fix WRITE SAME zeroing
-Date:   Mon,  4 May 2020 19:57:51 +0200
-Message-Id: <20200504165500.462575857@linuxfoundation.org>
+        stable@vger.kernel.org, Tang Bin <tangbin@cmss.chinamobile.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 46/57] iommu/qcom: Fix local_base status check
+Date:   Mon,  4 May 2020 19:57:50 +0200
+Message-Id: <20200504165500.352054802@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -60,44 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-commit 1d2ff149b263c9325875726a7804a0c75ef7112e upstream.
+commit b52649aee6243ea661905bdc5fbe28cc5f6dec76 upstream.
 
-SBC4 specifies that WRITE SAME requests with the UNMAP bit set to zero
-"shall perform the specified write operation to each LBA specified by the
-command".  Commit 2237498f0b5c ("target/iblock: Convert WRITE_SAME to
-blkdev_issue_zeroout") modified the iblock backend to call
-blkdev_issue_zeroout() when handling WRITE SAME requests with UNMAP=0 and a
-zero data segment.
+The function qcom_iommu_device_probe() does not perform sufficient
+error checking after executing devm_ioremap_resource(), which can
+result in crashes if a critical error path is encountered.
 
-The iblock blkdev_issue_zeroout() call incorrectly provides a flags
-parameter of 0 (bool false), instead of BLKDEV_ZERO_NOUNMAP.  The bool
-false parameter reflects the blkdev_issue_zeroout() API prior to commit
-ee472d835c26 ("block: add a flags argument to (__)blkdev_issue_zeroout")
-which was merged shortly before 2237498f0b5c.
-
-Link: https://lore.kernel.org/r/20200419163109.11689-1-ddiss@suse.de
-Fixes: 2237498f0b5c ("target/iblock: Convert WRITE_SAME to blkdev_issue_zeroout")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200418134703.1760-1-tangbin@cmss.chinamobile.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/target_core_iblock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/qcom_iommu.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -432,7 +432,7 @@ iblock_execute_zero_out(struct block_dev
- 				target_to_linux_sector(dev, cmd->t_task_lba),
- 				target_to_linux_sector(dev,
- 					sbc_get_write_same_sectors(cmd)),
--				GFP_KERNEL, false);
-+				GFP_KERNEL, BLKDEV_ZERO_NOUNMAP);
- 	if (ret)
- 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -814,8 +814,11 @@ static int qcom_iommu_device_probe(struc
+ 	qcom_iommu->dev = dev;
  
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (res)
++	if (res) {
+ 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(qcom_iommu->local_base))
++			return PTR_ERR(qcom_iommu->local_base);
++	}
+ 
+ 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
+ 	if (IS_ERR(qcom_iommu->iface_clk)) {
 
 
