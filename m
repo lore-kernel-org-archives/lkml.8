@@ -2,78 +2,77 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EB6C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0190EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCF12078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588607445;
-	bh=iSG/nC2oRo+ARmPK8Sb+eE6mMqpG54XrF1Dp06s5mz0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=F7DA/KJFBWrCfDhgs9pAGv0VhYtWO2DntWxBhmnXiTANiUOen1bs+UVrm/INcxZvR
-	 E152pigDCjfw8eqG009HnT1MJWHWpIBFCCs5QhX80khq1seh8R7QMgmxVuGlbIKLch
-	 u4bOlB9K2+R9sTzJgN89lR5IX/co2iyv1MWQo3Gw=
+	by mail.kernel.org (Postfix) with ESMTP id DCFCB206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgEDPup (ORCPT
+        id S1729357AbgEDPve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:50:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39684 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 11:51:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48040 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgEDPuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:50:44 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AE47206B9;
-        Mon,  4 May 2020 15:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588607444;
-        bh=iSG/nC2oRo+ARmPK8Sb+eE6mMqpG54XrF1Dp06s5mz0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hclEmbhvDGZnruLJbaGMTZsAUAHVmSgazlHdloHduy3C+/NtCNG4Wth0cIcGGtvqu
-         1NIoBjpnY3C+x3AKEjv6jiRgyQtBHB0WrPCrFQ4G+wWFMbZ5vAiLUf1HNr0pSMVorq
-         hKV2WJfqqrcjL2xOULwJ4uWJX1i8E7GtBR5GYdyg=
-Date:   Mon, 4 May 2020 10:50:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 12/12] arm64: dts: marvell: armada-37xx: Move PCIe
- max-link-speed property
-Message-ID: <20200504155042.GA271575@bjorn-Precision-5520>
+        id S1726509AbgEDPvd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:51:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 46BCEAFAC;
+        Mon,  4 May 2020 15:51:34 +0000 (UTC)
+Date:   Mon, 4 May 2020 17:51:30 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: Re: [PATCH] percpu: Sync vmalloc mappings in pcpu_alloc() and
+ free_percpu()
+Message-ID: <20200504155130.GK8135@suse.de>
+References: <20200429054857.66e8e333@oasis.local.home>
+ <20200430191434.GC8135@suse.de>
+ <20200430211308.74a994dc@oasis.local.home>
+ <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
+ <20200430223919.50861011@gandalf.local.home>
+ <20200504151236.GI8135@suse.de>
+ <99290786.82178.1588606126392.JavaMail.zimbra@efficios.com>
+ <20200504153135.GJ8135@suse.de>
+ <1533922227.82188.1588606723786.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-13-pali@kernel.org>
+In-Reply-To: <1533922227.82188.1588606723786.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:06:25AM +0200, Pali Rohár wrote:
-> Move the max-link-speed property of the PCIe node from board specific
-> device tree files to the generic armada-37xx.dtsi.
+On Mon, May 04, 2020 at 11:38:43AM -0400, Mathieu Desnoyers wrote:
+> ----- On May 4, 2020, at 11:31 AM, Joerg Roedel jroedel@suse.de wrote:
+> > Tried this before, actually I put it into the caller of
+> > pcpu_mem_zalloc(), but that didn't fix the problem for me. Stevens
+> > test-case still hangs the machine.
 > 
-> Armada 37xx supports only PCIe gen2 speed so max-link-speed property
-> should be in the genetic armada-37xx.dtsi file.
+> That's unexpected.
+> 
+> Did you confirm that those hangs were also caused by percpu allocations ?
 
-s/genetic/generic/
+No, I didn't dig deeper on that hang. I can probably do tomorrow.
 
-Only repost if you have more significant changes.
+
+Regards,
+
+	Joerg
