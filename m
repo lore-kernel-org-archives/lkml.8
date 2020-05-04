@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B011C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B3CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C972073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE18120721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615671;
-	bh=5Hg05jQx9fKm4esxgnrhIs8kDmBvvcdpoQ+ZqfQAQVs=;
+	s=default; t=1588615675;
+	bh=bJ2l/CHYhXqqCQmXxTph5G9oI6DoxV3kjVdO3Qi3s38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rAkdGPpo0o+SPSG1fVbJQhK6gTQ3mZongUTYwf0aC1xDDZlzx2tmKvz9Yd/mvB7h/
-	 Ra0iRTEwZhFkLrHRSFsO1xDcSZfc2diodpz/dR/rNrmBrk2h1CH4l5TQ0Jn6UbtMIQ
-	 7Ham+bsSqpXoCC3BIo9zeNpzn7uEr8/9RjFEH234=
+	b=IJbSaIMUOz51LT7U3sXf8TnuxQDQq8PvvOhsAeK6a2SLUgfXks8AKIyghLP5aMFy9
+	 F9SWupG7i4BVpI8kFzHI5s810sIngCnOanlj8VsSVJAAJJ2GgNbZl/gc/hicAQusfY
+	 +IHdJM3Og8OxVcWHsr3KfwUt5pYJ+BaLWE8lAdM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbgEDSHv (ORCPT
+        id S1731308AbgEDSHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732192AbgEDSHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:49 -0400
+        id S1732176AbgEDSHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63C3A20721;
-        Mon,  4 May 2020 18:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 278F320721;
+        Mon,  4 May 2020 18:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615668;
-        bh=5Hg05jQx9fKm4esxgnrhIs8kDmBvvcdpoQ+ZqfQAQVs=;
+        s=default; t=1588615661;
+        bh=bJ2l/CHYhXqqCQmXxTph5G9oI6DoxV3kjVdO3Qi3s38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSmmExwGUz9Dm8TBiDGJBKr0K5uTRc8axRDLqAYmYhUe1GHKJeEBfg2MTTrd7J+nx
-         x3iP1eBCumZlT5hTGiappfxrVyFfYlTov3zPdlbDfAnXB3SR+9X4aVt4vAE064Dym9
-         QAM2SpBzRVVOn993nBH4XqW3I9DqQ6bDUi32r4qI=
+        b=H9Cq5BuTeyKKghy+aCMQBB3+JBNn2GYhUZsOsolf29jWS0pdWH0io7nRtUiskmeRD
+         6UxEcmPo0c2ug3+6a4yDvh3tMXqeVks2S1tlMSTpUPL8dasD9jV9yE/7IlB8xI8gjI
+         doByrODGPO6/hil2Ma/aHtRyPEo0EJ+iOWzhXOhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Yang Xu <xuyang2018.jy@cn.fujitsu.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 40/73] block: remove the bd_openers checks in blk_drop_partitions
-Date:   Mon,  4 May 2020 19:57:43 +0200
-Message-Id: <20200504165508.013010361@linuxfoundation.org>
+        stable@vger.kernel.org, Seraj Alijan <seraj.alijan@sondrel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.6 71/73] dmaengine: dmatest: Fix process hang when reading wait parameter
+Date:   Mon,  4 May 2020 19:58:14 +0200
+Message-Id: <20200504165510.510085799@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,41 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 10c70d95c0f2f9a6f52d0e33243d2877370cef51 upstream.
+commit aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca upstream.
 
-When replacing the bd_super check with a bd_openers I followed a logical
-conclusion, which turns out to be utterly wrong.  When a block device has
-bd_super sets it has a mount file system on it (although not every
-mounted file system sets bd_super), but that also implies it doesn't even
-have partitions to start with.
+If we do
 
-So instead of trying to come up with a logical check for all openers,
-just remove the check entirely.
+  % echo 1 > /sys/module/dmatest/parameters/run
+  [  115.851124] dmatest: Could not start test, no channels configured
 
-Fixes: d3ef5536274f ("block: fix busy device checking in blk_drop_partitions")
-Fixes: cb6b771b05c3 ("block: fix busy device checking in blk_drop_partitions again")
-Reported-by: Michal Koutný <mkoutny@suse.com>
-Reported-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  % echo dma8chan7 > /sys/module/dmatest/parameters/channel
+  [  127.563872] dmatest: Added 1 threads using dma8chan7
+
+  % cat /sys/module/dmatest/parameters/wait
+  ... !!! HANG !!! ...
+
+The culprit is the commit 6138f967bccc
+
+  ("dmaengine: dmatest: Use fixed point div to calculate iops")
+
+which makes threads not to run, but pending and being kicked off by writing
+to the 'run' node. However, it forgot to consider 'wait' routine to avoid
+above mentioned case.
+
+In order to fix this, check for really running threads, i.e. with pending
+and done flags unset.
+
+It's pity the culprit commit hadn't updated documentation and tested all
+possible scenarios.
+
+Fixes: 6138f967bccc ("dmaengine: dmatest: Use fixed point div to calculate iops")
+Cc: Seraj Alijan <seraj.alijan@sondrel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200428113518.70620-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/partition-generic.c |    2 +-
+ drivers/dma/dmatest.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/block/partition-generic.c
-+++ b/block/partition-generic.c
-@@ -468,7 +468,7 @@ int blk_drop_partitions(struct gendisk *
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -240,7 +240,7 @@ static bool is_threaded_test_run(struct
+ 		struct dmatest_thread *thread;
  
- 	if (!disk_part_scan_enabled(disk))
- 		return 0;
--	if (bdev->bd_part_count || bdev->bd_openers > 1)
-+	if (bdev->bd_part_count)
- 		return -EBUSY;
- 	res = invalidate_partition(disk, 0);
- 	if (res)
+ 		list_for_each_entry(thread, &dtc->threads, node) {
+-			if (!thread->done)
++			if (!thread->done && !thread->pending)
+ 				return true;
+ 		}
+ 	}
 
 
