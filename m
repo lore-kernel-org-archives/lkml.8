@@ -2,143 +2,130 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B738C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DCFC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D7C20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84533206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="lyh772Tg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omfljF0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgEDQQG (ORCPT
+        id S1729580AbgEDQQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:16:06 -0400
-Received: from mout.web.de ([212.227.17.11]:55749 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729253AbgEDQQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:16:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588608949;
-        bh=DQ2nnjZEA8s4f3e4nypJA7Djufr+5weaQyav93E3Oso=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=lyh772TgdBb6MLT0ZJZ2riRi3nvnhxRjy/UD3s5yXQIEALNk+EpgNIeuB1E6nOAJd
-         XDKwCVIh6XOKeMx6f+/uxhvnYUTvVF08ifKtTqsKNcrCGLixZfwJh37n5KrKEcJHLm
-         exGCX5KqYsXodl/Xst42Ngvhm7UuvqqNzy/ofsfI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MT8bi-1jg7M31zUs-00S3b7; Mon, 04
- May 2020 18:15:49 +0200
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        jfs-discussion@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Dave Kleikamp <shaggy@kernel.org>
-Subject: Re: [PATCH] fs: jfs: fix a possible data race in txBegin()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <5ef374a5-0e2e-5c74-a827-0148c384f6e3@web.de>
-Date:   Mon, 4 May 2020 18:15:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:8/af1Ha9nzjc2lhZ5r//wz9hohzEA2pfMMozzIES8IlmQdG9k1y
- BKeq18KyyjcU61EVm7XNPp4CtjUHkYKPFVDMMHJ/RNxc4syj33nSr+vVhQt3mCce2gMp5dI
- EN09JEFU8qaIncDi4YTbj7Fq1T5z1YmY4pySdhWxCQo0Nc6eSxY1/YVtR4XXcFNo2KB9trT
- nZNH/YD2V1eKirZfeMePw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ArymooPZTeg=:Dmrghxo4++2SROSRIDzjLs
- KUlKg1b382hJrekSx8GrThMoLNhDaH5QLV0YfUDoKGNPPdGcFtxTsfjy18Lbjvnp57aGna+FK
- Jf0AqGDtF4QFONPIXcdrTYIXGdR4/L32GOjM9XBAc3FAlFNN12YavBRDEIC41eMeJKQ9teHiK
- D7vOY7RZoYK6wqg98jNJ+97qntaRK/D6i3UqwE04MmbIy124VxrWnHWcKcJVtjUXY//NlNNdN
- uZrUfFObTDg0tiwo9DswTYU0aU6rWvSd/pvXoSDVUeC3fxWcjH6mx8JHvqQEmnNL4lshl6bks
- NPHskXYMY2JVGMwbJcwOKss6YM7fOjvGI6+oj2QxhdfGF+uMfjhAGmanvpyCGd9145uP61vtn
- wzpkoyoHRr4aRgulr3LWTBigFEfZWvqcxPzbFSMw9X3bvoyrFinFPXEgCyNp4LB1B3MG6KvRy
- r3kHxPew2Dyne8HgrLo/3RNiH3GHTt9+MGurpptPCHIJaLW519VUv8QzgtS/eXItBqT8SQDIA
- kRY8tsPjx6HsIScW7FNza6Sfu18XnjB9NPYNi/rJIWT0UBid/qESlGZHnK91Fy91NlpnpHEum
- oyViDeD5vkSvMoR71kn6J2Wxx5TGk+BXOXz3N2Bb2Tw7deep5P/cxq6Q68XvX1O9UhlVf2PQU
- GuKibhy7whZcdrRZD7mdp5eJV4kWtb6hGKddtayhTRNpZwWkvcu3HSm1PoeQpzAzK1slrdwfk
- qIfcG4kyjEtuaIjIOalmymsRX2FOujh/+7hteZy1poWavA58zRZ48SIb+P5WPuFXB2eIZKRTt
- KrLhvn8z/yIE+ZFDzTJrneG/SQZvs++mgGEjRtMGalosadISLUGY7QKj7w4kyd3CIor0fslFU
- bMuj4WjJXxLeAReYSZCvqIKGf6bX22SVkAMzePLTiiQGlyH/DZB+wSXnNSFOA7Llp9Yjg1nmj
- hBWdeOcLe8RlMWE8N4RsSSEPc+nbGUugO9MFj8lA2CM4jgEeeBeo+iKlXe2xWMZmBp7/gNn9f
- apLo76LXr84JwQr6E4YfhpA1Z5Xm//Q17UxXfetgA+I89m3O1nQPMar5REX14mkw3y7XUiu2N
- frujy6IW7UipGGbHPZRi20B5WhP2sjvIaw1N8zh7Y3Qzmv0CeQ2mzKWYWJ0fCYHb+8b8Y9MXc
- azl95sxk2K5ZTGRXXR1pUUAWfNLn5Uh/nY3rLKYXMV3U2IcH+VMxCYH40NqkC3G4cndrsku+z
- sgybEMRZCeh6hawSq
+        Mon, 4 May 2020 12:16:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgEDQQQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:16:16 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC2EC061A0E;
+        Mon,  4 May 2020 09:16:16 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a32so3986pje.5;
+        Mon, 04 May 2020 09:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mJxATeoW9r1Ijzs0Cv12TCPDgNZzSbmxIdXoWB9J3wU=;
+        b=omfljF0dC/ATvmTsC2aJI+kHBhsxfZzHuKUdvPV/DvDvlRI/fZO15ItSIynzHh8WQ5
+         bbH7N1bQL2FjjPAEIrEd0PFWOz8TBebD0eBDMXALia6+1uXwoCkCVV+uX1/gi1jZHP2z
+         OGSFKCTO881EK7uqpI1LWSBPKKz3A4hHD7y4W4PAbbuwAb5/WlOnF2MxmaKNiQel42ZG
+         eRZSeaz3GqZDN5Mz76/vMH5GDJKd6nGUwDo2o/AUfrXkZ+qIkvN9oMVNVlUd0hjv/Cnl
+         PXQnP2kYOYpLYIc4NXyguUo6khYx8Yzkb3qeP6sWEgYTKcCU10jAgwRJCaS3O5Hyk/KT
+         SSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mJxATeoW9r1Ijzs0Cv12TCPDgNZzSbmxIdXoWB9J3wU=;
+        b=EQHJJhgWysNJ6/rQjKChZEgXad57ZHVPLcDPT1TIw3FFAa77zyeNVJbDB1nlciUvzk
+         4FNPr9RaPXqyanEOLZKRKlNUUa84+RuWYIILHOCFUy7TAyzm3NhObMPpyRU3lUxedMmZ
+         IWCzA9Zqo02gjoXTEMzZvuPGCwYQ0PvB/RqoD/D7cxehHEiqH/3WBcPRcZbN9aJT0TzD
+         i9yzDDk4OzouA1rCOv04ZjTrstv7vjypKE8FP6/EiMj5L4F7+lnX66mzxE9YUnE+6XyJ
+         zVNOM1VfSvhGvC8hdjJCS5T796liOVAaJJKNRAphQCdnYlHKw41tl8s2vXiEDObRgq8w
+         MtHg==
+X-Gm-Message-State: AGi0Puahozn6ZJPkMyroCIzr7pgujMNvPhihdyOW+EwDle1tP4X2+Jdn
+        FdBPmJzGvZ3PySD8//+U/qA=
+X-Google-Smtp-Source: APiQypKyG4mJ/QDG3KcoaV0DVI3jvg+MGkPaCDGlrIosbApPc0EPrPqH0uGoRpOpc+3ULNyzpJbiVg==
+X-Received: by 2002:a17:90a:4ce5:: with SMTP id k92mr71565pjh.192.1588608975646;
+        Mon, 04 May 2020 09:16:15 -0700 (PDT)
+Received: from localhost.localdomain ([120.244.110.63])
+        by smtp.gmail.com with ESMTPSA id 4sm9515257pff.18.2020.05.04.09.16.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:16:14 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] fs: xfs: fix a possible data race in xfs_inode_set_reclaim_tag()
+Date:   Tue,  5 May 2020 00:15:30 +0800
+Message-Id: <20200504161530.14059-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Thus, a data race can occur for tblk->flag.
->
-> To fix this data race, the spinlock log->gclock is used in
-> txBegin().
->
-> This data race is found by our concurrency fuzzer.
+We find that xfs_inode_set_reclaim_tag() and xfs_reclaim_inode() are
+concurrently executed at runtime in the following call contexts:
 
-How do you think about a wording variant like the following?
+Thread1:
+  xfs_fs_put_super()
+    xfs_unmountfs()
+      xfs_rtunmount_inodes()
+        xfs_irele()
+          xfs_fs_destroy_inode()
+            xfs_inode_set_reclaim_tag()
 
-   Change description:
-   A data race can occur for the data structure member =E2=80=9Cflag=E2=80=
-=9D.
-   This data race was found by our concurrency fuzzer.
+Thread2:
+  xfs_reclaim_worker()
+    xfs_reclaim_inodes()
+      xfs_reclaim_inodes_ag()
+        xfs_reclaim_inode()
 
-   Thus use the spin lock =E2=80=9Cgclock=E2=80=9D for the resetting of fi=
-ve
-   data structure members in this function implementation.
+In xfs_inode_set_reclaim_tag():
+  pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
+  ...
+  spin_lock(&ip->i_flags_lock);
 
+In xfs_reclaim_inode():
+  spin_lock(&ip->i_flags_lock);
+  ...
+  ip->i_ino = 0;
+  spin_unlock(&ip->i_flags_lock);
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
+Thus, a data race can occur for ip->i_ino.
 
-Regards,
-Markus
+To fix this data race, the spinlock ip->i_flags_lock is used to protect
+the access to ip->i_ino in xfs_inode_set_reclaim_tag().
+
+This data race is found by our concurrency fuzzer.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ fs/xfs/xfs_icache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 8bf1d15be3f6..a2de08222ff5 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -229,9 +229,9 @@ xfs_inode_set_reclaim_tag(
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_perag	*pag;
+ 
++	spin_lock(&ip->i_flags_lock);
+ 	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
+ 	spin_lock(&pag->pag_ici_lock);
+-	spin_lock(&ip->i_flags_lock);
+ 
+ 	radix_tree_tag_set(&pag->pag_ici_root, XFS_INO_TO_AGINO(mp, ip->i_ino),
+ 			   XFS_ICI_RECLAIM_TAG);
+-- 
+2.17.1
+
