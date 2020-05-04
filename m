@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F214C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02920C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1DF20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04F020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615242;
-	bh=IfDLe6lN7eIdQXF70MOOOos/2QGEaSxCOrUAJ3Yl/j0=;
+	s=default; t=1588615245;
+	bh=wRkYzBLk0vUVQRuUS+lFzvR6kc1EqVlOI6UkZWW2SN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDGOvd85tmf4hujR3ByEHJNW7m/itrLvXrVZosLm8BTteXH+S4UJRKujlSeqAj2Zx
-	 kkNt6xnLZ2upUdAoVYJar979Ygx66ntT8D/XtQC7/5gpAb5nvj6U/9u7bnM4mubuPt
-	 Zn7a4aObKOEnm/eCMLCSlha31YL980dytP2mFjoY=
+	b=XjPR6epb825xOqVGfBkZBmJRY4Afv5hwSD7xj8UaeoTL/GaOu5U8tT2KWj5iRh6oI
+	 zPq3WTxOyTBr5jrzNpsv+ByfPbo9jOXzUbwf6YiSjNUP6EyCV9wiE/l3uz7ms92t8l
+	 CZO+TB2SQhBdN2A0g3qUjMdJWt6Xj88OnV/5fnpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbgEDSAl (ORCPT
+        id S1731054AbgEDSAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbgEDSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:36 -0400
+        id S1731030AbgEDSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D293320663;
-        Mon,  4 May 2020 18:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A69E5206B8;
+        Mon,  4 May 2020 18:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615236;
-        bh=IfDLe6lN7eIdQXF70MOOOos/2QGEaSxCOrUAJ3Yl/j0=;
+        s=default; t=1588615241;
+        bh=wRkYzBLk0vUVQRuUS+lFzvR6kc1EqVlOI6UkZWW2SN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGmOizahxryKy6uyfTpzI8EyrgOSGdB5Yb1Qu5bdZ14NtXX/zg8LTOtjsN/OzFHMK
-         ST9J4AtbVuwJQcUudQtF4ZDc84cxtfi3FrvdLnTyDMQkLb+GA9ohbiJD1KskZ3082t
-         jWaTCHC+r0/nq7Z35RFvwMJB3DC2fwckGYCIQY5A=
+        b=tNrjxHt3aOkSS6CqgXI4nyIAXhESpGjKI9IPNl4/RxV5lE2IwQiTCCArqXiWlZ6Cp
+         7Fh2kJ76sxKG8XXszIFm/LeAxQdzVU+dggzojBMPzpav4xuGiwgQXqtiqeEhPD79UW
+         aF4btDvkryIHPDvV8wNsEFz0nJGN0Y1vWUzvZWMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tang Bin <tangbin@cmss.chinamobile.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.14 20/26] iommu/qcom: Fix local_base status check
-Date:   Mon,  4 May 2020 19:57:34 +0200
-Message-Id: <20200504165447.052905233@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 4.14 03/26] drm/qxl: qxl_release leak in qxl_draw_dirty_fb()
+Date:   Mon,  4 May 2020 19:57:17 +0200
+Message-Id: <20200504165443.279359748@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
 References: <20200504165442.494398840@linuxfoundation.org>
@@ -60,39 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit b52649aee6243ea661905bdc5fbe28cc5f6dec76 upstream.
+commit 85e9b88af1e6164f19ec71381efd5e2bcfc17620 upstream.
 
-The function qcom_iommu_device_probe() does not perform sufficient
-error checking after executing devm_ioremap_resource(), which can
-result in crashes if a critical error path is encountered.
+ret should be changed to release allocated struct qxl_release
 
-Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200418134703.1760-1-tangbin@cmss.chinamobile.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 8002db6336dd ("qxl: convert qxl driver to proper use for reservations")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/22cfd55f-07c8-95d0-a2f7-191b7153c3d4@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/qcom_iommu.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/qxl/qxl_draw.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -775,8 +775,11 @@ static int qcom_iommu_device_probe(struc
- 	qcom_iommu->dev = dev;
+--- a/drivers/gpu/drm/qxl/qxl_draw.c
++++ b/drivers/gpu/drm/qxl/qxl_draw.c
+@@ -348,9 +348,10 @@ void qxl_draw_dirty_fb(struct qxl_device
+ 		goto out_release_backoff;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (res)
-+	if (res) {
- 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(qcom_iommu->local_base))
-+			return PTR_ERR(qcom_iommu->local_base);
+ 	rects = drawable_set_clipping(qdev, num_clips, clips_bo);
+-	if (!rects)
++	if (!rects) {
++		ret = -EINVAL;
+ 		goto out_release_backoff;
+-
 +	}
+ 	drawable = (struct qxl_drawable *)qxl_release_map(qdev, release);
  
- 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
- 	if (IS_ERR(qcom_iommu->iface_clk)) {
+ 	drawable->clip.type = SPICE_CLIP_TYPE_RECTS;
 
 
