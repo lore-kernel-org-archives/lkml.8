@@ -2,189 +2,113 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C95EC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 127D92078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588576393;
-	bh=XfFhhStBycJzV0puy65G2AGQGcJw71aLuImYtkVyKy0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HO0ny9gp22XCnykpUfgCulAPQbijGYW8Qiu9P1Qq/J8PPS/sWdMmH/np3nYLzEAMa
-	 2Cd8hDatPu8+VQujdHycnKaIVIZcJxHDWTQJ3HcuSFJLqFO6H+hFTitTDpBQWdAFP6
-	 mqiiNq0VluciocGNuACz4a4l3O8YvZxaEjq7I2bM=
+	by mail.kernel.org (Postfix) with ESMTP id 2A36F20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ZEOi7IVw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="siaK7DlQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgEDHNM (ORCPT
+        id S1728097AbgEDHOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:13:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727882AbgEDHNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:13:11 -0400
+        Mon, 4 May 2020 03:14:07 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:58463 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726778AbgEDHOH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 03:14:07 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 026D35C0046;
+        Mon,  4 May 2020 03:14:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 04 May 2020 03:14:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=Wz04dSbXIX4sZLODJIrar6JPrux
+        ATrYocUeUPJKhuvI=; b=ZEOi7IVwVxlKjcnWefNnHkjW966Ly5SpMnTAbvlzRgC
+        BSJd2W92RRoujZmrdTgkPvOWqnuTS897tBsUOrPXHHpOvJ960sMbnf1jdOAAlMj9
+        09KRGx2AYi4B9ouIjXDqRdtYShmMonpo6swVoSXm095+/4kOBZTcqucZFyUy9GwC
+        Bja62u5VMOq9XXyA/16o5ZCEw3/roUZPlcnmY28vqAUKZ29bYbwZ5y1IKkbXJagd
+        SQCbh+LXYbsRm5lhX7ld2fXkyDWwIndG3eqRKd4rYM2aDUmGi2VJik5Fn60Wl86G
+        kvjz2tlr5R5dK6qLqba3omW+xphLCiB+95XZHAyzEiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Wz04dS
+        bXIX4sZLODJIrar6JPruxATrYocUeUPJKhuvI=; b=siaK7DlQJbiN7uaslRdnUO
+        w8KazPRzZoiJDsF20CMAxNPSkTa/FATjMhub3bSMlp7IJ00V5NbUhzc/uHxrpJxl
+        rx7/Y1qqSu01kNmEfuLcGuwEtuXcUxj8SkLPb92wPowzTLlRU2vQWPnBPSTtssnJ
+        NvJeYVAhNYZreeGZRc2US5gxEBimxLrjlK8eLfezuvyGykjeL3g/IB0Jgq2VRuQb
+        WH5WcVs7oASluJ5hLci8K+pQLLzRp/N9a0gJC8G4wR5NOcRpsipj9H+476hOs39c
+        NHEx1dxziuvjv8xMIoG1h2wgtZlrlAvfIZH+PloR6bHlL7xpIdIpmURF8u5GU3zQ
+        ==
+X-ME-Sender: <xms:vcCvXoF1JyjEyrq3EZxRbuJCrXkBo7whcOoqazIyUYfx0gmT9BKSaQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrjeefgdduudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpedufeefhe
+    dvffdvvedutddtheehieeuhfejleekleehudefteelveetvefgfffgkeenucffohhmrghi
+    nhepkhgvrhhnvghltghirdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhr
+    ohgrhhdrtghomh
+X-ME-Proxy: <xmx:vcCvXmWLcAMaNIA0ICDG3PK2Y4KN97x9CiRgUI2WVea2CY5tgyuGBg>
+    <xmx:vcCvXjDfsMZX8x_A6J64XUfdaKyNATD8okbZTjHwNgQBErVysTISzw>
+    <xmx:vcCvXv1q0rZpaP27I0t-A0lw-sYudUj6y95ED0DSlvjL-dv-7dFPag>
+    <xmx:vcCvXr-xoWeCgmHy30Erl6NIVYbj-DWV6VK_McJ-1DKH42T05QPDrg>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA5420757;
-        Mon,  4 May 2020 07:13:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588576390;
-        bh=XfFhhStBycJzV0puy65G2AGQGcJw71aLuImYtkVyKy0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PN6OVx5JB5/9SQpEja8hYrfZezsED5+zQGTFoXQ1/Tyk+8+nqB/XuGG0UuKkQweP+
-         FVlGCGy6RsuefwhtdM25LkXiPLAWeD78PCEqUKTZLBzzLkp84ji3V3DmIXA18j3RnO
-         VnbSPAV01ET9XxFSbqCTDJ+NdEbt/8NTdzh/ly9s=
-Date:   Mon, 4 May 2020 09:13:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
-        git@thegavinli.com, jarkko.sakkinen@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] usb: usbfs: correct kernel->user page attribute mismatch
-Message-ID: <20200504071306.GA831956@kroah.com>
-References: <20200430211922.929165-1-jeremy.linton@arm.com>
- <20200501070500.GA887524@kroah.com>
- <d2d4f50e-a0bf-77c8-399b-86c2137bfa84@arm.com>
+        by mail.messagingengine.com (Postfix) with ESMTPA id DE1ED328005D;
+        Mon,  4 May 2020 03:14:04 -0400 (EDT)
+Date:   Mon, 4 May 2020 09:14:01 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        "kernelci.org bot" <bot@kernelci.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20200504071401.GA837740@kroah.com>
+References: <20200504114625.1de2c54d@canb.auug.org.au>
+ <20200504114756.37a4948a@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d2d4f50e-a0bf-77c8-399b-86c2137bfa84@arm.com>
+In-Reply-To: <20200504114756.37a4948a@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 10:47:22AM -0500, Jeremy Linton wrote:
-> Hi,
+On Mon, May 04, 2020 at 11:47:56AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Thanks for taking a look at this.
+> [Just adding cc]
 > 
-> On 5/1/20 2:05 AM, Greg KH wrote:
-> > On Thu, Apr 30, 2020 at 04:19:22PM -0500, Jeremy Linton wrote:
-> > > On arm64, and possibly other architectures, requesting
-> > > IO coherent memory may return Normal-NC if the underlying
-> > > hardware isn't coherent. If these pages are then
-> > > remapped into userspace as Normal, that defeats the
-> > > purpose of getting Normal-NC, as well as resulting in
-> > > mappings with differing cache attributes.
+> On Mon, 4 May 2020 11:46:25 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
 > > 
-> > What is "Normal-NC"?
-> 
-> A non-cacheable attribute on arm64 pages. I think Mark R & Marc Z elaborated
-> while I was asleep (thanks!).
->   .
-> 
-> 
+> > After merging the char-misc tree, Friday's linux-next build (arm64
+> > allmodconfig) failed like this:
 > > 
-> > > In particular this happens with libusb, when it attempts
-> > > to create zero-copy buffers as is used by rtl-sdr, and
+> > ERROR: modpost: "zynqmp_pm_fpga_get_status" [drivers/fpga/zynqmp-fpga.ko] undefined!
+> > ERROR: modpost: "zynqmp_pm_fpga_load" [drivers/fpga/zynqmp-fpga.ko] undefined!
 > > 
-> > What is "rtl-sdr"
-> 
-> Its the realtek software defined radio (SDR), a really inexpensive TV dongle
-> that was discovered could be used as a general purpose SDR a decade or so
-> ago. In particular, this project
-> https://github.com/osmocom/rtl-sdr/
-> which is packaged by fedora/etc.
-> 
+> > Presumably caused by commit
 > > 
-> > > maybe other applications. The result is usually
-> > > application death.
+> >   4db8180ffe7c ("firmware: xilinx: Remove eemi ops for fpga related APIs")
 > > 
-> > So is this a new problem?  Old problem?  Old problem only showing up on
-> > future devices?  On current devices?  I need a hint here as to know if
-> > this is a bugfix or just work to make future devices work properly.
-> 
-> This has been a problem on arm devices without IO coherent USB apparently
-> for years. The rtl-sdr project itself has a disable zero-copy mode that
-> people have been using on rpi/etc specific builds. Fedora OTOH, is building
-> it with the same flags on x86 & arm64 which means that people report
-> problems. This happened a few days ago (on a pinebook), and I duplicated it
-> on an NXP platform just running the `rtl_test` artifact with a nooelec from
-> my junk box. Guessing that it was a page mismatch I went looking for that,
-> rather than disabling the zero copy since punishing arm machine that have IO
-> coherent USB adapters for the sins of these low end devices isn't ideal. I
-> found this, and this patch allows the rtl_test app to run without issues on
-> my NXP/solidrun.
-> 
-> Plus, given that its actually a kernel/libusb problem its likely there are
-> other applications having similar problems.
-> 
-> > 
-> > > 
-> > > If dma_mmap_attr() is used instead of remap_pfn_range,
-> > > the page cache/etc attributes can be matched between the
-> > > kernel and userspace.
-> > > 
-> > > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > ---
-> > >   drivers/usb/core/devio.c | 5 ++---
-> > >   1 file changed, 2 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-> > > index 6833c918abce..1e7458dd6e5d 100644
-> > > --- a/drivers/usb/core/devio.c
-> > > +++ b/drivers/usb/core/devio.c
-> > > @@ -217,6 +217,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
-> > >   {
-> > >   	struct usb_memory *usbm = NULL;
-> > >   	struct usb_dev_state *ps = file->private_data;
-> > > +	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
-> > >   	size_t size = vma->vm_end - vma->vm_start;
-> > >   	void *mem;
-> > >   	unsigned long flags;
-> > > @@ -250,9 +251,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
-> > >   	usbm->vma_use_count = 1;
-> > >   	INIT_LIST_HEAD(&usbm->memlist);
-> > > -	if (remap_pfn_range(vma, vma->vm_start,
-> > > -			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
-> > > -			size, vma->vm_page_prot) < 0) {
-> > > +	if (dma_mmap_attrs(hcd->self.sysdev, vma, mem, dma_handle, size, 0)) {
-> > 
-> > Given that this code has not changed since 2016, how has no one noticed
-> > this issue before?
-> They have there are a lot of reports of sdr failures, but the general use
-> case is rare?
-> 
-> > 
-> > And have you tested this change out on other systems (i.e. x86) to
-> > ensure that this still works properly?
-> 
-> Yes and no, I did some basic libusb tests on an x86 machine, but its a bit
-> tricky at the moment for me to get the rtl plugged into a x86 test machine.
-> (its a work in progress).
-> 
-> 
-> > 
-> > And why isn't this call used more by drivers if this is a real issue?
-> The particulars of asking for iocoherent memory and then mapping it to
-> userspace is rarer than just asking for kmalloc()/remap() and then
-> performing the dma ops?
-> 
-> Then there are all the softer issues around arm64 testing/availability and
-> vendors carrying "fixes" for particular issues (like rtl-sdr disabling zero
-> copy).
-> 
-> > And will this cause issues with how the userspace mapping is handled as
-> > now we rely on userspace to do things differently?  Or am I reading the
-> > dma_mmap_attrs() documentation wrong?
-> I don't think userspace is doing anything differently here, and AFAIK, on
-> systems with IO coherent adapters this ends up with the same page mapping as
-> just doing the remap_pfn_rage() with the same attributes as before. I've
-> looked at dma_map_attrs() a bit, but i'm also trusting it does what it says
-> on the tin.
-> 
-> 
-> Thanks again for looking at this.
+> > Reported-by: "kernelci.org bot" <bot@kernelci.org>
 
-Ok, can I get a lot better written changelog text for this patch based
-on this thread, so that it makes more sense when we merge this patch?
-
-thanks,
+Nathan sent me a patch for this on Friday, sorry I missed it.  I'll
+queue it up now, thanks.
 
 greg k-h
