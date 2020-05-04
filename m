@@ -2,234 +2,149 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047A3C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF71C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72CA20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588571745;
-	bh=hsRcOcXiosbEqy3AmtQTRIvno9cmDyh65wixvhLD2o8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nxOHEh95wz1tHkmg+1bCUY6Qg/Rywgd/HLx9YvtlEYJ0tdmxrexrehvuIPTkZsEFb
-	 lIsnMiYapeH6i1ExeD9wm50vqD/MTxkxjB0iGhL0Mgl7v4gc8fU5VIL+GvQNYN3JTa
-	 oTYXbdBf1nzb4bn248yRDxiIiF+2lSDZOuOxN8+A=
+	by mail.kernel.org (Postfix) with ESMTP id C0ECF206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:02:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="TlI2YE31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgEDFzp (ORCPT
+        id S1726798AbgEDGC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 01:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46298 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 02:02:28 -0400
+Received: from mout.web.de ([212.227.17.12]:56227 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725859AbgEDFzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 01:55:44 -0400
-Received: from localhost (unknown [171.76.84.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9075C20721;
-        Mon,  4 May 2020 05:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588571743;
-        bh=hsRcOcXiosbEqy3AmtQTRIvno9cmDyh65wixvhLD2o8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F+2ZSG+CW77IziyzS8stM3g0oqMWuv1wJC9kin2vUB3bNh14jsHciZXo9RGsYVnuq
-         I+gsWJ7LAw9YrmAbwsQ0tWDuZVd9S6pYwWYhz5Zx3FcmJdpn/AS791yC0DI1ZP3Su5
-         myp3hJnfR3yzAvhJ4qlhieTCz+NMfLmzJQGbsCPs=
-Date:   Mon, 4 May 2020 11:25:39 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] dmaengine: ptdma: Initial driver for the AMD
- PTDMA controller
-Message-ID: <20200504055539.GJ1375924@vkoul-mobl>
-References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
- <1588108416-49050-2-git-send-email-Sanju.Mehta@amd.com>
+        id S1725859AbgEDGC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:02:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588572131;
+        bh=VzTdkyAD08T61DvGRdMXtyVSqMI0D89n3sPnc+qPeXg=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=TlI2YE31VFBaW70FsVWiN9MHOVTW4Z894A3DS91GW369m02tNi9nOGmDe0mkjIj4o
+         nCp63mXTqvE8Zt72kZYAWmJcEqapUa695NSi7BTK0/QdmTWYg/NxVU6pgAgaQvguQ8
+         RFI4u2RH095TcTzLpfEDE6H3OvOBVVuLXRrtghrM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MX0YK-1jhdF03naG-00VzSC; Mon, 04
+ May 2020 08:02:11 +0200
+Subject: Re: [PATCH v3] nfp: abm: Fix incomplete release of system resources
+ in nfp_abm_vnic_set_mac()
+To:     Qiushi Wu <wu000273@umn.edu>, Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org
+Cc:     oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, Kangjie Lu <kjlu@umn.edu>
+References: <20200503204932.11167-1-wu000273@umn.edu>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <265a25f7-6ef1-1387-d60a-9ffe8ccfbd73@web.de>
+Date:   Mon, 4 May 2020 08:01:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588108416-49050-2-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <20200503204932.11167-1-wu000273@umn.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AvXDT0o/ikXfL38quRh8+24/gaW0HKkjufaX4AXzE7TDRVA80m0
+ QQcWwRwI7CvNRTOtX5SH6GNu+bmrZLyZYBLjtCVbbJRZJefTcl9pelHnlK7KGs9KRU+b7MA
+ oL1wssaT+LyZxJOOzUxYud8Svw+Gts0xpMo5l2JMpkGbcEk9N6QB50CKJGtUMoUwJoJeiU0
+ 7aqbYDVixFvwj09G0EaRw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ebZw7HG1iVM=:oeihwbmQomtzBFPf6Fk8j/
+ r/xegseR6mOQD52eq19nn/pNRjYxqFH1Rzq6lsqxMNvkOe0XAzPNMJx40thCa1h4caLZ5SiFc
+ mwPkPzwPYQlsZ183+yaqFHTsM2mEyBqsGRbj116Xict9hg2Kmhg4PBGmiNm3uVAv75LzAM3lb
+ 9dLh9xDu909jDnEXwPKFRT4AC7GMYcUko99aHSNLXRRUvSAvxGCKkTUz5za4NBZUpDZGzDhOc
+ 8iCJSz5XRnvvDwHSiZa1QB2Gt+TLYPSlmEIRnFOKihKdd2irRSZIZVu96dkKjBoALZyItluwx
+ nN+0AWT9ng3WtBZYJmqi8RHXZItR9q3Wp8wrgfGYfcXe7CGJpHfFpzoVxwIAGdHytGLVOK/5h
+ C521AiX7v/eF3AePwRgKAwOtYlE7ozKpFzMEJryPDK/I7eJm3ONYp6KTo6R+Q4V5DO3wOO+t4
+ IDfnvoLNi0INEket753Vgm8KWBev5yirmFZcZ9l+gN9a63+klDTg1joHNr1fwtNQHmT/Io4+p
+ otzfMnOUzhTi8KwzEOQBO+/OuFUEGBpBPQzLL2rwg5Up55/h3Y870AFPOCcHJdZGOmFsgVazr
+ YycW1NQenWEA6WDaya5RvqPc+A6ycPPQ+eeBgjdzJdB3ZXDNi9pr0/pjgSmIjgJ04aDLsWRsz
+ Pd5rmR/LAdmT56aAVSUrqi/EcaZc3zAaoMlmcVCUz5ZCOfHLXafcWnGkdGyPsknCPFNLnN9Po
+ MeeQE2YpNn5ohy5Uxu1PCv4kqWVttfjM04kvCBmvXh56CPlo8AWKoSMLD91/b85wzZZXOjU6v
+ /Twl+WZUfk5qPCadbrHKbyaV9E/As4UdQF4KjPB3YkXHxwMou87GOXHac9lJxqIzGG62azjrT
+ zt6V3jP/1v3FEAMkC3Vmy9n1XFph4ARQxEqz2nMMm3vh+ME7ZXtOkdVeOe4mA8QMRlUePFsC2
+ /X+lmy/wMh/g4rtbSw6QXy2/tOVC5k68Iv3wc44fKRUDMIwQo7ctbIEhijlPFRo5tfAU6vHWn
+ 8I4H7vq64eb2x7NALt7xrDF1SkLAPZcr7Wnw9FPLtuH21F76w/rd91RAe1Efdmjm8G5Tx2hkp
+ A1ZXEONI/577EwJP0NBuWVd2ZXulhd80wEIJPvuOi33423vFTo5vhJOMVB+rI/ywei1wapE/u
+ 0bDXVswxvm5sN+vTU/4TJGSZRMh3yoiSO56Idfa9oMFcJDlqCNIEwh3Ac55i7sGI6yuHZb5K2
+ eblermRJjO0UfHce3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-04-20, 16:13, Sanjay R Mehta wrote:
-> From: Sanjay R Mehta <sanju.mehta@amd.com>
-> 
-> This driver add support for AMD PTDMA controller.  This device
-> performs high-bandwidth memory to memory and IO copy operation.
-> Device commands are managed via a circular queue of 'descriptors',
-> each of which specifies source and destination addresses for copying
-> a single buffer of data.
-> 
-> The driver handles multiple devices, which are logged on a linked
-> list; all devices are treated equivalently.
-> 
-> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-> ---
->  MAINTAINERS                   |   6 +
->  drivers/dma/Kconfig           |   2 +
->  drivers/dma/Makefile          |   1 +
->  drivers/dma/ptdma/Kconfig     |  11 ++
->  drivers/dma/ptdma/Makefile    |  10 ++
->  drivers/dma/ptdma/ptdma-dev.c | 399 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/dma/ptdma/ptdma-pci.c | 253 ++++++++++++++++++++++++++
->  drivers/dma/ptdma/ptdma.h     | 324 ++++++++++++++++++++++++++++++++++
->  8 files changed, 1006 insertions(+)
->  create mode 100644 drivers/dma/ptdma/Kconfig
->  create mode 100644 drivers/dma/ptdma/Makefile
->  create mode 100644 drivers/dma/ptdma/ptdma-dev.c
->  create mode 100644 drivers/dma/ptdma/ptdma-pci.c
->  create mode 100644 drivers/dma/ptdma/ptdma.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e64e5db..8bf94b4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -921,6 +921,12 @@ S:	Supported
->  F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
->  F:	drivers/net/ethernet/amd/xgbe/
->  
-> +AMD PTDMA DRIVER
-> +M:	Sanjay R Mehta <sanju.mehta@amd.com>
-> +L:	dmaengine@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/dma/ptdma/
-> +
->  ANALOG DEVICES INC AD5686 DRIVER
->  M:	Stefan Popa <stefan.popa@analog.com>
->  L:	linux-pm@vger.kernel.org
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 0924836..44b8d73 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -738,6 +738,8 @@ source "drivers/dma/ti/Kconfig"
->  
->  source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
->  
-> +source "drivers/dma/ptdma/Kconfig"
-> +
->  # clients
->  comment "DMA Clients"
->  	depends on DMA_ENGINE
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index e60f813..2785756 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -83,6 +83,7 @@ obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
->  obj-$(CONFIG_ZX_DMA) += zx_dma.o
->  obj-$(CONFIG_ST_FDMA) += st_fdma.o
->  obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
-> +obj-$(CONFIG_AMD_PTDMA) += ptdma/
->  
->  obj-y += mediatek/
->  obj-y += qcom/
-> diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
-> new file mode 100644
-> index 0000000..f93f9c2
-> --- /dev/null
-> +++ b/drivers/dma/ptdma/Kconfig
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config AMD_PTDMA
-> +	tristate  "AMD PassThru DMA Engine"
-> +	depends on X86_64 && PCI
-> +	help
-> +	  Enable support for the AMD PTDMA controller.  This controller
-> +	  provides DMA capabilities & performs high bandwidth memory to
-> +	  memory and IO copy operation and performs DMA transfer through
-> +	  queue based descriptor management. This DMA controller is intended
-> +	  to use with AMD Non-Transparent Bridge devices and not for general
-> +	  purpose slave DMA.
-> diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
-> new file mode 100644
-> index 0000000..320fa82
-> --- /dev/null
-> +++ b/drivers/dma/ptdma/Makefile
-> @@ -0,0 +1,10 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# AMD Passthru DMA driver
-> +#
-> +
-> +obj-$(CONFIG_AMD_PTDMA) += ptdma.o
-> +
-> +ptdma-objs := ptdma-dev.o
-> +
-> +ptdma-$(CONFIG_PCI) += ptdma-pci.o
-> diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-> new file mode 100644
-> index 0000000..0a69fd4
-> --- /dev/null
-> +++ b/drivers/dma/ptdma/ptdma-dev.c
-> @@ -0,0 +1,399 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * AMD Passthru DMA device driver
-> + * -- Based on the CCP driver
-> + *
-> + * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
-> + *
-> + * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-> + * Author: Gary R Hook <gary.hook@amd.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/interrupt.h>
-> +
-> +#include "ptdma.h"
-> +
-> +static int cmd_queue_length = 32;
-> +module_param(cmd_queue_length, uint, 0644);
-> +MODULE_PARM_DESC(cmd_queue_length,
-> +		 " length of the command queue, a power of 2 (2 <= val <= 128)");
+> =E2=80=A6 Thus add a call of the function
+> =E2=80=9Cnfp_nsp_close=E2=80=9D for the completion of the exception hand=
+ling.
 
-Any reason for this as module param? who will configure this and how?
+I suggest to mention also the addition of a jump target because of
+a Linux coding style concern.
 
-> + * List of PTDMAs, PTDMA count, read-write access lock, and access functions
-> + *
-> + * Lock structure: get pt_unit_lock for reading whenever we need to
-> + * examine the PTDMA list. While holding it for reading we can acquire
-> + * the RR lock to update the round-robin next-PTDMA pointer. The unit lock
-> + * must be acquired before the RR lock.
-> + *
-> + * If the unit-lock is acquired for writing, we have total control over
-> + * the list, so there's no value in getting the RR lock.
-> + */
-> +static DEFINE_RWLOCK(pt_unit_lock);
-> +static LIST_HEAD(pt_units);
-> +
-> +static struct pt_device *pt_rr;
 
-why do we need these globals and not in driver context?
+=E2=80=A6
+> +++ b/drivers/net/ethernet/netronome/nfp/abm/main.c
+=E2=80=A6
+> @@ -300,12 +297,16 @@ nfp_abm_vnic_set_mac(struct nfp_pf *pf, struct nfp=
+_abm *abm, struct nfp_net *nn,
+=E2=80=A6
+> +generate_random_address:
+> +	eth_hw_addr_random(nn->dp.netdev);
+> +	return;
+>  }
+=E2=80=A6
 
-> +static void pt_add_device(struct pt_device *pt)
-> +{
-> +	unsigned long flags;
-> +
-> +	write_lock_irqsave(&pt_unit_lock, flags);
-> +	list_add_tail(&pt->entry, &pt_units);
-> +	if (!pt_rr)
-> +		/*
-> +		 * We already have the list lock (we're first) so this
-> +		 * pointer can't change on us. Set its initial value.
-> +		 */
-> +		pt_rr = pt;
-> +	write_unlock_irqrestore(&pt_unit_lock, flags);
-> +}
+I recommend to apply the check =E2=80=9CRETURN_VOID=E2=80=9D once more.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/sc=
+ripts/checkpatch.pl?id=3D0e698dfa282211e414076f9dc7e83c1c288314fd#n4866
 
-Can you please explain what do you mean by having a list of devices and
-why are we adding/removing dynamically?
-
--- 
-~Vinod
+Regards,
+Markus
