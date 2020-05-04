@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768A4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD592C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 496FA2192A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCA220663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AQk4n2gx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K8OKRjqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgEDXXt (ORCPT
+        id S1728092AbgEDXXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:23:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51020 "EHLO
+        Mon, 4 May 2020 19:23:51 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51028 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728223AbgEDXXs (ORCPT
+        with ESMTP id S1728428AbgEDXXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 19:23:48 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NNMxb100252;
-        Mon, 4 May 2020 23:23:22 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NNOlk100259;
+        Mon, 4 May 2020 23:23:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=nrgeGo5TWvkfow80ALHDxIo+Qf0rmV7hg2y44AzcZVE=;
- b=AQk4n2gxJW5DbmZcIDOcVZVNgkT/GX/SftTl9jRmH56yS713a1vjd3gTFG1Sc3/bp92Q
- vfPBxbnnQTn/HfmTe3ll6avCL483Fcd0Leln2YhOKtiIMBeC13YTfz5EEwyHNvZQbXCl
- U6fyQmg0mwkKWr3uexQhJEK1HuYpP+xZixtXHJLkyPbN4pL0mJUgjVd/YDSP+IRKG2vz
- W2g+ac9Vvn+FRX5oYT+6cryKaLXrJG+A23XJsFnNJFSlWAyUwwTkf1aL+Mt8/3z6hSuA
- ycNWYeEVC7gRQUJRDAcjdfRYE9OZVCnnvZPnI+HZZA4yk3aVSkokHC3cwEqNlZ/H8EEQ BQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30s0tm9t40-1
+ bh=R0wqtFdhHPWyxkeH774P5glzvKGkY+n3t2Jlub0gYr8=;
+ b=K8OKRjqTDVOYIjHyuVDzNeY5MSZ/15M4am+PenRjKqMSG+7QFUWwtPCLoCv1rhyHct3e
+ vcb570kOn6/d2dRZnX0z/9ct8Xtk6PleKLQMwr1Wpc59UiJ//wVX90f7nSWjnIVbQd8o
+ giyLY8PizWvVN3eXu2QgpnYAEqokqNHqDHZIT7OG8vfaDmdkHjCW59Fu24pO03jqQ6Do
+ BfuCFjJeruGuQBr42etk0ZshTobnkLEMtqXFDLZBv4ecU27knZ6rYwIt1rkALlVrnrcr
+ HopSDEWx+md37OfltkJuDviuLPpOPImGq59jX/ZOIkUPdaB/O+e1vu28kdMg1HZ929Bz dg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 30s0tm9t44-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 23:23:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NNL1L040569;
-        Mon, 4 May 2020 23:23:21 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30sjncbd61-1
+        Mon, 04 May 2020 23:23:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044NLciC140002;
+        Mon, 4 May 2020 23:23:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 30t1r3j23g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 23:23:21 +0000
+        Mon, 04 May 2020 23:23:23 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044NNHMZ001760;
-        Mon, 4 May 2020 23:23:17 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044NNLZJ003803;
+        Mon, 4 May 2020 23:23:22 GMT
 Received: from tomti.i.net-space.pl (/10.175.189.148)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 May 2020 16:23:16 -0700
+        with ESMTP ; Mon, 04 May 2020 16:23:21 -0700
 From:   Daniel Kiper <daniel.kiper@oracle.com>
 To:     grub-devel@gnu.org, linux-kernel@vger.kernel.org,
         trenchboot-devel@googlegroups.com, x86@kernel.org
@@ -61,15 +61,15 @@ Cc:     alexander.burmashev@oracle.com, andrew.cooper3@citrix.com,
         krystian.hebel@3mdeb.com, lukasz.hawrylko@linux.intel.com,
         michal.zygowski@3mdeb.com, mjg59@google.com, phcoder@gmail.com,
         pirot.krol@3mdeb.com, pjones@redhat.com, ross.philipson@oracle.com
-Subject: [GRUB PATCH RFC 16/18] i386/txt: Add Intel TXT ACM module support
-Date:   Tue,  5 May 2020 01:21:30 +0200
-Message-Id: <20200504232132.23570-17-daniel.kiper@oracle.com>
+Subject: [GRUB PATCH RFC 17/18] i386/txt: Add Intel TXT verification routines
+Date:   Tue,  5 May 2020 01:21:31 +0200
+Message-Id: <20200504232132.23570-18-daniel.kiper@oracle.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200504232132.23570-1-daniel.kiper@oracle.com>
 References: <20200504232132.23570-1-daniel.kiper@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2005040182
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
@@ -88,21 +88,20 @@ From: Ross Philipson <ross.philipson@oracle.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- grub-core/loader/i386/txt/acmod.c | 575 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 575 insertions(+)
- create mode 100644 grub-core/loader/i386/txt/acmod.c
+ grub-core/loader/i386/txt/verify.c | 297 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 297 insertions(+)
+ create mode 100644 grub-core/loader/i386/txt/verify.c
 
-diff --git a/grub-core/loader/i386/txt/acmod.c b/grub-core/loader/i386/txt/acmod.c
+diff --git a/grub-core/loader/i386/txt/verify.c b/grub-core/loader/i386/txt/verify.c
 new file mode 100644
-index 000000000..ed2fbab7b
+index 000000000..97f3b325d
 --- /dev/null
-+++ b/grub-core/loader/i386/txt/acmod.c
-@@ -0,0 +1,575 @@
++++ b/grub-core/loader/i386/txt/verify.c
+@@ -0,0 +1,297 @@
 +/*
-+ * acmod.c: support functions for use of Intel(r) TXT Authenticated
-+ *          Code (AC) Modules
++ * verify.c: verify that platform and processor supports Intel(r) TXT
 + *
-+ * Copyright (c) 2003-2011, Intel Corporation
++ * Copyright (c) 2003-2010, Intel Corporation
 + * All rights reserved.
 + *
 + * Redistribution and use in source and binary forms, with or without
@@ -164,514 +163,237 @@ index 000000000..ed2fbab7b
 +#include <grub/i386/msr.h>
 +#include <grub/i386/txt.h>
 +
-+/*
-+ * This checks to see if two numbers multiplied together are larger
-+ *   than the type that they are.  Returns TRUE if OVERFLOWING.
-+ *   If the first parameter "x" is greater than zero and
-+ *   if that is true, that the largest possible value 0xFFFFFFFF / "x"
-+ *   is less than the second parameter "y".  If "y" is zero then
-+ *   it will also fail because no unsigned number is less than zero.
-+ */
-+static inline int
-+multiply_overflow_u32 (grub_uint32_t x, grub_uint32_t y)
++/* Current max that the secure launch can handle */
++#define TXT_MAX_CPUS	512
++
++static grub_err_t
++verify_bios_spec_ver_elt (struct grub_txt_heap_ext_data_element *elt)
 +{
-+  /* Use x instead of (x > 0)? */
-+  return (x > 0) ? ((((grub_uint32_t)(~0))/x) < y) : 0;
++  grub_uint8_t *ptr = (grub_uint8_t *)elt;
++  struct grub_txt_heap_bios_spec_ver_element *bios_spec_ver_elt =
++         (struct grub_txt_heap_bios_spec_ver_element *)ptr;
++
++  if ( elt->size != sizeof(*elt) + sizeof(*bios_spec_ver_elt) )
++    return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                N_("HEAP_BIOS_SPEC_VER element has wrong size (%d)"),
++                elt->size);
++
++  /* Any values are allowed */
++  return GRUB_ERR_NONE;
 +}
 +
-+/*
-+ *  These three "plus overflow" functions take a "x" value
-+ *    and add the "y" value to it and if the two values are
-+ *    greater than the size of the variable type, they will
-+ *    overflow the type and end up with a smaller value and
-+ *    return TRUE - that they did overflow.  i.e.
-+ */
-+static inline int plus_overflow_u32 (grub_uint32_t x, grub_uint32_t y)
++static grub_err_t
++verify_acm_elt (struct grub_txt_heap_ext_data_element *elt)
 +{
-+  return ((((grub_uint32_t)(~0)) - x) < y);
++  grub_uint8_t *ptr = ((grub_uint8_t *)elt + sizeof(*elt));
++  struct grub_txt_heap_acm_element *acm_elt =
++         (struct grub_txt_heap_acm_element *)ptr;
++  grub_uint64_t *acm_addrs;
++  grub_uint32_t i;
++
++  if ( elt->size != sizeof(*elt) + sizeof(*acm_elt) +
++       acm_elt->num_acms*sizeof(grub_uint64_t) )
++    return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                N_("HEAP_ACM element has wrong size (%d)"),
++                elt->size);
++
++  /* No addrs is not error, but print warning. */
++  if ( acm_elt->num_acms == 0 )
++    grub_printf ("WARNING: HEAP_ACM element has no ACM addrs\n");
++
++  acm_addrs = (grub_uint64_t *)(ptr + sizeof(*acm_elt));
++  for ( i = 0; i < acm_elt->num_acms; i++ )
++    {
++      if ( acm_addrs[i] == 0 )
++        return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                    N_("HEAP_ACM element ACM addr (%d) is NULL"), i);
++
++      if ( acm_addrs[i] >= 0x100000000UL )
++        return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                    N_("HEAP_ACM element ACM addr (%d) is >4GB"), i);
++
++      /* Not going to check if ACM addrs are valid ACMs */
++    }
++
++  return GRUB_ERR_NONE;
 +}
 +
-+static struct grub_txt_acm_info_table*
-+get_acmod_info_table (struct grub_txt_acm_header* hdr)
++static grub_err_t
++verify_custom_elt (struct grub_txt_heap_ext_data_element *elt)
 +{
-+  grub_uint32_t user_area_off;
++  grub_uint8_t *ptr = (grub_uint8_t *)elt;
++  struct grub_txt_heap_custom_element *custom_elt =
++         (struct grub_txt_heap_custom_element *)ptr;
 +
-+  /* Overflow? */
-+  if ( plus_overflow_u32 (hdr->header_len, hdr->scratch_size) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("ACM header length plus scratch size overflows"));
-+      return NULL;
-+    }
++  if ( elt->size < sizeof(*elt) + sizeof(*custom_elt) )
++     return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                 N_("HEAP_CUSTOM element has wrong size (%d)"),
++                 elt->size);
 +
-+  if ( multiply_overflow_u32 ((hdr->header_len + hdr->scratch_size), 4) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("ACM header length and scratch size in bytes overflows"));
-+      return NULL;
-+    }
++  /* Any values are allowed */
 +
-+  /*
-+   * This fn assumes that the ACM has already passed at least the initial
-+   * is_acmod() checks.
++  return GRUB_ERR_NONE;
++}
++
++static grub_err_t
++verify_evt_log_ptr_elt (struct grub_txt_heap_ext_data_element *elt)
++{
++  grub_uint8_t *ptr = (grub_uint8_t *)elt;
++  struct grub_txt_heap_tpm_event_log_element *elog_elt =
++         (struct grub_txt_heap_tpm_event_log_element *)ptr;
++
++  if ( elt->size != sizeof(*elt) + sizeof(*elog_elt) )
++     return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                 N_("HEAP_EVENT_LOG_POINTER element has wrong size (%d)"),
++                 elt->size);
++
++  /* TODO: Sort out how to do this verifier once the event log handling is in place
++   *
++   * return verify_evt_log((event_log_container_t *)(unsigned long)
++   *                       elog_elt->event_log_phys_addr);
 +   */
 +
-+  user_area_off = (hdr->header_len + hdr->scratch_size) * 4;
-+
-+  /* Overflow? */
-+  if ( plus_overflow_u32 (user_area_off, sizeof(struct grub_txt_acm_info_table)) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("user_area_off plus acm_info_table_t size overflows"));
-+      return NULL;
-+    }
-+
-+  /* Check that table is within module. */
-+  if ( user_area_off + sizeof(struct grub_txt_acm_info_table) > hdr->size * 4 )
-+    {
-+      /* TODO: Is (grub_uint32_t) correct??? */
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("ACM info table size too large: %x > %x"),
-+		  user_area_off + (grub_uint32_t)sizeof(struct grub_txt_acm_info_table), hdr->size * 4);
-+      return NULL;
-+    }
-+
-+  /* Overflow? */
-+  if ( plus_overflow_u32 ((grub_uint32_t)(unsigned long)hdr, user_area_off) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("hdr plus user_area_off overflows"));
-+      return NULL;
-+    }
-+
-+    return (struct grub_txt_acm_info_table *)((unsigned long)hdr + user_area_off);
++  return GRUB_ERR_NONE;
 +}
 +
-+static struct grub_txt_acm_chipset_id_list*
-+get_acmod_chipset_list (struct grub_txt_acm_header *hdr)
++static grub_err_t
++verify_ext_data_elts(struct grub_txt_heap_ext_data_element *elts,
++                     grub_uint64_t elts_size)
 +{
-+  struct grub_txt_acm_info_table *info_table;
-+  grub_uint32_t size, id_list_off;
-+  struct grub_txt_acm_chipset_id_list *chipset_id_list;
++  struct grub_txt_heap_ext_data_element *elt = elts;
++  grub_err_t err;
 +
-+  /* This fn assumes that the ACM has already passed the is_acmod() checks */
++  if ( elts_size < sizeof(*elt) )
++     return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                 N_("TXT heap ext data elements too small"));
 +
-+  info_table = get_acmod_info_table (hdr);
-+  if ( !info_table )
-+    return NULL;
-+  id_list_off = info_table->chipset_id_list;
-+
-+  size = hdr->size * 4;
-+
-+  /* Overflow? */
-+  if ( plus_overflow_u32 (id_list_off, sizeof(struct grub_txt_acm_chipset_id)) )
++  for ( ; ; )
 +    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("id_list_off plus acm_chipset_id_t size overflows"));
-+      return NULL;
-+    }
++      if ( elts_size < elt->size || elt->size == 0 )
++        return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                    N_("TXT heap invalid element size: type: %d, size: %d"),
++                    elt->type, elt->size);
 +
-+  /* Check that chipset id table is w/in ACM */
-+  if ( id_list_off + sizeof(struct grub_txt_acm_chipset_id) > size )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("chipset id list is too big: %x"), id_list_off);
-+      return NULL;
-+    }
-+
-+  /* Overflow? */
-+  if ( plus_overflow_u32 ((grub_uint32_t)(unsigned long)hdr, id_list_off) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("hdr plus id_list_off overflows"));
-+      return NULL;
-+    }
-+
-+  chipset_id_list = (struct grub_txt_acm_chipset_id_list*)
-+                    ((unsigned long)hdr + id_list_off);
-+
-+  /* Overflows? */
-+  if ( multiply_overflow_u32 (chipset_id_list->count,
-+                              sizeof(struct grub_txt_acm_chipset_id)) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("size of acm_chipset_id_list overflows"));
-+      return NULL;
-+    }
-+
-+  if ( plus_overflow_u32 (id_list_off + sizeof(struct grub_txt_acm_chipset_id),
-+        chipset_id_list->count * sizeof(struct grub_txt_acm_chipset_id)) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("size of all entries overflows"));
-+      return NULL;
-+    }
-+
-+  /* Check that all entries are w/in ACM */
-+  if ( id_list_off + sizeof(struct grub_txt_acm_chipset_id) +
-+       chipset_id_list->count * sizeof(struct grub_txt_acm_chipset_id) > size )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("ACM chipset id entries are too big: %x"),
-+		  chipset_id_list->count);
-+      return NULL;
-+    }
-+
-+  return chipset_id_list;
-+}
-+
-+static struct grub_txt_acm_processor_id_list*
-+get_acmod_processor_list (struct grub_txt_acm_header* hdr)
-+{
-+  struct grub_txt_acm_info_table *info_table;
-+  grub_uint32_t size, id_list_off;
-+  struct grub_txt_acm_processor_id_list *proc_id_list;
-+
-+  /* This fn assumes that the ACM has already passed the is_acmod() checks */
-+
-+  info_table = get_acmod_info_table(hdr);
-+  if ( info_table == NULL )
-+    return NULL;
-+  id_list_off = info_table->processor_id_list;
-+
-+  size = hdr->size * 4;
-+
-+  /* Overflow? */
-+  if ( plus_overflow_u32 (id_list_off, sizeof(struct grub_txt_acm_processor_id)) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("id_list_off plus acm_processor_id_t size overflows"));
-+      return NULL;
-+    }
-+
-+  /* Check that processor id table is w/in ACM */
-+  if ( id_list_off + sizeof(struct grub_txt_acm_processor_id) > size )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("ACM processor id list is too big: %x"), id_list_off);
-+      return NULL;
-+    }
-+
-+  /* Overflow? */
-+  if ( plus_overflow_u32 ((unsigned long)hdr, id_list_off) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("hdr plus id_list_off overflows"));
-+      return NULL;
-+    }
-+
-+  proc_id_list = (struct grub_txt_acm_processor_id_list *)
-+                             ((unsigned long)hdr + id_list_off);
-+
-+  /* Overflows? */
-+  if ( multiply_overflow_u32 (proc_id_list->count,
-+             sizeof(struct grub_txt_acm_processor_id)) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("size of acm_processor_id_list overflows"));
-+      return NULL;
-+    }
-+
-+  if ( plus_overflow_u32 (id_list_off + sizeof(struct grub_txt_acm_processor_id),
-+        proc_id_list->count * sizeof(struct grub_txt_acm_processor_id)) )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("size of all entries overflows"));
-+      return NULL;
-+    }
-+
-+  /* Check that all entries are w/in ACM */
-+  if ( id_list_off + sizeof(struct grub_txt_acm_processor_id) +
-+         proc_id_list->count * sizeof(struct grub_txt_acm_processor_id) > size )
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("ACM processor id entries are too big: %x"),
-+		  proc_id_list->count);
-+      return NULL;
-+    }
-+
-+  return proc_id_list;
-+}
-+
-+static int
-+is_acmod (const void *acmod_base, grub_uint32_t acmod_size,
-+         grub_uint8_t *type_out)
-+{
-+  struct grub_txt_acm_header *acm_hdr = (struct grub_txt_acm_header *)acmod_base;
-+  struct grub_txt_acm_info_table *info_table;
-+
-+  /* First check size */
-+  if ( acmod_size < sizeof (struct grub_txt_acm_header) )
-+    return 0;
-+
-+  /* Then check overflow */
-+  if ( multiply_overflow_u32 (acm_hdr->size, 4) )
-+    return 0;
-+
-+  /* Then check size equivalency */
-+  if ( acmod_size != acm_hdr->size * 4 )
-+    return 0;
-+
-+  /* Then check type and vendor */
-+  if ( (acm_hdr->module_type != GRUB_TXT_ACM_MODULE_TYPE) ||
-+       (acm_hdr->module_vendor != GRUB_TXT_ACM_MODULE_VENDOR_INTEL) )
-+    return 0;
-+
-+  info_table = get_acmod_info_table (acm_hdr);
-+  if ( !info_table )
-+    return 0;
-+
-+  /* Check if ACM UUID is present */
-+  if ( grub_memcmp (&(info_table->uuid), GRUB_TXT_ACM_UUID, 16) )
-+    return 0;
-+
-+  if ( type_out )
-+    *type_out = info_table->chipset_acm_type;
-+
-+  return 1;
-+}
-+
-+static struct grub_txt_acm_header*
-+get_bios_sinit (void *sinit_region_base)
-+{
-+  grub_uint8_t *txt_heap = grub_txt_get_heap ();
-+  struct grub_txt_bios_data *bios_data = grub_txt_bios_data_start (txt_heap);
-+  struct grub_txt_acm_header *bios_sinit;
-+
-+  if ( !sinit_region_base )
-+     return NULL;
-+
-+  if ( bios_data->bios_sinit_size == 0 )
-+    return NULL;
-+
-+  /* BIOS has loaded an SINIT module, so verify that it is valid */
-+  grub_dprintf ("slaunch", "BIOS has already loaded an SINIT module\n");
-+
-+  bios_sinit = (struct grub_txt_acm_header *)sinit_region_base;
-+
-+  /* Is it a valid SINIT module? */
-+  if ( !grub_txt_is_sinit_acmod (sinit_region_base, bios_data->bios_sinit_size) ||
-+       !grub_txt_acmod_match_platform (bios_sinit) )
-+    return NULL;
-+
-+  return bios_sinit;
-+}
-+
-+grub_uint32_t
-+grub_txt_supported_os_sinit_data_ver (struct grub_txt_acm_header* hdr)
-+{
-+  static struct grub_txt_acm_info_table *info_table;
-+
-+  /* Assumes that it passed is_sinit_acmod() */
-+  info_table = get_acmod_info_table (hdr);
-+
-+  if ( info_table == NULL )
-+    return 0;
-+
-+  return info_table->os_sinit_data_ver;
-+}
-+
-+grub_uint32_t
-+grub_txt_get_sinit_capabilities (struct grub_txt_acm_header* hdr)
-+{
-+  static struct grub_txt_acm_info_table *info_table;
-+
-+  /* Assumes that it passed is_sinit_acmod() */
-+  info_table = get_acmod_info_table (hdr);
-+
-+  if ( info_table == NULL || info_table->version < 3 )
-+    return 0;
-+
-+  return info_table->capabilities;
-+}
-+
-+int
-+grub_txt_is_sinit_acmod (const void *acmod_base, grub_uint32_t acmod_size)
-+{
-+  grub_uint8_t type;
-+
-+  if ( !is_acmod (acmod_base, acmod_size, &type) )
-+    return 0;
-+
-+  if ( type != GRUB_TXT_ACM_CHIPSET_TYPE_SINIT )
-+    return 0;
-+
-+  return 1;
-+}
-+
-+/* Format of VER.FSBIF and VER.QPIIF registers. */
-+typedef union {
-+  grub_uint64_t _raw;
-+  struct {
-+     grub_uint64_t reserved   : 31;
-+     grub_uint64_t prod_fused : 1;
-+  };
-+} grub_txt_ver_fsbif_qpiif_t;
-+
-+int
-+grub_txt_acmod_match_platform (struct grub_txt_acm_header *hdr)
-+{
-+  union grub_txt_didvid didvid;
-+  grub_uint32_t fms, ign, i;
-+  grub_uint64_t platform_id;
-+  grub_txt_ver_fsbif_qpiif_t ver;
-+  struct grub_txt_acm_chipset_id_list *chipset_id_list;
-+  struct grub_txt_acm_chipset_id *chipset_id;
-+  struct grub_txt_acm_processor_id_list *proc_id_list;
-+  struct grub_txt_acm_processor_id *proc_id;
-+  struct grub_txt_acm_info_table *info_table;
-+
-+  /* This fn assumes that the ACM has already passed the is_acmod() checks */
-+
-+  /* Get chipset fusing, device, and vendor id info */
-+  didvid.value = grub_txt_reg_pub_readq (GRUB_TXT_DIDVID);
-+
-+  ver._raw = grub_txt_reg_pub_readq (GRUB_TXT_VER_FSBIF);
-+  if ( (ver._raw & 0xffffffff) == 0xffffffff ||
-+       (ver._raw & 0xffffffff) == 0x00 ) /* Need to use VER.QPIIF */
-+    ver._raw = grub_txt_reg_pub_readq (GRUB_TXT_VER_QPIIF);
-+
-+  grub_dprintf ("slaunch", "chipset production fused: %x, "
-+		"chipset vendor: 0x%x, device: 0x%x, revision: 0x%x\n",
-+		ver.prod_fused, didvid.vid, didvid.did, didvid.rid);
-+
-+  grub_cpuid (1, fms, ign, ign, ign);
-+  platform_id = grub_rdmsr (GRUB_MSR_X86_PLATFORM_ID);
-+
-+  grub_dprintf ("slaunch", "processor family/model/stepping: 0x%x, "
-+		"platform id: 0x%" PRIxGRUB_UINT64_T "\n", fms, platform_id);
-+
-+  /*
-+   * Check if chipset fusing is same. Note the DEBUG.FUSE bit in the version
-+   * is 0 when debug fused so the logic below checking a mismatch is valid.
-+   */
-+  if ( (ver._raw & GRUB_TXT_VERSION_DEBUG_FUSED) &&
-+       (hdr->flags & GRUB_TXT_ACM_FLAG_DEBUG_SIGNED) )
-+    {
-+      grub_error (GRUB_ERR_BAD_DEVICE, N_("production/debug mismatch between chipset and ACM"));
-+      return 0;
-+    }
-+
-+  /* Check if chipset vendor/device/revision IDs match */
-+  chipset_id_list = get_acmod_chipset_list (hdr);
-+  if ( !chipset_id_list )
-+    return 0;
-+
-+  grub_dprintf ("slaunch", "%d SINIT ACM chipset id entries:\n", chipset_id_list->count);
-+
-+  chipset_id = (struct grub_txt_acm_chipset_id *) ((grub_addr_t)chipset_id_list + sizeof (chipset_id_list->count));
-+  for (i = 0; i < chipset_id_list->count; i++, chipset_id++)
-+    {
-+      grub_dprintf ("slaunch", "  vendor: 0x%x, device: 0x%x, flags: 0x%x, "
-+		    "revision: 0x%x, extended: 0x%x\n", chipset_id->vendor_id,
-+		    chipset_id->device_id, chipset_id->flags,
-+		    chipset_id->revision_id, chipset_id->extended_id);
-+
-+      if ( (didvid.vid == chipset_id->vendor_id ) &&
-+           (didvid.did == chipset_id->device_id ) &&
-+           ( ( ( (chipset_id->flags & GRUB_TXT_ACM_REVISION_ID_MASK) == 0) &&
-+                 (didvid.rid == chipset_id->revision_id) ) ||
-+               ( ( (chipset_id->flags & GRUB_TXT_ACM_REVISION_ID_MASK) == 1) &&
-+                 ( (didvid.rid & chipset_id->revision_id) != 0 ) ) ) )
++      switch ( elt->type )
++        {
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_END:
++            return GRUB_ERR_NONE;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_BIOS_SPEC_VER:
++            err = verify_bios_spec_ver_elt (elt);
++            if ( err )
++              return err;
 +            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_ACM:
++            err = verify_acm_elt (elt);
++            if ( err )
++              return err;
++            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_STM:
++            /* Nothing to check, platform specific */
++            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_CUSTOM:
++            err = verify_custom_elt (elt);
++            if ( err )
++              return err;
++            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_TPM_EVENT_LOG_PTR:
++            err = verify_evt_log_ptr_elt (elt);
++            if ( err )
++              return err;
++            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_MADT:
++            /* Copy of ACPI MADT, not validating */
++            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1:
++            /* TODO TBOOT did not verify this, not sure why or how to do it */
++            break;
++          case GRUB_TXT_HEAP_EXTDATA_TYPE_MCFG:
++            /* Copy of ACPI MCFG, not validating */
++            break;
++          default:
++	    /* TODO: What kind of element??? Improve the message. */
++	    grub_printf ("WARNING: unknown element: type: %u, size: %u\n", elt->type, elt->size);
++            break;
++        }
++
++      elts_size -= elt->size;
++      elt = (struct grub_txt_heap_ext_data_element *)((grub_uint8_t *)elt + elt->size);
 +    }
 +
-+  if ( i >= chipset_id_list->count )
-+    {
-+      grub_error (GRUB_ERR_BAD_DEVICE, N_("chipset id mismatch"));
-+      return 0;
-+    }
-+
-+  /* Check if processor family/model/stepping and platform IDs match */
-+  info_table = get_acmod_info_table (hdr);
-+  if ( !info_table )
-+    return 0;
-+
-+  /*
-+   * Logic inverted from oringal to avoid the if block. Not sure what drives
-+   * the logic of not checking processor infrmation for version 4 or less.
-+   */
-+  if ( info_table->version < 4 )
-+    return 1;
-+
-+  proc_id_list = get_acmod_processor_list(hdr);
-+  if ( !proc_id_list )
-+    return 1;
-+
-+  grub_dprintf ("slaunch", "%d SINIT ACM processor id entries:\n", proc_id_list->count);
-+
-+  proc_id = (struct grub_txt_acm_processor_id *) ((grub_addr_t)proc_id_list + sizeof (proc_id_list->count));
-+  for (i = 0; i < proc_id_list->count; i++, proc_id++)
-+    {
-+      grub_dprintf ("slaunch", "  fms: 0x%x, fms_mask: 0x%x, platform_id: 0x%" PRIxGRUB_UINT64_T
-+		    ", platform_mask: 0x%" PRIxGRUB_UINT64_T "\n", proc_id->fms, proc_id->fms_mask,
-+		    proc_id->platform_id, proc_id->platform_mask);
-+
-+      if ( (proc_id->fms == (fms & proc_id->fms_mask)) &&
-+           (proc_id->platform_id == (platform_id & proc_id->platform_mask)) )
-+        break;
-+    }
-+
-+  if ( i >= proc_id_list->count )
-+    {
-+      grub_error (GRUB_ERR_BAD_DEVICE, N_("chipset id mismatch"));
-+      return 0;
-+    }
-+
-+  return 1;
++  return GRUB_ERR_NONE;
 +}
 +
-+struct grub_txt_acm_header *
-+grub_txt_sinit_select (struct grub_txt_acm_header *sinit)
++grub_err_t
++grub_txt_verify_platform (void)
 +{
-+  struct grub_txt_acm_header *bios_sinit;
-+  void *sinit_region_base;
-+  grub_uint32_t sinit_region_size;
++  grub_uint8_t *txt_heap;
++  grub_uint32_t eax, ebx, ecx, edx;
++  grub_uint64_t bios_size, heap_base, heap_size, msr;
++  grub_err_t err = GRUB_ERR_NONE;
++  struct grub_txt_bios_data *bios_data;
++  struct grub_txt_heap_ext_data_element *elts;
 +
-+  sinit_region_base = (void *)(grub_addr_t) grub_txt_reg_pub_readq (GRUB_TXT_SINIT_BASE);
-+  sinit_region_size = (grub_uint32_t) grub_txt_reg_pub_readq (GRUB_TXT_SINIT_SIZE);
++  grub_cpuid (GRUB_X86_CPUID_FEATURES, eax, ebx, ecx, edx);
 +
-+  grub_dprintf ("slaunch", "TXT.SINIT.BASE: %p\nTXT.SINIT.SIZE: 0x%"
-+		PRIxGRUB_UINT32_T "\n", sinit_region_base, sinit_region_size);
++  if (!(ecx & GRUB_SMX_CPUID_FEATURE))
++    return grub_error (GRUB_ERR_BAD_DEVICE, N_("CPU does not support SMX"));
 +
-+  if (sinit_region_base == NULL)
++  msr = grub_rdmsr (GRUB_MSR_X86_FEATURE_CONTROL);
++
++  if ((msr & (GRUB_MSR_X86_SENTER_FUNCTIONS | GRUB_MSR_X86_SENTER_ENABLE)) !=
++      (GRUB_MSR_X86_SENTER_FUNCTIONS | GRUB_MSR_X86_SENTER_ENABLE))
++    return grub_error (GRUB_ERR_BAD_DEVICE, N_("GETSEC[SENTER] is not enabled"));
++
++  /*
++   * TODO
++   * TXT Specification
++   * 4.5 SGX Requirement for TXT Platform
++   * Secure Launch currently does not support interop with SGX since it does
++   * not have TPM support to write the SE NVRAM index.
++   * Eventually need the verify_IA32_se_svn_status routine to be called here.
++   */
++
++  if (grub_txt_reg_pub_readq (GRUB_TXT_ESTS) & GRUB_TXT_ESTS_TXT_RESET)
++     return grub_error (GRUB_ERR_BAD_DEVICE,
++			N_("TXT_RESET.STS is set and GETSEC[SENTER] is disabled"));
++
++  /*
++   * Verify that the BIOS information in the TXT heap that was setup by the
++   * BIOS ACM is sane.
++   */
++
++  txt_heap = grub_txt_get_heap ();
++  heap_base = grub_txt_reg_pub_readq (GRUB_TXT_HEAP_BASE);
++  heap_size = grub_txt_reg_pub_readq (GRUB_TXT_HEAP_SIZE);
++
++  if ( txt_heap == NULL || heap_base == 0 || heap_size == 0 )
++     return grub_error (GRUB_ERR_BAD_DEVICE,
++                 N_("TXT heap is not configured correctly"));
++
++  bios_size = grub_txt_bios_data_size (txt_heap);
++  if ( bios_size == 0 || bios_size > heap_size )
++     return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                 N_("invalid size of the TXT heap BIOS data table"));
++
++  bios_data = grub_txt_bios_data_start (txt_heap);
++
++  /* Check version */
++  if ( bios_data->version < 5 )
++     return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                 N_("unsupported BIOS data version (%d)"), bios_data->version);
++
++  if ( bios_data->num_logical_procs > TXT_MAX_CPUS )
++     return grub_error (GRUB_ERR_OUT_OF_RANGE,
++                 N_("BIOS reports too many CPUs for secure launch (%d)"),
++                 bios_data->num_logical_procs);
++
++  if ( bios_data->version >= 4 && bios_size > sizeof(*bios_data) + sizeof(bios_size) )
 +    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("no SINIT ACM final resting place"));
-+      return NULL;
++      elts = (struct grub_txt_heap_ext_data_element *) ((grub_uint8_t *)bios_data + sizeof(*bios_data));
++      err = verify_ext_data_elts(elts, bios_size - sizeof(*bios_data));
 +    }
 +
-+  if (sinit != NULL)
-+    grub_dprintf ("slaunch", "SINIT ACM date: %" PRIxGRUB_UINT32_T "\n", sinit->date);
-+
-+  bios_sinit = get_bios_sinit (sinit_region_base);
-+
-+  /* Does BIOS provide SINIT ACM? */
-+  if (bios_sinit != NULL)
-+    {
-+      grub_dprintf ("slaunch", "BIOS SINIT ACM date: %" PRIxGRUB_UINT32_T "\n",
-+		    bios_sinit->date);
-+
-+      if (sinit == NULL)
-+        {
-+	  grub_dprintf ("slaunch", "no SINIT ACM provided. Using BIOS SINIT ACM\n");
-+          return bios_sinit;
-+        }
-+
-+      if (bios_sinit->date >= sinit->date)
-+        {
-+          grub_dprintf ("slaunch", "BIOS provides newer or same SINIT ACM, so, using BIOS one\n");
-+          return bios_sinit;
-+        }
-+
-+      grub_dprintf ("slaunch", "BIOS provides older SINIT ACM, so, ignoring BIOS one\n");
-+    }
-+
-+  /* Fail if there is no SINIT ACM. */
-+  if (sinit == NULL)
-+    return NULL;
-+
-+  /* Our SINIT ACM is newer than BIOS one or BIOS does not have one. */
-+
-+  if (multiply_overflow_u32 (sinit->size, 4))
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_RANGE, N_("SINIT ACM size in bytes overflows"));
-+      return NULL;
-+    }
-+
-+  if ((sinit->size * 4) > sinit_region_size)
-+    {
-+      grub_error (GRUB_ERR_OUT_OF_MEMORY,
-+		  N_("SINIT ACM does not fit into final resting place: 0x%"
-+		  PRIxGRUB_UINT32_T "\n"), sinit->size * 4);
-+      return NULL;
-+    }
-+
-+  grub_memcpy (sinit_region_base, sinit, sinit->size * 4);
-+
-+  return sinit_region_base;
++  return err;
 +}
 -- 
 2.11.0
