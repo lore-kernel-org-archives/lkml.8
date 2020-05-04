@@ -2,250 +2,95 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64804C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE616C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD07206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rDJrTpzt"
+	by mail.kernel.org (Postfix) with ESMTP id 8826F206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729880AbgEDQx3 (ORCPT
+        id S1729663AbgEDQ4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:53:29 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49748 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729553AbgEDQx3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:53:29 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044GrRDP081344;
-        Mon, 4 May 2020 11:53:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588611207;
-        bh=0eGgGN67Gih5o+VzyxIZ6R2au1X7hqDqT3zQR5pwfkA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rDJrTpztG/gD2nR+S/a0mAF+BBOHDRm214BhYt1hFOPOmQZRvQOf2GGcwq8AEOTHn
-         vN1f9szgR7xsVBeLjGZGqba8oGpZJHz8iLgTBXm9375PoPJo9GFvOVv7545yssNY+L
-         +lKtHsUHmpwpjf/FJlfHj6rhJUMa0O+IaG/d9F2M=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044GrRU0046672
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 11:53:27 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 11:53:27 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 11:53:27 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044GrQqP005405;
-        Mon, 4 May 2020 11:53:26 -0500
-Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
-To:     <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        "Davis, Andrew" <afd@ti.com>
-References: <20200504164156.21469-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
-Date:   Mon, 4 May 2020 11:44:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200504164156.21469-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 4 May 2020 12:56:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:49236 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728655AbgEDQ4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:56:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDCC6101E;
+        Mon,  4 May 2020 09:56:10 -0700 (PDT)
+Received: from e120937-lin.home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2EAF3F68F;
+        Mon,  4 May 2020 09:56:09 -0700 (PDT)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        cristian.marussi@arm.com
+Subject: [PATCH v2 0/3] SCMI System Power Support
+Date:   Mon,  4 May 2020 17:55:37 +0100
+Message-Id: <20200504165540.37188-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Andrew in manually.
+Hi all,
 
-On 5/4/20 11:41 AM, Dan Murphy wrote:
-> Convert the bq27xxx.txt to yaml format
->
-> CC: Pali Rohár <pali@kernel.org>
-> CC: Andrew F. Davis" <afd@ti.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->   .../bindings/power/supply/bq27xxx.txt         | 56 -----------
->   .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
->   2 files changed, 95 insertions(+), 56 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
->   create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> deleted file mode 100644
-> index 4fa8e08df2b6..000000000000
-> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -TI BQ27XXX fuel gauge family
-> -
-> -Required properties:
-> -- compatible: contains one of the following:
-> - * "ti,bq27200" - BQ27200
-> - * "ti,bq27210" - BQ27210
-> - * "ti,bq27500" - deprecated, use revision specific property below
-> - * "ti,bq27510" - deprecated, use revision specific property below
-> - * "ti,bq27520" - deprecated, use revision specific property below
-> - * "ti,bq27500-1" - BQ27500/1
-> - * "ti,bq27510g1" - BQ27510-g1
-> - * "ti,bq27510g2" - BQ27510-g2
-> - * "ti,bq27510g3" - BQ27510-g3
-> - * "ti,bq27520g1" - BQ27520-g1
-> - * "ti,bq27520g2" - BQ27520-g2
-> - * "ti,bq27520g3" - BQ27520-g3
-> - * "ti,bq27520g4" - BQ27520-g4
-> - * "ti,bq27521" - BQ27521
-> - * "ti,bq27530" - BQ27530
-> - * "ti,bq27531" - BQ27531
-> - * "ti,bq27541" - BQ27541
-> - * "ti,bq27542" - BQ27542
-> - * "ti,bq27546" - BQ27546
-> - * "ti,bq27742" - BQ27742
-> - * "ti,bq27545" - BQ27545
-> - * "ti,bq27411" - BQ27411
-> - * "ti,bq27421" - BQ27421
-> - * "ti,bq27425" - BQ27425
-> - * "ti,bq27426" - BQ27426
-> - * "ti,bq27441" - BQ27441
-> - * "ti,bq27621" - BQ27621
-> -- reg: integer, I2C address of the fuel gauge.
-> -
-> -Optional properties:
-> -- monitored-battery: phandle of battery characteristics node
-> -    The fuel gauge uses the following battery properties:
-> -    + energy-full-design-microwatt-hours
-> -    + charge-full-design-microamp-hours
-> -    + voltage-min-design-microvolt
-> -  Both or neither of the *-full-design-*-hours properties must be set.
-> -  See Documentation/devicetree/bindings/power/supply/battery.txt
-> -
-> -Example:
-> -
-> -	bat: battery {
-> -		compatible = "simple-battery";
-> -		voltage-min-design-microvolt = <3200000>;
-> -		energy-full-design-microwatt-hours = <5290000>;
-> -		charge-full-design-microamp-hours = <1430000>;
-> -	};
-> -
-> -	bq27510g3: fuel-gauge@55 {
-> -		compatible = "ti,bq27510g3";
-> -		reg = <0x55>;
-> -		monitored-battery = <&bat>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-> new file mode 100644
-> index 000000000000..6c53ee849004
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI BQ27XXX fuel gauge family
-> +
-> +maintainers:
-> +  - Pali Rohár <pali@kernel.org>
-> +  - Andrew F. Davis" <afd@ti.com>
-> +  - Sebastian Reichel <sre@kernel.org>
-> +
-> +description: |
-> +  Support various Texas Instruments fuel gauge devices that share similar
-> +  register maps and power supply properties
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,bq27200 - BQ27200
-> +      - ti,bq27210 - BQ27210
-> +      - ti,bq27500 - deprecated, use revision specific property below
-> +      - ti,bq27510 - deprecated, use revision specific property below
-> +      - ti,bq27520 - deprecated, use revision specific property below
-> +      - ti,bq27500-1 - BQ27500/1
-> +      - ti,bq27510g1 - BQ27510-g1
-> +      - ti,bq27510g2 - BQ27510-g2
-> +      - ti,bq27510g3 - BQ27510-g3
-> +      - ti,bq27520g1 - BQ27520-g1
-> +      - ti,bq27520g2 - BQ27520-g2
-> +      - ti,bq27520g3 - BQ27520-g3
-> +      - ti,bq27520g4 - BQ27520-g4
-> +      - ti,bq27521 - BQ27521
-> +      - ti,bq27530 - BQ27530
-> +      - ti,bq27531 - BQ27531
-> +      - ti,bq27541 - BQ27541
-> +      - ti,bq27542 - BQ27542
-> +      - ti,bq27546 - BQ27546
-> +      - ti,bq27742 - BQ27742
-> +      - ti,bq27545 - BQ27545
-> +      - ti,bq27411 - BQ27411
-> +      - ti,bq27421 - BQ27421
-> +      - ti,bq27425 - BQ27425
-> +      - ti,bq27426 - BQ27426
-> +      - ti,bq27441 - BQ27441
-> +      - ti,bq27621 - BQ27621
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: integer, I2C address of the fuel gauge.
-> +
-> +  monitored-battery:
-> +    description: phandle of battery characteristics node
-> +
-> +  energy-full-design-microwatt-hours:
-> +    description: |
-> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
-> +      If this property is set then charge-full-design-microamp-hours must be
-> +      set as well.
-> +
-> +  charge-full-design-microamp-hours:
-> +    description: |
-> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
-> +      If this property is set then energy-full-design-microwatt-hours must be
-> +      set as well.
-> +
-> +  voltage-min-design-microvolt:
-> +    description: |
-> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      bat: battery {
-> +        compatible = "simple-battery";
-> +        voltage-min-design-microvolt = <3200000>;
-> +        energy-full-design-microwatt-hours = <5290000>;
-> +        charge-full-design-microamp-hours = <1430000>;
-> +      };
-> +
-> +      bq27510g3: fuel-gauge@55 {
-> +        compatible = "ti,bq27510g3";
-> +        reg = <0x55>;
-> +        monitored-battery = <&bat>;
-> +      };
-> +    };
+this series wants to add the core SCMI System Power support and related
+events' handling logic: the protocol support itself is trivial and boils
+down to some bare initializations and supporting one SCMI System Power
+notification event meant to carry platform-originated System transition
+requests. This is patch [1/3].
+
+On top of this a new SCMI driver has been developed which registers for
+such System Power notification and acts accordingly to satisfy such
+plaform system-state transition requests that can be of forceful or
+graceful kind.
+
+In order to comply with such graceful requests, and co-operate with
+userspace entities to drive a clean shutdown/reboot, the logic of the
+driver relies on the same orderly_* API methods used by ACPI when handling
+ACPI Shutdown bus events.
+As an alternative method to tunnel graceful requests to userspace it is
+possible to configure, via available module parameters, a specific signal
+to be sent to CAD pid. This is patch [2/3].
+
+Patch [3/3] is a mere JUNO example of the minimal DT bindings needed to
+enable the protocol at the DT level and is NOT meant to be upstream as of
+now.
+
+The series is based on SCMI Notifications Core V7 [1] (only posted not
+merged) which in turn is based on top of scmi-for-next-5.7.
+
+Thanks
+
+Cristian
+
+----
+
+[1] https://lore.kernel.org/linux-arm-kernel/20200504163855.54548-1-cristian.marussi@arm.com/
+
+Cristian Marussi (3):
+  firmware: arm_scmi: Add System Power Protocol support
+  firmware: arm_scmi: Add SCMI System Power Control driver
+  arm64: dts: juno: add SCMI SystemPower Protocol support
+
+ arch/arm64/boot/dts/arm/juno-base.dtsi        |   4 +
+ drivers/firmware/Kconfig                      |  12 +
+ drivers/firmware/arm_scmi/Makefile            |   3 +-
+ drivers/firmware/arm_scmi/driver.c            |   1 +
+ .../firmware/arm_scmi/scmi_power_control.c    | 389 ++++++++++++++++++
+ drivers/firmware/arm_scmi/system.c            | 145 +++++++
+ include/linux/scmi_protocol.h                 |  18 +
+ 7 files changed, 571 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/scmi_power_control.c
+ create mode 100644 drivers/firmware/arm_scmi/system.c
+
+-- 
+2.17.1
+
