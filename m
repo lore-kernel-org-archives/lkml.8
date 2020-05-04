@@ -2,146 +2,132 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3839EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01384C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACAF2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C675E208DB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YisJlYix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgEDN3w (ORCPT
+        id S1728270AbgEDN35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:29:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33040 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgEDN3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:29:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 16598AD2C;
-        Mon,  4 May 2020 13:29:51 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id E7EB7604EE; Mon,  4 May 2020 15:29:47 +0200 (CEST)
-Date:   Mon, 4 May 2020 15:29:47 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     netdev@vger.kernel.org
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        kernel@pengutronix.de, David Jander <david@protonic.nl>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Herber <christian.herber@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v5 1/2] ethtool: provide UAPI for PHY master/slave
- configuration.
-Message-ID: <20200504132947.GB8237@lion.mk-sys.cz>
-References: <20200504071214.5890-1-o.rempel@pengutronix.de>
- <20200504071214.5890-2-o.rempel@pengutronix.de>
- <20200504091044.GA8237@lion.mk-sys.cz>
- <20200504101029.zt3eu7jsywdiq4tu@pengutronix.de>
+        Mon, 4 May 2020 09:29:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726404AbgEDN3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 09:29:54 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D08C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 06:29:54 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id w14so9754923lfk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 06:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c6xAL6X5RvjN5mQi5HFr283gmog4T0ACtjZPScG4s5c=;
+        b=YisJlYixqQ3kDPfcKEoMa0rZsFbsxNYzWqmR0FR8TfbFI9eFl0ZwBQEM2k+B7rzzOV
+         DMhVFoxw7rTmePShVzfeq5sbtWNLIFMLmugOKoNu7qQfBT+kE1rJ1Vk7xrYANYyP2W5s
+         wDVA1BcPcBV1qc7u7a6zf9Oc99g+821NHlJ27c23sRSdSWdNn7KT8vuwxSvE3+AZr5HY
+         vL1fq2f1ef+UY4VqpCS/U/PdOHhiN3VsAfqMZD3iXQLuW+i2ZJmaxxF4cBXT1aRoLtaa
+         sojc81r7OtikX8/aviPcJ3ltmv6OGIa8Z3f+QdOaf24DHCJpa2UzlcPO9SQmS3hOJ4Of
+         I8kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c6xAL6X5RvjN5mQi5HFr283gmog4T0ACtjZPScG4s5c=;
+        b=JMTfSG+k7H7JdxCFiU9IBDNaX1MYd+B+u+CwPwh6j6+Cm5cVhmgbzK3lN3ahh/gXr1
+         kA0LJNzukM/uDkn0G38IzMXi1p9gVcaO3j5xFOPmYaLCxC8IuzM15HXRreTeNQ+0l5Ad
+         DPlOipwx/QvAHbQvzszmjhJB6Z3HBQrqaor3vtAK5ijPOakQNbWCG2bH4TBeA5OYB2ue
+         0mMluzxWP14dPiZa9CMYEagdWUZb0Sfgr9dDirk3B0GdBQAl38o03qP7KJOFLpT2H/55
+         ObSWtaQwkeJ1cBrVPYklAtqWyob79ZlEXRkbGSoE+xSDLUKyJ/MShvoVK92taxfC/r43
+         seCw==
+X-Gm-Message-State: AGi0PuahKUe+2KTPqC6Y9MhMAP7g9+aYbSexjWeD3oKjJ65sjfyYZhqF
+        EPG/udQ1xEeVs89h6evXRthZBfcPamEjZ+4Px6dNUNm7o5w=
+X-Google-Smtp-Source: APiQypLe5p3MT0LNiXhYXRyluaADRv8y13qyDDzwW3DplynkkLB7KqMXtFrLpYM2Bm7BU+ippYOejMNFLGbBDyZXtXs=
+X-Received: by 2002:a05:6512:104a:: with SMTP id c10mr12015812lfb.184.1588598992425;
+ Mon, 04 May 2020 06:29:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504101029.zt3eu7jsywdiq4tu@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200504015704.6952-1-hdanton@sina.com> <CAKfTPtA3wVD3X7+HqTs-ovSQ8FmZRyryAFb2zzUm4kAbPo4+tw@mail.gmail.com>
+ <20200504114125.10180-1-hdanton@sina.com>
+In-Reply-To: <20200504114125.10180-1-hdanton@sina.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 4 May 2020 15:29:41 +0200
+Message-ID: <CAKfTPtBJvd244jdXXvjRcjcFdtVEpTauDjUpAs-uzWdKafbZrw@mail.gmail.com>
+Subject: Re: [RFC PATCH] sched/fair: correct llc shared domain's number of
+ busy CPUs
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 12:10:29PM +0200, Oleksij Rempel wrote:
-> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> > > index ac2784192472f..42dda9d2082ee 100644
-> > > --- a/drivers/net/phy/phy_device.c
-> > > +++ b/drivers/net/phy/phy_device.c
-> > > @@ -1768,6 +1768,90 @@ int genphy_setup_forced(struct phy_device *phydev)
-> > >  }
-> > >  EXPORT_SYMBOL(genphy_setup_forced);
-> > >  
-> > > +static int genphy_setup_master_slave(struct phy_device *phydev)
-> > > +{
-> > > +	u16 ctl = 0;
-> > > +
-> > > +	if (!phydev->is_gigabit_capable)
-> > > +		return 0;
-> > 
-> > Why did you revert to silently ignoring requests in this case?
-> 
-> genphy_setup_forced() is called by __genphy_config_aneg() and this can
-> be called by a PHY driver after configuring master slave mode locally by
-> PHY driver. See tja11xx patch. Same can be potentially done in the phy/realtek.c
-> driver.
-> 
-> Currently my imagination is not caffeanized enough to
-> provide a better solution. Do you have ideas?
+On Mon, 4 May 2020 at 13:41, Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> On Mon, 4 May 2020 09:53:36 Vincent Guittot wrote:
+> >
+> > On Mon, 4 May 2020 at 03:57, Hillf Danton wrote:
+> > >
+> > > The comment says, if there is an imbalance between LLC domains (IOW we
+> > > could increase the overall cache use),  we need some less-loaded LLC
+> > > domain to pull some load.
+> > >
+> > > To show that imbalance, record busy CPUs as they come and go by doing
+> > > a minor cleanup for sd::nohz_idle.
+> >
+> > Your comment failed to explain why we can get rid of sd->nohz_idle
+> >
+> The serialization added in 25f55d9d01ad ("sched: Fix init NOHZ_IDLE flag") to
+> updating nr_busy_cpus is no longer needed after 0e369d757578 ("sched/core:
+> Replace sd_busy/nr_busy_cpus with sched_domain_shared") AFAICT because a
 
-If we have the check in ethnl_update_linkmodes(), we shouldn't really
-get here so I believe we can leave this part as it is.
+I don't see the link between commit 0e369d757578 and the fact that we
+can remove the nohz_idle field.
 
-> > >  static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
-> > >  				  struct ethtool_link_ksettings *ksettings,
-> > >  				  bool *mod)
-> > >  {
-> > >  	struct ethtool_link_settings *lsettings = &ksettings->base;
-> > >  	bool req_speed, req_duplex;
-> > > +	const struct nlattr *master_slave_cfg;
-> > >  	int ret;
-> > >  
-> > > +	master_slave_cfg = tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG];
-> > > +	if (master_slave_cfg) {
-> > > +		u8 cfg = nla_get_u8(master_slave_cfg);
-> > > +		if (!ethnl_validate_master_slave_cfg(cfg)) {
-> > > +			GENL_SET_ERR_MSG(info, "LINKMODES_MASTER_SLAVE_CFG contains not valid value");
-> > > +			return -EOPNOTSUPP;
-> > > +		}
-> > > +	}
-> > 
-> > Please set also the "bad attribute" in extack, it may help
-> > non-interactive clients.
-> > 
-> > Also, it would be nice to report error if client wants to set master/slave but
-> > driver does not support it. How about this?
-> > 
-> > 	if (master_slave_cfg) {
-> > 		u8 cfg = nla_get_u8(master_slave_cfg);
-> > 
-> > 		if (lsettings->master_slave_cfg == MASTER_SLAVE_CFG_UNSUPPORTED) {
-> > 			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
-> > 					    "master/slave configuration not supported by device");
-> > 			return -EOPNOTSUPP;
-> > 		}
-> > 		if (!ethnl_validate_master_slave_cfg(cfg)) {
-> > 			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
-> > 					    "master/slave value is invalid");
-> > 			return -EOPNOTSUPP;
-> > 		}
-> > 	}
-> > 
-> 
-> looks good. thx!
-> 
-> > 
-> > Do you plan to allow handling master/slave also via ioctl()?
-> 
-> no.
-> 
-> > If yes, we should
-> > also add the sanity checks to ioctl code path. If not, we should prevent
-> > passing non-zero values from userspace to driver.
-> 
-> What is the best place to add this sanity check?
+> recorded idle/busy CPU does not mean the current CPU could not become idle or
+> busy. The right thing is to update the counter if we have a valid sd under rcu.
 
-If there is no plan to allow handling master/slave via ioctl, the best
-option would IMHO be zeroing both fields in ethtool_get_link_ksettings()
-right before the call to store_link_ksettings_for_user() and either
-zeroing master_slave_cfg in ethtool_set_link_ksettings() after the call
-load_link_ksettings_from_user(), or checking that it's zero (i.e. that
-userspace left it untouched).
+No it's not the root cause because the sd is per cpu so each cpu has
+its own sd->nohz_idle so if cpu A set sd->nohz_idle, cpu B will not be
+impact and will have to set its own.
 
-Michal
+We must ensure that nr_busy_cpus is inc/dec only once when
+transitioning from/to idle/busy state in order to keep the shared
+nr_busy_cpus correct. But set_cpu_sd_state_busy() is called from
+scheduler_tick() which means potentially every tick:
+
+scheduler_tick() -> trigger_load_balance() -> nohz_balancer_kick() ->
+nohz_balance_exit_idle() -> set_cpu_sd_state_busy()
+
+The nohz_idle field is there to prevent incrementing nr_busy_cpus at
+every tick. But set_cpu_sd_state_busy() is called from
+nohz_balance_exit_idle() since 00357f5ec5d6 ("sched/nohz: Clean up
+nohz enter/exit") and the latter has a similar mechanism with
+rq->nohz_tick_stopped so sd_llc->nohz_idle is useless
+
+>
+> > you remove the use of sd->nohz_idle but you don't remove it from
+> > struct sched_domain
+>
+> A seperate cleanup for it is needed if it's no longer used somewhere else.
+
+Please remove it in the same patch
+
+>
+> Hillf
+>
