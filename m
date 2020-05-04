@@ -2,64 +2,58 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F376C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020AAC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B36720707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4AB920721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615200;
-	bh=FZqtJdOJ6nZu43xCVXVs5WuqsmOOeeUDgUAo1PFw8/A=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=y0OcmXJug3mcVyOAvrNc7J5p+pnmITPehT04gpVw8zbd2uSvSNOkkXkz3j/7bc8Y3
-	 18Aka1Y63hZ/6uuwIyGE6mgDnkXKZB7/aQJRT+JXcB89lc4G48iJh7nWnXIZHuKy2T
-	 +pfG1IA4XlzBIXakMB9Q4P36xU7P5AAF3/3T132g=
+	s=default; t=1588615202;
+	bh=zpmXzaO6P1PeBJPtMvXhh7XEmu0fLIE1OTqr7nC/dcw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yfbS34y//wiMjmBB3fQu/9ez9EClemYhJeP21lXlq9O1mOKZpJuuWeci7c81DfEId
+	 ivEcQY4SBNesCvBA25QOKe1aL2SYN3t49Tm1s1Rwn9DEubuqcz1rQxiBE9QeVKe5Tg
+	 R1C7wF1RPplSeJmFRbv0JdeaAw/cLtx3y7P2zMzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbgEDR77 (ORCPT
+        id S1730920AbgEDSAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54066 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:00:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730894AbgEDR7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:55 -0400
+        id S1730902AbgEDR76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2513B206B8;
-        Mon,  4 May 2020 17:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69EC20663;
+        Mon,  4 May 2020 17:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615194;
-        bh=FZqtJdOJ6nZu43xCVXVs5WuqsmOOeeUDgUAo1PFw8/A=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dcHqA2K3fQ3+5kg9uBM1Z2vvIqN1U1TbofNnINKyxF+bczoynUsrIgE85TYo8IfaA
-         hzVWda6EU2+GuhToYR7p13Je3sw4a5mLIiznspgzWHhT8PBp5vNHqYk0bOiel7FuKP
-         iSu7/trloQaLb0O97RSXOilLFKVTKD9x2E+eGGnM=
+        s=default; t=1588615197;
+        bh=zpmXzaO6P1PeBJPtMvXhh7XEmu0fLIE1OTqr7nC/dcw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0g/2xQG/HSd3Pf+/JlXJ/sZ0ZvRiAZGq8xa1+VwPp4MuPBnApFPcq/ls2d837MT0f
+         aPSUJ3dcPP2i+KkBSBSdE5qcyuB0Awzr1ctEMZsog3Hsmqekk4LGC9VBm8wBJKkb/g
+         kBzvOw2uBh3/3yICs4KR4Iq7RX3pAGpG4diVair0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 00/18] 4.9.222-rc1 review
-Date:   Mon,  4 May 2020 19:57:10 +0200
-Message-Id: <20200504165442.028485341@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.9 16/18] dmaengine: dmatest: Fix iteration non-stop logic
+Date:   Mon,  4 May 2020 19:57:26 +0200
+Message-Id: <20200504165445.574061312@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
+In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
+References: <20200504165442.028485341@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.222-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.222-rc1
-X-KernelTest-Deadline: 2020-05-06T16:54+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,110 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.222 release.
-There are 18 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Responses should be made by Wed, 06 May 2020 16:52:55 +0000.
-Anything received after that time might be too late.
+commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.222-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
+Under some circumstances, i.e. when test is still running and about to
+time out and user runs, for example,
 
-thanks,
+	grep -H . /sys/module/dmatest/parameters/*
 
-greg k-h
+the iterations parameter is not respected and test is going on and on until
+user gives
 
--------------
-Pseudo-Shortlog of commits:
+	echo 0 > /sys/module/dmatest/parameters/run
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.222-rc1
+This is not what expected.
 
-Vasily Averin <vvs@virtuozzo.com>
-    drm/qxl: qxl_release use after free
+The history of this bug is interesting. I though that the commit
+  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+is a culprit, but looking closer to the code I think it simple revealed the
+broken logic from the day one, i.e. in the commit
+  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
+which adds iterations parameter.
 
-Paul Moore <paul@paul-moore.com>
-    selinux: properly handle multiple messages in selinux_netlink_send()
+So, to the point, the conditional of checking the thread to be stopped being
+first part of conjunction logic prevents to check iterations. Thus, we have to
+always check both conditions to be able to stop after given iterations.
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    dmaengine: dmatest: Fix iteration non-stop logic
+Since it wasn't visible before second commit appeared, I add a respective
+Fixes tag.
 
-Andreas Gruenbacher <agruenba@redhat.com>
-    nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Arnd Bergmann <arnd@arndb.de>
-    ALSA: opti9xx: shut up gcc-10 range warning
+---
+ drivers/dma/dmatest.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-    iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-
-Sean Christopherson <sean.j.christopherson@intel.com>
-    vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
-
-Alaa Hleihel <alaa@mellanox.com>
-    RDMA/mlx4: Initialize ib_spec on the stack
-
-Sunwook Eom <speed.eom@samsung.com>
-    dm verity fec: fix hash block number in verity_fec_decode
-
-Dexuan Cui <decui@microsoft.com>
-    PM: hibernate: Freeze kernel threads in software_resume()
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    PM: ACPI: Output correct message on target power state
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
-
-Wu Bo <wubo40@huawei.com>
-    ALSA: hda/hdmi: fix without unlocked before return
-
-Xiyu Yang <xiyuyang19@fudan.edu.cn>
-    btrfs: fix block group leak when removing fails
-
-Vasily Averin <vvs@virtuozzo.com>
-    drm/qxl: qxl_release leak in qxl_hw_surface_alloc()
-
-Vasily Averin <vvs@virtuozzo.com>
-    drm/qxl: qxl_release leak in qxl_draw_dirty_fb()
-
-Ville Syrjälä <ville.syrjala@linux.intel.com>
-    drm/edid: Fix off-by-one in DispID DTD pixel clock
-
-Theodore Ts'o <tytso@mit.edu>
-    ext4: fix special inode number checks in __ext4_iget()
-
-
--------------
-
-Diffstat:
-
- Makefile                           |  4 +--
- drivers/acpi/device_pm.c           |  4 +--
- drivers/dma/dmatest.c              |  4 +--
- drivers/gpu/drm/drm_edid.c         |  2 +-
- drivers/gpu/drm/qxl/qxl_cmd.c      | 10 +++---
- drivers/gpu/drm/qxl/qxl_display.c  |  8 ++---
- drivers/gpu/drm/qxl/qxl_draw.c     | 13 ++++----
- drivers/gpu/drm/qxl/qxl_ioctl.c    |  5 +--
- drivers/infiniband/hw/mlx4/main.c  |  3 +-
- drivers/iommu/amd_iommu_init.c     |  2 +-
- drivers/md/dm-verity-fec.c         |  2 +-
- drivers/vfio/vfio_iommu_type1.c    |  4 +--
- fs/btrfs/extent-tree.c             | 16 +++++----
- fs/ext4/inode.c                    |  2 +-
- fs/nfs/nfs3acl.c                   | 22 ++++++++----
- kernel/power/hibernate.c           |  7 ++++
- security/selinux/hooks.c           | 68 ++++++++++++++++++++++++--------------
- sound/core/oss/pcm_plugin.c        | 20 ++++++-----
- sound/isa/opti9xx/miro.c           |  9 +++--
- sound/isa/opti9xx/opti92x-ad1848.c |  9 +++--
- sound/pci/hda/patch_hdmi.c         |  4 ++-
- 21 files changed, 134 insertions(+), 84 deletions(-)
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -505,8 +505,8 @@ static int dmatest_func(void *data)
+ 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+ 
+ 	ktime = ktime_get();
+-	while (!kthread_should_stop()
+-	       && !(params->iterations && total_tests >= params->iterations)) {
++	while (!(kthread_should_stop() ||
++	       (params->iterations && total_tests >= params->iterations))) {
+ 		struct dma_async_tx_descriptor *tx = NULL;
+ 		struct dmaengine_unmap_data *um;
+ 		dma_addr_t srcs[src_cnt];
 
 
