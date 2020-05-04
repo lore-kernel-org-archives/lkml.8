@@ -2,383 +2,274 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46802C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746DFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD3D20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Ji333Otr"
+	by mail.kernel.org (Postfix) with ESMTP id 44DF020663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgEDWiI (ORCPT
+        id S1728278AbgEDWiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:38:08 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:61795 "EHLO rere.qmqm.pl"
+        Mon, 4 May 2020 18:38:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:31373 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgEDWiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:38:00 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49GHn06SJnzHm;
-        Tue,  5 May 2020 00:37:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1588631876; bh=PhipMKkVAuB02s31MTIFNoqzeH1P9lTruiM0jA6TTGQ=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=Ji333Otr9mGyQ8LhrmGgm/02NVRev1C75U77wFWvURtUWcMXywGbl9Zprct5szbGG
-         ITEpgChwoCfO3ECpHCWLEGmiXGIp1Q3+REvcHy7/m1h/zrzoQwMa0Of5f5pIA0obg3
-         9nHJ7RXnew/AZ67DMLVfSDrRLlnTd9c3vZJqJnDrVD3Mzts9FgqZv75a73cBUd2wfu
-         +KMfRhHqG/Q0Daz8TSWSAlbhNkD77euAHzHVwRARDTicB8szupTZUlvnUz7dKci/QG
-         eMFIBfR8v028EqF2Ql0hhEz1pt+aly6FsyKKUSUiUCBEyfhdJYZ+oTnvaboRdNSjwz
-         OgVJz/mYhmhLA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Tue, 05 May 2020 00:37:56 +0200
-Message-Id: <0054532c00163ddf405dad658b32f0d7d97fcc8e.1588630999.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1588630999.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v7 2/3] clk: at91: allow setting PCKx parent via DT
+        id S1726338AbgEDWiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:38:16 -0400
+IronPort-SDR: da6siWFEtum93mORjXazOk6EdwwzQNFPdkdCojd/4MeVjfOyPHYJLMfKlBw+ApkA/hLm2mmyld
+ wMLY1KibmpZA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 15:38:14 -0700
+IronPort-SDR: cwtcoZK+Y1EXNah7zMeiXDLxFpwAFeulM0tE7VLkPzG58uPGSJuJc/urdGIbAb1lhruqYCgtln
+ Yi9sELu7RDPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
+   d="scan'208";a="294771793"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 04 May 2020 15:38:13 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jVjj2-000AXJ-KJ; Tue, 05 May 2020 06:38:12 +0800
+Date:   Tue, 05 May 2020 06:37:17 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:kcsan-dev] BUILD SUCCESS
+ 52785b6ae8eded7ac99d65c92d989b702e5b4376
+Message-ID: <5eb0991d.2eSLjUSjLh7wna19%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This exposes PROGx clocks for use in assigned-clocks DeviceTree property
-for selecting PCKx parent clock.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  kcsan-dev
+branch HEAD: 52785b6ae8eded7ac99d65c92d989b702e5b4376  kcsan: Use GFP_ATOMIC under spin lock
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+elapsed time: 482m
+
+configs tested: 207
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+parisc                            allnoconfig
+arc                              allyesconfig
+ia64                        generic_defconfig
+riscv                             allnoconfig
+parisc                           allmodconfig
+powerpc                       holly_defconfig
+s390                             allmodconfig
+s390                          debug_defconfig
+ia64                             allyesconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             alldefconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+xtensa                          iss_defconfig
+h8300                    h8300h-sim_defconfig
+xtensa                       common_defconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                           ip32_defconfig
+mips                      loongson3_defconfig
+mips                       capcella_defconfig
+mips                  decstation_64_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+powerpc                      chrp32_defconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                    amigaone_defconfig
+powerpc                    adder875_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                          g5_defconfig
+powerpc                     mpc512x_defconfig
+m68k                 randconfig-a001-20200505
+mips                 randconfig-a001-20200505
+nds32                randconfig-a001-20200505
+parisc               randconfig-a001-20200505
+alpha                randconfig-a001-20200505
+riscv                randconfig-a001-20200505
+m68k                 randconfig-a001-20200503
+mips                 randconfig-a001-20200503
+nds32                randconfig-a001-20200503
+alpha                randconfig-a001-20200503
+parisc               randconfig-a001-20200503
+riscv                randconfig-a001-20200503
+m68k                 randconfig-a001-20200502
+mips                 randconfig-a001-20200502
+nds32                randconfig-a001-20200502
+alpha                randconfig-a001-20200502
+parisc               randconfig-a001-20200502
+riscv                randconfig-a001-20200502
+h8300                randconfig-a001-20200503
+nios2                randconfig-a001-20200503
+microblaze           randconfig-a001-20200503
+c6x                  randconfig-a001-20200503
+sparc64              randconfig-a001-20200503
+s390                 randconfig-a001-20200504
+xtensa               randconfig-a001-20200504
+sh                   randconfig-a001-20200504
+openrisc             randconfig-a001-20200504
+csky                 randconfig-a001-20200504
+s390                 randconfig-a001-20200505
+xtensa               randconfig-a001-20200505
+sh                   randconfig-a001-20200505
+openrisc             randconfig-a001-20200505
+csky                 randconfig-a001-20200505
+xtensa               randconfig-a001-20200503
+sh                   randconfig-a001-20200503
+openrisc             randconfig-a001-20200503
+csky                 randconfig-a001-20200503
+s390                 randconfig-a001-20200430
+xtensa               randconfig-a001-20200430
+csky                 randconfig-a001-20200430
+openrisc             randconfig-a001-20200430
+sh                   randconfig-a001-20200430
+i386                 randconfig-b003-20200503
+x86_64               randconfig-b002-20200503
+i386                 randconfig-b001-20200503
+x86_64               randconfig-b003-20200503
+x86_64               randconfig-b001-20200503
+i386                 randconfig-b002-20200503
+x86_64               randconfig-c002-20200502
+i386                 randconfig-c002-20200502
+i386                 randconfig-c001-20200502
+i386                 randconfig-c003-20200502
+i386                 randconfig-d003-20200502
+i386                 randconfig-d001-20200502
+x86_64               randconfig-d002-20200502
+i386                 randconfig-d002-20200502
+x86_64               randconfig-e003-20200502
+i386                 randconfig-e003-20200502
+x86_64               randconfig-e001-20200502
+i386                 randconfig-e002-20200502
+i386                 randconfig-e001-20200502
+x86_64               randconfig-e003-20200503
+x86_64               randconfig-e002-20200503
+i386                 randconfig-e003-20200503
+x86_64               randconfig-e001-20200503
+i386                 randconfig-e002-20200503
+i386                 randconfig-e001-20200503
+i386                 randconfig-f003-20200503
+x86_64               randconfig-f002-20200503
+i386                 randconfig-f001-20200503
+i386                 randconfig-f002-20200503
+i386                 randconfig-f003-20200505
+x86_64               randconfig-f001-20200505
+x86_64               randconfig-f003-20200505
+i386                 randconfig-f001-20200505
+i386                 randconfig-f002-20200505
+x86_64               randconfig-a003-20200505
+x86_64               randconfig-a001-20200505
+i386                 randconfig-a001-20200505
+i386                 randconfig-a003-20200505
+i386                 randconfig-a002-20200505
+ia64                 randconfig-a001-20200503
+arm64                randconfig-a001-20200503
+arc                  randconfig-a001-20200503
+arm                  randconfig-a001-20200503
+sparc                randconfig-a001-20200503
+ia64                 randconfig-a001-20200505
+powerpc              randconfig-a001-20200505
+arm                  randconfig-a001-20200505
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
-v2: rebase and update to clk/clk-at91 branch
-v3: rebase
-v4: no changes
-v5: no changes
-v6: no changes
-v7: push all pmc_data_free() to first patch (fix a rebase artifact)
----
- drivers/clk/at91/at91rm9200.c    |  4 +++-
- drivers/clk/at91/at91sam9260.c   |  5 ++++-
- drivers/clk/at91/at91sam9g45.c   |  4 +++-
- drivers/clk/at91/at91sam9n12.c   |  4 +++-
- drivers/clk/at91/at91sam9rl.c    |  4 +++-
- drivers/clk/at91/at91sam9x5.c    |  4 +++-
- drivers/clk/at91/pmc.c           | 12 ++++++++++--
- drivers/clk/at91/pmc.h           |  5 ++++-
- drivers/clk/at91/sam9x60.c       |  4 +++-
- drivers/clk/at91/sama5d2.c       |  4 +++-
- drivers/clk/at91/sama5d3.c       |  4 +++-
- drivers/clk/at91/sama5d4.c       |  4 +++-
- include/dt-bindings/clock/at91.h |  1 +
- 13 files changed, 46 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-index 6f4e1151553d..8da88e9a95d8 100644
---- a/drivers/clk/at91/at91rm9200.c
-+++ b/drivers/clk/at91/at91rm9200.c
-@@ -100,7 +100,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 
- 	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
- 					    nck(at91rm9200_systemck),
--					    nck(at91rm9200_periphck), 0);
-+					    nck(at91rm9200_periphck), 0, 4);
- 	if (!at91rm9200_pmc)
- 		return;
- 
-@@ -159,6 +159,8 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
- 						    &at91rm9200_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		at91rm9200_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(at91rm9200_systemck); i++) {
-diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-index 946f03a09858..7e5ff252fffc 100644
---- a/drivers/clk/at91/at91sam9260.c
-+++ b/drivers/clk/at91/at91sam9260.c
-@@ -354,7 +354,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 
- 	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
- 					    ndck(data->sck, data->num_sck),
--					    ndck(data->pck, data->num_pck), 0);
-+					    ndck(data->pck, data->num_pck),
-+					    0, data->num_progck);
- 	if (!at91sam9260_pmc)
- 		return;
- 
-@@ -434,6 +435,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
- 						    &at91rm9200_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		at91sam9260_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < data->num_sck; i++) {
-diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-index 53e8252b8a63..5d18eb04c218 100644
---- a/drivers/clk/at91/at91sam9g45.c
-+++ b/drivers/clk/at91/at91sam9g45.c
-@@ -117,7 +117,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 
- 	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
- 					    nck(at91sam9g45_systemck),
--					    nck(at91sam9g45_periphck), 0);
-+					    nck(at91sam9g45_periphck), 0, 2);
- 	if (!at91sam9g45_pmc)
- 		return;
- 
-@@ -182,6 +182,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
- 						    &at91sam9g45_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		at91sam9g45_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(at91sam9g45_systemck); i++) {
-diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-index f3ae1cd3cb8d..3a2564c2f724 100644
---- a/drivers/clk/at91/at91sam9n12.c
-+++ b/drivers/clk/at91/at91sam9n12.c
-@@ -129,7 +129,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 		return;
- 
- 	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
--					   nck(at91sam9n12_systemck), 31, 0);
-+					   nck(at91sam9n12_systemck), 31, 0, 2);
- 	if (!at91sam9n12_pmc)
- 		return;
- 
-@@ -198,6 +198,8 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
- 						    &at91sam9x5_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		at91sam9n12_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(at91sam9n12_systemck); i++) {
-diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-index cc739d214ae3..bcf07f6a0e0e 100644
---- a/drivers/clk/at91/at91sam9rl.c
-+++ b/drivers/clk/at91/at91sam9rl.c
-@@ -89,7 +89,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 
- 	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
- 					   nck(at91sam9rl_systemck),
--					   nck(at91sam9rl_periphck), 0);
-+					   nck(at91sam9rl_periphck), 0, 2);
- 	if (!at91sam9rl_pmc)
- 		return;
- 
-@@ -138,6 +138,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
- 						    &at91rm9200_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		at91sam9rl_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(at91sam9rl_systemck); i++) {
-diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-index aac99d699568..f13756b407e2 100644
---- a/drivers/clk/at91/at91sam9x5.c
-+++ b/drivers/clk/at91/at91sam9x5.c
-@@ -151,7 +151,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 		return;
- 
- 	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
--					   nck(at91sam9x5_systemck), 31, 0);
-+					   nck(at91sam9x5_systemck), 31, 0, 2);
- 	if (!at91sam9x5_pmc)
- 		return;
- 
-@@ -227,6 +227,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
- 						    &at91sam9x5_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		at91sam9x5_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(at91sam9x5_systemck); i++) {
-diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index ac46ea1b9fda..8a1577e2c2fd 100644
---- a/drivers/clk/at91/pmc.c
-+++ b/drivers/clk/at91/pmc.c
-@@ -67,6 +67,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
- 		if (idx < pmc_data->ngck)
- 			return pmc_data->ghws[idx];
- 		break;
-+	case PMC_TYPE_PROGRAMMABLE:
-+		if (idx < pmc_data->npck)
-+			return pmc_data->pchws[idx];
-+		break;
- 	default:
- 		break;
- 	}
-@@ -77,9 +81,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
- }
- 
- struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
--				   unsigned int nperiph, unsigned int ngck)
-+				   unsigned int nperiph, unsigned int ngck,
-+				   unsigned int npck)
- {
--	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
-+	unsigned int num_clks = ncore + nsystem + nperiph + ngck + npck;
- 	struct pmc_data *pmc_data;
- 
- 	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
-@@ -99,6 +104,9 @@ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
- 	pmc_data->ngck = ngck;
- 	pmc_data->ghws = pmc_data->phws + nperiph;
- 
-+	pmc_data->npck = npck;
-+	pmc_data->pchws = pmc_data->ghws + ngck;
-+
- 	return pmc_data;
- }
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index fc3ef772b9d9..df616f2937e7 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -24,6 +24,8 @@ struct pmc_data {
- 	struct clk_hw **phws;
- 	unsigned int ngck;
- 	struct clk_hw **ghws;
-+	unsigned int npck;
-+	struct clk_hw **pchws;
- 
- 	struct clk_hw *hwtable[];
- };
-@@ -96,7 +98,8 @@ struct clk_pcr_layout {
- #define ndck(a, s) (a[s - 1].id + 1)
- #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
- struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
--				   unsigned int nperiph, unsigned int ngck);
-+				   unsigned int nperiph, unsigned int ngck,
-+				   unsigned int npck);
- 
- int of_at91_get_clk_range(struct device_node *np, const char *propname,
- 			  struct clk_range *range);
-diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-index a7d4f648db26..db14e0427c7f 100644
---- a/drivers/clk/at91/sam9x60.c
-+++ b/drivers/clk/at91/sam9x60.c
-@@ -185,7 +185,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
- 					nck(sam9x60_systemck),
- 					nck(sam9x60_periphck),
--					nck(sam9x60_gck));
-+					nck(sam9x60_gck), 8);
- 	if (!sam9x60_pmc)
- 		return;
- 
-@@ -255,6 +255,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
- 						    &sam9x60_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		sam9x60_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(sam9x60_systemck); i++) {
-diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-index b2560670e5af..ae5e83cadb3d 100644
---- a/drivers/clk/at91/sama5d2.c
-+++ b/drivers/clk/at91/sama5d2.c
-@@ -169,7 +169,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
- 					nck(sama5d2_systemck),
- 					nck(sama5d2_periph32ck),
--					nck(sama5d2_gck));
-+					nck(sama5d2_gck), 3);
- 	if (!sama5d2_pmc)
- 		return;
- 
-@@ -267,6 +267,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
- 						    &sama5d2_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		sama5d2_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(sama5d2_systemck); i++) {
-diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-index 914e6f225510..507eef6797f1 100644
---- a/drivers/clk/at91/sama5d3.c
-+++ b/drivers/clk/at91/sama5d3.c
-@@ -127,7 +127,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 
- 	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
- 					nck(sama5d3_systemck),
--					nck(sama5d3_periphck), 0);
-+					nck(sama5d3_periphck), 0, 3);
- 	if (!sama5d3_pmc)
- 		return;
- 
-@@ -201,6 +201,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
- 						    &at91sam9x5_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		sama5d3_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(sama5d3_systemck); i++) {
-diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-index 4ca9a4619500..80692902b4e4 100644
---- a/drivers/clk/at91/sama5d4.c
-+++ b/drivers/clk/at91/sama5d4.c
-@@ -142,7 +142,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 
- 	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
- 					nck(sama5d4_systemck),
--					nck(sama5d4_periph32ck), 0);
-+					nck(sama5d4_periph32ck), 0, 3);
- 	if (!sama5d4_pmc)
- 		return;
- 
-@@ -224,6 +224,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
- 						    &at91sam9x5_programmable_layout);
- 		if (IS_ERR(hw))
- 			goto err_free;
-+
-+		sama5d4_pmc->pchws[i] = hw;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(sama5d4_systemck); i++) {
-diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-index 38b5554153c8..c3f4aa6a2d29 100644
---- a/include/dt-bindings/clock/at91.h
-+++ b/include/dt-bindings/clock/at91.h
-@@ -12,6 +12,7 @@
- #define PMC_TYPE_SYSTEM		1
- #define PMC_TYPE_PERIPHERAL	2
- #define PMC_TYPE_GCK		3
-+#define PMC_TYPE_PROGRAMMABLE	4
- 
- #define PMC_SLOW		0
- #define PMC_MCK			1
--- 
-2.20.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
