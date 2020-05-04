@@ -2,98 +2,118 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A78C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE86AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF758206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA742073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:56:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WB7fNAz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgEDQ4g (ORCPT
+        id S1729860AbgEDQ4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:56:36 -0400
-Received: from elvis.franken.de ([193.175.24.41]:39547 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbgEDQ4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 12:56:35 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jVeON-0004p9-00; Mon, 04 May 2020 18:56:31 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id C9E36C036D; Mon,  4 May 2020 18:56:14 +0200 (CEST)
-Date:   Mon, 4 May 2020 18:56:14 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
-        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit
- kernel
-Message-ID: <20200504165614.GA15545@alpha.franken.de>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com>
- <20200422143258.1250960-1-jiaxun.yang@flygoat.com>
- <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org>
- <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com>
- <alpine.LFD.2.21.2004241316360.851719@eddie.linux-mips.org>
- <20200504154613.GA14031@alpha.franken.de>
- <86D4A0AC-59E1-4C82-B66D-6BFC71E08376@flygoat.com>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729816AbgEDQ4e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:56:34 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E238C061A0E;
+        Mon,  4 May 2020 09:56:34 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id a9so4994212lfb.8;
+        Mon, 04 May 2020 09:56:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uq7Cp9sRzO17hCXg+U38cDHiVk9tcoMKEdlR/VPmBCA=;
+        b=WB7fNAz7ezTp/EIxVo9weanA4wgM5W+Ik6gzOwV1XRS6yZuIjkezO6aJeK7bxe22Fk
+         rjL49+fRdQZv0itvLwP+/nUzdiwrdtUV6PTc70cyu0avMZO36CZPeIBVIqf0gZe5laIv
+         xDH9JMsspY1KpfqgDGbosG6TIjW5TMb1HqyTiuB4bIMPv0nsjyOxFCIh3PeTHF/73NtJ
+         mq7Ay5vCk9uiOyJpDPe/71Yqmgr1eAMjQHHjDJ/OAaIF4jVDDjVWNSkjQpAmDpyquedd
+         XQIOwu+Nfm3SVDbWZ2dXPAYdJ4CRx5BZH3ie8uGHfYh6/MA/IHTkESuSaloDqAaciVws
+         nlsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uq7Cp9sRzO17hCXg+U38cDHiVk9tcoMKEdlR/VPmBCA=;
+        b=DSK68eUE4pYBYmNYGghmxLTy2MUTw4CyiKOY4Vpa0eTuotCAOiLZnQPoeehIuovyw4
+         Jh2gQkR8jpakyKP1CqBo1YZi/qfqoi4h29nqCBfo7Rn1gjRqOtiAzcxnlv+UGVHqdMyJ
+         SeLwdoSZcAAYEC4z+w62eyTF5oVPx5xG0Gw6uT1+1DF+p4mFJNrB+wFgcal1RA28Jds4
+         +66hsFTBtw1EncwvEi4KfnnNk7uJ+ohmbvpwCHjwMocjUzMLnZtGF0p0pvGD4ifazEm2
+         pNlgiwUbRBRo+eQr9puVw7U3rrixHkkmEEdnQPU8vwIMw67N1fn9HvkBdLW6u48Mp3Qt
+         cJWg==
+X-Gm-Message-State: AGi0PuYuiDDNSHoYAD0SG7OAOkHhWnilonSn4fCNVeyfgE7Q4AjN1pUm
+        niP85OTnHxTD7BScqPSO/JRP4/dciEvK/Q==
+X-Google-Smtp-Source: APiQypJIYOGRdt0a6sPjl66fJSqZJTkezZ3Epnp3pIhYCU2UkMwickRewOFI8jnorrTODAWiTk7xuQ==
+X-Received: by 2002:a19:7418:: with SMTP id v24mr5524146lfe.15.1588611392880;
+        Mon, 04 May 2020 09:56:32 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id h22sm8680500ljb.65.2020.05.04.09.56.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:56:32 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 4 May 2020 18:56:29 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 19/24] rcu/tree: Support reclaim for head-less object
+Message-ID: <20200504165629.GA20257@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-20-urezki@gmail.com>
+ <20200501223909.GF7560@paulmck-ThinkPad-P72>
+ <20200504001258.GD197097@google.com>
+ <20200504002855.GF2869@paulmck-ThinkPad-P72>
+ <20200504003237.GD212435@google.com>
+ <20200504142153.GG17577@pc636>
+ <20200504153147.GL2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <86D4A0AC-59E1-4C82-B66D-6BFC71E08376@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200504153147.GL2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 12:09:46AM +0800, Jiaxun Yang wrote:
+> > 
+> > For single argument we can drop the lock before the entry to the page
+> > allocator. Because it follows might_sleep() anotation we avoid of having
+> > a situation when spinlock(rt mutex) is taken from any atomic context.
+> > 
+> > Since the lock is dropped the current context can be interrupted by
+> > an IRQ which in its turn can also call kvfree_rcu() on current CPU.
+> > In that case it must be double argument(single is not allowed) kvfree_rcu()
+> > call. For PREEMPT_RT if no cache everything is reverted to rcu_head usage,
+> > i.e. the entry to page allocator is bypassed.
+> > 
+> > It can be addressed as a separate patch and send out later on if we
+> > are on the same page.
+> > 
+> > Paul, Joel what are your opinions?
 > 
-> 于 2020年5月4日 GMT+08:00 下午11:46:13, Thomas Bogendoerfer <tsbogend@alpha.franken.de> 写到:
-> >On Fri, Apr 24, 2020 at 01:22:30PM +0100, Maciej W. Rozycki wrote:
-> >> On Thu, 23 Apr 2020, Jiaxun Yang wrote:
-> >> 
-> >> > > Alternatively, have you made any attempt to verify if actually replacing 
-> >> > >the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over its use 
-> >> > >there do not appear to be many places.
-> >> > 
-> >> > Limited experiments showed it should be fine...
-> >> > 
-> >> > But MIPS kernel has some design I'm not really familiar with like SYM32 for
-> >> > 64-bit kernel and special address space design for Trap-and-emul KVM.
-> >> 
-> >>  This only affects CONFIG_32BIT kernels, so SYM32 does not apply; I can't 
-> >> comment on KVM.  There's still that bunch of:
-> >> 
-> >> $(shell expr $(...) \< 0xffffffff80000000)
-> >> 
-> >> constructs I mentioned before, so let's leave your change as it stands at 
-> >> this time.  Please do rename the variable as I suggested though, I hope 
-> >> that's not a big deal.
-> >
-> >Jiaxun, are you going to send an update with this change ?
+> I strongly prefer that it be removed from the series.  I do understand
+> that this is a bit more hassle right now, but this does help avoid
+> confusion in the future, plus perhaps also avoiding issues with future
+> bisections.
 > 
-> Sorry my mail server missed Maciej's reply.
-> 
-> Should I send another version or you just fix it at apply time?
+We have already decided to get rid of it, i mean small allocations(dynamic
+rcu_head attaching). I will exclude it from next patch-set version. 
 
-please send a new version, thank you.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+--
+Vlad Rezki
