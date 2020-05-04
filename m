@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EA6C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78530C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6539D206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4E820663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615192;
-	bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
+	s=default; t=1588615195;
+	bh=yuYvm1fkv6a9DEkSstB0vxNmG3SmDZImH4l1nKgoB8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yc2k0ua9EIYC8JM5++1+4a4x7rhn7XhD3Uq2pf7uqxjkhhu5Rp2g4Cei+AwV8dAY5
-	 8R5mxXhMLvavIPWAv3+6Ja6Kz0az2x2vUaTYyQpOk+IZL742JxVSniiIu/rgoWtjdh
-	 HLk3v12Xh/nzBzVKa3TA1hS6TLXt8nRkv1YkhwpM=
+	b=OQo/wKTMKHyQrsaYSL2HdO4MuB9dbb5N9uBkVrFGrKrZqRJbPSZjp60NgioO3+RUc
+	 mjVQq5Ix5vBu2jBcL+xDhK8m6Q+BF73uwIpOSFyyn0QlvH5SzILW9YWEGKilLJxb1b
+	 /eI9WX2gWKgJJra9W5bXgBIGHoZWkPLO/oeK5sUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgEDR7v (ORCPT
+        id S1730893AbgEDR7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 13:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbgEDR7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:47 -0400
+        id S1730880AbgEDR7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB1D820663;
-        Mon,  4 May 2020 17:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21DC620663;
+        Mon,  4 May 2020 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615187;
-        bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
+        s=default; t=1588615189;
+        bh=yuYvm1fkv6a9DEkSstB0vxNmG3SmDZImH4l1nKgoB8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLupE1KcFkcMeiodA8FOM6EGO3aPCQ2HN8CYSDj11qD5e0Vd+S5W4X8E4RMzj96XU
-         h+Qi+DEZLR1duZShEz/UaRBJuotCqKqOiKuQK0ot4LCH9d/M0XNzHb5HBVMdoOMCq6
-         6gLL9+DYph35M5BtOXp4OPIeb8g1r2RrqtAtM/gQ=
+        b=CMXfjA2J/TP8ysj23dHJbB+Dyic4+nmmDYc6HItikUZJRnL5szH4RiN9qQJsjr0rM
+         KmSEN1WWHdc/4Ql77LQfRDvWdQUBoLhVnkoo/LCo7WQqa0Ub577BAkdd4dk3mzA8Qx
+         xJ41s+jlX+zMmsTJkkDypLUFZyZ0Baxx0ICHupfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 07/18] ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
-Date:   Mon,  4 May 2020 19:57:17 +0200
-Message-Id: <20200504165443.593069659@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 08/18] PM: ACPI: Output correct message on target power state
+Date:   Mon,  4 May 2020 19:57:18 +0200
+Message-Id: <20200504165443.856844196@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
@@ -58,92 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 4285de0725b1bf73608abbcd35ad7fd3ddc0b61e upstream.
+commit a9b760b0266f563b4784f695bbd0e717610dc10a upstream.
 
-The checks of the plugin buffer overflow in the previous fix by commit
-  f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
-are put in the wrong places mistakenly, which leads to the expected
-(repeated) sound when the rate plugin is involved.  Fix in the right
-places.
+Transitioned power state logged at the end of setting ACPI power.
 
-Also, at those right places, the zero check is needed for the
-termination node, so added there as well, and let's get it done,
-finally.
+However, D3cold won't be in the message because state can only be
+D3hot at most.
 
-Fixes: f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200424193350.19678-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Use target_state to corretly report when power state is D3cold.
+
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/acpi/device_pm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -211,21 +211,23 @@ static snd_pcm_sframes_t plug_client_siz
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
--			if (check_size && drv_frames > plugin->buf_frames)
--				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-+			if (check_size && plugin->buf_frames &&
-+			    drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_prev;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_first(plug);
- 		while (plugin && drv_frames > 0) {
- 			plugin_next = plugin->next;
-+			if (check_size && plugin->buf_frames &&
-+			    drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
--			if (check_size && drv_frames > plugin->buf_frames)
--				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -251,26 +253,28 @@ static snd_pcm_sframes_t plug_slave_size
- 		plugin = snd_pcm_plug_first(plug);
- 		while (plugin && frames > 0) {
- 			plugin_next = plugin->next;
-+			if (check_size && plugin->buf_frames &&
-+			    frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			if (plugin->dst_frames) {
- 				frames = plugin->dst_frames(plugin, frames);
- 				if (frames < 0)
- 					return frames;
- 			}
--			if (check_size && frames > plugin->buf_frames)
--				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
--			if (check_size && frames > plugin->buf_frames)
--				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (check_size && plugin->buf_frames &&
-+			    frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_prev;
- 		}
- 	} else
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -226,13 +226,13 @@ int acpi_device_set_power(struct acpi_de
+  end:
+ 	if (result) {
+ 		dev_warn(&device->dev, "Failed to change power state to %s\n",
+-			 acpi_power_state_string(state));
++			 acpi_power_state_string(target_state));
+ 	} else {
+ 		device->power.state = target_state;
+ 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 				  "Device [%s] transitioned to %s\n",
+ 				  device->pnp.bus_id,
+-				  acpi_power_state_string(state)));
++				  acpi_power_state_string(target_state)));
+ 	}
+ 
+ 	return result;
 
 
