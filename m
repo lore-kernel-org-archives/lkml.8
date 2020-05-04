@@ -2,88 +2,107 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FECCC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9539CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC6E2063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790392063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbgEDPoX (ORCPT
+        id S1728757AbgEDPsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:44:23 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50870 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgEDPoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:44:23 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 044Fi1hv055060;
-        Tue, 5 May 2020 00:44:01 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Tue, 05 May 2020 00:44:01 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 044Fi0RI055015
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 5 May 2020 00:44:01 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200430182712.237526-1-shakeelb@google.com>
- <20200504065600.GA22838@dhcp22.suse.cz>
- <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
- <939b6744-6556-2733-b83e-bf14e848dabd@I-love.SAKURA.ne.jp>
- <CALvZod5T9pYG1xVHqNM=c68jgKPVXtKjuvV0DSAR+Ld_Mm1c4A@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <3c24ef6a-f1f4-38e6-2d0f-1eac18dc15bb@i-love.sakura.ne.jp>
-Date:   Tue, 5 May 2020 00:44:00 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 11:48:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:47696 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbgEDPsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:48:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E5CB1FB;
+        Mon,  4 May 2020 08:48:13 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1856A3F68F;
+        Mon,  4 May 2020 08:48:11 -0700 (PDT)
+References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ> <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peng Liu <iwtbavbm@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
+In-reply-to: <CAKfTPtCNG9Y4xNA-iLd+JRRsUCA1+SkkFFRbbzk5n7q6v401tw@mail.gmail.com>
+Date:   Mon, 04 May 2020 16:48:06 +0100
+Message-ID: <jhjtv0vd7m1.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CALvZod5T9pYG1xVHqNM=c68jgKPVXtKjuvV0DSAR+Ld_Mm1c4A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/04 23:57, Shakeel Butt wrote:
-> On Mon, May 4, 2020 at 7:20 AM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
->>
->> On 2020/05/04 22:54, Shakeel Butt wrote:
->>> It may not be a problem for an individual or small scale deployment
->>> but when "sweep before tear down" is the part of the workflow for
->>> thousands of machines cycling through hundreds of thousands of cgroups
->>> then we can potentially flood the logs with not useful dumps and may
->>> hide (or overflow) any useful information in the logs.
->>
->> I'm proposing a patch which allows configuring which OOM-related messages
->> should be sent to consoles at
->> https://lkml.kernel.org/r/20200424024239.63607-1-penguin-kernel@I-love.SAKURA.ne.jp .
->> Will that approach help you?
-> 
->>From what I understand, that patch is specifically for controlling
-> messages to consoles. The messages will still be in logs, right?
-> 
 
-Right.
+On 04/05/20 16:17, Vincent Guittot wrote:
+> On Sun, 3 May 2020 at 10:34, Peng Liu <iwtbavbm@gmail.com> wrote:
+>>
+>> commit c5afb6a87f23 ("sched/fair: Fix nohz.next_balance update")
+>> During idle load balance, this_cpu(ilb) do load balance for the other
+>> idle CPUs, also gather the earliest (nohz.)next_balance.
+>>
+>> Since commit:
+>>   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
+>>
+>> We update nohz.next_balance like this:
+>>
+>>   _nohz_idle_balance() {
+>>       for_each_cpu(nohz.idle_cpus_mask) {
+>>           rebalance_domains() {
+>>               update nohz.next_balance <-- compare and update
+>>           }
+>>       }
+>>       rebalance_domains(this_cpu) {
+>>           update nohz.next_balance <-- compare and update
+>>       }
+>>       update nohz.next_balance <-- unconditionally update
+>>   }
+>>
+>> For instance, nohz.idle_cpus_mask spans {cpu2,3,5,8}, and this_cpu is
+>> cpu5. After the above loop we could gather the earliest *next_balance*
+>> among {cpu2,3,8}, then rebalance_domains(this_cpu) update
+>> nohz.next_balance with this_rq->next_balance, but finally overwrite
+>> nohz.next_balance with the earliest *next_balance* among {cpu2,3,8},
+>> we may end up with not getting the earliest next_balance.
+>>
+>> Since we can gather all the updated rq->next_balance, including this_cpu,
+>> in _nohz_idle_balance(), it's safe to remove the extra lines in
+>> rebalance_domains() which are originally intended for this_cpu. And
+>> finally the updating only happen in _nohz_idle_balance().
+>
+> I'm not sure that's always true. Nothing prevents nohz_idle_balance()
+> to return false . Then run_rebalance_domains() calls
+> rebalance_domains(this_rq ,SCHED_IDLE) outside _nohz_idle_balance().
+> In this case we must keep the code in rebalance_domains().
+>
+> For example when the tick is not stopped when entering idle. Or when
+> need_resched() returns true.
+>
 
-If you want to control which OOM-related messages should be sent to syslog,
-we could use similar approach.
+I had missed that, good points.
+
+> So instead of removing the code from rebalance_domains, you should
+> move the one in _nohz_idle_balance() to make sure that the "if
+> (likely(update_next_balance)) ..." is called before calling
+> rebalance_domains for the local cpu
+>
+
+Why not just get rid of the update in _nohz_idle_balance() entirely then?
+The nohz.next_balance update in rebalance_domains() will always happen if
+it is required (and we have idle == CPU_IDLE), so the extra update in
+_nohz_idle_balance() doesn't seem to be any useful.
