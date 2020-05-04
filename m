@@ -2,478 +2,107 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09ADC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BFBC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA36206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11F2206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="a+3ZY8hj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgEDPCZ (ORCPT
+        id S1729407AbgEDPCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:02:25 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36659 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgEDPCZ (ORCPT
+        Mon, 4 May 2020 11:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728165AbgEDPCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:02:25 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 13FEF3C009C;
-        Mon,  4 May 2020 17:02:21 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id yLPyA56NIFdM; Mon,  4 May 2020 17:02:14 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 92FCC3C058E;
-        Mon,  4 May 2020 17:01:29 +0200 (CEST)
-Received: from vmlxhi-121.adit-jv.com (10.72.94.9) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 4 May 2020
- 17:01:29 +0200
-Date:   Mon, 4 May 2020 17:01:22 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     Suresh Udipi <sudipi@jp.adit-jv.com>
-CC:     <niklas.soderlund@ragnatech.se>, <akiyama@nds-osk.co.jp>,
-        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
-        <hverkuil-cisco@xs4all.nl>, <jacopo+renesas@jmondi.org>,
-        <laurent.pinchart@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
-        <securitycheck@denso.co.jp>
-Subject: Re: [PATCH v5] media: rcar-csi2: Correct the selection of hsfreqrange
-Message-ID: <20200504150122.GA8532@vmlxhi-121.adit-jv.com>
-References: <20200414115600.GB285053@oden.dyn.berto.se>
- <1588226590-12880-1-git-send-email-sudipi@jp.adit-jv.com>
+        Mon, 4 May 2020 11:02:40 -0400
+Received: from forwardcorp1j.mail.yandex.net (forwardcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::183])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62554C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 08:02:40 -0700 (PDT)
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 7D6A02E09E9;
+        Mon,  4 May 2020 18:02:35 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id x8Wr5xxAsD-2YXG9Sbt;
+        Mon, 04 May 2020 18:02:35 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1588604555; bh=TecYTwqL2Tni8kiHB0VFRMYHoz+jlo49hV2B3B1oH28=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=a+3ZY8hjuuH0jy7QCODn2HSUgXhHYwHG4hqr17w5kaBI8EqlqohmPA4GJdO4d29zZ
+         YoetrcGhkOqoWi4wF6aPU3Ji7SVhsDkU3qH8SFLhicKXFB3q46WYlUlOPSAXWCa7qR
+         lWRDAO4ZzWhQAqrAmWTJEht2lsU0/6X8RLxcqjzY=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:409::1:8])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id HG3qcYwhkL-2XXaA9TR;
+        Mon, 04 May 2020 18:02:33 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 2/4] block/part_stat: use __this_cpu_add() instead of
+ access by smp_processor_id()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Christoph Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>
+References: <158859896942.19836.15240144203131230746.stgit@buzz>
+ <158859897252.19836.5614675872684760741.stgit@buzz>
+ <20200504140317.GB29020@infradead.org>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <2dfaeec5-135e-c7ac-714b-ecdf14478568@yandex-team.ru>
+Date:   Mon, 4 May 2020 18:02:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1588226590-12880-1-git-send-email-sudipi@jp.adit-jv.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.94.9]
+In-Reply-To: <20200504140317.GB29020@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Suresh, Niklas,
+On 04/05/2020 17.03, Christoph Hellwig wrote:
+>> +#define __part_stat_add(part, field, addnd)				\
+>> +	(part_stat_get(part, field) += (addnd))
+> 
+> Just open coding part_stat_get for the UP side would seems a little
+> easier to read.
 
-I think that we should not change the structs for PHTW register configuration,
-because there are no "max" values in the table "PHTW Set Values" from the
-Renesas Hardware Manual. The patch looks just wrong. A major issue is also
-that the Hardware Manual does not provide any algorithm, how to select the
-right table entry for the configuration of PHTW and PHYPLL registers, so we
-can not say for sure that the patch is correct. It is also not clear, what
-are the "default" bit rates? It looks like they are made exactly for usage
-in driver code:
- - both PHTW and PHYPLL tables have "default" values
- - only PHYPLL (HSFREQRANGE) tables have min/max values and it requires
-   additional rounding in order to hardcode them in a driver
-But these are just my speculations. If they are correct, then the only
-exception, where the patch v2 failed, could be a typo in the Hardware Manual.
-Otherwise patch v2 looks much better to me. I think, we should wait for more
-details from Renesas before fixing this issue. 
+If rewrite filed definition as
 
-On Thu, Apr 30, 2020 at 03:03:10PM +0900, Suresh Udipi wrote:
-> hsfreqrange should be chosen based on the calculated mbps which
-> is within the range as per table[1]. But current calculation
-> always selects first value which is greater than or equal to the
-> calculated mbps which may lead to chosing a wrong range in some cases.
-> 
-> For example for 360 mbps for H3/M3N
-> Existing logic selects
-> Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
-> 
-> This hsfreqrange is out of range.
-> 
-> The logic is changed to select the first hsfreqrange whose max range[1] is
-> greater than the calculated bit rate.
-> 
-> Calculated value 360Mbps : max range 380.625 mbps is selected
->  i.e Default 350Mbps  Range [320.625 -380.625 mpbs]
-> 
-> [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
-> 
-> Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-> 
-> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-> Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
-> ---
->  Changes in v2:
->   - Added the boundary check for the maximum bit rate.
-> 
->   - Simplified the logic by remmoving range check
->     as only the closest default value covers most
->     of the use cases.
-> 
->   - Aligning the commit message based on the above change
-> 
-> 
->  Changes in v3:
->     - Added max member from struct rcsi2_mbps_reg.
->       mbps varialbe cannot be removed from rcsi2_mbps_reg,
->       since this structure is reused for
->       phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
->       used.
-> 
-> 
->    -  Update the walk of the array in rcsi2_set_phypll() so that it finds
->       the first entry where the calculated bit rate is less than the max.
-> 
->    - Support lower bit rates less than 80Mbps like 48Mbps
->      (Raspberry pi camera 640x480 connected to Kingfisher)
->      can also be supported by selecting the lowest default bit rate 80Mbps
->      as done before this fix
-> 
->    - Alignement of the commit message based on above changes.
-> 
->  Changes in v4:
->    - Remove unncessary braces.
->  
->  Changes in v5:
->    - Removed mbps variable in rcsi2_mbps_reg and aligned all 
->      tables accordingly
-> 
->  drivers/media/platform/rcar-vin/rcar-csi2.c | 282 ++++++++++++++--------------
->  1 file changed, 141 insertions(+), 141 deletions(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> index faa9fb2..d45bf80 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> @@ -132,63 +132,63 @@ struct phtw_value {
->  };
->  
->  struct rcsi2_mbps_reg {
-> -	u16 mbps;
->  	u16 reg;
-> +	u16 max;
->  };
->  
->  static const struct rcsi2_mbps_reg phtw_mbps_h3_v3h_m3n[] = {
-> -	{ .mbps =   80, .reg = 0x86 },
-> -	{ .mbps =   90, .reg = 0x86 },
-> -	{ .mbps =  100, .reg = 0x87 },
-> -	{ .mbps =  110, .reg = 0x87 },
-> -	{ .mbps =  120, .reg = 0x88 },
-> -	{ .mbps =  130, .reg = 0x88 },
-> -	{ .mbps =  140, .reg = 0x89 },
-> -	{ .mbps =  150, .reg = 0x89 },
-> -	{ .mbps =  160, .reg = 0x8a },
-> -	{ .mbps =  170, .reg = 0x8a },
-> -	{ .mbps =  180, .reg = 0x8b },
-> -	{ .mbps =  190, .reg = 0x8b },
-> -	{ .mbps =  205, .reg = 0x8c },
-> -	{ .mbps =  220, .reg = 0x8d },
-> -	{ .mbps =  235, .reg = 0x8e },
-> -	{ .mbps =  250, .reg = 0x8e },
-> +	{ .reg = 0x86, .max =  80  },
-> +	{ .reg = 0x86, .max =  90  },
-> +	{ .reg = 0x87, .max =  100 },
-> +	{ .reg = 0x87, .max =  110 },
-> +	{ .reg = 0x88, .max =  120 },
-> +	{ .reg = 0x88, .max =  130 },
-> +	{ .reg = 0x89, .max =  140 },
-> +	{ .reg = 0x89, .max =  150 },
-> +	{ .reg = 0x8a, .max =  160 },
-> +	{ .reg = 0x8a, .max =  170 },
-> +	{ .reg = 0x8b, .max =  180 },
-> +	{ .reg = 0x8b, .max =  190 },
-> +	{ .reg = 0x8c, .max =  205 },
-> +	{ .reg = 0x8d, .max =  220 },
-> +	{ .reg = 0x8e, .max =  235 },
-> +	{ .reg = 0x8e, .max =  250 },
->  	{ /* sentinel */ },
->  };
->  
->  static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
-> -	{ .mbps =   80, .reg = 0x00 },
-> -	{ .mbps =   90, .reg = 0x20 },
-> -	{ .mbps =  100, .reg = 0x40 },
-> -	{ .mbps =  110, .reg = 0x02 },
-> -	{ .mbps =  130, .reg = 0x22 },
-> -	{ .mbps =  140, .reg = 0x42 },
-> -	{ .mbps =  150, .reg = 0x04 },
-> -	{ .mbps =  170, .reg = 0x24 },
-> -	{ .mbps =  180, .reg = 0x44 },
-> -	{ .mbps =  200, .reg = 0x06 },
-> -	{ .mbps =  220, .reg = 0x26 },
-> -	{ .mbps =  240, .reg = 0x46 },
-> -	{ .mbps =  250, .reg = 0x08 },
-> -	{ .mbps =  270, .reg = 0x28 },
-> -	{ .mbps =  300, .reg = 0x0a },
-> -	{ .mbps =  330, .reg = 0x2a },
-> -	{ .mbps =  360, .reg = 0x4a },
-> -	{ .mbps =  400, .reg = 0x0c },
-> -	{ .mbps =  450, .reg = 0x2c },
-> -	{ .mbps =  500, .reg = 0x0e },
-> -	{ .mbps =  550, .reg = 0x2e },
-> -	{ .mbps =  600, .reg = 0x10 },
-> -	{ .mbps =  650, .reg = 0x30 },
-> -	{ .mbps =  700, .reg = 0x12 },
-> -	{ .mbps =  750, .reg = 0x32 },
-> -	{ .mbps =  800, .reg = 0x52 },
-> -	{ .mbps =  850, .reg = 0x72 },
-> -	{ .mbps =  900, .reg = 0x14 },
-> -	{ .mbps =  950, .reg = 0x34 },
-> -	{ .mbps = 1000, .reg = 0x54 },
-> -	{ .mbps = 1050, .reg = 0x74 },
-> -	{ .mbps = 1125, .reg = 0x16 },
-> +	{ .reg = 0x00, .max = 80   },
-> +	{ .reg = 0x20, .max = 90   },
-> +	{ .reg = 0x40, .max = 100  },
-> +	{ .reg = 0x02, .max = 110  },
-> +	{ .reg = 0x22, .max = 130  },
-> +	{ .reg = 0x42, .max = 140  },
-> +	{ .reg = 0x04, .max = 150  },
-> +	{ .reg = 0x24, .max = 170  },
-> +	{ .reg = 0x44, .max = 180  },
-> +	{ .reg = 0x06, .max = 200  },
-> +	{ .reg = 0x26, .max = 220  },
-> +	{ .reg = 0x46, .max = 240  },
-> +	{ .reg = 0x08, .max = 250  },
-> +	{ .reg = 0x28, .max = 270  },
-> +	{ .reg = 0x0a, .max = 300  },
-> +	{ .reg = 0x2a, .max = 330  },
-> +	{ .reg = 0x4a, .max = 360  },
-> +	{ .reg = 0x0c, .max = 400  },
-> +	{ .reg = 0x2c, .max = 450  },
-> +	{ .reg = 0x0e, .max = 500  },
-> +	{ .reg = 0x2e, .max = 550  },
-> +	{ .reg = 0x10, .max = 600  },
-> +	{ .reg = 0x30, .max = 650  },
-> +	{ .reg = 0x12, .max = 700  },
-> +	{ .reg = 0x32, .max = 750  },
-> +	{ .reg = 0x52, .max = 800  },
-> +	{ .reg = 0x72, .max = 850  },
-> +	{ .reg = 0x14, .max = 900  },
-> +	{ .reg = 0x34, .max = 950  },
-> +	{ .reg = 0x54, .max = 1000 },
-> +	{ .reg = 0x74, .max = 1050 },
-> +	{ .reg = 0x16, .max = 1125 },
->  	{ /* sentinel */ },
->  };
->  
-> @@ -201,96 +201,96 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
->  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
->  
->  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
-> -	{ .mbps =   80, .reg = 0x00 },
-> -	{ .mbps =   90, .reg = 0x10 },
-> -	{ .mbps =  100, .reg = 0x20 },
-> -	{ .mbps =  110, .reg = 0x30 },
-> -	{ .mbps =  120, .reg = 0x01 },
-> -	{ .mbps =  130, .reg = 0x11 },
-> -	{ .mbps =  140, .reg = 0x21 },
-> -	{ .mbps =  150, .reg = 0x31 },
-> -	{ .mbps =  160, .reg = 0x02 },
-> -	{ .mbps =  170, .reg = 0x12 },
-> -	{ .mbps =  180, .reg = 0x22 },
-> -	{ .mbps =  190, .reg = 0x32 },
-> -	{ .mbps =  205, .reg = 0x03 },
-> -	{ .mbps =  220, .reg = 0x13 },
-> -	{ .mbps =  235, .reg = 0x23 },
-> -	{ .mbps =  250, .reg = 0x33 },
-> -	{ .mbps =  275, .reg = 0x04 },
-> -	{ .mbps =  300, .reg = 0x14 },
-> -	{ .mbps =  325, .reg = 0x25 },
-> -	{ .mbps =  350, .reg = 0x35 },
-> -	{ .mbps =  400, .reg = 0x05 },
-> -	{ .mbps =  450, .reg = 0x16 },
-> -	{ .mbps =  500, .reg = 0x26 },
-> -	{ .mbps =  550, .reg = 0x37 },
-> -	{ .mbps =  600, .reg = 0x07 },
-> -	{ .mbps =  650, .reg = 0x18 },
-> -	{ .mbps =  700, .reg = 0x28 },
-> -	{ .mbps =  750, .reg = 0x39 },
-> -	{ .mbps =  800, .reg = 0x09 },
-> -	{ .mbps =  850, .reg = 0x19 },
-> -	{ .mbps =  900, .reg = 0x29 },
-> -	{ .mbps =  950, .reg = 0x3a },
-> -	{ .mbps = 1000, .reg = 0x0a },
-> -	{ .mbps = 1050, .reg = 0x1a },
-> -	{ .mbps = 1100, .reg = 0x2a },
-> -	{ .mbps = 1150, .reg = 0x3b },
-> -	{ .mbps = 1200, .reg = 0x0b },
-> -	{ .mbps = 1250, .reg = 0x1b },
-> -	{ .mbps = 1300, .reg = 0x2b },
-> -	{ .mbps = 1350, .reg = 0x3c },
-> -	{ .mbps = 1400, .reg = 0x0c },
-> -	{ .mbps = 1450, .reg = 0x1c },
-> -	{ .mbps = 1500, .reg = 0x2c },
-> +	{ .reg = 0x00, .max =   97 },
-> +	{ .reg = 0x10, .max =  107 },
-> +	{ .reg = 0x20, .max =  118 },
-> +	{ .reg = 0x30, .max =  128 },
-> +	{ .reg = 0x01, .max =  139 },
-> +	{ .reg = 0x11, .max =  149 },
-> +	{ .reg = 0x21, .max =  160 },
-> +	{ .reg = 0x31, .max =  170 },
-> +	{ .reg = 0x02, .max =  181 },
-> +	{ .reg = 0x12, .max =  191 },
-> +	{ .reg = 0x22, .max =  202 },
-> +	{ .reg = 0x32, .max =  212 },
-> +	{ .reg = 0x03, .max =  228 },
-> +	{ .reg = 0x13, .max =  224 },
-> +	{ .reg = 0x23, .max =  259 },
-> +	{ .reg = 0x33, .max =  275 },
-> +	{ .reg = 0x04, .max =  301 },
-> +	{ .reg = 0x14, .max =  328 },
-> +	{ .reg = 0x25, .max =  354 },
-> +	{ .reg = 0x35, .max =  380 },
-> +	{ .reg = 0x05, .max =  433 },
-> +	{ .reg = 0x16, .max =  485 },
-> +	{ .reg = 0x26, .max =  538 },
-> +	{ .reg = 0x37, .max =  590 },
-> +	{ .reg = 0x07, .max =  643 },
-> +	{ .reg = 0x18, .max =  695 },
-> +	{ .reg = 0x28, .max =  748 },
-> +	{ .reg = 0x39, .max =  800 },
-> +	{ .reg = 0x09, .max =  853 },
-> +	{ .reg = 0x19, .max =  905 },
-> +	{ .reg = 0x29, .max =  958 },
-> +	{ .reg = 0x3a, .max = 1010 },
-> +	{ .reg = 0x0a, .max = 1063 },
-> +	{ .reg = 0x1a, .max = 1115 },
-> +	{ .reg = 0x2a, .max = 1168 },
-> +	{ .reg = 0x3b, .max = 1220 },
-> +	{ .reg = 0x0b, .max = 1273 },
-> +	{ .reg = 0x1b, .max = 1325 },
-> +	{ .reg = 0x2b, .max = 1378 },
-> +	{ .reg = 0x3c, .max = 1430 },
-> +	{ .reg = 0x0c, .max = 1483 },
-> +	{ .reg = 0x1c, .max = 1500 },
-> +	{ .reg = 0x2c, .max = 1500 },
->  	{ /* sentinel */ },
->  };
->  
->  static const struct rcsi2_mbps_reg hsfreqrange_m3w_h3es1[] = {
-> -	{ .mbps =   80,	.reg = 0x00 },
-> -	{ .mbps =   90,	.reg = 0x10 },
-> -	{ .mbps =  100,	.reg = 0x20 },
-> -	{ .mbps =  110,	.reg = 0x30 },
-> -	{ .mbps =  120,	.reg = 0x01 },
-> -	{ .mbps =  130,	.reg = 0x11 },
-> -	{ .mbps =  140,	.reg = 0x21 },
-> -	{ .mbps =  150,	.reg = 0x31 },
-> -	{ .mbps =  160,	.reg = 0x02 },
-> -	{ .mbps =  170,	.reg = 0x12 },
-> -	{ .mbps =  180,	.reg = 0x22 },
-> -	{ .mbps =  190,	.reg = 0x32 },
-> -	{ .mbps =  205,	.reg = 0x03 },
-> -	{ .mbps =  220,	.reg = 0x13 },
-> -	{ .mbps =  235,	.reg = 0x23 },
-> -	{ .mbps =  250,	.reg = 0x33 },
-> -	{ .mbps =  275,	.reg = 0x04 },
-> -	{ .mbps =  300,	.reg = 0x14 },
-> -	{ .mbps =  325,	.reg = 0x05 },
-> -	{ .mbps =  350,	.reg = 0x15 },
-> -	{ .mbps =  400,	.reg = 0x25 },
-> -	{ .mbps =  450,	.reg = 0x06 },
-> -	{ .mbps =  500,	.reg = 0x16 },
-> -	{ .mbps =  550,	.reg = 0x07 },
-> -	{ .mbps =  600,	.reg = 0x17 },
-> -	{ .mbps =  650,	.reg = 0x08 },
-> -	{ .mbps =  700,	.reg = 0x18 },
-> -	{ .mbps =  750,	.reg = 0x09 },
-> -	{ .mbps =  800,	.reg = 0x19 },
-> -	{ .mbps =  850,	.reg = 0x29 },
-> -	{ .mbps =  900,	.reg = 0x39 },
-> -	{ .mbps =  950,	.reg = 0x0a },
-> -	{ .mbps = 1000,	.reg = 0x1a },
-> -	{ .mbps = 1050,	.reg = 0x2a },
-> -	{ .mbps = 1100,	.reg = 0x3a },
-> -	{ .mbps = 1150,	.reg = 0x0b },
-> -	{ .mbps = 1200,	.reg = 0x1b },
-> -	{ .mbps = 1250,	.reg = 0x2b },
-> -	{ .mbps = 1300,	.reg = 0x3b },
-> -	{ .mbps = 1350,	.reg = 0x0c },
-> -	{ .mbps = 1400,	.reg = 0x1c },
-> -	{ .mbps = 1450,	.reg = 0x2c },
-> -	{ .mbps = 1500,	.reg = 0x3c },
-> +	{ .reg = 0x00, .max =  110 },
-> +	{ .reg = 0x10, .max =  120 },
-> +	{ .reg = 0x20, .max =  131 },
-> +	{ .reg = 0x30, .max =  141 },
-> +	{ .reg = 0x01, .max =  152 },
-> +	{ .reg = 0x11, .max =  162 },
-> +	{ .reg = 0x21, .max =  173 },
-> +	{ .reg = 0x31, .max =  183 },
-> +	{ .reg = 0x02, .max =  194 },
-> +	{ .reg = 0x12, .max =  204 },
-> +	{ .reg = 0x22, .max =  215 },
-> +	{ .reg = 0x32, .max =  225 },
-> +	{ .reg = 0x03, .max =  241 },
-> +	{ .reg = 0x13, .max =  257 },
-> +	{ .reg = 0x23, .max =  273 },
-> +	{ .reg = 0x33, .max =  275 },
-> +	{ .reg = 0x04, .max =  301 },
-> +	{ .reg = 0x14, .max =  328 },
-> +	{ .reg = 0x05, .max =  354 },
-> +	{ .reg = 0x15, .max =  393 },
-> +	{ .reg = 0x25, .max =  446 },
-> +	{ .reg = 0x06, .max =  498 },
-> +	{ .reg = 0x16, .max =  551 },
-> +	{ .reg = 0x07, .max =  603 },
-> +	{ .reg = 0x17, .max =  656 },
-> +	{ .reg = 0x08, .max =  708 },
-> +	{ .reg = 0x18, .max =  761 },
-> +	{ .reg = 0x09, .max =  813 },
-> +	{ .reg = 0x19, .max =  866 },
-> +	{ .reg = 0x29, .max =  918 },
-> +	{ .reg = 0x39, .max =  971 },
-> +	{ .reg = 0x0a, .max = 1023 },
-> +	{ .reg = 0x1a, .max = 1076 },
-> +	{ .reg = 0x2a, .max = 1128 },
-> +	{ .reg = 0x3a, .max = 1181 },
-> +	{ .reg = 0x0b, .max = 1233 },
-> +	{ .reg = 0x1b, .max = 1286 },
-> +	{ .reg = 0x2b, .max = 1338 },
-> +	{ .reg = 0x3b, .max = 1391 },
-> +	{ .reg = 0x0c, .max = 1443 },
-> +	{ .reg = 0x1c, .max = 1496 },
-> +	{ .reg = 0x2c, .max = 1500 },
-> +	{ .reg = 0x3c, .max = 1500 },
->  	{ /* sentinel */ },
->  };
->  
-> @@ -432,11 +432,11 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
->  {
->  	const struct rcsi2_mbps_reg *hsfreq;
->  
-> -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
-> -		if (hsfreq->mbps >= mbps)
-> +	for (hsfreq = priv->info->hsfreqrange; hsfreq->max != 0; hsfreq++)
-> +		if (hsfreq->max >= mbps)
->  			break;
->  
-> -	if (!hsfreq->mbps) {
-> +	if (!hsfreq->max) {
->  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
->  		return -ERANGE;
->  	}
-> @@ -907,11 +907,11 @@ static int rcsi2_phtw_write_mbps(struct rcar_csi2 *priv, unsigned int mbps,
->  {
->  	const struct rcsi2_mbps_reg *value;
->  
-> -	for (value = values; value->mbps; value++)
-> -		if (value->mbps >= mbps)
-> +	for (value = values; value->max; value++)
-> +		if (value->max >= mbps)
->  			break;
->  
-> -	if (!value->mbps) {
-> +	if (!value->max) {
->  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
->  		return -ERANGE;
->  	}
-> -- 
-> 2.7.4
-> 
+#ifdef	CONFIG_SMP
+	struct disk_stats __percpu *dkstats;
+#else
+	struct disk_stats __percpu dkstats[1];
+#endif
 
--- 
-Best Regards,
-Michael
+Then all per-cpu macro should work as is for UP case too.
+Surprisingly arrow operator (struct->filed) works for arrays too =)
+
+
+Inlining per-cpu structures should be good for tiny UP systems.
+Especially if this could be done by few macro only in three places:
+definition, allocating and freeing.
+
+
+But sparse still complains.
+
+./include/linux/part_stat.h:45:24: warning: incorrect type in initializer (different address spaces)
+./include/linux/part_stat.h:45:24:    expected void const [noderef] <asn:3> *__vpp_verify
+./include/linux/part_stat.h:45:24:    got struct disk_stats [noderef] *
+
+Looks like it cannot assign different address-space to the filed.
+
+
+> 
+> Otherwise this looks good:
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
