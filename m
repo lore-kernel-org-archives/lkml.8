@@ -2,324 +2,285 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4126C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33219C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D2124961
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129DE2087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fIxd66/r";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="PUIRW1Jk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FlwWcvg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgEDW7d (ORCPT
+        id S1728333AbgEDXBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:59:33 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:31760 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727806AbgEDW7c (ORCPT
+        Mon, 4 May 2020 19:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728059AbgEDXBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:59:32 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044MxMhR008053;
-        Mon, 4 May 2020 15:59:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=qk7zY96zEAYh4rvMwIjk8A7NLJslV82xfWPmoz/2mbU=;
- b=fIxd66/reIR7EQggwvNULLm2WznRadcpp00bKTN9nPdo9AQsKFgcRkaUSKlvWXvhSZUD
- 7kRxyDnQdOk7SkLoGzC2jWHJihgTPNgso0cKuErKZwxW3n9zYYziw1m9udpl4UgrFhs2
- 18d7OqBpWhbXu/d9tEld+EGgi06etafX4UM= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 30srse7rgq-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 04 May 2020 15:59:24 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 4 May 2020 15:59:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZfEe1geZxFltqHmRFsIob9MdKEkWAkBk6nMeoJ6ngV+aUAtcWHYTe341PeLxNXqDGfho9wtGklqpkMIsJCDHSpYQDodaD0supgsf0SgdjGJ7ueDqcYoCmIuq2Si/ednrV/T4k0huHAkGZZkoWgU6r+X8xmIf9mXlKMpZBJi9jvMP71XjL8MJDm4aw9vdFPSYzFYJSZLqKG5OIKoz9dIMVKdQ1m6BB2K3C2WnggotbRjkqwLKmpk7g22wVJeaa73dsb1P/mPDQIAWuKr2+UyOpNkRj8OmY+vbKJ0rSvqxTEyTyth45W1PAhcLCM4frWRHguYQApRkq4y9AXoWK3dK/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qk7zY96zEAYh4rvMwIjk8A7NLJslV82xfWPmoz/2mbU=;
- b=AxieFQOTW285u5JTeLRnwP0jSi0xIfQYCB26b0dmgBa90sUHXX/42Csy+UJyYXpjAQYWIVLmPJI+knfl5mapVkucFRIqxmjP8HplUU4xCMlLKwItFf1N9qCdLZigBpuf/ZWGceCtLFLgT7Dt3iu/HBKiTpfjE96H0wwcJOegmlamv4sAfbsj8ps2fnnNGYtu6i0IuA9NeRjqZOEbTKF/wU1D61diSeKXRFdJykysRR1sIBzn/jnUHvyyBYPjtgXQJPKw+vt2P9s2xJDm8WNCqHW6XOvajLxo06D0lYo9ripIhmX906n8kC+nOsUuafB0B22qBJLOn1I8SE+hWI4ULA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qk7zY96zEAYh4rvMwIjk8A7NLJslV82xfWPmoz/2mbU=;
- b=PUIRW1JkeV41KwtyqG4/E+k1B8wpw4w1VD9eOsNSiaGvKcmBaEKyhxcIYToRbe0Qwg3EktK6A/tKx1eE2Ny/xS1SbFGfKGjUjfKthsG2uJG5VflXo8Bx0Iq1JaM0t9B7bzunPHUYZQUzn8xXzlrRxLnv59YGgzktA7Wmfu7wE1o=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3159.namprd15.prod.outlook.com (2603:10b6:a03:101::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Mon, 4 May
- 2020 22:59:19 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2958.029; Mon, 4 May 2020
- 22:59:19 +0000
-Date:   Mon, 4 May 2020 15:59:10 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Yafang Shao <laoar.shao@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm, memcg: Avoid stale protection values when cgroup
- is above protection
-Message-ID: <20200504225910.GB20009@carbon.dhcp.thefacebook.com>
-References: <cover.1588092152.git.chris@chrisdown.name>
- <d454fca5d6b38b74d8dc35141e8519b02089a698.1588092152.git.chris@chrisdown.name>
- <20200429101510.GA28637@dhcp22.suse.cz>
- <20200429140330.GA5054@cmpxchg.org>
- <20200429150414.GI28637@dhcp22.suse.cz>
- <20200429165627.GA24768@cmpxchg.org>
- <20200430145721.GF12655@dhcp22.suse.cz>
- <CALOAHbBub_oojkb5DpXUoHV=-e9PDAeVzJvKvDtyk-9Jg6_Pkw@mail.gmail.com>
- <20200504072342.GD22838@dhcp22.suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504072342.GD22838@dhcp22.suse.cz>
-X-ClientProxiedBy: BYAPR21CA0006.namprd21.prod.outlook.com
- (2603:10b6:a03:114::16) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Mon, 4 May 2020 19:01:09 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC218C061A0E;
+        Mon,  4 May 2020 16:01:09 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id di6so106514qvb.10;
+        Mon, 04 May 2020 16:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sr2MDEt6KTuLtYqratJ8mWzr8mlifnfhPq/CL0zWop0=;
+        b=FlwWcvg9JATvZF1AiaebjBtK/ym7D4Bog8N4mqTbq6ShO/0lbBn9K8SPEP1uiYhlId
+         k2XGfSPfPLsj+L/YUoI10NK+dgGXf/dSgsG39BgaGr3wNgMW75olQbUG2PTI+S3FIDxt
+         yfU277GFGAMw0aMOlSwIqjnql1nEohR/wHT+JZrSHx/HhqiSsRCWGNKLtRyelECFqR+Q
+         t9Kkd1AEjzHUan37m6F9A7H44bVkXil37Y/C7BswLzbJ7ea18mP+yc1l1TnrEIgiGW5P
+         0OKmfjcU62lPY4FRqfb/jOHGOjjcs/BG3nremQITg/ggc2wgRJIydWpZHwY55wbpVn2f
+         oFeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sr2MDEt6KTuLtYqratJ8mWzr8mlifnfhPq/CL0zWop0=;
+        b=DtfHFFstCB+d0GKL31kU6fvFRc5pA5hZ0BJgrAAD2KtAmw2bnM5NbwwEkcgzK8CPDE
+         VZVKMk0DFb94+Ch+boGH20A8RSXV4jJuQPsSKMr1kSHb5XPXWTh71j7c651Jfgn8MjN+
+         2Z7fqsxxiUDxqXZmR1JKcklHyL/fRxiEwmBFuhoFbTx80aFsuQv/Hcmw/cPe1vFCbPGq
+         0/+OcnDctUlxFJIo4/dKmMsQ0tCjUWSMnkh5ktVvrAeNel6i6CTlXWljuu2XuwNQNUMf
+         qj9kycR0LDCTjwjnGFywYJeHpojg78VYvbz2G3qDt4JzTz+HSAyGKF+RSPEB3dcC442z
+         tqUw==
+X-Gm-Message-State: AGi0PuYNopWXLT6ByY1cHtPW/rk9zM77u6iwZG87ziiyT6WptWzevKCQ
+        iFGRkUwEbAOQ/tzQ8Ko9cb6ROpQi35k=
+X-Google-Smtp-Source: APiQypIVxS1ZIQaiYcUAl5sFUkEiZNgxETDeUp0tZtSJbCo+IbcMpby88HQvA+T3XfJ/ITLv9gzlmQ==
+X-Received: by 2002:a0c:e6c2:: with SMTP id l2mr363898qvn.91.1588633268281;
+        Mon, 04 May 2020 16:01:08 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id f68sm441126qke.74.2020.05.04.16.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 16:01:07 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: omap3: Migrate AES from hwmods to sysc-omap2
+Date:   Mon,  4 May 2020 18:01:00 -0500
+Message-Id: <20200504230100.181926-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:a48e) by BYAPR21CA0006.namprd21.prod.outlook.com (2603:10b6:a03:114::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.0 via Frontend Transport; Mon, 4 May 2020 22:59:18 +0000
-X-Originating-IP: [2620:10d:c090:400::5:a48e]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9740123e-76db-42ad-1d93-08d7f07ec6ec
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3159:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3159BE30B19F0544BBDE0390BEA60@BYAPR15MB3159.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 03932714EB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JCx0LsuuqfEXljgIlLDyzSOrExeFLuXMpzD497BgnZQTJ5zxsMQ/5cTpSUWx2FpT6KuYZ1QfTpZTvdOAvtrIrh2LlYL4WvUsPnTQfcYfWpB0D4ehsh3/l9YFnSZT+bqauvWCKhFPYnJw42k01sCznaYQL7ik5daRpQQKyvOf7kmXktkmQhvy53bPRvoTtknP1JeaaUJVpcGAxom2sRgadrVLrezK57jNrdwZV1mwFwCIQPfOev9Gw147mKli86pBYvJ6NWdLIR3NZrkFVzTyDn6usArkociN7NGHZQrBqustdEqj+sOrm+ijuYn7gCFxlerz8y4s6f5K2InWtLDUtTsXEUdAjKBhzFksIHqWf3rEMHAG5W1qbYea9J/HWgjZAvM4y0Va8wvYfIQUk7shoJRFL72R8Wb7ALxWSQ9WrjR2YzvHLHyBUvhLQRKWV5/nL8ac+/DO0vR0cgB2CwafMzdquJir1ph975Uj5mfe8U+sTtRR31qabhP6skYfYGhuAPOtX/Mk5opdXKOYEeathfGYCS41jeeMsF3Y8qQeGjFHhtSpKE+UA/Nfonj2sSR9
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(366004)(136003)(39860400002)(346002)(376002)(33430700001)(33656002)(478600001)(86362001)(33440700001)(8676002)(5660300002)(8936002)(1076003)(52116002)(54906003)(7696005)(316002)(53546011)(6506007)(16526019)(6916009)(66946007)(9686003)(55016002)(4326008)(6666004)(66556008)(2906002)(66476007)(186003)(21314003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 6+QD4e5m7ayVr0G6oEVORVotSfjLFjGlB+BwZ7ZfNrTtnfC6lvYt+ibyvlx9o5Duhxv/Szhnan7VIu4nj+YVYJYWTd9JzjB7wvY5vAyZ9QjCx/q9jCSC+MwApQI+oMxIOBe5tpP6YE2OppdvrA/wjzCp+s60d2FQz9blIT0n6inlNc0BENLFmsFKleaJNYTMeqwICeoCFQc1uL9Cs41SHhN0cQONn69zwGj0OqRl15VMNnPrO3WW+9z6IS058dz7KnaDhdAUUPGMO+HrI1pr+okvB/ITJjZ16SRI+ZcU9r/MQ8z8uS/QlvBjzAI58aIJ/LSE7j7931XuvzBzv3vVDanZjxqePBK30o+FvXYITd6d8lK8iKFGdA+s646zoXbwNx+yWkq+TsXWjl/TquugV2iVREXd1bP8lYMXqGJU00DTRFHWv98Z4CASRG2mL7AW3bEBz9BPo7JkLbhV8FTzN6x0vg/2LZEFog0V5+u6EtL1y3R9gYdK0O57zkchBur0sEFb/tBTVMtFPy/SwMRK/jbA/UUBDHXL/tceEK7b82wXmfIDdHAWAJLlpQ/W/Jz5GVD2CIY1dJyq3Om+/nhZr/ZMTOg3/TyfR4fqz5H5Qt/NPbGM6hdCbxGyHjD6EQ2X3J+nzKSWhXIoS9Danq+7z9JDP2B+mNjWQvgp8K0vJssnYaFdAHxG5FchrbSF1Fm3HtrAilXqmRB15kn9UiTp4XdvbtTJNqf/ygzVZCM1vqi+A0Jp6DRnmy1zLsi7CW76Dwe5dHSr4aaMqgasLDPYLRN/UVH/EaAoO0/duRsj5W1gpl0nbsV6FC7bP7szcxDI5Cds3rt8Z+UuZ3x6hykEhA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9740123e-76db-42ad-1d93-08d7f07ec6ec
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 22:59:19.3470
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BKg6alOpswuKFEycZ1tD8Kh+vGjGSgNlIlvYF+6hXNVCrnGMAhACMD0pTkJSrD8q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3159
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_13:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 suspectscore=1
- mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040179
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 09:23:42AM +0200, Michal Hocko wrote:
-> On Fri 01-05-20 07:59:57, Yafang Shao wrote:
-> > On Thu, Apr 30, 2020 at 10:57 PM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Wed 29-04-20 12:56:27, Johannes Weiner wrote:
-> > > [...]
-> > > > I think to address this, we need a more comprehensive solution and
-> > > > introduce some form of serialization. I'm not sure yet how that would
-> > > > look like yet.
-> > >
-> > > Yeah, that is what I've tried to express earlier and that is why I would
-> > > rather go with an uglier workaround for now and think about a more
-> > > robust effective values calculation on top.
-> > >
-> > 
-> > Agreed.
-> > If there's a more robust effective values calculation on top, then we
-> > don't need to hack it here and there.
-> > 
-> > > > I'm still not sure it's worth having a somewhat ugly workaround in
-> > > > mem_cgroup_protection() to protect against half of the bug. If you
-> > > > think so, the full problem should at least be documented and marked
-> > > > XXX or something.
-> > >
-> > > Yes, this makes sense to me. What about the following?
-> > 
-> > Many thanks for the explaination on this workaround.
-> > With this explanation, I think the others will have a clear idea why
-> > we must add this ugly workaround here.
-> 
-> OK, this would be the patch with the full changelog. If both Chris and
-> Johannes are ok with this I would suggest replacing the one Andrew took
-> already
-> 
-> 
-> From dfcdbfd336d2d23195ec9d90e6e58898f49f8998 Mon Sep 17 00:00:00 2001
-> From: Yafang Shao <laoar.shao@gmail.com>
-> Date: Mon, 4 May 2020 09:10:03 +0200
-> Subject: [PATCH] mm, memcg: Avoid stale protection values when cgroup is above
->  protection
-> 
-> A cgroup can have both memory protection and a memory limit to isolate
-> it from its siblings in both directions - for example, to prevent it
-> from being shrunk below 2G under high pressure from outside, but also
-> from growing beyond 4G under low pressure.
-> 
-> Commit 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
-> implemented proportional scan pressure so that multiple siblings in
-> excess of their protection settings don't get reclaimed equally but
-> instead in accordance to their unprotected portion.
-> 
-> During limit reclaim, this proportionality shouldn't apply of course:
-> there is no competition, all pressure is from within the cgroup and
-> should be applied as such. Reclaim should operate at full efficiency.
-> 
-> However, mem_cgroup_protected() never expected anybody to look at the
-> effective protection values when it indicated that the cgroup is above
-> its protection. As a result, a query during limit reclaim may return
-> stale protection values that were calculated by a previous reclaim cycle
-> in which the cgroup did have siblings.
-> 
-> When this happens, reclaim is unnecessarily hesitant and potentially
-> slow to meet the desired limit. In theory this could lead to premature
-> OOM kills, although it's not obvious this has occurred in practice.
-> 
-> Workaround the problem by special casing reclaim roots in
-> mem_cgroup_protection. These memcgs are never participating in the
-> reclaim protection because the reclaim is internal.
-> 
-> We have to ignore effective protection values for reclaim roots because
-> mem_cgroup_protected might be called from racing reclaim contexts with
-> different roots. Calculation is relying on root -> leaf tree traversal
-> therefore top-down reclaim protection invariants should hold. The only
-> exception is the reclaim root which should have effective protection set
-> to 0 but that would be problematic for the following setup:
->  Let's have global and A's reclaim in parallel:
->   |
->   A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
->   |\
->   | C (low = 1G, usage = 2.5G)
->   B (low = 1G, usage = 0.5G)
-> 
->  for A reclaim we have
->  B.elow = B.low
->  C.elow = C.low
-> 
->  For the global reclaim
->  A.elow = A.low
->  B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
->  C.elow = min(C.usage, C.low)
-> 
->  With the effective values resetting we have A reclaim
->  A.elow = 0
->  B.elow = B.low
->  C.elow = C.low
-> 
->  and global reclaim could see the above and then
->  B.elow = C.elow = 0 because children_low_usage > A.elow
-> 
-> Which means that protected memcgs would get reclaimed.
-> 
-> In future we would like to make mem_cgroup_protected more robust against
-> racing reclaim contexts but that is likely more complex solution that
-> this simple workaround.
-> 
-> [hannes@cmpxchg.org - large part of the changelog]
-> [mhocko@suse.com - workaround explanation]
-> Fixes: 9783aa9917f8 ("mm, memcg: proportional memory.{low,min} reclaim")
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+Various OMAP3 boards have two AES blocks, but only one is currently
+available, because the hwmods are only configured for one.
 
-Acked-by: Roman Gushchin <guro@fb.com>
+This patch migrates the hwmods for the AES engine to sysc-omap2
+which allows the second AES crypto engine to become available.
 
-> ---
->  include/linux/memcontrol.h | 36 ++++++++++++++++++++++++++++++++++++
->  mm/memcontrol.c            |  8 ++++++++
->  2 files changed, 44 insertions(+)
-> 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index 1b4150ff64be..50ffbc17cdd8 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -350,6 +350,42 @@ static inline unsigned long mem_cgroup_protection(struct mem_cgroup *memcg,
->  	if (mem_cgroup_disabled())
->  		return 0;
->  
-> +	/*
-> +	 * There is no reclaim protection applied to a targeted reclaim.
-> +	 * We are special casing this specific case here because
-> +	 * mem_cgroup_protected calculation is not robust enough to keep
-> +	 * the protection invariant for calculated effective values for
-> +	 * parallel reclaimers with different reclaim target. This is
-> +	 * especially a problem for tail memcgs (as they have pages on LRU)
-> +	 * which would want to have effective values 0 for targeted reclaim
-> +	 * but a different value for external reclaim.
-> +	 *
-> +	 * Example
-> +	 * Let's have global and A's reclaim in parallel:
-> +	 *  |
-> +	 *  A (low=2G, usage = 3G, max = 3G, children_low_usage = 1.5G)
-> +	 *  |\
-> +	 *  | C (low = 1G, usage = 2.5G)
-> +	 *  B (low = 1G, usage = 0.5G)
-> +	 *
-> +	 * For the global reclaim
-> +	 * A.elow = A.low
-> +	 * B.elow = min(B.usage, B.low) because children_low_usage <= A.elow
-> +	 * C.elow = min(C.usage, C.low)
-> +	 *
-> +	 * With the effective values resetting we have A reclaim
-> +	 * A.elow = 0
-> +	 * B.elow = B.low
-> +	 * C.elow = C.low
-> +	 *
-> +	 * If the global reclaim races with A's reclaim then
-> +	 * B.elow = C.elow = 0 because children_low_usage > A.elow)
-> +	 * is possible and reclaiming B would be violating the protection.
-> +	 *
-> +	 */
-> +	if (memcg == root)
-> +		return 0;
-> +
->  	if (in_low_reclaim)
->  		return READ_ONCE(memcg->memory.emin);
->  
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 05b4ec2c6499..df88a22f09bc 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6385,6 +6385,14 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  
->  	if (!root)
->  		root = root_mem_cgroup;
-> +
-> +	/*
-> +	 * Effective values of the reclaim targets are ignored so they
-> +	 * can be stale. Have a look at mem_cgroup_protection for more
-> +	 * details.
-> +	 * TODO: calculation should be more robust so that we do not need
-> +	 * that special casing.
-> +	 */
->  	if (memcg == root)
->  		return MEMCG_PROT_NONE;
->  
-> -- 
-> 2.25.1
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+  omap-aes 480a6000.aes1: OMAP AES hw accel rev: 2.6
+  omap-aes 480a6000.aes1: will run requests pump with realtime priority
+  omap-aes 480c5000.aes2: OMAP AES hw accel rev: 2.6
+  omap-aes 480c5000.aes2: will run requests pump with realtime priority
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index adcdf88717a3..376628b32f77 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -157,13 +157,56 @@ omap3_pmx_wkup: pinmux@a00 {
+ 			};
+ 		};
+ 
+-		aes: aes@480c5000 {
+-			compatible = "ti,omap3-aes";
+-			ti,hwmods = "aes";
+-			reg = <0x480c5000 0x50>;
+-			interrupts = <0>;
+-			dmas = <&sdma 65 &sdma 66>;
+-			dma-names = "tx", "rx";
++		aes1_target: target-module@480a6000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480a6044 0x4>,
++			      <0x480a6048 0x4>,
++			      <0x480a604c 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&aes1_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480a6000 0x2000>;
++
++			aes1: aes1@0 {
++				compatible = "ti,omap3-aes";
++				reg = <0 0x50>;
++				interrupts = <0>;
++				dmas = <&sdma 65 &sdma 66>;
++				dma-names = "tx", "rx";
++			};
++		};
++
++		aes2_target: target-module@480c5000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480c5044 0x4>,
++			      <0x480c5048 0x4>,
++			      <0x480c504c 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&aes2_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480c5000 0x2000>;
++
++			aes2: aes2@0 {
++				compatible = "ti,omap3-aes";
++				reg = <0 0x50>;
++				interrupts = <0>;
++				dmas = <&sdma 65 &sdma 66>;
++				dma-names = "tx", "rx";
++			};
+ 		};
+ 
+ 		prm: prm@48306000 {
+diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+index ca02f91237e3..b6c7d98a9eff 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+@@ -2342,44 +2342,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__sham = {
+ 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+ };
+ 
+-/* l4_core -> AES */
+-static struct omap_hwmod_class_sysconfig omap3_aes_sysc = {
+-	.rev_offs	= 0x44,
+-	.sysc_offs	= 0x48,
+-	.syss_offs	= 0x4c,
+-	.sysc_flags	= (SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
+-			   SYSC_HAS_AUTOIDLE | SYSS_HAS_RESET_STATUS),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+-	.sysc_fields	= &omap3xxx_aes_sysc_fields,
+-};
+-
+-static struct omap_hwmod_class omap3xxx_aes_class = {
+-	.name	= "aes",
+-	.sysc	= &omap3_aes_sysc,
+-};
+-
+-
+-static struct omap_hwmod omap3xxx_aes_hwmod = {
+-	.name		= "aes",
+-	.main_clk	= "aes2_ick",
+-	.prcm		= {
+-		.omap2 = {
+-			.module_offs = CORE_MOD,
+-			.idlest_reg_id = 1,
+-			.idlest_idle_bit = OMAP3430_ST_AES2_SHIFT,
+-		},
+-	},
+-	.class		= &omap3xxx_aes_class,
+-};
+-
+-
+-static struct omap_hwmod_ocp_if omap3xxx_l4_core__aes = {
+-	.master		= &omap3xxx_l4_core_hwmod,
+-	.slave		= &omap3xxx_aes_hwmod,
+-	.clk		= "aes2_ick",
+-	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+-};
+-
+ /*
+  * 'ssi' class
+  * synchronous serial interface (multichannel and full-duplex serial if)
+@@ -2473,20 +2435,11 @@ static struct omap_hwmod_ocp_if *omap34xx_sham_hwmod_ocp_ifs[] __initdata = {
+ 	NULL,
+ };
+ 
+-static struct omap_hwmod_ocp_if *omap34xx_aes_hwmod_ocp_ifs[] __initdata = {
+-	&omap3xxx_l4_core__aes,
+-	NULL,
+-};
+-
+ static struct omap_hwmod_ocp_if *omap36xx_sham_hwmod_ocp_ifs[] __initdata = {
+ 	&omap3xxx_l4_core__sham,
+ 	NULL
+ };
+ 
+-static struct omap_hwmod_ocp_if *omap36xx_aes_hwmod_ocp_ifs[] __initdata = {
+-	&omap3xxx_l4_core__aes,
+-	NULL
+-};
+ 
+ /*
+  * Apparently the SHA/MD5 and AES accelerator IP blocks are
+@@ -2501,11 +2454,6 @@ static struct omap_hwmod_ocp_if *am35xx_sham_hwmod_ocp_ifs[] __initdata = {
+ 	NULL
+ };
+ 
+-static struct omap_hwmod_ocp_if *am35xx_aes_hwmod_ocp_ifs[] __initdata = {
+-	/* &omap3xxx_l4_core__aes, */
+-	NULL,
+-};
+-
+ /* 3430ES1-only hwmod links */
+ static struct omap_hwmod_ocp_if *omap3430es1_hwmod_ocp_ifs[] __initdata = {
+ 	&omap3430es1_dss__l3,
+@@ -2641,7 +2589,6 @@ int __init omap3xxx_hwmod_init(void)
+ {
+ 	int r;
+ 	struct omap_hwmod_ocp_if **h = NULL, **h_sham = NULL;
+-	struct omap_hwmod_ocp_if **h_aes = NULL;
+ 	struct device_node *bus;
+ 	unsigned int rev;
+ 
+@@ -2664,16 +2611,13 @@ int __init omap3xxx_hwmod_init(void)
+ 	    rev == OMAP3430_REV_ES3_1 || rev == OMAP3430_REV_ES3_1_2) {
+ 		h = omap34xx_hwmod_ocp_ifs;
+ 		h_sham = omap34xx_sham_hwmod_ocp_ifs;
+-		h_aes = omap34xx_aes_hwmod_ocp_ifs;
+ 	} else if (rev == AM35XX_REV_ES1_0 || rev == AM35XX_REV_ES1_1) {
+ 		h = am35xx_hwmod_ocp_ifs;
+ 		h_sham = am35xx_sham_hwmod_ocp_ifs;
+-		h_aes = am35xx_aes_hwmod_ocp_ifs;
+ 	} else if (rev == OMAP3630_REV_ES1_0 || rev == OMAP3630_REV_ES1_1 ||
+ 		   rev == OMAP3630_REV_ES1_2) {
+ 		h = omap36xx_hwmod_ocp_ifs;
+ 		h_sham = omap36xx_sham_hwmod_ocp_ifs;
+-		h_aes = omap36xx_aes_hwmod_ocp_ifs;
+ 	} else {
+ 		WARN(1, "OMAP3 hwmod family init: unknown chip type\n");
+ 		return -EINVAL;
+@@ -2696,11 +2640,6 @@ int __init omap3xxx_hwmod_init(void)
+ 			goto put_node;
+ 	}
+ 
+-	if (h_aes && omap3xxx_hwmod_is_hs_ip_block_usable(bus, "aes")) {
+-		r = omap_hwmod_register_links(h_aes);
+-		if (r < 0)
+-			goto put_node;
+-	}
+ 	of_node_put(bus);
+ 
+ 	/*
+-- 
+2.25.1
+
