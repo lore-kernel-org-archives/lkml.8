@@ -2,169 +2,287 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01E7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3685CC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7340720705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:59:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mDsP6kf6"
+	by mail.kernel.org (Postfix) with ESMTP id 14D2920705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgEDD7S (ORCPT
+        id S1726603AbgEDEBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 23:59:18 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53887 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgEDD7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 23:59:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588564757; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=pZT4ZZHn7pXhJIWWhYwujielHVnvoqjN8CtvF+L9W78=; b=mDsP6kf65zRhPCLlo9aauR8wjSdzpmGTgw7bJYgsbvYPmyXK3Tuct1PmsIAU0FGNoAbx7F4+
- E9BtODduMHppImZ6x5yVD05v7Z+b/8GJJvLY6Z8RqeVGiHLaB5JQrYTwwNMWipv7Lxcz8Y+N
- JjRvmAlq1A9f6y5x81oeJBBEjc0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eaf92fd.7f9c6d778500-smtp-out-n05;
- Mon, 04 May 2020 03:58:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A324FC4478F; Mon,  4 May 2020 03:58:51 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1B3FC433D2;
-        Mon,  4 May 2020 03:58:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1B3FC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Mon, 4 May 2020 09:28:42 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luca Abeni <luca.abeni@santannapisa.it>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Wei Wang <wvw@google.com>, Quentin Perret <qperret@google.com>,
-        Alessio Balsini <balsini@google.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] sched/deadline: Make DL capacity-aware
-Message-ID: <20200504035842.GF19464@codeaurora.org>
-References: <20200427083709.30262-1-dietmar.eggemann@arm.com>
- <20200427083709.30262-6-dietmar.eggemann@arm.com>
- <20200430131036.GE19464@codeaurora.org>
- <aa00aee6-2adb-569b-825b-781da12ad8d3@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aa00aee6-2adb-569b-825b-781da12ad8d3@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 4 May 2020 00:01:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:36806 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbgEDEBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 00:01:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4ADE51FB;
+        Sun,  3 May 2020 21:01:52 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.71.79])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 919B83F71F;
+        Sun,  3 May 2020 21:01:44 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V18 0/2] mm/debug: Add tests validating architecture page table helpers
+Date:   Mon,  4 May 2020 09:31:03 +0530
+Message-Id: <1588564865-31160-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 06:12:07PM +0200, Dietmar Eggemann wrote:
-> On 30/04/2020 15:10, Pavan Kondeti wrote:
-> > On Mon, Apr 27, 2020 at 10:37:08AM +0200, Dietmar Eggemann wrote:
-> >> From: Luca Abeni <luca.abeni@santannapisa.it>
-> 
-> [...]
-> 
-> >> @@ -1653,10 +1654,19 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
-> >>  	 * other hand, if it has a shorter deadline, we
-> >>  	 * try to make it stay here, it might be important.
-> >>  	 */
-> >> -	if (unlikely(dl_task(curr)) &&
-> >> -	    (curr->nr_cpus_allowed < 2 ||
-> >> -	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
-> >> -	    (p->nr_cpus_allowed > 1)) {
-> >> +	select_rq = unlikely(dl_task(curr)) &&
-> >> +		    (curr->nr_cpus_allowed < 2 ||
-> >> +		     !dl_entity_preempt(&p->dl, &curr->dl)) &&
-> >> +		    p->nr_cpus_allowed > 1;
-> >> +
-> >> +	/*
-> >> +	 * Take the capacity of the CPU into account to
-> >> +	 * ensure it fits the requirement of the task.
-> >> +	 */
-> >> +	if (static_branch_unlikely(&sched_asym_cpucapacity))
-> >> +		select_rq |= !dl_task_fits_capacity(p, cpu);
-> >> +
-> >> +	if (select_rq) {
-> >>  		int target = find_later_rq(p);
-> > 
-> > I see that find_later_rq() checks if the previous CPU is part of
-> > later_mask and returns it immediately. So we don't migrate the
-> > task in the case where there previous CPU can't fit the task and
-> > there are no idle CPUs on which the task can fit. LGTM.
-> 
-> Hope I understand you here. I don't think that [patch 6/6] provides this
-> already.
-> 
-> In case 'later_mask' has no fitting CPUs, 'max_cpu' is set in the
-> otherwise empty 'later_mask'. But 'max_cpu' is not necessary task_cpu(p).
-> 
-> Example on Juno [L b b L L L] with thread0-0 (big task)
-> 
->      cpudl_find [thread0-0 2117] orig later_mask=0,3-4 later_mask=0
->   find_later_rq [thread0-0 2117] task_cpu=2 later_mask=0
-> 
-> A tweak could be added favor task_cpu(p) in case it is amongst the CPUs
-> with the maximum capacity in cpudl_find() for the !fit case.
-> 
+This adds a test validation for architecture exported page table helpers.
+Patch adds basic transformation tests at various levels of the page table.
 
-You are right. max_cpu can be other than task_cpu(p) in which case we
-migrate the task though it won't fit on the new CPU. While introducing
-capacity awareness in RT, Quais made the below change to avoid the
-migration. We can do something similar here also.
+This test was originally suggested by Catalin during arm64 THP migration
+RFC discussion earlier. Going forward it can include more specific tests
+with respect to various generic MM functions like THP, HugeTLB etc and
+platform specific tests.
 
-commit b28bc1e002c2 (sched/rt: Re-instate old behavior in select_task_rq_rt())
+https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
 
-> [...]
-> 
-> >> +/*
-> >> + * Verify the fitness of task @p to run on @cpu taking into account the
-> >> + * CPU original capacity and the runtime/deadline ratio of the task.
-> >> + *
-> >> + * The function will return true if the CPU original capacity of the
-> >> + * @cpu scaled by SCHED_CAPACITY_SCALE >= runtime/deadline ratio of the
-> >> + * task and false otherwise.
-> >> + */
-> >> +static inline bool dl_task_fits_capacity(struct task_struct *p, int cpu)
-> >> +{
-> >> +	unsigned long cap = arch_scale_cpu_capacity(cpu);
-> >> +
-> >> +	return cap_scale(p->dl.dl_deadline, cap) >= p->dl.dl_runtime;
-> >> +}
-> >> +
-> > 
-> > This is same as
-> > 
-> > return p->dl.dl_bw >> (BW_SHIFT - SCHED_CAPACITY_SHIFT) <= cap
-> > 
-> > Correct?  If yes, would it be better to use this?
-> 
-> We could use sched_dl_entity::dl_density (dl_runtime / dl_deadline) but
-> then I would have to export BW_SHIFT.
+Needs to be applied on linux V5.7-rc4
 
-Yeah, I meant dl_denstity not dl_bw. Thanks for correcting me. I see that
-BW_SHIFT is defined in kernel/sched/sched.h
+Changes in V18:
 
-Thanks,
-Pavan
+- Stopped enabling CONFIG_DEBUG_VM_PGTABLE via CONFIG_EXPERT
+- Dropped the exclude list (IA64 and ARM) as CONFIG_EXPERT route no longer available
+- Updated CONFIG_DEBUG_VM_PGTABLE's help section as required
+- Updated the commit message for [PATCH 2/2] as required
+
+Changes in V17: (https://patchwork.kernel.org/project/linux-mm/list/?series=274401)
+
+- debug_vm_pgtable() is now called from late_initcall() per Linus
+- Explicitly enable DEBUG_VM_PGTABLE when ARCH_HAS_DEBUG_VM_PGTABLE and DEBUG_VM
+- Added #ifdef documentation per Gerald
+- Dropped page table helper semantics documentation (will be added via later patches)
+- Split the X86 changes defining mm_p4d_folded() into a new prerequisite patch
+
+Changes in V16: (https://patchwork.kernel.org/patch/11431277/)
+
+- Replaced WRITE_ONCE() with set_pte_at() with a new barrier() in pte_clear_tests() per Qian
+- Enabled all powerpc platforms and updated the feature list
+
+Changes in V15: (https://patchwork.kernel.org/patch/11422803/)
+
+- Replaced __pa() with __pa_symbol() (https://patchwork.kernel.org/patch/11407715/) 
+- Replaced pte_alloc_map() with pte_alloc_map_lock() per Qian
+- Replaced pte_unmap() with pte_unmap_unlock() per Qian
+- Added address to pte_clear_tests() and passed it down till pte_clear() per Qian
+
+Changes in V14: (https://patchwork.kernel.org/project/linux-mm/list/?series=242305)
+
+- Disabled DEBUG_VM_PGTABLE for IA64 and ARM (32 Bit) per Andrew and Christophe
+- Updated DEBUG_VM_PGTABLE documentation wrt EXPERT and disabled platforms
+- Updated RANDOM_[OR|NZ]VALUE open encodings with GENMASK() per Catalin
+- Updated s390 constraint bits from 12 to 4 (S390_MASK_BITS) per Gerald
+- Updated in-code documentation for RANDOM_ORVALUE per Gerald
+- Updated pxx_basic_tests() to use invert functions first per Catalin
+- Dropped ARCH_HAS_4LEVEL_HACK check from pud_basic_tests()
+- Replaced __ARCH_HAS_[4|5]LEVEL_HACK with __PAGETABLE_[PUD|P4D]_FOLDED per Catalin
+- Trimmed the CC list on the commit message per Catalin
+
+Changes in V13: (https://patchwork.kernel.org/project/linux-mm/list/?series=237125)
+
+- Subscribed s390 platform and updated debug-vm-pgtable/arch-support.txt per Gerald
+- Dropped keyword 'extern' from debug_vm_pgtable() declaration per Christophe
+- Moved debug_vm_pgtable() declarations to <linux/mmdebug.h> per Christophe
+- Moved debug_vm_pgtable() call site into kernel_init() per Christophe
+- Changed CONFIG_DEBUG_VM_PGTABLE rules per Christophe
+- Updated commit to include new supported platforms and changed config selection
+
+Changes in V12: (https://patchwork.kernel.org/project/linux-mm/list/?series=233905)
+
+- Replaced __mmdrop() with mmdrop()
+- Enable ARCH_HAS_DEBUG_VM_PGTABLE on X86 for non CONFIG_X86_PAE platforms as the
+  test procedure interfere with pre-allocated PMDs attached to the PGD resulting
+  in runtime failures with VM_BUG_ON()
+
+Changes in V11: (https://patchwork.kernel.org/project/linux-mm/list/?series=221135)
+
+- Rebased the patch on V5.4
+
+Changes in V10: (https://patchwork.kernel.org/project/linux-mm/list/?series=205529)
+
+- Always enable DEBUG_VM_PGTABLE when DEBUG_VM is enabled per Ingo
+- Added tags from Ingo
+
+Changes in V9: (https://patchwork.kernel.org/project/linux-mm/list/?series=201429)
+
+- Changed feature support enumeration for powerpc platforms per Christophe
+- Changed config wrapper for basic_[pmd|pud]_tests() to enable ARC platform
+- Enabled the test on ARC platform
+
+Changes in V8: (https://patchwork.kernel.org/project/linux-mm/list/?series=194297)
+
+- Enabled ARCH_HAS_DEBUG_VM_PGTABLE on PPC32 platform per Christophe
+- Updated feature documentation as DEBUG_VM_PGTABLE is now enabled on PPC32 platform
+- Moved ARCH_HAS_DEBUG_VM_PGTABLE earlier to indent it with DEBUG_VM per Christophe
+- Added an information message in debug_vm_pgtable() per Christophe
+- Dropped random_vaddr boundary condition checks per Christophe and Qian
+- Replaced virt_addr_valid() check with pfn_valid() check in debug_vm_pgtable()
+- Slightly changed pr_fmt(fmt) information
+
+Changes in V7: (https://patchwork.kernel.org/project/linux-mm/list/?series=193051)
+
+- Memory allocation and free routines for mapped pages have been droped
+- Mapped pfns are derived from standard kernel text symbol per Matthew
+- Moved debug_vm_pgtaable() after page_alloc_init_late() per Michal and Qian 
+- Updated the commit message per Michal
+- Updated W=1 GCC warning problem on x86 per Qian Cai
+- Addition of new alloc_contig_pages() helper has been submitted separately
+
+Changes in V6: (https://patchwork.kernel.org/project/linux-mm/list/?series=187589)
+
+- Moved alloc_gigantic_page_order() into mm/page_alloc.c per Michal
+- Moved alloc_gigantic_page_order() within CONFIG_CONTIG_ALLOC in the test
+- Folded Andrew's include/asm-generic/pgtable.h fix into the test patch 2/2
+
+Changes in V5: (https://patchwork.kernel.org/project/linux-mm/list/?series=185991)
+
+- Redefined and moved X86 mm_p4d_folded() into a different header per Kirill/Ingo
+- Updated the config option comment per Ingo and dropped 'kernel module' reference
+- Updated the commit message and dropped 'kernel module' reference
+- Changed DEBUG_ARCH_PGTABLE_TEST into DEBUG_VM_PGTABLE per Ingo
+- Moved config option from mm/Kconfig.debug into lib/Kconfig.debug
+- Renamed core test function arch_pgtable_tests() as debug_vm_pgtable()
+- Renamed mm/arch_pgtable_test.c as mm/debug_vm_pgtable.c
+- debug_vm_pgtable() gets called from kernel_init_freeable() after init_mm_internals()
+- Added an entry in Documentation/features/debug/ per Ingo
+- Enabled the test on arm64 and x86 platforms for now
+
+Changes in V4: (https://patchwork.kernel.org/project/linux-mm/list/?series=183465)
+
+- Disable DEBUG_ARCH_PGTABLE_TEST for ARM and IA64 platforms
+
+Changes in V3: (https://lore.kernel.org/patchwork/project/lkml/list/?series=411216)
+
+- Changed test trigger from module format into late_initcall()
+- Marked all functions with __init to be freed after completion
+- Changed all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded()
+- Folded in PPC32 fixes from Christophe
+
+Changes in V2:
+
+https://lore.kernel.org/linux-mm/1568268173-31302-1-git-send-email-anshuman.khandual@arm.com/T/#t
+
+- Fixed small typo error in MODULE_DESCRIPTION()
+- Fixed m64k build problems for lvalue concerns in pmd_xxx_tests()
+- Fixed dynamic page table level folding problems on x86 as per Kirril
+- Fixed second pointers during pxx_populate_tests() per Kirill and Gerald
+- Allocate and free pte table with pte_alloc_one/pte_free per Kirill
+- Modified pxx_clear_tests() to accommodate s390 lower 12 bits situation
+- Changed RANDOM_NZVALUE value from 0xbe to 0xff
+- Changed allocation, usage, free sequence for saved_ptep
+- Renamed VMA_FLAGS as VMFLAGS
+- Implemented a new method for random vaddr generation
+- Implemented some other cleanups
+- Dropped extern reference to mm_alloc()
+- Created and exported new alloc_gigantic_page_order()
+- Dropped the custom allocator and used new alloc_gigantic_page_order()
+
+Changes in V1:
+
+https://lore.kernel.org/linux-mm/1567497706-8649-1-git-send-email-anshuman.khandual@arm.com/
+
+- Added fallback mechanism for PMD aligned memory allocation failure
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-mm/1565335998-22553-1-git-send-email-anshuman.khandual@arm.com/T/#u
+
+- Moved test module and it's config from lib/ to mm/
+- Renamed config TEST_ARCH_PGTABLE as DEBUG_ARCH_PGTABLE_TEST
+- Renamed file from test_arch_pgtable.c to arch_pgtable_test.c
+- Added relevant MODULE_DESCRIPTION() and MODULE_AUTHOR() details
+- Dropped loadable module config option
+- Basic tests now use memory blocks with required size and alignment
+- PUD aligned memory block gets allocated with alloc_contig_range()
+- If PUD aligned memory could not be allocated it falls back on PMD aligned
+  memory block from page allocator and pud_* tests are skipped
+- Clear and populate tests now operate on real in memory page table entries
+- Dummy mm_struct gets allocated with mm_alloc()
+- Dummy page table entries get allocated with [pud|pmd|pte]_alloc_[map]()
+- Simplified [p4d|pgd]_basic_tests(), now has random values in the entries
+
+Original RFC V1:
+
+https://lore.kernel.org/linux-mm/1564037723-26676-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: x86@kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+
+Anshuman Khandual (2):
+  x86/mm: Define mm_p4d_folded()
+  mm/debug: Add tests validating architecture page table helpers
+
+ .../debug/debug-vm-pgtable/arch-support.txt   |  34 ++
+ arch/arc/Kconfig                              |   1 +
+ arch/arm64/Kconfig                            |   1 +
+ arch/powerpc/Kconfig                          |   1 +
+ arch/s390/Kconfig                             |   1 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/include/asm/pgtable_64.h             |   6 +
+ lib/Kconfig.debug                             |  22 +
+ mm/Makefile                                   |   1 +
+ mm/debug_vm_pgtable.c                         | 382 ++++++++++++++++++
+ 10 files changed, 450 insertions(+)
+ create mode 100644 Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+ create mode 100644 mm/debug_vm_pgtable.c
+
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.20.1
+
