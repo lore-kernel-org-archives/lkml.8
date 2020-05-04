@@ -2,123 +2,74 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C516C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A372C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 048FD20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3A120705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BL3jxcs7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d4W2iGCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgEDOAj (ORCPT
+        id S1728886AbgEDOAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728168AbgEDN74 (ORCPT
+        Mon, 4 May 2020 10:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728168AbgEDOAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:59:56 -0400
+        Mon, 4 May 2020 10:00:44 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A2AC061BD3;
-        Mon,  4 May 2020 06:59:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02D6C061A0E;
+        Mon,  4 May 2020 07:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=PThi5otuSmIv87sVwtTG8nfMFGAV/tBkGdHRgwma/LQ=; b=BL3jxcs71vRIL+nXcJX7p3KpN6
-        ZzayRxIQB6ZjYs2/yM5g/kZI1QxtkFtVxM4EliiaqVnQBLnzzGHZVMr3z7nNNVNUipPK9+pS08U7b
-        c3lfxqAp7itiR+nnUk59aT0UfH5Ik9+JNxCHRcTU/hQaEd0vg1gwwlomzR5VTeS5qRVv0gWFxNc9q
-        8Db3JlT2fOfErwjbD4NHyiOFmqs3yO5lgEIFtU1/ZkBHerm/c7DRWklYi9ynLc24RAiM6/ytSdV5Q
-        aPlIgg/Sk9k8/SFTYr6ZeLCzO/8Fh+pZG9R7g/A8+hRNBDVemLC7MnglZUBBTpp6aCUrsFR/mJGF+
-        Jsau9qnQ==;
-Received: from [2001:4bb8:18c:10bd:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVbdH-0007Zx-Js; Mon, 04 May 2020 13:59:43 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Tim Waugh <tim@cyberelk.net>, Borislav Petkov <bp@alien8.de>,
-        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] hfs: stop using ioctl_by_bdev
-Date:   Mon,  4 May 2020 15:59:24 +0200
-Message-Id: <20200504135927.2835750-6-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504135927.2835750-1-hch@lst.de>
-References: <20200504135927.2835750-1-hch@lst.de>
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wqRs4xFR7Bb6dZZZor/oQuuXpGGQ7dzVkmMwy13+NkU=; b=d4W2iGCpJ162OipZVbL4uSrYd9
+        32qjCj0tTVdPZTO+AI62NhxVpzyJW7I7i/rKKlDzqVxKWzH/bxUl/Tz0tKvs8/yz/LMSilgyynFIH
+        iw4K18nF0VxBil3g1mKt96K8n7vAi803N2ggKToZ2K+UJ2kcRCjpuJLDPiLyACUOPvMp73tD5lhGb
+        JIHWjIU9EVVIn5MGawtsjxd+8q8BcUCrJyoz/xjmKUmwR9l8HsriXvrX3voQ04Ycqn05HR/FegjNn
+        sPrOB25PBY7JioUawa5V4tUtMta5qufcW3vv5nIrY5+a1nKuxjDUXsB8+lGqdcRFoSe0kKUlH3aFj
+        XvD2sfTw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVbeG-0001tc-2P; Mon, 04 May 2020 14:00:44 +0000
+Date:   Mon, 4 May 2020 07:00:44 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH 1/4] block/part_stat: remove rcu_read_lock() from
+ part_stat_lock()
+Message-ID: <20200504140044.GA29020@infradead.org>
+References: <158859896942.19836.15240144203131230746.stgit@buzz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158859896942.19836.15240144203131230746.stgit@buzz>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead just call the CDROM layer functionality directly.
+On Mon, May 04, 2020 at 04:29:29PM +0300, Konstantin Khlebnikov wrote:
+> RCU lock is required only in blk_account_io_start() to lookup partition.
+> After that request holds reference to related hd_struct.
+> 
+> Replace get_cpu() with preempt_disable() - returned cpu index is unused.
+> 
+> Non-SMP case also needs preempt_disable, otherwise statistics update could
+> be non-atomic. Previously that was provided by rcu_read_lock().
+> 
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+
+Looks good,
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/hfs/mdb.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/fs/hfs/mdb.c b/fs/hfs/mdb.c
-index 460281b1299eb..cdf0edeeb2781 100644
---- a/fs/hfs/mdb.c
-+++ b/fs/hfs/mdb.c
-@@ -32,29 +32,35 @@
- static int hfs_get_last_session(struct super_block *sb,
- 				sector_t *start, sector_t *size)
- {
--	struct cdrom_multisession ms_info;
--	struct cdrom_tocentry te;
--	int res;
-+	struct cdrom_device_info *cdi = disk_to_cdi(sb->s_bdev->bd_disk);
- 
- 	/* default values */
- 	*start = 0;
- 	*size = i_size_read(sb->s_bdev->bd_inode) >> 9;
- 
- 	if (HFS_SB(sb)->session >= 0) {
-+		struct cdrom_tocentry te;
-+	
-+		if (!cdi)
-+			return -EINVAL;
-+
- 		te.cdte_track = HFS_SB(sb)->session;
- 		te.cdte_format = CDROM_LBA;
--		res = ioctl_by_bdev(sb->s_bdev, CDROMREADTOCENTRY, (unsigned long)&te);
--		if (!res && (te.cdte_ctrl & CDROM_DATA_TRACK) == 4) {
--			*start = (sector_t)te.cdte_addr.lba << 2;
--			return 0;
-+		if (cdrom_read_tocentry(cdi, &te) ||
-+		    (te.cdte_ctrl & CDROM_DATA_TRACK) != 4) {
-+			pr_err("invalid session number or type of track\n");
-+			return -EINVAL;
- 		}
--		pr_err("invalid session number or type of track\n");
--		return -EINVAL;
-+
-+		*start = (sector_t)te.cdte_addr.lba << 2;
-+	} else if (cdi) {
-+		struct cdrom_multisession ms_info;
-+
-+		ms_info.addr_format = CDROM_LBA;
-+		if (cdrom_multisession(cdi, &ms_info) == 0 && ms_info.xa_flag)
-+			*start = (sector_t)ms_info.addr.lba << 2;
- 	}
--	ms_info.addr_format = CDROM_LBA;
--	res = ioctl_by_bdev(sb->s_bdev, CDROMMULTISESSION, (unsigned long)&ms_info);
--	if (!res && ms_info.xa_flag)
--		*start = (sector_t)ms_info.addr.lba << 2;
-+
- 	return 0;
- }
- 
--- 
-2.26.2
-
+although I wonder if we should just kill off part_stat_lock and
+part_stat_unlock.
