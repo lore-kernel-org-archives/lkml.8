@@ -2,133 +2,97 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCD9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B9DC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C90F206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gnaxHkTW"
+	by mail.kernel.org (Postfix) with ESMTP id F09422087E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588615696;
+	bh=l+KK+/FOSyJrk8cynsjAzoOlsSuvU8t2q1eoOf25UcU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CxS/qUu7TC0UMvf6pr0spUh3L2abK3UxDe4wm3oiB2OhWkR3xLJI8v4Y4DUxWRmdv
+	 F6XUWf4qZ0GJYS7QrS6PsVGi2l4/tMXXIxzbYVyYCs4fyh/TKikzAXOqdMu257XNoW
+	 8AdS29oHdHaOxkuhbRO310efnALLPQrvMjhYkBI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732223AbgEDSIN (ORCPT
+        id S1732235AbgEDSIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732231AbgEDSIH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:08:07 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139EBC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:08:07 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id i14so444788qka.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:08:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8lqlcqzLSXs6kQK5WzXKsA6SXfOJlZ0T+LEde0fpTBU=;
-        b=gnaxHkTW0xp32Dnjn0U3/jhSQEoLB3QVuJZRpwpZQqGjQpILV2SWkM0bQgd73dRrsh
-         V/J7zKNRB3rG2HTqPTTN47hpUnZBw81Uv14JodvK3TSNjF1447WH41WQOwua+88IdE35
-         RQ58FtnvDfzr+hliOFTTwbzGh4QByFIFewB78=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8lqlcqzLSXs6kQK5WzXKsA6SXfOJlZ0T+LEde0fpTBU=;
-        b=abGv1Cix+6TUgAiePRi396lePJTa54C4OixEJ1ce1Q0SXrPaHMg+XjBDiamFlI5ubt
-         beR+BAeHIpJvSeeX0Qc06zQyo1Mf98gqwyMlTIofz4iD4W+QqYWag6PGs03hUADy5pvP
-         IY/APzsupiwhYiZWTPrHkw8MlF5tfFs3kLLoEIbHvQeC1jJarxRurfQ5MxL6bIPz6iV4
-         zIoiGl0IMFJ1qM6MiPfNRP40m/rpUWLCada5MA5qc7M4xrDP31LnyaGZ6XHkrT//fCmi
-         i955xRUTY8AHQ3NAUDTTsIeBrfuL17t4ISqiLHVliYqmnxyRAdKZljvReyUGPg7l33LS
-         y6Sg==
-X-Gm-Message-State: AGi0PuZKgQYRqeyaNO0JZsFsaz+IvQn51z65CIaAcH/jaD05sFja/cew
-        VzYqRyxTbtbMGaWF7po28ygAQQ==
-X-Google-Smtp-Source: APiQypI5eZszvopLJuDAZRuwCkGzdKXSDC/oOtdUeAQZtCszD77WvOxRYkXISoFQHLqf83/FhKwcrg==
-X-Received: by 2002:a37:809:: with SMTP id 9mr468583qki.93.1588615686148;
-        Mon, 04 May 2020 11:08:06 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g16sm8606827qkk.122.2020.05.04.11.08.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 11:08:05 -0700 (PDT)
-Date:   Mon, 4 May 2020 14:08:05 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-Message-ID: <20200504180805.GA172409@google.com>
-References: <20200428205903.61704-1-urezki@gmail.com>
- <20200428205903.61704-10-urezki@gmail.com>
- <20200501212749.GD7560@paulmck-ThinkPad-P72>
- <20200504124323.GA17577@pc636>
- <20200504152437.GK2869@paulmck-ThinkPad-P72>
- <20200504174822.GA20446@pc636>
+        Mon, 4 May 2020 14:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39218 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732223AbgEDSIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:08:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2267206B8;
+        Mon,  4 May 2020 18:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588615681;
+        bh=l+KK+/FOSyJrk8cynsjAzoOlsSuvU8t2q1eoOf25UcU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EoJCL+CwkyQYLDjJjb76XinHy7vVRyoWgEjCrvP7ZujzjJRpt4jcZaf5JllDeqte0
+         G7Me66JCImlMP1j9kEOx0fmekmmy5KI97WxWIdmupF2W6Cur7J1BRxkcZNfPs+oJSl
+         WJe/KlNf/zMAXXR9BTmS3KpmgG95slTvfexFOgMI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.6 45/73] RDMA/mlx4: Initialize ib_spec on the stack
+Date:   Mon,  4 May 2020 19:57:48 +0200
+Message-Id: <20200504165508.776092488@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504174822.GA20446@pc636>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 07:48:22PM +0200, Uladzislau Rezki wrote:
-> On Mon, May 04, 2020 at 08:24:37AM -0700, Paul E. McKenney wrote:
-[..] 
-> > > > Presumably the list can also be accessed without holding this lock,
-> > > > because otherwise we shouldn't need llist...
-> > > > 
-> > > Hm... We increase the number of elements in cache, therefore it is not
-> > > lockless. From the other hand i used llist_head to maintain the cache
-> > > because it is single linked list, we do not need "*prev" link. Also
-> > > we do not need to init the list.
-> > > 
-> > > But i can change it to list_head. Please let me know if i need :)
-> > 
-> > Hmmm...  Maybe it is time for a non-atomic singly linked list?  In the RCU
-> > callback processing, the operations were open-coded, but they have been
-> > pushed into include/linux/rcu_segcblist.h and kernel/rcu/rcu_segcblist.*.
-> > 
-> > Maybe some non-atomic/protected/whatever macros in the llist.h file?
-> > Or maybe just open-code the singly linked list?  (Probably not the
-> > best choice, though.)  Add comments stating that the atomic properties
-> > of the llist functions aren't neded?  Something else?
-> >
-> In order to keep it simple i can replace llist_head by the list_head?
+From: Alaa Hleihel <alaa@mellanox.com>
 
-Just to clarify for me, what is the disadvantage of using llist here?
+commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c upstream.
 
-Since we don't care about traversing backwards, isn't it better to use llist
-for this usecase?
+Initialize ib_spec on the stack before using it, otherwise we will have
+garbage values that will break creating default rules with invalid parsing
+error.
 
-I think Vlad is using locking as we're also tracking the size of the llist to
-know when to free pages. This tracking could suffer from the lost-update
-problem without any locking, 2 lockless llist_add happened simulatenously.
+Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
+Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Also if list_head is used, it will take more space and still use locking.
+---
+ drivers/infiniband/hw/mlx4/main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thoughts?
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1502,8 +1502,9 @@ static int __mlx4_ib_create_default_rule
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
++		union ib_flow_spec ib_spec = {};
+ 		int ret;
+-		union ib_flow_spec ib_spec;
++
+ 		switch (pdefault_rules->rules_create_list[i]) {
+ 		case 0:
+ 			/* no rule */
 
-thanks,
 
- - Joel
-
-> > 
-> > The comments would be a good start.  Just to take pity on people seeing
-> > the potential for concurrency and wondering how the concurrent accesses
-> > actually happen.  ;-)
-> > 
-> Sounds like you are kidding me :) 
-> 
-> --
-> Vlad Rezki
