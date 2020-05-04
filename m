@@ -2,273 +2,127 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB63C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740D7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFA0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7E02068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="oNKiQeOe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ngd+sBI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgEDLz2 (ORCPT
+        id S1728615AbgEDL4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:55:28 -0400
-Received: from mail-bn8nam11on2085.outbound.protection.outlook.com ([40.107.236.85]:22592
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728612AbgEDLz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:55:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ch3Oo2klE1LVxcbvaqpnk7DrnZyaxsiMNLii32d3XKR8O3r86Gnkbof0jvLhh2U1oMk13K5aNMlwhxJyLEgG+SlvtELK6kgWc2qAKsj22/lOxSBbRkyVjJoLAFuZlRLOXZqqPYL5nutTiYSFZzoJZbT+FAN1UwzIevIqwDnCdbqsipD64SBMedlWn8+joVuCL61WKpkr0mSpdPutnkwQ6OYONfwWuiRbyEsRbYmDb6Ps/3YSbFSxH+a9jBSNJaZGjTeiynhboF4bJnaXK1uZV/X3Jo59ipsJ15E6zoyfKa41VRwJ50HkxnuRK4zOYCWhzYN5Tyq7awFGZ03dsSJjWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zPyz/NmNrQ/i871oBzMYzTzXCR5jMUR8h+gOdrhEUcY=;
- b=nwSGBlXCrCwozln04p3AEdHn0iO4GEqJwMUdDycCoLqxqWRqkWP9zo7nTpBWwYwxpD1bidz2FCzSlChHYTPvHpYqi+9FL4TwpaNGNpdPLsLuUT2TP/GL4Hrdp3J23lM9jVyfWkFBne1aus8lcazLuJAKg0pBcPHLTnf/i/vrKB2YW4+kJKYDaw9R2cm+iMfas9RaOHcfmUD5evbugFG9da5zaPxHKxuF9Xds4hkbgn/r6IYz6FJk1grqe1of8QEWvL3G8d1jmzZQk0H7wJhEtNeFRZPbrBbNsTUrOlwAjKgniD7vJclnzUyS655gngORvIBj4PXpeB67+ED3vLv/lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Mon, 4 May 2020 07:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726756AbgEDL4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:56:39 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2EFAC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 04:56:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y25so5372476pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 04:56:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zPyz/NmNrQ/i871oBzMYzTzXCR5jMUR8h+gOdrhEUcY=;
- b=oNKiQeOe44SlC8iQi+PqrE8lsl33hHiZSEWndKW1/6K5vgX+T2QUdXI09MTWbRbEc/7/oLbUiRjoUKOxDmDb1+qhAZeKpLapGGqRmVAC6tjRIMMxkavF+NjiSgXTZr/IibGmE/ArcpHKQJJKUJFiSLXjs6gL1Dx8WuRWgwFidqE=
-Received: from DM6PR02MB5386.namprd02.prod.outlook.com (2603:10b6:5:75::25) by
- DM6PR02MB6124.namprd02.prod.outlook.com (2603:10b6:5:1fb::26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.19; Mon, 4 May 2020 11:55:24 +0000
-Received: from DM6PR02MB5386.namprd02.prod.outlook.com
- ([fe80::2cd7:4680:9cd4:f51b]) by DM6PR02MB5386.namprd02.prod.outlook.com
- ([fe80::2cd7:4680:9cd4:f51b%7]) with mapi id 15.20.2958.027; Mon, 4 May 2020
- 11:55:24 +0000
-From:   Nava kishore Manne <navam@xilinx.com>
-To:     Moritz Fischer <mdf@kernel.org>
-CC:     Michal Simek <michals@xilinx.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
-Subject: RE: [PATCH 2/2] fpga: zynq: Add AFI config driver
-Thread-Topic: [PATCH 2/2] fpga: zynq: Add AFI config driver
-Thread-Index: AQHWExAhzZUocH0/3EuatlmWIllh3KiGGIAAgBHUQYA=
-Date:   Mon, 4 May 2020 11:55:23 +0000
-Message-ID: <DM6PR02MB5386D0632A60A9C056DB31E6C2A60@DM6PR02MB5386.namprd02.prod.outlook.com>
-References: <1586946290-7280-1-git-send-email-nava.manne@xilinx.com>
- <1586946290-7280-2-git-send-email-nava.manne@xilinx.com>
- <20200423032854.GB2430@epycbox.lan>
-In-Reply-To: <20200423032854.GB2430@epycbox.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b0f4afc2-5634-4446-3064-08d7f022076d
-x-ms-traffictypediagnostic: DM6PR02MB6124:|DM6PR02MB6124:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR02MB6124DDEE5717F6BF924E0E23C2A60@DM6PR02MB6124.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:335;
-x-forefront-prvs: 03932714EB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5JDiXkM3QMonhhdpFgVP06xWP8KofBI7jSWVHsyY5LrMcgUFNE8EwtUSGdGQRmPu5HfyLtbMxboE0HQo/FCv8qZHYc8Rvbi3AbVx8RmN31LXuTNh30ToDfn7XjqOD6fDrzqmH/IIHqIlnolIfkJRGkwn10e3AfKSD1ZVVYA+DOfIgeEQ1Os45MAkQ7NMdH7u53MTTWQn/VVBApcRrGnF8gMmOGeW5MGNmp74OAQpVZY1Fr+/SVyXG6KtuhjunStqi42MUBUUvF4n4smhztjvyA+9odMg18Y3VHDkhyJAhMc7pvAtUUU/j6FIvsZGvG2IpbFj4q9ouFTBHcGg7BcvfqG83GnUYxFBoV/Kxp+A8WeYOyBcZOIk3jk6g9pyPuonofrN5haaCveGBz6iyXaDWOj3jOwmKrGg3k7tcv5c2mzV8kvJ5zy7UrTffaVenMvl
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB5386.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(376002)(396003)(136003)(346002)(186003)(33656002)(5660300002)(76116006)(53546011)(6506007)(66476007)(54906003)(7696005)(71200400001)(66946007)(26005)(66556008)(64756008)(66446008)(6916009)(86362001)(4326008)(9686003)(478600001)(8936002)(55016002)(8676002)(2906002)(316002)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: CZklHfAIogbZTMzhBAwfzoqbmOEdHb0Rr5QkRXZbaLu6ru/ZQXA7uQUQmF+G+5+COd7BKqB9O+9GNYUsepCkClXlCFP/KfVpyMQs3dvLNRCx6o/stIEx3LmjzNt3wlXLwmSlLijDQAmDp/sDBmxlp/jdFv88i2zkRZwnkAp1wQXTko8r9pIU5wc9KxHZAqqBt3HGSHvw9OdNAQDgTh+NTIi/4St9bWHV/lxXpkt7r9h2yhkA5LL4nk8jjIYGgXXD4DGC6VLDgizTZp+1qG2xS1ggB8ybLt+CGuE5RXFHKpOU5esXoYN1/vOz9kPJvNHlEZsPDuBrHOI+98PZlCpPAyWOyRvxvv4yC9gRJlN8CrIHyuulhA8EyWqwbYCHhl8CvHdgsNcI/3Y5zkVRZZM9cNnN7J4Iimvure3753xhkmewfEc32jl4jJPPkHNgr+w7vhIczJZCqRcmHdcTJN8NAxjbvIafhlcg1VnROwIs5suM+EK743essU92s1+bl8z5wpKA1V2bdlz5SAtOgu98x6GcTSMtAN/P/e3nA0YhMQLzwNvh9dlDJijLXUsZbTIuJLu0c9DUIrnMCZyQcxAwrtU1HsLUxmZkOUQAdIjEH1SDlTbXK4Onazk4kvcdRSlTXzDuCAyRN9bCrUA/3RPDJ62XV4FfHh/RFXYw9PmwBx5MQA98wMiZq1aAslGWvDH32TtP7AHG8iQ5xx+Nda43MNH4apB4qM5th0MxeeHTGV1goAuLnNBvSm5L1iJmFkYwmseJXKxdM0icJIjyo/IxfasBhnjXz/E7Yv8OCCtr2Kw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0f4afc2-5634-4446-3064-08d7f022076d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2020 11:55:23.9047
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sPJ0N7iD6XgGiDLPYOCDvf3JboEu+lIZklAYYA11OwXpECIq3DlFHiSFcDjxJ7a88L3vWzsdPMBMxgogtYXGOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6124
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=E/O/xlSGOBaRIcRWlWmBws8CpSsXMJGISjIPWe4h7js=;
+        b=ngd+sBI4q9GztVXWyhv9u/d2H1/CxJIw+a63h0woPZPHqRYtaEMRyoTABmtAEpBk7w
+         gGpg1reWhWTDlAxQ/uFzDU16JAz7HqudOL/ysc8AA3xH8ZeGfiGk9F1nbnRVEFz94TMP
+         o3sjN5FlskSywRbv9BHUMPuGQve3A4t3wYWbLZJapZi+PU5KopwfUKP8PUe7fLQMcxDQ
+         MH8uuLxG8rwxyg44NBAL6Y58q5Y8YOoYE4Up7rc/dDtDCpr1FYRng3GNcAXLsrjJKxqn
+         D9WMQUwlH/2lM4IITPHx380hoWMq+PHzAxg1uZaXC7nUPnl4VIA16jHBJvEBMvBURw3N
+         V/Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=E/O/xlSGOBaRIcRWlWmBws8CpSsXMJGISjIPWe4h7js=;
+        b=S5YU0bEntTNTFpFhzeCkVfNc1OMgWJtV3QoUz16FYGZylwXeDGx4pbdgZ5dNktfU/y
+         HQdFGXd02AopkxukQH0FZ7W/aHvqebvA3fC4reYysd8vp9KYJNeZs1FaTwNjuuWCxOa7
+         iWKgWTdl1bX0iCvWrtXKGMsSj71a0n4vm/HlrVmmjXo9d0gmdOhfWwWaA2axTb06AkcN
+         dRF/0r60NoVct48F35xYJA4Chf8BsQrtVRb5l680C34DIerKVNjphcFjTAWZAlBkhp1+
+         x/+PEkeBcm/yocnLvrmqN2rDniPV9TzorWYNPWqksrTdkDQkYVAwbjdGHvRoEOaMHkcI
+         IdWg==
+X-Gm-Message-State: AGi0PuaPo9GxjUpSlJyWTgUDW0BTu69E2dBXutiej1ynABBKI7hM1GDD
+        Je180zHDJGeQFbdoFXS1vAMdFg==
+X-Google-Smtp-Source: APiQypIBTkeD1NgnxriwtF7GJh8g6aRYPENbMctnD2pRVoMa4Dnc/oOm1I4oIFUtEG/jJvssWE19jQ==
+X-Received: by 2002:a63:df54:: with SMTP id h20mr16304752pgj.169.1588593398370;
+        Mon, 04 May 2020 04:56:38 -0700 (PDT)
+Received: from localhost ([2400:8904::f03c:91ff:fe8a:bbe4])
+        by smtp.gmail.com with ESMTPSA id o63sm7014010pjb.40.2020.05.04.04.56.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 May 2020 04:56:37 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Al Grant <al.grant@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v7 0/3] perf arm-spe: Add support for synthetic events
+Date:   Mon,  4 May 2020 19:56:22 +0800
+Message-Id: <20200504115625.12589-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mortiz,
+This patch set is to support synthetic events with enabling Arm SPE
+decoder.  Since before Xiaojun Tan (Hisilicon) and James Clark (Arm)
+have contributed much for this task, so this patch set is based on their
+privous work and polish for the version 7.
 
-Thanks for proving the comments.
-Please find my response inline.
+The main work in this version is to polished the core patch "perf
+arm-spe: Support synthetic events", e.g. rewrite the code to calculate
+ip, packet generation for multiple types (L1 data cache, Last level
+cache, TLB, remote access, etc).  It also heavily refactors code for
+data structure and program flow, which removed unused fields in
+structure and polished the program flow to achieve neat code as
+possible.
 
-> -----Original Message-----
-> From: Moritz Fischer [mailto:mdf@kernel.org]
-> Sent: Thursday, April 23, 2020 8:59 AM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: mdf@kernel.org; Michal Simek <michals@xilinx.com>; linux-
-> fpga@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; chinnikishore369@gmail.com
-> Subject: Re: [PATCH 2/2] fpga: zynq: Add AFI config driver
->=20
-> Hi Nava,
->=20
-> On Wed, Apr 15, 2020 at 03:54:50PM +0530, Nava kishore Manne wrote:
-> > This patch Adds AFI config driver. This is useful for the PS to PL
-> > configuration for the fpga manager On zynq platform.
-> >
-> > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > ---
-> >  drivers/fpga/Kconfig    |  8 +++++
-> >  drivers/fpga/Makefile   |  1 +
-> >  drivers/fpga/zynq-afi.c | 81
-> > +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 90 insertions(+)
-> >  create mode 100644 drivers/fpga/zynq-afi.c
-> >
-> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
-> > 474f304e..60982a0 100644
-> > --- a/drivers/fpga/Kconfig
-> > +++ b/drivers/fpga/Kconfig
-> > @@ -214,4 +214,12 @@ config FPGA_MGR_ZYNQMP_FPGA
-> >  	  to configure the programmable logic(PL) through PS
-> >  	  on ZynqMP SoC.
-> >
-> > +config FPGA_MGR_ZYNQ_AFI_FPGA
-> > +	bool "Xilinx AFI FPGA"
-> > +	depends on FPGA_MGR_ZYNQ_FPGA
-> Curious. How does this dependency play in here?
-> > +	help
-> > +	  Zynq AFI driver support for writing to the AFI registers
-> > +	  for configuring the PS_PL interface. For some of the bitstream
-> > +	  or designs to work the PS to PL interfaces need to be configured
-> > +	  like the data bus-width etc.
-> >  endif # FPGA
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile index
-> > 312b937..d115e29 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -26,6 +26,7 @@ obj-$(CONFIG_FPGA_BRIDGE)		+=3D fpga-
-> bridge.o
-> >  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+=3D altera-hps2fpga.o altera-
-> fpga2sdram.o
-> >  obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+=3D altera-freeze-bridge.o
-> >  obj-$(CONFIG_XILINX_PR_DECOUPLER)	+=3D xilinx-pr-decoupler.o
-> > +obj-$(CONFIG_FPGA_MGR_ZYNQ_AFI_FPGA)	+=3D zynq-afi.o
-> >
-> >  # High Level Interfaces
-> >  obj-$(CONFIG_FPGA_REGION)		+=3D fpga-region.o
-> > diff --git a/drivers/fpga/zynq-afi.c b/drivers/fpga/zynq-afi.c new
-> > file mode 100644 index 0000000..7ce0d08
-> > --- /dev/null
-> > +++ b/drivers/fpga/zynq-afi.c
-> > @@ -0,0 +1,81 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Xilinx FPGA AFI driver.
-> > + * Copyright (c) 2018 Xilinx Inc.
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +/* Registers and special values for doing register-based operations */
-> > +#define AFI_RDCHAN_CTRL_OFFSET	0x00
-> > +#define AFI_WRCHAN_CTRL_OFFSET	0x14
-> > +
-> > +#define AFI_BUSWIDTH_MASK	0x01
-> > +
-> > +/**
-> > + * struct afi_fpga - AFI register description
-> > + * @membase:	pointer to register struct
-> > + * @afi_width:	AFI bus width to be written
-> > + */
-> > +struct zynq_afi_fpga {
-> > +	void __iomem	*membase;
-> > +	u32		afi_width;
-> > +};
-> > +
-> > +static int zynq_afi_fpga_probe(struct platform_device *pdev) {
-> > +	struct zynq_afi_fpga *afi_fpga;
-> > +	struct resource *res;
-> > +	u32 reg_val;
-> > +	u32 val;
-> > +
-> > +	afi_fpga =3D devm_kzalloc(&pdev->dev, sizeof(*afi_fpga), GFP_KERNEL);
-> > +	if (!afi_fpga)
-> > +		return -ENOMEM;
-> > +
-> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	afi_fpga->membase =3D devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(afi_fpga->membase))
-> > +		return PTR_ERR(afi_fpga->membase);
-> > +
-> > +	val =3D device_property_read_u32(&pdev->dev, "xlnx,afi-width",
-> > +				       &afi_fpga->afi_width);
-> > +	if (val) {
-> > +		dev_err(&pdev->dev, "Fail to get the afi bus width\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	reg_val =3D readl(afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
-> > +	reg_val &=3D ~AFI_BUSWIDTH_MASK;
-> > +	writel(reg_val | afi_fpga->afi_width,
-> > +	       afi_fpga->membase + AFI_RDCHAN_CTRL_OFFSET);
-> > +	reg_val =3D readl(afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
-> > +	reg_val &=3D ~AFI_BUSWIDTH_MASK;
-> > +	writel(reg_val | afi_fpga->afi_width,
-> > +	       afi_fpga->membase + AFI_WRCHAN_CTRL_OFFSET);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id zynq_afi_fpga_ids[] =3D {
-> > +	{ .compatible =3D "xlnx,zynq-afi-fpga" },
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, zynq_afi_fpga_ids);
-> > +
-> > +static struct platform_driver zynq_afi_fpga_driver =3D {
-> > +	.driver =3D {
-> > +		.name =3D "zynq-afi-fpga",
-> > +		.of_match_table =3D zynq_afi_fpga_ids,
-> > +	},
-> > +	.probe =3D zynq_afi_fpga_probe,
-> > +};
-> > +module_platform_driver(zynq_afi_fpga_driver);
-> > +
-> > +MODULE_DESCRIPTION("ZYNQ FPGA AFI module");
-> MODULE_AUTHOR("Nava
-> > +kishore Manne <nava.manne@xilinx.com>"); MODULE_LICENSE("GPL v2");
-> > --
-> > 2.7.4
-> >
->=20
-> It looks like all the driver does is writing two registers? How does
-> that fit into FPGA Manager as a framework. Should this maybe be eithe
-> for Zynq architecture or a Misc driver instead?
->=20
-To establish the proper communication channel between PS and PL, The AXI In=
-terface Bus Width should be configured properly.
-For a design to design this AXI Interface Bus Width settings are vary. So f=
-or Zynq just loading the Bitstream into the PL is not sufficient
-to establish a proper communication channel between PS and PL we have to do=
- AXI Interface Bus Width settings as per the design
-after loading the Bit file into the PL. I feel this is more relevant to the=
- FPGA settings so I have placed this driver here.
+This patch set has been checked with checkpatch.pl, though it leaves
+several warnings, but these warnings are delibarately kept after
+reviewing.  Some warnings ask to add maintainer (so far it's not
+necessary), and some warnings complaint for patch 02 "perf auxtrace:
+Add four itrace options" for the text format, since need to keep the
+consistency with the same code format in the source code, this is why
+this patch doesn't get rid of checkpatch warnings.
 
-Please suggest the best place to put this driver.
 
-> Is the idea here to create the device via an overlay?
-Yes, this driver loading/removal is triggered by the overlay after loading =
-the bit file into the PL.
+Tan Xiaojun (3):
+  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+  perf auxtrace: Add four itrace options
+  perf arm-spe: Support synthetic events
 
-Regards,
-Navakishore.
+ tools/perf/Documentation/itrace.txt           |   6 +-
+ tools/perf/util/Build                         |   2 +-
+ tools/perf/util/arm-spe-decoder/Build         |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 219 +++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  82 ++
+ .../arm-spe-pkt-decoder.c                     |   0
+ .../arm-spe-pkt-decoder.h                     |  16 +
+ tools/perf/util/arm-spe.c                     | 823 +++++++++++++++++-
+ tools/perf/util/auxtrace.c                    |  17 +
+ tools/perf/util/auxtrace.h                    |  15 +-
+ 10 files changed, 1135 insertions(+), 46 deletions(-)
+ create mode 100644 tools/perf/util/arm-spe-decoder/Build
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (64%)
+
+-- 
+2.17.1
+
