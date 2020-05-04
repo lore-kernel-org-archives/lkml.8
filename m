@@ -2,119 +2,97 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CFFC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBA9C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11408206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="BtRBiszW"
+	by mail.kernel.org (Postfix) with ESMTP id CBFD0206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgEDQLm (ORCPT
+        id S1729498AbgEDQMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:11:42 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17792 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728764AbgEDQLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:11:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1588608593; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=i1zTiI6vQghvIRHWFVdCr6eMjt1Ty9sIUKZBB/8sWC/Qe60kjhy3CSjWRhYXApUh7r6sT4T7bvAvdOlU12tNkmSzCqYwaabr9xBSF4kR3rCx9cU/ddUAj1v7R5V1C1q40GPZrd5I4r4rJHHwPNo1fbHCkQSP95WVMflchxDnY8g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1588608593; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=Zitcy+9ai3qswjZX8GUqfMPQ7VUOo/hNsYYroSdp8Lg=; 
-        b=EcE/a6whG8qDaLcAKAHNfA7T1m4PJ6zDEs6+/4YgpKO/5j98aD0D9Hk1zGAU91NX99hHLxwB50OCHFAPouagsq9muVi14B7UTSkxr0QdTOF7eD+BEanTp0tNfTQ+oFcgUdUtfuIS1EHXhLut3LEFmBRqiNkwo2Y33LDuXfp2aEw=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1588608593;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=Zitcy+9ai3qswjZX8GUqfMPQ7VUOo/hNsYYroSdp8Lg=;
-        b=BtRBiszWw5dfPcbvDGjHEGdvN+ti3w+bi1DYWMGP3kc/HOOFR+QdPVWaen9sXnB3
-        k6udqdFCFAMPIStrKkIKPix1tCSIoEGmVd/luydwI7jqedolovnbMBlrRvUwSp6oFH3
-        G2gLYr220qIjZkyqWk+8cmOe15XnRwE2JwgYoVZs=
-Received: from [127.0.0.1] (122.235.211.112 [122.235.211.112]) by mx.zoho.com.cn
-        with SMTPS id 1588608590197451.40427373256; Tue, 5 May 2020 00:09:50 +0800 (CST)
-Date:   Tue, 05 May 2020 00:09:46 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-CC:     linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jouni Hogander <jouni.hogander@unikie.com>,
-        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        Borislav Petkov <bp@suse.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Mon, 4 May 2020 12:12:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42892 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729207AbgEDQMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 12:12:18 -0400
+IronPort-SDR: GaO8djqiS2pGiJ4VEzK21OfRR+p9GR/H1OOoiF1LyDWwe8m9F4UWF+CgXZu/iEGTLYCSBEzCzW
+ f95LkA7L/isQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 09:12:18 -0700
+IronPort-SDR: NjIs5eVckiefVYzs1nbR8TZZP08x1SCNuBp/AYXeYKVd5KTbFssOqilwxELtBYPR4imLSjI+d2
+ TGTnF4ViDebw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
+   d="scan'208";a="262866242"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 04 May 2020 09:12:14 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 04 May 2020 19:12:13 +0300
+Date:   Mon, 4 May 2020 19:12:13 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     stable@vger.kernel.org, Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] MIPS: Truncate link address into 32bit for 32bit kernel
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <20200504154613.GA14031@alpha.franken.de>
-References: <20200413062651.3992652-1-jiaxun.yang@flygoat.com> <20200422143258.1250960-1-jiaxun.yang@flygoat.com> <alpine.LFD.2.21.2004230036480.851719@eddie.linux-mips.org> <B307BFAC-9973-4444-B69A-40B054210E84@flygoat.com> <alpine.LFD.2.21.2004241316360.851719@eddie.linux-mips.org> <20200504154613.GA14031@alpha.franken.de>
-Message-ID: <86D4A0AC-59E1-4C82-B66D-6BFC71E08376@flygoat.com>
+Subject: Re: [PATCH] drm/i915: Don't enable WaIncreaseLatencyIPCEnabled when
+ IPC is disabled
+Message-ID: <20200504161213.GD6112@intel.com>
+References: <20200430214654.51314-1-sultan@kerneltoast.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430214654.51314-1-sultan@kerneltoast.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 30, 2020 at 02:46:54PM -0700, Sultan Alsawaf wrote:
+> From: Sultan Alsawaf <sultan@kerneltoast.com>
+> 
+> In commit 5a7d202b1574, a logical AND was erroneously changed to an OR,
+> causing WaIncreaseLatencyIPCEnabled to be enabled unconditionally for
+> kabylake and coffeelake, even when IPC is disabled. Fix the logic so
+> that WaIncreaseLatencyIPCEnabled is only used when IPC is enabled.
+> 
+> Fixes: 5a7d202b1574 ("drm/i915: Drop WaIncreaseLatencyIPCEnabled/1140 for cnl")
+> Cc: stable@vger.kernel.org # 5.3.x+
+> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> ---
+>  drivers/gpu/drm/i915/intel_pm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+> index 8375054ba27d..a52986a9e7a6 100644
+> --- a/drivers/gpu/drm/i915/intel_pm.c
+> +++ b/drivers/gpu/drm/i915/intel_pm.c
+> @@ -4992,7 +4992,7 @@ static void skl_compute_plane_wm(const struct intel_crtc_state *crtc_state,
+>  	 * WaIncreaseLatencyIPCEnabled: kbl,cfl
+>  	 * Display WA #1141: kbl,cfl
+>  	 */
+> -	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) ||
+> +	if ((IS_KABYLAKE(dev_priv) || IS_COFFEELAKE(dev_priv)) &&
 
+Whoops. Thanks for the fix. Pushed.
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=884=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8811=
-:46:13, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
-=B0:
->On Fri, Apr 24, 2020 at 01:22:30PM +0100, Maciej W=2E Rozycki wrote:
->> On Thu, 23 Apr 2020, Jiaxun Yang wrote:
->>=20
->> > > Alternatively, have you made any attempt to verify if actually repl=
-acing=20
->> > >the setting for VMLINUX_LOAD_ADDRESS would be safe?  Glancing over i=
-ts use=20
->> > >there do not appear to be many places=2E
->> >=20
->> > Limited experiments showed it should be fine=2E=2E=2E
->> >=20
->> > But MIPS kernel has some design I'm not really familiar with like SYM=
-32 for
->> > 64-bit kernel and special address space design for Trap-and-emul KVM=
-=2E
->>=20
->>  This only affects CONFIG_32BIT kernels, so SYM32 does not apply; I can=
-'t=20
->> comment on KVM=2E  There's still that bunch of:
->>=20
->> $(shell expr $(=2E=2E=2E) \< 0xffffffff80000000)
->>=20
->> constructs I mentioned before, so let's leave your change as it stands =
-at=20
->> this time=2E  Please do rename the variable as I suggested though, I ho=
-pe=20
->> that's not a big deal=2E
->
->Jiaxun, are you going to send an update with this change ?
+>  	    dev_priv->ipc_enabled)
+>  		latency += 4;
+>  
+> -- 
+> 2.26.2
 
-Sorry my mail server missed Maciej's reply=2E
-
-Should I send another version or you just fix it at apply time?
-
->
->Thomas=2E
->
-
---=20
-Jiaxun Yang
+-- 
+Ville Syrjälä
+Intel
