@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5887C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AB3C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBF720746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DAB320721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615366;
-	bh=VN6d4nzbrLNjgkAvTHCF4tjP+1SiphgWn7ph4Scj52s=;
+	s=default; t=1588615370;
+	bh=YMrD8pcg50reUIXVzF/igBtSXrGZ8Yfx4lDaYiEDGaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JMyIoeRiIaB9eJhhgOEJTG6VQopOBsqKXf0jz/zuFpt939vmaNIZ/7XLnU39mJ85m
-	 lIJ8j5BmfLj2XqKR9jD8Nh7feikCFvLwcb+Ohrrvgi3i/QFK6yQ4divrF+sbvL6MVn
-	 aXhEmjunKOL397lYM3N6RWfY15MY1cIbEMqEy9LQ=
+	b=RQXxgyibiPiqp1Bn6GD70cHmshUviOTMvC6A++Tt/9VQtzgsc/5m9AD/gZl7auotr
+	 kVLDJ/ZDcAd7jQDDPZdXYiBr8klKG2UAaQryhWd2fxhpeK3Yr5Rl1YmWmBIZu7Xft8
+	 da+j0HFrES4QyhtwEYBTSRCVhxzhcOkdKcH7I+ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbgEDSCp (ORCPT
+        id S1730771AbgEDSCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731356AbgEDSCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:37 -0400
+        id S1731370AbgEDSCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C41620746;
-        Mon,  4 May 2020 18:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFB8C2073E;
+        Mon,  4 May 2020 18:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615357;
-        bh=VN6d4nzbrLNjgkAvTHCF4tjP+1SiphgWn7ph4Scj52s=;
+        s=default; t=1588615362;
+        bh=YMrD8pcg50reUIXVzF/igBtSXrGZ8Yfx4lDaYiEDGaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLyxRac4QXwWptZw9TV/U31bbAfwdMc3UJmyyV51qsSKt8/laFqdFt6uPboTWUr1a
-         oRfryn/kekEr+rQ0Jf8rbKA2RfitezAfTHh0Ku7w/Iq0GdI1VEcwgutkEjHoZVOzxl
-         eF8i44DakwJLrR6xYnHj8WkpQIFAUZN6bzCE5N3U=
+        b=UpSFbNQLtg8QQ0hiKEX+ghIEcjplLKKytTHt6JUmP9/3aZQzhKRTSnSW95ABcVVb/
+         pNuLXbdHb1Rpw//PxCPpYyuupxCaJYn+1uAdC/T05KJ7FmLyd0D4FJOIavHks4vkGc
+         I/A/s0M86EKmFSC5fSldFl4thoaVyZm0N/rUmuq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tang Bin <tangbin@cmss.chinamobile.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 23/37] iommu/qcom: Fix local_base status check
-Date:   Mon,  4 May 2020 19:57:36 +0200
-Message-Id: <20200504165450.779338785@linuxfoundation.org>
+        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Martin Wilck <mwilck@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 15/37] scsi: qla2xxx: set UNLOADING before waiting for session deletion
+Date:   Mon,  4 May 2020 19:57:28 +0200
+Message-Id: <20200504165450.106909524@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,39 +63,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Martin Wilck <mwilck@suse.com>
 
-commit b52649aee6243ea661905bdc5fbe28cc5f6dec76 upstream.
+commit 856e152a3c08bf7987cbd41900741d83d9cddc8e upstream.
 
-The function qcom_iommu_device_probe() does not perform sufficient
-error checking after executing devm_ioremap_resource(), which can
-result in crashes if a critical error path is encountered.
+The purpose of the UNLOADING flag is to avoid port login procedures to
+continue when a controller is in the process of shutting down.  It makes
+sense to set this flag before starting session teardown.
 
-Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200418134703.1760-1-tangbin@cmss.chinamobile.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Furthermore, use atomic test_and_set_bit() to avoid the shutdown being run
+multiple times in parallel. In qla2x00_disable_board_on_pci_error(), the
+test for UNLOADING is postponed until after the check for an already
+disabled PCI board.
+
+Link: https://lore.kernel.org/r/20200421204621.19228-2-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Reviewed-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/qcom_iommu.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c |   32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
 
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -797,8 +797,11 @@ static int qcom_iommu_device_probe(struc
- 	qcom_iommu->dev = dev;
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3654,6 +3654,13 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	}
+ 	qla2x00_wait_for_hba_ready(base_vha);
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (res)
-+	if (res) {
- 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(qcom_iommu->local_base))
-+			return PTR_ERR(qcom_iommu->local_base);
-+	}
++	/*
++	 * if UNLOADING flag is already set, then continue unload,
++	 * where it was set first.
++	 */
++	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
++		return;
++
+ 	if (IS_QLA25XX(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha)) {
+ 		if (ha->flags.fw_started)
+ 			qla2x00_abort_isp_cleanup(base_vha);
+@@ -3671,15 +3678,6 @@ qla2x00_remove_one(struct pci_dev *pdev)
  
- 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
- 	if (IS_ERR(qcom_iommu->iface_clk)) {
+ 	qla2x00_wait_for_sess_deletion(base_vha);
+ 
+-	/*
+-	 * if UNLOAD flag is already set, then continue unload,
+-	 * where it was set first.
+-	 */
+-	if (test_bit(UNLOADING, &base_vha->dpc_flags))
+-		return;
+-
+-	set_bit(UNLOADING, &base_vha->dpc_flags);
+-
+ 	qla_nvme_delete(base_vha);
+ 
+ 	dma_free_coherent(&ha->pdev->dev,
+@@ -5845,13 +5843,6 @@ qla2x00_disable_board_on_pci_error(struc
+ 	struct pci_dev *pdev = ha->pdev;
+ 	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
+ 
+-	/*
+-	 * if UNLOAD flag is already set, then continue unload,
+-	 * where it was set first.
+-	 */
+-	if (test_bit(UNLOADING, &base_vha->dpc_flags))
+-		return;
+-
+ 	ql_log(ql_log_warn, base_vha, 0x015b,
+ 	    "Disabling adapter.\n");
+ 
+@@ -5862,9 +5853,14 @@ qla2x00_disable_board_on_pci_error(struc
+ 		return;
+ 	}
+ 
+-	qla2x00_wait_for_sess_deletion(base_vha);
++	/*
++	 * if UNLOADING flag is already set, then continue unload,
++	 * where it was set first.
++	 */
++	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
++		return;
+ 
+-	set_bit(UNLOADING, &base_vha->dpc_flags);
++	qla2x00_wait_for_sess_deletion(base_vha);
+ 
+ 	qla2x00_delete_all_vps(ha, base_vha);
+ 
 
 
