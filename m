@@ -2,188 +2,175 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20360C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7DB82073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA84421582
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lsFBoDUL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="L4JqgH+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgEDUER (ORCPT
+        id S1727811AbgEDUEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:04:17 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38530 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDUEQ (ORCPT
+        Mon, 4 May 2020 16:04:21 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.122]:24591 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727088AbgEDUEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:04:16 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044K4ALS080434;
-        Mon, 4 May 2020 15:04:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588622650;
-        bh=9VhwbEA312S5jn2e02G3zURBnKiTzVYqGi5OHCo+NQo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=lsFBoDULMdwpUWmJoyoHPpyi3EC1VpWs4hOTgioHZzeFKmoMFTKdF2WzPOOfx5/rE
-         pN6SJsVwbPpWdEV4is6PFf+JsjwQkiGxfvv+Y+uTcrPVnbqImyJKaA7X0m5bW1ynoE
-         aD2NYMYebWmyoOihI/LDQKoZ/UV054+O6JM+ujmE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044K4AQO025119
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 15:04:10 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 15:04:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 15:04:10 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044K49YS090232;
-        Mon, 4 May 2020 15:04:09 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings documention
-Date:   Mon, 4 May 2020 14:55:26 -0500
-Message-ID: <20200504195526.28242-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200503123215.6449-2-dmurphy@ti.com>
-References: <20200503123215.6449-2-dmurphy@ti.com>
+        Mon, 4 May 2020 16:04:20 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id B6CF12B67B6
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 15:04:17 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id VhK5jir5F8vkBVhK5jRHR1; Mon, 04 May 2020 15:04:17 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=V96LBizxl4+aEJIjzbcrRlhTjAqahm2dmV9MAZqHdGc=; b=L4JqgH+UVyVZV2P7eUgtXNCiOR
+        SNVfuSkG3J1W6yEXdAOSzu/7iJk37Nx6f+qmfoVr4NvirPvSMFnOuYtCT6axHGIB5OTK3Ftq6h1uF
+        F5epi927ICta8GvCWztD9SikDgk3pzeFCuu8m2P0Tgkp0oLPw0XbuCOP4fGF4NpEj8p4f/8mtQrjK
+        qxOvr9wynLQWlBrk1XRabwH7QlqyrymSub0l/rfky81DJZmckWhRkLHXJDEGs8ulU17h29TcecsVx
+        w2sRFbfjDqKtCjvHWYCsLFwN7IGezLXe7m3vfZ+Uu8DNTglqtORFixXudBRWvC206UmCzjVTiDThS
+        //HscYMg==;
+Received: from [189.207.59.248] (port=58762 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jVhK3-002Fbe-9W; Mon, 04 May 2020 15:04:15 -0500
+Date:   Mon, 4 May 2020 15:08:38 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] ath6kl: Replace zero-length array with flexible-array
+Message-ID: <20200504200838.GA31974@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jVhK3-002Fbe-9W
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.207.59.248]:58762
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the LEDs multicolor class framework.
-Add multicolor ID to the color ID list for device tree bindings.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-CC: Rob Herring <robh@kernel.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
- drivers/leds/led-core.c                       |  1 +
- include/dt-bindings/leds/common.h             |  3 +-
- 3 files changed, 74 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+ drivers/net/wireless/ath/ath6kl/core.h  | 4 ++--
+ drivers/net/wireless/ath/ath6kl/debug.c | 2 +-
+ drivers/net/wireless/ath/ath6kl/hif.h   | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-new file mode 100644
-index 000000000000..fa6ea8e5c46b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common properties for the multicolor LED class.
-+
-+maintainers:
-+  - Dan Murphy <dmurphy@ti.com>
-+
-+description: |
-+  Bindings for multi color LEDs show how to describe current outputs of
-+  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-+  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-+  modules. This is achieved by adding multi-led nodes layer to the
-+  monochrome LED bindings.
-+  The nodes and properties defined in this document are unique to the multicolor
-+  LED class.  Common LED nodes and properties are inherited from the common.txt
-+  within this documentation directory.
-+
-+properties:
-+  color:
-+    description: |
-+      For multicolor LED support this property should be defined as
-+      LED_COLOR_ID_MULTI and further definition can be found in
-+      include/linux/leds/common.h.
-+
-+required:
-+  - color
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@14 {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          compatible = "ti,lp5009";
-+          reg = <0x14>;
-+
-+          multi-led@1 {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            reg = <1>;
-+            color = <LED_COLOR_ID_MULTI>;
-+            function = LED_FUNCTION_CHARGING;
-+
-+            led@0 {
-+              reg = <0>;
-+              color = <LED_COLOR_ID_RED>;
-+            };
-+
-+            led@1 {
-+              reg = <1>;
-+              color = <LED_COLOR_ID_GREEN>;
-+            };
-+
-+            led@2 {
-+              reg = <2>;
-+              color = <LED_COLOR_ID_BLUE>;
-+            };
-+          };
-+        };
-+    };
-+
-+additionalProperties: false
-+...
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f1f718dbe0f8..846248a0693d 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
- 	[LED_COLOR_ID_VIOLET] = "violet",
- 	[LED_COLOR_ID_YELLOW] = "yellow",
- 	[LED_COLOR_ID_IR] = "ir",
-+	[LED_COLOR_ID_MULTI] = "multicolor",
+diff --git a/drivers/net/wireless/ath/ath6kl/core.h b/drivers/net/wireless/ath/ath6kl/core.h
+index 0d30e762c090..77e052336eb5 100644
+--- a/drivers/net/wireless/ath/ath6kl/core.h
++++ b/drivers/net/wireless/ath/ath6kl/core.h
+@@ -160,7 +160,7 @@ enum ath6kl_fw_capability {
+ struct ath6kl_fw_ie {
+ 	__le32 id;
+ 	__le32 len;
+-	u8 data[0];
++	u8 data[];
  };
- EXPORT_SYMBOL_GPL(led_colors);
  
-diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-index 0ce7dfc00dcb..a463ce6a8794 100644
---- a/include/dt-bindings/leds/common.h
-+++ b/include/dt-bindings/leds/common.h
-@@ -30,7 +30,8 @@
- #define LED_COLOR_ID_VIOLET	5
- #define LED_COLOR_ID_YELLOW	6
- #define LED_COLOR_ID_IR		7
--#define LED_COLOR_ID_MAX	8
-+#define LED_COLOR_ID_MULTI	8
-+#define LED_COLOR_ID_MAX	9
+ enum ath6kl_hw_flags {
+@@ -406,7 +406,7 @@ struct ath6kl_mgmt_buff {
+ 	u32 id;
+ 	bool no_cck;
+ 	size_t len;
+-	u8 buf[0];
++	u8 buf[];
+ };
  
- /* Standard LED functions */
- /* Keyboard LEDs, usually it would be input4::capslock etc. */
+ struct ath6kl_sta {
+diff --git a/drivers/net/wireless/ath/ath6kl/debug.c b/drivers/net/wireless/ath/ath6kl/debug.c
+index 54337d60f288..7506cea46f58 100644
+--- a/drivers/net/wireless/ath/ath6kl/debug.c
++++ b/drivers/net/wireless/ath/ath6kl/debug.c
+@@ -30,7 +30,7 @@ struct ath6kl_fwlog_slot {
+ 	__le32 length;
+ 
+ 	/* max ATH6KL_FWLOG_PAYLOAD_SIZE bytes */
+-	u8 payload[0];
++	u8 payload[];
+ };
+ 
+ #define ATH6KL_FWLOG_MAX_ENTRIES 20
+diff --git a/drivers/net/wireless/ath/ath6kl/hif.h b/drivers/net/wireless/ath/ath6kl/hif.h
+index dc6bd8cd9b83..aea7fea2a81e 100644
+--- a/drivers/net/wireless/ath/ath6kl/hif.h
++++ b/drivers/net/wireless/ath/ath6kl/hif.h
+@@ -199,7 +199,7 @@ struct hif_scatter_req {
+ 
+ 	u32 scat_q_depth;
+ 
+-	struct hif_scatter_item scat_list[0];
++	struct hif_scatter_item scat_list[];
+ };
+ 
+ struct ath6kl_irq_proc_registers {
 -- 
-2.25.1
+2.26.2
 
