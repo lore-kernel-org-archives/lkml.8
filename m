@@ -2,70 +2,177 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D6C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956A0C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9D822071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MRIGG/fk"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF612071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgEDMjO (ORCPT
+        id S1728826AbgEDMm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726625AbgEDMjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:39:14 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D9FC061A0E;
-        Mon,  4 May 2020 05:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=f2dOPUrKZgUgGSkMrdOrs8H5s2b4gi+dnFwdsR381A4=; b=MRIGG/fk13IU7YQiPfdBNpKH6j
-        DTRMMWl3oSa0d8XgMW4fpaSdWKCxKhphckwfEbWTA1dfs5pxJrb3KFnJa6fN7xC3CBduUKAZTvcVQ
-        uB7SMCKeroTFlZj1g7/NeHGHXsZuMOQtVxKUi+SmGcMecwgo9nJEwqLtnbP2Kmz3w8kp/nXtMRntL
-        yqA9IoyAWZTMc02SjkNpbasDk0SbHQ9jlQ8/fXsDQRWGiDgyP3BDKvqF3/4vv2ghDkT1qAX7qXXBU
-        3/q+5tWrOnhXHhyBKo602j2DRmXGy/gQuhKkmYBxHe0lqdOwEhN/8VUKGgPtjrtyBzSdxf4i9NXE8
-        aIgD6cvw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVaNN-0007QD-6f; Mon, 04 May 2020 12:39:13 +0000
-Date:   Mon, 4 May 2020 05:39:13 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] eventfd: convert to f_op->read_iter()
-Message-ID: <20200504123913.GA14334@infradead.org>
-References: <6b29f015-bd7c-0601-cf94-2c077285b933@kernel.dk>
+        Mon, 4 May 2020 08:42:58 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61499 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgEDMm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 08:42:58 -0400
+IronPort-SDR: UEOS+CMm56Yg/50P4f3Vq1bMlZQzt7ljnJRNl/nSOjyVW6jWfCnDGiVfQ8hJgOU52Dqo5XEiED
+ og4+Tq1Kz99A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 05:42:57 -0700
+IronPort-SDR: GZ5CLlJqOXi5gp7wS+11Ftok3l7QEB8bkkbjg3l7se4ElhXZSXh++4QMLGzklhBtp32cu/PIvn
+ OvjiMVJc5Dfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
+   d="scan'208";a="338307544"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 04 May 2020 05:42:54 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jVaQy-004cHK-N9; Mon, 04 May 2020 15:42:56 +0300
+Date:   Mon, 4 May 2020 15:42:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] i2c: drivers: Remove superfluous error message
+Message-ID: <20200504124256.GF185537@smile.fi.intel.com>
+References: <20200503120847.13528-1-aishwaryarj100@gmail.com>
+ <20200504114408.9128-1-aishwaryarj100@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6b29f015-bd7c-0601-cf94-2c077285b933@kernel.dk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200504114408.9128-1-aishwaryarj100@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 01:11:09PM -0600, Jens Axboe wrote:
-> eventfd is using ->read() as it's file_operations read handler, but
-> this prevents passing in information about whether a given IO operation
-> is blocking or not. We can only use the file flags for that. To support
-> async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
-> support. Convert eventfd to using ->read_iter().
-> 
-> With ->read_iter(), we can support IOCB_NOWAIT. Ensure the fd setup
-> is done such that we set file->f_mode with FMODE_NOWAIT.
+On Mon, May 04, 2020 at 05:14:06PM +0530, Aishwarya Ramakrishnan wrote:
+> The function platform_get_irq can log an error by itself.
+> This omit a redundant message for exception handling in the
+> calling function.
 
-Can you add a anon_inode_getfd_mode that passes extra flags for f_mode
-instead of opencoding it?  Especially as I expect more users that might
-want to handle IOCB_NOWAIT.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+
+> Suggested by Coccinelle.
+
+Compile tested only, right?
+
+> 
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-altera.c   | 4 +---
+>  drivers/i2c/busses/i2c-cht-wc.c   | 4 +---
+>  drivers/i2c/busses/i2c-img-scb.c  | 4 +---
+>  drivers/i2c/busses/i2c-lpc2k.c    | 4 +---
+>  drivers/i2c/busses/i2c-uniphier.c | 4 +---
+>  5 files changed, 5 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+> index f5c00f903df3..af6985f0ae63 100644
+> --- a/drivers/i2c/busses/i2c-altera.c
+> +++ b/drivers/i2c/busses/i2c-altera.c
+> @@ -395,10 +395,8 @@ static int altr_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(idev->base);
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "missing interrupt resource\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	idev->i2c_clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(idev->i2c_clk)) {
+> diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
+> index 35e55feda763..343ae5754e6e 100644
+> --- a/drivers/i2c/busses/i2c-cht-wc.c
+> +++ b/drivers/i2c/busses/i2c-cht-wc.c
+> @@ -314,10 +314,8 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
+>  	int ret, reg, irq;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "Error missing irq resource\n");
+> +	if (irq < 0)
+>  		return -EINVAL;
+> -	}
+>  
+>  	adap = devm_kzalloc(&pdev->dev, sizeof(*adap), GFP_KERNEL);
+>  	if (!adap)
+> diff --git a/drivers/i2c/busses/i2c-img-scb.c b/drivers/i2c/busses/i2c-img-scb.c
+> index 422097a31c95..2f6de763816a 100644
+> --- a/drivers/i2c/busses/i2c-img-scb.c
+> +++ b/drivers/i2c/busses/i2c-img-scb.c
+> @@ -1344,10 +1344,8 @@ static int img_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(i2c->base);
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(&pdev->dev, "can't get irq number\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	i2c->sys_clk = devm_clk_get(&pdev->dev, "sys");
+>  	if (IS_ERR(i2c->sys_clk)) {
+> diff --git a/drivers/i2c/busses/i2c-lpc2k.c b/drivers/i2c/busses/i2c-lpc2k.c
+> index 13b0c12e2dba..43dc9b7043e4 100644
+> --- a/drivers/i2c/busses/i2c-lpc2k.c
+> +++ b/drivers/i2c/busses/i2c-lpc2k.c
+> @@ -362,10 +362,8 @@ static int i2c_lpc2k_probe(struct platform_device *pdev)
+>  		return PTR_ERR(i2c->base);
+>  
+>  	i2c->irq = platform_get_irq(pdev, 0);
+> -	if (i2c->irq < 0) {
+> -		dev_err(&pdev->dev, "can't get interrupt resource\n");
+> +	if (i2c->irq < 0)
+>  		return i2c->irq;
+> -	}
+>  
+>  	init_waitqueue_head(&i2c->wait);
+>  
+> diff --git a/drivers/i2c/busses/i2c-uniphier.c b/drivers/i2c/busses/i2c-uniphier.c
+> index 668b1fa2b0ef..ee00a44bf4c7 100644
+> --- a/drivers/i2c/busses/i2c-uniphier.c
+> +++ b/drivers/i2c/busses/i2c-uniphier.c
+> @@ -324,10 +324,8 @@ static int uniphier_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(priv->membase);
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(dev, "failed to get IRQ number\n");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>  
+>  	if (of_property_read_u32(dev->of_node, "clock-frequency", &bus_speed))
+>  		bus_speed = I2C_MAX_STANDARD_MODE_FREQ;
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
