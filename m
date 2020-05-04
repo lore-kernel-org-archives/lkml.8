@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6596EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B7CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4305120721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896FA20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615465;
-	bh=fyBOmnqKsuvNpxFwlXUHV4DLG7y2lqjw2zO/T3sFijI=;
+	s=default; t=1588615469;
+	bh=YkAKodN6UufF5X2rzXlFeZr6xUI5WiB5/Lb6gaqDR/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTWQTrFrRiNPpSrKnZtV5ZCRHNoLNlWrsko030jmKKvixrU/RryzfTThlNNyw1SDi
-	 b9Aifiwc5VEyLR25iGw4geC+8be7or1mWTWoGdR40mGCUr3goIgoPjvhGNgD2bKpY0
-	 1Rv3LNAWdahPdjhrm8TK9d2SFGJkEyxAQoyeOBlg=
+	b=Ep9MK7KH0HdvCt9eY+UuoxK8+nP5EAf3Id9mt+dTMQG7FwZjeED9tRo6O1zqNp4s4
+	 uALGGzMNqD1774NE2+7vvEaQtaP4vvcZEFc9540CeVFTXYoYDiXnE3WfgId/EAVlx7
+	 wzzznosEeqT7p6cpIYyfCrRc/JLYYhffOHb1adrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731669AbgEDSEY (ORCPT
+        id S1731048AbgEDSE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33758 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731660AbgEDSEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:22 -0400
+        id S1731670AbgEDSEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CB28206B8;
-        Mon,  4 May 2020 18:04:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE680205ED;
+        Mon,  4 May 2020 18:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615461;
-        bh=fyBOmnqKsuvNpxFwlXUHV4DLG7y2lqjw2zO/T3sFijI=;
+        s=default; t=1588615464;
+        bh=YkAKodN6UufF5X2rzXlFeZr6xUI5WiB5/Lb6gaqDR/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6Ra093W8+2ey56LWufxc4v/NMH7Cy+MYu4GroZ7hfmj9+MRtzugRLaNCFga/G9t/
-         pXDTlXfCXe9VVSI3IkWUvs73pvaLOAOjaTUleI5zBtXVHf91297t6bxnNZvwVnDKrR
-         r+1akX3w7Hi4wdRNplc0wxOtfEqZwlHv0SExO1jE=
+        b=ERJFvegprR+5K+vwLN71VhJ3lL0MFNSEYI5DGpu/pIRIkDStmEE0Zr+nzrzSjT5hP
+         4sk6fLdGYtIYeghBES3jTCaK9XtrcoaDDp5ReZwDsWUBH5ch79VuEC0v7GvnYeK7gV
+         0BB0Xx6vB3rn8hw2vuTTDjdjDsLIY8eB7tGXuSjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 48/57] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-Date:   Mon,  4 May 2020 19:57:52 +0200
-Message-Id: <20200504165500.595704118@linuxfoundation.org>
+        stable@vger.kernel.org, ryan_chen <ryan_chen@aspeedtech.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.4 49/57] i2c: aspeed: Avoid i2c interrupt status clear race condition.
+Date:   Mon,  4 May 2020 19:57:53 +0200
+Message-Id: <20200504165500.835261420@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -60,39 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: ryan_chen <ryan_chen@aspeedtech.com>
 
-commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 upstream.
+commit c926c87b8e36dcc0ea5c2a0a0227ed4f32d0516a upstream.
 
-Currently, system fails to boot because the legacy interrupt remapping
-mode does not enable 128-bit IRTE (GA), which is required for x2APIC
-support.
+In AST2600 there have a slow peripheral bus between CPU and i2c
+controller. Therefore GIC i2c interrupt status clear have delay timing,
+when CPU issue write clear i2c controller interrupt status. To avoid
+this issue, the driver need have read after write clear at i2c ISR.
 
-Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
-kernel option amd_iommu_intr=legacy instead. The initialization
-logic will check GASup and automatically fallback to using
-AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
-
-Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: f327c686d3ba ("i2c: aspeed: added driver for Aspeed I2C")
+Signed-off-by: ryan_chen <ryan_chen@aspeedtech.com>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+[wsa: added Fixes tag]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu_init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-aspeed.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2946,7 +2946,7 @@ static int __init parse_amd_iommu_intr(c
- {
- 	for (; *str; ++str) {
- 		if (strncmp(str, "legacy", 6) == 0) {
--			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
-+			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
- 			break;
- 		}
- 		if (strncmp(str, "vapic", 5) == 0) {
+--- a/drivers/i2c/busses/i2c-aspeed.c
++++ b/drivers/i2c/busses/i2c-aspeed.c
+@@ -603,6 +603,7 @@ static irqreturn_t aspeed_i2c_bus_irq(in
+ 	/* Ack all interrupts except for Rx done */
+ 	writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+ 	       bus->base + ASPEED_I2C_INTR_STS_REG);
++	readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+ 	irq_remaining = irq_received;
+ 
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
+@@ -645,9 +646,11 @@ static irqreturn_t aspeed_i2c_bus_irq(in
+ 			irq_received, irq_handled);
+ 
+ 	/* Ack Rx done */
+-	if (irq_received & ASPEED_I2CD_INTR_RX_DONE)
++	if (irq_received & ASPEED_I2CD_INTR_RX_DONE) {
+ 		writel(ASPEED_I2CD_INTR_RX_DONE,
+ 		       bus->base + ASPEED_I2C_INTR_STS_REG);
++		readl(bus->base + ASPEED_I2C_INTR_STS_REG);
++	}
+ 	spin_unlock(&bus->lock);
+ 	return irq_remaining ? IRQ_NONE : IRQ_HANDLED;
+ }
 
 
