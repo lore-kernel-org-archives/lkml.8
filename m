@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF67C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B8CC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5032495E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F642496F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615836;
-	bh=o4bXWZrQJV80Xcf2zwTBo3dnICBBFbRYrxHVjZPcjNA=;
+	s=default; t=1588615846;
+	bh=NlVxoTjNVIj7k425iDGce3uuUKxG2Mo4IPPMlgN5liw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KaSWyZzRB6g9LH5sim0df5jZ+hAlyH4tMmq/7CQJVvb0T02hSUZsVHAh7VpmS/7sk
-	 YVQwNeJGMu7DJsh4bMgoe06vosaxL5EHJU3U39Ssn0ck382o6/dtOyrg6UzuUbAMs1
-	 ZUomvq+L7Um1W/LvkMiUiN/YJUF1gnSDPNn/m7Zk=
+	b=eqlduKsECGWhIQiZMxAHcPAZ3tm6QAeaz8P3X39vqpHpozKtBNFddJKwflBhbxbWb
+	 TsRG+YgFKC+ELFcWD01ApIVjUIsJFT9w2gU96m8Vxwa6+QiLe0lbOdPrYvGNDFtrz8
+	 be1cJwzSU8VwkTMgt093L0I34mC+glH/0RrrpWyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731177AbgEDSKf (ORCPT
+        id S1732092AbgEDSKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34950 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731782AbgEDSFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:14 -0400
+        id S1731207AbgEDSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:05:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D53206B8;
-        Mon,  4 May 2020 18:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F022073E;
+        Mon,  4 May 2020 18:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615514;
-        bh=o4bXWZrQJV80Xcf2zwTBo3dnICBBFbRYrxHVjZPcjNA=;
+        s=default; t=1588615503;
+        bh=NlVxoTjNVIj7k425iDGce3uuUKxG2Mo4IPPMlgN5liw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JGLZWsYCjyxp1mZ45OB4Ca/x7IHWCT0C3Q/rq5NRJ826v8kWOpywTUmUFibJBgIV
-         oM/b5svi0bcsXIKNYa95+fEitP3iqiRF98B4gOnc9VriB365qNpptD8Am9ce1/RpYN
-         SowSKpfn/YchMy5Ux3GPMkc7JY49cluVLBuyN12c=
+        b=gNSXXKklWzKUgIWXXw3F4/3hgrP7QaL2KhUUhnHKT26f3MRchQ21PPY4ir6Ea7hng
+         Bh3Hhwm9LwuZamCmknRrA/SC56Eq3nFMZCBdKO8WvahK3Nrvpw+EunFPE4+h9AoHzL
+         qR0Oypm1T/iwuJXN/rK4niGWMCUbcHWmuYAUZHMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.6 12/73] btrfs: fix transaction leak in btrfs_recover_relocation
-Date:   Mon,  4 May 2020 19:57:15 +0200
-Message-Id: <20200504165504.238322681@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.4 26/57] dlmfs_file_write(): fix the bogosity in handling non-zero *ppos
+Date:   Mon,  4 May 2020 19:57:30 +0200
+Message-Id: <20200504165458.613322756@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
-References: <20200504165501.781878940@linuxfoundation.org>
+In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
+References: <20200504165456.783676004@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 1402d17dfd9657be0da8458b2079d03c2d61c86a upstream.
+commit 3815f1be546e752327b5868af103ccdddcc4db77 upstream.
 
-btrfs_recover_relocation() invokes btrfs_join_transaction(), which joins
-a btrfs_trans_handle object into transactions and returns a reference of
-it with increased refcount to "trans".
+'count' is how much you want written, not the final position.
+Moreover, it can legitimately be less than the current position...
 
-When btrfs_recover_relocation() returns, "trans" becomes invalid, so the
-refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-btrfs_recover_relocation(). When read_fs_root() failed, the refcnt
-increased by btrfs_join_transaction() is not decreased, causing a refcnt
-leak.
-
-Fix this issue by calling btrfs_end_transaction() on this error path
-when read_fs_root() failed.
-
-Fixes: 79787eaab461 ("btrfs: replace many BUG_ONs with proper error handling")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ocfs2/dlmfs/dlmfs.c |   27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4614,6 +4614,7 @@ int btrfs_recover_relocation(struct btrf
- 		if (IS_ERR(fs_root)) {
- 			err = PTR_ERR(fs_root);
- 			list_add_tail(&reloc_root->root_list, &reloc_roots);
-+			btrfs_end_transaction(trans);
- 			goto out_unset;
- 		}
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -275,7 +275,6 @@ static ssize_t dlmfs_file_write(struct f
+ 				loff_t *ppos)
+ {
+ 	int bytes_left;
+-	ssize_t writelen;
+ 	char *lvb_buf;
+ 	struct inode *inode = file_inode(filp);
  
+@@ -285,32 +284,30 @@ static ssize_t dlmfs_file_write(struct f
+ 	if (*ppos >= i_size_read(inode))
+ 		return -ENOSPC;
+ 
++	/* don't write past the lvb */
++	if (count > i_size_read(inode) - *ppos)
++		count = i_size_read(inode) - *ppos;
++
+ 	if (!count)
+ 		return 0;
+ 
+ 	if (!access_ok(buf, count))
+ 		return -EFAULT;
+ 
+-	/* don't write past the lvb */
+-	if ((count + *ppos) > i_size_read(inode))
+-		writelen = i_size_read(inode) - *ppos;
+-	else
+-		writelen = count - *ppos;
+-
+-	lvb_buf = kmalloc(writelen, GFP_NOFS);
++	lvb_buf = kmalloc(count, GFP_NOFS);
+ 	if (!lvb_buf)
+ 		return -ENOMEM;
+ 
+-	bytes_left = copy_from_user(lvb_buf, buf, writelen);
+-	writelen -= bytes_left;
+-	if (writelen)
+-		user_dlm_write_lvb(inode, lvb_buf, writelen);
++	bytes_left = copy_from_user(lvb_buf, buf, count);
++	count -= bytes_left;
++	if (count)
++		user_dlm_write_lvb(inode, lvb_buf, count);
+ 
+ 	kfree(lvb_buf);
+ 
+-	*ppos = *ppos + writelen;
+-	mlog(0, "wrote %zd bytes\n", writelen);
+-	return writelen;
++	*ppos = *ppos + count;
++	mlog(0, "wrote %zu bytes\n", count);
++	return count;
+ }
+ 
+ static void dlmfs_init_once(void *foo)
 
 
