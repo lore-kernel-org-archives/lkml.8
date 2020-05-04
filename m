@@ -2,354 +2,781 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F66C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC16BC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03C624954
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C938621582
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgEDUGY (ORCPT
+        id S1727952AbgEDUHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:06:24 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35319 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDUGX (ORCPT
+        Mon, 4 May 2020 16:07:05 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:36504 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgEDUHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:06:23 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 5622DFF808;
-        Mon,  4 May 2020 20:06:19 +0000 (UTC)
-Date:   Mon, 4 May 2020 22:06:18 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] clk: at91: allow setting all PMC clock parents
- via DT
-Message-ID: <20200504200618.GJ34497@piout.net>
-References: <cover.1588622158.git.mirq-linux@rere.qmqm.pl>
- <74a5cd94fb7fb0058d905d83f192a4cc85fa6b5b.1588622158.git.mirq-linux@rere.qmqm.pl>
+        Mon, 4 May 2020 16:07:04 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D973D804C8;
+        Mon,  4 May 2020 22:06:55 +0200 (CEST)
+Date:   Mon, 4 May 2020 22:06:49 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 3/3] drm/bridge: chrontel-ch7033: Add a new driver
+Message-ID: <20200504200649.GC8122@ravnborg.org>
+References: <20200424213539.93157-1-lkundrak@v3.sk>
+ <20200424213539.93157-4-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <74a5cd94fb7fb0058d905d83f192a4cc85fa6b5b.1588622158.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <20200424213539.93157-4-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
+        a=_G2uAb-18WruFnNJAWUA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Lubomir.
 
-Your v5 and my review on v4 just crossed. My comment still holds
+Drivers looks good. I look forward to the day we have moved
+connector stuff to the displaydriver - this will simplify this driver
+even more.
 
-On 04/05/2020 21:58:44+0200, Michał Mirosław wrote:
-> We need to have clocks accessible via phandle to select them
-> as peripheral clock parent using assigned-clock-parents in DT.
-> Add support for PLLACK/PLLBCK/AUDIOPLLCK clocks where available.
+One Q in the following.
+
+	Sam
+
+On Fri, Apr 24, 2020 at 11:35:39PM +0200, Lubomir Rintel wrote:
+> This is a driver for video encoder with VGA and DVI/HDMI outputs.
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
-> v2: rebase to clk/clk-at91 branch
-> v3: no changes
-> v4: extend to whole family
-> v5: fix copy-and-paste bugs for SAMA5D3/4
-> ---
->  drivers/clk/at91/at91rm9200.c    | 6 +++++-
->  drivers/clk/at91/at91sam9260.c   | 6 +++++-
->  drivers/clk/at91/at91sam9g45.c   | 4 +++-
->  drivers/clk/at91/at91sam9n12.c   | 6 +++++-
->  drivers/clk/at91/at91sam9rl.c    | 4 +++-
->  drivers/clk/at91/at91sam9x5.c    | 4 +++-
->  drivers/clk/at91/sam9x60.c       | 4 +++-
->  drivers/clk/at91/sama5d2.c       | 6 +++++-
->  drivers/clk/at91/sama5d3.c       | 4 +++-
->  drivers/clk/at91/sama5d4.c       | 4 +++-
->  include/dt-bindings/clock/at91.h | 3 +++
->  11 files changed, 41 insertions(+), 10 deletions(-)
+> There is no documentation for the chip -- the operation was guessed from
+> what was sniffed on a Dell Wyse 3020 ThinOS terminal, the register names
+> come from the ch7035 driver in Mediatek's GPL code dump.
 > 
-> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-> index 8da88e9a95d8..38bdb4981315 100644
-> --- a/drivers/clk/at91/at91rm9200.c
-> +++ b/drivers/clk/at91/at91rm9200.c
-> @@ -98,7 +98,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
+> Only bare minimum is implemented -- no fancy stuff, such as scaling. That
+> would only worsen our misery. We don't load the firmware and we don't need
+> to even bother enabling the MCU.  There are probably no distributable
+> firmware images anyway.
+> 
+> Tested with a handful of monitors ranging from 1024x768@75 to 1400x1050@60,
+> with VGA as well as DVI.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> ---
+> Changes since v4:
+> - Removed the registration with the component framework and creation of
+>   drm_encoder.
+> 
+> Changes since v3:
+> - Cosmetic changes; drop ch7033_encoder_destroy() and use
+>   drm_encoder_cleanup() for drm_encoder_funcs.destroy callback
+>   directly.
+> 
+> Changes since v1:
+> - Sort the includes
+> - Drop a useless model id read
+> - Chain to the bridge-connector instead of dealing with the HPD/EDID
+>   readout machinery ourselves
+> - Utilize regmap to access the registers
+> 
+>  drivers/gpu/drm/bridge/Kconfig           |  10 +
+>  drivers/gpu/drm/bridge/Makefile          |   1 +
+>  drivers/gpu/drm/bridge/chrontel-ch7033.c | 620 +++++++++++++++++++++++
+>  3 files changed, 631 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/chrontel-ch7033.c
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index aaed2347ace9..0ebc72d62a5b 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -27,6 +27,16 @@ config DRM_CDNS_DSI
+>  	  Support Cadence DPI to DSI bridge. This is an internal
+>  	  bridge and is meant to be directly embedded in a SoC.
 >  
-> -	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91rm9200_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
->  					    nck(at91rm9200_systemck),
->  					    nck(at91rm9200_periphck), 0, 4);
->  	if (!at91rm9200_pmc)
-> @@ -123,12 +123,16 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91rm9200_pmc->chws[PMC_PLLACK] = hw;
+> +config DRM_CHRONTEL_CH7033
+> +	tristate "Chrontel CH7033 Video Encoder"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	help
+> +	  Enable support for the Chrontel CH7033 VGA/DVI/HDMI Encoder, as
+> +	  found in the Dell Wyse 3020 thin client.
 > +
->  	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
->  				   &at91rm9200_pll_layout,
->  				   &rm9200_pll_characteristics);
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91rm9200_pmc->chws[PMC_PLLBCK] = hw;
+> +	  If in doubt, say "N".
 > +
->  	parent_names[0] = slowxtal_name;
->  	parent_names[1] = "mainck";
->  	parent_names[2] = "pllack";
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index 7e5ff252fffc..6d0723aa8b13 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -352,7 +352,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9260_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
->  					    ndck(data->sck, data->num_sck),
->  					    ndck(data->pck, data->num_pck),
->  					    0, data->num_progck);
-> @@ -399,12 +399,16 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9260_pmc->chws[PMC_PLLACK] = hw;
+>  config DRM_DISPLAY_CONNECTOR
+>  	tristate "Display connector support"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 6fb062b5b0f0..a844315feddb 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
+> +obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
+>  obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
+>  obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
+>  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+> diff --git a/drivers/gpu/drm/bridge/chrontel-ch7033.c b/drivers/gpu/drm/bridge/chrontel-ch7033.c
+> new file mode 100644
+> index 000000000000..f8675d82974b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/chrontel-ch7033.c
+> @@ -0,0 +1,620 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Chrontel CH7033 Video Encoder Driver
+> + *
+> + * Copyright (C) 2019,2020 Lubomir Rintel
+> + */
 > +
->  	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
->  				   data->pllb_layout,
->  				   data->pllb_characteristics);
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9260_pmc->chws[PMC_PLLBCK] = hw;
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
 > +
->  	parent_names[0] = slck_name;
->  	parent_names[1] = "mainck";
->  	parent_names[2] = "pllack";
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index 5d18eb04c218..9873b583c260 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -115,7 +115,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9g45_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					    nck(at91sam9g45_systemck),
->  					    nck(at91sam9g45_periphck), 0, 2);
->  	if (!at91sam9g45_pmc)
-> @@ -143,6 +143,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9g45_pmc->chws[PMC_PLLACK] = hw;
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_edid.h>
+> +#include <drm/drm_of.h>
+> +#include <drm/drm_print.h>
+> +#include <drm/drm_probe_helper.h>
 > +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-> index 3a2564c2f724..630dc5d87171 100644
-> --- a/drivers/clk/at91/at91sam9n12.c
-> +++ b/drivers/clk/at91/at91sam9n12.c
-> @@ -128,7 +128,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9n12_pmc = pmc_data_allocate(PMC_PLLBCK + 1,
->  					   nck(at91sam9n12_systemck), 31, 0, 2);
->  	if (!at91sam9n12_pmc)
->  		return;
-> @@ -162,11 +162,15 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9n12_pmc->chws[PMC_PLLACK] = hw;
+> +/* Page 0, Register 0x07 */
+> +enum {
+> +	DRI_PD		= BIT(3),
+> +	IO_PD		= BIT(5),
+> +};
 > +
->  	hw = at91_clk_register_pll(regmap, "pllbck", "mainck", 1,
->  				   &at91rm9200_pll_layout, &pllb_characteristics);
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9n12_pmc->chws[PMC_PLLBCK] = hw;
+> +/* Page 0, Register 0x08 */
+> +enum {
+> +	DRI_PDDRI	= GENMASK(7, 4),
+> +	PDDAC		= GENMASK(3, 1),
+> +	PANEN		= BIT(0),
+> +};
 > +
->  	parent_names[0] = slck_name;
->  	parent_names[1] = "mainck";
->  	parent_names[2] = "plladivck";
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index bcf07f6a0e0e..0d1cc44b056f 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -87,7 +87,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9rl_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					   nck(at91sam9rl_systemck),
->  					   nck(at91sam9rl_periphck), 0, 2);
->  	if (!at91sam9rl_pmc)
-> @@ -105,6 +105,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9rl_pmc->chws[PMC_PLLACK] = hw;
+> +/* Page 0, Register 0x09 */
+> +enum {
+> +	DPD		= BIT(7),
+> +	GCKOFF		= BIT(6),
+> +	TV_BP		= BIT(5),
+> +	SCLPD		= BIT(4),
+> +	SDPD		= BIT(3),
+> +	VGA_PD		= BIT(2),
+> +	HDBKPD		= BIT(1),
+> +	HDMI_PD		= BIT(0),
+> +};
 > +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index f13756b407e2..0ce3da080287 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -150,7 +150,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	at91sam9x5_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					   nck(at91sam9x5_systemck), 31, 0, 2);
->  	if (!at91sam9x5_pmc)
->  		return;
-> @@ -184,6 +184,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	at91sam9x5_pmc->chws[PMC_PLLACK] = hw;
+> +/* Page 0, Register 0x0a */
+> +enum {
+> +	MEMINIT		= BIT(7),
+> +	MEMIDLE		= BIT(6),
+> +	MEMPD		= BIT(5),
+> +	STOP		= BIT(4),
+> +	LVDS_PD		= BIT(3),
+> +	HD_DVIB		= BIT(2),
+> +	HDCP_PD		= BIT(1),
+> +	MCU_PD		= BIT(0),
+> +};
 > +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index db14e0427c7f..3e20aa68259f 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -182,7 +182,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	sam9x60_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					nck(sam9x60_systemck),
->  					nck(sam9x60_periphck),
->  					nck(sam9x60_gck), 8);
-> @@ -214,6 +214,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sam9x60_pmc->chws[PMC_PLLACK] = hw;
+> +/* Page 0, Register 0x18 */
+> +enum {
+> +	IDF		= GENMASK(7, 4),
+> +	INTEN		= BIT(3),
+> +	SWAP		= GENMASK(2, 0),
+> +};
 > +
->  	hw = sam9x60_clk_register_pll(regmap, &pmc_pll_lock, "upllck",
->  				      "main_osc", 1, &upll_characteristics);
->  	if (IS_ERR(hw))
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index ae5e83cadb3d..b3fa2291ccd8 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -166,7 +166,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
-> +	sama5d2_pmc = pmc_data_allocate(PMC_AUDIOPLLCK + 1,
->  					nck(sama5d2_systemck),
->  					nck(sama5d2_periph32ck),
->  					nck(sama5d2_gck), 3);
-> @@ -202,6 +202,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d2_pmc->chws[PMC_PLLACK] = hw;
+> +enum {
+> +	BYTE_SWAP_RGB	= 0,
+> +	BYTE_SWAP_RBG	= 1,
+> +	BYTE_SWAP_GRB	= 2,
+> +	BYTE_SWAP_GBR	= 3,
+> +	BYTE_SWAP_BRG	= 4,
+> +	BYTE_SWAP_BGR	= 5,
+> +};
 > +
->  	hw = at91_clk_register_audio_pll_frac(regmap, "audiopll_fracck",
->  					      "mainck");
->  	if (IS_ERR(hw))
-> @@ -217,6 +219,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d2_pmc->chws[PMC_AUDIOPLLCK] = hw;
+> +/* Page 0, Register 0x19 */
+> +enum {
+> +	HPO_I		= BIT(5),
+> +	VPO_I		= BIT(4),
+> +	DEPO_I		= BIT(3),
+> +	CRYS_EN		= BIT(2),
+> +	GCLKFREQ	= GENMASK(2, 0),
+> +};
 > +
->  	regmap_sfr = syscon_regmap_lookup_by_compatible("atmel,sama5d2-sfr");
->  	if (IS_ERR(regmap_sfr))
->  		regmap_sfr = NULL;
-> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-> index 507eef6797f1..5e4e44dd4c37 100644
-> --- a/drivers/clk/at91/sama5d3.c
-> +++ b/drivers/clk/at91/sama5d3.c
-> @@ -125,7 +125,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> +	sama5d3_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					nck(sama5d3_systemck),
->  					nck(sama5d3_periphck), 0, 3);
->  	if (!sama5d3_pmc)
-> @@ -158,6 +158,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d3_pmc->chws[PMC_PLLACK] = hw;
+> +/* Page 0, Register 0x2e */
+> +enum {
+> +	HFLIP		= BIT(7),
+> +	VFLIP		= BIT(6),
+> +	DEPO_O		= BIT(5),
+> +	HPO_O		= BIT(4),
+> +	VPO_O		= BIT(3),
+> +	TE		= GENMASK(2, 0),
+> +};
 > +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index 80692902b4e4..662ff5fa6e98 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -140,7 +140,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	if (IS_ERR(regmap))
->  		return;
->  
-> -	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
-> +	sama5d4_pmc = pmc_data_allocate(PMC_PLLACK + 1,
->  					nck(sama5d4_systemck),
->  					nck(sama5d4_periph32ck), 0, 3);
->  	if (!sama5d4_pmc)
-> @@ -173,6 +173,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	if (IS_ERR(hw))
->  		goto err_free;
->  
-> +	sama5d4_pmc->chws[PMC_PLLACK] = hw;
+> +/* Page 0, Register 0x2b */
+> +enum {
+> +	SWAPS		= GENMASK(7, 4),
+> +	VFMT		= GENMASK(3, 0),
+> +};
 > +
->  	hw = at91_clk_register_utmi(regmap, NULL, "utmick", "mainck");
->  	if (IS_ERR(hw))
->  		goto err_free;
-> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-> index c3f4aa6a2d29..adcf608b41fa 100644
-> --- a/include/dt-bindings/clock/at91.h
-> +++ b/include/dt-bindings/clock/at91.h
-> @@ -21,6 +21,9 @@
->  #define PMC_MCK2		4
->  #define PMC_I2S0_MUX		5
->  #define PMC_I2S1_MUX		6
-> +#define PMC_PLLACK		7
-> +#define PMC_PLLBCK		8
-> +#define PMC_AUDIOPLLCK		8		/* SAMA5D2-only, no PLLB there */
->  
->  #ifndef AT91_PMC_MOSCS
->  #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
+> +/* Page 0, Register 0x54 */
+> +enum {
+> +	COMP_BP		= BIT(7),
+> +	DAC_EN_T	= BIT(6),
+> +	HWO_HDMI_HI	= GENMASK(5, 3),
+> +	HOO_HDMI_HI	= GENMASK(2, 0),
+> +};
+> +
+> +/* Page 0, Register 0x57 */
+> +enum {
+> +	FLDSEN		= BIT(7),
+> +	VWO_HDMI_HI	= GENMASK(5, 3),
+> +	VOO_HDMI_HI	= GENMASK(2, 0),
+> +};
+> +
+> +/* Page 0, Register 0x7e */
+> +enum {
+> +	HDMI_LVDS_SEL	= BIT(7),
+> +	DE_GEN		= BIT(6),
+> +	PWM_INDEX_HI	= BIT(5),
+> +	USE_DE		= BIT(4),
+> +	R_INT		= GENMASK(3, 0),
+> +};
+> +
+> +/* Page 1, Register 0x07 */
+> +enum {
+> +	BPCKSEL		= BIT(7),
+> +	DRI_CMFB_EN	= BIT(6),
+> +	CEC_PUEN	= BIT(5),
+> +	CEC_T		= BIT(3),
+> +	CKINV		= BIT(2),
+> +	CK_TVINV	= BIT(1),
+> +	DRI_CKS2	= BIT(0),
+> +};
+> +
+> +/* Page 1, Register 0x08 */
+> +enum {
+> +	DACG		= BIT(6),
+> +	DACKTST		= BIT(5),
+> +	DEDGEB		= BIT(4),
+> +	SYO		= BIT(3),
+> +	DRI_IT_LVDS	= GENMASK(2, 1),
+> +	DISPON		= BIT(0),
+> +};
+> +
+> +/* Page 1, Register 0x0c */
+> +enum {
+> +	DRI_PLL_CP	= GENMASK(7, 6),
+> +	DRI_PLL_DIVSEL	= BIT(5),
+> +	DRI_PLL_N1_1	= BIT(4),
+> +	DRI_PLL_N1_0	= BIT(3),
+> +	DRI_PLL_N3_1	= BIT(2),
+> +	DRI_PLL_N3_0	= BIT(1),
+> +	DRI_PLL_CKTSTEN = BIT(0),
+> +};
+> +
+> +/* Page 1, Register 0x6b */
+> +enum {
+> +	VCO3CS		= GENMASK(7, 6),
+> +	ICPGBK2_0	= GENMASK(5, 3),
+> +	DRI_VCO357SC	= BIT(2),
+> +	PDPLL2		= BIT(1),
+> +	DRI_PD_SER	= BIT(0),
+> +};
+> +
+> +/* Page 1, Register 0x6c */
+> +enum {
+> +	PLL2N11		= GENMASK(7, 4),
+> +	PLL2N5_4	= BIT(3),
+> +	PLL2N5_TOP	= BIT(2),
+> +	DRI_PLL_PD	= BIT(1),
+> +	PD_I2CM		= BIT(0),
+> +};
+> +
+> +/* Page 3, Register 0x28 */
+> +enum {
+> +	DIFF_EN		= GENMASK(7, 6),
+> +	CORREC_EN	= GENMASK(5, 4),
+> +	VGACLK_BP	= BIT(3),
+> +	HM_LV_SEL	= BIT(2),
+> +	HD_VGA_SEL	= BIT(1),
+> +};
+> +
+> +/* Page 3, Register 0x2a */
+> +enum {
+> +	LVDSCLK_BP	= BIT(7),
+> +	HDTVCLK_BP	= BIT(6),
+> +	HDMICLK_BP	= BIT(5),
+> +	HDTV_BP		= BIT(4),
+> +	HDMI_BP		= BIT(3),
+> +	THRWL		= GENMASK(2, 0),
+> +};
+> +
+> +/* Page 4, Register 0x52 */
+> +enum {
+> +	PGM_ARSTB	= BIT(7),
+> +	MCU_ARSTB	= BIT(6),
+> +	MCU_RETB	= BIT(2),
+> +	RESETIB		= BIT(1),
+> +	RESETDB		= BIT(0),
+> +};
+> +
+> +struct ch7033_priv {
+> +	struct regmap *regmap;
+> +	struct drm_bridge *next_bridge;
+> +	struct drm_bridge bridge;
+> +	struct drm_connector connector;
+> +};
+> +
+> +#define conn_to_ch7033_priv(x) \
+> +	container_of(x, struct ch7033_priv, connector)
+> +#define bridge_to_ch7033_priv(x) \
+> +	container_of(x, struct ch7033_priv, bridge)
+> +
+> +
+> +static enum drm_connector_status ch7033_connector_detect(
+> +	struct drm_connector *connector, bool force)
+> +{
+> +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
+> +
+> +	return drm_bridge_detect(priv->next_bridge);
+> +}
+> +
+> +static const struct drm_connector_funcs ch7033_connector_funcs = {
+> +	.reset = drm_atomic_helper_connector_reset,
+> +	.fill_modes = drm_helper_probe_single_connector_modes,
+> +	.detect = ch7033_connector_detect,
+> +	.destroy = drm_connector_cleanup,
+> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> +};
+> +
+> +static int ch7033_connector_get_modes(struct drm_connector *connector)
+> +{
+> +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
+> +	struct edid *edid;
+> +	int ret;
+> +
+> +	edid = drm_bridge_get_edid(priv->next_bridge, connector);
+
+> +	drm_connector_update_edid_property(connector, edid);
+I have seen that others do drm_connector_update_edid_property()
+in the get_modes operation - but I am yet to understand why that
+is correct in a get operation.
+Maybe you know?
+
+
+> +	if (edid) {
+> +		ret = drm_add_edid_modes(connector, edid);
+> +		kfree(edid);
+> +	} else {
+> +		ret = drm_add_modes_noedid(connector, 1920, 1080);
+> +		drm_set_preferred_mode(connector, 1024, 768);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static struct drm_encoder *ch7033_connector_best_encoder(
+> +			struct drm_connector *connector)
+> +{
+> +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
+> +
+> +	return priv->bridge.encoder;
+> +}
+> +
+> +static const struct drm_connector_helper_funcs ch7033_connector_helper_funcs = {
+> +	.get_modes = ch7033_connector_get_modes,
+> +	.best_encoder = ch7033_connector_best_encoder,
+> +};
+> +
+> +static void ch7033_hpd_event(void *arg, enum drm_connector_status status)
+> +{
+> +	struct ch7033_priv *priv = arg;
+> +
+> +	if (priv->bridge.dev)
+> +		drm_helper_hpd_irq_event(priv->connector.dev);
+> +}
+> +
+> +static int ch7033_bridge_attach(struct drm_bridge *bridge,
+> +				enum drm_bridge_attach_flags flags)
+> +{
+> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
+> +	struct drm_connector *connector = &priv->connector;
+> +	int ret;
+> +
+> +	ret = drm_bridge_attach(bridge->encoder, priv->next_bridge, bridge,
+> +				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
+> +		return 0;
+> +
+> +	if (priv->next_bridge->ops & DRM_BRIDGE_OP_DETECT) {
+> +		connector->polled = DRM_CONNECTOR_POLL_HPD;
+> +	} else {
+> +		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
+> +				    DRM_CONNECTOR_POLL_DISCONNECT;
+> +	}
+> +
+> +	if (priv->next_bridge->ops & DRM_BRIDGE_OP_HPD) {
+> +		drm_bridge_hpd_enable(priv->next_bridge, ch7033_hpd_event,
+> +				      priv);
+> +	}
+> +
+> +	drm_connector_helper_add(connector,
+> +				 &ch7033_connector_helper_funcs);
+> +	ret = drm_connector_init_with_ddc(bridge->dev, &priv->connector,
+> +					  &ch7033_connector_funcs,
+> +					  priv->next_bridge->type,
+> +					  priv->next_bridge->ddc);
+> +	if (ret) {
+> +		DRM_ERROR("Failed to initialize connector\n");
+> +		return ret;
+> +	}
+> +
+> +	return drm_connector_attach_encoder(&priv->connector, bridge->encoder);
+> +}
+> +
+> +static void ch7033_bridge_detach(struct drm_bridge *bridge)
+> +{
+> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
+> +
+> +	if (priv->next_bridge->ops & DRM_BRIDGE_OP_HPD)
+> +		drm_bridge_hpd_disable(priv->next_bridge);
+> +	drm_connector_cleanup(&priv->connector);
+> +}
+> +
+> +static enum drm_mode_status ch7033_bridge_mode_valid(struct drm_bridge *bridge,
+> +				     const struct drm_display_mode *mode)
+> +{
+> +	if (mode->clock > 165000)
+> +		return MODE_CLOCK_HIGH;
+> +	if (mode->hdisplay >= 1920)
+> +		return MODE_BAD_HVALUE;
+> +	if (mode->vdisplay >= 1080)
+> +		return MODE_BAD_VVALUE;
+> +	return MODE_OK;
+> +}
+> +
+> +static void ch7033_bridge_disable(struct drm_bridge *bridge)
+> +{
+> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
+> +
+> +	regmap_write(priv->regmap, 0x03, 0x04);
+> +	regmap_update_bits(priv->regmap, 0x52, RESETDB, 0x00);
+> +}
+> +
+> +static void ch7033_bridge_enable(struct drm_bridge *bridge)
+> +{
+> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
+> +
+> +	regmap_write(priv->regmap, 0x03, 0x04);
+> +	regmap_update_bits(priv->regmap, 0x52, RESETDB, RESETDB);
+> +}
+> +
+> +static void ch7033_bridge_mode_set(struct drm_bridge *bridge,
+> +				   const struct drm_display_mode *mode,
+> +				   const struct drm_display_mode *adjusted_mode)
+> +{
+> +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
+> +	int hbporch = mode->hsync_start - mode->hdisplay;
+> +	int hsynclen = mode->hsync_end - mode->hsync_start;
+> +	int vbporch = mode->vsync_start - mode->vdisplay;
+> +	int vsynclen = mode->vsync_end - mode->vsync_start;
+> +
+> +	/*
+> +	 * Page 4
+> +	 */
+> +	regmap_write(priv->regmap, 0x03, 0x04);
+> +
+> +	/* Turn everything off to set all the registers to their defaults. */
+> +	regmap_write(priv->regmap, 0x52, 0x00);
+> +	/* Bring I/O block up. */
+> +	regmap_write(priv->regmap, 0x52, RESETIB);
+> +
+> +	/*
+> +	 * Page 0
+> +	 */
+> +	regmap_write(priv->regmap, 0x03, 0x00);
+> +
+> +	/* Bring up parts we need from the power down. */
+> +	regmap_update_bits(priv->regmap, 0x07, DRI_PD | IO_PD, 0);
+> +	regmap_update_bits(priv->regmap, 0x08, DRI_PDDRI | PDDAC | PANEN, 0);
+> +	regmap_update_bits(priv->regmap, 0x09, DPD | GCKOFF |
+> +					       HDMI_PD | VGA_PD, 0);
+> +	regmap_update_bits(priv->regmap, 0x0a, HD_DVIB, 0);
+> +
+> +	/* Horizontal input timing. */
+> +	regmap_write(priv->regmap, 0x0b, (mode->htotal >> 8) << 3 |
+> +					 (mode->hdisplay >> 8));
+> +	regmap_write(priv->regmap, 0x0c, mode->hdisplay);
+> +	regmap_write(priv->regmap, 0x0d, mode->htotal);
+> +	regmap_write(priv->regmap, 0x0e, (hsynclen >> 8) << 3 |
+> +					 (hbporch >> 8));
+> +	regmap_write(priv->regmap, 0x0f, hbporch);
+> +	regmap_write(priv->regmap, 0x10, hsynclen);
+> +
+> +	/* Vertical input timing. */
+> +	regmap_write(priv->regmap, 0x11, (mode->vtotal >> 8) << 3 |
+> +					 (mode->vdisplay >> 8));
+> +	regmap_write(priv->regmap, 0x12, mode->vdisplay);
+> +	regmap_write(priv->regmap, 0x13, mode->vtotal);
+> +	regmap_write(priv->regmap, 0x14, ((vsynclen >> 8) << 3) |
+> +					 (vbporch >> 8));
+> +	regmap_write(priv->regmap, 0x15, vbporch);
+> +	regmap_write(priv->regmap, 0x16, vsynclen);
+> +
+> +	/* Input color swap. */
+> +	regmap_update_bits(priv->regmap, 0x18, SWAP, BYTE_SWAP_BGR);
+> +
+> +	/* Input clock and sync polarity. */
+> +	regmap_update_bits(priv->regmap, 0x19, 0x1, mode->clock >> 16);
+> +	regmap_update_bits(priv->regmap, 0x19, HPO_I | VPO_I | GCLKFREQ,
+> +			   (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_I : 0 |
+> +			   (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_I : 0 |
+> +			   mode->clock >> 16);
+> +	regmap_write(priv->regmap, 0x1a, mode->clock >> 8);
+> +	regmap_write(priv->regmap, 0x1b, mode->clock);
+> +
+> +	/* Horizontal output timing. */
+> +	regmap_write(priv->regmap, 0x1f, (mode->htotal >> 8) << 3 |
+> +					 (mode->hdisplay >> 8));
+> +	regmap_write(priv->regmap, 0x20, mode->hdisplay);
+> +	regmap_write(priv->regmap, 0x21, mode->htotal);
+> +
+> +	/* Vertical output timing. */
+> +	regmap_write(priv->regmap, 0x25, (mode->vtotal >> 8) << 3 |
+> +					 (mode->vdisplay >> 8));
+> +	regmap_write(priv->regmap, 0x26, mode->vdisplay);
+> +	regmap_write(priv->regmap, 0x27, mode->vtotal);
+> +
+> +	/* VGA channel bypass */
+> +	regmap_update_bits(priv->regmap, 0x2b, VFMT, 9);
+> +
+> +	/* Output sync polarity. */
+> +	regmap_update_bits(priv->regmap, 0x2e, HPO_O | VPO_O,
+> +			   (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_O : 0 |
+> +			   (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_O : 0);
+> +
+> +	/* HDMI horizontal output timing. */
+> +	regmap_update_bits(priv->regmap, 0x54, HWO_HDMI_HI | HOO_HDMI_HI,
+> +					       (hsynclen >> 8) << 3 |
+> +					       (hbporch >> 8));
+> +	regmap_write(priv->regmap, 0x55, hbporch);
+> +	regmap_write(priv->regmap, 0x56, hsynclen);
+> +
+> +	/* HDMI vertical output timing. */
+> +	regmap_update_bits(priv->regmap, 0x57, VWO_HDMI_HI | VOO_HDMI_HI,
+> +					       (vsynclen >> 8) << 3 |
+> +					       (vbporch >> 8));
+> +	regmap_write(priv->regmap, 0x58, vbporch);
+> +	regmap_write(priv->regmap, 0x59, vsynclen);
+> +
+> +	/* Pick HDMI, not LVDS. */
+> +	regmap_update_bits(priv->regmap, 0x7e, HDMI_LVDS_SEL, HDMI_LVDS_SEL);
+> +
+> +	/*
+> +	 * Page 1
+> +	 */
+> +	regmap_write(priv->regmap, 0x03, 0x01);
+> +
+> +	/* No idea what these do, but VGA is wobbly and blinky without them. */
+> +	regmap_update_bits(priv->regmap, 0x07, CKINV, CKINV);
+> +	regmap_update_bits(priv->regmap, 0x08, DISPON, DISPON);
+> +
+> +	/* DRI PLL */
+> +	regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_DIVSEL, DRI_PLL_DIVSEL);
+> +	if (mode->clock <= 40000) {
+> +		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
+> +						       DRI_PLL_N1_0 |
+> +						       DRI_PLL_N3_1 |
+> +						       DRI_PLL_N3_0,
+> +						       0);
+> +	} else if (mode->clock < 80000) {
+> +		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
+> +						       DRI_PLL_N1_0 |
+> +						       DRI_PLL_N3_1 |
+> +						       DRI_PLL_N3_0,
+> +						       DRI_PLL_N3_0 |
+> +						       DRI_PLL_N1_0);
+> +	} else {
+> +		regmap_update_bits(priv->regmap, 0x0c, DRI_PLL_N1_1 |
+> +						       DRI_PLL_N1_0 |
+> +						       DRI_PLL_N3_1 |
+> +						       DRI_PLL_N3_0,
+> +						       DRI_PLL_N3_1 |
+> +						       DRI_PLL_N1_1);
+> +	}
+> +
+> +	/* This seems to be color calibration for VGA. */
+> +	regmap_write(priv->regmap, 0x64, 0x29); /* LSB Blue */
+> +	regmap_write(priv->regmap, 0x65, 0x29); /* LSB Green */
+> +	regmap_write(priv->regmap, 0x66, 0x29); /* LSB Red */
+> +	regmap_write(priv->regmap, 0x67, 0x00); /* MSB Blue */
+> +	regmap_write(priv->regmap, 0x68, 0x00); /* MSB Green */
+> +	regmap_write(priv->regmap, 0x69, 0x00); /* MSB Red */
+> +
+> +	regmap_update_bits(priv->regmap, 0x6b, DRI_PD_SER, 0x00);
+> +	regmap_update_bits(priv->regmap, 0x6c, DRI_PLL_PD, 0x00);
+> +
+> +	/*
+> +	 * Page 3
+> +	 */
+> +	regmap_write(priv->regmap, 0x03, 0x03);
+> +
+> +	/* More bypasses and apparently another HDMI/LVDS selector. */
+> +	regmap_update_bits(priv->regmap, 0x28, VGACLK_BP | HM_LV_SEL,
+> +					       VGACLK_BP | HM_LV_SEL);
+> +	regmap_update_bits(priv->regmap, 0x2a, HDMICLK_BP | HDMI_BP,
+> +					       HDMICLK_BP | HDMI_BP);
+> +
+> +	/*
+> +	 * Page 4
+> +	 */
+> +	regmap_write(priv->regmap, 0x03, 0x04);
+> +
+> +	/* Output clock. */
+> +	regmap_write(priv->regmap, 0x10, mode->clock >> 16);
+> +	regmap_write(priv->regmap, 0x11, mode->clock >> 8);
+> +	regmap_write(priv->regmap, 0x12, mode->clock);
+> +}
+> +
+> +static const struct drm_bridge_funcs ch7033_bridge_funcs = {
+> +	.attach = ch7033_bridge_attach,
+> +	.detach = ch7033_bridge_detach,
+> +	.mode_valid = ch7033_bridge_mode_valid,
+> +	.disable = ch7033_bridge_disable,
+> +	.enable = ch7033_bridge_enable,
+> +	.mode_set = ch7033_bridge_mode_set,
+> +};
+> +
+> +static const struct regmap_config ch7033_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0x7f,
+> +};
+> +
+> +static int ch7033_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct ch7033_priv *priv;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, priv);
+> +
+> +	ret = drm_of_find_panel_or_bridge(dev->of_node, 1, -1, NULL,
+> +					  &priv->next_bridge);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->regmap = devm_regmap_init_i2c(client, &ch7033_regmap_config);
+> +	if (IS_ERR(priv->regmap)) {
+> +		dev_err(&client->dev, "regmap init failed\n");
+> +		return PTR_ERR(priv->regmap);
+> +	}
+> +
+> +	ret = regmap_read(priv->regmap, 0x00, &val);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "error reading the model id: %d\n", ret);
+> +		return ret;
+> +	}
+> +	if ((val & 0xf7) != 0x56) {
+> +		dev_err(&client->dev, "the device is not a ch7033\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	regmap_write(priv->regmap, 0x03, 0x04);
+> +	ret = regmap_read(priv->regmap, 0x51, &val);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "error reading the model id: %d\n", ret);
+> +		return ret;
+> +	}
+> +	if ((val & 0x0f) != 3) {
+> +		dev_err(&client->dev, "unknown revision %u\n", val);
+> +		return -ENODEV;
+> +	}
+> +
+> +	INIT_LIST_HEAD(&priv->bridge.list);
+> +	priv->bridge.funcs = &ch7033_bridge_funcs;
+> +	priv->bridge.of_node = dev->of_node;
+> +	drm_bridge_add(&priv->bridge);
+> +
+> +	dev_info(dev, "Chrontel CH7033 Video Encoder\n");
+> +	return 0;
+> +}
+> +
+> +static int ch7033_remove(struct i2c_client *client)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct ch7033_priv *priv = dev_get_drvdata(dev);
+> +
+> +	drm_bridge_remove(&priv->bridge);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ch7033_dt_ids[] = {
+> +	{ .compatible = "chrontel,ch7033", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ch7033_dt_ids);
+> +
+> +static const struct i2c_device_id ch7033_ids[] = {
+> +	{ "ch7033", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ch7033_ids);
+> +
+> +static struct i2c_driver ch7033_driver = {
+> +	.probe = ch7033_probe,
+> +	.remove = ch7033_remove,
+> +	.driver = {
+> +		.name = "ch7033",
+> +		.of_match_table = of_match_ptr(ch7033_dt_ids),
+> +	},
+> +	.id_table = ch7033_ids,
+> +};
+> +
+> +module_i2c_driver(ch7033_driver);
+> +
+> +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
+> +MODULE_DESCRIPTION("Chrontel CH7033 Video Encoder Driver");
+> +MODULE_LICENSE("GPL v2");
 > -- 
-> 2.20.1
+> 2.26.0
 > 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
