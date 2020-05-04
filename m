@@ -2,250 +2,408 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E251C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EFE206EB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43EB206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E12Zl5rs"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="lCDzLgr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgEDXhi (ORCPT
+        id S1728467AbgEDXh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:37:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728340AbgEDXhX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:37:23 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765EFC061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:37:22 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id g16so522878qtp.11
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:37:22 -0700 (PDT)
+        Mon, 4 May 2020 19:37:56 -0400
+Received: from mail-bn7nam10on2053.outbound.protection.outlook.com ([40.107.92.53]:48577
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728340AbgEDXhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 19:37:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HYCHzLdxz11VAQSMom39hHjpAMITgParpA2Y8Pt77OQbjDMDSAI6frCPr/HcCJr9CWYq9lU7PDGZGenNJfTBCSBlR8LyT+GuX/zOBjGP8IxmFTho4+ObO9+c/NdsIQ8jqjmwKoy1b/ji/ZLti/MC6N291w1ne0sStfJqnbfmdL1gbynwqdhP6l1l8h4J3F6Uj60wJnrhQRNgeNdKEoq1dLJHlVfH4JB2c8/9Bywjce4S7DxnEfS6vBPgr4UF0L/wM91pGdNwRp1q8K6bnS0z33CJfwIgE52pOyMI0ZMo6JbuZr8e2LnQwyTnYLGLkSydmcraNkUWFSMwOrc5vHUGmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4cKrIEGMysnJg9JL3Qd9XWFZ5ejANFFwysBAZZeA3I4=;
+ b=aXuolSDLR3TFgdyUhXD3lUmo8tLoP3XCyca1Viafxk1yvg2A2CDBjRO8hnDc2fPjwnEYxReh+3sW6Rw6Y3anwsMHwFYakJHD9cH/x6leZmHOuAD3oCKdl/NkJ9KH2Nq27ht2U85n6ziAirx2s1uGgJo0ubWF6V4+WFij8dC6JRaWC6qYYRuLALn66Zu2g79lcdoJuR5GP80m8grkWjprtVBYRvZqfSOwxJti7hiVuOdzMEFbKodIQcb+vqoyGE2ZKZXi+tJszjbAc8H9Tw8DogLudmZfXUdmfQwSj+LcxSeQEM73fgzTRA1oKMiMUwaTVxfFxyy+yb3QIl3GtSUqbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+SVKEsIIeMIoq0nGWFOrPILES0nl3fNBl6idp0P/1Ps=;
-        b=E12Zl5rs1mRKdlFDSASU1tgCY+SeIsOLtN7ovHj47a+ZyyGQIF66PyT0qFDSgakdvp
-         7k2Jd1MzK0s6JWerc6Ddu8x5QMo5Ldt1mItM7t1sI8Vhzdj2iLqKjD7qu8BsizJTjgRf
-         N50yS8cDquc7OFGFpc4MhgfIRd+4m5XEMrMkv+cu1wbloUNEQ1yixeV8mn1+i2LBbLTP
-         hXQIanuyvhqXHOgRGEEEaFwQjcWpjGoy1VYDO7kDXMPjSlXHO5fPtpCvzaQeiyPBk6ET
-         widFwsXxvWSjbOFTL43UcTKdec7dPizHXs2a6YVK2p0ELrpMRBJ1M9zHAQNLC1Y6snBh
-         Zk3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+SVKEsIIeMIoq0nGWFOrPILES0nl3fNBl6idp0P/1Ps=;
-        b=CgDjkH5cvvwsI1yQR6+iiu/gyGuATW4uotHgt+lZx7s1qdWGhLuf29io8+jEJmcxQh
-         d7fsbwhqwWubzOCDt2iFxVfvvZNQeg4I7CILE8DcW60OPJp6eec1fV81/u7RUw3wJ4FO
-         fAeCgw7Q54cK0qNKnWmsBxM2HZz3NGVpF3PUSHKdPCFn4O1EGHeDjTSHch4boOHWpQW8
-         OyW/LTS8FMWZX92dMGAv9f4xg39OfiZS+Es9MGOgPq3YhVfjr5XReVYF2cdU3ZYIPrNE
-         8VTSu7aksvtmjv3mWErfYGVGgAjCFvPSeU8QL282fbhhXJQAYdlk8erNxpjv3ZhFWFfW
-         t1Zg==
-X-Gm-Message-State: AGi0PuYq6InmYTPIg1L2TkWPn7W2tKSmpffiBJi4V/y2+QyLxBnPq79j
-        pcmN5yAoa+0ppdMb+kSFsQPP2oJydRM=
-X-Google-Smtp-Source: APiQypJnW5ZwyFqr8n/awhxvGwG8XA52esUciJmhc+bO1jvWdIgr8hDfe2WTyJoPS28OP5JvaLXT6A==
-X-Received: by 2002:ac8:a02:: with SMTP id b2mr1870qti.95.1588635441007;
-        Mon, 04 May 2020 16:37:21 -0700 (PDT)
-Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id x125sm494311qke.34.2020.05.04.16.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 16:37:20 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 2/3] net: ipa: introduce ipa_endpoint_program_suspend()
-Date:   Mon,  4 May 2020 18:37:12 -0500
-Message-Id: <20200504233713.16954-3-elder@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200504233713.16954-1-elder@linaro.org>
-References: <20200504233713.16954-1-elder@linaro.org>
-MIME-Version: 1.0
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4cKrIEGMysnJg9JL3Qd9XWFZ5ejANFFwysBAZZeA3I4=;
+ b=lCDzLgr5nU5I6iER1lFDZqPZF0TgmEO1a3wpLBtFf9KNc8D4HTp/Y8YXJP+Jd6xfS5Bg0CRKWImyVOhBU2c3makaZb4rgC5NGnJzskPPsjKvXoP2lipWlDg86nhECvDzKcbo8AeHBUXDKMqzJTG5/7c2jPYjccxb6T1yvRAkd/4=
+Authentication-Results: oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1577.namprd12.prod.outlook.com (2603:10b6:4:f::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.29; Mon, 4 May 2020 23:37:50 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::6962:a808:3fd5:7adb%3]) with mapi id 15.20.2958.029; Mon, 4 May 2020
+ 23:37:50 +0000
+Date:   Mon, 4 May 2020 23:37:47 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Venu Busireddy <venu.busireddy@oracle.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srutherford@google.com,
+        rientjes@google.com, brijesh.singh@amd.com
+Subject: Re: [PATCH v7 01/18] KVM: SVM: Add KVM_SEV SEND_START command
+Message-ID: <20200504233747.GB3615@ashkalra_ubuntu_server>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+ <6473e5803d8c47d9b207810e8015c3066c39f17d.1588234824.git.ashish.kalra@amd.com>
+ <20200504210717.GA1699387@vbusired-dt>
+ <20200504223637.GA3615@ashkalra_ubuntu_server>
+ <20200504231050.GA1701627@vbusired-dt>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200504231050.GA1701627@vbusired-dt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: DM5PR07CA0117.namprd07.prod.outlook.com
+ (2603:10b6:4:ae::46) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server (165.204.77.1) by DM5PR07CA0117.namprd07.prod.outlook.com (2603:10b6:4:ae::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Mon, 4 May 2020 23:37:49 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5b276b94-4fb6-4086-a5e2-08d7f084286c
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1577:|DM5PR12MB1577:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1577D6C24AD3D58EFEE42A9D8EA60@DM5PR12MB1577.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 03932714EB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KmOUcL4DVqapsDyEWtqgjR2iGXqWqOtnXRRNEh0eP4VJQlpvHshMmIkAoHQlGUmXW98e6bN3R5vS5lRZ5kMjvpRo4tha431g7hIsyvx2BX8z68L/S/8MjNbPJArbN10FaZAhxNszkhuW57xluoHhQFoErWLXdB8+vaJ5RX5SuTvYW9pgHhzDtATKJQdFwb42q5gGxJ2draimmpVve7bbpUQf8uyjLTCFDuxyV+AlYCAGx+4QpxmtI7tLTtddu7dl/p+9bUdV2DqVwEY+GLF7Awa7za7NfUOK61Qddqwrqs78rIZoaaYGAcLAHdVmicmv1G2IFdic6ZLa8J/xi2JfE2uOw+a8kKATlGdFl93Srj8lRbWBS8nv31rDDIobIBJaV14STlG2w6L+kf9mkoW5XsWusRPXE9MPS+YNi3et8ONrQlAXZTYp8DrL3bj2SBOfF1dNX3n38RVbx6W6lfwxkbnWTDhjZ+vdSQGaMcr5xsaM9JqK0seDJrLft2akCIoL4c2rg4sYKNHi5vMwfkrtVQRPHVA67EtLYY4opGZ1EAaJHLaWoa66oqImxKOM4EmyfVh5jrncHfxpSRXxagl0pShOXq62/jGl93YUii9GvSY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(396003)(376002)(136003)(366004)(33430700001)(9686003)(33656002)(316002)(52116002)(44832011)(7416002)(45080400002)(966005)(33716001)(86362001)(478600001)(2906002)(66574012)(1076003)(66476007)(30864003)(66556008)(55016002)(66946007)(6916009)(4326008)(5660300002)(6496006)(956004)(8676002)(186003)(16526019)(8936002)(53546011)(26005)(33440700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: cY0Jc2MaI3mL02n8QYeya4gPv29hA1Mg0h4a+wXFpgbXY6qj5klKSgEf5blrG30jWZgXKd7w3S2rfjr6669MpBGZPVcZ4zdP/JhyLHcOFZzKK6i6y55HNluR+RTLDy3iIcki8V7ow+VLo3IonVvWZOZ7ZmSkK6EDpVV4AY9glK31r7N9xnWns7kCYPrhcoh5EQLbLBwsBiURze4xYmPDRMMKgDU0C8FeFqNJJwBc1OAGFjhbVT4ambhPqg6r5TGN3MYO+4pI34+eqRK+a3nNaALr3Huu/sbdzLel5eaSmMkGRIdMaEuM5PzhRjhrGMsxsX/pa6Q9sUSKu0S+oHfeRf4TnH2ZqARU6Bv/8lIrz3AmlZ8qYa2G1ZIw3lJPYAWDIPV90coSi4cnYXLzFwEPMQdjKdlui6Lm2qqgKULEXYvT58+att2cb5Z82cY3mUZMW8jkoCz2oulAjsbJel589IBpyTl68KiKAR2dArCbipxD0HX+OX50E8HIWf0YuXfp6QNNGmCEeDHxEBYiXF3RQEJx+ezttE9brXXt7P7zJFtmc3KdCNeLwuW7hBl/6t9j8BkC2sh/GRRq4xHnNz2X/+Hl7Cm2c7aT+m6I/csFEJ+tKIiytwPqfJBYGvgrbQrvfdsmbK29uVpo3CJzizqhV626H0BaQKV85wUoBAGwphxExC7kjZ62D0lVyruaEl4MVCEHL8U/mmDMa7LqBkKmCa/OuaiptoQnE/0+UIfJowitiAL6bv6H0aQf5rszRa71/5z6H77cSJ60h7l29WF2dCsy0Vpyl59zllCI9ycroX0=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b276b94-4fb6-4086-a5e2-08d7f084286c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 23:37:50.2901
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i1nDLvbJXInLE94kRnaO20it22aBEh/J41YhU15688dLKV8cmrUKoxCbxILp0gaqSj+tKjRRLUdQGZlMTgNcZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1577
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a new helper function that encapsulates enabling or disabling
-suspend on an RX endpoint.  It returns the previous state of the
-endpoint (true means suspend mode was enabled).
+On Mon, May 04, 2020 at 06:10:50PM -0500, Venu Busireddy wrote:
+> On 2020-05-04 22:36:37 +0000, Ashish Kalra wrote:
+> > On Mon, May 04, 2020 at 04:07:17PM -0500, Venu Busireddy wrote:
+> > > On 2020-04-30 08:40:34 +0000, Ashish Kalra wrote:
+> > > > From: Brijesh Singh <Brijesh.Singh@amd.com>
+> > > > 
+> > > > The command is used to create an outgoing SEV guest encryption context.
+> > > > 
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > > Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> > > > Cc: Joerg Roedel <joro@8bytes.org>
+> > > > Cc: Borislav Petkov <bp@suse.de>
+> > > > Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> > > > Cc: x86@kernel.org
+> > > > Cc: kvm@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > Reviewed-by: Steve Rutherford <srutherford@google.com>
+> > > > Reviewed-by: Venu Busireddy <venu.busireddy@oracle.com>
+> > > > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> > > > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > > > ---
+> > > >  .../virt/kvm/amd-memory-encryption.rst        |  27 ++++
+> > > >  arch/x86/kvm/svm/sev.c                        | 125 ++++++++++++++++++
+> > > >  include/linux/psp-sev.h                       |   8 +-
+> > > >  include/uapi/linux/kvm.h                      |  12 ++
+> > > >  4 files changed, 168 insertions(+), 4 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> > > > index c3129b9ba5cb..4fd34fc5c7a7 100644
+> > > > --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> > > > +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> > > > @@ -263,6 +263,33 @@ Returns: 0 on success, -negative on error
+> > > >                  __u32 trans_len;
+> > > >          };
+> > > >  
+> > > > +10. KVM_SEV_SEND_START
+> > > > +----------------------
+> > > > +
+> > > > +The KVM_SEV_SEND_START command can be used by the hypervisor to create an
+> > > > +outgoing guest encryption context.
+> > > > +
+> > > > +Parameters (in): struct kvm_sev_send_start
+> > > > +
+> > > > +Returns: 0 on success, -negative on error
+> > > > +
+> > > > +::
+> > > > +        struct kvm_sev_send_start {
+> > > > +                __u32 policy;                 /* guest policy */
+> > > > +
+> > > > +                __u64 pdh_cert_uaddr;         /* platform Diffie-Hellman certificate */
+> > > > +                __u32 pdh_cert_len;
+> > > > +
+> > > > +                __u64 plat_certs_uadr;        /* platform certificate chain */
+> > > 
+> > > Can this be changed as mentioned in the previous review
+> > > (https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fkvm%2F20200402062726.GA647295%40vbusired-dt%2F&amp;data=02%7C01%7Cashish.kalra%40amd.com%7Cf8d037dd37224ed4a33608d7f08067f5%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637242306610788233&amp;sdata=eu1SgC6ukawOuxTeAoA3mzKiMNWlPCCa5lGEVs9D1s0%3D&amp;reserved=0)?
+> > > 
+> > > > +                __u32 plat_certs_len;
+> > > > +
+> > > > +                __u64 amd_certs_uaddr;        /* AMD certificate */
+> > > > +                __u32 amd_cert_len;
+> > > 
+> > > Can this be changed as mentioned in the previous review
+> > > (https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fkvm%2F20200402062726.GA647295%40vbusired-dt%2F&amp;data=02%7C01%7Cashish.kalra%40amd.com%7Cf8d037dd37224ed4a33608d7f08067f5%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637242306610798235&amp;sdata=7xgp4ko8VGokGGQz1X1yPhz1ZXY9R501YginoDcen90%3D&amp;reserved=0)?
+> > > 
+> > > > +
+> > > > +                __u64 session_uaddr;          /* Guest session information */
+> > > > +                __u32 session_len;
+> > > > +        };
+> > > > +
+> > > >  References
+> > > >  ==========
+> > > >  
+> > > > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> > > > index cf912b4aaba8..5a15b43b4349 100644
+> > > > --- a/arch/x86/kvm/svm/sev.c
+> > > > +++ b/arch/x86/kvm/svm/sev.c
+> > > > @@ -913,6 +913,128 @@ static int sev_launch_secret(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> > > >  	return ret;
+> > > >  }
+> > > >  
+> > > > +/* Userspace wants to query session length. */
+> > > > +static int
+> > > > +__sev_send_start_query_session_length(struct kvm *kvm, struct kvm_sev_cmd *argp,
+> > > > +				      struct kvm_sev_send_start *params)
+> > > > +{
+> > > > +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > > > +	struct sev_data_send_start *data;
+> > > > +	int ret;
+> > > > +
+> > > > +	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> > > > +	if (data == NULL)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	data->handle = sev->handle;
+> > > > +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
+> > > > +
+> > > > +	params->session_len = data->session_len;
+> > > > +	if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
+> > > > +				sizeof(struct kvm_sev_send_start)))
+> > > > +		ret = -EFAULT;
+> > > > +
+> > > > +	kfree(data);
+> > > > +	return ret;
+> > > > +}
+> > > > +
+> > > > +static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> > > > +{
+> > > > +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> > > > +	struct sev_data_send_start *data;
+> > > > +	struct kvm_sev_send_start params;
+> > > > +	void *amd_certs, *session_data;
+> > > > +	void *pdh_cert, *plat_certs;
+> > > > +	int ret;
+> > > > +
+> > > > +	if (!sev_guest(kvm))
+> > > > +		return -ENOTTY;
+> > > > +
+> > > > +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
+> > > > +				sizeof(struct kvm_sev_send_start)))
+> > > > +		return -EFAULT;
+> > > > +
+> > > > +	/* if session_len is zero, userspace wants to query the session length */
+> > > > +	if (!params.session_len)
+> > > > +		return __sev_send_start_query_session_length(kvm, argp,
+> > > > +				&params);
+> > > > +
+> > > > +	/* some sanity checks */
+> > > > +	if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
+> > > > +	    !params.session_uaddr || params.session_len > SEV_FW_BLOB_MAX_SIZE)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	/* allocate the memory to hold the session data blob */
+> > > > +	session_data = kmalloc(params.session_len, GFP_KERNEL_ACCOUNT);
+> > > > +	if (!session_data)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	/* copy the certificate blobs from userspace */
+> > > > +	pdh_cert = psp_copy_user_blob(params.pdh_cert_uaddr,
+> > > > +				params.pdh_cert_len);
+> > > > +	if (IS_ERR(pdh_cert)) {
+> > > > +		ret = PTR_ERR(pdh_cert);
+> > > > +		goto e_free_session;
+> > > > +	}
+> > > > +
+> > > > +	plat_certs = psp_copy_user_blob(params.plat_certs_uaddr,
+> > > > +				params.plat_certs_len);
+> > > > +	if (IS_ERR(plat_certs)) {
+> > > > +		ret = PTR_ERR(plat_certs);
+> > > > +		goto e_free_pdh;
+> > > > +	}
+> > > > +
+> > > > +	amd_certs = psp_copy_user_blob(params.amd_certs_uaddr,
+> > > > +				params.amd_certs_len);
+> > > > +	if (IS_ERR(amd_certs)) {
+> > > > +		ret = PTR_ERR(amd_certs);
+> > > > +		goto e_free_plat_cert;
+> > > > +	}
+> > > > +
+> > > > +	data = kzalloc(sizeof(*data), GFP_KERNEL_ACCOUNT);
+> > > > +	if (data == NULL) {
+> > > > +		ret = -ENOMEM;
+> > > > +		goto e_free_amd_cert;
+> > > > +	}
+> > > > +
+> > > > +	/* populate the FW SEND_START field with system physical address */
+> > > > +	data->pdh_cert_address = __psp_pa(pdh_cert);
+> > > > +	data->pdh_cert_len = params.pdh_cert_len;
+> > > > +	data->plat_certs_address = __psp_pa(plat_certs);
+> > > > +	data->plat_certs_len = params.plat_certs_len;
+> > > > +	data->amd_certs_address = __psp_pa(amd_certs);
+> > > > +	data->amd_certs_len = params.amd_certs_len;
+> > > > +	data->session_address = __psp_pa(session_data);
+> > > > +	data->session_len = params.session_len;
+> > > > +	data->handle = sev->handle;
+> > > > +
+> > > 
+> > > Can the following code be changed as acknowledged in
+> > > https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fkvm%2Ff715bf99-0158-4d5f-77f3-b27743db3c59%40amd.com%2F&amp;data=02%7C01%7Cashish.kalra%40amd.com%7Cf8d037dd37224ed4a33608d7f08067f5%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637242306610798235&amp;sdata=s3ZwfpCm94x2LCNN8I1jjcWcrkj3Nrw5PnOvxdDxSCs%3D&amp;reserved=0?
+> > > 
+> > 
+> > I believe that this has been already addressed as discussed :
+> > 
+> > Ah, so the main issue is we should not be going to e_free on error. If
+> > session_len is less than the expected len then FW will return an error.
+> > In the case of an error we can skip copying the session_data into
+> > userspace buffer but we still need to pass the session_len and policy
+> > back to the userspace.
+> > 
+> > So this patch is still returning session_len and policy back to user
+> > in case of error : ( as the code below shows )
+> > 
+> > if (!ret && copy_to_user((void
+> > __user*)(uintptr_t)params.session_uaddr,...
+> 
+> This fix addresses only one part of the problem. I am referring to the
+> other suggestion about avoiding copying the entire kvm_sev_send_start
+> structure back to the user. As I was mentioning in the discussion,
+> the only fields that changed are the policy and session_len fields. So,
+> why copy back the entire structure? Why not just those two fields?
+> 
+> > 
 
-Create another function that handles enabling or disabling delay mode
-on a TX endpoint.  Delay mode does not work correctly on IPA version
-4.2, so we don't currently use it (and shouldn't).
+Both policy and session_len are two different fields in the
+kvm_sev_send_start structure, why to complicate it by using two
+different copy_to_user()'s here, to send two 32-bit words back to user,
+it's much simpler to copy the whole structure back in one copy_to_user() 
+(makes it less complicated with no additional address computations),
+also this is just a session start code, so it is invoked once at
+the beginning of the migration process and it is not a performance
+critical path such that saving few bytes of copy_to_user() wil affect it.
 
-We only set delay mode in one case, and although we don't expect an
-endpoint to already be in delay mode, it doesn't really matter if it
-was.  So the delay function doesn't return a value.
+Thanks,
+Ashish
 
-Stop issuing warnings if the previous suspend or delay mode state
-differs from what is expected.
-
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/ipa_endpoint.c | 67 +++++++++++++++++++++-------------
- 1 file changed, 41 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index ad72adff653e..a830101b8edb 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -293,7 +293,14 @@ ipa_endpoint_init_ctrl(struct ipa_endpoint *endpoint, bool suspend_delay)
- 	u32 mask;
- 	u32 val;
- 
--	/* assert(ipa->version == IPA_VERSION_3_5_1 */
-+	/* Suspend is not supported for IPA v4.0+.  Delay doesn't work
-+	 * correctly on IPA v4.2.
-+	 *
-+	 * if (endpoint->toward_ipa)
-+	 * 	assert(ipa->version != IPA_VERSION_4.2);
-+	 * else
-+	 * 	assert(ipa->version == IPA_VERSION_3_5_1);
-+	 */
- 	mask = endpoint->toward_ipa ? ENDP_DELAY_FMASK : ENDP_SUSPEND_FMASK;
- 
- 	val = ioread32(ipa->reg_virt + offset);
-@@ -307,13 +314,31 @@ ipa_endpoint_init_ctrl(struct ipa_endpoint *endpoint, bool suspend_delay)
- 	return state;
- }
- 
-+/* We currently don't care what the previous state was for delay mode */
-+static void
-+ipa_endpoint_program_delay(struct ipa_endpoint *endpoint, bool enable)
-+{
-+	/* assert(endpoint->toward_ipa); */
-+
-+	(void)ipa_endpoint_init_ctrl(endpoint, enable);
-+}
-+
-+/* Returns previous suspend state (true means it was enabled) */
-+static bool
-+ipa_endpoint_program_suspend(struct ipa_endpoint *endpoint, bool enable)
-+{
-+	/* assert(!endpoint->toward_ipa); */
-+
-+	return ipa_endpoint_init_ctrl(endpoint, enable);
-+}
-+
- /* Enable or disable delay or suspend mode on all modem endpoints */
- void ipa_endpoint_modem_pause_all(struct ipa *ipa, bool enable)
- {
- 	bool support_suspend;
- 	u32 endpoint_id;
- 
--	/* DELAY mode doesn't work right on IPA v4.2 */
-+	/* DELAY mode doesn't work correctly on IPA v4.2 */
- 	if (ipa->version == IPA_VERSION_4_2)
- 		return;
- 
-@@ -327,8 +352,10 @@ void ipa_endpoint_modem_pause_all(struct ipa *ipa, bool enable)
- 			continue;
- 
- 		/* Set TX delay mode, or for IPA v3.5.1 RX suspend mode */
--		if (endpoint->toward_ipa || support_suspend)
--			(void)ipa_endpoint_init_ctrl(endpoint, enable);
-+		if (endpoint->toward_ipa)
-+			ipa_endpoint_program_delay(endpoint, enable);
-+		else if (support_suspend)
-+			(void)ipa_endpoint_program_suspend(endpoint, enable);
- 	}
- }
- 
-@@ -1135,8 +1162,8 @@ static int ipa_endpoint_reset_rx_aggr(struct ipa_endpoint *endpoint)
- {
- 	struct device *dev = &endpoint->ipa->pdev->dev;
- 	struct ipa *ipa = endpoint->ipa;
--	bool endpoint_suspended = false;
- 	struct gsi *gsi = &ipa->gsi;
-+	bool suspended = false;
- 	dma_addr_t addr;
- 	bool db_enable;
- 	u32 retries;
-@@ -1166,7 +1193,7 @@ static int ipa_endpoint_reset_rx_aggr(struct ipa_endpoint *endpoint)
- 
- 	/* Make sure the channel isn't suspended */
- 	if (endpoint->ipa->version == IPA_VERSION_3_5_1)
--		endpoint_suspended = ipa_endpoint_init_ctrl(endpoint, false);
-+		suspended = ipa_endpoint_program_suspend(endpoint, false);
- 
- 	/* Start channel and do a 1 byte read */
- 	ret = gsi_channel_start(gsi, endpoint->channel_id);
-@@ -1211,8 +1238,8 @@ static int ipa_endpoint_reset_rx_aggr(struct ipa_endpoint *endpoint)
- err_endpoint_stop:
- 	ipa_endpoint_stop(endpoint);
- out_suspend_again:
--	if (endpoint_suspended)
--		(void)ipa_endpoint_init_ctrl(endpoint, true);
-+	if (suspended)
-+		(void)ipa_endpoint_program_suspend(endpoint, true);
- 	dma_unmap_single(dev, addr, len, DMA_FROM_DEVICE);
- out_kfree:
- 	kfree(virt);
-@@ -1313,30 +1340,18 @@ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
- 
- static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
- {
--	struct device *dev = &endpoint->ipa->pdev->dev;
--	int ret;
--
- 	if (endpoint->toward_ipa) {
- 		bool delay_mode = endpoint->data->tx.delay;
- 
--		/* Endpoint is expected to not be in delay mode */
--		if (ipa_endpoint_init_ctrl(endpoint, delay_mode))
--			dev_warn(dev,
--				"TX endpoint %u was %sin delay mode\n",
--				endpoint->endpoint_id,
--				delay_mode ? "already " : "");
-+		if (endpoint->ipa->version != IPA_VERSION_4_2)
-+			ipa_endpoint_program_delay(endpoint, delay_mode);
- 		ipa_endpoint_init_hdr_ext(endpoint);
- 		ipa_endpoint_init_aggr(endpoint);
- 		ipa_endpoint_init_deaggr(endpoint);
- 		ipa_endpoint_init_seq(endpoint);
- 	} else {
--		/* Endpoint is expected to not be suspended */
--		if (endpoint->ipa->version == IPA_VERSION_3_5_1) {
--			if (ipa_endpoint_init_ctrl(endpoint, false))
--				dev_warn(dev,
--					"RX endpoint %u was suspended\n",
--					endpoint->endpoint_id);
--		}
-+		if (endpoint->ipa->version == IPA_VERSION_3_5_1)
-+			(void)ipa_endpoint_program_suspend(endpoint, false);
- 		ipa_endpoint_init_hdr_ext(endpoint);
- 		ipa_endpoint_init_aggr(endpoint);
- 	}
-@@ -1448,7 +1463,7 @@ void ipa_endpoint_suspend_one(struct ipa_endpoint *endpoint)
- 		 * aggregation frame, then simulating the arrival of such
- 		 * an interrupt.
- 		 */
--		WARN_ON(ipa_endpoint_init_ctrl(endpoint, true));
-+		(void)ipa_endpoint_program_suspend(endpoint, true);
- 		ipa_endpoint_suspend_aggr(endpoint);
- 	}
- 
-@@ -1471,7 +1486,7 @@ void ipa_endpoint_resume_one(struct ipa_endpoint *endpoint)
- 	/* IPA v3.5.1 doesn't use channel start for resume */
- 	start_channel = endpoint->ipa->version != IPA_VERSION_3_5_1;
- 	if (!endpoint->toward_ipa && !start_channel)
--		WARN_ON(!ipa_endpoint_init_ctrl(endpoint, false));
-+		(void)ipa_endpoint_program_suspend(endpoint, false);
- 
- 	ret = gsi_channel_resume(gsi, endpoint->channel_id, start_channel);
- 	if (ret)
--- 
-2.20.1
-
+> > 
+> > > > +	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_START, data, &argp->error);
+> > > > +
+> > > > +	if (!ret && copy_to_user((void __user *)(uintptr_t)params.session_uaddr,
+> > > > +			session_data, params.session_len)) {
+> > > > +		ret = -EFAULT;
+> > > > +		goto e_free;
+> > > > +	}
+> > > > +
+> > > > +	params.policy = data->policy;
+> > > > +	params.session_len = data->session_len;
+> > > > +	if (copy_to_user((void __user *)(uintptr_t)argp->data, &params,
+> > > > +				sizeof(struct kvm_sev_send_start)))
+> > > > +		ret = -EFAULT;
+> > > > +
+> > > > +e_free:
+> > > > +	kfree(data);
+> > > > +e_free_amd_cert:
+> > > > +	kfree(amd_certs);
+> > > > +e_free_plat_cert:
+> > > > +	kfree(plat_certs);
+> > > > +e_free_pdh:
+> > > > +	kfree(pdh_cert);
+> > > > +e_free_session:
+> > > > +	kfree(session_data);
+> > > > +	return ret;
+> > > > +}
+> > > > +
+> > > >  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> > > >  {
+> > > >  	struct kvm_sev_cmd sev_cmd;
+> > > > @@ -957,6 +1079,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> > > >  	case KVM_SEV_LAUNCH_SECRET:
+> > > >  		r = sev_launch_secret(kvm, &sev_cmd);
+> > > >  		break;
+> > > > +	case KVM_SEV_SEND_START:
+> > > > +		r = sev_send_start(kvm, &sev_cmd);
+> > > > +		break;
+> > > >  	default:
+> > > >  		r = -EINVAL;
+> > > >  		goto out;
+> > > > diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
+> > > > index 5167bf2bfc75..9f63b9d48b63 100644
+> > > > --- a/include/linux/psp-sev.h
+> > > > +++ b/include/linux/psp-sev.h
+> > > > @@ -323,11 +323,11 @@ struct sev_data_send_start {
+> > > >  	u64 pdh_cert_address;			/* In */
+> > > >  	u32 pdh_cert_len;			/* In */
+> > > >  	u32 reserved1;
+> > > > -	u64 plat_cert_address;			/* In */
+> > > > -	u32 plat_cert_len;			/* In */
+> > > > +	u64 plat_certs_address;			/* In */
+> > > > +	u32 plat_certs_len;			/* In */
+> > > >  	u32 reserved2;
+> > > > -	u64 amd_cert_address;			/* In */
+> > > > -	u32 amd_cert_len;			/* In */
+> > > > +	u64 amd_certs_address;			/* In */
+> > > > +	u32 amd_certs_len;			/* In */
+> > > >  	u32 reserved3;
+> > > >  	u64 session_address;			/* In */
+> > > >  	u32 session_len;			/* In/Out */
+> > > > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > > > index 428c7dde6b4b..8827d43e2684 100644
+> > > > --- a/include/uapi/linux/kvm.h
+> > > > +++ b/include/uapi/linux/kvm.h
+> > > > @@ -1598,6 +1598,18 @@ struct kvm_sev_dbg {
+> > > >  	__u32 len;
+> > > >  };
+> > > >  
+> > > > +struct kvm_sev_send_start {
+> > > > +	__u32 policy;
+> > > > +	__u64 pdh_cert_uaddr;
+> > > > +	__u32 pdh_cert_len;
+> > > > +	__u64 plat_certs_uaddr;
+> > > > +	__u32 plat_certs_len;
+> > > > +	__u64 amd_certs_uaddr;
+> > > > +	__u32 amd_certs_len;
+> > > > +	__u64 session_uaddr;
+> > > > +	__u32 session_len;
+> > > > +};
+> > > > +
+> > > >  #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
+> > > >  #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
+> > > >  #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
+> > > > -- 
+> > > > 2.17.1
+> > > > 
