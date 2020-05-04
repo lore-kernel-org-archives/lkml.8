@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B865FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E00BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9F92078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6652078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616062;
-	bh=5RSOwtjdCwwkfZcgxZNKLUw1gyJxdXv2+C7jrbdkHOY=;
+	s=default; t=1588616066;
+	bh=k62scmE/GZiKnp3l2l7zkJn0NgOpPJlV7ZzvKqtdrZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yDRm1C3BILuUIDvQWq+PmDVeQ/rn3aRfImBZBVl8+0qmGLpwAKTS1Qs05NGK+48h9
-	 YixKR/RYhNxJg9bPYDV2jrwtR/JrjOrDwwQa0uZaFZupy5AWXsWPLc2Fh0u6IheyH/
-	 V7L6BGiOTRDTdPbY8yljMAQcPhCof+iFYWD8G7sQ=
+	b=pwut/++U0tbQx7tSyBWc/PeLBjfGWxG6ORrQt8x89IumLJmv0b4a9gBT7Kv9EA6g/
+	 1vRKKuaHWhW7pDppLhdx0K8Be6zPYqKhxeWV4am5Md+AVtoMliFpNivcKY8fD5fQH9
+	 cTOsgmgXF8EDMVz0+HnQSN15HxNEWq9PID0beyjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732340AbgEDSOV (ORCPT
+        id S1731014AbgEDSAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55524 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731038AbgEDSAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:39 -0400
+        id S1730994AbgEDSA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 439DC2073B;
-        Mon,  4 May 2020 18:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09B21206B8;
+        Mon,  4 May 2020 18:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615238;
-        bh=5RSOwtjdCwwkfZcgxZNKLUw1gyJxdXv2+C7jrbdkHOY=;
+        s=default; t=1588615226;
+        bh=k62scmE/GZiKnp3l2l7zkJn0NgOpPJlV7ZzvKqtdrZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpSkmrFHUpG+fDc8blJew3BDr7vwvb3nO0UHrOMXm/P9sXNscvw224AtZtfzsM2KY
-         gtmeqXrHpp1HDUNidI88UBFaX8nTOSPTMqkJIyMf5uZMTzCIHhk5GSqcZcvcZYfU2w
-         bny1TQpilEuwrm7BG5SyjMLJ3RIGUYk7YuY4uvIs=
+        b=ArYokJSnEAO/l9xmqSkTUcPAp6tiaYDDmjqCNlfT+dzyCmPNYV8s3z+9g0VyXPkfm
+         9UVqv1iAXnn2iawZdCbakBnl3mP8CN2EH05UrTD7Xfo9L+VVL/SCSTNSc7RcyBZgxt
+         pgRZSZHJSEcJ5ObXhkNQ2ny0RzR7dDEULus/+I2U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
-        David Disseldorp <ddiss@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 21/26] scsi: target/iblock: fix WRITE SAME zeroing
-Date:   Mon,  4 May 2020 19:57:35 +0200
-Message-Id: <20200504165447.183232934@linuxfoundation.org>
+        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 17/26] RDMA/mlx4: Initialize ib_spec on the stack
+Date:   Mon,  4 May 2020 19:57:31 +0200
+Message-Id: <20200504165446.326630840@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
 References: <20200504165442.494398840@linuxfoundation.org>
@@ -60,44 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Alaa Hleihel <alaa@mellanox.com>
 
-commit 1d2ff149b263c9325875726a7804a0c75ef7112e upstream.
+commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c upstream.
 
-SBC4 specifies that WRITE SAME requests with the UNMAP bit set to zero
-"shall perform the specified write operation to each LBA specified by the
-command".  Commit 2237498f0b5c ("target/iblock: Convert WRITE_SAME to
-blkdev_issue_zeroout") modified the iblock backend to call
-blkdev_issue_zeroout() when handling WRITE SAME requests with UNMAP=0 and a
-zero data segment.
+Initialize ib_spec on the stack before using it, otherwise we will have
+garbage values that will break creating default rules with invalid parsing
+error.
 
-The iblock blkdev_issue_zeroout() call incorrectly provides a flags
-parameter of 0 (bool false), instead of BLKDEV_ZERO_NOUNMAP.  The bool
-false parameter reflects the blkdev_issue_zeroout() API prior to commit
-ee472d835c26 ("block: add a flags argument to (__)blkdev_issue_zeroout")
-which was merged shortly before 2237498f0b5c.
-
-Link: https://lore.kernel.org/r/20200419163109.11689-1-ddiss@suse.de
-Fixes: 2237498f0b5c ("target/iblock: Convert WRITE_SAME to blkdev_issue_zeroout")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
+Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/target_core_iblock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx4/main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/target/target_core_iblock.c
-+++ b/drivers/target/target_core_iblock.c
-@@ -447,7 +447,7 @@ iblock_execute_zero_out(struct block_dev
- 				target_to_linux_sector(dev, cmd->t_task_lba),
- 				target_to_linux_sector(dev,
- 					sbc_get_write_same_sectors(cmd)),
--				GFP_KERNEL, false);
-+				GFP_KERNEL, BLKDEV_ZERO_NOUNMAP);
- 	if (ret)
- 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1614,8 +1614,9 @@ static int __mlx4_ib_create_default_rule
+ 	int i;
  
+ 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
++		union ib_flow_spec ib_spec = {};
+ 		int ret;
+-		union ib_flow_spec ib_spec;
++
+ 		switch (pdefault_rules->rules_create_list[i]) {
+ 		case 0:
+ 			/* no rule */
 
 
