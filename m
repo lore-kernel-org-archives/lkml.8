@@ -2,147 +2,95 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50429C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA43AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB91206EB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B709E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588568423;
+	bh=Sqc/o6T+nFXemlcgmHtEKzYmFketuc1fqMA+mAYUeDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=trryL68+mKwBTQVGoSeiamuiJrCMsUz+L6cHfqpeAhdHmgVZrqG/iAjG4yuCXI7BI
+	 MGfVR2Fn6TvkK0KVxUnm7SMQyXPKJW5atfkBk9kuIRJGdApFMzWaWAT14MWMSFNul+
+	 ArDii2dxPvkp9QeO2HkYZxi2IVnvo8BN1Kb/3Cw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgEDElN (ORCPT
+        id S1726578AbgEDFAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 00:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgEDElN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 00:41:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62D8C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 21:41:12 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVSug-0003Ve-H5; Mon, 04 May 2020 06:41:06 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jVSuf-0004v2-Qf; Mon, 04 May 2020 06:41:05 +0200
-Date:   Mon, 4 May 2020 06:41:05 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     David Jander <david@protonic.nl>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
-        Marek Vasut <marex@denx.de>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH net-next v4 0/2] provide support for PHY master/slave
- configuration
-Message-ID: <20200504044105.rhjucllibspdsrxe@pengutronix.de>
-References: <20200504043320.29041-1-o.rempel@pengutronix.de>
+        Mon, 4 May 2020 01:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725859AbgEDFAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 01:00:07 -0400
+Received: from localhost (unknown [171.76.84.84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A092B206EB;
+        Mon,  4 May 2020 05:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588568407;
+        bh=Sqc/o6T+nFXemlcgmHtEKzYmFketuc1fqMA+mAYUeDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jh/tZLGNy9PXS1axw9ThF1Bu2U1hXjRht+1LYX3q+T2LIeI+WgJbw8jtUhyWEgaKS
+         AbWfBefqHzR8MFRhh3GQeG+cDfP3op4FsS39CkC2WLQ3NEcNPeBnMNRKpAnZnRUxZK
+         4HkDPuptej2x4y2OCE1Bm2sPGzOlVgyrDMCwiD1s=
+Date:   Mon, 4 May 2020 10:30:01 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
+Message-ID: <20200504050001.GC1375924@vkoul-mobl>
+References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
+ <20200502122333.GA1375924@vkoul-mobl>
+ <20200502173500.GA7621@BV030612LT>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="al4i3sobqapo63vk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200504043320.29041-1-o.rempel@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 06:40:27 up 170 days, 19:59, 170 users,  load average: 1.13, 0.59,
- 0.24
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200502173500.GA7621@BV030612LT>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Cristian,
 
---al4i3sobqapo63vk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 02-05-20, 20:35, Cristian Ciocaltea wrote:
+> On Sat, May 02, 2020 at 05:53:33PM +0530, Vinod Koul wrote:
+> > Hi Cristian,
+> > 
+> > On 29-04-20, 18:28, Cristian Ciocaltea wrote:
+> > > When the kernel is built with lockdep support and the owl-dma driver is
+> > > used, the following message is shown:
+> > 
+> > First the patch title needs upate, we describe the patch in the title
+> > and not the cause. So use correct lock, or use od lock might be better
+> > titles, pls revise.
+> > 
+> > Second, the susbsystem is named dmaengine:... not dma:.. You can always
+> > check that by using git log on the respective file
+> > 
+> > Pls do add fixes and further acks received on next iteration.
+> >
+> 
+> Hi Vinod,
+> 
+> Thank you for reviewing and sorry for the mistakes! I'll be more careful
+> next time with all those details.
 
-please ignore it, i send it by accident.
+No issues, we do learn a bit everytime :)
+> 
+> I've submitted the updated patch: [PATCH v4 1/1] dmaengine: owl: Use
+> correct lock in owl_dma_get_pchan()
 
-On Mon, May 04, 2020 at 06:33:18AM +0200, Oleksij Rempel wrote:
-> changes v3:
-> - rename port_mode to master_slave=20
-> - move validation code to net/ethtool/linkmodes.c=20
-> - add UNSUPPORTED state and avoid sending unsupported fields
-> - more formatting and naming fixes
-> - tja11xx: support only force mode
-> - tja11xx: mark state as unsupported
->=20
-> changes v3:
-> - provide separate field for config and state.
-> - make state rejected on set
-> - add validation
->=20
-> changes v2:
-> - change names. Use MASTER_PREFERRED instead of MULTIPORT
-> - configure master/slave only on request. Default configuration can be
->   provided by PHY or eeprom
-> - status and configuration to the user space.
->=20
-> Oleksij Rempel (2):
->   ethtool: provide UAPI for PHY master/slave configuration.
->   net: phy: tja11xx: add support for master-slave configuration
->=20
->  Documentation/networking/ethtool-netlink.rst | 35 ++++----
->  drivers/net/phy/nxp-tja11xx.c                | 47 +++++++++-
->  drivers/net/phy/phy.c                        |  4 +-
->  drivers/net/phy/phy_device.c                 | 95 ++++++++++++++++++++
->  include/linux/phy.h                          |  3 +
->  include/uapi/linux/ethtool.h                 | 16 +++-
->  include/uapi/linux/ethtool_netlink.h         |  2 +
->  include/uapi/linux/mii.h                     |  2 +
->  net/ethtool/linkmodes.c                      | 48 ++++++++++
->  9 files changed, 233 insertions(+), 19 deletions(-)
->=20
-> --=20
-> 2.26.2
->=20
->=20
+Thanks
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---al4i3sobqapo63vk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6vnN0ACgkQ4omh9DUa
-UbMisw//S+5fk4z2WYhenaLbiVvUUQXXS1a7PjerkTG6xeqYZdeSi1bz2m+JLlqS
-Yl5tI6lJmrWtS3qcZF35BkTVsnXTdss/+kQZxax39DJdKygCynfQtCzcWGyTZGFD
-p2q/ckLpFrGDrv2xw4JcP/8qFi+ur/X5/+6RPlQA8Ee0lFIomKRfBsazNpehXHgd
-kIKl7aZQPuiGK4Ne87RTAygJcXn/zuVWQmv0TW+nc/heQgXAqX9zRFAf5nej2b0F
-XiQT/RcznTJAfQHms8iDsjRH8w7AP7xXlkERcwAcFaMqOSxuiJOIUmyDrZ1LfSgr
-z4vdBosjMpFYMbCpmEuqkJfkTqvcax1Cm4yxjW0eo63rCKihjb9SXPdAUTvwG4RZ
-CfCD7B89/mmx4GzQ6TQhQDH+aqWviGFeJsGFNuN2dBt2I028bIT/4jhMjSVrS8Ny
-SS+CSfg1lVZ3ChfW+3fekBn5CavJ65jQsCiKqNQj08Wm+tgVazORV2NNMg3jb689
-p6UM203Mj5O1wtZIp3951P2W9HwSLBCqlEDkiB47M8izEPz+28N71N9r/1tMgQ9Y
-Hw7yAwQJ0/InT8VtnaN6mlcgUyjS8Xtch+SkiIHvtf2U1eKgWcnDch/gtybfkPCy
-RwetP/nzIeZ6kVdKDxYOqHBaT9+ByryfdOKIW5dVQmR4nBTFEt0=
-=ikpK
------END PGP SIGNATURE-----
-
---al4i3sobqapo63vk--
+-- 
+~Vinod
