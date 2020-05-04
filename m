@@ -2,112 +2,188 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354ABC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0F2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D2620707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588622582;
-	bh=GIxo0Vm+W3zux+9Tx3/1kqa1pGgR2R/67Dfb5VXJ+I4=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=g15wk2LcfAslGj3mFz2kBdP+eNVqqDP+MGvRBn/DspYliTXVa17RFT7w/ZLqXGtmT
-	 6EZhptaw2CRrfKYp1LEHLCmlXzxQbGOAugDj6zQm1lUW3XRx4NhM8oV/szdjN1PAg3
-	 vaPRVK/pLAtfMURcyaSx9ws4Miv994r/9pCK6uc0=
+	by mail.kernel.org (Postfix) with ESMTP id A7DB82073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lsFBoDUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgEDUDB (ORCPT
+        id S1727110AbgEDUER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:03:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726334AbgEDUDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:03:00 -0400
-Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740C1206A5;
-        Mon,  4 May 2020 20:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588622580;
-        bh=GIxo0Vm+W3zux+9Tx3/1kqa1pGgR2R/67Dfb5VXJ+I4=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=mNgiZ0Kjg0wTQw/+v4PZd/EHEfwYZfOKjaavdvVX1cdSFUs0nSI5RsWlB3Wyim1z1
-         UTEXTcGq4s8dF8BOkLpNRUVGSFI9PYoN9dclXKEy+8zmvWKoS+DUut7HpN0jg64ktd
-         R0MmkOpN0+k3SM0o0VIH0qeH+ENQwfPFv8dhA4Hs=
-Subject: Re: [PATCH] dmaengine: qcom_hidma: use true,false for bool variable
-To:     Jason Yan <yanaijie@huawei.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, vkoul@kernel.org,
-        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200504113406.41530-1-yanaijie@huawei.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <3d61f97c-6d7e-a0be-9986-99c09a0f896d@kernel.org>
-Date:   Mon, 4 May 2020 16:02:58 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 16:04:17 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:38530 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgEDUEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 16:04:16 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044K4ALS080434;
+        Mon, 4 May 2020 15:04:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588622650;
+        bh=9VhwbEA312S5jn2e02G3zURBnKiTzVYqGi5OHCo+NQo=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=lsFBoDULMdwpUWmJoyoHPpyi3EC1VpWs4hOTgioHZzeFKmoMFTKdF2WzPOOfx5/rE
+         pN6SJsVwbPpWdEV4is6PFf+JsjwQkiGxfvv+Y+uTcrPVnbqImyJKaA7X0m5bW1ynoE
+         aD2NYMYebWmyoOihI/LDQKoZ/UV054+O6JM+ujmE=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044K4AQO025119
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 May 2020 15:04:10 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 15:04:10 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 15:04:10 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044K49YS090232;
+        Mon, 4 May 2020 15:04:09 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings documention
+Date:   Mon, 4 May 2020 14:55:26 -0500
+Message-ID: <20200504195526.28242-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200503123215.6449-2-dmurphy@ti.com>
+References: <20200503123215.6449-2-dmurphy@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200504113406.41530-1-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/2020 7:34 AM, Jason Yan wrote:
-> Fix the following coccicheck warning:
-> 
-> drivers/dma/qcom/hidma.c:553:1-17: WARNING: Assignment of 0/1 to bool
-> variable
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> ---
->  drivers/dma/qcom/hidma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-> index 87490e125bc3..0a6d3ea08c78 100644
-> --- a/drivers/dma/qcom/hidma.c
-> +++ b/drivers/dma/qcom/hidma.c
-> @@ -550,7 +550,7 @@ static void hidma_free_chan_resources(struct dma_chan *dmach)
->  		kfree(mdesc);
->  	}
->  
-> -	mchan->allocated = 0;
-> +	mchan->allocated = false;
->  	spin_unlock_irqrestore(&mchan->lock, irqflags);
->  }
+Add DT bindings for the LEDs multicolor class framework.
+Add multicolor ID to the color ID list for device tree bindings.
 
-Acked By: Sinan Kaya <okaya@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
+ drivers/leds/led-core.c                       |  1 +
+ include/dt-bindings/leds/common.h             |  3 +-
+ 3 files changed, 74 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+new file mode 100644
+index 000000000000..fa6ea8e5c46b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Common properties for the multicolor LED class.
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  Bindings for multi color LEDs show how to describe current outputs of
++  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
++  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
++  modules. This is achieved by adding multi-led nodes layer to the
++  monochrome LED bindings.
++  The nodes and properties defined in this document are unique to the multicolor
++  LED class.  Common LED nodes and properties are inherited from the common.txt
++  within this documentation directory.
++
++properties:
++  color:
++    description: |
++      For multicolor LED support this property should be defined as
++      LED_COLOR_ID_MULTI and further definition can be found in
++      include/linux/leds/common.h.
++
++required:
++  - color
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        led-controller@14 {
++          #address-cells = <1>;
++          #size-cells = <0>;
++          compatible = "ti,lp5009";
++          reg = <0x14>;
++
++          multi-led@1 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            reg = <1>;
++            color = <LED_COLOR_ID_MULTI>;
++            function = LED_FUNCTION_CHARGING;
++
++            led@0 {
++              reg = <0>;
++              color = <LED_COLOR_ID_RED>;
++            };
++
++            led@1 {
++              reg = <1>;
++              color = <LED_COLOR_ID_GREEN>;
++            };
++
++            led@2 {
++              reg = <2>;
++              color = <LED_COLOR_ID_BLUE>;
++            };
++          };
++        };
++    };
++
++additionalProperties: false
++...
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index f1f718dbe0f8..846248a0693d 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
+ 	[LED_COLOR_ID_VIOLET] = "violet",
+ 	[LED_COLOR_ID_YELLOW] = "yellow",
+ 	[LED_COLOR_ID_IR] = "ir",
++	[LED_COLOR_ID_MULTI] = "multicolor",
+ };
+ EXPORT_SYMBOL_GPL(led_colors);
+ 
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index 0ce7dfc00dcb..a463ce6a8794 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -30,7 +30,8 @@
+ #define LED_COLOR_ID_VIOLET	5
+ #define LED_COLOR_ID_YELLOW	6
+ #define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_MAX	8
++#define LED_COLOR_ID_MULTI	8
++#define LED_COLOR_ID_MAX	9
+ 
+ /* Standard LED functions */
+ /* Keyboard LEDs, usually it would be input4::capslock etc. */
+-- 
+2.25.1
 
