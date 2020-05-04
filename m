@@ -2,84 +2,75 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F5AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF15C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD71C20658
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cy3LcYWO"
+	by mail.kernel.org (Postfix) with ESMTP id 106E12071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgEDJsA (ORCPT
+        id S1728498AbgEDJsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:48:00 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64875 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728339AbgEDJr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:47:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588585678; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=WM9/aRStIaPaqyNPtJJyM+h9b/Ec7TT+ctCUD/qlxj0=;
- b=cy3LcYWOZJpfMlJQdOkkBgMG26XhM0u6SZ/ICmb6+kK1nThIm7o85RASLadTciv4dX5Rw9jJ
- 5KzwHODbAqb41SRPf46qNblMwkemChqGksWvifLz5IBMRXBDR7LGkOIBbT6MA4ajnrgbB+Qk
- IIS/SOAj0ag7MGlhev5Kl3VTEa4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eafe4c5.7f106080c4c8-smtp-out-n02;
- Mon, 04 May 2020 09:47:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 265EFC433BA; Mon,  4 May 2020 09:47:48 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0311C433D2;
-        Mon,  4 May 2020 09:47:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0311C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Mon, 4 May 2020 05:48:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33172 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728349AbgEDJsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:48:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 66606AE53;
+        Mon,  4 May 2020 09:48:05 +0000 (UTC)
+Message-ID: <1588585655.13662.5.camel@suse.com>
+Subject: Re: [PATCH] xhci: Prevent runtime suspend all the time with
+ XHCI_RESET_ON_RESUME quirk
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        mathias.nyman@intel.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 04 May 2020 11:47:35 +0200
+In-Reply-To: <20200504091952.15820-1-kai.heng.feng@canonical.com>
+References: <20200504091952.15820-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] rtw88: fix spelling mistake "fimrware" ->
- "firmware"
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200424084733.7716-1-colin.king@canonical.com>
-References: <20200424084733.7716-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200504094748.265EFC433BA@smtp.codeaurora.org>
-Date:   Mon,  4 May 2020 09:47:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+Am Montag, den 04.05.2020, 17:19 +0800 schrieb Kai-Heng Feng:
+> Etron EJ168 USB 3.0 Host Controller stops working after S3, if it was
+> runtime suspended previously:
+> [  370.080359] pci 0000:02:00.0: can't change power state from D3cold to D0 (config space inaccessible)
 
-> From: Colin Ian King <colin.king@canonical.com>
+Apparently this controller has issues with D3cold
+
+> [  370.080477] xhci_hcd 0000:04:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+> [  370.080532] pcieport 0000:00:1c.0: DPC: containment event, status:0x1f05 source:0x0200
+> [  370.080533] pcieport 0000:00:1c.0: DPC: ERR_FATAL detected
+> [  370.080536] xhci_hcd 0000:04:00.0: can't change power state from D3hot to D0 (config space inaccessible)
+> [  370.080552] xhci_hcd 0000:04:00.0: AER: can't recover (no error_detected callback)
+> [  370.080566] usb usb3: root hub lost power or was reset
+> [  370.080566] usb usb4: root hub lost power or was reset
+> [  370.080572] xhci_hcd 0000:04:00.0: Host halt failed, -19
+> [  370.080574] xhci_hcd 0000:04:00.0: Host not accessible, reset failed.
+> [  370.080575] xhci_hcd 0000:04:00.0: PCI post-resume error -19!
+> [  370.080586] xhci_hcd 0000:04:00.0: HC died; cleaning up
 > 
-> There are spelling mistakes in two rtw_err error messages. Fix them.
+> This can be fixed by not runtime suspend the controller at all.
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> So instead of conditionally runtime suspend the controller, always
+> prevent runtime suspend with XHCI_RESET_ON_RESUME quirk.
 
-Patch applied to wireless-drivers-next.git, thanks.
+What does that do to other controllers that can do runtime suspend
+under the current scheme?
 
-a6336094c3ab rtw88: fix spelling mistake "fimrware" -> "firmware"
+	Regards
+		Oliver
 
--- 
-https://patchwork.kernel.org/patch/11507317/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
