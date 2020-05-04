@@ -2,272 +2,335 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C74DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CB5C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A245206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:16:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JNZPxPd+"
+	by mail.kernel.org (Postfix) with ESMTP id 9041B20746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588573208;
+	bh=gBVdlnwDDaIqWgTS9qLDeeC9X3IkgNNHkoku+6ZKLjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ciEZnX3l1siIm+olIs+Af/fuSvCQb5Bc2j1AzUkMhNyqmMaU7ucu2jiYI5go/FbUa
+	 1YIK4DGCAEYNKl5TgUhtJilJ/6HKfrHIGYZnDBJPi+gPwpmU32Aw6pdVojUhExCD80
+	 tnyXq7ijN1Te3bbkrCn+RZ+2F5lhG4jM17pWLPYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgEDGQK (ORCPT
+        id S1726864AbgEDGUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbgEDGQJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:16:09 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B529C061A0F
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 23:16:09 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mq3so3338091pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 23:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sqTraPKDft1HRYOy2Y+7P9+dELuEVh+xFBndt/Bu4tQ=;
-        b=JNZPxPd+nmY0NLYc/wIvMP9QGqRZWrcy4H8E9aA80rAUdAE7toNwRyC/BM5ZxYcnry
-         TvVCSS0zqG7QprpUiS7ZkCDo+ijE8giw1qcw9rRJi7f1l68fz9pMKlC08Yo5mMGvPguJ
-         sRaz7riUVcjBAg0ZEykZEWJ70Bv0lMW5ozMhf0sQYE4vmNg3I924j4xe8t8ni6Ww1wda
-         alAFeZkGDQbeKXGcUAAvFXK21UZ7YoU8/E3AhYNgm62asVQRHMp0u30xU47g2KTpZrWg
-         SWtOx55nO4KfCv7ooUei7xs0hzwMRTcxYrHLn+gqYUMIgfgtm379TxrGSNOq05rvB1Kc
-         yhaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sqTraPKDft1HRYOy2Y+7P9+dELuEVh+xFBndt/Bu4tQ=;
-        b=f5ElRZKCcUkfdRu9JUY1T8wSUeXEHQCjEM4g4fX3TFRGyyuKrPgamNEevMMhm6hueH
-         NOcvuvKTCIdwiSAbrFlpYd/QopG4ZwyojwLwXO8VME+Ol0zGupHlX8GXqcQNOwocQlyk
-         5SUmJaaMKsJr1rCjyj+pnrDEDh9ZoncR8XGw3WfyaDgshB4dp+PclgbBOlZg7RfDme8e
-         aagIlOahKz0d8XBYhsKh/TxwFX/7Lm4WGNjP7H/ev2vd40JUWPI2T9SxB5FRAKzg62ZH
-         WxzggiuL1Mu6fAIISqBKJSmE+YSqtSS7vDG1cr/kwrlEFmsYOSECWmKqjee4cxQAgWb7
-         He5A==
-X-Gm-Message-State: AGi0PuZBUiBJneKgtCRxXXMCRSvEAhOYifSBpjIUnvlvLg8Zvth7s3Oq
-        XEEWb+rKEi4DZ6ZfrBTucemG
-X-Google-Smtp-Source: APiQypKoKtYAzEDS8osmX98H1sF2gzYZ8WxWtlyFIeSjt4kqLe0YZ9smNleJS3C2gqxOBCeFODj1ZA==
-X-Received: by 2002:a17:90a:fc8c:: with SMTP id ci12mr15597317pjb.104.1588572968534;
-        Sun, 03 May 2020 23:16:08 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:51f:c7c4:bdcc:167e:2cd1:efea])
-        by smtp.gmail.com with ESMTPSA id n69sm5800912pjc.8.2020.05.03.23.16.03
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 May 2020 23:16:07 -0700 (PDT)
-Date:   Mon, 4 May 2020 11:46:00 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: soc: qcom: Add devicetree binding for
- Qcom IPCC
-Message-ID: <20200504061600.GB3391@Mani-XPS-13-9360>
-References: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
- <20200430193609.GA20625@builder.lan>
+        Mon, 4 May 2020 02:20:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbgEDGUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:20:07 -0400
+Received: from localhost (unknown [171.76.84.84])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BFE6206B9;
+        Mon,  4 May 2020 06:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588573206;
+        bh=gBVdlnwDDaIqWgTS9qLDeeC9X3IkgNNHkoku+6ZKLjs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PEsM+MjddLEX4k3BYULolB/p5llNHINyOlEy7hRt9ktLCnk/d7IQw7Kq/CRaGQg5E
+         jKCuRe3t8t7oqrRm2c4L6yLR4BMxTuglfcK7tCpU7gM/Hfh93V5VeCvYfU6/a1opMH
+         uTYxmwXwcUBePFS1uj8CGiixaodL6BQEuaa/wLw0=
+Date:   Mon, 4 May 2020 11:50:02 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA
+ information
+Message-ID: <20200504062002.GL1375924@vkoul-mobl>
+References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
+ <1588108416-49050-4-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200430193609.GA20625@builder.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1588108416-49050-4-git-send-email-Sanju.Mehta@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 12:36:09PM -0700, Bjorn Andersson wrote:
-> On Wed 29 Apr 23:30 PDT 2020, Manivannan Sadhasivam wrote:
+On 28-04-20, 16:13, Sanjay R Mehta wrote:
+> From: Sanjay R Mehta <sanju.mehta@amd.com>
 > 
-> > Add devicetree YAML binding for Qualcomm Inter-Processor Communication
-> > Controller (IPCC) block.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../bindings/soc/qcom/qcom,ipcc.yaml          | 85 +++++++++++++++++++
+> Expose data about the configuration and operation of the
+> PTDMA through debugfs entries: device name, capabilities,
+> configuration, statistics.
 > 
-> How about putting this in either interrupt-controller/ or mailbox/ instead?
+> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+> ---
+>  drivers/dma/ptdma/Makefile        |   3 +-
+>  drivers/dma/ptdma/ptdma-debugfs.c | 237 ++++++++++++++++++++++++++++++++++++++
+>  drivers/dma/ptdma/ptdma-dev.c     |  26 +++++
+>  drivers/dma/ptdma/ptdma.h         |  13 +++
+>  4 files changed, 278 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
 > 
+> diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
+> index 6fcb4ad..60e7c10 100644
+> --- a/drivers/dma/ptdma/Makefile
+> +++ b/drivers/dma/ptdma/Makefile
+> @@ -6,6 +6,7 @@
+>  obj-$(CONFIG_AMD_PTDMA) += ptdma.o
+>  
+>  ptdma-objs := ptdma-dev.o \
+> -	      ptdma-dmaengine.o
+> +	      ptdma-dmaengine.o \
+> +	      ptdma-debugfs.o
+>  
+>  ptdma-$(CONFIG_PCI) += ptdma-pci.o
+> diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/ptdma/ptdma-debugfs.c
+> new file mode 100644
+> index 0000000..837c43c
+> --- /dev/null
+> +++ b/drivers/dma/ptdma/ptdma-debugfs.c
+> @@ -0,0 +1,237 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * AMD Passthrough DMA device driver
+> + * -- Based on the CCP driver
+> + *
+> + * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Sanjay R Mehta <sanju.mehta@amd.com>
+> + * Author: Gary R Hook <gary.hook@amd.com>
+> + */
+> +
+> +#include <linux/debugfs.h>
+> +
+> +#include "ptdma.h"
+> +
+> +/* DebugFS helpers */
+> +#define	OBUFP		(obuf + oboff)
+> +#define	OBUFLEN		512
+> +#define	OBUFSPC		(OBUFLEN - oboff)
+> +
+> +#define	MAX_NAME_LEN	20
+> +#define	BUFLEN		63
+> +#define	RI_VERSION_NUM	0x0000003F
+> +
+> +#define	RI_NUM_VQM	0x00078000
+> +#define	RI_NVQM_SHIFT	15
+> +#define	RI_NVQM(r)	(((r) * RI_NUM_VQM) >> RI_NVQM_SHIFT)
+> +#define	RI_LSB_ENTRIES	0x0FF80000
+> +#define	RI_NLSB_SHIFT	19
+> +#define	RI_NLSB(r)	(((r) * RI_LSB_ENTRIES) >> RI_NLSB_SHIFT)
+> +
+> +static struct dentry *pt_debugfs_dir;
+> +static DEFINE_MUTEX(pt_debugfs_lock);
+> +
+> +static ssize_t ptdma_debugfs_info_read(struct file *filp, char __user *ubuf,
+> +				       size_t count, loff_t *offp)
+> +{
+> +	struct pt_device *pt = filp->private_data;
+> +	unsigned int oboff = 0;
+> +	unsigned int regval;
+> +	ssize_t ret;
+> +	char *obuf;
+> +
+> +	if (!pt)
+> +		return 0;
+> +
+> +	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
+> +	if (!obuf)
+> +		return -ENOMEM;
+> +
+> +	oboff += snprintf(OBUFP, OBUFSPC, "Device name: %s\n", pt->name);
+> +	oboff += snprintf(OBUFP, OBUFSPC, "   # Queues: %d\n", 1);
+> +	oboff += snprintf(OBUFP, OBUFSPC, "     # Cmds: %d\n", pt->cmd_count);
+> +
+> +	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
+> +
+> +	oboff += snprintf(OBUFP, OBUFSPC, "    Version: %d\n",
+> +		   regval & RI_VERSION_NUM);
+> +	oboff += snprintf(OBUFP, OBUFSPC, "    Engines:");
+> +	oboff += snprintf(OBUFP, OBUFSPC, "\n");
+> +	oboff += snprintf(OBUFP, OBUFSPC, "     Queues: %d\n",
+> +		   (regval & RI_NUM_VQM) >> RI_NVQM_SHIFT);
+> +
+> +	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
+> +	kfree(obuf);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Return a formatted buffer containing the current
+> + * statistics of queue for PTDMA
+> + */
+> +static ssize_t ptdma_debugfs_stats_read(struct file *filp, char __user *ubuf,
+> +					size_t count, loff_t *offp)
+> +{
+> +	struct pt_device *pt = filp->private_data;
+> +	unsigned long total_pt_ops = 0;
+> +	unsigned int oboff = 0;
+> +	ssize_t ret = 0;
+> +	char *obuf;
+> +	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
+> +
+> +	total_pt_ops += cmd_q->total_pt_ops;
+> +
+> +	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
+> +	if (!obuf)
+> +		return -ENOMEM;
+> +
+> +	oboff += snprintf(OBUFP, OBUFSPC, "Total Interrupts Handled: %ld\n",
+> +			    pt->total_interrupts);
+> +
+> +	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
+> +	kfree(obuf);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Reset the counters in a queue
+> + */
+> +static void ptdma_debugfs_reset_queue_stats(struct pt_cmd_queue *cmd_q)
+> +{
+> +	cmd_q->total_pt_ops = 0L;
+> +}
+> +
+> +/*
+> + * A value was written to the stats variable, which
+> + * should be used to reset the queue counters across
+> + * that device.
+> + */
+> +static ssize_t ptdma_debugfs_stats_write(struct file *filp,
+> +					 const char __user *ubuf,
+> +					 size_t count, loff_t *offp)
+> +{
+> +	struct pt_device *pt = filp->private_data;
+> +
+> +	ptdma_debugfs_reset_queue_stats(&pt->cmd_q);
+> +	pt->total_interrupts = 0L;
+> +
+> +	return count;
+> +}
+> +
+> +/*
+> + * Return a formatted buffer containing the current information
+> + * for that queue
+> + */
+> +static ssize_t ptdma_debugfs_queue_read(struct file *filp, char __user *ubuf,
+> +					size_t count, loff_t *offp)
+> +{
+> +	struct pt_cmd_queue *cmd_q = filp->private_data;
+> +	unsigned int oboff = 0;
+> +	unsigned int regval;
+> +	ssize_t ret;
+> +	char *obuf;
+> +
+> +	if (!cmd_q)
+> +		return 0;
+> +
+> +	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
+> +	if (!obuf)
+> +		return -ENOMEM;
+> +
+> +	oboff += snprintf(OBUFP, OBUFSPC, "               Pass-Thru: %ld\n",
+> +			    cmd_q->total_pt_ops);
+> +
+> +	regval = ioread32(cmd_q->reg_int_enable);
+> +	oboff += snprintf(OBUFP, OBUFSPC, "      Enabled Interrupts:");
+> +	if (regval & INT_EMPTY_QUEUE)
+> +		oboff += snprintf(OBUFP, OBUFSPC, " EMPTY");
+> +	if (regval & INT_QUEUE_STOPPED)
+> +		oboff += snprintf(OBUFP, OBUFSPC, " STOPPED");
+> +	if (regval & INT_ERROR)
+> +		oboff += snprintf(OBUFP, OBUFSPC, " ERROR");
+> +	if (regval & INT_COMPLETION)
+> +		oboff += snprintf(OBUFP, OBUFSPC, " COMPLETION");
+> +	oboff += snprintf(OBUFP, OBUFSPC, "\n");
+> +
+> +	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
+> +	kfree(obuf);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * A value was written to the stats variable for a
+> + * queue. Reset the queue counters to this value.
+> + */
+> +static ssize_t ptdma_debugfs_queue_write(struct file *filp,
+> +					 const char __user *ubuf,
+> +					 size_t count, loff_t *offp)
+> +{
+> +	struct pt_cmd_queue *cmd_q = filp->private_data;
+> +
+> +	ptdma_debugfs_reset_queue_stats(cmd_q);
+> +
+> +	return count;
+> +}
+> +
+> +static const struct file_operations pt_debugfs_info_ops = {
+> +	.owner = THIS_MODULE,
+> +	.open = simple_open,
+> +	.read = ptdma_debugfs_info_read,
+> +	.write = NULL,
+> +};
+> +
+> +static const struct file_operations pt_debugfs_queue_ops = {
+> +	.owner = THIS_MODULE,
+> +	.open = simple_open,
+> +	.read = ptdma_debugfs_queue_read,
+> +	.write = ptdma_debugfs_queue_write,
+> +};
+> +
+> +static const struct file_operations pt_debugfs_stats_ops = {
+> +	.owner = THIS_MODULE,
+> +	.open = simple_open,
+> +	.read = ptdma_debugfs_stats_read,
+> +	.write = ptdma_debugfs_stats_write,
+> +};
 
-I thought about it but was not sure. But if we want to move it to other
-relevant location I think mailbox is a better one. Because, there are other
-places where subsystem drivers expose irqchip functionality. So I think a
-mailbox driver exposing irqchip is a relevant one for this.
+pls convert to use DEFINE_SHOW_ATTRIBUTE()
 
-> >  include/dt-bindings/soc/qcom,ipcc.h           | 38 +++++++++
-> >  2 files changed, 123 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
-> >  create mode 100644 include/dt-bindings/soc/qcom,ipcc.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
-> > new file mode 100644
-> > index 000000000000..48b281181401
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipcc.yaml
-> > @@ -0,0 +1,85 @@
-> > +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/soc/qcom/qcom,ipcc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Technologies, Inc. Inter-Processor Communication Controller
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +
-> > +description:
-> > +  The Inter-Processor Communication Controller (IPCC) is a centralized hardware
-> > +  to route the interrupts across various subsystems. It involves a three-level
-> 
-> s/the//
-> 
-> > +  addressing scheme called protocol, client and signal. For example, consider an
-> > +  entity on the Application Processor Subsystem (APSS) that wants to listen to
-> > +  Modem's interrupts via Shared Memory Point to Point (SMP2P) interface. In such
-> > +  a case, the client would be Modem (client-id is 2) and the signal would be
-> > +  SMP2P (signal-id is 2). The SMP2P itself falls under the Multiprocessor (MPROC)
-> > +  protocol (protocol-id is 0). Refer include/dt-bindings/soc/qcom/qcom,ipcc.h
-> > +  for the list of such IDs.
-> > +
-> > +  One of the duties of this interrupt controller driver is to forward the
-> > +  interrupts to the correct entities on the APSS. The children inheriting the
-> 
-> Clients using the...
-> 
-> > +  interrupt-controller would be mentioning the client-id and signal-id it's
-> 
-> s/would be mentioning/should specify/
-> 
-> > +  interested in.
-> > +
-> > +  On the other hand, sending an interrupt to a subsystem is done through the
-> 
-> "In the other direction," and add clarify subsystem by making it "remote
-> subsystem".
-> 
-> > +  mailbox interface, which again requires client-id and signal-id.
-> > +
-> > +properties:
-> > +  compatible:
-> 
-> It's uncertain how new vers
-> 
+> +void ptdma_debugfs_setup(struct pt_device *pt)
+> +{
+> +	struct pt_cmd_queue *cmd_q;
+> +	char name[MAX_NAME_LEN + 1];
+> +	struct dentry *debugfs_q_instance;
+> +
+> +	if (!debugfs_initialized())
+> +		return;
+> +
+> +	mutex_lock(&pt_debugfs_lock);
+> +	if (!pt_debugfs_dir)
+> +		pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
+> +	mutex_unlock(&pt_debugfs_lock);
+> +
+> +	pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
+> +
+> +	debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
+> +			    &pt_debugfs_info_ops);
+> +
+> +	debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
+> +			    &pt_debugfs_stats_ops);
+> +
+> +	cmd_q = &pt->cmd_q;
+> +
+> +	snprintf(name, MAX_NAME_LEN - 1, "q");
+> +
+> +	debugfs_q_instance =
+> +		debugfs_create_dir(name, pt->debugfs_instance);
+> +
+> +	debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
+> +			    &pt_debugfs_queue_ops);
 
-lost?
+Pls use dbg_dev_root in struct dma_device as root for your own debugfs
 
-> > +    const: "qcom,ipcc"
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 3
-> > +    description:
-> > +      The first cell is the client-id, the second cell is the signal-id and the
-> > +      third cell is the interrupt type.
-> > +
-> > +  "#mbox-cells":
-> > +    const: 2
-> > +    description:
-> > +      The first cell is the client-id, and the second cell is the signal-id.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - interrupt-controller
-> > +  - "#interrupt-cells"
-> > +  - "#mbox-cells"
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +        #include <dt-bindings/soc/qcom,ipcc.h>
-> > +
-> > +        ipcc_mproc: qcom,ipcc@408000 {
-> 
-> interrupt-controller@
-> 
-
-mailbox?
-
-Thanks,
-Mani
-
-> Regards,
-> Bjorn
-> 
-> > +                compatible = "qcom,ipcc";
-> > +                reg = <0x408000 0x1000>;
-> > +                interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
-> > +                interrupt-controller;
-> > +                #interrupt-cells = <3>;
-> > +                #mbox-cells = <2>;
-> > +        };
-> > +
-> > +        smp2p-modem {
-> > +                compatible = "qcom,smp2p";
-> > +                interrupts-extended = <&ipcc_mproc IPCC_CLIENT_MPSS
-> > +                                IPCC_MPROC_SIGNAL_SMP2P IRQ_TYPE_EDGE_RISING>;
-> > +                mboxes = <&ipcc_mproc IPCC_CLIENT_MPSS IPCC_MPROC_SIGNAL_SMP2P>;
-> > +
-> > +                /* Other SMP2P fields */
-> > +        };
-> > diff --git a/include/dt-bindings/soc/qcom,ipcc.h b/include/dt-bindings/soc/qcom,ipcc.h
-> > new file mode 100644
-> > index 000000000000..2926cdb4cb48
-> > --- /dev/null
-> > +++ b/include/dt-bindings/soc/qcom,ipcc.h
-> > @@ -0,0 +1,38 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
-> > + */
-> > +
-> > +#ifndef __DT_BINDINGS_QCOM_IPCC_H
-> > +#define __DT_BINDINGS_QCOM_IPCC_H
-> > +
-> > +/* Signal IDs for MPROC protocol */
-> > +#define IPCC_MPROC_SIGNAL_GLINK_QMP	0
-> > +#define IPCC_MPROC_SIGNAL_SMP2P		2
-> > +#define IPCC_MPROC_SIGNAL_PING		3
-> > +#define IPCC_MPROC_SIGNAL_MAX		4 /* Used by driver only */
-> > +
-> > +#define IPCC_COMPUTE_L0_SIGNAL_MAX	32 /* Used by driver only */
-> > +#define IPCC_COMPUTE_L1_SIGNAL_MAX	32 /* Used by driver only */
-> > +
-> > +/* Client IDs */
-> > +#define IPCC_CLIENT_AOP			0
-> > +#define IPCC_CLIENT_TZ			1
-> > +#define IPCC_CLIENT_MPSS		2
-> > +#define IPCC_CLIENT_LPASS		3
-> > +#define IPCC_CLIENT_SLPI		4
-> > +#define IPCC_CLIENT_SDC			5
-> > +#define IPCC_CLIENT_CDSP		6
-> > +#define IPCC_CLIENT_NPU			7
-> > +#define IPCC_CLIENT_APSS		8
-> > +#define IPCC_CLIENT_GPU			9
-> > +#define IPCC_CLIENT_CVP			10
-> > +#define IPCC_CLIENT_CAM			11
-> > +#define IPCC_CLIENT_VPU			12
-> > +#define IPCC_CLIENT_PCIE0		13
-> > +#define IPCC_CLIENT_PCIE1		14
-> > +#define IPCC_CLIENT_PCIE2		15
-> > +#define IPCC_CLIENT_SPSS		16
-> > +#define IPCC_CLIENT_MAX			17 /* Used by driver only */
-> > +
-> > +#endif
-> > -- 
-> > 2.17.1
-> > 
+Thanks
+-- 
+~Vinod
