@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC92C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C417C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06E3320707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDD5206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615403;
-	bh=SsXvhzbB2jWYNJpRGiFkqDvIr0NI17B/xvS9oHi+tsM=;
+	s=default; t=1588615405;
+	bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggLPy1aMuR1s+Fw7/hF7PskYULZIuK8T/kFP/E8Ps8GPejOAxgLaruimi+DKk8IbH
-	 nZlrJ0IYKO/d/syNuo+oyET9kM6hdviZc+akhaBk2lQ+FigcmYdStba3xVgei6orV1
-	 +rvIvM4fUMuaVlV+3X/JYJmdXqlaRRdzJIKI+zdk=
+	b=P3bOFRNK2tNF/2VKazQt3mFhxU4Nq+EPDqC88aAu50N011lrMF3Hn+CKK5XJr+tYO
+	 tEeCT42iFcv/czbOofBpfVQKY7WqngRsY2bLRZ1jCRdLpljGs0l39mO5yauVnlPBhx
+	 Y2lWyuuUUke8aporFz6gd1ZcwMjD7MT6gEBDAr18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbgEDSDW (ORCPT
+        id S1731503AbgEDSDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731481AbgEDSDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:19 -0400
+        id S1731491AbgEDSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 597F4206B8;
-        Mon,  4 May 2020 18:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA897206B8;
+        Mon,  4 May 2020 18:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615398;
-        bh=SsXvhzbB2jWYNJpRGiFkqDvIr0NI17B/xvS9oHi+tsM=;
+        s=default; t=1588615401;
+        bh=WOwYZ/09O3hRQvZRWnR5ibcSY9bduvtiBeCePotFWM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yeUzbN1WANfZTtOO5hVeciHAk92+2+D2mG8VO82OE1bPHRn1Ns+ANks6j4NwLBABn
-         vXuzTvyQx5L6UHid7jeF2QKuN6dVdaBsHuSXjLwSBRfEPztnfOjD2uL32N3Rt59AKR
-         L81jnuyZ5Vs4K4K+IBHd8+OcuS7chWWqQqP8hXwI=
+        b=1eR8SOmfzn9ZeSRAVw2uJ0zNOM8qnFgIrOanTAsYlCqWApJPJPz0jKkRFmqtZTwXL
+         OSTRX286EUFL3RG2LhJzRO/jwmBRtmPdY3PUiX/0SLZtFirKsp4+tYTIcgS6W4UfX2
+         YFdx/myojj2uRTGc+ef2QLUtIxFwyfZ6//5bC6+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Khoruzhick <anarsoul@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 22/57] ALSA: line6: Fix POD HD500 audio playback
-Date:   Mon,  4 May 2020 19:57:26 +0200
-Message-Id: <20200504165458.292374352@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 23/57] ALSA: pcm: oss: Place the plugin buffer overflow checks correctly
+Date:   Mon,  4 May 2020 19:57:27 +0200
+Message-Id: <20200504165458.372036648@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -59,72 +58,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Khoruzhick <anarsoul@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit cc18b2f4f3f1d7ed3125ac1840794f9feab0325c upstream.
+commit 4285de0725b1bf73608abbcd35ad7fd3ddc0b61e upstream.
 
-Apparently interface 1 is control interface akin to HD500X,
-setting LINE6_CAP_CONTROL and choosing it as ctrl_if fixes
-audio playback on POD HD500.
+The checks of the plugin buffer overflow in the previous fix by commit
+  f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
+are put in the wrong places mistakenly, which leads to the expected
+(repeated) sound when the rate plugin is involved.  Fix in the right
+places.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Also, at those right places, the zero check is needed for the
+termination node, so added there as well, and let's get it done,
+finally.
+
+Fixes: f2ecf903ef06 ("ALSA: pcm: oss: Avoid plugin buffer overflow")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200425201115.3430-1-anarsoul@gmail.com
+Link: https://lore.kernel.org/r/20200424193350.19678-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/podhd.c |   22 +++++-----------------
- 1 file changed, 5 insertions(+), 17 deletions(-)
+ sound/core/oss/pcm_plugin.c |   20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -21,8 +21,7 @@
- enum {
- 	LINE6_PODHD300,
- 	LINE6_PODHD400,
--	LINE6_PODHD500_0,
--	LINE6_PODHD500_1,
-+	LINE6_PODHD500,
- 	LINE6_PODX3,
- 	LINE6_PODX3LIVE,
- 	LINE6_PODHD500X,
-@@ -318,8 +317,7 @@ static const struct usb_device_id podhd_
- 	/* TODO: no need to alloc data interfaces when only audio is used */
- 	{ LINE6_DEVICE(0x5057),    .driver_info = LINE6_PODHD300 },
- 	{ LINE6_DEVICE(0x5058),    .driver_info = LINE6_PODHD400 },
--	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500_0 },
--	{ LINE6_IF_NUM(0x414D, 1), .driver_info = LINE6_PODHD500_1 },
-+	{ LINE6_IF_NUM(0x414D, 0), .driver_info = LINE6_PODHD500 },
- 	{ LINE6_IF_NUM(0x414A, 0), .driver_info = LINE6_PODX3 },
- 	{ LINE6_IF_NUM(0x414B, 0), .driver_info = LINE6_PODX3LIVE },
- 	{ LINE6_IF_NUM(0x4159, 0), .driver_info = LINE6_PODHD500X },
-@@ -352,23 +350,13 @@ static const struct line6_properties pod
- 		.ep_audio_r = 0x82,
- 		.ep_audio_w = 0x01,
- 	},
--	[LINE6_PODHD500_0] = {
-+	[LINE6_PODHD500] = {
- 		.id = "PODHD500",
- 		.name = "POD HD500",
--		.capabilities	= LINE6_CAP_PCM
-+		.capabilities	= LINE6_CAP_PCM | LINE6_CAP_CONTROL
- 				| LINE6_CAP_HWMON,
- 		.altsetting = 1,
--		.ep_ctrl_r = 0x81,
--		.ep_ctrl_w = 0x01,
--		.ep_audio_r = 0x86,
--		.ep_audio_w = 0x02,
--	},
--	[LINE6_PODHD500_1] = {
--		.id = "PODHD500",
--		.name = "POD HD500",
--		.capabilities	= LINE6_CAP_PCM
--				| LINE6_CAP_HWMON,
--		.altsetting = 0,
-+		.ctrl_if = 1,
- 		.ep_ctrl_r = 0x81,
- 		.ep_ctrl_w = 0x01,
- 		.ep_audio_r = 0x86,
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -211,21 +211,23 @@ static snd_pcm_sframes_t plug_client_siz
+ 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin && drv_frames > 0) {
+-			if (check_size && drv_frames > plugin->buf_frames)
+-				drv_frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames)
+ 				drv_frames = plugin->src_frames(plugin, drv_frames);
++			if (check_size && plugin->buf_frames &&
++			    drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_prev;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_first(plug);
+ 		while (plugin && drv_frames > 0) {
+ 			plugin_next = plugin->next;
++			if (check_size && plugin->buf_frames &&
++			    drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			if (plugin->dst_frames)
+ 				drv_frames = plugin->dst_frames(plugin, drv_frames);
+-			if (check_size && drv_frames > plugin->buf_frames)
+-				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else
+@@ -251,26 +253,28 @@ static snd_pcm_sframes_t plug_slave_size
+ 		plugin = snd_pcm_plug_first(plug);
+ 		while (plugin && frames > 0) {
+ 			plugin_next = plugin->next;
++			if (check_size && plugin->buf_frames &&
++			    frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			if (plugin->dst_frames) {
+ 				frames = plugin->dst_frames(plugin, frames);
+ 				if (frames < 0)
+ 					return frames;
+ 			}
+-			if (check_size && frames > plugin->buf_frames)
+-				frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin) {
+-			if (check_size && frames > plugin->buf_frames)
+-				frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames) {
+ 				frames = plugin->src_frames(plugin, frames);
+ 				if (frames < 0)
+ 					return frames;
+ 			}
++			if (check_size && plugin->buf_frames &&
++			    frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin = plugin_prev;
+ 		}
+ 	} else
 
 
