@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA55C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9A5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC5B20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F274A20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615481;
-	bh=d+xFEZVtlJxwViYlMg9U/nr9NihjyZbPDu5cWuJZ6To=;
+	s=default; t=1588615485;
+	bh=bJ2l/CHYhXqqCQmXxTph5G9oI6DoxV3kjVdO3Qi3s38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TumF/sR8OI9nS/8Nx6NiO4HWCNtzbKjeR59dAhoIJbZ0RtUASIBMAKvXD4lCoEAzA
-	 sGFeXbho1nseP/8M8thVeIiE2ZJBbqYRR8uulgFhPWmEHTvSmz7Bb1VeQ4ZeWrqk7G
-	 VHHMdH00TSJ+xGWVITOlG3qx/4FQnMhkCfghVjcQ=
+	b=JjWMWIEjGrWQH3NpF0vzWaDFwrlSYAM4aPzpCZ1KnNEYWF9iat9lIKfztZqGa0Sqp
+	 52RiJRHHph2mPrCbVpSWSveRnjGmEjbz4M3HIl+GlIJTNvtxhtKld8MMafBnntgKB/
+	 t87pNiFcI/F2T1ISHypQ3RfDBp28kk5ZFqjf+T9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731700AbgEDSEk (ORCPT
+        id S1731707AbgEDSEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34062 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbgEDSEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:38 -0400
+        id S1731693AbgEDSEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F031F206B8;
-        Mon,  4 May 2020 18:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF5E6205ED;
+        Mon,  4 May 2020 18:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615476;
-        bh=d+xFEZVtlJxwViYlMg9U/nr9NihjyZbPDu5cWuJZ6To=;
+        s=default; t=1588615479;
+        bh=bJ2l/CHYhXqqCQmXxTph5G9oI6DoxV3kjVdO3Qi3s38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6J5TBRJnLG6+Mw6vN4qY49GbUETdMIEvHMBSqz6hnH3UtcmfpwaItpxMwQzch4id
-         FGOiGZd7X7p2na1lpAYuA1o5qZOFgpVwvq/Fo9UWyp5D80vW0RO/5vpRilPRifdnra
-         3Tz6H+FuvwEL0zEjF0Pe4hxsHEMCnq1YoTf/ime4=
+        b=cHBqgI+0OkFMzZMSIPSqCBeA3ZVFIfX/LpJ5FI+V04oJddoYeN1fX1qJIMqQO3GId
+         cVFOpJFwyHrUfrMvT/4Czd/q8Q0mOJryKkfLdWUf2heVo9lsbRrv7DL2aLScT97vBw
+         ibbvU4e8rSrbsIfZpYU259ke6WJ0HUTztGZIu+EI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        stable@vger.kernel.org, Seraj Alijan <seraj.alijan@sondrel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 54/57] dmaengine: dmatest: Fix iteration non-stop logic
-Date:   Mon,  4 May 2020 19:57:58 +0200
-Message-Id: <20200504165501.498645923@linuxfoundation.org>
+Subject: [PATCH 5.4 55/57] dmaengine: dmatest: Fix process hang when reading wait parameter
+Date:   Mon,  4 May 2020 19:57:59 +0200
+Message-Id: <20200504165501.618491542@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -63,59 +62,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
+commit aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca upstream.
 
-Under some circumstances, i.e. when test is still running and about to
-time out and user runs, for example,
+If we do
 
-	grep -H . /sys/module/dmatest/parameters/*
+  % echo 1 > /sys/module/dmatest/parameters/run
+  [  115.851124] dmatest: Could not start test, no channels configured
 
-the iterations parameter is not respected and test is going on and on until
-user gives
+  % echo dma8chan7 > /sys/module/dmatest/parameters/channel
+  [  127.563872] dmatest: Added 1 threads using dma8chan7
 
-	echo 0 > /sys/module/dmatest/parameters/run
+  % cat /sys/module/dmatest/parameters/wait
+  ... !!! HANG !!! ...
 
-This is not what expected.
+The culprit is the commit 6138f967bccc
 
-The history of this bug is interesting. I though that the commit
-  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-is a culprit, but looking closer to the code I think it simple revealed the
-broken logic from the day one, i.e. in the commit
-  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
-which adds iterations parameter.
+  ("dmaengine: dmatest: Use fixed point div to calculate iops")
 
-So, to the point, the conditional of checking the thread to be stopped being
-first part of conjunction logic prevents to check iterations. Thus, we have to
-always check both conditions to be able to stop after given iterations.
+which makes threads not to run, but pending and being kicked off by writing
+to the 'run' node. However, it forgot to consider 'wait' routine to avoid
+above mentioned case.
 
-Since it wasn't visible before second commit appeared, I add a respective
-Fixes tag.
+In order to fix this, check for really running threads, i.e. with pending
+and done flags unset.
 
-Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+It's pity the culprit commit hadn't updated documentation and tested all
+possible scenarios.
+
+Fixes: 6138f967bccc ("dmaengine: dmatest: Use fixed point div to calculate iops")
+Cc: Seraj Alijan <seraj.alijan@sondrel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
+Link: https://lore.kernel.org/r/20200428113518.70620-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dmatest.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/dmatest.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/drivers/dma/dmatest.c
 +++ b/drivers/dma/dmatest.c
-@@ -662,8 +662,8 @@ static int dmatest_func(void *data)
- 		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+@@ -240,7 +240,7 @@ static bool is_threaded_test_run(struct
+ 		struct dmatest_thread *thread;
  
- 	ktime = ktime_get();
--	while (!kthread_should_stop()
--	       && !(params->iterations && total_tests >= params->iterations)) {
-+	while (!(kthread_should_stop() ||
-+	       (params->iterations && total_tests >= params->iterations))) {
- 		struct dma_async_tx_descriptor *tx = NULL;
- 		struct dmaengine_unmap_data *um;
- 		dma_addr_t *dsts;
+ 		list_for_each_entry(thread, &dtc->threads, node) {
+-			if (!thread->done)
++			if (!thread->done && !thread->pending)
+ 				return true;
+ 		}
+ 	}
 
 
