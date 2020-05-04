@@ -7,167 +7,130 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41598C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7196DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4C92073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483B020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BkqQFi0+"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="J50Yc3ts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgEDPmb (ORCPT
+        id S1729453AbgEDPml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgEDPmb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:42:31 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8DA8C061A0E;
-        Mon,  4 May 2020 08:42:30 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id v4so309405wme.1;
-        Mon, 04 May 2020 08:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HZ0kwajVNDVc6kGRwmzoSlZILWUSqHM0exCohrNVZMM=;
-        b=BkqQFi0+AaEtXI7qFmwdV/U1uRMvXrakoc5iKBneVuNlGZnI9wD220a1BtDxjCqfan
-         o3+VUSP5Xes2bctImgy2dqXoBG9giE3NKvjUiroyuy8bb4llt9xoBuoXGcnVjy7KRCLO
-         XAinVgEqxy5poa1UXsg47JMsXE3BCfrsL/vU2JByPuXh0Yorm1My3FKYKH/esydeNXeJ
-         XU6zqtt8uzGpQJJfYRaVmFQ6s2MbORUkXEAswxHpkMbuWgcjzgkEd9XPcwPqcaSL1XMM
-         Xjtr62lGe/M+G1yQjH/CJNg/sZANHFkQyUtA6JH7LyK2EWVhSlBAlw6FCHn4T6BaJYWm
-         vwrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HZ0kwajVNDVc6kGRwmzoSlZILWUSqHM0exCohrNVZMM=;
-        b=OWtlDEoS0BVNtMjOxB2l4isKiEfT9QvmayhGgdvvOLRqPNVhA2cKwubtXVjEP3XCgH
-         0VH5bmJfk0beIBk+GoLkabNMwgPqEv/Thgduu1rmJbmFXe+yIl80jo5YZPUd0TRQ/vsQ
-         Mv6EiSv1o2NFLVqm0iErWajRbWc6lm7S4bpuel8oBGRyDZLudEdJtFNlqrHgawTgq+RV
-         t/19wf0K/4GB5NHnkz+/yERd0W6EcOs5PIWinTBsv7pwJTkjuIN5SdxlXAgJII5ShNTU
-         z5RqjxjewfhGjvhbsp8s7ItvCHe8vvAbEODBfWduEwr8GpokHGOv0V2wFlJl3aSVt4zp
-         tt5w==
-X-Gm-Message-State: AGi0PubKRUuI8snmldx0CBRz134GOYYe7Kuwa05LZ8xmB/SJVLnGUy0q
-        8TBaYfiSPRDxSNU9+2ci7j8=
-X-Google-Smtp-Source: APiQypLpDC/GMx6y2l/BDiHCciUPwVbk3Hj60EHeltjqMQ2qh8snhlQDpB1WaaKTBiTwxh7Uv4DY+g==
-X-Received: by 2002:a1c:c345:: with SMTP id t66mr16418509wmf.189.1588606949426;
-        Mon, 04 May 2020 08:42:29 -0700 (PDT)
-Received: from localhost (p2E5BE57B.dip0.t-ipconnect.de. [46.91.229.123])
-        by smtp.gmail.com with ESMTPSA id q184sm14544893wma.25.2020.05.04.08.42.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 08:42:27 -0700 (PDT)
-Date:   Mon, 4 May 2020 17:42:26 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy
- for a long time
-Message-ID: <20200504154226.GA614153@ulmo>
-References: <fd1ca178-1ea3-851f-20a6-10bf00453ce3@nvidia.com>
- <a5734f19-254e-b6bc-e791-fa1ac63f11a4@gmail.com>
- <79f6560e-dbb5-0ae1-49f8-cf1cd95396ec@nvidia.com>
- <20200427074837.GC3451400@ulmo>
- <c1190858-eaea-8e94-b4d1-1cf28076c330@gmail.com>
- <20200427103851.GB24446@kunai>
- <dc2de966-81d6-6ad5-0c51-16dd28ca4165@gmail.com>
- <20200427141922.GD3464906@ulmo>
- <20200427153106.GA8113@kunai>
- <e5a3dd07-97f5-29f1-974e-3037a01cc89c@gmail.com>
+        Mon, 4 May 2020 11:42:41 -0400
+Received: from mout.web.de ([212.227.17.11]:52933 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgEDPmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:42:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1588606945;
+        bh=kTdJoXl3KihM907TcZsBRc2W6R4KPhYFBlrHy96bxEU=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=J50Yc3tsucubTtUrl63togQLmFo+2Szj6XxRSxaWcBKQKYTPHAJUtUrCqbl+tD7A8
+         03hPmJ4jxNWof2FslFm/yAkxd5IScKyd6VVxmR1GzEo9H5REiP6KLaMX3ZlYVUPfLU
+         DjCT92ebHpZVIvvwqTbJ2uUNZb+8mUSIX1pKr+yI=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lba35-1iqldS1Ftb-00lAY5; Mon, 04
+ May 2020 17:42:25 +0200
+To:     Maxim Petrov <mmrmaximuzz@gmail.com>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2] stmmac: fix pointer check after utilization in
+ stmmac_interrupt
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <af38eb97-d734-3911-2f5d-eb666deaad7e@web.de>
+Date:   Mon, 4 May 2020 17:42:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-In-Reply-To: <e5a3dd07-97f5-29f1-974e-3037a01cc89c@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZqWFU/Ep00QRhnJVF0Ey7fqh0s4qdzWKsmdFQLqzRnIGN4im0ug
+ QLgJaEbCfhp0nlw4NkcRoCa2Z5a0rX88tEhDbfAmv24S+Qu/HEHxmjZmnwD9c0gF0U37VDq
+ TJiqRN9+60p9yX5yHY+WEofWcCYR10PfCpo7+cbOgcirnIry24ZLRJ54mmIeFPT44o8Hws8
+ cPRYTzr4ZF2mMpy6vd2pg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eoIDu8Cm6qE=:Cyte8JDVMvZuD3US9WBtA1
+ OVZOqFEzmziuiOacYme3IbY/qFFHEBfTmBnfnZ+8OWC3YFLyQ2Wv4heLPkGSgrNnDsq/z36eF
+ j7yX9l/SRsW/hRU+boG9RMFEoRuudVTFpeBG/JNhDAW2KQdVZi4czbA9YZwtEEJbnXxtmEVrZ
+ otQY6j1p6zrqR+T9Q8CN+IMBl7ejjB+fBEeEx8Z6hHnWf9qZEblzwUWo/My4ooDCkeoFKSHLw
+ NGZMc0O3SQx+yldJ5YGEzbey9ve8ZjVaKC0ebN+1INC5R4I1U1g9xqbLM//RYjQxLaJksH5dC
+ dCmb/n+Iwarjnbl2NDdyXaPq1E6EWRwEF2UrjsZ5jG+jEdOQa8G6awFV7hWyYmCZU9yZR1C3G
+ v07WDD0sJwh7y0eaL67iRD/XI4FGGlpXbFUwQTzpYP+YSWlF3HY9qyPin/yjCPq4+pa1IR53+
+ huTc5njfGWrOaaDW6EpbfhI764WGK1WEC0c+xnJhAVTkfNOr/hysl1t+dJmd9xyjpKm59WHBF
+ F8pY8IjhkhfdD8Cnr35YpWN/vJnsRgFpo0S6QSIQFQv1zgJ61WBWCaD4DuRf9SRwrhOt8xLf9
+ Cp0cbYe4cilTvHWA6KO+8N44XqaG8ZgzbbeSpo7JiOX2C3oQwCzMj4SVTbcD6AJQkyo1NXDXw
+ /mAfO/az22IR8YUGWg3Q7+kAT2V9HQogSxZKwMILa7JgkrcfnBFDrnr311no64gBOETQww1d2
+ sOMf/DOqDecWOTjZz/ym3hRssqvYDCzbKTzp61RoQKEd3vLDUTwdx9BPLuLfPdoKdtTj+TXsr
+ tpRX4zWAo7CnmVO4qt85aat3B1aIeotF/FZZ14llqvrNDfS7S3YLfsYtViaApRA8WaIEd1lB9
+ TINrzZGAVhBUZkl9+yfeicbl65sUs1X/5YKr6ofE4ZJtnELBcgkCtGfa3bYmaLUAAHT0tgLzd
+ LySyVIHuwDVcfgV+Yf9MqsKbPaYQh7iHhhaEHu6DsVmid3pe/xqxsyOfxIcXKTqHnbuApu+kp
+ DKlHjuSc2m5/9h6BwneWfmASq0YGDDQKE+L0x8stuaz76PuG28aGAlifIlg/ssymyv2V3qWlE
+ alaXlCG2CNykOOapqww+THRpGr0JONc+PsNdKT4lUiBGGxNn9D28IdZgt0i1ghfef/OsbVGC+
+ GTxlPiarN2pUKnkdHmg0l6SiPuvOO7pMJ4DS5NVWqyxZMD5MRhw4G7DSU5m/Cz6soJsG7nCHo
+ x2qqD/LpkU6t028+p
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> =E2=80=A6 However, the code fragment is incorrect
+> because the dev pointer is used before the actual check
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I find such information interesting.
 
-On Sat, May 02, 2020 at 05:40:35PM +0300, Dmitry Osipenko wrote:
-> 27.04.2020 18:31, Wolfram Sang =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >=20
-> >> Yes, that bug should be fixed anyway. But that doesn't justify breaking
-> >> suspend/resume completely, which *is* a regression.
-> >>
-> >> Look, I'm not saying that we should drop this patch altogether. All I'm
-> >> saying is that we should postpone it so that we can: a) get suspend and
-> >> resume working again (and by doing so make sure no other suspend/resume
-> >> regressions silently creep in, because that always seems to happen when
-> >> you're not looking) and b) fix any preexisting issues without possibly
-> >> scrambling the result with this perhaps unrelated fix.
-> >>
-> >> So, again, I think the safest road forward is to back this one out for
-> >> now, fix whatever this other bug is and once suspend/resume is working
-> >> properly again we can revisit this patch based on a known-good baselin=
-e.
-> >=20
-> > I am with you here. I want to add that the proper fix should be
-> > developed without thinking too much about stable in the first place.
-> > *When* we have a proper working fix, then we can think about making it
-> > "more" suitable for backporting. Yet, it may also be a result that older
-> > kernels need a different solution. Or have no solution at all, in case
-> > they can't do atomic_transfers and this is needed.
-> >=20
-> > D'accord?
-> >=20
->=20
-> I saw that you submitted the revert of the patches for 5.7, hopefully it
-> won't result in putting the PCIe driver problem into the back burner.
-> I'll try not to forget about these patches to resubmit them later on,
-> once the problem will be resolved :)
 
-I can put these two patches into a local development branch to keep
-track of them. From what I said earlier, it looks like it would be fine
-to apply these if we also make that runtime PM change (i.e. drop force
-runtime PM and instead manually invoke runtime PM callbacks, which seems
-to be in line with what the PM maintainers suggest, as pointed out
-elsewhere in this thread).
+> which leads to undefined behavior. =E2=80=A6
 
-How about if I put all of that into a branch and push it to linux-next
-so that we can get some broader testing? I've already run it through our
-internal test system, which, while not perfect, is the broadest system I
-am aware of, and all tests came back positive.
+I suggest to adjust the wording for this =E2=80=9Cconclusion=E2=80=9D.
 
-I'm not exactly sure I see a real issue with the PCIe driver after those
-patches are applied. The regulator errors are gone (presumably because
-the regulators now do get turned off properly) and I don't observe any
-other issues.
-
-Thierry
-
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6wN+AACgkQ3SOs138+
-s6FAxQ//Z4QpPdcFLKFZCSCH23KA4t2/646O0Py+XUV421tLkrvkOepTvI2CXWQd
-vj8cFw6SyA7IKDOEorgHT8nDwJqNTPuEO9eNS33QVlq21ezkibKXAfJH4kbrDr7l
-pVFJajPsJWvHUS9ULWtWdQKbH7QgAFyiqO5r/b6tOP32uEN+uHAatlUb0ao3ZXnR
-FZZWkZ4QdX+kxb1RRyLc6+KMIl/XwIdVkgXthRHjhKGT5UQOArj7LrxYQgPaUrqK
-yFp9ahclAinfGsbPEHbIyxmDTy20SxQbfM9l9Bq/+Tb3NzXfhs5tTnFKx1SImXDY
-0fEWZWLiV/uOzwVaAZZ80LRJd2T4VpYGdbX3m06GksmuZRfN74ART7F+dDegECXf
-Eug96QB2gNLJKaxwP1eBnlLnEobsmAfIKpo4DMcdKD8kcdMQu6TAJSbIl4vT/f19
-n0+er/TSPBmVO8c8FlnT2EXmrYvM2uy4BJiE7TdqU7SauexrUxErR5O2mt3Etofb
-9aIq3aApVEG1SyU7/Q1HznCJREGv1kB711bgJxE32ZbgpqxdJF7tuTxWX7aV48Os
-2HAO4tVeXZWJ5EiciF0v54QrH0TtsLhtbwb6GyIxJvjOLERDffzvKAwKgGXL+1XU
-Ym4+vPB4bGYtfzASLHrJgMFSTVrHBlrS2v4ZOe5zcBgcBUJk48I=
-=+3Hv
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
+Regards,
+Markus
