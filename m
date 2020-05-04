@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01255C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D01C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D78F4206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23276206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615248;
-	bh=h9wQ7p5kC7HRMjeeis5OSe0tAUhnYOwRGHgrzoC6kFA=;
+	s=default; t=1588615254;
+	bh=9PO4eLzEaxeDb9USrLBsYzA4tX35j8/SlZcCjclVEYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uqwBCxKUCr+ENQXZe+qIo+sM8YghCsOJodAup3H9I512Rql7gS37fa3K9tIGsY8yQ
-	 pq9V/YGL3VgT/Hz4iMd9kSCPwVQpxcSw7EBcccrIGj1o4P2o8FnIe33S9aIaby1EML
-	 rUHbOZyFmRRD0L/3vjUATDf9PVfXXuF7j+3CGBWg=
+	b=fPxsiBb4gyt3AaAH+pggw3OD+qv40h8AbBgRsPayO3HkdOrXih1i0ipEJ/5v1G6bi
+	 r6NMW64aEuLdES7/XdHSrFrDEWZfbZSDohCkdlqLpwEOETxJ1utuKbMdF3VstV+JwT
+	 7v79IxKZ475saiad2Wk0AAvKfK2DkNbVoyBMCJrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbgEDSAs (ORCPT
+        id S1731076AbgEDSAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:00:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:00:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbgEDSAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:00:43 -0400
+        id S1730575AbgEDSAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:00:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C3AD2073B;
-        Mon,  4 May 2020 18:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CF6220721;
+        Mon,  4 May 2020 18:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615243;
-        bh=h9wQ7p5kC7HRMjeeis5OSe0tAUhnYOwRGHgrzoC6kFA=;
+        s=default; t=1588615248;
+        bh=9PO4eLzEaxeDb9USrLBsYzA4tX35j8/SlZcCjclVEYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auyt9kpCVnriMK1OurdV9hJHD/rg1Y38IxQbgTb8DGpznENKT/fyzW23nLaiF5zuq
-         6pAQzWhY0HNM7xBpDcRdmcr6XfNT4hXhxs5dU/DvOjAMFSl0uUvCDl4ywP8UJxgPiJ
-         JDEw1c531rL6HPbHuHg5ncbhvYKuObD85c5uypTw=
+        b=RlAtd80bqxGrSKRbLtd5uDU/E4n5FfHEe4SBPj5nbbQRFs9S/4CRuhK2L0SRTIom4
+         WK8xALL0JxzFivGJr1uPUL3rp69MKYRrBzwJefOGtmXfBf0o4wd88Hui4MKeqsbj8d
+         sIMWsX630F3FYGHk48k2SZpt79j7HI06/PxmbC00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 4.14 04/26] drm/qxl: qxl_release leak in qxl_hw_surface_alloc()
-Date:   Mon,  4 May 2020 19:57:18 +0200
-Message-Id: <20200504165443.436730782@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 06/26] btrfs: fix block group leak when removing fails
+Date:   Mon,  4 May 2020 19:57:20 +0200
+Message-Id: <20200504165443.791496186@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
 References: <20200504165442.494398840@linuxfoundation.org>
@@ -59,35 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit a65aa9c3676ffccb21361d52fcfedd5b5ff387d7 upstream.
+commit f6033c5e333238f299c3ae03fac8cc1365b23b77 upstream.
 
-Cc: stable@vger.kernel.org
-Fixes: 8002db6336dd ("qxl: convert qxl driver to proper use for reservations")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/2e5a13ae-9ab2-5401-aa4d-03d5f5593423@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
+returns a local reference of the block group that contains the given
+bytenr to "block_group" with increased refcount.
+
+When btrfs_remove_block_group() returns, "block_group" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in several exception handling paths
+of btrfs_remove_block_group(). When those error scenarios occur such as
+btrfs_alloc_path() returns NULL, the function forgets to decrease its
+refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
+leak.
+
+Fix this issue by jumping to "out_put_group" label and calling
+btrfs_put_block_group() when those error scenarios occur.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/qxl/qxl_cmd.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/extent-tree.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- a/drivers/gpu/drm/qxl/qxl_cmd.c
-+++ b/drivers/gpu/drm/qxl/qxl_cmd.c
-@@ -504,9 +504,10 @@ int qxl_hw_surface_alloc(struct qxl_devi
- 		return ret;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -10554,7 +10554,7 @@ int btrfs_remove_block_group(struct btrf
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto out_put_group;
+ 	}
  
- 	ret = qxl_release_reserve_list(release, true);
--	if (ret)
-+	if (ret) {
-+		qxl_release_free(qdev, release);
- 		return ret;
--
-+	}
- 	cmd = (struct qxl_surface_cmd *)qxl_release_map(qdev, release);
- 	cmd->type = QXL_SURFACE_CMD_CREATE;
- 	cmd->flags = QXL_SURF_FLAG_KEEP_DATA;
+ 	/*
+@@ -10591,7 +10591,7 @@ int btrfs_remove_block_group(struct btrf
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out;
++			goto out_put_group;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -10614,13 +10614,13 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out;
++		goto out_put_group;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out;
++			goto out_put_group;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -10778,9 +10778,9 @@ int btrfs_remove_block_group(struct btrf
+ 
+ 	ret = remove_block_group_free_space(trans, fs_info, block_group);
+ 	if (ret)
+-		goto out;
++		goto out_put_group;
+ 
+-	btrfs_put_block_group(block_group);
++	/* Once for the block groups rbtree */
+ 	btrfs_put_block_group(block_group);
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+@@ -10790,6 +10790,10 @@ int btrfs_remove_block_group(struct btrf
+ 		goto out;
+ 
+ 	ret = btrfs_del_item(trans, root, path);
++
++out_put_group:
++	/* Once for the lookup reference */
++	btrfs_put_block_group(block_group);
+ out:
+ 	btrfs_free_path(path);
+ 	return ret;
 
 
