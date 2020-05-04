@@ -2,88 +2,177 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B3AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADABC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A596206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376392071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:53:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6K6BJbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgEDMww (ORCPT
+        id S1728110AbgEDMxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:52:52 -0400
-Received: from outbound-smtp09.blacknight.com ([46.22.139.14]:55489 "EHLO
-        outbound-smtp09.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgEDMwv (ORCPT
+        Mon, 4 May 2020 08:53:24 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48754 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgEDMxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:52:51 -0400
-X-Greylist: delayed 518 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 May 2020 08:52:50 EDT
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp09.blacknight.com (Postfix) with ESMTPS id 538B61C3C52
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:44:11 +0100 (IST)
-Received: (qmail 21279 invoked from network); 4 May 2020 12:44:11 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 4 May 2020 12:44:11 -0000
-Date:   Mon, 4 May 2020 13:44:09 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Henry Willard <henry.willard@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Limit boost_watermark on small zones.
-Message-ID: <20200504124409.GB3758@techsingularity.net>
-References: <1588294148-6586-1-git-send-email-henry.willard@oracle.com>
- <20200501155729.a479c4b27f127d9aa866bd8e@linux-foundation.org>
+        Mon, 4 May 2020 08:53:23 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044CrDiR101787;
+        Mon, 4 May 2020 07:53:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588596793;
+        bh=egWsxDaoDfltWcOEQkby+ChR38lWf3kFvTkLIhVfDqM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O6K6BJbuShLOF85rq7SiZpAyTsijWz3jZnRZH3Qi6xm0/+5FsErBaqZg8NouMWfAP
+         PP4CR/VEFYXi687Pl3LgHg8RYsXXOJGrZhJDbOyMXgvtJ28hQpdOxGxzAdvk7a6NYV
+         S3n2B1pY3K162gyvMADHWP9VhxzaOmKAEAYpJfm4=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044CrD2e126233;
+        Mon, 4 May 2020 07:53:13 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 07:53:12 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 07:53:12 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044Cr9rS066968;
+        Mon, 4 May 2020 07:53:10 -0500
+Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200417114322.31111-1-kishon@ti.com>
+ <20200417114322.31111-3-kishon@ti.com>
+ <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
+ <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
+ <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
+ <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
+Date:   Mon, 4 May 2020 18:23:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200501155729.a479c4b27f127d9aa866bd8e@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:57:29PM -0700, Andrew Morton wrote:
-> On Thu, 30 Apr 2020 17:49:08 -0700 Henry Willard <henry.willard@oracle.com> wrote:
-> 
-> > Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an external
-> > fragmentation event occurs") adds a boost_watermark() function which
-> > increases the min watermark in a zone by at least pageblock_nr_pages or
-> > the number of pages in a page block. On Arm64, with 64K pages and 512M
-> > huge pages, this is 8192 pages or 512M. It does this regardless of the
-> > number of managed pages managed in the zone or the likelihood of success.
-> > This can put the zone immediately under water in terms of allocating pages
-> > from the zone, and can cause a small machine to fail immediately due to
-> > OoM. Unlike set_recommended_min_free_kbytes(), which substantially
-> > increases min_free_kbytes and is tied to THP, boost_watermark() can be
-> > called even if THP is not active. The problem is most likely to appear
-> > on architectures such as Arm64 where pageblock_nr_pages is very large.
-> > 
-> > It is desirable to run the kdump capture kernel in as small a space as
-> > possible to avoid wasting memory. In some architectures, such as Arm64,
-> > there are restrictions on where the capture kernel can run, and therefore,
-> > the space available. A capture kernel running in 768M can fail due to OoM
-> > immediately after boost_watermark() sets the min in zone DMA32, where
-> > most of the memory is, to 512M. It fails even though there is over 500M of
-> > free memory. With boost_watermark() suppressed, the capture kernel can run
-> > successfully in 448M.
-> > 
-> > This patch limits boost_watermark() to boosting a zone's min watermark only
-> > when there are enough pages that the boost will produce positive results.
-> > In this case that is estimated to be four times as many pages as
-> > pageblock_nr_pages.
-> > 
-> 
-> Let's Cc Mel.
-> 
+Hi Robin,
 
-Seems reasonable.
+On 5/4/2020 4:24 PM, Robin Murphy wrote:
+> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
+>> Hi Robin,
+>>
+>> On 5/1/2020 9:24 PM, Robin Murphy wrote:
+>>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
+>>>> [+Robin - to check on dma-ranges intepretation]
+>>>>
+>>>> I would need RobH and Robin to review this.
+>>>>
+>>>> Also, An ACK from Tom is required - for the whole series.
+>>>>
+>>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
+>>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
+>>>>> property to configure the number of bits passed through from PCIe
+>>>>> address to internal address in Inbound Address Translation register.
+>>>>>
+>>>>> However standard PCI dt-binding already defines "dma-ranges" to
+>>>>> describe the address range accessible by PCIe controller. Parse
+>>>>> "dma-ranges" property to configure the number of bits passed
+>>>>> through from PCIe address to internal address in Inbound Address
+>>>>> Translation register.
+>>>>>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>> index 9b1c3966414b..60f912a657b9 100644
+>>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>>        struct device *dev = rc->pcie.dev;
+>>>>>        struct platform_device *pdev = to_platform_device(dev);
+>>>>>        struct device_node *np = dev->of_node;
+>>>>> +    struct of_pci_range_parser parser;
+>>>>>        struct pci_host_bridge *bridge;
+>>>>>        struct list_head resources;
+>>>>> +    struct of_pci_range range;
+>>>>>        struct cdns_pcie *pcie;
+>>>>>        struct resource *res;
+>>>>>        int ret;
+>>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>>>>        rc->max_regions = 32;
+>>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
+>>>>> &rc->max_regions);
+>>>>>    -    rc->no_bar_nbits = 32;
+>>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+>>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
+>>>>> +        if (of_pci_range_parser_one(&parser, &range))
+>>>>> +            rc->no_bar_nbits = ilog2(range.size);
+>>>
+>>> You probably want "range.pci_addr + range.size" here just in case the bottom of
+>>> the window is ever non-zero. Is there definitely only ever a single inbound
+>>> window to consider?
+>>
+>> Cadence IP has 3 inbound address translation registers, however we use only 1
+>> inbound address translation register to map the entire 32 bit or 64 bit address
+>> region.
+> 
+> OK, if anything that further strengthens the argument for deprecating a single
+> "number of bits" property in favour of ranges that accurately describe the
+> window(s). However it also suggests that other users in future might have some
+> expectation that specifying "dma-ranges" with up to 3 entries should work to
+> allow a more restrictive inbound configuration. Thus it would be desirable to
+> make the code a little more robust here - even if we don't support multiple
+> windows straight off, it would still be better to implement it in a way that
+> can be cleanly extended later, and at least say something if more ranges are
+> specified rather than just silently ignoring them.
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+I looked at this further in the Cadence user doc. The three inbound ATU entries
+are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
+BAR when there is no matching found in RC BARs. Right now we always configure
+the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
+> 
+>>> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
+>>> for you, but I suppose plumbing that in plus processing the resulting
+>>> dma_ranges resource probably ends up a bit messier than the concise open-coding
+>>> here.
+>>
+>> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
+>> for outbound configuration, whereas here we parse "dma-ranges" property and is
+>> used for inbound configuration.
+> 
+> If you give it a valid third argument it *also* parses "dma-ranges" into a list
+> of inbound regions. This is already used by various other drivers for
+> equivalent inbound window setup, which is what I was hinting at before, but
+> given the extensibility argument above I'm now going to actively suggest
+> following that pattern for consistency.
+yeah, just got to know about this.
 
--- 
-Mel Gorman
-SUSE Labs
+Thanks
+Kishon
