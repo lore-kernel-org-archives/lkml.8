@@ -2,121 +2,168 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA257C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202CEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D47A72071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F862078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TBa2bsb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgEDMzP (ORCPT
+        id S1729088AbgEDMzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728940AbgEDMyT (ORCPT
+        Mon, 4 May 2020 08:55:22 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56322 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728564AbgEDMyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:54:19 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C549AC061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 05:54:18 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 300465BB; Mon,  4 May 2020 14:54:15 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     iommu@lists.linux-foundation.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5/5] iommu/amd: Do not flush Device Table in iommu_map_page()
-Date:   Mon,  4 May 2020 14:54:13 +0200
-Message-Id: <20200504125413.16798-6-joro@8bytes.org>
+        Mon, 4 May 2020 08:54:18 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200504125416euoutp01c644e3ad7ebb85c43a881c68925abc18~L1Gy4APPl2809928099euoutp01G
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:54:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200504125416euoutp01c644e3ad7ebb85c43a881c68925abc18~L1Gy4APPl2809928099euoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588596857;
+        bh=4gYupzc/UJMgmHWpPu2pQvg0evsLFhb5hvvpEtLWtk4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TBa2bsb5mbktXySJBoleq/q280OjjLCbSxWdW6KDVoGNlN9O2MF2vqs+Sv1m99jbG
+         24gENpjKKpMGXZLz8ZD0LlsLcCW4jw+5T7QGtK+lXZsVgWmElToPyeeHKKI0YOZA/x
+         ad+5M/JLVaFOPnk/OWEBBY9K7gVQ01GRLSuJzKqs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200504125416eucas1p2f417af8300199cd00291584432cff973~L1GyhfFMd2227522275eucas1p2m;
+        Mon,  4 May 2020 12:54:16 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id EB.D2.60679.87010BE5; Mon,  4
+        May 2020 13:54:16 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200504125415eucas1p1eea125ce87eec4e7c2e2dcc75f965896~L1Gx8x-ai1176711767eucas1p1S;
+        Mon,  4 May 2020 12:54:15 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200504125415eusmtrp1ab58d44cf2acebca7c2c1109419622b6~L1Gx8GCL92470624706eusmtrp1i;
+        Mon,  4 May 2020 12:54:15 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-a4-5eb01078b33a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 87.06.07950.77010BE5; Mon,  4
+        May 2020 13:54:15 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200504125415eusmtip2131813f4a891672552b948480ffbdf1e~L1GxNGVje0350403504eusmtip26;
+        Mon,  4 May 2020 12:54:15 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+Subject: [PATCH v2 09/21] drm: panfrost: fix sg_table nents vs. orig_nents
+ misuse
+Date:   Mon,  4 May 2020 14:53:47 +0200
+Message-Id: <20200504125359.5678-9-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504125413.16798-1-joro@8bytes.org>
-References: <20200504125413.16798-1-joro@8bytes.org>
+In-Reply-To: <20200504125359.5678-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSeyyVYRzHPee9nJc5ehzKM7lsZ4vVFpE/3o1aNavX+qeWtWpL3niH5bbz
+        Oi5tSoQcjnGUJDUrzfVECCHnOC4nMZXblOT6D5tuLkkuOb3ov+/3+3y++/7+eChMqiNsqZDw
+        KE4ezobKSDO8rvP3u4OxsMrvUG6HI63q7RLRvX3pBP0ir5KgN+qyMXpg8RtJl5Z3iOhCrSe9
+        MDAhoqunhgi6v7GApDXto2J6o7lBTLd+nyboW+2bbKamjzy2i6l4XAGYhtEiwLxeKsSZ6rI0
+        kqlfGieYsXSDiKkpusmMrE9hTM5wMWCaPiaQTGZtGWDmqx3OmF8y8wrkQkOiObnrUX+z4D+1
+        lpHNu2ILmsrxBLBurgSmFIIeqEQ5CJTAjJLCEoAG5ztFglkAaC2xBxPMPEAV469E2xXDz+It
+        qhggnX4O26l0TqqAkSKhG1LOKUmjtobJAL1R/RvEoA5D4x27lUBMWcFzqM3XmOJwH0rpWhUb
+        tQR6oay0EUzYckTlVbpNTVGm8Ah6oHI2LiH4SYx0Hxa3GG809Khl6zYrNGuoFQvaDnXnZOBC
+        IQmgiV6NWDAZAPUn5gGB8kSfe1dI4wIG96PKRlchPo5Se7QiY4ygBRqesxSut0DquvuYEEvQ
+        nRSpQDuhfMPzndnW931bCIOe3XMxxlLYBlBODZ8FHPP/TxUCUAZsOAUfFsTx7uFcjAvPhvGK
+        8CCXgIiwarD5r7rXDQsNoHH1qh5ACsjMJRfmK/2kBBvNx4XpAaIwmbWk4fZmJAlk465z8ogr
+        ckUox+vBXgqX2UgOP5m5LIVBbBR3jeMiOfn2q4gytU0AyVnqsvjc0FGP1BF/K9Zbkeh48cRT
+        3L6pcd3V12kPUZdU4LPiaeFWZTJZcuPXSG7acn5rocPosnqhFjNxidGWVHQOmbyFPia5J1UT
+        +FhkKd2e4a6YnrhrP3t6zrflfL3/w5k+3Zev2oDseD0R4fxSPcR6ZZ3ysNOc1f6QFUvWZDgf
+        zLodwOQ8+xeC4Ld/UwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsVy+t/xe7rlAhviDFatsLDoPXeSyeLcpW5W
+        i40z1rNa/N82kdniytf3bBYrVx9lsliw39riy5WHTBabHl9jtbi8aw6bxdojd9kt/u/ZwW5x
+        8MMTVovGI0C1fWsvsTnwe6yZt4bRY8fdJYwee78tYPHYtKqTzWP7twesHve7jzN5bF5S73H7
+        32Nmj8k3ljN67L7ZwObRt2UVo8fnTXIBPFF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqG
+        xuaxVkamSvp2NimpOZllqUX6dgl6Gb+3CBbs4a+Ys3s1SwPjP54uRk4OCQETieOfljN1MXJx
+        CAksZZS4dP8aK0RCRuLktAYoW1jiz7UuNoiiT4wS13vusYEk2AQMJbreQiREBDoZJaZ1f2QH
+        cZgFTjFL3Jh9DaxKWCBQou/VbmYQm0VAVaLt5B92EJtXwEZiQudtZogV8hKrNxwAsjk4OAVs
+        JWb2qoOEhQTyJe4+/ccygZFvASPDKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxNjMA42nbs55Yd
+        jF3vgg8xCnAwKvHwbvi6Pk6INbGsuDL3EKMEB7OSCO+OFqAQb0piZVVqUX58UWlOavEhRlOg
+        myYyS4km5wNjPK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA+P2
+        iveW57ieMcw8fWVp9oGzgWJCmbadnKztN8Rrnbzm9U4+43cvyK7scvAr+ecsnJYm15q8nee/
+        tNBb4fLE/ehGT97Td/Y+13t5ojR4yylhpYt/05/n/8rfcuu5Kqfsnk0B7pMapXLOrK558Ypj
+        XYfsoY3PeF8aMfYy3ZwefHKOptJeuw/rIwyUWIozEg21mIuKEwGkmqhquQIAAA==
+X-CMS-MailID: 20200504125415eucas1p1eea125ce87eec4e7c2e2dcc75f965896
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200504125415eucas1p1eea125ce87eec4e7c2e2dcc75f965896
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200504125415eucas1p1eea125ce87eec4e7c2e2dcc75f965896
+References: <20200504125017.5494-1-m.szyprowski@samsung.com>
+        <20200504125359.5678-1-m.szyprowski@samsung.com>
+        <CGME20200504125415eucas1p1eea125ce87eec4e7c2e2dcc75f965896@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
+numer of the created entries in the DMA address space. However the
+subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
+called with the original number of entries passed to dma_map_sg. The
+sg_table->nents in turn holds the result of the dma_map_sg call as stated
+in include/linux/scatterlist.h. Adapt the code to obey those rules.
 
-The flush of the Device Table Entries for the domain has already
-happened in increase_address_space(), if necessary. Do no flush them
-again in iommu_map_page().
-
-Tested-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- drivers/iommu/amd_iommu.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+For more information, see '[PATCH v2 00/21] DRM: fix struct sg_table nents
+vs. orig_nents misuse' thread: https://lkml.org/lkml/2020/5/4/373
+---
+ drivers/gpu/drm/panfrost/panfrost_gem.c | 3 ++-
+ drivers/gpu/drm/panfrost/panfrost_mmu.c | 4 +++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 2ae1daac888a..1dc3718560d0 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1446,15 +1446,18 @@ static bool increase_address_space(struct protection_domain *domain,
- {
- 	struct domain_pgtable pgtable;
- 	unsigned long flags;
--	bool ret = false;
-+	bool ret = true;
- 	u64 *pte, root;
+diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
+index 17b654e..22fec7c 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_gem.c
++++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+@@ -42,7 +42,8 @@ static void panfrost_gem_free_object(struct drm_gem_object *obj)
+ 		for (i = 0; i < n_sgt; i++) {
+ 			if (bo->sgts[i].sgl) {
+ 				dma_unmap_sg(pfdev->dev, bo->sgts[i].sgl,
+-					     bo->sgts[i].nents, DMA_BIDIRECTIONAL);
++					     bo->sgts[i].orig_nents,
++					     DMA_BIDIRECTIONAL);
+ 				sg_free_table(&bo->sgts[i]);
+ 			}
+ 		}
+diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+index ed28aeb..2d9b1f9 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -517,7 +517,9 @@ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
+ 	if (ret)
+ 		goto err_pages;
  
- 	spin_lock_irqsave(&domain->lock, flags);
- 
- 	amd_iommu_domain_get_pgtable(domain, &pgtable);
- 
--	if (address <= PM_LEVEL_SIZE(pgtable.mode) ||
--	    WARN_ON_ONCE(pgtable.mode == PAGE_MODE_6_LEVEL))
-+	if (address <= PM_LEVEL_SIZE(pgtable.mode))
-+		goto out;
-+
-+	ret = false;
-+	if (WARN_ON_ONCE(pgtable.mode == PAGE_MODE_6_LEVEL))
- 		goto out;
- 
- 	pte = (void *)get_zeroed_page(gfp);
-@@ -1499,19 +1502,15 @@ static u64 *alloc_pte(struct protection_domain *domain,
- 	amd_iommu_domain_get_pgtable(domain, &pgtable);
- 
- 	while (address > PM_LEVEL_SIZE(pgtable.mode)) {
--		bool upd = increase_address_space(domain, address, gfp);
--
--		/* Read new values to check if update was successful */
--		amd_iommu_domain_get_pgtable(domain, &pgtable);
--
- 		/*
- 		 * Return an error if there is no memory to update the
- 		 * page-table.
- 		 */
--		if (!upd && (address > PM_LEVEL_SIZE(pgtable.mode)))
-+		if (!increase_address_space(domain, address, gfp))
- 			return NULL;
- 
--		*updated = *updated || upd;
-+		/* Read new values to check if update was successful */
-+		amd_iommu_domain_get_pgtable(domain, &pgtable);
+-	if (!dma_map_sg(pfdev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL)) {
++	sgt->nents = dma_map_sg(pfdev->dev, sgt->sgl, sgt->orig_nents,
++				DMA_BIDIRECTIONAL);
++	if (!sgt->nents) {
+ 		ret = -EINVAL;
+ 		goto err_map;
  	}
- 
- 
-@@ -1719,7 +1718,13 @@ static int iommu_map_page(struct protection_domain *dom,
- 		unsigned long flags;
- 
- 		spin_lock_irqsave(&dom->lock, flags);
--		update_domain(dom);
-+		/*
-+		 * Flush domain TLB(s) and wait for completion. Any Device-Table
-+		 * Updates and flushing already happened in
-+		 * increase_address_space().
-+		 */
-+		domain_flush_tlb_pde(dom);
-+		domain_flush_complete(dom);
- 		spin_unlock_irqrestore(&dom->lock, flags);
- 	}
- 
 -- 
-2.17.1
+1.9.1
 
