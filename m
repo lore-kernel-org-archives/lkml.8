@@ -2,99 +2,110 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFA7C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3772BC47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D823D2078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JDybFtus"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1DC2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgEDWLW (ORCPT
+        id S1728102AbgEDWNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:11:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726338AbgEDWLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:11:21 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669A7C061A0E;
-        Mon,  4 May 2020 15:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Ke6Is75zTSCuovFahCnc7BTlhzg10jNaHS1gn8ns//o=; b=JDybFtusCmGEq91bmNnwoWCj+a
-        N0xxIbsYu5lQxZkzPmNDuU07PGvTPGCdW0vbPRO5yL9CyEBvYR1vtbAgXrtqw0hBFSByZmuXy1eOa
-        BV13lTYReOQhwPBCt6oCwd0okqW34ZMeppO7ul+DxlMT9qEZya+kLv/fyY5XjjSJAr4+XskBbUHkP
-        mPhZXNr8NsQlQubgAbiO0erlNn5pHycINxr2ibFLT8cB20zuIsAzAh/rYn7lMK6nibeLoyUg72TaC
-        rhhs1ncVZ9Po/A7mh6tw7ETaxX3a6Mq6QjZeYirrDtXuot86KgWihjeGnL68mEPitegVqvhOr0bO8
-        9WIr0pFg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVjIz-0001BJ-5H; Mon, 04 May 2020 22:11:17 +0000
-Subject: Re: [PATCH v2 2/5] stats_fs API: create, add and remove stats_fs
- sources and values
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        kvm@vger.kernel.org
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200504110344.17560-1-eesposit@redhat.com>
- <20200504110344.17560-3-eesposit@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9a4e7489-bac4-23dc-b612-73eb91babb6f@infradead.org>
-Date:   Mon, 4 May 2020 15:11:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 18:13:30 -0400
+Received: from mail-co1nam11olkn2060.outbound.protection.outlook.com ([40.92.18.60]:57024
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726433AbgEDWNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:13:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KMqJIsCaWUv2EzZYHckjyqdFY6UZr8VkNbIKz7+fH0yKvSFzuCVJPRr3CCMxUYB3fT97ZxMD7f0Mrtt3PCcmotgfT53Ldbe2t2k4tOgtRF+DHZzeL73iKn/9uk10ceijHaLqIx6ZP8cVKA97xiAB18hyLSPJ3D6mFwojzES70FNjYCbOZCVWc1GInSweUGOjucwJqTuC5tO1crLsV6sIQcSGxLj17ccAlmo0s/7UnZxUR0SHPfaOAFLSTY9lmH8HTI8HbvXmCFPQwNc9j966TI0eW76Sp+tZpR7E9opZ3EvSRu05J+3Caodyfl9KzvT9QmHpMklUiNFe2Vo83hPuHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RiBPZdxoYhg53RcsUryS63pWhkfxyAVyRABnH+FEjRY=;
+ b=MzVMrwkLczNr7An7qTyg7LCWGLtqLxeZ0tUi0TkyAGdxjppS7vAkXiGMqdLQIrDy2SV0t/dJ7UqbaQmsx2r+6Q73+e4sfdsLYsMZ+8aWbRPRbWkajQsRXsU5IbMKtPrKke8M+FHAcjHY9nWvSCQuHIDI93URnxO2jgkTBN60dnWC5HoUY3yXBLHbPPlaC54/R+FsoFdkvFkoq+6J6QG4TL6+V0WFKYKyKQKbfuWaEMVDg8y6D0k/XCe2vodtQHNsLw3jW2rfWivw1d3RKRITvi7Sr6760OUqptQynOIMCwFrrL1sEv/gx2rKVqsC16eayC1mDRkeLMEqfgEO23rjVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN8NAM11FT010.eop-nam11.prod.protection.outlook.com
+ (2a01:111:e400:fc4b::46) by
+ BN8NAM11HT236.eop-nam11.prod.protection.outlook.com (2a01:111:e400:fc4b::416)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Mon, 4 May
+ 2020 22:13:27 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc4b::4d) by BN8NAM11FT010.mail.protection.outlook.com
+ (2a01:111:e400:fc4b::309) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend
+ Transport; Mon, 4 May 2020 22:13:27 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:68233827BE256D2F9577E37CF0FBCA613500C69BC1CDB474F561A23E110EA7BE;UpperCasedChecksum:90EEA3423F0453A484840B9C54641D1F146A733C500F2DE6029EB97E0464947B;SizeAsReceived:7647;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.2958.029; Mon, 4 May 2020
+ 22:13:27 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     sre@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH 0/3] power: supply: Improve max17040 support
+Date:   Mon,  4 May 2020 15:12:57 -0700
+Message-ID: <BN6PR04MB06604ED6118024782BC2C11BA3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR2201CA0053.namprd22.prod.outlook.com
+ (2603:10b6:301:16::27) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200504221300.3153-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200504110344.17560-3-eesposit@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR2201CA0053.namprd22.prod.outlook.com (2603:10b6:301:16::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19 via Frontend Transport; Mon, 4 May 2020 22:13:26 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200504221300.3153-1-xc-racer2@live.ca>
+X-TMN:  [3hSWzqfsy1G5aoiJ6uvVHjoBHqUc0SAl9VBYyOjFKWA5Scj8MxbfzRai+dw1rZ0u]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 903f35a0-9406-4a5c-6456-08d7f0785e73
+X-MS-TrafficTypeDiagnostic: BN8NAM11HT236:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NZn4tNrO6czs+BOJmBJGu7jH1QL+9VPBO2TpIc1wEf4iLtDtTMSVImFSbJaMMAWDaH7VJjtE1Lh8WO/axIymiXqzqc9OxZTgdnLgXec3E83h6t1e9mWznST5cUeNkydnOeTm556nw0P3N0gkT3+GK9yUZOjmk5vwNf2el9ZJ0moaWJ6XWYPuNSBh77scN5hAygv58Dv5WyBWCJ4qvbebKQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: t8/EqjYXGrY9ctZLbZllfKkiGVtWnjBcwZcJ6muCC5S1dXjEsr72F2CSghpHOVNl26WtUAsTfbT7K0/a1hGFFtpuT4ctKApd/qAUN2wWRhEn4KgxM6VGf5Gupk2a5LWdod6Y453Q/D2C5CrR3dq6/pKyJ5OxdMdP+6yg/6FBB0e5fTTz3ZLIn1j4XwWomHr2f71Y4yhwtNIx931yva+7ag==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 903f35a0-9406-4a5c-6456-08d7f0785e73
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 22:13:27.3134
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8NAM11HT236
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 4:03 AM, Emanuele Giuseppe Esposito wrote:
-> diff --git a/fs/Kconfig b/fs/Kconfig
-> index f08fbbfafd9a..1b0de0f19e96 100644
-> --- a/fs/Kconfig
-> +++ b/fs/Kconfig
-> @@ -328,4 +328,10 @@ source "fs/unicode/Kconfig"
->  config IO_WQ
->  	bool
->  
-> +config STATS_FS
-> +	bool "Statistics Filesystem"
-> +	help
-> +	  stats_fs is a virtual file system that provides counters and
-> +	  other statistics about the running kernel.
-> +
->  endmenu
+This patchset does two things:
+1) Corrects the voltage reading from the max17040, which was missing
+the shift and scaling.
+2) Adds the ability to the set the rcomp, which is used to optimize
+performance for specific battery chemistries and/or workloads.
 
-Hi,
+Jonathan Bakker (3):
+  power: supply: max17040: Correct voltage reading
+  dt-bindings: power: supply: Document maxim,rcomp-value for max17040
+  power: supply: max17040: Set rcomp value
 
-This kconfig entry should be under (inside) "Pseudo filesystems",
-i.e., between 'menu "Pseudo filesystems"' and its corresponding
-"endmenu".
+ .../power/supply/max17040_battery.txt         |  3 ++
+ drivers/power/supply/max17040_battery.c       | 35 +++++++++++++++----
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-Thanks.
 -- 
-~Randy
+2.20.1
 
