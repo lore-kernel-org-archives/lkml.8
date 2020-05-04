@@ -2,105 +2,70 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297AEC47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D6C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0988B206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D822071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsWKHA+Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MRIGG/fk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgEDMhc (ORCPT
+        id S1728660AbgEDMjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
+        Mon, 4 May 2020 08:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726625AbgEDMhb (ORCPT
+        by vger.kernel.org with ESMTP id S1726625AbgEDMjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:37:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E349C061A0E;
-        Mon,  4 May 2020 05:37:31 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so5410602pfw.13;
-        Mon, 04 May 2020 05:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6gbrmq6FrgNGtrSILlAV+rPedEwu6SsSkZaNYC9dK3U=;
-        b=PsWKHA+QtU+Ahl8eGOiKkZmaiTmeVH9ebW3Mzff6eslXqeukM0nd0GZ28yIirvxZrX
-         t6oVDs/0VbyEPaTDqFQuJfmyK7uNhfX2ztgh0tYlJQIbKQ49aXwRPOSradUlAQiW1oPo
-         7LwHiYgNAxBs0/9biBCFVOrq6503SCk2tH5o93Wr5c1BjxyLsUY3KCpHTse1X6tQ1Zfz
-         Or3oj5Te2J698TzqiyNB96Zr8cIbvxzSgXKimIc/ciXOF4Y4N7UJlu7TmsppQsdx0BZZ
-         GIubu2zBnskGSaI2Y2ID43KlFHemHf85pEriaduOPPdCXJrNqaOQc12HBSLx5vpqgTWa
-         HMng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6gbrmq6FrgNGtrSILlAV+rPedEwu6SsSkZaNYC9dK3U=;
-        b=G+ro1haGyiy09PSpoT8mDu/3CchWfbaKLToilkYGjSkHCvykFGvkb1Lk0o7K6TlbCf
-         q31EGX8hbJsyyv7iiPkyWDbbI3jjGJ0ht5N7hdgKw6UwL2BCFVOFyspvtEvEvDof5hy5
-         BwBwgxbkpbL0TReqIUHVXeKp7jjnYvPKKJb+7/4AROvTIGAB10cw78pLjhJhzxdKITCx
-         HE9MuVZwmCSRkCxHkKwr66MVCa0V9Ip8P6RRi3XqSeK+98EMp+u+8DnJ2dxs7sMKwBEm
-         6cEpXvUarpDkfT1poAj2sKriHUdOccDrnooPX3PbZD4Aqc/cOBK3J5eS444nkoQEQj5/
-         Xz4Q==
-X-Gm-Message-State: AGi0PuaQY7YHWqrpFNYwF6JjkSSrlK6tyY0r0IzOgteLXbs61Y7Au99W
-        jHshC1EadZgj/WvlXPQVi31avrxj2F1XMe7IaSU=
-X-Google-Smtp-Source: APiQypIbWMNMFqZ9xa++2jx9gxWODbg6xRneVFnCqtkRlHYTL0ouTAxlrvffkp+pfeyKIKsVPKNNI0ancl9ZxwDnCmk=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr17686564pfr.36.1588595850616;
- Mon, 04 May 2020 05:37:30 -0700 (PDT)
+        Mon, 4 May 2020 08:39:14 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D9FC061A0E;
+        Mon,  4 May 2020 05:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=f2dOPUrKZgUgGSkMrdOrs8H5s2b4gi+dnFwdsR381A4=; b=MRIGG/fk13IU7YQiPfdBNpKH6j
+        DTRMMWl3oSa0d8XgMW4fpaSdWKCxKhphckwfEbWTA1dfs5pxJrb3KFnJa6fN7xC3CBduUKAZTvcVQ
+        uB7SMCKeroTFlZj1g7/NeHGHXsZuMOQtVxKUi+SmGcMecwgo9nJEwqLtnbP2Kmz3w8kp/nXtMRntL
+        yqA9IoyAWZTMc02SjkNpbasDk0SbHQ9jlQ8/fXsDQRWGiDgyP3BDKvqF3/4vv2ghDkT1qAX7qXXBU
+        3/q+5tWrOnhXHhyBKo602j2DRmXGy/gQuhKkmYBxHe0lqdOwEhN/8VUKGgPtjrtyBzSdxf4i9NXE8
+        aIgD6cvw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVaNN-0007QD-6f; Mon, 04 May 2020 12:39:13 +0000
+Date:   Mon, 4 May 2020 05:39:13 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] eventfd: convert to f_op->read_iter()
+Message-ID: <20200504123913.GA14334@infradead.org>
+References: <6b29f015-bd7c-0601-cf94-2c077285b933@kernel.dk>
 MIME-Version: 1.0
-References: <20200419001858.105281-1-hector.bujanda@digi.com> <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
-In-Reply-To: <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 May 2020 15:37:24 +0300
-Message-ID: <CAHp75VeFCFbjr02BiwbKOAHim-xys3N1Lieyfr99xgwN5GoVLA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Hector Bujanda <hector.bujanda@digi.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6b29f015-bd7c-0601-cf94-2c077285b933@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 3:09 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> niedz., 19 kwi 2020 o 02:19 Hector Bujanda <hector.bujanda@digi.com> napi=
-sa=C5=82(a):
+On Fri, May 01, 2020 at 01:11:09PM -0600, Jens Axboe wrote:
+> eventfd is using ->read() as it's file_operations read handler, but
+> this prevents passing in information about whether a given IO operation
+> is blocking or not. We can only use the file flags for that. To support
+> async (-EAGAIN/poll based) retries for io_uring, we need ->read_iter()
+> support. Convert eventfd to using ->read_iter().
+> 
+> With ->read_iter(), we can support IOCB_NOWAIT. Ensure the fd setup
+> is done such that we set file->f_mode with FMODE_NOWAIT.
 
-...
-
-> Finally: we can extend the gpiohandle_config structure with a field
-> containing the debounce time which would be read by the kernel if the
-> debounce flag is set in gpiohandle_config.flags.
-
-Don't forget the 64/32 ABI.
-
-The configuration structure has padding / endianess issues
-
-Should be something like
-
-{
-u32 x;
-u8 y;
-u8 padding8[3];
-u32 padding32[2*z];
-}
-
-I.O.W. each member must have padding / endianess agnostic place along
-with whole structure to be multiple of 64-bit words.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Can you add a anon_inode_getfd_mode that passes extra flags for f_mode
+instead of opencoding it?  Especially as I expect more users that might
+want to handle IOCB_NOWAIT.
