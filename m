@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA380C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CE1C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97622073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A4221973
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615540;
-	bh=UimvCBn9psmg95nF9nENjpcecV3G4CRP3EAeJJfvkms=;
+	s=default; t=1588615544;
+	bh=m0NOQkhaDLLWHMFRUMofd+9PQkdwLZpGR0kbkLzWY9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3bosZv/G346+v8OVeoiW9AxqVXJMJhKat9qprHunnSdsQDPJbZorCzFaO8uftLE5
-	 U6RAbU3jWGculAao816ZIIv0SL3Edy4PCU1hPt1WJB9d3f987KjLveKINqtE9h7BK2
-	 fn8dkrne++voHs7WpGmuN0Y9M6zXhTbdZ50FEgwQ=
+	b=Mv9uP5fMxYsIANHvpZeFHsWenMRC/Hais15758BvgE392CeKEfiVe0i7VgepVyr5L
+	 fa+wtrj7pXs/b7Fp8M5ULLyLsvX7ZUs1Miseu8XVBibf+WNBdkGTnaxq+u8E393/7L
+	 42x52cMRy2MYtwrrDmEuxr/kju5GKLnw1ATQQD7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbgEDSFj (ORCPT
+        id S1731831AbgEDSFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:05:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731808AbgEDSFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:05:31 -0400
+        id S1731030AbgEDSFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:05:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBD1020746;
-        Mon,  4 May 2020 18:05:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0820206B8;
+        Mon,  4 May 2020 18:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615531;
-        bh=UimvCBn9psmg95nF9nENjpcecV3G4CRP3EAeJJfvkms=;
+        s=default; t=1588615538;
+        bh=m0NOQkhaDLLWHMFRUMofd+9PQkdwLZpGR0kbkLzWY9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VzkXM6DR1x+tufr4KViqsFPVeINUpiINFjMu4BYTwowm3EjO/Tsr/uhwBEUVu7RxY
-         hr9NgkWK/zudLphgeoCHuOxzGVKEkJwW7LLZ3y/6fjAPb8/pQPn8MbvsIKaN3UdQUs
-         IwKbUHO/HlNXSGdNMUlQ2xjclLvwJFSPXTYlS/Vk=
+        b=WHBAKvjO/UgIvvlYFrGwB7MjGc974k+e0PKcuaN1bhLlSP3A2Oll2OsHpICazB61h
+         zwtQtFWfXKS72Y62pNn+kNKUSAIdJmFy4V/CSPQJz0RhpE6N7I5cZpN0nJnwofNmre
+         +NspUoW5oaD4JFbFt+LeO4u9eXJmKfsriwtlwR0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 19/73] mmc: sdhci-msm: Enable host capabilities pertains to R1b response
-Date:   Mon,  4 May 2020 19:57:22 +0200
-Message-Id: <20200504165505.334804830@linuxfoundation.org>
+Subject: [PATCH 5.6 21/73] mmc: meson-mx-sdio: remove the broken ->card_busy() op
+Date:   Mon,  4 May 2020 19:57:24 +0200
+Message-Id: <20200504165505.612443779@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,42 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-commit 9d8cb58691f85cef687512262acb2c7109ee4868 upstream.
+commit ddca1092c4324c89cf692b5efe655aa251864b51 upstream.
 
-MSM sd host controller is capable of HW busy detection of device busy
-signaling over DAT0 line. And it requires the R1B response for commands
-that have this response associated with them.
+The recent commit 0d84c3e6a5b2 ("mmc: core: Convert to
+mmc_poll_for_busy() for erase/trim/discard") makes use of the
+->card_busy() op for SD cards. This uncovered that the ->card_busy() op
+in the Meson SDIO driver was never working right:
+while polling the busy status with ->card_busy()
+meson_mx_mmc_card_busy() reads only one of the two MESON_MX_SDIO_IRQC
+register values 0x1f001f10 or 0x1f003f10. This translates to "three out
+of four DAT lines are HIGH" and "all four DAT lines are HIGH", which
+is interpreted as "the card is busy".
 
-So set the below two host capabilities for qcom SDHC.
- - MMC_CAP_WAIT_WHILE_BUSY
- - MMC_CAP_NEED_RSP_BUSY
+It turns out that no situation can be observed where all four DAT lines
+are LOW, meaning the card is not busy anymore. Upon further research the
+3.10 vendor driver for this controller does not implement the
+->card_busy() op.
 
-Recent development of the mmc core in regards to this, revealed this as
-being a potential bug, hence the stable tag.
+Remove the ->card_busy() op from the meson-mx-sdio driver since it is
+not working. At the time of writing this patch it is not clear what's
+needed to make the ->card_busy() implementation work with this specific
+controller hardware. For all use-cases which have previously worked the
+MMC_CAP_WAIT_WHILE_BUSY flag is now taking over, even if we don't have
+a ->card_busy() op anymore.
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/1587363626-20413-2-git-send-email-vbadigan@codeaurora.org
+Fixes: ed80a13bb4c4c9 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200416183513.993763-3-martin.blumenstingl@googlemail.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-msm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/host/meson-mx-sdio.c |    9 ---------
+ 1 file changed, 9 deletions(-)
 
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -2068,6 +2068,8 @@ static int sdhci_msm_probe(struct platfo
- 		goto clk_disable;
- 	}
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -357,14 +357,6 @@ static void meson_mx_mmc_request(struct
+ 		meson_mx_mmc_start_cmd(mmc, mrq->cmd);
+ }
  
-+	msm_host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_NEED_RSP_BUSY;
-+
- 	pm_runtime_get_noresume(&pdev->dev);
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
+-static int meson_mx_mmc_card_busy(struct mmc_host *mmc)
+-{
+-	struct meson_mx_mmc_host *host = mmc_priv(mmc);
+-	u32 irqc = readl(host->base + MESON_MX_SDIO_IRQC);
+-
+-	return !!(irqc & MESON_MX_SDIO_IRQC_FORCE_DATA_DAT_MASK);
+-}
+-
+ static void meson_mx_mmc_read_response(struct mmc_host *mmc,
+ 				       struct mmc_command *cmd)
+ {
+@@ -506,7 +498,6 @@ static void meson_mx_mmc_timeout(struct
+ static struct mmc_host_ops meson_mx_mmc_ops = {
+ 	.request		= meson_mx_mmc_request,
+ 	.set_ios		= meson_mx_mmc_set_ios,
+-	.card_busy		= meson_mx_mmc_card_busy,
+ 	.get_cd			= mmc_gpio_get_cd,
+ 	.get_ro			= mmc_gpio_get_ro,
+ };
 
 
