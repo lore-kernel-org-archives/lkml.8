@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69026C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0BBC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFE02087E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8CB2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615306;
-	bh=c4w0F0b0i7PQj7BSqyrSdl1KFEF1ve4kwjIyyETWKwk=;
+	s=default; t=1588615309;
+	bh=PZfauH4491WPHaB4fDnCfLRZc8zUXeJQPOQuPy6eoM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oLrDhVB4tnOcv0VrISyr12qu3QcWtttc99YgG5rKNU37jGtsuCDjBXd/NZ0+Hl+nZ
-	 MphA6f76CkzT2zhfWdEgu3zb8H/M77d8fIOQ370OtrKAu0qJn47hV7G74XZEYwCwvP
-	 x5c0ay3LNEWuFN9EAudLWY+qpyhu7c3Qb2c9Kz7c=
+	b=q67ewRz5lvtDLFXNu/mxHsq00tcdlXi8ohUTA2plB8ilDxtKb54EkYcd89l5WPeOO
+	 BzEJ2Mg260++nYKRcIy3HevYXqTt/MlEGSpvwSutqBbA90HOmjxm9yhT0jTWEKS9Pt
+	 D59zXCaASG4Phtg+Qz5jb74fAnT0AU8G2i9HoznU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbgEDSBl (ORCPT
+        id S1731221AbgEDSBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgEDSBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:32 -0400
+        id S1731203AbgEDSBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D98206B8;
-        Mon,  4 May 2020 18:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB90206B8;
+        Mon,  4 May 2020 18:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615292;
-        bh=c4w0F0b0i7PQj7BSqyrSdl1KFEF1ve4kwjIyyETWKwk=;
+        s=default; t=1588615301;
+        bh=PZfauH4491WPHaB4fDnCfLRZc8zUXeJQPOQuPy6eoM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clien9T+NksWOW+rWvyb29sN642gd4NlGdc55C1jyBGfpq8GUCyuBoUBLpYT+z8ne
-         XLp/3ZGfKdnULWajC032mFflWF5mBYecu/FKE8W+v6nk5rQ9NzVusHJnaZnPCueyoj
-         sWaqqSknYI358I+kY3kv0v/HzFDw75q4ybQDRn4c=
+        b=g515IMJfq3NafDF1B1Fzbx3YOtdc3cg8kpEsIxfRyLW3mb0ktP/GdxzSsF/fAf1lo
+         wx5HFsX4BLBhTtcMmp6LHyDX+Ibe3sn+vtA0vp+cvpPjDeGtWvbjJKLdB8BQi7ZyPG
+         nYLPWILiwtwpHEtgqqwTPl5ko+LXHgdXRt9xb2pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 4.19 04/37] drm/qxl: qxl_release use after free
-Date:   Mon,  4 May 2020 19:57:17 +0200
-Message-Id: <20200504165448.994337529@linuxfoundation.org>
+        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 08/37] ALSA: hda/hdmi: fix without unlocked before return
+Date:   Mon,  4 May 2020 19:57:21 +0200
+Message-Id: <20200504165449.583755570@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,147 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Wu Bo <wubo40@huawei.com>
 
-commit 933db73351d359f74b14f4af095808260aff11f9 upstream.
+commit a2f647240998aa49632fb09b01388fdf2b87acfc upstream.
 
-qxl_release should not be accesses after qxl_push_*_ring_release() calls:
-userspace driver can process submitted command quickly, move qxl_release
-into release_ring, generate interrupt and trigger garbage collector.
+Fix the following coccicheck warning:
+sound/pci/hda/patch_hdmi.c:1852:2-8: preceding lock on line 1846
 
-It can lead to crashes in qxl driver or trigger memory corruption
-in some kmalloc-192 slab object
+After add sanity check to pass klockwork check,
+The spdif_mutex should be unlock before return true
+in check_non_pcm_per_cvt().
 
-Gerd Hoffmann proposes to swap the qxl_release_fence_buffer_objects() +
-qxl_push_{cursor,command}_ring_release() calls to close that race window.
-
-cc: stable@vger.kernel.org
-Fixes: f64122c1f6ad ("drm: add new QXL driver. (v1.4)")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/fa17b338-66ae-f299-68fe-8d32419d9071@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-[backported to v.4.19 stable]
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Fixes: 960a581e22d9 ("ALSA: hda: fix some klockwork scan warnings")
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1587907042-694161-1-git-send-email-wubo40@huawei.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/qxl/qxl_cmd.c     |    5 ++---
- drivers/gpu/drm/qxl/qxl_display.c |    6 +++---
- drivers/gpu/drm/qxl/qxl_draw.c    |    8 ++++----
- drivers/gpu/drm/qxl/qxl_ioctl.c   |    5 +----
- 4 files changed, 10 insertions(+), 14 deletions(-)
+ sound/pci/hda/patch_hdmi.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/qxl/qxl_cmd.c
-+++ b/drivers/gpu/drm/qxl/qxl_cmd.c
-@@ -501,8 +501,8 @@ int qxl_hw_surface_alloc(struct qxl_devi
- 	/* no need to add a release to the fence for this surface bo,
- 	   since it is only released when we ask to destroy the surface
- 	   and it would never signal otherwise */
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
- 
- 	surf->hw_surf_alloc = true;
- 	spin_lock(&qdev->surf_id_idr_lock);
-@@ -544,9 +544,8 @@ int qxl_hw_surface_dealloc(struct qxl_de
- 	cmd->surface_id = id;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
--
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
- 
- 	return 0;
- }
---- a/drivers/gpu/drm/qxl/qxl_display.c
-+++ b/drivers/gpu/drm/qxl/qxl_display.c
-@@ -532,8 +532,8 @@ static int qxl_primary_apply_cursor(stru
- 	cmd->u.set.visible = 1;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
--	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 
- 	return ret;
- 
-@@ -694,8 +694,8 @@ static void qxl_cursor_atomic_update(str
- 	cmd->u.position.y = plane->state->crtc_y + fb->hot_y;
- 
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
--	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 
- 	if (old_cursor_bo)
- 		qxl_bo_unref(&old_cursor_bo);
-@@ -740,8 +740,8 @@ static void qxl_cursor_atomic_disable(st
- 	cmd->type = QXL_CURSOR_HIDE;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
--	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- }
- 
- static int qxl_plane_prepare_fb(struct drm_plane *plane,
---- a/drivers/gpu/drm/qxl/qxl_draw.c
-+++ b/drivers/gpu/drm/qxl/qxl_draw.c
-@@ -241,8 +241,8 @@ void qxl_draw_opaque_fb(const struct qxl
- 		qxl_bo_physical_address(qdev, dimage->bo, 0);
- 	qxl_release_unmap(qdev, release, &drawable->release_info);
- 
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 
- out_free_palette:
- 	if (palette_bo)
-@@ -382,8 +382,8 @@ void qxl_draw_dirty_fb(struct qxl_device
- 	}
- 	qxl_bo_kunmap(clips_bo);
- 
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 
- out_release_backoff:
- 	if (ret)
-@@ -433,8 +433,8 @@ void qxl_draw_copyarea(struct qxl_device
- 	drawable->u.copy_bits.src_pos.y = sy;
- 	qxl_release_unmap(qdev, release, &drawable->release_info);
- 
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 
- out_free_release:
- 	if (ret)
-@@ -477,8 +477,8 @@ void qxl_draw_fill(struct qxl_draw_fill
- 
- 	qxl_release_unmap(qdev, release, &drawable->release_info);
- 
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 
- out_free_release:
- 	if (ret)
---- a/drivers/gpu/drm/qxl/qxl_ioctl.c
-+++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
-@@ -257,11 +257,8 @@ static int qxl_process_single_command(st
- 			apply_surf_reloc(qdev, &reloc_info[i]);
- 	}
- 
-+	qxl_release_fence_buffer_objects(release);
- 	ret = qxl_push_command_ring_release(qdev, release, cmd->type, true);
--	if (ret)
--		qxl_release_backoff_reserve_list(release);
--	else
--		qxl_release_fence_buffer_objects(release);
- 
- out_free_bos:
- out_free_release:
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1848,8 +1848,10 @@ static bool check_non_pcm_per_cvt(struct
+ 	/* Add sanity check to pass klockwork check.
+ 	 * This should never happen.
+ 	 */
+-	if (WARN_ON(spdif == NULL))
++	if (WARN_ON(spdif == NULL)) {
++		mutex_unlock(&codec->spdif_mutex);
+ 		return true;
++	}
+ 	non_pcm = !!(spdif->status & IEC958_AES0_NONAUDIO);
+ 	mutex_unlock(&codec->spdif_mutex);
+ 	return non_pcm;
 
 
