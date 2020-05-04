@@ -2,143 +2,208 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FED9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EEFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D603C2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CFF20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pAg+iBXh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="idQo3VGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgEDNw3 (ORCPT
+        id S1728268AbgEDNyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:52:29 -0400
-Received: from mout.web.de ([212.227.17.11]:60733 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgEDNw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:52:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1588600322;
-        bh=cFVXkRUk6UJaSpBI/VIx/GR5RITKsiriExba2uaETAY=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=pAg+iBXh0v63DQOToH1XqZ2WGSAZJVnl2bNg5TIFIuTvdPeelMGVgvtQ+2J1tckkt
-         H0WJirV38uqObQfpgnDfXMtdUogMnbWiYudFjiG9tWm2xk8FJjPJ13dIANqtXGjRZ1
-         G/JCoFo95Wp7a+egu7ab39P2WbdiUe6bzUw+RPo4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.152.69]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MUnUe-1jdNRW10to-00YAvs; Mon, 04
- May 2020 15:52:02 +0200
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>
-Subject: Re: [PATCH] net: rtw88: fix an issue about leak system resources
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     Dejin Zheng <zhengdejin5@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Message-ID: <79591cab-fe3e-0597-3126-c251d41d492b@web.de>
-Date:   Mon, 4 May 2020 15:51:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 09:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726404AbgEDNyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 09:54:55 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7280C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 06:54:54 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so9718452ljg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 06:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qVLyyN3yDodf1IeoqdYhIU2b08myf8w4Qqrbvm4OznY=;
+        b=idQo3VGpbrqwIifYmGR0a0EXYGiEZ9XzDk3FKw23XHc0K6JEMrIfLIXOVpTHNFxVn4
+         fBXdc2Lv5STOs92mF4cOx5Fgbw6cZB7lLAUwRSCndR8WE7SqYkkp0kd2ath7wKjM/kmR
+         GpgDMOzcLcBtpac0PraW4Rb6j0W+PMPs7VY6T9IQZNpz7uy2sIejK6HuQEk4VBeCTCtu
+         ABxBnFOxp4m++CoMNOGY0n4RQm2I4KU9I5AEi8M/D35y0+Jt5CCmzdyC9n1tPH2Rf2Po
+         /P3E0CMiEvFpTfV4zclQnU0CT4fPDqPRXyj1jRqfeg/x9ydp3iz1Tv3oudmuJXUcguuQ
+         3M0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qVLyyN3yDodf1IeoqdYhIU2b08myf8w4Qqrbvm4OznY=;
+        b=Y/Tq38tkV/6rmeBRQMgfdBmna0tU3rR/MXrouD4l5b08avLMiVZ8jTrFbVHKYFpZuE
+         bvxmd1MvAcrSQLGGt1b4BJzX0byDqfjJlZ1LxKJrs56HiSVv+oHakiFMwbzgBi48Gvps
+         vx7IdJooeYgJKHk0gysEwXbvEUCZn9GQJzw9pJvja9dMqfRBZGbR3iJSMsz6Dg2ToNBc
+         mx9qKfEh5ypvqq3A3WS6lQRvVlTXDFhiqNQOBlbhcjXgMDUufSQeLWtATbt37EHORSjA
+         ZicW1nnMzg/Oct8UFon4BbxTQHdnGKp2WOyegzTZmuJYVv8xR4K/0P43ur/CYKq6CTej
+         sPKA==
+X-Gm-Message-State: AGi0PubwOnlUk6/CEZ3M37OqUhxtLXYXI6jSMtR5pJ56foLq0cIlk7Ic
+        yzDs/xFQieiURLK+4Law5zRQ24Q8Oq4/t/sk+Sxl5Q==
+X-Google-Smtp-Source: APiQypLmK+Lu3onhk1e4czRFQm35FjeQJ5Js+7o4FHZrpWrpG84HWZRhWwd8FqQ01PdeSaWoMxUcnoTtgVngjWa85Ms=
+X-Received: by 2002:a2e:9713:: with SMTP id r19mr10619521lji.89.1588600492864;
+ Mon, 04 May 2020 06:54:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:3Q0yOt/oAiOS1O7c3Hdjl6qzdo3m20XKBVz2bJ1oMCAYp2iCjlx
- rJr+ctoTrrpjOWCOBR4qS/pp3uguwcSdYI9yyZGUZSrPyGEBYHyH67lBcPDkqFJCKW7NCHR
- i/M8iUiPnK3XsYJv3guI4juC3Eh9zJ9lOu5B7zy3IKUKwjsKKndMqi9gu6P1MQk7PAndUUx
- DWsJcWpt01Sz8g6UK0sCg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aKSvsNpMAO4=:Ly1KZx6a7fIU7UFehGSu26
- A2g+9d+R9MloGS9A8NA872lGFp5B3dkgdYiX2FTso9K58NSva65uiJguKSQNh0e9lSCzc0nAw
- XQGb96c5cBo1IlvwvKOH63edxpSEcFQOFJyzEWOVJBfC4S54ZmPXT6xJdKJrfnQxyqYo0KQVG
- KSsuHCEayPJCkHxqQuWGFPIKOFrUj26Lfql01hhZiXJN14EO7FRIYwkKyRYJ4UYeLkjhMHXZ1
- iuQeAR1ZgqOdjZIwDPnKqPBHbiwpSuSjtbC0I52iccJSfUQpsERWSzZgFFESIVGEcq0jwgD0m
- dg5pkQN8W315BEWM6k+QuDCGOydrol5L2MSndOnBAhYy/xJzm7aWohiUo0VNb1YTmL0vxRmZ/
- KXBnOk5iyIq9VMfaF4MR1JN/jc1IwM9FKWB+UGbAhi1wbT4Wey0jZ3dkZIjbsyOqZGFJnst3W
- Ah7W7Ky6An39OuWH9RBcNokHAzO/hm08FpPc+4hRoDqOnyExMmOJt7xzypYVlIlkxHl1xX0UG
- KDe9VbhZ8CZyQNm4RbPnynMTDPQmQHywuF9bJ3EB9X0rS7C/1PFHLvIJejfWqUR4SypJiFA30
- dpgnH+Fh8o7jqt6Smjb0ZNGgf2yHafibI3cluOtTKQkEq8h7blh2LAK6Vs9Mp1s7kkOpUR6TC
- y382ZPFJEpmQ/sqzRNuio9lpIpcnJ1LzL6N6B5+B2rjMiTTE4dRCldRPwcTDDVDoqHHChzN3E
- 5TArfC6y4tQ1EZE6QbUI1mnJ6F/aKpUybTy3K9aBPrmlj1f+UrQK+O8CqfsEBeyAg0+z7jqDz
- eCFFyES2cytUZ8Dp7wdjjhebyx6HgoK7vcB6hTqje+v19CkJvDBBOWGppfQ5+6Ji5pc7QkMt6
- PwkoxJifG2lu6srxnlIImGp+u9NONKetXY8IREOgvzV4KRHJzgfJRW/9BNhRDNBA3n3bzVPiy
- mitrO4QXOrDFaIJ5fHemqjEeaLhS57dZ7oKwXy53VhiDwgLPxm8wJJzPeaTxnOvZNq9Fj7xqy
- cpcoV9U/fn4kJzBpkmcFmxx04LcTR0ePft544egb2adfspYW1VwVDHakNXszzbl6Raf/W5Ow/
- fQVicdFxHWoioJJxft7PmTP9DYySmkiiRiad0GthuWwEgDGOoQZ4cU/GTW9L41S9SgnAx0FvB
- u8MhZjJjfrrNT5UzVZncn3e3PzVmt6J2yh7tBttqvf7IyJwP7Et72GLkZNG3Jok4jtZUp8a8m
- piH24JV1diC8x5KPj
+References: <20200430182712.237526-1-shakeelb@google.com> <20200504065600.GA22838@dhcp22.suse.cz>
+In-Reply-To: <20200504065600.GA22838@dhcp22.suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 4 May 2020 06:54:40 -0700
+Message-ID: <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> the related system resources were not released when pci_iomap() return
-> error in the rtw_pci_io_mapping() function. add pci_release_regions() to
-> fix it.
+On Sun, May 3, 2020 at 11:56 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 30-04-20 11:27:12, Shakeel Butt wrote:
+> > Lowering memory.max can trigger an oom-kill if the reclaim does not
+> > succeed. However if oom-killer does not find a process for killing, it
+> > dumps a lot of warnings.
+>
+> It shouldn't dump much more than the regular OOM report AFAICS. Sure
+> there is "Out of memory and no killable processes..." message printed as
+> well but is that a real problem?
+>
+> > Deleting a memcg does not reclaim memory from it and the memory can
+> > linger till there is a memory pressure. One normal way to proactively
+> > reclaim such memory is to set memory.max to 0 just before deleting the
+> > memcg. However if some of the memcg's memory is pinned by others, this
+> > operation can trigger an oom-kill without any process and thus can log a
+> > lot un-needed warnings. So, ignore all such warnings from memory.max.
+>
+> OK, I can see why you might want to use memory.max for that purpose but
+> I do not really understand why the oom report is a problem here.
 
-How do you think about a wording variant like the following?
+It may not be a problem for an individual or small scale deployment
+but when "sweep before tear down" is the part of the workflow for
+thousands of machines cycling through hundreds of thousands of cgroups
+then we can potentially flood the logs with not useful dumps and may
+hide (or overflow) any useful information in the logs.
 
-   Subject:
-   [PATCH v2] net: rtw88: Complete exception handling in rtw_pci_io_mappin=
-g()
+> memory.max can trigger the oom kill and user should be expecting the oom
+> report under that condition. Why is "no eligible task" so special? Is it
+> because you know that there won't be any tasks for your particular case?
+> What about other use cases where memory.max is not used as a "sweep
+> before tear down"?
 
-   Change description:
-   A call of the function =E2=80=9Cpci_request_regions=E2=80=9D can fail h=
-ere.
-   The corresponding system resources were not released then.
-   Thus add a call of the function =E2=80=9Cpci_release_regions=E2=80=9D.
+What other such use-cases would be? The only use-case I can envision
+of adjusting limits dynamically of a live cgroup are resource
+managers. However for cgroup v2, memory.high is the recommended way to
+limit the usage, so, why would resource managers be changing
+memory.max instead of memory.high? I am not sure. What do you think?
+FB is moving away from limits setting, so, not sure if they have
+thought of these cases.
 
+BTW for such use-cases, shouldn't we be taking the memcg's oom_lock?
 
-Regards,
-Markus
+>
+> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> > ---
+> >  include/linux/oom.h | 3 +++
+> >  mm/memcontrol.c     | 9 +++++----
+> >  mm/oom_kill.c       | 2 +-
+> >  3 files changed, 9 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/include/linux/oom.h b/include/linux/oom.h
+> > index c696c265f019..6345dc55df64 100644
+> > --- a/include/linux/oom.h
+> > +++ b/include/linux/oom.h
+> > @@ -52,6 +52,9 @@ struct oom_control {
+> >
+> >       /* Used to print the constraint info. */
+> >       enum oom_constraint constraint;
+> > +
+> > +     /* Do not warn even if there is no process to be killed. */
+> > +     bool no_warn;
+> >  };
+> >
+> >  extern struct mutex oom_lock;
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 317dbbaac603..a1f00d9b9bb0 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -1571,7 +1571,7 @@ unsigned long mem_cgroup_size(struct mem_cgroup *memcg)
+> >  }
+> >
+> >  static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+> > -                                  int order)
+> > +                                  int order, bool no_warn)
+> >  {
+> >       struct oom_control oc = {
+> >               .zonelist = NULL,
+> > @@ -1579,6 +1579,7 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+> >               .memcg = memcg,
+> >               .gfp_mask = gfp_mask,
+> >               .order = order,
+> > +             .no_warn = no_warn,
+> >       };
+> >       bool ret;
+> >
+> > @@ -1821,7 +1822,7 @@ static enum oom_status mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int
+> >               mem_cgroup_oom_notify(memcg);
+> >
+> >       mem_cgroup_unmark_under_oom(memcg);
+> > -     if (mem_cgroup_out_of_memory(memcg, mask, order))
+> > +     if (mem_cgroup_out_of_memory(memcg, mask, order, false))
+> >               ret = OOM_SUCCESS;
+> >       else
+> >               ret = OOM_FAILED;
+> > @@ -1880,7 +1881,7 @@ bool mem_cgroup_oom_synchronize(bool handle)
+> >               mem_cgroup_unmark_under_oom(memcg);
+> >               finish_wait(&memcg_oom_waitq, &owait.wait);
+> >               mem_cgroup_out_of_memory(memcg, current->memcg_oom_gfp_mask,
+> > -                                      current->memcg_oom_order);
+> > +                                      current->memcg_oom_order, false);
+> >       } else {
+> >               schedule();
+> >               mem_cgroup_unmark_under_oom(memcg);
+> > @@ -6106,7 +6107,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
+> >               }
+> >
+> >               memcg_memory_event(memcg, MEMCG_OOM);
+> > -             if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0))
+> > +             if (!mem_cgroup_out_of_memory(memcg, GFP_KERNEL, 0, true))
+> >                       break;
+> >       }
+> >
+> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > index 463b3d74a64a..5ace39f6fe1e 100644
+> > --- a/mm/oom_kill.c
+> > +++ b/mm/oom_kill.c
+> > @@ -1098,7 +1098,7 @@ bool out_of_memory(struct oom_control *oc)
+> >
+> >       select_bad_process(oc);
+> >       /* Found nothing?!?! */
+> > -     if (!oc->chosen) {
+> > +     if (!oc->chosen && !oc->no_warn) {
+> >               dump_header(oc, NULL);
+> >               pr_warn("Out of memory and no killable processes...\n");
+> >               /*
+> > --
+> > 2.26.2.526.g744177e7f7-goog
+>
+> --
+> Michal Hocko
+> SUSE Labs
