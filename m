@@ -2,78 +2,120 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EAEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A54C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB52206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6182073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588606309;
+	bh=A+Wg6eINNCOwpBUPq6wuAXpzjxrFpdtTuyxWoRzfZWo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=id5KLzeCUqEKCCJnI63uo0InO1W7vcq/DIgaQx9C11KpWEB0E6uY/5RQvMmrT4ZOB
+	 43ZLRdcnLqAU9EsqeyvALwcimBe04QTi4w4heS1vMx6+zpdxNoSeaG2FW+LHtMnCNW
+	 zvvGn5l7TTyAcq72spfu31a+KbkeOyjkHCDH95fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgEDPbk (ORCPT
+        id S1729373AbgEDPbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:31:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38134 "EHLO mx2.suse.de"
+        Mon, 4 May 2020 11:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbgEDPbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:31:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id F12A2AF5C;
-        Mon,  4 May 2020 15:31:39 +0000 (UTC)
-Date:   Mon, 4 May 2020 17:31:35 +0200
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     rostedt <rostedt@goodmis.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
+        id S1726908AbgEDPbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:31:48 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79C2B206B9;
+        Mon,  4 May 2020 15:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588606307;
+        bh=A+Wg6eINNCOwpBUPq6wuAXpzjxrFpdtTuyxWoRzfZWo=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=izahuf1wNxw8JN6DemPEtNR3xVeeHd63bAVZyT9L5CIqVtDcAx7CQ/kmV8aA2tZCh
+         zDNhnDvK3YBK+9+xaaJnanfjpmZ0qKkFv6mw/vpRCifUB8ToVoY85fUVjQYKGnYMXD
+         jNZ88FZMBQSrq9ZYfYoWtNm0DG78g+cIsG6/c5ZQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 53FB835226F4; Mon,  4 May 2020 08:31:47 -0700 (PDT)
+Date:   Mon, 4 May 2020 08:31:47 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Subject: Re: [PATCH] percpu: Sync vmalloc mappings in pcpu_alloc() and
- free_percpu()
-Message-ID: <20200504153135.GJ8135@suse.de>
-References: <20200429054857.66e8e333@oasis.local.home>
- <20200430141120.GA8135@suse.de>
- <20200430121136.6d7aeb22@gandalf.local.home>
- <20200430191434.GC8135@suse.de>
- <20200430211308.74a994dc@oasis.local.home>
- <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
- <20200430223919.50861011@gandalf.local.home>
- <20200504151236.GI8135@suse.de>
- <99290786.82178.1588606126392.JavaMail.zimbra@efficios.com>
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 19/24] rcu/tree: Support reclaim for head-less object
+Message-ID: <20200504153147.GL2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-20-urezki@gmail.com>
+ <20200501223909.GF7560@paulmck-ThinkPad-P72>
+ <20200504001258.GD197097@google.com>
+ <20200504002855.GF2869@paulmck-ThinkPad-P72>
+ <20200504003237.GD212435@google.com>
+ <20200504142153.GG17577@pc636>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <99290786.82178.1588606126392.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200504142153.GG17577@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 11:28:46AM -0400, Mathieu Desnoyers wrote:
-> ----- On May 4, 2020, at 11:12 AM, Joerg Roedel jroedel@suse.de wrote:
-> Placing this here is inefficient. It syncs mappings for each percpu allocation.
-> I would recommend moving it right after __vmalloc() is called to allocate the
-> underlying memory chunk instead:
+On Mon, May 04, 2020 at 04:21:53PM +0200, Uladzislau Rezki wrote:
+> > > > 
+> > > > If we are not doing single-pointer allocation, then that would also eliminate
+> > > > entering the low-level page allocator for single-pointer allocations.
+> > > > 
+> > > > Or did you mean entry into the allocator for the full-page allocations
+> > > > related to the pointer array for PREEMPT_RT? Even if we skip entry into the
+> > > > allocator for those, we will still have additional caching which further
+> > > > reduces chances of getting a full page. In the event of such failure, we can
+> > > > simply queue the rcu_head.
+> > > > 
+> > > > Thoughts?
+> > > 
+> > > I was just trying to guess why you kept the single-pointer allocation.
+> > > It looks like I guessed wrong.  ;-)
+> > > 
+> > > If, as you say above, you make it go straight to synchronize_rcu()
+> > > upon full-page allocation failure, that would be good!
+> > 
+> > Paul, sounds good. Vlad, are you also Ok with that?
+> > 
+> OK, let's drop it and keep it simple :)
 > 
-> static void *pcpu_mem_zalloc(size_t size, gfp_t gfp)
-> {
+> BTW, for PREEMPT_RT we still can do a page allocation for single
+> argument of kvfree_rcu(). In case of double we just revert everything
+> to the rcu_head if no cache.
+> 
+> For single argument we can drop the lock before the entry to the page
+> allocator. Because it follows might_sleep() anotation we avoid of having
+> a situation when spinlock(rt mutex) is taken from any atomic context.
+> 
+> Since the lock is dropped the current context can be interrupted by
+> an IRQ which in its turn can also call kvfree_rcu() on current CPU.
+> In that case it must be double argument(single is not allowed) kvfree_rcu()
+> call. For PREEMPT_RT if no cache everything is reverted to rcu_head usage,
+> i.e. the entry to page allocator is bypassed.
+> 
+> It can be addressed as a separate patch and send out later on if we
+> are on the same page.
+> 
+> Paul, Joel what are your opinions?
 
-Tried this before, actually I put it into the caller of
-pcpu_mem_zalloc(), but that didn't fix the problem for me. Stevens
-test-case still hangs the machine.
+I strongly prefer that it be removed from the series.  I do understand
+that this is a bit more hassle right now, but this does help avoid
+confusion in the future, plus perhaps also avoiding issues with future
+bisections.
 
-
-Regards,
-
-	Joerg
+							Thanx, Paul
