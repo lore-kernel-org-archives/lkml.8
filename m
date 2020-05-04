@@ -2,115 +2,134 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922B9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16F6C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9E0206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4692206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:47:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OPD0Xtwa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjhU7qwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730394AbgEDRqw (ORCPT
+        id S1730238AbgEDRrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
+        Mon, 4 May 2020 13:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729667AbgEDRqw (ORCPT
+        by vger.kernel.org with ESMTP id S1728158AbgEDRrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:46:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443F5C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:46:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 7so110782pjo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:46:52 -0700 (PDT)
+        Mon, 4 May 2020 13:47:52 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D85C061A0E;
+        Mon,  4 May 2020 10:47:51 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id s9so14691553eju.1;
+        Mon, 04 May 2020 10:47:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=gt27CLurvYsK7qkWUdWOy6wuN6djEE1cyv2+umNLdkI=;
-        b=OPD0XtwaaTz+TwDb5S2Ga3A9WGt7H977EIyB2Mafk4tVLlj1upGyCin1tsVAn0QnWg
-         cwUgKrJn9xecbT06PIrxsRHkxuigdwYITA5cPTBxtPF9aznwrRn6aevPRBWIVw6/2e+n
-         xneS7YhQ7CK2mXy+JN0quWUBZZF5EF3rhcMJU=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hQpvk8vgp1YbyFllbBW8xqqGLWMt1EgunqBmk7p9TlQ=;
+        b=kjhU7qwuLUl0tgR1+ZMtPX0gXNz5aUz/F88ZhiEUnMhCOiWuh8hJ4xwCoE3QiM1C4n
+         M3DzFk5zkOAz+jwzdAFblAhyYtMvNzM94V+VxmXFm9XyRdE58Aa5LQt/wDR804AsrwW6
+         Gl0AFFTX0mrDpCguqaReT2ETbj+lzXW/0WsupNJCzFs99F8kQVWs+c9cXg8kvkryihl8
+         lFhk009uQr70yHCuCRiE3Fiw06qQSWfKls9EoZeZtSmS89io1+oDDCu5YxgDY7dsYh8e
+         0xEZkItYS7PyyjOCIrjmriI81HVc4ntiwcrBXe568He/68RB9mE1jIGumTBrIR276y4S
+         Vz1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=gt27CLurvYsK7qkWUdWOy6wuN6djEE1cyv2+umNLdkI=;
-        b=f6LsvqCV7vbSlChTqsN+b9nYDEcXn0kazULf+o8Htk7hX1kZFR8Q2DHGW3G4uD2U7i
-         gpSRb8BWjZG8XLbropxeo3QhQkegIXl7LvHQCaUID8K6IorJSZDCRWkHJm2yb2+97Zqy
-         IggdTXQ9v8WUT+RW540mqJ3YWniVQ9K3gBzBXStWErBYQCs4dtseJbUqZEAKvjuv3vnV
-         zYLBh9v4gOGdy5Lj5VJEHKvy8sZ0TtA0B22NDHrFltAhbjBbzZr1YIPRzWCJUWW7mAWI
-         rR7InoiJimTQfoO+rliWxtOjcHSfUeo6LZr7FQOTBCn60MOv84KThpKOD2/WFG2pHkMg
-         iDEQ==
-X-Gm-Message-State: AGi0Pub4LiFwczoohBZLG9GFfCO2fHggdZc7ZPavthzqPlokABRh7yWC
-        wawFLIaS/y4QvudRe3lhT3831tb0cyI=
-X-Google-Smtp-Source: APiQypIr927pMvZ40rFFE8e3cKWdt2STWcPYwJMQ9H7kZsorAAdojehUHsHyF0v+Tl7SaxB6g3a+Sw==
-X-Received: by 2002:a17:902:82c6:: with SMTP id u6mr373243plz.146.1588614411839;
-        Mon, 04 May 2020 10:46:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t23sm91508pji.32.2020.05.04.10.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 10:46:51 -0700 (PDT)
-Date:   Mon, 4 May 2020 10:46:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Pierret 
-        <frederic.pierret@qubes-os.org>
-Subject: [GIT PULL] gcc-plugins fixes for v5.7-rc5
-Message-ID: <202005041045.BC2557B6@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hQpvk8vgp1YbyFllbBW8xqqGLWMt1EgunqBmk7p9TlQ=;
+        b=ZYCoH0S4eZ1b+Z/fmlsgZLbvJuWiwTxTNk32WH9oujQ72ficZcNivLRToRCYOGsp4G
+         MebSEc6GuyE1K8F6bSbTozrbWn6g2510BY08WeOFzDDQp8SV1vXLlEqbATFbN762gb4y
+         MQBjxThcPtTsjTHOuR0sCivTxldqvczCrxH+CDf/xaaphBft9qcRf9HiXxosIdSiAN00
+         LALjClp9P0KGMfYL3Wmgqx6tNYNINYaH/lNNiifnOx3HslcPPLrBVqPbV3DNgD2Q5RYR
+         Z8Ymx/vgApA4q5k/p/CWj6/mBGQs2KNt+YyZqNU23QuINqoFaDaEgFGhk6qzNNuND7Ft
+         UhuQ==
+X-Gm-Message-State: AGi0PuayrTR8+VgrR0rZ575ZwL7uWGzHHaJdPBKuuAuwGIYl3DFsxkEu
+        JAg1pImWtiMfdB2BJPX9H5nf6JyY8ZfuY9WnGig=
+X-Google-Smtp-Source: APiQypIB+DjJDEbl3B8ocaghRBc++ZzEvZ0KpOa2gaX14qS/UjOBQn89425mtvYHu8jWZhwETphKyX3pbNyfgGl3Sms=
+X-Received: by 2002:a17:906:78c:: with SMTP id l12mr14971947ejc.189.1588614470560;
+ Mon, 04 May 2020 10:47:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20200504165228.12787-1-michael@walle.cc>
+In-Reply-To: <20200504165228.12787-1-michael@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 4 May 2020 20:47:39 +0300
+Message-ID: <CA+h21hpGT8qzeOVUZKU2CJDRmjSyRO-Z2oy_PvPeN88jTPsYuw@mail.gmail.com>
+Subject: Re: [PATCH RESEND net-next] net: dsa: felix: allow the device to be disabled
+To:     Michael Walle <michael@walle.cc>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, 4 May 2020 at 19:55, Michael Walle <michael@walle.cc> wrote:
+>
+> If there is no specific configuration of the felix switch in the device
+> tree, but only the default configuration (ie. given by the SoCs dtsi
+> file), the probe fails because no CPU port has been set. On the other
+> hand you cannot set a default CPU port because that depends on the
+> actual board using the switch.
+>
+> [    2.701300] DSA: tree 0 has no CPU port
+> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
+>
+> Thus let the device tree disable this device entirely, like it is also
+> done with the enetc driver of the same SoC.
+>
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
 
-Please pull these gcc-plugins fixes for v5.7-rc5. These are some more
-clean-ups for using the plugins under GCC 10.
+Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Thanks!
+> This was part of a two patch series. The second patch is already merged.
+> This patch was never picked up, although it was Acked-by: David Miller,
+> see:
+> https://lore.kernel.org/netdev/20200314.205335.907987569817755804.davem@davemloft.net/
+>
+> Since there is no more dependency, this patch could go through the
+> net-next queue.
+>
+>  drivers/net/dsa/ocelot/felix.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+> index 69546383a382..531c7710063f 100644
+> --- a/drivers/net/dsa/ocelot/felix.c
+> +++ b/drivers/net/dsa/ocelot/felix.c
+> @@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
+>         struct felix *felix;
+>         int err;
+>
+> +       if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
+> +               dev_info(&pdev->dev, "device is disabled, skipping\n");
+> +               return -ENODEV;
+> +       }
+> +
+>         err = pci_enable_device(pdev);
+>         if (err) {
+>                 dev_err(&pdev->dev, "device enable failed\n");
+> --
+> 2.20.1
+>
 
--Kees
-
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
-
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/gcc-plugins-v5.7-rc5
-
-for you to fetch changes up to c7527373fe28f97d8a196ab562db5589be0d34b9:
-
-  gcc-common.h: Update for GCC 10 (2020-04-13 10:19:20 -0700)
-
-----------------------------------------------------------------
-GCC 10 fixes for gcc-plugins
-
-- Adjust caller of cgraph_create_edge for GCC 10 argument usage
-- Update common headers to build under GCC 10 (Frédéric Pierret)
-
-----------------------------------------------------------------
-Frédéric Pierret (fepitre) (1):
-      gcc-common.h: Update for GCC 10
-
-Kees Cook (1):
-      gcc-plugins/stackleak: Avoid assignment for unused macro argument
-
- scripts/gcc-plugins/Makefile           | 1 +
- scripts/gcc-plugins/gcc-common.h       | 4 ++++
- scripts/gcc-plugins/stackleak_plugin.c | 5 ++---
- 3 files changed, 7 insertions(+), 3 deletions(-)
-
--- 
-Kees Cook
+Thanks, Michael!
+-Vladimir
