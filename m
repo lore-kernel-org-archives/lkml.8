@@ -2,150 +2,109 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EA9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031F4C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8259D20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D844E20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZJnRRv8G"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WhE5NNBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbgEDOfK (ORCPT
+        id S1729161AbgEDOf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:35:10 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53275 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728187AbgEDOfK (ORCPT
+        Mon, 4 May 2020 10:35:27 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16141 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728187AbgEDOf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:35:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588602909; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=4OlRcGETyCmH3CyivLm0F5Fs+YC/4OSoLg+kCNZVH5w=; b=ZJnRRv8GK/1jokhaK0dSaFgP3VLGIRtn+65k7A/BQaAcDzY+nyAVVkURc6Jxps/apSSa/loY
- ierEzzxBEgq1rCSw+986Dhz5gDpegbVcRrx4awUaZvIg2fACxD/HDd/q79r+0/HsJxFKb1dz
- N4he03rVszM1sjrRmyXrYar3PSo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb02805.7f88f8fa1180-smtp-out-n01;
- Mon, 04 May 2020 14:34:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C6FEDC433F2; Mon,  4 May 2020 14:34:45 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA1A7C433D2;
-        Mon,  4 May 2020 14:34:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA1A7C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH] ath10k: Remove msdu from idr when management pkt send fails
-Date:   Mon,  4 May 2020 20:04:39 +0530
-Message-Id: <1588602879-14098-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 May 2020 10:35:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb027e90000>; Mon, 04 May 2020 07:34:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 May 2020 07:35:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 07:35:26 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
+ 2020 14:35:26 +0000
+Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
+ 14:35:25 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <834b9295-d46a-dd01-2496-2c24a8e7a8e4@nvidia.com>
+Date:   Mon, 4 May 2020 07:36:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <f1cbb602-163e-a539-aaa5-c7e947a8945b@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588602857; bh=QbHAIibWev3PVyqXHVQaxCb68Be+zOimcNcvRZM45Ec=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=WhE5NNBNk2KR58CeKJ3JDTLxgB344OmjUeTKqdEmKhd1HZ78sqnH0vFfhVTrZx05a
+         WXVlyyHuW4kCgOKu4JNleNd6oTtCaxH9+0PTpZvFjI57Aj4bkBUSwQGkCZXO0d1g0R
+         nb7CYqEXnEoNKR0Qoi789+TZnaXVlly1lTT6O7gwmFthjPDHsEVeOx9qzWyPh6MUTU
+         OIRHPn1/WZvoacZOR9UBQI35XrrQRHHo5t0FqUjiR4dcyjBOYyXP31QRo/gJVVyG1s
+         hPoB7AqDn9HKFGMi3SdL4Dy5/R/u8WUW6LGkHAiSsMBqYsmYMhKV88e1jhlKZUrAvw
+         ayKTD8qVDkYSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently when the sending of any management pkt
-via wmi command fails, the packet is being unmapped
-freed in the error handling. But the idr entry added,
-which is used to track these packet is not getting removed.
 
-Hence, during unload, in wmi cleanup, all the entries
-in IDR are removed and the corresponding buffer is
-attempted to be freed. This can cause a situation where
-one packet is attempted to be freed twice.
-
-Fix this error by rmeoving the msdu from the idr
-list when the sending of a management packet over
-wmi fails.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-
-Fixes: 1807da49733e ("ath10k: wmi: add management tx by reference support over wmi")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/wmi-ops.h |  7 ++++++-
- drivers/net/wireless/ath/ath10k/wmi-tlv.c | 15 +++++++++++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-ops.h b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-index 1491c25..de15e62 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-ops.h
-+++ b/drivers/net/wireless/ath/ath10k/wmi-ops.h
-@@ -216,6 +216,7 @@ struct wmi_ops {
- 	struct sk_buff *(*gen_bb_timing)
- 			(struct ath10k *ar,
- 			 const struct wmi_bb_timing_cfg_arg *arg);
-+	int (*cleanup_mgmt_tx_send)(struct ath10k *ar, struct sk_buff *msdu);
- 
- };
- 
-@@ -457,8 +458,12 @@ ath10k_wmi_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 
- 	ret = ath10k_wmi_cmd_send(ar, skb,
- 				  ar->wmi.cmd->mgmt_tx_send_cmdid);
--	if (ret)
-+	if (ret) {
-+		/* remove this msdu from idr tracking */
-+		if (ar->wmi.ops->cleanup_mgmt_tx_send)
-+			ar->wmi.ops->cleanup_mgmt_tx_send(ar, msdu);
- 		return ret;
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/net/wireless/ath/ath10k/wmi-tlv.c b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-index e1ab900f..b2a4a44 100644
---- a/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi-tlv.c
-@@ -2898,6 +2898,18 @@ ath10k_wmi_tlv_op_gen_request_stats(struct ath10k *ar, u32 stats_mask)
- }
- 
- static int
-+ath10k_wmi_tlv_op_cleanup_mgmt_tx_send(struct ath10k *ar,
-+				       struct sk_buff *msdu)
-+{
-+	struct ath10k_skb_cb *cb = ATH10K_SKB_CB(msdu);
-+	struct ath10k_wmi *wmi = &ar->wmi;
-+
-+	idr_remove(&wmi->mgmt_pending_tx, cb->msdu_id);
-+
-+	return 0;
-+}
-+
-+static int
- ath10k_wmi_mgmt_tx_alloc_msdu_id(struct ath10k *ar, struct sk_buff *skb,
- 				 dma_addr_t paddr)
- {
-@@ -2971,6 +2983,8 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
- 	if (desc_id < 0)
- 		goto err_free_skb;
- 
-+	cb->msdu_id = desc_id;
-+
- 	ptr = (void *)skb->data;
- 	tlv = ptr;
- 	tlv->tag = __cpu_to_le16(WMI_TLV_TAG_STRUCT_MGMT_TX_CMD);
-@@ -4447,6 +4461,7 @@ static const struct wmi_ops wmi_tlv_ops = {
- 	.gen_echo = ath10k_wmi_tlv_op_gen_echo,
- 	.gen_vdev_spectral_conf = ath10k_wmi_tlv_op_gen_vdev_spectral_conf,
- 	.gen_vdev_spectral_enable = ath10k_wmi_tlv_op_gen_vdev_spectral_enable,
-+	.cleanup_mgmt_tx_send = ath10k_wmi_tlv_op_cleanup_mgmt_tx_send,
- };
- 
- static const struct wmi_peer_flags_map wmi_tlv_peer_flags_map = {
--- 
-2.7.4
+On 5/4/20 12:44 AM, Dmitry Osipenko wrote:
+> 30.04.2020 01:00, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> +/*
+>> + * VI channel input data type enum.
+>> + * These data type enum value gets programmed into corresponding Tegra =
+VI
+>> + * channel register bits.
+>> + */
+>> +enum tegra_image_dt {
+>> +	TEGRA_IMAGE_DT_YUV420_8 =3D 24,
+>> +	TEGRA_IMAGE_DT_YUV420_10,
+>> +
+>> +	TEGRA_IMAGE_DT_YUV420CSPS_8 =3D 28,
+>> +	TEGRA_IMAGE_DT_YUV420CSPS_10,
+>> +	TEGRA_IMAGE_DT_YUV422_8,
+>> +	TEGRA_IMAGE_DT_YUV422_10,
+>> +	TEGRA_IMAGE_DT_RGB444,
+>> +	TEGRA_IMAGE_DT_RGB555,
+>> +	TEGRA_IMAGE_DT_RGB565,
+>> +	TEGRA_IMAGE_DT_RGB666,
+>> +	TEGRA_IMAGE_DT_RGB888,
+>> +
+>> +	TEGRA_IMAGE_DT_RAW6 =3D 40,
+>> +	TEGRA_IMAGE_DT_RAW7,
+>> +	TEGRA_IMAGE_DT_RAW8,
+>> +	TEGRA_IMAGE_DT_RAW10,
+>> +	TEGRA_IMAGE_DT_RAW12,
+>> +	TEGRA_IMAGE_DT_RAW14,
+>> +};
+> Are these format IDs common to all Tegra SoCs or they unique to T210?
+Common for all SoCs
