@@ -2,136 +2,181 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C998FC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EF4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A590520661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:48:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="RA1GqZgt"
+	by mail.kernel.org (Postfix) with ESMTP id C66DC20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgEDSsh (ORCPT
+        id S1727981AbgEDSuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727903AbgEDSsg (ORCPT
+        Mon, 4 May 2020 14:50:24 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:37968 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726291AbgEDSuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:48:36 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B55C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:48:35 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id pg17so14850152ejb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cCEQjPC67dYv3CnpnkDC1IHcr6icFNy3P67sHSsxZbo=;
-        b=RA1GqZgt6de20O5DgFDhzog+4Vz6PCSt6pEItZTtW0YoMo1m04eFXsB8Bxf2P1nJ+E
-         tOiKLb3fMQBpCYyXw3pRHpDstbl/derppS+XwXA8+HXH8pviNjmvBla+L9PNmOQKe5eH
-         6qXJPKcm19f24lGr1GgYLSZjBJuvk/R56e52+pkUi/BbDmOyi67ji7PNoxCBUcZrsKlN
-         lA7M9eQVaRaQMbyJTgS0ngUxnp0pvD6bfAc2Y3Wf5fKKWfTUWHhG2VIEGm6yCQ1Qr3Sf
-         jIT6Qbg4OY7WC7dOOFTO9IdizEtHn51qhCn8Gk5ltPr7sgTug743SRhN/k9eXszAoDhw
-         OS+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cCEQjPC67dYv3CnpnkDC1IHcr6icFNy3P67sHSsxZbo=;
-        b=PhURiMFFTBhA5et5oKouSFbEYo9ZBOyHWrpfYAr+UjoI68hFtleTVcj1IYPHXbSwTa
-         ymKmOyg4UslP79EI0R56MnuAHRtEP6n2SQ6TAOVJnvkvaYa9tSJePg1z46Wjxq4w0rbU
-         7exK7dAf9Ok8XtsBa81uz7ZVAQ6DhpNEQ+gEEl0FX+LPuUGGi1nOUBqisGgAmttjqWk/
-         zlqEAp/b/JSep+DYvgYqqJPorsaIfU8BanqAga743mD3+bgqO9Wp+M4UK13WrT4Lgz3i
-         QcloMpp/9VTlAa3GCMTqBtTkufw3B4+Utro2ZmWDTycktoS9+jFg3+S9yT1SWGtS9pEz
-         mrow==
-X-Gm-Message-State: AGi0PuZJXjaGZPd/mPg+epz2k3wBFtv9tIsNwKtZDgI6E/8jVHyUHW17
-        hffc8r9d6orkfYTy/trV9Ir9lm5/hd3M2O5MGNuykQ==
-X-Google-Smtp-Source: APiQypJYjHte4f1KJhlfkkExpm93glok0kGNLcxIMMpKeSKVxgfUOTNgRMC5iZWALcfVT1/9Q5QBJG6IJaQUDhN9vEI=
-X-Received: by 2002:a17:906:37d0:: with SMTP id o16mr15393604ejc.368.1588618101626;
- Mon, 04 May 2020 11:48:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com> <202005041112.F3C8117F67@keescook>
-In-Reply-To: <202005041112.F3C8117F67@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 4 May 2020 14:47:45 -0400
-Message-ID: <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 May 2020 14:50:21 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 04 May 2020 11:50:20 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 04 May 2020 11:50:19 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id E73651A7B; Mon,  4 May 2020 11:50:19 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [RESEND PATCH v14 00/11] Convert PWM period and duty cycle to u64
+Date:   Mon,  4 May 2020 11:50:06 -0700
+Message-Id: <cover.1588616856.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > # reboot -f
-> >
-> > After VM is back:
-> >
-> > # mount -t pstore pstore /mnt
-> > # head /mnt/dmesg-ramoops-0
-> > Restart#1 Part1
->
-> Is there a reason that using ramoops.console_size isn't sufficient for
-> this?
+Because period and duty cycle are defined in the PWM framework structs as ints
+with units of nanoseconds, the maximum time duration that can be set is limited
+to ~2.147 seconds. Consequently, applications desiring to set greater time
+periods via the PWM framework are not be able to do so - like, for instance,
+causing an LED to blink at an interval of 5 seconds.
 
-Unfortunately, the console option is not working for us (Microsoft),
-we have an embedded device with a serial console, and the baud rate
-reduces the reboot performance, so we must keep the console quiet. We
-also want to be able collect full shutdown logs from the field that
-are collected during kexec based updates.
+Redefining the period and duty cycle struct members in the core PWM framework
+structs as u64 values will enable larger time durations to be set and solve
+this problem. Such a change to the framework mandates that drivers using these
+struct members (and corresponding helper functions) also be modified correctly
+in order to prevent compilation errors.
 
->
-> I'm not strictly opposed to making these changes, but traditionally the
-> granularity of dmesg output has been pretty easily "all or crashes"
-> instead of a range within.
+This patch series introduces the changes to all the drivers first, followed by
+the framework change at the very end so that when the latter is applied, all
+the drivers are in good shape and there are no compilation errors.
 
-As of now, ramoops  allows collecting dmesg only for oops and panic,
-but not for all types of events.
+Changes from v13:
+  - Pruned cc-list and added same (reduced) set of reviewers to all patches.
+  - Added Lee Jones' Acked-by to the pwm_bl.c patch.
+  - Added Jani Nikula's Acked-by to intel-panel.c patch.
+  - Added Stephen Boyd's Acked-by to pwm-clk.c patch.
+  - Addressed Geert's review comments in clps711x.c patch.
 
-Thank you,
-Pasha
+Changes from v12:
+  - Rebased to tip of for-next
+  - Collected Acked-by for sun4i
+  - Reworked patch for intel-panel.c due to rebase, dropped Jani's Acked-by as
+    a result
 
-On Mon, May 4, 2020 at 2:14 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Sat, May 02, 2020 at 10:35:52AM -0400, Pavel Tatashin wrote:
-> > Currently, ramoops is capable to collect dmesg buffer only during
-> > panic and oops events. However, it is desirable for shutdown performance
-> > analysis reasons to optionally allow collecting dmesg buffers during other
-> > events as well: reboot, kexec, emergency reboot etc.
-> >
-> > How to quickly test:
-> >
-> > virtme-run --mods=auto --kdir --mods=auto --kdir . \
-> >       -a memmap=1G$8G -a ramoops.mem_address=0x200000000 \
-> >       -a ramoops.mem_size=0x100000 -a ramoops.record_size=32768 \
-> >       -a ramoops.dump_all=1 -a quiet --qemu-opts -m 8G
-> > ..
-> > # reboot -f
-> >
-> > After VM is back:
-> >
-> > # mount -t pstore pstore /mnt
-> > # head /mnt/dmesg-ramoops-0
-> > Restart#1 Part1
->
-> Is there a reason that using ramoops.console_size isn't sufficient for
-> this?
->
-> I'm not strictly opposed to making these changes, but traditionally the
-> granularity of dmesg output has been pretty easily "all or crashes"
-> instead of a range within.
->
-> --
-> Kees Cook
+Changes from v11:
+  - Rebased to tip of for-next.
+  - Collected "Acked-by:" for v7 (unchanged) of pwm: sifive: [4]
+  - Squished stm32-lp.c change with final patch in series
+  - sun4i: Used nsecs_to_jiffies()
+  - imx27: Added overflow handling logic
+  - clps711x: Corrected the if condition for skipping the division
+  - clk: pwm: Reverted to v8 version, added check to prevent division-by-zero
+
+Changes from v10:
+  - Carefully added back all the "Reviewed-by: " and "Acked-by: " tags received
+    so far that had gotten missed in v9. No other changes.
+
+Changes from v9:
+  - Gathered the received "Reviewed-by: " tag
+  - Added back the clk-pwm.c patch because kbuild test robot complained [3]
+    and addressed received review comments.
+  - clps711x: Addressed review comments.
+
+Changes from v8:
+  - Gathered all received "Acked-by: " and "Reviewed-by: " tags
+  - Dropped patch to clk-pwm.c for reasons mentiond in [2]
+  - Expanded audience of unreviewed patches
+
+Changes from v7:
+  - Changed commit messages of all patches to be brief and to the point.
+  - Added explanation of change in cover letter.
+  - Dropped change to pwm-sti.c as upon review it was unnecessary as struct
+    pwm_capture is not being modified in the PWM core.
+
+Changes from v6:
+  - Split out the driver changes out into separate patches, one patch per file
+    for ease of reviewing.
+
+Changes from v5:
+  - Dropped the conversion of struct pwm_capture to u64 for reasons mentioned
+    in https://www.spinics.net/lists/linux-pwm/msg11541.html
+
+Changes from v4:
+  - Split the patch into two: one for changes to the drivers, and the actual
+    switch to u64 for ease of reverting should the need arise.
+  - Re-examined the patch and made the following corrections:
+      * intel_panel.c:
+	DIV64_U64_ROUND_UP -> DIV_ROUND_UP_ULL (as only the numerator would be
+	64-bit in this case).
+      * pwm-sti.c:
+	do_div -> div_u64 (do_div is optimized only for x86 architectures, and
+	div_u64's comment block suggests to use this as much as possible).
+
+Changes from v3:
+  - Rebased to current tip of for-next.
+
+Changes from v2:
+  - Fixed %u -> %llu in a dev_dbg in pwm-stm32-lp.c, thanks to kbuild test robot
+  - Added a couple of fixes to pwm-imx-tpm.c and pwm-sifive.c
+
+Changes from v1:
+  - Fixed compilation errors seen when compiling for different archs.
+
+v1:
+  - Reworked the change pushed upstream earlier [1] so as to not add an
+    extension to an obsolete API. With this change, pwm_ops->apply() can be
+    used to set pwm_state parameters as usual.
+
+[1] https://lore.kernel.org/lkml/20190916140048.GB7488@ulmo/
+[2] https://lore.kernel.org/lkml/20200312190859.GA19605@xxxxxxxxxxxxxx/
+[3] https://www.spinics.net/lists/linux-pwm/msg11906.html
+[4] https://www.spinics.net/lists/linux-pwm/msg11986.html
+
+Guru Das Srinagesh (11):
+  drm/i915: Use 64-bit division macro
+  hwmon: pwm-fan: Use 64-bit division macro
+  ir-rx51: Use 64-bit division macro
+  pwm: clps711x: Cast period to u32 before use as divisor
+  pwm: pwm-imx-tpm: Use 64-bit division macro
+  pwm: imx27: Use 64-bit division macro and function
+  pwm: sifive: Use 64-bit division macro
+  pwm: sun4i: Use nsecs_to_jiffies to avoid a division
+  backlight: pwm_bl: Use 64-bit division function
+  clk: pwm: Use 64-bit division function
+  pwm: core: Convert period and duty cycle to u64
+
+ drivers/clk/clk-pwm.c                      |  7 +++-
+ drivers/gpu/drm/i915/display/intel_panel.c |  2 +-
+ drivers/hwmon/pwm-fan.c                    |  2 +-
+ drivers/media/rc/ir-rx51.c                 |  3 +-
+ drivers/pwm/core.c                         | 14 ++++----
+ drivers/pwm/pwm-clps711x.c                 |  5 ++-
+ drivers/pwm/pwm-imx-tpm.c                  |  2 +-
+ drivers/pwm/pwm-imx27.c                    | 53 +++++++++++++++++++++++++-----
+ drivers/pwm/pwm-sifive.c                   |  2 +-
+ drivers/pwm/pwm-stm32-lp.c                 |  2 +-
+ drivers/pwm/pwm-sun4i.c                    |  2 +-
+ drivers/pwm/sysfs.c                        |  8 ++---
+ drivers/video/backlight/pwm_bl.c           |  3 +-
+ include/linux/pwm.h                        | 12 +++----
+ 14 files changed, 82 insertions(+), 35 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
