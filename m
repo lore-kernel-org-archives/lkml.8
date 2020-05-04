@@ -2,147 +2,248 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FCFC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EE9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A425B20705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB71B20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vaJNJgNc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OSfhlTIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgEDTeb (ORCPT
+        id S1727771AbgEDTgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTea (ORCPT
+        Mon, 4 May 2020 15:36:01 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27570 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgEDTgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:34:30 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E12C061A0E;
-        Mon,  4 May 2020 12:34:30 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j8so9393326iog.13;
-        Mon, 04 May 2020 12:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=VLedveHRjOWzxQFafIfJM9vIF9bwIvP2E6cViDidxC0=;
-        b=vaJNJgNcxrb1V5Ckol5RMcTftci6iMEwDqjBnwg7I9WEAjRh9OiwFGM1XEAF9FFeFB
-         TwTgyft86VFfbUnMYpmPxCfITWODOtjcvxiVdLsdtn/V7Mgb7iHrEOYEHNWkBobsIRJM
-         cJpt09Z/GjDpK/iBDC14QsKMe8Y+bOfQmMKDsDe8XofsTdqihOsSRFZwhocx7VgajxY9
-         ZAB+ToZsSEVpJzV3lGVsUNRfmktcvgncHQEbmz0Swp3YKoMOByPG8I205KNBzv1Eors6
-         PHCPbMmVEUQ0gRcaClkxLC9inREdEBwepLrV9LmsSAHZAZ3O7OW/A8Kt1/bz1TB0Di9c
-         JXCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=VLedveHRjOWzxQFafIfJM9vIF9bwIvP2E6cViDidxC0=;
-        b=qIrMv+SxgBsjfSjmB/AfXyRgeB/c8vvzjuBzBq0yaQuot5NHMleiPKPUxGzfb6LyXz
-         GxM5aogsca2Dsq+XpvbZ5souMbiUIssTfcDDLPmMM4I0638nHH24g9lHr5s57Y7QY7Cp
-         iiTURBxOKql3mIRtEB8ZOxSSSLXaeRbgFeWeOmXWfSe2Cy5IBq7wU/Vq5YPvnEPOgZfX
-         /2+/NDPfSRykMAAMLJDvX4GHi/WW4tgNP2Vzvrf2atl7+bl87Eb3Nf0NN4a4CDps7+x0
-         0MmhZq/BfsH2SbjQoYL4t9N6MMtihuJTnXTsv8QToHy/JBVdU9rtoTrq40TgdwpehNkE
-         3Evg==
-X-Gm-Message-State: AGi0PuaFZQ3zLV5V5QAXzKJEYgzNBj/Z8oqGWEMCN3fLssz/GwGKwe9A
-        57lD74GcnpY6HwFv95BoFqbsr/YTOTaS/QQkXiLGDdHn
-X-Google-Smtp-Source: APiQypK9Olv8kCXFxHfdydxi6Zo3gzKdeDYOEOWdBFjLcGrNydDzLvq6rm7R+os2X1oVOh/CZoO1TcZcz7TI7xUtcgY=
-X-Received: by 2002:a02:a004:: with SMTP id a4mr34524jah.18.1588620869486;
- Mon, 04 May 2020 12:34:29 -0700 (PDT)
+        Mon, 4 May 2020 15:36:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588620958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/3A058FfJ5jnR8BVGCc03H6CDy7W6sjA+o5zMn7+ggc=;
+        b=OSfhlTIYSt0IlWa8RtsW7/ydP14ejSNgyj+M7vAsuW2SToSQNUvvUkdeLXbMSuYw/WqYaR
+        7SjDZ1bY3CW1KAg8mVXqTbI5noEDU9STE1Ag2xUAO2+8trMsmPf5VuSHkdPjjMNDr2WyJL
+        XtKu13WFO9YcATxSngPmHcCaLr/pIpw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-xd7BJY1lNf6EgTSbei380g-1; Mon, 04 May 2020 15:35:57 -0400
+X-MC-Unique: xd7BJY1lNf6EgTSbei380g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB3341005510;
+        Mon,  4 May 2020 19:35:55 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D881F5D715;
+        Mon,  4 May 2020 19:35:52 +0000 (UTC)
+Date:   Mon, 4 May 2020 13:35:52 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 3/3] vfio-pci: Invalidate mmaps and block MMIO access on
+ disabled memory
+Message-ID: <20200504133552.3d00c77d@x1.home>
+In-Reply-To: <20200504184436.GZ26002@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+        <158836917028.8433.13715345616117345453.stgit@gimli.home>
+        <20200501234849.GQ26002@ziepe.ca>
+        <20200504122643.52267e44@x1.home>
+        <20200504184436.GZ26002@ziepe.ca>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200428142629.8950-1-peron.clem@gmail.com> <20200504122742.er2jd67bvrn2rfgp@core.my.home>
-In-Reply-To: <20200504122742.er2jd67bvrn2rfgp@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 4 May 2020 21:34:17 +0200
-Message-ID: <CAJiuCcdSmgp75ByEDDtH0AtqGsUyc9QrAcD9xqLZduh2ijnrqQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2] arm64: dts: allwinner: h6: Use dummy
- regulator for Tanix TX6
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Piotr Oniszczuk <warpme@o2.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ondrej,
+On Mon, 4 May 2020 15:44:36 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-On Mon, 4 May 2020 at 14:27, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> Hi Cl=C3=A9ment,
->
+> On Mon, May 04, 2020 at 12:26:43PM -0600, Alex Williamson wrote:
+> > On Fri, 1 May 2020 20:48:49 -0300
+> > Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >   
+> > > On Fri, May 01, 2020 at 03:39:30PM -0600, Alex Williamson wrote:
+> > >   
+> > > >  static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
+> > > >  			    struct vm_area_struct *vma)
+> > > >  {
+> > > > @@ -1346,15 +1450,49 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+> > > >  {
+> > > >  	struct vm_area_struct *vma = vmf->vma;
+> > > >  	struct vfio_pci_device *vdev = vma->vm_private_data;
+> > > > +	vm_fault_t ret = VM_FAULT_NOPAGE;
+> > > >  
+> > > > -	if (vfio_pci_add_vma(vdev, vma))
+> > > > -		return VM_FAULT_OOM;
+> > > > +	/*
+> > > > +	 * Zap callers hold memory_lock and acquire mmap_sem, we hold
+> > > > +	 * mmap_sem and need to acquire memory_lock to avoid races with
+> > > > +	 * memory bit settings.  Release mmap_sem, wait, and retry, or fail.
+> > > > +	 */
+> > > > +	if (unlikely(!down_read_trylock(&vdev->memory_lock))) {
+> > > > +		if (vmf->flags & FAULT_FLAG_ALLOW_RETRY) {
+> > > > +			if (vmf->flags & FAULT_FLAG_RETRY_NOWAIT)
+> > > > +				return VM_FAULT_RETRY;
+> > > > +
+> > > > +			up_read(&vma->vm_mm->mmap_sem);
+> > > > +
+> > > > +			if (vmf->flags & FAULT_FLAG_KILLABLE) {
+> > > > +				if (!down_read_killable(&vdev->memory_lock))
+> > > > +					up_read(&vdev->memory_lock);
+> > > > +			} else {
+> > > > +				down_read(&vdev->memory_lock);
+> > > > +				up_read(&vdev->memory_lock);
+> > > > +			}
+> > > > +			return VM_FAULT_RETRY;
+> > > > +		}
+> > > > +		return VM_FAULT_SIGBUS;
+> > > > +	}    
+> > > 
+> > > So, why have the wait? It isn't reliable - if this gets faulted from a
+> > > call site that can't handle retry then it will SIGBUS anyhow?  
+> > 
+> > Do such call sites exist?  My assumption was that half of the branch
+> > was unlikely to ever occur.  
+> 
+> hmm_range_fault() for instance doesn't set ALLOW_RETRY, I assume there
+> are enough other case to care about, but am not so sure
+> 
+> > > The weird use of a rwsem as a completion suggest that perhaps using
+> > > wait_event might improve things:
+> > > 
+> > > disable:
+> > >   // Clean out the vma list with zap, then:
+> > > 
+> > >   down_read(mm->mmap_sem)  
+> > 
+> > I assume this is simplifying the dance we do in zapping to first take
+> > vma_lock in order to walk vma_list, to find a vma from which we can
+> > acquire the mm, drop vma_lock, get mmap_sem, then re-get vma_lock
+> > below.    
+> 
+> No, that has to stay..
 
-<snip>
+Sorry, I stated that unclearly, I'm assuming we keep that and it's been
+omitted from this pseudo code for simplicity.
+ 
+> > Also accounting that vma_list might be empty and we might need
+> > to drop and re-acquire vma_lock to get to another mm, so we really
+> > probably want to set pause_faults at the start rather than at the end.  
+> 
+> New vmas should not created/faulted while vma_lock is held, so the
+> order shouldn't matter..
 
->
-> So I guess ignoring the voltage and not disabling this OPP may or may not=
- work
-> based on SoC bin.
->
-> On Orange Pi One, there's a regulator that supports two voltages (that ca=
-n't
-> support all the listed OPPs for H3), and cpufreq-dt can deal with that
-> automagically, if you specify OPP voltages via a tripplet of [prefered mi=
-n max].
-> Kernell will log this in dmesg on boot:
->
-> [    0.672440] core: _opp_supported_by_regulators: OPP minuV: 1320000 max=
-uV: 1320000, not supported by regulator
-> [    0.672454] cpu cpu0: _opp_add: OPP not supported by regulators (11040=
-00000)
-> [    0.672523] core: _opp_supported_by_regulators: OPP minuV: 1320000 max=
-uV: 1320000, not supported by regulator
-> [    0.672530] cpu cpu0: _opp_add: OPP not supported by regulators (12000=
-00000)
-> [    0.672621] core: _opp_supported_by_regulators: OPP minuV: 1340000 max=
-uV: 1340000, not supported by regulator
-> [    0.672628] cpu cpu0: _opp_add: OPP not supported by regulators (12960=
-00000)
-> [    0.672712] core: _opp_supported_by_regulators: OPP minuV: 1400000 max=
-uV: 1400000, not supported by regulator
-> [    0.672719] cpu cpu0: _opp_add: OPP not supported by regulators (13680=
-00000)
->
-> And the list of available OPPs will be reduced at runtime to a supportabl=
-e
-> set by the CPU regulator.
->
-> If you look at:
->
->   https://megous.com/git/linux/commit/?h=3Dths-5.7&id=3Dd231770195913cf54=
-3c0cf9539deee2ecec06680
->
-> you'll see a bunch of OPPs for H3 that are specified as a range. So
-> for example if you want 480MHz, and your regulator can't produce
-> 1.04V exactly, cpufreq will set the voltage to something supportable
-> in the range.
->
-> I think the proper fix is to fix the OPP table for H6, so that it uses
-> voltage ranges for each OPP and not a single fixed voltage, to support
-> boards that don't have the standard PMIC that goes with H6.
+Technically that's true, but if vfio_pci_zap_mmap_vmas() drops vma_lock
+to go back and get another mm, then vm_ops.fault() could get another
+vma into the list while we're trying to zap and clear them all.  The
+result is the same, but we might be doing unnecessary work versus
+holding off the fault from the start.
+ 
+> > >   mutex_lock(vma_lock);
+> > >   list_for_each_entry_safe()
+> > >      // zap and remove all vmas
+> > > 
+> > >   pause_faults = true;
+> > >   mutex_write(vma_lock);
+> > > 
+> > > fault:
+> > >   // Already have down_read(mmap_sem)
+> > >   mutex_lock(vma_lock);
+> > >   while (pause_faults) {
+> > >      mutex_unlock(vma_lock)
+> > >      wait_event(..., !pause_faults)
+> > >      mutex_lock(vma_lock)
+> > >   }  
+> > 
+> > Nit, we need to test the memory enable bit setting somewhere under this
+> > lock since it seems to be the only thing protecting it now.  
+> 
+> I was thinking you'd keep the same locking for the memory enable bit,
+> the pause_faults is a shadow of that bit with locking connected to
+> vma_lock..
 
-Thanks for the suggestion and I agree with you, this is a good way to
-keep the same OPP table for all the H6 devices and handle both board
-with PMIC and with fixed regulator.
+Oh!  I totally did not get that!
 
-I will propose a patch.
+> > >   list_add()
+> > >   remap_pfn()
+> > >   mutex_unlock(vma_lock)  
+> > 
+> > The read and write file ops would need similar mechanisms.  
+> 
+> Keep using the rwsem?
+> 
+> > > enable:
+> > >   pause_faults = false
+> > >   wake_event()  
+> > 
+> > Hmm, vma_lock was dropped above and not re-acquired here.  
+> 
+> I was thinking this would be under a continous rwlock
+> 
+> > I'm not sure if it was an oversight that pause_faults was not tested
+> > in the disable path, but this combination appears to lead to
+> > concurrent writers and serialized readers??  
+> 
+> ? pause_faults only exists to prevent the vm_ops fault callback from
+> progressing to a fault. I don't think any concurrancy is lost
+> 
+> > > The only requirement here is that while inside the write side of
+> > > memory_lock you cannot touch user pages (ie no copy_from_user/etc)  
+> > 
+> > I'm lost at this statement, I can only figure the above works if we
+> > remove memory_lock.  Are you referring to a different lock?  Thanks,  
+> 
+> No
+> 
+> This is just an approach to avoid the ABBA deadlock problem when using
+> a rwsem by using a looser form of lock combined witih the already
+> correctly nested vma_lock.
+> 
+> Stated another way, you can keep the existing memory_lock as is, if it
+> is structured like this:
+> 
+> disable:
+>  down_read(mmap_sem)
+>  mutex_lock(vma_lock)
+>  list_for_each_entry_safe()
+>       // zap and remove all vmas
+>  down_write(memory_lock)   // Now inside vma_lock!
+>  mutex_unlock(vma_lock)
+>  up_read(mmap_sem
+> 
+>  [ do the existing stuff under memory_lock ]
+> 
+> 
+> fault:
+>   mutex_lock(vma_lock)
+>   down_write(memory_lock)
+>   remap_pfn
+>   up_write(memory_lock)
+>   mutex_unlock(vma_lock)
+> 
+> enable:
+>   up_write(memory_lock)
+> 
+> Ie the key is to organize things to move the down_write(memory_lock)
+> to be under the mmap_sem/vma_lock
 
-Thanks clement
+Ok, this all makes a lot more sense with memory_lock still in the
+picture.  And it looks like you're not insisting on the wait_event, we
+can block on memory_lock so long as we don't have an ordering issue.
+I'll see what I can do.  Thanks,
 
->
-> regards,
->         o.
+Alex
+
