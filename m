@@ -2,268 +2,146 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFC9C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C809C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E5520746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E738720746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:18:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SKVrCXff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgEDJRO (ORCPT
+        id S1728197AbgEDJSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:17:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32748 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbgEDJRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:17:13 -0400
-IronPort-SDR: z+8C1aCJOkoJ3lT6HuKSUlbQaE2jCEDsp3Zb+lKplgk/9hVFI5SwAEXQXZO7H7AyrcqVmXTduS
- ttD6htasAS/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 02:17:09 -0700
-IronPort-SDR: Dq52u6PWQtdqZ0Px8+M4c1TID7QfAh+HOAP/p6nNUDLeMMv1hJlRd8Q4jvanxUVo4vadOyl3wp
- vhi+rOAuJUHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,351,1583222400"; 
-   d="scan'208";a="369037346"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 04 May 2020 02:17:09 -0700
-Received: from [10.214.154.10] (vramuthx-MOBL1.gar.corp.intel.com [10.214.154.10])
-        by linux.intel.com (Postfix) with ESMTP id 01894580613;
-        Mon,  4 May 2020 02:17:04 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on Intel
- LGM SoC
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     tglx@linutronix.de, cheol.yong.kim@intel.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        masonccyang@mxic.com.tw, anders.roxell@linaro.org, vigneshr@ti.com,
-        arnd@arndb.de, hauke.mehrtens@intel.com, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, qi-ming.wu@intel.com,
-        andriy.shevchenko@intel.com
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200429162249.55d38ee8@collabora.com>
- <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
- <20200429164832.6800fc70@collabora.com>
- <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
- <20200429173107.5c6d2f55@collabora.com>
- <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
- <20200430102114.29b6552f@collabora.com>
- <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
- <20200430103658.4b0b979e@collabora.com>
- <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
- <20200430143600.27031639@collabora.com>
- <20200430150124.7856d112@collabora.com>
- <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
- <20200504090824.1eb16b78@collabora.com>
- <854521ed-b0f9-0f0f-2cd7-5ad11b2d059a@linux.intel.com>
- <20200504091755.0d0e73aa@collabora.com>
- <db023399-8b4d-c75c-30c8-b35e38e2e5f8@linux.intel.com>
- <20200504105828.72aaf7b8@collabora.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <b9c2bda4-39e0-a53f-528e-9beb50549acf@linux.intel.com>
-Date:   Mon, 4 May 2020 17:17:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200504105828.72aaf7b8@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 4 May 2020 05:18:08 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28466 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726625AbgEDJSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:18:07 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044978Ts004044;
+        Mon, 4 May 2020 11:17:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=t8yE9JoGl4flloHQYJEWfkrlpSIqoEFqyExGxmwsMx8=;
+ b=SKVrCXff3h/xL4m3odmOVBOJUf2qGJNoKtavF7W6Rz0kENh4xvZMCpxwYDsfw58rWIxe
+ uHRuHlXRWPeptG3pU39cL8A4BE1d0BtwMYevfaQHB/x2JNqzO9+rv8pP8e/Bm++04prk
+ NdRdpi514nAwSf9qy1Vh0haZNOCXBmidZqBMY04DfYc6MFpEo1X2u3FXlifIRn7rEtbt
+ SHgnlyxsUf/vuXjEWSG7CZZ98MkRvZu5Ey0Me0w2BRr4wkDbaVHNUqljBSysarYiAjBl
+ atBmEB2Osx42GsTLk8y13PzfkW51ioujPXV2+37zvew1lZHY8NySEcot5hhcDaqikLV2 xg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30rx089j7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 11:17:45 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E65710002A;
+        Mon,  4 May 2020 11:17:41 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D3AA22BBAA5;
+        Mon,  4 May 2020 11:17:41 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
+ 2020 11:17:41 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Mon, 4 May 2020 11:17:41 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>
+Subject: Re: [RFC 0/3] Introduce cpufreq minimum load QoS
+Thread-Topic: [RFC 0/3] Introduce cpufreq minimum load QoS
+Thread-Index: AQHWGi06wBgeAQBseECYOK/U7Qvw76iQJdAAgAACCYCAAAQ3AIABBseAgAAT0wCAAE7QgIAADU2AgAARzICAAAO9AIAF2zaA
+Date:   Mon, 4 May 2020 09:17:41 +0000
+Message-ID: <b8757472-c973-a32d-d5c9-a584d7d703f8@st.com>
+References: <20200424114058.21199-1-benjamin.gaignard@st.com>
+ <7657495.QyJl4BcWH5@kreacher> <30cdecf9-703a-eb2b-7c2b-f1e21c805add@st.com>
+ <70e743cf-b88e-346a-5114-939b8724c83d@arm.com>
+ <6b5cde14-58b3-045d-9413-223e66b87bf0@st.com>
+ <CAJZ5v0h6t6perZiibCWhEh1_V0pSXqFe-z22TFqH7KTFXYmqpQ@mail.gmail.com>
+ <a234e123-6c15-8e58-8921-614b58ca24ca@st.com> <jhjtv11cabk.mognet@arm.com>
+ <a20c5214-211b-1f70-1162-57b32e60549b@st.com> <jhjmu6tc6rz.mognet@arm.com>
+In-Reply-To: <jhjmu6tc6rz.mognet@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F04BFBC11629A34FAC8C983CAC60E3EF@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-04_05:2020-05-01,2020-05-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
-
-On 4/5/2020 4:58 pm, Boris Brezillon wrote:
-> On Mon, 4 May 2020 16:50:08 +0800
-> "Ramuthevar, Vadivel MuruganX"
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> 
->> Hi Boris,
->>
->> On 4/5/2020 3:17 pm, Boris Brezillon wrote:
->>> On Mon, 4 May 2020 15:15:08 +0800
->>> "Ramuthevar, Vadivel MuruganX"
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>    
->>>> Hi Boris,
->>>>
->>>>      Thank you very much for the prompt review and suggestions...
->>>>
->>>> On 4/5/2020 3:08 pm, Boris Brezillon wrote:
->>>>> On Mon, 4 May 2020 10:02:35 +0800
->>>>> "Ramuthevar, Vadivel MuruganX"
->>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
->>>>>       
->>>>>> Hi Boris,
->>>>>>
->>>>>> On 30/4/2020 9:01 pm, Boris Brezillon wrote:
->>>>>>> On Thu, 30 Apr 2020 14:36:00 +0200
->>>>>>> Boris Brezillon<boris.brezillon@collabora.com>  wrote:
->>>>>>>          
->>>>>>>> On Thu, 30 Apr 2020 17:07:03 +0800
->>>>>>>> "Ramuthevar, Vadivel MuruganX"
->>>>>>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
->>>>>>>>         
->>>>>>>>>>>> The question is, is it the same value we have in nand_pa or it is
->>>>>>>>>>>> different?
->>>>>>>>>>>>                  
->>>>>>>>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.
->>>>>>>>>> Then why didn't you tell me they didn't match when I suggested to pass
->>>>>>>>> sorry, because you keep asking nand_pa after that only I realized that.
->>>>>>>>>             
->>>>>>>>>> nand_pa? So now the question is, what does this address represent?
->>>>>>>>>                     EBU-MODULE
->>>>>>>>>       _________     _______________________
->>>>>>>>> |         |   |            |NAND CTRL  |
->>>>>>>>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
->>>>>>>>> |_________|   |_CS1(0x17C)_|__________ |
->>>>>>>>>
->>>>>>>>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
->>>>>>>>> HSNAND_BASE: 0xE100_0000
->>>>>>>>> NAND_CS0: 0xE140_0000
->>>>>>>>> NAND_CS1: 0xE1C0_0000
->>>>>>>>>
->>>>>>>>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
->>>>>>>>> MEM_REGION_BASE_CS1: 0x17C00
->>>>>>>>>             
->>>>>>>> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
->>>>>>>> address translation. Something like
->>>>>>>>
->>>>>>>> 	ebu@xxx {
->>>>>>>> 		ranges = <0x17400000 0xe1400000 0x1000>,
->>>>>>>> 			 <0x17c00000 0xe1c00000 0x1000>;
->>>>>>>> 		reg = <0x17400000>, <0x17c00000>;
->>>>>>>> 		reg-names = "cs-0", "cs-1";
->>>>>>>> 	}
->>>>>>>>
->>>>>>>> The translated address (0xE1X00000) will be available in res->start,
->>>>>>>> and the non-translated one (0x17X00000) can be retrieved with
->>>>>>>> of_get_address(). All you'd have to do then would be calculate the
->>>>>>>> mask:
->>>>>>>>
->>>>>>>> 	mask = (translated_address & original_address) >> 22;
->>>>>>>> 	num_comp_bits = fls(mask);
->>>>>>>> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
->>>>>>>>
->>>>>>>> Which allows you to properly set the ADDR_SEL() register without
->>>>>>>> relying on some hardcoded values:
->>>>>>>>
->>>>>>>> 	writel(original_address | EBU_ADDR_SEL_REGEN |
->>>>>>>> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
->>>>>>>> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
->>>>>>>>
->>>>>>>> That's quite important if we want to merge the xway NAND driver with
->>>>>>>> this one.
->>>>>>> Looks like the translation is done at the FPI bus declaration level (see
->>>>>>> [1]). We really need to see the big picture to take a wise decision
->>>>>>> about the bindings. Would you mind pasting your dsti/dts files
->>>>>>> somewhere? It feels like the NAND controller is a sub-part of a more
->>>>>>> generic 'memory' controller, in which case the NAND controller should be
->>>>>>> declared as a child of this generic memory bus (called localbus in [1],
->>>>>>> but maybe EBU is more accurate).
->>>>>>>
->>>>>>> [1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162
->>>>>>
->>>>>>      ebu_nand: ebu_nand@e0f00000 {
->>>>>>                      compatible = "intel,lgm-ebu-nand";
->>>>>>                      reg = <0xe0f00000 0x100
->>>>>>                      0xe1000000 0x300
->>>>>>                      0xe1400000 0x80000
->>>>>>                      0xe1c00000 0x10000>;
->>>>>>                      reg-names = "ebunand", "hsnand", "nand_cs0", nand_cs1";
->>>>>>                      dmas = <&dma0 8>, <&dma0 9>;
->>>>>>                      dma-names = "ebu_rx", "ebu_tx";
->>>>>>                      clocks =  <&cgu0 LGM_GCLK_EBU>;
->>>>>>              };
->>>>>>
->>>>>>
->>>>>> 	 &ebu_nand {
->>>>>> 	         status = "disabled";
->>>>>> 	        nand,cs = <1>;
->>>>>> 	        nand-ecc-mode = "hw";
->>>>>> 	        pinctrl-names = "default";
->>>>>> 	        pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
->>>>>> 	};
->>>>>>      
->>>>>>>          
->>>>> Ok. If I understand the SoC topology correctly it should actually be
->>>>> something like that:
->>>>>
->>>>> {
->>>>> 	...
->>>>> 	fpi@xxxxx {
->>>>> 		compatible = "intel,lgm-fpi", "simple-bus";
->>>>>
->>>>> 		/* You might have other ranges to define here */
->>>>> 		ranges = <0x16000000 0xe0000000 0x1000000>;
->>>>>
->>>>> 		...
->>>>
->>>> Sorry, we do not have fpi tree node in our dts/dtsi file instead we have
->>>> the below one.. , that also not included the major peripherals
->>>> controllers node.
->>>>            /* Special part from CPU core */
->>>>            core: core {
->>>>                    compatible = "intel,core", "simple-bus";
->>>>                    #address-cells = <1>;
->>>>                    #size-cells = <1>;
->>>>                    ranges;
->>>>
->>>>                    ioapic1: interrupt-controller@fec00000 {
->>>>                            #interrupt-cells = <2>;
->>>>                            #address-cells = <0>;
->>>>                            compatible = "intel,ce4100-ioapic";
->>>>                            interrupt-controller;
->>>>                            reg = <0xfec00000 0x1000>;
->>>>                            nr_entries = <256>;
->>>>                    };
->>>>
->>>>                    hpet: timer@fed00000 {
->>>>                            compatible = "intel,ce4100-hpet";
->>>>                            reg = <0xfed00000 0x400>;
->>>>                    };
->>>>
->>>>                    lapic0: interrupt-controller@fee00000 {
->>>>                            compatible = "intel,ce4100-lapic";
->>>>                            reg = <0xfee00000 0x1000>;
->>>>                            no_pic_mode;
->>>>                    };
->>>>            };
->>>>
->>>> other than this, rest all in independent node .
->>>
->>> But you do have an FPI bus, right? If this is the case it should be
->>> represented.
->>
->> Yes, FPI bus is slave to core which connects all the peripherals.
->>
->>    Or is the "intel,core" bus actually the FPI bus that you
->>> named differently?
->>
->> FPI slave bus connects to core bus by OCP bridge, so here it is named
->> FPI bus, but SW perspective didn't have root tree which has all
->> sub-nodes, as of now each peripheral has its own node.
-> 
-> Duh, not sure that's a good idea to hide that, especially since you
-> have to describe the address translation that happens when crossing the
-> FPI bus (the ranges thing I mentioned previously).
-
-Thanks Boris, Sure I will do as you have suggested.
-
-can I proceed to send next patch-set.
-
-Regards
-Vadivel
-
+DQoNCk9uIDQvMzAvMjAgNTo1MCBQTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPiBPbiAz
+MC8wNC8yMCAxNjozNywgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+PiBPbiA0LzMwLzIwIDQ6
+MzMgUE0sIFZhbGVudGluIFNjaG5laWRlciB3cm90ZToNCj4+PiBPbiAzMC8wNC8yMCAxNDo0Niwg
+QmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+Pj4+PiBUaGF0J3Mgbm90IHdoYXQgSSBtZWFudC4N
+Cj4+Pj4+DQo+Pj4+PiBJIHN1cHBvc2UgdGhhdCB0aGUgaW50ZXJydXB0IHByb2Nlc3NpbmcgaW4g
+cXVlc3Rpb24gdGFrZXMgcGxhY2UgaW4NCj4+Pj4+IHByb2Nlc3MgY29udGV4dCBhbmQgc28geW91
+IG1heSBzZXQgdGhlIGxvd2VyIGNsYW1wIG9uIHRoZSB1dGlsaXphdGlvbg0KPj4+Pj4gb2YgdGhl
+IHRhc2sgY2FycnlpbmcgdGhhdCBvdXQuDQo+Pj4+IEkgaGF2ZSB0cnkgdG8gYWRkIHRoaXMgY29k
+ZSB3aGVuIHN0YXJ0aW5nIHN0cmVhbWluZyAoYmVmb3JlIHRoZSBmaXJzdA0KPj4+PiBpbnRlcnJ1
+cHQpIHRoZSBmcmFtZXMgZnJvbSB0aGUgc2Vuc29yOg0KPj4+PiBjb25zdCBzdHJ1Y3Qgc2NoZWRf
+YXR0ciBzY2hlZF9hdHRyID0gew0KPj4+PiAgICAgIC5zY2hlZF91dGlsX21pbiA9IDEwMDAwLCAv
+KiAxMDAlIG9mIHVzYWdlICovDQo+Pj4gVW5sZXNzIHlvdSBwbGF5IHdpdGggU0NIRURfQ0FQQUNJ
+VFlfU0hJRlQsIHRoZSBtYXggc2hvdWxkIGJlIDEwMjQgLQ0KPj4+IGkuZS4gU0NIRURfQ0FQQUNJ
+VFlfU0NBTEUuIFRoYXQncyBhIHJlYWxseSBiaWcgYm9vc3QsIGJ1dCB0aGF0J3MgZm9yIHlvdSB0
+bw0KPj4+IGJlbmNobWFyay4NCj4+Pg0KPj4+PiAgICAgIC5zY2hlZF9mbGFncyA9IFNDSEVEX0ZM
+QUdfVVRJTF9DTEFNUF9NSU4sDQo+Pj4+ICAgICB9Ow0KPj4+Pg0KPj4+PiBzY2hlZF9zZXRhdHRy
+KGN1cnJlbnQsICZzY2hlZF9hdHRyKTsNCj4+Pj4NCj4+Pj4gSSBkb24ndCBzZWUgYW55IGJlbmVm
+aWNlcyBtYXliZSB0aGVyZSBpcyBzb21lIGNvbmZpZ3VyYXRpb24gZmxhZ3MgdG8gc2V0Lg0KPj4+
+Pg0KPj4+PiBIb3cgY2hhbmdpbmcgc2NoZWRfdXRpbF9taW4gY291bGQgaW1wYWN0IGNwdWZyZXEg
+b25kZW1hbmQgZ292ZXJub3IgPw0KPj4+PiBEb2VzIGl0IGNoYW5nZSB0aGUgdmFsdWUgcmV0dXJu
+ZWQgd2hlbiB0aGUgZ292ZXJub3IgY2hlY2sgdGhlIGlkbGUgdGltZSA/DQo+Pj4+DQo+Pj4gWW91
+J2xsIGhhdmUgdG8gdXNlIHRoZSBzY2hlZHV0aWwgZ292ZXJub3IgZm9yIHVjbGFtcCB0byBoYXZl
+IGFuIGVmZmVjdC4gQW5kDQo+Pj4gYXJndWFibHkgdGhhdCdzIHdoYXQgeW91IHNob3VsZCBiZSB1
+c2luZywgdW5sZXNzIHNvbWV0aGluZyBleHBsaWNpdGx5DQo+Pj4gcHJldmVudHMgeW91IGZyb20g
+ZG9pbmcgdGhhdC4NCj4+IEV2ZW4gd2l0aCBzY2hlZHV0aWwgYW5kIFNDSEVEX0NBUEFDSVRZX1ND
+QUxFIHRoYXQgaXQgZG9lc24ndCB3b3JrLg0KPj4gY3B1ZnJlcS9jcHVpbmZvX2N1cl9mcmVxIHZh
+bHVlcyBhcmUgYWx3YXlzIG9uIHRoZSBtYXggdmFsdWUgZXZlbiBpZiB0aGUNCj4+IHN0YXRzIHNo
+b3cgdHJhbnNpdGlvbnMgYmV0d2VlbiB0aGUgYXZhaWxhYmxlIGZyZXF1ZW5jaWVzLg0KPj4NCj4+
+IEkgc2VlIHR3byBwb3NzaWJsZXMgcmVhc29ucyB0byBleHBsYWluIHRoYXQ6DQo+PiAtIHNjaGVk
+X3NldGF0dHIoKSBpcyBjYWxsZWQgaW4gdXNlcmxhbmQgcHJvY2VzcyBjb250ZXh0LCBidXQgdGhl
+DQo+PiB0aHJlYWRlZCBpcnEgaGFuZGxlciBpcyBydW5uaW5nIGluIGFub3RoZXIgcHJvY2Vzcy4N
+Cj4gQWggeWVzLCB0aGlzIG9ubHkgd29ya3MgaWYgdGhlIHRhc2sgeW91IGJvb3N0IGlzIHRoZSBv
+bmUgdGhhdCB3aWxsIGhhbmRsZQ0KPiB3aGF0ZXZlciB3b3JrIHlvdSBjYXJlIGFib3V0IChpbiB0
+aGlzIGNhc2UgaGFuZGxpbmcgdGhlIGlycSkuIFRoYXQgc2FpZCwgaWYNCj4geW91IGRvIHVzZSB0
+aHJlYWRlZCBJUlFzLCB0aGF0IHNob3VsZCBnaXZlIHlvdSBhIFNDSEVEX0ZJRk8gdGhyZWFkLCB3
+aGljaA0KPiBzaG91bGQgZHJpdmUgdGhlIGZyZXF1ZW5jeSB0byBpdHMgbWF4IHdoZW4gdXNpbmcg
+c2NoZWR1dGlsICh1bnJlbGF0ZWQgdG8NCj4gdWNsYW1wKS4NCkNhbiBJIGNvbmNsdWRlIHRoYXQg
+c2NoZWRfc2V0YXR0cigpIGlzbid0IHRoZSBnb29kIHdheSB0byBzb2x2ZSB0aGlzIA0KcHJvYmxl
+bSA/DQpEb2VzIG15IHBhdGNoZXMgbWFrZSBzZW5zZSBpbiB0aGlzIGNhc2UgPw0KDQo+PiAtIGJl
+Y2F1c2UgdGhpcyB1c2UgY2FzZSBpcyBhbG1vc3QgcnVubmluZyBhbGwgaW4gaGFyZHdhcmUgdGhl
+IHByb2Nlc3MNCj4+IGlzbid0IGRvaW5nIGFueXRoaW5nIHNvIHRoZSBzY2hlZHVsZXIgZG9lc24n
+dCB0YWtlIGNhcmUgb2YgaXQuDQo+Pg0KPj4+Pj4gQWx0ZXJuYXRpdmVseSwgdGhhdCB0YXNrIG1h
+eSBiZSBhIGRlYWRsaW5lIG9uZS4NCg==
