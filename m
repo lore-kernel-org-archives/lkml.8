@@ -2,113 +2,122 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE2BC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31997C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26033206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECD8206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="JSSYqRf7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZKgyDO+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgEDTSU (ORCPT
+        id S1726825AbgEDTUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725956AbgEDTST (ORCPT
+        Mon, 4 May 2020 15:20:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35155 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725956AbgEDTUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:18:19 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A5DC061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:18:18 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id k22so14581625eds.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kROsHnsD9muMWEwboUG5hUj2OVBxs90xwEJKMpv4TqU=;
-        b=JSSYqRf7kz1USqv9VwACVLKCxXRB4qyB6svg1s1rslPg7jHXZcr350vq//aDz2g2od
-         YrZSNERm7ak33/2IuJG4au8xuXPQFwEQbFXj+L+x4EUIvztQZSki+kdKhj3zWTm6HxJI
-         gbmQaiKZf75LY2xZIOAAEagt5SpP9peefxR/Rh5/r8hjTa4VVArlhpT4LqFjpsK3dN1V
-         G/6ksnlX6fwRL7DLFbfn9S4CsQQ3i+8qY1/p8H3OFOPvdls+wlW5EXSjp1erhRu0GSLG
-         G2xwwrAtWE9oOjg8jwxtuNErvw/V7Pad1dxG+DY/cneVyjglCqOuCdsAD43VZ85A5GAN
-         SXIw==
+        Mon, 4 May 2020 15:20:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588620013;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nUz/aAZitMLVExxnDPAtTS+sV7w5r/mnfHx+jPKwGw4=;
+        b=ZKgyDO+r7LFghDjoXFdqkEJX5/62PO87q6tvUtKVgk4OL5RC1iTJA7z16aB2aGqXtX+fHs
+        7s+t/j4Tu8cjGTp0hnR8Dcll755h+r4brZBJlToJr9BA3ROZQPNAkNn11x0Yg1RCkqZAjG
+        7BqWyNr+WS2eh0kDvBJyIL2d6An3LGc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-57-X6-PZDk8NeesqUqufiIggg-1; Mon, 04 May 2020 15:20:09 -0400
+X-MC-Unique: X6-PZDk8NeesqUqufiIggg-1
+Received: by mail-wm1-f69.google.com with SMTP id n17so534081wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:20:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kROsHnsD9muMWEwboUG5hUj2OVBxs90xwEJKMpv4TqU=;
-        b=WXc6Tt3KaSgY/TbpacT4qlosjLiGIz+pQm2WSIcO1LyuptzsCIaZhJUqg3yByt63dE
-         TqmraOnTIfNOAZEt1w9BSc4eM0KkuDW+GggYw4S3Uf1vPvUl8qO8E68B30UUQrCBXMFc
-         dwun59sP1v7XhaSbihzjnNX5jrJlb9y+jIBjTAiGzZSwr0p7hvp+PimOgNT+IWdUO395
-         gZFjWL+bTqJTRb0z4jRhGdqf5Pq5NfDXVVogdzwK6odNY+39VWXl4aRzcHa/GzhzBJCv
-         Ll3rXZ26zDPUbb9PejQx/XTT9hyt8I0fKyPBFo1wvVLf4cU7sAtebVhq72fmx4QMGv/C
-         SJlA==
-X-Gm-Message-State: AGi0PubOWIczYeY+7GqxqqYRCAPVMqBFkGaWU9SDkwFNR0goug6kG3Pn
-        y9rA2hkpv9yYXoJ7Yx+LjAiFbzNSfHgG49AiFsMYQQ==
-X-Google-Smtp-Source: APiQypLAAV4FjDK1Jvxoka65plqeN9pxdUehUoxnWzxXbsHXQPalVul5W+hYrC+PRTtb7+mGD9+ACSv0F/eCwxI563Y=
-X-Received: by 2002:a05:6402:14c1:: with SMTP id f1mr16188235edx.221.1588619896803;
- Mon, 04 May 2020 12:18:16 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nUz/aAZitMLVExxnDPAtTS+sV7w5r/mnfHx+jPKwGw4=;
+        b=l/i5GT+ptYsiYyhal+0FAXDYCFJWF2Biqy6wnBiWdiXItHOTriI4uWoWL98qFztAxJ
+         Wjk2PhGcfj45faIXtHVyWrHWOM6htajW56k+M2y/+0+SnrZGKZcHj643hMPcfNynVQKk
+         hP7Pj8aCXzK14CuNAFudYBrZndvInmbCFUDTRWusyvyW5nZ/MkT/BlCvhweuH60+Fh8n
+         oEw/lkRqBivjYQY0M29sU2mMUahhxgnQJn6QXPp32attvMBsKuh1qIaG0SN5PPtBmXn4
+         XAwcTiR2tZbxX264krifhevhGQZSU+G9XQXaU5ithCEHmwcxoA8ZQvJkkeRS+MH3hOVT
+         saKg==
+X-Gm-Message-State: AGi0PuaekzOPM/ejh6gaFO8QSV/CeTxq6pK4EPOkh5HD/rQufVP92rSH
+        hQNpBmZzvnpfKlQMcU0Mju2PhP4InIRtO+lWnJEsexMF7k8AiI+6Q78fKv6mPZ5qA61s5cLYQeZ
+        vOj/wy/24nn0Ahi7R4Vr+e2gT
+X-Received: by 2002:a1c:f418:: with SMTP id z24mr16040957wma.122.1588620007719;
+        Mon, 04 May 2020 12:20:07 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLyPq+EBft+DIchDIzmT78A6K6Mxa6RNvlcQjX/sIkHDq7lmFqLYsZCjQWjuXepLhFnr/H1ww==
+X-Received: by 2002:a1c:f418:: with SMTP id z24mr16040934wma.122.1588620007436;
+        Mon, 04 May 2020 12:20:07 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:cd89:3799:7fbf:7b5d? ([2001:b07:6468:f312:cd89:3799:7fbf:7b5d])
+        by smtp.gmail.com with ESMTPSA id n2sm19921300wrt.33.2020.05.04.12.20.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 12:20:06 -0700 (PDT)
+Subject: Re: [PATCH 0/3] KVM: x86: cleanup and fixes for debug register
+ accesses
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200504155558.401468-1-pbonzini@redhat.com>
+ <20200504185530.GE6299@xz-x1>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <06dcafe8-8278-a818-ad76-36f3bbbcc0a2@redhat.com>
+Date:   Mon, 4 May 2020 21:20:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
- <202005041112.F3C8117F67@keescook> <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
- <202005041211.040A1C65C8@keescook>
-In-Reply-To: <202005041211.040A1C65C8@keescook>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Mon, 4 May 2020 15:17:40 -0400
-Message-ID: <CA+CK2bAJgKR+=Tby91gU-ZKy29Juv_oJinCTFAWRaKiiro2vkg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
-        ccross@android.com, Tony Luck <tony.luck@intel.com>,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200504185530.GE6299@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 3:12 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, May 04, 2020 at 02:47:45PM -0400, Pavel Tatashin wrote:
-> > > > # reboot -f
-> > > >
-> > > > After VM is back:
-> > > >
-> > > > # mount -t pstore pstore /mnt
-> > > > # head /mnt/dmesg-ramoops-0
-> > > > Restart#1 Part1
-> > >
-> > > Is there a reason that using ramoops.console_size isn't sufficient for
-> > > this?
-> >
-> > Unfortunately, the console option is not working for us (Microsoft),
-> > we have an embedded device with a serial console, and the baud rate
-> > reduces the reboot performance, so we must keep the console quiet. We
-> > also want to be able collect full shutdown logs from the field that
-> > are collected during kexec based updates.
->
-> I meant collecting console via pstore (i.e. /mnt/console-ramoops-0). Are
-> you saying that's still too large for your situation?
+On 04/05/20 20:55, Peter Xu wrote:
+> On Mon, May 04, 2020 at 11:55:55AM -0400, Paolo Bonzini wrote:
+>> The purpose of this series is to get rid of the get_dr6 accessor
+>> and, on Intel, of set_dr6 as well.  This is done mostly in patch 2,
+>> since patch 3 is only the resulting cleanup.  Patch 1 is a related
+>> bug fix that I found while inspecting the code.
+> 
+> Reviewed-by: Peter Xu <peterx@redhat.com>
+> 
+> (Btw, the db_interception() change in patch 2 seems to be a real fix to me)
 
-pstore /mnt/console-ramoops-0 outputs only messages below the console
-loglevel, and our console loglevel is set to 3 due to slowness of
-serial console. Which means only errors and worse types of messages
-are recorded. AFAIK, there is no way to have different log levels for
-different consoles.
+It should be okay because vcpu->arch.dr6 is not used on AMD.
 
-Thank you,
-Pasha
+However I think a kvm_update_dr6 call is missing in
+kvm_deliver_exception_payload, and kvm_vcpu_check_breakpoint should use
+kvm_queue_exception_p.  I'll fix all of those.
 
->
-> --
-> Kees Cook
+> I have that in my list, but I don't know it's "sorely" needed. :) It was low
+> after I knew the fact that we've got one test in kvm-unit-test, but I can for
+> sure do that earlier.
+> 
+> I am wondering whether we still want a test in selftests if there's a similar
+> test in kvm-unit-test already.  For this one I guess at least the guest debug
+> test is still missing.
+
+The guest debugging test would basically cover the gdbstub case, which
+is different from kvm-unit-tests.  It would run similar tests to
+kvm-unit-tests, but #DB and #BP exceptions would be replaced by
+KVM_EXIT_DEBUG, and MOVs to DR would be replaced by KVM_SET_GUEST_DEBUG.
+
+It could also cover exception payload support in KVM_GET_VCPU_EVENTS,
+but that is more complicated because it would require support for
+exceptions in the selftests.
+
+Paolo
+
