@@ -2,177 +2,211 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADABC47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8796FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 376392071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBC5206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O6K6BJbu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S5Uh9j5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgEDMxY (ORCPT
+        id S1728359AbgEDMyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:53:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48754 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgEDMxX (ORCPT
+        Mon, 4 May 2020 08:54:13 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59121 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbgEDMyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:53:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044CrDiR101787;
-        Mon, 4 May 2020 07:53:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588596793;
-        bh=egWsxDaoDfltWcOEQkby+ChR38lWf3kFvTkLIhVfDqM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=O6K6BJbuShLOF85rq7SiZpAyTsijWz3jZnRZH3Qi6xm0/+5FsErBaqZg8NouMWfAP
-         PP4CR/VEFYXi687Pl3LgHg8RYsXXOJGrZhJDbOyMXgvtJ28hQpdOxGxzAdvk7a6NYV
-         S3n2B1pY3K162gyvMADHWP9VhxzaOmKAEAYpJfm4=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044CrD2e126233;
-        Mon, 4 May 2020 07:53:13 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 07:53:12 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 07:53:12 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044Cr9rS066968;
-        Mon, 4 May 2020 07:53:10 -0500
-Subject: Re: [PATCH v2 2/4] PCI: cadence: Use "dma-ranges" instead of
- "cdns,no-bar-match-nbits" property
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-3-kishon@ti.com>
- <20200501144645.GB7398@e121166-lin.cambridge.arm.com>
- <dc581c5b-11de-f4b3-e928-208b9293e391@arm.com>
- <2472c182-834c-d2c1-175e-4d73898aef35@ti.com>
- <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <cf9c2dcc-57e8-cfa0-e3b4-55ff5113341f@ti.com>
-Date:   Mon, 4 May 2020 18:23:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <4f333ceb-2809-c4ae-4ae3-33a83c612cd3@arm.com>
+        Mon, 4 May 2020 08:54:12 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200504125410euoutp024edb891a0ce145918f4a5b3d31b797c4~L1GtO0qEH1779417794euoutp02E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:54:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200504125410euoutp024edb891a0ce145918f4a5b3d31b797c4~L1GtO0qEH1779417794euoutp02E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1588596850;
+        bh=axunh1IQkLSrq+yQ6b8oQPSu9vjhL9vwC+tOp/2Weyw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S5Uh9j5Y/WQ3mclJD4TtMC0uJWCTTOq5P9af9Ye7snQAx3McIEf20/N4t0W2cXXK2
+         bV56idYXlJKZwV+hwDuzHCbgV7iCUrXO/dC59+qBJ3kwzLb2mSV1PLSvgVzCjJrUiS
+         mj1W4NlgCDH2Nm53fuh1n3lqZpRtXEwOYY1cCt2Y=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200504125410eucas1p1424d1bddb2fdbd37118a13a49f218101~L1Gs9u_Tb0159301593eucas1p16;
+        Mon,  4 May 2020 12:54:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 69.61.61286.27010BE5; Mon,  4
+        May 2020 13:54:10 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200504125409eucas1p2225bf61e6a293eb4da81ec26341488f3~L1GsXPcpC2226922269eucas1p2n;
+        Mon,  4 May 2020 12:54:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200504125409eusmtrp1ffd21b736e32b3480030799b3c707e4d~L1GsWQGG_2497724977eusmtrp1R;
+        Mon,  4 May 2020 12:54:09 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-ee-5eb01072b78f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 32.06.07950.17010BE5; Mon,  4
+        May 2020 13:54:09 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200504125409eusmtip2d4ce3360799e751dcef40defd5ef9c3d~L1Grt2Ja_0241002410eusmtip2F;
+        Mon,  4 May 2020 12:54:09 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v2 01/21] drm: core: fix sg_table nents vs. orig_nents
+ misuse
+Date:   Mon,  4 May 2020 14:53:39 +0200
+Message-Id: <20200504125359.5678-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200504125017.5494-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0gUURTm7szOjptr02p51NDYSNDIRxpNapJhMBBR0B+ztKYcVstV2VHT
+        CLJ8UNsa5gaJlS0pvtM0MzPKfG4lii9SKVNzEx+Jlq6mlOU6Wv++8z3udzhcEpPnie3JiKhY
+        Th3FRioIKV7dsti+S009CfWYattBp7e/E9EVWeVi+k/1bYzuMU0TdFFJs4jW1/nScz3DIrpy
+        5IOY7q69T9CPmwYkdP2MUXxgA1OaU4qYV/N6nHk+PyRmBm8aRMzTvCvMx+URjNH1FSDmZX8S
+        wdyqKkbMbKXjMWmw1C+Mi4yI59Tu/mek4ekDQTFpjgmlmf3iJKSx0yALEihveJ/fTGiQlJRT
+        hQhKTDOEWZBTcwjK2oIFYRbB5EMjtp4wNqaIBKEAQX2LDhOGlcTvpk6x2UVQnqCZ0qw+ZUOl
+        InibbmnGGJUlgubJOA0iSWvqKNTO8mYap3bA2PcvEjOWUX6QttCIhDInKHnyBjPbLaj9UHfj
+        uLkKqDIJ3HthJARPICTnTuICtoYJQ5VEwFuhVafFhUAyguH2xxJh0CLovpa11uALn9qXCHMD
+        RrlAea27QAfA2MOxVRooK+ib2iSsbwWZ1XcxgZbB9TS54HaGbEPZv9r6jq61WzHQmD+OC+fJ
+        QJAyWoxnIKfs/2V6hIqRLRfHq5Qc7xnFXXTjWRUfF6V0OxetqkQrf6d12fCjBpm6zjYgikQK
+        S1nQbHmoXMzG84mqBgQkprCR1aSsULIwNvESp44+rY6L5PgG5EDiCluZ16PxEDmlZGO5CxwX
+        w6nXVRFpYZ+EfJ4Zi4YOusQHjp6S9C0mzG2z3+l43uHwA9e9zoO6y1q7MI/aLSGOhpzx6V+F
+        vZVBXspCNnZgaeDrnlRXntX6qPadCNb7n8zVvD6EPLVFrlcH9fLhz8sQg/wnvTsWqifuxOhC
+        g/CKzUexHO323Z0h0aamky0LAVNHvo1s/Dlm26vA+XDW0xVT8+xfU1n6hTcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42I5/e/4Pd1CgQ1xBjf3m1r0njvJZLFxxnpW
+        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hs1h75C67xcEPT1gduD3WzFvD
+        6LH32wIWj+3fHrB63O8+zuSxeUm9x+1/j5k9Jt9Yzuix+2YDm0ffllWMHp83yQVwRenZFOWX
+        lqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehl9N6NKGiTq1gz
+        6SZrA2OXZBcjJ4eEgInEk8MtTF2MXBxCAksZJT4+2cQMkZCRODmtgRXCFpb4c62LDaLoE6PE
+        qmU/wBJsAoYSXW8hEiICnYwS07o/soM4zALzmCQWPTzEDlIlLOAr8WrRdUYQm0VAVeLFx0dg
+        cV4BG4m274cZIVbIS6zecABoNQcHp4CtxP7OYJCwEFDJxwVLmCcw8i1gZFjFKJJaWpybnlts
+        pFecmFtcmpeul5yfu4kRGAvbjv3csoOx613wIUYBDkYlHt4NX9fHCbEmlhVX5h5ilOBgVhLh
+        3dECFOJNSaysSi3Kjy8qzUktPsRoCnTTRGYp0eR8YJzmlcQbmhqaW1gamhubG5tZKInzdggc
+        jBESSE8sSc1OTS1ILYLpY+LglGpg7O89c0vEvPfWl+2eq9rTj93kLJY6KDJ7VxTHsafvmItD
+        XjRUZ7LzOn/ZMVfq+vmS+PbCW4dW3/y8zue36O5o/yVFfipur976z2E4YD23yXmChukjTrNr
+        amKv20XmqupfZqvhfZO18nHa8pWBilZPHEwar+0T+lqZFVAQtD9uwT8h6VyF96zlSizFGYmG
+        WsxFxYkAEpMMU5sCAAA=
+X-CMS-MailID: 20200504125409eucas1p2225bf61e6a293eb4da81ec26341488f3
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-RootMTR: 20200504125409eucas1p2225bf61e6a293eb4da81ec26341488f3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200504125409eucas1p2225bf61e6a293eb4da81ec26341488f3
+References: <20200504125017.5494-1-m.szyprowski@samsung.com>
+        <CGME20200504125409eucas1p2225bf61e6a293eb4da81ec26341488f3@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
+numer of the created entries in the DMA address space. However the
+subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
+called with the original number of entries passed to dma_map_sg. The
+sg_table->nents in turn holds the result of the dma_map_sg call as stated
+in include/linux/scatterlist.h. Adapt the code to obey those rules.
 
-On 5/4/2020 4:24 PM, Robin Murphy wrote:
-> On 2020-05-04 9:44 am, Kishon Vijay Abraham I wrote:
->> Hi Robin,
->>
->> On 5/1/2020 9:24 PM, Robin Murphy wrote:
->>> On 2020-05-01 3:46 pm, Lorenzo Pieralisi wrote:
->>>> [+Robin - to check on dma-ranges intepretation]
->>>>
->>>> I would need RobH and Robin to review this.
->>>>
->>>> Also, An ACK from Tom is required - for the whole series.
->>>>
->>>> On Fri, Apr 17, 2020 at 05:13:20PM +0530, Kishon Vijay Abraham I wrote:
->>>>> Cadence PCIe core driver (host mode) uses "cdns,no-bar-match-nbits"
->>>>> property to configure the number of bits passed through from PCIe
->>>>> address to internal address in Inbound Address Translation register.
->>>>>
->>>>> However standard PCI dt-binding already defines "dma-ranges" to
->>>>> describe the address range accessible by PCIe controller. Parse
->>>>> "dma-ranges" property to configure the number of bits passed
->>>>> through from PCIe address to internal address in Inbound Address
->>>>> Translation register.
->>>>>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>> ---
->>>>>    drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
->>>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> index 9b1c3966414b..60f912a657b9 100644
->>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->>>>> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>        struct device *dev = rc->pcie.dev;
->>>>>        struct platform_device *pdev = to_platform_device(dev);
->>>>>        struct device_node *np = dev->of_node;
->>>>> +    struct of_pci_range_parser parser;
->>>>>        struct pci_host_bridge *bridge;
->>>>>        struct list_head resources;
->>>>> +    struct of_pci_range range;
->>>>>        struct cdns_pcie *pcie;
->>>>>        struct resource *res;
->>>>>        int ret;
->>>>> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>>>>        rc->max_regions = 32;
->>>>>        of_property_read_u32(np, "cdns,max-outbound-regions",
->>>>> &rc->max_regions);
->>>>>    -    rc->no_bar_nbits = 32;
->>>>> -    of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
->>>>> +    if (!of_pci_dma_range_parser_init(&parser, np))
->>>>> +        if (of_pci_range_parser_one(&parser, &range))
->>>>> +            rc->no_bar_nbits = ilog2(range.size);
->>>
->>> You probably want "range.pci_addr + range.size" here just in case the bottom of
->>> the window is ever non-zero. Is there definitely only ever a single inbound
->>> window to consider?
->>
->> Cadence IP has 3 inbound address translation registers, however we use only 1
->> inbound address translation register to map the entire 32 bit or 64 bit address
->> region.
-> 
-> OK, if anything that further strengthens the argument for deprecating a single
-> "number of bits" property in favour of ranges that accurately describe the
-> window(s). However it also suggests that other users in future might have some
-> expectation that specifying "dma-ranges" with up to 3 entries should work to
-> allow a more restrictive inbound configuration. Thus it would be desirable to
-> make the code a little more robust here - even if we don't support multiple
-> windows straight off, it would still be better to implement it in a way that
-> can be cleanly extended later, and at least say something if more ranges are
-> specified rather than just silently ignoring them.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/gpu/drm/drm_cache.c            | 2 +-
+ drivers/gpu/drm/drm_gem_shmem_helper.c | 7 ++++---
+ drivers/gpu/drm/drm_prime.c            | 9 +++++----
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
-I looked at this further in the Cadence user doc. The three inbound ATU entries
-are for BAR0, BAR1 in RC configuration space and the third one is for NO MATCH
-BAR when there is no matching found in RC BARs. Right now we always configure
-the NO MATCH BAR. Would it be possible describe at BAR granularity in dma-ranges?
-> 
->>> I believe that pci_parse_request_of_pci_ranges() could do the actual parsing
->>> for you, but I suppose plumbing that in plus processing the resulting
->>> dma_ranges resource probably ends up a bit messier than the concise open-coding
->>> here.
->>
->> right, pci_parse_request_of_pci_ranges() parses "ranges" property and is used
->> for outbound configuration, whereas here we parse "dma-ranges" property and is
->> used for inbound configuration.
-> 
-> If you give it a valid third argument it *also* parses "dma-ranges" into a list
-> of inbound regions. This is already used by various other drivers for
-> equivalent inbound window setup, which is what I was hinting at before, but
-> given the extensibility argument above I'm now going to actively suggest
-> following that pattern for consistency.
-yeah, just got to know about this.
+diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
+index 03e01b0..63bd497 100644
+--- a/drivers/gpu/drm/drm_cache.c
++++ b/drivers/gpu/drm/drm_cache.c
+@@ -127,7 +127,7 @@ static void drm_cache_flush_clflush(struct page *pages[],
+ 		struct sg_page_iter sg_iter;
+ 
+ 		mb(); /*CLFLUSH is ordered only by using memory barriers*/
+-		for_each_sg_page(st->sgl, &sg_iter, st->nents, 0)
++		for_each_sg_page(st->sgl, &sg_iter, st->orig_nents, 0)
+ 			drm_clflush_page(sg_page_iter_page(&sg_iter));
+ 		mb(); /*Make sure that all cache line entry is flushed*/
+ 
+diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+index df31e57..f47caa7 100644
+--- a/drivers/gpu/drm/drm_gem_shmem_helper.c
++++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+@@ -118,7 +118,7 @@ void drm_gem_shmem_free_object(struct drm_gem_object *obj)
+ 	} else {
+ 		if (shmem->sgt) {
+ 			dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
+-				     shmem->sgt->nents, DMA_BIDIRECTIONAL);
++				     shmem->sgt->orig_nents, DMA_BIDIRECTIONAL);
+ 			sg_free_table(shmem->sgt);
+ 			kfree(shmem->sgt);
+ 		}
+@@ -396,7 +396,7 @@ void drm_gem_shmem_purge_locked(struct drm_gem_object *obj)
+ 	WARN_ON(!drm_gem_shmem_is_purgeable(shmem));
+ 
+ 	dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
+-		     shmem->sgt->nents, DMA_BIDIRECTIONAL);
++		     shmem->sgt->orig_nents, DMA_BIDIRECTIONAL);
+ 	sg_free_table(shmem->sgt);
+ 	kfree(shmem->sgt);
+ 	shmem->sgt = NULL;
+@@ -623,7 +623,8 @@ struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *obj)
+ 		goto err_put_pages;
+ 	}
+ 	/* Map the pages for use by the h/w. */
+-	dma_map_sg(obj->dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
++	sgt->nents = dma_map_sg(obj->dev->dev, sgt->sgl, sgt->orig_nents,
++				DMA_BIDIRECTIONAL);
+ 
+ 	shmem->sgt = sgt;
+ 
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index 282774e..f3e2d2a 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -626,8 +626,9 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
+ 	else
+ 		sgt = obj->dev->driver->gem_prime_get_sg_table(obj);
+ 
+-	if (!dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
+-			      DMA_ATTR_SKIP_CPU_SYNC)) {
++	sgt->nents = dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->orig_nents,
++				      dir, DMA_ATTR_SKIP_CPU_SYNC);
++	if (!sgt->nents) {
+ 		sg_free_table(sgt);
+ 		kfree(sgt);
+ 		sgt = ERR_PTR(-ENOMEM);
+@@ -652,7 +653,7 @@ void drm_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
+ 	if (!sgt)
+ 		return;
+ 
+-	dma_unmap_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
++	dma_unmap_sg_attrs(attach->dev, sgt->sgl, sgt->orig_nents, dir,
+ 			   DMA_ATTR_SKIP_CPU_SYNC);
+ 	sg_free_table(sgt);
+ 	kfree(sgt);
+@@ -975,7 +976,7 @@ int drm_prime_sg_to_page_addr_arrays(struct sg_table *sgt, struct page **pages,
+ 	 */
+ 	page_index = 0;
+ 	dma_index = 0;
+-	for_each_sg(sgt->sgl, sg, sgt->nents, count) {
++	for_each_sg(sgt->sgl, sg, sgt->orig_nents, count) {
+ 		page_len = sg->length;
+ 		page = sg_page(sg);
+ 		dma_len = sg_dma_len(sg);
+-- 
+1.9.1
 
-Thanks
-Kishon
