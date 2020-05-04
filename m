@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EE7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDDC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F4C20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9565206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Xw1O5YFA"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="RLh3ufIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgEDMFW (ORCPT
+        id S1728754AbgEDMFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57772 "EHLO
+        Mon, 4 May 2020 08:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728733AbgEDMFU (ORCPT
+        by vger.kernel.org with ESMTP id S1726797AbgEDMFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:05:20 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B7AC061A0F
+        Mon, 4 May 2020 08:05:21 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C50C061A10
         for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 05:05:20 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id g185so2655765qke.7
+Received: by mail-qk1-x744.google.com with SMTP id q7so16223249qkf.3
         for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 05:05:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AkV9Ms3hREYQxDI7vbI/vre83zHV+UkAnE8bMyGSE40=;
-        b=Xw1O5YFAMOdNkTA0GRsuZN/EHqty3MLT15ZROyM4ee26FXm7poVBfNDJKGF8+6vHWK
-         iV/+oczWlxYvSad7X7Mr1ieD1IuwZjsAknyhUW8MMOaG5ecGxUGDrq9/uPI2x0/jHM/K
-         ED0UJwOcWTJ23fB2jd3sOb1pSC3Ml8k2YfE/A=
+        bh=VDKqK5vboDPN0MSXFBVx837WJ5aTs/ItYy0UQe5d/bA=;
+        b=RLh3ufIYu+6pP0zyIJ/DVmenRYKyezNLIgKu+QFjzYmj1qNXlWtqOSq1NDXqWxc39d
+         I0hL1CCE69n7rGmHq2J/OLnoI8FtSBNsUnL3X6tx3Ue9RLcQAOg+TZz4MYLKKsg5z53j
+         acqkikq0cvAYrDhiDjcsyagbHsq52I6O6voaw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AkV9Ms3hREYQxDI7vbI/vre83zHV+UkAnE8bMyGSE40=;
-        b=KAw/yAS8e5Ov3tTS5BDkyi+gVHn9u+RPPkD5AvZ+FWYPfTjh3fGHSqS8jda77pSAo0
-         SI68/kQBrZIifB8XsNrJ48x3q9GBMHQQjlehtI0NAUgy5apLiGQSBPj3ernnZWUmOpbV
-         mSNwzvvthBN06TMhemu0u6cWFpIZdWjHDzzFYAyrWF/mgmNpseyXI6SclTCarlFyy9Un
-         7V++/nWYl+wMcjyJHceL/AIviL154enJRbiU1grcGcOe2JTHOisdetAgYYoQH2M0QXGc
-         VpjewMRzIBR3dQAfpKwsJNFxmzW2+fj9B5fcrOdeb5+A543GXz9zAQop94v9O4LfUsOh
-         rHhA==
-X-Gm-Message-State: AGi0PuZ2WnfUlW+R3nHuLFN3lrExgjoKeCgEMFhpSE69DLkCGSrM0VEy
-        YRFXoPwOLGKVi/rYoBqDy63Kud4jumo=
-X-Google-Smtp-Source: APiQypJYQMsgW1be3aeepNkiH8+m/0+inCleC9mF3XGU/Ou4Ft52TSrGTSg+934E6/sgZnJZaApt3g==
-X-Received: by 2002:a37:804:: with SMTP id 4mr7969049qki.405.1588593918568;
-        Mon, 04 May 2020 05:05:18 -0700 (PDT)
+        bh=VDKqK5vboDPN0MSXFBVx837WJ5aTs/ItYy0UQe5d/bA=;
+        b=AEhkVboPSVed/t0bIqIaH1B5c7U44/Zt/PhpAl4VbduH85lpTII6jGezq2Zr+mUJl+
+         GsNqCo3VQUqCBOVcQJbBMxYK7hWZETQj0PHhiF4lr5i45dd98ZUwXZMvJdL7A19x3pnP
+         lnKoC/gbf8p+y56owIvSA4V4yJY3teZ6R5BX3A0Q2OYNcrlQaz4zNdc92p2FQ9a8UONU
+         Fnqmo2GApy1YK3hAKeov5wh4Cdt4xs5MqnkS72USCeJKbZsk6ednMKInfuTnF96viuV5
+         /e6EoQskYvY8vqogUfybW9x6l2m6yFjk8MSAbyy7JQBInivD9DamH4ikpJPkUdtzGQyn
+         N9hQ==
+X-Gm-Message-State: AGi0PuZOR+kYlA2qKX/8tbHOQaWLeyt0FJr8VeLk7kS89+ONvRr893fh
+        nC1PjbQMyuAqyNb/49cLUS2UdNnrVVQ=
+X-Google-Smtp-Source: APiQypJmtYdA2jscBR+3U0tbmE/OVOy8UnvuKOA5X9n8+WSeEH5F+0mt00jXgfPewO/v0VnmsM9EDg==
+X-Received: by 2002:a37:d247:: with SMTP id f68mr14708199qkj.362.1588593919651;
+        Mon, 04 May 2020 05:05:19 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id y50sm6194534qta.56.2020.05.04.05.05.17
+        by smtp.gmail.com with ESMTPSA id y50sm6194534qta.56.2020.05.04.05.05.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 05:05:17 -0700 (PDT)
+        Mon, 04 May 2020 05:05:19 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -69,9 +69,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Paul E. McKenney" <paulmck@kernel.org>, peterz@infradead.org,
         Petr Mladek <pmladek@suse.com>, rcu@vger.kernel.org,
         rostedt@goodmis.org, tglx@linutronix.de, vpillai@digitalocean.com
-Subject: [PATCH v3 2/5] rcu/tree: Add better tracing for dyntick-idle
-Date:   Mon,  4 May 2020 08:05:02 -0400
-Message-Id: <20200504120505.89351-3-joel@joelfernandes.org>
+Subject: [PATCH v3 3/5] rcu/tree: Clean up dynticks counter usage
+Date:   Mon,  4 May 2020 08:05:03 -0400
+Message-Id: <20200504120505.89351-4-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 In-Reply-To: <20200504120505.89351-1-joel@joelfernandes.org>
 References: <20200504120505.89351-1-joel@joelfernandes.org>
@@ -82,145 +82,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dyntick-idle traces are a bit confusing. This patch makes it simpler
-and adds some missing cases such as EQS-enter due to user vs idle mode.
+The dynticks counter are confusing due to crowbar writes of
+DYNTICK_IRQ_NONIDLE whose purpose is to detect half-interrupts (i.e. we
+see rcu_irq_enter() but not rcu_irq_exit() due to a usermode upcall) and
+if so then do a reset of the dyntick_nmi_nesting counters. This patch
+tries to get rid of DYNTICK_IRQ_NONIDLE while still keeping the code
+working, fully functional, and less confusing. The confusion recently
+has even led to patches forgetting that DYNTICK_IRQ_NONIDLE was written
+to which wasted lots of time.
 
-Following are the changes:
-(1) Add a new context field to trace_rcu_dyntick tracepoint. This
-    context field can be "USER", "IDLE" or "IRQ".
+The patch has the following changes:
 
-(2) Remove the "++=" and "--=" strings and replace them with
-   "StillNonIdle". This is much easier on the eyes, and the -- and ++
-   are easily apparent in the dynticks_nesting counters we are printing
-   anyway.
+(1) Use dynticks_nesting instead of dynticks_nmi_nesting for determining
+outer most "EQS exit". This is needed to detect in
+rcu_nmi_enter_common() if we have already EQS-exited, such as because of
+a syscall. Currently we rely on a forced write of DYNTICK_IRQ_NONIDLE
+from rcu_eqs_exit() for this purpose. This is one purpose of the
+DYNTICK_IRQ_NONIDLE write (other than detecting half-interrupts).
+However, we do not need to do that. dyntick_nesting already tells us that
+we have EQS-exited so just use that thus removing the dependence of
+dynticks_nmi_nesting for this purpose.
+
+(2) Keep dynticks_nmi_nesting around because:
+
+  (a) rcu_is_cpu_rrupt_from_idle() needs to be able to detect first
+      interrupt nesting level.
+
+  (b) We need to detect half-interrupts till we are sure they're not an
+      issue. However, change the comparison to DYNTICK_IRQ_NONIDLE with 0.
+
+(3) Since we got rid of DYNTICK_IRQ_NONIDLE, we also do cheaper
+comparisons with zero instead for the code that keeps the tick on in
+rcu_nmi_enter_common().
+
+In the next patch, both of the concerns of (2) will be addressed and
+then we can get rid of dynticks_nmi_nesting, however one step at a time.
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- include/trace/events/rcu.h | 29 ++++++++++++++++-------------
- kernel/rcu/tree.c          | 20 +++++++++++++-------
- 2 files changed, 29 insertions(+), 20 deletions(-)
+ kernel/rcu/rcu.h  |  4 ----
+ kernel/rcu/tree.c | 58 +++++++++++++++++++++++++++--------------------
+ 2 files changed, 34 insertions(+), 28 deletions(-)
 
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index f9a7811148e2a..164c43b72ca29 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -435,26 +435,28 @@ TRACE_EVENT_RCU(rcu_fqs,
- #endif /* #if defined(CONFIG_TREE_RCU) */
+diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+index cf66a3ccd7573..b9f64abc48b85 100644
+--- a/kernel/rcu/rcu.h
++++ b/kernel/rcu/rcu.h
+@@ -12,10 +12,6 @@
  
+ #include <trace/events/rcu.h>
+ 
+-/* Offset to allow distinguishing irq vs. task-based idle entry/exit. */
+-#define DYNTICK_IRQ_NONIDLE	((LONG_MAX / 2) + 1)
+-
+-
  /*
-- * Tracepoint for dyntick-idle entry/exit events.  These take a string
-- * as argument: "Start" for entering dyntick-idle mode, "Startirq" for
-- * entering it from irq/NMI, "End" for leaving it, "Endirq" for leaving it
-- * to irq/NMI, "--=" for events moving towards idle, and "++=" for events
-- * moving away from idle.
-+ * Tracepoint for dyntick-idle entry/exit events.  These take 2 strings
-+ * as argument:
-+ * polarilty: "Start", "End", "StillIdle" for entering, exiting or still being
-+ * in dyntick-idle mode.
-+ * context: "USER" or "KERNEL" or "IRQ".
-+ * NMIs nested in IRQs are inferred with dynticks_nesting > 1 in IRQ context.
-  *
-  * These events also take a pair of numbers, which indicate the nesting
-  * depth before and after the event of interest, and a third number that is
-- * the ->dynticks counter.  Note that task-related and interrupt-related
-- * events use two separate counters, and that the "++=" and "--=" events
-- * for irq/NMI will change the counter by two, otherwise by one.
-+ * the ->dynticks counter. During NMI nesting within IRQs, the dynticks_nesting
-+ * counter changes by two, otherwise one.
+  * Grace-period counter management.
   */
- TRACE_EVENT_RCU(rcu_dyntick,
- 
--	TP_PROTO(const char *polarity, long oldnesting, long newnesting, int dynticks),
-+	TP_PROTO(const char *polarity, const char *context, long oldnesting,
-+		 long newnesting, int dynticks),
- 
--	TP_ARGS(polarity, oldnesting, newnesting, dynticks),
-+	TP_ARGS(polarity, context, oldnesting, newnesting, dynticks),
- 
- 	TP_STRUCT__entry(
- 		__field(const char *, polarity)
-+		__field(const char *, context)
- 		__field(long, oldnesting)
- 		__field(long, newnesting)
- 		__field(int, dynticks)
-@@ -462,14 +464,15 @@ TRACE_EVENT_RCU(rcu_dyntick,
- 
- 	TP_fast_assign(
- 		__entry->polarity = polarity;
-+		__entry->context = context;
- 		__entry->oldnesting = oldnesting;
- 		__entry->newnesting = newnesting;
- 		__entry->dynticks = dynticks;
- 	),
- 
--	TP_printk("%s %lx %lx %#3x", __entry->polarity,
--		  __entry->oldnesting, __entry->newnesting,
--		  __entry->dynticks & 0xfff)
-+	TP_printk("%s %s %lx %lx %#3x", __entry->polarity,
-+		__entry->context, __entry->oldnesting, __entry->newnesting,
-+		__entry->dynticks & 0xfff)
- );
- 
- /*
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 1ec7b1d4a03c4..eb7a4d90b3b91 100644
+index eb7a4d90b3b91..d6df8abdcc21f 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -573,7 +573,8 @@ static void rcu_eqs_enter(bool user)
- 	}
+@@ -84,7 +84,6 @@
  
- 	lockdep_assert_irqs_disabled();
--	trace_rcu_dyntick(TPS("Start"), rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
-+	trace_rcu_dyntick(TPS("Start"), (user ? TPS("USER") : TPS("IDLE")),
-+			  rdp->dynticks_nesting, 0, atomic_read(&rdp->dynticks));
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
- 	rdp = this_cpu_ptr(&rcu_data);
- 	do_nocb_deferred_wakeup(rdp);
-@@ -648,15 +649,17 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+ static DEFINE_PER_CPU_SHARED_ALIGNED(struct rcu_data, rcu_data) = {
+ 	.dynticks_nesting = 1,
+-	.dynticks_nmi_nesting = DYNTICK_IRQ_NONIDLE,
+ 	.dynticks = ATOMIC_INIT(1),
+ };
+ static struct rcu_state rcu_state = {
+@@ -553,17 +552,19 @@ EXPORT_SYMBOL_GPL(rcutorture_get_gp_data);
+ /*
+  * Enter an RCU extended quiescent state, which can be either the
+  * idle loop or adaptive-tickless usermode execution.
+- *
+- * We crowbar the ->dynticks_nmi_nesting field to zero to allow for
+- * the possibility of usermode upcalls having messed up our count
+- * of interrupt nesting level during the prior busy period.
+  */
+ static void rcu_eqs_enter(bool user)
+ {
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 
+-	WARN_ON_ONCE(rdp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
+-	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
++	/*
++	 * Entering usermode/idle from interrupt is not handled. These would
++	 * mean usermode upcalls or idle exit happened from interrupts. Remove
++	 * the warning by 2020.
++	 */
++	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
++		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
++
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
+ 		     rdp->dynticks_nesting == 0);
+ 	if (rdp->dynticks_nesting != 1) {
+@@ -641,26 +642,29 @@ static __always_inline void rcu_nmi_exit_common(bool irq)
+ 	 * (We are exiting an NMI handler, so RCU better be paying attention
+ 	 * to us!)
+ 	 */
++	WARN_ON_ONCE(rdp->dynticks_nesting <= 0);
+ 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting <= 0);
+ 	WARN_ON_ONCE(rcu_dynticks_curr_cpu_in_eqs());
+ 
++	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
++		   rdp->dynticks_nmi_nesting - 1);
+ 	/*
+ 	 * If the nesting level is not 1, the CPU wasn't RCU-idle, so
  	 * leave it in non-RCU-idle state.
  	 */
- 	if (rdp->dynticks_nmi_nesting != 1) {
--		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
--				  atomic_read(&rdp->dynticks));
-+		trace_rcu_dyntick(TPS("StillNonIdle"), TPS("IRQ"),
-+				  rdp->dynticks_nmi_nesting,
-+				  rdp->dynticks_nmi_nesting - 2, atomic_read(&rdp->dynticks));
- 		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
- 			   rdp->dynticks_nmi_nesting - 2);
+-	if (rdp->dynticks_nmi_nesting != 1) {
++	if (rdp->dynticks_nesting != 1) {
+ 		trace_rcu_dyntick(TPS("StillNonIdle"), TPS("IRQ"),
+-				  rdp->dynticks_nmi_nesting,
+-				  rdp->dynticks_nmi_nesting - 2, atomic_read(&rdp->dynticks));
+-		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+-			   rdp->dynticks_nmi_nesting - 2);
++				  rdp->dynticks_nesting,
++				  rdp->dynticks_nesting - 2, atomic_read(&rdp->dynticks));
++		WRITE_ONCE(rdp->dynticks_nesting, /* No store tearing. */
++			   rdp->dynticks_nesting - 2);
  		return;
  	}
  
  	/* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
--	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
-+	trace_rcu_dyntick(TPS("Start"), TPS("IRQ"), rdp->dynticks_nmi_nesting,
-+			  0, atomic_read(&rdp->dynticks));
- 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+-	trace_rcu_dyntick(TPS("Start"), TPS("IRQ"), rdp->dynticks_nmi_nesting,
++	trace_rcu_dyntick(TPS("Start"), TPS("IRQ"), rdp->dynticks_nesting,
+ 			  0, atomic_read(&rdp->dynticks));
+-	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
++	WRITE_ONCE(rdp->dynticks_nesting, 0); /* Avoid store tearing. */
  
  	if (irq)
-@@ -748,7 +751,8 @@ static void rcu_eqs_exit(bool user)
- 	rcu_dynticks_eqs_exit();
- 	// ... but is watching here.
- 	rcu_cleanup_after_idle();
--	trace_rcu_dyntick(TPS("End"), rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
-+	trace_rcu_dyntick(TPS("End"), (user ? TPS("USER") : TPS("IDLE")),
-+			  rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
+ 		rcu_prepare_for_idle();
+@@ -727,10 +731,6 @@ void rcu_irq_exit_irqson(void)
+ /*
+  * Exit an RCU extended quiescent state, which can be either the
+  * idle loop or adaptive-tickless usermode execution.
+- *
+- * We crowbar the ->dynticks_nmi_nesting field to DYNTICK_IRQ_NONIDLE to
+- * allow for the possibility of usermode upcalls messing up our count of
+- * interrupt nesting level during the busy period that is just now starting.
+  */
+ static void rcu_eqs_exit(bool user)
+ {
+@@ -755,8 +755,14 @@ static void rcu_eqs_exit(bool user)
+ 			  rdp->dynticks_nesting, 1, atomic_read(&rdp->dynticks));
  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
  	WRITE_ONCE(rdp->dynticks_nesting, 1);
- 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
-@@ -850,9 +854,11 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
- 		}
- 		raw_spin_unlock_rcu_node(rdp->mynode);
+-	WARN_ON_ONCE(rdp->dynticks_nmi_nesting);
+-	WRITE_ONCE(rdp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
++
++	/*
++	 * Exiting usermode/idle from interrupt is not handled. These would
++	 * mean usermode upcalls or idle exit happened from interrupts. Remove
++	 * the warning by 2020.
++	 */
++	if (WARN_ON_ONCE(rdp->dynticks_nmi_nesting != 0))
++		WRITE_ONCE(rdp->dynticks_nmi_nesting, 0);
+ }
+ 
+ /**
+@@ -812,6 +818,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 
+ 	/* Complain about underflow. */
++	WARN_ON_ONCE(rdp->dynticks_nesting < 0);
+ 	WARN_ON_ONCE(rdp->dynticks_nmi_nesting < 0);
+ 
+ 	/*
+@@ -836,7 +843,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+ 
+ 		incby = 1;
+ 	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+-		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
++		   !rdp->dynticks_nmi_nesting &&
+ 		   READ_ONCE(rdp->rcu_urgent_qs) &&
+ 		   !READ_ONCE(rdp->rcu_forced_tick)) {
+ 		// We get here only if we had already exited the extended
+@@ -856,11 +863,14 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
  	}
--	trace_rcu_dyntick(incby == 1 ? TPS("Endirq") : TPS("++="),
--			  rdp->dynticks_nmi_nesting,
+ 
+ 	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
+-			  TPS("IRQ"), rdp->dynticks_nmi_nesting,
+-			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
++			  TPS("IRQ"), rdp->dynticks_nesting,
++			  rdp->dynticks_nesting + incby, atomic_read(&rdp->dynticks));
 +
-+	trace_rcu_dyntick(incby == 1 ? TPS("End") : TPS("StillNonIdle"),
-+			  TPS("IRQ"), rdp->dynticks_nmi_nesting,
- 			  rdp->dynticks_nmi_nesting + incby, atomic_read(&rdp->dynticks));
-+
++	WRITE_ONCE(rdp->dynticks_nesting, /* Prevent store tearing. */
++		   rdp->dynticks_nesting + incby);
+ 
  	WRITE_ONCE(rdp->dynticks_nmi_nesting, /* Prevent store tearing. */
- 		   rdp->dynticks_nmi_nesting + incby);
+-		   rdp->dynticks_nmi_nesting + incby);
++		   rdp->dynticks_nmi_nesting + 1);
  	barrier();
+ }
+ 
 -- 
 2.26.2.526.g744177e7f7-goog
 
