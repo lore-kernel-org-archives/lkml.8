@@ -2,34 +2,34 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E263C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174E7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6B3320735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F317420757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEDGhj (ORCPT
+        id S1727783AbgEDGjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:37:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49810 "EHLO mx2.suse.de"
+        Mon, 4 May 2020 02:39:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50204 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgEDGhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:37:38 -0400
+        id S1726660AbgEDGjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:39:06 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EBFF7ABBD;
-        Mon,  4 May 2020 06:37:38 +0000 (UTC)
-Subject: Re: [PATCH 1/3] tty: n_gsm: Improve debug output
+        by mx2.suse.de (Postfix) with ESMTP id 7627AABBD;
+        Mon,  4 May 2020 06:39:06 +0000 (UTC)
+Subject: Re: [PATCH 2/3] tty: n_gsm: Fix SOF skipping
 To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 References: <20200430113433.2162886-1-gregory.clement@bootlin.com>
- <20200430113433.2162886-2-gregory.clement@bootlin.com>
+ <20200430113433.2162886-3-gregory.clement@bootlin.com>
 From:   Jiri Slaby <jslaby@suse.cz>
 Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
  mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
@@ -73,72 +73,32 @@ Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
  9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
  VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
  sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
-Message-ID: <344a3762-ddbe-f57a-6929-83bf255736ca@suse.cz>
-Date:   Mon, 4 May 2020 08:37:36 +0200
+Message-ID: <2484f5ee-a88d-9beb-231c-fdd307fc3400@suse.cz>
+Date:   Mon, 4 May 2020 08:39:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200430113433.2162886-2-gregory.clement@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200430113433.2162886-3-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 30. 04. 20, 13:34, Gregory CLEMENT wrote:
-> Use appropriate print helpers for debug messages.
+> For at least some modems like the TELIT LE910, skipping SOF makes
+> transfers blocking indefinitely after a short amount of data
+> transferred.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->  drivers/tty/n_gsm.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
+> Given the small improvement provided by skipping the SOF (just one
+> byte on about 100 bytes), it seems better to completely remove this
+> "feature" than make it optional.
 > 
-> diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-> index d77ed82a4840..4965e39e0223 100644
-> --- a/drivers/tty/n_gsm.c
-> +++ b/drivers/tty/n_gsm.c
-> @@ -459,7 +459,7 @@ static void gsm_print_packet(const char *hdr, int addr, int cr,
->  	if (!(debug & 1))
->  		return;
->  
-> -	pr_info("%s %d) %c: ", hdr, addr, "RC"[cr]);
-> +	pr_debug("%s %d) %c: ", hdr, addr, "RC"[cr]);
+> Fixes: 96fd7ce58ffb ("TTY: create drivers/tty and move the tty core files there")
 
-Now, you need both debug=1 module parameter *and* fiddling with
-dynamic_debug, if enabled. And it is enabled in most distros…
-
-We don't have any unconditional KERN_DEBUG printk helper, unfortunately.
-
->  	switch (control & ~PF) {
->  	case SABM:
-> @@ -504,18 +504,10 @@ static void gsm_print_packet(const char *hdr, int addr, int cr,
->  	else
->  		pr_cont("(F)");
->  
-> -	if (dlen) {
-> -		int ct = 0;
-> -		while (dlen--) {
-> -			if (ct % 8 == 0) {
-> -				pr_cont("\n");
-> -				pr_debug("    ");
-> -			}
-> -			pr_cont("%02X ", *data++);
-> -			ct++;
-> -		}
-> -	}
-> -	pr_cont("\n");
-> +	if (dlen)
-
-print_hex_dump* handle zero len quite well. No need for the if.
-
-> +		print_hex_dump_bytes("", DUMP_PREFIX_NONE, data, dlen);
-> +
-> +	pr_debug("\n");
-
-This is superfluous too. It was intended as the last \n in the previous
-code.
+Again, this is unlikely a correct "fixes" commit.
 
 thanks,
 -- 
