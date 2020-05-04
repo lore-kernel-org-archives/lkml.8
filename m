@@ -2,155 +2,263 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F1DC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27F7C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C26D4206F0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JtCWfSGU"
+	by mail.kernel.org (Postfix) with ESMTP id 876B22071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 01:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgEDBFh (ORCPT
+        id S1727779AbgEDBJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 21:05:37 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:37862 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgEDBFg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 21:05:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588554334; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=F3RwTvS4W/Ru6HPIjFj+d9jqrjj8rrS76agrs9WAWAA=;
-        b=JtCWfSGUh9re+3gtwIPVYhHKnqMydySyvWFRBnxPdQAKrSWiJggKm7kP2Ph05Ebp13bNoI
-        +MKgD6goxUhrjziZPjjkolIMpyezdg9oMQZoeimI6b9XAUNDW/oeQUqR4wGUH+XREi0Hi/
-        laW0mz6FxfeLc/Bnh8cccgXXwkkkBSM=
-Date:   Mon, 04 May 2020 03:05:22 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: DRM interaction problems on Ingenic CI20 / jz4780 with dw-hdmi
- and ingenic-drm
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Dave Airlie <airlied@linux.ie>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Paul Boddie <paul@boddie.org.uk>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>
-Message-Id: <YC8S9Q.M96AR8DWGF0F1@crapouillou.net>
-In-Reply-To: <125Q8Q.9F49TXF6ZICX1@crapouillou.net>
-References: <ED77DCA8-FF50-4E9E-A4B8-688262774723@goldelico.com>
-        <125Q8Q.9F49TXF6ZICX1@crapouillou.net>
+        Sun, 3 May 2020 21:09:24 -0400
+Received: from mga12.intel.com ([192.55.52.136]:29566 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgEDBJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 21:09:23 -0400
+IronPort-SDR: 2sDOfcb3F5mRDbZN8aJU/gfb91dFXUDELpw5XVXoaOIKsW+Yv3eupo5GnIKkVYVSGFFA4kM5YN
+ Ni//qPIBfQHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 18:09:21 -0700
+IronPort-SDR: 5JoyiIVwom1lkt6Vg0SCXKYR4YSDxajShQ4pXaZ+YL/BI2Wr1bMA05ygOTiJSAB3ffIfcCKkOE
+ Bmvncx5YYtNQ==
+X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
+   d="scan'208";a="277386312"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 18:09:20 -0700
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH V2 01/11] arch/kmap: Remove BUG_ON()
+Date:   Sun,  3 May 2020 18:09:02 -0700
+Message-Id: <20200504010912.982044-2-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200504010912.982044-1-ira.weiny@intel.com>
+References: <20200504010912.982044-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+From: Ira Weiny <ira.weiny@intel.com>
 
-So I just wrote a HDMI driver for a different chip, I guess I can=20
-answer some of your questions now.
+Replace the use of BUG_ON(in_interrupt()) in the kmap() and kunmap()
+in favor of might_sleep().
 
+Besides the benefits of might_sleep(), this normalizes the
+implementations such that they can be made generic in subsequent
+patches.
 
-Le lun. 13 avril 2020 =E0 13:25, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> Hi Nikolaus,
->=20
->=20
-> Le sam. 11 avril 2020 =E0 16:14, H. Nikolaus Schaller=20
-> <hns@goldelico.com> a =E9crit :
->> Hi,
->> we (Paul Boddie and me) are working to get HDMI functional on the
->> Ingenic CI20 board with jz4780 SoC which uses a specialization of
->> the dw-hdmi driver.
->>=20
->>=20
->> So far we have identified two issues.
->>=20
->> The first is that HPD interrupts are not properly processed.
->>=20
->> drm_helper_hpd_irq_event() is called by HPD events but
->> dev->mode_config.poll_enabled is false.
->>=20
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ arch/arc/include/asm/highmem.h        | 2 +-
+ arch/arc/mm/highmem.c                 | 2 +-
+ arch/arm/mm/highmem.c                 | 2 +-
+ arch/csky/mm/highmem.c                | 2 +-
+ arch/microblaze/include/asm/highmem.h | 2 +-
+ arch/mips/mm/highmem.c                | 2 +-
+ arch/nds32/mm/highmem.c               | 2 +-
+ arch/powerpc/include/asm/highmem.h    | 2 +-
+ arch/sparc/include/asm/highmem.h      | 4 ++--
+ arch/x86/mm/highmem_32.c              | 3 +--
+ arch/xtensa/include/asm/highmem.h     | 4 ++--
+ 11 files changed, 13 insertions(+), 14 deletions(-)
 
-This is to be used when there's no hardware interrupt. I believe you=20
-have one, right? Then call drm_kms_helper_hotplug_event() from the=20
-interrupt handler instead.
-
->> Therefore the interrupt is ignored and nothing happens.
->>=20
->> Now I wonder about the logic behind checking for poll_enabled.
->> I understand that a driver can do either polling or irq or both.
->>=20
->> Therefore handling the irq_event shouldn't be disabled by=20
->> poll_enabled
->> being false. Otherwise we can only do: nothing, polling, polling+irq
->> but not irq alone.
->>=20
->> The jz4780 hdmi subsystem (drm/bridge/dw-hdmi.c) uses
->>=20
->> 	connector->polled =3D DRM_CONNECTOR_POLL_HPD;
->>=20
->> but shouldn't this enable polling? Note that there seems to be
->> no (direct) call to drm_kms_helper_poll_init().
->>=20
->> If we set dev->mode_config.poll_enabled =3D true in
->> drm_helper_hpd_irq_event() things start to work.
->>=20
->> Please can you clarify what would be best practise here to
->> get HPD event handling working.
->>=20
-
-Remove that - this stuff is for hardware without interrupts, where=20
-everything has to be polled.
-
->> The other issue is in dw-hdmi.c:
->>=20
->> We found out that ingenic_drm_encoder_atomic_check() fails because
->>=20
->> info->num_bus_formats =3D=3D 0
->>=20
->> and not 1. This blocks further initialization.
->>=20
->> The reason seems to be that dw_hdmi_bridge_attach() does not call
->> drm_display_info_set_bus_formats() with a proper format like
->> other drivers (e.g. drm/bridge/ti-tfp410.c) are doing.
->>=20
->> We have patched to set a single bus format MEDIA_BUS_FMT_RGB888_1X24
->> and then DRM setup seems to work (although we still have no valid
->> HDMI signal but that is likely something else).
->>=20
->> Please can you explain how setting the bus format should be fixed
->> in dw-hdmi.c.
->>=20
-
-I'm not sure, but that information may come from EDID data. Are you=20
-able to obtain video modes from the connected monitor?
-
--Paul
-
->> If these questions should be forwarded to other specialists, please
->> do so.
->=20
-> It should be sent to the DRI mailing list, you missed the most=20
-> important one.
->=20
-> -Paul
->=20
->>=20
->> BR and thanks,
->> Nikolaus Schaller
-
+diff --git a/arch/arc/include/asm/highmem.h b/arch/arc/include/asm/highmem.h
+index 1af00accb37f..042e92921c4c 100644
+--- a/arch/arc/include/asm/highmem.h
++++ b/arch/arc/include/asm/highmem.h
+@@ -45,7 +45,7 @@ static inline void flush_cache_kmaps(void)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/arc/mm/highmem.c b/arch/arc/mm/highmem.c
+index fc8849e4f72e..39ef7b9a3aa9 100644
+--- a/arch/arc/mm/highmem.c
++++ b/arch/arc/mm/highmem.c
+@@ -51,7 +51,7 @@ static pte_t * fixmap_page_table;
+ 
+ void *kmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 
+diff --git a/arch/arm/mm/highmem.c b/arch/arm/mm/highmem.c
+index a76f8ace9ce6..cc6eb79ef20c 100644
+--- a/arch/arm/mm/highmem.c
++++ b/arch/arm/mm/highmem.c
+@@ -42,7 +42,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
+index 813129145f3d..690d678649d1 100644
+--- a/arch/csky/mm/highmem.c
++++ b/arch/csky/mm/highmem.c
+@@ -29,7 +29,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/microblaze/include/asm/highmem.h b/arch/microblaze/include/asm/highmem.h
+index 332c78e15198..99ced7278b5c 100644
+--- a/arch/microblaze/include/asm/highmem.h
++++ b/arch/microblaze/include/asm/highmem.h
+@@ -66,7 +66,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/mips/mm/highmem.c b/arch/mips/mm/highmem.c
+index d08e6d7d533b..edd889f6cede 100644
+--- a/arch/mips/mm/highmem.c
++++ b/arch/mips/mm/highmem.c
+@@ -28,7 +28,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
+index 022779af6148..4c7c28e994ea 100644
+--- a/arch/nds32/mm/highmem.c
++++ b/arch/nds32/mm/highmem.c
+@@ -24,7 +24,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/powerpc/include/asm/highmem.h b/arch/powerpc/include/asm/highmem.h
+index a4b65b186ec6..529512f6d65a 100644
+--- a/arch/powerpc/include/asm/highmem.h
++++ b/arch/powerpc/include/asm/highmem.h
+@@ -74,7 +74,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/sparc/include/asm/highmem.h b/arch/sparc/include/asm/highmem.h
+index 18d776925c45..7dd2d4b3f980 100644
+--- a/arch/sparc/include/asm/highmem.h
++++ b/arch/sparc/include/asm/highmem.h
+@@ -55,7 +55,7 @@ void kunmap_high(struct page *page);
+ 
+ static inline void *kmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 	return kmap_high(page);
+@@ -63,7 +63,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/x86/mm/highmem_32.c b/arch/x86/mm/highmem_32.c
+index 0a1898b8552e..8af66382672b 100644
+--- a/arch/x86/mm/highmem_32.c
++++ b/arch/x86/mm/highmem_32.c
+@@ -15,8 +15,7 @@ EXPORT_SYMBOL(kmap);
+ 
+ void kunmap(struct page *page)
+ {
+-	if (in_interrupt())
+-		BUG();
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+diff --git a/arch/xtensa/include/asm/highmem.h b/arch/xtensa/include/asm/highmem.h
+index 04e9340eac4b..413848cc1e56 100644
+--- a/arch/xtensa/include/asm/highmem.h
++++ b/arch/xtensa/include/asm/highmem.h
+@@ -73,7 +73,7 @@ static inline void *kmap(struct page *page)
+ 	 */
+ 	BUILD_BUG_ON(PKMAP_BASE <
+ 		     TLBTEMP_BASE_1 + TLBTEMP_SIZE);
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return page_address(page);
+ 	return kmap_high(page);
+@@ -81,7 +81,7 @@ static inline void *kmap(struct page *page)
+ 
+ static inline void kunmap(struct page *page)
+ {
+-	BUG_ON(in_interrupt());
++	might_sleep();
+ 	if (!PageHighMem(page))
+ 		return;
+ 	kunmap_high(page);
+-- 
+2.25.1
 
