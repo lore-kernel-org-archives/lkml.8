@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF1C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4343EC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A832075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268C7206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615657;
-	bh=CKAyMzgdGXCoYpRCj3cr2sVbSPR+LqD5jd9a361D360=;
+	s=default; t=1588615661;
+	bh=d+xFEZVtlJxwViYlMg9U/nr9NihjyZbPDu5cWuJZ6To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SA31cxNySOq8P7sKvp8I6nB1wRrtpEDTd6VoXwWdIIlOq4KZ4T1rCkofwsanRLRUw
-	 qyF2lbHl49KusYbsO/Ihzss9XIH+5b6+outYDDznirmTAg3zRmLzxAkH3TbuQGesLF
-	 a26ykzzOQFdYb0Yyp11rOqmwWDcd9XcaHIvd4Yc4=
+	b=FS5U+aWkJffyUtOlf6GVyAgYlVl3o6IyesNrs9TDO85J3H8FVevq63sJm5tjc/XHm
+	 czl/WyhOmXmjlndHKahBA5rbse+qhlWlZ/MRWxxMRnYl9J8QIuCWv5WLizwBoGV1b8
+	 p53l5JY0E/EoGJ0OFx19lDe7zB2EJx0g8FKc61ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbgEDSHg (ORCPT
+        id S1732170AbgEDSHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgEDSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:32 -0400
+        id S1732164AbgEDSHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73665206B8;
-        Mon,  4 May 2020 18:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A61E20721;
+        Mon,  4 May 2020 18:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615651;
-        bh=CKAyMzgdGXCoYpRCj3cr2sVbSPR+LqD5jd9a361D360=;
+        s=default; t=1588615656;
+        bh=d+xFEZVtlJxwViYlMg9U/nr9NihjyZbPDu5cWuJZ6To=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2hAvP5B3zm7KtDW0hEMayfCmHahpQGHU5NhXvWbkN9sutsJDvbc1jvJOQpoqxuGL
-         +9rWJygzQCNERe4FUnWpR7GASwhYVX5h8WFebzsBFT7N3Lsn8wQ2jOs59HdWLfQ3fo
-         IFFF0ac7/QqIDi8OcEBx73NL/jR/87jxtpX5n1pM=
+        b=XGWE/2lMfjUH/booLFYYCekq4n0aEE0DVLNE25vnoLnzGOt1efShuOBAW86Dxm7jJ
+         L92FLrOwUadtkBDKEXt6ln14xouIt4rtZ8FJlHXSJKC83PAXwrkQiYGvD8TjOYQrdO
+         /IhWz1LXp/5L2ZMebjNE6bLhVh0cmpNx1zyNJNaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.6 67/73] drm/i915/selftests: Fix i915_address_space refcnt leak
-Date:   Mon,  4 May 2020 19:58:10 +0200
-Message-Id: <20200504165510.250076900@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.6 69/73] dmaengine: dmatest: Fix iteration non-stop logic
+Date:   Mon,  4 May 2020 19:58:12 +0200
+Message-Id: <20200504165510.379860060@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -61,66 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 5d5e100a20348c336e56df604b353b978f8adbb9 upstream.
+commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
 
-igt_ppgtt_pin_update() invokes i915_gem_context_get_vm_rcu(), which
-returns a reference of the i915_address_space object to "vm" with
-increased refcount.
+Under some circumstances, i.e. when test is still running and about to
+time out and user runs, for example,
 
-When igt_ppgtt_pin_update() returns, "vm" becomes invalid, so the
-refcount should be decreased to keep refcount balanced.
+	grep -H . /sys/module/dmatest/parameters/*
 
-The reference counting issue happens in two exception handling paths of
-igt_ppgtt_pin_update(). When i915_gem_object_create_internal() returns
-IS_ERR, the refcnt increased by i915_gem_context_get_vm_rcu() is not
-decreased, causing a refcnt leak.
+the iterations parameter is not respected and test is going on and on until
+user gives
 
-Fix this issue by jumping to "out_vm" label when
-i915_gem_object_create_internal() returns IS_ERR.
+	echo 0 > /sys/module/dmatest/parameters/run
 
-Fixes: a4e7ccdac38e ("drm/i915: Move context management under GEM")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/1587361342-83494-1-git-send-email-xiyuyang19@fudan.edu.cn
-(cherry picked from commit e07c7606a00c4361bad72ff4e72ed0dfbefa23b0)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+This is not what expected.
+
+The history of this bug is interesting. I though that the commit
+  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+is a culprit, but looking closer to the code I think it simple revealed the
+broken logic from the day one, i.e. in the commit
+  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
+which adds iterations parameter.
+
+So, to the point, the conditional of checking the thread to be stopped being
+first part of conjunction logic prevents to check iterations. Thus, we have to
+always check both conditions to be able to stop after given iterations.
+
+Since it wasn't visible before second commit appeared, I add a respective
+Fixes tag.
+
+Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gem/selftests/huge_pages.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/dma/dmatest.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
-+++ b/drivers/gpu/drm/i915/gem/selftests/huge_pages.c
-@@ -1578,8 +1578,10 @@ static int igt_ppgtt_pin_update(void *ar
- 		unsigned int page_size = BIT(first);
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -662,8 +662,8 @@ static int dmatest_func(void *data)
+ 		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
  
- 		obj = i915_gem_object_create_internal(dev_priv, page_size);
--		if (IS_ERR(obj))
--			return PTR_ERR(obj);
-+		if (IS_ERR(obj)) {
-+			err = PTR_ERR(obj);
-+			goto out_vm;
-+		}
- 
- 		vma = i915_vma_instance(obj, vm, NULL);
- 		if (IS_ERR(vma)) {
-@@ -1632,8 +1634,10 @@ static int igt_ppgtt_pin_update(void *ar
- 	}
- 
- 	obj = i915_gem_object_create_internal(dev_priv, PAGE_SIZE);
--	if (IS_ERR(obj))
--		return PTR_ERR(obj);
-+	if (IS_ERR(obj)) {
-+		err = PTR_ERR(obj);
-+		goto out_vm;
-+	}
- 
- 	vma = i915_vma_instance(obj, vm, NULL);
- 	if (IS_ERR(vma)) {
+ 	ktime = ktime_get();
+-	while (!kthread_should_stop()
+-	       && !(params->iterations && total_tests >= params->iterations)) {
++	while (!(kthread_should_stop() ||
++	       (params->iterations && total_tests >= params->iterations))) {
+ 		struct dma_async_tx_descriptor *tx = NULL;
+ 		struct dmaengine_unmap_data *um;
+ 		dma_addr_t *dsts;
 
 
