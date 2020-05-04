@@ -2,281 +2,97 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEDEC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4CDC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 444BD20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4462420661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:17:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588616249;
+	bh=6Cc5uK0xpSEhAULcKCqr2vRXb5oEtl0zXMdTVAfo6GU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=x0+7IKJ/QxcnzxkUUeGI/aFY7kAmbxwbmgctBJCRw1I6EgHxNQqufeO9pu3BCG4wB
+	 BW0m/Tl9YNsiOKJCe3nn8VWZUXZS8c18ezEXezkFopvm4DjBvGnvbKN1ZxLUM/pN9O
+	 FfUUzlGeAb4JeGQOWNCKW2rUvqn55hMW65xXHhPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732439AbgEDSQ5 (ORCPT
+        id S1732358AbgEDSPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:16:57 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27142 "EHLO mga12.intel.com"
+        Mon, 4 May 2020 14:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731270AbgEDSQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:16:44 -0400
-IronPort-SDR: 4qqtT4SPLEW/sZ2KAqQ3bQ6K7RZVNZYa4oq1WLROY4Ier09QnqJr1an+s1fCBkdRe6uTC6TzZ8
- zPa6nkEhh2kQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 11:16:34 -0700
-IronPort-SDR: 078soUGTQ5aWln7LwyIGSfzdYrqG9zKepNPq/uYGF4Bp6UlW0KLBeYvJnCSw8oBij1UNmT8kMw
- f8SJEbN23THA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="259427129"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.212.145.237])
-  by orsmga003.jf.intel.com with ESMTP; 04 May 2020 11:16:33 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [RFC][PATCH 3/5] thermal: Add support for setting notification thresholds
-Date:   Mon,  4 May 2020 11:16:14 -0700
-Message-Id: <20200504181616.175477-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
-References: <20200504181616.175477-1-srinivas.pandruvada@linux.intel.com>
+        id S1730753AbgEDR7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81558206B8;
+        Mon,  4 May 2020 17:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588615158;
+        bh=6Cc5uK0xpSEhAULcKCqr2vRXb5oEtl0zXMdTVAfo6GU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ybSohxwOGG2gtB7HD/n9DJe/GUpxuHbhsJVWeZI7zI/7yrBo/IozQJAx0QGQrVvu4
+         WDNITtNVlSXL9r/neBrinuLW3/724eT/sMetfuSsRo6vXkEQt5ydUW94mgOCn354OA
+         EggdMMEg6SVC/zQk81qDV0fHk5NS9CJJb/e2LFOc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.4 10/18] i2c: designware-pci: use IRQF_COND_SUSPEND flag
+Date:   Mon,  4 May 2020 19:57:08 +0200
+Message-Id: <20200504165443.749819807@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
+References: <20200504165441.533160703@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new attributes in thermal syfs when a thermal drivers provides
-callbacks for them and CONFIG_THERMAL_USER_EVENT_INTERFACE is defined.
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-These attribute allow user space to stop polling for temperature.
+commit 08c6e8cc66282a082484480c1a5641bc27d26c55 upstream.
 
-These attributes are:
-- temp_thres_low: Specify a notification temperature for a low
-temperature threshold event.
-temp_thres_high: Specify a notification temperature for a high
-temperature threshold event.
-temp_thres_hyst: Specify a change in temperature to send notification
-again.
+This is effectively reapplies the commit b0898fdaffb2 ("i2c: designware-pci: use
+IRQF_COND_SUSPEND flag") after the commit d80d134182ba ("i2c: designware: Move
+common probe code into i2c_dw_probe()"). Original message as follows.
 
-This is implemented by adding additional sysfs attribute group. The
-changes in this patch are trivial to add new attributes in thermal
-sysfs as done for other attributes.
+The mentioned flag fixes a warning on Intel Edison board since one of the I2C
+controller shares IRQ line with watchdog timer.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: d80d134182ba (i2c: designware: Move common probe code into i2c_dw_probe())
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/thermal/thermal_sysfs.c | 136 +++++++++++++++++++++++++++++++-
- include/linux/thermal.h         |  10 ++-
- 2 files changed, 143 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-designware-core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index aa99edb4dff7..aa85424c3ac4 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -215,6 +215,125 @@ trip_point_hyst_show(struct device *dev, struct device_attribute *attr,
- 	return ret ? ret : sprintf(buf, "%d\n", temperature);
- }
+--- a/drivers/i2c/busses/i2c-designware-core.c
++++ b/drivers/i2c/busses/i2c-designware-core.c
+@@ -865,7 +865,8 @@ int i2c_dw_probe(struct dw_i2c_dev *dev)
+ 	i2c_set_adapdata(adap, dev);
  
-+#if IS_ENABLED(CONFIG_THERMAL_USER_EVENT_INTERFACE)
-+
-+#define create_thres_attr(name)					\
-+	static ssize_t							\
-+	name##_show(struct device *dev, struct device_attribute *devattr, \
-+		char *buf)						\
-+	{								\
-+	struct thermal_zone_device *tz = to_thermal_zone(dev);	\
-+	int temperature, ret;						\
-+									\
-+	ret = tz->ops->get_##name(tz, &temperature);			\
-+									\
-+	return ret ? ret : sprintf(buf, "%d\n", temperature);	\
-+	}								\
-+									\
-+	static ssize_t							\
-+	name##_store(struct device *dev, struct device_attribute *devattr, \
-+		const char *buf, size_t count)				\
-+	{								\
-+		struct thermal_zone_device *tz = to_thermal_zone(dev);	\
-+		int temperature, ret;					\
-+									\
-+		if (kstrtoint(buf, 10, &temperature))			\
-+			return -EINVAL;				\
-+									\
-+		ret = tz->ops->set_##name(tz, temperature);		\
-+		return ret ? ret : count;				\
-+	}
-+
-+create_thres_attr(temp_thres_low);
-+create_thres_attr(temp_thres_high);
-+create_thres_attr(temp_thres_hyst);
-+
-+static int create_user_events_attrs(struct thermal_zone_device *tz)
-+{
-+	struct attribute **attrs;
-+	int index = 0;
-+
-+	if (tz->ops->get_temp_thres_low)
-+		++index;
-+	if (tz->ops->get_temp_thres_high)
-+		++index;
-+	if (tz->ops->get_temp_thres_high)
-+		++index;
-+
-+	/* One additional space for NULL */
-+	attrs = kcalloc(index + 1, sizeof(*attrs), GFP_KERNEL);
-+	if (!attrs)
-+		return -ENOMEM;
-+
-+	tz->threshold_attrs = kcalloc(index, sizeof(*tz->threshold_attrs), GFP_KERNEL);
-+	if (!tz->threshold_attrs) {
-+		kfree(attrs);
-+		return -ENOMEM;
-+	}
-+
-+	index = 0;
-+
-+	if (tz->ops->get_temp_thres_low) {
-+		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
-+			 "temp_thres_low");
-+
-+		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
-+		tz->threshold_attrs[index].attr.attr.name =
-+						tz->threshold_attrs[index].name;
-+		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
-+		tz->threshold_attrs[index].attr.show = temp_thres_low_show;
-+		tz->threshold_attrs[index].attr.store = temp_thres_low_store;
-+		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-+		++index;
-+	}
-+	if (tz->ops->get_temp_thres_high) {
-+		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
-+			 "temp_thres_high");
-+
-+		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
-+		tz->threshold_attrs[index].attr.attr.name =
-+						tz->threshold_attrs[index].name;
-+		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
-+		tz->threshold_attrs[index].attr.show = temp_thres_high_show;
-+		tz->threshold_attrs[index].attr.store = temp_thres_high_store;
-+		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-+		++index;
-+	}
-+	if (tz->ops->get_temp_thres_hyst) {
-+		snprintf(tz->threshold_attrs[index].name, THERMAL_NAME_LENGTH,
-+			 "temp_thres_hyst");
-+
-+		sysfs_attr_init(&tz->threshold_attrs[index].attr.attr);
-+		tz->threshold_attrs[index].attr.attr.name =
-+						tz->threshold_attrs[index].name;
-+		tz->threshold_attrs[index].attr.attr.mode = S_IWUSR | S_IRUGO;
-+		tz->threshold_attrs[index].attr.show = temp_thres_hyst_show;
-+		tz->threshold_attrs[index].attr.store = temp_thres_hyst_store;
-+		attrs[index] = &tz->threshold_attrs[index].attr.attr;
-+		++index;
-+	}
-+	attrs[index] = NULL;
-+	tz->threshold_attribute_group.attrs = attrs;
-+
-+	return 0;
-+}
-+
-+static void delete_user_events_attrs(struct thermal_zone_device *tz)
-+{
-+	kfree(tz->threshold_attrs);
-+	kfree(tz->threshold_attribute_group.attrs);
-+}
-+#else
-+static int create_user_events_attrs(struct thermal_zone_device *tz)
-+{
-+	return -EINVAL;
-+}
-+
-+static void delete_user_events_attrs(struct thermal_zone_device *tz)
-+{
-+}
-+#endif
-+
- static ssize_t
- passive_store(struct device *dev, struct device_attribute *attr,
- 	      const char *buf, size_t count)
-@@ -625,16 +744,27 @@ int thermal_zone_create_device_groups(struct thermal_zone_device *tz,
- {
- 	const struct attribute_group **groups;
- 	int i, size, result;
-+	int start = 0;
- 
- 	/* we need one extra for trips and the NULL to terminate the array */
- 	size = ARRAY_SIZE(thermal_zone_attribute_groups) + 2;
-+
-+	result = create_user_events_attrs(tz);
-+	if (!result) {
-+		++size;
-+		++start;
-+	}
-+
- 	/* This also takes care of API requirement to be NULL terminated */
- 	groups = kcalloc(size, sizeof(*groups), GFP_KERNEL);
- 	if (!groups)
- 		return -ENOMEM;
- 
--	for (i = 0; i < size - 2; i++)
--		groups[i] = thermal_zone_attribute_groups[i];
-+	if (start)
-+		groups[0] = &tz->threshold_attribute_group;
-+
-+	for (i = 0; i < size - 2 - start; i++)
-+		groups[i + start] = thermal_zone_attribute_groups[i];
- 
- 	if (tz->trips) {
- 		result = create_trip_attrs(tz, mask);
-@@ -660,6 +790,8 @@ void thermal_zone_destroy_device_groups(struct thermal_zone_device *tz)
- 	if (tz->trips)
- 		destroy_trip_attrs(tz);
- 
-+	delete_user_events_attrs(tz);
-+
- 	kfree(tz->device.groups);
- }
- 
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index f5e1e7c6a9a2..ee9d79ace7ce 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -102,6 +102,12 @@ struct thermal_zone_device_ops {
- 			  enum thermal_trend *);
- 	int (*notify) (struct thermal_zone_device *, int,
- 		       enum thermal_trip_type);
-+	int (*set_temp_thres_low)(struct thermal_zone_device *, int);
-+	int (*set_temp_thres_high)(struct thermal_zone_device *, int);
-+	int (*set_temp_thres_hyst)(struct thermal_zone_device *, int);
-+	int (*get_temp_thres_low)(struct thermal_zone_device *, int *);
-+	int (*get_temp_thres_high)(struct thermal_zone_device *, int *);
-+	int (*get_temp_thres_hyst)(struct thermal_zone_device *, int *);
- };
- 
- struct thermal_cooling_device_ops {
-@@ -208,6 +214,8 @@ struct thermal_zone_device {
- 	struct list_head node;
- 	struct delayed_work poll_queue;
- 	enum thermal_notify_event notify_event;
-+	struct attribute_group threshold_attribute_group;
-+	struct thermal_attr *threshold_attrs;
- };
- 
- /**
-@@ -558,7 +566,7 @@ enum thermal_device_events {
- 	THERMAL_PERF_CHANGED,
- };
- 
--#ifdef CONFIG_THERMAL_USER_EVENT_INTERFACE
-+#if IS_ENABLED(CONFIG_THERMAL_USER_EVENT_INTERFACE)
- int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data);
- #else
- int thermal_dev_send_event(int zone_id, enum thermal_device_events event, u64 event_data)
--- 
-2.25.4
+ 	i2c_dw_disable_int(dev);
+-	r = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr, IRQF_SHARED,
++	r = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr,
++			     IRQF_SHARED | IRQF_COND_SUSPEND,
+ 			     dev_name(dev->dev), dev);
+ 	if (r) {
+ 		dev_err(dev->dev, "failure requesting irq %i: %d\n",
+
 
