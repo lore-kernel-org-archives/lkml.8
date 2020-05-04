@@ -2,168 +2,106 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D478C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C960C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDBE206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616025;
-	bh=oVLv5rN4Og2JenVBR+1ml367ggK1PNVegBS0R8bZudM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/67JJ90tZcyn5Fg8PO+Oc7W8Zfei7x3qpXf9FfiK62xATbjDoMqv91pSL/a6t9VY
-	 +SYGsBxFNzlySroyy0/kYmR12myaXj2Pz7VQnxcohqTMKK6iN7MnbE2U9F2h8Yint4
-	 2mSlc8JHX1NJEYZYpVktuGoSngR2riMV/DcNDjmM=
+	by mail.kernel.org (Postfix) with ESMTP id 20812206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6pBRaZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbgEDSNn (ORCPT
+        id S1732321AbgEDSNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730496AbgEDSBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9352075A;
-        Mon,  4 May 2020 18:01:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615267;
-        bh=oVLv5rN4Og2JenVBR+1ml367ggK1PNVegBS0R8bZudM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htJq7YVd1ABiuRt6nc61HQeQtyUf5vJ4rYirYM5zLcoXMiwE0kkjn5ZnPz4hnslqF
-         DGVYA4XXMseQmFObD83xPvtsD+EZlpgm8CgYd+RXYkmbRKVHWMeIO6Ht7i431XGDLT
-         ZTzmB/GuHU+yzhtH3p21AgY2+Eap6o8T+57U/D6c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.14 26/26] selinux: properly handle multiple messages in selinux_netlink_send()
-Date:   Mon,  4 May 2020 19:57:40 +0200
-Message-Id: <20200504165448.165548535@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
-References: <20200504165442.494398840@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 May 2020 14:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731918AbgEDSNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:13:37 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80754C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:13:37 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y4so10655441ljn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:13:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=noyhhByb12LN4LKrdHZP/yohxdBTg9eACOZjHEQQZSw=;
+        b=r6pBRaZeaSe6YLtjSricU/1PdZ4Z/UNZt8MLyfVqVNUDNKGKZbCPVSfVa1VWqlczTE
+         3exkc6YflKaC+zwu/U/e0tp3BY1dl5wdsa+zeiUi/QFCxv/afDvZ1xaGH1npNS7AHj51
+         jzBeNaIXtnkcr8fahBzZoBnEQd3EST4uUUWlUGLuUns8PByZamCIJQHiasROr+hHc/1P
+         Ll+Llg0743huW2Dqb6Kt4eBspyn1ebrROyB8PCFVhwc93N6tx/5Zf0YQTWInI1NMvglp
+         dpMMFV4C56tsrb4joX+RXCCawIGPlfmy0sT187WVxJ5JpJrgjhAcoNAIII4GXAI8eDGZ
+         a8TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=noyhhByb12LN4LKrdHZP/yohxdBTg9eACOZjHEQQZSw=;
+        b=JFGLdYRdNAwl86HxBAnicEAUIM8f1SawxNetYKeFFXNHOFjlt4k/2HRz0ij+C8Y3IP
+         MU0KQJiXAj95OvnQFiFpAW8vpbHEGHSH+axj7gF1f2UwTBjLWvlkPON+gRQto7z8WK2Y
+         OVHVVC3wyUL5RscUTIFLTqV5mcQ50637cVeqJfhpcGXw9j0mcYaILaLCUJU2Kcs0yd5c
+         pdsKRpksypGfIYdEzzaHqucYi58vlI/DRbOZfY2pbnvivdqaaulqUygL2NSMiv66Lxnj
+         qpM6to2yGi5HgZMO6D5XcPPOT/4vQc2adhAqWjBDnffUPrwJiyd4m59ySq2PSHEe32S/
+         nlZQ==
+X-Gm-Message-State: AGi0PuZlGV8HUYTVwNzO5bqRFdyaPZxXGLvsMCT1Yy3cgOveqMaQH/L9
+        cCz4hR2WpLUo3lf5UY1NtcEvZA==
+X-Google-Smtp-Source: APiQypIXsSBpPqvz5nwBaR6TohrSjdXOt+8TvHMn4JimyxDTWHqEZSW6G48ENPGzKPER4VorYMz00w==
+X-Received: by 2002:a2e:3017:: with SMTP id w23mr11282519ljw.150.1588616016018;
+        Mon, 04 May 2020 11:13:36 -0700 (PDT)
+Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id r4sm6033018lfm.28.2020.05.04.11.13.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 11:13:35 -0700 (PDT)
+Date:   Mon, 4 May 2020 20:13:33 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+List-Id: <soc.lore.kernel.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        tee-dev@lists.linaro.org
+Subject: [GIT PULL] tee subsystem fix for v5.8
+Message-ID: <20200504181333.GA11018@jade>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+Hello arm-soc maintainers,
 
-commit fb73974172ffaaf57a7c42f35424d9aece1a5af6 upstream.
+Please pull this small fix for a Smatch warning in tee_shm_alloc().
 
-Fix the SELinux netlink_send hook to properly handle multiple netlink
-messages in a single sk_buff; each message is parsed and subject to
-SELinux access control.  Prior to this patch, SELinux only inspected
-the first message in the sk_buff.
+Thanks,
+Jens
 
-Cc: stable@vger.kernel.org
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
----
- security/selinux/hooks.c |   68 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 44 insertions(+), 24 deletions(-)
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5121,39 +5121,59 @@ static int selinux_tun_dev_open(void *se
- 
- static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
- {
--	int err = 0;
--	u32 perm;
-+	int rc = 0;
-+	unsigned int msg_len;
-+	unsigned int data_len = skb->len;
-+	unsigned char *data = skb->data;
- 	struct nlmsghdr *nlh;
- 	struct sk_security_struct *sksec = sk->sk_security;
-+	u16 sclass = sksec->sclass;
-+	u32 perm;
- 
--	if (skb->len < NLMSG_HDRLEN) {
--		err = -EINVAL;
--		goto out;
--	}
--	nlh = nlmsg_hdr(skb);
-+	while (data_len >= nlmsg_total_size(0)) {
-+		nlh = (struct nlmsghdr *)data;
- 
--	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
--	if (err) {
--		if (err == -EINVAL) {
-+		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
-+		 *       users which means we can't reject skb's with bogus
-+		 *       length fields; our solution is to follow what
-+		 *       netlink_rcv_skb() does and simply skip processing at
-+		 *       messages with length fields that are clearly junk
-+		 */
-+		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
-+			return 0;
-+
-+		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
-+		if (rc == 0) {
-+			rc = sock_has_perm(sk, perm);
-+			if (rc)
-+				return rc;
-+		} else if (rc == -EINVAL) {
-+			/* -EINVAL is a missing msg/perm mapping */
- 			pr_warn_ratelimited("SELinux: unrecognized netlink"
--			       " message: protocol=%hu nlmsg_type=%hu sclass=%s"
--			       " pig=%d comm=%s\n",
--			       sk->sk_protocol, nlh->nlmsg_type,
--			       secclass_map[sksec->sclass - 1].name,
--			       task_pid_nr(current), current->comm);
--			if (!selinux_enforcing || security_get_allow_unknown())
--				err = 0;
-+				" message: protocol=%hu nlmsg_type=%hu sclass=%s"
-+				" pid=%d comm=%s\n",
-+				sk->sk_protocol, nlh->nlmsg_type,
-+				secclass_map[sclass - 1].name,
-+				task_pid_nr(current), current->comm);
-+			if (selinux_enforcing && !security_get_allow_unknown())
-+				return rc;
-+			rc = 0;
-+		} else if (rc == -ENOENT) {
-+			/* -ENOENT is a missing socket/class mapping, ignore */
-+			rc = 0;
-+		} else {
-+			return rc;
- 		}
- 
--		/* Ignore */
--		if (err == -ENOENT)
--			err = 0;
--		goto out;
-+		/* move to the next message after applying netlink padding */
-+		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
-+		if (msg_len >= data_len)
-+			return 0;
-+		data_len -= msg_len;
-+		data += msg_len;
- 	}
- 
--	err = sock_has_perm(sk, perm);
--out:
--	return err;
-+	return rc;
- }
- 
- #ifdef CONFIG_NETFILTER
+are available in the Git repository at:
 
+  git://git.linaro.org/people/jens.wiklander/linux-tee.git tags/tee-smatch-for-5.8
 
+for you to fetch changes up to 1115899e7aad71bc36100c3fa1d0b99cff9263e6:
+
+  tee: remove unnecessary NULL check in tee_shm_alloc() (2020-04-20 13:12:01 +0200)
+
+----------------------------------------------------------------
+tee: remove unnecessary NULL check in tee_shm_alloc()
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      tee: remove unnecessary NULL check in tee_shm_alloc()
+
+ drivers/tee/tee_shm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
