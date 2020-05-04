@@ -2,97 +2,184 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00461C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF8BC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1B720746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF40620735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgEDGVC (ORCPT
+        id S1726885AbgEDGZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:21:02 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:3330 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726906AbgEDGUe (ORCPT
+        Mon, 4 May 2020 02:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbgEDGZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:20:34 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 03 May 2020 23:20:31 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 03 May 2020 23:20:27 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 6D73C21737; Mon,  4 May 2020 11:50:26 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH V4 0/8] Add APSS clock controller support for IPQ6018
-Date:   Mon,  4 May 2020 11:50:16 +0530
-Message-Id: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 May 2020 02:25:00 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A480DC061A0E
+        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 23:25:00 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jVUX7-0004OA-T3; Mon, 04 May 2020 08:24:53 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jVUWx-0000TK-96; Mon, 04 May 2020 08:24:43 +0200
+Date:   Mon, 4 May 2020 08:24:43 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200504062443.qgme3pnhzugqeqhk@pengutronix.de>
+References: <20200429162437.2025699-1-robert.foss@linaro.org>
+ <20200429162437.2025699-3-robert.foss@linaro.org>
+ <20200430093524.GB2188@pengutronix.de>
+ <20200430094549.GF867@valkosipuli.retiisi.org.uk>
+ <20200430095332.GC2188@pengutronix.de>
+ <20200430095907.GG867@valkosipuli.retiisi.org.uk>
+ <20200430101157.GD2188@pengutronix.de>
+ <20200430102018.GI867@valkosipuli.retiisi.org.uk>
+ <20200430120740.GG2188@pengutronix.de>
+ <CAG3jFytP9=pL=9Qh64BKqQchs7J7E45USfirK_SnGn3NMeCdcg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFytP9=pL=9Qh64BKqQchs7J7E45USfirK_SnGn3NMeCdcg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:13:17 up 170 days, 21:31, 171 users,  load average: 0.06, 0.04,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPU on Qualcomm's IPQ6018 devices are primarily fed by APSS PLL and XO,
-these are connected to a clock mux and enable block.
+Hi Robert,
 
-This patch series adds support for these clocks and inturn enables clocks
-required for CPU freq.
+On 20-04-30 18:11, Robert Foss wrote:
+> Hey Marco,
+> 
+> On Thu, 30 Apr 2020 at 14:07, Marco Felsch <m.felsch@pengutronix.de> wrote:
+> >
+> > On 20-04-30 13:20, Sakari Ailus wrote:
+> > > On Thu, Apr 30, 2020 at 12:11:57PM +0200, Marco Felsch wrote:
+> > > > On 20-04-30 12:59, Sakari Ailus wrote:
+> > > > > Hi Marco,
+> > > > >
+> > > > > On Thu, Apr 30, 2020 at 11:53:32AM +0200, Marco Felsch wrote:
+> > > > > > Hi Sakari,
+> > > > > >
+> > > > > > On 20-04-30 12:45, Sakari Ailus wrote:
+> > > > > > > Hi Marco,
+> > > > > > >
+> > > > > > > On Thu, Apr 30, 2020 at 11:35:24AM +0200, Marco Felsch wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > > > > - if (mclk != OV8856_MCLK) {
+> > > > > > > > > -         dev_err(dev, "external clock %d is not supported", mclk);
+> > > > > > > > > -         return -EINVAL;
+> > > > > > > > > + if (!is_acpi_node(fwnode)) {
+> > > > > > > > > +         ov8856->xvclk = devm_clk_get(dev, "xvclk");
+> > > > > > > > > +         if (IS_ERR(ov8856->xvclk)) {
+> > > > > > > > > +                 dev_err(dev, "could not get xvclk clock (%pe)\n",
+> > > > > > > > > +                                 ov8856->xvclk);
+> > > > > > > > > +                 return PTR_ERR(ov8856->xvclk);
+> > > > > > > > > +         }
+> > > > > > > > > +
+> > > > > > > > > +         clk_set_rate(ov8856->xvclk, xvclk_rate);
+> > > > > > > > > +         xvclk_rate = clk_get_rate(ov8856->xvclk);
+> > > > > > > > >   }
+> > > > > > > >
+> > > > > > > > Why do we handle the clock only in DT case? Is there a problem with the
+> > > > > > > > clock handling and ACPI?
+> > > > > > >
+> > > > > > > Not really, it's just that ACPI does not provide an interface to the clocks
+> > > > > > > as such.
+> > > > > >
+> > > > > > But you will get a clk by devm_clk_get()?
+> > > > >
+> > > > > No, because ACPI does not expose one to drivers. Effectively the entire
+> > > > > power sequences are implemented in ACPI, not in the driver.
+> > > > >
+> > > >
+> > > > Ah okay, thanks for the explanation. I'm really not into the ACPI
+> > > > stuff.. So this means the __power_off / power_on should only be done if
+> > > > we are using DT's?
+> > >
+> > > Correct. That's why it bails out early. It could be yet earlier though,
+> > > without doing anything.
+> >
+> > Yes I see. For easier and error less prone handling I would prefer:
+> >
+> > if (is_acpi_node())
+> >         return 0;
+> >
+> > as first instruction for __power_off/on().
+> 
+> __ov8856_power_on() does make a check like that, albeit only after
+> having run clk_prepare_enable() which won't do anything due to
+> ov8856->xvclk==NULL. So this should be fixed and be moved to after the
+> ACPI check.
 
-[V4]
- * Re-written PLL found on IPQ platforms as a separate driver
- * Addressed stephen's comments on apss clock controller and pll
- * Addressed Rob's review comments on bindings
- * moved a53 pll binding from this series as it is not applicable, will send
-   it separately.
-[V3]
- * Fixed dt binding check error in patch2
-   dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
-[V2]
- * Restructred the patch series as there are two different HW blocks,
-   the mux and enable belongs to the apcs block and PLL has a separate HW
-   block.
- * Converted qcom mailbox and qcom a53 pll documentation to yaml.
- * Addressed review comments from Stephen, Rob and Sibi where it is applicable.
- * Changed this cover letter to state the purpose of this patch series
+Yep, I saw that. I didn't checked the clk_prepare_enable() function and
+just saw that we don't request the clk for the acpi case and enable it
+in both cases. This doesn't sound right to me.
 
-Sivaprakash Murugesan (8):
-  dt-bindings: mailbox: Add YAML schemas for QCOM APCS global block
-  dt-bindings: clock: Add schema for QCOM IPQ apss pll
-  clk: qcom: Add ipq apss pll driver
-  clk: qcom: Add DT bindings for ipq6018 apss clock controller
-  clk: qcom: Add ipq apss clock controller
-  dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
-  mailbox: qcom: Add ipq6018 apcs compatible
-  arm64: dts: ipq6018: Add a53 pll and apcs clock
+> __ov8856_power_off() has no ACPI check, but all of the calls it makes
+> are going to do nothing due to v8856->reset_gpio / v8856->reset_gpio /
+> ov8856->xvclk all being NULL or dummies. For the sake of clarity an
+> early ACPI check+return could be added, but if clarity is the goal a
+> comment would work too.
 
- .../bindings/clock/qcom,ipq-apsspll.yaml           |  49 ++++++++++
- .../bindings/mailbox/qcom,apcs-kpss-global.txt     |  88 -----------------
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml    |  99 +++++++++++++++++++
- arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  16 +++-
- drivers/clk/qcom/Kconfig                           |  19 ++++
- drivers/clk/qcom/Makefile                          |   2 +
- drivers/clk/qcom/apss-ipq-pll.c                    |  97 +++++++++++++++++++
- drivers/clk/qcom/apss-ipq.c                        | 106 +++++++++++++++++++++
- drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  26 +++--
- include/dt-bindings/clock/qcom,apss-ipq.h          |  12 +++
- 10 files changed, 414 insertions(+), 100 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq-apsspll.yaml
- delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
- create mode 100644 drivers/clk/qcom/apss-ipq-pll.c
- create mode 100644 drivers/clk/qcom/apss-ipq.c
- create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
+Thanks god that most of the library functions taking NULL into account
+=) But I think we have to take the regulator count into account. Again I
+don't know how the ACPI part is working. What happens if we request
+regulators which aren't listed within the ACPI table? In case of DT
+there will be added dummy-regulator. If this is the case for ACPI too we
+are ending in an unbalanced regulator enable/disable count since you
+enable it for the DT case and disable it in both cases.
 
--- 
-2.7.4
+> >
+> > Also I would refactor the ov8856_check_hwcfg() so the common part can be
+> > used by this function and by a ov8856_parse_of() function. But thats
+> > only my opinion.
+> 
+> I'm trying to grok the above paragraph. You'd like to see something in
+> the style of tc358743_probe_of()?
 
+You don't have to if Saki is fine with the current patch. Just saying
+that it would be a bit easier for the patch review.
+
+Regards,
+  Marco
+
+> >
+> > Regards,
+> >   Marco
+> 
