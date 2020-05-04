@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20529C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2515C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A822078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D713520663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616007;
-	bh=+uHnYeckTZ/b/1RoIw0t+qHts3oKfYXWET/DSt23zbY=;
+	s=default; t=1588616010;
+	bh=fwR0V1cq/YSDhhql/2sy5/+ZtJJnxpF1Wz065Hb34Jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pD0ImZSVacKVXeayvDkO+ZqC8FLclEVsbYZkoEYuyXthOcZtUVDS6p+g5MW0wMZeO
-	 xxxYt8InWwyUvMKgDzK3vSiAOdrlzRu43fopz9zDbuzl2TsQPZYz5XgEdR17EYfL2Z
-	 kbPS4N6hzvfPqZRGxi0BErfGOX+AxjjETtwa89eU=
+	b=au5sFiPWNZj72LQKe3O/To7iXz89omodIquHKoG3W0npTuIm5V49vhz+rAbK0WT3f
+	 N1J1MC/GDf3pKFY/HZ8NNoroHSIIfyP6rTlIrFOgvJdC7ADo7LtroBvCrlP1E8U4jY
+	 tCK+kT2eTq6h+vxUkBvlG3cVUjhQlL2gEzA2TQko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbgEDSN0 (ORCPT
+        id S1731157AbgEDSBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57182 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731168AbgEDSBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:34 -0400
+        id S1731137AbgEDSBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165E520707;
-        Mon,  4 May 2020 18:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AFF120707;
+        Mon,  4 May 2020 18:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615294;
-        bh=+uHnYeckTZ/b/1RoIw0t+qHts3oKfYXWET/DSt23zbY=;
+        s=default; t=1588615279;
+        bh=fwR0V1cq/YSDhhql/2sy5/+ZtJJnxpF1Wz065Hb34Jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ui7iHAAyYSGP4SBB3EDXNbWP7L7nwG/v96SJZ6RlvrJJNGVkQb4vieC61zzrfiXBZ
-         yiWZezlmEC26Q4cGrzAnsswwlSdn/Hkf7ofOSG98+h0qubkoU2jIbPqzwk6h9F3RjV
-         JSm4tSVW0pYDHnkf7C3Y2zrH9Q0jcvPn/g9DB0n4=
+        b=UMvF3Z8+uD4ciKawNHd6Z3igzFj01+8tBuKFbt8vTKXiGvj4DypuKfR2D5B8WaNP1
+         zNNTYQO7xDaRVSyB8Otde/hgMBQBNq7YM09Ih4CCUofZ1rqkqtnSXyfXKi4Imm8pxY
+         tD/Ied6C7mrEhNkzG5AWKhzJtzpCrjkg3UQVbPJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 05/37] btrfs: fix block group leak when removing fails
-Date:   Mon,  4 May 2020 19:57:18 +0200
-Message-Id: <20200504165449.199649237@linuxfoundation.org>
+        stable@vger.kernel.org, Sunwook Eom <speed.eom@samsung.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 12/37] dm verity fec: fix hash block number in verity_fec_decode
+Date:   Mon,  4 May 2020 19:57:25 +0200
+Message-Id: <20200504165449.793743944@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,95 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Sunwook Eom <speed.eom@samsung.com>
 
-commit f6033c5e333238f299c3ae03fac8cc1365b23b77 upstream.
+commit ad4e80a639fc61d5ecebb03caa5cdbfb91fcebfc upstream.
 
-btrfs_remove_block_group() invokes btrfs_lookup_block_group(), which
-returns a local reference of the block group that contains the given
-bytenr to "block_group" with increased refcount.
+The error correction data is computed as if data and hash blocks
+were concatenated. But hash block number starts from v->hash_start.
+So, we have to calculate hash block number based on that.
 
-When btrfs_remove_block_group() returns, "block_group" becomes invalid,
-so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in several exception handling paths
-of btrfs_remove_block_group(). When those error scenarios occur such as
-btrfs_alloc_path() returns NULL, the function forgets to decrease its
-refcnt increased by btrfs_lookup_block_group() and will cause a refcnt
-leak.
-
-Fix this issue by jumping to "out_put_group" label and calling
-btrfs_put_block_group() when those error scenarios occur.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: a739ff3f543af ("dm verity: add support for forward error correction")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sunwook Eom <speed.eom@samsung.com>
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent-tree.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/md/dm-verity-fec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -10286,7 +10286,7 @@ int btrfs_remove_block_group(struct btrf
- 	path = btrfs_alloc_path();
- 	if (!path) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto out_put_group;
- 	}
+--- a/drivers/md/dm-verity-fec.c
++++ b/drivers/md/dm-verity-fec.c
+@@ -436,7 +436,7 @@ int verity_fec_decode(struct dm_verity *
+ 	fio->level++;
+ 
+ 	if (type == DM_VERITY_BLOCK_TYPE_METADATA)
+-		block += v->data_blocks;
++		block = block - v->hash_start + v->data_blocks;
  
  	/*
-@@ -10323,7 +10323,7 @@ int btrfs_remove_block_group(struct btrf
- 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
- 		if (ret) {
- 			btrfs_add_delayed_iput(inode);
--			goto out;
-+			goto out_put_group;
- 		}
- 		clear_nlink(inode);
- 		/* One for the block groups ref */
-@@ -10346,13 +10346,13 @@ int btrfs_remove_block_group(struct btrf
- 
- 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
- 	if (ret < 0)
--		goto out;
-+		goto out_put_group;
- 	if (ret > 0)
- 		btrfs_release_path(path);
- 	if (ret == 0) {
- 		ret = btrfs_del_item(trans, tree_root, path);
- 		if (ret)
--			goto out;
-+			goto out_put_group;
- 		btrfs_release_path(path);
- 	}
- 
-@@ -10494,9 +10494,9 @@ int btrfs_remove_block_group(struct btrf
- 
- 	ret = remove_block_group_free_space(trans, block_group);
- 	if (ret)
--		goto out;
-+		goto out_put_group;
- 
--	btrfs_put_block_group(block_group);
-+	/* Once for the block groups rbtree */
- 	btrfs_put_block_group(block_group);
- 
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
-@@ -10524,6 +10524,10 @@ int btrfs_remove_block_group(struct btrf
- 		/* once for the tree */
- 		free_extent_map(em);
- 	}
-+
-+out_put_group:
-+	/* Once for the lookup reference */
-+	btrfs_put_block_group(block_group);
- out:
- 	btrfs_free_path(path);
- 	return ret;
+ 	 * For RS(M, N), the continuous FEC data is divided into blocks of N
 
 
