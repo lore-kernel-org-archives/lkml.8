@@ -2,156 +2,93 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1BEC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36582C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3145C20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060B22075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588602642;
+	bh=npyVMpEkCqP47vK/3mKvzs371ZtGgQITkgOQX9mdQjY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OPtolwzGpbEx/peBWEOVuKzEJ1gkESA7Sf2GFSFmpAtWKASpzVX+Bby9DxMLX3M8A
+	 e0No6NjOszYZK5HSr0XT7GpRZTXh5uVgz/pR9MkLX0iz3DyqgIRsbw+fYIUhhneCyk
+	 c4Rl9QWfdkCWrFAlk4hX9VB9OkfbSJlevp/DO2Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgEDO3n (ORCPT
+        id S1729131AbgEDOal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:29:43 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35423 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbgEDO3m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:29:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k110so4504853otc.2;
-        Mon, 04 May 2020 07:29:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4qmNWbZEWGK3APAzYwIeRF7N4Ey8Oknk1ZvcU1u1ZqU=;
-        b=N1oXyP7br7VE+24jMnpp//tEsI2I9XMyipiwrWkWyV0WlxffaFdZWcngd8JXS1pXP4
-         /6ighEpGKEP276G12e4Pu0JNaLUnWjHgTK6cbnaqvYkYNnROtka1WSFPI+u631GQpSWo
-         j/qX4TSs7AWDXwKmOOK5MCtz/OcYRe+prCpD9/QFZNd7+gcGnJfVIwENZ2Sg00uMeVzh
-         lZ2mBJ8OxZtgGMNJHj4DQxSq6Txc+7+ppz3xhoAhNlsx5Rf6YAVaxwZ/MqKzJsuEYJNX
-         5GGcBolqiK1c5HVmUvZ5chSXUv+OKPPXa1+Y5KZYL1/eEbU27l6ZKz1WvUwwQjtKjDBV
-         IvvA==
-X-Gm-Message-State: AGi0PuYY/E3WPj86DYzI8Lv6+XTmM+aw9qLH865psgy4eTdcKEb2H2hi
-        npNwSZIpNgFJft8rgPTu77NOvfq5q98kkxjqZbo=
-X-Google-Smtp-Source: APiQypIl5oeOYwC1jEI/m9PhRtWzOpl25bOP4xHlOC6xhIPb9atAy1P1nyb7qKk0U0HPJufqUAievgfEuM+jpmQcYow=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr14016322otm.145.1588602579133;
- Mon, 04 May 2020 07:29:39 -0700 (PDT)
+        Mon, 4 May 2020 10:30:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728324AbgEDOak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:30:40 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F6F20721;
+        Mon,  4 May 2020 14:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588602640;
+        bh=npyVMpEkCqP47vK/3mKvzs371ZtGgQITkgOQX9mdQjY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=eEJaD0ZEz5VfWYlWTVpOTos5fOnwiNG3g/saqcrKdLWp78+xQuLIWaK/+6+jzg7A6
+         lUVoRHynjtW/MoTSZCXKP4hBWLOgKLvzHTEAx46W/NXdOqsy+yFe3tqORj1sPjyHsV
+         VND1zcREbsOSfw7FDmp+OZpATxcM3scDDKAEmXFU=
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: change maximum zstd compression buffer size
+Date:   Mon,  4 May 2020 07:30:39 -0700
+Message-Id: <20200504143039.155644-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com> <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-In-Reply-To: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 16:29:28 +0200
-Message-ID: <CAMuHMdX6_zOVXStgRRCYonZF2XUowsm0T=3L3+xmqhyGCqMi6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
- Qseven SOM
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+From: Daeho Jeong <daehojeong@google.com>
 
-On Mon, May 4, 2020 at 4:20 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add support for iWave RZ/G1H Qseven System On Module.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Current zstd compression buffer size is one page and header size less
+than cluster size. By this, zstd compression always succeeds even if
+the real compression data is failed to fit into the buffer size, and
+eventually reading the cluster returns I/O error with the corrupted
+compression data.
 
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> > > @@ -0,0 +1,53 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
-> > > + *
-> > > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > > + */
-> > > +
-> > > +#include "r8a7742.dtsi"
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > > +
-> > > +/ {
-> > > +       compatible = "iwave,g21m", "renesas,r8a7742";
-> > > +
-> > > +       memory@40000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <0 0x40000000 0 0x40000000>;
-> > > +       };
-> > > +
-> > > +       memory@200000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <2 0x00000000 0 0x20000000>;
-> >
-> > According to the schematics, the second bank is also 1 GiB, so the
-> > reg length should be 0x40000000.
-> >
-> Agreed will fix that.
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fs/f2fs/compress.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks for the confirmation.  I can fix that while applying.
-
-> > > +       };
-> >
-> > > +&pfc {
-> > > +       mmc1_pins: mmc1 {
-> > > +               groups = "mmc1_data4", "mmc1_ctrl";
-> > > +               function = "mmc1";
-> > > +       };
-> > > +};
-> > > +
-> > > +&mmcif1 {
-> > > +       pinctrl-0 = <&mmc1_pins>;
-> > > +       pinctrl-names = "default";
-> > > +
-> > > +       vmmc-supply = <&reg_3p3v>;
-> > > +       bus-width = <4>;
-> > > +       non-removable;
-> > > +       status = "okay";
-> > > +};
-> >
-> > The eMMC has an 8-bit data path.  Is there any specific reason you use
-> > bus-width = <4>, and the "mmc1_data4" pin group?
-> >
-> MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
-> device when using 8-bit just switched to 4bit mode so that both the
-> peripherals can be used.
-
-OK.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8 with the above fixed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 4c7eaeee52336..a9fa8049b295f 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -313,7 +313,7 @@ static int zstd_init_compress_ctx(struct compress_ctx *cc)
+ 	cc->private = workspace;
+ 	cc->private2 = stream;
+ 
+-	cc->clen = cc->rlen - PAGE_SIZE - COMPRESS_HEADER_SIZE;
++	cc->clen = ZSTD_compressBound(PAGE_SIZE << cc->log_cluster_size);
+ 	return 0;
+ }
+ 
+@@ -330,7 +330,7 @@ static int zstd_compress_pages(struct compress_ctx *cc)
+ 	ZSTD_inBuffer inbuf;
+ 	ZSTD_outBuffer outbuf;
+ 	int src_size = cc->rlen;
+-	int dst_size = src_size - PAGE_SIZE - COMPRESS_HEADER_SIZE;
++	int dst_size = cc->clen;
+ 	int ret;
+ 
+ 	inbuf.pos = 0;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2.526.g744177e7f7-goog
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
