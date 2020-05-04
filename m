@@ -2,177 +2,171 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE00CC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD40C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD60020705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FFF20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GT9EzMOw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrfRQ8/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgEDPxZ (ORCPT
+        id S1729527AbgEDPx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:53:25 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59743 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728873AbgEDPxX (ORCPT
+        Mon, 4 May 2020 11:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729479AbgEDPxY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:53:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588607602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bSWYDQDC7kolljOU3FOH/hFgbKSyHO/eA7z20C/Wf7g=;
-        b=GT9EzMOwOKE3GnKuKzAtbrZ6S+z2ZgstV0zAsNQ6NzaNlLADyTeepRSSjSks+PZXcgrbWC
-        SS2GinUCLE640TYKphKUtQWexxfVU4t253RXxX+HC3bLRBss6lLSuvYpwsTdooTiGtbrST
-        Q9SAepE95lboF/QXJ/QBLmOS7l8edcU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-xCKsR0mOPfmMx1ghtVk2vw-1; Mon, 04 May 2020 11:53:18 -0400
-X-MC-Unique: xCKsR0mOPfmMx1ghtVk2vw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE42F1895A28;
-        Mon,  4 May 2020 15:53:17 +0000 (UTC)
-Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 643D06FF1A;
-        Mon,  4 May 2020 15:53:14 +0000 (UTC)
-Date:   Mon, 4 May 2020 09:53:13 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, peterx@redhat.com
-Subject: Re: [PATCH 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Message-ID: <20200504095313.271fbe40@x1.home>
-In-Reply-To: <20200504150556.GX26002@ziepe.ca>
-References: <158836742096.8433.685478071796941103.stgit@gimli.home>
-        <158836915917.8433.8017639758883869710.stgit@gimli.home>
-        <20200501232550.GP26002@ziepe.ca>
-        <20200504082055.0faeef8b@x1.home>
-        <20200504150556.GX26002@ziepe.ca>
-Organization: Red Hat
+        Mon, 4 May 2020 11:53:24 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA69C061A0E;
+        Mon,  4 May 2020 08:53:24 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id s8so11268752wrt.9;
+        Mon, 04 May 2020 08:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a51OfRZ33jZudrw71sJOVnYwq5K9qTUEcP4pBHMr04A=;
+        b=JrfRQ8/P7x/T5NAffxXkepwKmvwZK3c+IHiTDqRUz4I+CNaR9rIsAzheuLUPeKecdq
+         18Eu9YPwKO2809csIUMr18/QT/Mn8nZAJD0u5pjdAZkHJozr0R1EjeFLBnhf837aCOU6
+         L59+dtAztMayqeD6CD/REdfp9qG7Vlb4Tbx0SOGtM+oyfXGQ/Rv9Yd6useR0gIbDKhJ9
+         xIZwAfxSDfoX8qYL9/jzm1zHQ0FWYT7N1mLUQT+BsVJPrWviGg6xTuQ7ilmKvPOF/Njj
+         fxhZsgH1JINnmYdmLeSPiGer6dXPYo7PvFpjYRShDwEd6eJuskfc8bQ7lZOPTbUB3jIo
+         OwcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=a51OfRZ33jZudrw71sJOVnYwq5K9qTUEcP4pBHMr04A=;
+        b=KJ7E4uyXaXbRK20JcoldnPi9KkLzQ2NaMIgrK40HmBVV7wiiwFTcSyA3VT7RjCoypP
+         fW4DPdIdyfJ+J0KdVMcU6XcuJ6DA4tiPwOYeh0oMB7rhSTqhbzGKsw5guS1O3sPbHNpm
+         leDyx+wehElP2GtoZC4o4t5VEHjrkbY2cMlI8W/cBI7qOjF2a5ZjM4ggnLLTrWsa+B/B
+         /MQsK0WinWKimJQRAkH3JcVxs6YWoN0MgSvvuXnBsosYB0J2YQMg+25t+bEts6xGWop+
+         l6Qvq5RXnTwXWrZrII0VtjacKqWwxqPEokEl4RV21j+JIvinvTemalyGOCjKKG46no2g
+         OA7g==
+X-Gm-Message-State: AGi0PuYFZ+MUOMd00KlPmlv/xt49XraUT+vfTUDPJqoLJVK94ibJL/As
+        ETOaUv5PFTdmjF9p6d3Mg6jxNFEC
+X-Google-Smtp-Source: APiQypLktSGrl9Czf2iXPJCpsgaisVYVHpeQnFjMU3AhYBvXXlyz7dbfXsF3KL0dP0oidqNycuHqrw==
+X-Received: by 2002:a5d:6742:: with SMTP id l2mr12713590wrw.138.1588607602913;
+        Mon, 04 May 2020 08:53:22 -0700 (PDT)
+Received: from [192.168.43.158] ([109.126.133.135])
+        by smtp.gmail.com with ESMTPSA id k14sm19424026wrp.53.2020.05.04.08.53.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 08:53:22 -0700 (PDT)
+Subject: Re: [PATCH][next] io_uring: Remove logically dead code in io_splice
+To:     Jens Axboe <axboe@kernel.dk>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200504151912.GA22779@embeddedor>
+ <b26c33c8-e636-edf6-3d43-7b3394850d7a@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <55bf573d-52f9-9131-ff08-49231a88abce@gmail.com>
+Date:   Mon, 4 May 2020 18:52:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <b26c33c8-e636-edf6-3d43-7b3394850d7a@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 12:05:56 -0300
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
-
-> On Mon, May 04, 2020 at 08:20:55AM -0600, Alex Williamson wrote:
-> > On Fri, 1 May 2020 20:25:50 -0300
-> > Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >   
-> > > On Fri, May 01, 2020 at 03:39:19PM -0600, Alex Williamson wrote:  
-> > > > Rather than calling remap_pfn_range() when a region is mmap'd, setup
-> > > > a vm_ops handler to support dynamic faulting of the range on access.
-> > > > This allows us to manage a list of vmas actively mapping the area that
-> > > > we can later use to invalidate those mappings.  The open callback
-> > > > invalidates the vma range so that all tracking is inserted in the
-> > > > fault handler and removed in the close handler.
-> > > > 
-> > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> > > >  drivers/vfio/pci/vfio_pci.c         |   76 ++++++++++++++++++++++++++++++++++-
-> > > >  drivers/vfio/pci/vfio_pci_private.h |    7 +++
-> > > >  2 files changed, 81 insertions(+), 2 deletions(-)    
-> > >   
-> > > > +static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-> > > > +{
-> > > > +	struct vm_area_struct *vma = vmf->vma;
-> > > > +	struct vfio_pci_device *vdev = vma->vm_private_data;
-> > > > +
-> > > > +	if (vfio_pci_add_vma(vdev, vma))
-> > > > +		return VM_FAULT_OOM;
-> > > > +
-> > > > +	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> > > > +			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
-> > > > +		return VM_FAULT_SIGBUS;
-> > > > +
-> > > > +	return VM_FAULT_NOPAGE;
-> > > > +}
-> > > > +
-> > > > +static const struct vm_operations_struct vfio_pci_mmap_ops = {
-> > > > +	.open = vfio_pci_mmap_open,
-> > > > +	.close = vfio_pci_mmap_close,
-> > > > +	.fault = vfio_pci_mmap_fault,
-> > > > +};
-> > > > +
-> > > >  static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> > > >  {
-> > > >  	struct vfio_pci_device *vdev = device_data;
-> > > > @@ -1357,8 +1421,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
-> > > >  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-> > > >  	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
-> > > >  
-> > > > -	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-> > > > -			       req_len, vma->vm_page_prot);
-> > > > +	/*
-> > > > +	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
-> > > > +	 * change vm_flags within the fault handler.  Set them now.
-> > > > +	 */
-> > > > +	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-> > > > +	vma->vm_ops = &vfio_pci_mmap_ops;    
-> > > 
-> > > Perhaps do the vfio_pci_add_vma & remap_pfn_range combo here if the
-> > > BAR is activated ? That way a fully populated BAR is presented in the
-> > > common case and avoids taking a fault path?
-> > > 
-> > > But it does seem OK as is  
-> > 
-> > Thanks for reviewing.  There's also an argument that we defer
-> > remap_pfn_range() until the device is actually touched, which might
-> > reduce the startup latency.  
+On 04/05/2020 18:25, Jens Axboe wrote:
+> On 5/4/20 9:19 AM, Gustavo A. R. Silva wrote:
+>> In case force_nonblock happens to be true, the function returns
+>> at:
+>>
+>>  2779         if (force_nonblock)
+>>  2780                 return -EAGAIN;
+>>
+>> before reaching this line of code. So, the null check on force_nonblock
+>> at 2785, is never actually being executed.
+>>
+>> Addresses-Coverity-ID: 1492838 ("Logically dead code")
+>> Fixes: 2fb3e82284fc ("io_uring: punt splice async because of inode mutex")
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  fs/io_uring.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index e5dfbbd2aa34..4b1efb062f7f 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -2782,7 +2782,7 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
+>>  	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
+>>  	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
+>>  	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
+>> -	if (force_nonblock && ret == -EAGAIN)
+>> +	if (ret == -EAGAIN)
+>>  		return -EAGAIN;
 > 
-> But not startup to a functional VM as that will now have to take the
-> slower fault path.
+> This isn't right, it should just remove the two lines completely. But
+> also see:
 
-We need to take the fault path regardless because a VM will size and
-(virtually) map the BARs, toggling the memory enable bit.  As provided
-here, we don't trigger the fault unless the user attempts to access the
-BAR or we DMA map the BAR.  That defers the fault until the VM is (to
-some extent) up and running, and has a better chance for multi-threaded
-faulting than does QEMU initialization. 
- 
-> > It's also a bit inconsistent with the vm_ops.open() path where I
-> > can't return error, so I can't call vfio_pci_add_vma(), I can only
-> > zap the vma so that the fault handler can return an error if
-> > necessary.  
+Oh, right, it will ignore O_NONBLOCK and be resubmitted, as going through
+io_wq_submit_work(). I need to be more attentive.
+
+
 > 
-> open could allocate memory so the zap isn't needed. If allocation
-> fails then do the zap and take the slow path.
-
-That's a good idea, but it also gives us one more initialization
-variation.  I thought it was a rather nice feature that our vma_list
-includes only vmas that have actually faulted in the mapping since it
-was last zapped.  This is our steady state, so why not get there
-immediately rather than putting every mmap or open into the list,
-regardless of whether that particular vma ever accesses the mapping?
-If we have vmas in our vma_list that have never accessed the mapping,
-we're increasing our latency on zap.
-
-> > handler.  If there's a good reason to do otherwise, I can make the
-> > change, but I doubt I'd have encountered the dma mapping of an
-> > unfaulted vma issue had I done it this way, so maybe there's a test
-> > coverage argument as well.  Thanks,  
+> https://lore.kernel.org/io-uring/529ea928-88a6-2cbe-ba8c-72b4c68cc7e8@kernel.dk/T/#u
 > 
-> This test is best done by having one thread disable the other bar
-> while another thread is trying to map it
 
-We can split hairs on the best mechanism to trigger this, but the best
-test is the one that actually gets run, and this triggered by simply
-starting an assigned device VM.  Thanks,
-
-Alex
-
+-- 
+Pavel Begunkov
