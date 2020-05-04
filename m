@@ -2,120 +2,146 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D611EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3839EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF59F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="rAwrIjR/"
+	by mail.kernel.org (Postfix) with ESMTP id 1ACAF2075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:29:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgEDN3l (ORCPT
+        id S1728240AbgEDN3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:29:41 -0400
-Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:60982 "EHLO
-        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726404AbgEDN3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:29:38 -0400
-Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 6E0612E0DF0;
-        Mon,  4 May 2020 16:29:31 +0300 (MSK)
-Received: from sas2-32987e004045.qloud-c.yandex.net (sas2-32987e004045.qloud-c.yandex.net [2a02:6b8:c08:b889:0:640:3298:7e00])
-        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id ONPkaKCySh-TUW0g9np;
-        Mon, 04 May 2020 16:29:31 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1588598971; bh=ACX3+Kjv5E3oD5vNgDl+54nvwQYFB1P5GSJhJZbV9OY=;
-        h=Message-ID:Date:To:From:Subject;
-        b=rAwrIjR//k3mW9rEBXzWcDKsqOJIpjQyCffU1ukvAQVJtsFti82vcvHBslQUGyoEO
-         LXZXh2j2HiAnetq814e7vgjngYFcmyl4vRyVGq02eAqRz7xC2/KiD1uwOQ3QC08imG
-         CmsMI/OpSbKCvdOyRNl8d7/UNKhtoG/tNKLRVcCo=
-Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b081:409::1:8])
-        by sas2-32987e004045.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id XuQMN8HZVe-TTW88Pdb;
-        Mon, 04 May 2020 16:29:30 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH 1/4] block/part_stat: remove rcu_read_lock() from
- part_stat_lock()
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Date:   Mon, 04 May 2020 16:29:29 +0300
-Message-ID: <158859896942.19836.15240144203131230746.stgit@buzz>
-User-Agent: StGit/0.22-32-g6a05
+        Mon, 4 May 2020 09:29:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33040 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbgEDN3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 09:29:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 16598AD2C;
+        Mon,  4 May 2020 13:29:51 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id E7EB7604EE; Mon,  4 May 2020 15:29:47 +0200 (CEST)
+Date:   Mon, 4 May 2020 15:29:47 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marek Vasut <marex@denx.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>, mkl@pengutronix.de,
+        kernel@pengutronix.de, David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v5 1/2] ethtool: provide UAPI for PHY master/slave
+ configuration.
+Message-ID: <20200504132947.GB8237@lion.mk-sys.cz>
+References: <20200504071214.5890-1-o.rempel@pengutronix.de>
+ <20200504071214.5890-2-o.rempel@pengutronix.de>
+ <20200504091044.GA8237@lion.mk-sys.cz>
+ <20200504101029.zt3eu7jsywdiq4tu@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504101029.zt3eu7jsywdiq4tu@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RCU lock is required only in blk_account_io_start() to lookup partition.
-After that request holds reference to related hd_struct.
+On Mon, May 04, 2020 at 12:10:29PM +0200, Oleksij Rempel wrote:
+> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> > > index ac2784192472f..42dda9d2082ee 100644
+> > > --- a/drivers/net/phy/phy_device.c
+> > > +++ b/drivers/net/phy/phy_device.c
+> > > @@ -1768,6 +1768,90 @@ int genphy_setup_forced(struct phy_device *phydev)
+> > >  }
+> > >  EXPORT_SYMBOL(genphy_setup_forced);
+> > >  
+> > > +static int genphy_setup_master_slave(struct phy_device *phydev)
+> > > +{
+> > > +	u16 ctl = 0;
+> > > +
+> > > +	if (!phydev->is_gigabit_capable)
+> > > +		return 0;
+> > 
+> > Why did you revert to silently ignoring requests in this case?
+> 
+> genphy_setup_forced() is called by __genphy_config_aneg() and this can
+> be called by a PHY driver after configuring master slave mode locally by
+> PHY driver. See tja11xx patch. Same can be potentially done in the phy/realtek.c
+> driver.
+> 
+> Currently my imagination is not caffeanized enough to
+> provide a better solution. Do you have ideas?
 
-Replace get_cpu() with preempt_disable() - returned cpu index is unused.
+If we have the check in ethnl_update_linkmodes(), we shouldn't really
+get here so I believe we can leave this part as it is.
 
-Non-SMP case also needs preempt_disable, otherwise statistics update could
-be non-atomic. Previously that was provided by rcu_read_lock().
+> > >  static int ethnl_update_linkmodes(struct genl_info *info, struct nlattr **tb,
+> > >  				  struct ethtool_link_ksettings *ksettings,
+> > >  				  bool *mod)
+> > >  {
+> > >  	struct ethtool_link_settings *lsettings = &ksettings->base;
+> > >  	bool req_speed, req_duplex;
+> > > +	const struct nlattr *master_slave_cfg;
+> > >  	int ret;
+> > >  
+> > > +	master_slave_cfg = tb[ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG];
+> > > +	if (master_slave_cfg) {
+> > > +		u8 cfg = nla_get_u8(master_slave_cfg);
+> > > +		if (!ethnl_validate_master_slave_cfg(cfg)) {
+> > > +			GENL_SET_ERR_MSG(info, "LINKMODES_MASTER_SLAVE_CFG contains not valid value");
+> > > +			return -EOPNOTSUPP;
+> > > +		}
+> > > +	}
+> > 
+> > Please set also the "bad attribute" in extack, it may help
+> > non-interactive clients.
+> > 
+> > Also, it would be nice to report error if client wants to set master/slave but
+> > driver does not support it. How about this?
+> > 
+> > 	if (master_slave_cfg) {
+> > 		u8 cfg = nla_get_u8(master_slave_cfg);
+> > 
+> > 		if (lsettings->master_slave_cfg == MASTER_SLAVE_CFG_UNSUPPORTED) {
+> > 			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
+> > 					    "master/slave configuration not supported by device");
+> > 			return -EOPNOTSUPP;
+> > 		}
+> > 		if (!ethnl_validate_master_slave_cfg(cfg)) {
+> > 			NL_SET_ERR_MSG_ATTR(info->extack, master_slave_cfg,
+> > 					    "master/slave value is invalid");
+> > 			return -EOPNOTSUPP;
+> > 		}
+> > 	}
+> > 
+> 
+> looks good. thx!
+> 
+> > 
+> > Do you plan to allow handling master/slave also via ioctl()?
+> 
+> no.
+> 
+> > If yes, we should
+> > also add the sanity checks to ioctl code path. If not, we should prevent
+> > passing non-zero values from userspace to driver.
+> 
+> What is the best place to add this sanity check?
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
----
- block/blk-core.c          |    3 +++
- include/linux/part_stat.h |    7 +++----
- 2 files changed, 6 insertions(+), 4 deletions(-)
+If there is no plan to allow handling master/slave via ioctl, the best
+option would IMHO be zeroing both fields in ethtool_get_link_ksettings()
+right before the call to store_link_ksettings_for_user() and either
+zeroing master_slave_cfg in ethtool_set_link_ksettings() after the call
+load_link_ksettings_from_user(), or checking that it's zero (i.e. that
+userspace left it untouched).
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 7f11560bfddb..45ddf7238c06 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1362,6 +1362,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
- 		part = rq->part;
- 		part_stat_inc(part, merges[rw]);
- 	} else {
-+		rcu_read_lock();
- 		part = disk_map_sector_rcu(rq->rq_disk, blk_rq_pos(rq));
- 		if (!hd_struct_try_get(part)) {
- 			/*
-@@ -1375,6 +1376,8 @@ void blk_account_io_start(struct request *rq, bool new_io)
- 			part = &rq->rq_disk->part0;
- 			hd_struct_get(part);
- 		}
-+		rcu_read_unlock();
-+
- 		part_inc_in_flight(rq->q, part, rw);
- 		rq->part = part;
- 	}
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index ece607607a86..755a01f0fd61 100644
---- a/include/linux/part_stat.h
-+++ b/include/linux/part_stat.h
-@@ -16,9 +16,10 @@
-  * part_stat_{add|set_all}() and {init|free}_part_stats are for
-  * internal use only.
-  */
-+#define part_stat_lock()	preempt_disable()
-+#define part_stat_unlock()	preempt_enable()
-+
- #ifdef	CONFIG_SMP
--#define part_stat_lock()	({ rcu_read_lock(); get_cpu(); })
--#define part_stat_unlock()	do { put_cpu(); rcu_read_unlock(); } while (0)
- 
- #define part_stat_get_cpu(part, field, cpu)				\
- 	(per_cpu_ptr((part)->dkstats, (cpu))->field)
-@@ -58,8 +59,6 @@ static inline void free_part_stats(struct hd_struct *part)
- }
- 
- #else /* !CONFIG_SMP */
--#define part_stat_lock()	({ rcu_read_lock(); 0; })
--#define part_stat_unlock()	rcu_read_unlock()
- 
- #define part_stat_get(part, field)		((part)->dkstats.field)
- #define part_stat_get_cpu(part, field, cpu)	part_stat_get(part, field)
-
+Michal
