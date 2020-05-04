@@ -2,161 +2,103 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A046DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BD7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7369220757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B9620663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BtzWkZxy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dhtEwmdY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgEDXxA (ORCPT
+        id S1728453AbgEDXxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:53:00 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:41862 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728364AbgEDXw7 (ORCPT
+        Mon, 4 May 2020 19:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728273AbgEDXxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:52:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588636378;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aMMkAii//hOjjah/wFry8XI5JrN/TtYxtkhOj6HfRi0=;
-        b=BtzWkZxyI0Nt+up6hKu6HMwpPVUR4LnawwbtbETO3gR1spry1BG+ORVaOUW2w3It7wNTr1
-        w+LhIl95BJpv8j5o5ornSC7s3z+nXfCOD5Ku7wrB5sLxUXhSFlR7m4L7em98XUZsdRq0s2
-        0y4VY/mI/FQkIIDuxd9blKliMBK9Ur8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-DWmS5O72MsepFRv42TrOaA-1; Mon, 04 May 2020 19:52:55 -0400
-X-MC-Unique: DWmS5O72MsepFRv42TrOaA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D07C835B4F;
-        Mon,  4 May 2020 23:52:53 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-132.bne.redhat.com [10.64.54.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5856962486;
-        Mon,  4 May 2020 23:52:48 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH RFC 2/6] KVM: x86: extend struct kvm_vcpu_pv_apf_data with
- token info
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200429093634.1514902-1-vkuznets@redhat.com>
- <20200429093634.1514902-3-vkuznets@redhat.com>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <409b802c-0abe-0cb4-92fe-925733bfd612@redhat.com>
-Date:   Tue, 5 May 2020 09:52:45 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 4 May 2020 19:53:52 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EE1C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:53:51 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id g26so537600qtv.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uU5L3mTKQu7zv3TIEEDa+1AYyusenBY7XS77GDMeGtU=;
+        b=dhtEwmdYZyY0rRSaEhvfcNC1vITa/c/X54xRPc3E0yng8bUWygzhzNuicxUYw0p9wx
+         Uc/YksC7AF7oeveIe8SZ9pqUUWT1luLkag9l0OUTeIostGlmXMBRCKw6CWhLwmbm7oQ8
+         fnuP9O0PS2qxUZvw3QSic2awNcaQdSn326lFZqZ+K89aplT1BDmde15uHh2AePrHezDh
+         J32jKYW7mqwaHmgHHu4qHSyrrxmks45wybtVMZgvoK8uaH8ve2sLPQw0fD993jqhY9hX
+         f5uunAV4vzbneq4GfLT+I33hcvhPkDQSuGdYqxqRgIRDhNgTUDc19EliQf1p8HFIsF/b
+         bGBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uU5L3mTKQu7zv3TIEEDa+1AYyusenBY7XS77GDMeGtU=;
+        b=dsYvaJhZCeb4jbpDECOinrNLlPFGcgBF9GmV6JwWHvK8HSInuZUesPbK3FxMsbwh8r
+         kS3ARuB1uT1n5kPCQs3gwf9CcfGy5Rp2w6UlnhKLzwb7g6PAity5llIK7I6s3OxkxiTW
+         nZg9p4roV678yISIgYP8uN7h/zrxO18k8Apst+ClqPW/J3vtJtcVyBntSXx9uSmF2veb
+         RPEyI5TkF7QajS50MH0xGciqdU5Fq7eE6eL1HXbXIY5m3+h6NaQlMn97hRd0Z1CMNAcP
+         bM4GxBolahkeg9AF5UNUVTHoil67MNzhWuAIsRIFrlrhBpn92VJemvqnxi0UHV31poov
+         +qEQ==
+X-Gm-Message-State: AGi0PuZTGQ22g7ugSqQ1O5wa1dF8pmggbNIHLbr5Oswur6lVDHuOb21g
+        1d2BbHBjmrnhcnZ4wm3xuwgDvyvJWq8=
+X-Google-Smtp-Source: APiQypJO619AUMvWP6tjl8Otz6evwH1MBuUzxWXt92IyN7ElOczdcZodDUh4lgeHbyyZyfkO5hwADw==
+X-Received: by 2002:ac8:65d4:: with SMTP id t20mr36761qto.358.1588636430635;
+        Mon, 04 May 2020 16:53:50 -0700 (PDT)
+Received: from beast.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id z18sm296004qti.47.2020.05.04.16.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 16:53:50 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 0/5] net: ipa: kill endpoint stop workaround
+Date:   Mon,  4 May 2020 18:53:40 -0500
+Message-Id: <20200504235345.17118-1-elder@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200429093634.1514902-3-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
+It turns out that a workaround that performs a small DMA operation
+between retried attempts to stop a GSI channel is not needed for any
+supported hardware.  The hardware quirk that required the extra DMA
+operation was fixed after IPA v3.1.  So this series gets rid of that
+workaround code, along with some other code that was only present to
+support it.
 
-On 4/29/20 7:36 PM, Vitaly Kuznetsov wrote:
-> Currently, APF mechanism relies on the #PF abuse where the token is being
-> passed through CR2. If we switch to using interrupts to deliver page-ready
-> notifications we need a different way to pass the data. Extent the existing
-> 'struct kvm_vcpu_pv_apf_data' with token information.
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->   arch/x86/include/uapi/asm/kvm_para.h |  3 ++-
->   arch/x86/kvm/x86.c                   | 10 ++++++----
->   2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-> index 2a8e0b6b9805..df2ba34037a2 100644
-> --- a/arch/x86/include/uapi/asm/kvm_para.h
-> +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> @@ -113,7 +113,8 @@ struct kvm_mmu_op_release_pt {
->   
->   struct kvm_vcpu_pv_apf_data {
->   	__u32 reason;
-> -	__u8 pad[60];
-> +	__u32 token;
-> +	__u8 pad[56];
->   	__u32 enabled;
->   };
->   
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b93133ee07ba..7c21c0cf0a33 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2662,7 +2662,7 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
->   	}
->   
->   	if (kvm_gfn_to_hva_cache_init(vcpu->kvm, &vcpu->arch.apf.data, gpa,
-> -					sizeof(u32)))
-> +					sizeof(u64)))
->   		return 1;
->   
->   	vcpu->arch.apf.send_user_only = !(data & KVM_ASYNC_PF_SEND_ALWAYS);
-> @@ -10352,8 +10352,9 @@ static void kvm_del_async_pf_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
->   	}
->   }
->   
-> -static int apf_put_user(struct kvm_vcpu *vcpu, u32 val)
-> +static int apf_put_user(struct kvm_vcpu *vcpu, u32 reason, u32 token)
->   {
-> +	u64 val = (u64)token << 32 | reason;
->   
->   	return kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.apf.data, &val,
->   				      sizeof(val));
-> @@ -10405,7 +10406,8 @@ void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
->   	kvm_add_async_pf_gfn(vcpu, work->arch.gfn);
->   
->   	if (kvm_can_deliver_async_pf(vcpu) &&
-> -	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT)) {
-> +	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_NOT_PRESENT,
-> +			  work->arch.token)) {
->   		fault.vector = PF_VECTOR;
->   		fault.error_code_valid = true;
->   		fault.error_code = 0;
-> @@ -10438,7 +10440,7 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
->   	trace_kvm_async_pf_ready(work->arch.token, work->cr2_or_gpa);
->   
->   	if (vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED &&
-> -	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_READY)) {
-> +	    !apf_put_user(vcpu, KVM_PV_REASON_PAGE_READY, work->arch.token)) {
->   			fault.vector = PF_VECTOR;
->   			fault.error_code_valid = true;
->   			fault.error_code = 0;
-> 
+NOTE:  This series depends on (and includes/duplicates) another patch
+       that has already been committed in the net tree:
+         713b6ebb4c37 net: ipa: fix a bug in ipa_endpoint_stop()
 
-It would be as below based on two facts: (1) token is more important than reason;
-(2) token will be put into high word of @val. I think apf_{get,put}_user() might
-be worthy to be inline. However, it's not a big deal.
+					-Alex
+Alex Elder (5):
+  net: ipa: fix a bug in ipa_endpoint_stop()
+  net: ipa: get rid of workaround in ipa_endpoint_stop()
+  net: ipa: don't retry in ipa_endpoint_stop()
+  net: ipa: kill ipa_endpoint_stop()
+  net: ipa: kill ipa_cmd_dma_task_32b_addr_add()
 
-    static inline int apf_put_user(struct kvm_vcpu *vcpu, u32 token, u32 reason)
+ drivers/net/ipa/ipa_cmd.c      | 59 -------------------------
+ drivers/net/ipa/ipa_cmd.h      | 11 -----
+ drivers/net/ipa/ipa_endpoint.c | 80 +++-------------------------------
+ drivers/net/ipa/ipa_endpoint.h |  2 -
+ 4 files changed, 6 insertions(+), 146 deletions(-)
 
-Thanks,
-Gavin
-    
+-- 
+2.20.1
 
