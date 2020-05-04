@@ -2,136 +2,178 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155ECC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA15C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D835920721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D1A2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="SydrB3k6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMVmOxzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgEDPjK (ORCPT
+        id S1729374AbgEDPkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:39:10 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:16900 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726551AbgEDPjJ (ORCPT
+        Mon, 4 May 2020 11:40:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728294AbgEDPkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:39:09 -0400
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FcxeZ018780;
-        Mon, 4 May 2020 11:39:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=O2WbsxsZuUPSXf26/rBUiMV6gTfnpKukAyM0OOwerJk=;
- b=SydrB3k6fn7Ql0ZE3/cEDl2uNe/SDD+fnPJQAguN/1oEqngZvr8DaPhWAlRQH+RnUJK+
- 2OaxadohFRW921MykkCJlSsCphIdDnJSLRPKcMB5sHbNIu+uXZ2kqfl8bNTD5zJ/gm2+
- WpOyWVRCXDR5i1EUXrxFV5YVwoQ3y/i3s11uhDnkIRHU/YmWbm+zZSixi4p62O/3EUFK
- 5n7scSPQK86+qDqTr2vFaoow+yAx/stzFNP0qZ6K1U92zXUmqYNf7Cw+VW+s1V33CWsD
- D9chR4i1yLfgPp4pPNpUzKc7GoG4poaEKsB9+fi/sn1KZ12GCi020tLyr9BZm1pUjXe7 ZQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 30s43a45qu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 11:39:07 -0400
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FWh3s053414;
-        Mon, 4 May 2020 11:39:06 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0b-00154901.pphosted.com with ESMTP id 30s57eg13j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 11:39:06 -0400
-X-LoopCount0: from 10.166.132.128
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="545729394"
-From:   <Mario.Limonciello@dell.com>
-To:     <hdegoede@redhat.com>, <dvhart@infradead.org>, <andy@infradead.org>
-CC:     <linux-acpi@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/5] platform/x86: intel-vbtn: Fixes + rework to make it
- work on more devices
-Thread-Topic: [PATCH 0/5] platform/x86: intel-vbtn: Fixes + rework to make it
- work on more devices
-Thread-Index: AQHWIK+xAhXVMpX2lEOTT4RsIve+eqiYDgUw
-Date:   Mon, 4 May 2020 15:38:58 +0000
-Message-ID: <e729ee1142a94fd394e0dbfb84e52a4b@AUSX13MPC101.AMER.DELL.COM>
-References: <20200502182951.114231-1-hdegoede@redhat.com>
-In-Reply-To: <20200502182951.114231-1-hdegoede@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-05-04T15:21:38.2713206Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=c39d1487-c787-4f40-9be5-36055d49081e;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 4 May 2020 11:40:00 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B8EC061A0E;
+        Mon,  4 May 2020 08:40:00 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id b12so12746913ion.8;
+        Mon, 04 May 2020 08:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GSh55CCbMhlQ6Ehk5ylQlYonoWrHiCRrR3CxkJ5viUw=;
+        b=TMVmOxzBKI7LellWJ7F60mt/JpgFh9iwcKncHCdLGVXpAg3hKnj/oHvXTGDDBRBzd1
+         wULU6BtCjnNoxLOyvLQNRqdmUdcIBxlQ4fWOA2mQLZhjRGcFHtnDq1vk56r0qqVlG/8a
+         zJSV31XxaCFB1B6FlzYpxlvVlD4uzeCrg1R/IEoeZlOXGMHnRUZfjvq+UHzjb7wd9A3a
+         i5hnBEKsw03lfNr9KXKkvmZ73tdCHjs0hxcFnzGFl/MeFVfzbtfP/aR+wbujiGhWv4Fi
+         6UDReaAPsD5LzC3wPGT7pC2DdnLauFJ9WwZP73mdyBNLLZ5D1uNx9UnBxQJ8m/QDV+EV
+         838g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GSh55CCbMhlQ6Ehk5ylQlYonoWrHiCRrR3CxkJ5viUw=;
+        b=VuVvNeYOnR6hq9JCv82oBMRcAP3Bnk9qAvhiSLavnRBVi3UiEU5rcDO3loJ1SSwTgy
+         uipYtNfsx+PjW1E+vCUDwl3njxHAOTPHd5nJm4M/mM1rFNJZhaxkjckOLZicxdR//DNP
+         7gpJXvnZXRJScZGnLXO+VaDqU4wFrCOj3LvidkfYb+RcMhVrhR66YprbtWe4+XPzCsJJ
+         EGfQPPSmqJBNirJR4655Cs8MI6X1WS+hiZYb6qxx/WOVC7D5eVoW1eDe6lbVjtoAPXgR
+         cf6wB7Ez6X+Haa3wq7aKKjSIFGYS0KqzgLtX/ZBxOVpggLx3cqfE8wt2wMRJsuAWsvQS
+         I5lg==
+X-Gm-Message-State: AGi0PuYNgVz6AL2uJm0nVR9rVcYWsTytu1Ms9inMxHUvtkXol4UwFFF6
+        kh2zW6+frYC9RCIA5Ee9FjzYuzHkOW6yGoGOMnxncKPzEdw=
+X-Google-Smtp-Source: APiQypL6wbyjFbj5yLrzGcBcVeHFcmQNaNaIDoEiwyxvlC5/IVvgDQmFeu9cpbRCrq64VWTYRaX6UbiJRzgyTH+6Mjs=
+X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr16045599iob.10.1588606799979;
+ Mon, 04 May 2020 08:39:59 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_10:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- bulkscore=0 phishscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040126
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040125
+References: <20200430182712.237526-1-shakeelb@google.com> <20200504065600.GA22838@dhcp22.suse.cz>
+ <CALvZod5Ao2PEFPEOckW6URBfxisp9nNpNeon1GuctuHehqk_6Q@mail.gmail.com>
+ <20200504141136.GR22838@dhcp22.suse.cz> <CALvZod7Ls7rTDOr5vXwEiPneLqbq3JoxfFBxZZ71YWgvLkNr5A@mail.gmail.com>
+ <20200504150052.GT22838@dhcp22.suse.cz> <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
+In-Reply-To: <CALvZod7EeQm-T4dsBddfMY_szYw3m8gRh5R5GfjQiuQAtCocug@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Mon, 4 May 2020 23:39:24 +0800
+Message-ID: <CALOAHbCK4dBmL059Lodr-Z-WDnw_f0YtqD8YmaJ0ajGdHYrqhA@mail.gmail.com>
+Subject: Re: [PATCH] memcg: oom: ignore oom warnings from memory.max
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Hans de Goede <hdegoede@redhat.com>
-> Sent: Saturday, May 2, 2020 1:30 PM
-> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
-> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 0/5] platform/x86: intel-vbtn: Fixes + rework to make it =
-work
-> on more devices
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> Hi All,
->=20
-> Here is a series of fixes, mostly aimed at fixing commit: de9647efeaa9
-> ("platform/x86: intel-vbtn: Only activate tablet mode switch on 2-in-1's"=
-)
-> causing the driver to not bind on some devices where it could and
-> should report SW_TABLET_MODE.
->=20
-> The last commit makes the driver also work on some devices where it
-> previously would not work because they lack a VBDL method.
->=20
-> Mario, can you test this on a Dell XPS 9360 (for which you wrote the
-> de9647efeaa9 commit) to ensure that this series does not cause a
-> regression there?
+On Mon, May 4, 2020 at 11:36 PM Shakeel Butt <shakeelb@google.com> wrote:
+>
+> On Mon, May 4, 2020 at 8:00 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 04-05-20 07:53:01, Shakeel Butt wrote:
+> > > On Mon, May 4, 2020 at 7:11 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Mon 04-05-20 06:54:40, Shakeel Butt wrote:
+> > > > > On Sun, May 3, 2020 at 11:56 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > > >
+> > > > > > On Thu 30-04-20 11:27:12, Shakeel Butt wrote:
+> > > > > > > Lowering memory.max can trigger an oom-kill if the reclaim does not
+> > > > > > > succeed. However if oom-killer does not find a process for killing, it
+> > > > > > > dumps a lot of warnings.
+> > > > > >
+> > > > > > It shouldn't dump much more than the regular OOM report AFAICS. Sure
+> > > > > > there is "Out of memory and no killable processes..." message printed as
+> > > > > > well but is that a real problem?
+> > > > > >
+> > > > > > > Deleting a memcg does not reclaim memory from it and the memory can
+> > > > > > > linger till there is a memory pressure. One normal way to proactively
+> > > > > > > reclaim such memory is to set memory.max to 0 just before deleting the
+> > > > > > > memcg. However if some of the memcg's memory is pinned by others, this
+> > > > > > > operation can trigger an oom-kill without any process and thus can log a
+> > > > > > > lot un-needed warnings. So, ignore all such warnings from memory.max.
+> > > > > >
+> > > > > > OK, I can see why you might want to use memory.max for that purpose but
+> > > > > > I do not really understand why the oom report is a problem here.
+> > > > >
+> > > > > It may not be a problem for an individual or small scale deployment
+> > > > > but when "sweep before tear down" is the part of the workflow for
+> > > > > thousands of machines cycling through hundreds of thousands of cgroups
+> > > > > then we can potentially flood the logs with not useful dumps and may
+> > > > > hide (or overflow) any useful information in the logs.
+> > > >
+> > > > If you are doing this in a large scale and the oom report is really a
+> > > > problem then you shouldn't be resetting hard limit to 0 in the first
+> > > > place.
+> > > >
+> > >
+> > > I think I have pretty clearly described why we want to reset the hard
+> > > limit to 0, so, unless there is an alternative I don't see why we
+> > > should not be doing this.
+> >
+> > I am not saying you shouldn't be doing that. I am just saying that if
+> > you do then you have to live with oom reports.
+> >
+> > > > > > memory.max can trigger the oom kill and user should be expecting the oom
+> > > > > > report under that condition. Why is "no eligible task" so special? Is it
+> > > > > > because you know that there won't be any tasks for your particular case?
+> > > > > > What about other use cases where memory.max is not used as a "sweep
+> > > > > > before tear down"?
+> > > > >
+> > > > > What other such use-cases would be? The only use-case I can envision
+> > > > > of adjusting limits dynamically of a live cgroup are resource
+> > > > > managers. However for cgroup v2, memory.high is the recommended way to
+> > > > > limit the usage, so, why would resource managers be changing
+> > > > > memory.max instead of memory.high? I am not sure. What do you think?
+> > > >
+> > > > There are different reasons to use the hard limit. Mostly to contain
+> > > > potential runaways. While high limit might be a sufficient measure to
+> > > > achieve that as well the hard limit is the last resort. And it clearly
+> > > > has the oom killer semantic so I am not really sure why you are
+> > > > comparing the two.
+> > > >
+> > >
+> > > I am trying to see if "no eligible task" is really an issue and should
+> > > be warned for the "other use cases". The only real use-case I can
+> > > think of are resource managers adjusting the limit dynamically. I
+> > > don't see "no eligible task" a concerning reason for such use-case.
+> >
+> > It is very much a concerning reason to notify about like any other OOM
+> > situation due to hard limit breach. In this case it is worse in some
+> > sense because the limit cannot be trimmed down because there is no
+> > directly reclaimable memory at all. Such an oom situation is
+> > effectivelly conserved.
+> > --
+>
+> Let me make a more precise statement and tell me if you agree. The "no
+> eligible task" is concerning for the charging path but not for the
+> writer of memory.max. The writer can read the usage and
+> cgroup.[procs|events] to figure out the situation if needed.
 
-Unfortunately I can't double check that with WFH, I don't have access to th=
-is hardware.
+Agreed.
+cgroup.[procs|events] can give all the admin want in this situation.
+The oom report is a redundant infomation, really.
 
-> Also I have a question for you about using the DMI
-> chassis-type for this / a proposal for dealing with this differently
-> below the '---' of the commit msg of the 4th patch.
+> Usually
+> such writers (i.e. resource managers) use memory.high in addition to
+> memory.max. First set memory.high and once the usage is below the high
+> then set max to not induce the oom-kills.
+>
 
 
-OK will look.
+
+-- 
+Thanks
+Yafang
