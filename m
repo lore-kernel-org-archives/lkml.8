@@ -2,246 +2,159 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B807C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4C0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5508E206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bbQCRaBO"
+	by mail.kernel.org (Postfix) with ESMTP id C38D92073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbgEDQun (ORCPT
+        id S1729800AbgEDQwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:50:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58564 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729634AbgEDQun (ORCPT
+        Mon, 4 May 2020 12:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729604AbgEDQwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:50:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044GoeY3038670;
-        Mon, 4 May 2020 11:50:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1588611040;
-        bh=lsII3Py9s+SHOVmgNp+S9qM4NUvmFLJTFhD7yaqMXLA=;
-        h=From:To:CC:Subject:Date;
-        b=bbQCRaBOlWyggGD2bmWjmXVxYbJy1QBJxf2N1zihi5av1EakSM8eMsfPiTMS0iHk3
-         UXJLCJdHA5aVmjuZrnhnj1sY1g5wYzGuPlByVB5SUXNvMqLT+qGr0c2TTrXODhbMlj
-         DSmoVNVSQ/Y6QaiJF+vA+UdmKQ8L1AfSwn96pTAo=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044Goemx011435
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 May 2020 11:50:40 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
- 2020 11:50:40 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 May 2020 11:50:40 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044Goev6129119;
-        Mon, 4 May 2020 11:50:40 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>
-CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
-Date:   Mon, 4 May 2020 11:41:56 -0500
-Message-ID: <20200504164156.21469-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 4 May 2020 12:52:08 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1584BC061A0F;
+        Mon,  4 May 2020 09:52:08 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jVeK4-0001aX-Nv; Mon, 04 May 2020 18:52:04 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 47E8D1C047D;
+        Mon,  4 May 2020 18:52:04 +0200 (CEST)
+Date:   Mon, 04 May 2020 16:52:04 -0000
+From:   "tip-bot2 for Vamshi K Sthambamkadi" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/boot: Add kstrtoul() from lib/
+Cc:     Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1587645588-7130-2-git-send-email-vamshi.k.sthambamkadi@gmail.com>
+References: <1587645588-7130-2-git-send-email-vamshi.k.sthambamkadi@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Message-ID: <158861112423.8414.159944326230563590.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the bq27xxx.txt to yaml format
+The following commit has been merged into the x86/boot branch of tip:
 
-CC: Pali Rohár <pali@kernel.org>
-CC: Andrew F. Davis" <afd@ti.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Commit-ID:     5fafbebc86a0043ca5bbd8d3ce4f63dc5a02ad8e
+Gitweb:        https://git.kernel.org/tip/5fafbebc86a0043ca5bbd8d3ce4f63dc5a02ad8e
+Author:        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+AuthorDate:    Thu, 23 Apr 2020 18:09:47 +05:30
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 04 May 2020 15:19:07 +02:00
+
+x86/boot: Add kstrtoul() from lib/
+
+Add kstrtoul() to ../boot/ to be used by facilities there too.
+
+ [
+   bp: Massage, make _kstrtoul() static. Prepend function names with
+   "boot_". This is a temporary workaround for build errors like:
+
+   ld: arch/x86/boot/compressed/acpi.o: in function `count_immovable_mem_regions':
+   acpi.c:(.text+0x463): undefined reference to `_kstrtoul'
+   make[2]: *** [arch/x86/boot/compressed/Makefile:117: arch/x86/boot/compressed/vmlinux] Error 1
+
+   due to the namespace clash between x86/boot/ and kernel proper.
+   Future reorg will get rid of the linux/linux/ namespace as much as
+   possible so that x86/boot/ can be independent from kernel proper. ]
+
+Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/1587645588-7130-2-git-send-email-vamshi.k.sthambamkadi@gmail.com
 ---
- .../bindings/power/supply/bq27xxx.txt         | 56 -----------
- .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
- 2 files changed, 95 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+ arch/x86/boot/string.c | 43 ++++++++++++++++++++++++++++++++++++++++-
+ arch/x86/boot/string.h |  1 +-
+ 2 files changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-deleted file mode 100644
-index 4fa8e08df2b6..000000000000
---- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--TI BQ27XXX fuel gauge family
+diff --git a/arch/x86/boot/string.c b/arch/x86/boot/string.c
+index 8272a44..8a3fff9 100644
+--- a/arch/x86/boot/string.c
++++ b/arch/x86/boot/string.c
+@@ -117,7 +117,6 @@ static unsigned int simple_guess_base(const char *cp)
+  * @endp: A pointer to the end of the parsed string will be placed here
+  * @base: The number base to use
+  */
 -
--Required properties:
--- compatible: contains one of the following:
-- * "ti,bq27200" - BQ27200
-- * "ti,bq27210" - BQ27210
-- * "ti,bq27500" - deprecated, use revision specific property below
-- * "ti,bq27510" - deprecated, use revision specific property below
-- * "ti,bq27520" - deprecated, use revision specific property below
-- * "ti,bq27500-1" - BQ27500/1
-- * "ti,bq27510g1" - BQ27510-g1
-- * "ti,bq27510g2" - BQ27510-g2
-- * "ti,bq27510g3" - BQ27510-g3
-- * "ti,bq27520g1" - BQ27520-g1
-- * "ti,bq27520g2" - BQ27520-g2
-- * "ti,bq27520g3" - BQ27520-g3
-- * "ti,bq27520g4" - BQ27520-g4
-- * "ti,bq27521" - BQ27521
-- * "ti,bq27530" - BQ27530
-- * "ti,bq27531" - BQ27531
-- * "ti,bq27541" - BQ27541
-- * "ti,bq27542" - BQ27542
-- * "ti,bq27546" - BQ27546
-- * "ti,bq27742" - BQ27742
-- * "ti,bq27545" - BQ27545
-- * "ti,bq27411" - BQ27411
-- * "ti,bq27421" - BQ27421
-- * "ti,bq27425" - BQ27425
-- * "ti,bq27426" - BQ27426
-- * "ti,bq27441" - BQ27441
-- * "ti,bq27621" - BQ27621
--- reg: integer, I2C address of the fuel gauge.
--
--Optional properties:
--- monitored-battery: phandle of battery characteristics node
--    The fuel gauge uses the following battery properties:
--    + energy-full-design-microwatt-hours
--    + charge-full-design-microamp-hours
--    + voltage-min-design-microvolt
--  Both or neither of the *-full-design-*-hours properties must be set.
--  See Documentation/devicetree/bindings/power/supply/battery.txt
--
--Example:
--
--	bat: battery {
--		compatible = "simple-battery";
--		voltage-min-design-microvolt = <3200000>;
--		energy-full-design-microwatt-hours = <5290000>;
--		charge-full-design-microamp-hours = <1430000>;
--	};
--
--	bq27510g3: fuel-gauge@55 {
--		compatible = "ti,bq27510g3";
--		reg = <0x55>;
--		monitored-battery = <&bat>;
--	};
-diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-new file mode 100644
-index 000000000000..6c53ee849004
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
-@@ -0,0 +1,95 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+ unsigned long long simple_strtoull(const char *cp, char **endp, unsigned int base)
+ {
+ 	unsigned long long result = 0;
+@@ -335,3 +334,45 @@ int kstrtoull(const char *s, unsigned int base, unsigned long long *res)
+ 		s++;
+ 	return _kstrtoull(s, base, res);
+ }
 +
-+title: TI BQ27XXX fuel gauge family
++static int _kstrtoul(const char *s, unsigned int base, unsigned long *res)
++{
++	unsigned long long tmp;
++	int rv;
 +
-+maintainers:
-+  - Pali Rohár <pali@kernel.org>
-+  - Andrew F. Davis" <afd@ti.com>
-+  - Sebastian Reichel <sre@kernel.org>
++	rv = kstrtoull(s, base, &tmp);
++	if (rv < 0)
++		return rv;
++	if (tmp != (unsigned long)tmp)
++		return -ERANGE;
++	*res = tmp;
++	return 0;
++}
 +
-+description: |
-+  Support various Texas Instruments fuel gauge devices that share similar
-+  register maps and power supply properties
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,bq27200 - BQ27200
-+      - ti,bq27210 - BQ27210
-+      - ti,bq27500 - deprecated, use revision specific property below
-+      - ti,bq27510 - deprecated, use revision specific property below
-+      - ti,bq27520 - deprecated, use revision specific property below
-+      - ti,bq27500-1 - BQ27500/1
-+      - ti,bq27510g1 - BQ27510-g1
-+      - ti,bq27510g2 - BQ27510-g2
-+      - ti,bq27510g3 - BQ27510-g3
-+      - ti,bq27520g1 - BQ27520-g1
-+      - ti,bq27520g2 - BQ27520-g2
-+      - ti,bq27520g3 - BQ27520-g3
-+      - ti,bq27520g4 - BQ27520-g4
-+      - ti,bq27521 - BQ27521
-+      - ti,bq27530 - BQ27530
-+      - ti,bq27531 - BQ27531
-+      - ti,bq27541 - BQ27541
-+      - ti,bq27542 - BQ27542
-+      - ti,bq27546 - BQ27546
-+      - ti,bq27742 - BQ27742
-+      - ti,bq27545 - BQ27545
-+      - ti,bq27411 - BQ27411
-+      - ti,bq27421 - BQ27421
-+      - ti,bq27425 - BQ27425
-+      - ti,bq27426 - BQ27426
-+      - ti,bq27441 - BQ27441
-+      - ti,bq27621 - BQ27621
-+
-+  reg:
-+    maxItems: 1
-+    description: integer, I2C address of the fuel gauge.
-+
-+  monitored-battery:
-+    description: phandle of battery characteristics node
-+
-+  energy-full-design-microwatt-hours:
-+    description: |
-+      See Documentation/devicetree/bindings/power/supply/battery.txt.
-+      If this property is set then charge-full-design-microamp-hours must be
-+      set as well.
-+
-+  charge-full-design-microamp-hours:
-+    description: |
-+      See Documentation/devicetree/bindings/power/supply/battery.txt.
-+      If this property is set then energy-full-design-microwatt-hours must be
-+      set as well.
-+
-+  voltage-min-design-microvolt:
-+    description: |
-+      See Documentation/devicetree/bindings/power/supply/battery.txt.
-+
-+required:
-+  - compatible
-+  - reg
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      bat: battery {
-+        compatible = "simple-battery";
-+        voltage-min-design-microvolt = <3200000>;
-+        energy-full-design-microwatt-hours = <5290000>;
-+        charge-full-design-microamp-hours = <1430000>;
-+      };
-+
-+      bq27510g3: fuel-gauge@55 {
-+        compatible = "ti,bq27510g3";
-+        reg = <0x55>;
-+        monitored-battery = <&bat>;
-+      };
-+    };
--- 
-2.25.1
-
++/**
++ * kstrtoul - convert a string to an unsigned long
++ * @s: The start of the string. The string must be null-terminated, and may also
++ *  include a single newline before its terminating null. The first character
++ *  may also be a plus sign, but not a minus sign.
++ * @base: The number base to use. The maximum supported base is 16. If base is
++ *  given as 0, then the base of the string is automatically detected with the
++ *  conventional semantics - If it begins with 0x the number will be parsed as a
++ *  hexadecimal (case insensitive), if it otherwise begins with 0, it will be
++ *  parsed as an octal number. Otherwise it will be parsed as a decimal.
++ * @res: Where to write the result of the conversion on success.
++ *
++ * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
++ * Used as a replacement for the simple_strtoull.
++ */
++int boot_kstrtoul(const char *s, unsigned int base, unsigned long *res)
++{
++	/*
++	 * We want to shortcut function call, but
++	 * __builtin_types_compatible_p(unsigned long, unsigned long long) = 0.
++	 */
++	if (sizeof(unsigned long) == sizeof(unsigned long long) &&
++	    __alignof__(unsigned long) == __alignof__(unsigned long long))
++		return kstrtoull(s, base, (unsigned long long *)res);
++	else
++		return _kstrtoul(s, base, res);
++}
+diff --git a/arch/x86/boot/string.h b/arch/x86/boot/string.h
+index 38d8f2f..995f7b7 100644
+--- a/arch/x86/boot/string.h
++++ b/arch/x86/boot/string.h
+@@ -30,4 +30,5 @@ extern unsigned long long simple_strtoull(const char *cp, char **endp,
+ 					  unsigned int base);
+ 
+ int kstrtoull(const char *s, unsigned int base, unsigned long long *res);
++int boot_kstrtoul(const char *s, unsigned int base, unsigned long *res);
+ #endif /* BOOT_STRING_H */
