@@ -2,75 +2,267 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF15C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D26C47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106E12071C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7048D2071C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NPoJZPqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728498AbgEDJsG (ORCPT
+        id S1728401AbgEDJuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:48:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33172 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgEDJsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:48:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 66606AE53;
-        Mon,  4 May 2020 09:48:05 +0000 (UTC)
-Message-ID: <1588585655.13662.5.camel@suse.com>
-Subject: Re: [PATCH] xhci: Prevent runtime suspend all the time with
- XHCI_RESET_ON_RESUME quirk
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        mathias.nyman@intel.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 04 May 2020 11:47:35 +0200
-In-Reply-To: <20200504091952.15820-1-kai.heng.feng@canonical.com>
-References: <20200504091952.15820-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mon, 4 May 2020 05:50:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49863 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728196AbgEDJuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:50:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588585804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HaYmUd4XEuSgafwC55WiMzv1aLTWj2AlIXJRBF8pG+o=;
+        b=NPoJZPqpNybho1wzvDNGEbbbYQNysZThVVuyPIXPIjmAY2T8cuOUj7oM4gRJitMqT1aJi2
+        LDIZ0Vh9UIJFLlCgCKCrNdPIMmSbTvVGTi98fkJayYHcpDX3RgX/OTP0LSQ+PZn8ehoj0+
+        fDug/enVhsIewrk6+Ar9hbmdEUxeOpY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-o0BXe8W3MzWjYdiH387WVw-1; Mon, 04 May 2020 05:50:02 -0400
+X-MC-Unique: o0BXe8W3MzWjYdiH387WVw-1
+Received: by mail-wr1-f70.google.com with SMTP id u4so10500522wrm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 02:50:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HaYmUd4XEuSgafwC55WiMzv1aLTWj2AlIXJRBF8pG+o=;
+        b=SKYcvyAJGjfeaGr14EE64ehQnXpMxxzUQIw9prkgFLxnYg+vqJsfSA8F68MjMq/Me9
+         yssX1e5Tu/G6DcLxB59oeenRKYkQ2RqcdYZ2g/5E0eTHlV9ac7UKwycM8FDWJets68vJ
+         04p8BWPVNesRZAP5J1u3Gx5v4aSlsFznfltk82qeSmhNEPoNd9SkCFaUqkAK/wd+d+O+
+         jNYG0joZz9vRK51ErCHxOMn14PwvmiJpk3RpZ07zvS2exf6Tz5Ig+kottFoQhDReId9Z
+         qovmCBrMP11CfMt3i9Qh+b+7rGMRJuxQ2majE3EUeRydyd5ntSV7Xvlwt1wj3Wpv9ukS
+         wczg==
+X-Gm-Message-State: AGi0PuYQqo09J2H5BfwmRFid6bhqsJ8PJq6Y2EjiqNne6x+Ws4bNQOD/
+        PNCStwfAJ7k9tqrEWXSEi894kcb1f6AiT6BHc1SkxtFrSPnioiyDyeOhVcqAGZlxqZNl3Cx01m4
+        2CzpKRsHm3YaxOPbUOreF0R/3
+X-Received: by 2002:adf:f004:: with SMTP id j4mr17918592wro.123.1588585800886;
+        Mon, 04 May 2020 02:50:00 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLU6n6JpygT3mf36b6a2UklvXwZI3oEiuS2GxkZIGi6MTzDLo/wYhRd2YT5E91HAeSCcwtOsg==
+X-Received: by 2002:adf:f004:: with SMTP id j4mr17918567wro.123.1588585800605;
+        Mon, 04 May 2020 02:50:00 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id f83sm12471745wmf.42.2020.05.04.02.49.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 02:50:00 -0700 (PDT)
+Subject: Re: [PATCH v3 04/11] iio: light: cm32181: Add support for the CM3218
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200428172923.567806-1-hdegoede@redhat.com>
+ <20200428172923.567806-4-hdegoede@redhat.com>
+ <20200503115906.6fb86b49@archlinux>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3eae2042-209e-5944-b90e-f747da820ac9@redhat.com>
+Date:   Mon, 4 May 2020 11:49:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200503115906.6fb86b49@archlinux>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, den 04.05.2020, 17:19 +0800 schrieb Kai-Heng Feng:
-> Etron EJ168 USB 3.0 Host Controller stops working after S3, if it was
-> runtime suspended previously:
-> [  370.080359] pci 0000:02:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+Hi,
 
-Apparently this controller has issues with D3cold
-
-> [  370.080477] xhci_hcd 0000:04:00.0: can't change power state from D3cold to D0 (config space inaccessible)
-> [  370.080532] pcieport 0000:00:1c.0: DPC: containment event, status:0x1f05 source:0x0200
-> [  370.080533] pcieport 0000:00:1c.0: DPC: ERR_FATAL detected
-> [  370.080536] xhci_hcd 0000:04:00.0: can't change power state from D3hot to D0 (config space inaccessible)
-> [  370.080552] xhci_hcd 0000:04:00.0: AER: can't recover (no error_detected callback)
-> [  370.080566] usb usb3: root hub lost power or was reset
-> [  370.080566] usb usb4: root hub lost power or was reset
-> [  370.080572] xhci_hcd 0000:04:00.0: Host halt failed, -19
-> [  370.080574] xhci_hcd 0000:04:00.0: Host not accessible, reset failed.
-> [  370.080575] xhci_hcd 0000:04:00.0: PCI post-resume error -19!
-> [  370.080586] xhci_hcd 0000:04:00.0: HC died; cleaning up
+On 5/3/20 12:59 PM, Jonathan Cameron wrote:
+> On Tue, 28 Apr 2020 19:29:16 +0200
+> Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> This can be fixed by not runtime suspend the controller at all.
+>> Add support for the CM3218 which is an older version of the
+>> CM32181.
+>>
+>> This is based on a newer version of cm32181.c, with a copyright of:
+>>
+>>   * Copyright (C) 2014 Capella Microsystems Inc.
+>>   * Author: Kevin Tsai <ktsai@capellamicro.com>
+>>   *
+>>   * This program is free software; you can redistribute it and/or modify it
+>>   * under the terms of the GNU General Public License version 2, as published
+>>   * by the Free Software Foundation.
+>>
+>> Which is floating around on the net in various places, but the changes
+>> from this newer version never made it upstream.
+>>
+>> This was tested on an Asus T100TA and an Asus T100CHI, which both come
+>> with the CM3218 variant of the light sensor.
+>>
+>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> So instead of conditionally runtime suspend the controller, always
-> prevent runtime suspend with XHCI_RESET_ON_RESUME quirk.
+> The need to also store the name for the different sensors makes
+> the case for picking between 'chip_info' structures in here stronger.
+> So I'd do that instead of setting multiple elements in your
+> switch statement... (See inline)
+> 
+>> ---
+>>   drivers/iio/light/cm32181.c | 48 +++++++++++++++++++++++++++----------
+>>   1 file changed, 36 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+>> index 6fc0a753c499..065bc7a11f84 100644
+>> --- a/drivers/iio/light/cm32181.c
+>> +++ b/drivers/iio/light/cm32181.c
+>> @@ -55,15 +55,24 @@ static const u8 cm32181_reg[CM32181_CONF_REG_NUM] = {
+>>   	CM32181_REG_ADDR_CMD,
+>>   };
+>>   
+>> -static const int als_it_bits[] = {12, 8, 0, 1, 2, 3};
+>> -static const int als_it_value[] = {25000, 50000, 100000, 200000, 400000,
+>> -	800000};
+>> +/* CM3218 Family */
+>> +static const int cm3218_als_it_bits[] = { 0, 1, 2, 3 };
+>> +static const int cm3218_als_it_values[] = { 100000, 200000, 400000, 800000 };
+>> +
+>> +/* CM32181 Family */
+>> +static const int cm32181_als_it_bits[] = { 12, 8, 0, 1, 2, 3 };
+>> +static const int cm32181_als_it_values[] = {
+>> +	25000, 50000, 100000, 200000, 400000, 800000
+>> +};
+>>   
+>>   struct cm32181_chip {
+>>   	struct i2c_client *client;
+>>   	struct mutex lock;
+>>   	u16 conf_regs[CM32181_CONF_REG_NUM];
+>>   	int calibscale;
+>> +	int num_als_it;
+>> +	const int *als_it_bits;
+>> +	const int *als_it_values;
+> These are constant for each type of chip and come as a set.
+> Better to just have a cm32181_chip_info structure with all 3 in it
+> (and the name as mentioned earlier).  That way your switch below
+> just becomes a matter of setting a single pointer for each case.
 
-What does that do to other controllers that can do runtime suspend
-under the current scheme?
+Ok I will add a chip_info structure for v4 off the patch-set.
 
-	Regards
-		Oliver
+
+> 
+>>   };
+>>   
+>>   /**
+>> @@ -85,8 +94,21 @@ static int cm32181_reg_init(struct cm32181_chip *cm32181)
+>>   		return ret;
+>>   
+>>   	/* check device ID */
+>> -	if ((ret & 0xFF) != 0x81)
+>> +	switch (ret & 0xFF) {
+>> +	case 0x18: /* CM3218 */
+> 
+> I'd ideally like to see a sanity check that we have the part expected.
+> So the compatible matches what we actually get.
+
+Erm, so far I've only seen the CM3218 on X86 + ACPI devices which
+use an ACPI id of CPLM3218 for both sensor models, so at least
+on ACPI there is nothing to check.
+
+Regards,
+
+Hans
+
+
+
+> 
+> If it doesn't but the part is still one we support print a warning.
+> 
+>> +		cm32181->num_als_it = ARRAY_SIZE(cm3218_als_it_bits);
+>> +		cm32181->als_it_bits = cm3218_als_it_bits;
+>> +		cm32181->als_it_values = cm3218_als_it_values;
+>> +		break;
+>> +	case 0x81: /* CM32181 */
+>> +	case 0x82: /* CM32182, fully compat. with CM32181 */
+>> +		cm32181->num_als_it = ARRAY_SIZE(cm32181_als_it_bits);
+>> +		cm32181->als_it_bits = cm32181_als_it_bits;
+>> +		cm32181->als_it_values = cm32181_als_it_values;
+>> +		break;
+>> +	default:
+>>   		return -ENODEV;
+>> +	}
+>>   
+>>   	/* Default Values */
+>>   	cm32181->conf_regs[CM32181_REG_ADDR_CMD] =
+>> @@ -121,9 +143,9 @@ static int cm32181_read_als_it(struct cm32181_chip *cm32181, int *val2)
+>>   	als_it = cm32181->conf_regs[CM32181_REG_ADDR_CMD];
+>>   	als_it &= CM32181_CMD_ALS_IT_MASK;
+>>   	als_it >>= CM32181_CMD_ALS_IT_SHIFT;
+>> -	for (i = 0; i < ARRAY_SIZE(als_it_bits); i++) {
+>> -		if (als_it == als_it_bits[i]) {
+>> -			*val2 = als_it_value[i];
+>> +	for (i = 0; i < cm32181->num_als_it; i++) {
+>> +		if (als_it == cm32181->als_it_bits[i]) {
+>> +			*val2 = cm32181->als_it_values[i];
+>>   			return IIO_VAL_INT_PLUS_MICRO;
+>>   		}
+>>   	}
+>> @@ -146,14 +168,14 @@ static int cm32181_write_als_it(struct cm32181_chip *cm32181, int val)
+>>   	u16 als_it;
+>>   	int ret, i, n;
+>>   
+>> -	n = ARRAY_SIZE(als_it_value);
+>> +	n = cm32181->num_als_it;
+>>   	for (i = 0; i < n; i++)
+>> -		if (val <= als_it_value[i])
+>> +		if (val <= cm32181->als_it_values[i])
+>>   			break;
+>>   	if (i >= n)
+>>   		i = n - 1;
+>>   
+>> -	als_it = als_it_bits[i];
+>> +	als_it = cm32181->als_it_bits[i];
+>>   	als_it <<= CM32181_CMD_ALS_IT_SHIFT;
+>>   
+>>   	mutex_lock(&cm32181->lock);
+>> @@ -265,11 +287,12 @@ static int cm32181_write_raw(struct iio_dev *indio_dev,
+>>   static ssize_t cm32181_get_it_available(struct device *dev,
+>>   			struct device_attribute *attr, char *buf)
+>>   {
+>> +	struct cm32181_chip *cm32181 = iio_priv(dev_to_iio_dev(dev));
+>>   	int i, n, len;
+>>   
+>> -	n = ARRAY_SIZE(als_it_value);
+>> +	n = cm32181->num_als_it;
+>>   	for (i = 0, len = 0; i < n; i++)
+>> -		len += sprintf(buf + len, "0.%06u ", als_it_value[i]);
+>> +		len += sprintf(buf + len, "0.%06u ", cm32181->als_it_values[i]);
+>>   	return len + sprintf(buf + len, "\n");
+>>   }
+>>   
+>> @@ -345,6 +368,7 @@ static int cm32181_probe(struct i2c_client *client)
+>>   }
+>>   
+>>   static const struct of_device_id cm32181_of_match[] = {
+>> +	{ .compatible = "capella,cm3218" },
+>>   	{ .compatible = "capella,cm32181" },
+>>   	{ }
+>>   };
+> 
 
