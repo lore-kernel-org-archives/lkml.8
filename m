@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EADEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC46C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF69F206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9F820721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615678;
-	bh=r3c1iXelmmBrzj0DTZL4IUaoj5TuLR7/oHUZShSDMrw=;
+	s=default; t=1588615681;
+	bh=EQblGGpLkGOfM1NRKoo8QUwTJ8FnFzmzoaLxEdKnxks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RPKd/6o8NGo9ulthg8RJGZxbEW/ribhkQRnmpkI/XsQAKAFLNVY8UVMG+mI6xJeo+
-	 beA5XGjpHyFsexcHiQWmxQGoRtl3uaPkB6FFiuOs8ZHEIi/sMqVumpkg17Fkdp8Fm9
-	 4KAB74iNmz/w3YZl7U2dYJN+oGjVgdA4x0j+JKaU=
+	b=lLVIhPPjtNsK3QwjBQGbRcRXkXfVVrOoNWQ8BDKF1VX40wB7WMPtJyLFbDOJT4FtY
+	 +49W9dFyY5ZQ3aanXJXura+rdTXcfNwWt2B3AuhLi4qzu96Zs2d006kTPClV9kBPNR
+	 xuhqBY94vDSff1UspdoqQYuQwphySzQbNmp8b240=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgEDSH5 (ORCPT
+        id S1732220AbgEDSIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38802 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:08:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732176AbgEDSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:46 -0400
+        id S1730911AbgEDSHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034E6206B8;
-        Mon,  4 May 2020 18:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BEBD206B8;
+        Mon,  4 May 2020 18:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615666;
-        bh=r3c1iXelmmBrzj0DTZL4IUaoj5TuLR7/oHUZShSDMrw=;
+        s=default; t=1588615673;
+        bh=EQblGGpLkGOfM1NRKoo8QUwTJ8FnFzmzoaLxEdKnxks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3pK66oL+V2je3XUHuHIqIzfTqdANHvJT34CvSWIFbkk5k+ZUgjBT+fRuPXmLFE76
-         IWwO0ZZXp2MaA6KjbsfconSk4G5kFoqeetI8b1qpCgxhJJt/tnPQmqIiWm4iSE09pt
-         UyO9ZBDvd1lRR1PZ+EFM06HpdpTK0JHcEtn/UJDo=
+        b=fr2hh1yjyVJv5b+QKAPhVWaY5w+uhyvA2Vv6u/vIA9mg48rjOvh1Sb2f7gO3GCCUO
+         7SxBZzteOip+vfCKz4jozf32eHFOc2t02lcRnI6ErV2RibVwogRaqRdsJlBr//KI+e
+         im8RCvyu78UEOvzOkIdo7SfF6P0IaIw5xelW6TPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Clay Harris <bugs@claycon.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.6 73/73] io_uring: statx must grab the file table for valid fd
-Date:   Mon,  4 May 2020 19:58:16 +0200
-Message-Id: <20200504165510.640529034@linuxfoundation.org>
+        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Martin Wilck <mwilck@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 42/73] scsi: qla2xxx: check UNLOADING before posting async work
+Date:   Mon,  4 May 2020 19:57:45 +0200
+Message-Id: <20200504165508.360336069@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -59,80 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Martin Wilck <mwilck@suse.com>
 
-commit 5b0bbee4732cbd58aa98213d4c11a366356bba3d upstream.
+commit 5a263892d7d0b4fe351363f8d1a14c6a75955475 upstream.
 
-Clay reports that OP_STATX fails for a test case with a valid fd
-and empty path:
+qlt_free_session_done() tries to post async PRLO / LOGO, and waits for the
+completion of these async commands. If UNLOADING is set, this is doomed to
+timeout, because the async logout command will never complete.
 
- -- Test 0: statx:fd 3: SUCCEED, file mode 100755
- -- Test 1: statx:path ./uring_statx: SUCCEED, file mode 100755
- -- Test 2: io_uring_statx:fd 3: FAIL, errno 9: Bad file descriptor
- -- Test 3: io_uring_statx:path ./uring_statx: SUCCEED, file mode 100755
+The only way to avoid waiting pointlessly is to fail posting these commands
+in the first place if the driver is in UNLOADING state.  In general,
+posting any command should be avoided when the driver is UNLOADING.
 
-This is due to statx not grabbing the process file table, hence we can't
-lookup the fd in async context. If the fd is valid, ensure that we grab
-the file table so we can grab the file from async context.
+With this patch, "rmmod qla2xxx" completes without noticeable delay.
 
-Cc: stable@vger.kernel.org # v5.6
-Reported-by: Clay Harris <bugs@claycon.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20200421204621.19228-3-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Acked-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -479,6 +479,7 @@ enum {
- 	REQ_F_COMP_LOCKED_BIT,
- 	REQ_F_NEED_CLEANUP_BIT,
- 	REQ_F_OVERFLOW_BIT,
-+	REQ_F_NO_FILE_TABLE_BIT,
- };
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4854,6 +4854,9 @@ qla2x00_alloc_work(struct scsi_qla_host
+ 	struct qla_work_evt *e;
+ 	uint8_t bail;
  
- enum {
-@@ -521,6 +522,8 @@ enum {
- 	REQ_F_NEED_CLEANUP	= BIT(REQ_F_NEED_CLEANUP_BIT),
- 	/* in overflow list */
- 	REQ_F_OVERFLOW		= BIT(REQ_F_OVERFLOW_BIT),
-+	/* doesn't need file table for this request */
-+	REQ_F_NO_FILE_TABLE	= BIT(REQ_F_NO_FILE_TABLE_BIT),
- };
- 
- /*
-@@ -711,6 +714,7 @@ static const struct io_op_def io_op_defs
- 		.needs_file		= 1,
- 		.fd_non_neg		= 1,
- 		.needs_fs		= 1,
-+		.file_table		= 1,
- 	},
- 	[IORING_OP_READ] = {
- 		.needs_mm		= 1,
-@@ -2843,8 +2847,12 @@ static int io_statx(struct io_kiocb *req
- 	struct kstat stat;
- 	int ret;
- 
--	if (force_nonblock)
-+	if (force_nonblock) {
-+		/* only need file table for an actual valid fd */
-+		if (ctx->dfd == -1 || ctx->dfd == AT_FDCWD)
-+			req->flags |= REQ_F_NO_FILE_TABLE;
- 		return -EAGAIN;
-+	}
- 
- 	if (vfs_stat_set_lookup_flags(&lookup_flags, ctx->how.flags))
- 		return -EINVAL;
-@@ -4632,7 +4640,7 @@ static int io_grab_files(struct io_kiocb
- 	int ret = -EBADF;
- 	struct io_ring_ctx *ctx = req->ctx;
- 
--	if (req->work.files)
-+	if (req->work.files || (req->flags & REQ_F_NO_FILE_TABLE))
- 		return 0;
- 	if (!ctx->ring_file)
- 		return -EBADF;
++	if (test_bit(UNLOADING, &vha->dpc_flags))
++		return NULL;
++
+ 	QLA_VHA_MARK_BUSY(vha, bail);
+ 	if (bail)
+ 		return NULL;
 
 
