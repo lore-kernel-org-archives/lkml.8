@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D456C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4D9C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589A520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23E12073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615326;
-	bh=V7X8SJgcPJFFssox4XmJ0tvNWklV+ZOCfm7PUf8xJc0=;
+	s=default; t=1588615328;
+	bh=wJZikCOwCgHtvasCHg+KWLI22Jg9cLD8ZEXCaOGAnRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OzCoKE5Vge+2fVPt1oNRB8Atlk1uUd9BCoWAAZ3Q03A10eTtCiZEwforaVJi0Kj0P
-	 wZ6NDTB3BXA6fkJgn5WUNao3fGswo+vu64WY0le7tEB2M7nbRH7Vd+66YSLcLwQ8Jn
-	 roItl4KohFr/AlFyHNMXiqvOM6HAVi6oFqJMRTps=
+	b=ydCGscG1k78mWjCGoloi644c8+fbvId9noX0IdKqLFNogPpaL5oou3M3iv/vV0+0d
+	 2XWgfZ4qJEE4qlGKhCkIxI6rl/3RAOI36VDMgP1cpE+jFlAM5peAfuKV+Mz80p1ANv
+	 HMAFdW9qrsQeU64CpbZhYB3AOjI6OeRwraPNnVus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgEDSCF (ORCPT
+        id S1731282AbgEDSCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731264AbgEDSCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:02 -0400
+        id S1731267AbgEDSCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B14F22073B;
-        Mon,  4 May 2020 18:02:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 202A720707;
+        Mon,  4 May 2020 18:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615321;
-        bh=V7X8SJgcPJFFssox4XmJ0tvNWklV+ZOCfm7PUf8xJc0=;
+        s=default; t=1588615323;
+        bh=wJZikCOwCgHtvasCHg+KWLI22Jg9cLD8ZEXCaOGAnRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TsejKngxdhRef+QWGO0zlFPzXsrJaLObAWnLxTnUAaRN3uteldFMcY7R7lAI5EuIK
-         +P/6gg5vpZsMTWH43m36DYe1aNG+XuTMJ7hdqMwpxesHTIpdvJJm/x1U/Xzei55dE2
-         QmofdU1m6tdSB5z0RTJZw2CbI8JaXHMZZnrAEY3I=
+        b=udOCnmHiy8zKkNbzIC/wIXexXlIH5g4wiHa6J1+EVppfGqGBPBjJpd+o0lluBkrAQ
+         8Km5XDmETjEmyxeJLHC5i1vY9eqCFiIWYNyfCzdlSEDborHBzyUDEJ8COsJaT44PpS
+         eQfcNetPfcoQ746Ty8TB9xvPnYiwpp+Ui8kGFg0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.19 29/37] selinux: properly handle multiple messages in selinux_netlink_send()
-Date:   Mon,  4 May 2020 19:57:42 +0200
-Message-Id: <20200504165451.358601101@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 30/37] btrfs: fix partial loss of prealloc extent past i_size after fsync
+Date:   Mon,  4 May 2020 19:57:43 +0200
+Message-Id: <20200504165451.410747989@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,112 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit fb73974172ffaaf57a7c42f35424d9aece1a5af6 upstream.
+commit f135cea30de5f74d5bfb5116682073841fb4af8f upstream.
 
-Fix the SELinux netlink_send hook to properly handle multiple netlink
-messages in a single sk_buff; each message is parsed and subject to
-SELinux access control.  Prior to this patch, SELinux only inspected
-the first message in the sk_buff.
+When we have an inode with a prealloc extent that starts at an offset
+lower than the i_size and there is another prealloc extent that starts at
+an offset beyond i_size, we can end up losing part of the first prealloc
+extent (the part that starts at i_size) and have an implicit hole if we
+fsync the file and then have a power failure.
 
-Cc: stable@vger.kernel.org
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Consider the following example with comments explaining how and why it
+happens.
+
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  # Create our test file with 2 consecutive prealloc extents, each with a
+  # size of 128Kb, and covering the range from 0 to 256Kb, with a file
+  # size of 0.
+  $ xfs_io -f -c "falloc -k 0 128K" /mnt/foo
+  $ xfs_io -c "falloc -k 128K 128K" /mnt/foo
+
+  # Fsync the file to record both extents in the log tree.
+  $ xfs_io -c "fsync" /mnt/foo
+
+  # Now do a redudant extent allocation for the range from 0 to 64Kb.
+  # This will merely increase the file size from 0 to 64Kb. Instead we
+  # could also do a truncate to set the file size to 64Kb.
+  $ xfs_io -c "falloc 0 64K" /mnt/foo
+
+  # Fsync the file, so we update the inode item in the log tree with the
+  # new file size (64Kb). This also ends up setting the number of bytes
+  # for the first prealloc extent to 64Kb. This is done by the truncation
+  # at btrfs_log_prealloc_extents().
+  # This means that if a power failure happens after this, a write into
+  # the file range 64Kb to 128Kb will not use the prealloc extent and
+  # will result in allocation of a new extent.
+  $ xfs_io -c "fsync" /mnt/foo
+
+  # Now set the file size to 256K with a truncate and then fsync the file.
+  # Since no changes happened to the extents, the fsync only updates the
+  # i_size in the inode item at the log tree. This results in an implicit
+  # hole for the file range from 64Kb to 128Kb, something which fsck will
+  # complain when not using the NO_HOLES feature if we replay the log
+  # after a power failure.
+  $ xfs_io -c "truncate 256K" -c "fsync" /mnt/foo
+
+So instead of always truncating the log to the inode's current i_size at
+btrfs_log_prealloc_extents(), check first if there's a prealloc extent
+that starts at an offset lower than the i_size and with a length that
+crosses the i_size - if there is one, just make sure we truncate to a
+size that corresponds to the end offset of that prealloc extent, so
+that we don't lose the part of that extent that starts at i_size if a
+power failure happens.
+
+A test case for fstests follows soon.
+
+Fixes: 31d11b83b96f ("Btrfs: fix duplicate extents after fsync of file with prealloc extents")
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/selinux/hooks.c |   70 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 45 insertions(+), 25 deletions(-)
+ fs/btrfs/tree-log.c |   43 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -5595,40 +5595,60 @@ static int selinux_tun_dev_open(void *se
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4182,6 +4182,9 @@ static int btrfs_log_prealloc_extents(st
+ 	const u64 ino = btrfs_ino(inode);
+ 	struct btrfs_path *dst_path = NULL;
+ 	bool dropped_extents = false;
++	u64 truncate_offset = i_size;
++	struct extent_buffer *leaf;
++	int slot;
+ 	int ins_nr = 0;
+ 	int start_slot;
+ 	int ret;
+@@ -4196,9 +4199,43 @@ static int btrfs_log_prealloc_extents(st
+ 	if (ret < 0)
+ 		goto out;
  
- static int selinux_nlmsg_perm(struct sock *sk, struct sk_buff *skb)
- {
--	int err = 0;
--	u32 perm;
-+	int rc = 0;
-+	unsigned int msg_len;
-+	unsigned int data_len = skb->len;
-+	unsigned char *data = skb->data;
- 	struct nlmsghdr *nlh;
- 	struct sk_security_struct *sksec = sk->sk_security;
-+	u16 sclass = sksec->sclass;
-+	u32 perm;
- 
--	if (skb->len < NLMSG_HDRLEN) {
--		err = -EINVAL;
--		goto out;
--	}
--	nlh = nlmsg_hdr(skb);
-+	while (data_len >= nlmsg_total_size(0)) {
-+		nlh = (struct nlmsghdr *)data;
- 
--	err = selinux_nlmsg_lookup(sksec->sclass, nlh->nlmsg_type, &perm);
--	if (err) {
--		if (err == -EINVAL) {
-+		/* NOTE: the nlmsg_len field isn't reliably set by some netlink
-+		 *       users which means we can't reject skb's with bogus
-+		 *       length fields; our solution is to follow what
-+		 *       netlink_rcv_skb() does and simply skip processing at
-+		 *       messages with length fields that are clearly junk
-+		 */
-+		if (nlh->nlmsg_len < NLMSG_HDRLEN || nlh->nlmsg_len > data_len)
-+			return 0;
++	/*
++	 * We must check if there is a prealloc extent that starts before the
++	 * i_size and crosses the i_size boundary. This is to ensure later we
++	 * truncate down to the end of that extent and not to the i_size, as
++	 * otherwise we end up losing part of the prealloc extent after a log
++	 * replay and with an implicit hole if there is another prealloc extent
++	 * that starts at an offset beyond i_size.
++	 */
++	ret = btrfs_previous_item(root, path, ino, BTRFS_EXTENT_DATA_KEY);
++	if (ret < 0)
++		goto out;
 +
-+		rc = selinux_nlmsg_lookup(sclass, nlh->nlmsg_type, &perm);
-+		if (rc == 0) {
-+			rc = sock_has_perm(sk, perm);
-+			if (rc)
-+				return rc;
-+		} else if (rc == -EINVAL) {
-+			/* -EINVAL is a missing msg/perm mapping */
- 			pr_warn_ratelimited("SELinux: unrecognized netlink"
--			       " message: protocol=%hu nlmsg_type=%hu sclass=%s"
--			       " pig=%d comm=%s\n",
--			       sk->sk_protocol, nlh->nlmsg_type,
--			       secclass_map[sksec->sclass - 1].name,
--			       task_pid_nr(current), current->comm);
--			if (!enforcing_enabled(&selinux_state) ||
--			    security_get_allow_unknown(&selinux_state))
--				err = 0;
-+				" message: protocol=%hu nlmsg_type=%hu sclass=%s"
-+				" pid=%d comm=%s\n",
-+				sk->sk_protocol, nlh->nlmsg_type,
-+				secclass_map[sclass - 1].name,
-+				task_pid_nr(current), current->comm);
-+			if (enforcing_enabled(&selinux_state) &&
-+			    !security_get_allow_unknown(&selinux_state))
-+				return rc;
-+			rc = 0;
-+		} else if (rc == -ENOENT) {
-+			/* -ENOENT is a missing socket/class mapping, ignore */
-+			rc = 0;
-+		} else {
-+			return rc;
- 		}
++	if (ret == 0) {
++		struct btrfs_file_extent_item *ei;
++
++		leaf = path->nodes[0];
++		slot = path->slots[0];
++		ei = btrfs_item_ptr(leaf, slot, struct btrfs_file_extent_item);
++
++		if (btrfs_file_extent_type(leaf, ei) ==
++		    BTRFS_FILE_EXTENT_PREALLOC) {
++			u64 extent_end;
++
++			btrfs_item_key_to_cpu(leaf, &key, slot);
++			extent_end = key.offset +
++				btrfs_file_extent_num_bytes(leaf, ei);
++
++			if (extent_end > i_size)
++				truncate_offset = extent_end;
++		}
++	} else {
++		ret = 0;
++	}
++
+ 	while (true) {
+-		struct extent_buffer *leaf = path->nodes[0];
+-		int slot = path->slots[0];
++		leaf = path->nodes[0];
++		slot = path->slots[0];
  
--		/* Ignore */
--		if (err == -ENOENT)
--			err = 0;
--		goto out;
-+		/* move to the next message after applying netlink padding */
-+		msg_len = NLMSG_ALIGN(nlh->nlmsg_len);
-+		if (msg_len >= data_len)
-+			return 0;
-+		data_len -= msg_len;
-+		data += msg_len;
- 	}
- 
--	err = sock_has_perm(sk, perm);
--out:
--	return err;
-+	return rc;
- }
- 
- #ifdef CONFIG_NETFILTER
+ 		if (slot >= btrfs_header_nritems(leaf)) {
+ 			if (ins_nr > 0) {
+@@ -4236,7 +4273,7 @@ static int btrfs_log_prealloc_extents(st
+ 				ret = btrfs_truncate_inode_items(trans,
+ 							 root->log_root,
+ 							 &inode->vfs_inode,
+-							 i_size,
++							 truncate_offset,
+ 							 BTRFS_EXTENT_DATA_KEY);
+ 			} while (ret == -EAGAIN);
+ 			if (ret)
 
 
