@@ -2,117 +2,149 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2756C4725A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073BCC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1F27206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588580283;
-	bh=OVUdf03GpdBKoKoEIdOkVqH3usUQTub5eg9rUM5Tk7E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JEM9BUOVWCmchqu9lWxK8N7khq9+EL9MHSIo5ltM7fJVtPT2FnIsoqAfovZPaRPPl
-	 kXVEoG2pjuemEeuOhBZFnBIZgw1tcQ9lfCoBD/iAn/xIZVtr5Q3SygKmOkcJQCuNkG
-	 WP5gELuudMxAlXWDH7yYphIrhK9kqpXN3m082YD0=
+	by mail.kernel.org (Postfix) with ESMTP id D8309206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mU7VtKff"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgEDISD (ORCPT
+        id S1728083AbgEDIVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728052AbgEDISC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:18:02 -0400
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A122206B9;
-        Mon,  4 May 2020 08:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588580281;
-        bh=OVUdf03GpdBKoKoEIdOkVqH3usUQTub5eg9rUM5Tk7E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ur+LDywLeocYQ8c521eEsiMHthn9gmXQVo7xuA5oS9uYyZXqj1b9DCTC6GDvA5/e1
-         1xNJ1NVf+w7ZckeInrzJEfr+45bQT6kNZ9YemwsjDlN8U5owii+Ro6kl9x3ql6CHgE
-         u4K81Peb95GhNXrew1TxoosEvdcbi4MP1TCnn8d8=
-Received: by mail-il1-f170.google.com with SMTP id r2so10436129ilo.6;
-        Mon, 04 May 2020 01:18:01 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYevqRfwbCgGCNdqFUzG3ySgI4efMubm0tXe/EW2Kl567zRgnYe
-        6ntdCgHItNw+vcZ6YpQ0IQiPysFPErd3rCYH1vU=
-X-Google-Smtp-Source: APiQypLhl3BTB/BJgQ22Pc7HsMxpk/V/B39J75KD7MfQp7B5jk4hb5eHO5Ghj7SzGZYovBjRreKKRXMOJzkcMXJ3be4=
-X-Received: by 2002:a92:3c55:: with SMTP id j82mr15615706ila.258.1588580280680;
- Mon, 04 May 2020 01:18:00 -0700 (PDT)
+        Mon, 4 May 2020 04:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727100AbgEDIVh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 04:21:37 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40ACEC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 01:21:37 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y4so8748889ljn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 01:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LUC+hpkyutV8S5+QH/c+7yUMtr6MEkXFCNyPSg7o1E4=;
+        b=mU7VtKff+auNB64V3AYUSs2qQFmjPo0dWpA4Aoz+YTW586bZoIgSw9VhcFKYoSoBfw
+         bOVl4yPbt3FTTuKTpCXuLlLeVDh36N2hicHfSEwZ6ADqZm9Jqn1GEp234DaD6oeCMmOw
+         AZaF945jzYr94/9RAxcctlAIedKPuCORYhA4Xu3pRChnM6v2V1nLukexpBjDSVnzxYaJ
+         6oLKSWLSlC7wv/hpL82I8XWOxxGuN4wjxwqVFK7WuHRq6GbYTFMHtYdIbII3hjvIOohq
+         VxfwloeIh2nwc6y+U8tcNEH8y+dpm6CqnAdlhytHJQT1H+d45sZGsW2kvvy1ldQXnx06
+         viPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LUC+hpkyutV8S5+QH/c+7yUMtr6MEkXFCNyPSg7o1E4=;
+        b=Chog8oJWZzen3w7bSNvyzxxU6ZwnjgJLrI2JVwfPV9knjl8OXB9X1LWNJBKejrpXvj
+         OUoY1uueOaaTxPRcrRvQJ9y+vmVXLkxx1X1gDogozimgm7mYtPRXJrjXIGbPSym1pnHE
+         +yfOWp8NbHTz/AYf62dA/SyRMm7+mm7ohbfvzbsC/SsVWglcqzLBmpnlFNuq8vyv4ZBi
+         +VCtEzFKy80ZEnZkJNj/wj9RIJR5ZNJ+xZ7uLDV2PLGHx+gjOEg1b3n872fdGjtvz5B1
+         MxDEUxX0btCLyMuqJMyvtpTXAnCz9kmvNuFX/V/qDaeHu5B9D+2yaz4ANxzGVxViP7bP
+         Jatw==
+X-Gm-Message-State: AGi0PuZgeE/uBsVFB5PV+EX5bRYEdanVERj8fOzYmf8c5KFAQHTLW3X2
+        Wsdm2vNLLfUCuaOle4nc0hADTAoFSk3x1Rp8H3M=
+X-Google-Smtp-Source: APiQypLbXjgu8KnJh/TptbZQXk2/XJY0chvNvaA7TtSWS/bWwmb+UY+6XkkrvNtDTPWLVl8K88HCGsvtKZdMUVRV9f8=
+X-Received: by 2002:a2e:8603:: with SMTP id a3mr9843410lji.153.1588580495753;
+ Mon, 04 May 2020 01:21:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429174120.1497212-1-nivedita@alum.mit.edu> <20200430182843.2510180-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200430182843.2510180-1-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 4 May 2020 10:17:49 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF=rcCLXZBe=_A_-Mn26eHPyuiaSES1RtJmfVjmHrFPVg@mail.gmail.com>
-Message-ID: <CAMj1kXF=rcCLXZBe=_A_-Mn26eHPyuiaSES1RtJmfVjmHrFPVg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] efi: some cleanups/refactoring for efi/next
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <c2fd765aa388d4510194ba02c017e39bde57c8d4.1587478171.git.baolin.wang7@gmail.com>
+ <CADBw62rJ8VYTgnW_3q4=TkCyZx2B1DHsG+oOmiph8FLsukUROQ@mail.gmail.com>
+ <20200427090518.GG3559@dell> <CADBw62qXtNnoNq0F1iZrvQHryMTy86GEqcD-qXBzsJJL-B8mQg@mail.gmail.com>
+ <20200428071447.GJ3559@dell> <CADBw62o=D-hmp1yB=oPXPJfBucOEEa87cZado5+1mTKsCWDKfg@mail.gmail.com>
+ <20200428081902.GK3559@dell> <CADBw62qrsOHUCKdU17ctQBM21EAOuAO8vxFabRP9hpguC5ixsg@mail.gmail.com>
+In-Reply-To: <CADBw62qrsOHUCKdU17ctQBM21EAOuAO8vxFabRP9hpguC5ixsg@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 4 May 2020 16:21:22 +0800
+Message-ID: <CADBw62psCr1aSmYtqck5dpddCRk8f-UAw5rUsPyfhNw-OCfYkA@mail.gmail.com>
+Subject: Re: [PATCH v3] mfd: syscon: Add Spreadtrum physical regmap bus support
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 30 Apr 2020 at 20:28, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> This series is on top of efi/next.
->
-> Patch 1 fixes the size allocated for x86 boot_params.
-> Patch 2 refactors the setting of various hi/lo 32-bit fields, mainly on x86.
-> Patch 3 renames pr_efi/pr_efi_err
-> Patches 4-6 convert the remaining uses of efi_printk to print error
-> messages to use efi_err instead.
-> Patch 7 updates dtb= ignored message to efi_err.
-> Patches 8-9 refactor initrd loading, moving it into efi-stub-helper.
-> Patch 10 adds support for x86 builtin command line.
-> Patch 11 adds error checking for efi_parse_options.
->
-> Changes from v1:
-> - Rename pr_efi/pr_efi_err
-> - Drop the soft_limit-removing patch
-> - Fix a couple of compile warnings
->
-> Arvind Sankar (11):
->   efi/x86: Use correct size for boot_params
->   efi/libstub: Add a helper function to split 64-bit values
->   efi/libstub: Move pr_efi/pr_efi_err into efi namespace
->   efi/x86: Use efi_err for error messages
->   efi/gop: Use efi_err for error messages
->   efi/tpm: Use efi_err for error messages
->   efi/libstub: Upgrade ignored dtb= argument message to error
->   efi/x86: Move command-line initrd loading to efi_main
->   efi/libstub: Unify initrd loading across architectures
->   efi/x86: Support builtin command line
->   efi/libstub: Check return value of efi_parse_options
->
+Hi Arnd
 
-Thanks Arvind, I've queued these up now
-
-
->  drivers/firmware/efi/libstub/arm32-stub.c     |  12 +-
->  drivers/firmware/efi/libstub/arm64-stub.c     |  14 +-
->  .../firmware/efi/libstub/efi-stub-helper.c    |  46 ++++++-
->  drivers/firmware/efi/libstub/efi-stub.c       |  63 ++++-----
->  drivers/firmware/efi/libstub/efistub.h        |  32 ++---
->  drivers/firmware/efi/libstub/fdt.c            |  16 +--
->  drivers/firmware/efi/libstub/file.c           |  12 +-
->  drivers/firmware/efi/libstub/gop.c            |  16 +--
->  drivers/firmware/efi/libstub/pci.c            |   8 +-
->  drivers/firmware/efi/libstub/relocate.c       |   2 +-
->  drivers/firmware/efi/libstub/secureboot.c     |   4 +-
->  drivers/firmware/efi/libstub/tpm.c            |   2 +-
->  drivers/firmware/efi/libstub/x86-stub.c       | 122 ++++++++----------
->  13 files changed, 186 insertions(+), 163 deletions(-)
+On Tue, Apr 28, 2020 at 4:41 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
 >
-> --
-> 2.26.2
+> On Tue, Apr 28, 2020 at 4:19 PM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Tue, 28 Apr 2020, Baolin Wang wrote:
+> >
+> > > On Tue, Apr 28, 2020 at 3:14 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > >
+> > > > On Tue, 28 Apr 2020, Baolin Wang wrote:
+> > > >
+> > > > > On Mon, Apr 27, 2020 at 5:05 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > > >
+> > > > > > On Mon, 27 Apr 2020, Baolin Wang wrote:
+> > > > > >
+> > > > > > > Hi Arnd and Lee,
+> > > > > > >
+> > > > > > > On Tue, Apr 21, 2020 at 10:13 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > Some platforms such as Spreadtrum platform, define a special method to
+> > > > > > > > update bits of the registers instead of read-modify-write, which means
+> > > > > > > > we should use a physical regmap bus to define the reg_update_bits()
+> > > > > > > > operation instead of the MMIO regmap bus. Thus we can register a new
+> > > > > > > > physical regmap bus into syscon core to support this.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > > > > > >
+> > > > > > > Do you have any comments for this patch? Thanks.
+> > > > > >
+> > > > > > Yes.  I'm not accepting it, sorry.
+> > > > > >
+> > > > > > I'd rather you duplicate the things you need from of_syscon_register()
+> > > > > > in your own driver than taint this one.
+> > > > >
+> > > > > Thanks for your comments and I can understand your concern. But we
+> > > > > still want to use the standard syscon APIs in syscon.c, which means we
+> > > > > still need insert an callback or registration or other similar methods
+> > > > > to support vendor specific regmap bus. Otherwise we should invent some
+> > > > > similar syscon APIs in our vendor syscon driver, like
+> > > > > sprd_syscon_regmap_lookup_by_phandle/sprd_syscon_regmap_lookup_by_compatible.
+> > > >
+> > > > So long as the generic driver stays generic.  Providing a registration
+> > > > function sounds cleaner than tainting the code with vendor specifics.
+> > >
+> > > So seems my V1 patch set [1] was on the direction as you suggested,
+> > > but Arnd did not like that.
+> > >
+> > > [1]
+> > > https://lore.kernel.org/patchwork/patch/1226161/
+> > > https://lore.kernel.org/patchwork/patch/1226162/
+> >
+> > I don't often disagree with Arnd, but in this instance I think a
+> > registration function which allows vendor spin-offs to use the generic
+> > API is better than tainting the generic driver by adding vendor
+> > specific #ifery/code to it.
+> >
+> > Your original idea seems more palatable to me.
 >
+> OK, thanks for sharing your opinion. Let's see what Arnd's opinion
+> before I send out new version.
+
+Do yo have any comments about how to add new bits updating method? Can
+I re-send my v1 patch set [1]? Thanks.
+
+[1]:
+https://lore.kernel.org/patchwork/patch/1226161/
+https://lore.kernel.org/patchwork/patch/1226162/
+
+-- 
+Baolin Wang
