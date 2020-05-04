@@ -2,63 +2,108 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77FDC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AB7C47259
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9443D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B90206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RlXQPhgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgEDRwf (ORCPT
+        id S1730442AbgEDRyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729937AbgEDRwf (ORCPT
+        Mon, 4 May 2020 13:54:40 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45598 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730142AbgEDRyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:52:35 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09C45C061A0E;
-        Mon,  4 May 2020 10:52:35 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7616915D15A63;
-        Mon,  4 May 2020 10:52:34 -0700 (PDT)
-Date:   Mon, 04 May 2020 10:52:33 -0700 (PDT)
-Message-Id: <20200504.105233.141268457994511921.davem@davemloft.net>
-To:     zhengdejin5@gmail.com
-Cc:     claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com
-Subject: Re: [PATCH net v1] net: enetc: fix an issue about leak system
- resources
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200504120127.4482-1-zhengdejin5@gmail.com>
-References: <20200504120127.4482-1-zhengdejin5@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 4 May 2020 13:54:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588614877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+o4SdY0w3UouF91y2gLQuR1sVRgD2BPdPwIappEYt/U=;
+        b=RlXQPhgzh3gsilovZehVqYRsakFgZ6Pe7x9oLVqBETYyJ9pS8HJmW9EL29O741nN9aiza7
+        6ttt4WCuyL+HVeGs2t8GJTudfQwNiAhVitQ1orQCw6+XfTd11I8p0yRWPljUDRAz4S0fCG
+        n5AxVilHmDDaxRpnr6IwqrPQXZq9IGg=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-119-f5OQJsV5Mdyj6CtlSNE6dw-1; Mon, 04 May 2020 13:54:36 -0400
+X-MC-Unique: f5OQJsV5Mdyj6CtlSNE6dw-1
+Received: by mail-qk1-f200.google.com with SMTP id j12so133872qkl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:54:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=+o4SdY0w3UouF91y2gLQuR1sVRgD2BPdPwIappEYt/U=;
+        b=B8YL8cy9rdPDh0d3/aYjdR1C068CiuFkZpVWvu6ob5gZOSh/A8Yt4/3E1cFgHFXzQL
+         xKIpLmuL3yA995ubDSLbLd3+zWvmcL1yVevKyHeEePRVmqBWEDT02eto1mD0Y4SIWTDV
+         nxymkTFjGyX1a0JzPjV8YJ6EIee73SwsaGhoxNnw+ClskQN9qucR5exAfJ/J+A5bD6tO
+         ZyRqXxIpe8V2fBKYFqJJm7LiFUNjVLgupix3n9QJ4T4wq9Clh/1lTC8g/d39EjNAE+GT
+         utuJnrC3y4B8rh3LuYObFSdIW6blyjbFdxkq0O7HRvQkCeOuBYMNnwxeddsXYax17YFO
+         y0CA==
+X-Gm-Message-State: AGi0Pua5SoK94nB4dx6wNr7v2hxHJ70SuiqFeYdw8gORU+wBbDopyyru
+        DSeZoMDIq6O15KE4vovAB+eiph3uk1qusdOuRjbCuLAWC4nEGfSpQ56twwKoQ8SuTERtLjNp7si
+        zo8oMXd/DR1kNSG+HXggMRExJ
+X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr370213qkb.131.1588614875626;
+        Mon, 04 May 2020 10:54:35 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK3uCi6lFkdGRP90/JqMNVl2EPo4jU4+vUXICbUKWh5Z7zHzwK3PWjYZaZSl3+osjCddPgO1g==
+X-Received: by 2002:a05:620a:7ca:: with SMTP id 10mr370193qkb.131.1588614875436;
+        Mon, 04 May 2020 10:54:35 -0700 (PDT)
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id q32sm12123066qta.13.2020.05.04.10.54.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 10:54:34 -0700 (PDT)
+Message-ID: <63498a6eedc7994b1e96a59d12468bfd15e15ef4.camel@redhat.com>
+Subject: Re: [RFC PATCH 00/61] fscache, cachefiles: Rewrite the I/O
+ interface in terms of kiocb/iov_iter
+From:   Jeff Layton <jlayton@redhat.com>
+To:     David Howells <dhowells@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 04 May 2020 13:54:33 -0400
+In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 10:52:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
-Date: Mon,  4 May 2020 20:01:27 +0800
-
-> the related system resources were not released when enetc_hw_alloc()
-> return error in the enetc_pci_mdio_probe(), add iounmap() for error
-> handling label "err_hw_alloc" to fix it.
+On Mon, 2020-05-04 at 18:07 +0100, David Howells wrote:
 > 
-> Fixes: 6517798dd3432a ("enetc: Make MDIO accessors more generic and export to include/linux/fsl")
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+>  (3) Make NFS, CIFS, Ceph, 9P work with it.  I'm hoping that Jeff Layton will
+>      do Ceph.  As mentioned, I'm having a crack at NFS, but it's evolved a bit
+>      since I last looked at it and it might be easier if I can palm that off
+>      to someone more current in the NFS I/O code.
+> 
+> 
 
-Applied, thank you.
+[...]
+
+This looks like a really nice overhaul. I particularly love the
+diffstat. Net removal of ~4000 lines!
+
+I'll plan to draft up a patch for Ceph in the near future. The new API
+seems to be quite different, so I imagine this will more or less be a
+rip and replace on the old code.
+-- 
+Jeff Layton <jlayton@redhat.com>
+
