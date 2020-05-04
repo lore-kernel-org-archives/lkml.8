@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B3CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EADEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE18120721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF69F206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615675;
-	bh=bJ2l/CHYhXqqCQmXxTph5G9oI6DoxV3kjVdO3Qi3s38=;
+	s=default; t=1588615678;
+	bh=r3c1iXelmmBrzj0DTZL4IUaoj5TuLR7/oHUZShSDMrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJbSaIMUOz51LT7U3sXf8TnuxQDQq8PvvOhsAeK6a2SLUgfXks8AKIyghLP5aMFy9
-	 F9SWupG7i4BVpI8kFzHI5s810sIngCnOanlj8VsSVJAAJJ2GgNbZl/gc/hicAQusfY
-	 +IHdJM3Og8OxVcWHsr3KfwUt5pYJ+BaLWE8lAdM4=
+	b=RPKd/6o8NGo9ulthg8RJGZxbEW/ribhkQRnmpkI/XsQAKAFLNVY8UVMG+mI6xJeo+
+	 beA5XGjpHyFsexcHiQWmxQGoRtl3uaPkB6FFiuOs8ZHEIi/sMqVumpkg17Fkdp8Fm9
+	 4KAB74iNmz/w3YZl7U2dYJN+oGjVgdA4x0j+JKaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731308AbgEDSHq (ORCPT
+        id S1731359AbgEDSH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732176AbgEDSHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:42 -0400
+        id S1732176AbgEDSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 278F320721;
-        Mon,  4 May 2020 18:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 034E6206B8;
+        Mon,  4 May 2020 18:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615661;
-        bh=bJ2l/CHYhXqqCQmXxTph5G9oI6DoxV3kjVdO3Qi3s38=;
+        s=default; t=1588615666;
+        bh=r3c1iXelmmBrzj0DTZL4IUaoj5TuLR7/oHUZShSDMrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9Cq5BuTeyKKghy+aCMQBB3+JBNn2GYhUZsOsolf29jWS0pdWH0io7nRtUiskmeRD
-         6UxEcmPo0c2ug3+6a4yDvh3tMXqeVks2S1tlMSTpUPL8dasD9jV9yE/7IlB8xI8gjI
-         doByrODGPO6/hil2Ma/aHtRyPEo0EJ+iOWzhXOhs=
+        b=C3pK66oL+V2je3XUHuHIqIzfTqdANHvJT34CvSWIFbkk5k+ZUgjBT+fRuPXmLFE76
+         IWwO0ZZXp2MaA6KjbsfconSk4G5kFoqeetI8b1qpCgxhJJt/tnPQmqIiWm4iSE09pt
+         UyO9ZBDvd1lRR1PZ+EFM06HpdpTK0JHcEtn/UJDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seraj Alijan <seraj.alijan@sondrel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.6 71/73] dmaengine: dmatest: Fix process hang when reading wait parameter
-Date:   Mon,  4 May 2020 19:58:14 +0200
-Message-Id: <20200504165510.510085799@linuxfoundation.org>
+        stable@vger.kernel.org, Clay Harris <bugs@claycon.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.6 73/73] io_uring: statx must grab the file table for valid fd
+Date:   Mon,  4 May 2020 19:58:16 +0200
+Message-Id: <20200504165510.640529034@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -60,56 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca upstream.
+commit 5b0bbee4732cbd58aa98213d4c11a366356bba3d upstream.
 
-If we do
+Clay reports that OP_STATX fails for a test case with a valid fd
+and empty path:
 
-  % echo 1 > /sys/module/dmatest/parameters/run
-  [  115.851124] dmatest: Could not start test, no channels configured
+ -- Test 0: statx:fd 3: SUCCEED, file mode 100755
+ -- Test 1: statx:path ./uring_statx: SUCCEED, file mode 100755
+ -- Test 2: io_uring_statx:fd 3: FAIL, errno 9: Bad file descriptor
+ -- Test 3: io_uring_statx:path ./uring_statx: SUCCEED, file mode 100755
 
-  % echo dma8chan7 > /sys/module/dmatest/parameters/channel
-  [  127.563872] dmatest: Added 1 threads using dma8chan7
+This is due to statx not grabbing the process file table, hence we can't
+lookup the fd in async context. If the fd is valid, ensure that we grab
+the file table so we can grab the file from async context.
 
-  % cat /sys/module/dmatest/parameters/wait
-  ... !!! HANG !!! ...
-
-The culprit is the commit 6138f967bccc
-
-  ("dmaengine: dmatest: Use fixed point div to calculate iops")
-
-which makes threads not to run, but pending and being kicked off by writing
-to the 'run' node. However, it forgot to consider 'wait' routine to avoid
-above mentioned case.
-
-In order to fix this, check for really running threads, i.e. with pending
-and done flags unset.
-
-It's pity the culprit commit hadn't updated documentation and tested all
-possible scenarios.
-
-Fixes: 6138f967bccc ("dmaengine: dmatest: Use fixed point div to calculate iops")
-Cc: Seraj Alijan <seraj.alijan@sondrel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20200428113518.70620-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: stable@vger.kernel.org # v5.6
+Reported-by: Clay Harris <bugs@claycon.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dmatest.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -240,7 +240,7 @@ static bool is_threaded_test_run(struct
- 		struct dmatest_thread *thread;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -479,6 +479,7 @@ enum {
+ 	REQ_F_COMP_LOCKED_BIT,
+ 	REQ_F_NEED_CLEANUP_BIT,
+ 	REQ_F_OVERFLOW_BIT,
++	REQ_F_NO_FILE_TABLE_BIT,
+ };
  
- 		list_for_each_entry(thread, &dtc->threads, node) {
--			if (!thread->done)
-+			if (!thread->done && !thread->pending)
- 				return true;
- 		}
- 	}
+ enum {
+@@ -521,6 +522,8 @@ enum {
+ 	REQ_F_NEED_CLEANUP	= BIT(REQ_F_NEED_CLEANUP_BIT),
+ 	/* in overflow list */
+ 	REQ_F_OVERFLOW		= BIT(REQ_F_OVERFLOW_BIT),
++	/* doesn't need file table for this request */
++	REQ_F_NO_FILE_TABLE	= BIT(REQ_F_NO_FILE_TABLE_BIT),
+ };
+ 
+ /*
+@@ -711,6 +714,7 @@ static const struct io_op_def io_op_defs
+ 		.needs_file		= 1,
+ 		.fd_non_neg		= 1,
+ 		.needs_fs		= 1,
++		.file_table		= 1,
+ 	},
+ 	[IORING_OP_READ] = {
+ 		.needs_mm		= 1,
+@@ -2843,8 +2847,12 @@ static int io_statx(struct io_kiocb *req
+ 	struct kstat stat;
+ 	int ret;
+ 
+-	if (force_nonblock)
++	if (force_nonblock) {
++		/* only need file table for an actual valid fd */
++		if (ctx->dfd == -1 || ctx->dfd == AT_FDCWD)
++			req->flags |= REQ_F_NO_FILE_TABLE;
+ 		return -EAGAIN;
++	}
+ 
+ 	if (vfs_stat_set_lookup_flags(&lookup_flags, ctx->how.flags))
+ 		return -EINVAL;
+@@ -4632,7 +4640,7 @@ static int io_grab_files(struct io_kiocb
+ 	int ret = -EBADF;
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 
+-	if (req->work.files)
++	if (req->work.files || (req->flags & REQ_F_NO_FILE_TABLE))
+ 		return 0;
+ 	if (!ctx->ring_file)
+ 		return -EBADF;
 
 
