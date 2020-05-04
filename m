@@ -2,121 +2,156 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95760C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9450BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E964206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA3020707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmR4y6bU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgEDVCn (ORCPT
+        id S1728059AbgEDVDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:02:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
+        Mon, 4 May 2020 17:03:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbgEDVCm (ORCPT
+        with ESMTP id S1726334AbgEDVDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:02:42 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5A5C061A0E;
-        Mon,  4 May 2020 14:02:42 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jViEL-0010Kx-57; Mon, 04 May 2020 21:02:25 +0000
-Date:   Mon, 4 May 2020 22:02:25 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        Mon, 4 May 2020 17:03:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B51C061A0E;
+        Mon,  4 May 2020 14:03:17 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g13so152330wrb.8;
+        Mon, 04 May 2020 14:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n0gWd/LKEKfbFqunt27R8+2BYVGb8cKLklv+je6aFbk=;
+        b=LmR4y6bUzadG9TaDR2YViM86obTCNs5PL7ve0409Y2bFpIIpoy0SpP8Xbi84p1Hahm
+         yPK/AA/H9XMFLgd/6lIpf0fCyuY6+bnvRIF0IR9keaEbYibbhINA226PjfFTCWtXQ+ss
+         TiB0XRBVM/xs2Ifs+8TqYcqI+vVjpBkpTpngfbg+CkJTpNjtYDf+SxhXzVOHcqIllh4g
+         oGZqUG247TO6j4PFV5OMt4imAoXNhzs7oaCdk2qA7Jn6h/OJkiqvyc74NdtJGs9Dtjc4
+         UlIkbPvknNXGwXTruZvhbqphUFfxL0Cs2hxF4kq/OuWqdjWB3zeY+QDQi+sXNsQeDEBX
+         XWgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n0gWd/LKEKfbFqunt27R8+2BYVGb8cKLklv+je6aFbk=;
+        b=kRqUDrOIwC+fImVC4u/bsSBY/AyRETk+z1jxi6zoWdWZ0aFd25VsSYQdAJqBW3v8Jw
+         /GaTaCzHtUHW+CGEI+4prkFzV1PMdwmqosEcPQU0rT0GOfkHk+LizjIVJUwsnYCAm3Q5
+         EAIf4cmy6Xl+cWyYOxk1civ+zCp3wvyHz81CjnriEEMsxXLkS7413wEMfmzbKexo8wNz
+         opsV++m1Cmi9spTGgCCeU8yVpxI4dLA10h4MhinFCFseXkxHvxt3pvOJwG4HIxEWMErK
+         FMKwMKZMa07/maRyiUBJPxRtZx04aM+T41Gm/2gfYczUFAAWCoALAP6lAbg9/d9jojFT
+         UJ8w==
+X-Gm-Message-State: AGi0PuaTa5PoLejnohZBcoaxPGzp1eRbf1+CsrU6eBy8UjBtd8xKrFso
+        RcMjukeDici7gfoyAEITzafwlbHo
+X-Google-Smtp-Source: APiQypJzkKLT2kMEemfvan89ukp/i0ZeR5T1FDjZwlEnyqDg6E3kHj4mcha3VCheoZAMEd3nYVmSQg==
+X-Received: by 2002:a5d:650b:: with SMTP id x11mr982279wru.405.1588626196291;
+        Mon, 04 May 2020 14:03:16 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y63sm259719wmg.21.2020.05.04.14.03.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 14:03:15 -0700 (PDT)
+Subject: Re: [PATCH net] net: dsa: Do not leave DSA master with NULL
+ netdev_ops
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>, allen.pais@oracle.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
-Message-ID: <20200504210225.GW23230@ZenIV.linux.org.uk>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
- <20200504013509.GU23230@ZenIV.linux.org.uk>
- <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
- <20200504053357.GV23230@ZenIV.linux.org.uk>
- <20200504201740.GA985739@iweiny-DESK2.sc.intel.com>
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200504201806.27192-1-f.fainelli@gmail.com>
+ <CA+h21ho50twA=D=kZYxVuE=C6gf=8JeXmTEHhV30p_30oQZjjA@mail.gmail.com>
+ <b32f205a-6ff3-e1db-33d1-6518091f90b4@gmail.com>
+ <CA+h21hpObEHt04igBBbX40niuqON=41=f35zTgYNOTZZscbivQ@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <9ed48660-8b43-6661-1794-aa6eedbed3cc@gmail.com>
+Date:   Mon, 4 May 2020 14:03:12 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504201740.GA985739@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <CA+h21hpObEHt04igBBbX40niuqON=41=f35zTgYNOTZZscbivQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 01:17:41PM -0700, Ira Weiny wrote:
 
-> > || * arm: much, much worse.  We have several files that pull linux/highmem.h:
-> > || arch/arm/mm/cache-feroceon-l2.c, arch/arm/mm/cache-xsc3l2.c,
-> > || arch/arm/mm/copypage-*.c, arch/arm/mm/dma-mapping.c, arch/arm/mm/flush.c,
-> > || arch/arm/mm/highmem.c, arch/arm/probes/uprobes/core.c,
-> > || arch/arm/include/asm/kvm_mmu.h (kmap_atomic_pfn()).
-> > || Those are fine, but we also have this:
-> > || arch/arm/include/asm/pgtable.h:200:#define __pte_map(pmd)               (pte_t *)kmap_atomic(pmd_page(*(pmd)))
-> > || arch/arm/include/asm/pgtable.h:208:#define pte_offset_map(pmd,addr)     (__pte_map(pmd) + pte_index(addr))
-> > || and sure as hell, asm/pgtable.h does *NOT* pull linux/highmem.h.
+
+On 5/4/2020 1:49 PM, Vladimir Oltean wrote:
+> On Mon, 4 May 2020 at 23:40, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>
+>>
+>>
+>> On 5/4/2020 1:34 PM, Vladimir Oltean wrote:
+>>> Hi Florian,
+>>>
+>>> On Mon, 4 May 2020 at 23:19, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>>
+>>>> When ndo_get_phys_port_name() for the CPU port was added we introduced
+>>>> an early check for when the DSA master network device in
+>>>> dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
+>>>> we perform the teardown operation in dsa_master_ndo_teardown() we would
+>>>> not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
+>>>> non-NULL initialized.
+>>>>
+>>>> With network device drivers such as virtio_net, this leads to a NPD as
+>>>> soon as the DSA switch hanging off of it gets torn down because we are
+>>>> now assigning the virtio_net device's netdev_ops a NULL pointer.
+>>>>
+>>>> Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
+>>>> Reported-by: Allen Pais <allen.pais@oracle.com>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>
+>>> The fix makes complete sense.
+>>> But on another note, if we don't overlay an ndo_get_phys_port_name if
+>>> the master already has one, doesn't that render the entire mechanism
+>>> of having a reliable way for user space to determine the CPU port
+>>> number pointless?
+>>
+>> For the CPU port I would consider ndo_get_phys_port_name() to be more
+>> best effort than an absolute need unlike the user facing ports, where
+>> this is necessary for a variety of actions (e.g.: determining
+>> queues/port numbers etc.) which is why there was no overlay being done
+>> in that case. There is not a good way to cascade the information other
+>> than do something like pX.Y and defining what the X and Y are, what do
+>> you think?
+>> --
+>> Florian
 > 
-> It does not pull asm/highmem.h either...
+> For the CPU/master port I am not actually sure who is the final
+> consumer of the ndo_get_phys_port_name, I thought it is simply
+> informational, with the observation that it may be unreliable in
+> transmitting that information over.
+> Speaking of which, if "informational" is the only purpose, could this
+> not be used?
 
-No, but the users of those macros need to be considered.
+Yes, I had not considered devlink would expose that information,
+ndo_phys_port_name() is there now though and since it is exposed through
+sysfs so reverting would be an ABI breakage.
 
-> > || #define pte_offset_map(dir, addr)               \
-> > ||         ((pte_t *) kmap_atomic(pmd_page(*(dir))) + pte_index(addr))
-> > ||         One pte_offset_map user in arch/microblaze:
-> > || arch/microblaze/kernel/signal.c:207:    ptep = pte_offset_map(pmdp, address);
-> > || Messy, but doesn't require any changes (we have asm/pgalloc.h included
-> > || there, and that pull linux/highmem.h).
 > 
-> AFAICS asm/pgtable.h does not include asm/highmem.h here...
+> devlink port | grep "flavour cpu"
+> pci/0000:00:00.5/4: type notset flavour cpu port 4
+> spi/spi2.0/4: type notset flavour cpu port 4
+> spi/spi2.1/4: type notset flavour cpu port 4
 > 
-> So looks like arch/microblaze/kernel/signal.c will need linux/highmem.h
-
-See above - line 39 in there is
-#include <asm/pgalloc.h>
-and line 14 in arch/microblaze/include/asm/pgalloc.h is
-#include <linux/highmem.h>
-It's conditional upon CONFIG_MMU in there, but so's the use of
-pte_offset_map() in arch/microblaze/kernel/signal.c 
-
-So it shouldn't be a problem.
-
-> > || * xtensa: users in arch/xtensa/kernel/pci-dma.c, arch/xtensa/mm/highmem.c,
-> > || arch/xtensa/mm/cache.c and arch/xtensa/platforms/iss/simdisk.c (all pull
-> > || linux/highmem.h).
+> Thanks,
+> -Vladimir
 > 
-> Actually
-> 
-> arch/xtensa/mm/cache.c gets linux/highmem.h from linux/pagemap.h
-> 
-> arch/xtensa/platforms/iss/simdisk.c may have an issue?
-> 	linux/blkdev.h -> CONFIG_BLOCK -> linux/pagemap.h -> linux/highmem.h
-> 	But simdisk.c requires BLK_DEV_SIMDISK -> CONFIG_BLOCK...
-> 	<sigh>
 
-Yep - see above re major chain of indirect includes conditional upon CONFIG_BLOCK
-and its uses in places that only build with such configs.  There's a plenty of
-similar considerations outside of arch/*, unfortunately...
+-- 
+Florian
