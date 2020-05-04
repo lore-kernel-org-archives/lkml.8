@@ -2,184 +2,242 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1CEC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A059FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8957D20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:14:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588572893;
-	bh=N0yq5ahXgMtgtu91eiz8HXvEkM1smExwUQNbeJhVm90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TygO8u8huZgn2l2vY7iNXpjAKQcd7+SfmWUqX3Bb+X9U5uisctT4vdaYPBpoCysee
-	 UEnSQ/+9LWi7jBbKy0g1FFzNN9fqNNF+rtJIbCSDmJV1f+5pDFheUDoWnnbbEPpWOY
-	 sNahjpVBIvtWuAzw0KW1QkrF0tXuq8Hiz9U319Ck=
+	by mail.kernel.org (Postfix) with ESMTP id 796E5206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:15:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WAmd3WMO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgEDGOx (ORCPT
+        id S1727088AbgEDGPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:14:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgEDGOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:14:52 -0400
-Received: from localhost (unknown [171.76.84.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 May 2020 02:15:11 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:28916 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726743AbgEDGPL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 02:15:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588572909; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=i7iQj9o0ySk1sX74mTJNhUkqJlEGwuoDp1GH+9bfS5w=; b=WAmd3WMOHgYpAQQEeMTu7KBID9orzToGknCVWToYU+F/TEBPJD09tBkjwQe5W7FhW2E+0uZ0
+ QqhjClUgepOq6bdG90d4GAmvcWEqeugtdY8sPvTqb7oIJH0KNx31P/a05hZZBws0fKATsGOf
+ N3WLc8iaDHu3GfWAMlnReGP4H9M=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eafb2e2.7f25765970d8-smtp-out-n01;
+ Mon, 04 May 2020 06:14:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 63A2DC432C2; Mon,  4 May 2020 06:14:58 +0000 (UTC)
+Received: from [192.168.0.105] (unknown [49.206.125.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AF73206B9;
-        Mon,  4 May 2020 06:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588572892;
-        bh=N0yq5ahXgMtgtu91eiz8HXvEkM1smExwUQNbeJhVm90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=znPn/xmRZBsl9Cqux5lgOg2EXM8P3iOA/D6w5D6hv/aEEJ90kAs2PreaLAjsVcJCo
-         NhlwZCpIr90Z1zHF5LGKeqzvFgtoAN/8C8afMW7WrJdN+4VCPQVtWkRkhcnPyeCkMw
-         KBRPvwQXAOvoveIhm3b5Je5SAQQyTxQdw1AAwT4E=
-Date:   Mon, 4 May 2020 11:44:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] dmaengine: ptdma: register PTDMA controller as a
- DMA resource
-Message-ID: <20200504061445.GK1375924@vkoul-mobl>
-References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
- <1588108416-49050-3-git-send-email-Sanju.Mehta@amd.com>
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84555C433F2;
+        Mon,  4 May 2020 06:14:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84555C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V3 1/8] dt-bindings: mailbox: Add YAML schemas for QCOM
+ APCS global block
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1586832922-29191-1-git-send-email-sivaprak@codeaurora.org>
+ <1586832922-29191-2-git-send-email-sivaprak@codeaurora.org>
+ <20200420205924.GA13256@bogus>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <02ead2f7-3eed-d9cf-26aa-25e2ef246a4c@codeaurora.org>
+Date:   Mon, 4 May 2020 11:44:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588108416-49050-3-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <20200420205924.GA13256@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-04-20, 16:13, Sanjay R Mehta wrote:
 
-> +static void pt_do_cmd_complete(unsigned long data)
-> +{
-> +	struct pt_tasklet_data *tdata = (struct pt_tasklet_data *)data;
-> +	struct pt_cmd *cmd = tdata->cmd;
-> +	struct pt_cmd_queue *cmd_q = &cmd->pt->cmd_q;
-> +	u32 tail;
-> +
-> +	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
-> +	if (cmd_q->cmd_error) {
-> +	       /*
-> +		* Log the error and flush the queue by
-> +		* moving the head pointer
-> +		*/
-> +		pt_log_error(cmd_q->pt, cmd_q->cmd_error);
-> +		iowrite32(tail, cmd_q->reg_head_lo);
-> +	}
-> +
-> +	cmd->pt_cmd_callback(cmd->data, cmd->ret);
-
-So in the isr you schedule this tasklet and this invokes the calback..
-this is very inefficient.
-
-You should submit the next txn to dmaengine in your isr, keeping the dma
-idle at this point is very inefficient.
-
-> +static void pt_cmd_callback(void *data, int err)
-> +{
-> +	struct pt_dma_desc *desc = data;
-> +	struct pt_dma_chan *chan;
-> +	int ret;
-
-This is called as callback from pt layer..
-> +
-> +	if (err == -EINPROGRESS)
-> +		return;
-> +
-> +	chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
-> +			    vc.chan);
-> +
-> +	dev_dbg(chan->pt->dev, "%s - tx %d callback, err=%d\n",
-> +		__func__, desc->vd.tx.cookie, err);
-> +
-> +	if (err)
-> +		desc->status = DMA_ERROR;
-> +
-> +	while (true) {
-> +		/* Check for DMA descriptor completion */
-> +		desc = pt_handle_active_desc(chan, desc);
-> +
-> +		/* Don't submit cmd if no descriptor or DMA is paused */
-> +		if (!desc || chan->status == DMA_PAUSED)
-> +			break;
-> +
-> +		ret = pt_issue_next_cmd(desc);
-
-And you call this to issue next cmd... The missing thing I am seeing
-here is vchan_cookie_complete() you need to call that here for correct
-vchan list mgmt
-
-> +static struct pt_dma_desc *pt_create_desc(struct dma_chan *dma_chan,
-> +					  struct scatterlist *dst_sg,
-> +					    unsigned int dst_nents,
-> +					    struct scatterlist *src_sg,
-> +					    unsigned int src_nents,
-> +					    unsigned long flags)
-
-unaligned add indentation! Pls run checkpatch --strict to check for
-these oddities
-
-> +	dma_dev->dev = pt->dev;
-> +	dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-> +	dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-> +	dma_dev->directions = DMA_MEM_TO_MEM;
-> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-> +
-> +	INIT_LIST_HEAD(&dma_dev->channels);
-> +
-> +	chan = pt->pt_dma_chan;
-> +	chan->pt = pt;
-> +	dma_chan = &chan->vc.chan;
-> +
-> +	dma_dev->device_free_chan_resources = pt_free_chan_resources;
-> +	dma_dev->device_prep_dma_memcpy = pt_prep_dma_memcpy;
-> +	dma_dev->device_prep_dma_interrupt = pt_prep_dma_interrupt;
-> +	dma_dev->device_issue_pending = pt_issue_pending;
-> +	dma_dev->device_tx_status = pt_tx_status;
-> +	dma_dev->device_pause = pt_pause;
-> +	dma_dev->device_resume = pt_resume;
-> +	dma_dev->device_terminate_all = pt_terminate_all;
-
-Pls implement .device_synchronize as well
-
-> +struct pt_dma_desc {
-> +	struct virt_dma_desc vd;
-> +
-> +	struct pt_device *pt;
-> +
-> +	struct list_head pending;
-> +	struct list_head active;
-
-why not use vc->desc_submitted, desc_issued instead!
-
-> +
-> +	enum dma_status status;
-> +
-> +	size_t len;
-> +};
-> +
-> +struct pt_dma_chan {
-> +	struct virt_dma_chan vc;
-> +
-> +	struct pt_device *pt;
-> +
-> +	enum dma_status status;
-
-channel status as well as desc, why do you need both?
--- 
-~Vinod
+On 4/21/2020 2:29 AM, Rob Herring wrote:
+> On Tue, Apr 14, 2020 at 08:25:15AM +0530, Sivaprakash Murugesan wrote:
+>> Qualcomm APCS global block provides a bunch of generic properties which
+>> are required in a device tree. Add YAML schema for these properties.
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>   .../bindings/mailbox/qcom,apcs-kpss-global.txt     | 88 ----------------------
+>>   .../bindings/mailbox/qcom,apcs-kpss-global.yaml    | 88 ++++++++++++++++++++++
+>>   2 files changed, 88 insertions(+), 88 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+>>   create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+>> deleted file mode 100644
+>> index beec612..0000000
+>> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+>> +++ /dev/null
+>> @@ -1,88 +0,0 @@
+>> -Binding for the Qualcomm APCS global block
+>> -==========================================
+>> -
+>> -This binding describes the APCS "global" block found in various Qualcomm
+>> -platforms.
+>> -
+>> -- compatible:
+>> -	Usage: required
+>> -	Value type: <string>
+>> -	Definition: must be one of:
+>> -		    "qcom,msm8916-apcs-kpss-global",
+>> -		    "qcom,msm8996-apcs-hmss-global"
+>> -		    "qcom,msm8998-apcs-hmss-global"
+>> -		    "qcom,qcs404-apcs-apps-global"
+>> -		    "qcom,sc7180-apss-shared"
+>> -		    "qcom,sdm845-apss-shared"
+>> -		    "qcom,sm8150-apss-shared"
+>> -		    "qcom,ipq8074-apcs-apps-global"
+>> -
+>> -- reg:
+>> -	Usage: required
+>> -	Value type: <prop-encoded-array>
+>> -	Definition: must specify the base address and size of the global block
+>> -
+>> -- clocks:
+>> -	Usage: required if #clock-names property is present
+>> -	Value type: <phandle array>
+>> -	Definition: phandles to the two parent clocks of the clock driver.
+>> -
+>> -- #mbox-cells:
+>> -	Usage: required
+>> -	Value type: <u32>
+>> -	Definition: as described in mailbox.txt, must be 1
+>> -
+>> -- #clock-cells:
+>> -	Usage: optional
+>> -	Value type: <u32>
+>> -	Definition: as described in clock.txt, must be 0
+>> -
+>> -- clock-names:
+>> -	Usage: required if the platform data based clock driver needs to
+>> -	retrieve the parent clock names from device tree.
+>> -	This will requires two mandatory clocks to be defined.
+>> -	Value type: <string-array>
+>> -	Definition: must be "pll" and "aux"
+>> -
+>> -= EXAMPLE
+>> -The following example describes the APCS HMSS found in MSM8996 and part of the
+>> -GLINK RPM referencing the "rpm_hlos" doorbell therein.
+>> -
+>> -	apcs_glb: mailbox@9820000 {
+>> -		compatible = "qcom,msm8996-apcs-hmss-global";
+>> -		reg = <0x9820000 0x1000>;
+>> -
+>> -		#mbox-cells = <1>;
+>> -	};
+>> -
+>> -	rpm-glink {
+>> -		compatible = "qcom,glink-rpm";
+>> -
+>> -		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+>> -
+>> -		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+>> -
+>> -		mboxes = <&apcs_glb 0>;
+>> -		mbox-names = "rpm_hlos";
+>> -	};
+>> -
+>> -Below is another example of the APCS binding on MSM8916 platforms:
+>> -
+>> -	apcs: mailbox@b011000 {
+>> -		compatible = "qcom,msm8916-apcs-kpss-global";
+>> -		reg = <0xb011000 0x1000>;
+>> -		#mbox-cells = <1>;
+>> -		clocks = <&a53pll>;
+>> -		#clock-cells = <0>;
+>> -	};
+>> -
+>> -Below is another example of the APCS binding on QCS404 platforms:
+>> -
+>> -	apcs_glb: mailbox@b011000 {
+>> -		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+>> -		reg = <0x0b011000 0x1000>;
+>> -		#mbox-cells = <1>;
+>> -		clocks = <&apcs_hfpll>, <&gcc GCC_GPLL0_AO_OUT_MAIN>;
+>> -		clock-names = "pll", "aux";
+>> -		#clock-cells = <0>;
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+>> new file mode 100644
+>> index 0000000..b46474b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+>> @@ -0,0 +1,88 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/mailbox/qcom,apcs-kpss-global.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Qualcomm APCS global block bindings
+>> +
+>> +description:
+>> +  This binding describes the APCS "global" block found in various Qualcomm
+>> +  platforms.
+>> +
+>> +maintainers:
+>> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,ipq8074-apcs-apps-global
+>> +      - qcom,msm8916-apcs-kpss-global
+>> +      - qcom,msm8996-apcs-hmss-global
+>> +      - qcom,msm8998-apcs-hmss-global
+>> +      - qcom,qcs404-apcs-apps-global
+>> +      - qcom,sc7180-apss-shared
+>> +      - qcom,sdm845-apss-shared
+>> +      - qcom,sm8150-apss-shared
+>> +
+>> +  reg:
+>> +    description: specifies the base address and size of the global block
+> Can drop this.
+ok.
+>
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description: phandles to the parent clocks of the clock driver
+> Need to define how many and what each one is.
+ok.
+>
+>> +
+>> +  '#mbox-cells':
+>> +    const: 1
+>> +
+>> +  '#clock-cells':
+>> +    const: 0
+>> +
+>> +  clock-names:
+>> +    description:
+>> +      parent clock names, required if the platform data based clock driver
+>> +      needs to retrieve the parent clock names from device tree.
+> Drop.
+ok.
+>
+>> +    maxItems: 2
+> Not needed as 'items' implies this.
+ok.
