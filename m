@@ -2,245 +2,113 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25831C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE2BC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21D82073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588619748;
-	bh=F7Qmmhq6TcbGJuhxEEsR8hmeCqnfcivsCGguf9UeE7E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=en/xd7XjXxybE/RyJZEs6J1drUEVmP0C0cP6NO8LfsDOpTiDOkR6g9twwNOslIE65
-	 N4Bumakp1hGyw/g95sXV30WzKeHwY/qdZxVyg7CcyDDY2NfjMFhcfVaFix+/+D78ok
-	 7wHEdg3RLJTwFCaJogV5rUMhBcrE0mHaMsq2OBBY=
+	by mail.kernel.org (Postfix) with ESMTP id 26033206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:18:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="JSSYqRf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgEDTPr (ORCPT
+        id S1726482AbgEDTSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbgEDTPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:15:46 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E2542073E;
-        Mon,  4 May 2020 19:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588619745;
-        bh=F7Qmmhq6TcbGJuhxEEsR8hmeCqnfcivsCGguf9UeE7E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zYsiT55HzuWGF97RueqOkkgrNj8YtTjj5Y+T928v3pCL9O1IU/503Q4bKizkgtWnk
-         dghRszYP2nSZszZsW0w39j8v9aVRZp7flQlVKmVIM8cBypwmJ9HU3Wt6M0oa8TpvIr
-         axm0aBdhbzUOyVpiPnfeXKuySio2SDn/31utg7yk=
-Received: by mail-ot1-f51.google.com with SMTP id z17so9947243oto.4;
-        Mon, 04 May 2020 12:15:45 -0700 (PDT)
-X-Gm-Message-State: AGi0PubBJsywy+uhqdPfPhd/xglwFM46fviI7/UNlIviE4UfHt+3w4/s
-        QAJA7pW2F1kjmSJKcp0vIOrN6MfwOLr7UCwUIw==
-X-Google-Smtp-Source: APiQypK3VZQ36VWy3e7C0F+WtWxSO1XQD91KJ/cOHPDKIxPLR1SVmk2HUWN/cm9ekPsDYqbb2I8+UQJKA4ppbF9fZsM=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr14640730otn.107.1588619744639;
- Mon, 04 May 2020 12:15:44 -0700 (PDT)
+        Mon, 4 May 2020 15:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725956AbgEDTST (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:18:19 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A5DC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:18:18 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id k22so14581625eds.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:18:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kROsHnsD9muMWEwboUG5hUj2OVBxs90xwEJKMpv4TqU=;
+        b=JSSYqRf7kz1USqv9VwACVLKCxXRB4qyB6svg1s1rslPg7jHXZcr350vq//aDz2g2od
+         YrZSNERm7ak33/2IuJG4au8xuXPQFwEQbFXj+L+x4EUIvztQZSki+kdKhj3zWTm6HxJI
+         gbmQaiKZf75LY2xZIOAAEagt5SpP9peefxR/Rh5/r8hjTa4VVArlhpT4LqFjpsK3dN1V
+         G/6ksnlX6fwRL7DLFbfn9S4CsQQ3i+8qY1/p8H3OFOPvdls+wlW5EXSjp1erhRu0GSLG
+         G2xwwrAtWE9oOjg8jwxtuNErvw/V7Pad1dxG+DY/cneVyjglCqOuCdsAD43VZ85A5GAN
+         SXIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kROsHnsD9muMWEwboUG5hUj2OVBxs90xwEJKMpv4TqU=;
+        b=WXc6Tt3KaSgY/TbpacT4qlosjLiGIz+pQm2WSIcO1LyuptzsCIaZhJUqg3yByt63dE
+         TqmraOnTIfNOAZEt1w9BSc4eM0KkuDW+GggYw4S3Uf1vPvUl8qO8E68B30UUQrCBXMFc
+         dwun59sP1v7XhaSbihzjnNX5jrJlb9y+jIBjTAiGzZSwr0p7hvp+PimOgNT+IWdUO395
+         gZFjWL+bTqJTRb0z4jRhGdqf5Pq5NfDXVVogdzwK6odNY+39VWXl4aRzcHa/GzhzBJCv
+         Ll3rXZ26zDPUbb9PejQx/XTT9hyt8I0fKyPBFo1wvVLf4cU7sAtebVhq72fmx4QMGv/C
+         SJlA==
+X-Gm-Message-State: AGi0PubOWIczYeY+7GqxqqYRCAPVMqBFkGaWU9SDkwFNR0goug6kG3Pn
+        y9rA2hkpv9yYXoJ7Yx+LjAiFbzNSfHgG49AiFsMYQQ==
+X-Google-Smtp-Source: APiQypLAAV4FjDK1Jvxoka65plqeN9pxdUehUoxnWzxXbsHXQPalVul5W+hYrC+PRTtb7+mGD9+ACSv0F/eCwxI563Y=
+X-Received: by 2002:a05:6402:14c1:: with SMTP id f1mr16188235edx.221.1588619896803;
+ Mon, 04 May 2020 12:18:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200504020651.37031-1-masahiroy@kernel.org> <20200504020651.37031-2-masahiroy@kernel.org>
-In-Reply-To: <20200504020651.37031-2-masahiroy@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 4 May 2020 14:15:32 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com>
-Message-ID: <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVo77+977+9w6Ju?= <marek.behun@nic.cz>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
+References: <20200502143555.543636-1-pasha.tatashin@soleen.com>
+ <202005041112.F3C8117F67@keescook> <CA+CK2bBDzbXdH23aDxqGzMoxPppNcVmitrYJ00tJqympMBVJOg@mail.gmail.com>
+ <202005041211.040A1C65C8@keescook>
+In-Reply-To: <202005041211.040A1C65C8@keescook>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 4 May 2020 15:17:40 -0400
+Message-ID: <CA+CK2bAJgKR+=Tby91gU-ZKy29Juv_oJinCTFAWRaKiiro2vkg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] allow ramoops to collect all kmesg_dump events
+To:     Kees Cook <keescook@chromium.org>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>, anton@enomsg.org,
+        ccross@android.com, Tony Luck <tony.luck@intel.com>,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 9:07 PM Masahiro Yamada <masahiroy@kernel.org> wrote=
-:
+On Mon, May 4, 2020 at 3:12 PM Kees Cook <keescook@chromium.org> wrote:
 >
-> Marek Beh=C3=BAn reported a case where pkg-config fails to detect the
-> libyaml-dev package, which is presumably a bug of the distro.
+> On Mon, May 04, 2020 at 02:47:45PM -0400, Pavel Tatashin wrote:
+> > > > # reboot -f
+> > > >
+> > > > After VM is back:
+> > > >
+> > > > # mount -t pstore pstore /mnt
+> > > > # head /mnt/dmesg-ramoops-0
+> > > > Restart#1 Part1
+> > >
+> > > Is there a reason that using ramoops.console_size isn't sufficient for
+> > > this?
+> >
+> > Unfortunately, the console option is not working for us (Microsoft),
+> > we have an embedded device with a serial console, and the baud rate
+> > reduces the reboot performance, so we must keep the console quiet. We
+> > also want to be able collect full shutdown logs from the field that
+> > are collected during kexec based updates.
 >
-> Irrespective of that, I am not a big fan of pkg-config in the Makefile
-> parse stage. The cost of pkg-config is quite small, but it is evaluated
-> everytime we run make, even when we do 'make mrproper'. This commit
-> changes the Makefile to not rely on pkg-config at all.
+> I meant collecting console via pstore (i.e. /mnt/console-ramoops-0). Are
+> you saying that's still too large for your situation?
 
-I don't really love the solution here... I'm inclined to just make
-libyaml always required. Anyone building dtbs should care about
-validating them. However, there's some dts files sprinkled in the tree
-such as DT unittests and I don't want to break allmodconfig for CI,
-0-day, etc. Though eventually we may have to.
+pstore /mnt/console-ramoops-0 outputs only messages below the console
+loglevel, and our console loglevel is set to 3 due to slowness of
+serial console. Which means only errors and worse types of messages
+are recorded. AFAIK, there is no way to have different log levels for
+different consoles.
 
-> The normal build should not require libyaml-dev while we need to compile
-> dtc with libyaml for the schema check.
->
-> Build two dtc variants:
->
->   scripts/dtc/dtc      for *.dts -> *.dtb
->   scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
+Thank you,
+Pasha
 
-My longer term plan is to integrate the schema checks into dtc. This
-would be some sort of plugin to dtc found or specified at run-time. It
-would eliminate the need for 2 passes of dtc and the 2nd case will go
-away.
-
-> 'make dtbs_check' or 'make dt_binding_check' without libyaml-dev installe=
-d
-> will fail like this:
 >
->   scripts/dtc/yamltree.c:9:10: fatal error: yaml.h: No such file or direc=
-tory
->
-> I hope people will notice what to do.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  scripts/Makefile.lib      |  9 +++++----
->  scripts/dtc/.gitignore    |  1 +
->  scripts/dtc/Makefile      | 28 +++++++++++-----------------
->  scripts/dtc/dtc-no-yaml.c |  3 +++
->  4 files changed, 20 insertions(+), 21 deletions(-)
->  create mode 100644 scripts/dtc/dtc-no-yaml.c
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 8f9f2abf3d67..ca12412304b8 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
->  # DTC
->  # ----------------------------------------------------------------------=
------
->  DTC ?=3D $(objtree)/scripts/dtc/dtc
-> +DTC_YAML ?=3D $(objtree)/scripts/dtc/dtc-yaml
-
-Can we make 'DTC' override both and keep this an internal detail.
-
->  # Disable noisy checks by default
->  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
-> @@ -286,13 +287,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
->
->  __cmd_dtc =3D mkdir -p $(dir ${dtc-tmp}) ; \
->         $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp)=
- $< ; \
-> -       $(DTC) -O $(1) -o $@ -b 0 \
-> +       $(1) -O $(2) -o $@ -b 0 \
->                 $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
->                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
->         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
->
->  quiet_cmd_dtc =3D DTC     $@
-> -      cmd_dtc =3D $(call __cmd_dtc,dtb)
-> +      cmd_dtc =3D $(call __cmd_dtc,$(DTC),dtb)
->
->  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
->         $(call if_changed_dep,dtc)
-> @@ -303,7 +304,7 @@ DT_BINDING_DIR :=3D Documentation/devicetree/bindings
->  DT_TMP_SCHEMA ?=3D $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
->
->  quiet_cmd_dtc_yaml =3D DTCYAML $@
-> -      cmd_dtc_yaml =3D $(call __cmd_dtc,yaml)
-> +      cmd_dtc_yaml =3D $(call __cmd_dtc,$(DTC_YAML),yaml)
->
->  quiet_cmd_dtb_check =3D  CHECK   $@
->        cmd_dtb_check =3D  $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -=
-p $(DT_TMP_SCHEMA) $@
-> @@ -313,7 +314,7 @@ define rule_dtc_yaml
->         $(call cmd,dtb_check)
->  endef
->
-> -$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
-> +$(obj)/%.dt.yaml: $(src)/%.dts $(DTC_YAML) $(DT_TMP_SCHEMA) FORCE
->         $(call if_changed_rule,dtc_yaml)
->
->  dtc-tmp =3D $(subst $(comma),_,$(dot-target).dts.tmp)
-> diff --git a/scripts/dtc/.gitignore b/scripts/dtc/.gitignore
-> index b814e6076bdb..e0cf8222c137 100644
-> --- a/scripts/dtc/.gitignore
-> +++ b/scripts/dtc/.gitignore
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  dtc
-> +dtc-yaml
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> index ef85f8b7d4a7..c6d7e2b70f08 100644
-> --- a/scripts/dtc/Makefile
-> +++ b/scripts/dtc/Makefile
-> @@ -1,28 +1,22 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # scripts/dtc makefile
->
-> -hostprogs                      :=3D dtc
-> -always-$(CONFIG_DTC)           +=3D $(hostprogs)
-> -always-$(CHECK_DT_BINDING)     +=3D $(hostprogs)
-> +# Build the yaml variant for DT schema validation, which requires libyam=
-l
-> +# development package. The normal build does not need it.
-> +hostprogs                      :=3D dtc dtc-yaml
-> +always-$(CONFIG_DTC)           +=3D dtc
-> +always-$(CHECK_DTBS)           +=3D dtc-yaml
-> +always-$(CHECK_DT_BINDING)     +=3D dtc-yaml
->
-> -dtc-objs       :=3D dtc.o flattree.o fstree.o data.o livetree.o treesour=
-ce.o \
-> -                  srcpos.o checks.o util.o
-> -dtc-objs       +=3D dtc-lexer.lex.o dtc-parser.tab.o
-> +common-objs    :=3D flattree.o fstree.o data.o livetree.o treesource.o \
-> +                  srcpos.o checks.o util.o dtc-lexer.lex.o dtc-parser.ta=
-b.o
-> +dtc-objs       :=3D dtc-no-yaml.o $(common-objs)
-> +dtc-yaml-objs  :=3D dtc.o yamltree.o $(common-objs)
-> +HOSTLDLIBS_dtc-yaml :=3D -lyaml
-
-Does this work for yocto? As we had this before commit 067c650c456e.
-Not clear if this changed for any reason or just 'let's use pkg-config
-everywhere'.
-
-Or is there another way to fix yocto issue and we can just check the
-header exists. I assume yocto needs some prefix in front of
-'/usr/include/yaml.h'?
-
->  # Source files need to get at the userspace version of libfdt_env.h to c=
-ompile
->  HOST_EXTRACFLAGS :=3D -I $(srctree)/$(src)/libfdt
->
-> -ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
-> -ifneq ($(CHECK_DT_BINDING)$(CHECK_DTBS),)
-> -$(error dtc needs libyaml for DT schema validation support. \
-> -       Install the necessary libyaml development package.)
-> -endif
-> -HOST_EXTRACFLAGS +=3D -DNO_YAML
-> -else
-> -dtc-objs       +=3D yamltree.o
-> -HOSTLDLIBS_dtc :=3D $(shell pkg-config yaml-0.1 --libs)
-> -endif
-> -
->  # Generated files need one more search path to include headers in source=
- tree
->  HOSTCFLAGS_dtc-lexer.lex.o :=3D -I $(srctree)/$(src)
->  HOSTCFLAGS_dtc-parser.tab.o :=3D -I $(srctree)/$(src)
-> diff --git a/scripts/dtc/dtc-no-yaml.c b/scripts/dtc/dtc-no-yaml.c
-> new file mode 100644
-> index 000000000000..f3459e45835f
-> --- /dev/null
-> +++ b/scripts/dtc/dtc-no-yaml.c
-> @@ -0,0 +1,3 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +#define NO_YAML
-> +#include "dtc.c"
 > --
-> 2.25.1
->
+> Kees Cook
