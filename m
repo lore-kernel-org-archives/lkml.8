@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20074C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D71EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF3620735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9EC20735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgEDGUr (ORCPT
+        id S1727901AbgEDGUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:20:47 -0400
+        Mon, 4 May 2020 02:20:51 -0400
 Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:41354 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727811AbgEDGUh (ORCPT
+        by vger.kernel.org with ESMTP id S1727808AbgEDGUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:20:37 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 03 May 2020 23:20:36 -0700
+        Mon, 4 May 2020 02:20:36 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 03 May 2020 23:20:35 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 03 May 2020 23:20:32 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 03 May 2020 23:20:32 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 20C352174A; Mon,  4 May 2020 11:50:27 +0530 (IST)
+        id 4DC2421758; Mon,  4 May 2020 11:50:27 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
@@ -33,9 +33,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Subject: [PATCH V4 6/8] dt-bindings: mailbox: Add dt-bindings for ipq6018 apcs global block
-Date:   Mon,  4 May 2020 11:50:22 +0530
-Message-Id: <1588573224-3038-7-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V4 8/8] arm64: dts: ipq6018: Add a53 pll and apcs clock
+Date:   Mon,  4 May 2020 11:50:24 +0530
+Message-Id: <1588573224-3038-9-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
 References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
@@ -44,57 +44,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt-bindings for ipq6018 mailbox driver
+add support for apps pll and apcs clock.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- .../bindings/mailbox/qcom,apcs-kpss-global.yaml         | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-index 12eff94..e05bff4 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-+++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
-@@ -16,6 +16,7 @@ maintainers:
- properties:
-   compatible:
-     enum:
-+      - qcom,ipq6018-apcs-apps-global
-       - qcom,ipq8074-apcs-apps-global
-       - qcom,msm8916-apcs-kpss-global
-       - qcom,msm8996-apcs-hmss-global
-@@ -38,12 +39,12 @@ properties:
-     const: 1
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 1aa8d85..af2ceeb 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -294,12 +294,22 @@
+ 		};
  
-   '#clock-cells':
--    const: 0
-+    enum: [ 0, 1 ]
+ 		apcs_glb: mailbox@b111000 {
+-			compatible = "qcom,ipq8074-apcs-apps-global";
+-			reg = <0x0b111000 0xc>;
+-
++			compatible = "qcom,ipq6018-apcs-apps-global";
++			reg = <0x0b111000 0x1000>;
++			#clock-cells = <1>;
++			clocks = <&apsspll>, <&xo>;
++			clock-names = "pll", "xo";
+ 			#mbox-cells = <1>;
+ 		};
  
-   clock-names:
-     items:
-       - const: pll
--      - const: aux
-+      - enum: [ aux, xo ]
- 
- required:
-   - compatible
-@@ -84,3 +85,15 @@ examples:
-         clock-names = "pll", "aux";
-         #clock-cells = <0>;
-     };
++		apsspll: clock@b116000 {
++			compatible = "qcom,ipq-apss-pll";
++			reg = <0x0b116000 0x40>;
++			#clock-cells = <0>;
++			clocks = <&xo>;
++			clock-names = "xo";
++		};
 +
-+  # Example apcs with ipq6018
-+  - |
-+    #include "dt-bindings/clock/qcom,apss-ipq.h"
-+    apcs_ipq: mailbox@b111000 {
-+        compatible = "qcom,ipq6018-apcs-apps-global";
-+        reg = <0x0b111000 0x1000>;
-+        #clock-cells = <1>;
-+        clocks = <&a53pll>, <&xo>;
-+        clock-names = "pll", "xo";
-+        #mbox-cells = <1>;
-+    };
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.7.4
 
