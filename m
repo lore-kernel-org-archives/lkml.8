@@ -2,156 +2,156 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE765C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1BEC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B483D20752
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3145C20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgEDO3i (ORCPT
+        id S1729122AbgEDO3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:29:38 -0400
-Received: from mga12.intel.com ([192.55.52.136]:10186 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728486AbgEDO3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:29:38 -0400
-IronPort-SDR: DqN//+WXfewpoXY2ugTjMm6t3xEP6iMEgcDRBevVPTDROxHjOT1GLpmnt35r8z7hdIfr1sngUp
- 8urm3+dscnVg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 07:29:37 -0700
-IronPort-SDR: iDqMIApWMrLvqyrp4b+noLJWhA1sSSJaN1o4qQFAscjAq2F3HVn8fIQsk4NZNSGa3ScNI5X32X
- sl3/q3dfiOoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="460683383"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 04 May 2020 07:29:33 -0700
-Date:   Mon, 4 May 2020 07:29:33 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        KarimAllah Raslan <karahmed@amazon.de>
-Subject: Re: [PATCH v2] KVM: nVMX: Skip IBPB when switching between vmcs01
- and vmcs02
-Message-ID: <20200504142933.GA16949@linux.intel.com>
-References: <20200501163117.4655-1-sean.j.christopherson@intel.com>
- <1de7b016-8bc9-23d4-7f8b-145c30d7e58a@amazon.com>
- <9d0d09da-3920-16d6-11ae-51b864171b66@redhat.com>
+        Mon, 4 May 2020 10:29:43 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35423 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729060AbgEDO3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 10:29:42 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k110so4504853otc.2;
+        Mon, 04 May 2020 07:29:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4qmNWbZEWGK3APAzYwIeRF7N4Ey8Oknk1ZvcU1u1ZqU=;
+        b=N1oXyP7br7VE+24jMnpp//tEsI2I9XMyipiwrWkWyV0WlxffaFdZWcngd8JXS1pXP4
+         /6ighEpGKEP276G12e4Pu0JNaLUnWjHgTK6cbnaqvYkYNnROtka1WSFPI+u631GQpSWo
+         j/qX4TSs7AWDXwKmOOK5MCtz/OcYRe+prCpD9/QFZNd7+gcGnJfVIwENZ2Sg00uMeVzh
+         lZ2mBJ8OxZtgGMNJHj4DQxSq6Txc+7+ppz3xhoAhNlsx5Rf6YAVaxwZ/MqKzJsuEYJNX
+         5GGcBolqiK1c5HVmUvZ5chSXUv+OKPPXa1+Y5KZYL1/eEbU27l6ZKz1WvUwwQjtKjDBV
+         IvvA==
+X-Gm-Message-State: AGi0PuYY/E3WPj86DYzI8Lv6+XTmM+aw9qLH865psgy4eTdcKEb2H2hi
+        npNwSZIpNgFJft8rgPTu77NOvfq5q98kkxjqZbo=
+X-Google-Smtp-Source: APiQypIl5oeOYwC1jEI/m9PhRtWzOpl25bOP4xHlOC6xhIPb9atAy1P1nyb7qKk0U0HPJufqUAievgfEuM+jpmQcYow=
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr14016322otm.145.1588602579133;
+ Mon, 04 May 2020 07:29:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d0d09da-3920-16d6-11ae-51b864171b66@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com> <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
+In-Reply-To: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 16:29:28 +0200
+Message-ID: <CAMuHMdX6_zOVXStgRRCYonZF2XUowsm0T=3L3+xmqhyGCqMi6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
+ Qseven SOM
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 03:12:36PM +0200, Paolo Bonzini wrote:
-> On 04/05/20 14:01, Alexander Graf wrote:
-> > I like the WARN_ON :). It should be almost free during execution, but
-> > helps us catch problems early.
-> 
-> Yes, it's nice.  I didn't mind the "buddy" argument either, but if we're 
-> going to get a bool I prefer positive logic so I'd like to squash this:
+Hi Prabhakar,
 
-I don't love need_ibpb as a param name, it doesn't provide any information
-as to why the IBPB is needed.  But, I can't come up with anything better
-that isn't absurdly long because e.g. "different_guest" isn't necessarily
-true in the vmx_vcpu_load() path.
+On Mon, May 4, 2020 at 4:20 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Add support for iWave RZ/G1H Qseven System On Module.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-What about going the @buddy route and adding the comment and WARN in
-vmx_vcpu_load_vmcs()?  E.g.
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+> > > @@ -0,0 +1,53 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
+> > > + *
+> > > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > > + */
+> > > +
+> > > +#include "r8a7742.dtsi"
+> > > +#include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +/ {
+> > > +       compatible = "iwave,g21m", "renesas,r8a7742";
+> > > +
+> > > +       memory@40000000 {
+> > > +               device_type = "memory";
+> > > +               reg = <0 0x40000000 0 0x40000000>;
+> > > +       };
+> > > +
+> > > +       memory@200000000 {
+> > > +               device_type = "memory";
+> > > +               reg = <2 0x00000000 0 0x20000000>;
+> >
+> > According to the schematics, the second bank is also 1 GiB, so the
+> > reg length should be 0x40000000.
+> >
+> Agreed will fix that.
 
-        prev = per_cpu(current_vmcs, cpu);
-        if (prev != vmx->loaded_vmcs->vmcs) {
-                per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
-                vmcs_load(vmx->loaded_vmcs->vmcs);
+Thanks for the confirmation.  I can fix that while applying.
 
-                /*
-                 * No indirect branch prediction barrier needed when switching
-		 * the active VMCS within a guest, e.g. on nested VM-Enter.
-		 * The L1 VMM can protect itself with retpolines, IBPB or IBRS.
-                 */
-                if (!buddy || WARN_ON_ONCE(buddy->vmcs != prev))
-                        indirect_branch_prediction_barrier();
-        }
+> > > +       };
+> >
+> > > +&pfc {
+> > > +       mmc1_pins: mmc1 {
+> > > +               groups = "mmc1_data4", "mmc1_ctrl";
+> > > +               function = "mmc1";
+> > > +       };
+> > > +};
+> > > +
+> > > +&mmcif1 {
+> > > +       pinctrl-0 = <&mmc1_pins>;
+> > > +       pinctrl-names = "default";
+> > > +
+> > > +       vmmc-supply = <&reg_3p3v>;
+> > > +       bus-width = <4>;
+> > > +       non-removable;
+> > > +       status = "okay";
+> > > +};
+> >
+> > The eMMC has an 8-bit data path.  Is there any specific reason you use
+> > bus-width = <4>, and the "mmc1_data4" pin group?
+> >
+> MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
+> device when using 8-bit just switched to 4bit mode so that both the
+> peripherals can be used.
 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index b57420f3dd8f..299393750a18 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -304,7 +304,13 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, struct loaded_vmcs *vmcs)
->  	prev = vmx->loaded_vmcs;
->  	WARN_ON_ONCE(prev->cpu != cpu || prev->vmcs != per_cpu(current_vmcs, cpu));
->  	vmx->loaded_vmcs = vmcs;
-> -	vmx_vcpu_load_vmcs(vcpu, cpu, true);
-> +
-> +	/*
-> +	 * This is the same guest from our point of view, so no
-> +	 * indirect branch prediction barrier is needed.  The L1
-> +	 * guest can protect itself with retpolines, IBPB or IBRS.
-> +	 */
-> +	vmx_vcpu_load_vmcs(vcpu, cpu, false);
->  	vmx_sync_vmcs_host_state(vmx, prev);
->  	put_cpu();
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 669e14947ba9..0f9c8d2dd7f6 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1311,7 +1311,7 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
->  		pi_set_on(pi_desc);
->  }
->  
-> -void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_switch)
-> +void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool need_ibpb)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	bool already_loaded = vmx->loaded_vmcs->cpu == cpu;
-> @@ -1336,7 +1336,7 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_switch)
->  	if (per_cpu(current_vmcs, cpu) != vmx->loaded_vmcs->vmcs) {
->  		per_cpu(current_vmcs, cpu) = vmx->loaded_vmcs->vmcs;
->  		vmcs_load(vmx->loaded_vmcs->vmcs);
-> -		if (!nested_switch)
-> +		if (need_ibpb)
->  			indirect_branch_prediction_barrier();
->  	}
->  
-> @@ -1378,7 +1378,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  
-> -	vmx_vcpu_load_vmcs(vcpu, cpu, false);
-> +	vmx_vcpu_load_vmcs(vcpu, cpu, true);
->  
->  	vmx_vcpu_pi_load(vcpu, cpu);
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index fa61dc802183..e584ee9b3e94 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -320,7 +320,7 @@ struct kvm_vmx {
->  };
->  
->  bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
-> -void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_switch);
-> +void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool need_ibpb);
->  void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
->  int allocate_vpid(void);
->  void free_vpid(int vpid);
-> 
-> 
-> Paolo
-> 
+OK.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.8 with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
