@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98024C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC45C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA582073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B1E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgEDLc7 (ORCPT
+        id S1728615AbgEDLdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:32:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3786 "EHLO huawei.com"
+        Mon, 4 May 2020 07:33:06 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55120 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726445AbgEDLc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:32:59 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 82EF5A42CF2971ECF32A;
-        Mon,  4 May 2020 19:32:57 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
- 19:32:50 +0800
+        id S1726445AbgEDLdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:33:06 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A203D400EF87F3558DB5;
+        Mon,  4 May 2020 19:33:04 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
+ 19:32:59 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
+To:     <eric@anholt.net>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <sumit.semwal@linaro.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linaro-mm-sig@lists.linaro.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] drm/amd/display: remove unused variable 'ret' in dm_suspend()
-Date:   Mon, 4 May 2020 19:32:13 +0800
-Message-ID: <20200504113213.40403-1-yanaijie@huawei.com>
+Subject: [PATCH] drm/vc4: make vc4_queue_seqno_cb() return void
+Date:   Mon, 4 May 2020 19:32:21 +0800
+Message-ID: <20200504113221.40488-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -46,37 +45,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following coccicheck warning:
+No one uses the return value of this function, so make it return void.
+This fixes the following coccicheck warning:
 
-drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c:1574:5-8: Unneeded
-variable: "ret". Return "0" on line 1586
+drivers/gpu/drm/vc4/vc4_gem.c:1029:5-8: Unneeded variable: "ret". Return
+"0" on line 1044
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/vc4/vc4_drv.h | 6 +++---
+ drivers/gpu/drm/vc4/vc4_gem.c | 9 +++------
+ 2 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 9c2a07626d2c..2b7588371170 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -1571,7 +1571,6 @@ static int dm_suspend(void *handle)
- {
- 	struct amdgpu_device *adev = handle;
- 	struct amdgpu_display_manager *dm = &adev->dm;
--	int ret = 0;
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index 3b1f02efefbe..990b15b82e24 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -810,9 +810,9 @@ void vc4_move_job_to_render(struct drm_device *dev, struct vc4_exec_info *exec);
+ int vc4_wait_for_seqno(struct drm_device *dev, uint64_t seqno,
+ 		       uint64_t timeout_ns, bool interruptible);
+ void vc4_job_handle_completed(struct vc4_dev *vc4);
+-int vc4_queue_seqno_cb(struct drm_device *dev,
+-		       struct vc4_seqno_cb *cb, uint64_t seqno,
+-		       void (*func)(struct vc4_seqno_cb *cb));
++void vc4_queue_seqno_cb(struct drm_device *dev,
++		        struct vc4_seqno_cb *cb, uint64_t seqno,
++		        void (*func)(struct vc4_seqno_cb *cb));
+ int vc4_gem_madvise_ioctl(struct drm_device *dev, void *data,
+ 			  struct drm_file *file_priv);
  
- 	WARN_ON(adev->dm.cached_state);
- 	adev->dm.cached_state = drm_atomic_helper_suspend(adev->ddev);
-@@ -1583,7 +1582,7 @@ static int dm_suspend(void *handle)
- 
- 	dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D3);
- 
--	return ret;
-+	return 0;
+diff --git a/drivers/gpu/drm/vc4/vc4_gem.c b/drivers/gpu/drm/vc4/vc4_gem.c
+index e1cfc3ccd05a..fbcb4fa4e80a 100644
+--- a/drivers/gpu/drm/vc4/vc4_gem.c
++++ b/drivers/gpu/drm/vc4/vc4_gem.c
+@@ -1021,12 +1021,11 @@ static void vc4_seqno_cb_work(struct work_struct *work)
+ 	cb->func(cb);
  }
  
- static struct amdgpu_dm_connector *
+-int vc4_queue_seqno_cb(struct drm_device *dev,
+-		       struct vc4_seqno_cb *cb, uint64_t seqno,
+-		       void (*func)(struct vc4_seqno_cb *cb))
++void vc4_queue_seqno_cb(struct drm_device *dev,
++		        struct vc4_seqno_cb *cb, uint64_t seqno,
++		        void (*func)(struct vc4_seqno_cb *cb))
+ {
+ 	struct vc4_dev *vc4 = to_vc4_dev(dev);
+-	int ret = 0;
+ 	unsigned long irqflags;
+ 
+ 	cb->func = func;
+@@ -1040,8 +1039,6 @@ int vc4_queue_seqno_cb(struct drm_device *dev,
+ 		schedule_work(&cb->work);
+ 	}
+ 	spin_unlock_irqrestore(&vc4->job_lock, irqflags);
+-
+-	return ret;
+ }
+ 
+ /* Scheduled when any job has been completed, this walks the list of
 -- 
 2.21.1
 
