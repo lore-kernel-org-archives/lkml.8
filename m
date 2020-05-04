@@ -2,142 +2,102 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9D8C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E7CC47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC3F20735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cfZRFvM3"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB16206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588569587;
+	bh=4EmP+2FrxfyqR11RGq1tcyZLWtI7D3c2DFsoLAgeg8w=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bFZy1BMAECbEDoCXzWNrqw4ybc4HNAmRDlU43yI3Xm2XRBkpNJkEcGfWiDb/nW37v
+	 f2/pkCYAa7XOLpJg90O0yhqKiV7tpSoNqJlivmcirDNMaTMU8XB+O/UVIVbQ5W7L3A
+	 QHQKFVUdoxoHbeyVDy3aWiqEokhXe7pwAK1XYXYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgEDFTm (ORCPT
+        id S1727093AbgEDFTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 01:19:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60963 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726509AbgEDFTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 01:19:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588569581; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=MxVD4lIGNr5TTM6n/CVOQaK8MEvwp2IKXE3ld2sTRzw=; b=cfZRFvM3WHNdSPUVFVGr1EiMNfqB7QUX10a4vhlO6XZp+UwGKPft7p2TCY1Y2jPl1jK2i26Q
- /ZptJS3+59o4F/92rag+r1f1l+9JFGyk5UgRc074+C9QcYPn/dDQJi1jDATwStUjpCQg4K0a
- DQIjVOD/ENLQ6MwOP5HSNuRKSWQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eafa5e5.7efd188171f0-smtp-out-n02;
- Mon, 04 May 2020 05:19:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 64BB9C433D2; Mon,  4 May 2020 05:19:33 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.157.33])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 4 May 2020 01:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgEDFTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 01:19:44 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 825AAC433CB;
-        Mon,  4 May 2020 05:19:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 825AAC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v5 1/5] soc: qcom: rpmh-rsc: Correctly ignore
- CPU_CLUSTER_PM notifications
-To:     Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rafael.j.wysocki@intel.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     evgreen@chromium.org, mka@chromium.org, swboyd@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <e8310c51-d7b1-ac88-cd6b-0965804eb754@codeaurora.org>
-Date:   Mon, 4 May 2020 10:49:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 8041020735;
+        Mon,  4 May 2020 05:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588569584;
+        bh=4EmP+2FrxfyqR11RGq1tcyZLWtI7D3c2DFsoLAgeg8w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aDZsuSRrEISnnDH/pGxOXte+So6f2PJ0pF5qrCaV3iwGn/xlZWMVx0cNd15M9d3Co
+         ZcJdGzwGaH2OADELxYRRVvNQP5kMfTzOTThnmlbjG4JlMbN7P2BjFqaG4/NytW1yE+
+         bkEqfnZJ9OnZJW0wOO8Kxo/XTrP4+ntufvo6q+5s=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Mark Zhang <markz@mellanox.com>
+Subject: [PATCH rdma-next v3 0/5] Set flow_label and RoCEv2 UDP source port for datagram QP
+Date:   Mon,  4 May 2020 08:19:30 +0300
+Message-Id: <20200504051935.269708-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Leon Romanovsky <leonro@mellanox.com>
 
-On 4/24/2020 10:16 PM, Douglas Anderson wrote:
-> Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
-> CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
-> a default.  This means that we'll try to do a flush in those cases but
-> we won't necessarily be the last CPU down.  That's not so ideal since
-> our (lack of) locking assumes we're on the last CPU.
->
-> Luckily this isn't as big a problem as you'd think since (at least on
-> the SoC I tested) we don't get these notifications except on full
-> system suspend.  ...and on full system suspend we get them on the last
-> CPU down.  That means that the worst problem we hit is flushing twice.
-> Still, it's good to make it correct.
->
-> Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Changes in v5:
-> - Corrently => Correctly
->
-> Changes in v4:
-> - ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
->
-> Changes in v3: None
-> Changes in v2: None
->
->   drivers/soc/qcom/rpmh-rsc.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index a9e15699f55f..3571a99fc839 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -806,6 +806,8 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
->   	case CPU_PM_EXIT:
->   		cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
->   		goto exit;
-> +	default:
-> +		return NOTIFY_DONE;
+Changelog:
+ v3: Rebased on latest rdma-nex, which includes HCA set capability patch
+ and LAG code and this is why new patch from Maor was added.
+ v2: https://lore.kernel.org/linux-rdma/20200413133703.932731-1-leon@kernel.org
+ Dropped patch "RDMA/cm: Set flow label of recv_wc based on primary
+ flow label", because it violates IBTA 13.5.4.3/13.5.4.4 sections.
+ v1: https://lore.kernel.org/lkml/20200322093031.918447-1-leon@kernel.org
+ Added extra patch to reduce amount of kzalloc/kfree calls in
+ the HCA set capability flow.
+ v0: https://lore.kernel.org/linux-rdma/20200318095300.45574-1-leon@kernel.org
+--------------------------------
 
-I noticed a bug here,
+From Mark:
 
-Either need to unlock and return here.
+This series provide flow label and UDP source port definition in RoCE v2.
+Those fields are used to create entropy for network routes (ECMP), load
+balancers and 802.3ad link aggregation switching that are not aware of
+RoCE headers.
 
-+	default:
-+               ret = NOTIFY_DONE;
-+		goto exit;
+Thanks.
 
-Or
+Maor Gottlieb (1):
+  RDMA/core: Consider flow label when building skb
 
-If you move this patch at the end of series, it should will work fine as is.
-Since in patch 5 of this series,  pm_lock is removed, so return 
-NOTIFY_DONE; do not any unlock.
+Mark Zhang (4):
+  RDMA/core: Add hash functions to calculate RoCEv2 flowlabel and UDP
+    source port
+  RDMA/mlx5: Define RoCEv2 udp source port when set path
+  RDMA/cma: Initialize the flow label of CM's route path record
+  RDMA/mlx5: Set UDP source port based on the grh.flow_label
 
-When i pulled in only first two changes in this series i got spinlock 
-recursion during suspend-resume.
-Back when i pull in entire series for validation, the issue do not come 
-because last patch removes pm_lock.
+ drivers/infiniband/core/cma.c        | 23 +++++++++++++++
+ drivers/infiniband/core/lag.c        |  6 ++--
+ drivers/infiniband/hw/mlx5/ah.c      | 21 +++++++++++--
+ drivers/infiniband/hw/mlx5/main.c    |  4 +--
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  4 +--
+ drivers/infiniband/hw/mlx5/qp.c      | 30 +++++++++++++++----
+ include/rdma/ib_verbs.h              | 44 ++++++++++++++++++++++++++++
+ 7 files changed, 118 insertions(+), 14 deletions(-)
 
-Thanks,
-Maulik
->   	}
->   
->   	ret = rpmh_rsc_ctrlr_is_busy(drv);
+--
+2.26.2
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
