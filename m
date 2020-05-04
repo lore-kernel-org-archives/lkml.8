@@ -2,92 +2,110 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A81C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F12C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05BA220721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBEE2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:23:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="IpF0KAT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgEDLWK (ORCPT
+        id S1728557AbgEDLXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:22:10 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44335 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgEDLWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:22:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a2so6258644oia.11;
-        Mon, 04 May 2020 04:22:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/jRRl/QTF62BTO0pe47y/GWsOHz0nkfjCAIUVeTbtdY=;
-        b=pGqTYZJVu37luwOmAJTxXHgZIdsFmIBbKyR7fINcZDv01N/p8pXEI5+y+HJc8qh1Oa
-         NrIEq3h8edOuezJ7CpXvTYK4O5T6ludeXXJlnhe4GZ5vUj+r7cCh2IDmWdTFtJLXKVXg
-         A65mzKssS1zTRLFwkYln+C+gK9qigaDw+F6+tU6vMohCgdnyMLEE3VPbnk7CfY5yFXpO
-         ZvxhK3FVNG/AIb/clGuNtfGJlljyiIY0aVI7ucxxg8CIGPevlv+adedbbTG68sVnl7Zb
-         O5J+7T2VMzKC3a1Ud3TpOXSWifNbLalrm4TDtsW77C7CIXKBmqR2i7ehoI0FI9MJQAwX
-         CAYw==
-X-Gm-Message-State: AGi0PuZ1yOQf0NZ3UmOvG3v0ItAclivIlF5+617XoRHZsSy2Sp9QIYGe
-        aNuGBEjZE1A1TR9fTXskkdAiMtR7beoXf2yF2/QiA5So
-X-Google-Smtp-Source: APiQypLhQa33fXpG4CJeXxg3td7a1+tJhkA8EyqpoDhMWC0c9V02ObVa3BG3J0cZD74cbBUTpHl6RscmLuTe+RiMbt4=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr8163136oih.148.1588591328305;
- Mon, 04 May 2020 04:22:08 -0700 (PDT)
+        Mon, 4 May 2020 07:23:31 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:40343 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgEDLXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:23:31 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 49e0af25;
+        Mon, 4 May 2020 11:11:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=MshPdTivdQoEaiICWNo3xWGuO00=; b=IpF0KA
+        T3Flp86mw4XwuAySVKKGzTvzRvxgd+j/1OZCgygCNJwSvUzC0qvPrGi6FzHBlKjP
+        /uZZwjfgGZ9b9joUdSY6SmPbW8L6OCpaGwUS6iCvGOFEdJ9aAEEvDDqrVChDkFjc
+        cg0ssL+i9ZZKKKmjgwwi15OvOq9Z6MyEIcLT34fmi15OJpmk/vrzmXdSYYcW9g1U
+        TW/vLuvXbatTOna8Dja3WBuynAdtA6nn7nsCnG0C6hpxejT5d6LjLixcZmDZSuIG
+        H+KqlweT4z0GjEkZuIRhqyGJVU5A82pmDFfLg8VxlVC+LOR9uVVXnLCaHPy3ejxF
+        ywUgzniriikoQC4g==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b89c4137 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Mon, 4 May 2020 11:11:05 +0000 (UTC)
+Received: by mail-il1-f176.google.com with SMTP id w6so10874770ilg.1;
+        Mon, 04 May 2020 04:23:28 -0700 (PDT)
+X-Gm-Message-State: AGi0PubGAMAGEIpIOAfqwZdpRlTiYqHAsCoJ9ZauaBxFWIRowFJzrCD8
+        O192DZVqMcY0F0dqhSBooDBaxkCEhK/l3BqFeCg=
+X-Google-Smtp-Source: APiQypKKfDzUtssMsRFuPB9MBgpCxpRDJrla4OQThGgQpXh+dzwUnDUeYrjOVDcBl/9bz1EkcmaNqR/+tP+3OIoMfzU=
+X-Received: by 2002:a92:5c82:: with SMTP id d2mr16079991ilg.231.1588591408099;
+ Mon, 04 May 2020 04:23:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 13:21:56 +0200
-Message-ID: <CAMuHMdWqD6k7-cfaZQbc2pjSuCOGL4TcKR-S6QRgVqoUHfBayQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H
- board
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <0000000000005fd19505a4355311@google.com> <e40c443e-74aa-bad4-7be8-4cdddfdf3eaf@gmail.com>
+ <CAHmME9ov2ae08UTzwKL7enquChzDNxpg4c=ppnJqS2QF6ZAn_Q@mail.gmail.com>
+ <f2eb18ea-b32a-4b64-0417-9b5b2df98e33@gmail.com> <29bd64f4-5fe0-605e-59cc-1afa199b1141@gmail.com>
+ <CAHmME9rR-_KvENZyBrRhYNWD+hVD-FraxPJiofsmuXBh651QXw@mail.gmail.com> <85e76f66-f807-ad12-df9d-0805b68133fa@gmail.com>
+In-Reply-To: <85e76f66-f807-ad12-df9d-0805b68133fa@gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 4 May 2020 05:23:17 -0600
+X-Gmail-Original-Message-ID: <CAHmME9ocB-LUYwJTxsqui1Bh+cbKixEP-sayVNa9puY25hEASA@mail.gmail.com>
+Message-ID: <CAHmME9ocB-LUYwJTxsqui1Bh+cbKixEP-sayVNa9puY25hEASA@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in wg_packet_tx_worker
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     syzbot <syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, kvalo@codeaurora.org,
+        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>, vivien.didelot@gmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document the iW-RainboW-G21D-Qseven-RZG1H device tree bindings,
-> listing it as a supported board.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+So in spite of this Syzkaller bug being unrelated in the end, I've
+continued to think about the stacktrace a bit, and combined with some
+other [potentially false alarm] bug reports I'm trying to wrap my head
+around, I'm a bit a curious about ideal usage for the udp_tunnel API.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8.
+All the uses I've seen in the kernel (including wireguard) follow this pattern:
 
-Gr{oetje,eeting}s,
+rcu_read_lock_bh();
+sock = rcu_dereference(obj->sock);
+...
+udp_tunnel_xmit_skb(..., sock, ...);
+rcu_read_unlock_bh();
 
-                        Geert
+udp_tunnel_xmit_skb calls iptunnel_xmit, which winds up in the usual
+ip_local_out path, which eventually winds up calling some other
+devices' ndo_xmit, or gets queued up in a qdisc. Calls to
+udp_tunnel_xmit_skb aren't exactly cheap. So I wonder: is holding the
+rcu lock for all that time really a good thing?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+A different pattern that avoids holding the rcu lock would be:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+rcu_read_lock_bh();
+sock = rcu_dereference(obj->sock);
+sock_hold(sock);
+rcu_read_unlock_bh();
+...
+udp_tunnel_xmit_skb(..., sock, ...);
+sock_put(sock);
+
+This seems better, but I wonder if it has some drawbacks too. For
+example, sock_put has some comment that warns against incrementing it
+in response to forwarded packets. And if this isn't necessary to do,
+it's marginally more costly than the first pattern.
+
+Any opinions about this?
+
+Jason
