@@ -2,162 +2,314 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D6C28CBC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6D3C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D33206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00063206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 00:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgEDAKu (ORCPT
+        id S1726802AbgEDAMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 20:10:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:34614 "EHLO foss.arm.com"
+        Sun, 3 May 2020 20:12:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:56733 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbgEDAKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 20:10:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA297101E;
-        Sun,  3 May 2020 17:10:49 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64D273F305;
-        Sun,  3 May 2020 17:10:48 -0700 (PDT)
-References: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Subject: Re: [PATCH] sched/fair: Fix nohz.next_balance update
-In-reply-to: <20200503083407.GA27766@iZj6chx1xj0e0buvshuecpZ>
-Date:   Mon, 04 May 2020 01:10:46 +0100
-Message-ID: <jhjwo5sd0ft.mognet@arm.com>
+        id S1726419AbgEDAMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 May 2020 20:12:00 -0400
+IronPort-SDR: BUb1wmwrTteHMwS9G1BIQAkZltLofAjTbzrWHyfEAbuGmPWjKq4Du4wdanHS4Vw3BNQL9clfBx
+ mrIsyKnXKjpg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 17:11:59 -0700
+IronPort-SDR: HZTe/X6Tg1DxjC1F9bf8cTnUoxZDpelHbxlDYUgI1U8rb2ct1wKyoUDgjrSkiuqkqQTRuuJzuJ
+ l4Du9YT4PuOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,349,1583222400"; 
+   d="scan'208";a="406315407"
+Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.212.197.87]) ([10.212.197.87])
+  by orsmga004.jf.intel.com with ESMTP; 03 May 2020 17:11:58 -0700
+Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+ <87pnbvtfdc.fsf@nanos.tec.linutronix.de>
+From:   "Dey, Megha" <megha.dey@linux.intel.com>
+Message-ID: <53df1de7-ca25-e1be-b31c-e57bd95f0564@linux.intel.com>
+Date:   Sun, 3 May 2020 17:11:58 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <87pnbvtfdc.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas,
 
-Hi,
+On 4/25/2020 2:38 PM, Thomas Gleixner wrote:
+> Dave Jiang <dave.jiang@intel.com> writes:
+>> From: Megha Dey <megha.dey@linux.intel.com>
+>>
+>> Add support for the creation of a new IMS irq domain. It creates a new
+>> irq chip associated with the IMS domain and adds the necessary domain
+>> operations to it.
+> 
+> And how is a X86 specific thingy related to drivers/base?
 
-On 03/05/20 09:34, Peng Liu wrote:
-> commit c5afb6a87f23 ("sched/fair: Fix nohz.next_balance update")
+Well, clearly this file has both arch independent sand dependent code 
+which is incorrect. From various discussions, we have now concluded that 
+IMS is after all not a X86 specific thingy after all. IMS is just a name 
+intel came up with, all it really means is device managed addr/data 
+writes to generate interrupts.
 
-I got confused because this has the same topic as your patch, but that's a
-genuine commit from 2015. Is this meant to be a "Fixes:" reference?
+> 
+>> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
+> 
+> This sits in drivers base because IMS is architecture independent, right?
 
-> During idle load balance, this_cpu(ilb) do load balance for the other
-> idle CPUs, also gather the earliest (nohz.)next_balance.
->
-> Since commit:
->   'b7031a02ec75 ("sched/fair: Add NOHZ_STATS_KICK")'
->
-> We update nohz.next_balance like this:
->
->   _nohz_idle_balance() {
->       for_each_cpu(nohz.idle_cpus_mask) {
->         rebalance_domains() {
->                     update nohz.next_balance <-- compare and update
->         }
->       }
->       rebalance_domains(this_cpu) {
->         update nohz.next_balance <-- compare and update
->       }
->       update nohz.next_balance <-- unconditionally update
->   }
->
-> For instance, nohz.idle_cpus_mask spans {cpu2,3,5,8}, and this_cpu is
-> cpu5. After the above loop we could gather the earliest *next_balance*
-> among {cpu2,3,8}, then rebalance_domains(this_cpu) update
-> nohz.next_balance with this_rq->next_balance, but finally overwrite
-> nohz.next_balance with the earliest *next_balance* among {cpu2,3,8},
-> we may end up with not getting the earliest next_balance.
->
+Per my above comment, technically we can call something IMS even if 
+device has its own location to store interrupts in non-pci standard 
+mechanism, much like platform-msi indeed. We simply need to extend 
+platform-msi to its address some of its shortcomings: increase number of 
+interrupts to > 2048, enable dynamic allocation of interrupts, add 
+mask/unmask callbacks in addition to write_msg etc.
 
-That does look like it, nice catch!
+I will be sending out an email shortly outlining the new design for IMS 
+and what are the improvements we want to add to the already exisitng 
+platform-msi infrastructure.
 
-> Since we can gather all the updated rq->next_balance, including this_cpu,
-> in _nohz_idle_balance(), it's safe to remove the extra lines in
-> rebalance_domains() which are originally intended for this_cpu. And
-> finally the updating only happen in _nohz_idle_balance().
->
+> 
+>> new file mode 100644
+>> index 000000000000..738f6d153155
+>> --- /dev/null
+>> +++ b/drivers/base/ims-msi.c
+>> @@ -0,0 +1,100 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Support for Device Specific IMS interrupts.
+>> + *
+>> + * Copyright © 2019 Intel Corporation.
+>> + *
+>> + * Author: Megha Dey <megha.dey@intel.com>
+>> + */
+>> +
+>> +#include <linux/dmar.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/mdev.h>
+>> +#include <linux/pci.h>
+>> +
+>> +/*
+>> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
+>> + * Return mdev's parent dev if success.
+>> + */
+>> +static inline struct device *mdev_to_parent(struct device *dev)
+>> +{
+>> +	struct device *ret = NULL;
+>> +	struct device *(*fn)(struct device *dev);
+>> +	struct bus_type *bus = symbol_get(mdev_bus_type);
+> 
+> symbol_get()?
 
-One added benefit of this is that we get rid of extra writes to
-nohz.next_balance, since that special case in rebalance_domains() could be
-hit by all NOHZ CPUs, not just the ILB.
+mdev_bus_type is defined in driver/vfio/mdev/ directory. The entire 
+vfio-mdev can be compiled as a module and if so, then this symbol is not 
+visible outside of that directory and there are some linker errors. 
+Currently, there these symbols sare self-contained and are not used 
+outside of the directory where they are defined. I did not know earlier 
+that is not advisible to use symbol_get() for this. I will try to come 
+up with a better approach.
 
-With the below comment taken into account:
+> 
+>> +
+>> +	if (bus && dev->bus == bus) {
+>> +		fn = symbol_get(mdev_dev_to_parent_dev);
+> 
+> What's wrong with simple function calls?
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Hmmm, same reason as above..
+> 
+>> +		ret = fn(dev);
+>> +		symbol_put(mdev_dev_to_parent_dev);
+>> +		symbol_put(mdev_bus_type);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static irq_hw_number_t dev_ims_get_hwirq(struct msi_domain_info *info,
+>> +					 msi_alloc_info_t *arg)
+>> +{
+>> +	return arg->ims_hwirq;
+>> +}
+>> +
+>> +static int dev_ims_prepare(struct irq_domain *domain, struct device *dev,
+>> +			   int nvec, msi_alloc_info_t *arg)
+>> +{
+>> +	if (dev_is_mdev(dev))
+>> +		dev = mdev_to_parent(dev);
+> 
+> This makes absolutely no sense. Somewhere you claimed that this is
+> solely for mdev. Now this interface takes both a regular device and mdev.
+> 
+> Lack of explanation seems to be a common scheme here.
 
-> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> ---
->  kernel/sched/fair.c | 24 ++++++++----------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 02f323b85b6d..1d0cf33fefad 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9943,22 +9943,8 @@ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
->        * When the cpu is attached to null domain for ex, it will not be
->        * updated.
->        */
-> -	if (likely(update_next_balance)) {
-> +	if (likely(update_next_balance))
->               rq->next_balance = next_balance;
-> -
-> -#ifdef CONFIG_NO_HZ_COMMON
-> -		/*
-> -		 * If this CPU has been elected to perform the nohz idle
-> -		 * balance. Other idle CPUs have already rebalanced with
-> -		 * nohz_idle_balance() and nohz.next_balance has been
-> -		 * updated accordingly. This CPU is now running the idle load
-> -		 * balance for itself and we need to update the
-> -		 * nohz.next_balance accordingly.
-> -		 */
-> -		if ((idle == CPU_IDLE) && time_after(nohz.next_balance, rq->next_balance))
-> -			nohz.next_balance = rq->next_balance;
-> -#endif
-> -	}
->  }
->
->  static inline int on_null_domain(struct rq *rq)
-> @@ -10321,9 +10307,15 @@ static bool _nohz_idle_balance(struct rq *this_rq, unsigned int flags,
->               has_blocked_load |= this_rq->has_blocked_load;
->       }
->
-> -	if (flags & NOHZ_BALANCE_KICK)
-> +	if (flags & NOHZ_BALANCE_KICK) {
->               rebalance_domains(this_rq, CPU_IDLE);
->
-> +		if (time_after(next_balance, this_rq->next_balance)) {
-> +			next_balance = this_rq->next_balance;
-> +			update_next_balance = 1;
-> +		}
-> +	}
+IMS can be used for mdev or a regular device. I do not think it is 
+claimed anywhere that IMS is solely for mdev. In the current use case 
+for DSA, IMS is used only by the guest (mdev) although it can very well 
+be used by the host driver as well.
 
-To align with what we do for the other NOHZ CPUs, shouldn't this update
-be outside of the NOHZ_BALANCE_KICK condition? That way we can update
-nohz.next_balance with just NOHZ_STATS_KICK, which IMO is the expected
-course of action.
+> 
+>> +	init_irq_alloc_info(arg, NULL);
+>> +	arg->dev = dev;
+>> +	arg->type = X86_IRQ_ALLOC_TYPE_IMS;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void dev_ims_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+>> +{
+>> +	arg->ims_hwirq = platform_msi_calc_hwirq(desc);
+>> +}
+>> +
+>> +static struct msi_domain_ops dev_ims_domain_ops = {
+>> +	.get_hwirq	= dev_ims_get_hwirq,
+>> +	.msi_prepare	= dev_ims_prepare,
+>> +	.set_desc	= dev_ims_set_desc,
+>> +};
+>> +
+>> +static struct irq_chip dev_ims_ir_controller = {
+>> +	.name			= "IR-DEV-IMS",
+>> +	.irq_ack		= irq_chip_ack_parent,
+>> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+>> +	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
+>> +	.flags			= IRQCHIP_SKIP_SET_WAKE,
+>> +	.irq_write_msi_msg	= platform_msi_write_msg,
+>> +};
+>> +
+>> +static struct msi_domain_info ims_ir_domain_info = {
+>> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS,
+>> +	.ops		= &dev_ims_domain_ops,
+>> +	.chip		= &dev_ims_ir_controller,
+>> +	.handler	= handle_edge_irq,
+>> +	.handler_name	= "edge",
+>> +};
+>> +
+>> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
+>> +					      const char *name)
+> 
+> arch_create_ ???? In drivers/base ???
 
-> +
->       WRITE_ONCE(nohz.next_blocked,
->               now + msecs_to_jiffies(LOAD_AVG_PERIOD));
+Needs to go away. On second thought, per Jason Gunthorpe's comment, this 
+is not even required. We can simply use the existing 
+platform_msi_create_irq_domain API itself.
+> 
+>> +{
+>> +	struct fwnode_handle *fn;
+>> +	struct irq_domain *domain;
+>> +
+>> +	fn = irq_domain_alloc_named_fwnode(name);
+>> +	if (!fn)
+>> +		return NULL;
+>> +
+>> +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
+>> +	if (!domain)
+>> +		return NULL;
+>> +
+>> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+>> +	irq_domain_free_fwnode(fn);
+>> +
+>> +	return domain;
+>> +}
+>> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+>> index 2696aa75983b..59160e8cbfb1 100644
+>> --- a/drivers/base/platform-msi.c
+>> +++ b/drivers/base/platform-msi.c
+>> @@ -31,12 +31,11 @@ struct platform_msi_priv_data {
+>>   /* The devid allocator */
+>>   static DEFINE_IDA(platform_msi_devid_ida);
+>>   
+>> -#ifdef GENERIC_MSI_DOMAIN_OPS
+>>   /*
+>>    * Convert an msi_desc to a globaly unique identifier (per-device
+>>    * devid + msi_desc position in the msi_list).
+>>    */
+>> -static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
+>> +irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
+>>   {
+>>   	u32 devid;
+>>   
+>> @@ -45,6 +44,7 @@ static irq_hw_number_t platform_msi_calc_hwirq(struct msi_desc *desc)
+>>   	return (devid << (32 - DEV_ID_SHIFT)) | desc->platform.msi_index;
+>>   }
+>>   
+>> +#ifdef GENERIC_MSI_DOMAIN_OPS
+>>   static void platform_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+>>   {
+>>   	arg->desc = desc;
+>> @@ -76,7 +76,7 @@ static void platform_msi_update_dom_ops(struct msi_domain_info *info)
+>>   		ops->set_desc = platform_msi_set_desc;
+>>   }
+>>   
+>> -static void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
+>> +void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg)
+>>   {
+>>   	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>>   	struct platform_msi_priv_data *priv_data;
+>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>> index b558d4cfd082..cecc6a6bdbef 100644
+>> --- a/drivers/vfio/mdev/mdev_core.c
+>> +++ b/drivers/vfio/mdev/mdev_core.c
+>> @@ -33,6 +33,12 @@ struct device *mdev_parent_dev(struct mdev_device *mdev)
+>>   }
+>>   EXPORT_SYMBOL(mdev_parent_dev);
+>>   
+>> +struct device *mdev_dev_to_parent_dev(struct device *dev)
+>> +{
+>> +	return to_mdev_device(dev)->parent->dev;
+>> +}
+>> +EXPORT_SYMBOL(mdev_dev_to_parent_dev);
+> 
+> And this needs to be EXPORT_SYMBOL because this is designed to support
+> non GPL drivers from the very beginning, right? Ditto for the other
+> exports in this file.
+
+Hmm, I followed the same convention as the other exports here. Guess I 
+would have to change all other exports to EXPORT_SYMBOL_GPL as well.
+
+> 
+>> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+>> index 7d922950caaf..c21f1305a76b 100644
+>> --- a/drivers/vfio/mdev/mdev_private.h
+>> +++ b/drivers/vfio/mdev/mdev_private.h
+>> @@ -36,7 +36,6 @@ struct mdev_device {
+>>   };
+>>   
+>>   #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+>> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
+> 
+> Moving stuff around 3 patches later makes tons of sense.
+
+ok will add it earlier then.
+>    
+> Thanks,
+> 
+>          tglx
+> 
