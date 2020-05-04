@@ -2,97 +2,137 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E95C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB07BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B13722495A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87561206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/Ws8Bmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgEDJ33 (ORCPT
+        id S1728554AbgEDJ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:29:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:40568 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728483AbgEDJ3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:29:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6067111D4;
-        Mon,  4 May 2020 02:29:18 -0700 (PDT)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2C8233F305;
-        Mon,  4 May 2020 02:29:17 -0700 (PDT)
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        linux-kernel@vger.kernel.org, harb@amperecomputing.com
-Subject: [PATCH v2 4/5] firmware: psci: Add function to fetch SMCCC version
-Date:   Mon,  4 May 2020 10:29:04 +0100
-Message-Id: <20200504092905.10580-5-sudeep.holla@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504092905.10580-1-sudeep.holla@arm.com>
-References: <20200504092905.10580-1-sudeep.holla@arm.com>
+        Mon, 4 May 2020 05:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727781AbgEDJ35 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:29:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944B3C061A0E;
+        Mon,  4 May 2020 02:29:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e16so14948707wra.7;
+        Mon, 04 May 2020 02:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l2YxkH/lWbx8jjAhy6XV0nL4qLMq1MOAjY7RA6k/WB4=;
+        b=K/Ws8BmyoqGZGLQYHin3HwA+JMkgqMir7wNzB+pLnNTGxSTZUQHt0DLXMzAsIQEzcP
+         9QJhcV4cq2WOOptbt+J4xCmszcY31/GvEuCAPr3uqFtzKXNVWE9T/Kza5Y0rT/KzbyaA
+         hL9Sre8KAx8xY1lePcT+QeEx4d81BJyyb6c2/KPjBTx0YLLH0EjrYv/y0BcbiMjfluoR
+         /coNr6jJ3H+bn0ZuQ+DREJfJeSjZ+oxvg21BqHTIWsOJVyJypNsL7X5HEHOoYc8ma5E/
+         0ivUVZdwJXvWcE79pxbu0EAW9Gw1v5obnDV/lGVFG6/5I6LqZCBBtLvoTR3myFpzLxE7
+         lKDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l2YxkH/lWbx8jjAhy6XV0nL4qLMq1MOAjY7RA6k/WB4=;
+        b=rysfett1YnHUB8EevK4YlL9fwyRXojWrzUsmyyyMpCGW2yaPuB9xbYbk3PfBwyS50d
+         /UE5ckicsTDVulmHFV1V17bkZzZXSeDuK9lua2nKnN3uO8cgsT7d+UWFMNG7wvfSKFL5
+         0k6qMumR43cNkvgj96/6tlJ3+H360FAG1BUR4r57YXRlQk/R6nuyHtRe2zz8PNRhXU+S
+         lOKtS7dXoTO7AeSp8YKRSua/gZ6qVLvxBeQwnB4k56nhBQrW8ukAWTwjo/lC4YGwd/UI
+         wmpeL57J/tEQ7YNFRrm0eNLtIx1432ZZAxD+nijGffckMkOBzG0HLa5b2GlnQ3Q2XMoZ
+         vCfw==
+X-Gm-Message-State: AGi0PubKpangctsFpuZuB57EXbwDLUwNGYJN0dOgEbOfGUmzrUfOI4LS
+        KOB6KRQ4D5yiggHFbN/NTc8=
+X-Google-Smtp-Source: APiQypIkkbhC2pp71xWc4qJpvnWgeLLvCX9aOOoVg4impVPijmMMmbwo6MgNbyyZOaF+TmYb8rAXSw==
+X-Received: by 2002:adf:ea09:: with SMTP id q9mr314819wrm.399.1588584596171;
+        Mon, 04 May 2020 02:29:56 -0700 (PDT)
+Received: from skynet.lan (246.red-83-44-9.dynamicip.rima-tde.net. [83.44.9.246])
+        by smtp.gmail.com with ESMTPSA id s8sm17334965wru.38.2020.05.04.02.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 02:29:55 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH] nand: brcmnand: correctly verify erased pages
+Date:   Mon,  4 May 2020 11:29:43 +0200
+Message-Id: <20200504092943.2739784-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For backward compatibility reasons, PSCI maintains SMCCC version as
-SMCCC didn't provide ARM_SMCCC_VERSION_FUNC_ID until v1.1
+The current code checks that the whole OOB area is erased.
+This is a problem when JFFS2 cleanmarkers are added to the OOB, since it will
+fail due to the usable OOB bytes not being 0xff.
+Correct this by only checking that the ECC aren't 0xff.
 
-Let us provide accessors to fetch the SMCCC version in PSCI so that
-other SMCCC v1.1+ features can use it.
-
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 ---
- drivers/firmware/psci/psci.c | 5 +++++
- include/linux/arm-smccc.h    | 9 +++++++++
- 2 files changed, 14 insertions(+)
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index 6a56d7196697..04426e16fee6 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -65,6 +65,11 @@ enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
- 	return psci_ops.conduit;
- }
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index e4e3ceeac38f..546f0807b887 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -2018,6 +2018,7 @@ static int brcmnand_read_by_pio(struct mtd_info *mtd, struct nand_chip *chip,
+ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+ 		  struct nand_chip *chip, void *buf, u64 addr)
+ {
++	struct mtd_oob_region oobecc;
+ 	int i, sas;
+ 	void *oob = chip->oob_poi;
+ 	int bitflips = 0;
+@@ -2035,11 +2036,24 @@ static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+ 	if (ret)
+ 		return ret;
  
-+u32 arm_smccc_get_version(void)
-+{
-+	return psci_ops.smccc_version;
-+}
+-	for (i = 0; i < chip->ecc.steps; i++, oob += sas) {
++	for (i = 0; i < chip->ecc.steps; i++) {
+ 		ecc_chunk = buf + chip->ecc.size * i;
+-		ret = nand_check_erased_ecc_chunk(ecc_chunk,
+-						  chip->ecc.size,
+-						  oob, sas, NULL, 0,
 +
- typedef unsigned long (psci_fn)(unsigned long, unsigned long,
- 				unsigned long, unsigned long);
- static psci_fn *invoke_psci_fn;
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 9d9a2e42e919..d6b0f4acc707 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -98,6 +98,15 @@ enum arm_smccc_conduit {
-  */
- enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void);
- 
-+/**
-+ * arm_smccc_get_version()
-+ *
-+ * Returns the version to be used for SMCCCv1.1 or later.
-+ *
-+ * When SMCCCv1.1 or above is not present, assumes and returns SMCCCv1.0.
-+ */
-+u32 arm_smccc_get_version(void);
++		ret = nand_check_erased_ecc_chunk(ecc_chunk, chip->ecc.size,
++						  NULL, 0, NULL, 0,
++						  chip->ecc.strength);
++		if (ret < 0)
++			return ret;
 +
- /**
-  * struct arm_smccc_res - Result from SMC/HVC call
-  * @a0-a3 result values from registers 0 to 3
++		bitflips = max(bitflips, ret);
++	}
++
++	for (i = 0; mtd->ooblayout->ecc(mtd, i, &oobecc) != -ERANGE; i++)
++	{
++		ret = nand_check_erased_ecc_chunk(NULL, 0,
++						  oob + oobecc.offset,
++						  oobecc.length,
++						  NULL, 0,
+ 						  chip->ecc.strength);
+ 		if (ret < 0)
+ 			return ret;
 -- 
-2.17.1
+2.26.2
 
