@@ -2,159 +2,155 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C5C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD25C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 057982064C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A0C2064C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k1JJpkLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgEDX12 (ORCPT
+        id S1728404AbgEDX1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:27:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:31042 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgEDX11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:27:27 -0400
-IronPort-SDR: lbnx4feHI1aVj/ziqVyEYLXW9QTn6RLW7Ylz3d/TDHq+iGPZHtqN7StH7FOQmR4Z7118MeuafW
- whneddWFOKZw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 16:27:27 -0700
-IronPort-SDR: FfmHJ+ZXo1f5ZQiiqbjWS0lOXVjHvUwnQi1XbTU0n32Bds1d2LVvsjbZwDRAuatgMzoWj4tKIj
- rnIe76RxdCiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
-   d="scan'208";a="248380428"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga007.jf.intel.com with ESMTP; 04 May 2020 16:27:26 -0700
-Date:   Mon, 4 May 2020 16:27:26 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
-Message-ID: <20200504232725.GA1084304@iweiny-DESK2.sc.intel.com>
-References: <20200504010912.982044-1-ira.weiny@intel.com>
- <20200504013509.GU23230@ZenIV.linux.org.uk>
- <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
- <20200504053357.GV23230@ZenIV.linux.org.uk>
- <20200504201740.GA985739@iweiny-DESK2.sc.intel.com>
- <20200504210225.GW23230@ZenIV.linux.org.uk>
+        Mon, 4 May 2020 19:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbgEDX1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 19:27:43 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA5AC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 16:27:43 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id v9so292276ybq.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 16:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qyKw+ba1yZRkxHkom61742xjtNSrJ6q9h9MnN2GvcMQ=;
+        b=k1JJpkLgOCQT7vcVWkR0e06i3uluqZdrOHdjOPNr839tXFnZGXy35PK3YanQ4srjp6
+         GyXU+dZuQxWhBSwW5Vpr6O8F5ls3Aovn9AmHiF6pQcFcZr82Pr6kcS6aTuU+2DonQUiQ
+         xSOJiKUbFOFrm8XiUizT3yG3CV/Ol/bxbgaC+7e8ny4sf7QRqO/g3rvwQjeeo9EX5/dY
+         9IFhTsmQJISAW8WJQoooHnW+Zz2Qm1BymB/POrsKQd3eJsq/S2I6UQ41rc1DPRPvyku4
+         FD01SVJMXhgV1VFbveszucRmdVXr66CKfgu8xkwDwmxGq2x4i4bTVUUwnUK2PGKI2X46
+         qrEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qyKw+ba1yZRkxHkom61742xjtNSrJ6q9h9MnN2GvcMQ=;
+        b=GkhHuoCwdRc664jUo/gCVrof4Sn3MCpmdnMBO63Lk5apjf9gSutnNbvbKB9kCDq226
+         4E+QUYlcSJa5jK1WvbfEP7MtjzvutfBXg6/XknBg3gbw3VUBClaSXClhu/EUllxtigzV
+         gwUmp/I3YELlBLgY8z+e3H8DvPFVO85cc39n0LalGUe/Kc4f77jPURVTBisXtQD2v1xi
+         maHBL8LcDwKC+veaq66V9cXnFwECOB0utplXGstjTq89GOr1X6PXttfYUQF9WAc0DLZY
+         UUoGSES6jcKpq7BEM/c7VcWyHYdT39oriaHCIyiO7gxC5b2qWhY4WTSVSso+Fw+I2qJt
+         uOLw==
+X-Gm-Message-State: AGi0PuY7RGof1kW6cOe1WRK5T7QIJtJzBu1HoAu/BYKs1RrokdM0Deu2
+        NzkCt9R5TBowMcOorKc5e835JqGcxbN6pIeRfrn+JQ==
+X-Google-Smtp-Source: APiQypLzQdaZTAf3tan2b48ef88C9A3sYH0CoAvNqXb3SIsAXbOrJfQ7770SgJ3giv82dfHlVwl/W803/NGr32wBjfU=
+X-Received: by 2002:a25:ddc3:: with SMTP id u186mr392795ybg.383.1588634862378;
+ Mon, 04 May 2020 16:27:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504210225.GW23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+References: <20200501113448.1809037-1-jolsa@kernel.org> <20200504225325.GE1916255@krava>
+In-Reply-To: <20200504225325.GE1916255@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 4 May 2020 16:27:31 -0700
+Message-ID: <CAP-5=fWK_NuLx57mX-oJDAUZQEcKD+ZSWvYOcb-v8epzySsZtg@mail.gmail.com>
+Subject: Re: [PATCH] perf session: Try to read pipe data from file
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 10:02:25PM +0100, Al Viro wrote:
-> On Mon, May 04, 2020 at 01:17:41PM -0700, Ira Weiny wrote:
-> 
-> > > || * arm: much, much worse.  We have several files that pull linux/highmem.h:
-> > > || arch/arm/mm/cache-feroceon-l2.c, arch/arm/mm/cache-xsc3l2.c,
-> > > || arch/arm/mm/copypage-*.c, arch/arm/mm/dma-mapping.c, arch/arm/mm/flush.c,
-> > > || arch/arm/mm/highmem.c, arch/arm/probes/uprobes/core.c,
-> > > || arch/arm/include/asm/kvm_mmu.h (kmap_atomic_pfn()).
-> > > || Those are fine, but we also have this:
-> > > || arch/arm/include/asm/pgtable.h:200:#define __pte_map(pmd)               (pte_t *)kmap_atomic(pmd_page(*(pmd)))
-> > > || arch/arm/include/asm/pgtable.h:208:#define pte_offset_map(pmd,addr)     (__pte_map(pmd) + pte_index(addr))
-> > > || and sure as hell, asm/pgtable.h does *NOT* pull linux/highmem.h.
-> > 
-> > It does not pull asm/highmem.h either...
-> 
-> No, but the users of those macros need to be considered.
+On Mon, May 4, 2020 at 3:57 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Fri, May 01, 2020 at 01:34:47PM +0200, Jiri Olsa wrote:
+> > From: Jiri Olsa <jolsa@redhat.com>
+> >
+> > Ian came with the idea of having support to read the pipe
+> > data also from file [1]. Currently pipe mode files fails
+> > like:
+> >
+> >   $ perf record -o - sleep 1 > /tmp/perf.pipe.data
+> >   $ perf report -i /tmp/perf.pipe.data
+> >   incompatible file format (rerun with -v to learn more)
+> >
+> > This patch adds the support to do that by trying the pipe
+> > header first, and if its successfully detected, switching
+> > the perf data to pipe mode.
+> >
+> > [1] https://lore.kernel.org/lkml/20200409185744.255881-1-irogers@google.com/
+> > Original-patch-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>
+> actualy.. I found another issue while trying this on tracepoints:
+>
+>   # ./perf record -g  -e 'raw_syscalls:sys_enter' -o -  true > data
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.000 MB - ]
+>   # ./perf script -i ./data
+>   perf_event__process_tracing_data: tracing data size mismatch0x1034 [0xc]: failed to process type: 66
+>
+> it's because some of the pipe synthesize code calls lseek, which
+> fails on pipe, but succeeds on normal file (with pipe data)
+>
+> patch below fixes that for me, but I wonder there are other leftovers
+> like this.. I'll check on post it all together
 
-Agreed, I was trying to point out that highmem.h was being pulled from
-somewhere else prior to my series, sorry.
+Thanks for testing! I wonder in the 2nd case whether a comment as to
+why the seek isn't needed in pipe mode would be useful.
 
-> 
-> > > || #define pte_offset_map(dir, addr)               \
-> > > ||         ((pte_t *) kmap_atomic(pmd_page(*(dir))) + pte_index(addr))
-> > > ||         One pte_offset_map user in arch/microblaze:
-> > > || arch/microblaze/kernel/signal.c:207:    ptep = pte_offset_map(pmdp, address);
-> > > || Messy, but doesn't require any changes (we have asm/pgalloc.h included
-> > > || there, and that pull linux/highmem.h).
-> > 
-> > AFAICS asm/pgtable.h does not include asm/highmem.h here...
-> > 
-> > So looks like arch/microblaze/kernel/signal.c will need linux/highmem.h
-> 
-> See above - line 39 in there is
-> #include <asm/pgalloc.h>
-> and line 14 in arch/microblaze/include/asm/pgalloc.h is
-> #include <linux/highmem.h>
-> It's conditional upon CONFIG_MMU in there, but so's the use of
-> pte_offset_map() in arch/microblaze/kernel/signal.c 
-> 
-> So it shouldn't be a problem.
+Ian
 
-Ah ok, I did not see that one.  Ok I'll drop that change and this series should
-be good.
-
-I was setting up to submit another version with 3 more patches you have
-suggested:
-
-kmap: Remove kmap_atomic_to_page()
-parisc/kmap: Remove duplicate kmap code
-sparc: Remove unnecessary includes
-
-Would you like to see those folded in?  I submitted 2 of the above as a
-separate series already.
-
-> 
-> > > || * xtensa: users in arch/xtensa/kernel/pci-dma.c, arch/xtensa/mm/highmem.c,
-> > > || arch/xtensa/mm/cache.c and arch/xtensa/platforms/iss/simdisk.c (all pull
-> > > || linux/highmem.h).
-> > 
-> > Actually
-> > 
-> > arch/xtensa/mm/cache.c gets linux/highmem.h from linux/pagemap.h
-> > 
-> > arch/xtensa/platforms/iss/simdisk.c may have an issue?
-> > 	linux/blkdev.h -> CONFIG_BLOCK -> linux/pagemap.h -> linux/highmem.h
-> > 	But simdisk.c requires BLK_DEV_SIMDISK -> CONFIG_BLOCK...
-> > 	<sigh>
-> 
-> Yep - see above re major chain of indirect includes conditional upon CONFIG_BLOCK
-> and its uses in places that only build with such configs.  There's a plenty of
-> similar considerations outside of arch/*, unfortunately...
-
-Indeed.
-
-FWIW the last 2 versions of this series have had no build failures with 0-day.
-
-This series in particular just finished 164 configs without issue.
-
-Would you like me to submit a new series?  With your additional patches?
-
-Ira
+> jirka
+>
+>
+> ---
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 8ca709f938b8..33e299674121 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3955,13 +3955,8 @@ int perf_event__process_tracing_data(struct perf_session *session,
+>  {
+>         ssize_t size_read, padding, size = event->tracing_data.size;
+>         int fd = perf_data__fd(session->data);
+> -       off_t offset = lseek(fd, 0, SEEK_CUR);
+>         char buf[BUFSIZ];
+>
+> -       /* setup for reading amidst mmap */
+> -       lseek(fd, offset + sizeof(struct perf_record_header_tracing_data),
+> -             SEEK_SET);
+> -
+>         size_read = trace_report(fd, &session->tevent,
+>                                  session->repipe);
+>         padding = PERF_ALIGN(size_read, sizeof(u64)) - size_read;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index c11d89e0ee55..b75df19feaf1 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1543,7 +1543,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+>                 return 0;
+>         case PERF_RECORD_HEADER_TRACING_DATA:
+>                 /* setup for reading amidst mmap */
+> -               lseek(fd, file_offset, SEEK_SET);
+> +               if (!perf_data__is_pipe(session->data))
+> +                       lseek(fd, file_offset, SEEK_SET);
+>                 return tool->tracing_data(session, event);
+>         case PERF_RECORD_HEADER_BUILD_ID:
+>                 return tool->build_id(session, event);
+>
