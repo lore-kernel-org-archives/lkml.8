@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4F9C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092C0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60970205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D536A205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615733;
-	bh=0iRX5pdG6hLfO5oiZwm3feE0J+0QYE/p8vgpjkEUCww=;
+	s=default; t=1588615749;
+	bh=qmok/smR5p8JzoYGwRx25aI23XUjwrs5b7JAFG9KgD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0Il94A6xBSJnUxvxNQI2Ot0M31Exswt1xef73uX9wDHbu7uMDzro7zovbiiHfayk
-	 bGTAN9WIYJnd78PNGxJ2fX0TOf9E5GZEcPQNnNXKXB4uUSYK0EtJPsq9p14Hb+PShB
-	 7thU520YUJo0fQudT00YYO0BAkCDh6u+/Jm2Aqi8=
+	b=HhM+WBJGmG2+r5QfFTspZPnwDrHJZdGqKwA9L8hrDfH68lhQ1+AHYvLPjfzDHp4Rx
+	 qGT22n6mu1i7HA3FKHzBo+CGgwGPswBV4hglKKwbRMgeToByMubVxxxFmgBO6lETx8
+	 ixhZwPB5alboa70uQT1zK7ogI1zat38wtqZO91uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbgEDSIw (ORCPT
+        id S1732063AbgEDSG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38360 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732154AbgEDSH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:29 -0400
+        id S1731519AbgEDSG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11DDF2087E;
-        Mon,  4 May 2020 18:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828432073B;
+        Mon,  4 May 2020 18:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615649;
-        bh=0iRX5pdG6hLfO5oiZwm3feE0J+0QYE/p8vgpjkEUCww=;
+        s=default; t=1588615615;
+        bh=qmok/smR5p8JzoYGwRx25aI23XUjwrs5b7JAFG9KgD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDEJQTYh+odTOwFQuXafEJgzit0DXAcpaHOqx4kTQnhNasg68IxY4mZA46INrs7jW
-         ooTVZYeTMKYnsJIFVZXOsnW/eRATRrEw0VDOvEyhzU30O3uQfevSLsXogVMLHQkaEg
-         BjFI0sZ/cL4miCpB9L2+b1jnyNgCWqMMq/TiOSXs=
+        b=NgUn72JvZF8kGEIuJzduApoZLjSH4MXsRcx5BmzC93dQr9+jELMf0wPN7HqdK3Ewm
+         YHCf99DUxsdx28Yd3f4fp6uFFNaH4cEL91IZy1K18IEhE2GBXNX+Jn9lVKCZsw40b7
+         /YlC6dI8JLOyV6/BowqpCGTN273VkD+PZTaZnAMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.6 66/73] nvme: prevent double free in nvme_alloc_ns() error handling
-Date:   Mon,  4 May 2020 19:58:09 +0200
-Message-Id: <20200504165510.184799022@linuxfoundation.org>
+        stable@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.6 54/73] vfio: avoid possible overflow in vfio_iommu_type1_pin_pages
+Date:   Mon,  4 May 2020 19:57:57 +0200
+Message-Id: <20200504165509.404568015@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -59,43 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@wdc.com>
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-commit 132be62387c7a72a38872676c18b0dfae264adb8 upstream.
+commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 upstream.
 
-When jumping to the out_put_disk label, we will call put_disk(), which will
-trigger a call to disk_release(), which calls blk_put_queue().
+add parentheses to avoid possible vaddr overflow.
 
-Later in the cleanup code, we do blk_cleanup_queue(), which will also call
-blk_put_queue().
-
-Putting the queue twice is incorrect, and will generate a KASAN splat.
-
-Set the disk->queue pointer to NULL, before calling put_disk(), so that the
-first call to blk_put_queue() will not free the queue.
-
-The second call to blk_put_queue() uses another pointer to the same queue,
-so this call will still free the queue.
-
-Fixes: 85136c010285 ("lightnvm: simplify geometry enumeration")
-Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/core.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/vfio/vfio_iommu_type1.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3580,6 +3580,8 @@ static int nvme_alloc_ns(struct nvme_ctr
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -554,7 +554,7 @@ static int vfio_iommu_type1_pin_pages(vo
+ 			continue;
+ 		}
  
- 	return 0;
-  out_put_disk:
-+	/* prevent double queue cleanup */
-+	ns->disk->queue = NULL;
- 	put_disk(ns->disk);
-  out_unlink_ns:
- 	mutex_lock(&ctrl->subsys->lock);
+-		remote_vaddr = dma->vaddr + iova - dma->iova;
++		remote_vaddr = dma->vaddr + (iova - dma->iova);
+ 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
+ 					     do_accounting);
+ 		if (ret)
 
 
