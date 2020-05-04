@@ -2,305 +2,91 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DB1C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48303C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A51D20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:19:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="glUcsG5W"
+	by mail.kernel.org (Postfix) with ESMTP id 25CB220721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgEDLTF (ORCPT
+        id S1728557AbgEDLVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728248AbgEDLTE (ORCPT
+        Mon, 4 May 2020 07:21:35 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36836 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbgEDLVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:19:04 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3754C0610D6
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 04:19:02 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g19so8525570otk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 04:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=deBFpZDyD7Ytv7er+9351gbbtNrttVAi3jZjoadiPO4=;
-        b=glUcsG5WwYRnt+lJPOtXI4u2+uV8cO9bdXvRZGvTV68eBEUcNwFHztrwdHRujYdHDs
-         za+2QmAIcNuBiVZoHk5c2TrjPwt7XJeqrhwOA5f0z/BkNND1OxBYATl7dOYGOc4jL0aM
-         OrNogdlgitlS26m/bpcotVxSFTKnDWeAr50F4=
+        Mon, 4 May 2020 07:21:35 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s202so6293525oih.3;
+        Mon, 04 May 2020 04:21:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=deBFpZDyD7Ytv7er+9351gbbtNrttVAi3jZjoadiPO4=;
-        b=pldVH4nbXHCxi3YJwdomCnlXsEvq24Wt4ZHR22c2R6anRdbKDfSvUKQWexXuQIou31
-         kXVHP7s9tjws49hOP+zpe1NIgQ1Ek+aGW1dKTM4eh51xTGDvtx6/sZ+uCQu6yfu/RUt1
-         tMZmXTtj3AcM0kh9G1j6UcqgQ06cddwxGQgGx345EvZzo2WjY67TMz6W43gQSUY4lk75
-         WSmoyjnDrvS2RjBGrr7z+P7kD8PBjJUvzH03JaF9shtGybdyNnIXsZ38IFvHKxZRRB0B
-         xtkQChrm4BM2B67QTtPs/iGS8tehf7XFKnFkZ9bPsJVYwHuT4b800PKjwFgETy0hB/ms
-         2xzw==
-X-Gm-Message-State: AGi0PuaNLEfTDiWTkMbjz2mabcSrBNz5YmywWOw6Jzi9bxBpqvmnErHX
-        arYRQAdO+4iHSggO6m1RrRr3bpNLmElk4LZwnBhvEA==
-X-Google-Smtp-Source: APiQypLa3Y84foLnht3d7ZcPNR2FZ3H6bsD5C/40pRpZ5N6wW+C1v22NLJcYfxdC783HNctofY9OsgbQwCLqMroI8Ls=
-X-Received: by 2002:a9d:7c92:: with SMTP id q18mr7889489otn.281.1588591141860;
- Mon, 04 May 2020 04:19:01 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=tZDl2ISqwoHN4MDsNOQjpFEl7Qj/2jW8GPSfjfJo6nc=;
+        b=WM8qLFAfOdxGJtCFPNk0ZBz2V7jHgPf0p30Bdwq8c0mZpCb4aJafif9BCN8J5xxAd4
+         BFND0C7yKCQKyi6ERamJIZuQsvoUVLNakRYH+2M7Y1RCv3bcvsHfn1WhZuV3rkVeTvFO
+         c/YFtzcoEpAXa6bOgAIyR1nfgRz9EnjjYf5BhVDzkfvcrxGxWlphRhyPNZwzClwMyLhd
+         l/tsQJZyxKNu8as87+3VVDdjYsTETjs6dKpuTgCbKO605g3Pflc2CiXoNyDxTfCFV0Ob
+         e3Bud0YeHBinx2bqKA8kzL8/e9Xx78AeZtYoBpSVlEx1FwPWYM1+hlvhNa4GnQODtZOi
+         HpAg==
+X-Gm-Message-State: AGi0PuaRGRWjp6RTEVZObM9CTTsWjtBDk0shhjPYmNAb16OWttEnrACZ
+        kwsO+6MIt1gppvMbNn3rmvcB3kCFJXOiU35R6S0=
+X-Google-Smtp-Source: APiQypLg42OO2VjW0SY9rnGti/L+fKWDI0eWfPP2uNbvCsMbAadHm9cbkZemqzEwjcmfQHTIp0JmQe3BpKW5x1EEses=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr8161718oih.148.1588591292740;
+ Mon, 04 May 2020 04:21:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200504010912.982044-1-ira.weiny@intel.com> <20200504010912.982044-12-ira.weiny@intel.com>
-In-Reply-To: <20200504010912.982044-12-ira.weiny@intel.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 4 May 2020 13:18:51 +0200
-Message-ID: <CAKMK7uF4fd3upBYSQEzs==Nx7osn=wZPnxoKLKm9HTxwU_sZ+w@mail.gmail.com>
-Subject: Re: [PATCH V2 11/11] drm: Remove drm specific kmap_atomic code
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, sparclinux@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Helge Deller <deller@gmx.de>, X86 ML <x86@kernel.org>,
-        linux-csky@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        linux-xtensa@linux-xtensa.org, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Chris Zankel <chris@zankel.net>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-parisc@vger.kernel.org, linux-mips@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "David S. Miller" <davem@davemloft.net>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 13:21:21 +0200
+Message-ID: <CAMuHMdXUkxe2GJigr92HYBtg3Ni_MSpuMnxo132U+9448YVDBA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] dt-bindings: arm: Document iW-RainboW-G21M-Qseven-RZG1H
+ system on module
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 3:09 AM <ira.weiny@intel.com> wrote:
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document the iW-RainboW-G21M-Qseven-RZG1H device tree bindings,
+> listing it as a supported system on module.
 >
-> From: Ira Weiny <ira.weiny@intel.com>
->
-> kmap_atomic_prot() is now exported by all architectures.  Use this
-> function rather than open coding a driver specific kmap_atomic.
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-I'm assuming this lands through some other tree or a topic branch or whatev=
-er.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.8.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Gr{oetje,eeting}s,
 
-Cheers, Daniel
+                        Geert
 
-> ---
->  drivers/gpu/drm/ttm/ttm_bo_util.c    | 56 ++--------------------------
->  drivers/gpu/drm/vmwgfx/vmwgfx_blit.c | 16 ++++----
->  include/drm/ttm/ttm_bo_api.h         |  4 --
->  3 files changed, 12 insertions(+), 64 deletions(-)
->
-> diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_=
-bo_util.c
-> index 52d2b71f1588..f09b096ba4fd 100644
-> --- a/drivers/gpu/drm/ttm/ttm_bo_util.c
-> +++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
-> @@ -257,54 +257,6 @@ static int ttm_copy_io_page(void *dst, void *src, un=
-signed long page)
->         return 0;
->  }
->
-> -#ifdef CONFIG_X86
-> -#define __ttm_kmap_atomic_prot(__page, __prot) kmap_atomic_prot(__page, =
-__prot)
-> -#define __ttm_kunmap_atomic(__addr) kunmap_atomic(__addr)
-> -#else
-> -#define __ttm_kmap_atomic_prot(__page, __prot) vmap(&__page, 1, 0,  __pr=
-ot)
-> -#define __ttm_kunmap_atomic(__addr) vunmap(__addr)
-> -#endif
-> -
-> -
-> -/**
-> - * ttm_kmap_atomic_prot - Efficient kernel map of a single page with
-> - * specified page protection.
-> - *
-> - * @page: The page to map.
-> - * @prot: The page protection.
-> - *
-> - * This function maps a TTM page using the kmap_atomic api if available,
-> - * otherwise falls back to vmap. The user must make sure that the
-> - * specified page does not have an aliased mapping with a different cach=
-ing
-> - * policy unless the architecture explicitly allows it. Also mapping and
-> - * unmapping using this api must be correctly nested. Unmapping should
-> - * occur in the reverse order of mapping.
-> - */
-> -void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot)
-> -{
-> -       if (pgprot_val(prot) =3D=3D pgprot_val(PAGE_KERNEL))
-> -               return kmap_atomic(page);
-> -       else
-> -               return __ttm_kmap_atomic_prot(page, prot);
-> -}
-> -EXPORT_SYMBOL(ttm_kmap_atomic_prot);
-> -
-> -/**
-> - * ttm_kunmap_atomic_prot - Unmap a page that was mapped using
-> - * ttm_kmap_atomic_prot.
-> - *
-> - * @addr: The virtual address from the map.
-> - * @prot: The page protection.
-> - */
-> -void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot)
-> -{
-> -       if (pgprot_val(prot) =3D=3D pgprot_val(PAGE_KERNEL))
-> -               kunmap_atomic(addr);
-> -       else
-> -               __ttm_kunmap_atomic(addr);
-> -}
-> -EXPORT_SYMBOL(ttm_kunmap_atomic_prot);
-> -
->  static int ttm_copy_io_ttm_page(struct ttm_tt *ttm, void *src,
->                                 unsigned long page,
->                                 pgprot_t prot)
-> @@ -316,13 +268,13 @@ static int ttm_copy_io_ttm_page(struct ttm_tt *ttm,=
- void *src,
->                 return -ENOMEM;
->
->         src =3D (void *)((unsigned long)src + (page << PAGE_SHIFT));
-> -       dst =3D ttm_kmap_atomic_prot(d, prot);
-> +       dst =3D kmap_atomic_prot(d, prot);
->         if (!dst)
->                 return -ENOMEM;
->
->         memcpy_fromio(dst, src, PAGE_SIZE);
->
-> -       ttm_kunmap_atomic_prot(dst, prot);
-> +       kunmap_atomic(dst);
->
->         return 0;
->  }
-> @@ -338,13 +290,13 @@ static int ttm_copy_ttm_io_page(struct ttm_tt *ttm,=
- void *dst,
->                 return -ENOMEM;
->
->         dst =3D (void *)((unsigned long)dst + (page << PAGE_SHIFT));
-> -       src =3D ttm_kmap_atomic_prot(s, prot);
-> +       src =3D kmap_atomic_prot(s, prot);
->         if (!src)
->                 return -ENOMEM;
->
->         memcpy_toio(dst, src, PAGE_SIZE);
->
-> -       ttm_kunmap_atomic_prot(src, prot);
-> +       kunmap_atomic(src);
->
->         return 0;
->  }
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c b/drivers/gpu/drm/vmwgf=
-x/vmwgfx_blit.c
-> index bb46ca0c458f..94d456a1d1a9 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_blit.c
-> @@ -374,12 +374,12 @@ static int vmw_bo_cpu_blit_line(struct vmw_bo_blit_=
-line_data *d,
->                 copy_size =3D min_t(u32, copy_size, PAGE_SIZE - src_page_=
-offset);
->
->                 if (unmap_src) {
-> -                       ttm_kunmap_atomic_prot(d->src_addr, d->src_prot);
-> +                       kunmap_atomic(d->src_addr);
->                         d->src_addr =3D NULL;
->                 }
->
->                 if (unmap_dst) {
-> -                       ttm_kunmap_atomic_prot(d->dst_addr, d->dst_prot);
-> +                       kunmap_atomic(d->dst_addr);
->                         d->dst_addr =3D NULL;
->                 }
->
-> @@ -388,8 +388,8 @@ static int vmw_bo_cpu_blit_line(struct vmw_bo_blit_li=
-ne_data *d,
->                                 return -EINVAL;
->
->                         d->dst_addr =3D
-> -                               ttm_kmap_atomic_prot(d->dst_pages[dst_pag=
-e],
-> -                                                    d->dst_prot);
-> +                               kmap_atomic_prot(d->dst_pages[dst_page],
-> +                                                d->dst_prot);
->                         if (!d->dst_addr)
->                                 return -ENOMEM;
->
-> @@ -401,8 +401,8 @@ static int vmw_bo_cpu_blit_line(struct vmw_bo_blit_li=
-ne_data *d,
->                                 return -EINVAL;
->
->                         d->src_addr =3D
-> -                               ttm_kmap_atomic_prot(d->src_pages[src_pag=
-e],
-> -                                                    d->src_prot);
-> +                               kmap_atomic_prot(d->src_pages[src_page],
-> +                                                d->src_prot);
->                         if (!d->src_addr)
->                                 return -ENOMEM;
->
-> @@ -499,9 +499,9 @@ int vmw_bo_cpu_blit(struct ttm_buffer_object *dst,
->         }
->  out:
->         if (d.src_addr)
-> -               ttm_kunmap_atomic_prot(d.src_addr, d.src_prot);
-> +               kunmap_atomic(d.src_addr);
->         if (d.dst_addr)
-> -               ttm_kunmap_atomic_prot(d.dst_addr, d.dst_prot);
-> +               kunmap_atomic(d.dst_addr);
->
->         return ret;
->  }
-> diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-> index 0a9d042e075a..de1ccdcd5703 100644
-> --- a/include/drm/ttm/ttm_bo_api.h
-> +++ b/include/drm/ttm/ttm_bo_api.h
-> @@ -668,10 +668,6 @@ int ttm_bo_mmap_obj(struct vm_area_struct *vma, stru=
-ct ttm_buffer_object *bo);
->  int ttm_bo_mmap(struct file *filp, struct vm_area_struct *vma,
->                 struct ttm_bo_device *bdev);
->
-> -void *ttm_kmap_atomic_prot(struct page *page, pgprot_t prot);
-> -
-> -void ttm_kunmap_atomic_prot(void *addr, pgprot_t prot);
-> -
->  /**
->   * ttm_bo_io
->   *
-> --
-> 2.25.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
