@@ -2,137 +2,106 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0928C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CE4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE9212078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615867;
-	bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/VRvaNp4ZbaN9E69wLFwB04TjZUO/ZH2+1GZueHxUmU+6XHu/5FfoAUOqNh23uF+
-	 U451UZ+eqIwdIX6sL+50WjwvvthcfRMX54nUbcUJH/da9ToJLaOewghCDjQz1Y5mYI
-	 VrqdhzbZoLmDMY/Lc403AOX/QbZKhuC1csWMhmnw=
+	by mail.kernel.org (Postfix) with ESMTP id A600C2078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732275AbgEDSLH (ORCPT
+        id S1732185AbgEDSLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 4 May 2020 14:11:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:44035 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732265AbgEDSLH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 May 2020 14:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgEDSEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EE0E20721;
-        Mon,  4 May 2020 18:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615474;
-        bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/WCFL8V958TwK1lcJ6BDFTsV/Rwv37nxBzTjvJ1GNdFV4HZpKmURfUbB+cdb892C
-         JzSGDlBTG2oBq9sHO6cTtrfRP4HrhY0nUseJN6HoF637A+0GiTVd7X+i/nOxklv8T8
-         BqfbqSUinuhW9AHUIdj8GumwkkHOUFfZ3NBAC6ms=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.4 53/57] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
-Date:   Mon,  4 May 2020 19:57:57 +0200
-Message-Id: <20200504165501.373919057@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
-References: <20200504165456.783676004@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from localhost ([109.41.193.12]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M58SY-1jWm0f3tDQ-0016Pm; Mon, 04 May 2020 20:10:38 +0200
+Date:   Mon, 4 May 2020 20:10:34 +0200
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        tglx@linutronix.de, allison@lohutok.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] iio: bmp280: fix compensation of humidity
+Message-ID: <20200504181033.GA15745@arbad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:ocgTseaez8bdvV9u0+jmemzP2DfkQbD7gDGFoeFvrUSUgmWG2lK
+ NDSVIRPPSrIMxBnpSWtJM8aYNFU5deDn9LaChONPne5226HYUGUW/wBhWBcvjvcH3hrwJM4
+ byjq9YPVokkwr3qdK6wVvYmjbPxFLzqkAFb2DmAgHagi0pBcfXlkw+FH3c7Xmfiqwx3VMqY
+ 0zN7rp+/vM3yRtC2FsMiw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lf9AWC4ovJ4=:mJnYAnWFsnpuNXC45ASvp/
+ qHip1buxF0G2h4HS4JfGBUweYpiZNe8jidwQdTzAWFjLiMyEGBm3sb85PfrxTS3EG6sTNhSGi
+ OYj7PPSl+wkzYUjUlKCNaQC37flFsYDO4hWR5e4hcTK/f9GAurjCqf2cWsyVabUuEyQrD7iSu
+ Gi7+hHkbiJvHFZt/qGIqASEPrdMyA8mHeRMhyA4LwNNe/yNn8tBez/xjxiB1ouK8qM4zUURP0
+ kAnmzqdDGIhGp1cc4pBcGpTweZ+EAtrPoUdBHKMHmh9MUGsIpLA/lw+3VYCH0N35KLTXeVaYt
+ 5ozXkao/PfDRz4zEpMjojmV9k7osfLLUzboF50WqwrxfJJa03R63AwPIbB1fIDrU3HUP8/2l6
+ 17FTxkz1oicJdVi7GmyGM4K36jQrxyAb+HtLMgwr8KELpbkVGIi7j73s7NfrmDu16rPmoyuYt
+ EVRapTTULUDPV/1v/JpMQxOJ22aKkD1y6/E96OpD00UM2/UkGIioLa6z3sOluTM8KSDB1iOSO
+ c+bX1lTOs2F9TUZmgOnWmSVSk07QG5c4GgBNih/wVFt7iQkdGMPRWLIYuxHYa2zsfCo6A+yT/
+ XXptZRxZIAqV/Z4wTItCdn9RidsnlctQHwUg6pxy7Gznp4y1O9DQsFqkx4uuoioJE+KI2FNOc
+ GFOOiRNeAyuFzc9t0Qrl7qNd5zFgUikGiJMkrUb02iGNLOjGCjgmqXlAcniyO5E4MwHvT+2d8
+ B6Yz+vI4OobdHkwzFLOlweXKIgFM64CdeCPoegqJ0v5XhVd+WKhojm3ZHbEZxWMLdEAcgyMdw
+ Hn7Q3zTDqNBtW0E0/hkEZQ/J06fGl64rVNtMTxrnnJBpRtWCR3uuf/VWZgMTzQ9UNP2fzyB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+Limit the output of humidity compensation to the range between 0 and 100
+percent.
 
-commit 7648f939cb919b9d15c21fff8cd9eba908d595dc upstream.
+Depending on the calibration parameters of the individual sensor it
+happens, that a humidity above 100 percent or below 0 percent is
+calculated, which don't make sense in terms of relative humidity.
 
-nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
-needs to be released at the end.  This results in a memory leak when the
-function allocates an acl as well as a default acl.  Fix by releasing acls
-that differ from the acl originally passed into nfs3_set_acl.
+Add a clamp to the compensation formula as described in the datasheet of
+the sensor in chapter 4.2.3.
 
-Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
-Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Although this clamp is documented, it was never in the driver of the
+kernel.
 
+It depends on the circumstances (calibration parameters, temperature,
+humidity) if one can see a value above 100 percent without the clamp.
+The writer of this patch was working with this type of sensor without
+noting this error. So it seems to be a rare event when this bug occures.
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- fs/nfs/nfs3acl.c |   22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
 
---- a/fs/nfs/nfs3acl.c
-+++ b/fs/nfs/nfs3acl.c
-@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inod
- 
- int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
- {
--	struct posix_acl *alloc = NULL, *dfacl = NULL;
-+	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
- 	int status;
- 
- 	if (S_ISDIR(inode->i_mode)) {
- 		switch(type) {
- 		case ACL_TYPE_ACCESS:
--			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
-+			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = alloc;
- 			break;
- 
- 		case ACL_TYPE_DEFAULT:
--			dfacl = acl;
--			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
-+			alloc = get_acl(inode, ACL_TYPE_ACCESS);
- 			if (IS_ERR(alloc))
- 				goto fail;
-+			dfacl = acl;
-+			acl = alloc;
- 			break;
- 		}
- 	}
- 
- 	if (acl == NULL) {
--		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-+		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
- 		if (IS_ERR(alloc))
- 			goto fail;
-+		acl = alloc;
- 	}
- 	status = __nfs3_proc_setacls(inode, acl, dfacl);
--	posix_acl_release(alloc);
-+out:
-+	if (acl != orig)
-+		posix_acl_release(acl);
-+	if (dfacl != orig)
-+		posix_acl_release(dfacl);
- 	return status;
- 
- fail:
--	return PTR_ERR(alloc);
-+	status = PTR_ERR(alloc);
-+	goto out;
- }
- 
- const struct xattr_handler *nfs3_xattr_handlers[] = {
+Change to v2:
+Thanks to the review of Jonathan a more descriptive commit message is
+added.
 
+Change to v1:
+Thanks to Tomasz for suggesting the easier to use function clamp_val()
+which is now used.
 
+ drivers/iio/pressure/bmp280-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 29c209cc1108..297ee2205bf6 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -271,6 +271,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+ 		+ (s32)2097152) * calib->H2 + 8192) >> 14);
+ 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)calib->H1) >> 4;
+ 
++	var = clamp_val(var, 0, 419430400);
++
+ 	return var >> 12;
+ };
+ 
+-- 
+2.20.1
