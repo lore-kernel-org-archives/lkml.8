@@ -4,109 +4,216 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFD1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC631C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5438B20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A9524965
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEDIoE convert rfc822-to-8bit (ORCPT
+        id S1728214AbgEDIoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:44:04 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:14459 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgEDIoE (ORCPT
+        Mon, 4 May 2020 04:44:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726351AbgEDIoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:44:04 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 8DCEF240014;
-        Mon,  4 May 2020 08:43:40 +0000 (UTC)
-Date:   Mon, 4 May 2020 10:43:39 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Ricardo Ribalda Delgado <ricardo@ribalda.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alban Bedel <albeu@free.fr>,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: Re: [PATCH] mtd: Fix mtd not registered due to nvmem name collision
-Message-ID: <20200504104339.31b4a858@xps13>
-In-Reply-To: <20200430131721.360064-1-ricardo@ribalda.com>
-References: <20200430131721.360064-1-ricardo@ribalda.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 May 2020 04:44:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BA6C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 01:44:19 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVWhx-0004Ba-Uo; Mon, 04 May 2020 10:44:13 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jVWhw-00061L-O0; Mon, 04 May 2020 10:44:12 +0200
+Date:   Mon, 4 May 2020 10:44:12 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC PATCH] dt-bindings: net: nxp,tja11xx: add compatible support
+Message-ID: <20200504084412.juhnxip7lg2d3ct5@pengutronix.de>
+References: <20200504082617.11326-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pe24nsds5j3wiypj"
+Content-Disposition: inline
+In-Reply-To: <20200504082617.11326-1-o.rempel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:26:30 up 170 days, 23:45, 184 users,  load average: 0.17, 0.11,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
 
-Ricardo Ribalda Delgado <ricardo@ribalda.com> wrote on Thu, 30 Apr 2020
-15:17:21 +0200:
+--pe24nsds5j3wiypj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> 
-> When the nvmem framework is enabled, a nvmem device is created per mtd
-> device/partition.
-> 
-> It is not uncommon that a device can have multiple mtd devices with
-> partitions that have the same name. Eg, when there DT overlay is allowed
-> and the same device with mtd is attached twice.
-> 
-> Under that circumstances, the mtd fails to register due to a name
-> duplication on the nvmem framework.
-> 
-> With this patch we use the mtdX name instead of the partition name,
-> which is unique.
-> 
-> [    8.948991] sysfs: cannot create duplicate filename '/bus/nvmem/devices/Production Data'
-> [    8.948992] CPU: 7 PID: 246 Comm: systemd-udevd Not tainted 5.5.0-qtec-standard #13
-> [    8.948993] Hardware name: AMD Dibbler/Dibbler, BIOS 05.22.04.0019 10/26/2019
-> [    8.948994] Call Trace:
-> [    8.948996]  dump_stack+0x50/0x70
-> [    8.948998]  sysfs_warn_dup.cold+0x17/0x2d
-> [    8.949000]  sysfs_do_create_link_sd.isra.0+0xc2/0xd0
-> [    8.949002]  bus_add_device+0x74/0x140
-> [    8.949004]  device_add+0x34b/0x850
-> [    8.949006]  nvmem_register.part.0+0x1bf/0x640
-> ...
-> [    8.948926] mtd mtd8: Failed to register NVMEM device
-> 
-> Fixes: c4dfa25ab307 ("mtd: add support for reading MTD devices via the nvmem API")
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Hi all,
+
+here is first attempt to rework this binding. So far I have following
+questions and/or issues:
+- currently this PHY is identified by ID, not by compatible. Should it
+  be probed by compatible?
+  Theoretically I can use:
+  	compatible =3D "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
+
+  But till now this was used only for nodes with not clear support state
+  and seems to be not a welcome solution (at least till now).
+
+- matching by node name patter seems to trigger warning by different
+  (not related) bindings. What is a best practice to avoid it?
+
+Regards,
+Oleksij
+
+On Mon, May 04, 2020 at 10:26:17AM +0200, Oleksij Rempel wrote:
+> ... and correct SPDX-License-Identifier.
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
->  drivers/mtd/mtdcore.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-> index 2916674208b3..29d41003d6e0 100644
-> --- a/drivers/mtd/mtdcore.c
-> +++ b/drivers/mtd/mtdcore.c
-> @@ -555,7 +555,7 @@ static int mtd_nvmem_add(struct mtd_info *mtd)
->  
->  	config.id = -1;
->  	config.dev = &mtd->dev;
-> -	config.name = mtd->name;
-> +	config.name = dev_name(&mtd->dev);
->  	config.owner = THIS_MODULE;
->  	config.reg_read = mtd_nvmem_reg_read;
->  	config.size = mtd->size;
+>  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 51 ++++++++++++-------
+>  1 file changed, 32 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Doc=
+umentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> index 42be0255512b3..e4ae8257f3258 100644
+> --- a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> @@ -1,4 +1,4 @@
+> -# SPDX-License-Identifier: GPL-2.0+
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> @@ -14,25 +14,36 @@ maintainers:
+>  description:
+>    Bindings for NXP TJA11xx automotive PHYs
+> =20
+> -allOf:
+> -  - $ref: ethernet-phy.yaml#
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +          - nxp,tja1102
+> +        - const: ethernet-phy-ieee802.3-c22
+> =20
+> -patternProperties:
+> -  "^ethernet-phy@[0-9a-f]+$":
+> -    type: object
+> -    description: |
+> -      Some packages have multiple PHYs. Secondary PHY should be defines =
+as
+> -      subnode of the first (parent) PHY.
+> +  $nodename:
+> +    pattern: "^ethernet-phy(@[a-f0-9]+)?$"
+> =20
+> -    properties:
+> -      reg:
+> -        minimum: 0
+> -        maximum: 31
+> -        description:
+> -          The ID number for the child PHY. Should be +1 of parent PHY.
+> +  reg:
+> +    minimum: 0
+> +    maximum: 31
+> +    description:
+> +      The ID number for the child PHY. Should be +1 of parent PHY.
+> =20
+> -    required:
+> -      - reg
+> +  '#address-cells':
+> +    description: number of address cells for the MDIO bus
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    description: number of size cells on the MDIO bus
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#address-cells'
+> +  - '#size-cells'
+> =20
+>  examples:
+>    - |
+> @@ -40,8 +51,9 @@ examples:
+>          #address-cells =3D <1>;
+>          #size-cells =3D <0>;
+> =20
+> -        tja1101_phy0: ethernet-phy@4 {
+> -            reg =3D <0x4>;
+> +        tja1101_phy0: ethernet-phy@1 {
+> +            compatible =3D "nxp,tja1101", "ethernet-phy-ieee802.3-c22";
+> +            reg =3D <0x1>;
+>          };
+>      };
+>    - |
+> @@ -50,6 +62,7 @@ examples:
+>          #size-cells =3D <0>;
+> =20
+>          tja1102_phy0: ethernet-phy@4 {
+> +            compatible =3D "nxp,tja1102", "ethernet-phy-ieee802.3-c22";
+>              reg =3D <0x4>;
+>              #address-cells =3D <1>;
+>              #size-cells =3D <0>;
+> --=20
+> 2.26.2
+>=20
+>=20
 
-We hope this will definitely fix the NVMEM duplicate name issue. If it
-does not reliably, we might want to revert this patch and create an MTD
-unique ID field which, for each MTD device, concatenates the name of
-its parent and its own mtd->name.
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+--pe24nsds5j3wiypj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Miquèl
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6v1dgACgkQ4omh9DUa
+UbN3bhAAmwBlKUxD8sJbC2KWRGhMPoF1krEfvmCTUqG4Dr9yrhzztnMi2j+GIhmY
+JuDcR538mLieGd8iDo0BheWOShryiArR2ze4mvQxAxYYJRqGGFS3oDtBkzDA46hR
+LUWfcBE/7VyCI1dNu9vhn8K1GRtqFM4vffihDeoVxwNrSCUPViWabsuF31OZRhYo
+mlwRfRuz8UWj8juPwAtsRy4v5hr1cemfA3DLuN7pnvpgMpFv4bWGP9BcYI/ZVVtn
+YYFLsw6uuAwC5jcnz7TzQbyPEo68axNvI77n4nKld6SKFjjBQWMsrtxbBtcAYCAL
+DOykrEFJe9Mdpz8jutAfo8x6ddVj56Z6EIzsZkiG0Ajvlwurj3pGsdJZX/X8vx0B
+WHX2zekiaBxSefDNqeWj84O3bzgbPo0B/lt2Jd3C/jomgn1UPyEBulc/rrQsKNMg
+jUs6n9EGyNhuZMg2Q619W0fZ+I12B3GlnRUNCCP1IzGPoBed5KTmYR253pvapDG9
+rK2yR9esM1Yo1HAC/oz8omxqVqJLlNNoLu2i1Qzj/MJglUd/bYGijQHtb3Z75HRM
+oEnJdOqZuZKzZ8F/uWDGLdq9a6C10JJVetQEyXSK29IEM2x+DDyIY8j/lNszSKL6
+2bRYu3qC6p5MauuGaKw9AeRlhVUk5fphLX0UBDBFhAQsx3OLE6s=
+=2IeE
+-----END PGP SIGNATURE-----
+
+--pe24nsds5j3wiypj--
