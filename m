@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBC5C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4309C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C014206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA6F206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615295;
-	bh=3yxTTUPjFSSAXYVpitcAhssTLaI/KWzFDPPA2e7jZiU=;
+	s=default; t=1588615298;
+	bh=wRkYzBLk0vUVQRuUS+lFzvR6kc1EqVlOI6UkZWW2SN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6zKEJKzkDrWnox0UOcAAn7dZN6ESBvMAf2X1yi84wRDJpBWKYy4/LuyifaVKkcaD
-	 gAIH2Rph2Fd04yKI3s4STKTx1M7NmIO47v6e/rJAI1Uzy/pQYHqdO9lS2sQxEOkSmT
-	 fE8LWPSzkL6VHsZLrAWFFoLooTjLEaIoU1KP5RvE=
+	b=t9uSfZ9IMYSBXthyyTs4X24gh1JOlqfqOIqHb8Oxfh2RlK8tRPO22W4WvNapxiUNK
+	 eMwM5K32TTMnG0uYwxXwXwLtlbtiomyg7WtQbOcvHaANfx1igS3/XPxMuV+ZiuaAil
+	 KiWMZpm4K40p7ykfdwifEDQYRaB465D44nu9Z32c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbgEDSBd (ORCPT
+        id S1730651AbgEDSBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731156AbgEDSBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:25 -0400
+        id S1730598AbgEDSB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71E6920707;
-        Mon,  4 May 2020 18:01:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D94C2206B8;
+        Mon,  4 May 2020 18:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615284;
-        bh=3yxTTUPjFSSAXYVpitcAhssTLaI/KWzFDPPA2e7jZiU=;
+        s=default; t=1588615287;
+        bh=wRkYzBLk0vUVQRuUS+lFzvR6kc1EqVlOI6UkZWW2SN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L71JM8ZPZ2KzBIC1TlxaXGGrnTctoFR+V210OooN25ehv3Gyn8k2EiIV+4EdLLoNL
-         7wsr6wSo1eckxEtNefWfXWsLPSGAhlKTFU/7oTifchdSTLyRulW8RVZYizypZknYL/
-         OvLkTdMF1pvUK1KDCcFSM2M/2gjaa/H8RV3SciaM=
+        b=r9X9oLClbxWJnpc7KCXD94QW3yUNsc77tF2Ms/d67JDeXJ37lfLK5+GUXI1K5I5TH
+         isftEl2FO2K9MH8rize9PZu3ACVhyPMIfVQztOoMgwnpFuCmmscf/nDLEnFVmVO2Zi
+         O9q6Njc6Bx8VnX6S8N6BwXXYqODnUtzjsZp7LcxE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 14/37] dm multipath: use updated MPATHF_QUEUE_IO on mapping for bio-based mpath
-Date:   Mon,  4 May 2020 19:57:27 +0200
-Message-Id: <20200504165450.028545641@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 4.19 02/37] drm/qxl: qxl_release leak in qxl_draw_dirty_fb()
+Date:   Mon,  4 May 2020 19:57:15 +0200
+Message-Id: <20200504165448.660485899@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,99 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 5686dee34dbfe0238c0274e0454fa0174ac0a57a upstream.
+commit 85e9b88af1e6164f19ec71381efd5e2bcfc17620 upstream.
 
-When adding devices that don't have a scsi_dh on a BIO based multipath,
-I was able to consistently hit the warning below and lock-up the system.
-
-The problem is that __map_bio reads the flag before it potentially being
-modified by choose_pgpath, and ends up using the older value.
-
-The WARN_ON below is not trivially linked to the issue. It goes like
-this: The activate_path delayed_work is not initialized for non-scsi_dh
-devices, but we always set MPATHF_QUEUE_IO, asking for initialization.
-That is fine, since MPATHF_QUEUE_IO would be cleared in choose_pgpath.
-Nevertheless, only for BIO-based mpath, we cache the flag before calling
-choose_pgpath, and use the older version when deciding if we should
-initialize the path.  Therefore, we end up trying to initialize the
-paths, and calling the non-initialized activate_path work.
-
-[   82.437100] ------------[ cut here ]------------
-[   82.437659] WARNING: CPU: 3 PID: 602 at kernel/workqueue.c:1624
-  __queue_delayed_work+0x71/0x90
-[   82.438436] Modules linked in:
-[   82.438911] CPU: 3 PID: 602 Comm: systemd-udevd Not tainted 5.6.0-rc6+ #339
-[   82.439680] RIP: 0010:__queue_delayed_work+0x71/0x90
-[   82.440287] Code: c1 48 89 4a 50 81 ff 00 02 00 00 75 2a 4c 89 cf e9
-94 d6 07 00 e9 7f e9 ff ff 0f 0b eb c7 0f 0b 48 81 7a 58 40 74 a8 94 74
-a7 <0f> 0b 48 83 7a 48 00 74 a5 0f 0b eb a1 89 fe 4c 89 cf e9 c8 c4 07
-[   82.441719] RSP: 0018:ffffb738803977c0 EFLAGS: 00010007
-[   82.442121] RAX: ffffa086389f9740 RBX: 0000000000000002 RCX: 0000000000000000
-[   82.442718] RDX: ffffa086350dd930 RSI: ffffa0863d76f600 RDI: 0000000000000200
-[   82.443484] RBP: 0000000000000200 R08: 0000000000000000 R09: ffffa086350dd970
-[   82.444128] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa086350dd930
-[   82.444773] R13: ffffa0863d76f600 R14: 0000000000000000 R15: ffffa08636738008
-[   82.445427] FS:  00007f6abfe9dd40(0000) GS:ffffa0863dd80000(0000) knlGS:00000
-[   82.446040] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   82.446478] CR2: 0000557d288db4e8 CR3: 0000000078b36000 CR4: 00000000000006e0
-[   82.447104] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   82.447561] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   82.448012] Call Trace:
-[   82.448164]  queue_delayed_work_on+0x6d/0x80
-[   82.448472]  __pg_init_all_paths+0x7b/0xf0
-[   82.448714]  pg_init_all_paths+0x26/0x40
-[   82.448980]  __multipath_map_bio.isra.0+0x84/0x210
-[   82.449267]  __map_bio+0x3c/0x1f0
-[   82.449468]  __split_and_process_non_flush+0x14a/0x1b0
-[   82.449775]  __split_and_process_bio+0xde/0x340
-[   82.450045]  ? dm_get_live_table+0x5/0xb0
-[   82.450278]  dm_process_bio+0x98/0x290
-[   82.450518]  dm_make_request+0x54/0x120
-[   82.450778]  generic_make_request+0xd2/0x3e0
-[   82.451038]  ? submit_bio+0x3c/0x150
-[   82.451278]  submit_bio+0x3c/0x150
-[   82.451492]  mpage_readpages+0x129/0x160
-[   82.451756]  ? bdev_evict_inode+0x1d0/0x1d0
-[   82.452033]  read_pages+0x72/0x170
-[   82.452260]  __do_page_cache_readahead+0x1ba/0x1d0
-[   82.452624]  force_page_cache_readahead+0x96/0x110
-[   82.452903]  generic_file_read_iter+0x84f/0xae0
-[   82.453192]  ? __seccomp_filter+0x7c/0x670
-[   82.453547]  new_sync_read+0x10e/0x190
-[   82.453883]  vfs_read+0x9d/0x150
-[   82.454172]  ksys_read+0x65/0xe0
-[   82.454466]  do_syscall_64+0x4e/0x210
-[   82.454828]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[...]
-[   82.462501] ---[ end trace bb39975e9cf45daa ]---
+ret should be changed to release allocated struct qxl_release
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 8002db6336dd ("qxl: convert qxl driver to proper use for reservations")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/22cfd55f-07c8-95d0-a2f7-191b7153c3d4@virtuozzo.com
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-mpath.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/qxl/qxl_draw.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -586,10 +586,12 @@ static struct pgpath *__map_bio(struct m
+--- a/drivers/gpu/drm/qxl/qxl_draw.c
++++ b/drivers/gpu/drm/qxl/qxl_draw.c
+@@ -348,9 +348,10 @@ void qxl_draw_dirty_fb(struct qxl_device
+ 		goto out_release_backoff;
  
- 	/* Do we need to select a new pgpath? */
- 	pgpath = READ_ONCE(m->current_pgpath);
--	queue_io = test_bit(MPATHF_QUEUE_IO, &m->flags);
--	if (!pgpath || !queue_io)
-+	if (!pgpath || !test_bit(MPATHF_QUEUE_IO, &m->flags))
- 		pgpath = choose_pgpath(m, bio->bi_iter.bi_size);
+ 	rects = drawable_set_clipping(qdev, num_clips, clips_bo);
+-	if (!rects)
++	if (!rects) {
++		ret = -EINVAL;
+ 		goto out_release_backoff;
+-
++	}
+ 	drawable = (struct qxl_drawable *)qxl_release_map(qdev, release);
  
-+	/* MPATHF_QUEUE_IO might have been cleared by choose_pgpath. */
-+	queue_io = test_bit(MPATHF_QUEUE_IO, &m->flags);
-+
- 	if ((pgpath && queue_io) ||
- 	    (!pgpath && test_bit(MPATHF_QUEUE_IF_NO_PATH, &m->flags))) {
- 		/* Queue for the daemon to resubmit */
+ 	drawable->clip.type = SPICE_CLIP_TYPE_RECTS;
 
 
