@@ -2,96 +2,178 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2790C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E57FBC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B965920705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C559820705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 21:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AynCMGGq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z+yEQp4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgEDVjn (ORCPT
+        id S1727982AbgEDVmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 17:39:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726338AbgEDVjm (ORCPT
+        Mon, 4 May 2020 17:42:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41808 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgEDVmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 17:39:42 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2435C061A0E;
-        Mon,  4 May 2020 14:39:42 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v2so312759plp.9;
-        Mon, 04 May 2020 14:39:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dnKlsTHwnnFXazn7zzxGnzLza7yEGHj+jI4fWn0tS74=;
-        b=AynCMGGq0W5VEIeiqAdRi99uVamrPcFWpeWEkJSSFpofFC9z+cTdg2BqY7IQs4bIPZ
-         GSqk0NDj1De6v3E6B8hD69oAQTlbDvt1Lx9cjx93XUcfEwcebbSsgHRMtF4qhLb0jzZX
-         itI0Q8Kr1odj5D/nJN/BpvPDndUDGVSMkPUzjR5fkCIsZ0cHYIyF0GBIi0buzkkIVTYX
-         vyMUc8KMOGVroi9h+Rt1Zocd5gnzZOxcPjMnShu3prz33cm7yAKqGlvhXPLfJHUQyMp3
-         L/RalKi4lfErm0MP9laMKgQi1WBfOL73oLxLBoIMe2Umoj52vUyX7Fb2Vn9QenyLud+5
-         JzTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dnKlsTHwnnFXazn7zzxGnzLza7yEGHj+jI4fWn0tS74=;
-        b=iV3tvBC1dV3jeoNR/aGEjrtX1IfcrmutBIRHbyiK4h676Qi7geqNU4IGGQ7/Rk81xc
-         oUAHpzsNTVl3hWV1Xjd6q40acDqCI0LOA/kPofODUss+vw5dkXNBIOX+djzhrlDFNkz+
-         tK3RQ0AkKv/npFSYG9O6/SqxUZFmPfoxolT0fCnPAnM+55Q1b9HpJu1txbdkjEuUjQHf
-         2yaVzdQQ4L9s2dAaPmWIo9KWnBg5MuNvTxpTChgbixhQgp1MFf83KAoaXXv7sEBiJhg6
-         mkqlmh/jvVCJcknZwib+v89uQ84qWtduEUAWEefWiBeXqh0JmFpaAZfRPM0wymEZm5P2
-         r6WA==
-X-Gm-Message-State: AGi0PublvgyIwp1syPYhSCTmgHVbtw+G88uLFET6PPKGPC4h4Z5JNUQq
-        KbU/iyGExz+3hyrumy5MBkg=
-X-Google-Smtp-Source: APiQypJ0HAeQTPu2DzaLtYV63srcvAmn2r4FeBJuSk32vuYutJBixLjLmYsfLjkggFKUUIZHiN62KQ==
-X-Received: by 2002:a17:90b:3017:: with SMTP id hg23mr171014pjb.150.1588628381874;
-        Mon, 04 May 2020 14:39:41 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id a12sm44947pfr.28.2020.05.04.14.39.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 14:39:41 -0700 (PDT)
-Date:   Mon, 4 May 2020 14:39:05 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ASoC: fsl_esai: introduce SoC specific data
-Message-ID: <20200504213905.GA21292@Asurada-Nvidia>
-References: <cover.1588320655.git.shengjiu.wang@nxp.com>
- <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
+        Mon, 4 May 2020 17:42:07 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LcShO131751;
+        Mon, 4 May 2020 21:41:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=yg2ZR1ipuPSiABn9nWjM+pbi+mP5eKrUqAA4rLILE2k=;
+ b=z+yEQp4fNCk3Oo3mGPuY/1oG//+vQjDgO+FsUxPf4Sg74uJm3dj4qWzWAZKGWL01XHQo
+ VnOe/9tqqjaJFk2ApAD28jOczJXmYdR6XSvDe7m414OGUUygcBTr5RYo3VjrLmkPRqPe
+ VH1AW44039ZbVvVUu3Vz+dhc3W+2j16G4u+CCgOpa213ajM4g6WoWhTZQHRbwCtFLy4j
+ LIPLOCxmFWWzSphgnPqtuTl2Yjz+2pYjeXr8WZ7DOAGLhBY+7uz/j45Mdfzc5qSogtN8
+ YO0jb1vKkpHZPEvG+X7g1CGwaepaUozRlIFvKjtfNIlV5jd4zd4V1Hw7zQRTcKZN4Zmh eA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30s1gn1b6t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 21:41:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 044LcVQP190223;
+        Mon, 4 May 2020 21:41:45 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 30sjjwxqaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 May 2020 21:41:45 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 044LfhTE032069;
+        Mon, 4 May 2020 21:41:43 GMT
+Received: from vbusired-dt (/10.39.235.150)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 May 2020 14:41:43 -0700
+Date:   Mon, 4 May 2020 16:41:42 -0500
+From:   Venu Busireddy <venu.busireddy@oracle.com>
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, srutherford@google.com,
+        rientjes@google.com, brijesh.singh@amd.com
+Subject: Re: [PATCH v7 06/18] KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+Message-ID: <20200504214142.GB1700255@vbusired-dt>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
+ <01ba3a317e54756593e54b7029e7df846c33d3e4.1588234824.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <27af074e47bf2b81e2dce67ea66a9f7301dfcb07.1588320656.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <01ba3a317e54756593e54b7029e7df846c33d3e4.1588234824.git.ashish.kalra@amd.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxscore=0 phishscore=0
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040170
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9611 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1 mlxscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005040170
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 01, 2020 at 04:12:04PM +0800, Shengjiu Wang wrote:
-> Introduce a SoC specific data structure which contains the
-> differences between the different SoCs.
-> This makes it easier to support more differences without having
-> to introduce a new if/else each time.
+On 2020-04-30 08:42:37 +0000, Ashish Kalra wrote:
+> From: Brijesh Singh <Brijesh.Singh@amd.com>
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> The command finalize the guest receiving process and make the SEV guest
+> ready for the execution.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: x86@kernel.org
+> Cc: kvm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Steve Rutherford <srutherford@google.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+>  arch/x86/kvm/svm/sev.c                        | 23 +++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
+> index 554aa33a99cc..93cd95d9a6c0 100644
+> --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> @@ -375,6 +375,14 @@ Returns: 0 on success, -negative on error
+>                  __u32 trans_len;
+>          };
+>  
+> +15. KVM_SEV_RECEIVE_FINISH
+> +------------------------
+> +
+> +After completion of the migration flow, the KVM_SEV_RECEIVE_FINISH command can be
+> +issued by the hypervisor to make the guest ready for execution.
+> +
+> +Returns: 0 on success, -negative on error
+> +
+>  References
+>  ==========
+>  
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index d5dfd0da53b9..1f9181e37ef0 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -1327,6 +1327,26 @@ static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  	return ret;
+>  }
+>  
+> +static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+> +{
+> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +	struct sev_data_receive_finish *data;
+> +	int ret;
+> +
+> +	if (!sev_guest(kvm))
+> +		return -ENOTTY;
 
-Though the 2nd patch is having comments to address, this one
-looks fine to me and should be able to merge as long as Mark
-is okay with this too:
+What is the rationale for using -ENOTTY? Is it the best return
+value? Aren't one of -ENXIO, or -ENODEV, or -EINVAL a better choice?
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->handle = sev->handle;
+> +	ret = sev_issue_cmd(kvm, SEV_CMD_RECEIVE_FINISH, data, &argp->error);
+> +
+> +	kfree(data);
+> +	return ret;
+> +}
+> +
+>  int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>  	struct kvm_sev_cmd sev_cmd;
+> @@ -1386,6 +1406,9 @@ int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  	case KVM_SEV_RECEIVE_UPDATE_DATA:
+>  		r = sev_receive_update_data(kvm, &sev_cmd);
+>  		break;
+> +	case KVM_SEV_RECEIVE_FINISH:
+> +		r = sev_receive_finish(kvm, &sev_cmd);
+> +		break;
+>  	default:
+>  		r = -EINVAL;
+>  		goto out;
+> -- 
+> 2.17.1
+> 
