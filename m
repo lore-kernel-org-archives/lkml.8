@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A8DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97188C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFD39207DD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713D62075E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615174;
-	bh=mOLq5NrFpkAPcr2xZLmslx+sAtrNrZ3gV5xcUnDSkZY=;
+	s=default; t=1588615180;
+	bh=yaSrsYE0N5KSzZ1Mxd8AqBPhY+jnZZhzXAsJHLQEezc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zs7ZavSA25o3mofy3qfjsY+sOfz6lHXcPt6jmiHOa3p8n9hj8dWN8dEs5yi4s34VF
-	 Qui7Mjp6pMMxFUrbxdAEyJW/809i8Uquy0DtSWKfUDHpEuifwFpR7CTyAWWcNqk63u
-	 Qz/ikbfljvRJPyOdu4M4a6GiOwIC0VsA8j3X75pc=
+	b=dYJmpI7VWL9B2K/4EGRSJo60Z0e/lX37uOrvliT9SULyFr/sihhLsfqpnCQ/b4d5D
+	 qwD6R7kuk1qkqUYDO5chEhYXiGqY6tcZSMjzLRb7mIUPAZ2doILsCKnhwmOMO1zVjf
+	 Vl4Ok341FW6Kyo7VKtzgz14EYv3dZRJVDlXcVEKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbgEDR7e (ORCPT
+        id S1730841AbgEDR7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 13:59:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbgEDR7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:31 -0400
+        id S1730826AbgEDR7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4E8E207DD;
-        Mon,  4 May 2020 17:59:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 917432075E;
+        Mon,  4 May 2020 17:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615170;
-        bh=mOLq5NrFpkAPcr2xZLmslx+sAtrNrZ3gV5xcUnDSkZY=;
+        s=default; t=1588615175;
+        bh=yaSrsYE0N5KSzZ1Mxd8AqBPhY+jnZZhzXAsJHLQEezc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ggeZZfHQi2PaEE8yE+Ry71MPeU2cbPmQWnprFYFGLw8e6NdB0o16edxS+W1jxEJnQ
-         AAJ+aTDLcaCR9KIA+05UMFQIkBikD7Xszgw8lq7q3x/5M64qvUn63cD7LWkg12EsMX
-         dRfCm8qYDLFoeGgp2ct1xZKm8aufBrbzPifdZzHE=
+        b=U9N+UTSkZR4nXeweAmlkdYLBcN1YVfno1bL1VoAbmL4rL9mAEg0jxOH1bhGLnz/J+
+         dSIGvqaedrafzEDSI8b3HkMp/o0xQZQOH0Mvj3dWddUjlK9GS29aP6T6o1KgkqdxNw
+         SbY16cKkQv9l/djyNESnYkv4QQGfkF/LIiCe85s8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.9 13/18] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-Date:   Mon,  4 May 2020 19:57:23 +0200
-Message-Id: <20200504165445.002707971@linuxfoundation.org>
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>
+Subject: [PATCH 4.9 02/18] drm/edid: Fix off-by-one in DispID DTD pixel clock
+Date:   Mon,  4 May 2020 19:57:12 +0200
+Message-Id: <20200504165442.510359901@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
@@ -60,39 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 upstream.
+commit 6292b8efe32e6be408af364132f09572aed14382 upstream.
 
-Currently, system fails to boot because the legacy interrupt remapping
-mode does not enable 128-bit IRTE (GA), which is required for x2APIC
-support.
+The DispID DTD pixel clock is documented as:
+"00 00 00 h → FF FF FF h | Pixel clock ÷ 10,000 0.01 → 167,772.16 Mega Pixels per Sec"
+Which seems to imply that we to add one to the raw value.
 
-Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
-kernel option amd_iommu_intr=legacy instead. The initialization
-logic will check GASup and automatically fallback to using
-AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
+Reality seems to agree as there are tiled displays in the wild
+which currently show a 10kHz difference in the pixel clock
+between the tiles (one tile gets its mode from the base EDID,
+the other from the DispID block).
 
-Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200423151743.18767-1-ville.syrjala@linux.intel.com
+Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu_init.c |    2 +-
+ drivers/gpu/drm/drm_edid.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2574,7 +2574,7 @@ static int __init parse_amd_iommu_intr(c
- {
- 	for (; *str; ++str) {
- 		if (strncmp(str, "legacy", 6) == 0) {
--			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
-+			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
- 			break;
- 		}
- 		if (strncmp(str, "vapic", 5) == 0) {
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -3970,7 +3970,7 @@ static struct drm_display_mode *drm_mode
+ 	struct drm_display_mode *mode;
+ 	unsigned pixel_clock = (timings->pixel_clock[0] |
+ 				(timings->pixel_clock[1] << 8) |
+-				(timings->pixel_clock[2] << 16));
++				(timings->pixel_clock[2] << 16)) + 1;
+ 	unsigned hactive = (timings->hactive[0] | timings->hactive[1] << 8) + 1;
+ 	unsigned hblank = (timings->hblank[0] | timings->hblank[1] << 8) + 1;
+ 	unsigned hsync = (timings->hsync[0] | (timings->hsync[1] & 0x7f) << 8) + 1;
 
 
