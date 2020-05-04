@@ -2,140 +2,314 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BCBC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13888C47254
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 127B0206F1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E604F20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 04:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mPEo91Lt"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="nkrFLCq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgEDEOd (ORCPT
+        id S1726948AbgEDEab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 00:14:33 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:14448 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgEDEOb (ORCPT
+        Mon, 4 May 2020 00:30:31 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:17992 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725859AbgEDEaa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 00:14:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1588565672; x=1620101672;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=f42SAWEpwqudHXonrKA4kH+lQCUO1YP3xrO+LV4WQhs=;
-  b=mPEo91Lt89JNo9I93heNsRvl9ZXaA5o7sxrc8J37OJfu97YXOp6XwkUQ
-   p//q2CMtPMGwMoZ5u05RO6AkVuVhEHD4e/qGF9kyeTEpYbOeijMBGQ4h9
-   VtiJf8FRSn9N++n/Mdqup3wApIHZBLpyj9K0Fy/hWy+DiC50hGoGMh02p
-   g=;
-IronPort-SDR: ZNvYprR0WaB4GObqt/IqNihXXySJzjGxi8xQL+tUwJybcIVys81ZtJ5VUOeG6urs2CuUGN/9Jv
- 653FroqRJGWQ==
-X-IronPort-AV: E=Sophos;i="5.73,350,1583193600"; 
-   d="scan'208";a="29830148"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 04 May 2020 04:14:17 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 8EAD9A2702;
-        Mon,  4 May 2020 04:14:15 +0000 (UTC)
-Received: from EX13D01UWA001.ant.amazon.com (10.43.160.60) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 4 May 2020 04:14:06 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13d01UWA001.ant.amazon.com (10.43.160.60) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 4 May 2020 04:14:05 +0000
-Received: from localhost (10.85.6.15) by mail-relay.amazon.com (10.43.61.243)
- with Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Mon, 4 May
- 2020 04:14:04 +0000
-From:   Balbir Singh <sblbir@amazon.com>
-To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
-        <keescook@chromium.org>, <benh@kernel.crashing.org>,
-        <x86@kernel.org>, <dave.hansen@intel.com>,
-        <thomas.lendacky@amd.com>, Balbir Singh <sblbir@amazon.com>
-Subject: [PATCH v5 6/6] Documentation: Add L1D flushing Documentation
-Date:   Mon, 4 May 2020 14:13:43 +1000
-Message-ID: <20200504041343.9651-7-sblbir@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504041343.9651-1-sblbir@amazon.com>
-References: <20200504041343.9651-1-sblbir@amazon.com>
+        Mon, 4 May 2020 00:30:30 -0400
+Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
+        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 0444P35e031038;
+        Mon, 4 May 2020 05:29:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=T8PDTQL0uSlwi+g83in0pi0RNtimDixDufC6d6Fagkk=;
+ b=nkrFLCq6MgTQGFk1MGdLzHoSRh6fBF2xaplidSkUxKzfTkzi7K5VN7HkqwEu1VYcZhJ9
+ UxS0PpSW66prgNfeM5Dsyq0kq6gGNg4bWVzch3H+QwY6Qz3974dCV70bH8IP9IX/PJ5s
+ HyHnsLdxJJmrayRlX/PfZaPMbTCv75lXdGrSXOqqIOYiwQN/u2naYjzFh8HUV+VmHzmB
+ TK0/edJwlPsDUIPnGHi+mVryCedmtHoIJvIgJH7OjKTWy37SG47XPFv36iE0yc+yx16F
+ qe09cn0vcbUqFUVLKyqyaZuHnJ7ImtN445uPpjN78nxUetyMh7P9GFc0moLnv6X5lCcm 5g== 
+Received: from prod-mail-ppoint3 (a72-247-45-31.deploy.static.akamaitechnologies.com [72.247.45.31] (may be forged))
+        by m0050093.ppops.net-00190b01. with ESMTP id 30s04s29db-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 05:29:24 +0100
+Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
+        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 04443GWL002815;
+        Mon, 4 May 2020 00:29:23 -0400
+Received: from prod-mail-relay15.akamai.com ([172.27.17.40])
+        by prod-mail-ppoint3.akamai.com with ESMTP id 30sqqu77my-1;
+        Mon, 04 May 2020 00:29:22 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay15.akamai.com (Postfix) with ESMTP id C88AF2309B;
+        Mon,  4 May 2020 04:29:21 +0000 (GMT)
+Subject: Re: [PATCH] epoll: ensure ep_poll() doesn't miss wakeup events
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Davidlohr Bueso <dbueso@suse.de>, stable@vger.kernel.org
+References: <1588360533-11828-1-git-send-email-jbaron@akamai.com>
+ <930c565705249d2b6264a31f1be6529e@suse.de>
+ <81612721-9448-83fa-4efe-603996d56b9a@akamai.com>
+ <f3c2e63ec34a611ec256785ebfd39270@suse.de>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <842aa331-b650-bf99-8ea9-b5d3e0866054@akamai.com>
+Date:   Mon, 4 May 2020 00:29:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <f3c2e63ec34a611ec256785ebfd39270@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-04_01:2020-05-01,2020-05-04 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2005040033
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-04_01:2020-05-01,2020-05-04 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 impostorscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 phishscore=0 mlxscore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation of l1d flushing, explain the need for the
-feature and how it can be used.
 
-Signed-off-by: Balbir Singh <sblbir@amazon.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- Documentation/admin-guide/hw-vuln/index.rst   |  1 +
- .../admin-guide/hw-vuln/l1d_flush.rst         | 40 +++++++++++++++++++
- 2 files changed, 41 insertions(+)
- create mode 100644 Documentation/admin-guide/hw-vuln/l1d_flush.rst
 
-diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
-index 0795e3c2643f..35633b299d45 100644
---- a/Documentation/admin-guide/hw-vuln/index.rst
-+++ b/Documentation/admin-guide/hw-vuln/index.rst
-@@ -14,3 +14,4 @@ are configurable at compile, boot or run time.
-    mds
-    tsx_async_abort
-    multihit.rst
-+   l1d_flush
-diff --git a/Documentation/admin-guide/hw-vuln/l1d_flush.rst b/Documentation/admin-guide/hw-vuln/l1d_flush.rst
-new file mode 100644
-index 000000000000..7d515b8c29f1
---- /dev/null
-+++ b/Documentation/admin-guide/hw-vuln/l1d_flush.rst
-@@ -0,0 +1,40 @@
-+L1D Flushing for the paranoid
-+=============================
+On 5/3/20 6:24 AM, Roman Penyaev wrote:
+> On 2020-05-02 00:09, Jason Baron wrote:
+>> On 5/1/20 5:02 PM, Roman Penyaev wrote:
+>>> Hi Jason,
+>>>
+>>> That is indeed a nice catch.
+>>> Seems we need smp_rmb() pair between list_empty_careful(&rp->rdllist) and
+>>> READ_ONCE(ep->ovflist) for ep_events_available(), do we?
+>>>
+>>
+>> Hi Roman,
+>>
+>> Good point, even if we order those reads its still racy, since the
+>> read of the ready list could come after its been cleared and the
+>> read of the overflow could again come after its been cleared.
+> 
+> You mean the second chunk? True. Sigh.
+> 
+>> So I'm afraid we might need instead something like this to make
+>> sure they are read together:
+> 
+> No, impossible, I can't believe in that :) We can't give up.
+> 
+> All we need is to keep a mark, that ep->rdllist is not empty,
+> even we've just spliced it.  ep_poll_callback() always takes
+> the ->ovflist path, if ->ovflist is not EP_UNACTIVE_PTR, but
+> ep_events_available() does not need to observe ->ovflist at
+> all, just a ->rdllist.
+> 
+> Take a look at that, do I miss something? :
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index aba03ee749f8..a8770f9a917e 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -376,8 +376,7 @@ static void ep_nested_calls_init(struct nested_calls *ncalls)
+>   */
+>  static inline int ep_events_available(struct eventpoll *ep)
+>  {
+> -       return !list_empty_careful(&ep->rdllist) ||
+> -               READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+> +       return !list_empty_careful(&ep->rdllist);
+>  }
+> 
+>  #ifdef CONFIG_NET_RX_BUSY_POLL
+> @@ -683,7 +682,8 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>  {
+>         __poll_t res;
+>         struct epitem *epi, *nepi;
+> -       LIST_HEAD(txlist);
+> +       LIST_HEAD(rdllist);
+> +       LIST_HEAD(ovflist);
+> 
+>         lockdep_assert_irqs_enabled();
+> 
+> @@ -704,14 +704,22 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>          * in a lockless way.
+>          */
+>         write_lock_irq(&ep->lock);
+> -       list_splice_init(&ep->rdllist, &txlist);
+> +       /*
+> +        * We do not call list_splice_init() because for lockless
+> +        * ep_events_available() ->rdllist is still "not empty".
+> +        * Otherwise the feature that there is something left in
+> +        * the list can be lost which causes missed wakeup.
+> +        */
+> +       list_splice(&ep->rdllist, &rdllist);
+> +       /*
+> +        * If ->rdllist was empty we should pretend it was not,
+> +        * because after the unlock ->ovflist comes into play,
+> +        * which is invisible for lockless ep_events_available().
+> +        */
+> +       ep->rdllist.next = LIST_POISON1;
+>         WRITE_ONCE(ep->ovflist, NULL);
+>         write_unlock_irq(&ep->lock);
+> 
+>         /*
+>          * Now call the callback function.
+>          */
+> -       res = (*sproc)(ep, &txlist, priv);
+> +       res = (*sproc)(ep, &rdllist, priv);
+> 
+>         write_lock_irq(&ep->lock);
+>         /*
+> @@ -724,7 +732,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>                 /*
+>                  * We need to check if the item is already in the list.
+>                  * During the "sproc" callback execution time, items are
+> -                * queued into ->ovflist but the "txlist" might already
+> +                * queued into ->ovflist but the "rdllist" might already
+>                  * contain them, and the list_splice() below takes care of them.
+>                  */
+>                 if (!ep_is_linked(epi)) {
+> @@ -732,7 +740,7 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>                          * ->ovflist is LIFO, so we have to reverse it in order
+>                          * to keep in FIFO.
+>                          */
+> -                       list_add(&epi->rdllink, &ep->rdllist);
+> +                       list_add(&epi->rdllink, &ovflist);
+>                         ep_pm_stay_awake(epi);
+>                 }
+>         }
+> @@ -743,10 +751,11 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+>          */
+>         WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+> 
+> -       /*
+> -        * Quickly re-inject items left on "txlist".
+> -        */
+> -       list_splice(&txlist, &ep->rdllist);
+> +       /* Events from ->ovflist happened later, thus splice to the tail */
+> +       list_splice_tail(&ovflist, &rdllist);
+> +       /* Just replace list */
+> +       list_replace(&rdllist, &ep->rdllist);
+> +
+>         __pm_relax(ep->ws);
+>         write_unlock_irq(&ep->lock);
+> 
+> @@ -1763,13 +1772,13 @@ static __poll_t ep_send_events_proc(struct eventpoll *ep, struct list_head *head
+>                          * Trigger mode, we need to insert back inside
+>                          * the ready list, so that the next call to
+>                          * epoll_wait() will check again the events
+> -                        * availability. At this point, no one can insert
+> -                        * into ep->rdllist besides us. The epoll_ctl()
+> -                        * callers are locked out by
+> -                        * ep_scan_ready_list() holding "mtx" and the
+> -                        * poll callback will queue them in ep->ovflist.
+> +                        * availability. What we do here is simply
+> +                        * return the epi to the same position where
+> +                        * it was, the ep_scan_ready_list() will
+> +                        * re-inject the leftovers to the ->rdllist
+> +                        * under the proper lock.
+>                          */
+> -                       list_add_tail(&epi->rdllink, &ep->rdllist);
+> +                       list_add_tail(&epi->rdllink, &tmp->rdllink);
+>                         ep_pm_stay_awake(epi);
+>                 }
+>         }
+> 
+> 
+> -- 
+> Roman
+> 
+
+
+Hi Roman,
+
+I think this misses an important case - the initial ep_poll_callback()
+may queue to the overflow list. In this case ep_poll has no visibility
+into the event since its only checking ep->rdllist.
+
+Here's a different approach using seqcount that avoids expanding ep->lock
+region.
+
+Thanks,
+
+-Jason
+
+
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -221,6 +221,8 @@ struct eventpoll {
+        struct list_head visited_list_link;
+        int visited;
+
++       seqcount_t seq;
 +
-+With an increasing number of vulnerabilities being reported around data
-+leaks from L1D, a new user space mechanism to flush the L1D cache on
-+context switch is added to the kernel. This should help address
-+CVE-2020-0550 and for paranoid applications, keep them safe from any
-+yet to be discovered vulnerabilities, related to leaks from the L1D
-+cache.
-+
-+Tasks can opt in to this mechanism by using a prctl (implemented only
-+for x86 at the moment).
-+
-+Related CVES
-+------------
-+At the present moment, the following CVEs can be addressed by this
-+mechanism
-+
-+    =============       ========================     ==================
-+    CVE-2020-0550       Improper Data Forwarding     OS related aspects
-+    =============       ========================     ==================
-+
-+Usage Guidelines
-+----------------
-+Applications can call ``prctl(2)`` with one of these two arguments
-+
-+1. PR_SET_L1D_FLUSH - flush the L1D cache on context switch (out)
-+2. PR_GET_L1D_FLUSH - get the current state of the L1D cache flush, returns 1
-+   if set and 0 if not set.
-+
-+**NOTE**: The feature is disabled by default, applications to need to specifically
-+opt into the feature to enable it.
-+
-+Mitigation
-+----------
-+When PR_SET_L1D_FLUSH is enabled for a task, on switching tasks (when
-+the address space changes), a flush of the L1D cache is performed for
-+the task when it leaves the CPU. If the underlying CPU supports L1D
-+flushing in hardware, the hardware mechanism is used, otherwise a software
-+fallback, similar to the mechanism used by L1TF is used.
--- 
-2.17.1
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+        /* used to track busy poll napi_id */
+        unsigned int napi_id;
+@@ -704,8 +706,10 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+         * in a lockless way.
+         */
+        write_lock_irq(&ep->lock);
++       write_seqcount_begin(&ep->seq);
+        list_splice_init(&ep->rdllist, &txlist);
+        WRITE_ONCE(ep->ovflist, NULL);
++       write_seqcount_end(&ep->seq);
+        write_unlock_irq(&ep->lock);
+
+        /*
+@@ -741,12 +745,14 @@ static __poll_t ep_scan_ready_list(struct eventpoll *ep,
+         * releasing the lock, events will be queued in the normal way inside
+         * ep->rdllist.
+         */
++       write_seqcount_begin(&ep->seq);
+        WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+
+        /*
+         * Quickly re-inject items left on "txlist".
+         */
+        list_splice(&txlist, &ep->rdllist);
++       write_seqcount_end(&ep->seq);
+        __pm_relax(ep->ws);
+        write_unlock_irq(&ep->lock);
+
+@@ -1025,6 +1031,7 @@ static int ep_alloc(struct eventpoll **pep)
+        ep->rbr = RB_ROOT_CACHED;
+        ep->ovflist = EP_UNACTIVE_PTR;
+        ep->user = user;
++       seqcount_init(&ep->seq);
+
+        *pep = ep;
+
+@@ -1824,6 +1831,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+        u64 slack = 0;
+        wait_queue_entry_t wait;
+        ktime_t expires, *to = NULL;
++       unsigned int seq;
+
+        lockdep_assert_irqs_enabled();
+
+@@ -1900,7 +1908,10 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+                        break;
+                }
+
+-               eavail = ep_events_available(ep);
++               do {
++                       seq = read_seqcount_begin(&ep->seq);
++                       eavail = ep_events_available(ep);
++               } while (read_seqcount_retry(&ep->seq, seq));
+                if (eavail)
+                        break;
+                if (signal_pending(current)) {
 
