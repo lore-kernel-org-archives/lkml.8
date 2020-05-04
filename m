@@ -2,415 +2,509 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750D1C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B767C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEB2206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED182073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4vsbtwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgEDUBS (ORCPT
+        id S1728008AbgEDUBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:01:18 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:49679 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDUBS (ORCPT
+        Mon, 4 May 2020 16:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726111AbgEDUBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:01:18 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B6B73C0003;
-        Mon,  4 May 2020 20:01:13 +0000 (UTC)
-Date:   Mon, 4 May 2020 22:01:13 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Mon, 4 May 2020 16:01:19 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A100C061A0E;
+        Mon,  4 May 2020 13:01:17 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l18so575637wrn.6;
+        Mon, 04 May 2020 13:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8LURFpSuPjK7UxUPzLwhwClseyW2K44cZLKIaUSIMHA=;
+        b=l4vsbtwcE5B4Wz7pnPqMff8wVwFg/nf5xeg2ecMJ7950SuI7zrVlbRDTklx8vHg5BH
+         6YnDT58GUmXJzQausIAzvb8fw1wYSQ4MHm7N2HhGwhV6BS739Wjh4qVmMCBPCJqewfTG
+         AHEeRI9RG3fvRCsc94F//kvLrV7srIGH5OSVXFgky9Rqk9A6PFVY8CPAgljqaMCC3xvL
+         HaXfY+HkS4Cq9PRV7NHjVUpfw7KQ5MOZdCbg1jv/xzPpplhEfJXNsXRESLBBAPZW3Z/o
+         RqOoNpGgdBIItCalYVvk5x65gx/sBLZD4PpP+CfLTx8t5s3yV1QJ1EpC+48lIRml7+ry
+         Ujaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8LURFpSuPjK7UxUPzLwhwClseyW2K44cZLKIaUSIMHA=;
+        b=G0FZkZxk7txkooMXtiOxoHYdCjJSYrkGZoeBCtMV2/aJx7eI25qSOVarGpfurv1oWW
+         GnaDG4f7XiY7Lsn27FQrD4BOm1HosJUw9VZegOFbpKEJFnPdEh7oZTuzTB9ElejGd+GY
+         LgTySkwjtl/UbbhfCsJUaZ6Ymi0nXje/q3HrJS/sSKjyHlR7sDNNs2k0DAKcdHt56CX3
+         q9adLssFyShNf/ujpkLuk9pffet30iRb6JE7+H78949iR7TI0jURK1G+3HW4pze1TJHH
+         o3kI31oLB/Acrf8158UgGi4kLWufQ5AmMiVUH2kEihvgZIe4VMICKPsn2OqZi89MW5+p
+         jUAg==
+X-Gm-Message-State: AGi0PuaawwYLTr3Anb9UH5ghphI1wrH82XUizCnGJo6E7cQ+Xk6mMSuj
+        Tv3JRy9gEToOTE8CQRdQwPo=
+X-Google-Smtp-Source: APiQypICUFbyPq81sU8MUd9EmZc1rwo0C9cb/xl7K6rU34u2+10xHjK6Nv4xJgz12cEGU1D21QvxHw==
+X-Received: by 2002:adf:e2c2:: with SMTP id d2mr1103270wrj.55.1588622475826;
+        Mon, 04 May 2020 13:01:15 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id s17sm739252wmc.48.2020.05.04.13.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 13:01:15 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] clk: at91: allow setting PCKx parent via DT
-Message-ID: <20200504200113.GH34497@piout.net>
-References: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
- <787d012c250cc2e9abb88a9848664336b6eb0174.1588526049.git.mirq-linux@rere.qmqm.pl>
+Subject: [v3 PATCH 1/2] drivers: drm: panel: Add ASUS TM5P5 NT35596 panel driver
+Date:   Mon,  4 May 2020 22:00:59 +0200
+Message-Id: <20200504200102.129195-2-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200504200102.129195-1-konradybcio@gmail.com>
+References: <20200504200102.129195-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <787d012c250cc2e9abb88a9848664336b6eb0174.1588526049.git.mirq-linux@rere.qmqm.pl>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2020 19:19:25+0200, Michał Mirosław wrote:
-> This exposes PROGx clocks for use in assigned-clocks DeviceTree property
-> for selecting PCKx parent clock.
-> 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+This adds support for TMP5P5 NT35596 1080x1920 video
+mode panel that can be found on some Asus Zenfone 2
+Laser (Z00T) devices.
 
-> ---
-> v2: rebase and update to clk/clk-at91 branch
-> v3: rebase
-> v4: no changes
-> ---
->  drivers/clk/at91/at91rm9200.c    |  6 ++++--
->  drivers/clk/at91/at91sam9260.c   |  5 ++++-
->  drivers/clk/at91/at91sam9g45.c   |  6 ++++--
->  drivers/clk/at91/at91sam9n12.c   |  6 ++++--
->  drivers/clk/at91/at91sam9rl.c    |  4 +++-
->  drivers/clk/at91/at91sam9x5.c    |  4 +++-
->  drivers/clk/at91/pmc.c           | 12 ++++++++++--
->  drivers/clk/at91/pmc.h           |  5 ++++-
->  drivers/clk/at91/sam9x60.c       |  4 +++-
->  drivers/clk/at91/sama5d2.c       |  4 +++-
->  drivers/clk/at91/sama5d3.c       |  6 ++++--
->  drivers/clk/at91/sama5d4.c       |  4 +++-
->  include/dt-bindings/clock/at91.h |  1 +
->  13 files changed, 50 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-> index c44a431b6c97..8da88e9a95d8 100644
-> --- a/drivers/clk/at91/at91rm9200.c
-> +++ b/drivers/clk/at91/at91rm9200.c
-> @@ -100,7 +100,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  
->  	at91rm9200_pmc = pmc_data_allocate(PMC_MAIN + 1,
->  					    nck(at91rm9200_systemck),
-> -					    nck(at91rm9200_periphck), 0);
-> +					    nck(at91rm9200_periphck), 0, 4);
->  	if (!at91rm9200_pmc)
->  		return;
->  
-> @@ -159,6 +159,8 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  						    &at91rm9200_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		at91rm9200_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(at91rm9200_systemck); i++) {
-> @@ -187,7 +189,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91rm9200_pmc);
-> +	kfree(at91rm9200_pmc);
->  }
->  /*
->   * While the TCB can be used as the clocksource, the system timer is most likely
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index 946f03a09858..7e5ff252fffc 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -354,7 +354,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  
->  	at91sam9260_pmc = pmc_data_allocate(PMC_MAIN + 1,
->  					    ndck(data->sck, data->num_sck),
-> -					    ndck(data->pck, data->num_pck), 0);
-> +					    ndck(data->pck, data->num_pck),
-> +					    0, data->num_progck);
->  	if (!at91sam9260_pmc)
->  		return;
->  
-> @@ -434,6 +435,8 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  						    &at91rm9200_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		at91sam9260_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < data->num_sck; i++) {
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index 38a7d2d2df0c..5d18eb04c218 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -117,7 +117,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  
->  	at91sam9g45_pmc = pmc_data_allocate(PMC_MAIN + 1,
->  					    nck(at91sam9g45_systemck),
-> -					    nck(at91sam9g45_periphck), 0);
-> +					    nck(at91sam9g45_periphck), 0, 2);
->  	if (!at91sam9g45_pmc)
->  		return;
->  
-> @@ -182,6 +182,8 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  						    &at91sam9g45_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		at91sam9g45_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(at91sam9g45_systemck); i++) {
-> @@ -210,7 +212,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9g45_pmc);
-> +	kfree(at91sam9g45_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-> index 8bb39d2ba84b..3a2564c2f724 100644
-> --- a/drivers/clk/at91/at91sam9n12.c
-> +++ b/drivers/clk/at91/at91sam9n12.c
-> @@ -129,7 +129,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  		return;
->  
->  	at91sam9n12_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> -					   nck(at91sam9n12_systemck), 31, 0);
-> +					   nck(at91sam9n12_systemck), 31, 0, 2);
->  	if (!at91sam9n12_pmc)
->  		return;
->  
-> @@ -198,6 +198,8 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  						    &at91sam9x5_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		at91sam9n12_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(at91sam9n12_systemck); i++) {
-> @@ -228,7 +230,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9n12_pmc);
-> +	kfree(at91sam9n12_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index cc739d214ae3..bcf07f6a0e0e 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -89,7 +89,7 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  
->  	at91sam9rl_pmc = pmc_data_allocate(PMC_MAIN + 1,
->  					   nck(at91sam9rl_systemck),
-> -					   nck(at91sam9rl_periphck), 0);
-> +					   nck(at91sam9rl_periphck), 0, 2);
->  	if (!at91sam9rl_pmc)
->  		return;
->  
-> @@ -138,6 +138,8 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  						    &at91rm9200_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		at91sam9rl_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(at91sam9rl_systemck); i++) {
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index aac99d699568..f13756b407e2 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -151,7 +151,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  		return;
->  
->  	at91sam9x5_pmc = pmc_data_allocate(PMC_MAIN + 1,
-> -					   nck(at91sam9x5_systemck), 31, 0);
-> +					   nck(at91sam9x5_systemck), 31, 0, 2);
->  	if (!at91sam9x5_pmc)
->  		return;
->  
-> @@ -227,6 +227,8 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  						    &at91sam9x5_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		at91sam9x5_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(at91sam9x5_systemck); i++) {
-> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-> index ac46ea1b9fda..8a1577e2c2fd 100644
-> --- a/drivers/clk/at91/pmc.c
-> +++ b/drivers/clk/at91/pmc.c
-> @@ -67,6 +67,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
->  		if (idx < pmc_data->ngck)
->  			return pmc_data->ghws[idx];
->  		break;
-> +	case PMC_TYPE_PROGRAMMABLE:
-> +		if (idx < pmc_data->npck)
-> +			return pmc_data->pchws[idx];
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -77,9 +81,10 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
->  }
->  
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
-> -				   unsigned int nperiph, unsigned int ngck)
-> +				   unsigned int nperiph, unsigned int ngck,
-> +				   unsigned int npck)
->  {
-> -	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
-> +	unsigned int num_clks = ncore + nsystem + nperiph + ngck + npck;
->  	struct pmc_data *pmc_data;
->  
->  	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
-> @@ -99,6 +104,9 @@ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
->  	pmc_data->ngck = ngck;
->  	pmc_data->ghws = pmc_data->phws + nperiph;
->  
-> +	pmc_data->npck = npck;
-> +	pmc_data->pchws = pmc_data->ghws + ngck;
-> +
->  	return pmc_data;
->  }
->  
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index fc3ef772b9d9..df616f2937e7 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -24,6 +24,8 @@ struct pmc_data {
->  	struct clk_hw **phws;
->  	unsigned int ngck;
->  	struct clk_hw **ghws;
-> +	unsigned int npck;
-> +	struct clk_hw **pchws;
->  
->  	struct clk_hw *hwtable[];
->  };
-> @@ -96,7 +98,8 @@ struct clk_pcr_layout {
->  #define ndck(a, s) (a[s - 1].id + 1)
->  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
-> -				   unsigned int nperiph, unsigned int ngck);
-> +				   unsigned int nperiph, unsigned int ngck,
-> +				   unsigned int npck);
->  
->  int of_at91_get_clk_range(struct device_node *np, const char *propname,
->  			  struct clk_range *range);
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index a7d4f648db26..db14e0427c7f 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -185,7 +185,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	sam9x60_pmc = pmc_data_allocate(PMC_MAIN + 1,
->  					nck(sam9x60_systemck),
->  					nck(sam9x60_periphck),
-> -					nck(sam9x60_gck));
-> +					nck(sam9x60_gck), 8);
->  	if (!sam9x60_pmc)
->  		return;
->  
-> @@ -255,6 +255,8 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  						    &sam9x60_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		sam9x60_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(sam9x60_systemck); i++) {
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index b2560670e5af..ae5e83cadb3d 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -169,7 +169,7 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	sama5d2_pmc = pmc_data_allocate(PMC_I2S1_MUX + 1,
->  					nck(sama5d2_systemck),
->  					nck(sama5d2_periph32ck),
-> -					nck(sama5d2_gck));
-> +					nck(sama5d2_gck), 3);
->  	if (!sama5d2_pmc)
->  		return;
->  
-> @@ -267,6 +267,8 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  						    &sama5d2_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		sama5d2_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(sama5d2_systemck); i++) {
-> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-> index 88506f909c08..507eef6797f1 100644
-> --- a/drivers/clk/at91/sama5d3.c
-> +++ b/drivers/clk/at91/sama5d3.c
-> @@ -127,7 +127,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  
->  	sama5d3_pmc = pmc_data_allocate(PMC_MAIN + 1,
->  					nck(sama5d3_systemck),
-> -					nck(sama5d3_periphck), 0);
-> +					nck(sama5d3_periphck), 0, 3);
->  	if (!sama5d3_pmc)
->  		return;
->  
-> @@ -201,6 +201,8 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  						    &at91sam9x5_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		sama5d3_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(sama5d3_systemck); i++) {
-> @@ -231,7 +233,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d3_pmc);
-> +	kfree(sama5d3_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index 4ca9a4619500..80692902b4e4 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -142,7 +142,7 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  
->  	sama5d4_pmc = pmc_data_allocate(PMC_MCK2 + 1,
->  					nck(sama5d4_systemck),
-> -					nck(sama5d4_periph32ck), 0);
-> +					nck(sama5d4_periph32ck), 0, 3);
->  	if (!sama5d4_pmc)
->  		return;
->  
-> @@ -224,6 +224,8 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  						    &at91sam9x5_programmable_layout);
->  		if (IS_ERR(hw))
->  			goto err_free;
-> +
-> +		sama5d4_pmc->pchws[i] = hw;
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(sama5d4_systemck); i++) {
-> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
-> index 38b5554153c8..c3f4aa6a2d29 100644
-> --- a/include/dt-bindings/clock/at91.h
-> +++ b/include/dt-bindings/clock/at91.h
-> @@ -12,6 +12,7 @@
->  #define PMC_TYPE_SYSTEM		1
->  #define PMC_TYPE_PERIPHERAL	2
->  #define PMC_TYPE_GCK		3
-> +#define PMC_TYPE_PROGRAMMABLE	4
->  
->  #define PMC_SLOW		0
->  #define PMC_MCK			1
-> -- 
-> 2.20.1
-> 
+This panel seems to only be found in this device
+and we have no straightforward way of actually
+getting the correct model number, as no schematics
+are released publicly.
 
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ drivers/gpu/drm/panel/Kconfig                 |  10 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 367 ++++++++++++++++++
+ 3 files changed, 378 insertions(+)
+ create mode 100644 drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
+
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index a1723c1b5fbf8..ad896a877d49f 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -18,6 +18,16 @@ config DRM_PANEL_ARM_VERSATILE
+ 	  reference designs. The panel is detected using special registers
+ 	  in the Versatile family syscon registers.
+ 
++config DRM_PANEL_ASUS_Z00T_TM5P5_NT35596
++	tristate "ASUS Z00T TM5P5 NT35596 panel"
++	depends on GPIOLIB && OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y here if you want to enable support for the ASUS TMP5P5
++	  NT35596 1080x1920 video mode panel as found in some Asus
++	  Zenfone 2 Laser Z00T devices.
++
+ config DRM_PANEL_BOE_HIMAX8279D
+ 	tristate "Boe Himax8279d panel"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index 96a883cd66305..3efc1de93aeeb 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
++obj-$(CONFIG_DRM_PANEL_ASUS_Z00T_TM5P5_NT35596) += panel-asus-z00t-tm5p5-n35596.o
+ obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
+ obj-$(CONFIG_DRM_PANEL_BOE_TV101WUM_NL6) += panel-boe-tv101wum-nl6.o
+ obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
+diff --git a/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c b/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
+new file mode 100644
+index 0000000000000..ec5599685a4c2
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
+@@ -0,0 +1,367 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/backlight.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regulator/consumer.h>
++
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_modes.h>
++#include <drm/drm_panel.h>
++
++struct tm5p5_nt35596 {
++	struct drm_panel panel;
++	struct mipi_dsi_device *dsi;
++	struct regulator_bulk_data supplies[2];
++	struct gpio_desc *reset_gpio;
++	bool prepared;
++};
++
++static inline struct tm5p5_nt35596 *to_tm5p5_nt35596(struct drm_panel *panel)
++{
++	return container_of(panel, struct tm5p5_nt35596, panel);
++}
++
++#define dsi_generic_write_seq(dsi, seq...) do {				\
++		static const u8 d[] = { seq };				\
++		int ret;						\
++		ret = mipi_dsi_generic_write(dsi, d, ARRAY_SIZE(d));	\
++		if (ret < 0)						\
++			return ret;					\
++	} while (0)
++
++#define dsi_dcs_write_seq(dsi, seq...) do {				\
++		static const u8 d[] = { seq };				\
++		int ret;						\
++		ret = mipi_dsi_dcs_write_buffer(dsi, d, ARRAY_SIZE(d));	\
++		if (ret < 0)						\
++			return ret;					\
++	} while (0)
++
++static void tm5p5_nt35596_reset(struct tm5p5_nt35596 *ctx)
++{
++	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
++	usleep_range(1000, 2000);
++	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
++	usleep_range(1000, 2000);
++	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
++	usleep_range(15000, 16000);
++}
++
++static int tm5p5_nt35596_on(struct tm5p5_nt35596 *ctx)
++{
++	struct mipi_dsi_device *dsi = ctx->dsi;
++
++	dsi_generic_write_seq(dsi, 0xff, 0x05);
++	dsi_generic_write_seq(dsi, 0xfb, 0x01);
++	dsi_generic_write_seq(dsi, 0xc5, 0x31);
++	dsi_generic_write_seq(dsi, 0xff, 0x04);
++	dsi_generic_write_seq(dsi, 0x01, 0x84);
++	dsi_generic_write_seq(dsi, 0x05, 0x25);
++	dsi_generic_write_seq(dsi, 0x06, 0x01);
++	dsi_generic_write_seq(dsi, 0x07, 0x20);
++	dsi_generic_write_seq(dsi, 0x08, 0x06);
++	dsi_generic_write_seq(dsi, 0x09, 0x08);
++	dsi_generic_write_seq(dsi, 0x0a, 0x10);
++	dsi_generic_write_seq(dsi, 0x0b, 0x10);
++	dsi_generic_write_seq(dsi, 0x0c, 0x10);
++	dsi_generic_write_seq(dsi, 0x0d, 0x14);
++	dsi_generic_write_seq(dsi, 0x0e, 0x14);
++	dsi_generic_write_seq(dsi, 0x0f, 0x14);
++	dsi_generic_write_seq(dsi, 0x10, 0x14);
++	dsi_generic_write_seq(dsi, 0x11, 0x14);
++	dsi_generic_write_seq(dsi, 0x12, 0x14);
++	dsi_generic_write_seq(dsi, 0x17, 0xf3);
++	dsi_generic_write_seq(dsi, 0x18, 0xc0);
++	dsi_generic_write_seq(dsi, 0x19, 0xc0);
++	dsi_generic_write_seq(dsi, 0x1a, 0xc0);
++	dsi_generic_write_seq(dsi, 0x1b, 0xb3);
++	dsi_generic_write_seq(dsi, 0x1c, 0xb3);
++	dsi_generic_write_seq(dsi, 0x1d, 0xb3);
++	dsi_generic_write_seq(dsi, 0x1e, 0xb3);
++	dsi_generic_write_seq(dsi, 0x1f, 0xb3);
++	dsi_generic_write_seq(dsi, 0x20, 0xb3);
++	dsi_generic_write_seq(dsi, 0xfb, 0x01);
++	dsi_generic_write_seq(dsi, 0xff, 0x00);
++	dsi_generic_write_seq(dsi, 0xfb, 0x01);
++	dsi_generic_write_seq(dsi, 0x35, 0x01);
++	dsi_generic_write_seq(dsi, 0xd3, 0x06);
++	dsi_generic_write_seq(dsi, 0xd4, 0x04);
++	dsi_generic_write_seq(dsi, 0x5e, 0x0d);
++	dsi_generic_write_seq(dsi, 0x11, 0x00);
++	msleep(100);
++	dsi_generic_write_seq(dsi, 0x29, 0x00);
++	dsi_generic_write_seq(dsi, 0x53, 0x24);
++
++	return 0;
++}
++
++static int tm5p5_nt35596_off(struct tm5p5_nt35596 *ctx)
++{
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	struct device *dev = &dsi->dev;
++	int ret;
++
++	ret = mipi_dsi_dcs_set_display_off(dsi);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set display off: %d\n", ret);
++		return ret;
++	}
++	msleep(60);
++
++	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
++	if (ret < 0) {
++		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
++		return ret;
++	}
++
++	dsi_dcs_write_seq(dsi, 0x4f, 0x01);
++
++	return 0;
++}
++
++static int tm5p5_nt35596_prepare(struct drm_panel *panel)
++{
++	struct tm5p5_nt35596 *ctx = to_tm5p5_nt35596(panel);
++	struct device *dev = &ctx->dsi->dev;
++	int ret;
++
++	if (ctx->prepared)
++		return 0;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
++	if (ret < 0) {
++		dev_err(dev, "Failed to enable regulators: %d\n", ret);
++		return ret;
++	}
++
++	tm5p5_nt35596_reset(ctx);
++
++	ret = tm5p5_nt35596_on(ctx);
++	if (ret < 0) {
++		dev_err(dev, "Failed to initialize panel: %d\n", ret);
++		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
++		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
++			ctx->supplies);
++		return ret;
++	}
++
++	ctx->prepared = true;
++	return 0;
++}
++
++static int tm5p5_nt35596_unprepare(struct drm_panel *panel)
++{
++	struct tm5p5_nt35596 *ctx = to_tm5p5_nt35596(panel);
++	struct device *dev = &ctx->dsi->dev;
++	int ret;
++
++	if (!ctx->prepared)
++		return 0;
++
++	ret = tm5p5_nt35596_off(ctx);
++	if (ret < 0)
++		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
++
++	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
++	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies),
++		ctx->supplies);
++
++	ctx->prepared = false;
++	return 0;
++}
++
++static const struct drm_display_mode tm5p5_nt35596_mode = {
++	.clock = (1080 + 100 + 8 + 16) * (1920 + 4 + 2 + 4) * 60 / 1000,
++	.hdisplay = 1080,
++	.hsync_start = 1080 + 100,
++	.hsync_end = 1080 + 100 + 8,
++	.htotal = 1080 + 100 + 8 + 16,
++	.vdisplay = 1920,
++	.vsync_start = 1920 + 4,
++	.vsync_end = 1920 + 4 + 2,
++	.vtotal = 1920 + 4 + 2 + 4,
++	.vrefresh = 60,
++	.width_mm = 68,
++	.height_mm = 121,
++};
++
++static int tm5p5_nt35596_get_modes(struct drm_panel *panel,
++				   struct drm_connector *connector)
++{
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_duplicate(connector->dev, &tm5p5_nt35596_mode);
++	if (!mode)
++		return -ENOMEM;
++
++	drm_mode_set_name(mode);
++
++	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	connector->display_info.width_mm = mode->width_mm;
++	connector->display_info.height_mm = mode->height_mm;
++	drm_mode_probed_add(connector, mode);
++
++	return 1;
++}
++
++static const struct drm_panel_funcs tm5p5_nt35596_panel_funcs = {
++	.prepare = tm5p5_nt35596_prepare,
++	.unprepare = tm5p5_nt35596_unprepare,
++	.get_modes = tm5p5_nt35596_get_modes,
++};
++
++static int tm5p5_nt35596_bl_update_status(struct backlight_device *bl)
++{
++	struct mipi_dsi_device *dsi = bl_get_data(bl);
++	u16 brightness = bl->props.brightness;
++	int ret;
++
++	if (bl->props.power != FB_BLANK_UNBLANK ||
++	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
++	    bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
++		brightness = 0;
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
++
++	ret = mipi_dsi_dcs_set_display_brightness(dsi, brightness);
++	if (ret < 0)
++		return ret;
++
++	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
++
++	return 0;
++}
++
++static int tm5p5_nt35596_bl_get_brightness(struct backlight_device *bl)
++{
++	struct mipi_dsi_device *dsi = bl_get_data(bl);
++	u16 brightness = bl->props.brightness;
++	int ret;
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
++
++	ret = mipi_dsi_dcs_get_display_brightness(dsi, &brightness);
++	if (ret < 0)
++		return ret;
++
++	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
++
++	return brightness & 0xff;
++}
++
++static const struct backlight_ops tm5p5_nt35596_bl_ops = {
++	.update_status = tm5p5_nt35596_bl_update_status,
++	.get_brightness = tm5p5_nt35596_bl_get_brightness,
++};
++
++static struct backlight_device *
++tm5p5_nt35596_create_backlight(struct mipi_dsi_device *dsi)
++{
++	struct device *dev = &dsi->dev;
++	const struct backlight_properties props = {
++		.type = BACKLIGHT_RAW,
++		.brightness = 255,
++		.max_brightness = 255,
++	};
++
++	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
++					      &tm5p5_nt35596_bl_ops, &props);
++}
++
++static int tm5p5_nt35596_probe(struct mipi_dsi_device *dsi)
++{
++	struct device *dev = &dsi->dev;
++	struct tm5p5_nt35596 *ctx;
++	int ret;
++
++	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->supplies[0].supply = "vdd";
++	ctx->supplies[1].supply = "vddio";
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
++				      ctx->supplies);
++	if (ret < 0) {
++		dev_err(dev, "Failed to get regulators: %d\n", ret);
++		return ret;
++	}
++
++	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(ctx->reset_gpio)) {
++		ret = PTR_ERR(ctx->reset_gpio);
++		dev_err(dev, "Failed to get reset-gpios: %d\n", ret);
++		return ret;
++	}
++
++	ctx->dsi = dsi;
++	mipi_dsi_set_drvdata(dsi, ctx);
++
++	dsi->lanes = 4;
++	dsi->format = MIPI_DSI_FMT_RGB888;
++	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
++			  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_EOT_PACKET |
++			  MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM;
++
++	drm_panel_init(&ctx->panel, dev, &tm5p5_nt35596_panel_funcs,
++		       DRM_MODE_CONNECTOR_DSI);
++
++	ctx->panel.backlight = tm5p5_nt35596_create_backlight(dsi);
++	if (IS_ERR(ctx->panel.backlight)) {
++		ret = PTR_ERR(ctx->panel.backlight);
++		dev_err(dev, "Failed to create backlight: %d\n", ret);
++		return ret;
++	}
++
++	ret = drm_panel_add(&ctx->panel);
++	if (ret < 0) {
++		dev_err(dev, "Failed to add panel: %d\n", ret);
++		return ret;
++	}
++
++	ret = mipi_dsi_attach(dsi);
++	if (ret < 0) {
++		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int tm5p5_nt35596_remove(struct mipi_dsi_device *dsi)
++{
++	struct tm5p5_nt35596 *ctx = mipi_dsi_get_drvdata(dsi);
++	int ret;
++
++	ret = mipi_dsi_detach(dsi);
++	if (ret < 0)
++		dev_err(&dsi->dev,
++		 "Failed to detach from DSI host: %d\n", ret);
++
++	drm_panel_remove(&ctx->panel);
++
++	return 0;
++}
++
++static const struct of_device_id tm5p5_nt35596_of_match[] = {
++	{ .compatible = "asus,z00t-tm5p5-n35596" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, tm5p5_nt35596_of_match);
++
++static struct mipi_dsi_driver tm5p5_nt35596_driver = {
++	.probe = tm5p5_nt35596_probe,
++	.remove = tm5p5_nt35596_remove,
++	.driver = {
++		.name = "panel-tm5p5-nt35596",
++		.of_match_table = tm5p5_nt35596_of_match,
++	},
++};
++module_mipi_dsi_driver(tm5p5_nt35596_driver);
++
++MODULE_AUTHOR("Konrad Dybcio <konradybcio@gmail.com>");
++MODULE_DESCRIPTION("DRM driver for tm5p5 nt35596 1080p video mode dsi panel");
++MODULE_LICENSE("GPL v2");
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.26.1
+
