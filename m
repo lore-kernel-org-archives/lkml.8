@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDD4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD05C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6024420707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1BA20707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615320;
-	bh=W6dS0v1cYhrT4LEbt0fg78g3V09ZN/LUD+MoQ0FGmz8=;
+	s=default; t=1588615322;
+	bh=JYjLPEV0PIWOMU14g2yyUsIEW37yUb40bbRv0A4nGiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2OYRuQPcIfIJ6BOj9C3OfVh+H3GnPd5lhBe932UElvGc+KH57X/tntFF3wG55adVw
-	 UkL3Mku9WvXtnZiUuTRWW6JOYmsCSgF1o07MTr8aFvjhZsIVGMogisG7CbuNV7nqcZ
-	 pAzjmRxa49hNx24NEOjqUSnQ0oBtOxk/hA+r/bzU=
+	b=gDtIEHpYaMRdPyf1NEbWJQNM1MezVap/Ewk91wdNS2wEBrDJHqnHlMBbUpgUPw64a
+	 WYGV6rBGDvBdKk2HN7ZqUjmRt48v/uZanO305bSqGZj3DleN7lFeFOLMnGMjnA3YdE
+	 N1u7fx3g7h1d0g5eNhxYZG0IP78GbjNRk+hnDH4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbgEDSB7 (ORCPT
+        id S1731265AbgEDSCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731239AbgEDSBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:54 -0400
+        id S1731257AbgEDSB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7332320707;
-        Mon,  4 May 2020 18:01:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4859220707;
+        Mon,  4 May 2020 18:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615313;
-        bh=W6dS0v1cYhrT4LEbt0fg78g3V09ZN/LUD+MoQ0FGmz8=;
+        s=default; t=1588615318;
+        bh=JYjLPEV0PIWOMU14g2yyUsIEW37yUb40bbRv0A4nGiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qnNxWjEv53IiwEaWKE6s2f2HDgmjhp+NvUK9e+3PpsSHl8sPnhjkDgl9dxt6YhTa2
-         hJXOf6vEkIScD7y2eV+qGBmDFu8oNjxrtn69aJMHSDHUSUzWLCG6b+6tN7uKoQ4/Fq
-         OU/7EtOQ8rSG7eHmXxFYWiZ6C/wjL//3D7duNvok=
+        b=NsFRpkfJRP/OINUEHH7yzgNSZH7wjTvk9dDXlBHR86cCRdhwSsmCHbqIc6rwzDMLh
+         O5AFxg8ttm25ixw85BBZlF3yotyvWX89O1v3Ebb9PF1NfU5wEDedi3NGYQZjK12Dwa
+         ykorX3ADg1aR0DJMimgUf+GCfTY/uqY2YVwL0wuo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 26/37] ALSA: opti9xx: shut up gcc-10 range warning
-Date:   Mon,  4 May 2020 19:57:39 +0200
-Message-Id: <20200504165451.102084517@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.19 28/37] dmaengine: dmatest: Fix iteration non-stop logic
+Date:   Mon,  4 May 2020 19:57:41 +0200
+Message-Id: <20200504165451.307643203@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,84 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 5ce00760a84848d008554c693ceb6286f4d9c509 upstream.
+commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
 
-gcc-10 points out a few instances of suspicious integer arithmetic
-leading to value truncation:
+Under some circumstances, i.e. when test is still running and about to
+time out and user runs, for example,
 
-sound/isa/opti9xx/opti92x-ad1848.c: In function 'snd_opti9xx_configure':
-sound/isa/opti9xx/opti92x-ad1848.c:322:43: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_opti9xx_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
-  322 |   (snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-sound/isa/opti9xx/opti92x-ad1848.c:351:3: note: in expansion of macro 'snd_opti9xx_write_mask'
-  351 |   snd_opti9xx_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
-      |   ^~~~~~~~~~~~~~~~~~~~~~
-sound/isa/opti9xx/miro.c: In function 'snd_miro_configure':
-sound/isa/opti9xx/miro.c:873:40: error: overflow in conversion from 'int' to 'unsigned char' changes value from '(int)snd_miro_read(chip, 3) & -256 | 240' to '240' [-Werror=overflow]
-  873 |   (snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-sound/isa/opti9xx/miro.c:1010:3: note: in expansion of macro 'snd_miro_write_mask'
- 1010 |   snd_miro_write_mask(chip, OPTi9XX_MC_REG(3), 0xf0, 0xff);
-      |   ^~~~~~~~~~~~~~~~~~~
+	grep -H . /sys/module/dmatest/parameters/*
 
-These are all harmless here as only the low 8 bit are passed down
-anyway. Change the macros to inline functions to make the code
-more readable and also avoid the warning.
+the iterations parameter is not respected and test is going on and on until
+user gives
 
-Strictly speaking those functions also need locking to make the
-read/write pair atomic, but it seems unlikely that anyone would
-still run into that issue.
+	echo 0 > /sys/module/dmatest/parameters/run
 
-Fixes: 1841f613fd2e ("[ALSA] Add snd-miro driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200429190216.85919-1-arnd@arndb.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This is not what expected.
+
+The history of this bug is interesting. I though that the commit
+  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+is a culprit, but looking closer to the code I think it simple revealed the
+broken logic from the day one, i.e. in the commit
+  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
+which adds iterations parameter.
+
+So, to the point, the conditional of checking the thread to be stopped being
+first part of conjunction logic prevents to check iterations. Thus, we have to
+always check both conditions to be able to stop after given iterations.
+
+Since it wasn't visible before second commit appeared, I add a respective
+Fixes tag.
+
+Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/isa/opti9xx/miro.c           |    9 ++++++---
- sound/isa/opti9xx/opti92x-ad1848.c |    9 ++++++---
- 2 files changed, 12 insertions(+), 6 deletions(-)
+ drivers/dma/dmatest.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/isa/opti9xx/miro.c
-+++ b/sound/isa/opti9xx/miro.c
-@@ -880,10 +880,13 @@ static void snd_miro_write(struct snd_mi
- 	spin_unlock_irqrestore(&chip->lock, flags);
- }
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -567,8 +567,8 @@ static int dmatest_func(void *data)
+ 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
  
-+static inline void snd_miro_write_mask(struct snd_miro *chip,
-+		unsigned char reg, unsigned char value, unsigned char mask)
-+{
-+	unsigned char oldval = snd_miro_read(chip, reg);
- 
--#define snd_miro_write_mask(chip, reg, value, mask)	\
--	snd_miro_write(chip, reg,			\
--		(snd_miro_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-+	snd_miro_write(chip, reg, (oldval & ~mask) | (value & mask));
-+}
- 
- /*
-  *  Proc Interface
---- a/sound/isa/opti9xx/opti92x-ad1848.c
-+++ b/sound/isa/opti9xx/opti92x-ad1848.c
-@@ -329,10 +329,13 @@ static void snd_opti9xx_write(struct snd
- }
- 
- 
--#define snd_opti9xx_write_mask(chip, reg, value, mask)	\
--	snd_opti9xx_write(chip, reg,			\
--		(snd_opti9xx_read(chip, reg) & ~(mask)) | ((value) & (mask)))
-+static inline void snd_opti9xx_write_mask(struct snd_opti9xx *chip,
-+		unsigned char reg, unsigned char value, unsigned char mask)
-+{
-+	unsigned char oldval = snd_opti9xx_read(chip, reg);
- 
-+	snd_opti9xx_write(chip, reg, (oldval & ~mask) | (value & mask));
-+}
- 
- static int snd_opti9xx_configure(struct snd_opti9xx *chip,
- 					   long port,
+ 	ktime = ktime_get();
+-	while (!kthread_should_stop()
+-	       && !(params->iterations && total_tests >= params->iterations)) {
++	while (!(kthread_should_stop() ||
++	       (params->iterations && total_tests >= params->iterations))) {
+ 		struct dma_async_tx_descriptor *tx = NULL;
+ 		struct dmaengine_unmap_data *um;
+ 		dma_addr_t *dsts;
 
 
