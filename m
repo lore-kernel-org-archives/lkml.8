@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5A9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD771C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E30DC20752
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EB72073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgEDLdT (ORCPT
+        id S1728641AbgEDLdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:33:19 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55348 "EHLO huawei.com"
+        Mon, 4 May 2020 07:33:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56594 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726445AbgEDLdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:33:18 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 387597363C817F9ED181;
-        Mon,  4 May 2020 19:33:16 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
- 19:33:07 +0800
+        id S1726445AbgEDLdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:33:39 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 85D99CE2747AD275C5FC;
+        Mon,  4 May 2020 19:33:36 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
+ 19:33:28 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <shawnguo@kernel.org>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+To:     <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] drm/zte: remove unneeded semicolon
-Date:   Mon, 4 May 2020 19:32:30 +0800
-Message-ID: <20200504113230.40588-1-yanaijie@huawei.com>
+Subject: [PATCH] staging: rtl8723bs: remove conversion to bool in halbtcoutsrc_Get()
+Date:   Mon, 4 May 2020 19:32:51 +0800
+Message-ID: <20200504113251.40791-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,46 +45,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fix the following coccicheck warning:
 
-drivers/gpu/drm/zte/zx_vga.c:158:2-3: Unneeded semicolon
-drivers/gpu/drm/zte/zx_vga.c:171:2-3: Unneeded semicolon
-drivers/gpu/drm/zte/zx_vga.c:179:2-3: Unneeded semicolon
+drivers/staging/rtl8723bs/hal/hal_btcoex.c:410:59-64: WARNING:
+conversion to bool not needed here
 
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/gpu/drm/zte/zx_vga.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8723bs/hal/hal_btcoex.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/zte/zx_vga.c b/drivers/gpu/drm/zte/zx_vga.c
-index a7ed7f5ca837..0f9bbb7e3b8d 100644
---- a/drivers/gpu/drm/zte/zx_vga.c
-+++ b/drivers/gpu/drm/zte/zx_vga.c
-@@ -155,7 +155,7 @@ static int zx_vga_register(struct drm_device *drm, struct zx_vga *vga)
- 	if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to init encoder: %d\n", ret);
- 		return ret;
--	};
-+	}
+diff --git a/drivers/staging/rtl8723bs/hal/hal_btcoex.c b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
+index a6ed1bb9945e..3705a60a0546 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_btcoex.c
++++ b/drivers/staging/rtl8723bs/hal/hal_btcoex.c
+@@ -407,7 +407,7 @@ static u8 halbtcoutsrc_Get(void *pBtcContext, u8 getType, void *pOutBuf)
+ 		break;
  
- 	drm_encoder_helper_add(encoder, &zx_vga_encoder_helper_funcs);
+ 	case BTC_GET_BL_WIFI_ENABLE_ENCRYPTION:
+-		*pu8 = padapter->securitypriv.dot11PrivacyAlgrthm == 0 ? false : true;
++		*pu8 = padapter->securitypriv.dot11PrivacyAlgrthm != 0;
+ 		break;
  
-@@ -168,7 +168,7 @@ static int zx_vga_register(struct drm_device *drm, struct zx_vga *vga)
- 	if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to init connector: %d\n", ret);
- 		goto clean_encoder;
--	};
-+	}
- 
- 	drm_connector_helper_add(connector, &zx_vga_connector_helper_funcs);
- 
-@@ -176,7 +176,7 @@ static int zx_vga_register(struct drm_device *drm, struct zx_vga *vga)
- 	if (ret) {
- 		DRM_DEV_ERROR(dev, "failed to attach encoder: %d\n", ret);
- 		goto clean_connector;
--	};
-+	}
- 
- 	return 0;
- 
+ 	case BTC_GET_BL_WIFI_UNDER_B_MODE:
 -- 
 2.21.1
 
