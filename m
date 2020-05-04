@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28949C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F00C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAC62073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42C3206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615276;
-	bh=KM+5ik6RLQBZbsV7DlMlXyXPAZX07Hbs70ZHx00bSTg=;
+	s=default; t=1588615281;
+	bh=UGGbM2hQYyJn/Vg6Sovij8kw+FeIOPufGCrPLGKnL/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gjq6KSO366DaryDukXNAFr1R9ubbnep830rS79VL0uMqFoshq+12xmNbIr/d4/oXT
-	 7p4gO7Iccl8ZOgfZy0NPk/R13cQYSDEA+j1dhxTZnTkwcrG9kQMt6YC8PP/OZqMCbn
-	 Gjh+zlLPC9uRlBS+tvhfIldFofjo4Ry/tKdCwtQ4=
+	b=FIzzx00i1x+uh4m+NiqfbTf/ux6kmwftimU6RQuVpMP8Rykh3UjIpYaxNE8BPJyly
+	 rcJ5Y4DHasKOszhhfaXuEct+KD8Th56vxzKfCtFYzwEMME3wFCYvzuk7KGtrLdNQcL
+	 308exf2h5k7w/ESrsXVEH/9r1hZjuvfW/onDsTao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbgEDSBO (ORCPT
+        id S1730587AbgEDSBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56318 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731110AbgEDSBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:06 -0400
+        id S1731110AbgEDSBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A716206B8;
-        Mon,  4 May 2020 18:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D28206B8;
+        Mon,  4 May 2020 18:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615265;
-        bh=KM+5ik6RLQBZbsV7DlMlXyXPAZX07Hbs70ZHx00bSTg=;
+        s=default; t=1588615275;
+        bh=UGGbM2hQYyJn/Vg6Sovij8kw+FeIOPufGCrPLGKnL/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0yF1WF3J8AKFoNAg5vH4GpuQAHG4fcPq2RiQ0JbvQvTKWwe2dz+kVjYhaLXr6Yrj
-         tqRlZ9Qh1apafm6je4emYe1mxBEvdq8Pm/E9/yF3/dFaHDJm4qkQpT2PfXybbmOPbb
-         xlvntyBNZHt3tEKAyDNSFaRlrHVLcYl1RfCwNYUk=
+        b=kHUO98cTzHzP7TYWpFoN6Zw+9Yfxr3nf2M0jp5jmKxY+XJe38rU6SpdW04xTxoM/x
+         aQBpKz3QRFC7yL+XLui8MWw0R5BQ9CwM8GDwV3ZABzUCha0ktHgcEmrTy8fFWfXgnX
+         C8KQfaiOzXrIaFHn/QShd7j2lSeQii0WpYT/3yJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 25/26] dmaengine: dmatest: Fix iteration non-stop logic
-Date:   Mon,  4 May 2020 19:57:39 +0200
-Message-Id: <20200504165447.975455737@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 10/37] PM: ACPI: Output correct message on target power state
+Date:   Mon,  4 May 2020 19:57:23 +0200
+Message-Id: <20200504165449.690035547@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165442.494398840@linuxfoundation.org>
-References: <20200504165442.494398840@linuxfoundation.org>
+In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
+References: <20200504165448.264746645@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,61 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit b9f960201249f20deea586b4ec814669b4c6b1c0 upstream.
+commit a9b760b0266f563b4784f695bbd0e717610dc10a upstream.
 
-Under some circumstances, i.e. when test is still running and about to
-time out and user runs, for example,
+Transitioned power state logged at the end of setting ACPI power.
 
-	grep -H . /sys/module/dmatest/parameters/*
+However, D3cold won't be in the message because state can only be
+D3hot at most.
 
-the iterations parameter is not respected and test is going on and on until
-user gives
+Use target_state to corretly report when power state is D3cold.
 
-	echo 0 > /sys/module/dmatest/parameters/run
-
-This is not what expected.
-
-The history of this bug is interesting. I though that the commit
-  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-is a culprit, but looking closer to the code I think it simple revealed the
-broken logic from the day one, i.e. in the commit
-  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
-which adds iterations parameter.
-
-So, to the point, the conditional of checking the thread to be stopped being
-first part of conjunction logic prevents to check iterations. Thus, we have to
-always check both conditions to be able to stop after given iterations.
-
-Since it wasn't visible before second commit appeared, I add a respective
-Fixes tag.
-
-Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dma/dmatest.c |    4 ++--
+ drivers/acpi/device_pm.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -552,8 +552,8 @@ static int dmatest_func(void *data)
- 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -227,13 +227,13 @@ int acpi_device_set_power(struct acpi_de
+  end:
+ 	if (result) {
+ 		dev_warn(&device->dev, "Failed to change power state to %s\n",
+-			 acpi_power_state_string(state));
++			 acpi_power_state_string(target_state));
+ 	} else {
+ 		device->power.state = target_state;
+ 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 				  "Device [%s] transitioned to %s\n",
+ 				  device->pnp.bus_id,
+-				  acpi_power_state_string(state)));
++				  acpi_power_state_string(target_state)));
+ 	}
  
- 	ktime = ktime_get();
--	while (!kthread_should_stop()
--	       && !(params->iterations && total_tests >= params->iterations)) {
-+	while (!(kthread_should_stop() ||
-+	       (params->iterations && total_tests >= params->iterations))) {
- 		struct dma_async_tx_descriptor *tx = NULL;
- 		struct dmaengine_unmap_data *um;
- 		dma_addr_t srcs[src_cnt];
+ 	return result;
 
 
