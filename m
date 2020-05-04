@@ -2,162 +2,114 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEC2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B48C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBFCC206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51691206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgEDSio (ORCPT
+        id S1726885AbgEDSim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726580AbgEDSia (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:38:30 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16257C061A0F;
-        Mon,  4 May 2020 11:38:30 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id 53FE82A0773
-Message-ID: <98946a03023451d44c2ebb2da719fa7dd3e530f6.camel@collabora.com>
-Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Date:   Mon, 04 May 2020 14:38:23 -0400
-In-Reply-To: <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
-References: <20200410115113.31728-1-ezequiel@collabora.com>
-         <20200410115113.31728-3-ezequiel@collabora.com>
-         <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
-         <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
-         <20200502203707.402ea3cd@collabora.com>
-         <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
-         <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-EyYe3EysLdTBugQZatPp"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Mon, 4 May 2020 14:38:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33938 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgEDSig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:38:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AAEA0ABCC;
+        Mon,  4 May 2020 18:38:36 +0000 (UTC)
+Date:   Mon, 4 May 2020 20:38:32 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: Re: [PATCH] percpu: Sync vmalloc mappings in pcpu_alloc() and
+ free_percpu()
+Message-ID: <20200504183832.GL8135@suse.de>
+References: <20200429082854.6e1796b5@oasis.local.home>
+ <20200429100731.201312a9@gandalf.local.home>
+ <20200430141120.GA8135@suse.de>
+ <20200430121136.6d7aeb22@gandalf.local.home>
+ <20200430191434.GC8135@suse.de>
+ <20200430211308.74a994dc@oasis.local.home>
+ <1902703609.78863.1588300015661.JavaMail.zimbra@efficios.com>
+ <20200430223919.50861011@gandalf.local.home>
+ <20200504151236.GI8135@suse.de>
+ <20200504134042.178409c3@gandalf.local.home>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200504134042.178409c3@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 04, 2020 at 01:40:42PM -0400, Steven Rostedt wrote:
+> Seems that your patch caused a lockdep splat on my box:
+> 
+>  ========================================================
+>  WARNING: possible irq lock inversion dependency detected
+>  5.7.0-rc3-test+ #249 Not tainted
+>  --------------------------------------------------------
+>  swapper/4/0 just changed the state of lock:
+>  ffff9a580fdd75a0 (&ndev->lock){++.-}-{2:2}, at: mld_ifc_timer_expire+0x3c/0x350
+>  but this lock took another, SOFTIRQ-unsafe lock in the past:
+>   (pgd_lock){+.+.}-{2:2}
+>  
+>  
+>  and interrupts could create inverse lock ordering between them.
+>  
+>  
+>  other info that might help us debug this:
+>   Possible interrupt unsafe locking scenario:
+>  
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(pgd_lock);
+>                                 local_irq_disable();
+>                                 lock(&ndev->lock);
+>                                 lock(pgd_lock);
+>    <Interrupt>
+>      lock(&ndev->lock);
+>  
+>   *** DEADLOCK ***
 
---=-EyYe3EysLdTBugQZatPp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Fair point, but this just shows how problematic it is to call something
+like vmalloc_sync_mappings() from a lower-level kernel API function.
+The obvious fix for this would be to make pgd_lock irq-safe, but this is
+getting more and more ridiculous.
 
-Le lundi 04 mai 2020 =C3=A0 14:01 -0400, Nicolas Dufresne a =C3=A9crit :
-> Le samedi 02 mai 2020 =C3=A0 19:55 -0300, Ezequiel Garcia a =C3=A9crit :
-> > +Nicolas
-> >=20
-> > On Sat, 2020-05-02 at 20:37 +0200, Boris Brezillon wrote:
-> > > On Fri, 01 May 2020 13:57:49 -0300
-> > > Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > >=20
-> > > > > > +
-> > > > > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > > > > > +
-> > > > > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
-> > > > > > +    :header-rows:  0
-> > > > > > +    :stub-columns: 0
-> > > > > > +    :widths:       1 2
-> > > > > > +
-> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
-> > > > > > +      - Do not reset any frame context.
-> > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
-> > > > > > +      - Do not reset any frame context. This is an alternative=
- value for
-> > > > > > +        V4L2_VP9_RESET_FRAME_CTX_NONE. =20
-> > > > >=20
-> > > > > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
-> > > > >  =20
-> > > >=20
-> > > > Hm, now that I look closer, what's the point
-> > > > of having the NONE_ALT in our uAPI if it
-> > > > has same meaning as NONE?
-> > > >=20
-> > > > I think it can be removed.
-> > >=20
-> > > The intent was to match the spec so that one can pass the value
-> > > extracted from the bitstream directly.
->=20
-> reset_frame_contextspecifies whether the frame context should be reset
-> to default values:
->   =E2=88=92 0 or 1 means do not reset any frame context
->   =E2=88=92 2 resets just the context specified in the frame header
->   =E2=88=92 3 resets all cont
->=20
-> But aren't we going too far by making this an emum ? In Microsfot DXVA,
-> we pass that value without interpreting it in userspace. For the
-> following RKVDEC, it is (suspiciously ?) ignored. Maybe just passing
-> over the value would make more sense, less work ?
+I know you don't like to have a vmalloc_sync_mappings() call in the
+tracing code, but can you live with it until we get rid of this broken
+interface?
 
-I have looked deeper. So basically when 2 and 3, that needs to be done
-by userspace is set back the associated probs arrays to their default
-values (see section 10.5 or the spec).
+My plan for this is to use a small bitmap to track in the vmalloc and
+the (x86-)ioremap code at which levels of the page-tables the code made
+changes and combine that with an architecture-dependend mask to decide
+whether anything needs to be synced.
 
-https://github.com/rockchip-linux/mpp/blob/develop/mpp/codec/dec/vp9/vp9d_p=
-arser.c#L1021
+On x86-64 the sync would be necessary at most 64 times after boot, so I
+think this will only have a very small performance impact, even with
+VMAP_STACKS. And as a bonus it would also get rid of vmalloc faulting on
+x86, fixing the issue with tracing too.
 
-It seems that for both VAAPI And DXVA, the drivers takes care of that
-reset. So I'd like to ask, shall we code these defaults inside the
-driver ? I think we do similar things in JPEG side. But if we keep it
-the way it is, this should be strictly documented, otherwise anyone
-porting from DXVA or VAAPI will be tricked by this.
+Regards,
 
->=20
-> > > > > I got several smatch warnings:
-> > > > >=20
-> > > > > smatch: ERRORS
-> > > > > drivers/media/v4l2-core/v4l2-ctrls.c:1880 validate_vp9_frame_deco=
-de_params() warn: was && intended here instead of ||?
-> > > > >=20
-> > > > > (Commented on this ^^^ one above)
-> > > > >=20
-> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:426 init_intra_only_pro=
-bs() error: buffer overflow 'ptr' 9 <=3D 69
-> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1478 rkvdec_vp9_done() =
-error: potentially dereferencing uninitialized 'ctrl'.
-> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1483 rkvdec_vp9_done() =
-error: uninitialized symbol 'dec_dst_buf'.
-> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:941:6: warning: variabl=
-e 'ret' set but not used [-Wunused-but-set-variable]
-> > > > > drivers/staging/media/rkvdec/rkvdec-vp9.c:1466:40: warning: varia=
-ble 'fctx' set but not used [-Wunused-but-set-variable]
-> > > > >  =20
-> > > >=20
-> > > > Oh, I'll run smatch and fix them all.
-> > >=20
-> > > Oops!
-
---=-EyYe3EysLdTBugQZatPp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXrBhHwAKCRBxUwItrAao
-HH8LAJ9aosLvF3M9LdhkX81jDPOwCl6TeACgsfbMRb5H7BOUvQ1h1XZSCTi02FY=
-=j3aC
------END PGP SIGNATURE-----
-
---=-EyYe3EysLdTBugQZatPp--
-
+	Joerg
