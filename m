@@ -2,370 +2,186 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01CC47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7068BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68EA72064C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588634879;
-	bh=ZXzR09uGuRbjIzhfkDHxYAsP/QvYBcC85V44m3Lykos=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=U5wWEQ04qFXO6AiJ1Rm2Zi+3JdWLAh7D3ThoC88CtSHX7c2h+/TXoVeNyETB8xxWn
-	 unJ5pFZbNNwEToKWJtmRTl/vLjQxvVSHeVj946xQprsLWtWJjdyEh5DB9Y32+FVFwH
-	 VAaE57gc4N77QLe/Ol+4QS7eeJI0XNETD8q1vGkU=
+	by mail.kernel.org (Postfix) with ESMTP id 4BD182068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 23:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgEDX16 (ORCPT
+        id S1728335AbgEDX3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 19:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgEDX16 (ORCPT
+        Mon, 4 May 2020 19:29:04 -0400
+Received: from smtprelay0036.hostedemail.com ([216.40.44.36]:48910 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727982AbgEDX3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 19:27:58 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD40C061A0E;
-        Mon,  4 May 2020 16:27:57 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id f83so505038qke.13;
-        Mon, 04 May 2020 16:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=ip3zhTzFNO8GaDSRR5Xv3BK5YgA2YXgYzXwyja3RCNc=;
-        b=uJZyLFH7OYZRQopRfg8qLOZSE+chPXLsRuaPH2UtwWV2adHuHG980H3af9BMlE2Fjb
-         pqyFPQyiG6weqr2LIpMsxpcgeu2rij/dY+GAc7rOWgQasesMzK6EI9RehyqdQq7pUTPQ
-         Z2jAhRNEZxvliEHRbRI0xQ9HNHbj6UI+9hZxr3jFBFFclkzKvoQHyPWuBATQXVpHtSe4
-         +wFeEzG/1uLqh5N/MU4bgmFYBEcr9zYt+FOqSCWZLIATYXo10kR5oFNPZXrnw+OcivOJ
-         P/XTWWbf1kEsdGGHH1X2lBNIKDrnDz8UL/7EWglUibLhiK3QbGi6Wp/97YiKdemTPg1R
-         tXdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=ip3zhTzFNO8GaDSRR5Xv3BK5YgA2YXgYzXwyja3RCNc=;
-        b=LjV0WBnOYQNfxhrY4ufv/Jp2hoCbRgyh9kAxhQneYBKPkAA/eXmYk6NTOOpes58Kiu
-         cHrvsqoFhhqym/kNoUfs6ihkEPT8LrP1PA7smJcE9SrrfIpVlwCJfLHu92XjmMckeAWX
-         98jqSQxdhgnTXJhDsoXWF5XedbD6fW0mKSBzxKVGCpJ5sNAmySf+FtYIgmLJ4fmvSEwr
-         vZogqx/09i3DLcD15eKTB7Xo2tOp9kg7Yz8BZUlhgn2Wob9Vu3kLEVSXb65mX31ai3Ji
-         IrPVGODkJrC0zTn/qz0p0sztH8+U9OqdYnfxfpgszsk7G/TkrmRUS3hx17hosg9Ixqtz
-         Cgyg==
-X-Gm-Message-State: AGi0PuZNSMLkaJCkLa1JFA+n09Adjw4S2xSYn5GiVV7gqo7VbsffEpdi
-        gQ3uSwa95AB3+AZmBqEG9AOFHLXq4sM=
-X-Google-Smtp-Source: APiQypKcO3GAJ8hdRsEq35pFlniR0GDTRVzDZNCOUE05DlSMcNtW/HXuII4sRaSUy9Xd6HvScaKguA==
-X-Received: by 2002:a05:620a:62c:: with SMTP id 12mr884394qkv.234.1588634876483;
-        Mon, 04 May 2020 16:27:56 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:5ece])
-        by smtp.gmail.com with ESMTPSA id i4sm424538qkh.66.2020.05.04.16.27.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 16:27:55 -0700 (PDT)
-Date:   Mon, 4 May 2020 19:27:54 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org,
-        Vlad Dmitriev <vvd@fb.com>
-Subject: [block/for-5.7] iocost: protect iocg->abs_vdebt with iocg->waitq.lock
-Message-ID: <20200504232754.GB3209250@mtj.thefacebook.com>
+        Mon, 4 May 2020 19:29:04 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8294D1822384F;
+        Mon,  4 May 2020 23:29:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: burst33_88fb33cf02246
+X-Filterd-Recvd-Size: 5410
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  4 May 2020 23:29:01 +0000 (UTC)
+Message-ID: <b1cf967015c5beafa475aaa30d8e21a58caff870.camel@perches.com>
+Subject: [trivial PATCH] video: fbdev: Use IS_BUILTIN
+From:   Joe Perches <joe@perches.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Date:   Mon, 04 May 2020 16:29:00 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: iocost: protect iocg->abs_vdebt with iocg->waitq.lock
+IS_BUILTIN can be use to replace various initializations
+like #if CONFIG_<FOO> int val = 1; #else int val = 0; #endif
+so do so.
 
-abs_vdebt is an atomic_64 which tracks how much over budget a given cgroup
-is and controls the activation of use_delay mechanism. Once a cgroup goes
-over budget from forced IOs, it has to pay it back with its future budget.
-The progress guarantee on debt paying comes from the iocg being active -
-active iocgs are processed by the periodic timer, which ensures that as time
-passes the debts dissipate and the iocg returns to normal operation.
-
-However, both iocg activation and vdebt handling are asynchronous and a
-sequence like the following may happen.
-
-1. The iocg is in the process of being deactivated by the periodic timer.
-
-2. A bio enters ioc_rqos_throttle(), calls iocg_activate() which returns
-   without anything because it still sees that the iocg is already active.
-
-3. The iocg is deactivated.
-
-4. The bio from #2 is over budget but needs to be forced. It increases
-   abs_vdebt and goes over the threshold and enables use_delay.
-
-5. IO control is enabled for the iocg's subtree and now IOs are attributed
-   to the descendant cgroups and the iocg itself no longer issues IOs.
-
-This leaves the iocg with stuck abs_vdebt - it has debt but inactive and no
-further IOs which can activate it. This can end up unduly punishing all the
-descendants cgroups.
-
-The usual throttling path has the same issue - the iocg must be active while
-throttled to ensure that future event will wake it up - and solves the
-problem by synchronizing the throttling path with a spinlock. abs_vdebt
-handling is another form of overage handling and shares a lot of
-characteristics including the fact that it isn't in the hottest path.
-
-This patch fixes the above and other possible races by strictly
-synchronizing abs_vdebt and use_delay handling with iocg->waitq.lock.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Vlad Dmitriev <vvd@fb.com>
-Cc: stable@vger.kernel.org # v5.4+
-Fixes: e1518f63f246 ("blk-iocost: Don't let merges push vtime into the future")
+Signed-off-by: Joe Perches <joe@perches.com>
 ---
- block/blk-iocost.c             |  117 ++++++++++++++++++++++++-----------------
- tools/cgroup/iocost_monitor.py |    7 ++
- 2 files changed, 77 insertions(+), 47 deletions(-)
+ drivers/video/fbdev/aty/aty128fb.c     | 6 +-----
+ drivers/video/fbdev/aty/atyfb_base.c   | 7 +------
+ drivers/video/fbdev/aty/radeon_base.c  | 6 +-----
+ drivers/video/fbdev/nvidia/nvidia.c    | 6 +-----
+ drivers/video/fbdev/omap/omapfb_main.c | 6 +-----
+ drivers/video/fbdev/riva/fbdev.c       | 6 +-----
+ drivers/video/fbdev/s3c2410fb.c        | 6 +-----
+ 7 files changed, 7 insertions(+), 36 deletions(-)
 
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -466,7 +466,7 @@ struct ioc_gq {
- 	 */
- 	atomic64_t			vtime;
- 	atomic64_t			done_vtime;
--	atomic64_t			abs_vdebt;
-+	u64				abs_vdebt;
- 	u64				last_vtime;
+diff --git a/drivers/video/fbdev/aty/aty128fb.c b/drivers/video/fbdev/aty/aty128fb.c
+index d05d4195acad..6fae6ad6cb77 100644
+--- a/drivers/video/fbdev/aty/aty128fb.c
++++ b/drivers/video/fbdev/aty/aty128fb.c
+@@ -384,11 +384,7 @@ static int default_lcd_on = 1;
+ static bool mtrr = true;
  
- 	/*
-@@ -1142,7 +1142,7 @@ static void iocg_kick_waitq(struct ioc_g
- 	struct iocg_wake_ctx ctx = { .iocg = iocg };
- 	u64 margin_ns = (u64)(ioc->period_us *
- 			      WAITQ_TIMER_MARGIN_PCT / 100) * NSEC_PER_USEC;
--	u64 abs_vdebt, vdebt, vshortage, expires, oexpires;
-+	u64 vdebt, vshortage, expires, oexpires;
- 	s64 vbudget;
- 	u32 hw_inuse;
+ #ifdef CONFIG_FB_ATY128_BACKLIGHT
+-#ifdef CONFIG_PMAC_BACKLIGHT
+-static int backlight = 1;
+-#else
+-static int backlight = 0;
+-#endif
++static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
+ #endif
  
-@@ -1152,18 +1152,15 @@ static void iocg_kick_waitq(struct ioc_g
- 	vbudget = now->vnow - atomic64_read(&iocg->vtime);
- 
- 	/* pay off debt */
--	abs_vdebt = atomic64_read(&iocg->abs_vdebt);
--	vdebt = abs_cost_to_cost(abs_vdebt, hw_inuse);
-+	vdebt = abs_cost_to_cost(iocg->abs_vdebt, hw_inuse);
- 	if (vdebt && vbudget > 0) {
- 		u64 delta = min_t(u64, vbudget, vdebt);
- 		u64 abs_delta = min(cost_to_abs_cost(delta, hw_inuse),
--				    abs_vdebt);
-+				    iocg->abs_vdebt);
- 
- 		atomic64_add(delta, &iocg->vtime);
- 		atomic64_add(delta, &iocg->done_vtime);
--		atomic64_sub(abs_delta, &iocg->abs_vdebt);
--		if (WARN_ON_ONCE(atomic64_read(&iocg->abs_vdebt) < 0))
--			atomic64_set(&iocg->abs_vdebt, 0);
-+		iocg->abs_vdebt -= abs_delta;
- 	}
- 
- 	/*
-@@ -1219,12 +1216,18 @@ static bool iocg_kick_delay(struct ioc_g
- 	u64 expires, oexpires;
- 	u32 hw_inuse;
- 
-+	lockdep_assert_held(&iocg->waitq.lock);
-+
- 	/* debt-adjust vtime */
- 	current_hweight(iocg, NULL, &hw_inuse);
--	vtime += abs_cost_to_cost(atomic64_read(&iocg->abs_vdebt), hw_inuse);
-+	vtime += abs_cost_to_cost(iocg->abs_vdebt, hw_inuse);
- 
--	/* clear or maintain depending on the overage */
--	if (time_before_eq64(vtime, now->vnow)) {
-+	/*
-+	 * Clear or maintain depending on the overage. Non-zero vdebt is what
-+	 * guarantees that @iocg is online and future iocg_kick_delay() will
-+	 * clear use_delay. Don't leave it on when there's no vdebt.
-+	 */
-+	if (!iocg->abs_vdebt || time_before_eq64(vtime, now->vnow)) {
- 		blkcg_clear_delay(blkg);
- 		return false;
- 	}
-@@ -1258,9 +1261,12 @@ static enum hrtimer_restart iocg_delay_t
- {
- 	struct ioc_gq *iocg = container_of(timer, struct ioc_gq, delay_timer);
- 	struct ioc_now now;
-+	unsigned long flags;
- 
-+	spin_lock_irqsave(&iocg->waitq.lock, flags);
- 	ioc_now(iocg->ioc, &now);
- 	iocg_kick_delay(iocg, &now, 0);
-+	spin_unlock_irqrestore(&iocg->waitq.lock, flags);
- 
- 	return HRTIMER_NORESTART;
- }
-@@ -1368,14 +1374,13 @@ static void ioc_timer_fn(struct timer_li
- 	 * should have woken up in the last period and expire idle iocgs.
- 	 */
- 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
--		if (!waitqueue_active(&iocg->waitq) &&
--		    !atomic64_read(&iocg->abs_vdebt) && !iocg_is_idle(iocg))
-+		if (!waitqueue_active(&iocg->waitq) && iocg->abs_vdebt &&
-+		    !iocg_is_idle(iocg))
- 			continue;
- 
- 		spin_lock(&iocg->waitq.lock);
- 
--		if (waitqueue_active(&iocg->waitq) ||
--		    atomic64_read(&iocg->abs_vdebt)) {
-+		if (waitqueue_active(&iocg->waitq) || iocg->abs_vdebt) {
- 			/* might be oversleeping vtime / hweight changes, kick */
- 			iocg_kick_waitq(iocg, &now);
- 			iocg_kick_delay(iocg, &now, 0);
-@@ -1718,28 +1723,49 @@ static void ioc_rqos_throttle(struct rq_
- 	 * tests are racy but the races aren't systemic - we only miss once
- 	 * in a while which is fine.
- 	 */
--	if (!waitqueue_active(&iocg->waitq) &&
--	    !atomic64_read(&iocg->abs_vdebt) &&
-+	if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
- 	    time_before_eq64(vtime + cost, now.vnow)) {
- 		iocg_commit_bio(iocg, bio, cost);
- 		return;
- 	}
- 
- 	/*
--	 * We're over budget.  If @bio has to be issued regardless,
--	 * remember the abs_cost instead of advancing vtime.
--	 * iocg_kick_waitq() will pay off the debt before waking more IOs.
-+	 * We activated above but w/o any synchronization. Deactivation is
-+	 * synchronized with waitq.lock and we won't get deactivated as long
-+	 * as we're waiting or has debt, so we're good if we're activated
-+	 * here. In the unlikely case that we aren't, just issue the IO.
-+	 */
-+	spin_lock_irq(&iocg->waitq.lock);
-+
-+	if (unlikely(list_empty(&iocg->active_list))) {
-+		spin_unlock_irq(&iocg->waitq.lock);
-+		iocg_commit_bio(iocg, bio, cost);
-+		return;
-+	}
-+
-+	/*
-+	 * We're over budget. If @bio has to be issued regardless, remember
-+	 * the abs_cost instead of advancing vtime. iocg_kick_waitq() will pay
-+	 * off the debt before waking more IOs.
-+	 *
- 	 * This way, the debt is continuously paid off each period with the
--	 * actual budget available to the cgroup.  If we just wound vtime,
--	 * we would incorrectly use the current hw_inuse for the entire
--	 * amount which, for example, can lead to the cgroup staying
--	 * blocked for a long time even with substantially raised hw_inuse.
-+	 * actual budget available to the cgroup. If we just wound vtime, we
-+	 * would incorrectly use the current hw_inuse for the entire amount
-+	 * which, for example, can lead to the cgroup staying blocked for a
-+	 * long time even with substantially raised hw_inuse.
-+	 *
-+	 * An iocg with vdebt should stay online so that the timer can keep
-+	 * deducting its vdebt and [de]activate use_delay mechanism
-+	 * accordingly. We don't want to race against the timer trying to
-+	 * clear them and leave @iocg inactive w/ dangling use_delay heavily
-+	 * penalizing the cgroup and its descendants.
- 	 */
- 	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
--		atomic64_add(abs_cost, &iocg->abs_vdebt);
-+		iocg->abs_vdebt += abs_cost;
- 		if (iocg_kick_delay(iocg, &now, cost))
- 			blkcg_schedule_throttle(rqos->q,
- 					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
-+		spin_unlock_irq(&iocg->waitq.lock);
- 		return;
- 	}
- 
-@@ -1756,20 +1782,6 @@ static void ioc_rqos_throttle(struct rq_
- 	 * All waiters are on iocg->waitq and the wait states are
- 	 * synchronized using waitq.lock.
- 	 */
--	spin_lock_irq(&iocg->waitq.lock);
+ /* PLL constants */
+diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+index 49d192869cf5..23a29d61c2a2 100644
+--- a/drivers/video/fbdev/aty/atyfb_base.c
++++ b/drivers/video/fbdev/aty/atyfb_base.c
+@@ -317,12 +317,7 @@ static int mclk;
+ static int xclk;
+ static int comp_sync = -1;
+ static char *mode;
 -
--	/*
--	 * We activated above but w/o any synchronization.  Deactivation is
--	 * synchronized with waitq.lock and we won't get deactivated as
--	 * long as we're waiting, so we're good if we're activated here.
--	 * In the unlikely case that we are deactivated, just issue the IO.
--	 */
--	if (unlikely(list_empty(&iocg->active_list))) {
--		spin_unlock_irq(&iocg->waitq.lock);
--		iocg_commit_bio(iocg, bio, cost);
--		return;
--	}
--
- 	init_waitqueue_func_entry(&wait.wait, iocg_wake_fn);
- 	wait.wait.private = current;
- 	wait.bio = bio;
-@@ -1801,6 +1813,7 @@ static void ioc_rqos_merge(struct rq_qos
- 	struct ioc_now now;
- 	u32 hw_inuse;
- 	u64 abs_cost, cost;
-+	unsigned long flags;
+-#ifdef CONFIG_PMAC_BACKLIGHT
+-static int backlight = 1;
+-#else
+-static int backlight = 0;
+-#endif
++static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
  
- 	/* bypass if disabled or for root cgroup */
- 	if (!ioc->enabled || !iocg->level)
-@@ -1820,15 +1833,28 @@ static void ioc_rqos_merge(struct rq_qos
- 		iocg->cursor = bio_end;
+ #ifdef CONFIG_PPC
+ static int default_vmode = VMODE_CHOOSE;
+diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
+index e116a3f9ad56..3fe509cb9b87 100644
+--- a/drivers/video/fbdev/aty/radeon_base.c
++++ b/drivers/video/fbdev/aty/radeon_base.c
+@@ -269,11 +269,7 @@ static bool force_measure_pll = 0;
+ static bool nomtrr = 0;
+ static bool force_sleep;
+ static bool ignore_devlist;
+-#ifdef CONFIG_PMAC_BACKLIGHT
+-static int backlight = 1;
+-#else
+-static int backlight = 0;
+-#endif
++static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
  
- 	/*
--	 * Charge if there's enough vtime budget and the existing request
--	 * has cost assigned.  Otherwise, account it as debt.  See debt
--	 * handling in ioc_rqos_throttle() for details.
-+	 * Charge if there's enough vtime budget and the existing request has
-+	 * cost assigned.
- 	 */
- 	if (rq->bio && rq->bio->bi_iocost_cost &&
--	    time_before_eq64(atomic64_read(&iocg->vtime) + cost, now.vnow))
-+	    time_before_eq64(atomic64_read(&iocg->vtime) + cost, now.vnow)) {
- 		iocg_commit_bio(iocg, bio, cost);
--	else
--		atomic64_add(abs_cost, &iocg->abs_vdebt);
-+		return;
-+	}
-+
-+	/*
-+	 * Otherwise, account it as debt if @iocg is online, which it should
-+	 * be for the vast majority of cases. See debt handling in
-+	 * ioc_rqos_throttle() for details.
-+	 */
-+	spin_lock_irqsave(&iocg->waitq.lock, flags);
-+	if (likely(!list_empty(&iocg->active_list))) {
-+		iocg->abs_vdebt += abs_cost;
-+		iocg_kick_delay(iocg, &now, cost);
-+	} else {
-+		iocg_commit_bio(iocg, bio, cost);
-+	}
-+	spin_unlock_irqrestore(&iocg->waitq.lock, flags);
- }
+ /* Note about this function: we have some rare cases where we must not schedule,
+  * this typically happen with our special "wake up early" hook which allows us to
+diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
+index c24de9107958..c6820e21875d 100644
+--- a/drivers/video/fbdev/nvidia/nvidia.c
++++ b/drivers/video/fbdev/nvidia/nvidia.c
+@@ -74,11 +74,7 @@ static int vram = 0;
+ static int bpp = 8;
+ static int reverse_i2c;
+ static bool nomtrr = false;
+-#ifdef CONFIG_PMAC_BACKLIGHT
+-static int backlight = 1;
+-#else
+-static int backlight = 0;
+-#endif
++static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
  
- static void ioc_rqos_done_bio(struct rq_qos *rqos, struct bio *bio)
-@@ -1998,7 +2024,6 @@ static void ioc_pd_init(struct blkg_poli
- 	iocg->ioc = ioc;
- 	atomic64_set(&iocg->vtime, now.vnow);
- 	atomic64_set(&iocg->done_vtime, now.vnow);
--	atomic64_set(&iocg->abs_vdebt, 0);
- 	atomic64_set(&iocg->active_period, atomic64_read(&ioc->cur_period));
- 	INIT_LIST_HEAD(&iocg->active_list);
- 	iocg->hweight_active = HWEIGHT_WHOLE;
---- a/tools/cgroup/iocost_monitor.py
-+++ b/tools/cgroup/iocost_monitor.py
-@@ -159,7 +159,12 @@ class IocgStat:
-         else:
-             self.inflight_pct = 0
+ static char *mode_option = NULL;
  
--        self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
-+        # vdebt used to be an atomic64_t and is now u64, support both
-+        try:
-+            self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
-+        except:
-+            self.debt_ms = iocg.abs_vdebt.value_() / VTIME_PER_USEC / 1000
-+
-         self.use_delay = blkg.use_delay.counter.value_()
-         self.delay_ms = blkg.delay_nsec.counter.value_() / 1_000_000
+diff --git a/drivers/video/fbdev/omap/omapfb_main.c b/drivers/video/fbdev/omap/omapfb_main.c
+index 1a9d6242916e..0cbcc74fa943 100644
+--- a/drivers/video/fbdev/omap/omapfb_main.c
++++ b/drivers/video/fbdev/omap/omapfb_main.c
+@@ -34,11 +34,7 @@ static unsigned long	def_vyres;
+ static unsigned int	def_rotate;
+ static unsigned int	def_mirror;
  
+-#ifdef CONFIG_FB_OMAP_MANUAL_UPDATE
+-static bool		manual_update = 1;
+-#else
+-static bool		manual_update;
+-#endif
++static bool	manual_update = IS_BUILTIN(CONFIG_FB_OMAP_MANUAL_UPDATE);
+ 
+ static struct platform_device	*fbdev_pdev;
+ static struct lcd_panel		*fbdev_panel;
+diff --git a/drivers/video/fbdev/riva/fbdev.c b/drivers/video/fbdev/riva/fbdev.c
+index 764ec3285e62..9b3493846f4d 100644
+--- a/drivers/video/fbdev/riva/fbdev.c
++++ b/drivers/video/fbdev/riva/fbdev.c
+@@ -202,11 +202,7 @@ static int flatpanel = -1; /* Autodetect later */
+ static int forceCRTC = -1;
+ static bool noaccel  = 0;
+ static bool nomtrr = 0;
+-#ifdef CONFIG_PMAC_BACKLIGHT
+-static int backlight = 1;
+-#else
+-static int backlight = 0;
+-#endif
++static int backlight = IS_BUILTIN(CONFIG_PMAC_BACKLIGHT);
+ 
+ static char *mode_option = NULL;
+ static bool strictmode       = 0;
+diff --git a/drivers/video/fbdev/s3c2410fb.c b/drivers/video/fbdev/s3c2410fb.c
+index 2fb15a540167..6f8fa501583f 100644
+--- a/drivers/video/fbdev/s3c2410fb.c
++++ b/drivers/video/fbdev/s3c2410fb.c
+@@ -44,11 +44,7 @@
+ #include "s3c2410fb.h"
+ 
+ /* Debugging stuff */
+-#ifdef CONFIG_FB_S3C2410_DEBUG
+-static int debug	= 1;
+-#else
+-static int debug;
+-#endif
++static int debug = IS_BUILTIN(CONFIG_FB_S3C2410_DEBUG);
+ 
+ #define dprintk(msg...) \
+ do { \
+
+
