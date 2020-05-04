@@ -4,55 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C828AC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F9CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8132078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E092078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616120;
-	bh=kIwCCfweveYoQbi6bP/t2EngD/hoy3ths/sI0RWzOEk=;
+	s=default; t=1588616124;
+	bh=2Ts0qwqIIy4EueHUrt2AeaiXr9zjm5BSbIDgkMTapuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lFZ1Q8SX8QWFSbdNZORuG9nZZjXCpQWGHzW5q39b7Bcxyefq2u99BUp6et6RoYRqb
-	 gJZfCXH4215D45zmBUyCDydXifWEsRZH0Hy3qPzuNS9tbhdUVpSNQncwsa5Qf5LTl6
-	 /Ly+oSq2OtBNiUFwyz7yTjvOi0sPywqTASGOyf4w=
+	b=sAlxHhiAgPeuxdXo4o+gS4slXsRn+cazCy19WziIcoJM8f1XU2xQSQMrTmsbrcL16
+	 YCdik6NNDDS6L7xQcOOp7GBcfQMrIRk2ZEwiy3miatDfeHFbI5m4HmLEIzL7FINvd4
+	 olCHH2PsS+izr14WvsKoxWNFLyPLS1LT0/Qn8POY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbgEDR7b (ORCPT
+        id S1730785AbgEDR71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:59:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53032 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 13:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbgEDR7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:25 -0400
+        id S1730759AbgEDR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1305D2073B;
-        Mon,  4 May 2020 17:59:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6EBF2073E;
+        Mon,  4 May 2020 17:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615165;
-        bh=kIwCCfweveYoQbi6bP/t2EngD/hoy3ths/sI0RWzOEk=;
+        s=default; t=1588615160;
+        bh=2Ts0qwqIIy4EueHUrt2AeaiXr9zjm5BSbIDgkMTapuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLbTlyNUn5u4+RinFpr7lh+V9pzqAkHFDaXrlff59VUSoo3Wl6XjdPvlWJtLsigy3
-         uY3Kc+k3PdE/YeOBln21yDSOjsd/lBLlAiqMIN324S2SFy4nXaFvgmH0RZsGuO9t/K
-         ux3du9BgBP6jktJ9/mSsW0clWz7uwHPOzBOlyn98=
+        b=Lts8jGsZki/bKWYeDy3rXgB9fpd4lWuNMpWuGz0LLUU6bjJEzUYy/tQClky1PM5oP
+         Lbnc9GlPFlE8j02RJI9oFCdYUE13kljXpySYzxiV7u0h+ihpuRYusuTJRPWnJWf7L3
+         WTwQ8ENH+7i+NvTRXyVjyvVm8Bd+7MBkSVVHUjQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.9 11/18] RDMA/mlx4: Initialize ib_spec on the stack
-Date:   Mon,  4 May 2020 19:57:21 +0200
-Message-Id: <20200504165444.499591167@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Dan Carpenter <dan.carpenter@oracle.com>, stable@kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.9 01/18] ext4: fix special inode number checks in __ext4_iget()
+Date:   Mon,  4 May 2020 19:57:11 +0200
+Message-Id: <20200504165442.343060583@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165442.028485341@linuxfoundation.org>
 References: <20200504165442.028485341@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,38 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit c08cfb2d8d78bfe81b37cc6ba84f0875bddd0d5c upstream.
+commit 191ce17876c9367819c4b0a25b503c0f6d9054d8 upstream.
 
-Initialize ib_spec on the stack before using it, otherwise we will have
-garbage values that will break creating default rules with invalid parsing
-error.
+The check for special (reserved) inode number checks in __ext4_iget()
+was broken by commit 8a363970d1dc: ("ext4: avoid declaring fs
+inconsistent due to invalid file handles").  This was caused by a
+botched reversal of the sense of the flag now known as
+EXT4_IGET_SPECIAL (when it was previously named EXT4_IGET_NORMAL).
+Fix the logic appropriately.
 
-Fixes: a37a1a428431 ("IB/mlx4: Add mechanism to support flow steering over IB links")
-Link: https://lore.kernel.org/r/20200413132235.930642-1-leon@kernel.org
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 8a363970d1dc ("ext4: avoid declaring fs inconsistent...")
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable@kernel.org
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx4/main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -1589,8 +1589,9 @@ static int __mlx4_ib_create_default_rule
- 	int i;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4494,7 +4494,7 @@ struct inode *__ext4_iget(struct super_b
+ 	gid_t i_gid;
+ 	projid_t i_projid;
  
- 	for (i = 0; i < ARRAY_SIZE(pdefault_rules->rules_create_list); i++) {
-+		union ib_flow_spec ib_spec = {};
- 		int ret;
--		union ib_flow_spec ib_spec;
-+
- 		switch (pdefault_rules->rules_create_list[i]) {
- 		case 0:
- 			/* no rule */
+-	if (((flags & EXT4_IGET_NORMAL) &&
++	if ((!(flags & EXT4_IGET_SPECIAL) &&
+ 	     (ino < EXT4_FIRST_INO(sb) && ino != EXT4_ROOT_INO)) ||
+ 	    (ino < EXT4_ROOT_INO) ||
+ 	    (ino > le32_to_cpu(EXT4_SB(sb)->s_es->s_inodes_count))) {
 
 
