@@ -2,101 +2,71 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB15C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6846C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9203F20661
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616180;
-	bh=Ch+9jydRbx+Y2XO2w7/HHuybV5IpP4ly0FO6bfnAURw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tykSi4+3gE1dtYXcg/nb33i0GAyGPfrz2PRIOgTgdklVrJQJE4V3taAfaHejrXS/t
-	 MIrxXwPGm8DWEM3fi+gvaAS+mi32kRM3v93odUak08nU0WcCFUTpEqD7dyEChGq0bT
-	 vHqjSiZGLub1GxiOva5dFec0NpdwckAhEb7ObYMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8459C20661
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730489AbgEDR6p (ORCPT
+        id S1732294AbgEDSQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgEDR6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:58:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C9920707;
-        Mon,  4 May 2020 17:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615121;
-        bh=Ch+9jydRbx+Y2XO2w7/HHuybV5IpP4ly0FO6bfnAURw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtfCD39gS5XQJYaagu+FU9XH9cMzgUvSvkBbv88BLmuOpFHSrm0BdyEKaumVlFAVH
-         TRmcjC7Mrp9jIjs/IDgWn9YplIzi4cwK0RY1OIvKMAOv7/poVz4BJedoSBBu0zTj7C
-         hFSECPq7aNCQkxJkDt6sby/8Qy0Eus8PF1VBiFE4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.4 04/18] PM: ACPI: Output correct message on target power state
-Date:   Mon,  4 May 2020 19:57:02 +0200
-Message-Id: <20200504165442.587185825@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
-References: <20200504165441.533160703@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 4 May 2020 14:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730118AbgEDSQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:16:22 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0063EC061A0E;
+        Mon,  4 May 2020 11:16:21 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ED9C611F5F61A;
+        Mon,  4 May 2020 11:16:20 -0700 (PDT)
+Date:   Mon, 04 May 2020 11:16:20 -0700 (PDT)
+Message-Id: <20200504.111620.1983042701063972335.davem@davemloft.net>
+To:     michael@walle.cc
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, f.fainelli@gmail.com,
+        vivien.didelot@gmail.com, andrew@lunn.ch, claudiu.manoil@nxp.com,
+        vladimir.oltean@nxp.com, shawnguo@kernel.org
+Subject: Re: [PATCH RESEND net-next] net: dsa: felix: allow the device to
+ be disabled
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200504165228.12787-1-michael@walle.cc>
+References: <20200504165228.12787-1-michael@walle.cc>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 11:16:21 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Michael Walle <michael@walle.cc>
+Date: Mon,  4 May 2020 18:52:28 +0200
 
-commit a9b760b0266f563b4784f695bbd0e717610dc10a upstream.
+> If there is no specific configuration of the felix switch in the device
+> tree, but only the default configuration (ie. given by the SoCs dtsi
+> file), the probe fails because no CPU port has been set. On the other
+> hand you cannot set a default CPU port because that depends on the
+> actual board using the switch.
+> 
+> [    2.701300] DSA: tree 0 has no CPU port
+> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
+> 
+> Thus let the device tree disable this device entirely, like it is also
+> done with the enetc driver of the same SoC.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Transitioned power state logged at the end of setting ACPI power.
-
-However, D3cold won't be in the message because state can only be
-D3hot at most.
-
-Use target_state to corretly report when power state is D3cold.
-
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/acpi/device_pm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -225,13 +225,13 @@ int acpi_device_set_power(struct acpi_de
-  end:
- 	if (result) {
- 		dev_warn(&device->dev, "Failed to change power state to %s\n",
--			 acpi_power_state_string(state));
-+			 acpi_power_state_string(target_state));
- 	} else {
- 		device->power.state = target_state;
- 		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 				  "Device [%s] transitioned to %s\n",
- 				  device->pnp.bus_id,
--				  acpi_power_state_string(state)));
-+				  acpi_power_state_string(target_state)));
- 	}
- 
- 	return result;
-
-
+Applied, thank you.
