@@ -2,112 +2,83 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC0FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78B9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49249206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:51:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SmNRMKW9"
+	by mail.kernel.org (Postfix) with ESMTP id 81C99206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588632758;
+	bh=oDW2m6L9Wrq4l6Sa6FvG+TJuH2YvKGkX1auEkVIa68g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=f1MtHjTggP2YEuXjUFcbL4vrs5Pc3hGW09qahyTiWZnGILkCT9Rc/FNlWJGvGUbfz
+	 lceoF8p4kYw6y3oUvUQj15lKJNVdLmuDLZBYZecYlkaggn8L2z366QwX06Jmgyk1G8
+	 fzcWFLSL9+Q0TQMjotmWPigYE7yk+6hn6yiK0gpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgEDWvy (ORCPT
+        id S1728141AbgEDWwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:51:54 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54530 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgEDWvx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:51:53 -0400
-Received: from [192.168.0.109] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A901720B717B;
-        Mon,  4 May 2020 15:51:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A901720B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1588632712;
-        bh=TlGQvxa4ZoTlkS3uwvgeQHJhmGCbxfklMLyyEyAa7OY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SmNRMKW9loVFwCG/K0n82fcbSosLA5AlKHNh9PPxohuV+WIHiV7kQqXjgu1kId1Tz
-         M7Znn2wPlci5ysddHzsZQCaXDe1/ZZEy7U73IFQ1h2apD6MkOAaEk8/FhAlnl3VQgg
-         8R1enS/nld1g/KsJUf28+R+pyifNpF+kq0BnCvgo=
-Subject: Re: [RFC PATCH] ima: verify mprotect change is consistent with mmap
- policy
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <7812a3a7-f47d-c924-c12e-f417bb6f43dc@linux.microsoft.com>
-Date:   Mon, 4 May 2020 15:51:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 18:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726773AbgEDWwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:52:37 -0400
+Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65AC3206C0;
+        Mon,  4 May 2020 22:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588632756;
+        bh=oDW2m6L9Wrq4l6Sa6FvG+TJuH2YvKGkX1auEkVIa68g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qmCv3L7FRPXdzRbioI3T3Quf3DdF6rhAzTR9i6zP7T4//X93+af4luIhonhjHQsxn
+         O95sd19nj4u3WoDX9BhU/vRHt6Zi37Lp/sCZ6sACPd6FOUe2HAPUO8R8uVm7pVR6n6
+         raEzi3KqsL9DDVFz4SAVWJmSttzT9aOGcEGIbSDc=
+Date:   Mon, 4 May 2020 17:52:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Stefan Wahren <wahrenst@gmx.net>, linux-usb@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, f.fainelli@gmail.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, RayJui <rjui@broadcom.com>,
+        ScottBranden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v7 2/4] firmware: raspberrypi: Introduce vl805 init
+ routine
+Message-ID: <20200504225234.GA300024@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <1588627060-7399-1-git-send-email-zohar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d105712418b93ebce7c0498d05eea77171892366.camel@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 2:17 PM, Mimi Zohar wrote:
+On Mon, May 04, 2020 at 10:59:29AM +0200, Nicolas Saenz Julienne wrote:
+> On Sat, 2020-05-02 at 11:05 +0200, Stefan Wahren wrote:
+> > > +	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version);
+> > pci_read_config_dword() can fail, we might want to store the return value?
+> 
+> I planned on doing that, but realised that the vast majority of
+> pci_read_config_*() users pass on checking for errors.
+> 
+> Bjorn, any rule of thumb on when to check for errors here?
 
-Hi Mimi,
+Not really.  It *can* fail, for sure.  If it does fail, you normally
+get ~0 data, which means you would skip the firmware load, do another
+config read (which probably also returns ~0) and print firmware
+version ffffffff, and the device probably won't work.
 
-> +int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
-> +{
-> +	struct ima_template_desc *template;
-> +	struct inode *inode;
-> +	int result = 0;
-> +	int action;
-> +	u32 secid;
-> +	int pcr;
-> +
-> +	if (vma->vm_file && (prot & PROT_EXEC) && !(vma->vm_flags & VM_EXEC)) {
+But checking doesn't get you much other than a better error message.
 
-Just a suggestion:
-Maybe you could do the negative of the above check and return, so that 
-the block within the if statement doesn't have to be indented.
+Personally I probably wouldn't bother because it clutters the code so
+much for so little benefit.
 
-> +		inode = file_inode(vma->vm_file);
-> +
-> +		security_task_getsecid(current, &secid);
-> +		action = ima_get_action(inode, current_cred(), secid, MAY_EXEC,
-> +					MMAP_CHECK, &pcr, &template, 0);
-> +
-> +		if (action & IMA_APPRAISE_SUBMASK)
-> +			result = -EPERM;
-> +
-> +		if ((action & IMA_APPRAISE_SUBMASK) || (action & IMA_MEASURE)) {
-
-action is checked for IMA_APPRAISE_SUBMASK bits in the previous if 
-statement. Does it need to be checked again in the above if statement?
-
-> +			struct file *file = vma->vm_file;
-> +			char *pathbuf = NULL;
-> +			const char *pathname;
-> +			char filename[NAME_MAX];
-> +
-> +			pathname = ima_d_path(&file->f_path, &pathbuf,
-> +					      filename);
-> +			integrity_audit_msg(AUDIT_INTEGRITY_DATA, inode,
-> +					    pathname, "collect_data",
-> +					    "failed-mprotect", result, 0);
-> +
-> +			if (pathbuf)
-> +				__putname(pathbuf);
-> +		}
-> +	}
-> +	return result;
-> +}
-
-thanks,
-  -lakshmi
-
+Bjorn
