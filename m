@@ -2,232 +2,175 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84857C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714B5C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 615A7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53689206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NMhdK6K3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uiOiwfTg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgEDUkl (ORCPT
+        id S1728109AbgEDUko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:40:41 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:10782 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726410AbgEDUki (ORCPT
+        Mon, 4 May 2020 16:40:44 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42316 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgEDUkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:40:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588624837; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=fLYIM9kqqwdLGMsIsdcSwPKcC0oxxXbjzB2POxGFLMk=;
- b=NMhdK6K3GZsMg27eE5aZeBwe2AlaPuaHuKAZRFfFpVGBWtCxvrMVdbDbYDXsnYmX7vX621fX
- iMWLu6vLRYta8ETaePjUk97oxZ6TdkxWpn9kGav3kz3Qubvl0ER9r9tA+5KFQP2t9rAOvI3S
- reNvgz3aQ6xob5DgOCZ0rYMXzxU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb07db5.7f04b837b650-smtp-out-n04;
- Mon, 04 May 2020 20:40:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E25CFC433F2; Mon,  4 May 2020 20:40:19 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38301C433BA;
-        Mon,  4 May 2020 20:40:18 +0000 (UTC)
+        Mon, 4 May 2020 16:40:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044Kea0K089197;
+        Mon, 4 May 2020 15:40:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588624836;
+        bh=lv6TC7aSuO22gPGDe/fPeNjVbeZdq1DIoXMXrdKh8oc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uiOiwfTg6Vg1HE0GMb8a7h/rnCIqmiQxXPtU44Br8gQb6mcRN4+MwvZorRoupKWar
+         VOsoeMLjCiy4QD+UKfj+u7+/wSspvejGmutCxWY9f46ImjY81B5J1xX6Qjo8l75u4f
+         fd46BDaBNZYpY+vAOinbq/RWGl0nX9sA9ht5vUx4=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044KeaCn078149
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 May 2020 15:40:36 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 15:40:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 15:40:36 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044Kea77031863;
+        Mon, 4 May 2020 15:40:36 -0500
+Subject: Re: [PATCH v24 02/16] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200503123215.6449-1-dmurphy@ti.com>
+ <20200503123215.6449-3-dmurphy@ti.com>
+ <b33c83a2-4cf1-7137-74d9-7e1cb8b00737@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <33114e81-e276-4659-c667-c9a3d61265c9@ti.com>
+Date:   Mon, 4 May 2020 15:31:52 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 May 2020 02:10:18 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org,
-        robh+dt@kernel.org, rjw@rjwysocki.net, saravanak@google.com,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        vincent.guittot@linaro.org, jcrouse@codeaurora.org,
-        evgreen@chromium.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v7 2/7] OPP: Add helpers for reading the binding
- properties
-In-Reply-To: <20200424155404.10746-3-georgi.djakov@linaro.org>
-References: <20200424155404.10746-1-georgi.djakov@linaro.org>
- <20200424155404.10746-3-georgi.djakov@linaro.org>
-Message-ID: <cbba1156b96e2cef39a2ea596fd5b911@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <b33c83a2-4cf1-7137-74d9-7e1cb8b00737@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-24 21:23, Georgi Djakov wrote:
-> From: Saravana Kannan <saravanak@google.com>
-> 
-> The opp-hz DT property is not mandatory and we may use another property
-> as a key in the OPP table. Add helper functions to simplify the reading
-> and comparing the keys.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
-> v7:
-> * Extracted just the helpers from patch v6, as Viresh advised to split 
-> it.
-> 
-> v6: 
-> https://lore.kernel.org/r/20191207002424.201796-3-saravanak@google.com
-> 
->  drivers/opp/core.c | 15 +++++++++++++--
->  drivers/opp/of.c   | 42 ++++++++++++++++++++++++++----------------
->  drivers/opp/opp.h  |  1 +
->  3 files changed, 40 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index ba43e6a3dc0a..c9c1bbe6ae27 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1272,11 +1272,21 @@ static bool
-> _opp_supported_by_regulators(struct dev_pm_opp *opp,
->  	return true;
->  }
-> 
-> +int _opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
-> +{
-> +	if (opp1->rate != opp2->rate)
-> +		return opp1->rate < opp2->rate ? -1 : 1;
-> +	if (opp1->level != opp2->level)
-> +		return opp1->level < opp2->level ? -1 : 1;
-> +	return 0;
-> +}
-> +
->  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp 
-> *new_opp,
->  			     struct opp_table *opp_table,
->  			     struct list_head **head)
->  {
->  	struct dev_pm_opp *opp;
-> +	int opp_cmp;
-> 
->  	/*
->  	 * Insert new OPP in order of increasing frequency and discard if
-> @@ -1287,12 +1297,13 @@ static int _opp_is_duplicate(struct device
-> *dev, struct dev_pm_opp *new_opp,
->  	 * loop.
->  	 */
->  	list_for_each_entry(opp, &opp_table->opp_list, node) {
-> -		if (new_opp->rate > opp->rate) {
-> +		opp_cmp = _opp_compare_key(new_opp, opp);
-> +		if (opp_cmp > 0) {
->  			*head = &opp->node;
->  			continue;
->  		}
-> 
-> -		if (new_opp->rate < opp->rate)
-> +		if (opp_cmp < 0)
->  			return 0;
-> 
->  		/* Duplicate OPPs */
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 9cd8f0adacae..e33169c7e045 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -521,6 +521,28 @@ void dev_pm_opp_of_remove_table(struct device 
-> *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> 
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct 
-> device_node *np,
-> +			 bool *rate_not_available)
-> +{
-> +	u64 rate;
-> +	int ret;
-> +
-> +	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	if (!ret) {
-> +		/*
-> +		 * Rate is defined as an unsigned long in clk API, and so
-> +		 * casting explicitly to its type. Must be fixed once rate is 64
-> +		 * bit guaranteed in clk API.
-> +		 */
-> +		new_opp->rate = (unsigned long)rate;
-> +	}
-> +	*rate_not_available = !!ret;
-> +
-> +	of_property_read_u32(np, "opp-level", &new_opp->level);
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT 
-> bindings)
->   * @opp_table:	OPP table
-> @@ -558,26 +580,14 @@ static struct dev_pm_opp
-> *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (!new_opp)
->  		return ERR_PTR(-ENOMEM);
-> 
-> -	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	ret = _read_opp_key(new_opp, np, &rate_not_available);
->  	if (ret < 0) {
-> -		/* "opp-hz" is optional for devices like power domains. */
-> -		if (!opp_table->is_genpd) {
-> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
-> -			goto free_opp;
-> -		}
-> +		if (!opp_table->is_genpd)
-> +			dev_err(dev, "%s: opp key field not found\n", __func__);
+Jacek
 
-With ^^ regression fixed
+On 5/4/20 3:31 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 5/3/20 2:32 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The multi color class groups monochrome LEDs and allows controlling two
+>> aspects of the final combined color: hue and lightness. The former is
+>> controlled via the intensity file and the latter is controlled
+>> via brightness file.
+>>
+>> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> [...]
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -30,6 +30,17 @@ config LEDS_CLASS_FLASH
+>>         for the flash related features of a LED device. It can be built
+>>         as a module.
+>>   +config LEDS_CLASS_MULTI_COLOR
+>> +    tristate "LED MultiColor LED Class Support"
+>> +    depends on LEDS_CLASS
+>> +    depends on LEDS_CLASS_MULTI_COLOR || !LEDS_CLASS_MULTI_COLOR
+>
+> I was saying about adding this dependency to the drivers based on
+> LED mc class. This way it does not make any sense. Moreover it is
+> erroneous:
+>
+> $ make menuconfig
+> drivers/leds/Kconfig:33:error: recursive dependency detected!
+>
+> Instead you should add it to the Kconfig entries of all drivers
+> that depend on LED mc class, i.e.:
+>
+> - config LEDS_LP50XX
+> - config LEDS_LP5521
+> - config LEDS_LP5523
+>
+> Moreover there are still some checkpatch.pl problems:
+>
+> ---------------------------------------------------------------
+> 0003-leds-multicolor-Introduce-a-multicolor-class-definit.patch
+> ---------------------------------------------------------------
+> WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+> #89: FILE: Documentation/leds/leds-class-multicolor.rst:1:
+> +====================================
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Great another requirement and issue
 
-> 
-> -		rate_not_available = true;
-> -	} else {
-> -		/*
-> -		 * Rate is defined as an unsigned long in clk API, and so
-> -		 * casting explicitly to its type. Must be fixed once rate is 64
-> -		 * bit guaranteed in clk API.
-> -		 */
-> -		new_opp->rate = (unsigned long)rate;
-> +		goto free_opp;
->  	}
-> 
-> -	of_property_read_u32(np, "opp-level", &new_opp->level);
-> -
->  	/* Check if the OPP supports hardware's hierarchy of versions or not 
-> */
->  	if (!_opp_is_supported(dev, opp_table, np)) {
->  		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index d14e27102730..bcadb1e328a4 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -211,6 +211,7 @@ struct opp_device *_add_opp_dev(const struct
-> device *dev, struct opp_table *opp_
->  void _dev_pm_opp_find_and_remove_table(struct device *dev);
->  struct dev_pm_opp *_opp_allocate(struct opp_table *opp_table);
->  void _opp_free(struct dev_pm_opp *opp);
-> +int _opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp 
-> *opp2);
->  int _opp_add(struct device *dev, struct dev_pm_opp *new_opp, struct
-> opp_table *opp_table, bool rate_not_available);
->  int _opp_add_v1(struct opp_table *opp_table, struct device *dev,
-> unsigned long freq, long u_volt, bool dynamic);
->  void _dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask,
-> int last_cpu);
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+>
+> ERROR: spaces required around that '=' (ctx:WxO)
+> #294: FILE: drivers/leds/led-class-multicolor.c:62:
+> +        ret =-EINVAL;
+>              ^
+>
+> ERROR: space required before that '-' (ctx:OxV)
+> #294: FILE: drivers/leds/led-class-multicolor.c:62:
+> +        ret =-EINVAL;
+>
+Ack
+
+
+> WARNING: DT binding documents should be licensed (GPL-2.0-only OR 
+> BSD-2-Clause)
+> #31: FILE: Documentation/devicetree/bindings/leds/leds-lp50xx.yaml:1:
+> +# SPDX-License-Identifier: GPL-2.0
+>
+ack
+> WARNING: Block comments use * on subsequent lines
+> #705: FILE: drivers/leds/leds-lp50xx.c:636:
+> +        /* There are only 3 LEDs per module otherwise they should be
+> +           banked which also is presented as 3 LEDs*/
+>
+> WARNING: Block comments use a trailing */ on a separate line
+> #705: FILE: drivers/leds/leds-lp50xx.c:636:
+> +           banked which also is presented as 3 LEDs*/
+>
+Ack
+>
+> ---------------------------------------------------------------
+> 0008-ARM-dts-n900-Add-reg-property-to-the-LP5523-channel-.patch
+> ---------------------------------------------------------------
+> WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
+>
+> ---------------------------------------------------------------
+> 0009-ARM-dts-imx6dl-yapp4-Add-reg-property-to-the-lp5562-.patch
+> ---------------------------------------------------------------
+> WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
+>
+> ---------------------------------------------------------------
+> 0010-ARM-dts-ste-href-Add-reg-property-to-the-LP5521-chan.patch
+> ---------------------------------------------------------------
+> WARNING: 'accomodate' may be misspelled - perhaps 'accommodate'?
+>
+ACK * 3
+
+Dan
+
