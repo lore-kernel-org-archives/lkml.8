@@ -2,119 +2,81 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1360C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE10C28CBC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B882073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4962073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 03:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VY0BX8QJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g1BP8fSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgEDDJX (ORCPT
+        id S1727787AbgEDDKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 May 2020 23:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59402 "EHLO
+        Sun, 3 May 2020 23:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgEDDJX (ORCPT
+        with ESMTP id S1726768AbgEDDKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 May 2020 23:09:23 -0400
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA0E4C061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 20:09:22 -0700 (PDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id v18so7697387qvx.9
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 20:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IjhzQ3oHa9nNeIuiLupnxo7YU2u+0fWxdlUhWitx3YU=;
-        b=VY0BX8QJL/Ls8mKkxdOnZWoc/16ZP/mvIQfcoHIcj1h/K2Q2zQh4jUPwqUTBdL0/gf
-         B/V3IiNsa7a7TQFt2egmpLSRf7jrnXzSaQhRP4vAamVcc+66FrZSPEWYVrbYuzcEC126
-         damw8M1AurzoePG5McVEwdfx+HHJ78R3X9+vqJUwrzBP8PW0VmM2UDFvA0LhACCwFWa5
-         ZENGXzZ+BPVX7AgJElbGuJdcFA3A8KksJ9U8cDmfCbVNyEBLTxim+YNdRHfgkjJFHz+Q
-         rCyOz/nrabbolc5/vqm39RXSn6Yy3h00G+9J0rJ0pter4I7xyDYZ0RNdDJM8oMXAF9Bg
-         Wa0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IjhzQ3oHa9nNeIuiLupnxo7YU2u+0fWxdlUhWitx3YU=;
-        b=Qg4Gcs3QVyC3wEJnQNa5Kaij9jZoSSARr/VnouOvUA/4f5qdUkT59YaR2GHnsM+FTB
-         1iO5/161r8CUMvyPGc3R+WL7/k1R+NJjh0GTGQP/5xN1D7imPeoxL3v4xBsSCRZNmNnZ
-         vPHEWVQ22Hujtwnc8YNCh/8jZ65Ij7T+7dPFCnFu6u9uSGRQ3GoAtrfanrXBIvJQwJT6
-         iN01Ci5hfGxkk1vuHYIz1q0z0jUGMXw3ADu3Q0P7XT4VVMiBDjA673KEHXOO0GQJ5gh1
-         B0gVCZU+8IDZbqkISxGeJJdfRo2D9QBGKGOUy/rmB26aTf7Hf9Ao75Yh3U7lWpZZ/HFn
-         rvwg==
-X-Gm-Message-State: AGi0Puavg8FqKXGfQ1Mqx0fxV3OIcczQYGuKNyHhf4hWQs7X+fgePB40
-        YDxI/IapD4gBeZbIE5s8CIVb9asuKXnRHC/9n/g=
-X-Google-Smtp-Source: APiQypJZnb1KhKURAZgc+1wjYSttxzA52ie++9Xhfq/pqC2ENO5/rrIWom4CorrSsaCSFMI4ZXJjRxkFSBOB8lhbrz8=
-X-Received: by 2002:a05:6214:7e1:: with SMTP id bp1mr14347599qvb.208.1588561762103;
- Sun, 03 May 2020 20:09:22 -0700 (PDT)
+        Sun, 3 May 2020 23:10:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4166BC061A0E;
+        Sun,  3 May 2020 20:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XXJ2nLBUwta0Na249+bQSZuRqkr1ECfsOkPvLduFZV0=; b=g1BP8fSKFiDU9E9Y5b2D0PjBQ9
+        FiTM+ywvRARjPcGKha2iPGb2jDEvx4LVKONbuyki4+x71gAasA27cT0q7u8QoYcB0MwlN7ERRAJjr
+        WKLnPLVnRh/Vvm8n2lv8RnuZh4WkFYGYhZWt3YjYZtfWynEsbpCZN6eCn6dRZngWoeKtGfdtJ+EQq
+        SOqybcna34WTXu2+HnuBtfRdxEUnJteMRxhaUazWMbKkOkkV0aX4akfdTLlkJF3tVZprTnXy+OUKw
+        8LXH5a3Mb5pTkOQv29D2dUwD64tkrWPqnWEtXX81TQDDdXOhEefvUS1+BM0OuXD8ViENU2E8FosH7
+        tmjJOBBw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jVRV6-0000DP-89; Mon, 04 May 2020 03:10:36 +0000
+Date:   Sun, 3 May 2020 20:10:36 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 18/25] mm: Allow large pages to be added to the page
+ cache
+Message-ID: <20200504031036.GB16070@bombadil.infradead.org>
+References: <20200429133657.22632-1-willy@infradead.org>
+ <20200429133657.22632-19-willy@infradead.org>
 MIME-Version: 1.0
-References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
- <20200429184711.9d603da097fdea80f574f1f1@linux-foundation.org>
- <CAAmzW4NC4LHXSoU8r6Jrh7WP8fouuaSkM--0gQVWf8G4wkDupg@mail.gmail.com>
- <20200501105545.GA29460@infradead.org> <CAAmzW4M+EoPqhossgJKxpZ_5=uto1jXK56qYmUd6SNKmbswuJQ@mail.gmail.com>
- <20200501123429.GA26861@infradead.org>
-In-Reply-To: <20200501123429.GA26861@infradead.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 4 May 2020 12:09:11 +0900
-Message-ID: <CAAmzW4Mcar3PfL+_VV66hxJ1H2rMJxskiJ7JYvcbWp4yRYyXvg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] change the implementation of the PageHighMem()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Laura Abbott <labbott@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429133657.22632-19-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 5=EC=9B=94 1=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 9:34, Ch=
-ristoph Hellwig <hch@infradead.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Fri, May 01, 2020 at 09:15:30PM +0900, Joonsoo Kim wrote:
-> > I think that PageHighMemZone() is long and complicated enough to have
-> > a macro.
->
-> It is.  But then again it also shouldn't really be used by anything
-> but MM internals.
+On Wed, Apr 29, 2020 at 06:36:50AM -0700, Matthew Wilcox wrote:
+> @@ -886,7 +906,7 @@ static int __add_to_page_cache_locked(struct page *page,
+>  	/* Leave page->index set: truncation relies upon it */
+>  	if (!huge)
+>  		mem_cgroup_cancel_charge(page, memcg, false);
+> -	put_page(page);
+> +	page_ref_sub(page, nr);
+>  	return xas_error(&xas);
+>  }
+>  ALLOW_ERROR_INJECTION(__add_to_page_cache_locked, ERRNO);
 
-I'm not sure that we can make it MM internal but I will try.
+This is wrong.  page_ref_sub() will not call __put_page() if the refcount
+gets to zero.  What do people prefer?
 
-> >
-> > PageHighMemZone(page) =3D is_highmem_idx(zone_idx(page_zone(page))
-> >
-> > Instead of open-code, how about changing the style of macro like as
-> > page_from_highmem()? What PageHighMemZone() represent is derivated
-> > attribute from the page so PageXXX() style may not be appropriate.
->
-> Maybe page_is_highmem_zone() with a big kerneldoc comment explaining
-> the use case?  Bonus points of killing enough users that it can be
-> in mm/internal.h.
+-	put_page(page);
 
-I will try to kill page_is_highmem_zone() as much as possible in next versi=
-on.
+(a)
++	put_thp(page);
 
-Thanks.
+(b)
++	put_page_nr(page, nr);
+
+(c)
++	if (page_ref_sub_return(page, nr) == 0)
++		__put_page(page);
