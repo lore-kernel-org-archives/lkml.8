@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75693C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4241C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB1C20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84CD220721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DehRRxLf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jgY22NFK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgEDRT4 (ORCPT
+        id S1730142AbgEDRWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
+        Mon, 4 May 2020 13:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729667AbgEDRTz (ORCPT
+        by vger.kernel.org with ESMTP id S1729667AbgEDRWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:19:55 -0400
+        Mon, 4 May 2020 13:22:09 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DA7C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:19:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 389FBC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=MM253sF1U6dObDLa771vU13RUASD51CrGjHZh2c0+1E=; b=DehRRxLf8f91cTv3rjoJHqR1z9
-        Sc46SbNNkc8OBs2DdwUvjxf68P16HxlltRgLJ++nMzgBw3PuR54SWOWnRbCANkmn6ciintqEn5SGD
-        6Hm7QIdn5dUvRktx7dvuvbabBbTRVG8XArfITKLbjtSU//lNTR2OJU23fHxPidTWgQlcg1YFA+RwN
-        3vdn7lT5bSUsshQMDjtNqcFaevXgD0TYBmUQkwmpLA6RnZAF4xM53agPgvEpenWgE8Tnh7aXL7C6E
-        oVDN81Y766LoV8oYUHk23iiyoWnocaC9aMUD9V7GDTtio4Gt5wMIAg6iovx9/3OBRSJDnUnJXv/2U
-        H8yqajlA==;
+        bh=Tl/t8Argnrjl74YSR8dZbdLmuYRfU0RXLsTShjlC7yQ=; b=jgY22NFKJJKITvIfqmlCVwVekQ
+        2c1IYo4QSrFabRLHgMINiCXrtH4POPyi2jiFmOlnDBGzkohJXaovYhoWZiktM/h/hJiCrgOhwM03K
+        xoJj9vI02LSGoJtYJsj+mCvuIpjk2gFMIXXEwKaJyeLuiDj6uwd0/agowPgTp6M2hlq/Iic+/j1pq
+        lLvKedHdqmap/SnI4sgDOM7Fj58qHuWkaG6Hka2Ap0FBLhdErN0eRhErsY5Vlk4LemllOyNFiJqHD
+        j7kej5XvIVYd0tl4IptOv6Gz5eP8ZGDG+iZK+JYcEffKjZKR1r8m/mCpCLUxa6fZKKJgQ9+K2qeHq
+        dmivnyAA==;
 Received: from 089144205116.atnat0014.highway.webapn.at ([89.144.205.116] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jVel0-0005EH-Se; Mon, 04 May 2020 17:19:55 +0000
+        id 1jVenA-0008Ln-1h; Mon, 04 May 2020 17:22:08 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     x86@kernel.org
 Cc:     Mike Travis <mike.travis@hpe.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/11] x86/uv: Mark uv_bios_call and uv_bios_call_irqsave static
-Date:   Mon,  4 May 2020 19:15:17 +0200
-Message-Id: <20200504171527.2845224-2-hch@lst.de>
+Subject: [PATCH 02/11] x86/uv: Remove the uv_partition_coherence_id macro
+Date:   Mon,  4 May 2020 19:15:18 +0200
+Message-Id: <20200504171527.2845224-3-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504171527.2845224-1-hch@lst.de>
 References: <20200504171527.2845224-1-hch@lst.de>
@@ -56,66 +56,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both functions are only used inside of bios_uv.c.
+uv_partition_coherence_id is only used once.  Just open code it in the
+only user.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/x86/include/asm/uv/bios.h | 6 ------
- arch/x86/platform/uv/bios_uv.c | 9 ++++-----
- 2 files changed, 4 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/uv/bios.h  | 1 -
+ arch/x86/platform/uv/uv_sysfs.c | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/uv/bios.h b/arch/x86/include/asm/uv/bios.h
-index 389174eaec794..fc85dafa5e496 100644
+index fc85dafa5e496..2fcc3ac12e76c 100644
 --- a/arch/x86/include/asm/uv/bios.h
 +++ b/arch/x86/include/asm/uv/bios.h
-@@ -123,12 +123,6 @@ enum uv_memprotect {
- 	UV_MEMPROT_ALLOW_RW
- };
+@@ -140,7 +140,6 @@ extern long sn_partition_id;
+ extern long sn_coherency_id;
+ extern long sn_region_size;
+ extern long system_serial_number;
+-#define uv_partition_coherence_id()	(sn_coherency_id)
  
--/*
-- * bios calls have 6 parameters
-- */
--extern s64 uv_bios_call(enum uv_bios_cmd, u64, u64, u64, u64, u64);
--extern s64 uv_bios_call_irqsave(enum uv_bios_cmd, u64, u64, u64, u64, u64);
--
- extern s64 uv_bios_get_sn_info(int, int *, long *, long *, long *, long *);
- extern s64 uv_bios_freq_base(u64, u64 *);
- extern int uv_bios_mq_watchlist_alloc(unsigned long, unsigned int,
-diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-index c60255da5a6cd..ca287554e2342 100644
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -45,7 +45,8 @@ static s64 __uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
- 	return ret;
- }
+ extern struct kobject *sgi_uv_kobj;	/* /sys/firmware/sgi_uv */
  
--s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
-+static s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4,
-+		u64 a5)
+diff --git a/arch/x86/platform/uv/uv_sysfs.c b/arch/x86/platform/uv/uv_sysfs.c
+index 62214731fea5e..266773e2fb379 100644
+--- a/arch/x86/platform/uv/uv_sysfs.c
++++ b/arch/x86/platform/uv/uv_sysfs.c
+@@ -21,7 +21,7 @@ static ssize_t partition_id_show(struct kobject *kobj,
+ static ssize_t coherence_id_show(struct kobject *kobj,
+ 			struct kobj_attribute *attr, char *buf)
  {
- 	s64 ret;
- 
-@@ -57,10 +58,9 @@ s64 uv_bios_call(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3, u64 a4, u64 a5)
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(uv_bios_call);
- 
--s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
--					u64 a4, u64 a5)
-+static s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
-+		u64 a4, u64 a5)
- {
- 	unsigned long bios_flags;
- 	s64 ret;
-@@ -77,7 +77,6 @@ s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
- 	return ret;
+-	return snprintf(buf, PAGE_SIZE, "%ld\n", uv_partition_coherence_id());
++	return snprintf(buf, PAGE_SIZE, "%ld\n", sn_coherency_id);
  }
  
--
- long sn_partition_id;
- EXPORT_SYMBOL_GPL(sn_partition_id);
- long sn_coherency_id;
+ static struct kobj_attribute partition_id_attr =
 -- 
 2.26.2
 
