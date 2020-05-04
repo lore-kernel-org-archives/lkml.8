@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CEEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380A0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C970C205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E00B205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615715;
-	bh=jLnwdL+bQ47tryUM0Gx+p/BOVwwIranqzTd57rNgdUQ=;
+	s=default; t=1588615722;
+	bh=VteYMk1LR6te1UA/DCtb6VMoHlcOc655RQxOBLcsWgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pUfa39io+GRNChlfwi4Eu30+LkPxIQ7abOCyvsAoaBKV2GuCD01wKPfxmTUlp95lt
-	 QVTH+QOzoxnERrJJpvvY52ebycTarAZCDmY6XTbtMPm71ls/aPf6smRky5TgfV4kFa
-	 c0bMIkrci+Ch9IEcA2OnESVrjNkr6I5Wlg+FJWXE=
+	b=1+E10bjZEv7wof0i9X5NxAqf+CWMMojaD0zxAxLkhPjIH2QTyv/CI5kImX5nffu6N
+	 AubZfT92dF7RnA0pADN3+uuRWgRJZSwJ3X0lBS7DohZD+b6g+VicQZ2DDJjIQez6Uh
+	 LWuzP2Xp4RjCIipJ6IE6g/jCBCbBeqqo03Zc14T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732205AbgEDSIe (ORCPT
+        id S1731794AbgEDSIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:08:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732202AbgEDSHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:51 -0400
+        id S1731071AbgEDSHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1FD2075A;
-        Mon,  4 May 2020 18:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22BC2078C;
+        Mon,  4 May 2020 18:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615671;
-        bh=jLnwdL+bQ47tryUM0Gx+p/BOVwwIranqzTd57rNgdUQ=;
+        s=default; t=1588615659;
+        bh=VteYMk1LR6te1UA/DCtb6VMoHlcOc655RQxOBLcsWgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gOvmZg3jPuL7wogd5TgHEBLdKfM6ar3Xl37dgeEW2t+VFTeBkMbo7L4fngt7cTCvj
-         EgXylX9rb0Ey48RPXrpEI4Qm+LVhV+BxV9/63AvMLK1R4NEcf6bubSnvEIKugIssDE
-         oi6uWo8gyoQH1/aCAVHe1Fe876QvPWrL0I29ZsaA=
+        b=PJXOQ0aQVsMtI5gVGXMm/GOyukP9EqdIxuy/nrI86Tdtm6s13cQds215sDVa7+Aq0
+         Wj4Kk+2mCZy+Y5VK3cwAmgHnwum+Xj+K6tZ71fqomeP+J7PHjU6fLmCaaZd1kHB/Rt
+         +u8Td2dEdkkxNndZ4kP870NRn0aKNctSS4Vm/epw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Martin Wilck <mwilck@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 41/73] scsi: qla2xxx: set UNLOADING before waiting for session deletion
-Date:   Mon,  4 May 2020 19:57:44 +0200
-Message-Id: <20200504165508.091879440@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Matt Roper <matthew.d.roper@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.6 70/73] drm/i915: Use proper fault mask in interrupt postinstall too
+Date:   Mon,  4 May 2020 19:58:13 +0200
+Message-Id: <20200504165510.444897810@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -63,95 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Wilck <mwilck@suse.com>
+From: Matt Roper <matthew.d.roper@intel.com>
 
-commit 856e152a3c08bf7987cbd41900741d83d9cddc8e upstream.
+commit 8598eb781cf68fd6cb67c479f1479ae58bd54fb9 upstream.
 
-The purpose of the UNLOADING flag is to avoid port login procedures to
-continue when a controller is in the process of shutting down.  It makes
-sense to set this flag before starting session teardown.
+The IRQ postinstall handling had open-coded pipe fault mask selection
+that never got updated for gen11.  Switch it to use
+gen8_de_pipe_fault_mask() to ensure we don't miss updates for new
+platforms.
 
-Furthermore, use atomic test_and_set_bit() to avoid the shutdown being run
-multiple times in parallel. In qla2x00_disable_board_on_pci_error(), the
-test for UNLOADING is postponed until after the check for an already
-disabled PCI board.
-
-Link: https://lore.kernel.org/r/20200421204621.19228-2-mwilck@suse.com
-Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
-Reviewed-by: Arun Easi <aeasi@marvell.com>
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: José Roberto de Souza <jose.souza@intel.com>
+Fixes: d506a65d56fd ("drm/i915: Catch GTT fault errors for gen11+ planes")
+Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200424231423.4065231-1-matthew.d.roper@intel.com
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+(cherry picked from commit 869129ee0c624a78c74e50b51635e183196cd2c6)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_os.c |   32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/i915/i915_irq.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -3720,6 +3720,13 @@ qla2x00_remove_one(struct pci_dev *pdev)
- 	}
- 	qla2x00_wait_for_hba_ready(base_vha);
+--- a/drivers/gpu/drm/i915/i915_irq.c
++++ b/drivers/gpu/drm/i915/i915_irq.c
+@@ -3321,7 +3321,8 @@ static void gen8_de_irq_postinstall(stru
+ {
+ 	struct intel_uncore *uncore = &dev_priv->uncore;
  
-+	/*
-+	 * if UNLOADING flag is already set, then continue unload,
-+	 * where it was set first.
-+	 */
-+	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
-+		return;
-+
- 	if (IS_QLA25XX(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha) ||
- 	    IS_QLA28XX(ha)) {
- 		if (ha->flags.fw_started)
-@@ -3738,15 +3745,6 @@ qla2x00_remove_one(struct pci_dev *pdev)
+-	u32 de_pipe_masked = GEN8_PIPE_CDCLK_CRC_DONE;
++	u32 de_pipe_masked = gen8_de_pipe_fault_mask(dev_priv) |
++		GEN8_PIPE_CDCLK_CRC_DONE;
+ 	u32 de_pipe_enables;
+ 	u32 de_port_masked = GEN8_AUX_CHANNEL_A;
+ 	u32 de_port_enables;
+@@ -3332,13 +3333,10 @@ static void gen8_de_irq_postinstall(stru
+ 		de_misc_masked |= GEN8_DE_MISC_GSE;
  
- 	qla2x00_wait_for_sess_deletion(base_vha);
- 
--	/*
--	 * if UNLOAD flag is already set, then continue unload,
--	 * where it was set first.
--	 */
--	if (test_bit(UNLOADING, &base_vha->dpc_flags))
--		return;
--
--	set_bit(UNLOADING, &base_vha->dpc_flags);
--
- 	qla_nvme_delete(base_vha);
- 
- 	dma_free_coherent(&ha->pdev->dev,
-@@ -6044,13 +6042,6 @@ qla2x00_disable_board_on_pci_error(struc
- 	struct pci_dev *pdev = ha->pdev;
- 	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
- 
--	/*
--	 * if UNLOAD flag is already set, then continue unload,
--	 * where it was set first.
--	 */
--	if (test_bit(UNLOADING, &base_vha->dpc_flags))
--		return;
--
- 	ql_log(ql_log_warn, base_vha, 0x015b,
- 	    "Disabling adapter.\n");
- 
-@@ -6061,9 +6052,14 @@ qla2x00_disable_board_on_pci_error(struc
- 		return;
+ 	if (INTEL_GEN(dev_priv) >= 9) {
+-		de_pipe_masked |= GEN9_DE_PIPE_IRQ_FAULT_ERRORS;
+ 		de_port_masked |= GEN9_AUX_CHANNEL_B | GEN9_AUX_CHANNEL_C |
+ 				  GEN9_AUX_CHANNEL_D;
+ 		if (IS_GEN9_LP(dev_priv))
+ 			de_port_masked |= BXT_DE_PORT_GMBUS;
+-	} else {
+-		de_pipe_masked |= GEN8_DE_PIPE_IRQ_FAULT_ERRORS;
  	}
  
--	qla2x00_wait_for_sess_deletion(base_vha);
-+	/*
-+	 * if UNLOADING flag is already set, then continue unload,
-+	 * where it was set first.
-+	 */
-+	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
-+		return;
- 
--	set_bit(UNLOADING, &base_vha->dpc_flags);
-+	qla2x00_wait_for_sess_deletion(base_vha);
- 
- 	qla2x00_delete_all_vps(ha, base_vha);
- 
+ 	if (INTEL_GEN(dev_priv) >= 11)
 
 
