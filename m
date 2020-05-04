@@ -2,99 +2,135 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE25DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28C0C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A30020746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9EC206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:53:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PRMxKoWT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eMS49H5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgEDHvw (ORCPT
+        id S1728088AbgEDHxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:51:52 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13281 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727951AbgEDHvw (ORCPT
+        Mon, 4 May 2020 03:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725941AbgEDHxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:51:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588578712; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Gm+ck2cB95VAaRfiAV1AhlwdbM3i0yfSnXxwhtbbaZE=; b=PRMxKoWT7MJhMmJCpqxHCiQ+Gz6BhFh9ud6EkKL8oqBpWpZXOdpFaiEUt9kWiyVi8FhWDI/Q
- TrYSHfD5L5rOMm5ZXkqR/elCdLdyctldAr/9ebNuRUeozRIL7rJhdpEJ3mevOJCkSkPaVqDb
- t34vkEKN0qt5I6MEotJAK9w9Jwk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eafc987.7f4fa18ee9d0-smtp-out-n05;
- Mon, 04 May 2020 07:51:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8F5DAC432C2; Mon,  4 May 2020 07:51:34 +0000 (UTC)
-Received: from [10.110.9.159] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE2CC433CB;
-        Mon,  4 May 2020 07:51:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE2CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v6 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
- <20200504071502.GM1375924@vkoul-mobl>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <655be70d-918b-7a59-8a6d-48d542226486@codeaurora.org>
-Date:   Mon, 4 May 2020 00:51:32 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 03:53:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF36BC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 00:53:49 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id e25so8701918ljg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 00:53:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UmXGi3GpP/NWw/x5EeBfh2CHXXIxEQ6XPHMrgxKeMTQ=;
+        b=eMS49H5UTt/uzOOGrd44QxN8eOb6fq0hkRXyeaMqi8xL3G25gwvdk8XTDEI2XWeWPy
+         zWZ6guNxob8E0Jwpm/pE6crthlJ7YwmkpjWYG4wjWzSKvX7J+fj+N2kmyXJCM/ZhRu2A
+         YBT/LtdcOOzwODqpopZ8E/IrDG9Md0vA4O3B3Pu9ATO117TZhPvzRpRMAWZFdykww1Ge
+         pUv0BmtrBso9L6tMXjMAFsisZ77UbeyQz5C5ElIMa5ExYdAGclfJjGRZ7V1r3bj7jGVY
+         VRR2jtAAD/zroipjKmj7lVS6S7OIkZi2O7anJJ6D1Ly2ghYJhRjMSLlty1vcMcnbPxsQ
+         TDIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UmXGi3GpP/NWw/x5EeBfh2CHXXIxEQ6XPHMrgxKeMTQ=;
+        b=Qf++3HWcKNrB6c6Q9scrQS7mlfEXn8JQ7nDvAHOoEeX6NeYXbjHZpNdcNGRxzT4/r5
+         G+AbXHnkCOcY1FR/1e91Yk+bbdUpgVDP2svxltLnm4lU/OgaNtyOknXICgLvV4PkNip0
+         9yHazHWAuTFxLF2zZRmLgw/53/Wdjt4FpUHuNcLasVBs/oqjagVKxSh9cjMbSw/l9cOv
+         uwQShSUVHePwI2kXfl7YOPuL8ylzsMrh/b5t6a/na8xFHe8yeejaTKFNSutjxS2h11IY
+         WdH3612hCIbL/ljWv94TV2W50xOL5mdIth3xBFWtDAlFifqVtEPJ9aPID7iMpfHDnraj
+         eY9g==
+X-Gm-Message-State: AGi0PuakQJWFON2AFMcI19Hqar90FnIqNj9skM93Ur7KCmk+gqt72NXd
+        spI9H27GMEmAFQhUWbv0JFqUliKTTPWOCJwtfNQwCNXMJUg=
+X-Google-Smtp-Source: APiQypKNLqUCReBS+vFry0LD76xdsoPJXx/J6gLLBL1gNM0yxRkWxkjQDSJfoU7Crke/c7fcR6aLKtHPBhPZi8dAkYk=
+X-Received: by 2002:a2e:3209:: with SMTP id y9mr8957526ljy.154.1588578828316;
+ Mon, 04 May 2020 00:53:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200504071502.GM1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200504015704.6952-1-hdanton@sina.com>
+In-Reply-To: <20200504015704.6952-1-hdanton@sina.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 4 May 2020 09:53:36 +0200
+Message-ID: <CAKfTPtA3wVD3X7+HqTs-ovSQ8FmZRyryAFb2zzUm4kAbPo4+tw@mail.gmail.com>
+Subject: Re: [RFC PATCH] sched/fair: correct llc shared domain's number of
+ busy CPUs
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 4 May 2020 at 03:57, Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> The comment says, if there is an imbalance between LLC domains (IOW we
+> could increase the overall cache use),  we need some less-loaded LLC
+> domain to pull some load.
+>
+> To show that imbalance, record busy CPUs as they come and go by doing
+> a minor cleanup for sd::nohz_idle.
 
+Your comment failed to explain why we can get rid of sd->nohz_idle
 
-On 5/4/2020 12:15 AM, Vinod Koul wrote:
-> Hi Wesley,
-> 
-> On 09-04-20, 15:52, Wesley Cheng wrote:
->> This series adds support for the Synopsis 7nm HSPHY USB driver being
->> used in QCOM chipsets.  The HSPHY register map differs compared to 
->> other PHY revisions.  In addition, modifications and updates are done
->> to the QMP driver to add new registers/offsets, and to update the
->> initialization sequence for enabling the SSUSB path on SM8150.
-> 
-> This fails to apply for me, Can you please rebase on
-> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git next and
-> send.
-> 
-> Also, I saw checkpatch --strict complain about "Alignment should match
-> open parenthesis" please check and fix while not sacrificing readablity.
-> 
-> Thanks
-> 
+>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Signed-off-by: Hillf Danton <hdanton@sina.com>
+> ---
+>
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10138,13 +10138,8 @@ static void set_cpu_sd_state_busy(int cp
+>
+>         rcu_read_lock();
+>         sd = rcu_dereference(per_cpu(sd_llc, cpu));
+> -
+> -       if (!sd || !sd->nohz_idle)
+> -               goto unlock;
+> -       sd->nohz_idle = 0;
 
-Hi Vinod,
+you remove the use of sd->nohz_idle but you don't remove it from
+struct sched_domain
 
-Got it!  Will rebase and fix warnings, and resend a patch revision
-tomorrow.  Thanks again.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> -
+> -       atomic_inc(&sd->shared->nr_busy_cpus);
+> -unlock:
+> +       if (sd)
+> +               atomic_inc(&sd->shared->nr_busy_cpus);
+>         rcu_read_unlock();
+>  }
+>
+> @@ -10168,13 +10163,8 @@ static void set_cpu_sd_state_idle(int cp
+>
+>         rcu_read_lock();
+>         sd = rcu_dereference(per_cpu(sd_llc, cpu));
+> -
+> -       if (!sd || sd->nohz_idle)
+> -               goto unlock;
+> -       sd->nohz_idle = 1;
+> -
+> -       atomic_dec(&sd->shared->nr_busy_cpus);
+> -unlock:
+> +       if (sd)
+> +               atomic_dec(&sd->shared->nr_busy_cpus);
+>         rcu_read_unlock();
+>  }
+>
+>
