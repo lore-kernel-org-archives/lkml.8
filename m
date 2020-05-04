@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBF0C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE39C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD7E206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9136420721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615332;
-	bh=ALr5P5uc5kfYMY0WVPmuOGBIuhGk+HBbjdIrCLtCg9M=;
+	s=default; t=1588615336;
+	bh=w/JwMb7JVHqYplPPoNYvno00KImVTLDxu+5qtPyfeg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQkrXnQ/rDLT/YYdIr5MiepuupwreeATPSE7geRi9dakobaWP+TCtGOl2HA+9g90a
-	 K8iVGsnaRq46K0NEOAu34xbB4dBzQiMyeVgT1JGZMx9Qf82LrqX8UZpi2YhIfqGulE
-	 qoi4AgB3Jr+sHdITaF73M2jzHz+y9NX3CjW22cyg=
+	b=1t953My+y5odTaPtoLKEKho5uSFuVePR++LNpSuLIDeSEbHvU2k4OwO3MW9zN+Zk7
+	 qrctYdOZsY2IlG3RH1fnm0UHi1xq3tUHp6LLawi4QuFehPZNOg92NSRg2GLpwCImTN
+	 /Fp2nkK3zlXjcYCDD/u8XtalS/vN9uC5eZkg87/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbgEDSCL (ORCPT
+        id S1731295AbgEDSCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58176 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731276AbgEDSCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:07 -0400
+        id S1731276AbgEDSCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93488206B8;
-        Mon,  4 May 2020 18:02:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6739E20707;
+        Mon,  4 May 2020 18:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615326;
-        bh=ALr5P5uc5kfYMY0WVPmuOGBIuhGk+HBbjdIrCLtCg9M=;
+        s=default; t=1588615330;
+        bh=w/JwMb7JVHqYplPPoNYvno00KImVTLDxu+5qtPyfeg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hH8MaPongcqNMftRhEIDSlp+Pmyv93qPRD5Qa1r5QYtv+IJtx+asnHPxfyCqPMMgH
-         kG21Vn2y4/5pN38uqUIf7C7pjgjIKLt81P2J2+ATztr8za43WlzOOJfYDFG9HkT4Sw
-         x8/eBP+CPmQzWDAGEpaHeN9EVrpEyp5osJ4mZerI=
+        b=a29RGHSIGQdm7PdjeAUktKgiiz2vFy1pdJ2OOtczzNPr9ye9+P9U95F3blGx9p7ys
+         34uKEDJ0os03l7DGCzyBJHLa+jgVN2r45WSyASwWlVxdE/dOxbkmy5YRrBGvqJN42H
+         pOctOS7sckFcuAkzrntzDY249Hc0vEUyzKyyU1TM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 31/37] btrfs: transaction: Avoid deadlock due to bad initialization timing of fs_info::journal_info
-Date:   Mon,  4 May 2020 19:57:44 +0200
-Message-Id: <20200504165451.463599438@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 33/37] mmc: sdhci-xenon: fix annoying 1.8V regulator warning
+Date:   Mon,  4 May 2020 19:57:46 +0200
+Message-Id: <20200504165451.581609291@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,127 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Marek Behún <marek.behun@nic.cz>
 
-commit fcc99734d1d4ced30167eb02e17f656735cb9928 upstream.
+commit bb32e1987bc55ce1db400faf47d85891da3c9b9f upstream.
 
-[BUG]
-One run of btrfs/063 triggered the following lockdep warning:
-  ============================================
-  WARNING: possible recursive locking detected
-  5.6.0-rc7-custom+ #48 Not tainted
-  --------------------------------------------
-  kworker/u24:0/7 is trying to acquire lock:
-  ffff88817d3a46e0 (sb_internal#2){.+.+}, at: start_transaction+0x66c/0x890 [btrfs]
+For some reason the Host Control2 register of the Xenon SDHCI controller
+sometimes reports the bit representing 1.8V signaling as 0 when read
+after it was written as 1. Subsequent read reports 1.
 
-  but task is already holding lock:
-  ffff88817d3a46e0 (sb_internal#2){.+.+}, at: start_transaction+0x66c/0x890 [btrfs]
+This causes the sdhci_start_signal_voltage_switch function to report
+  1.8V regulator output did not become stable
 
-  other info that might help us debug this:
-   Possible unsafe locking scenario:
+When CONFIG_PM is enabled, the host is suspended and resumend many
+times, and in each resume the switch to 1.8V is called, and so the
+kernel log reports this message annoyingly often.
 
-         CPU0
-         ----
-    lock(sb_internal#2);
-    lock(sb_internal#2);
+Do an empty read of the Host Control2 register in Xenon's
+.voltage_switch method to circumvent this.
 
-   *** DEADLOCK ***
+This patch fixes this particular problem on Turris MOX.
 
-   May be due to missing lock nesting notation
-
-  4 locks held by kworker/u24:0/7:
-   #0: ffff88817b495948 ((wq_completion)btrfs-endio-write){+.+.}, at: process_one_work+0x557/0xb80
-   #1: ffff888189ea7db8 ((work_completion)(&work->normal_work)){+.+.}, at: process_one_work+0x557/0xb80
-   #2: ffff88817d3a46e0 (sb_internal#2){.+.+}, at: start_transaction+0x66c/0x890 [btrfs]
-   #3: ffff888174ca4da8 (&fs_info->reloc_mutex){+.+.}, at: btrfs_record_root_in_trans+0x83/0xd0 [btrfs]
-
-  stack backtrace:
-  CPU: 0 PID: 7 Comm: kworker/u24:0 Not tainted 5.6.0-rc7-custom+ #48
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-  Workqueue: btrfs-endio-write btrfs_work_helper [btrfs]
-  Call Trace:
-   dump_stack+0xc2/0x11a
-   __lock_acquire.cold+0xce/0x214
-   lock_acquire+0xe6/0x210
-   __sb_start_write+0x14e/0x290
-   start_transaction+0x66c/0x890 [btrfs]
-   btrfs_join_transaction+0x1d/0x20 [btrfs]
-   find_free_extent+0x1504/0x1a50 [btrfs]
-   btrfs_reserve_extent+0xd5/0x1f0 [btrfs]
-   btrfs_alloc_tree_block+0x1ac/0x570 [btrfs]
-   btrfs_copy_root+0x213/0x580 [btrfs]
-   create_reloc_root+0x3bd/0x470 [btrfs]
-   btrfs_init_reloc_root+0x2d2/0x310 [btrfs]
-   record_root_in_trans+0x191/0x1d0 [btrfs]
-   btrfs_record_root_in_trans+0x90/0xd0 [btrfs]
-   start_transaction+0x16e/0x890 [btrfs]
-   btrfs_join_transaction+0x1d/0x20 [btrfs]
-   btrfs_finish_ordered_io+0x55d/0xcd0 [btrfs]
-   finish_ordered_fn+0x15/0x20 [btrfs]
-   btrfs_work_helper+0x116/0x9a0 [btrfs]
-   process_one_work+0x632/0xb80
-   worker_thread+0x80/0x690
-   kthread+0x1a3/0x1f0
-   ret_from_fork+0x27/0x50
-
-It's pretty hard to reproduce, only one hit so far.
-
-[CAUSE]
-This is because we're calling btrfs_join_transaction() without re-using
-the current running one:
-
-btrfs_finish_ordered_io()
-|- btrfs_join_transaction()		<<< Call #1
-   |- btrfs_record_root_in_trans()
-      |- btrfs_reserve_extent()
-	 |- btrfs_join_transaction()	<<< Call #2
-
-Normally such btrfs_join_transaction() call should re-use the existing
-one, without trying to re-start a transaction.
-
-But the problem is, in btrfs_join_transaction() call #1, we call
-btrfs_record_root_in_trans() before initializing current::journal_info.
-
-And in btrfs_join_transaction() call #2, we're relying on
-current::journal_info to avoid such deadlock.
-
-[FIX]
-Call btrfs_record_root_in_trans() after we have initialized
-current::journal_info.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Fixes: 8d876bf472db ("mmc: sdhci-xenon: wait 5ms after set 1.8V...")
+Cc: stable@vger.kernel.org # v4.16+
+Link: https://lore.kernel.org/r/20200420080444.25242-1-marek.behun@nic.cz
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/transaction.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/mmc/host/sdhci-xenon.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -572,10 +572,19 @@ again:
- 	}
- 
- got_it:
--	btrfs_record_root_in_trans(h, root);
--
- 	if (!current->journal_info)
- 		current->journal_info = h;
+--- a/drivers/mmc/host/sdhci-xenon.c
++++ b/drivers/mmc/host/sdhci-xenon.c
+@@ -238,6 +238,16 @@ static void xenon_voltage_switch(struct
+ {
+ 	/* Wait for 5ms after set 1.8V signal enable bit */
+ 	usleep_range(5000, 5500);
 +
 +	/*
-+	 * btrfs_record_root_in_trans() needs to alloc new extents, and may
-+	 * call btrfs_join_transaction() while we're also starting a
-+	 * transaction.
++	 * For some reason the controller's Host Control2 register reports
++	 * the bit representing 1.8V signaling as 0 when read after it was
++	 * written as 1. Subsequent read reports 1.
 +	 *
-+	 * Thus it need to be called after current->journal_info initialized,
-+	 * or we can deadlock.
++	 * Since this may cause some issues, do an empty read of the Host
++	 * Control2 register here to circumvent this.
 +	 */
-+	btrfs_record_root_in_trans(h, root);
-+
- 	return h;
++	sdhci_readw(host, SDHCI_HOST_CONTROL2);
+ }
  
- join_fail:
+ static const struct sdhci_ops sdhci_xenon_ops = {
 
 
