@@ -2,108 +2,145 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AF5C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E70C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083D520721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588568690;
-	bh=uC1pih+roQvwyhTev/L0dbHWDrWGsjBiyYcYdiKyvnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yVDClNE2rFWjphh0Y/yUPVS5s+Ta65IKCvPG4VJVcBT6GxvqvVdLXS13hFu1M5nmI
-	 YarI8RTk5rAdC0kpNIcaBFUuGNX5aaAS1Pjeuto+MJeraY2draxFtQY5YVGg28i7Ef
-	 EhoYr2bgpSz/tlaf9RXPn2+ia2YMFXfdYNdh8+x8=
+	by mail.kernel.org (Postfix) with ESMTP id EC437206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 05:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgEDFEt (ORCPT
+        id S1726935AbgEDFEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 01:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52088 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 01:04:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:43373 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgEDFEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 01:04:48 -0400
-Received: from localhost (unknown [171.76.84.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0488206EB;
-        Mon,  4 May 2020 05:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588568688;
-        bh=uC1pih+roQvwyhTev/L0dbHWDrWGsjBiyYcYdiKyvnY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dQS/jPaz1EZ2HGweB8C3vAqHoOlHKALAfbdAmZKuny5/FPENQi1dPTy+POlsZgYyQ
-         2UjaeSS5S92HESh6a7KqqWmfnvVQX1VwsyjComKoruRNg0TGB70oTH3DLfb1N5nIAh
-         ZNJikxLezQrsqLY2UAK8f1qIqmySzy28k59PvvAQ=
-Date:   Mon, 4 May 2020 10:34:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        id S1725894AbgEDFEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 01:04:50 -0400
+IronPort-SDR: RI4gvK+9HDVAKbRklvMRzIq+pixxdYwbvyTVuNGFD83c+J+nmEf9PVYs8K3ZAJRRWmwQxHCADe
+ 82/fHngT1KIw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2020 22:04:49 -0700
+IronPort-SDR: MxCGejezytWAFr2qtWtnEu9Zlbx9sDBny4KBWGPuntnxpb8eeVieC20Y3SJ8U7XteAAgk3t7Pj
+ fSoUNNLnXPgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,350,1583222400"; 
+   d="scan'208";a="295395757"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga008.jf.intel.com with ESMTP; 03 May 2020 22:04:48 -0700
+Date:   Sun, 3 May 2020 22:04:47 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] dmaengine: owl: Use correct lock in
- owl_dma_get_pchan()
-Message-ID: <20200504050443.GD1375924@vkoul-mobl>
-References: <c6e6cdaca252b5364bd294093673951036488cf0.1588439073.git.cristian.ciocaltea@gmail.com>
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH V2 00/11] Subject: Remove duplicated kmap code
+Message-ID: <20200504050447.GA979899@iweiny-DESK2.sc.intel.com>
+References: <20200504010912.982044-1-ira.weiny@intel.com>
+ <20200504013509.GU23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c6e6cdaca252b5364bd294093673951036488cf0.1588439073.git.cristian.ciocaltea@gmail.com>
+In-Reply-To: <20200504013509.GU23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-05-20, 20:15, Cristian Ciocaltea wrote:
-> When the kernel is built with lockdep support and the owl-dma driver is
-> used, the following message is shown:
+On Mon, May 04, 2020 at 02:35:09AM +0100, Al Viro wrote:
+> On Sun, May 03, 2020 at 06:09:01PM -0700, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > The kmap infrastructure has been copied almost verbatim to every architecture.
+> > This series consolidates obvious duplicated code by defining core functions
+> > which call into the architectures only when needed.
+> > 
+> > Some of the k[un]map_atomic() implementations have some similarities but the
+> > similarities were not sufficient to warrant further changes.
+> > 
+> > In addition we remove a duplicate implementation of kmap() in DRM.
+> > 
+> > Testing was done by 0day to cover all the architectures I can't readily
+> > build/test.
 > 
-> [    2.496939] INFO: trying to register non-static key.
-> [    2.501889] the code is fine but needs lockdep annotation.
-> [    2.507357] turning off the locking correctness validator.
-> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
-> [    2.519084] Hardware name: Generic DT based system
-> [    2.523878] Workqueue: events_freezable mmc_rescan
-> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
-> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
-> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
-> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
-> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
-> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
-> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
-> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
-> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
-> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
-> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
-> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
-> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
-> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
-> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
-> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
-> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
-> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
-> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
-> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
-> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
-> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> OK...  Looking through my old notes on kmap unification (this winter, never
+> went anywhere),
 > 
-> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
-> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
-> 
-> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
-> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
-> 'owl_dma_terminate_pchan()'.
-> 
-> Therefore, this patch substitutes 'pchan->lock' with 'od->lock' and
-> removes the 'lock' attribute in 'owl_dma_pchan' struct.
+> * arch/mips/mm/cache.c ought to use linux/highmem.h, not asm/highmem.h
+> I suspect that your series doesn't build on some configs there.  Hadn't
+> verified that, though.
 
-Applied, thanks
+Yes patch 6 makes the change because kmap_atomic() was no longer declared in
+asm/highmem.h.  I'm pretty sure 0-day caught that ...  but I seem to remember
+noticing some oddness in that file and I did go through it by hand.
 
--- 
-~Vinod
+> 
+> * kmap_atomic_to_page() is dead, but not quite gone - csky and nds32 brought
+> the damn thing back (nds32 - only an extern).  It needs killin'...
+
+Easy enough. Added as a follow on patch.
+
+> 
+> * parisc is (arguably) abusing kunmap()/kunmap_atomic() for cache flushing.
+> Replace the bulk of its highmem.h with
+> #define ARCH_HAS_FLUSH_ON_KUNMAP
+> #define arch_before_kunmap flush_kernel_dcache_page_addr
+> and have default kunmap()/kunmap_atomic() do
+> #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
+> 	arch_before_kunmap(page_address(page));
+> #endif
+> and
+> #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
+> 	arch_before_kunmap(addr);
+> #endif
+> resp.  Kills ARCH_HAS_KMAP along with ifdefs on it, makes parisc use somewhat
+> less hacky.
+
+Agreed.  Done in a follow on patch.
+
+> 
+> I'd suggest checking various configs on mips - that's likely to cause headache.
+> Said that, my analysis of include chains back then is pretty much worthless
+> by now - I really hate the amount of indirect include chains leading to that
+> sucker on some, but not all configs ;-/  IIRC, the proof that everything
+> using kmap*/kunmap* would pull linux/highmem.h regardless of config took several
+> hours of digging, ran for several pages and had been hopelessly brittle.
+> arch/mips/mm/cache.c was the only exception caught by it, but these days
+> there might be more.
+
+Grepping for 'asm/highmem.h' and investigations don't reveal any issues...  But
+you do have me worried.  That said 0-day has been crunching on multiple
+versions of this series without issues such as this (save the mips issue
+above).
+
+I have to say it would be nice if the relation between linux/highmem.h and
+asm/highmem.h was more straightforward.
+
+Ira
+
