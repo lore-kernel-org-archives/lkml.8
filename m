@@ -2,116 +2,112 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA8C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354ABC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23C70206A5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJcXHxLS"
+	by mail.kernel.org (Postfix) with ESMTP id 17D2620707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588622582;
+	bh=GIxo0Vm+W3zux+9Tx3/1kqa1pGgR2R/67Dfb5VXJ+I4=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=g15wk2LcfAslGj3mFz2kBdP+eNVqqDP+MGvRBn/DspYliTXVa17RFT7w/ZLqXGtmT
+	 6EZhptaw2CRrfKYp1LEHLCmlXzxQbGOAugDj6zQm1lUW3XRx4NhM8oV/szdjN1PAg3
+	 vaPRVK/pLAtfMURcyaSx9ws4Miv994r/9pCK6uc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgEDUCJ (ORCPT
+        id S1727800AbgEDUDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726441AbgEDUCI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:02:08 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A21C061A0E;
-        Mon,  4 May 2020 13:02:08 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x4so873153wmj.1;
-        Mon, 04 May 2020 13:02:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KdlOL0+4+Ykci+7yQYazMb8JW9d/9xEljqxcf/GDuEk=;
-        b=sJcXHxLSBnzJGMaKNW+99617mOPEmXnMG5Noq1kdinn6Ed89n3c9c+GeJVczmV0vCu
-         pvDt6LRa1hz1a1M3pbXUYY+71rble+dJs0BQ4tholGGBuEof7kKZaL7p97aHQVhTq22W
-         Tkm/t2uTcMagqEp/CE014kqT9GmDoUIisRe97eJs20d0MqBMGNQwJRYRnaMhGfR2IS/i
-         YH8KEnMqltUdXf/GxTZAZiyfgHEm/mORzPhzh+Q7BsIpH71rJkRPrksfpZmKA5IhnUIO
-         GII3sCKzYNjXKmlzMq/3nwTahAUEaDyS5ng+aESP14gzxHO/Mq/qngu+GZP9SFL1Pr0x
-         DOMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KdlOL0+4+Ykci+7yQYazMb8JW9d/9xEljqxcf/GDuEk=;
-        b=b5JFLj/Q8jPUhhL3LgdSTQz9Jc8ICZQ5f3dwv46HjW4hi4UhYDe79DwOz4v5kNAABA
-         6UUE7NCu+uYUdS6LYDLuSHuMJ48uKmNaqcQsBQ/hfm1Pq1jvlVymWAU4FFoNmi+rROBJ
-         4ymiQIgJygAGd8Ji6XuFJuxc3pKUg8CRoLGGp5U5WRM8HqrKlw1PxzzK0jC0+sglJSJK
-         owci6jLgYVQ8XhNuygOm7UQiqvEmtv/DR420Qcr2Gs3BXtbWpkuR74TyK7RiSrp/oAp2
-         AxUxvLuTCX5m5VZQGZFviMP2Wgpp5a2UaiNnfaS+3lorT0M1uRaLJqipbJBy4RHXVPwp
-         0QKg==
-X-Gm-Message-State: AGi0PuZQoiE2kthAWFukEFAFdqH1XYUNvxvdHk66mlWcXcpBmoz2Zx+Y
-        Iv8ZsE9kLte5jCUyVcqQE5WnMwKN
-X-Google-Smtp-Source: APiQypLtdII6d3Uh6/K5h+dxXP5Ugh8M97Xscg7xDlXEjK1u9cJyQqNmpchCvB+ACdDUmIXUsWo5mA==
-X-Received: by 2002:a1c:40c4:: with SMTP id n187mr15844209wma.28.1588622527018;
-        Mon, 04 May 2020 13:02:07 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id c190sm25482wme.10.2020.05.04.13.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 13:02:06 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>,
-        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH for-5.7] io_uring: fix zero len do_splice()
-Date:   Mon,  4 May 2020 23:00:54 +0300
-Message-Id: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Mon, 4 May 2020 16:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726334AbgEDUDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 16:03:00 -0400
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740C1206A5;
+        Mon,  4 May 2020 20:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588622580;
+        bh=GIxo0Vm+W3zux+9Tx3/1kqa1pGgR2R/67Dfb5VXJ+I4=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=mNgiZ0Kjg0wTQw/+v4PZd/EHEfwYZfOKjaavdvVX1cdSFUs0nSI5RsWlB3Wyim1z1
+         UTEXTcGq4s8dF8BOkLpNRUVGSFI9PYoN9dclXKEy+8zmvWKoS+DUut7HpN0jg64ktd
+         R0MmkOpN0+k3SM0o0VIH0qeH+ENQwfPFv8dhA4Hs=
+Subject: Re: [PATCH] dmaengine: qcom_hidma: use true,false for bool variable
+To:     Jason Yan <yanaijie@huawei.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, vkoul@kernel.org,
+        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200504113406.41530-1-yanaijie@huawei.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <3d61f97c-6d7e-a0be-9986-99c09a0f896d@kernel.org>
+Date:   Mon, 4 May 2020 16:02:58 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200504113406.41530-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-do_splice() doesn't expect len to be 0. Just always return 0 in this
-case as splice(2) do.
+On 5/4/2020 7:34 AM, Jason Yan wrote:
+> Fix the following coccicheck warning:
+> 
+> drivers/dma/qcom/hidma.c:553:1-17: WARNING: Assignment of 0/1 to bool
+> variable
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/dma/qcom/hidma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+> index 87490e125bc3..0a6d3ea08c78 100644
+> --- a/drivers/dma/qcom/hidma.c
+> +++ b/drivers/dma/qcom/hidma.c
+> @@ -550,7 +550,7 @@ static void hidma_free_chan_resources(struct dma_chan *dmach)
+>  		kfree(mdesc);
+>  	}
+>  
+> -	mchan->allocated = 0;
+> +	mchan->allocated = false;
+>  	spin_unlock_irqrestore(&mchan->lock, irqflags);
+>  }
 
-Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 65458eda2127..d53a1ef2a205 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2772,16 +2772,19 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
- 	struct file *out = sp->file_out;
- 	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
- 	loff_t *poff_in, *poff_out;
--	long ret;
-+	long ret = 0;
- 
- 	if (force_nonblock)
- 		return -EAGAIN;
- 
- 	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
- 	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
--	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
--	if (force_nonblock && ret == -EAGAIN)
--		return -EAGAIN;
-+
-+	if (sp->len) {
-+		ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
-+		if (force_nonblock && ret == -EAGAIN)
-+			return -EAGAIN;
-+	}
- 
- 	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
- 	req->flags &= ~REQ_F_NEED_CLEANUP;
--- 
-2.24.0
+Acked By: Sinan Kaya <okaya@kernel.org>
 
