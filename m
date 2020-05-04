@@ -2,56 +2,56 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA61C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2338C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F9B21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1F021974
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 13:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0L4VWVbV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0+JAHkcW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgEDNq4 (ORCPT
+        id S1728695AbgEDNrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 09:46:56 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:36552 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728334AbgEDNqy (ORCPT
+        Mon, 4 May 2020 09:47:07 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:21352 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbgEDNrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 09:46:54 -0400
+        Mon, 4 May 2020 09:47:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1588600014; x=1620136014;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=12xjLzI1c4xmu9itMWLk1HDPDRb1cJVAi53VDaonBYc=;
-  b=0L4VWVbV8Z1aCUU49kGXYmE/J0QNfjv9rMSfR/4mqVg9tAc9Yjdp8F5X
-   0l1LQi6T2SSGRueQ5+q0jhS6yR8SrGdRoDwOYEcg21dab9HO6kxZYOwmO
-   Kre0dFQK8dcr8dXe+VkkJIV5inwnlBO/glDylowrSaIiyxWnWQF2zCVCe
-   aNrmoWH8gYQ3aa13rJLeYB9Rm5umeztYySCjQyoqt6HuczxHUV7F979yB
-   ssHDl1i4hzm+hH4v4L8dWQ9y78enSGBYfea/ZXbbfuFTQsCu3O69g5EIw
-   FIjVr05fktVKtHy2RIYSAXwT2nGZ5AkwsDMMvwtj5VlzUUnqopetflsD1
+  t=1588600025; x=1620136025;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YdfSV8vFHtHkdY/j8Ajqyu9W6T2nF4zgct9CAGRxwRQ=;
+  b=0+JAHkcWxpITI5R4goTSPQMBKrdiHzSTWMwCmcQAEU1p6lByU4QWCY4q
+   BfVc66AVR8BWDyXk0zSOPJj65yjI4S7Cb+LS/F60iUVfDLrZ8sHnOZVuf
+   KunmtH8XwuVFrFHRj2OZfqeBb3YweWfsRJVy9mhTH+V+ifZ0HAOmd1GbP
+   y7i9P+c0rRxRpMFiYnUSIKmZmWr8I4rFP6V4c5Ihk646iQffqsSbJV2ww
+   2RrZRgnsEt3yVnT1KeCCn/XQYb6rSBQLIjIz0Wv8fK27M6rErb2a1cpzh
+   CLcvTlb9jF3MGyQoG87tH4qNqOa9kOl+6wVF2y93lg6++/KAaQBXT8ok+
    w==;
-IronPort-SDR: ZXnc/wUiGFY/B3+inZSWq9bYwDHFMMv3hrflf0gpSWTmhoAoRQl28agtHAlcsB0fncaWN094wj
- 6m69xlWsR7TZQ5Xt6UQAvMnAkKi7jB5A4N1ih6mVK6fuc3mhGSf+bFPG4u3+/BlFaeJ2LFcQBO
- Ros5J1KaJ3lXYJRQT1aoSbX5Oxuafoo4gkY45I7J7eT0mOJmvKQNL+iuow+fzLZ5kuRr2wW4rh
- RKAp+9dKTK+m5NszmJ1KBO8qSes+Nq3HIP+mQwEme7+0EhsxzAIQs244SrkL9XVd+p5oh6P81A
- 4LM=
+IronPort-SDR: hsTM1QVLN9NhCq54tmB8QKFvocu9kjOduP0h93w7Ccg6OxKoxHWaRIoqTuZrqRgNyQpmP7Jfop
+ 6UdRqUn7gGWMLXt3nGVbqEEBVWrHnut10yjQX+yGmawu8RbxMZd3JCoYcyYiqys8CgxH8ORxPX
+ BSsBbmQnqNZBNO4mMFMwy66FWVOXwjrDYZzA49QowmyXrFBkn3GoOaZg1d9eWYe3P1hLzHQHrX
+ vX/6rFmXYsdvDvmvc6Kv5z+1PzB/JRWk7kLA7ndsIzhtKFPUundxmirbcXFgBL+zJlOwAVRFHD
+ HJ0=
 X-IronPort-AV: E=Sophos;i="5.73,352,1583218800"; 
-   d="scan'208";a="72332658"
+   d="scan'208";a="74135742"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 May 2020 06:46:52 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 May 2020 06:46:29 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 4 May 2020 06:46:53 -0700
+ 15.1.1713.5; Mon, 4 May 2020 06:46:30 -0700
 Received: from localhost.localdomain (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 4 May 2020 06:46:49 -0700
+ 15.1.1713.5 via Frontend Transport; Mon, 4 May 2020 06:46:26 -0700
 From:   <nicolas.ferre@microchip.com>
 To:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
         "Claudiu Beznea" <claudiu.beznea@microchip.com>,
@@ -63,12 +63,10 @@ CC:     <linux-kernel@vger.kernel.org>,
         <linux@armlinux.org.uk>, <andrew@lunn.ch>,
         <michal.simek@xilinx.com>,
         "Nicolas Ferre" <nicolas.ferre@microchip.com>
-Subject: [PATCH v3 7/7] net: macb: Add WoL interrupt support for MACB type of Ethernet controller
-Date:   Mon, 4 May 2020 15:44:22 +0200
-Message-ID: <a7ff77de9ab8694ac1c0648a623f6916c000d35e.1588597759.git.nicolas.ferre@microchip.com>
+Subject: [PATCH v3 0/7] net: macb: Wake-on-Lan magic packet fixes and GEM handling
+Date:   Mon, 4 May 2020 15:44:15 +0200
+Message-ID: <cover.1588597759.git.nicolas.ferre@microchip.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1588597759.git.nicolas.ferre@microchip.com>
-References: <cover.1588597759.git.nicolas.ferre@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -79,87 +77,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Handle the Wake-on-Lan interrupt for the Cadence MACB Ethernet
-controller.
-As we do for the GEM version, we handle of WoL interrupt in a
-specialized interrupt handler for MACB version that is positionned
-just between suspend() and resume() calls.
+Hi,
+Here is the 3rd series to fix WoL magic-packet on the current macb driver.
+I also add, in the second part of this series the feature to GEM types of IPs.
+Please tell me if they should be separated; but the two last patches cannot go
+without the 5 fixes first ones.
 
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
+MACB and GEM code must co-exist and as they don't share exactly the same
+register layout, I had to specialize a bit the suspend/resume paths and plug a
+specific IRQ handler in order to avoid overloading the "normal" IRQ hot path.
+
+The use of dumb buffers for RX that Harini implemented in [1] might
+need to be considered for a follow-up patch series in order to address
+lower-power modes on some of the platforms.
+For instance, I didn't have to implement dumb buffers for some of the simpler
+ARM9 platforms using MACB+FIFO types of controllers.
+
+Please give feedback. Best regards,
+  Nicolas
+
+[1]:
+https://github.com/Xilinx/linux-xlnx/commit/e9648006e8d9132db2594e50e700af362b3c9226#diff-41909d180431659ccc1229aa30fd4e5a
+https://github.com/Xilinx/linux-xlnx/commit/60a21c686f7e4e50489ae04b9bb1980b145e52ef
+
+Changes in v3:
+- Revert some of the v2 changes done in macb_resume(). Now the resume function
+  supports in-depth re-configuration of the controller in order to deal with
+  deeper sleep states. Basically as it was before changes introduced by this
+  series
+- Tested for non-regression with our deeper Power Management mode which cuts
+  power to the controller completely
+
 Changes in v2:
-- Addition of pm_wakeup_event() in WoL IRQ
+- Add patch 4/7 ("net: macb: fix macb_suspend() by removing call to netif_carrier_off()")
+  needed for keeping phy state consistent
+- Add patch 5/7 ("net: macb: fix call to pm_runtime in the suspend/resume functions") that prevent
+  putting the macb in runtime pm suspend mode when WoL is used
+- Collect review tags on 3 first patches from Florian: Thanks!
+- Review of macb_resume() function
+- Addition of pm_wakeup_event() in both MACB and GEM WoL IRQ handlers
 
- drivers/net/ethernet/cadence/macb_main.c | 39 +++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+Nicolas Ferre (7):
+  net: macb: fix wakeup test in runtime suspend/resume routines
+  net: macb: mark device wake capable when "magic-packet" property
+    present
+  net: macb: fix macb_get/set_wol() when moving to phylink
+  net: macb: fix macb_suspend() by removing call to netif_carrier_off()
+  net: macb: fix call to pm_runtime in the suspend/resume functions
+  net: macb: WoL support for GEM type of Ethernet controller
+  net: macb: Add WoL interrupt support for MACB type of Ethernet
+    controller
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index be8454a8535b..f8dc3c1b807b 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1513,6 +1513,35 @@ static void macb_tx_restart(struct macb_queue *queue)
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(TSTART));
- }
- 
-+static irqreturn_t macb_wol_interrupt(int irq, void *dev_id)
-+{
-+	struct macb_queue *queue = dev_id;
-+	struct macb *bp = queue->bp;
-+	u32 status;
-+
-+	status = queue_readl(queue, ISR);
-+
-+	if (unlikely(!status))
-+		return IRQ_NONE;
-+
-+	spin_lock(&bp->lock);
-+
-+	if (status & MACB_BIT(WOL)) {
-+		queue_writel(queue, IDR, MACB_BIT(WOL));
-+		macb_writel(bp, WOL, 0);
-+		netdev_vdbg(bp->dev, "MACB WoL: queue = %u, isr = 0x%08lx\n",
-+			    (unsigned int)(queue - bp->queues),
-+			    (unsigned long)status);
-+		if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
-+			queue_writel(queue, ISR, MACB_BIT(WOL));
-+		pm_wakeup_event(&bp->pdev->dev, 0);
-+	}
-+
-+	spin_unlock(&bp->lock);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static irqreturn_t gem_wol_interrupt(int irq, void *dev_id)
- {
- 	struct macb_queue *queue = dev_id;
-@@ -4586,8 +4615,8 @@ static int __maybe_unused macb_suspend(struct device *dev)
- 		/* Change interrupt handler and
- 		 * Enable WoL IRQ on queue 0
- 		 */
-+		devm_free_irq(dev, bp->queues[0].irq, bp->queues);
- 		if (macb_is_gem(bp)) {
--			devm_free_irq(dev, bp->queues[0].irq, bp->queues);
- 			err = devm_request_irq(dev, bp->queues[0].irq, gem_wol_interrupt,
- 					       IRQF_SHARED, netdev->name, bp->queues);
- 			if (err) {
-@@ -4599,6 +4628,14 @@ static int __maybe_unused macb_suspend(struct device *dev)
- 			queue_writel(bp->queues, IER, GEM_BIT(WOL));
- 			gem_writel(bp, WOL, MACB_BIT(MAG));
- 		} else {
-+			err = devm_request_irq(dev, bp->queues[0].irq, macb_wol_interrupt,
-+					       IRQF_SHARED, netdev->name, bp->queues);
-+			if (err) {
-+				dev_err(dev,
-+					"Unable to request IRQ %d (error %d)\n",
-+					bp->queues[0].irq, err);
-+				return err;
-+			}
- 			queue_writel(bp->queues, IER, MACB_BIT(WOL));
- 			macb_writel(bp, WOL, MACB_BIT(MAG));
- 		}
+ drivers/net/ethernet/cadence/macb.h      |   3 +
+ drivers/net/ethernet/cadence/macb_main.c | 209 +++++++++++++++++++----
+ 2 files changed, 176 insertions(+), 36 deletions(-)
+
 -- 
 2.26.2
 
