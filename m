@@ -2,149 +2,103 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA1AC47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C70C47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38C220721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E56920707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="GObmazAb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGvZgbNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgEDThr (ORCPT
+        id S1727802AbgEDTj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
+        Mon, 4 May 2020 15:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726550AbgEDThq (ORCPT
+        by vger.kernel.org with ESMTP id S1725956AbgEDTj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:37:46 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F05C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:37:46 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id k18so13697305ion.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:37:46 -0700 (PDT)
+        Mon, 4 May 2020 15:39:57 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2AAC061A0E;
+        Mon,  4 May 2020 12:39:56 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k12so785473wmj.3;
+        Mon, 04 May 2020 12:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AdWMO0GZMNFscZNybGWQG3ITswtupKPg+QTxQVbhP58=;
-        b=GObmazAbydGljs6lUpNTgX82Yj9VICjxvJsXCRjiEN/IiUC4gN8U8xjGFwFx9O7ill
-         ZFs+VP0q2tO0znb2WC0f2LJP3cMcp+e1Muf7XNyClzKjOuvajCxdLCIVo5W1RvjY4uOd
-         sLQwXUEOzKPvuukgNeSceNmqwReuSA9lOcGCA=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NW8oQWWMjyDuVRlAJpFreByMFafi4QpaqckDeeBZAK4=;
+        b=BGvZgbNEWZJtJB/rLL03NY9rGi/ehlH0jg4N4WKhGixHvbUP/tquGIF4e4ki56rWne
+         Tz+uVwFhd/70t7HHez2Wfo7FBUinRRAwV0VJriMwat8q2EEUNSlL64jdTT5bA10iKRyx
+         IIowCe8n3GYDpxPnBrITwbAUvLNRl0fWAdB735ya0JBTSIRaMoUqvamsrQXPyr+8zaiF
+         XF453YXLy1G6JebbBAtF6Qkh80Zh3npwl8uGSw1KXyMRg7rXYI3UU96M4TJ5/6WKwNoT
+         yN6EOUFOZvFiEU0gO+PL9RHUPFEThCSX/0Tb5IUPAPUIyDtMAemXAQhDOqu87hAVH/Ds
+         G6OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AdWMO0GZMNFscZNybGWQG3ITswtupKPg+QTxQVbhP58=;
-        b=hJEnjMaILrkpr9vgcqypYEywr9n/jYgNj+k3kvimt1UbAMTgjcXwDGoAYP1Tx7uNih
-         QR5Ma7NaUQ/jIvGUn61KXsJUCL/y0YeuEfTFiFpWDb3ltEGN3eEu4nZy7dN2n2J1E7jY
-         a/8GSFi9BN9HtgMBoE8JMX+EZYX+4cNxgNOl+j8AczFDhEbugF1OwpXoD/L6UEYbWae1
-         nXs7ha4sh1pHkkPHM0kYOOp51//wJ19291rXPPeJ7+D4OGkXLbHAzsP5r5vtrrp4oyJT
-         695+WqHyHGT6d31YGiL8etTzLAeh+tYubyxvesd8puavNx5DVeGPoLOQG9u/I/G5GdTi
-         jjiQ==
-X-Gm-Message-State: AGi0Pub4Jlc5qyNfPecwtZgMp8PuMfutg6L7ki4Rj80Mz7KuIlQetBQ1
-        /A/Q9G0VxRs30vvQzbpxwXMRYlMBAkcThg+X7ZA8ZelMVi4=
-X-Google-Smtp-Source: APiQypLQSD4iaEpIO5FjQ3ZmMTHwJnzzJlOFWYJXTb12bjeP6SAD28w06feWRZUOQRwbhUf9KFyI72uv/kTlXn/A57o=
-X-Received: by 2002:a6b:bc85:: with SMTP id m127mr3389827iof.89.1588621065701;
- Mon, 04 May 2020 12:37:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NW8oQWWMjyDuVRlAJpFreByMFafi4QpaqckDeeBZAK4=;
+        b=bUvh7JlgT/76oHBko8cULCEj1qGQtbnyZGviye34723Z6d66T9/xatn9iY3LHFhabX
+         yHLnkfifJ8Qubw28IPvnp7hCeqfT7kZyTaCd8/0sRPX7mhHLFymErfnXE9THGhdezqV/
+         oKW5ia8P6ZTLNhBoqqqN9yLVZhBTus/XO8DpgbFyuAC5qW+neR/cr9NzfdDLTLtb17pG
+         l5wRGGcm+TFPZdxLxx4HQPixUODX3UYQVhMO2MOEGHgryhNWIGBUhxp5b9xmCszNs7EU
+         G6VDX+EVNq3OpmxwlcgAurmZiTS137BlKio+FI1EzrcbKXQnmufZtubIcBU6HPuyAduC
+         v9/Q==
+X-Gm-Message-State: AGi0PuayherJlnaNDGKp+ZZ+QdsDjkJ7kBpayxTD8jHdsGVjevbbJodp
+        +o95Ah3ZhEx0T/EGjOfgDFg=
+X-Google-Smtp-Source: APiQypKgVNA1FOuWyq3/1fPwRoS94xnMG7wOri4uYVEUV4/OF7DNlSDZCeZjGj/SyAfRTNf6GeY4FA==
+X-Received: by 2002:a1c:dc8b:: with SMTP id t133mr16729738wmg.117.1588621195459;
+        Mon, 04 May 2020 12:39:55 -0700 (PDT)
+Received: from localhost.localdomain (abag125.neoplus.adsl.tpnet.pl. [83.6.170.125])
+        by smtp.googlemail.com with ESMTPSA id p7sm20631312wrf.31.2020.05.04.12.39.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 12:39:55 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2 PATCH 0/2] Add support for ASUS Z00T TM5P5 NT35596 panel
+Date:   Mon,  4 May 2020 21:38:12 +0200
+Message-Id: <20200504193816.126299-1-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-References: <20200428205903.61704-1-urezki@gmail.com> <20200428205903.61704-10-urezki@gmail.com>
- <20200501212749.GD7560@paulmck-ThinkPad-P72> <20200504124323.GA17577@pc636>
- <20200504152437.GK2869@paulmck-ThinkPad-P72> <20200504174822.GA20446@pc636>
- <20200504180805.GA172409@google.com> <20200504190138.GU2869@paulmck-ThinkPad-P72>
-In-Reply-To: <20200504190138.GU2869@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Mon, 4 May 2020 15:37:33 -0400
-Message-ID: <CAEXW_YQmrfbaDocsc7bLULRR1yUv4=MMMEw3b0s1mXM8sEVVzQ@mail.gmail.com>
-Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        RCU <rcu@vger.kernel.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+changes since v1:
+- make `backlight_properties props` constant
+- a couple of line breaks
+- change name and compatible to reflect ASUS being the vendor
+- remove a redundant TODO
 
-On Mon, May 4, 2020 at 3:01 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Mon, May 04, 2020 at 02:08:05PM -0400, Joel Fernandes wrote:
-> > On Mon, May 04, 2020 at 07:48:22PM +0200, Uladzislau Rezki wrote:
-> > > On Mon, May 04, 2020 at 08:24:37AM -0700, Paul E. McKenney wrote:
-> > [..]
-> > > > > > Presumably the list can also be accessed without holding this lock,
-> > > > > > because otherwise we shouldn't need llist...
-> > > > > >
-> > > > > Hm... We increase the number of elements in cache, therefore it is not
-> > > > > lockless. From the other hand i used llist_head to maintain the cache
-> > > > > because it is single linked list, we do not need "*prev" link. Also
-> > > > > we do not need to init the list.
-> > > > >
-> > > > > But i can change it to list_head. Please let me know if i need :)
-> > > >
-> > > > Hmmm...  Maybe it is time for a non-atomic singly linked list?  In the RCU
-> > > > callback processing, the operations were open-coded, but they have been
-> > > > pushed into include/linux/rcu_segcblist.h and kernel/rcu/rcu_segcblist.*.
-> > > >
-> > > > Maybe some non-atomic/protected/whatever macros in the llist.h file?
-> > > > Or maybe just open-code the singly linked list?  (Probably not the
-> > > > best choice, though.)  Add comments stating that the atomic properties
-> > > > of the llist functions aren't neded?  Something else?
-> > > >
-> > > In order to keep it simple i can replace llist_head by the list_head?
-> >
-> > Just to clarify for me, what is the disadvantage of using llist here?
->
-> Are there some llist APIs that are not set up for concurrency?  I am
-> not seeing any.
+Konrad Dybcio (2):
+  drivers: drm: panel: Add ASUS TM5P5 NT35596 panel driver
+  dt-bindings: display: Document ASUS Z00T TM5P5 NT35596 panel
+    compatible
 
-llist deletion racing with another llist deletion will need locking.
-So strictly speaking, some locking is possible with llist usage?
+ .../display/panel/asus,z00t-tm5p5-n35596.yaml |  56 +++
+ drivers/gpu/drm/panel/Kconfig                 |  10 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../drm/panel/panel-asus-z00t-tm5p5-n35596.c  | 367 ++++++++++++++++++
+ 4 files changed, 434 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/asus,z00t-tm5p5-n35596.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-asus-z00t-tm5p5-n35596.c
 
-The locklessness as I understand comes when adding and deleting at the
-same time. For that no lock is needed. But in the current patch, it
-locks anyway to avoid the lost-update of the size of the list.
+-- 
+2.26.1
 
-> The overhead isn't that much of a concern, given that these are not on the
-> hotpath, but people reading the code and seeing the cmpxchg operations
-> might be forgiven for believing that there is some concurrency involved
-> somewhere.
->
-> Or am I confused and there are now single-threaded add/delete operations
-> for llist?
-
-I do see some examples of llist usage with locking in the kernel code.
-One case is: do_init_module() calling llist_add to add to the
-init_free_list under module_mutex.
-
-> > Since we don't care about traversing backwards, isn't it better to use llist
-> > for this usecase?
-> >
-> > I think Vlad is using locking as we're also tracking the size of the llist to
-> > know when to free pages. This tracking could suffer from the lost-update
-> > problem without any locking, 2 lockless llist_add happened simulatenously.
-> >
-> > Also if list_head is used, it will take more space and still use locking.
->
-> Indeed, it would be best to use a non-concurrent singly linked list.
-
-Ok cool :-)
-
-Is it safe to say something like the following is ruled out? ;-) :-D
-#define kfree_rcu_list_add llist_add
-
-Thanks,
-
- - Joel
