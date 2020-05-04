@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556B1C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D3BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBE02073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8367C205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615568;
-	bh=YxTXa3lak5sQR57j7nhMT8HyMkyHwF1YFWTTwA7M/Pg=;
+	s=default; t=1588615571;
+	bh=NlVxoTjNVIj7k425iDGce3uuUKxG2Mo4IPPMlgN5liw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pAY4IOkuBwASCcFDbPp36+p9j+cmN2RDIAm7Nd7oFSBqbSP1po/okIqfX+fckU+E7
-	 dkFfiAms5fPsVS87pLzshFu9MyybOUnxm2VchcGR6rgMh0Px++gUFHxUuRSuganPH6
-	 nKQvNEnt845reBPwfkK2kOQ/ELxHuE2Zh9nwtuWs=
+	b=ak2T2i6zrb4VX4k5mKa0JC2Uq6awtQCn7doMv8ltZlKaXcMcuv6RYeqJcXVJZi34K
+	 VSWG879k8ezfBj5MJ67DKvfwV3CiMaVOD/CEd9W4crEbT4oOArL7hcbEoMiLXD0bzc
+	 IOnBIkpyz6p0NcwkSJrJz0Knt6V3+1+KM1XVadac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbgEDSGH (ORCPT
+        id S1731919AbgEDSGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36126 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:06:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731899AbgEDSGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:06:01 -0400
+        id S1731024AbgEDSGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:06:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E634A206B8;
-        Mon,  4 May 2020 18:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB39E206B8;
+        Mon,  4 May 2020 18:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615560;
-        bh=YxTXa3lak5sQR57j7nhMT8HyMkyHwF1YFWTTwA7M/Pg=;
+        s=default; t=1588615565;
+        bh=NlVxoTjNVIj7k425iDGce3uuUKxG2Mo4IPPMlgN5liw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hQgIt74OcXAQ1FAly/zNzRybVyW77av0bpiA/ES2GCj5IHTghjNMTT87PGtOekVlj
-         MAcIEkIzX+/jQHCayeHPSeoen9PcwGgBiGfkRax0YyuSS7F1WenI1jNStnkMs1Dcab
-         J0kdw32jsqWL1fXkXs7Fwm2iWyBaPNdNBTDyOZe0=
+        b=RmXOJ/f3ppbdyUAv6U6Ya+ICfmuEAGT8x+0N5n6Fzhk0BCaSY6KWwg22JwqR8CMvR
+         EYhKEkE6YCLI/u+ehDs79VEVpOEB2XVqPxrKFXrsdZAgPelr6jMJmpylgBnVNVwZ08
+         hbPRLqvw2RKdCDGPRADV88deiYDgVft6aIKKyy7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.6 03/73] drm/amdgpu: invalidate L2 before SDMA IBs (v2)
-Date:   Mon,  4 May 2020 19:57:06 +0200
-Message-Id: <20200504165502.317626734@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.6 31/73] dlmfs_file_write(): fix the bogosity in handling non-zero *ppos
+Date:   Mon,  4 May 2020 19:57:34 +0200
+Message-Id: <20200504165507.332146380@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -62,80 +58,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Olšák <marek.olsak@amd.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit fdf83646c0542ecfb9adc4db8f741a1f43dca058 upstream.
+commit 3815f1be546e752327b5868af103ccdddcc4db77 upstream.
 
-This fixes GPU hangs due to cache coherency issues.
+'count' is how much you want written, not the final position.
+Moreover, it can legitimately be less than the current position...
 
-v2: Split the version bump to a separate patch
-
-Signed-off-by: Marek Olšák <marek.olsak@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Tested-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h |   16 ++++++++++++++++
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c            |   14 +++++++++++++-
- 2 files changed, 29 insertions(+), 1 deletion(-)
+ fs/ocfs2/dlmfs/dlmfs.c |   27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
-+++ b/drivers/gpu/drm/amd/amdgpu/navi10_sdma_pkt_open.h
-@@ -73,6 +73,22 @@
- #define SDMA_OP_AQL_COPY  0
- #define SDMA_OP_AQL_BARRIER_OR  0
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -275,7 +275,6 @@ static ssize_t dlmfs_file_write(struct f
+ 				loff_t *ppos)
+ {
+ 	int bytes_left;
+-	ssize_t writelen;
+ 	char *lvb_buf;
+ 	struct inode *inode = file_inode(filp);
  
-+#define SDMA_GCR_RANGE_IS_PA		(1 << 18)
-+#define SDMA_GCR_SEQ(x)			(((x) & 0x3) << 16)
-+#define SDMA_GCR_GL2_WB			(1 << 15)
-+#define SDMA_GCR_GL2_INV		(1 << 14)
-+#define SDMA_GCR_GL2_DISCARD		(1 << 13)
-+#define SDMA_GCR_GL2_RANGE(x)		(((x) & 0x3) << 11)
-+#define SDMA_GCR_GL2_US			(1 << 10)
-+#define SDMA_GCR_GL1_INV		(1 << 9)
-+#define SDMA_GCR_GLV_INV		(1 << 8)
-+#define SDMA_GCR_GLK_INV		(1 << 7)
-+#define SDMA_GCR_GLK_WB			(1 << 6)
-+#define SDMA_GCR_GLM_INV		(1 << 5)
-+#define SDMA_GCR_GLM_WB			(1 << 4)
-+#define SDMA_GCR_GL1_RANGE(x)		(((x) & 0x3) << 2)
-+#define SDMA_GCR_GLI_INV(x)		(((x) & 0x3) << 0)
-+
- /*define for op field*/
- #define SDMA_PKT_HEADER_op_offset 0
- #define SDMA_PKT_HEADER_op_mask   0x000000FF
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -382,6 +382,18 @@ static void sdma_v5_0_ring_emit_ib(struc
- 	unsigned vmid = AMDGPU_JOB_GET_VMID(job);
- 	uint64_t csa_mc_addr = amdgpu_sdma_get_csa_mc_addr(ring, vmid);
+@@ -285,32 +284,30 @@ static ssize_t dlmfs_file_write(struct f
+ 	if (*ppos >= i_size_read(inode))
+ 		return -ENOSPC;
  
-+	/* Invalidate L2, because if we don't do it, we might get stale cache
-+	 * lines from previous IBs.
-+	 */
-+	amdgpu_ring_write(ring, SDMA_PKT_HEADER_OP(SDMA_OP_GCR_REQ));
-+	amdgpu_ring_write(ring, 0);
-+	amdgpu_ring_write(ring, (SDMA_GCR_GL2_INV |
-+				 SDMA_GCR_GL2_WB |
-+				 SDMA_GCR_GLM_INV |
-+				 SDMA_GCR_GLM_WB) << 16);
-+	amdgpu_ring_write(ring, 0xffffff80);
-+	amdgpu_ring_write(ring, 0xffff);
++	/* don't write past the lvb */
++	if (count > i_size_read(inode) - *ppos)
++		count = i_size_read(inode) - *ppos;
 +
- 	/* An IB packet must end on a 8 DW boundary--the next dword
- 	 * must be on a 8-dword boundary. Our IB packet below is 6
- 	 * dwords long, thus add x number of NOPs, such that, in
-@@ -1597,7 +1609,7 @@ static const struct amdgpu_ring_funcs sd
- 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 3 +
- 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 6 * 2 +
- 		10 + 10 + 10, /* sdma_v5_0_ring_emit_fence x3 for user fence, vm fence */
--	.emit_ib_size = 7 + 6, /* sdma_v5_0_ring_emit_ib */
-+	.emit_ib_size = 5 + 7 + 6, /* sdma_v5_0_ring_emit_ib */
- 	.emit_ib = sdma_v5_0_ring_emit_ib,
- 	.emit_fence = sdma_v5_0_ring_emit_fence,
- 	.emit_pipeline_sync = sdma_v5_0_ring_emit_pipeline_sync,
+ 	if (!count)
+ 		return 0;
+ 
+ 	if (!access_ok(buf, count))
+ 		return -EFAULT;
+ 
+-	/* don't write past the lvb */
+-	if ((count + *ppos) > i_size_read(inode))
+-		writelen = i_size_read(inode) - *ppos;
+-	else
+-		writelen = count - *ppos;
+-
+-	lvb_buf = kmalloc(writelen, GFP_NOFS);
++	lvb_buf = kmalloc(count, GFP_NOFS);
+ 	if (!lvb_buf)
+ 		return -ENOMEM;
+ 
+-	bytes_left = copy_from_user(lvb_buf, buf, writelen);
+-	writelen -= bytes_left;
+-	if (writelen)
+-		user_dlm_write_lvb(inode, lvb_buf, writelen);
++	bytes_left = copy_from_user(lvb_buf, buf, count);
++	count -= bytes_left;
++	if (count)
++		user_dlm_write_lvb(inode, lvb_buf, count);
+ 
+ 	kfree(lvb_buf);
+ 
+-	*ppos = *ppos + writelen;
+-	mlog(0, "wrote %zd bytes\n", writelen);
+-	return writelen;
++	*ppos = *ppos + count;
++	mlog(0, "wrote %zu bytes\n", count);
++	return count;
+ }
+ 
+ static void dlmfs_init_once(void *foo)
 
 
