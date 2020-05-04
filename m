@@ -2,255 +2,117 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3651C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D535C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C789C20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B8420663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 22:43:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFikycEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgEDWiU (ORCPT
+        id S1728105AbgEDWnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 18:38:20 -0400
-Received: from mga01.intel.com ([192.55.52.88]:20003 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbgEDWiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 18:38:16 -0400
-IronPort-SDR: taPUgCGCON2jpDZPjyyQlbxiSqPNLf6fadgABOfQRY5xDhDS0+O6fAhWHhMfEHGzmp6noIGkwc
- 6U5TXJa7EtLg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 15:38:14 -0700
-IronPort-SDR: RWYtxfy4B/5q1L+p3RCJn0jQECbCDd6WhON3+i8u4U+6LwJ+3jCCTwazaHo1yPKzK1rjMOVB/m
- ERwk2OFZtkuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,353,1583222400"; 
-   d="scan'208";a="259490636"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 04 May 2020 15:38:13 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jVjj2-000AWX-Hu; Tue, 05 May 2020 06:38:12 +0800
-Date:   Tue, 05 May 2020 06:37:13 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/test] BUILD SUCCESS
- 3b32274eac83933867ce206ca2dc2a8edeac9515
-Message-ID: <5eb09919.DQ98O4IbgYeOenIW%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 4 May 2020 18:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726338AbgEDWnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 18:43:16 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71235C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 15:43:16 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so71666wml.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 15:43:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lUmbEdvnWPeUk4t6giKyfyBVYwPjBnJKNQQQsbV/urQ=;
+        b=GFikycEtJDisqtrSKLOaeTLwYYqS8iklzvNquIP5B5vdHasLq78Y4fBa8X8qpC5H7g
+         gqqaMWqgrbsNgOTtvFu6oA/7VnR85SMwZ2fim/BfEHlT8rs69qrgGB7k6XcUJKwWOOzg
+         xlmpHXkTXwyl8HepS+SN76+25+yos6OXavMhD+ICCX/5gMj+/USH8Yxgoes4aHVI81cU
+         IPyvJuuT0K13qy7WHNjYagvNH1GdowW4IOevVQtCJvofInfMp96fDc76YD/4uBawPNvv
+         JzYJh5KWrI9mFaLIyaFrkONd18yxbxFIaoXb//FHsT+lhEaEr3zmcgr/xWCbWWCcwyKz
+         zRRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lUmbEdvnWPeUk4t6giKyfyBVYwPjBnJKNQQQsbV/urQ=;
+        b=RP/ktM+fLRFitQIn+FTaJeZznJOKFTDEegbtQoeOSLeAgVQwlTZNYekSKkM2y/iDB5
+         OxkMYuGy03DxaKvn+WFjbpzrW9gCuvVYANrIANu7k/09aKO+c2IVXkIrVRNNRmxitHgO
+         VPc1jzhvzI+kkXM7hj5lCM9Zmlkxx/4nOm7qiI7kVo3n6Qlg5GOZlJ22XL6laXDsoMVz
+         AMFmVZHiujs+Gn5bmL80YBdTnJsd9hhS0OG1ZviwEc7DQ9RI7DoMSuyAp0gG8F55FMBR
+         KkE9G5IC2kLdpwaKZ2j3QPQA6mx3411NbEVZFH/MzsX5k11N2hijSoe8AO8NXsum/d8b
+         YMpw==
+X-Gm-Message-State: AGi0PuYqBcSKiRK9jfmsIsRoe4VRZwc4/yBXkvLEUZ1UNxOB3BLqCVWw
+        4sUeXQa7R1ZdjgTGPbHuWeyNQg==
+X-Google-Smtp-Source: APiQypILeXJRTqVe0dXJOUkSfx8nfwQF9nbbhp5olaJiEfZQKtxHmC4CXqx0a2GkR9492iGwqFfm/Q==
+X-Received: by 2002:a1c:7fc6:: with SMTP id a189mr16700521wmd.27.1588632195175;
+        Mon, 04 May 2020 15:43:15 -0700 (PDT)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id a13sm13895888wrv.67.2020.05.04.15.43.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 15:43:14 -0700 (PDT)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     Peter.Chen@nxp.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 1/2] usb: chipidea: msm: Ensure proper controller reset using role switch API
+Date:   Mon,  4 May 2020 23:43:45 +0100
+Message-Id: <20200504224346.613377-2-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200504224346.613377-1-bryan.odonoghue@linaro.org>
+References: <20200504224346.613377-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/test
-branch HEAD: 3b32274eac83933867ce206ca2dc2a8edeac9515  Merge branch 'dev' into HEAD
+Currently we check to make sure there is no error state on the extcon
+handle for VBUS when writing to the HS_PHY_GENCONFIG_2 register. When using
+the USB role-switch API we still need to write to this register absent an
+extcon handle.
 
-elapsed time: 482m
+This patch makes the appropriate update to ensure the write happens if
+role-switching is true.
 
-configs tested: 188
-configs skipped: 0
+Fixes: 05559f10ed79 ("usb: chipidea: add role switch class support")
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-arc                              allyesconfig
-riscv                             allnoconfig
-parisc                            allnoconfig
-powerpc                       holly_defconfig
-s390                             allmodconfig
-s390                          debug_defconfig
-ia64                             allyesconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             alldefconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                       bvme6000_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-xtensa                          iss_defconfig
-h8300                    h8300h-sim_defconfig
-xtensa                       common_defconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                      chrp32_defconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                    amigaone_defconfig
-powerpc                    adder875_defconfig
-powerpc                     ep8248e_defconfig
-powerpc                          g5_defconfig
-powerpc                     mpc512x_defconfig
-m68k                 randconfig-a001-20200505
-mips                 randconfig-a001-20200505
-nds32                randconfig-a001-20200505
-parisc               randconfig-a001-20200505
-alpha                randconfig-a001-20200505
-riscv                randconfig-a001-20200505
-m68k                 randconfig-a001-20200502
-mips                 randconfig-a001-20200502
-nds32                randconfig-a001-20200502
-alpha                randconfig-a001-20200502
-parisc               randconfig-a001-20200502
-riscv                randconfig-a001-20200502
-h8300                randconfig-a001-20200503
-nios2                randconfig-a001-20200503
-microblaze           randconfig-a001-20200503
-c6x                  randconfig-a001-20200503
-sparc64              randconfig-a001-20200503
-s390                 randconfig-a001-20200505
-xtensa               randconfig-a001-20200505
-sh                   randconfig-a001-20200505
-openrisc             randconfig-a001-20200505
-csky                 randconfig-a001-20200505
-xtensa               randconfig-a001-20200503
-sh                   randconfig-a001-20200503
-openrisc             randconfig-a001-20200503
-csky                 randconfig-a001-20200503
-s390                 randconfig-a001-20200430
-xtensa               randconfig-a001-20200430
-csky                 randconfig-a001-20200430
-openrisc             randconfig-a001-20200430
-sh                   randconfig-a001-20200430
-i386                 randconfig-b003-20200503
-x86_64               randconfig-b002-20200503
-i386                 randconfig-b001-20200503
-x86_64               randconfig-b003-20200503
-x86_64               randconfig-b001-20200503
-i386                 randconfig-b002-20200503
-x86_64               randconfig-c002-20200502
-i386                 randconfig-c002-20200502
-i386                 randconfig-c001-20200502
-i386                 randconfig-c003-20200502
-i386                 randconfig-d003-20200502
-i386                 randconfig-d001-20200502
-x86_64               randconfig-d002-20200502
-i386                 randconfig-d002-20200502
-x86_64               randconfig-e003-20200502
-i386                 randconfig-e003-20200502
-x86_64               randconfig-e001-20200502
-i386                 randconfig-e002-20200502
-i386                 randconfig-e001-20200502
-x86_64               randconfig-e003-20200503
-x86_64               randconfig-e002-20200503
-i386                 randconfig-e003-20200503
-x86_64               randconfig-e001-20200503
-i386                 randconfig-e002-20200503
-i386                 randconfig-e001-20200503
-i386                 randconfig-f003-20200503
-x86_64               randconfig-f002-20200503
-i386                 randconfig-f001-20200503
-i386                 randconfig-f002-20200503
-x86_64               randconfig-a003-20200505
-x86_64               randconfig-a001-20200505
-i386                 randconfig-a001-20200505
-i386                 randconfig-a003-20200505
-i386                 randconfig-a002-20200505
-ia64                 randconfig-a001-20200503
-arm64                randconfig-a001-20200503
-arc                  randconfig-a001-20200503
-arm                  randconfig-a001-20200503
-sparc                randconfig-a001-20200503
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
+Cc: Peter Chen <Peter.Chen@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/usb/chipidea/ci_hdrc_msm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/chipidea/ci_hdrc_msm.c b/drivers/usb/chipidea/ci_hdrc_msm.c
+index af648ba6544d..46105457e1ca 100644
+--- a/drivers/usb/chipidea/ci_hdrc_msm.c
++++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+@@ -114,7 +114,7 @@ static int ci_hdrc_msm_notify_event(struct ci_hdrc *ci, unsigned event)
+ 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
+ 					HS_PHY_ULPI_TX_PKT_EN_CLR_FIX, 0);
+ 
+-		if (!IS_ERR(ci->platdata->vbus_extcon.edev)) {
++		if (!IS_ERR(ci->platdata->vbus_extcon.edev) || ci->role_switch) {
+ 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
+ 					HS_PHY_SESS_VLD_CTRL_EN,
+ 					HS_PHY_SESS_VLD_CTRL_EN);
+-- 
+2.25.1
+
