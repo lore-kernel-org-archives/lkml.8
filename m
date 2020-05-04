@@ -2,117 +2,177 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B733C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE00CC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4728020721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD60020705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXvlHJUw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GT9EzMOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgEDPxT (ORCPT
+        id S1729498AbgEDPxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728873AbgEDPxT (ORCPT
+        Mon, 4 May 2020 11:53:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59743 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728873AbgEDPxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:53:19 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6931C061A0E;
-        Mon,  4 May 2020 08:53:18 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a21so10158480ljj.11;
-        Mon, 04 May 2020 08:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Uaqoisb/ISvzu7HtxB7/o6dTkuqP/WZqu9coo5sj/rM=;
-        b=oXvlHJUwcUAMcJO2folcLpAl4lu16ZdbHEUsIwKLpxhkbVjp+Pqsf29yGIQ0ZQ6CBp
-         mkb8I6hfNPtNe84cp72KKyuFGdD3W1dErn9FwHRIjfgpjPbyO46oblD3L3JLxYVdCVil
-         06P5osWdgGoXea5Xlh9Bruoxw8N41BiwWFhg2BmrbbgqRvK9fSODQpe0FI1jt8QYhr6x
-         xu0IwDh0VcEuPOL89Gub9MpeSnnhXmjuBLzBtUKq7QFLTv+M+g82rGvR402vk7AxuR63
-         SiC1judP6Hz6poiGeRWSoY8uO6voUtRJpGW87jlvaXJO+umnBTCbIpEbcEkoafq47WPr
-         Wfhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Uaqoisb/ISvzu7HtxB7/o6dTkuqP/WZqu9coo5sj/rM=;
-        b=iBNDwPcFSe/QIs3ltR+WmYgg50G4X8R3+zlKPJeEgVinyZrtfsxSI0QHs4UNfC2ojZ
-         U5iu+Za/JJWDJrhxdEoMcxgd9DlRVND9id+hpjlE3avW16kVEmoUacFSaqWEMkUd9WqI
-         fWQahgRkm5VqQzRkNCruNPE56eEh/cJ2ZdqhQtfk06AaYEqBgRLUAwk4Xc9MEKcpqguG
-         DFhFgfS6AOh2tkbCdJx8BFE+cinRJNBIseFEHDuyUKbWaiHCNTIPLrluVeZo0UQ+IUrJ
-         uSUIDkwWBxnaSLc4S8rwMHxgCF9YXEycuZ2oA7TAPg/2K3aBj9yNLR+zDf1fUTbE8VK/
-         Csaw==
-X-Gm-Message-State: AGi0PuYmj0M9ltIVVSNK2evH+au9kVY6b1BElA1pvrjWtLinGwheaEQE
-        VU3zsZMi/aMWP9W0L+x3zGrRj1XQ
-X-Google-Smtp-Source: APiQypIYu3Eg7NEgNAgIjKBlQAKZLAcXDN2o4QVrIrfX6wXxEGW7JxgFHm/j+Ij7gLyXdheePb6ZUg==
-X-Received: by 2002:a2e:8884:: with SMTP id k4mr11003642lji.267.1588607596749;
-        Mon, 04 May 2020 08:53:16 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id o18sm10053646lfb.13.2020.05.04.08.53.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 08:53:15 -0700 (PDT)
-Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
- <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
- <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
- <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
- <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
- <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
- <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
- <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
- <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
- <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
- <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
- <960d2715-a717-0cc3-df19-ff78dc426535@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <23520fa4-4d8f-b083-0ad3-b249339ee032@gmail.com>
-Date:   Mon, 4 May 2020 18:53:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 11:53:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588607602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bSWYDQDC7kolljOU3FOH/hFgbKSyHO/eA7z20C/Wf7g=;
+        b=GT9EzMOwOKE3GnKuKzAtbrZ6S+z2ZgstV0zAsNQ6NzaNlLADyTeepRSSjSks+PZXcgrbWC
+        SS2GinUCLE640TYKphKUtQWexxfVU4t253RXxX+HC3bLRBss6lLSuvYpwsTdooTiGtbrST
+        Q9SAepE95lboF/QXJ/QBLmOS7l8edcU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-xCKsR0mOPfmMx1ghtVk2vw-1; Mon, 04 May 2020 11:53:18 -0400
+X-MC-Unique: xCKsR0mOPfmMx1ghtVk2vw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE42F1895A28;
+        Mon,  4 May 2020 15:53:17 +0000 (UTC)
+Received: from x1.home (ovpn-113-95.phx2.redhat.com [10.3.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 643D06FF1A;
+        Mon,  4 May 2020 15:53:14 +0000 (UTC)
+Date:   Mon, 4 May 2020 09:53:13 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, peterx@redhat.com
+Subject: Re: [PATCH 2/3] vfio-pci: Fault mmaps to enable vma tracking
+Message-ID: <20200504095313.271fbe40@x1.home>
+In-Reply-To: <20200504150556.GX26002@ziepe.ca>
+References: <158836742096.8433.685478071796941103.stgit@gimli.home>
+        <158836915917.8433.8017639758883869710.stgit@gimli.home>
+        <20200501232550.GP26002@ziepe.ca>
+        <20200504082055.0faeef8b@x1.home>
+        <20200504150556.GX26002@ziepe.ca>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <960d2715-a717-0cc3-df19-ff78dc426535@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.05.2020 17:53, Sowjanya Komatineni пишет:
-> 
-> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
->>>>> Hi Dmitry,
->>>>>
->>>>> Will update in v12 to not allow freeze in middle of a frame capture.
->>>>>
->>>>> Can you please confirm on above if you agree to allow freeze to
->>>>> happen in b/w frame captures?
->>>>>
->>>>> Also as most feedback has been received from you by now, appreciate
->>>>> if you can provide all in this v11 if you have anything else so we
->>>>> will not have any new changes after v12.
->> I'll take another look tomorrow / during weekend and let you know.
-> 
-> Hi Dmitry,
-> 
-> Will send v12 if there is no more feedback. Please let me know.
+On Mon, 4 May 2020 12:05:56 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-Hello Sowjanya,
+> On Mon, May 04, 2020 at 08:20:55AM -0600, Alex Williamson wrote:
+> > On Fri, 1 May 2020 20:25:50 -0300
+> > Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >   
+> > > On Fri, May 01, 2020 at 03:39:19PM -0600, Alex Williamson wrote:  
+> > > > Rather than calling remap_pfn_range() when a region is mmap'd, setup
+> > > > a vm_ops handler to support dynamic faulting of the range on access.
+> > > > This allows us to manage a list of vmas actively mapping the area that
+> > > > we can later use to invalidate those mappings.  The open callback
+> > > > invalidates the vma range so that all tracking is inserted in the
+> > > > fault handler and removed in the close handler.
+> > > > 
+> > > > Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> > > >  drivers/vfio/pci/vfio_pci.c         |   76 ++++++++++++++++++++++++++++++++++-
+> > > >  drivers/vfio/pci/vfio_pci_private.h |    7 +++
+> > > >  2 files changed, 81 insertions(+), 2 deletions(-)    
+> > >   
+> > > > +static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+> > > > +{
+> > > > +	struct vm_area_struct *vma = vmf->vma;
+> > > > +	struct vfio_pci_device *vdev = vma->vm_private_data;
+> > > > +
+> > > > +	if (vfio_pci_add_vma(vdev, vma))
+> > > > +		return VM_FAULT_OOM;
+> > > > +
+> > > > +	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+> > > > +			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
+> > > > +		return VM_FAULT_SIGBUS;
+> > > > +
+> > > > +	return VM_FAULT_NOPAGE;
+> > > > +}
+> > > > +
+> > > > +static const struct vm_operations_struct vfio_pci_mmap_ops = {
+> > > > +	.open = vfio_pci_mmap_open,
+> > > > +	.close = vfio_pci_mmap_close,
+> > > > +	.fault = vfio_pci_mmap_fault,
+> > > > +};
+> > > > +
+> > > >  static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+> > > >  {
+> > > >  	struct vfio_pci_device *vdev = device_data;
+> > > > @@ -1357,8 +1421,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
+> > > >  	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+> > > >  	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
+> > > >  
+> > > > -	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+> > > > -			       req_len, vma->vm_page_prot);
+> > > > +	/*
+> > > > +	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
+> > > > +	 * change vm_flags within the fault handler.  Set them now.
+> > > > +	 */
+> > > > +	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+> > > > +	vma->vm_ops = &vfio_pci_mmap_ops;    
+> > > 
+> > > Perhaps do the vfio_pci_add_vma & remap_pfn_range combo here if the
+> > > BAR is activated ? That way a fully populated BAR is presented in the
+> > > common case and avoids taking a fault path?
+> > > 
+> > > But it does seem OK as is  
+> > 
+> > Thanks for reviewing.  There's also an argument that we defer
+> > remap_pfn_range() until the device is actually touched, which might
+> > reduce the startup latency.  
+> 
+> But not startup to a functional VM as that will now have to take the
+> slower fault path.
 
-I don't have any more comments to add, looking forward to v12.
+We need to take the fault path regardless because a VM will size and
+(virtually) map the BARs, toggling the memory enable bit.  As provided
+here, we don't trigger the fault unless the user attempts to access the
+BAR or we DMA map the BAR.  That defers the fault until the VM is (to
+some extent) up and running, and has a better chance for multi-threaded
+faulting than does QEMU initialization. 
+ 
+> > It's also a bit inconsistent with the vm_ops.open() path where I
+> > can't return error, so I can't call vfio_pci_add_vma(), I can only
+> > zap the vma so that the fault handler can return an error if
+> > necessary.  
+> 
+> open could allocate memory so the zap isn't needed. If allocation
+> fails then do the zap and take the slow path.
+
+That's a good idea, but it also gives us one more initialization
+variation.  I thought it was a rather nice feature that our vma_list
+includes only vmas that have actually faulted in the mapping since it
+was last zapped.  This is our steady state, so why not get there
+immediately rather than putting every mmap or open into the list,
+regardless of whether that particular vma ever accesses the mapping?
+If we have vmas in our vma_list that have never accessed the mapping,
+we're increasing our latency on zap.
+
+> > handler.  If there's a good reason to do otherwise, I can make the
+> > change, but I doubt I'd have encountered the dma mapping of an
+> > unfaulted vma issue had I done it this way, so maybe there's a test
+> > coverage argument as well.  Thanks,  
+> 
+> This test is best done by having one thread disable the other bar
+> while another thread is trying to map it
+
+We can split hairs on the best mechanism to trigger this, but the best
+test is the one that actually gets run, and this triggered by simply
+starting an assigned device VM.  Thanks,
+
+Alex
+
