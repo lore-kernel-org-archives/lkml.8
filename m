@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F7FC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8F98206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A5A205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615421;
-	bh=z4cqvnk6Rzpi/NGSkK4ma/fkQPm9mS7DduXFNAfNqs0=;
+	s=default; t=1588615425;
+	bh=EDuFdQ8OJTSvFYRyENsSd//nuLUV5HFFKR4Cj6SGVTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GZUj6jT+QHghGCXal2PGfvlnd5Qtwa4iXoVMmLu93Sh3LKl5uTd4ohKWcSw4GM9hK
-	 Gl+miud6sTsyJ235GLOfkmDHmBSOYIrCJKrACDNU6wRuJG+wnmh8m70Ic70ga2tH0J
-	 QlJCg5TkeVIyPU/hPEYWqafeGvP2urxrCPUDAByQ=
+	b=UfHWGiJLCcBIzFx7f6jV9F2Ws4O5UdUN/1NX7hh1qy+Asew9lTZP7UF64Gu5lrKZo
+	 jQsCqjsFiB9Ro1DkXIqc/e8ULG6n9ExJsYNVXffqKC5WKqScCxP0UH6WE2rc3Z5fpk
+	 t4ntYfPxYWI1QrboqhM2GTkvZDXPcaAZsucJO+JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731551AbgEDSDk (ORCPT
+        id S1731561AbgEDSDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:03:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731527AbgEDSDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:03:37 -0400
+        id S1731535AbgEDSDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:03:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF4D205ED;
-        Mon,  4 May 2020 18:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4C61206B8;
+        Mon,  4 May 2020 18:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615415;
-        bh=z4cqvnk6Rzpi/NGSkK4ma/fkQPm9mS7DduXFNAfNqs0=;
+        s=default; t=1588615418;
+        bh=EDuFdQ8OJTSvFYRyENsSd//nuLUV5HFFKR4Cj6SGVTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=seM5kZ3rDcr+QC/1bwHm1S7eGFvQt9JH711xHlKCTyiEdEB4J4VnE3o254YKPv9KB
-         ZFHeXSHEdrXpKz7toBWhf+r7/v8PRpTv6VJDwqbHXMJl3Ygl6l8I8UOjDIg4rDuBZj
-         PQGaNnOt4axlIOveUZVkhA9N/f5jz1T0XKjQpZHg=
+        b=NtBrUzC7+Co9n+vffAkKzfHltO5VdFm1V1zgksw9dxc/Fmf9mik8kKDEj7NbwXTVo
+         uhZcI9gO9bt2WEJQS6+cU4yowbOtVwbfAvcU3/3vqq2h5Rc/5p8EhhE8nEAlLuRm6H
+         RoJXJ8Zw73thCPq9Jnqzn68hCG6C5Ar588yo1oGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH 5.4 06/57] drm/qxl: qxl_release use after free
-Date:   Mon,  4 May 2020 19:57:10 +0200
-Message-Id: <20200504165457.134532238@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.4 07/57] NFSv4.1: fix handling of backchannel binding in BIND_CONN_TO_SESSION
+Date:   Mon,  4 May 2020 19:57:11 +0200
+Message-Id: <20200504165457.192577326@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -59,115 +59,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-commit 933db73351d359f74b14f4af095808260aff11f9 upstream.
+commit dff58530c4ca8ce7ee5a74db431c6e35362cf682 upstream.
 
-qxl_release should not be accesses after qxl_push_*_ring_release() calls:
-userspace driver can process submitted command quickly, move qxl_release
-into release_ring, generate interrupt and trigger garbage collector.
+Currently, if the client sends BIND_CONN_TO_SESSION with
+NFS4_CDFC4_FORE_OR_BOTH but only gets NFS4_CDFS4_FORE back it ignores
+that it wasn't able to enable a backchannel.
 
-It can lead to crashes in qxl driver or trigger memory corruption
-in some kmalloc-192 slab object
+To make sure, the client sends BIND_CONN_TO_SESSION as the first
+operation on the connections (ie., no other session compounds haven't
+been sent before), and if the client's request to bind the backchannel
+is not satisfied, then reset the connection and retry.
 
-Gerd Hoffmann proposes to swap the qxl_release_fence_buffer_objects() +
-qxl_push_{cursor,command}_ring_release() calls to close that race window.
-
-cc: stable@vger.kernel.org
-Fixes: f64122c1f6ad ("drm: add new QXL driver. (v1.4)")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/fa17b338-66ae-f299-68fe-8d32419d9071@virtuozzo.com
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/qxl/qxl_cmd.c     |    5 ++---
- drivers/gpu/drm/qxl/qxl_display.c |    6 +++---
- drivers/gpu/drm/qxl/qxl_draw.c    |    2 +-
- drivers/gpu/drm/qxl/qxl_ioctl.c   |    5 +----
- 4 files changed, 7 insertions(+), 11 deletions(-)
+ fs/nfs/nfs4proc.c           |    8 ++++++++
+ include/linux/nfs_xdr.h     |    2 ++
+ include/linux/sunrpc/clnt.h |    5 +++++
+ 3 files changed, 15 insertions(+)
 
---- a/drivers/gpu/drm/qxl/qxl_cmd.c
-+++ b/drivers/gpu/drm/qxl/qxl_cmd.c
-@@ -500,8 +500,8 @@ int qxl_hw_surface_alloc(struct qxl_devi
- 	/* no need to add a release to the fence for this surface bo,
- 	   since it is only released when we ask to destroy the surface
- 	   and it would never signal otherwise */
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7852,6 +7852,7 @@ static void
+ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs41_bind_conn_to_session_args *args = task->tk_msg.rpc_argp;
++	struct nfs41_bind_conn_to_session_res *res = task->tk_msg.rpc_resp;
+ 	struct nfs_client *clp = args->client;
  
- 	surf->hw_surf_alloc = true;
- 	spin_lock(&qdev->surf_id_idr_lock);
-@@ -543,9 +543,8 @@ int qxl_hw_surface_dealloc(struct qxl_de
- 	cmd->surface_id = id;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
--
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_SURFACE, false);
- 
- 	return 0;
- }
---- a/drivers/gpu/drm/qxl/qxl_display.c
-+++ b/drivers/gpu/drm/qxl/qxl_display.c
-@@ -523,8 +523,8 @@ static int qxl_primary_apply_cursor(stru
- 	cmd->u.set.visible = 1;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
--	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 
- 	return ret;
- 
-@@ -665,8 +665,8 @@ static void qxl_cursor_atomic_update(str
- 	cmd->u.position.y = plane->state->crtc_y + fb->hot_y;
- 
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
--	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 
- 	if (old_cursor_bo != NULL)
- 		qxl_bo_unpin(old_cursor_bo);
-@@ -713,8 +713,8 @@ static void qxl_cursor_atomic_disable(st
- 	cmd->type = QXL_CURSOR_HIDE;
- 	qxl_release_unmap(qdev, release, &cmd->release_info);
- 
--	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_cursor_ring_release(qdev, release, QXL_CMD_CURSOR, false);
+ 	switch (task->tk_status) {
+@@ -7860,6 +7861,12 @@ nfs4_bind_one_conn_to_session_done(struc
+ 		nfs4_schedule_session_recovery(clp->cl_session,
+ 				task->tk_status);
+ 	}
++	if (args->dir == NFS4_CDFC4_FORE_OR_BOTH &&
++			res->dir != NFS4_CDFS4_BOTH) {
++		rpc_task_close_connection(task);
++		if (args->retries++ < MAX_BIND_CONN_TO_SESSION_RETRIES)
++			rpc_restart_call(task);
++	}
  }
  
- static void qxl_update_dumb_head(struct qxl_device *qdev,
---- a/drivers/gpu/drm/qxl/qxl_draw.c
-+++ b/drivers/gpu/drm/qxl/qxl_draw.c
-@@ -243,8 +243,8 @@ void qxl_draw_dirty_fb(struct qxl_device
- 	}
- 	qxl_bo_kunmap(clips_bo);
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+@@ -7882,6 +7889,7 @@ int nfs4_proc_bind_one_conn_to_session(s
+ 	struct nfs41_bind_conn_to_session_args args = {
+ 		.client = clp,
+ 		.dir = NFS4_CDFC4_FORE_OR_BOTH,
++		.retries = 0,
+ 	};
+ 	struct nfs41_bind_conn_to_session_res res;
+ 	struct rpc_message msg = {
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1307,11 +1307,13 @@ struct nfs41_impl_id {
+ 	struct nfstime4			date;
+ };
  
--	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
- 	qxl_release_fence_buffer_objects(release);
-+	qxl_push_command_ring_release(qdev, release, QXL_CMD_DRAW, false);
++#define MAX_BIND_CONN_TO_SESSION_RETRIES 3
+ struct nfs41_bind_conn_to_session_args {
+ 	struct nfs_client		*client;
+ 	struct nfs4_sessionid		sessionid;
+ 	u32				dir;
+ 	bool				use_conn_in_rdma_mode;
++	int				retries;
+ };
  
- out_release_backoff:
- 	if (ret)
---- a/drivers/gpu/drm/qxl/qxl_ioctl.c
-+++ b/drivers/gpu/drm/qxl/qxl_ioctl.c
-@@ -261,11 +261,8 @@ static int qxl_process_single_command(st
- 			apply_surf_reloc(qdev, &reloc_info[i]);
- 	}
+ struct nfs41_bind_conn_to_session_res {
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -237,5 +237,10 @@ static inline int rpc_reply_expected(str
+ 		(task->tk_msg.rpc_proc->p_decode != NULL);
+ }
  
-+	qxl_release_fence_buffer_objects(release);
- 	ret = qxl_push_command_ring_release(qdev, release, cmd->type, true);
--	if (ret)
--		qxl_release_backoff_reserve_list(release);
--	else
--		qxl_release_fence_buffer_objects(release);
- 
- out_free_bos:
- out_free_release:
++static inline void rpc_task_close_connection(struct rpc_task *task)
++{
++	if (task->tk_xprt)
++		xprt_force_disconnect(task->tk_xprt);
++}
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_SUNRPC_CLNT_H */
 
 
