@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68057C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5887C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E5320721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBF720746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615360;
-	bh=mE/sYWgXPIp4AbOTkequVWThX26dgVQKrnppDC79Ko4=;
+	s=default; t=1588615366;
+	bh=VN6d4nzbrLNjgkAvTHCF4tjP+1SiphgWn7ph4Scj52s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oq5M6kgg2kVdU0r7DqcLyY4g7QOwbY6AAmadqCbQ1YYjpu4h49C4CZDPuqH7ybRtT
-	 Rs27B9Sdcl1twIUJtKYojuAx3GNS/vmSBddvndW/jHnOqbUuWmjWFRP28IJwdsrXPk
-	 qCQChRg4XmydTxoROiR6chYuOdlydLT/nxYf9nME=
+	b=JMyIoeRiIaB9eJhhgOEJTG6VQopOBsqKXf0jz/zuFpt939vmaNIZ/7XLnU39mJ85m
+	 lIJ8j5BmfLj2XqKR9jD8Nh7feikCFvLwcb+Ohrrvgi3i/QFK6yQ4divrF+sbvL6MVn
+	 aXhEmjunKOL397lYM3N6RWfY15MY1cIbEMqEy9LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbgEDSCj (ORCPT
+        id S1731373AbgEDSCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:02:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59050 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731350AbgEDSCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:02:36 -0400
+        id S1731356AbgEDSCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:02:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAF2620721;
-        Mon,  4 May 2020 18:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C41620746;
+        Mon,  4 May 2020 18:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615355;
-        bh=mE/sYWgXPIp4AbOTkequVWThX26dgVQKrnppDC79Ko4=;
+        s=default; t=1588615357;
+        bh=VN6d4nzbrLNjgkAvTHCF4tjP+1SiphgWn7ph4Scj52s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZV3FjkfC3ChVxsJ+B3mipUS2XISXvc27yrr9HCzh43+quWKrHU/sCbkjhB4uLOHHo
-         XjO1XD/d5pdRWY+LKulMTsBhrweybxw7Ky9u9jaGiUYJS0t3mIrzpoxee60hHUkrLi
-         6eR/AirtH3YId2RBBILJmnqrA/jZFzjRBozODx2Y=
+        b=GLyxRac4QXwWptZw9TV/U31bbAfwdMc3UJmyyV51qsSKt8/laFqdFt6uPboTWUr1a
+         oRfryn/kekEr+rQ0Jf8rbKA2RfitezAfTHh0Ku7w/Iq0GdI1VEcwgutkEjHoZVOzxl
+         eF8i44DakwJLrR6xYnHj8WkpQIFAUZN6bzCE5N3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 4.19 22/37] vfio/type1: Fix VA->PA translation for PFNMAP VMAs in vaddr_get_pfn()
-Date:   Mon,  4 May 2020 19:57:35 +0200
-Message-Id: <20200504165450.668045868@linuxfoundation.org>
+        stable@vger.kernel.org, Tang Bin <tangbin@cmss.chinamobile.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.19 23/37] iommu/qcom: Fix local_base status check
+Date:   Mon,  4 May 2020 19:57:36 +0200
+Message-Id: <20200504165450.779338785@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,73 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-commit 5cbf3264bc715e9eb384e2b68601f8c02bb9a61d upstream.
+commit b52649aee6243ea661905bdc5fbe28cc5f6dec76 upstream.
 
-Use follow_pfn() to get the PFN of a PFNMAP VMA instead of assuming that
-vma->vm_pgoff holds the base PFN of the VMA.  This fixes a bug where
-attempting to do VFIO_IOMMU_MAP_DMA on an arbitrary PFNMAP'd region of
-memory calculates garbage for the PFN.
+The function qcom_iommu_device_probe() does not perform sufficient
+error checking after executing devm_ioremap_resource(), which can
+result in crashes if a critical error path is encountered.
 
-Hilariously, this only got detected because the first "PFN" calculated
-by vaddr_get_pfn() is PFN 0 (vma->vm_pgoff==0), and iommu_iova_to_phys()
-uses PA==0 as an error, which triggers a WARN in vfio_unmap_unpin()
-because the translation "failed".  PFN 0 is now unconditionally reserved
-on x86 in order to mitigate L1TF, which causes is_invalid_reserved_pfn()
-to return true and in turns results in vaddr_get_pfn() returning success
-for PFN 0.  Eventually the bogus calculation runs into PFNs that aren't
-reserved and leads to failure in vfio_pin_map_dma().  The subsequent
-call to vfio_remove_dma() attempts to unmap PFN 0 and WARNs.
-
-  WARNING: CPU: 8 PID: 5130 at drivers/vfio/vfio_iommu_type1.c:750 vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
-  Modules linked in: vfio_pci vfio_virqfd vfio_iommu_type1 vfio ...
-  CPU: 8 PID: 5130 Comm: sgx Tainted: G        W         5.6.0-rc5-705d787c7fee-vfio+ #3
-  Hardware name: Intel Corporation Mehlow UP Server Platform/Moss Beach Server, BIOS CNLSE2R1.D00.X119.B49.1803010910 03/01/2018
-  RIP: 0010:vfio_unmap_unpin+0x2e1/0x310 [vfio_iommu_type1]
-  Code: <0f> 0b 49 81 c5 00 10 00 00 e9 c5 fe ff ff bb 00 10 00 00 e9 3d fe
-  RSP: 0018:ffffbeb5039ebda8 EFLAGS: 00010246
-  RAX: 0000000000000000 RBX: ffff9a55cbf8d480 RCX: 0000000000000000
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a52b771c200
-  RBP: 0000000000000000 R08: 0000000000000040 R09: 00000000fffffff2
-  R10: 0000000000000001 R11: ffff9a51fa896000 R12: 0000000184010000
-  R13: 0000000184000000 R14: 0000000000010000 R15: ffff9a55cb66ea08
-  FS:  00007f15d3830b40(0000) GS:ffff9a55d5600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000561cf39429e0 CR3: 000000084f75f005 CR4: 00000000003626e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   vfio_remove_dma+0x17/0x70 [vfio_iommu_type1]
-   vfio_iommu_type1_ioctl+0x9e3/0xa7b [vfio_iommu_type1]
-   ksys_ioctl+0x92/0xb0
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x180
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f15d04c75d7
-  Code: <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 81 48 2d 00 f7 d8 64 89 01 48
-
-Fixes: 73fa0d10d077 ("vfio: Type1 IOMMU implementation")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: 0ae349a0f33f ("iommu/qcom: Add qcom_iommu")
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200418134703.1760-1-tangbin@cmss.chinamobile.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vfio/vfio_iommu_type1.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/qcom_iommu.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -385,8 +385,8 @@ static int vaddr_get_pfn(struct mm_struc
- 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -797,8 +797,11 @@ static int qcom_iommu_device_probe(struc
+ 	qcom_iommu->dev = dev;
  
- 	if (vma && vma->vm_flags & VM_PFNMAP) {
--		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
--		if (is_invalid_reserved_pfn(*pfn))
-+		if (!follow_pfn(vma, vaddr, pfn) &&
-+		    is_invalid_reserved_pfn(*pfn))
- 			ret = 0;
- 	}
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (res)
++	if (res) {
+ 		qcom_iommu->local_base = devm_ioremap_resource(dev, res);
++		if (IS_ERR(qcom_iommu->local_base))
++			return PTR_ERR(qcom_iommu->local_base);
++	}
  
+ 	qcom_iommu->iface_clk = devm_clk_get(dev, "iface");
+ 	if (IS_ERR(qcom_iommu->iface_clk)) {
 
 
