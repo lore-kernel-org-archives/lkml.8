@@ -2,144 +2,276 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8EFC47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6139E2085B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FA521655
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:25:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YXOeQUUa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FneXA0Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbgEDSXT (ORCPT
+        id S1730685AbgEDSZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
+        Mon, 4 May 2020 14:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730697AbgEDSXT (ORCPT
+        by vger.kernel.org with ESMTP id S1729963AbgEDSZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:23:19 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BA7C061A41
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:23:18 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id k18so13436882ion.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:23:18 -0700 (PDT)
+        Mon, 4 May 2020 14:25:47 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427B5C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:25:47 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id o19so200431qko.10
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 11:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g00MXxVdtztL4qBMS1aNPPa+lbPn+NJIpTHVHqlFdp4=;
-        b=YXOeQUUayM6/ouFtGCsISVJxSpaOEQJ4jSyQ8BSyXptcIlItLECymk2zqbRE+z8BeA
-         UzxwHHZpnbYkXMQDviMSGeIK+cTw9DXrZtbjMZxLAX8ZsP2lDNKaZoD1FLP4XFBtLIqN
-         K/H5/dVM9JPfTuuczRP0juET3D1IhxXabFd4X4nYxcrmR/BO9A9jZWLJvI3AfFXDWcsP
-         bB1UKpqXRlBv4AUsMxnNUrs7tjoNgQo7ge9pYVwGbD8gk8uvgb1ToQlwdpLDcFGHhHFF
-         2lr22WkBR+95902NkqrDrVSE/+Ykn6r7eOlO8Ao2XwkJQqQD+mX1ObF3xY6hqbMSLWxe
-         q9Dw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Vr82xnSdttu/vwNeVjuXmdlyvgmTUqEl7LZO5k4HAlY=;
+        b=FneXA0CsHKSgv1W+P2IQfI9C8e/ieyCjIGOOXkDQG9ARa3vmqWwtwcqWgVDtP17aic
+         Pzx+bvvZY6ASVtBNbJWIZynhPwRhsJotgS/byYrrZzhCrNYBbtXtKFrcnLtZ93ppfgwO
+         +VnD/trb8iv2yoaMr4+gdF8COIx/7mQI46SMzTrsA7K6R6YlqyFuhseKOjGveDP+b5tM
+         jM5QQrTABZlrqJTT8FDWU1mtKkWua/8thCYnyRO6EZQl7Rzn3PqRW5Bt3w+4WEMsazVx
+         lklDzpxo3EdbSSjxGpqM5iywPjMTuOnJBRXIxhAZZAiivAIzxuGhOId3CewyZhZ0Aztn
+         TosA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g00MXxVdtztL4qBMS1aNPPa+lbPn+NJIpTHVHqlFdp4=;
-        b=NFOYe+7gCuRLSoIY2TPIlnF9DVcDf0U3CiRu4PxAQL+FjgMo2MkDCMIi0yq/WKupAb
-         Rs1nFBbppvahBd2axSs7wj8ezqprnR+cNGFLhzel287i1KtJpWAtQ6y8ODghhD1SUsH8
-         Gce2rGjoTOvRuz9TCO3wxrmnHK479766CN45Gt/JQGY6IzAD//blt6Yy8AB33GBZTysU
-         3truLrZnmYtHIPO+kyM7UQrbNDsp102bDObbvVOYOKXq+nObDTfsOXIWPM+XN2hNqSIo
-         iNdO+n4rKVFwEhr9xNCVjBneE3N1aVmoED6w0hOoCSR2uuF8TEKWySyJqWJ1IVrCLqGH
-         PuhQ==
-X-Gm-Message-State: AGi0PubhiSSQdkiPKiHPxuaXBoZjmubGwfTsMig8FEv+4iQPaiuR6Sqs
-        WHN0s0xQDrcdjlHZSXJSQ5WvQQDoBq8=
-X-Google-Smtp-Source: APiQypKXOR9T8IP7JnAqSvoxNt2MP63A/IWQcSz212xzt/Zjxn35i0MjKM6muvk2wEXRTm5fSj0L8w==
-X-Received: by 2002:a5e:c008:: with SMTP id u8mr16636889iol.4.1588616597871;
-        Mon, 04 May 2020 11:23:17 -0700 (PDT)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id v9sm4487809iol.28.2020.05.04.11.23.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 11:23:16 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: net: add IPA iommus property
-From:   Alex Elder <elder@linaro.org>
-To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     evgreen@chromium.org.net, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, davem@davemloft.net,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200501214500.31433-1-elder@linaro.org>
-Message-ID: <040dbe54-1a64-6d32-076e-189963f10036@linaro.org>
-Date:   Mon, 4 May 2020 13:23:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200501214500.31433-1-elder@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Vr82xnSdttu/vwNeVjuXmdlyvgmTUqEl7LZO5k4HAlY=;
+        b=inFUvpoRNsCbC8TKf5ify0BZo+jfJTvfFHS66QWaqbzVEsTJbyZXEDZP6MuN8axCN9
+         n1LkJhCCPz+LoywfrMGXteKaw0SExyrCnMQTXCsH+bE0SWvO3eeFxCxsfaPJzz7T1wze
+         x57NRycvRUQflR4nyL/0Iv+If1vUf5dAA+5RHT4PD9vhIs800RKiO+57f7tMLIXrlQKR
+         GIetqaprpwtvblc3igccs+SqVguNFAUZBbSrWQAIJuCQp9glZCnkdu9iphH0P5Gme8ij
+         Y8RZFGhDqQmJ8EIkEezU+R388YduXSeCcHdVvOgWHvJOao+Xn1bqyhPzIX3V24iR1E+g
+         hrVg==
+X-Gm-Message-State: AGi0PuYCVxERIGwCA17pQODluXvK5g1Ad3FNXhJNoohiGeD1sixUPbHp
+        WV2aeFUFaAM7Hlqwrz43Jco8k9U21hk=
+X-Google-Smtp-Source: APiQypKpkGH3ku1eNF7NWCvz4QuH/NE1kfdyAmilguB2sknGZK+XaHTXQHMJRWari/NX/TZPKNA0sK4y/yQ=
+X-Received: by 2002:a05:6214:8e9:: with SMTP id dr9mr460689qvb.84.1588616746138;
+ Mon, 04 May 2020 11:25:46 -0700 (PDT)
+Date:   Mon,  4 May 2020 11:25:40 -0700
+Message-Id: <20200504182540.11124-1-surenb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.526.g744177e7f7-goog
+Subject: [PATCH v2 1/1] kthread: break dependency between worker->lock and task_struct->pi_lock
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     surenb@google.com
+Cc:     peterz@infradead.org, mingo@redhat.com, hannes@cmpxchg.org,
+        will@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
+        ben.dooks@codethink.co.uk, cl@rock-chips.com, ke.wang@unisoc.com,
+        shakeelb@google.com, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/20 4:45 PM, Alex Elder wrote:
-> The IPA accesses "IMEM" and main system memory through an SMMU, so
-> its DT node requires an iommus property to define range of stream IDs
-> it uses.
-> 
-> Signed-off-by: Alex Elder <elder@linaro.org>
+A number of kthread-related functions indirectly take task_struct->pi_lock
+while holding worker->lock in the call chain like this:
+    spin_lock(&worker->lock)
+    kthread_insert_work
+    wake_up_process
+    try_to_wake_up
+    raw_spin_lock_irqsave(&p->pi_lock, flags)
 
-Please ignore this patch.  I have reposted it as the first
-patch in a new series:
-   https://lore.kernel.org/netdev/20200504175859.22606-1-elder@linaro.org/
+This lock dependency exists whenever kthread_insert_work is called either
+directly or indirectly via __kthread_queue_delayed_work in the following
+functions:
+    kthread_queue_work
+    kthread_delayed_work_timer_fn
+    kthread_queue_delayed_work
+    kthread_flush_work
+    kthread_mod_delayed_work
 
-					-Alex
+This creates possibilities for circular dependencies like the one reported
+at [1]. Break this lock dependency by moving task wakeup after worker->lock
+has been released.
 
-> ---
->   Documentation/devicetree/bindings/net/qcom,ipa.yaml | 10 +++++++++-
->   1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.yaml b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> index 140f15245654..7b749fc04c32 100644
-> --- a/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.yaml
-> @@ -20,7 +20,10 @@ description:
->     The GSI is an integral part of the IPA, but it is logically isolated
->     and has a distinct interrupt and a separately-defined address space.
->   
-> -  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.
-> +  See also soc/qcom/qcom,smp2p.txt and interconnect/interconnect.txt.  See
-> +  iommu/iommu.txt and iommu/arm,smmu.yaml for more information about SMMU
-> +  bindings.
-> +
->   
->     - |
->       --------             ---------
-> @@ -54,6 +57,9 @@ properties:
->         - const: ipa-shared
->         - const: gsi
->   
-> +  iommus:
-> +    maxItems: 1
-> +
->     clocks:
->       maxItems: 1
->   
-> @@ -126,6 +132,7 @@ properties:
->   
->   required:
->     - compatible
-> +  - iommus
->     - reg
->     - clocks
->     - interrupts
-> @@ -164,6 +171,7 @@ examples:
->                   modem-init;
->                   modem-remoteproc = <&mss_pil>;
->   
-> +                iommus = <&apps_smmu 0x720 0x3>;
->                   reg = <0 0x1e40000 0 0x7000>,
->                           <0 0x1e47000 0 0x2000>,
->                           <0 0x1e04000 0 0x2c000>;
-> 
+[1]: https://lore.kernel.org/lkml/CAJuCfpG4NkhpQvZjgXZ_3gm6Hf1QgN_eUOQ8iX9Cv1k9whLwSQ@mail.gmail.com
+
+Reported-by: Ke Wang <ke.wang@unisoc.com>
+Reported-by: Shakeel Butt <shakeelb@google.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Tested-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+
+---
+v2:
+  * replace lkml link with lore.kernel.org one
+  * change a line break to be more consistent with the rest of the code
+---
+ kernel/kthread.c | 44 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/kthread.c b/kernel/kthread.c
+index bfbfa481be3a..d37cd37d934c 100644
+--- a/kernel/kthread.c
++++ b/kernel/kthread.c
+@@ -9,6 +9,7 @@
+ #include <uapi/linux/sched/types.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task.h>
++#include <linux/sched/wake_q.h>
+ #include <linux/kthread.h>
+ #include <linux/completion.h>
+ #include <linux/err.h>
+@@ -806,14 +807,15 @@ static void kthread_insert_work_sanity_check(struct kthread_worker *worker,
+ /* insert @work before @pos in @worker */
+ static void kthread_insert_work(struct kthread_worker *worker,
+ 				struct kthread_work *work,
+-				struct list_head *pos)
++				struct list_head *pos,
++				struct wake_q_head *wake_q)
+ {
+ 	kthread_insert_work_sanity_check(worker, work);
+ 
+ 	list_add_tail(&work->node, pos);
+ 	work->worker = worker;
+ 	if (!worker->current_work && likely(worker->task))
+-		wake_up_process(worker->task);
++		wake_q_add(wake_q, worker->task);
+ }
+ 
+ /**
+@@ -831,15 +833,19 @@ static void kthread_insert_work(struct kthread_worker *worker,
+ bool kthread_queue_work(struct kthread_worker *worker,
+ 			struct kthread_work *work)
+ {
+-	bool ret = false;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
++	bool ret = false;
+ 
+ 	raw_spin_lock_irqsave(&worker->lock, flags);
+ 	if (!queuing_blocked(worker, work)) {
+-		kthread_insert_work(worker, work, &worker->work_list);
++		kthread_insert_work(worker, work, &worker->work_list, &wake_q);
+ 		ret = true;
+ 	}
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kthread_queue_work);
+@@ -857,6 +863,7 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
+ 	struct kthread_delayed_work *dwork = from_timer(dwork, t, timer);
+ 	struct kthread_work *work = &dwork->work;
+ 	struct kthread_worker *worker = work->worker;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 
+ 	/*
+@@ -873,15 +880,18 @@ void kthread_delayed_work_timer_fn(struct timer_list *t)
+ 	/* Move the work from worker->delayed_work_list. */
+ 	WARN_ON_ONCE(list_empty(&work->node));
+ 	list_del_init(&work->node);
+-	kthread_insert_work(worker, work, &worker->work_list);
++	kthread_insert_work(worker, work, &worker->work_list, &wake_q);
+ 
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
+ }
+ EXPORT_SYMBOL(kthread_delayed_work_timer_fn);
+ 
+ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+ 					 struct kthread_delayed_work *dwork,
+-					 unsigned long delay)
++					 unsigned long delay,
++					 struct wake_q_head *wake_q)
+ {
+ 	struct timer_list *timer = &dwork->timer;
+ 	struct kthread_work *work = &dwork->work;
+@@ -895,7 +905,7 @@ static void __kthread_queue_delayed_work(struct kthread_worker *worker,
+ 	 * on that there's no such delay when @delay is 0.
+ 	 */
+ 	if (!delay) {
+-		kthread_insert_work(worker, work, &worker->work_list);
++		kthread_insert_work(worker, work, &worker->work_list, wake_q);
+ 		return;
+ 	}
+ 
+@@ -928,17 +938,21 @@ bool kthread_queue_delayed_work(struct kthread_worker *worker,
+ 				unsigned long delay)
+ {
+ 	struct kthread_work *work = &dwork->work;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 	bool ret = false;
+ 
+ 	raw_spin_lock_irqsave(&worker->lock, flags);
+ 
+ 	if (!queuing_blocked(worker, work)) {
+-		__kthread_queue_delayed_work(worker, dwork, delay);
++		__kthread_queue_delayed_work(worker, dwork, delay, &wake_q);
+ 		ret = true;
+ 	}
+ 
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kthread_queue_delayed_work);
+@@ -967,6 +981,7 @@ void kthread_flush_work(struct kthread_work *work)
+ 		KTHREAD_WORK_INIT(fwork.work, kthread_flush_work_fn),
+ 		COMPLETION_INITIALIZER_ONSTACK(fwork.done),
+ 	};
++	DEFINE_WAKE_Q(wake_q);
+ 	struct kthread_worker *worker;
+ 	bool noop = false;
+ 
+@@ -979,15 +994,18 @@ void kthread_flush_work(struct kthread_work *work)
+ 	WARN_ON_ONCE(work->worker != worker);
+ 
+ 	if (!list_empty(&work->node))
+-		kthread_insert_work(worker, &fwork.work, work->node.next);
++		kthread_insert_work(worker, &fwork.work,
++				    work->node.next, &wake_q);
+ 	else if (worker->current_work == work)
+ 		kthread_insert_work(worker, &fwork.work,
+-				    worker->work_list.next);
++				    worker->work_list.next, &wake_q);
+ 	else
+ 		noop = true;
+ 
+ 	raw_spin_unlock_irq(&worker->lock);
+ 
++	wake_up_q(&wake_q);
++
+ 	if (!noop)
+ 		wait_for_completion(&fwork.done);
+ }
+@@ -1065,6 +1083,7 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
+ 			      unsigned long delay)
+ {
+ 	struct kthread_work *work = &dwork->work;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 	int ret = false;
+ 
+@@ -1083,9 +1102,12 @@ bool kthread_mod_delayed_work(struct kthread_worker *worker,
+ 
+ 	ret = __kthread_cancel_work(work, true, &flags);
+ fast_queue:
+-	__kthread_queue_delayed_work(worker, dwork, delay);
++	__kthread_queue_delayed_work(worker, dwork, delay, &wake_q);
+ out:
+ 	raw_spin_unlock_irqrestore(&worker->lock, flags);
++
++	wake_up_q(&wake_q);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kthread_mod_delayed_work);
+-- 
+2.26.2.526.g744177e7f7-goog
 
