@@ -2,169 +2,149 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77495C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7EFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58DD4206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:55:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z9NzLadp"
+	by mail.kernel.org (Postfix) with ESMTP id 9EE5B206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588614959;
+	bh=7AASLHxv2Rby4dstXR1mZull2LY1/sl46uo96ENxXog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qY12Ts4wRE4R6dGG7JpOiKw9zgAXhhSb+AWrBvshEIjKm4LsTKwIBo9E1ifOkB8+x
+	 Nc/cgW41JZSp+m2+UWaghPZ7UAdW8QwYfyV94ip4E5Nm8NtnJfPJvek4T0L16Kp95g
+	 bbb1yPui9etZfWEZc5/sUmIS7X+RR3MOg0peCzlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgEDRzJ (ORCPT
+        id S1730530AbgEDRz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:55:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730215AbgEDRzJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:55:09 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF33C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:55:08 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id u12so235653vsq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:55:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y/gQPiK17suTq6DuWJoy9CBpFSu8hTHVI3iRDs2LpJo=;
-        b=Z9NzLadpYL6ZcaMH8/UG7+m0Is3JRgBpqDvu0N+weEfhTLO4xOv4bkPY7JC32O0chR
-         uaZw/ZHjB92vj9dcV/KOk9raMH9IwyPJS6TtHalY0UWnBRRcxCJ92zgKH3v2OrH/kkOz
-         Qudc2N/RPNQTufP/DoNvsRmw23xnTPWkfgoes=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y/gQPiK17suTq6DuWJoy9CBpFSu8hTHVI3iRDs2LpJo=;
-        b=gdE+vXNpdBQbujAL3nnvmuRjidhhAeqy7E7d8esgttoZ10pxgolS/Of80y3mWx14K7
-         X+VuPZTX8g1Pat6wxP6Q7xfozyyEnStJXJYFjsS17YyHGXtdmBd3JtGLYaIJG9jskBvZ
-         L7iVLHznBFsrEK1RZpvCtuzkrQ42oy6+CRUfTD5MWimN+l5JJxAlhNp2kv2E4nq9VsJX
-         2nGyDdkTnlcu5TwN1LjCCdD+rm2AvG0ekKQBBRjZx/SYyMfAxy0fyPo6BKXauMMl+ibt
-         zlTethONxfabd8JlPpI7icm5R1SQmRNAejbwmu3H0j4cYhkt6Vq6Znk6N+IoVzL1TygB
-         pcfw==
-X-Gm-Message-State: AGi0PuZsL9VUoA6RmPYiQ51OdKJJuSLFPvskePp00UWTy2vRwpvdPTFN
-        VQxUDP8GhC0u/T0hzQsWw0ozAByHmGU=
-X-Google-Smtp-Source: APiQypIhw/aRIfEz5eDikfeNZPnwPN8gv0p9zmvEsz4l8NCoCGM9x5OiTXbcbTyFFdKwf0iR8qNMSg==
-X-Received: by 2002:a05:6102:208f:: with SMTP id h15mr314525vsr.69.1588614906758;
-        Mon, 04 May 2020 10:55:06 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id u85sm4945147vsu.22.2020.05.04.10.55.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 10:55:06 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id l25so206651vso.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:55:06 -0700 (PDT)
-X-Received: by 2002:a67:fc46:: with SMTP id p6mr308066vsq.169.1588614905535;
- Mon, 04 May 2020 10:55:05 -0700 (PDT)
+        Mon, 4 May 2020 13:55:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729386AbgEDRz6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:55:58 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40165206B8;
+        Mon,  4 May 2020 17:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588614957;
+        bh=7AASLHxv2Rby4dstXR1mZull2LY1/sl46uo96ENxXog=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T/4b4jqaWekrwSnAOxrrDnnsqhQdyBbqnCTaU4oZvRIk1eLfkoYWFZ1ih5QvyBaPn
+         /XDMyxX07GqjYgR0nbxYkb7arLT1aQCJjt4ADoIePOJItfhJ06Z1Gf3LlyxSV+FfeV
+         FizZRIenSvfWO2jknmk2ojaBVX7K1p8zWc+VBTk0=
+Date:   Mon, 4 May 2020 18:55:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, kuninori.morimoto.gx@renesas.com,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
+        swarren@nvidia.com, nicoleotsuka@gmail.com
+Subject: Re: [RFC] DPCM for Tegra
+Message-ID: <20200504175555.GG5491@sirena.org.uk>
+References: <1588250483-10014-1-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-References: <20200424094610.v5.1.Ic7096b3b9b7828cdd41cd5469a6dee5eb6abf549@changeid>
- <e8310c51-d7b1-ac88-cd6b-0965804eb754@codeaurora.org>
-In-Reply-To: <e8310c51-d7b1-ac88-cd6b-0965804eb754@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 4 May 2020 10:54:54 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WF4=4ZgeBE8WYysW1HevynMrPqv6oU4a=hZMQ_z9juiA@mail.gmail.com>
-Message-ID: <CAD=FV=WF4=4ZgeBE8WYysW1HevynMrPqv6oU4a=hZMQ_z9juiA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] soc: qcom: rpmh-rsc: Correctly ignore
- CPU_CLUSTER_PM notifications
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ahP6B03r4gLOj5uD"
+Content-Disposition: inline
+In-Reply-To: <1588250483-10014-1-git-send-email-spujar@nvidia.com>
+X-Cookie: My life is a patio of fun!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Sun, May 3, 2020 at 10:19 PM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Hi,
->
-> On 4/24/2020 10:16 PM, Douglas Anderson wrote:
-> > Our switch statement doesn't have entries for CPU_CLUSTER_PM_ENTER,
-> > CPU_CLUSTER_PM_ENTER_FAILED, and CPU_CLUSTER_PM_EXIT and doesn't have
-> > a default.  This means that we'll try to do a flush in those cases but
-> > we won't necessarily be the last CPU down.  That's not so ideal since
-> > our (lack of) locking assumes we're on the last CPU.
-> >
-> > Luckily this isn't as big a problem as you'd think since (at least on
-> > the SoC I tested) we don't get these notifications except on full
-> > system suspend.  ...and on full system suspend we get them on the last
-> > CPU down.  That means that the worst problem we hit is flushing twice.
-> > Still, it's good to make it correct.
-> >
-> > Fixes: 985427f997b6 ("soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches")
-> > Reported-by: Stephen Boyd <swboyd@chromium.org>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >
-> > Changes in v5:
-> > - Corrently => Correctly
-> >
-> > Changes in v4:
-> > - ("...Corrently ignore CPU_CLUSTER_PM notifications") split out for v4.
-> >
-> > Changes in v3: None
-> > Changes in v2: None
-> >
-> >   drivers/soc/qcom/rpmh-rsc.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> > index a9e15699f55f..3571a99fc839 100644
-> > --- a/drivers/soc/qcom/rpmh-rsc.c
-> > +++ b/drivers/soc/qcom/rpmh-rsc.c
-> > @@ -806,6 +806,8 @@ static int rpmh_rsc_cpu_pm_callback(struct notifier_block *nfb,
-> >       case CPU_PM_EXIT:
-> >               cpumask_clear_cpu(smp_processor_id(), &drv->cpus_entered_pm);
-> >               goto exit;
-> > +     default:
-> > +             return NOTIFY_DONE;
->
-> I noticed a bug here,
->
-> Either need to unlock and return here.
+--ahP6B03r4gLOj5uD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Dang it!  Thank you very much for noticing.  v6 sent.  I removed both
-yours and Stephen's "Reviewed-by" tags.  Please re-review to make sure
-I didn't do anything else stuid.
+On Thu, Apr 30, 2020 at 06:11:23PM +0530, Sameer Pujar wrote:
 
+>  a) Can I use a DAPM Mux control to activate a BE path? This in turn can
+>     program required switch in XBAR.
 
-> +       default:
-> +               ret = NOTIFY_DONE;
-> +               goto exit;
->
-> Or
->
-> If you move this patch at the end of series, it should will work fine as is.
-> Since in patch 5 of this series,  pm_lock is removed, so return
-> NOTIFY_DONE; do not any unlock.
+If it works then sure, that seems sensible.
 
-Right.  It used to be part of the last patch but Stephen requested I
-move the bugfixes first so they could land sooner even if we aren't
-ready to land the "remove the pm_lock" patch.
+>  b) I have modelled SFC and MIXER as backends. Is this allowed?
+>=20
+>     This was done to include SFC or MIXER HW components as part of the
+>     sound card and use like below in one of the audio use cases.
+> =20
+>     ADMAIF1(FE) --> SFC(BE1) --> I2S(BE2) ... OR
+>     ADMAIF2(FE) --> SFC(BE1) --> I2S(BE2) ...
 
+This is the sort of setup that'd be a lot happier using a component
+model.
 
-> When i pulled in only first two changes in this series i got spinlock
-> recursion during suspend-resume.
-> Back when i pull in entire series for validation, the issue do not come
-> because last patch removes pm_lock.
+>     I used following workaround to connect multiple BE components.
+>     With this I can see PCM callbacks happen for all BE DAIs along the DA=
+PM
+>     path. The obective was to connect multiple components together and (a)
+>     was used to connect one component to another. Each "-->" here connects
+>     two components and it is a switch in XBAR.=20
 
-OK, v6 is sent out.
+This doesn't strike me as something that's likely to be robust but given
+that that applies to DPCM in general so long as it doesn't break anyone
+else's existing stuff I guess it should be viable, it's not like there
+are actually good options that you could use currently.  It's really
+hard to get enthusiastic about it though.
 
--Doug
+>  c) Hostless mode did NOT work:
+>      - Following audio path was intended to be tested:
+>        I2S1 --> SFC --> I2S2
+
+>      - [3] offers two options:
+>          * CODEC<->CODEC: If I were to use a separate DAI link for each B=
+E to BE
+>            connection, then it will result in a similar design what we ha=
+ve
+>            currently.
+
+This is more in line with components so will probably be easier going
+forwards.
+
+>          * Hostless: I did not come across references for this.
+>            (Any references in this regard will be helpful)
+
+Not sure anyone has ever done this with DPCM, could be wrong though.
+
+> May be the current Tegra ASoC design is more suitable for component model=
+ as you
+> had previously mentioned. I wanted to understand if above, especially (a)=
+ and (b),
+> are acceptable in this regard or if there are better options to interconn=
+ect
+> multiple ASoC components.
+
+In general most systems would be happier with components but yeah, I
+think that's particularly the case for something as powerful and
+flexible as your hardware seems to be.
+
+--ahP6B03r4gLOj5uD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6wVyoACgkQJNaLcl1U
+h9BsCQf+NDpQnXUKOhrp8OMCAs73chnv7fTrNscXnf0V+rnrqqSC7b6d0Q2tz3QL
+8HYzl1AiMtRaAmybm98BhWpdUWXMGTKdYMBM7uKX2r+uVkm6oWhhK+EST6fOMv3k
+ZvgRM35+2mIXUrSR5b62uPIi8O3mtbLuFkPb3oWkw/hT0jQm4MPKl/c6h3f9e2qb
+FY8yrgExhRQkp+NAKMSNKV4gEZbViEJG5M9w879aEjQdWWhJ4tqo2s2QQXZmg5p2
+x/uNk6mgWU+edW21BN78iaOB8urYcnac5ItgRCiVVCrhRjNeP8qhs0irsRF5l03X
+656KL7U44mgySYNW2tlLHsXV/jmJXg==
+=W0ip
+-----END PGP SIGNATURE-----
+
+--ahP6B03r4gLOj5uD--
