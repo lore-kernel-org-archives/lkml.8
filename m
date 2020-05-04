@@ -2,116 +2,150 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57913C47254
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5EAC47258
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB4A2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DD62075B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7/KxBZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgEDOjA (ORCPT
+        id S1729085AbgEDOk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:39:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23056 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728486AbgEDOjA (ORCPT
+        Mon, 4 May 2020 10:40:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728219AbgEDOk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:39:00 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044EXBuV136193;
-        Mon, 4 May 2020 10:38:52 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s45sqhkt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 10:38:51 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044EZof4019833;
-        Mon, 4 May 2020 14:38:48 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5myqr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 14:38:48 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044EckA060424284
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 May 2020 14:38:46 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88E6711C054;
-        Mon,  4 May 2020 14:38:46 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14B6F11C04A;
-        Mon,  4 May 2020 14:38:44 +0000 (GMT)
-Received: from [9.199.43.226] (unknown [9.199.43.226])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  4 May 2020 14:38:43 +0000 (GMT)
-Subject: Re: [PATCH] selftests/vm/keys: fix a broken reference at
- protection_keys.c
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org
-References: <d478a2fc5d204691d0cac6e2b416f0e07a26d3d9.1588585390.git.mchehab+huawei@kernel.org>
- <bd55a74d-1305-9e23-94cd-37e59c11dfcd@intel.com>
-From:   Sandipan Das <sandipan@linux.ibm.com>
-Message-ID: <43841ceb-f682-26ff-8b57-fed545759193@linux.ibm.com>
-Date:   Mon, 4 May 2020 20:08:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 4 May 2020 10:40:27 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F680C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 07:40:25 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id y24so9408377wma.4
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 07:40:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UMNcIlbSFVLU3Wa4ZdiVbcd/h1/cMb1IhxbYjcynbwI=;
+        b=M7/KxBZ5XzimbtUhN6RRKrjEVlCkEj4NzUOP9Kc444ElO6wJDueL/eN76CHLf8294X
+         9NADHFTz9JoVaee6qN40eOAiZ+YmOx2inS4dyl7U7AsqqjLglLYTY4eOzD2c+vsAx25h
+         YzEJxwrRCBMLuVQjLTLBYqP3LzCAEWNuYarVKR2h8gHZrHLA1exVW0nsY5ioTZS/oLVa
+         XiP8GwhViqmttqnOAf78uUD0kgTETqerlTBPYSO5mALlho6MP6V4RAiPd3+NRmwUm/Yx
+         ToYFwH7jBF2GEoWMDpckgTAJDlgPtR9Gg2YqgH3cpNLd29+669owb4ijnRwfivk/Kc/G
+         NZlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UMNcIlbSFVLU3Wa4ZdiVbcd/h1/cMb1IhxbYjcynbwI=;
+        b=g8w9PihFlzrqiuxb7YXi/bMTFgXcwSeEaK6jhjBigGdRdApijeCLNTFlWX2kCAAHSp
+         oNRkcRX50oplFacgKY0D8uTp7GO6ft0w0RXG+utKqBa+Xet1zAPYBZULedNvWa8JIaUq
+         WnVzBPmr9LG+HfJ3yRhMs8PrGOjE6zIP7Nv1roe1T79lisGA4JIXrUtFScGtarB1A7Rf
+         KQALiJJAEXlFvXp3WIcRaJvHBozwpW98jnSMxIJ+T7Yg3mRGki1AyOjuSoq9BDGXBIry
+         OA8rjcrYAiwiy/vKNcyThx0CrIW6I4PU4ZkrHkOMojhNB6ewnZv50fN5ZAswPs7c7BA6
+         THSA==
+X-Gm-Message-State: AGi0PuZkOJEJUIbFp1uBwECe2B40gdJbCeJVGJUxdTz4md0XvmsMYC4+
+        e1dVI+CWm0nldAjuXWifkOviTw==
+X-Google-Smtp-Source: APiQypLONXW6Th2YSXt1LejwYNd0se4jOgnWg3t4puqftZujkExEtw4mF7AOlVMsxoMeaiIjwkbBFA==
+X-Received: by 2002:a05:600c:2c0f:: with SMTP id q15mr16461206wmg.185.1588603223998;
+        Mon, 04 May 2020 07:40:23 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id u188sm14313631wmg.37.2020.05.04.07.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:40:23 -0700 (PDT)
+Date:   Mon, 4 May 2020 15:40:21 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     jason.wessel@windriver.com, gregkh@linuxfoundation.org,
+        agross@kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        catalin.marinas@arm.com, linux-serial@vger.kernel.org,
+        sumit.garg@linaro.org, corbet@lwn.net, mingo@redhat.com,
+        will@kernel.org, hpa@zytor.com, tglx@linutronix.de,
+        frowand.list@gmail.com, bp@alien8.de, bjorn.andersson@linaro.org,
+        jslaby@suse.com, Andrew Morton <akpm@linux-foundation.org>,
+        Juergen Gross <jgross@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/11] Documentation: kgdboc: Document new
+ kgdboc_earlycon parameter
+Message-ID: <20200504144021.kdr3zwvpqh2pj3cs@holly.lan>
+References: <20200428211351.85055-1-dianders@chromium.org>
+ <20200428141218.v3.8.I7d5eb42c6180c831d47aef1af44d0b8be3fac559@changeid>
 MIME-Version: 1.0
-In-Reply-To: <bd55a74d-1305-9e23-94cd-37e59c11dfcd@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_08:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- phishscore=0 clxscore=1011 suspectscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428141218.v3.8.I7d5eb42c6180c831d47aef1af44d0b8be3fac559@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 04/05/20 7:40 pm, Dave Hansen wrote:
-> On 5/4/20 2:44 AM, Mauro Carvalho Chehab wrote:
->> Changeset 1eecbcdca2bd ("docs: move protection-keys.rst to the core-api book")
->> from Jun 7, 2019 converted protection-keys.txt file to ReST.
->>
->> A recent change at protection_keys.c partially reverted such
->> changeset, causing it to point to a non-existing file:
->>
->> 	- * Tests x86 Memory Protection Keys (see Documentation/core-api/protection-keys.rst)
->> 	+ * Tests Memory Protection Keys (see Documentation/vm/protection-keys.txt)
->>
->> It sounds to me that the changeset that introduced such change
->> 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
->> could also have other side effects, as it sounds that it was not
->> generated against uptream code, but, instead, against a version
->> older than Jun 7, 2019.
->>
->> Fixes: 4645e3563673 ("selftests/vm/pkeys: rename all references to pkru to a generic name")
->> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Tue, Apr 28, 2020 at 02:13:48PM -0700, Douglas Anderson wrote:
+> The recent patch ("kgdboc: Add kgdboc_earlycon to support early kgdb
+> using boot consoles") adds a new kernel command line parameter.
+> Document it.
 > 
-> Thanks for finding this!  The patch set which moved protection-keys.txt
-> out of x86 code probably just missed this when it got rebased.  It
-> originated well before June 2019, iirc.
+> Note that the patch adding the feature does some comparing/contrasting
+> of "kgdboc_earlycon" vs. the existing "ekgdboc".  See that patch for
+> more details, but briefly "ekgdboc" can be used _instead_ of "kgdboc"
+> and just makes "kgdboc" do its normal initialization early (only works
+> if your tty driver is already ready).  The new "kgdboc_earlycon" works
+> in combination with "kgdboc" and is backed by boot consoles.
 > 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> 
+> Changes in v3:
+> - Added example in kgdb.rst
+> - Removed unneeded sentence in kerenel-parameters doc.
+> - Renamed earlycon_kgdboc to kgdboc_earlycon.
+> - Suggest people use kgdboc_earlycon instead of ekgdboc.
+> 
+> Changes in v2: None
+> 
+>  .../admin-guide/kernel-parameters.txt         | 20 ++++++++++++++++
+>  Documentation/dev-tools/kgdb.rst              | 24 +++++++++++++++++++
+>  2 files changed, 44 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7bc83f3d9bdf..3b5ae06a98aa 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1190,6 +1190,11 @@
+>  			This is designed to be used in conjunction with
+>  			the boot argument: earlyprintk=vga
+>  
+> +			This parameter works in place of the kgdboc parameter
+> +			but can only be used if the backing tty is available
+> +			very early in the boot process. For early debugging
+> +			via a serial port see kgdboc_earlycon instead.
+> +
+>  	edd=		[EDD]
+>  			Format: {"off" | "on" | "skip[mbr]"}
+>  
+> @@ -2105,6 +2110,21 @@
+>  			 kms, kbd format: kms,kbd
+>  			 kms, kbd and serial format: kms,kbd,<ser_dev>[,baud]
+>  
+> +	kgdboc_earlycon=	[KGDB,HW]
+> +			If the boot console provides the ability to read
+> +			characters and can work in polling mode, you can use
+> +			this parameter to tell kgdb to use it as a backend
+> +			until the normal console is registered. Intended to
+> +			be used together with the kgdboc parameter which
+> +			specifies the normal console to transition to.
+> +
+> +			The the name of the early console should be specified
 
-That's right. Sorry about that. Must have missed it when rebasing the
-older pkey selftest patches. Thanks for fixing this Mauro.
+s/The the/The/
 
-Acked-by: Sandipan Das <sandipan@linux.ibm.com>
+Other than that:
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
