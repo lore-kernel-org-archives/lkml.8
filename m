@@ -2,132 +2,250 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00787C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64804C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6FF2073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD07206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="t9zuEan8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rDJrTpzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgEDQww (ORCPT
+        id S1729880AbgEDQx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729724AbgEDQwv (ORCPT
+        Mon, 4 May 2020 12:53:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49748 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729553AbgEDQx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:52:51 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D2AC061A0E;
-        Mon,  4 May 2020 09:52:51 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 190E822FF5;
-        Mon,  4 May 2020 18:52:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1588611169;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=s3MJel5dUV3iL+D3nK/MzZnYREoru8RurZpnEykOVsQ=;
-        b=t9zuEan8+Y5jKryk55vfcPI5vOFxLGri2s2STZlooSNGGkQqD/3NuI4nMpimzXixTW0zlu
-        8oIX9gF/JCn5vb2Ww1SDCUEq0HP98Pe7rGQyHQo0QgmmFx6DOUB7RvIhfwXlFBCqdQiGu4
-        H/PN+kTxkxOReVCPH8UZFx7FloB72i4=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH RESEND net-next] net: dsa: felix: allow the device to be disabled
-Date:   Mon,  4 May 2020 18:52:28 +0200
-Message-Id: <20200504165228.12787-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Mon, 4 May 2020 12:53:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 044GrRDP081344;
+        Mon, 4 May 2020 11:53:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1588611207;
+        bh=0eGgGN67Gih5o+VzyxIZ6R2au1X7hqDqT3zQR5pwfkA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rDJrTpztG/gD2nR+S/a0mAF+BBOHDRm214BhYt1hFOPOmQZRvQOf2GGcwq8AEOTHn
+         vN1f9szgR7xsVBeLjGZGqba8oGpZJHz8iLgTBXm9375PoPJo9GFvOVv7545yssNY+L
+         +lKtHsUHmpwpjf/FJlfHj6rhJUMa0O+IaG/d9F2M=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 044GrRU0046672
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 May 2020 11:53:27 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 May
+ 2020 11:53:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 May 2020 11:53:27 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 044GrQqP005405;
+        Mon, 4 May 2020 11:53:26 -0500
+Subject: Re: [PATCH] dt-bindings: power: Convert bq27xxx dt to yaml
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        "Davis, Andrew" <afd@ti.com>
+References: <20200504164156.21469-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1ddf643b-c54e-0a60-ee14-8ea137f2bfc9@ti.com>
+Date:   Mon, 4 May 2020 11:44:43 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200504164156.21469-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 190E822FF5
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.858];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[11];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[davemloft.net,gmail.com,lunn.ch,nxp.com,kernel.org,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there is no specific configuration of the felix switch in the device
-tree, but only the default configuration (ie. given by the SoCs dtsi
-file), the probe fails because no CPU port has been set. On the other
-hand you cannot set a default CPU port because that depends on the
-actual board using the switch.
+Adding Andrew in manually.
 
-[    2.701300] DSA: tree 0 has no CPU port
-[    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
-[    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
-
-Thus let the device tree disable this device entirely, like it is also
-done with the enetc driver of the same SoC.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-This was part of a two patch series. The second patch is already merged.
-This patch was never picked up, although it was Acked-by: David Miller,
-see:
-https://lore.kernel.org/netdev/20200314.205335.907987569817755804.davem@davemloft.net/
-
-Since there is no more dependency, this patch could go through the
-net-next queue.
-
- drivers/net/dsa/ocelot/felix.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index 69546383a382..531c7710063f 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
- 	struct felix *felix;
- 	int err;
- 
-+	if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
-+		dev_info(&pdev->dev, "device is disabled, skipping\n");
-+		return -ENODEV;
-+	}
-+
- 	err = pci_enable_device(pdev);
- 	if (err) {
- 		dev_err(&pdev->dev, "device enable failed\n");
--- 
-2.20.1
-
+On 5/4/20 11:41 AM, Dan Murphy wrote:
+> Convert the bq27xxx.txt to yaml format
+>
+> CC: Pali Rohár <pali@kernel.org>
+> CC: Andrew F. Davis" <afd@ti.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   .../bindings/power/supply/bq27xxx.txt         | 56 -----------
+>   .../bindings/power/supply/bq27xxx.yaml        | 95 +++++++++++++++++++
+>   2 files changed, 95 insertions(+), 56 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt b/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+> deleted file mode 100644
+> index 4fa8e08df2b6..000000000000
+> --- a/Documentation/devicetree/bindings/power/supply/bq27xxx.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -TI BQ27XXX fuel gauge family
+> -
+> -Required properties:
+> -- compatible: contains one of the following:
+> - * "ti,bq27200" - BQ27200
+> - * "ti,bq27210" - BQ27210
+> - * "ti,bq27500" - deprecated, use revision specific property below
+> - * "ti,bq27510" - deprecated, use revision specific property below
+> - * "ti,bq27520" - deprecated, use revision specific property below
+> - * "ti,bq27500-1" - BQ27500/1
+> - * "ti,bq27510g1" - BQ27510-g1
+> - * "ti,bq27510g2" - BQ27510-g2
+> - * "ti,bq27510g3" - BQ27510-g3
+> - * "ti,bq27520g1" - BQ27520-g1
+> - * "ti,bq27520g2" - BQ27520-g2
+> - * "ti,bq27520g3" - BQ27520-g3
+> - * "ti,bq27520g4" - BQ27520-g4
+> - * "ti,bq27521" - BQ27521
+> - * "ti,bq27530" - BQ27530
+> - * "ti,bq27531" - BQ27531
+> - * "ti,bq27541" - BQ27541
+> - * "ti,bq27542" - BQ27542
+> - * "ti,bq27546" - BQ27546
+> - * "ti,bq27742" - BQ27742
+> - * "ti,bq27545" - BQ27545
+> - * "ti,bq27411" - BQ27411
+> - * "ti,bq27421" - BQ27421
+> - * "ti,bq27425" - BQ27425
+> - * "ti,bq27426" - BQ27426
+> - * "ti,bq27441" - BQ27441
+> - * "ti,bq27621" - BQ27621
+> -- reg: integer, I2C address of the fuel gauge.
+> -
+> -Optional properties:
+> -- monitored-battery: phandle of battery characteristics node
+> -    The fuel gauge uses the following battery properties:
+> -    + energy-full-design-microwatt-hours
+> -    + charge-full-design-microamp-hours
+> -    + voltage-min-design-microvolt
+> -  Both or neither of the *-full-design-*-hours properties must be set.
+> -  See Documentation/devicetree/bindings/power/supply/battery.txt
+> -
+> -Example:
+> -
+> -	bat: battery {
+> -		compatible = "simple-battery";
+> -		voltage-min-design-microvolt = <3200000>;
+> -		energy-full-design-microwatt-hours = <5290000>;
+> -		charge-full-design-microamp-hours = <1430000>;
+> -	};
+> -
+> -	bq27510g3: fuel-gauge@55 {
+> -		compatible = "ti,bq27510g3";
+> -		reg = <0x55>;
+> -		monitored-battery = <&bat>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+> new file mode 100644
+> index 000000000000..6c53ee849004
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/power/supply/bq27xxx.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI BQ27XXX fuel gauge family
+> +
+> +maintainers:
+> +  - Pali Rohár <pali@kernel.org>
+> +  - Andrew F. Davis" <afd@ti.com>
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  Support various Texas Instruments fuel gauge devices that share similar
+> +  register maps and power supply properties
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,bq27200 - BQ27200
+> +      - ti,bq27210 - BQ27210
+> +      - ti,bq27500 - deprecated, use revision specific property below
+> +      - ti,bq27510 - deprecated, use revision specific property below
+> +      - ti,bq27520 - deprecated, use revision specific property below
+> +      - ti,bq27500-1 - BQ27500/1
+> +      - ti,bq27510g1 - BQ27510-g1
+> +      - ti,bq27510g2 - BQ27510-g2
+> +      - ti,bq27510g3 - BQ27510-g3
+> +      - ti,bq27520g1 - BQ27520-g1
+> +      - ti,bq27520g2 - BQ27520-g2
+> +      - ti,bq27520g3 - BQ27520-g3
+> +      - ti,bq27520g4 - BQ27520-g4
+> +      - ti,bq27521 - BQ27521
+> +      - ti,bq27530 - BQ27530
+> +      - ti,bq27531 - BQ27531
+> +      - ti,bq27541 - BQ27541
+> +      - ti,bq27542 - BQ27542
+> +      - ti,bq27546 - BQ27546
+> +      - ti,bq27742 - BQ27742
+> +      - ti,bq27545 - BQ27545
+> +      - ti,bq27411 - BQ27411
+> +      - ti,bq27421 - BQ27421
+> +      - ti,bq27425 - BQ27425
+> +      - ti,bq27426 - BQ27426
+> +      - ti,bq27441 - BQ27441
+> +      - ti,bq27621 - BQ27621
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: integer, I2C address of the fuel gauge.
+> +
+> +  monitored-battery:
+> +    description: phandle of battery characteristics node
+> +
+> +  energy-full-design-microwatt-hours:
+> +    description: |
+> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
+> +      If this property is set then charge-full-design-microamp-hours must be
+> +      set as well.
+> +
+> +  charge-full-design-microamp-hours:
+> +    description: |
+> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
+> +      If this property is set then energy-full-design-microwatt-hours must be
+> +      set as well.
+> +
+> +  voltage-min-design-microvolt:
+> +    description: |
+> +      See Documentation/devicetree/bindings/power/supply/battery.txt.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      bat: battery {
+> +        compatible = "simple-battery";
+> +        voltage-min-design-microvolt = <3200000>;
+> +        energy-full-design-microwatt-hours = <5290000>;
+> +        charge-full-design-microamp-hours = <1430000>;
+> +      };
+> +
+> +      bq27510g3: fuel-gauge@55 {
+> +        compatible = "ti,bq27510g3";
+> +        reg = <0x55>;
+> +        monitored-battery = <&bat>;
+> +      };
+> +    };
