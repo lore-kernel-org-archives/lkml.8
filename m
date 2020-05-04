@@ -2,105 +2,225 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19421C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A4BC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AC02073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680832073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 12:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/qK5uqm"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qQf6XSk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgEDMBg (ORCPT
+        id S1728717AbgEDMCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 08:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726445AbgEDMBf (ORCPT
+        Mon, 4 May 2020 08:02:08 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:59234 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgEDMCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 08:01:35 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F13C061A0E;
-        Mon,  4 May 2020 05:01:35 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id hi11so3670311pjb.3;
-        Mon, 04 May 2020 05:01:35 -0700 (PDT)
+        Mon, 4 May 2020 08:02:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QzsKXL54QvuRKs7TKdiKfQUShykoR6n5UojyFRWW+gk=;
-        b=T/qK5uqmZIKrhIb/DIJ/DfL90hQm6GSUp/elWjJ8CwEU2qBhCwqivOba8xQgLRxeqV
-         4NThZBvi/6Q9PniGItMndipp+6FGGntmL7Mfw/1Sw10TUwVFfjOs7bsKcJIESRuqHZFj
-         J2JAw3lzujhwppvKwyjnlDiFyaANCQ5/8UFNaIjLPFjDVYJ3lOagRm5Cn0x6O5465ZSU
-         gJJcB8mmt0h3PEOy477BilIA4/OymYajsf5XzpM3lVvd2KFuucf+R2fpFlN2to8/cxgS
-         LNs12AkViZlBjPjqtv6+/hIgXerlPQKrK09NswZR+cATPtZdSWUsIYphFWfcWC+r3GtM
-         jH6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QzsKXL54QvuRKs7TKdiKfQUShykoR6n5UojyFRWW+gk=;
-        b=k0DeWH8M9kxoNF8yjTZNEl5vI1go6Hw/8Lzi2Dk+HiWYCkJe5F2zMc0hJoOpJEWS7b
-         NKb0hKGCrIGPPflztwXxai+kRhLcjDWjHnlQrK80GQkAocFj8rkOaFUVSjxFxNFI5GZQ
-         +3stpvcHYbwknT4yneWZZKnyQcl7jJt0WN87MsMvkbbFYcMeAU3zkQF6i2GLXQRRWM1P
-         0/a8SZSzUFtTlk/0PEVwD0xo2tX2qN+SvItYZLS8fyphLWs7b/EP1uTmhma9Zn6c2QZB
-         UngVV4nOofydXyPW/N2dV1X+ABRiIgdEQY8xkETr3DfTrVqP3HU6ATD9YU3FoiO1xE//
-         qz/w==
-X-Gm-Message-State: AGi0PubOxrLlCU3ZK8UwnN0giw4Ihns5AK3IddhTKt8QlFdB/HcspQQy
-        Sjc6tQ43Zz77DfzvX48umfk=
-X-Google-Smtp-Source: APiQypIeAGR5MGlOZrGOX5Ic3d55EImWrtDHe6ZwOnXBCLEsmQWJCLYn1VHDDJGq+ExRsEaU/QJmAA==
-X-Received: by 2002:a17:90a:3086:: with SMTP id h6mr17926601pjb.49.1588593694898;
-        Mon, 04 May 2020 05:01:34 -0700 (PDT)
-Received: from localhost ([162.211.220.152])
-        by smtp.gmail.com with ESMTPSA id 14sm8945087pfj.90.2020.05.04.05.01.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 05:01:34 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     claudiu.manoil@nxp.com, davem@davemloft.net,
-        vladimir.oltean@nxp.com, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH net v1] net: enetc: fix an issue about leak system resources
-Date:   Mon,  4 May 2020 20:01:27 +0800
-Message-Id: <20200504120127.4482-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1588593728; x=1620129728;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=oz/2ALb5OVTxQnVg7IfzEFgf/Uw6IfZKqeh0udnmnjg=;
+  b=qQf6XSk7brf4LID4dKCKcDk+kHXJIZXiHuSFWXO4Y1Qfsa4VWLR2ggDI
+   xHUgUObj6ZXLkHNHvNMAxOPOUg+L8n/jt/pDwGbzsMNrz7rCpExvl5Gak
+   R5QocMILYFWIP1jumHP4gzS1/xZGNYtPFyHMlUa22Z6JQfDTgUgidxkMA
+   I=;
+IronPort-SDR: D9MG6OUrNRO3shhHXPKjuNCQd3zrfkdDTNWVXm3w7W8GpmmWJb7x2Ghr4OsPW6akkDY0+i5its
+ 089G92bYV8cw==
+X-IronPort-AV: E=Sophos;i="5.73,351,1583193600"; 
+   d="scan'208";a="29930547"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 04 May 2020 12:01:54 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 021E3A450F;
+        Mon,  4 May 2020 12:01:51 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 4 May 2020 12:01:51 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.247) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 4 May 2020 12:01:48 +0000
+Subject: Re: [PATCH v2] KVM: nVMX: Skip IBPB when switching between vmcs01 and
+ vmcs02
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        KarimAllah Raslan <karahmed@amazon.de>
+References: <20200501163117.4655-1-sean.j.christopherson@intel.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <1de7b016-8bc9-23d4-7f8b-145c30d7e58a@amazon.com>
+Date:   Mon, 4 May 2020 14:01:46 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200501163117.4655-1-sean.j.christopherson@intel.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.247]
+X-ClientProxiedBy: EX13D07UWB004.ant.amazon.com (10.43.161.196) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the related system resources were not released when enetc_hw_alloc()
-return error in the enetc_pci_mdio_probe(), add iounmap() for error
-handling label "err_hw_alloc" to fix it.
 
-Fixes: 6517798dd3432a ("enetc: Make MDIO accessors more generic and export to include/linux/fsl")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-index ebc635f8a4cc..15f37c5b8dc1 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-@@ -74,8 +74,8 @@ static int enetc_pci_mdio_probe(struct pci_dev *pdev,
- 	pci_disable_device(pdev);
- err_pci_enable:
- err_mdiobus_alloc:
--	iounmap(port_regs);
- err_hw_alloc:
-+	iounmap(port_regs);
- err_ioremap:
- 	return err;
- }
--- 
-2.25.0
+On 01.05.20 18:31, Sean Christopherson wrote:
+> =
+
+> Skip the Indirect Branch Prediction Barrier that is triggered on a VMCS
+> switch when running with spectre_v2_user=3Don/auto if the switch is
+> between two VMCSes in the same guest, i.e. between vmcs01 and vmcs02.
+> The IBPB is intended to prevent one guest from attacking another, which
+> is unnecessary in the nested case as it's the same guest from KVM's
+> perspective.
+> =
+
+> This all but eliminates the overhead observed for nested VMX transitions
+> when running with CONFIG_RETPOLINE=3Dy and spectre_v2_user=3Don/auto, whi=
+ch
+> can be significant, e.g. roughly 3x on current systems.
+> =
+
+> Reported-by: Alexander Graf <graf@amazon.com>
+> Cc: KarimAllah Raslan <karahmed@amazon.de>
+> Cc: stable@vger.kernel.org
+> Fixes: 15d45071523d ("KVM/x86: Add IBPB support")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> =
+
+> v2: Pass a boolean to indicate a nested VMCS switch and instead WARN if
+>      the buddy VMCS is not already loaded.  [Alex]
+> =
+
+> Paolo, feel free to drop the WARN_ON_ONCE() if you think it's overkill.
+> I'm 50/50 as to whether it's useful or just a waste of cycles.  Figured
+> it'd be easier for you to delete a line of code while applying than to add
+> and test a new WARN.
+
+I like the WARN_ON :). It should be almost free during execution, but =
+
+helps us catch problems early.
+
+> =
+
+>   arch/x86/kvm/vmx/nested.c | 3 ++-
+>   arch/x86/kvm/vmx/vmx.c    | 7 ++++---
+>   arch/x86/kvm/vmx/vmx.h    | 2 +-
+>   3 files changed, 7 insertions(+), 5 deletions(-)
+> =
+
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 2c36f3f53108..b57420f3dd8f 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -302,8 +302,9 @@ static void vmx_switch_vmcs(struct kvm_vcpu *vcpu, st=
+ruct loaded_vmcs *vmcs)
+> =
+
+>          cpu =3D get_cpu();
+>          prev =3D vmx->loaded_vmcs;
+> +       WARN_ON_ONCE(prev->cpu !=3D cpu || prev->vmcs !=3D per_cpu(curren=
+t_vmcs, cpu));
+>          vmx->loaded_vmcs =3D vmcs;
+> -       vmx_vcpu_load_vmcs(vcpu, cpu);
+> +       vmx_vcpu_load_vmcs(vcpu, cpu, true);
+>          vmx_sync_vmcs_host_state(vmx, prev);
+>          put_cpu();
+> =
+
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 3ab6ca6062ce..d3d57b7a67bd 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1311,7 +1311,7 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu,=
+ int cpu)
+>                  pi_set_on(pi_desc);
+>   }
+> =
+
+> -void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu)
+> +void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_swit=
+ch)
+>   {
+>          struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>          bool already_loaded =3D vmx->loaded_vmcs->cpu =3D=3D cpu;
+> @@ -1336,7 +1336,8 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int =
+cpu)
+>          if (per_cpu(current_vmcs, cpu) !=3D vmx->loaded_vmcs->vmcs) {
+>                  per_cpu(current_vmcs, cpu) =3D vmx->loaded_vmcs->vmcs;
+>                  vmcs_load(vmx->loaded_vmcs->vmcs);
+> -               indirect_branch_prediction_barrier();
+
+... however, this really needs an in-code comment to explain why it's =
+
+safe not to flush the branch predictor cache here.
+
+
+Alex
+
+> +               if (!nested_switch)
+> +                       indirect_branch_prediction_barrier();
+>          }
+> =
+
+>          if (!already_loaded) {
+> @@ -1377,7 +1378,7 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+>   {
+>          struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> =
+
+> -       vmx_vcpu_load_vmcs(vcpu, cpu);
+> +       vmx_vcpu_load_vmcs(vcpu, cpu, false);
+> =
+
+>          vmx_vcpu_pi_load(vcpu, cpu);
+> =
+
+> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> index b5e773267abe..fa61dc802183 100644
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -320,7 +320,7 @@ struct kvm_vmx {
+>   };
+> =
+
+>   bool nested_vmx_allowed(struct kvm_vcpu *vcpu);
+> -void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu);
+> +void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu, bool nested_swit=
+ch);
+>   void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+>   int allocate_vpid(void);
+>   void free_vpid(int vpid);
+> --
+> 2.26.0
+> =
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
