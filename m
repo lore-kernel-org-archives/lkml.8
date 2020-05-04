@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380A0C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6171C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E00B205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6928205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615722;
-	bh=VteYMk1LR6te1UA/DCtb6VMoHlcOc655RQxOBLcsWgs=;
+	s=default; t=1588615727;
+	bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1+E10bjZEv7wof0i9X5NxAqf+CWMMojaD0zxAxLkhPjIH2QTyv/CI5kImX5nffu6N
-	 AubZfT92dF7RnA0pADN3+uuRWgRJZSwJ3X0lBS7DohZD+b6g+VicQZ2DDJjIQez6Uh
-	 LWuzP2Xp4RjCIipJ6IE6g/jCBCbBeqqo03Zc14T4=
+	b=2CM5cNY3yUEtZJO3xUSZUWU9XNkZg1pkSLScdNGSxgefGE24Nzl8BO8mKZCvfVwKY
+	 fXymDfoFzBZJCzsht0zJjglV1jH5A88Oy5mzsQ3EbSbADiMHN1v0OK88F1RjwARcI+
+	 M9RKBQbxa3xtIHILZaCB7Ha/+JVadC47XfXRggDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbgEDSIk (ORCPT
+        id S1732159AbgEDSIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731071AbgEDSHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:07:39 -0400
+        id S1731635AbgEDSHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22BC2078C;
-        Mon,  4 May 2020 18:07:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D592B2075A;
+        Mon,  4 May 2020 18:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615659;
-        bh=VteYMk1LR6te1UA/DCtb6VMoHlcOc655RQxOBLcsWgs=;
+        s=default; t=1588615654;
+        bh=0iBARj4TxwISLi/XhODDCPesSt/fsZtgRkxuEPlml6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJXOQ0aQVsMtI5gVGXMm/GOyukP9EqdIxuy/nrI86Tdtm6s13cQds215sDVa7+Aq0
-         Wj4Kk+2mCZy+Y5VK3cwAmgHnwum+Xj+K6tZ71fqomeP+J7PHjU6fLmCaaZd1kHB/Rt
-         +u8Td2dEdkkxNndZ4kP870NRn0aKNctSS4Vm/epw=
+        b=1NIUEaXMkMOnB8OiVPCkQzSlkiy0ntnza+ug0qkUAD3YXvm+jicOpnj3WRetyPaoM
+         0SySJ4ePmyFQdfvSy4ZpSynaCemLyXDcl+Ad9xUUNuHh7uNOrQ5AcLXOaoMBQb5jMs
+         e50kL66NSTYU8CKr+Tx7EFq4Ywj9+9rVeBdJfcMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.6 70/73] drm/i915: Use proper fault mask in interrupt postinstall too
-Date:   Mon,  4 May 2020 19:58:13 +0200
-Message-Id: <20200504165510.444897810@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.6 68/73] nfs: Fix potential posix_acl refcnt leak in nfs3_set_acl
+Date:   Mon,  4 May 2020 19:58:11 +0200
+Message-Id: <20200504165510.314983224@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
 References: <20200504165501.781878940@linuxfoundation.org>
@@ -63,53 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Roper <matthew.d.roper@intel.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit 8598eb781cf68fd6cb67c479f1479ae58bd54fb9 upstream.
+commit 7648f939cb919b9d15c21fff8cd9eba908d595dc upstream.
 
-The IRQ postinstall handling had open-coded pipe fault mask selection
-that never got updated for gen11.  Switch it to use
-gen8_de_pipe_fault_mask() to ensure we don't miss updates for new
-platforms.
+nfs3_set_acl keeps track of the acl it allocated locally to determine if an acl
+needs to be released at the end.  This results in a memory leak when the
+function allocates an acl as well as a default acl.  Fix by releasing acls
+that differ from the acl originally passed into nfs3_set_acl.
 
-Cc: José Roberto de Souza <jose.souza@intel.com>
-Fixes: d506a65d56fd ("drm/i915: Catch GTT fault errors for gen11+ planes")
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200424231423.4065231-1-matthew.d.roper@intel.com
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-(cherry picked from commit 869129ee0c624a78c74e50b51635e183196cd2c6)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Fixes: b7fa0554cf1b ("[PATCH] NFS: Add support for NFSv3 ACLs")
+Reported-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_irq.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/nfs/nfs3acl.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_irq.c
-+++ b/drivers/gpu/drm/i915/i915_irq.c
-@@ -3321,7 +3321,8 @@ static void gen8_de_irq_postinstall(stru
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -253,37 +253,45 @@ int nfs3_proc_setacls(struct inode *inod
+ 
+ int nfs3_set_acl(struct inode *inode, struct posix_acl *acl, int type)
  {
- 	struct intel_uncore *uncore = &dev_priv->uncore;
+-	struct posix_acl *alloc = NULL, *dfacl = NULL;
++	struct posix_acl *orig = acl, *dfacl = NULL, *alloc;
+ 	int status;
  
--	u32 de_pipe_masked = GEN8_PIPE_CDCLK_CRC_DONE;
-+	u32 de_pipe_masked = gen8_de_pipe_fault_mask(dev_priv) |
-+		GEN8_PIPE_CDCLK_CRC_DONE;
- 	u32 de_pipe_enables;
- 	u32 de_port_masked = GEN8_AUX_CHANNEL_A;
- 	u32 de_port_enables;
-@@ -3332,13 +3333,10 @@ static void gen8_de_irq_postinstall(stru
- 		de_misc_masked |= GEN8_DE_MISC_GSE;
+ 	if (S_ISDIR(inode->i_mode)) {
+ 		switch(type) {
+ 		case ACL_TYPE_ACCESS:
+-			alloc = dfacl = get_acl(inode, ACL_TYPE_DEFAULT);
++			alloc = get_acl(inode, ACL_TYPE_DEFAULT);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = alloc;
+ 			break;
  
- 	if (INTEL_GEN(dev_priv) >= 9) {
--		de_pipe_masked |= GEN9_DE_PIPE_IRQ_FAULT_ERRORS;
- 		de_port_masked |= GEN9_AUX_CHANNEL_B | GEN9_AUX_CHANNEL_C |
- 				  GEN9_AUX_CHANNEL_D;
- 		if (IS_GEN9_LP(dev_priv))
- 			de_port_masked |= BXT_DE_PORT_GMBUS;
--	} else {
--		de_pipe_masked |= GEN8_DE_PIPE_IRQ_FAULT_ERRORS;
+ 		case ACL_TYPE_DEFAULT:
+-			dfacl = acl;
+-			alloc = acl = get_acl(inode, ACL_TYPE_ACCESS);
++			alloc = get_acl(inode, ACL_TYPE_ACCESS);
+ 			if (IS_ERR(alloc))
+ 				goto fail;
++			dfacl = acl;
++			acl = alloc;
+ 			break;
+ 		}
  	}
  
- 	if (INTEL_GEN(dev_priv) >= 11)
+ 	if (acl == NULL) {
+-		alloc = acl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
++		alloc = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+ 		if (IS_ERR(alloc))
+ 			goto fail;
++		acl = alloc;
+ 	}
+ 	status = __nfs3_proc_setacls(inode, acl, dfacl);
+-	posix_acl_release(alloc);
++out:
++	if (acl != orig)
++		posix_acl_release(acl);
++	if (dfacl != orig)
++		posix_acl_release(dfacl);
+ 	return status;
+ 
+ fail:
+-	return PTR_ERR(alloc);
++	status = PTR_ERR(alloc);
++	goto out;
+ }
+ 
+ const struct xattr_handler *nfs3_xattr_handlers[] = {
 
 
