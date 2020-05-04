@@ -2,175 +2,79 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20360C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FADC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA84421582
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="L4JqgH+U"
+	by mail.kernel.org (Postfix) with ESMTP id 43BE32073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgEDUEV (ORCPT
+        id S1727893AbgEDUEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:04:21 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.122]:24591 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727088AbgEDUEU (ORCPT
+        Mon, 4 May 2020 16:04:35 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:58565 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgEDUEf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:04:20 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id B6CF12B67B6
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 15:04:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id VhK5jir5F8vkBVhK5jRHR1; Mon, 04 May 2020 15:04:17 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V96LBizxl4+aEJIjzbcrRlhTjAqahm2dmV9MAZqHdGc=; b=L4JqgH+UVyVZV2P7eUgtXNCiOR
-        SNVfuSkG3J1W6yEXdAOSzu/7iJk37Nx6f+qmfoVr4NvirPvSMFnOuYtCT6axHGIB5OTK3Ftq6h1uF
-        F5epi927ICta8GvCWztD9SikDgk3pzeFCuu8m2P0Tgkp0oLPw0XbuCOP4fGF4NpEj8p4f/8mtQrjK
-        qxOvr9wynLQWlBrk1XRabwH7QlqyrymSub0l/rfky81DJZmckWhRkLHXJDEGs8ulU17h29TcecsVx
-        w2sRFbfjDqKtCjvHWYCsLFwN7IGezLXe7m3vfZ+Uu8DNTglqtORFixXudBRWvC206UmCzjVTiDThS
-        //HscYMg==;
-Received: from [189.207.59.248] (port=58762 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jVhK3-002Fbe-9W; Mon, 04 May 2020 15:04:15 -0500
-Date:   Mon, 4 May 2020 15:08:38 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] ath6kl: Replace zero-length array with flexible-array
-Message-ID: <20200504200838.GA31974@embeddedor>
+        Mon, 4 May 2020 16:04:35 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id BEBEA200003;
+        Mon,  4 May 2020 20:04:31 +0000 (UTC)
+Date:   Mon, 4 May 2020 22:04:31 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] clk: at91: allow setting all PMC clock parents
+ via DT
+Message-ID: <20200504200431.GI34497@piout.net>
+References: <cover.1588526049.git.mirq-linux@rere.qmqm.pl>
+ <ae0c612ce6bc53ea726ddcb25eb36bca78055e33.1588526049.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.207.59.248
-X-Source-L: No
-X-Exim-ID: 1jVhK3-002Fbe-9W
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.207.59.248]:58762
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ae0c612ce6bc53ea726ddcb25eb36bca78055e33.1588526049.git.mirq-linux@rere.qmqm.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Hi,
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+On 03/05/2020 19:19:26+0200, Michał Mirosław wrote:
+> diff --git a/include/dt-bindings/clock/at91.h b/include/dt-bindings/clock/at91.h
+> index c3f4aa6a2d29..adcf608b41fa 100644
+> --- a/include/dt-bindings/clock/at91.h
+> +++ b/include/dt-bindings/clock/at91.h
+> @@ -21,6 +21,9 @@
+>  #define PMC_MCK2		4
+>  #define PMC_I2S0_MUX		5
+>  #define PMC_I2S1_MUX		6
+> +#define PMC_PLLACK		7
+> +#define PMC_PLLBCK		8
+> +#define PMC_AUDIOPLLCK		8		/* SAMA5D2-only, no PLLB there */
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+Just use 9 here because we can't know for sure that a future SoC won't
+have both a PLLB and audio PLL.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+>  
+>  #ifndef AT91_PMC_MOSCS
+>  #define AT91_PMC_MOSCS		0		/* MOSCS Flag */
+> -- 
+> 2.20.1
+> 
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/ath/ath6kl/core.h  | 4 ++--
- drivers/net/wireless/ath/ath6kl/debug.c | 2 +-
- drivers/net/wireless/ath/ath6kl/hif.h   | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath6kl/core.h b/drivers/net/wireless/ath/ath6kl/core.h
-index 0d30e762c090..77e052336eb5 100644
---- a/drivers/net/wireless/ath/ath6kl/core.h
-+++ b/drivers/net/wireless/ath/ath6kl/core.h
-@@ -160,7 +160,7 @@ enum ath6kl_fw_capability {
- struct ath6kl_fw_ie {
- 	__le32 id;
- 	__le32 len;
--	u8 data[0];
-+	u8 data[];
- };
- 
- enum ath6kl_hw_flags {
-@@ -406,7 +406,7 @@ struct ath6kl_mgmt_buff {
- 	u32 id;
- 	bool no_cck;
- 	size_t len;
--	u8 buf[0];
-+	u8 buf[];
- };
- 
- struct ath6kl_sta {
-diff --git a/drivers/net/wireless/ath/ath6kl/debug.c b/drivers/net/wireless/ath/ath6kl/debug.c
-index 54337d60f288..7506cea46f58 100644
---- a/drivers/net/wireless/ath/ath6kl/debug.c
-+++ b/drivers/net/wireless/ath/ath6kl/debug.c
-@@ -30,7 +30,7 @@ struct ath6kl_fwlog_slot {
- 	__le32 length;
- 
- 	/* max ATH6KL_FWLOG_PAYLOAD_SIZE bytes */
--	u8 payload[0];
-+	u8 payload[];
- };
- 
- #define ATH6KL_FWLOG_MAX_ENTRIES 20
-diff --git a/drivers/net/wireless/ath/ath6kl/hif.h b/drivers/net/wireless/ath/ath6kl/hif.h
-index dc6bd8cd9b83..aea7fea2a81e 100644
---- a/drivers/net/wireless/ath/ath6kl/hif.h
-+++ b/drivers/net/wireless/ath/ath6kl/hif.h
-@@ -199,7 +199,7 @@ struct hif_scatter_req {
- 
- 	u32 scat_q_depth;
- 
--	struct hif_scatter_item scat_list[0];
-+	struct hif_scatter_item scat_list[];
- };
- 
- struct ath6kl_irq_proc_registers {
 -- 
-2.26.2
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
