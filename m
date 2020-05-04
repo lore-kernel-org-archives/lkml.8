@@ -2,101 +2,116 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98C4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA8C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B57DE20707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C70206A5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qrHszcJG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJcXHxLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgEDUBe (ORCPT
+        id S1728118AbgEDUCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47806 "EHLO
+        Mon, 4 May 2020 16:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728082AbgEDUB3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726441AbgEDUCI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:01:29 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920D4C061A10
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:01:29 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id f8so228726plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 13:01:29 -0700 (PDT)
+        Mon, 4 May 2020 16:02:08 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A21C061A0E;
+        Mon,  4 May 2020 13:02:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x4so873153wmj.1;
+        Mon, 04 May 2020 13:02:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ZFRO3RhADYIeDpbw4dnAWyjVt7yzrlI/aPmG+9d8qeE=;
-        b=qrHszcJGGSIsCedROR57TweuB7bX5mbZsxDa1hb+YaSY5m/twRdgsGDaKjFpj1FT4N
-         V3ECCU3uh6lis3rOAqcfqTQFIoLtc4zGPki5ISHQzFRgDjGkRwdfSu8CkSBUiSKcJgiN
-         NM4EF5poDdfcNB/62wYhnyLMSNCzCJpcWte6mNPF9NsqMNcZhm0uMDZQWCgNOYDo1Ohu
-         GlAjPDD1qGAC1SHA99cElOMjxrhYtOKW+YnG3vVMHZXdgDCy9UwHxWSNR0bKV3na+jYG
-         eJUzGB70l7kBEHhrWRgbWMAsO+hihmceg9Zo2H2vXXs0My0GoiqKsOph6Z3gBJZL0qwe
-         pXIg==
+        bh=KdlOL0+4+Ykci+7yQYazMb8JW9d/9xEljqxcf/GDuEk=;
+        b=sJcXHxLSBnzJGMaKNW+99617mOPEmXnMG5Noq1kdinn6Ed89n3c9c+GeJVczmV0vCu
+         pvDt6LRa1hz1a1M3pbXUYY+71rble+dJs0BQ4tholGGBuEof7kKZaL7p97aHQVhTq22W
+         Tkm/t2uTcMagqEp/CE014kqT9GmDoUIisRe97eJs20d0MqBMGNQwJRYRnaMhGfR2IS/i
+         YH8KEnMqltUdXf/GxTZAZiyfgHEm/mORzPhzh+Q7BsIpH71rJkRPrksfpZmKA5IhnUIO
+         GII3sCKzYNjXKmlzMq/3nwTahAUEaDyS5ng+aESP14gzxHO/Mq/qngu+GZP9SFL1Pr0x
+         DOMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=ZFRO3RhADYIeDpbw4dnAWyjVt7yzrlI/aPmG+9d8qeE=;
-        b=oBoCyrqtE7yGjzYAdmk0JGjUbR7ENrzCCEhYV1/CkSkGDfGt/5M4ndffXXeQ36rH76
-         Qqi2qdI/fp2TMz8UBtQbj1IM6wUOkdJqvJTArvJkGnYRLx9pBXo+fAQDa2SC/y1z6K1S
-         uGM9QdCTunlZSWDJmaDkHmFyl3b9DCCmq9xvOE3T0KUVWDRvyJpQqiNeQ3kjMTSYMwce
-         O0jU+G7UY+vAI1dfJmppxPbZ03q6XKuK7RsFNbiIw3L6bOGefzYVDKY5pui8USL4f3fQ
-         ANSNeTkp+YR4yvlNnfHL12r767D22UH7vezQWlKtkZOZw7pb6B6zTjovu3Zv0sz8uwJQ
-         t+NA==
-X-Gm-Message-State: AGi0PubAYzNVK4XSF5RiIQAuxqNNXYC4K0LbybCQS/9Z0sQ4nIttjD2n
-        PxCUE8zqrFx5lbrk6F/VO1GyZA==
-X-Google-Smtp-Source: APiQypIFC8V36B+W7lp+3i/NHiQ8u4AgxMSexVW/Rp60TpLxCPv8LY5YL73POlfEskWD07QJhyN/kQ==
-X-Received: by 2002:a17:902:8497:: with SMTP id c23mr868287plo.335.1588622488940;
-        Mon, 04 May 2020 13:01:28 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id p189sm9716682pfp.135.2020.05.04.13.01.27
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KdlOL0+4+Ykci+7yQYazMb8JW9d/9xEljqxcf/GDuEk=;
+        b=b5JFLj/Q8jPUhhL3LgdSTQz9Jc8ICZQ5f3dwv46HjW4hi4UhYDe79DwOz4v5kNAABA
+         6UUE7NCu+uYUdS6LYDLuSHuMJ48uKmNaqcQsBQ/hfm1Pq1jvlVymWAU4FFoNmi+rROBJ
+         4ymiQIgJygAGd8Ji6XuFJuxc3pKUg8CRoLGGp5U5WRM8HqrKlw1PxzzK0jC0+sglJSJK
+         owci6jLgYVQ8XhNuygOm7UQiqvEmtv/DR420Qcr2Gs3BXtbWpkuR74TyK7RiSrp/oAp2
+         AxUxvLuTCX5m5VZQGZFviMP2Wgpp5a2UaiNnfaS+3lorT0M1uRaLJqipbJBy4RHXVPwp
+         0QKg==
+X-Gm-Message-State: AGi0PuZQoiE2kthAWFukEFAFdqH1XYUNvxvdHk66mlWcXcpBmoz2Zx+Y
+        Iv8ZsE9kLte5jCUyVcqQE5WnMwKN
+X-Google-Smtp-Source: APiQypLtdII6d3Uh6/K5h+dxXP5Ugh8M97Xscg7xDlXEjK1u9cJyQqNmpchCvB+ACdDUmIXUsWo5mA==
+X-Received: by 2002:a1c:40c4:: with SMTP id n187mr15844209wma.28.1588622527018;
+        Mon, 04 May 2020 13:02:07 -0700 (PDT)
+Received: from localhost.localdomain ([109.126.133.135])
+        by smtp.gmail.com with ESMTPSA id c190sm25482wme.10.2020.05.04.13.02.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 13:01:28 -0700 (PDT)
-Date:   Mon, 04 May 2020 13:01:28 -0700 (PDT)
-X-Google-Original-Date: Mon, 04 May 2020 13:01:06 PDT (-0700)
-Subject:     Re: [PATCH 0/3] RISC-V KVM preparation
-In-Reply-To: <20200424045928.79324-1-anup.patel@wdc.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        pbonzini@redhat.com, Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        anup@brainfault.org, kvm@vger.kernel.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <Anup.Patel@wdc.com>
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Message-ID: <mhng-be6b9ad5-d81c-4ae1-9eed-9b2d63600b37@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 04 May 2020 13:02:06 -0700 (PDT)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>,
+        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH for-5.7] io_uring: fix zero len do_splice()
+Date:   Mon,  4 May 2020 23:00:54 +0300
+Message-Id: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 21:59:25 PDT (-0700), Anup Patel wrote:
-> This patch series is factored-out from the KVM RISC-V v11 series and is
-> based upon Linux-5.7-rc2.
->
-> These patches are mostly preparatory changes in Linux RISC-V kernel which
-> we require for KVM RISC-V implementation. Also, most of these patches are
-> already reviewed as part of original KVM RISC-V series.
->
-> Anup Patel (3):
->   RISC-V: Export riscv_cpuid_to_hartid_mask() API
->   RISC-V: Add bitmap reprensenting ISA features common across CPUs
->   RISC-V: Remove N-extension related defines
->
->  arch/riscv/include/asm/csr.h   |  3 --
->  arch/riscv/include/asm/hwcap.h | 22 +++++++++
->  arch/riscv/kernel/cpufeature.c | 83 ++++++++++++++++++++++++++++++++--
->  arch/riscv/kernel/smp.c        |  2 +
->  4 files changed, 104 insertions(+), 6 deletions(-)
+do_splice() doesn't expect len to be 0. Just always return 0 in this
+case as splice(2) do.
 
-These are on fixes.
+Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 65458eda2127..d53a1ef2a205 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2772,16 +2772,19 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
+ 	struct file *out = sp->file_out;
+ 	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
+ 	loff_t *poff_in, *poff_out;
+-	long ret;
++	long ret = 0;
+ 
+ 	if (force_nonblock)
+ 		return -EAGAIN;
+ 
+ 	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
+ 	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
+-	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
+-	if (force_nonblock && ret == -EAGAIN)
+-		return -EAGAIN;
++
++	if (sp->len) {
++		ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
++		if (force_nonblock && ret == -EAGAIN)
++			return -EAGAIN;
++	}
+ 
+ 	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
+ 	req->flags &= ~REQ_F_NEED_CLEANUP;
+-- 
+2.24.0
+
