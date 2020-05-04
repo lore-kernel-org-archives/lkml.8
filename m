@@ -2,131 +2,156 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBA3C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CEEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A3B206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C970C205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615708;
-	bh=3kE93KOqN86Y89UIWlogoqpE00pDfbHOWdaJi8fWZKE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=OLbQEtr9UXLiVj6ab37xHGORNTjFyFaQOFa5U+Mg/V/jUixsjCk9LC5aN583pYbfl
-	 Zbrrv3hmw0imsK8y0/uViUp33OX7BpE352HbX2juqQ+iJoxffcKgPzalKspraSeRoP
-	 EEvzGnEc3UXy6EnUjSZblTcr5iiFfbATrfJUOx3o=
+	s=default; t=1588615715;
+	bh=jLnwdL+bQ47tryUM0Gx+p/BOVwwIranqzTd57rNgdUQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pUfa39io+GRNChlfwi4Eu30+LkPxIQ7abOCyvsAoaBKV2GuCD01wKPfxmTUlp95lt
+	 QVTH+QOzoxnERrJJpvvY52ebycTarAZCDmY6XTbtMPm71ls/aPf6smRky5TgfV4kFa
+	 c0bMIkrci+Ch9IEcA2OnESVrjNkr6I5Wlg+FJWXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732246AbgEDSI0 (ORCPT
+        id S1732205AbgEDSIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39846 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730356AbgEDSIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:08:24 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
+        id S1732202AbgEDSHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:07:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAB732078C;
-        Mon,  4 May 2020 18:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1FD2075A;
+        Mon,  4 May 2020 18:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615704;
-        bh=3kE93KOqN86Y89UIWlogoqpE00pDfbHOWdaJi8fWZKE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nMuIlsiFaHEVz6n29r8yQ6uL9CyGvPj2t2j6luK2GBvYs7juilzEGWsz9/eW7WvSh
-         FLdRo5SkA9Csz+yzbhj4a09nDXLcOPqQY9NF9jxFiSUxEpcn55joPRCweg7/UQhKIi
-         +8BPpmW7AH9zWd1azT8tNUrw+sXCAb5g0V5z0vPc=
-Date:   Mon, 4 May 2020 13:08:22 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Aman Sharma <amanharitsh123@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/2] driver core: platform: Clarify that IRQ 0 is
- invalid
-Message-ID: <20200504180822.GA282766@bjorn-Precision-5520>
+        s=default; t=1588615671;
+        bh=jLnwdL+bQ47tryUM0Gx+p/BOVwwIranqzTd57rNgdUQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gOvmZg3jPuL7wogd5TgHEBLdKfM6ar3Xl37dgeEW2t+VFTeBkMbo7L4fngt7cTCvj
+         EgXylX9rb0Ey48RPXrpEI4Qm+LVhV+BxV9/63AvMLK1R4NEcf6bubSnvEIKugIssDE
+         oi6uWo8gyoQH1/aCAVHe1Fe876QvPWrL0I29ZsaA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Martin Wilck <mwilck@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.6 41/73] scsi: qla2xxx: set UNLOADING before waiting for session deletion
+Date:   Mon,  4 May 2020 19:57:44 +0200
+Message-Id: <20200504165508.091879440@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
+References: <20200504165501.781878940@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200502061537.GA2527384@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 02, 2020 at 08:15:37AM +0200, Greg Kroah-Hartman wrote:
-> On Fri, May 01, 2020 at 05:40:41PM -0500, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > These interfaces return a negative error number or an IRQ:
-> > 
-> >   platform_get_irq()
-> >   platform_get_irq_optional()
-> >   platform_get_irq_byname()
-> >   platform_get_irq_byname_optional()
-> > 
-> > The function comments suggest checking for error like this:
-> > 
-> >   irq = platform_get_irq(...);
-> >   if (irq < 0)
-> >     return irq;
-> > 
-> > which is what most callers (~900 of 1400) do, so it's implicit that IRQ 0
-> > is invalid.  But some callers check for "irq <= 0", and it's not obvious
-> > from the source that we never return an IRQ 0.
-> > 
-> > Make this more explicit by updating the comments to say that an IRQ number
-> > is always non-zero and adding a WARN() if we ever do return zero.  If we do
-> > return IRQ 0, it likely indicates a bug in the arch-specific parts of
-> > platform_get_irq().
-> 
-> I worry about adding WARN() as there are systems that do panic_on_warn()
-> and syzbot trips over this as well.  I don't think that for this issue
-> it would be a problem, but what really is this warning about that
-> someone could do anything with?
-> 
-> Other than that minor thing, this looks good to me, thanks for finally
-> clearing this up.
+From: Martin Wilck <mwilck@suse.com>
 
-What I'm concerned about is an arch that returns 0.  Most drivers
-don't check for 0 so they'll just try to use it, and things will fail
-in some obscure way.  My assumption is that if there really is no IRQ,
-we should return -ENOENT or similar instead of 0.
+commit 856e152a3c08bf7987cbd41900741d83d9cddc8e upstream.
 
-I could be convinced that it's not worth warning about at all, or we
-could do something like the following:
+The purpose of the UNLOADING flag is to avoid port login procedures to
+continue when a controller is in the process of shutting down.  It makes
+sense to set this flag before starting session teardown.
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 084cf1d23d3f..4afa5875e14d 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -220,7 +220,11 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
- 	ret = -ENXIO;
- #endif
- out:
--	WARN(ret == 0, "0 is an invalid IRQ number\n");
-+	/* Returning zero here is likely a bug in the arch IRQ code */
-+	if (ret == 0) {
-+		pr_warn("0 is an invalid IRQ number\n");
-+		dump_stack();
-+	}
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(platform_get_irq_optional);
-@@ -312,7 +316,11 @@ static int __platform_get_irq_byname(struct platform_device *dev,
+Furthermore, use atomic test_and_set_bit() to avoid the shutdown being run
+multiple times in parallel. In qla2x00_disable_board_on_pci_error(), the
+test for UNLOADING is postponed until after the check for an already
+disabled PCI board.
+
+Link: https://lore.kernel.org/r/20200421204621.19228-2-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Reviewed-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/qla2xxx/qla_os.c |   32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
+
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -3720,6 +3720,13 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 	}
+ 	qla2x00_wait_for_hba_ready(base_vha);
  
- 	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
- 	if (r) {
--		WARN(r->start == 0, "0 is an invalid IRQ number\n");
-+		/* Returning zero here is likely a bug in the arch IRQ code */
-+		if (r->start == 0) {
-+			pr_warn("0 is an invalid IRQ number\n");
-+			dump_stack();
-+		}
- 		return r->start;
++	/*
++	 * if UNLOADING flag is already set, then continue unload,
++	 * where it was set first.
++	 */
++	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
++		return;
++
+ 	if (IS_QLA25XX(ha) || IS_QLA2031(ha) || IS_QLA27XX(ha) ||
+ 	    IS_QLA28XX(ha)) {
+ 		if (ha->flags.fw_started)
+@@ -3738,15 +3745,6 @@ qla2x00_remove_one(struct pci_dev *pdev)
+ 
+ 	qla2x00_wait_for_sess_deletion(base_vha);
+ 
+-	/*
+-	 * if UNLOAD flag is already set, then continue unload,
+-	 * where it was set first.
+-	 */
+-	if (test_bit(UNLOADING, &base_vha->dpc_flags))
+-		return;
+-
+-	set_bit(UNLOADING, &base_vha->dpc_flags);
+-
+ 	qla_nvme_delete(base_vha);
+ 
+ 	dma_free_coherent(&ha->pdev->dev,
+@@ -6044,13 +6042,6 @@ qla2x00_disable_board_on_pci_error(struc
+ 	struct pci_dev *pdev = ha->pdev;
+ 	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
+ 
+-	/*
+-	 * if UNLOAD flag is already set, then continue unload,
+-	 * where it was set first.
+-	 */
+-	if (test_bit(UNLOADING, &base_vha->dpc_flags))
+-		return;
+-
+ 	ql_log(ql_log_warn, base_vha, 0x015b,
+ 	    "Disabling adapter.\n");
+ 
+@@ -6061,9 +6052,14 @@ qla2x00_disable_board_on_pci_error(struc
+ 		return;
  	}
  
+-	qla2x00_wait_for_sess_deletion(base_vha);
++	/*
++	 * if UNLOADING flag is already set, then continue unload,
++	 * where it was set first.
++	 */
++	if (test_and_set_bit(UNLOADING, &base_vha->dpc_flags))
++		return;
+ 
+-	set_bit(UNLOADING, &base_vha->dpc_flags);
++	qla2x00_wait_for_sess_deletion(base_vha);
+ 
+ 	qla2x00_delete_all_vps(ha, base_vha);
+ 
+
+
