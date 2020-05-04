@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1ABC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3BCC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0453E20746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E38206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615451;
-	bh=ci47eiWNLUFZvk28Ty4nu5g7RfATAgZzgBWRl7eZKRg=;
+	s=default; t=1588615455;
+	bh=zOlGqC9+C1xUenmbvMRYr2ASQHTqrqZDZyomtHP8jXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W55Izz+9HtYBA2OJt8pwLp74FcK9WsCIro5kZys76mzi11c8xgU1erjRg0/64sSen
-	 Mx1tC62XbEJbsXRf8d79z9CTXalMktzl4igpR/L9cStWWybd6C46yTGZKOSyBfOwWC
-	 KjNDbeK7nJGsg9xW+fzUHZRzVdTUQQE4r54Nr+Mw=
+	b=W6S+w3VNwN8oWsTYO918uIMbgJed4kiHEHneUMEjursmnXcR0ABrMnvKWxiVAm6iO
+	 r5X/YCa/CwHxeidO5buuhgaPBi1GpCYSfOk7fgDMDov7cHHEJc2M3cUy8c6eVjHH82
+	 UX7a2FB66PzoM5nc8c9YJ70zhrP8wBOgUp4Rv0qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731633AbgEDSEK (ORCPT
+        id S1731647AbgEDSEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:04:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33322 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:04:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731622AbgEDSEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:04:05 -0400
+        id S1730752AbgEDSEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:04:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E13C2073B;
-        Mon,  4 May 2020 18:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0C42073E;
+        Mon,  4 May 2020 18:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615444;
-        bh=ci47eiWNLUFZvk28Ty4nu5g7RfATAgZzgBWRl7eZKRg=;
+        s=default; t=1588615449;
+        bh=zOlGqC9+C1xUenmbvMRYr2ASQHTqrqZDZyomtHP8jXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sCT+9u6P7EANU8vVlUm7kScI3m1yj3t+xpCIiYjyVbyOfLFuyCumWd0cwcnMmjriF
-         vw6oCX/p3j3zNTFyweT4TJ9JPpDrkUwGAsNgcDSAekuZpYPvYt+wunG/G60zaKtk1r
-         2n9bV+QNorG1l3z08UUdyJSo1x/Sh2q3H7CuQ1ME=
+        b=BDKWbdxyuNLeWNkNe9E8gdle/x0FlFNpxMBuNinB9dbwMEdCXEi3T5g5btGvWzZue
+         UUk4w7nZ0j4pXpnlEWpz3K4JDM6ncFoHVc/ZaHnqEvkCdiPXqE/bdxykZ18JuKx4RR
+         w9wZrCQXd+QP1ZHFxFnMX0wQ1AN5K14oz28BHedk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 42/57] RDMA/cm: Fix an error check in cm_alloc_id_priv()
-Date:   Mon,  4 May 2020 19:57:46 +0200
-Message-Id: <20200504165459.974554129@linuxfoundation.org>
+        stable@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.4 44/57] vfio: avoid possible overflow in vfio_iommu_type1_pin_pages
+Date:   Mon,  4 May 2020 19:57:48 +0200
+Message-Id: <20200504165500.152788410@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165456.783676004@linuxfoundation.org>
 References: <20200504165456.783676004@linuxfoundation.org>
@@ -60,35 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yan Zhao <yan.y.zhao@intel.com>
 
-commit 983653515849fb56b78ce55d349bb384d43030f6 upstream.
+commit 0ea971f8dcd6dee78a9a30ea70227cf305f11ff7 upstream.
 
-The xa_alloc_cyclic_irq() function returns either 0 or 1 on success and
-negatives on error.  This code treats 1 as an error and returns ERR_PTR(1)
-which will cause an Oops in the caller.
+add parentheses to avoid possible vaddr overflow.
 
-Fixes: ae78ff3a0f0c ("RDMA/cm: Convert local_id_table to XArray")
-Link: https://lore.kernel.org/r/20200407093714.GA80285@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/cm.c |    2 +-
+ drivers/vfio/vfio_iommu_type1.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/cm.c
-+++ b/drivers/infiniband/core/cm.c
-@@ -873,7 +873,7 @@ struct ib_cm_id *ib_create_cm_id(struct
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -593,7 +593,7 @@ static int vfio_iommu_type1_pin_pages(vo
+ 			continue;
+ 		}
  
- 	ret = xa_alloc_cyclic_irq(&cm.local_id_table, &id, NULL, xa_limit_32b,
- 				  &cm.local_id_next, GFP_KERNEL);
--	if (ret)
-+	if (ret < 0)
- 		goto error;
- 	cm_id_priv->id.local_id = (__force __be32)id ^ cm.random_id_operand;
- 	xa_store_irq(&cm.local_id_table, cm_local_id(cm_id_priv->id.local_id),
+-		remote_vaddr = dma->vaddr + iova - dma->iova;
++		remote_vaddr = dma->vaddr + (iova - dma->iova);
+ 		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
+ 					     do_accounting);
+ 		if (ret)
 
 
