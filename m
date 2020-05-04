@@ -2,126 +2,245 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F91C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25831C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B20206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21D82073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588619748;
+	bh=F7Qmmhq6TcbGJuhxEEsR8hmeCqnfcivsCGguf9UeE7E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=en/xd7XjXxybE/RyJZEs6J1drUEVmP0C0cP6NO8LfsDOpTiDOkR6g9twwNOslIE65
+	 N4Bumakp1hGyw/g95sXV30WzKeHwY/qdZxVyg7CcyDDY2NfjMFhcfVaFix+/+D78ok
+	 7wHEdg3RLJTwFCaJogV5rUMhBcrE0mHaMsq2OBBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgEDTOC convert rfc822-to-8bit (ORCPT
+        id S1727789AbgEDTPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:14:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60840 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgEDTOB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:14:01 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 May 2020 15:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgEDTPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:15:46 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 53FBB2A0E46;
-        Mon,  4 May 2020 20:13:58 +0100 (BST)
-Date:   Mon, 4 May 2020 21:13:54 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>
-Subject: Re: [PATCH v2 2/3] media: uapi: Add VP9 stateless decoder controls
-Message-ID: <20200504211354.5b8cafd4@collabora.com>
-In-Reply-To: <98946a03023451d44c2ebb2da719fa7dd3e530f6.camel@collabora.com>
-References: <20200410115113.31728-1-ezequiel@collabora.com>
-        <20200410115113.31728-3-ezequiel@collabora.com>
-        <9126475c-275d-71ab-0308-6ae85e22446b@xs4all.nl>
-        <bf475e70cca6f9ebf645aed51276e57668eaf43b.camel@collabora.com>
-        <20200502203707.402ea3cd@collabora.com>
-        <db9fa91be8084fe9c87f263a4a97dc38d46f9bd1.camel@collabora.com>
-        <e53824aed3eeb27419e5399576cce028f0ba8203.camel@collabora.com>
-        <98946a03023451d44c2ebb2da719fa7dd3e530f6.camel@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E2542073E;
+        Mon,  4 May 2020 19:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588619745;
+        bh=F7Qmmhq6TcbGJuhxEEsR8hmeCqnfcivsCGguf9UeE7E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zYsiT55HzuWGF97RueqOkkgrNj8YtTjj5Y+T928v3pCL9O1IU/503Q4bKizkgtWnk
+         dghRszYP2nSZszZsW0w39j8v9aVRZp7flQlVKmVIM8cBypwmJ9HU3Wt6M0oa8TpvIr
+         axm0aBdhbzUOyVpiPnfeXKuySio2SDn/31utg7yk=
+Received: by mail-ot1-f51.google.com with SMTP id z17so9947243oto.4;
+        Mon, 04 May 2020 12:15:45 -0700 (PDT)
+X-Gm-Message-State: AGi0PubBJsywy+uhqdPfPhd/xglwFM46fviI7/UNlIviE4UfHt+3w4/s
+        QAJA7pW2F1kjmSJKcp0vIOrN6MfwOLr7UCwUIw==
+X-Google-Smtp-Source: APiQypK3VZQ36VWy3e7C0F+WtWxSO1XQD91KJ/cOHPDKIxPLR1SVmk2HUWN/cm9ekPsDYqbb2I8+UQJKA4ppbF9fZsM=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr14640730otn.107.1588619744639;
+ Mon, 04 May 2020 12:15:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200504020651.37031-1-masahiroy@kernel.org> <20200504020651.37031-2-masahiroy@kernel.org>
+In-Reply-To: <20200504020651.37031-2-masahiroy@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 May 2020 14:15:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com>
+Message-ID: <CAL_JsqLRUAEmh3kwEo+T-dMhXZTBH_kwbBwKzZyhJMR5P92pwA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] scripts/dtc: compile separate dtc-yaml
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?TWFyZWsgQmVo77+977+9w6Ju?= <marek.behun@nic.cz>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 04 May 2020 14:38:23 -0400
-Nicolas Dufresne <nicolas.dufresne@collabora.com> wrote:
+On Sun, May 3, 2020 at 9:07 PM Masahiro Yamada <masahiroy@kernel.org> wrote=
+:
+>
+> Marek Beh=C3=BAn reported a case where pkg-config fails to detect the
+> libyaml-dev package, which is presumably a bug of the distro.
+>
+> Irrespective of that, I am not a big fan of pkg-config in the Makefile
+> parse stage. The cost of pkg-config is quite small, but it is evaluated
+> everytime we run make, even when we do 'make mrproper'. This commit
+> changes the Makefile to not rely on pkg-config at all.
 
-> Le lundi 04 mai 2020 à 14:01 -0400, Nicolas Dufresne a écrit :
-> > Le samedi 02 mai 2020 à 19:55 -0300, Ezequiel Garcia a écrit :  
-> > > +Nicolas
-> > > 
-> > > On Sat, 2020-05-02 at 20:37 +0200, Boris Brezillon wrote:  
-> > > > On Fri, 01 May 2020 13:57:49 -0300
-> > > > Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > > >   
-> > > > > > > +
-> > > > > > > +.. tabularcolumns:: |p{1.5cm}|p{6.3cm}|p{9.4cm}|
-> > > > > > > +
-> > > > > > > +.. flat-table:: enum v4l2_vp9_reset_frame_context
-> > > > > > > +    :header-rows:  0
-> > > > > > > +    :stub-columns: 0
-> > > > > > > +    :widths:       1 2
-> > > > > > > +
-> > > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE``
-> > > > > > > +      - Do not reset any frame context.
-> > > > > > > +    * - ``V4L2_VP9_RESET_FRAME_CTX_NONE_ALT``
-> > > > > > > +      - Do not reset any frame context. This is an alternative value for
-> > > > > > > +        V4L2_VP9_RESET_FRAME_CTX_NONE.    
-> > > > > > 
-> > > > > > Add `` around V4L2_VP9_RESET_FRAME_CTX_NONE.
-> > > > > >     
-> > > > > 
-> > > > > Hm, now that I look closer, what's the point
-> > > > > of having the NONE_ALT in our uAPI if it
-> > > > > has same meaning as NONE?
-> > > > > 
-> > > > > I think it can be removed.  
-> > > > 
-> > > > The intent was to match the spec so that one can pass the value
-> > > > extracted from the bitstream directly.  
-> > 
-> > reset_frame_contextspecifies whether the frame context should be reset
-> > to default values:
-> >   − 0 or 1 means do not reset any frame context
-> >   − 2 resets just the context specified in the frame header
-> >   − 3 resets all cont
-> > 
-> > But aren't we going too far by making this an emum ? In Microsfot DXVA,
-> > we pass that value without interpreting it in userspace. For the
-> > following RKVDEC, it is (suspiciously ?) ignored. Maybe just passing
-> > over the value would make more sense, less work ?  
-> 
-> I have looked deeper. So basically when 2 and 3, that needs to be done
-> by userspace is set back the associated probs arrays to their default
-> values (see section 10.5 or the spec).
-> 
-> https://github.com/rockchip-linux/mpp/blob/develop/mpp/codec/dec/vp9/vp9d_parser.c#L1021
-> 
-> It seems that for both VAAPI And DXVA, the drivers takes care of that
-> reset. So I'd like to ask, shall we code these defaults inside the
-> driver ? I think we do similar things in JPEG side. But if we keep it
-> the way it is, this should be strictly documented, otherwise anyone
-> porting from DXVA or VAAPI will be tricked by this.
+I don't really love the solution here... I'm inclined to just make
+libyaml always required. Anyone building dtbs should care about
+validating them. However, there's some dts files sprinkled in the tree
+such as DT unittests and I don't want to break allmodconfig for CI,
+0-day, etc. Though eventually we may have to.
 
-IIRC, some book keeping had to be done in userspace anyway, so I didn't
-feel the need for resetting probe context in kernel space (tt's always
-hard to draw a clear line of what should be done in userspace and what
-should be automated by kernel drivers for those stateless decoders).
-I suspect some engines have hardware probs contexts, and in that case,
-you'd have to reset those when this field is set to 2 or 3, but that's
-not the case here.
+> The normal build should not require libyaml-dev while we need to compile
+> dtc with libyaml for the schema check.
+>
+> Build two dtc variants:
+>
+>   scripts/dtc/dtc      for *.dts -> *.dtb
+>   scripts/dtc/dtc-yaml for *.dts -> *.dt.yaml
+
+My longer term plan is to integrate the schema checks into dtc. This
+would be some sort of plugin to dtc found or specified at run-time. It
+would eliminate the need for 2 passes of dtc and the 2nd case will go
+away.
+
+> 'make dtbs_check' or 'make dt_binding_check' without libyaml-dev installe=
+d
+> will fail like this:
+>
+>   scripts/dtc/yamltree.c:9:10: fatal error: yaml.h: No such file or direc=
+tory
+>
+> I hope people will notice what to do.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  scripts/Makefile.lib      |  9 +++++----
+>  scripts/dtc/.gitignore    |  1 +
+>  scripts/dtc/Makefile      | 28 +++++++++++-----------------
+>  scripts/dtc/dtc-no-yaml.c |  3 +++
+>  4 files changed, 20 insertions(+), 21 deletions(-)
+>  create mode 100644 scripts/dtc/dtc-no-yaml.c
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 8f9f2abf3d67..ca12412304b8 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -246,6 +246,7 @@ quiet_cmd_gzip =3D GZIP    $@
+>  # DTC
+>  # ----------------------------------------------------------------------=
+-----
+>  DTC ?=3D $(objtree)/scripts/dtc/dtc
+> +DTC_YAML ?=3D $(objtree)/scripts/dtc/dtc-yaml
+
+Can we make 'DTC' override both and keep this an internal detail.
+
+>  # Disable noisy checks by default
+>  ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+> @@ -286,13 +287,13 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+>
+>  __cmd_dtc =3D mkdir -p $(dir ${dtc-tmp}) ; \
+>         $(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp)=
+ $< ; \
+> -       $(DTC) -O $(1) -o $@ -b 0 \
+> +       $(1) -O $(2) -o $@ -b 0 \
+>                 $(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+>                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
+>         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+>
+>  quiet_cmd_dtc =3D DTC     $@
+> -      cmd_dtc =3D $(call __cmd_dtc,dtb)
+> +      cmd_dtc =3D $(call __cmd_dtc,$(DTC),dtb)
+>
+>  $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
+>         $(call if_changed_dep,dtc)
+> @@ -303,7 +304,7 @@ DT_BINDING_DIR :=3D Documentation/devicetree/bindings
+>  DT_TMP_SCHEMA ?=3D $(objtree)/$(DT_BINDING_DIR)/processed-schema.yaml
+>
+>  quiet_cmd_dtc_yaml =3D DTCYAML $@
+> -      cmd_dtc_yaml =3D $(call __cmd_dtc,yaml)
+> +      cmd_dtc_yaml =3D $(call __cmd_dtc,$(DTC_YAML),yaml)
+>
+>  quiet_cmd_dtb_check =3D  CHECK   $@
+>        cmd_dtb_check =3D  $(DT_CHECKER) -u $(srctree)/$(DT_BINDING_DIR) -=
+p $(DT_TMP_SCHEMA) $@
+> @@ -313,7 +314,7 @@ define rule_dtc_yaml
+>         $(call cmd,dtb_check)
+>  endef
+>
+> -$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
+> +$(obj)/%.dt.yaml: $(src)/%.dts $(DTC_YAML) $(DT_TMP_SCHEMA) FORCE
+>         $(call if_changed_rule,dtc_yaml)
+>
+>  dtc-tmp =3D $(subst $(comma),_,$(dot-target).dts.tmp)
+> diff --git a/scripts/dtc/.gitignore b/scripts/dtc/.gitignore
+> index b814e6076bdb..e0cf8222c137 100644
+> --- a/scripts/dtc/.gitignore
+> +++ b/scripts/dtc/.gitignore
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  dtc
+> +dtc-yaml
+> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> index ef85f8b7d4a7..c6d7e2b70f08 100644
+> --- a/scripts/dtc/Makefile
+> +++ b/scripts/dtc/Makefile
+> @@ -1,28 +1,22 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # scripts/dtc makefile
+>
+> -hostprogs                      :=3D dtc
+> -always-$(CONFIG_DTC)           +=3D $(hostprogs)
+> -always-$(CHECK_DT_BINDING)     +=3D $(hostprogs)
+> +# Build the yaml variant for DT schema validation, which requires libyam=
+l
+> +# development package. The normal build does not need it.
+> +hostprogs                      :=3D dtc dtc-yaml
+> +always-$(CONFIG_DTC)           +=3D dtc
+> +always-$(CHECK_DTBS)           +=3D dtc-yaml
+> +always-$(CHECK_DT_BINDING)     +=3D dtc-yaml
+>
+> -dtc-objs       :=3D dtc.o flattree.o fstree.o data.o livetree.o treesour=
+ce.o \
+> -                  srcpos.o checks.o util.o
+> -dtc-objs       +=3D dtc-lexer.lex.o dtc-parser.tab.o
+> +common-objs    :=3D flattree.o fstree.o data.o livetree.o treesource.o \
+> +                  srcpos.o checks.o util.o dtc-lexer.lex.o dtc-parser.ta=
+b.o
+> +dtc-objs       :=3D dtc-no-yaml.o $(common-objs)
+> +dtc-yaml-objs  :=3D dtc.o yamltree.o $(common-objs)
+> +HOSTLDLIBS_dtc-yaml :=3D -lyaml
+
+Does this work for yocto? As we had this before commit 067c650c456e.
+Not clear if this changed for any reason or just 'let's use pkg-config
+everywhere'.
+
+Or is there another way to fix yocto issue and we can just check the
+header exists. I assume yocto needs some prefix in front of
+'/usr/include/yaml.h'?
+
+>  # Source files need to get at the userspace version of libfdt_env.h to c=
+ompile
+>  HOST_EXTRACFLAGS :=3D -I $(srctree)/$(src)/libfdt
+>
+> -ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+> -ifneq ($(CHECK_DT_BINDING)$(CHECK_DTBS),)
+> -$(error dtc needs libyaml for DT schema validation support. \
+> -       Install the necessary libyaml development package.)
+> -endif
+> -HOST_EXTRACFLAGS +=3D -DNO_YAML
+> -else
+> -dtc-objs       +=3D yamltree.o
+> -HOSTLDLIBS_dtc :=3D $(shell pkg-config yaml-0.1 --libs)
+> -endif
+> -
+>  # Generated files need one more search path to include headers in source=
+ tree
+>  HOSTCFLAGS_dtc-lexer.lex.o :=3D -I $(srctree)/$(src)
+>  HOSTCFLAGS_dtc-parser.tab.o :=3D -I $(srctree)/$(src)
+> diff --git a/scripts/dtc/dtc-no-yaml.c b/scripts/dtc/dtc-no-yaml.c
+> new file mode 100644
+> index 000000000000..f3459e45835f
+> --- /dev/null
+> +++ b/scripts/dtc/dtc-no-yaml.c
+> @@ -0,0 +1,3 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +#define NO_YAML
+> +#include "dtc.c"
+> --
+> 2.25.1
+>
