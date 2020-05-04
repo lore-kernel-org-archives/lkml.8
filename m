@@ -2,224 +2,139 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76141C47258
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E68C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5183F2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2E3320721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588576749;
+	bh=JRN6Kiqx1O4ODA2mlwCr6ZZawMu5tFYb1hU/u58xqsg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i3RL+bh6tV9jiv6LsfQzucsGGv1VavKJIVT8LItpDprm4C3TiyRBJTBeAQ/Ow/gn+
+	 GthL7tvzBdEaA0nV1Bd8+1rble27nCbmjdMe+PM7fDjMitkZx64N0pZFhzxZCjWDZB
+	 oTYXPNjJxJKPiBoxwkEvn0bZz/azOFv9u6FIvDJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgEDHSB (ORCPT
+        id S1727878AbgEDHTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:18:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53774 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgEDHSB (ORCPT
+        Mon, 4 May 2020 03:19:08 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:36590 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgEDHTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:18:01 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 21FB52A0DAA;
-        Mon,  4 May 2020 08:17:59 +0100 (BST)
-Date:   Mon, 4 May 2020 09:17:55 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>, tglx@linutronix.de,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, masonccyang@mxic.com.tw,
-        anders.roxell@linaro.org, vigneshr@ti.com, arnd@arndb.de,
-        hauke.mehrtens@intel.com, richard@nod.at,
-        brendanhiggins@google.com, linux-mips@vger.kernel.org,
-        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, qi-ming.wu@intel.com,
-        andriy.shevchenko@intel.com
-Subject: Re: [PATCH v4 2/2] mtd: rawnand: Add NAND controller support on
- Intel LGM SoC
-Message-ID: <20200504091755.0d0e73aa@collabora.com>
-In-Reply-To: <854521ed-b0f9-0f0f-2cd7-5ad11b2d059a@linux.intel.com>
-References: <20200429104205.18780-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429104205.18780-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <20200429162249.55d38ee8@collabora.com>
-        <9d77c64c-d0f9-7a13-3391-d05bf458bdb1@linux.intel.com>
-        <20200429164832.6800fc70@collabora.com>
-        <2e83a2f7-853c-f0e2-f686-daf1e0649eae@linux.intel.com>
-        <20200429173107.5c6d2f55@collabora.com>
-        <1de9ba29-30f1-6829-27e0-6f141e9bb1e6@linux.intel.com>
-        <20200430102114.29b6552f@collabora.com>
-        <1df71cf7-4cae-4cd0-864c-0812bb2cc123@linux.intel.com>
-        <20200430103658.4b0b979e@collabora.com>
-        <1d5aec11-a7b5-01c2-6614-16e57c64511b@linux.intel.com>
-        <20200430143600.27031639@collabora.com>
-        <20200430150124.7856d112@collabora.com>
-        <df7c1952-bc9b-bad7-bf31-d09707a0829e@linux.intel.com>
-        <20200504090824.1eb16b78@collabora.com>
-        <854521ed-b0f9-0f0f-2cd7-5ad11b2d059a@linux.intel.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 4 May 2020 03:19:08 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 0447IqMq019915
+        for <linux-kernel@vger.kernel.org>; Mon, 4 May 2020 16:18:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0447IqMq019915
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588576733;
+        bh=Si+uHh7+JIQDmUm173RyRUWl4SOLFbyk0wxcbPR9Eng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QJB2PJEoO2SlXyapAnkLthBSlF9o5alXfMYFBiQ7M7HzmN9+lhj6/ypahR+uZbvid
+         x+zKE0C7hdQwNpW4gib9zsxXbEXb5YPeOYFHHcQXNw+qXCnEnoiSHfan+CkBihE5mV
+         EP5VPIQnXA0qB+mooAd5GPzhKM3qwi09nvh2azFi12LNN1S1YXLvmzetZN5N5eaWEJ
+         KQWG2IvHrW6s7cHbft+i5Yk+vJsFfO0ULwlhjl6RLW2jEwZ3CLWZxsz9S7QESanRYQ
+         3i5wzPlrJabfO4b9qrnyNf5pvPIMBnkDgQhg9uH9VYwQl9+fVjkC2cnUjDjnSkJ1aE
+         wNDDEuLN4aAwg==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id z16so6166449uae.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 00:18:53 -0700 (PDT)
+X-Gm-Message-State: AGi0Puaa2ooZpIRY21/Q44N85qv5kY9QKmTy9SAXMWrff318op/F88iM
+        Ha0Vy97ejrlZNbX6WWuXhpajh9S04TvwDkiSVCM=
+X-Google-Smtp-Source: APiQypL9xVGg6OPLgdKiadBx9SBjVLyldVIF003gBtl6vwXUrWyA/lP/CQIhzpHgetIpT0QeL1Xgdc64fbJ4AXrTeWs=
+X-Received: by 2002:ab0:69c9:: with SMTP id u9mr10567025uaq.121.1588576731993;
+ Mon, 04 May 2020 00:18:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1588476545-21082-1-git-send-email-sidgup@codeaurora.org>
+In-Reply-To: <1588476545-21082-1-git-send-email-sidgup@codeaurora.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 4 May 2020 16:18:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ55OPgiUOdoXDHqD_p3ntiUctqmVhAmO9fRuoq=uAV7g@mail.gmail.com>
+Message-ID: <CAK7LNAQ55OPgiUOdoXDHqD_p3ntiUctqmVhAmO9fRuoq=uAV7g@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts: headers_install: Exit with error on config leak
+To:     Siddharth Gupta <sidgup@codeaurora.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 May 2020 15:15:08 +0800
-"Ramuthevar, Vadivel MuruganX"
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+On Sun, May 3, 2020 at 12:29 PM Siddharth Gupta <sidgup@codeaurora.org> wrote:
+>
+> Misuse of CONFIG_* in UAPI headers should result in an error as it exposes
+> configuration of different targets to userspace.
 
-> Hi Boris,
-> 
->    Thank you very much for the prompt review and suggestions...
-> 
-> On 4/5/2020 3:08 pm, Boris Brezillon wrote:
-> > On Mon, 4 May 2020 10:02:35 +0800
-> > "Ramuthevar, Vadivel MuruganX"
-> > <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
-> >   
-> >> Hi Boris,
-> >>
-> >> On 30/4/2020 9:01 pm, Boris Brezillon wrote:  
-> >>> On Thu, 30 Apr 2020 14:36:00 +0200
-> >>> Boris Brezillon<boris.brezillon@collabora.com>  wrote:
-> >>>      
-> >>>> On Thu, 30 Apr 2020 17:07:03 +0800
-> >>>> "Ramuthevar, Vadivel MuruganX"
-> >>>> <vadivel.muruganx.ramuthevar@linux.intel.com>  wrote:
-> >>>>     
-> >>>>>>>> The question is, is it the same value we have in nand_pa or it is
-> >>>>>>>> different?
-> >>>>>>>>              
-> >>>>>>> Different address which is 0xE1400000 NAND_BASE_PHY address.  
-> >>>>>> Then why didn't you tell me they didn't match when I suggested to pass  
-> >>>>> sorry, because you keep asking nand_pa after that only I realized that.
-> >>>>>         
-> >>>>>> nand_pa? So now the question is, what does this address represent?  
-> >>>>>                   EBU-MODULE
-> >>>>>     _________     _______________________
-> >>>>> |         |   |            |NAND CTRL  |
-> >>>>> | FPI BUS |==>| CS0(0x174) | 0xE100    ( 0xE14/0xE1C) NAND_PHY_BASE
-> >>>>> |_________|   |_CS1(0x17C)_|__________ |
-> >>>>>
-> >>>>> EBU_CONRTROLLER_BASE : 0xE0F0_0000
-> >>>>> HSNAND_BASE: 0xE100_0000
-> >>>>> NAND_CS0: 0xE140_0000
-> >>>>> NAND_CS1: 0xE1C0_0000
-> >>>>>
-> >>>>> MEM_REGION_BASE_CS0: 0x17400 (internal to ebu controller )
-> >>>>> MEM_REGION_BASE_CS1: 0x17C00
-> >>>>>         
-> >>>> Hm, I wonder if we shouldn't use a 'ranges' property to describe this
-> >>>> address translation. Something like
-> >>>>
-> >>>> 	ebu@xxx {
-> >>>> 		ranges = <0x17400000 0xe1400000 0x1000>,
-> >>>> 			 <0x17c00000 0xe1c00000 0x1000>;
-> >>>> 		reg = <0x17400000>, <0x17c00000>;
-> >>>> 		reg-names = "cs-0", "cs-1";
-> >>>> 	}
-> >>>>
-> >>>> The translated address (0xE1X00000) will be available in res->start,
-> >>>> and the non-translated one (0x17X00000) can be retrieved with
-> >>>> of_get_address(). All you'd have to do then would be calculate the
-> >>>> mask:
-> >>>>
-> >>>> 	mask = (translated_address & original_address) >> 22;
-> >>>> 	num_comp_bits = fls(mask);
-> >>>> 	WARN_ON(mask != GENMASK(num_comp_bits - 1, 0));
-> >>>>
-> >>>> Which allows you to properly set the ADDR_SEL() register without
-> >>>> relying on some hardcoded values:
-> >>>>
-> >>>> 	writel(original_address | EBU_ADDR_SEL_REGEN |
-> >>>> 	       EBU_ADDR_COMP_BITS(num_comp_bits),
-> >>>> 	       ebu_host->ebu + EBU_ADDR_SEL(csid));
-> >>>>
-> >>>> That's quite important if we want to merge the xway NAND driver with
-> >>>> this one.  
-> >>> Looks like the translation is done at the FPI bus declaration level (see
-> >>> [1]). We really need to see the big picture to take a wise decision
-> >>> about the bindings. Would you mind pasting your dsti/dts files
-> >>> somewhere? It feels like the NAND controller is a sub-part of a more
-> >>> generic 'memory' controller, in which case the NAND controller should be
-> >>> declared as a child of this generic memory bus (called localbus in [1],
-> >>> but maybe EBU is more accurate).
-> >>>
-> >>> [1]https://github.com/xieyaxiongfly/Atheros_CSI_tool_OpenWRT_src/blob/master/target/linux/lantiq/files-4.14/arch/mips/boot/dts/vr9.dtsi#L162     
-> >>
-> >>    ebu_nand: ebu_nand@e0f00000 {
-> >>                    compatible = "intel,lgm-ebu-nand";
-> >>                    reg = <0xe0f00000 0x100
-> >>                    0xe1000000 0x300
-> >>                    0xe1400000 0x80000
-> >>                    0xe1c00000 0x10000>;
-> >>                    reg-names = "ebunand", "hsnand", "nand_cs0", nand_cs1";
-> >>                    dmas = <&dma0 8>, <&dma0 9>;
-> >>                    dma-names = "ebu_rx", "ebu_tx";
-> >>                    clocks =  <&cgu0 LGM_GCLK_EBU>;
-> >>            };
-> >>
-> >>
-> >> 	 &ebu_nand {
-> >> 	         status = "disabled";
-> >> 	        nand,cs = <1>;
-> >> 	        nand-ecc-mode = "hw";
-> >> 	        pinctrl-names = "default";
-> >> 	        pinctrl-0 = <&ebu_nand_base &ebu_cs1>;
-> >> 	};
-> >>  
-> >>>      
-> > Ok. If I understand the SoC topology correctly it should actually be
-> > something like that:
-> > 
-> > {
-> > 	...
-> > 	fpi@xxxxx {
-> > 		compatible = "intel,lgm-fpi", "simple-bus";
-> > 
-> > 		/* You might have other ranges to define here */
-> > 		ranges = <0x16000000 0xe0000000 0x1000000>;
-> > 
-> > 		...  
-> 
-> Sorry, we do not have fpi tree node in our dts/dtsi file instead we have 
-> the below one.. , that also not included the major peripherals 
-> controllers node.
->          /* Special part from CPU core */
->          core: core {
->                  compatible = "intel,core", "simple-bus";
->                  #address-cells = <1>;
->                  #size-cells = <1>;
->                  ranges;
-> 
->                  ioapic1: interrupt-controller@fec00000 {
->                          #interrupt-cells = <2>;
->                          #address-cells = <0>;
->                          compatible = "intel,ce4100-ioapic";
->                          interrupt-controller;
->                          reg = <0xfec00000 0x1000>;
->                          nr_entries = <256>;
->                  };
-> 
->                  hpet: timer@fed00000 {
->                          compatible = "intel,ce4100-hpet";
->                          reg = <0xfed00000 0x400>;
->                  };
-> 
->                  lapic0: interrupt-controller@fee00000 {
->                          compatible = "intel,ce4100-lapic";
->                          reg = <0xfee00000 0x1000>;
->                          no_pic_mode;
->                  };
->          };
-> 
-> other than this, rest all in independent node .
 
-But you do have an FPI bus, right? If this is the case it should be
-represented. Or is the "intel,core" bus actually the FPI bus that you
-named differently?
+Sorry, I missed to point out this.
+
+This statement is not precious; it does not expose the kernel
+configuration at all.
+
+include/generated/autoconf.h is not available from userspace.
+So, all the CONFIG options are undefined.
+
+Could you reword the commit somehow?
+
+
+
+
+
+>
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> ---
+>  scripts/headers_install.sh | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+> index a07668a..94a8335 100755
+> --- a/scripts/headers_install.sh
+> +++ b/scripts/headers_install.sh
+> @@ -64,7 +64,7 @@ configs=$(sed -e '
+>         d
+>  ' $OUTFILE)
+>
+> -# The entries in the following list are not warned.
+> +# The entries in the following list do not result in an error.
+>  # Please do not add a new entry. This list is only for existing ones.
+>  # The list will be reduced gradually, and deleted eventually. (hopefully)
+>  #
+> @@ -98,18 +98,19 @@ include/uapi/linux/raw.h:CONFIG_MAX_RAW_DEVS
+>
+>  for c in $configs
+>  do
+> -       warn=1
+> +       leak_error=1
+>
+>         for ignore in $config_leak_ignores
+>         do
+>                 if echo "$INFILE:$c" | grep -q "$ignore$"; then
+> -                       warn=
+> +                       leak_error=
+>                         break
+>                 fi
+>         done
+>
+> -       if [ "$warn" = 1 ]; then
+> -               echo "warning: $INFILE: leak $c to user-space" >&2
+> +       if [ "$leak_error" = 1 ]; then
+> +               echo "error: $INFILE: leak $c to user-space" >&2
+> +               exit 1
+>         fi
+>  done
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
