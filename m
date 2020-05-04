@@ -2,124 +2,143 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8397C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2546AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94942206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588614256;
-	bh=9Sb1ZJEY/oPGWjp07mTfMZs9PiyuEaUxtKetFjkV1zY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=fLTNmYn/kPMUkjDOEEgEl4P5nDE/aQ3++4Xti7oQSa600W794qGT/zYDhdjQhTuAU
-	 xCbgcomEWNma5ep9LylVeGiYmXG2pqVvScmxHMBHxOtfEWNa4zcjMNKnkXzFwh6sML
-	 gVbHEiQwA0GCNNoo0PjgvgsoUNMyLqGz75vLDfHo=
+	by mail.kernel.org (Postfix) with ESMTP id 030BF206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/4fA1U6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgEDRoP (ORCPT
+        id S1730057AbgEDRpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbgEDRoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:44:15 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8DD4206A4;
-        Mon,  4 May 2020 17:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588614254;
-        bh=9Sb1ZJEY/oPGWjp07mTfMZs9PiyuEaUxtKetFjkV1zY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=fU3T+tszlgh22hrOk5J0VcoUX2E6BbRaWKyq8iSD8BgDncfy9Jm3Tn6py+DXjHJ8k
-         obeZ7/FhD761N6QvensAuDhNakfKXkOKm6E6nuKoubu1j4zX2SGxNRm8UgjeMkfkDv
-         ZZS+2Tq+9clTyLWaYtQ9sEHvzh/Cii3+2bt6XUTg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1CC0135226F4; Mon,  4 May 2020 10:44:13 -0700 (PDT)
-Date:   Mon, 4 May 2020 10:44:13 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>, frextrite@gmail.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>, kernel-team@android.com,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        madhuparnabhowmik04@gmail.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        peterz@infradead.org, Petr Mladek <pmladek@suse.com>,
-        rcu@vger.kernel.org, rostedt@goodmis.org, tglx@linutronix.de,
-        vpillai@digitalocean.com
-Subject: Re: [PATCH v3 0/5] RCU dyntick nesting counter cleanups for rcu -dev
-Message-ID: <20200504174413.GA8883@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200504120505.89351-1-joel@joelfernandes.org>
- <20200504171532.GR2869@paulmck-ThinkPad-P72>
+        Mon, 4 May 2020 13:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729386AbgEDRpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:45:17 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD0FC061A0E;
+        Mon,  4 May 2020 10:45:17 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id a5so217478pjh.2;
+        Mon, 04 May 2020 10:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2s0HKSDbYZQCfls10fELFqwmKEgOAIpeqz5usoPo4C0=;
+        b=g/4fA1U6TvbO9g8SGDv9GgL60R0B0BYHGWxzBykqBMPixJZPEUkJykL3gXRFz3BycJ
+         h4lD13nQHVFN/A8FUFm/u9+nDjpPx+i6DcqFg45WnPAWLxMUHD0jlbAK7eMY4Pfgx0h5
+         3C2GPafI3xCIwcz1Yfe0V/ESc5G0FlF5nTpN87ZXOOCl4jUcxSeISzIv35p801+0Cq1S
+         dSp3UnTupyjEM0/7wGjFz4xyl4iMqWAVs6Z3W/Jw9rBQkcMZCm4g5uYQdxRa2MX/2vTj
+         RVKmafd1J+hYu7lokWZUzhuNFrFGfCwIHOCofBe6Sm3dYrF+TP6cQiRc7Dq5RoASg7Dg
+         4Xyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2s0HKSDbYZQCfls10fELFqwmKEgOAIpeqz5usoPo4C0=;
+        b=KpknbY+/nofefQPx+V/eQozlPQ9vcrTZrQ6jrA4LMCXPIsO1v0PECfq51DiKK8uHVB
+         s2URUAxvYofi8hD/R5BUW4PN6XQgYSxPzf7P6pvhNDpb07nAWrsJ2y3e4dnbOOL/zqiv
+         44Z1hxsqZ6SjlLt22k6QTEPNKyaKk0YoGXOAeplRKOTL/CqsfiZZ/LcCwSeWtDJf5ogz
+         LTRB2IUA5HZzdQrh3l6jfClHfDXBWWkFfWovHNRtjilPoHjoxO3kRLlR5NYZLfb3rhps
+         zmgndNby3Ae8Hxi7gHRiZDEoTauNlx+MuIojVb6mo/1RpVYOVHqdfARl2+DupVk47y5a
+         ocWg==
+X-Gm-Message-State: AGi0PuZAHT8h6LsHdi8EFIQTKFqv5DngsG8HeEBYLPjPIJoSjvCERAYh
+        fWghl61im8QC4nl8DECmlpz83MPi
+X-Google-Smtp-Source: APiQypJ1TXlo5ebIEETrzNeVDBC0y7QkNKSvcViP8Ys+iHpEzMNrMnbMET9A3Oz0ftwc30gsrCH+XA==
+X-Received: by 2002:a17:90a:f985:: with SMTP id cq5mr69889pjb.193.1588614316940;
+        Mon, 04 May 2020 10:45:16 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h8sm9262758pfo.143.2020.05.04.10.45.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 10:45:16 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/3] net: phy: add concept of shared storage for
+ PHYs
+To:     Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>
+References: <20200504163859.10763-1-michael@walle.cc>
+ <20200504163859.10763-2-michael@walle.cc>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <3649566c-1424-133f-fed0-b920874fb36b@gmail.com>
+Date:   Mon, 4 May 2020 10:45:14 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504171532.GR2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200504163859.10763-2-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 10:15:32AM -0700, Paul E. McKenney wrote:
-> On Mon, May 04, 2020 at 08:05:00AM -0400, Joel Fernandes (Google) wrote:
-> > These patches clean up the usage of dynticks nesting counters simplifying the
-> > code, while preserving the usecases.
-> > 
-> > It is a much needed simplification, makes the code less confusing, and prevents
-> > future bugs such as those that arise from forgetting that the
-> > dynticks_nmi_nesting counter is not a simple counter and can be "crowbarred" in
-> > common situations.
-> > 
-> > rcutorture testing with all TREE RCU configurations succeed with
-> > CONFIG_RCU_EQS_DEBUG=y and CONFIG_PROVE_LOCKING=y.
-> > 
-> > v1->v2:
-> > - Rebase on v5.6-rc6
-> > 
-> > v2->v3:
-> > - Rebase on rcu/dev with adjustments for tasks-RCU.
+
+
+On 5/4/2020 9:38 AM, Michael Walle wrote:
+> There are packages which contain multiple PHY devices, eg. a quad PHY
+> transceiver. Provide functions to allocate and free shared storage.
 > 
-> Thank you!
+> Usually, a quad PHY contains global registers, which don't belong to any
+> PHY. Provide convenience functions to access these registers.
 > 
-> But this does not apply to any of v5.6-rc6, v5.7-rc1, or v5.7-rc2.
-> 
-> Where should I be trying to apply it?
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-OK, morning blindness overcome.  I new see the "rcu/dev" in v2->v3.
+This looks pretty good, just a few comments below.
 
-Please accept my apologies for the noise.
+[snip]
 
-							Thanx, Paul
+> +
+> +/**
+> + * devm_phy_package_join - resource managed phy_package_join()
+> + * @dev: device that is registering this GPIO device
 
-> > Joel Fernandes (Google) (4):
-> > Revert b8c17e6664c4 ("rcu: Maintain special bits at bottom of
-> > ->dynticks counter")
-> > rcu/tree: Add better tracing for dyntick-idle
-> > rcu/tree: Clean up dynticks counter usage
-> > rcu/tree: Remove dynticks_nmi_nesting counter
-> > 
-> > Madhuparna Bhowmik (1):
-> > trace: events: rcu: Change description of rcu_dyntick trace event
-> > 
-> > .../Data-Structures/Data-Structures.rst       |  31 +--
-> > Documentation/RCU/stallwarn.rst               |   6 +-
-> > include/linux/rcutiny.h                       |   3 -
-> > include/trace/events/rcu.h                    |  29 +--
-> > kernel/rcu/rcu.h                              |   4 -
-> > kernel/rcu/tree.c                             | 199 +++++++-----------
-> > kernel/rcu/tree.h                             |   4 +-
-> > kernel/rcu/tree_stall.h                       |   4 +-
-> > 8 files changed, 110 insertions(+), 170 deletions(-)
-> > 
-> > --
-> > 2.26.2.526.g744177e7f7-goog
-> > 
+You mean device registering this PHY package here?
+
+[snip]
+
+Might be worth a comment that this is a used as a bit number.
+
+> +
+> +#define PHY_SHARED_F_INIT_DONE 0
+> +
+>  /*
+>   * The Bus class for PHYs.  Devices which provide access to
+>   * PHYs should register using this structure
+> @@ -278,6 +301,12 @@ struct mii_bus {
+>  	int reset_delay_us;
+>  	/* RESET GPIO descriptor pointer */
+>  	struct gpio_desc *reset_gpiod;
+> +
+> +	/* protect access to the shared element */
+> +	struct mutex shared_lock;
+> +
+> +	/* shared state across different PHYs */
+> +	struct phy_package_shared *shared[PHY_MAX_ADDR];
+>  };
+>  #define to_mii_bus(d) container_of(d, struct mii_bus, dev)
+>  
+> @@ -478,6 +507,10 @@ struct phy_device {
+>  	/* For use by PHYs to maintain extra state */
+>  	void *priv;
+>  
+> +	/* shared data pointer */
+> +	/* For use by PHYs inside the same package and needs a shared state. */
+
+s/and needs/that need/
+-- 
+Florian
