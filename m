@@ -2,162 +2,117 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BBBC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B733C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A282073E
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588607571;
-	bh=AGDxw0MW8aAebw6WlhG9CfOILh00EtjOKxqc25DpNow=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=mtoZyOmzoxVn//iu60eoXOo3Vpwiyc8ii+Orgx6P0IzhoXA3Ltft4G/uWkH84J6PF
-	 5XyK9YnRlURyZrOmHFQuu4LpzDZkVNVkxeOSToph/Gbl+tf9Zf3z8njUNcArw092Lu
-	 ZXDByQMWDN1N12yNvzPPoaUbPwRtWE0dTMYX9UIo=
+	by mail.kernel.org (Postfix) with ESMTP id 4728020721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXvlHJUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgEDPwv (ORCPT
+        id S1729453AbgEDPxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728873AbgEDPwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:52:50 -0400
-Received: from localhost (mobile-166-175-184-168.mycingular.net [166.175.184.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343E320705;
-        Mon,  4 May 2020 15:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588607569;
-        bh=AGDxw0MW8aAebw6WlhG9CfOILh00EtjOKxqc25DpNow=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=R300NHO1dDSUAthZKMfjGmN7n4jKSBZCh/GQhoQYgQsQYkwEck8KsCP0v8JQ4mlJ8
-         ixgHfgpSlETQ2IOHghiYKvfJ1VrKK1dG9uj0xsSzAVNKICd3k5hsBUrSdAkNZEeM8V
-         YhkpKQdoHwIz8XGmeV0MchZPmGHsToBCmIjLm6zI=
-Date:   Mon, 4 May 2020 10:52:47 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 08/12] PCI: aardvark: Replace custom macros by
- standard linux/pci_regs.h macros
-Message-ID: <20200504155247.GA271721@bjorn-Precision-5520>
+        Mon, 4 May 2020 11:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728873AbgEDPxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:53:19 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6931C061A0E;
+        Mon,  4 May 2020 08:53:18 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id a21so10158480ljj.11;
+        Mon, 04 May 2020 08:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Uaqoisb/ISvzu7HtxB7/o6dTkuqP/WZqu9coo5sj/rM=;
+        b=oXvlHJUwcUAMcJO2folcLpAl4lu16ZdbHEUsIwKLpxhkbVjp+Pqsf29yGIQ0ZQ6CBp
+         mkb8I6hfNPtNe84cp72KKyuFGdD3W1dErn9FwHRIjfgpjPbyO46oblD3L3JLxYVdCVil
+         06P5osWdgGoXea5Xlh9Bruoxw8N41BiwWFhg2BmrbbgqRvK9fSODQpe0FI1jt8QYhr6x
+         xu0IwDh0VcEuPOL89Gub9MpeSnnhXmjuBLzBtUKq7QFLTv+M+g82rGvR402vk7AxuR63
+         SiC1judP6Hz6poiGeRWSoY8uO6voUtRJpGW87jlvaXJO+umnBTCbIpEbcEkoafq47WPr
+         Wfhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Uaqoisb/ISvzu7HtxB7/o6dTkuqP/WZqu9coo5sj/rM=;
+        b=iBNDwPcFSe/QIs3ltR+WmYgg50G4X8R3+zlKPJeEgVinyZrtfsxSI0QHs4UNfC2ojZ
+         U5iu+Za/JJWDJrhxdEoMcxgd9DlRVND9id+hpjlE3avW16kVEmoUacFSaqWEMkUd9WqI
+         fWQahgRkm5VqQzRkNCruNPE56eEh/cJ2ZdqhQtfk06AaYEqBgRLUAwk4Xc9MEKcpqguG
+         DFhFgfS6AOh2tkbCdJx8BFE+cinRJNBIseFEHDuyUKbWaiHCNTIPLrluVeZo0UQ+IUrJ
+         uSUIDkwWBxnaSLc4S8rwMHxgCF9YXEycuZ2oA7TAPg/2K3aBj9yNLR+zDf1fUTbE8VK/
+         Csaw==
+X-Gm-Message-State: AGi0PuYmj0M9ltIVVSNK2evH+au9kVY6b1BElA1pvrjWtLinGwheaEQE
+        VU3zsZMi/aMWP9W0L+x3zGrRj1XQ
+X-Google-Smtp-Source: APiQypIYu3Eg7NEgNAgIjKBlQAKZLAcXDN2o4QVrIrfX6wXxEGW7JxgFHm/j+Ij7gLyXdheePb6ZUg==
+X-Received: by 2002:a2e:8884:: with SMTP id k4mr11003642lji.267.1588607596749;
+        Mon, 04 May 2020 08:53:16 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o18sm10053646lfb.13.2020.05.04.08.53.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 08:53:15 -0700 (PDT)
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <1588197606-32124-7-git-send-email-skomatineni@nvidia.com>
+ <bacc4308-4b95-f566-b80e-096ff96407b5@gmail.com>
+ <4da289e6-036f-853b-beb4-379d6462adb0@gmail.com>
+ <c6d54885-6f23-f60c-a17b-3481fc4d6adf@gmail.com>
+ <b14b9dc5-7ac9-7735-d98d-eebc7e151cba@nvidia.com>
+ <7d31d24f-f353-7e82-3ff9-cdba8b773d1e@nvidia.com>
+ <06a4a067-8d54-4322-b2a6-14e82eaeda29@nvidia.com>
+ <47873bbd-cf90-4595-5a99-7e9113327ecc@nvidia.com>
+ <f6088e0f-4ac7-a6be-3ede-0233dc88ef2c@nvidia.com>
+ <71532440-f455-cc24-74f7-9ccad5947099@gmail.com>
+ <960d2715-a717-0cc3-df19-ff78dc426535@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <23520fa4-4d8f-b083-0ad3-b249339ee032@gmail.com>
+Date:   Mon, 4 May 2020 18:53:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <960d2715-a717-0cc3-df19-ff78dc426535@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200430080625.26070-9-pali@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 10:06:21AM +0200, Pali Roh�r wrote:
-> PCI-E capability macros are already defined in linux/pci_regs.h.
-> Remove their reimplementation in pcie-aardvark.
-
-s/PCI-E/PCIe/
-
-I mentioned this last time, but I guess you missed it.
-
-> Signed-off-by: Pali Roh�r <pali@kernel.org>
-> ---
->  drivers/pci/controller/pci-aardvark.c | 41 ++++++++++++---------------
->  1 file changed, 18 insertions(+), 23 deletions(-)
+04.05.2020 17:53, Sowjanya Komatineni пишет:
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 053ae6c19a3d..c53ae2511a9c 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -34,17 +34,6 @@
->  #define     PCIE_CORE_CMD_MEM_IO_REQ_EN				BIT(2)
->  #define PCIE_CORE_DEV_REV_REG					0x8
->  #define PCIE_CORE_PCIEXP_CAP					0xc0
-> -#define PCIE_CORE_DEV_CTRL_STATS_REG				0xc8
-> -#define     PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE	(0 << 4)
-> -#define     PCIE_CORE_DEV_CTRL_STATS_MAX_PAYLOAD_SZ_SHIFT	5
-> -#define     PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE		(0 << 11)
-> -#define     PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SIZE_SHIFT	12
-> -#define     PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SZ		0x2
-> -#define PCIE_CORE_LINK_CTRL_STAT_REG				0xd0
-> -#define     PCIE_CORE_LINK_L0S_ENTRY				BIT(0)
-> -#define     PCIE_CORE_LINK_TRAINING				BIT(5)
-> -#define     PCIE_CORE_LINK_SPEED_SHIFT				16
-> -#define     PCIE_CORE_LINK_WIDTH_SHIFT				20
->  #define PCIE_CORE_ERR_CAPCTL_REG				0x118
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX			BIT(5)
->  #define     PCIE_CORE_ERR_CAPCTL_ECRC_CHK_TX_EN			BIT(6)
-> @@ -223,6 +212,11 @@ static inline u32 advk_readl(struct advk_pcie *pcie, u64 reg)
->  	return readl(pcie->base + reg);
->  }
->  
-> +static inline u16 advk_read16(struct advk_pcie *pcie, u64 reg)
-> +{
-> +	return advk_readl(pcie, (reg & ~0x3)) >> ((reg & 0x3) * 8);
-> +}
-> +
->  static int advk_pcie_link_up(struct advk_pcie *pcie)
->  {
->  	u32 val, ltssm_state;
-> @@ -286,16 +280,16 @@ static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
->  	 * Start link training immediately after enabling it.
->  	 * This solves problems for some buggy cards.
->  	 */
-> -	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-> -	reg |= PCIE_CORE_LINK_TRAINING;
-> -	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
-> +	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
-> +	reg |= PCI_EXP_LNKCTL_RL;
-> +	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKCTL);
->  
->  	ret = advk_pcie_wait_for_link(pcie);
->  	if (ret)
->  		return ret;
->  
-> -	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
-> -	neg_gen = (reg >> PCIE_CORE_LINK_SPEED_SHIFT) & 0xf;
-> +	reg = advk_read16(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_LNKSTA);
-> +	neg_gen = reg & PCI_EXP_LNKSTA_CLS;
->  
->  	return neg_gen;
->  }
-> @@ -385,13 +379,14 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  		PCIE_CORE_ERR_CAPCTL_ECRC_CHCK_RCV;
->  	advk_writel(pcie, reg, PCIE_CORE_ERR_CAPCTL_REG);
->  
-> -	/* Set PCIe Device Control and Status 1 PF0 register */
-> -	reg = PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE |
-> -		(7 << PCIE_CORE_DEV_CTRL_STATS_MAX_PAYLOAD_SZ_SHIFT) |
-> -		PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE |
-> -		(PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SZ <<
-> -		 PCIE_CORE_DEV_CTRL_STATS_MAX_RD_REQ_SIZE_SHIFT);
-> -	advk_writel(pcie, reg, PCIE_CORE_DEV_CTRL_STATS_REG);
-> +	/* Set PCIe Device Control register */
-> +	reg = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
-> +	reg &= ~PCI_EXP_DEVCTL_RELAX_EN;
-> +	reg &= ~PCI_EXP_DEVCTL_NOSNOOP_EN;
-> +	reg &= ~PCI_EXP_DEVCTL_READRQ;
-> +	reg |= PCI_EXP_DEVCTL_PAYLOAD; /* Set max payload size */
-> +	reg |= PCI_EXP_DEVCTL_READRQ_512B;
-> +	advk_writel(pcie, reg, PCIE_CORE_PCIEXP_CAP + PCI_EXP_DEVCTL);
->  
->  	/* Program PCIe Control 2 to disable strict ordering */
->  	reg = PCIE_CORE_CTRL2_RESERVED |
-> -- 
-> 2.20.1
+> On 4/30/20 12:33 PM, Dmitry Osipenko wrote:
+>>>>> Hi Dmitry,
+>>>>>
+>>>>> Will update in v12 to not allow freeze in middle of a frame capture.
+>>>>>
+>>>>> Can you please confirm on above if you agree to allow freeze to
+>>>>> happen in b/w frame captures?
+>>>>>
+>>>>> Also as most feedback has been received from you by now, appreciate
+>>>>> if you can provide all in this v11 if you have anything else so we
+>>>>> will not have any new changes after v12.
+>> I'll take another look tomorrow / during weekend and let you know.
 > 
+> Hi Dmitry,
+> 
+> Will send v12 if there is no more feedback. Please let me know.
+
+Hello Sowjanya,
+
+I don't have any more comments to add, looking forward to v12.
