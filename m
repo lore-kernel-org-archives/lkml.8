@@ -2,104 +2,90 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5418BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79DFC4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345D420746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83E620643
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588579710;
+	bh=h0inz+VU++t35+VE3yTSyDQV6lbfcLRSl/zOOLAbes4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CpAeVcovposFycpMCmUUSkNiLYelhoduBuo4bV4bKTSmTwcN5hM1MQhCUgenq2Dtl
+	 WGvQ9eQ74hFvwN70wIqS+eXy0B6SrXic2K/vVZujWKgoydWCuoDmaTlKVULrlZoDbu
+	 hgMpb933U1IR5sA7R22Mp2yskpsOPrnxTFs6NacI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgEDIHg (ORCPT
+        id S1728187AbgEDIIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727100AbgEDIHg (ORCPT
+        Mon, 4 May 2020 04:08:30 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:25563 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbgEDII3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:07:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29C9C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 01:07:35 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1jVW8B-0007yE-Il; Mon, 04 May 2020 10:07:15 +0200
-Message-ID: <bf758b2ce26ba8f1b94f1f8fbd1c506d84759a5f.camel@pengutronix.de>
-Subject: Re: [RFC PATCH 4/4] arm64: dts: imx8mm: Add GPU nodes for 2D and 3D
- core using Etnaviv
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Adam Ford <aford173@gmail.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Li Jun <jun.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "etnaviv@lists.freedesktop.org" <etnaviv@lists.freedesktop.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Mon, 04 May 2020 10:07:14 +0200
-In-Reply-To: <CAHCN7xJ=srZxygtG6hW_+us=qH1heY-k=EosavYH9tDk-KG0Bw@mail.gmail.com>
-References: <20200430124602.14463-1-frieder.schrempf@kontron.de>
-         <20200430124602.14463-5-frieder.schrempf@kontron.de>
-         <CAHCN7xJ=srZxygtG6hW_+us=qH1heY-k=EosavYH9tDk-KG0Bw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
+        Mon, 4 May 2020 04:08:29 -0400
+Received: from oscar.flets-west.jp (softbank126090202047.bbtec.net [126.90.202.47]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 044888nB016007;
+        Mon, 4 May 2020 17:08:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 044888nB016007
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1588579689;
+        bh=nuJbw5G3DpGKfGFZVxs3XiBYPKyFjbnT1dAooHhstog=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sR9fn7uf5igk2yoU3Vi86n3nGJIwNe6Bqi+x5vPFjc9ZBhC4QHuOiglu1TxY23gIT
+         kBOEYOP827UZfZHFIy8TwxCsbWdeBbwin8DqhkYBGcCvMKNTcGD8o7n3FywrMLs+cO
+         i5/84J3Tik+8QEICZkbzeXfgxd+kGAW+Ua8905PFnKm9Cmr17iL/C1V8na1p5cB81m
+         AfbZp6zD23vI4/e2k5Heu9PpjUhABPeGVZZVV18ef1X+9zDXfe+oQ26JqRdHVU9xe3
+         3zlHGopXpY4Eey69V4bF8XXqKLg536elrZzd4kRi69NDhRmZNabVG9Gy9ti12Ori2U
+         mA/ZGU7DNJO9w==
+X-Nifty-SrcIP: [126.90.202.47]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH 1/2] kbuild: remove misleading stale FIXME comment
+Date:   Mon,  4 May 2020 17:08:06 +0900
+Message-Id: <20200504080807.126396-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, den 03.05.2020, 09:49 -0500 schrieb Adam Ford:
-> On Thu, Apr 30, 2020 at 7:46 AM Schrempf Frieder
-> <frieder.schrempf@kontron.de> wrote:
-> > From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> > 
-> > According to the documents, the i.MX8M-Mini features a GC320 and a
-> > GCNanoUltra GPU core. Etnaviv detects them as:
-> > 
-> >         etnaviv-gpu 38000000.gpu: model: GC600, revision: 4653
-> >         etnaviv-gpu 38008000.gpu: model: GC520, revision: 5341
-> > 
-> > This seems to work fine more or less without any changes to the HWDB,
-> > which still might be needed in the future to correct some features,
-> > etc.
-> > 
-> > Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> > ---
-> Since not everyone uses the 3D or 2D, would it make sense to mark them
-> as disabled by default and let people who need the 3D and 2D enable
-> them at their respective board files?
+This comment was added by commit ("kbuild: Restore build nr, improve
+vmlinux link") [1].
 
-No, devices on the SoC with no external dependencies should be always
-enabled.
+It was talking about if_changed_rule at that time. Now, it is unclear
+what to fix.
 
-The board has much less influence over whether the GPU is being used
-than the specific use-case. While the board designer may not even think
-about using the GPUs (because no display connector present or something
-like that) people using the board may still find uses for the GPU, like
-doing video pipeline color space conversions or something lie that.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=ea52ca1b3e3882b499cc6c043f384958b88b62ff
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Regards,
-Lucas
+ Makefile | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 9ff00bfe0575..ffd80afcd0bb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1827,9 +1827,6 @@ tools/%: FORCE
+ 	$(Q)mkdir -p $(objtree)/tools
+ 	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(tools_silent) $(filter --j% -j,$(MAKEFLAGS))" O=$(abspath $(objtree)) subdir=tools -C $(srctree)/tools/ $*
+ 
+-# FIXME Should go into a make.lib or something
+-# ===========================================================================
+-
+ quiet_cmd_rmdirs = $(if $(wildcard $(rm-dirs)),CLEAN   $(wildcard $(rm-dirs)))
+       cmd_rmdirs = rm -rf $(rm-dirs)
+ 
+-- 
+2.25.1
 
