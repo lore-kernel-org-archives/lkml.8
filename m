@@ -2,132 +2,101 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B76C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7193C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D20B1206D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89A52068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:37:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="sLf6cwlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgEDRf2 (ORCPT
+        id S1730013AbgEDRhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:35:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbgEDRf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:35:27 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55B4320663;
-        Mon,  4 May 2020 17:35:26 +0000 (UTC)
-Date:   Mon, 4 May 2020 13:35:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-bcache@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH RFC 2/2] tracing/block: add request operation and flags
- into trace events
-Message-ID: <20200504133524.686c7be5@gandalf.local.home>
-In-Reply-To: <158860538157.30407.6389633238674780245.stgit@buzz>
-References: <158860537783.30407.1084087380643625249.stgit@buzz>
-        <158860538157.30407.6389633238674780245.stgit@buzz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 May 2020 13:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729386AbgEDRhx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:37:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E4DC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 10:37:52 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x17so95450wrt.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 10:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IJI5f8hOlgJLa4m5pIdFlzMabgKQ1SIX55UP+OjSdBA=;
+        b=sLf6cwlLSRIjHDP2kg2TBle9sRTX1zi6t7cBz7OZjT9zBPnOEVCp7dAhZ5VIuRj425
+         hxplPKugPEkVft3YJtydQZYUMpH30NOBQ5q0fFULuSd7zUGzC7yeqHcr+4X8P8e6TltU
+         Mf26btkL2BK0+vGP6QKT0th24uAi86BCR8Jg8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IJI5f8hOlgJLa4m5pIdFlzMabgKQ1SIX55UP+OjSdBA=;
+        b=b6uy8TCOkk+5uKALLG8akAbTpoA27h/HDRl2eIAQhOeyEuJIawfSwsu1/T3vGs4jsK
+         W5D/+6lsn7YDu02EgRh/Co4RumkdFiCgrAAn3Si0TALMKxBVLYnF79toGrBi7UktSyY7
+         G+lbKnUicTjhF5M66GPPy37HI923mdP9rqaHrS6xJh7rxFm+O+npzMZUO02WIY1K1cb/
+         7xyJ5ACWKr19qT4HQK7kHPbErbFNmXJiHdZxBP1Gkk6d5Ln/zzsGuS4WM2KtYuHa6rEm
+         rX429H9IaZy83FL5Rb3OAmoGT0vt//9d7KbL5yXMOEVQyOa7m0NPCAmHBrEZiIpPHkZh
+         jiJw==
+X-Gm-Message-State: AGi0PubxKtsVCUlB5/bSI7dTrUkNfg4+9ZMNA93FAE2EO+mi6EBRpMqF
+        aBXVaocTKE0D2rUtD8eUpelHht53zQ5/TxrE5BLj
+X-Google-Smtp-Source: APiQypKL0LFBdt9evPCiVFS44KQzDG+nTobDCx2UrOxF2R5qtZLfeQ4eUc2xP93l7Mm+VWsLa5Cp/CkvPSnw5qyW42c=
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr438377wrr.162.1588613871278;
+ Mon, 04 May 2020 10:37:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200504035448.13893-1-zong.li@sifive.com> <CAAhSdy23jzYvZcmXoX_5F1wDenBQ8NpvNpoO41=aBGHoONPCgg@mail.gmail.com>
+ <87tv0w3zrp.fsf@igel.home>
+In-Reply-To: <87tv0w3zrp.fsf@igel.home>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 4 May 2020 10:37:40 -0700
+Message-ID: <CAOnJCUKCryLuZn0Pd71z3Oa1AEN1xUfz=SW_5PBV-2pDU+Nw=g@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: force __cpu_up_ variables to put in data section
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Anup Patel <anup@brainfault.org>, Zong Li <zong.li@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Greentime Hu <greentime.hu@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 04 May 2020 18:16:21 +0300
-Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+On Mon, May 4, 2020 at 12:50 AM Andreas Schwab <schwab@linux-m68k.org> wrote:
+>
+> On Mai 04 2020, Anup Patel wrote:
+>
+> > Slightly improved text:
+> >
+> > This issue happens on random booting of multiple harts, which means
+> > it will manifest for BBL and OpenSBI v0.6 (or older version). In OpenSBI
+> > v0.7 (or higher version), we have HSM extension so all the secondary harts
+> > are brought-up by Linux kernel in an orderly fashion. This means we don't
+> > this change for OpenSBI v0.7 (or higher version).
+>
+>   +need
+>
+> Andreas.
+>
+> --
+> Andreas Schwab, schwab@linux-m68k.org
+> GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+> "And now for something completely different."
 
-> +/* Request operations, see enum req_opf */
-> +
-> +TRACE_DEFINE_ENUM(REQ_OP_READ);
-> +TRACE_DEFINE_ENUM(REQ_OP_WRITE);
-> +TRACE_DEFINE_ENUM(REQ_OP_FLUSH);
-> +TRACE_DEFINE_ENUM(REQ_OP_DISCARD);
-> +TRACE_DEFINE_ENUM(REQ_OP_SECURE_ERASE);
-> +TRACE_DEFINE_ENUM(REQ_OP_ZONE_RESET);
-> +TRACE_DEFINE_ENUM(REQ_OP_WRITE_SAME);
-> +TRACE_DEFINE_ENUM(REQ_OP_ZONE_RESET_ALL);
-> +TRACE_DEFINE_ENUM(REQ_OP_WRITE_ZEROES);
-> +TRACE_DEFINE_ENUM(REQ_OP_ZONE_OPEN);
-> +TRACE_DEFINE_ENUM(REQ_OP_ZONE_CLOSE);
-> +TRACE_DEFINE_ENUM(REQ_OP_ZONE_FINISH);
-> +TRACE_DEFINE_ENUM(REQ_OP_SCSI_IN);
-> +TRACE_DEFINE_ENUM(REQ_OP_SCSI_OUT);
-> +TRACE_DEFINE_ENUM(REQ_OP_DRV_IN);
-> +TRACE_DEFINE_ENUM(REQ_OP_DRV_OUT);
-> +
-> +#define BLOCK_REQ_OP_STRINGS					\
-> +	{ REQ_OP_READ,		"READ" },			\
-> +	{ REQ_OP_WRITE,		"WRITE" },			\
-> +	{ REQ_OP_FLUSH,		"FLUSH" },			\
-> +	{ REQ_OP_DISCARD,	"DISCARD" },			\
-> +	{ REQ_OP_SECURE_ERASE,	"SECURE_ERASE" },		\
-> +	{ REQ_OP_ZONE_RESET,	"ZONE_RESET" },			\
-> +	{ REQ_OP_WRITE_SAME,	"WRITE_SAME" },			\
-> +	{ REQ_OP_ZONE_RESET_ALL,"ZONE_RESET_ALL" },		\
-> +	{ REQ_OP_WRITE_ZEROES,	"WRITE_ZEROES" },		\
-> +	{ REQ_OP_ZONE_OPEN,	"ZONE_OPEN" },			\
-> +	{ REQ_OP_ZONE_CLOSE,	"ZONE_CLOSE" },			\
-> +	{ REQ_OP_ZONE_FINISH,	"ZONE_FINISH" },		\
-> +	{ REQ_OP_SCSI_IN,	"SCSI_IN" },			\
-> +	{ REQ_OP_SCSI_OUT,	"SCSI_OUT" },			\
-> +	{ REQ_OP_DRV_IN,	"DRV_IN" },			\
-> +	{ REQ_OP_DRV_OUT,	"DRV_OUT" }
-> +
-> +#define show_block_req_op(req)					\
-> +	__print_symbolic((req) & REQ_OP_MASK, BLOCK_REQ_OP_STRINGS)
-> +
+With Andreas & Anup's nitpick addressed,
 
-A common trick to avoid the duplication from above is to do this:
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
 
-#define BLOCK_REQ_OP_STRINGS					\
-	EM( REQ_OP_READ,	"READ" )			\
-	EM( REQ_OP_WRITE,	"WRITE" )			\
-	EM( REQ_OP_FLUSH,	"FLUSH" )			\
-	EM( REQ_OP_DISCARD,	"DISCARD" )			\
-	EM( REQ_OP_SECURE_ERASE, "SECURE_ERASE" )		\
-	EM( REQ_OP_ZONE_RESET,	"ZONE_RESET" )			\
-	EM( REQ_OP_WRITE_SAME,	"WRITE_SAME" )			\
-	EM( REQ_OP_ZONE_RESET_ALL,"ZONE_RESET_ALL" )		\
-	EM( REQ_OP_WRITE_ZEROES, "WRITE_ZEROES" )		\
-	EM( REQ_OP_ZONE_OPEN,	"ZONE_OPEN" )			\
-	EM( REQ_OP_ZONE_CLOSE,	"ZONE_CLOSE" )			\
-	EM( REQ_OP_ZONE_FINISH,	"ZONE_FINISH" )			\
-	EM( REQ_OP_SCSI_IN,	"SCSI_IN" )			\
-	EM( REQ_OP_SCSI_OUT,	"SCSI_OUT" )			\
-	EM( REQ_OP_DRV_IN,	"DRV_IN" )			\
-	EMe( REQ_OP_DRV_OUT,	"DRV_OUT" )
-
-#undef EM
-#undef EMe
-
-#define EM(a, b) TRACE_DEFINE_ENUM(a);
-#define EMe(a, b) TRACE_DEFINE_ENUM(a);
-
-BLOCK_REQ_OP_STRINGS
-
-#undef EM
-#undef EMe
-
-#define EM(a, b) { a, b },
-#define EMe(a, b)  { a , b }
-
-#define show_block_req_op(req)
-	__print_symbolic((req) & REQ_OP_MASK, BLOCK_REQ_OP_STRINGS)
-
-
-Several other event files in include/trace/events do this.
-
--- Steve
-
+-- 
+Regards,
+Atish
