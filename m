@@ -2,109 +2,124 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1841EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E45C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB87A206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20570206A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fze/N73a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vXoxx6s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbgEDRsm (ORCPT
+        id S1730352AbgEDRth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728158AbgEDRsl (ORCPT
+        Mon, 4 May 2020 13:49:37 -0400
+Received: from gateway20.websitewelcome.com ([192.185.45.27]:28175 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729839AbgEDRtg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:48:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50BA9C061A0E;
-        Mon,  4 May 2020 10:48:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u22so18325plq.12;
-        Mon, 04 May 2020 10:48:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0YqP8VecB2UmToDpnEaiYt/EjUvvCgEGjmA2T6HOWIA=;
-        b=fze/N73aF0T0xDDZ9EvDTavgTrx7OOs9+P8+jDDYp/iG7xAbRoPZZgYjiHrNRftuqi
-         gxBfqiF55Jt43mLXDIoZxgMMW2hGd08bO8E8vjxTjnxOkykodaVdfVWS2ievBhDjJ3Hm
-         XVKvsUBfBb/eP1VwzntNMkKjgGlDoxyQFd4yngkMmFkHGeLBYG6f+1s/zQK0k4AkCcqD
-         WSORyabSj14nrudCoPiC10dEh7zBx49ywPouXJOBIX6FzL8fGZKGIa0dVVFSK4IsRc0E
-         SZo8SnUUVlLNk3UnUpN+zSEssVjxbPIyf+tzU8VIh41eu+gjko5qJYLtmz0blKW9MEZl
-         4qJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0YqP8VecB2UmToDpnEaiYt/EjUvvCgEGjmA2T6HOWIA=;
-        b=SMsg5LaidiQ/RhsbPhekIYC1NDMbXkbGRtM9+Ctta3+0sV9W03FjNpXzpQgi7XMjhb
-         9ken2B+gXxkY7pgtuNk5WwONkVtkg1fOOEicTS/SROsuwB35QVM4FAlMWljaIwgk+9La
-         tdb9WFVn+ysQe2UbGF5DWeu97eZbmuw+vGkO+8CyW/0y8IbeEmI75+KL2rsFaysVqfkB
-         QvX8+6/n1M7VQE1OpLNRAaSZj6bD+q/x7ktN2UDCQ7d7GbR6KwCyDr2J7hts3OhATFGE
-         ZMoYlwCEX0GrPQDcyfxi+S6/twOc2MArD0pgoXsbmHYxu76mB6rmYkdZnnQGrnV+YLdB
-         c2jQ==
-X-Gm-Message-State: AGi0PuYlJEEIxwjuxaSkgVgeW7IhvR6gdSNfQRwaJDVISQYcIwJ0/i7Y
-        rTWNm71/ssqyMAnIehLqhvg=
-X-Google-Smtp-Source: APiQypLr2jwuAnm1jNRaW+Ddm4ybkhMe5FmAfgXl619Lj25y3qbkURxTMQdu/z08bXQtKrtADpCv+g==
-X-Received: by 2002:a17:902:fe03:: with SMTP id g3mr380567plj.28.1588614520869;
-        Mon, 04 May 2020 10:48:40 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i9sm9403353pfk.199.2020.05.04.10.48.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 10:48:40 -0700 (PDT)
-Subject: Re: [PATCH RESEND net-next] net: dsa: felix: allow the device to be
- disabled
-To:     Michael Walle <michael@walle.cc>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-References: <20200504165228.12787-1-michael@walle.cc>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a2284212-bc13-5221-acf0-188c2965416d@gmail.com>
-Date:   Mon, 4 May 2020 10:48:37 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Mon, 4 May 2020 13:49:36 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 8E81C400E7A61
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 11:22:33 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id Vf4pjrBjRAGTXVf4pj8YlB; Mon, 04 May 2020 12:40:23 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+5a4Lppw4lJsYvc8K58j+1uvME/U/HnGj1dRIM7HnuA=; b=vXoxx6s5atXqWdZuR4go1HOx0W
+        NUnwKJnlkXujGKpqLinY3IWWFwB3UgrRPYAuxKXwFuhAD4uuFByeFbqJRSH3XykGBKVGQ1mxsm0av
+        pNGsl79FaNZj1HGTaOOOrxAcpANWPYL72d5awFeui5z2XBN2LdpRSC0QawZD9kugc5vfcwGMAyAOH
+        JKMetNK+U5LllOkNo09A7PM7PGZbVvzdT6YfR3KjTZzjbp5A6FzXK2oHRoqRmCu2Aq58VPRBrnppC
+        ljgf60vdXCIMzeWFH3Cvm0uI7WD6h9in8TnvFcietYkWhK4rB6oAk2bYu3bytG3RWsemDJbPf24AU
+        0A8usVYw==;
+Received: from [189.207.59.248] (port=55708 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jVf4p-000sBs-FO; Mon, 04 May 2020 12:40:23 -0500
+Date:   Mon, 4 May 2020 12:44:49 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [GIT PULL] flexible-array member convertion patches for 5.7-rc5
+Message-ID: <20200504174449.GA15934@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20200504165228.12787-1-michael@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.207.59.248
+X-Source-L: No
+X-Exim-ID: 1jVf4p-000sBs-FO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.207.59.248]:55708
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
 
+  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
 
-On 5/4/2020 9:52 AM, Michael Walle wrote:
-> If there is no specific configuration of the felix switch in the device
-> tree, but only the default configuration (ie. given by the SoCs dtsi
-> file), the probe fails because no CPU port has been set. On the other
-> hand you cannot set a default CPU port because that depends on the
-> actual board using the switch.
-> 
-> [    2.701300] DSA: tree 0 has no CPU port
-> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
-> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
-> 
-> Thus let the device tree disable this device entirely, like it is also
-> done with the enetc driver of the same SoC.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+are available in the Git repository at:
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flexible-array-member-5.7-rc5
+
+for you to fetch changes up to 1e6e9d0f4859ec698d55381ea26f4136eff3afe1:
+
+  uapi: revert flexible-array conversions (2020-05-04 11:30:15 -0500)
+
+----------------------------------------------------------------
+flexible-array member convertion patches for 5.7-rc5
+
+Hi Linus,
+
+Please, pull the following patch that reverts changes in include/uapi/
+
+These structures can get embedded in other structures in user-space
+and cause all sorts of warnings and problems[1]. So, we better don't take
+any chances and keep the zero-length arrays in place for now.
+
+[1] https://lore.kernel.org/lkml/20200424121553.GE26002@ziepe.ca/
+
+Thanks
+--
+Gustavo
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (1):
+      uapi: revert flexible-array conversions
+
+ include/uapi/linux/bpf.h                        | 2 +-
+ include/uapi/linux/dlm_device.h                 | 4 ++--
+ include/uapi/linux/fiemap.h                     | 2 +-
+ include/uapi/linux/if_arcnet.h                  | 6 +++---
+ include/uapi/linux/mmc/ioctl.h                  | 2 +-
+ include/uapi/linux/net_dropmon.h                | 4 ++--
+ include/uapi/linux/netfilter_bridge/ebt_among.h | 2 +-
+ include/uapi/scsi/scsi_bsg_fc.h                 | 2 +-
+ 8 files changed, 12 insertions(+), 12 deletions(-)
