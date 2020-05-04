@@ -2,656 +2,268 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8454AC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F12C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CFC20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F3120746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 09:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="G9FsTWdv"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="28u1SGw5";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="28u1SGw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgEDJBE (ORCPT
+        id S1728068AbgEDJGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 05:01:04 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13579 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbgEDJBE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 05:01:04 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eafd9890001>; Mon, 04 May 2020 01:59:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 04 May 2020 02:01:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 04 May 2020 02:01:03 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
- 2020 09:01:02 +0000
-Received: from [10.19.66.205] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
- 09:00:58 +0000
-Subject: Re: [PATCH V2 6/8] phy: tegra: xusb: Add support for charger detect
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1586939108-10075-1-git-send-email-nkristam@nvidia.com>
- <1586939108-10075-7-git-send-email-nkristam@nvidia.com>
- <20200428105510.GH3592148@ulmo>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <ea0f5906-4681-8b84-a55a-e959ce40aece@nvidia.com>
-Date:   Mon, 4 May 2020 14:32:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 4 May 2020 05:06:46 -0400
+Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:51392
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726467AbgEDJGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 05:06:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=me03ZDsFYyyUDzA23dGXx6iBVPgSmnXSn0KWN4Dd3EM=;
+ b=28u1SGw5rJWQb9jhV37HkHEhDp1xKLwup0mAM0Aq+H7RryGPw/LCt/CevpHHzReQzoHUClOQWQypNfPDepJlGuC21gy2NDPCgwSaE5bAnKudmrhW38ikElxv0kWVNqiy2Gb7Nsh1jglAXuzkngm3W6xAP6DKm11s/TmBxvfXr9o=
+Received: from DB6PR0802CA0030.eurprd08.prod.outlook.com (2603:10a6:4:a3::16)
+ by VI1PR0801MB2095.eurprd08.prod.outlook.com (2603:10a6:800:8c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Mon, 4 May
+ 2020 09:06:37 +0000
+Received: from DB5EUR03FT008.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:a3:cafe::3) by DB6PR0802CA0030.outlook.office365.com
+ (2603:10a6:4:a3::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
+ Transport; Mon, 4 May 2020 09:06:37 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT008.mail.protection.outlook.com (10.152.20.98) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20 via Frontend Transport; Mon, 4 May 2020 09:06:37 +0000
+Received: ("Tessian outbound 4cdf5642225a:v54"); Mon, 04 May 2020 09:06:37 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: b360b976e1bbede9
+X-CR-MTA-TID: 64aa7808
+Received: from 1bcda96b86ba.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 390088F8-F9AF-4029-90E4-6893A561AB32.1;
+        Mon, 04 May 2020 09:06:31 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 1bcda96b86ba.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Mon, 04 May 2020 09:06:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KoQyfqoVL30oSmA9a1Q6JjSQLfnCnVUahKRZh9LPEyeAMQQrAL+TXS+29mhR/6QFv/UIt7UEuM5suVp1/zMedDASaeYkpvQL1J2w40uAdFDCeENWejm+9CKaPadQ6J4pzSpNJs5Nghj8xwYg7muLJXQi7NEq2dhIbdQ+FBo1XNopwkCuLmlPzubkxOX179K9LuXxXURP4JIB9lddRBU1+Nphfo0A4cpZZnNEMNDlHX5rxEoEcaYqEe87ygkN3UzB74rchtqbjcnC8B84WEkGd9/nSbjleCyX7s/0ocJB+A4ba3Sf34rKIBEErwhw035/iLRVC/E9koNk0jSVrrU29Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=me03ZDsFYyyUDzA23dGXx6iBVPgSmnXSn0KWN4Dd3EM=;
+ b=OJnDsOpkUhfOQG4uj3W5TOw9bdAE+bGLYrk+zQ2gTN9vnGX7WlmDWkbdsEXhkle1kJKXki32jeivCvTgN2zO/DFusCYXW5qTZkL8f/3xtQFnLP+CVginSUcaEKJQdJgjboO0ixoq+/ZCMou3NY0Wgh/PX0wjvlXgSThmJ96tT6S0SxU9NdqIulIX6FQn0FL0WBVkZoWX1TUnijMEM2Uy/sZfOJ2HwYr3oPQvPUNigdLx8w+4kHOFXncVdVDtt0sZE5mlv/1GAuv6KoJTwrU4bDfnYGERG4PPtVBiSRjujS2G5XL4Xz0bnf56Sf8/t5z++52F+OjfhFJa/vdQMtx2gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=me03ZDsFYyyUDzA23dGXx6iBVPgSmnXSn0KWN4Dd3EM=;
+ b=28u1SGw5rJWQb9jhV37HkHEhDp1xKLwup0mAM0Aq+H7RryGPw/LCt/CevpHHzReQzoHUClOQWQypNfPDepJlGuC21gy2NDPCgwSaE5bAnKudmrhW38ikElxv0kWVNqiy2Gb7Nsh1jglAXuzkngm3W6xAP6DKm11s/TmBxvfXr9o=
+Authentication-Results-Original: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=arm.com;
+Received: from AM6PR08MB3829.eurprd08.prod.outlook.com (2603:10a6:20b:85::14)
+ by AM6PR08MB4262.eurprd08.prod.outlook.com (2603:10a6:20b:b4::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Mon, 4 May
+ 2020 09:06:28 +0000
+Received: from AM6PR08MB3829.eurprd08.prod.outlook.com
+ ([fe80::78d3:4ffd:f7da:b26d]) by AM6PR08MB3829.eurprd08.prod.outlook.com
+ ([fe80::78d3:4ffd:f7da:b26d%3]) with mapi id 15.20.2958.030; Mon, 4 May 2020
+ 09:06:28 +0000
+Date:   Mon, 4 May 2020 10:06:28 +0100
+From:   Brian Starkey <brian.starkey@arm.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-mm <linux-mm@kvack.org>, nd <nd@arm.com>
+Subject: Re: [RFC][PATCH 3/4] dma-buf: cma_heap: Extend logic to export CMA
+ regions tagged with "linux,cma-heap"
+Message-ID: <20200504090628.d2q32dwyg6em5pp7@DESKTOP-E1NTVVP.localdomain>
+References: <20200501073949.120396-1-john.stultz@linaro.org>
+ <20200501073949.120396-4-john.stultz@linaro.org>
+ <20200501102143.xcckvsfecumbei3c@DESKTOP-E1NTVVP.localdomain>
+ <47e7eded-7240-887a-39e1-97c55bf752e7@arm.com>
+ <CALAqxLU6kmvJ+xPCFzc3N+RNMv4g=L9bmzgE0wrOXefiGfPoHg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLU6kmvJ+xPCFzc3N+RNMv4g=L9bmzgE0wrOXefiGfPoHg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-849-147d51-dirty
+X-ClientProxiedBy: LNXP123CA0020.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::32) To AM6PR08MB3829.eurprd08.prod.outlook.com
+ (2603:10a6:20b:85::14)
 MIME-Version: 1.0
-In-Reply-To: <20200428105510.GH3592148@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1588582793; bh=jGq5qpiiwlNqoGOWpeiBQNcPcB9UTwr/jOVlwnpkL8E=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=G9FsTWdvsi+5uX6ajvRB38b3vxng3RPpVvg70Ijb5G6fys+yhfZBKt8duQAQ7Q1NO
-         RU2tyRtXCBDbQfEdMoVMz6oXNEDthdmhvb7MyW+hvM3sIHum2NKOPQVAmVxNCqOPxJ
-         fTaHTeTS4b0cpltxLLX9/aF3JhrZIA5Eiu9d+iyMfOB24muJCZxPtk9Y3XuEPa3X+C
-         d5EUokBlXBHZtxgC8LgpM1q5Y3ENG1qwMb68niij3D7A4MnFHwT1QtYvylNKKFFiKf
-         XJVe/RzEKrmfIpp3z6nm4Bj9kTfy2Lypr1IHq+HTjgPeUuitOsZoBx4F4ZW/yGEzAA
-         uDN1wvSTt7zCA==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from DESKTOP-E1NTVVP.localdomain (82.1.208.173) by LNXP123CA0020.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Mon, 4 May 2020 09:06:27 +0000
+X-Originating-IP: [82.1.208.173]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: bf6419b3-499e-42f5-f8d2-08d7f00a7376
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4262:|AM6PR08MB4262:|VI1PR0801MB2095:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0801MB209563C3F67447F0FF05CF72F0A60@VI1PR0801MB2095.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
+X-Forefront-PRVS: 03932714EB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: zPp3U3FEfsKFX7a9HESOO4JYYUae2MCPEeZbO0oeUZvohxp4UEUzbT+Kd+JZYAxN1qkNS8ibuIlDxrpXK9uBJVVDJrxk66DnYCbOk5rag4XhLiglzUbmhzcLI+kZWDvyWDe9QjH4dT+pT3CVkqRWJfH2dDtEUisgPV+Ct9rhH2ur7cZw9fhB1qSbBAAHqUnWdBfl2aAz2mbT93+WHBGjhK7Wg2eQd88eFlIxKacVLA4QOR4uvbBK8fUSzQLK1XfGM+Y3ruaM0uk8grPUPwVhYy5JC8yY8UueHt4VJNiiHqxkJo1jFJI8sFSAjPy6YO/1J5FDHhRuWKCj6LhXYR94BPFdhOmsEs5w1ygSgzrTuzVF1S/CTA28T8gXDyoEmL6lfKlJZlNqDyWbNEuNo0tBI3i36TQtTgJ9d+fIHQzekHlfkl5ocSJVcYY1J/9oNAvfxeiXlRGMv5iM/OFvUtT9eKViMM3Rk4Fl0UXtcjGZ1CDQuxGJOHzBcskcXY5A3i6k
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3829.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(39860400002)(136003)(376002)(346002)(86362001)(55016002)(2906002)(6916009)(478600001)(8936002)(9686003)(5660300002)(8676002)(6506007)(66946007)(956004)(53546011)(7416002)(186003)(26005)(16526019)(1076003)(52116002)(7696005)(66556008)(66476007)(4326008)(54906003)(44832011)(316002)(142933001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: sT9mVsWfaq0GWQLx5SCmDh2PZAKCVxGVOa/HtbFPMiQkmM/jLPFfCz/od7+jwvM25EL8lcL++dW4N9i0YLOxrWE9/sbpfdOJ6VUEUAx3KxsHASJNlD0DUtA1nt4kyKxVr8c6g0jBmix14lZoRCwmTjTURMMpkvJ4oZVCi+HWlu6SGbrGL6kxI1uLYWvIxceWO5xcdeCxRLRhzVvAIGGES06vbNNSP1uHF9mAVH39ZqoXIzejdJq7G8yLVFM9ctuFSZ96Q/WW5T3xxnYhszjaDAurxc0SDrFK0w4JFXiCr6LeQA505FcOb3xtSCMyTNYVXTkbFtgSfv4M3aZYRSqp7eopCPH7r23VIop3hOZPbF0F3JdDHpqevFHX3uCjuCC83hwDwjRaNJlDoBBaYu+GXrHpFZNb6XLtyIDoMHrYQTzqw0vqa+QhJqST+1Ng+tO1wBQUBDDLWZSCkg15nmdWxImU0Ec+Yd5ioNA4T1HQHxqMHz6xzJezUCkGVjdQJgW1+uAK0jGy4fIeg8ZSCg6jQ5v4pkhHuIH5L4GAUKGw1my7eNlti81CwqN/sZ+wNwS9CG7on74aklo1PcunO8O2WEawjmRFj3ZGbe+7pWT7XUJ1L8HdQvGy4aIuzYYHVMUXUiUt1apqxyrE95VSelLJRwmKoCGmCgSC8ssqPOBRSfl+eUyxpWDrmtEMZpu9QEl4sF8HAcsl1/pvDSeZCCB4VcED60TCFLtDVecLJNCJOysw+kNjL5VmOKwfFMB2wzN77rEL3ymSho0FxDrOOREpx2pCfidaqncU9YxhcKCFDBU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4262
+Original-Authentication-Results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT008.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(346002)(136003)(396003)(46966005)(26005)(16526019)(316002)(8936002)(956004)(336012)(7696005)(86362001)(44832011)(186003)(54906003)(6862004)(82740400003)(47076004)(82310400002)(8676002)(1076003)(2906002)(81166007)(478600001)(53546011)(6506007)(450100002)(5660300002)(356005)(9686003)(55016002)(70586007)(4326008)(70206006)(142933001);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: d4c63e69-87bf-49ea-0be7-08d7f00a6e0c
+X-Forefront-PRVS: 03932714EB
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2Zq1bdMmRJggEVlEnsKfYgeL5QI6U45HsL0BOnfE1qU19fOn2qJARHCCM9TIZukqIzwGXVosSQ3MY5kvILFYcLu4lR7rVpbwlaWJEO3MweZGeCjGbYkc7WRTroLdUSJnsCB1UXgURto3VCGATwxWYHCVTKuShqXG3+PBdn+b6D0oV9OMKngv7POJQLVnthDg9F04NxG8eLtcpkCqOijsITRIKgYvKjZQGfT7KXGwC2pRvYSGGKbvl9yrnQ24yXIoyOi2VWU0F65GSTgJ6b1u/HNPoOymeZtQdfq2NQdvOQAfEwIR6nnKl4njIpiaF3Nz8U3tFrrwk0pn4wIf4ynd64P5NHxhyus4TxCGj/P4m7VIKj03P9iA+f6exOTq21mPxtfcp/iM6fifn2o0b9va+wwfXOT9dAI6c81UH/jvs/KpTf/DbiFwlPHNLTz99ISQGG5EfQ6S96R1LgiM5pwr3G24M1sr1AOVy19ErlGPmmeqJvE2eiPxaxiX32DJMj6xfpcGK8ZpUqgxP/+w3axDY91ZfJaHL6AvQSUJwRAryYA=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 09:06:37.3640
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf6419b3-499e-42f5-f8d2-08d7f00a7376
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB2095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 01, 2020 at 12:01:40PM -0700, John Stultz wrote:
+> On Fri, May 1, 2020 at 4:08 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 2020-05-01 11:21 am, Brian Starkey wrote:
+> > > Hi John,
+> > >
+> > > On Fri, May 01, 2020 at 07:39:48AM +0000, John Stultz wrote:
+> > >> This patch reworks the cma_heap initialization so that
+> > >> we expose both the default CMA region and any CMA regions
+> > >> tagged with "linux,cma-heap" in the device-tree.
+> > >>
+> > >> Cc: Rob Herring <robh+dt@kernel.org>
+> > >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > >> Cc: "Andrew F. Davis" <afd@ti.com>
+> > >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > >> Cc: Liam Mark <lmark@codeaurora.org>
+> > >> Cc: Pratik Patel <pratikp@codeaurora.org>
+> > >> Cc: Laura Abbott <labbott@redhat.com>
+> > >> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> > >> Cc: Chenbo Feng <fengc@google.com>
+> > >> Cc: Alistair Strachan <astrachan@google.com>
+> > >> Cc: Sandeep Patil <sspatil@google.com>
+> > >> Cc: Hridya Valsaraju <hridya@google.com>
+> > >> Cc: Christoph Hellwig <hch@lst.de>
+> > >> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > >> Cc: Robin Murphy <robin.murphy@arm.com>
+> > >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> > >> Cc: devicetree@vger.kernel.org
+> > >> Cc: dri-devel@lists.freedesktop.org
+> > >> Cc: linux-mm@kvack.org
+> > >> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > >> ---
+> > >>   drivers/dma-buf/heaps/cma_heap.c | 18 +++++++++---------
+> > >>   1 file changed, 9 insertions(+), 9 deletions(-)
+> > >>
+> > >> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+> > >> index 626cf7fd033a..dd154e2db101 100644
+> > >> --- a/drivers/dma-buf/heaps/cma_heap.c
+> > >> +++ b/drivers/dma-buf/heaps/cma_heap.c
+> > >> @@ -141,6 +141,11 @@ static int __add_cma_heap(struct cma *cma, void *data)
+> > >>   {
+> > >>      struct cma_heap *cma_heap;
+> > >>      struct dma_heap_export_info exp_info;
+> > >> +    struct cma *default_cma = dev_get_cma_area(NULL);
+> > >> +
+> > >> +    /* We only add the default heap and explicitly tagged heaps */
+> > >> +    if (cma != default_cma && !cma_dma_heap_enabled(cma))
+> > >> +            return 0;
+> > >
+> > > Thinking about the pl111 thread[1], I'm wondering if we should also
+> > > let drivers call this directly to expose their CMA pools, even if they
+> > > aren't tagged for dma-heaps in DT. But perhaps that's too close to
+> > > policy.
+> >
+> > That sounds much like what my first thoughts were - apologies if I'm
+> > wildly off-base here, but as far as I understand:
+> >
+> > - Device drivers know whether they have their own "memory-region" or not.
+> > - Device drivers already have to do *something* to participate in dma-buf.
+> > - Device drivers know best how they make use of both the above.
+> > - Therefore couldn't it be left to drivers to choose whether to register
+> > their CMA regions as heaps, without having to mess with DT at all?
+> 
+> I guess I'm not opposed to this. But I guess I'd like to see some more
+> details? You're thinking the pl111 driver would add the
+> "memory-region" node itself?
+> 
+> Assuming that's the case, my only worry is what if that memory-region
+> node isn't a CMA area, but instead something like a carveout? Does the
+> driver need to parse enough of the dt to figure out where to register
+> the region as a heap?
 
+My thinking was more like there would already be a reserved-memory
+node in DT for the chunk of memory, appropriately tagged so that it
+gets added as a CMA region. 
 
- >On 28-04-2020 16:25, Thierry Reding wrote:
->> On Wed, Apr 15, 2020 at 01:55:06PM +0530, Nagarjuna Kristam wrote:
->> Perform charger-detect operation if corresponding dt property is enabled.
->> Update usb-phy with the detected charger state and max current values.
->> Register charger-detect API's of usb-phy to provide needed functionalities.
->>
->> Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
->> ---
->> V2:
->>   - Patch re-based.
->> ---
->>   drivers/phy/tegra/Makefile        |   2 +-
->>   drivers/phy/tegra/xusb-tegra-cd.c | 300 ++++++++++++++++++++++++++++++++++++++
->>   drivers/phy/tegra/xusb.c          |  80 ++++++++++
->>   drivers/phy/tegra/xusb.h          |   7 +
->>   4 files changed, 388 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/phy/tegra/xusb-tegra-cd.c
-> Looks mostly good to me, just a few small nits.
+The device's node would have "memory-region=<&blah>;" and would use
+of_reserved_mem_device_init() to link up dev->cma_area to the
+corresponding cma region.
+
+So far, that's all in-place already. The bit that's missing is
+exposing that dev->cma_area to userspace as a dma_heap - so we could
+just have "int cma_heap_add(struct cma *cma)" or "int
+cma_heap_dev_add(struct device *dev)" or something exported for
+drivers to expose their device-assigned cma region if they wanted to.
+
+I don't think this runs into the lifetime problems of generalised
+heaps-as-modules either, because the CMA region will never go away
+even if the driver does.
+
+Alongside that, I do think the completely DT-driven approach can be
+useful too - because there may be regions which aren't associated with
+any specific device driver, that we want exported as heaps.
+
+Hope that makes sense,
+-Brian
+
 > 
->> diff --git a/drivers/phy/tegra/Makefile b/drivers/phy/tegra/Makefile
->> index 89b8406..25ea9a9 100644
->> --- a/drivers/phy/tegra/Makefile
->> +++ b/drivers/phy/tegra/Makefile
->> @@ -1,7 +1,7 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->>   obj-$(CONFIG_PHY_TEGRA_XUSB) += phy-tegra-xusb.o
->>   
->> -phy-tegra-xusb-y += xusb.o
->> +phy-tegra-xusb-y += xusb.o xusb-tegra-cd.o
-> Splitting this off into a separate file seems a little arbitrary. If
-> adding this to xusb.c is really making things too unwieldy, I'd suggest
-> a different name. Perhaps something like xusb-charger.c, or just cd.c.
-> This is already in a directory called "tegra" and it's obvious also that
-> this is part of the XUSB PHY driver.
-> 
-Will add as cd.c
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_124_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_132_SOC) += xusb-tegra124.o
->>   phy-tegra-xusb-$(CONFIG_ARCH_TEGRA_210_SOC) += xusb-tegra210.o
->> diff --git a/drivers/phy/tegra/xusb-tegra-cd.c b/drivers/phy/tegra/xusb-tegra-cd.c
->> new file mode 100644
->> index 0000000..0fafc68
->> --- /dev/null
->> +++ b/drivers/phy/tegra/xusb-tegra-cd.c
->> @@ -0,0 +1,300 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
->> + */
->> +
->> +#include <linux/delay.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/phy/phy.h>
->> +
->> +#include "xusb.h"
->> +
->> +/* Data contact detection timeout */
->> +#define TDCD_TIMEOUT_MS                         400
->> +
->> +#define USB2_BATTERY_CHRG_OTGPADX_CTL0(x)       (0x80 + (x) * 0x40)
->> +#define  PD_CHG                                 (1 << 0)
->> +#define  VDCD_DET_FILTER_EN                     (1 << 4)
->> +#define  VDAT_DET                               (1 << 5)
->> +#define  VDAT_DET_FILTER_EN                     (1 << 8)
->> +#define  OP_SINK_EN                             (1 << 9)
->> +#define  OP_SRC_EN                              (1 << 10)
->> +#define  ON_SINK_EN                             (1 << 11)
->> +#define  ON_SRC_EN                              (1 << 12)
->> +#define  OP_I_SRC_EN                            (1 << 13)
->> +#define  ZIP_FILTER_EN                          (1 << 21)
->> +#define  ZIN_FILTER_EN                          (1 << 25)
->> +#define  DCD_DETECTED                           (1 << 26)
->> +
->> +#define USB2_BATTERY_CHRG_OTGPADX_CTL1(x)       (0x84 + (x) * 0x40)
->> +#define  PD_VREG                                (1 << 6)
->> +#define  VREG_LEV(x)                            (((x) & 0x3) << 7)
->> +#define  VREG_DIR(x)                            (((x) & 0x3) << 11)
->> +#define  VREG_DIR_IN                            VREG_DIR(1)
->> +#define  VREG_DIR_OUT                           VREG_DIR(2)
->> +#define  USBOP_RPD_OVRD                         (1 << 16)
->> +#define  USBOP_RPD_OVRD_VAL                     (1 << 17)
->> +#define  USBOP_RPU_OVRD                         (1 << 18)
->> +#define  USBOP_RPU_OVRD_VAL                     (1 << 19)
->> +#define  USBON_RPD_OVRD                         (1 << 20)
->> +#define  USBON_RPD_OVRD_VAL                     (1 << 21)
->> +#define  USBON_RPU_OVRD                         (1 << 22)
->> +#define  USBON_RPU_OVRD_VAL                     (1 << 23)
->> +
->> +#define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x)	(0x88 + (x) * 0x40)
-> There's a bit of a mix of spaces and tabs for indentation here. Just
-> pick one and stick with it. I think checkpatch will want you to use tabs
-> first and then spaces if additional indentation is needed.
-> 
-Will update accordingly
->> +#define  USB2_OTG_PD2                           (1 << 27)
->> +#define  USB2_OTG_PD2_OVRD_EN                   (1 << 28)
->> +#define  USB2_OTG_PD_ZI                         (1 << 29)
->> +
->> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_TDCD_DBNC_TIMER_0 (0x280)
->> +#define   TDCD_DBNC(x)                          (((x) & 0x7ff) << 0)
->> +
->> +static void tegra_xusb_padctl_set_debounce_time(
->> +				struct tegra_xusb_padctl *padctl, u32 val)
-> Perhaps rename "val" to something like "debounce", or "delay" or
-> something to avoid the "val" vs. "value" confusion. Also, wrapping
-> should be after the return type. Same for most functions below.
-> 
-Will update accordingly
->> +{
->> +	u32 value;
->> +
->> +	value = padctl_readl(padctl,
->> +		XUSB_PADCTL_USB2_BATTERY_CHRG_TDCD_DBNC_TIMER_0);
->> +	value &= ~(TDCD_DBNC(0));
->> +	value |= TDCD_DBNC(val);
->> +	padctl_writel(padctl, value,
->> +		XUSB_PADCTL_USB2_BATTERY_CHRG_TDCD_DBNC_TIMER_0);
->> +}
->> +
->> +static void tegra_xusb_padctl_utmi_pad_charger_detect_on(
->> +				struct tegra_xusb_padctl *padctl, u32 index)
-> In general these function names are a little long for my taste. Charger
-> detection can only happen on UTMI pads, right? So could we just drop the
-> _utmi_pad infix in these? That doesn't give us much, but at least it
-> should make splitting this across multiple lines less awkward.
-> 
-will remove utmi_pad_ and shorten the functions.
->> +{
->> +	u32 value;
->> +
->> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
->> +	value &= ~USB2_OTG_PD_ZI;
->> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
->> +
->> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
->> +	value |= (USB2_OTG_PD2 | USB2_OTG_PD2_OVRD_EN);
->> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
->> +
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value &= ~PD_CHG;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	/* Set DP/DN Pull up/down to zero by default */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +	value &= ~(USBOP_RPD_OVRD_VAL | USBOP_RPU_OVRD_VAL |
->> +		USBON_RPD_OVRD_VAL | USBON_RPU_OVRD_VAL);
->> +	value |= (USBOP_RPD_OVRD | USBOP_RPU_OVRD |
->> +		USBON_RPD_OVRD | USBON_RPU_OVRD);
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +
->> +	/* Disable DP/DN as src/sink */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value &= ~(OP_SRC_EN | ON_SINK_EN |
->> +	ON_SRC_EN | OP_SINK_EN);
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +}
->> +
->> +static void tegra_xusb_padctl_utmi_pad_charger_detect_off(
->> +				struct tegra_xusb_padctl *padctl, u32 index)
->> +{
->> +	u32 value;
->> +
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +	value &= ~(USBOP_RPD_OVRD | USBOP_RPU_OVRD |
->> +		 USBON_RPD_OVRD | USBON_RPU_OVRD);
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +
->> +	/* power down necessary stuff */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value |= PD_CHG;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
->> +	value &= ~(USB2_OTG_PD2 | USB2_OTG_PD2_OVRD_EN);
->> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
->> +}
->> +
->> +
->> +static void tegra_xusb_padctl_detect_filters(
->> +				struct tegra_xusb_padctl *padctl, u32 index,
->> +				bool on)
->> +{
->> +	u32 value;
->> +
->> +	if (on) {
->> +		value = padctl_readl(padctl,
->> +				     USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +		value |= (VDCD_DET_FILTER_EN | VDAT_DET_FILTER_EN |
->> +			  ZIP_FILTER_EN | ZIN_FILTER_EN);
->> +		padctl_writel(padctl, value,
->> +			      USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	} else {
->> +		value = padctl_readl(padctl,
->> +				     USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +		value &= ~(VDCD_DET_FILTER_EN | VDAT_DET_FILTER_EN |
->> +			   ZIP_FILTER_EN | ZIN_FILTER_EN);
->> +		padctl_writel(padctl, value,
->> +			      USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	}
->> +}
->> +
->> +static void tegra_xusb_padctl_utmi_pad_dcd(struct tegra_xusb_padctl *padctl,
->> +					      u32 index)
->> +{
->> +	u32 value;
->> +	int dcd_timeout_ms = 0;
->> +	bool ret = false;
->> +
->> +	/* Turn on IDP_SRC */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value |= OP_I_SRC_EN;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	/* Turn on D- pull-down resistor */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +	value |= USBON_RPD_OVRD_VAL;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +
->> +	/* Wait for TDCD_DBNC */
->> +	usleep_range(10000, 120000);
->  From the comment this looks like we're waiting for some hardware
-> condition. Can we somehow obtain this rather than implementing a fixed
-> sleep? Especially since the range here is so large.
-> 
-As per data sheet we need to wait for 10 micro seconds as settle time.
->> +
->> +	while (dcd_timeout_ms < TDCD_TIMEOUT_MS) {
->> +		value = padctl_readl(padctl,
->> +				     USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +		if (value & DCD_DETECTED) {
->> +			dev_dbg(padctl->dev, "USB2 port %d DCD successful\n",
->> +				index);
->> +			ret = true;
->> +			break;
->> +		}
->> +
->> +		usleep_range(20000, 22000);
->> +		dcd_timeout_ms += 22;
->> +	}
-> Can we just use a timed loop instead? You should be able to use
-> something like:
-Will update using single API accordingly
-> 
-> 		unsigned int offset = USB2_BATTERY_CHRG_OTGPADX_CTL0(index);
-> 
-> 		err = readl_poll_timeout(padctl->regs + offset, value,
-> 					 value & DCD_DETECTED,
-> 					 22000, TDCD_TIMEOUT_MS * 1000);
-> 
-> That's slightly suboptimal because it doesn't let you use padctl_readl,
-> but at least it gives you a standard way of doing this kind of loop.
-> 
->> +
->> +	if (!ret)
->> +		dev_info(padctl->dev, "%s: DCD timeout %d ms\n", __func__,
->> +			 dcd_timeout_ms);
-> Should this be a dev_err() or dev_warn()? Is this expected to happen?
-> 
-In general shouldnot happen, will mark as warn.
->> +
->> +	/* Turn off IP_SRC, clear DCD DETECTED*/
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value &= ~OP_I_SRC_EN;
->> +	value |= DCD_DETECTED;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	/* Turn off D- pull-down resistor */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +	value &= ~USBON_RPD_OVRD_VAL;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
->> +
->> +	dev_dbg(padctl->dev, "DCD: %d\n", ret);
->> +}
->> +
->> +static bool tegra_xusb_padctl_utmi_pad_primary_charger_detect(
->> +				struct tegra_xusb_padctl *padctl, u32 index)
->> +{
->> +	u32 value;
->> +	int ret = false;
-> It doesn't look like there's a need to initialize this.
-> 
-will remove.
->> +
->> +	/* data contact detection */
->> +	tegra_xusb_padctl_utmi_pad_dcd(padctl, index);
->> +
->> +	/* Source D+ to D- */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value |= OP_SRC_EN | ON_SINK_EN;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	/* Wait for TVDPSRC_ON */
->> +	msleep(40);
-> Again, is this a hardware condition that we can wait on by polling a
-> register?
-> 
-It HW settle time before reading registers.
->> +
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	ret = !!(value & VDAT_DET);
->> +
->> +	/* Turn off OP_SRC, ON_SINK, clear VDAT, ZIN status change */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value &= ~(OP_SRC_EN | ON_SINK_EN);
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	return ret;
->> +}
->> +
->> +static bool tegra_xusb_padctl_utmi_pad_secondary_charger_detect(
->> +				struct tegra_xusb_padctl *padctl, u32 index)
->> +{
->> +	u32 value;
->> +	bool ret = false;
->> +
->> +	/* Source D- to D+ */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value |= ON_SRC_EN | OP_SINK_EN;
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	/* Wait for TVDPSRC_ON */
->> +	msleep(40);
->> +
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	ret = !(value & VDAT_DET);
->> +
->> +	/* Turn off ON_SRC, OP_SINK, clear VDAT, ZIP status change */
->> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +	value &= ~(ON_SRC_EN | OP_SINK_EN);
->> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
->> +
->> +	return ret;
->> +}
-> This seems to be mostly identical to the primary charger detect, so
-> perhaps this can be parameterized instead? I'm not generally opposed to
-> splitting functions up like this if they are fairly small, but in this
-> particular case, splitting up could make the name a lot shorter, and in
-> this case it's really quite excessive (I count 51 characters...) =)
-> Will update accordingly
->> +
->> +enum usb_charger_type tegra_xusb_padctl_charger_detect(
->> +					  struct tegra_xusb_port *port)
->> +{
->> +	struct tegra_xusb_padctl *padctl = port->padctl;
->> +	struct phy *phy = port->lane->pad->lanes[port->index];
->> +	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(port->lane);
->> +	u32 index = port->index;
->> +	enum usb_charger_type chrg_type;
->> +	bool pad_power_off = false;
->> +
->> +	mutex_lock(&padctl->lock);
->> +
->> +	if (!usb2->powered_on) {
->> +		padctl->soc->ops->utmi_pad_power_on(phy);
->> +		pad_power_off = true;
->> +	}
->> +
->> +	tegra_xusb_padctl_utmi_pad_charger_detect_on(padctl, index);
->> +	tegra_xusb_padctl_set_debounce_time(padctl, 0xa);
-> Perhaps use 10 here because that's how we're usually used to read time
-> values.
-> 
-Will update accordingly
->> +	tegra_xusb_padctl_detect_filters(padctl, index, true);
->> +
->> +	if (tegra_xusb_padctl_utmi_pad_primary_charger_detect(padctl,
->> +								 index)) {
->> +		/*
->> +		 * wait 20ms (max of TVDMSRC_DIS) for D- to be disabled
->> +		 * from host side, before we perform secondary detection.
->> +		 * Some hosts may not respond well if we do secondary
->> +		 * detection right after primary detection.
->> +		 */
->> +		msleep(20);
-> Could use a blank line after this for readability.
-> 
-Will update accordingly
->> +		if (tegra_xusb_padctl_utmi_pad_secondary_charger_detect(padctl,
->> +									index))
->> +			chrg_type = CDP_TYPE;
->> +		else
->> +			chrg_type = DCP_TYPE;
->> +	} else {
->> +		chrg_type = SDP_TYPE;
->> +	}
->> +
->> +	dev_dbg(&port->dev, "charger detected of type %d", chrg_type);
-> Do we have a string representation of this?
-> 
-No String representation available. Shall i add one for wasy reading ?
->> +
->> +	tegra_xusb_padctl_detect_filters(padctl, index, false);
->> +	tegra_xusb_padctl_utmi_pad_charger_detect_off(padctl, index);
->> +
->> +	if (pad_power_off)
->> +		padctl->soc->ops->utmi_pad_power_down(phy);
->> +
->> +	mutex_unlock(&padctl->lock);
->> +	return chrg_type;
->> +}
->> +
->> +MODULE_AUTHOR("Nagarjuna Kristam<nkristam@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra186 XUSB charger detect driver");
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
->> index de4a46f..e505ac4 100644
->> --- a/drivers/phy/tegra/xusb.c
->> +++ b/drivers/phy/tegra/xusb.c
->> @@ -591,6 +591,50 @@ static enum usb_phy_events to_usb_phy_event(enum usb_role role)
->>   	}
->>   }
->>   
->> +#define VON_DIV2P0_DET BIT(0)
->> +#define VON_DIV2P7_DET BIT(1)
->> +#define VOP_DIV2P0_DET BIT(2)
->> +#define VOP_DIV2P7_DET BIT(3)
->> +
->> +#define VREG_CUR_LEVEL_0        500
->> +#define VREG_CUR_LEVEL_1        900
->> +#define VREG_CUR_LEVEL_2        1500
->> +#define VREG_CUR_LEVEL_3        2000
->> +
->> +#define IS_CUR_IN_RANGE(ma, low, high)  \
->> +	((ma >= VREG_CUR_LEVEL_##low) && (ma <= (VREG_CUR_LEVEL_##high - 1)))
->> +#define VREG_LVL(ma, level)     IS_CUR_IN_RANGE(ma, level, level + 1)
->> +
->> +static void tegra_xusb_padctl_vbus_pad_portection(struct tegra_xusb_port *port)
->> +{
->> +	struct tegra_xusb_padctl *padctl = port->padctl;
->> +	int level = 0;
->> +	enum tegra_vbus_dir dir = TEGRA_VBUS_SINK;
->> +	int max_ua, min_ua;
->> +
->> +	if (!padctl->soc->ops->utmi_pad_set_protection_level)
->> +		return;
->> +
->> +	usb_phy_get_charger_current(&port->usb_phy, &min_ua, &max_ua);
->> +
->> +	if (max_ua == 0) {
->> +		level = -1;
->> +		dir = TEGRA_VBUS_DEFAULT;
->> +	} else if (VREG_LVL(max_ua, 0)) {
->> +		level = 0;
->> +	} else if (VREG_LVL(max_ua, 1)) {
->> +		level = 1;
->> +	} else if (VREG_LVL(max_ua, 2)) {
->> +		level = 2;
->> +	} else if (max_ua >= VREG_CUR_LEVEL_3) {
->> +		level = 3;
->> +	} else {
->> +		return;
->> +	}
->> +
->> +	padctl->soc->ops->utmi_pad_set_protection_level(port, max_ua, dir);
->> +}
-> level seems to never be used in the above. Instead you just pass max_ua
-> to the set protection level callback.
-> 
-Will remove accordingly
->> +
->>   static void tegra_xusb_usb_phy_work(struct work_struct *work)
->>   {
->>   	struct tegra_xusb_port *port = container_of(work,
->> @@ -598,6 +642,10 @@ static void tegra_xusb_usb_phy_work(struct work_struct *work)
->>   						    usb_phy_work);
->>   	enum usb_role role = usb_role_switch_get_role(port->usb_role_sw);
->>   
->> +	/* Set role to none, if charger is DCP type */
->> +	if (port->chrg_type == DCP_TYPE)
->> +		role = USB_ROLE_NONE;
->> +
->>   	usb_phy_set_event(&port->usb_phy, to_usb_phy_event(role));
->>   
->>   	dev_dbg(&port->dev, "%s(): calling notifier for role %s\n", __func__,
->> @@ -610,9 +658,26 @@ static int tegra_xusb_role_sw_set(struct usb_role_switch *sw,
->>   				  enum usb_role role)
->>   {
->>   	struct tegra_xusb_port *port = usb_role_switch_get_drvdata(sw);
->> +	enum usb_charger_state charger_state;
->>   
->>   	dev_dbg(&port->dev, "%s(): role %s\n", __func__, usb_roles[role]);
->>   
->> +	/* Do charger detect if role is Device and charger detect is enabled */
->> +	if (port->charger_detect) {
->> +		if (role == USB_ROLE_DEVICE)
->> +			port->chrg_type =
->> +					 tegra_xusb_padctl_charger_detect(port);
->> +		else
->> +			port->chrg_type = UNKNOWN_TYPE;
->> +
->> +		charger_state = (port->chrg_type == UNKNOWN_TYPE) ?
->> +				 USB_CHARGER_ABSENT : USB_CHARGER_PRESENT;
->> +
->> +		usb_phy_set_charger_state(&port->usb_phy, charger_state);
->> +
->> +		tegra_xusb_padctl_vbus_pad_portection(port);
->> +	}
->> +
->>   	schedule_work(&port->usb_phy_work);
->>   
->>   	return 0;
->> @@ -643,6 +708,14 @@ static int tegra_xusb_set_host(struct usb_otg *otg, struct usb_bus *host)
->>   	return 0;
->>   }
->>   
->> +static enum usb_charger_type tegra_xusb_charger_detect(struct usb_phy *usb_phy)
->> +{
->> +	struct tegra_xusb_port *port = container_of(usb_phy,
->> +						    struct tegra_xusb_port,
->> +						    usb_phy);
->> +
->> +	return port->chrg_type;
->> +}
->>   
->>   static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
->>   {
->> @@ -693,6 +766,9 @@ static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
->>   	port->usb_phy.otg->set_peripheral = tegra_xusb_set_peripheral;
->>   	port->usb_phy.otg->set_host = tegra_xusb_set_host;
->>   
->> +	if (port->charger_detect)
->> +		port->usb_phy.charger_detect = tegra_xusb_charger_detect;
->> +
->>   	err = usb_add_phy_dev(&port->usb_phy);
->>   	if (err < 0) {
->>   		dev_err(&port->dev, "Failed to add USB PHY: %d\n", err);
->> @@ -727,6 +803,10 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
->>   		usb2->mode = USB_DR_MODE_HOST;
->>   	}
->>   
->> +	if (port->padctl->soc->charger_detect &&
->> +	    of_property_read_bool(np, "nvidia,charger-detect"))
->> +		port->charger_detect = true;
->> +
->>   	/* usb-role-switch property is mandatory for OTG/Peripheral modes */
->>   	if (usb2->mode == USB_DR_MODE_PERIPHERAL ||
->>   	    usb2->mode == USB_DR_MODE_OTG) {
->> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
->> index 79e96b0..714bca2 100644
->> --- a/drivers/phy/tegra/xusb.h
->> +++ b/drivers/phy/tegra/xusb.h
->> @@ -282,6 +282,9 @@ struct tegra_xusb_port {
->>   	struct work_struct usb_phy_work;
->>   	struct usb_phy usb_phy;
->>   
->> +	bool charger_detect;
->> +	enum usb_charger_type chrg_type;
->> +
->>   	const struct tegra_xusb_port_ops *ops;
->>   };
->>   
->> @@ -306,6 +309,9 @@ struct tegra_xusb_port *
->>   tegra_xusb_find_port(struct tegra_xusb_padctl *padctl, const char *type,
->>   		     unsigned int index);
->>   
->> +enum usb_charger_type tegra_xusb_padctl_charger_detect(
->> +					  struct tegra_xusb_port *port);
->> +
->>   struct tegra_xusb_usb2_port {
->>   	struct tegra_xusb_port base;
->>   
->> @@ -430,6 +436,7 @@ struct tegra_xusb_padctl_soc {
->>   	unsigned int num_supplies;
->>   	bool supports_gen2;
->>   	bool need_fake_usb3_port;
->> +	bool charger_detect;
-> Perhaps make this "supports_charger_detection" because it being in the
-> SoC structure means that it's a capability. "charger_detect" makes it
-> look like an option that we've enabled or not. That's what struct
-> tegra_xusb_port.charger_detect already is.
-> 
-Will update accordingly
--Nagarjuna
-> Thierry
-> 
+> thanks
+> -john
