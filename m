@@ -2,149 +2,269 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFD7C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591EFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E322F20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="dBDouQ+k"
+	by mail.kernel.org (Postfix) with ESMTP id 2FB5620746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgEDHUH (ORCPT
+        id S1727870AbgEDHWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:20:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        Mon, 4 May 2020 03:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726515AbgEDHUH (ORCPT
+        by vger.kernel.org with ESMTP id S1726515AbgEDHWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:20:07 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C3BC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 00:20:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id x17so19592801wrt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 00:20:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=r5Eb2cb9CEtLZKCdXljzvPF0qrOQKbRCYhU5bBtwDRw=;
-        b=dBDouQ+kI5lBhrPP0D6YZIyCNozA5sE1edwVigm58hy5SMk/HKMeNNvhJ1NUXnBmmn
-         l909no4r78lShUfHPPW4l8WwAIqvD9usGlf/fUdzMfZBLE9hpyjJ1K0XnRa34oIOT7WC
-         AK52giKBjQGYC1WliGR4pgxHI5SWKUW4iGV4Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=r5Eb2cb9CEtLZKCdXljzvPF0qrOQKbRCYhU5bBtwDRw=;
-        b=QIiZTuW20JPb1wdIXUHR6pqqZ4Zedb6Ibf5glFWIIvtb/+3jthWN6zJASNUAotBV7P
-         7nZqVSKa9efEGtuQ/t8L/mvM/aLyE33PgDGN6xbcnNBjSiKflzTNlk2uGLalFeNdpANa
-         /7Pu9HdqJ5BTqXesZyFal1caYKYuTnvq5wqK7++RjWnaGmV7Wiuj5kYN/OELwX1pGPaR
-         6LP8PAGozT4Q9PvwQrYIaEaQo1jhak7Zc75Uocshy4BB32nQXhqtn2zt0WZlJX+7BIHK
-         ZQa8X1cZ2427YxPWKXPq+3W/hthfshsw3Sz+VxXHN6Mnoxp3PFK1ku1tCqI+dydChXsE
-         RxOw==
-X-Gm-Message-State: AGi0PuYLM9nicojoIciByS/YAMEHcrGhMyHDsIJTzM52vj/tAlI3nCqr
-        DrooTVLk4RHfgZhjEKlLWemozg==
-X-Google-Smtp-Source: APiQypLqvplkESHstF8neGqeECT1JIoalNhHnF7IDhYb6hQYVQ6i01QktZrA3/DpDJKvyBZhjm1dIg==
-X-Received: by 2002:adf:d4d0:: with SMTP id w16mr17658165wrk.264.1588576805813;
-        Mon, 04 May 2020 00:20:05 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-116-45.cgn.fibianet.dk. [5.186.116.45])
-        by smtp.gmail.com with ESMTPSA id l6sm17714393wrb.75.2020.05.04.00.20.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 00:20:05 -0700 (PDT)
-Subject: Re: [PATCH v4 14/18] static_call: Add static_cond_call()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        pbonzini@redhat.com, mathieu.desnoyers@efficios.com
-References: <20200501202849.647891881@infradead.org>
- <20200501202944.593400184@infradead.org>
- <1238787e-d97d-f09b-d76d-2df2dc273f4b@rasmusvillemoes.dk>
- <20200503125813.GL3762@hirez.programming.kicks-ass.net>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a53369f3-665a-af0e-efad-09ae456af847@rasmusvillemoes.dk>
-Date:   Mon, 4 May 2020 09:20:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200503125813.GL3762@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 4 May 2020 03:22:33 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F9FC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 00:22:32 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:c9ee:5a66:ff84:1654])
+        by albert.telenet-ops.be with bizsmtp
+        id aXNW220023vVciC06XNW5A; Mon, 04 May 2020 09:22:30 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVVQs-0003ve-2W
+        for linux-kernel@vger.kernel.org; Mon, 04 May 2020 09:22:30 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jVVQr-0008AQ-W0
+        for linux-kernel@vger.kernel.org; Mon, 04 May 2020 09:22:30 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-kernel@vger.kernel.org
+Subject: Build regressions/improvements in v5.7-rc4
+Date:   Mon,  4 May 2020 09:22:29 +0200
+Message-Id: <20200504072229.31214-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2020 14.58, Peter Zijlstra wrote:
-> On Sat, May 02, 2020 at 03:08:00PM +0200, Rasmus Villemoes wrote:
->> On 01/05/2020 22.29, Peter Zijlstra wrote:
+Below is the list of build error/warning regressions/improvements in
+v5.7-rc4[1] compared to v5.6[2].
 
->>> +#define static_cond_call(name)						\
->>> +	if (STATIC_CALL_KEY(name).func)					\
->>> +		((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_KEY(name).func))
->>> +
->>
->> This addresses neither the READ_ONCE issue nor the fact that,
->> AFAICT, the semantics of
->>
->>   static_cond_call(foo)(i++)
->>
->> will depend on CONFIG_HAVE_STATIC_CALL.
-> 
-> True.
-> 
-> So there is something utterly terrible we can do to address both:
-> 
-> void __static_call_nop(void)
-> {
-> }
-> 
-> #define __static_cond_call(name) \
-> ({ \
-> 	void *func = READ_ONCE(STATIC_CALL_KEY(name).func); \
-> 	if (!func) \
-> 		func = &__static_call_nop; \
-> 	(typeof(STATIC_CALL_TRAMP(name))*)func; \
-> })
-> 
-> #define static_cond_call(name) (void)__static_cond_call(name)
-> 
-> This gets us into Undefined Behaviour territory, but it ought to work.
-> 
-> It adds the READ_ONCE(), and it cures the argument evaluation issue.
+Summarized:
+  - build errors: +1/-3
+  - build warnings: +95/-80
 
-Indeed, that is horrible. And it "fixes" the argument evaluation by
-changing the !HAVE_STATIC_CALL case to match the HAVE_STATIC_CALL, not
-the other way around, which means that it is not a direct equivalent to the
+JFYI, when comparing v5.7-rc4[1] to v5.7-rc3[3], the summaries are:
+  - build errors: +3/-123
+  - build warnings: +8/-160
 
-  if (foo)
-     foo(a, b, c)
+Happy fixing! ;-)
 
-[which pattern of course has the READ_ONCE issue, but each individual
-existing site with that may be ok for various reasons].
+Thanks to the linux-next team for providing the build service.
 
-Is gcc smart enough to change the if (!func) to a jump across the
-function call (but still evaluting side effects in args), or is
-__static_call_nop actually emitted and called? If the latter, then one
-might as well patch the write-side to do "WRITE_ONCE(foo, func ? :
-__static_call_nop)" and elide the test from __static_cond_call() - in
-fact, that just becomes a single READ_ONCE. [There's probably some
-annoying issue with making sure static initialization of foo points at
-__static_call_nop].
+[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0e698dfa282211e414076f9dc7e83c1c288314fd/ (all 239 configs)
+[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/7111951b8d4973bda27ff663f2cf18b663d15b48/ (all 239 configs)
+[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/6a8b55ed4056ea5559ebe4f6a4b247f627870d4c/ (all 239 configs)
 
-And that brings me to the other issue I raised - do you have a few
-examples of call sites that could use this, so we can see disassembly
-before/after? I'm still concerned that, even if there are no
-side-effects in the arguments, you still force the compiler to
-spill/shuffle registers for call/restore unconditionally, whereas with a
-good'ol if(), all that work is guarded by the load+test.
 
-Rasmus
+*** ERRORS ***
+
+1 error regressions:
+  + error: modpost: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!:  => N/A
+
+3 error improvements:
+  - error: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!: N/A => 
+  - error: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!: N/A => 
+  - error: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!: N/A => 
+
+
+*** WARNINGS ***
+
+95 warning regressions:
+  + .config: warning: symbol value '2.01827e+11' invalid for LD_VERSION:  => 11
+  + /kisskb/src/block/genhd.c: warning: the frame size of 1688 bytes is larger than 1280 bytes [-Wframe-larger-than=]:  => 1617:1
+  + /kisskb/src/block/genhd.c: warning: the frame size of 1720 bytes is larger than 1280 bytes [-Wframe-larger-than=]:  => 1617:1
+  + /kisskb/src/drivers/char/random.c: warning: 'rv' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 814:18
+  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.c: warning: (near initialization for 'dcn2_0_nv12_soc.clock_limits') [-Wmissing-braces]:  => 451:8
+  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_resource.c: warning: missing braces around initializer [-Wmissing-braces]:  => 451:8
+  + /kisskb/src/drivers/gpu/drm/bridge/tc358768.c: warning: the frame size of 2224 bytes is larger than 2048 bytes [-Wframe-larger-than=]:  => 840:1
+  + /kisskb/src/drivers/iio/dac/ad5770r.c: warning: 'ret' may be used uninitialized in this function [-Wuninitialized]:  => 516:6
+  + /kisskb/src/drivers/net/ethernet/mellanox/mlx5/core/en/health.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]:  => 264:6
+  + /kisskb/src/drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.c: warning: 'rule' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1134:27
+  + /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_probe' uses dynamic stack allocation:  => 544:1
+  + /kisskb/src/drivers/staging/octeon/ethernet-mem.c: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 123:18
+  + /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]:  => 2059:14, 2037:14
+  + /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]:  => 2037:14
+  + /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]:  => 2059:14, 2037:14
+  + /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]:  => 2037:14, 2059:14
+  + /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 7 has type 'unsigned int' [-Wformat=]:  => 2059:14
+  + /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]:  => 2059:14
+  + /kisskb/src/drivers/vhost/vdpa.c: warning: 'map_pfn' may be used uninitialized in this function [-Wuninitialized]:  => 576:52
+  + /kisskb/src/fs/mpage.c: warning: the frame size of 1152 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 690:1
+  + /kisskb/src/fs/namei.c: warning: 'inode' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1805:10
+  + /kisskb/src/fs/namei.c: warning: 'inode' may be used uninitialized in this function [-Wuninitialized]:  => 1805:10
+  + /kisskb/src/fs/namei.c: warning: 'seq' may be used uninitialized in this function [-Wuninitialized]:  => 1805:10
+  + /kisskb/src/kernel/events/core.c: warning: 'perf_event_cgroup_output' uses dynamic stack allocation:  => 7831:1
+  + /kisskb/src/kernel/futex.c: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 1676:17, 1686:17
+  + /kisskb/src/kernel/futex.c: warning: 'oldval' may be used uninitialized in this function [-Wuninitialized]:  => 1676:3, 1686:3
+  + /kisskb/src/kernel/trace/ftrace.c: warning: 'filtered_pids' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 7245:8
+  + /kisskb/src/kernel/trace/ftrace.c: warning: 'filtered_pids' may be used uninitialized in this function [-Wuninitialized]:  => 7245:23, 7245:6
+  + /kisskb/src/kernel/trace/ftrace.c: warning: 'other_pids' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 7262:22
+  + /kisskb/src/kernel/trace/ftrace.c: warning: 'other_pids' may be used uninitialized in this function [-Wuninitialized]:  => 7262:22, 7262:25
+  + /kisskb/src/kernel/trace/ftrace.c: warning: 'seq_ops' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 7167:6
+  + /kisskb/src/kernel/trace/ftrace.c: warning: 'seq_ops' may be used uninitialized in this function [-Wuninitialized]:  => 7167:6
+  + /kisskb/src/mm/memory.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]:  => 1614:2
+  + /kisskb/src/mm/page_alloc.c: warning: array subscript is above array bounds [-Warray-bounds]:  => 872:43, 874:2
+  + /kisskb/src/net/mptcp/protocol.c: warning: 'dfrag_collapsed' may be used uninitialized in this function [-Wmaybe-uninitialized]:  => 606:6
+  + /kisskb/src/net/mptcp/protocol.c: warning: 'dfrag_collapsed' may be used uninitialized in this function [-Wuninitialized]:  => 606:6
+  + init/Kconfig: warning: 'LD_VERSION': number is invalid:  => 21
+  + modpost: WARNING: modpost: "clear_page" [drivers/md/dm-integrity.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [drivers/md/raid456.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [drivers/scsi/sd_mod.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [fs/btrfs/btrfs.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [fs/fuse/fuse.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [fs/gfs2/gfs2.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [fs/ntfs/ntfs.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "clear_page" [fs/ocfs2/dlm/ocfs2_dlm.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "copy_page" [drivers/block/drbd/drbd.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "copy_page" [fs/btrfs/btrfs.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "copy_page" [fs/cachefiles/cachefiles.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "copy_page" [fs/fuse/fuse.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "copy_page" [fs/nilfs2/nilfs2.ko] has no CRC!:  => N/A
+  + modpost: WARNING: modpost: "saved_config" [vmlinux] is COMMON symbol:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "_mcount" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "clear_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "copy_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: lib/test_bitmap.o(.text.unlikely+0x58): Section mismatch in reference from the function bitmap_equal() to the variable .init.rodata:clump_exp:  => N/A
+  + modpost: WARNING: modpost: vmlinux.o (.PPC.EMB.apuinfo): unexpected non-allocatable section.:  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text+0x31668): Section mismatch in reference from the function setup_scache() to the function .init.text:loongson3_sc_init():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text+0x36888): Section mismatch in reference from the function mips_sc_init() to the function .init.text:mips_sc_probe_cm3():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1a0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1ac): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2b0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2ba4): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2ba8): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2bc): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2dac): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2db0): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2e00): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3008): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3d94): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_root():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3da4): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_subnode_by_name():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3da8): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_root():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3db8): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_subnode_by_name():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3dc0): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_prop():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x3dd4): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_prop():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x4074): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_root():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x4084): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_subnode_by_name():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x40a0): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_prop():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x714): Section mismatch in reference from the function .smp_setup_pacas() to the function .init.text:.allocate_paca():  => N/A
+  + modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x94c): Section mismatch in reference from the function .smp_setup_pacas() to the function .init.text:.allocate_paca():  => N/A
+  + warning: unmet direct dependencies detected for SND_SOC_WM9712:  => N/A
+
+80 warning improvements:
+  - /kisskb/src/arch/m68k/include/asm/string.h: warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7] [-Warray-bounds]: 72:25 => 
+  - /kisskb/src/arch/powerpc/include/asm/epapr_hcalls.h: warning: array subscript 1 is outside array bounds of 'const char[1]' [-Warray-bounds]: 298:20 => 
+  - /kisskb/src/arch/powerpc/include/asm/epapr_hcalls.h: warning: array subscript 2 is outside array bounds of 'const char[1]' [-Warray-bounds]: 299:20 => 
+  - /kisskb/src/arch/powerpc/include/asm/epapr_hcalls.h: warning: array subscript 3 is outside array bounds of 'const char[1]' [-Warray-bounds]: 300:20 => 
+  - /kisskb/src/drivers/net/wireless/realtek/rtw88/pci.c: warning: 'rtw_pci_resume' defined but not used [-Wunused-function]: 1296:12 => 
+  - /kisskb/src/drivers/net/wireless/realtek/rtw88/pci.c: warning: 'rtw_pci_suspend' defined but not used [-Wunused-function]: 1291:12 => 
+  - /kisskb/src/drivers/s390/net/ism_drv.c: warning: 'ism_dev_init' uses dynamic stack allocation: 491:1 => 
+  - /kisskb/src/drivers/usb/gadget/udc/fsl_qe_udc.c: warning: 'udc' may be used uninitialized in this function [-Wuninitialized]: 1840:2 => 
+  - /kisskb/src/drivers/usb/gadget/udc/fsl_qe_udc.c: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]: 1491:4, 1491:27, 837:28, 965:5, 965:28, 837:5 => 965:28, 837:28, 1491:27
+  - /kisskb/src/drivers/usb/host/fhci-hcd.c: warning: this statement may fall through [-Wimplicit-fallthrough=]: 398:8 => 
+  - /kisskb/src/fs/mpage.c: warning: the frame size of 1148 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 690:1 => 
+  - /kisskb/src/include/linux/spinlock.h: warning: 'flags' may be used uninitialized in this function [-Wuninitialized]: 393:2 => 
+  - /kisskb/src/include/linux/unaligned/le_byteshift.h: warning: array subscript is above array bounds [-Warray-bounds]: 26:7 => 
+  - /kisskb/src/kernel/padata.c: warning: 'err' may be used uninitialized in this function [-Wuninitialized]: 539:2 => 
+  - /kisskb/src/mm/memcontrol.c: warning: 'mem_cgroup_id_get_many' defined but not used [-Wunused-function]: 4864:13 => 
+  - warning: "clear_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [drivers/md/raid456.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [drivers/scsi/sd_mod.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [fs/gfs2/gfs2.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [fs/ntfs/ntfs.ko] has no CRC!: N/A => 
+  - warning: "clear_page" [fs/ocfs2/dlm/ocfs2_dlm.ko] has no CRC!: N/A => 
+  - warning: "copy_page" [drivers/block/drbd/drbd.ko] has no CRC!: N/A => 
+  - warning: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
+  - warning: "copy_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
+  - warning: "copy_page" [fs/cachefiles/cachefiles.ko] has no CRC!: N/A => 
+  - warning: "copy_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
+  - warning: "copy_page" [fs/nilfs2/nilfs2.ko] has no CRC!: N/A => 
+  - warning: "saved_config" [vmlinux] is COMMON symbol: N/A => 
+  - warning: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "_mcount" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "clear_page" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "copy_page" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.: N/A => 
+  - warning: lib/test_bitmap.o(.text.unlikely+0x58): Section mismatch in reference from the function bitmap_equal() to the variable .init.rodata:clump_exp: N/A => 
+  - warning: unmet direct dependencies detected for SPI_PXA2XX: N/A => 
+  - warning: vmlinux.o (.PPC.EMB.apuinfo): unexpected non-allocatable section.: N/A => 
+  - warning: vmlinux.o(.text+0x2e1c): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
+  - warning: vmlinux.o(.text+0x2fc8): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
+  - warning: vmlinux.o(.text+0x314c8): Section mismatch in reference from the function setup_scache() to the function .init.text:loongson3_sc_init(): N/A => 
+  - warning: vmlinux.o(.text+0x31d4): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
+  - warning: vmlinux.o(.text+0x31dc): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
+  - warning: vmlinux.o(.text+0x31e4): Section mismatch in reference from the variable __boot_from_prom to the function .init.text:prom_init(): N/A => 
+  - warning: vmlinux.o(.text+0x33c8): Section mismatch in reference from the variable start_here_common to the function .init.text:start_kernel(): N/A => 
+  - warning: vmlinux.o(.text+0x36698): Section mismatch in reference from the function mips_sc_init() to the function .init.text:mips_sc_probe_cm3(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x114): Section mismatch in reference from the function .setup_secure_guest() to the function .init.text:.prom_printf(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x160): Section mismatch in reference from the function .setup_secure_guest() to the function .init.text:.prom_printf(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x180): Section mismatch in reference from the function .setup_secure_guest() to the function .init.text:.call_prom(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x1b0): Section mismatch in reference from the function .setup_secure_guest() to the function .init.text:.prom_getprop(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x1c8): Section mismatch in reference from the function .setup_secure_guest() to the function .init.text:.prom_panic(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x2b74): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x2b78): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x2d7c): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x2d80): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x2dd0): Section mismatch in reference from the function .remove_pmd_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x2fd8): Section mismatch in reference from the function .remove_pud_table() to the function .meminit.text:.split_kernel_mapping(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x3d64): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_root(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x3d74): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_subnode_by_name(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x3d78): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_root(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x3d88): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_subnode_by_name(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x3d90): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_prop(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x3da4): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_prop(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x4044): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_root(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x4054): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_subnode_by_name(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x4070): Section mismatch in reference from the function .xive_spapr_disabled() to the function .init.text:.of_get_flat_dt_prop(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0x874): Section mismatch in reference from the function .smp_setup_pacas() to the function .init.text:.allocate_paca(): N/A => 
+  - warning: vmlinux.o(.text.unlikely+0xaac): Section mismatch in reference from the function .smp_setup_pacas() to the function .init.text:.allocate_paca(): N/A => 
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
