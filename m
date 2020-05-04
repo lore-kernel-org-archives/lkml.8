@@ -2,93 +2,147 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337C0C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B9DC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B21120735
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9658D20735
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgEDHck (ORCPT
+        id S1728045AbgEDHfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:32:40 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44152 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgEDHcj (ORCPT
+        Mon, 4 May 2020 03:35:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:35821 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgEDHfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:32:39 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a2so5833221oia.11
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 00:32:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ooc31C0HVG+wuFWk6i8TyXlbS7UT7v67DJlPvfFWyqk=;
-        b=cjB0pkijA7DLujj6UwkHKz0TGN5Guq35XcfdvBOK/zh8PF+1JeqUjPS8QLyjYAYLvB
-         THF2C6/pukN2PCuAQcWn8OlWht1r+suSJsp8tgdBGMYojzGt7ndv6Asz0ajSAKKDfNZr
-         jze4cnvY72eIIdCQj5bzYvf2AiL5PfxEE7vfbtuJ+Je5jWWlfhatkyimpYWT6rrsMumV
-         IE/aGw7a00A9yqPamiu/xMpQmfK9fnud8zn+7mEP7KFw3xLyMgy0jFslqmRTYoeQ0QNS
-         +WvMr+Q5pSFCE3HX/ALzLQH7EeXPLnIJCHWE2xL5dnH2VasY/D4Xt6Ec995DlO9vTEKi
-         icmA==
-X-Gm-Message-State: AGi0Puas3M8XZlRi4Q1YFMFVZkThaGRIDlf6Nyd+rUzgxbLn0jUCNrz+
-        FnuCSH6dTyiZt9LML5UBQXJ2GAhW+UFauQAjrPcSNJOr
-X-Google-Smtp-Source: APiQypLEE+zhkdSnfmZtRrT0AndiKSIR8Yc7ujLR9NAOfft9X24jtxxKzLyC0ok06W7mvA6Q4E3ASrRaa3/UBThdJ1c=
-X-Received: by 2002:aca:895:: with SMTP id 143mr7666525oii.153.1588577558483;
- Mon, 04 May 2020 00:32:38 -0700 (PDT)
+        Mon, 4 May 2020 03:35:00 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MPp0l-1jqdGu42tP-00MsxR; Mon, 04 May 2020 09:34:48 +0200
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id D9ED06510C9;
+        Mon,  4 May 2020 07:34:46 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dUcN9RcOQ6Gr; Mon,  4 May 2020 09:34:46 +0200 (CEST)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 80F0964FBE0;
+        Mon,  4 May 2020 09:34:46 +0200 (CEST)
+Received: from pflmmbl.corp.cetitec.com (10.8.5.34) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 4 May 2020 09:34:46 +0200
+From:   Matthias Blankertz <matthias.blankertz@cetitec.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jerome Brunet <jbrunet@baylibre.com>
+CC:     <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [RFC PATCH] drm: dw-hdmi-i2s: Workaround for interchannel sample offset
+Date:   Mon, 4 May 2020 09:34:22 +0200
+Message-ID: <20200504073422.7322-1-matthias.blankertz@cetitec.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200504072229.31214-1-geert@linux-m68k.org>
-In-Reply-To: <20200504072229.31214-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 09:32:27 +0200
-Message-ID: <CAMuHMdV3mWTcrVhut01Tt3j58QY5-UqaDYh4SSQwgk-=7TX80A@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.7-rc4
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Timothy Pearson <tpearson@raptorengineering.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.8.5.34]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536B667464
+X-Provags-ID: V03:K1:OgV8speWiqwUCoBxIRG3cxL3b5yA1H2ttfw7UzEq0x6x2+KVPhd
+ CXsjGXkYCBVde6ROVMy1EGe8uEVUNGJUSAT/3NeoMXYLk8pJu8czKJUJVdiWItSyndNPNtX
+ ZIq/9tB3GLE2Y1z+G3pNpcdsLfgkHJuxlQyzRKwkoeM6KZXcSJYonyns40yEfLcSD9W9BFe
+ sqp5ug1ZgnmH91CDOxr6w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OZitNiLl6Hs=:T3NY6pV5wPlArxj2mGeotK
+ A79kxdvNg8tgJtnLqyaaMZm5MNUohqLJp8cLQCTcnwoBnO5BDzfA3lpyC0NkIdkvMZBCMU+2u
+ ar0pZ8gmSrTG8uO0hLveccgXNLbEXFck3u0+ZdFknaOMm97XegZ6yKxf5u41KX0aOeN7XrlxY
+ A4RuAuSpMn/nUwrXdheey1IgCSHbg1wCcCfnAVBfBYg+VCEVESUPRa+6Y39HIvu6DaA5YJIDs
+ N4h44W5yqFtRvI49OV2jnHvAmGs7UElZeKx4jxUMFWkXNUh0LrVPzrMw0kjZTx6Cc2FU6Uynm
+ 4xgex7a/zNBj+KbEvo5SKwuZTm3tWrhexKUPQEH6m4m6jWsy5CNu/QbMHGxUqixucoHKXRbDJ
+ TJX7E1dNCtvOyrVqcaJcZLKY8vImW1PKdN8vyG0VYImVRkeUpwNJDFlvqpM51djD2TONRBrZg
+ AufRAezk5TjA1bKhHfStEgvgQ6Gts24GJ2m60+Q8IbVyJjbFs9gsKfgI+3FhlA3qzz1IHUIoD
+ 1Nv1J3fDvOIO1R3ipmNsGC/dZQX2b/OVi/cNczj/n5Y6JOTmbjG81w1eXeUUzrd8LORwzU3Nf
+ wYDy7xInZ9ehZKjPtlyEimOfYNFfaQeaB/Xm9izoVfE19UhQYvyWKqLM4OxhH++cZ+pdosLxP
+ NRSbm+pAnhWbwwNL2ar4rWXMEnnKHc/T8aKC3pC6ubwbxO/Xeq+E55LskYZ8j/+rDebB+mBea
+ gwCNN4ODMV5yWeEOcluwHfSRR6+n3p46LJsfnokHLeVAAdrJgZak9raBc/zZCPbFouPWEEGf0
+ nN3as7C+iVlrSB2DTkg3vacEFhGoGioSE2czMK9RoQEoKKYD6A0KJLvb0xkGaerL38q9ghunD
+ ggTNDMh9x7Ymwqpg1WNg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 4, 2020 at 9:24 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> JFYI, when comparing v5.7-rc4[1] to v5.7-rc3[3], the summaries are:
->   - build errors: +3/-123
+Add a second reset of the I2S block after the audio parameters are set.
+Without this, it was observed on the R-Car Gen3 platform that in ~50% of
+audio stream starts, the samples on each odd-numbered channel were delayed
+by one sample relative to the even-numbered channels: A stereo test stream
+was sent with a walking ones pattern, that is the data pattern was:
+Sample  Left    Right
+1       0x0001  0x0001
+2       0x0002  0x0002
+3       0x0004  0x0004
+4       0x0008  0x0008
+5       0x0010  0x0010
+etc.
+When the error occurred, the receiving device got the following data:
+Left    Right
+...
+0x0004  0x0002
+0x0008  0x0004
+0x0010  0x0008
+...
 
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/0e698dfa282211e414076f9dc7e83c1c288314fd/ (all 239 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/6a8b55ed4056ea5559ebe4f6a4b247f627870d4c/ (all 239 configs)
+With the additional reset, the samples were always properly aligned on the
+receiver.
 
-It's back:
+Maybe this relates to the comment of commit 46cecde310bb ("drm/bridge:
+dw-hdmi-i2s: reset audio fifo before applying new params"), but without
+the datasheet it is only speculation.
 
-  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:
-error: implicit declaration of function 'cpu_has_feature'
-[-Werror=implicit-function-declaration]:  => 626:2
-  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:
-error: implicit declaration of function 'disable_kernel_vsx'
-[-Werror=implicit-function-declaration]:  => 662:2
-  + /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/calcs/dcn_calcs.c:
-error: implicit declaration of function 'enable_kernel_vsx'
-[-Werror=implicit-function-declaration]:  => 626:2
+Signed-off-by: Matthias Blankertz <matthias.blankertz@cetitec.com>
+---
 
-powerpc-gcc4.6/ppc64_book3e_allmodconfig
+Can someone with knowledge of the hardware, or access to the datasheet
+give some insight if this is a "proper" fix, an ugly workaround, or the
+problem is actually elsewhere and this only changes behaviour due to
+e.g. timing changes?
 
-powerpc-gcc9/ppc64_book3e_allmodconfig builds fine, as it doesn't have
-DRM_AMD_DC_DCN, enabled due to:
+Thanks,
+	Matthias
 
-    select DRM_AMD_DC_DCN if (X86 || PPC64) && !(KCOV_INSTRUMENT_ALL
-&& KCOV_ENABLE_COMPARISONS)
 
-Gr{oetje,eeting}s,
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-                        Geert
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+index d7e65c869415..0cb526f6b8d9 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+@@ -110,6 +110,14 @@ static int dw_hdmi_i2s_hw_params(struct device *dev, void *data,
+ 	hdmi_write(audio, conf0, HDMI_AUD_CONF0);
+ 	hdmi_write(audio, conf1, HDMI_AUD_CONF1);
+ 
++	/* Re-reset I2S in an attempt to fix inter-channel sample offset
++	 * Without this second reset of the I2S interface, it was observed on
++	 * the R-Car Gen3 platform that in ~50% of audio stream starts, the
++	 * samples on each odd-numbered channel were delayed by one sample
++	 * relative to the even-numbered channels.
++	 */
++	audio->write(audio->hdmi, (u8)~HDMI_MC_SWRSTZ_I2SSWRST_REQ,
++		     HDMI_MC_SWRSTZ);
+ 	return 0;
+ }
+ 
 
+base-commit: 7111951b8d4973bda27ff663f2cf18b663d15b48
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
