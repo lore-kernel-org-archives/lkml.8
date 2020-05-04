@@ -2,704 +2,217 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EECEC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7320EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F040D20746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 06:57:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iBTYnGMu"
+	by mail.kernel.org (Postfix) with ESMTP id 5842E206EB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgEDG5i (ORCPT
+        id S1727933AbgEDHAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 02:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726712AbgEDG5h (ORCPT
+        Mon, 4 May 2020 03:00:14 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:3518 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbgEDHAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 02:57:37 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B348FC061A0E
-        for <linux-kernel@vger.kernel.org>; Sun,  3 May 2020 23:57:37 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t9so3378679pjw.0
-        for <linux-kernel@vger.kernel.org>; Sun, 03 May 2020 23:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jvWxVIxjwnLTZ8Vn/RKbxzSc7PlCsdF/id9mDDjTAxU=;
-        b=iBTYnGMuF/bvpgsi7rttcwz7Doa1dmiVOPWanoRWTnZ+y2EjeyLHTTJa+DlXoFAcSn
-         /Mdp7hry5+FgC5oq54j121RUeGtc3P5eSWxY27/NPU7R77NI0tlTsAQGnkkx0Q1kgcHu
-         bnYbX82aHWa/j0dj/V4Rxz7neYmWQWprH5XU/n+h3Vi1Xtz30KcyNmoOHvjzuzg22T1s
-         QsEW1Tfm86fGLkyZnae+IghPZZ/4buswz1OManMnS2+cGV4MXA/hOanZxFzoKUWakMWj
-         HF5rHNUDXqcEPzLfEsEzCKwMXSSX/rLH+WGgmcVjbbsjsp98MNadZvJEG9sTUYBhPcdX
-         4rXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jvWxVIxjwnLTZ8Vn/RKbxzSc7PlCsdF/id9mDDjTAxU=;
-        b=d1os7nbFZfhgpAYU28ODSqC6Qpc4KoYo85oi/kiZZ+O5VSZTha7dd4Sntu0Cb4t846
-         ytOLPlJgNPRN3dcrOoxrKyTs404eSnFyPHfj1IVq98mL/WfuBNU3bjeFXJdpkeW/+aYm
-         z5kcqvsvk6Di9445KxToN/2BYFkHyk30+VnUA6sBjLfb4CUElTG2F9KP183yAM95NY69
-         GzoEXKviU8g9ZYE1zHWLzpBAzeoEE4PzX5iA1gkLmrwjrZUKfkDvuBIIGsA5Uu8LSZBl
-         9gEyklkRYN3umoX5rC1CSxzUI/RRZG4j1VNIz+FW9I9ge/Sha5lwjyucg8iMYRigjm4I
-         aqeA==
-X-Gm-Message-State: AGi0Pub4tGSLw9iBX0ePQyEMdkKWE8/z9EKPOYJ8Z7O856iYxCyt9uZT
-        +qLK2jZ9xzLh8zGQEl8xSitk
-X-Google-Smtp-Source: APiQypIH/M+x7iGiqUaXM/ccZiMBbWQ3nTzsM3yyk605o+HejE5/vF4WlgIsTvabGCUAr3f3CdsNBA==
-X-Received: by 2002:a17:90a:6f22:: with SMTP id d31mr15748845pjk.14.1588575456791;
-        Sun, 03 May 2020 23:57:36 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:51f:c7c4:bdcc:167e:2cd1:efea])
-        by smtp.gmail.com with ESMTPSA id 71sm8043894pfw.111.2020.05.03.23.57.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 03 May 2020 23:57:36 -0700 (PDT)
-Date:   Mon, 4 May 2020 12:27:28 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Raghavendra Rao Ananta <rananta@codeaurora.org>
-Subject: Re: [PATCH 2/2] soc: qcom: ipcc: Add support for IPCC controller
-Message-ID: <20200504065728.GC3391@Mani-XPS-13-9360>
-References: <20200430063054.18879-1-manivannan.sadhasivam@linaro.org>
- <20200430063054.18879-2-manivannan.sadhasivam@linaro.org>
- <20200430201807.GB20625@builder.lan>
+        Mon, 4 May 2020 03:00:14 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee55eafbd46cfd-fd0ef; Mon, 04 May 2020 14:59:18 +0800 (CST)
+X-RM-TRANSID: 2ee55eafbd46cfd-fd0ef
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.3.182.180])
+        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5eafbd4152c-0599b;
+        Mon, 04 May 2020 14:59:17 +0800 (CST)
+X-RM-TRANSID: 2eea5eafbd4152c-0599b
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        lgirdwood@gmail.com, bgoswami@codeaurora.org, plai@codeaurora.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH] ASoC: qcom: Use the defined variable to simplify code
+Date:   Mon,  4 May 2020 14:59:47 +0800
+Message-Id: <20200504065947.12172-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430201807.GB20625@builder.lan>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 01:18:07PM -0700, Bjorn Andersson wrote:
-> On Wed 29 Apr 23:30 PDT 2020, Manivannan Sadhasivam wrote:
-> 
-> > From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> > 
-> > Add support for the Inter-Processor Communication Controller (IPCC)
-> > driver that coordinates the interrupts (inbound & outbound) for
-> > Multiprocessor (MPROC), COMPUTE-Level0 (COMPUTE-L0) & COMPUTE-Level1
-> > (COMPUTE-L1) protocols for the Application Processor Subsystem (APSS).
-> > 
-> > As a part of its inbound communication, the driver would be responsible
-> > for forwarding the interrupts from various clients, such as Modem, DSPs,
-> > PCIe, and so on, to the entities running on the APPS. As a result, it's
-> > implemented as an irq_chip driver.
-> > 
-> > On the other hand, the driver also registers as a mailbox controller
-> > that provides a mailbox interface to interrupt other clients connected
-> > to the IPCC, acting as an outbound communication channel.
-> > 
-> > Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-> > Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > [mani: cleaned up for upstream]
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/soc/qcom/Kconfig     |  11 +
-> >  drivers/soc/qcom/Makefile    |   1 +
-> >  drivers/soc/qcom/qcom_ipcc.c | 410 +++++++++++++++++++++++++++++++++++
-> 
-> I think the driver should be moved to either drivers/irqchip or
-> drivers/mailbox.
-> 
+Use the defined variable "dev" to make the code cleaner.
 
-As said in bindings patch, mailbox seems to be a better location if we don't
-want this to be under drivers/soc.
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+ sound/soc/qcom/lpass-apq8016.c |  9 ++++----
+ sound/soc/qcom/lpass-cpu.c     | 39 ++++++++++++++++------------------
+ 2 files changed, 22 insertions(+), 26 deletions(-)
 
-> >  3 files changed, 422 insertions(+)
-> >  create mode 100644 drivers/soc/qcom/qcom_ipcc.c
-> > 
-> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> > index bf42a17a45de..97c380c3fa09 100644
-> > --- a/drivers/soc/qcom/Kconfig
-> > +++ b/drivers/soc/qcom/Kconfig
-> > @@ -53,6 +53,17 @@ config QCOM_GSBI
-> >  	  functions for connecting the underlying serial UART, SPI, and I2C
-> >  	  devices to the output pins.
-> >  
-> > +config QCOM_IPCC
-> > +	tristate "Qualcomm Technologies, Inc. IPCC driver"
-> > +	depends on MAILBOX
-> > +	help
-> > +	  Qualcomm Technologies, Inc. IPCC driver for MSM devices. The drivers
-> > +	  acts as an interrupt controller for the clients interested in
-> > +	  talking to the IPCC (inbound-communication). On the other hand, the
-> > +	  driver also provides a mailbox channel for outbound-communications.
-> > +	  Say Y here to compile the driver as a part of kernel or M to compile
-> > +	  as a module.
-> > +
-> >  config QCOM_LLCC
-> >  	tristate "Qualcomm Technologies, Inc. LLCC driver"
-> >  	depends on ARCH_QCOM || COMPILE_TEST
-> > diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> > index 5d6b83dc58e8..b7658b007040 100644
-> > --- a/drivers/soc/qcom/Makefile
-> > +++ b/drivers/soc/qcom/Makefile
-> > @@ -24,5 +24,6 @@ obj-$(CONFIG_QCOM_SOCINFO)	+= socinfo.o
-> >  obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
-> >  obj-$(CONFIG_QCOM_APR) += apr.o
-> >  obj-$(CONFIG_QCOM_LLCC) += llcc-qcom.o
-> > +obj-$(CONFIG_QCOM_IPCC) += qcom_ipcc.o
-> >  obj-$(CONFIG_QCOM_RPMHPD) += rpmhpd.o
-> >  obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
-> > diff --git a/drivers/soc/qcom/qcom_ipcc.c b/drivers/soc/qcom/qcom_ipcc.c
-> > new file mode 100644
-> > index 000000000000..5906a70220e0
-> > --- /dev/null
-> > +++ b/drivers/soc/qcom/qcom_ipcc.c
-> > @@ -0,0 +1,410 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-> > + */
-> > +
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/mailbox_controller.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include <dt-bindings/soc/qcom,ipcc.h>
-> > +
-> > +/* IPCC Register offsets */
-> > +#define IPCC_REG_SEND_ID		0x0c
-> > +#define IPCC_REG_RECV_ID		0x10
-> > +#define IPCC_REG_RECV_SIGNAL_ENABLE	0x14
-> > +#define IPCC_REG_RECV_SIGNAL_DISABLE	0x18
-> > +#define IPCC_REG_RECV_SIGNAL_CLEAR	0x1c
-> > +#define IPCC_REG_CLIENT_CLEAR		0x38
-> > +
-> > +#define IPCC_SIGNAL_ID_MASK		GENMASK(15, 0)
-> > +#define IPCC_CLIENT_ID_MASK		GENMASK(31, 16)
-> > +#define IPCC_CLIENT_ID_SHIFT		16
-> > +
-> > +#define IPCC_NO_PENDING_IRQ		0xffffffff
-> > +
-> > +/**
-> > + * struct qcom_ipcc_proto_data - Per-protocol data
-> > + * @irq_domain:		irq_domain associated with this protocol-id
-> > + * @mbox:		mailbox-controller interface
-> > + * @chans:		The mailbox clients channel array (created dynamically)
-> > + * @base:		Base address of the IPCC frame associated to APSS
-> > + * @dev:		Device associated with this instance
-> > + * @irq:		Summary irq
-> > + */
-> > +struct qcom_ipcc_proto_data {
-> 
-> There's only one of these per IPCC hardware block, so I would suggest
-> that you shorten in to just "struct qcom_ipcc" and then throughout the
-> implementation replace "proto_data" with just "ipcc".
-> 
+diff --git a/sound/soc/qcom/lpass-apq8016.c b/sound/soc/qcom/lpass-apq8016.c
+index 6575da549..b3610d05b 100644
+--- a/sound/soc/qcom/lpass-apq8016.c
++++ b/sound/soc/qcom/lpass-apq8016.c
+@@ -166,28 +166,27 @@ static int apq8016_lpass_init(struct platform_device *pdev)
+ 
+ 	drvdata->pcnoc_mport_clk = devm_clk_get(dev, "pcnoc-mport-clk");
+ 	if (IS_ERR(drvdata->pcnoc_mport_clk)) {
+-		dev_err(&pdev->dev, "error getting pcnoc-mport-clk: %ld\n",
++		dev_err(dev, "error getting pcnoc-mport-clk: %ld\n",
+ 			PTR_ERR(drvdata->pcnoc_mport_clk));
+ 		return PTR_ERR(drvdata->pcnoc_mport_clk);
+ 	}
+ 
+ 	ret = clk_prepare_enable(drvdata->pcnoc_mport_clk);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Error enabling pcnoc-mport-clk: %d\n",
+-			ret);
++		dev_err(dev, "Error enabling pcnoc-mport-clk: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+ 	drvdata->pcnoc_sway_clk = devm_clk_get(dev, "pcnoc-sway-clk");
+ 	if (IS_ERR(drvdata->pcnoc_sway_clk)) {
+-		dev_err(&pdev->dev, "error getting pcnoc-sway-clk: %ld\n",
++		dev_err(dev, "error getting pcnoc-sway-clk: %ld\n",
+ 			PTR_ERR(drvdata->pcnoc_sway_clk));
+ 		return PTR_ERR(drvdata->pcnoc_sway_clk);
+ 	}
+ 
+ 	ret = clk_prepare_enable(drvdata->pcnoc_sway_clk);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Error enabling pcnoc_sway_clk: %d\n", ret);
++		dev_err(dev, "Error enabling pcnoc_sway_clk: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+index dbce7e92b..c6d26395f 100644
+--- a/sound/soc/qcom/lpass-cpu.c
++++ b/sound/soc/qcom/lpass-cpu.c
+@@ -425,12 +425,11 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 
+ 	dsp_of_node = of_parse_phandle(pdev->dev.of_node, "qcom,adsp", 0);
+ 	if (dsp_of_node) {
+-		dev_err(&pdev->dev, "DSP exists and holds audio resources\n");
++		dev_err(dev, "DSP exists and holds audio resources\n");
+ 		return -EBUSY;
+ 	}
+ 
+-	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct lpass_data),
+-			GFP_KERNEL);
++	drvdata = devm_kzalloc(dev, sizeof(struct lpass_data), GFP_KERNEL);
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 	platform_set_drvdata(pdev, drvdata);
+@@ -444,9 +443,9 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "lpass-lpaif");
+ 
+-	drvdata->lpaif = devm_ioremap_resource(&pdev->dev, res);
++	drvdata->lpaif = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR((void const __force *)drvdata->lpaif)) {
+-		dev_err(&pdev->dev, "error mapping reg resource: %ld\n",
++		dev_err(dev, "error mapping reg resource: %ld\n",
+ 				PTR_ERR((void const __force *)drvdata->lpaif));
+ 		return PTR_ERR((void const __force *)drvdata->lpaif);
+ 	}
+@@ -455,10 +454,10 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 						variant->wrdma_channels +
+ 						variant->wrdma_channel_start);
+ 
+-	drvdata->lpaif_map = devm_regmap_init_mmio(&pdev->dev, drvdata->lpaif,
++	drvdata->lpaif_map = devm_regmap_init_mmio(dev, drvdata->lpaif,
+ 			&lpass_cpu_regmap_config);
+ 	if (IS_ERR(drvdata->lpaif_map)) {
+-		dev_err(&pdev->dev, "error initializing regmap: %ld\n",
++		dev_err(dev, "error initializing regmap: %ld\n",
+ 			PTR_ERR(drvdata->lpaif_map));
+ 		return PTR_ERR(drvdata->lpaif_map);
+ 	}
+@@ -468,10 +467,10 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < variant->num_dai; i++) {
+ 		dai_id = variant->dai_driver[i].id;
+-		drvdata->mi2s_osr_clk[dai_id] = devm_clk_get(&pdev->dev,
++		drvdata->mi2s_osr_clk[dai_id] = devm_clk_get(dev,
+ 					     variant->dai_osr_clk_names[i]);
+ 		if (IS_ERR(drvdata->mi2s_osr_clk[dai_id])) {
+-			dev_warn(&pdev->dev,
++			dev_warn(dev,
+ 				"%s() error getting optional %s: %ld\n",
+ 				__func__,
+ 				variant->dai_osr_clk_names[i],
+@@ -480,10 +479,10 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 			drvdata->mi2s_osr_clk[dai_id] = NULL;
+ 		}
+ 
+-		drvdata->mi2s_bit_clk[dai_id] = devm_clk_get(&pdev->dev,
++		drvdata->mi2s_bit_clk[dai_id] = devm_clk_get(dev,
+ 						variant->dai_bit_clk_names[i]);
+ 		if (IS_ERR(drvdata->mi2s_bit_clk[dai_id])) {
+-			dev_err(&pdev->dev,
++			dev_err(dev,
+ 				"error getting %s: %ld\n",
+ 				variant->dai_bit_clk_names[i],
+ 				PTR_ERR(drvdata->mi2s_bit_clk[dai_id]));
+@@ -491,41 +490,39 @@ int asoc_qcom_lpass_cpu_platform_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	drvdata->ahbix_clk = devm_clk_get(&pdev->dev, "ahbix-clk");
++	drvdata->ahbix_clk = devm_clk_get(dev, "ahbix-clk");
+ 	if (IS_ERR(drvdata->ahbix_clk)) {
+-		dev_err(&pdev->dev, "error getting ahbix-clk: %ld\n",
++		dev_err(dev, "error getting ahbix-clk: %ld\n",
+ 			PTR_ERR(drvdata->ahbix_clk));
+ 		return PTR_ERR(drvdata->ahbix_clk);
+ 	}
+ 
+ 	ret = clk_set_rate(drvdata->ahbix_clk, LPASS_AHBIX_CLOCK_FREQUENCY);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "error setting rate on ahbix_clk: %d\n",
+-			ret);
++		dev_err(dev, "error setting rate on ahbix_clk: %d\n", ret);
+ 		return ret;
+ 	}
+-	dev_dbg(&pdev->dev, "set ahbix_clk rate to %lu\n",
++	dev_dbg(dev, "set ahbix_clk rate to %lu\n",
+ 		clk_get_rate(drvdata->ahbix_clk));
+ 
+ 	ret = clk_prepare_enable(drvdata->ahbix_clk);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "error enabling ahbix_clk: %d\n", ret);
++		dev_err(dev, "error enabling ahbix_clk: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
++	ret = devm_snd_soc_register_component(dev,
+ 					      &lpass_cpu_comp_driver,
+ 					      variant->dai_driver,
+ 					      variant->num_dai);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "error registering cpu driver: %d\n", ret);
++		dev_err(dev, "error registering cpu driver: %d\n", ret);
+ 		goto err_clk;
+ 	}
+ 
+ 	ret = asoc_qcom_lpass_platform_register(pdev);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "error registering platform driver: %d\n",
+-			ret);
++		dev_err(dev, "error registering platform driver: %d\n", ret);
+ 		goto err_clk;
+ 	}
+ 
+-- 
+2.20.1.windows.1
 
-okay
 
-> > +	struct irq_domain *irq_domain;
-> > +	struct mbox_controller mbox;
-> > +	struct mbox_chan *chans;
-> > +	void __iomem *base;
-> > +	struct device *dev;
-> > +	int irq;
-> > +};
-> > +
-> > +/**
-> > + * struct qcom_ipcc_mbox_chan - Per-mailbox-channel data. Associated to
-> > + *				channel when requested by the clients
-> > + * @chan:	Points to this channel's array element for this protocol's
-> > + *		ipcc_protocol_data->chans[]
-> > + * @proto_data: The pointer to per-protocol data associated to this channel
-> > + * @client_id:	The client-id to which the interrupt has to be triggered
-> > + * @signal_id:	The signal-id to which the interrupt has to be triggered
-> > + */
-> > +struct qcom_ipcc_mbox_chan {
-> > +	struct mbox_chan *chan;
-> > +	struct qcom_ipcc_proto_data *proto_data;
-> > +	u16 client_id;
-> > +	u16 signal_id;
-> > +};
-> > +
-> > +static struct qcom_ipcc_proto_data *ipcc_proto_data;
-> > +
-> > +static inline u32 qcom_ipcc_get_packed_id(u16 client_id, u16 signal_id)
-> 
-> qcom_ipcc_pack_ids()
-> 
-> and please omit the "inline", the compiler will inline it if it's a good
-> thing to do.
-> 
 
-But the usual convention is to give the hint to compiler isn't it?
-
-> > +{
-> > +	return (client_id << IPCC_CLIENT_ID_SHIFT) | signal_id;
-> 
-> How about:
-> 
-> 	return FIELD_PREP(IPCC_CLIENT_ID_MASK, client_id) |
-> 	       FIELD_PREP(IPCC_SIGNAL_ID_MASK, signal_id);
-> 
-
-okay
-
-> > +}
-> > +
-> > +static inline u16 qcom_ipcc_get_client_id(u32 packed_id)
-> 
-> This is used only to extract the field for a dev_dbg print. How about
-> dropping this for now and if this kind of debugging is beneficial lets
-> add some tracepoint that internally can extract the fields.
-> 
-
-okay, will drop.
-
-> > +{
-> > +	return packed_id >> IPCC_CLIENT_ID_SHIFT;
-> > +}
-> > +
-> > +static inline u16 qcom_ipcc_get_signal_id(u32 packed_id)
-> 
-> Ditto.
-> 
-> > +{
-> > +	return packed_id & IPCC_SIGNAL_ID_MASK;
-> > +}
-> > +
-> > +static irqreturn_t qcom_ipcc_irq_fn(int irq, void *data)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data = data;
-> > +	u32 packed_id;
-> > +	int virq;
-> > +
-> > +	for (;;) {
-> > +		packed_id = readl(proto_data->base + IPCC_REG_RECV_ID);
-> > +		if (packed_id == IPCC_NO_PENDING_IRQ)
-> > +			break;
-> > +
-> > +		virq = irq_find_mapping(proto_data->irq_domain, packed_id);
-> > +
-> > +		dev_dbg(proto_data->dev,
-> > +			"IRQ for client_id: %u; signal_id: %u; virq: %d\n",
-> > +			qcom_ipcc_get_client_id(packed_id),
-> > +			qcom_ipcc_get_signal_id(packed_id), virq);
-> 
-> As above, I think this is useful either during development of the driver
-> (now done) or in a system debugging case as a tracepoint. So please omit
-> this debug print.
-> 
-
-okay
-
-> > +
-> > +		writel(packed_id,
-> 
-> If you're consistently with naming this "hwirq" you don't need to wrap
-> this line.
-> 
-> > +		       proto_data->base + IPCC_REG_RECV_SIGNAL_CLEAR);
-> > +
-> > +		generic_handle_irq(virq);
-> > +	}
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static void qcom_ipcc_mask_irq(struct irq_data *irqd)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data;
-> > +	irq_hw_number_t hwirq = irqd_to_hwirq(irqd);
-> > +	u16 sender_client_id = qcom_ipcc_get_client_id(hwirq);
-> > +	u16 sender_signal_id = qcom_ipcc_get_signal_id(hwirq);
-> > +
-> > +	proto_data = irq_data_get_irq_chip_data(irqd);
-> 
-> 	struct qcom_ipcc *ipcc = irq_data_get_irq_chip_data(irqd);
-> 	irq_hw_number_t hwirq = irqd_to_hwirq(irqd);
-> 
-> Looks better.
-> 
-> > +
-> > +	dev_dbg(proto_data->dev,
-> > +		"Disabling interrupts for: client_id: %u; signal_id: %u\n",
-> > +		sender_client_id, sender_signal_id);
-> 
-> Pushing out field dissection and "logging" to a tracepoint would make
-> this function prettier as well.
-> 
-
-okay
-
-> > +
-> > +	writel(hwirq, proto_data->base + IPCC_REG_RECV_SIGNAL_DISABLE);
-> > +}
-> > +
-> > +static void qcom_ipcc_unmask_irq(struct irq_data *irqd)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data;
-> > +	irq_hw_number_t hwirq = irqd_to_hwirq(irqd);
-> > +	u16 sender_client_id = qcom_ipcc_get_client_id(hwirq);
-> > +	u16 sender_signal_id = qcom_ipcc_get_signal_id(hwirq);
-> > +
-> > +	proto_data = irq_data_get_irq_chip_data(irqd);
-> 
-> As above.
-> 
-> > +
-> > +	dev_dbg(proto_data->dev,
-> > +		"Enabling interrupts for: client_id: %u; signal_id: %u\n",
-> > +		sender_client_id, sender_signal_id);
-> > +
-> > +	writel(hwirq, proto_data->base + IPCC_REG_RECV_SIGNAL_ENABLE);
-> > +}
-> > +
-> > +static struct irq_chip qcom_ipcc_irq_chip = {
-> > +	.name = "ipcc",
-> > +	.irq_mask = qcom_ipcc_mask_irq,
-> > +	.irq_unmask = qcom_ipcc_unmask_irq,
-> > +	.flags = IRQCHIP_SKIP_SET_WAKE,
-> > +};
-> > +
-> > +static int qcom_ipcc_domain_map(struct irq_domain *d, unsigned int irq,
-> > +				irq_hw_number_t hw)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data = d->host_data;
-> > +
-> > +	irq_set_chip_and_handler(irq, &qcom_ipcc_irq_chip, handle_level_irq);
-> > +	irq_set_chip_data(irq, proto_data);
-> > +	irq_set_noprobe(irq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int qcom_ipcc_domain_xlate(struct irq_domain *d,
-> > +				  struct device_node *node, const u32 *intspec,
-> > +				  unsigned int intsize,
-> > +				  unsigned long *out_hwirq,
-> > +				  unsigned int *out_type)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data = d->host_data;
-> > +	struct device *dev = proto_data->dev;
-> > +
-> > +	if (intsize != 3)
-> > +		return -EINVAL;
-> > +
-> > +	*out_hwirq = qcom_ipcc_get_packed_id(intspec[0], intspec[1]);
-> > +	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
-> > +
-> > +	dev_dbg(dev, "hwirq: 0x%lx\n", *out_hwirq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct irq_domain_ops qcom_ipcc_irq_ops = {
-> > +	.map = qcom_ipcc_domain_map,
-> > +	.xlate = qcom_ipcc_domain_xlate,
-> > +};
-> > +
-> > +static int qcom_ipcc_mbox_send_data(struct mbox_chan *chan, void *data)
-> > +{
-> > +	struct qcom_ipcc_mbox_chan *ipcc_mbox_chan = chan->con_priv;
-> > +	struct qcom_ipcc_proto_data *proto_data = ipcc_mbox_chan->proto_data;
-> > +	u32 packed_id;
-> 
-> Although we're in the "mailbox section", I still think it's reasonable
-> to name this hwirq for consistency (otherwise please shorten it to "id").
-> 
-
-okay, will name it as hwirq. 
-
-> > +
-> > +	dev_dbg(proto_data->dev,
-> > +		"Generating IRQ for client_id: %u; signal_id: %u\n",
-> > +		ipcc_mbox_chan->client_id, ipcc_mbox_chan->signal_id);
-> > +
-> > +	packed_id = qcom_ipcc_get_packed_id(ipcc_mbox_chan->client_id,
-> > +					    ipcc_mbox_chan->signal_id);
-> > +	writel(packed_id, proto_data->base + IPCC_REG_SEND_ID);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void qcom_ipcc_mbox_shutdown(struct mbox_chan *chan)
-> > +{
-> > +	struct qcom_ipcc_mbox_chan *ipcc_mbox_chan = chan->con_priv;
-> > +
-> > +	chan->con_priv = NULL;
-> > +	kfree(ipcc_mbox_chan);
-> > +}
-> > +
-> > +static struct mbox_chan *qcom_ipcc_mbox_xlate(struct mbox_controller *mbox,
-> > +					const struct of_phandle_args *ph)
-> > +{
-> > +	struct device *dev;
-> > +	struct qcom_ipcc_proto_data *proto_data;
-> > +	struct qcom_ipcc_mbox_chan *ipcc_mbox_chan;
-> > +	int chan_id;
-> > +
-> > +	proto_data = container_of(mbox, struct qcom_ipcc_proto_data, mbox);
-> > +	if (WARN_ON(!proto_data))
-> 
-> Is this possible?
-> 
-
-hmm, not required.
-
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	dev = proto_data->dev;
-> > +
-> > +	if (ph->args_count != 2)
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	/* Check whether the mbox channel is allocated or not */
-> > +	for (chan_id = 0; chan_id < mbox->num_chans; chan_id++) {
-> > +		ipcc_mbox_chan = proto_data->chans[chan_id].con_priv;
-> > +
-> > +		if (!ipcc_mbox_chan)
-> > +			break;
-> > +		else if (ipcc_mbox_chan->client_id == ph->args[0] &&
-> > +			 ipcc_mbox_chan->signal_id == ph->args[1])
-> > +			return ERR_PTR(-EBUSY);
-> 
-> I think it would be better to just return the matching chan, and let
-> mbox_request_channel() deal with the fact that it's already in use.
-> 
-
-okay
-
-> > +	}
-> > +
-> > +	if (chan_id >= mbox->num_chans)
-> > +		return ERR_PTR(-EBUSY);
-> > +
-> > +	ipcc_mbox_chan = kzalloc(sizeof(*ipcc_mbox_chan), GFP_KERNEL);
-> 
-> Can we allocate these during initialization time instead of allocating
-> and releasing them in of_xlate and shutdown?
-> 
-
-We should know the max channels supported for allocating statically.
-
-> > +	if (!ipcc_mbox_chan)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	ipcc_mbox_chan->client_id = ph->args[0];
-> > +	ipcc_mbox_chan->signal_id = ph->args[1];
-> > +	ipcc_mbox_chan->chan = &proto_data->chans[chan_id];
-> > +	ipcc_mbox_chan->proto_data = proto_data;
-> > +	ipcc_mbox_chan->chan->con_priv = ipcc_mbox_chan;
-> > +
-> > +	dev_dbg(dev,
-> > +		"New mailbox channel: %u for client_id: %u; signal_id: %u\n",
-> > +		chan_id, ipcc_mbox_chan->client_id,
-> > +		ipcc_mbox_chan->signal_id);
-> > +
-> > +	return ipcc_mbox_chan->chan;
-> > +}
-> > +
-> > +static const struct mbox_chan_ops ipcc_mbox_chan_ops = {
-> > +	.send_data = qcom_ipcc_mbox_send_data,
-> > +	.shutdown = qcom_ipcc_mbox_shutdown
-> > +};
-> > +
-> > +static int qcom_ipcc_setup_mbox(struct qcom_ipcc_proto_data *proto_data,
-> > +				struct device_node *controller_dn)
-> > +{
-> > +	struct mbox_controller *mbox;
-> > +	struct device_node *client_dn;
-> > +	struct device *dev = proto_data->dev;
-> > +	struct of_phandle_args curr_ph;
-> > +	int i, j, ret;
-> > +	int num_chans = 0;
-> > +
-> > +	/*
-> > +	 * Find out the number of clients interested in this mailbox
-> > +	 * and create channels accordingly.
-> > +	 */
-> > +	for_each_node_with_property(client_dn, "mboxes") {
-> 
-> How much memory do we save by doing this, in comparison to just picking
-> a max amount?
-> 
-
-Right, this is what I thought and was hoping that you'll get to it :)
-But I don't know the max channels supported by IPCC.
-
-Can someone help to find this?
-
-> > +		if (!of_device_is_available(client_dn))
-> > +			continue;
-> > +		i = of_count_phandle_with_args(client_dn,
-> > +					       "mboxes", "#mbox-cells");
-> > +		for (j = 0; j < i; j++) {
-> > +			ret = of_parse_phandle_with_args(client_dn, "mboxes",
-> > +							 "#mbox-cells", j,
-> > +							 &curr_ph);
-> > +			of_node_put(curr_ph.np);
-> > +			if (!ret && curr_ph.np == controller_dn) {
-> > +				num_chans++;
-> > +				break;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	/* If no clients are found, skip registering as a mbox controller */
-> > +	if (!num_chans)
-> > +		return 0;
-> > +
-> > +	proto_data->chans = devm_kcalloc(dev, num_chans,
-> > +					 sizeof(struct mbox_chan), GFP_KERNEL);
-> 
-> sizeof(*proto_data->chans)
-> 
-> > +	if (!proto_data->chans)
-> > +		return -ENOMEM;
-> > +
-> > +	mbox = &proto_data->mbox;
-> > +	mbox->dev = dev;
-> > +	mbox->num_chans = num_chans;
-> > +	mbox->chans = proto_data->chans;
-> > +	mbox->ops = &ipcc_mbox_chan_ops;
-> > +	mbox->of_xlate = qcom_ipcc_mbox_xlate;
-> > +	mbox->txdone_irq = false;
-> > +	mbox->txdone_poll = false;
-> > +
-> > +	return devm_mbox_controller_register(dev, mbox);
-> > +}
-> > +
-> > +static int qcom_ipcc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data;
-> > +	int ret;
-> > +
-> > +	proto_data = devm_kzalloc(&pdev->dev, sizeof(*proto_data), GFP_KERNEL);
-> > +	if (!proto_data)
-> > +		return -ENOMEM;
-> > +
-> > +	ipcc_proto_data = proto_data;
-> 
-> ipcc_protocol_data is unused.
-> 
-
-Ack, this is a leftover.
-
-> > +	proto_data->dev = &pdev->dev;
-> > +
-> > +	proto_data->base = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(proto_data->base)) {
-> > +		dev_err(&pdev->dev, "Failed to ioremap the ipcc base addr\n");
-> > +		return PTR_ERR(proto_data->base);
-> > +	}
-> > +
-> > +	proto_data->irq = platform_get_irq(pdev, 0);
-> > +	if (proto_data->irq < 0) {
-> > +		dev_err(&pdev->dev, "Failed to get the IRQ\n");
-> 
-> platform_get_irq() already did print.
-> 
-> > +		return proto_data->irq;
-> > +	}
-> > +
-> > +	/* Perform a SW reset on this client's protocol state */
-> > +	writel(0x1, proto_data->base + IPCC_REG_CLIENT_CLEAR);
-> > +
-> > +	proto_data->irq_domain = irq_domain_add_tree(pdev->dev.of_node,
-> > +						     &qcom_ipcc_irq_ops,
-> > +						     proto_data);
-> > +	if (!proto_data->irq_domain) {
-> > +		dev_err(&pdev->dev, "Failed to add irq_domain\n");
-> 
-> Afaict this also prints errors.
-> 
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	ret = qcom_ipcc_setup_mbox(proto_data, pdev->dev.of_node);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Failed to create mailbox\n");
-> 
-> Afaict this too will print errors in all code paths (except the ones
-> where you pass invalid data to mbox_controller_register() - but we're
-> already past that).
-> 
-
-Okay, will remove.
-
-Thanks,
-Mani
-
-> Regards,
-> Bjorn
-> 
-> > +		goto err_mbox;
-> > +	}
-> > +
-> > +	ret = devm_request_irq(&pdev->dev, proto_data->irq, qcom_ipcc_irq_fn,
-> > +			       IRQF_TRIGGER_HIGH, "ipcc", proto_data);
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "Failed to register the irq: %d\n", ret);
-> > +		goto err_mbox;
-> > +	}
-> > +
-> > +	enable_irq_wake(proto_data->irq);
-> > +	platform_set_drvdata(pdev, proto_data);
-> > +
-> > +	return 0;
-> > +
-> > +err_mbox:
-> > +	irq_domain_remove(proto_data->irq_domain);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int qcom_ipcc_remove(struct platform_device *pdev)
-> > +{
-> > +	struct qcom_ipcc_proto_data *proto_data = platform_get_drvdata(pdev);
-> > +
-> > +	disable_irq_wake(proto_data->irq);
-> > +	irq_domain_remove(proto_data->irq_domain);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id qcom_ipcc_of_match[] = {
-> > +	{ .compatible = "qcom,ipcc"},
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, qcom_ipcc_of_match);
-> > +
-> > +static struct platform_driver qcom_ipcc_driver = {
-> > +	.probe = qcom_ipcc_probe,
-> > +	.remove = qcom_ipcc_remove,
-> > +	.driver = {
-> > +		.name = "qcom_ipcc",
-> > +		.of_match_table = qcom_ipcc_of_match,
-> > +	},
-> > +};
-> > +
-> > +static int __init qcom_ipcc_init(void)
-> > +{
-> > +	return platform_driver_register(&qcom_ipcc_driver);
-> > +}
-> > +arch_initcall(qcom_ipcc_init);
-> > +
-> > +static void __exit qcom_ipcc_exit(void)
-> > +{
-> > +	platform_driver_unregister(&qcom_ipcc_driver);
-> > +}
-> > +module_exit(qcom_ipcc_exit);
-> > +
-> > +MODULE_LICENSE("GPL v2");
-> > -- 
-> > 2.17.1
-> > 
