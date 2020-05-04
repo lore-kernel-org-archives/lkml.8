@@ -2,98 +2,98 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6AAC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A8EC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9692820721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:25:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Oz+0fPtt"
+	by mail.kernel.org (Postfix) with ESMTP id CCA3D20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588623905;
+	bh=dCUcj64WxQsEocNsatvppm/zf3WGdXsZ0RfjpWEZz/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cJ6vWzqwjfhCesa3c4d/8Dmof7hvrG1CX+XG9U1qc7iuFS+6r1lf9rjLMXMoBRtYX
+	 CpA9sS7sbtN+te7BD8XMwbaqG2DYhMqyvjitYaiJ4TXAZbRH996asLZQYBRLdKNSSU
+	 IjT3BYGXvkZu1pEPqo7/6CL1+wNbVraSggsSzrAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgEDUZC (ORCPT
+        id S1728182AbgEDUZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:25:02 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40493 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728155AbgEDUY7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:24:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588623899; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=whfsKbTByTCa4nC/8eyS8pS1JkobHmiSe5nlsTPnSjs=; b=Oz+0fPttTGWg+sij8YSME8k6hxDsZ1SAQMRrLesToEPfxdaiZvjdBwF4jXZ3tgSnA7/kxGJU
- oeePg1tOPjajVc4Lhj5OIlFcKwIO6NamxsPivsCGDKmu0rwS6u0VqPL78RQF1pzRcRKd18gN
- 99D541D2pRHiktqVROEQ/Q4Tink=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eb07a17.7efd156c03b0-smtp-out-n02;
- Mon, 04 May 2020 20:24:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E1EACC00456; Mon,  4 May 2020 20:24:53 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 4 May 2020 16:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727804AbgEDUZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 16:25:00 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D0EAC447A1;
-        Mon,  4 May 2020 20:24:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D0EAC447A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        saravanak@google.com, mka@chromium.org
-Cc:     nm@ti.com, agross@kernel.org, david.brown@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
-        lukasz.luba@arm.com, sudeep.holla@arm.com,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 09/12] dt-bindings: interconnect: Add interconnect-tags bindings
-Date:   Tue,  5 May 2020 01:52:40 +0530
-Message-Id: <20200504202243.5476-10-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200504202243.5476-1-sibis@codeaurora.org>
-References: <20200504202243.5476-1-sibis@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 05E3420721;
+        Mon,  4 May 2020 20:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588623899;
+        bh=dCUcj64WxQsEocNsatvppm/zf3WGdXsZ0RfjpWEZz/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=drrSv1ltJv0WLhISRLHG/qvOeiVCSP5oy99VBxNo0rvRjwYLzOrpF1RSA+AaAi49u
+         PdtCfQw2CQ6rcLvPivJ8lN+g6CShd3diYYqcPVuQyUtKTi2wb7lRIqGi9xiU1/4PaB
+         7EiOLTyNgeIM5z78mmHFcW0lKuQr5xeu8ZcZJrDs=
+Date:   Mon, 4 May 2020 21:24:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 02/16] arm64/cpufeature: Drop TraceFilt feature
+ exposure from ID_DFR0 register
+Message-ID: <20200504202453.GA5012@willie-the-truck>
+References: <1588426445-24344-1-git-send-email-anshuman.khandual@arm.com>
+ <1588426445-24344-3-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588426445-24344-3-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect-tags bindings to enable passing of optional
-tag information to the interconnect framework.
+On Sat, May 02, 2020 at 07:03:51PM +0530, Anshuman Khandual wrote:
+> ID_DFR0 based TraceFilt feature should not be exposed to guests. Hence lets
+> drop it.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/kernel/cpufeature.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 6d032fbe416f..51386dade423 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -435,7 +435,6 @@ static const struct arm64_ftr_bits ftr_id_pfr1[] = {
+>  };
+>  
+>  static const struct arm64_ftr_bits ftr_id_dfr0[] = {
+> -	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
- 1 file changed, 5 insertions(+)
+Hmm, this still confuses me. Is this not now FTR_NONSTRICT? Why is that ok?
 
-diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-index 6f5d23a605b75..c1a226a934e50 100644
---- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
-+++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-@@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
- 			 * dma-mem: Path from the device to the main memory of
- 			            the system
- 
-+interconnect-tags : List of interconnect path tags sorted in the same order as the
-+		    interconnects property. Consumers can append a specific tag to
-+		    the path and pass this information to the interconnect framework
-+		    to do aggregation based on the attached tag.
-+
- Example:
- 
- 	sdhci@7864000 {
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Will
