@@ -2,98 +2,62 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF19FC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52568C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A269D2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588619121;
-	bh=aCv1F6E9QThI8vva9EtdscBCQGKHO0zt1VxPt/iOnuQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DWJvwe+wKlx7JUMfkp18dh/uZ7VFWtBej64peZD+16JZZqFmVCl/oTcZe7MxuGu4Q
-	 +TRGpQ4uQdlI+IjORaVLyPg6iuMcpTVIkVWoDP3t6UYS7gpAit71AacM99e/Z4GK/n
-	 HIFKnqySs4Jo+65Be485NDysqwVKxX3bWxqGrKkk=
+	by mail.kernel.org (Postfix) with ESMTP id 38D402073B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgEDTFV (ORCPT
+        id S1727853AbgEDTF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgEDTFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:05:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE090206B8;
-        Mon,  4 May 2020 19:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588619120;
-        bh=aCv1F6E9QThI8vva9EtdscBCQGKHO0zt1VxPt/iOnuQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FM+39DPfhYzon6z5jHCkAmHn44SVhQMQMIZTUIzPmQV7C0U8JxiW2XBN9i/Wiqn7M
-         WVPuiNL0DsifwbVEh8alUx2v9umGlJ1VyJE0BTk0KwADG4X/l0ESsmYUytivx9TKHp
-         04XIccgKGT+ABFSBYqNCPimn6tDZbzCDNrZD+e5M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sanjay K <sanjay.k.kumar@intel.com>
-Subject: [PATCH 5.6 61/73] iommu/vt-d: Use right Kconfig option name
-Date:   Mon,  4 May 2020 19:58:04 +0200
-Message-Id: <20200504165509.860520707@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200504165501.781878940@linuxfoundation.org>
-References: <20200504165501.781878940@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 4 May 2020 15:05:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726469AbgEDTF3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:05:29 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49780C061A0E;
+        Mon,  4 May 2020 12:05:28 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AA29211F5F61A;
+        Mon,  4 May 2020 12:05:27 -0700 (PDT)
+Date:   Mon, 04 May 2020 12:05:26 -0700 (PDT)
+Message-Id: <20200504.120526.935588639172781549.davem@davemloft.net>
+To:     wu000273@umn.edu
+Cc:     kuba@kernel.org, oss-drivers@netronome.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kjlu@umn.edu
+Subject: Re: [PATCH] nfp: abm: fix a memory leak bug
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200502224259.1477-1-wu000273@umn.edu>
+References: <20200502224259.1477-1-wu000273@umn.edu>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 04 May 2020 12:05:27 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: wu000273@umn.edu
+Date: Sat,  2 May 2020 17:42:59 -0500
 
-commit ba61c3da00f4a5bf8805aeca1ba5ac3c9bd82e96 upstream.
+> From: Qiushi Wu <wu000273@umn.edu>
+> 
+> In function nfp_abm_vnic_set_mac, pointer nsp is allocated by nfp_nsp_open.
+> But when nfp_nsp_has_hwinfo_lookup fail, the pointer is not released,
+> which can lead to a memory leak bug. Fix this issue by adding
+> nfp_nsp_close(nsp) in the error path.
+> 
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 
-The CONFIG_ prefix should be added in the code.
-
-Fixes: 046182525db61 ("iommu/vt-d: Add Kconfig option to enable/disable scalable mode")
-Reported-and-tested-by: Kumar, Sanjay K <sanjay.k.kumar@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Link: https://lore.kernel.org/r/20200501072427.14265-1-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/iommu/intel-iommu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -371,11 +371,11 @@ int dmar_disabled = 0;
- int dmar_disabled = 1;
- #endif /* CONFIG_INTEL_IOMMU_DEFAULT_ON */
- 
--#ifdef INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
-+#ifdef CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON
- int intel_iommu_sm = 1;
- #else
- int intel_iommu_sm;
--#endif /* INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
-+#endif /* CONFIG_INTEL_IOMMU_SCALABLE_MODE_DEFAULT_ON */
- 
- int intel_iommu_enabled = 0;
- EXPORT_SYMBOL_GPL(intel_iommu_enabled);
-
-
+Applied and queued up for -stable, thanks.
