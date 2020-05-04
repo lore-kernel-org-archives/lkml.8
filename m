@@ -2,123 +2,84 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F3BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A85DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD262073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:34:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GITI6WzH"
+	by mail.kernel.org (Postfix) with ESMTP id 017EF206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 15:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgEDPeh (ORCPT
+        id S1729436AbgEDPfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 11:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726509AbgEDPeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 11:34:37 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39766C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 08:34:37 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id q124so8599020pgq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 08:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MttICuxXavbYMq8WIjicbuvf1Y6ye3X+bWJxx0AAnXc=;
-        b=GITI6WzHQ8sPVvnvNjM/77u08qgAq7eXKr1ZaNlw2etpk+K0D2RIl+nt2Lm77+qcp+
-         WT2VCckI36iyFh/n8nGxdzrNp1gUGTzjtjJT4tY6Ko36IvJZsAkM/5vnNjvSbVf9LaY7
-         DUccfi+2/Zf2VjUl8GIMQCaAHtBb1N/u3mL7rD9CgeB9QA7rKNYFhrNzmttYAW1tGQ2c
-         wr9SK36Ap5IDTURoTjocTnJfqz4YlSt8L62ieB+NXzXqGVuPAPdHkPtqcJoJUaiTR5oE
-         +o2yVX7s5M4PUNdc5bqReRhkodBRSfxoVorAVIJUmNEMq75zMns/Panug5Tr+3cxf+Ya
-         FjKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MttICuxXavbYMq8WIjicbuvf1Y6ye3X+bWJxx0AAnXc=;
-        b=cA2LxR7FCwC3biK7DhkowLM78SE0Kb85yQZZQggTwvgCKms0B8Exl8dR3ZeMlahp6z
-         a2xxwu6mXAxvIO3WTGF53iuUqDZ6OHJfbU/LHv8aGKN1CzXPYm8LR2r8Exdpn2y6mOdl
-         ryIGwmMPdrsHtYsMK7KtPZeu5eBwe6YOZCBY465DVpTiF9LDoQLv7EzWa3r6ZOsyaozk
-         qlY0IqtWdI7RRcXtHlDQQ+oDElwWbxeFU9uKGwfV/9lAwDGfrvNOxCXXvJxGRpXocK7j
-         lC3KZB3OfOv0ghdpwrmQkkUebp1rigFdcqRMM8qqhK/yiH6RNhcEOZ1sDnMEOCtKxkpS
-         UthQ==
-X-Gm-Message-State: AGi0PuaNrLGwv3eKUnyebS8avrMHG+Bv1rkB4Xp1wrAR6/b5F66YNuJg
-        mjVZwm4sYnqnJbP2bg2JhBc=
-X-Google-Smtp-Source: APiQypLtehcfIcerd1n0dU1u3gBN3WpIFPxv0tu5ClUiy1B3odbFiv7d19IM0wiaN9hOXAODfk/zBA==
-X-Received: by 2002:a65:6713:: with SMTP id u19mr1438519pgf.143.1588606476815;
-        Mon, 04 May 2020 08:34:36 -0700 (PDT)
-Received: from localhost.localdomain ([120.244.110.63])
-        by smtp.gmail.com with ESMTPSA id c4sm7178830pga.73.2020.05.04.08.34.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 08:34:36 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     shaggy@kernel.org
-Cc:     jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] fs: jfs: fix a possible data race in txBegin()
-Date:   Mon,  4 May 2020 23:34:11 +0800
-Message-Id: <20200504153411.13679-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 May 2020 11:35:08 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8045 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgEDPfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 11:35:07 -0400
+IronPort-SDR: E4U8WfJvNQf6Ivjag9VoKvEDaRXwmAJqDa+o/HMvZkzZHJZPvCvRciT4+dQ7qVYm5po8yUEWZt
+ ItuySFAmcB5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 08:35:07 -0700
+IronPort-SDR: wNG88MpeGTwh5P0sEpGjUgEXobg6Tuh4Dw7tF62ERYYy7EVobg60aKBCGDXVM1zVyjZPLLOarf
+ zL/glzex/T+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
+   d="scan'208";a="295533046"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
+  by orsmga008.jf.intel.com with ESMTP; 04 May 2020 08:35:07 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: nVMX: Replace a BUG_ON(1) with BUG() to squash clang warning
+Date:   Mon,  4 May 2020 08:35:06 -0700
+Message-Id: <20200504153506.28898-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions txBegin() and txLazyCommit() can be concurrently executed
-in the following call contexts:
+Use BUG() in the impossible-to-hit default case when switching on the
+scope of INVEPT to squash a warning with clang 11 due to clang treating
+the BUG_ON() as conditional.
 
-Thread1:
-  jfs_write_inode()
-    jfs_commit_inode()
-      txBegin()
+  >> arch/x86/kvm/vmx/nested.c:5246:3: warning: variable 'roots_to_free'
+     is used uninitialized whenever 'if' condition is false
+     [-Wsometimes-uninitialized]
+                   BUG_ON(1);
 
-Thread2:
-  jfs_lazycommit()
-    txLazyCommit()
-
-In txBegin():
-  tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
-
-In txLazyCommit():
-  spin_lock_irq(&log->gclock);
-  ...
-  tblk->flag |= tblkGC_COMMITTED;
-  ...
-  spin_unlock_irq(&log->gclock);
-
-Thus, a data race can occur for tblk->flag.
-
-To fix this data race, the spinlock log->gclock is used in 
-txBegin().
-
-This data race is found by our concurrency fuzzer.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: ce8fe7b77bd8 ("KVM: nVMX: Free only the affected contexts when emulating INVEPT")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- fs/jfs/jfs_txnmgr.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/vmx/nested.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
-index c8ce7f1bc594..a1f124aad2e0 100644
---- a/fs/jfs/jfs_txnmgr.c
-+++ b/fs/jfs/jfs_txnmgr.c
-@@ -415,7 +415,9 @@ tid_t txBegin(struct super_block *sb, int flag)
- 	 *
- 	 * memset(tblk, 0, sizeof(struct tblock));
- 	 */
-+	spin_lock_irq(&log->gclock);
- 	tblk->next = tblk->last = tblk->xflag = tblk->flag = tblk->lsn = 0;
-+	spin_unlock_irq(&log->gclock);
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 2c36f3f53108..669445136144 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5249,7 +5249,7 @@ static int handle_invept(struct kvm_vcpu *vcpu)
+ 		roots_to_free = KVM_MMU_ROOTS_ALL;
+ 		break;
+ 	default:
+-		BUG_ON(1);
++		BUG();
+ 		break;
+ 	}
  
- 	tblk->sb = sb;
- 	++log->logtid;
 -- 
-2.17.1
+2.26.0
 
