@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD49C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80635C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60AB32073B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1BA20707
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615314;
-	bh=DP6GuHWBhLYSM0nwAlW4kAgEOkm3d3zWXYfhE4/nkek=;
+	s=default; t=1588615317;
+	bh=a5Q6ARFG+WGwfBrNNAer3kTu/FZ8YJRrxVocg0nPM7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWUKwf+Kc7LLSBQoaaVP7itPw3av4fKN0Xco2vi7UURdVaRN58Ao/hV9oOJXZN44B
-	 x9wbxsOQj2D1J+r45tZtNoGhd4MWvOTAjjzHzCVVMs8iVsYDSNxyOnIIJxzC5ZYNSY
-	 8YBjyrIkyYMvnJNWJnPezdmjbDCsSadqoY/IV0O4=
+	b=nJxGUlwDKwTRWNUanuM8XiqHJjfBFbOikCGgI6uAUK2xirJeBaQ5t+jPlovZqXjfl
+	 IOa2GKxfTp/LZQYvGT3E2/ZKWJrX2sObSIYjHrrYKhAI/IMxRzA4erSdm4/PUkCsp7
+	 jk7jIsOO0nTxTIn6cRFovcIZX8/VhnXYu0gn9X4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbgEDSBx (ORCPT
+        id S1731243AbgEDSB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57704 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbgEDSBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:51 -0400
+        id S1731224AbgEDSBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1089020707;
-        Mon,  4 May 2020 18:01:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42E52073B;
+        Mon,  4 May 2020 18:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615311;
-        bh=DP6GuHWBhLYSM0nwAlW4kAgEOkm3d3zWXYfhE4/nkek=;
+        s=default; t=1588615309;
+        bh=a5Q6ARFG+WGwfBrNNAer3kTu/FZ8YJRrxVocg0nPM7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/Jv8JMEgBZ+efvcydL5P9/yjfnO7tvklvJmhzvHvOAY1dybeCAUWvjjWiFlV6AOQ
-         V8fJKXig+G2qSx19Ni39b6R9L8ldAzkD8mPpIkjYUGWmx7eaE8yLBSAz4IVUgu41k0
-         AJPUxwwBkytdgTGnbjv0agD8ZwAHVPjFIvi0kiI8=
+        b=VHaLLYv9EqvvcxyTL3j19nXvZszbPBDDkm60aGbGlMCeXo2NG6cb67OSvsdeUjoei
+         9hmO5Y4f8pMmiAIez7BFsNnyfGby6kgJIBrFi3qRqxkneiYFiNYNm184d40ZmHSQrk
+         lTjAtufZWP6DmrubAlHlB9+cFSTIKyyk9Pcgnq4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 25/37] iommu/amd: Fix legacy interrupt remapping for x2APIC-enabled system
-Date:   Mon,  4 May 2020 19:57:38 +0200
-Message-Id: <20200504165450.998396217@linuxfoundation.org>
+        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Martin Wilck <mwilck@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 16/37] scsi: qla2xxx: check UNLOADING before posting async work
+Date:   Mon,  4 May 2020 19:57:29 +0200
+Message-Id: <20200504165450.158814908@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -60,39 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+From: Martin Wilck <mwilck@suse.com>
 
-commit b74aa02d7a30ee5e262072a7d6e8deff10b37924 upstream.
+commit 5a263892d7d0b4fe351363f8d1a14c6a75955475 upstream.
 
-Currently, system fails to boot because the legacy interrupt remapping
-mode does not enable 128-bit IRTE (GA), which is required for x2APIC
-support.
+qlt_free_session_done() tries to post async PRLO / LOGO, and waits for the
+completion of these async commands. If UNLOADING is set, this is doomed to
+timeout, because the async logout command will never complete.
 
-Fix by using AMD_IOMMU_GUEST_IR_LEGACY_GA mode when booting with
-kernel option amd_iommu_intr=legacy instead. The initialization
-logic will check GASup and automatically fallback to using
-AMD_IOMMU_GUEST_IR_LEGACY if GA mode is not supported.
+The only way to avoid waiting pointlessly is to fail posting these commands
+in the first place if the driver is in UNLOADING state.  In general,
+posting any command should be avoided when the driver is UNLOADING.
 
-Fixes: 3928aa3f5775 ("iommu/amd: Detect and enable guest vAPIC support")
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Link: https://lore.kernel.org/r/1587562202-14183-1-git-send-email-suravee.suthikulpanit@amd.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+With this patch, "rmmod qla2xxx" completes without noticeable delay.
+
+Link: https://lore.kernel.org/r/20200421204621.19228-3-mwilck@suse.com
+Fixes: 45235022da99 ("scsi: qla2xxx: Fix driver unload by shutting down chip")
+Acked-by: Arun Easi <aeasi@marvell.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu_init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2836,7 +2836,7 @@ static int __init parse_amd_iommu_intr(c
- {
- 	for (; *str; ++str) {
- 		if (strncmp(str, "legacy", 6) == 0) {
--			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
-+			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY_GA;
- 			break;
- 		}
- 		if (strncmp(str, "vapic", 5) == 0) {
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4645,6 +4645,9 @@ qla2x00_alloc_work(struct scsi_qla_host
+ 	struct qla_work_evt *e;
+ 	uint8_t bail;
+ 
++	if (test_bit(UNLOADING, &vha->dpc_flags))
++		return NULL;
++
+ 	QLA_VHA_MARK_BUSY(vha, bail);
+ 	if (bail)
+ 		return NULL;
 
 
