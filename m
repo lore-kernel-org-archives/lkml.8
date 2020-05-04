@@ -2,165 +2,145 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C68C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6A8C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDCF820757
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F39B20705
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sC64yDvj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hoa6/WOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgEDOEr (ORCPT
+        id S1728828AbgEDOFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48306 "EHLO
+        Mon, 4 May 2020 10:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgEDOEq (ORCPT
+        with ESMTP id S1726404AbgEDOFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:04:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE58C061A0E;
-        Mon,  4 May 2020 07:04:46 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so15972838wra.7;
-        Mon, 04 May 2020 07:04:46 -0700 (PDT)
+        Mon, 4 May 2020 10:05:45 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5F8C061A0E;
+        Mon,  4 May 2020 07:05:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e16so15977667wra.7;
+        Mon, 04 May 2020 07:05:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DablqqPCpx4w4xSuQkb4zjD/vUdE5t/EFHIl9EZBzFc=;
-        b=sC64yDvjCic9ysOEGw9B4LlyryXXRKYB+BpOayHBUBTqbqP/AGryd40AbUyVdJUvnD
-         EnGU5+tn1vVn63AoGtEjLQ230B0/xX4KPAba8khJ/EDFjOuTOvxwvZ6yoU2YJfJl9zpO
-         MlwGnY8/PkWk9Klh12dCPTAnsJCrBnH35tyOV8iH3NJtTSCJHb2qL9jUcCyqXiOlpwlH
-         q8734XIVvdaadG5LV1lGi6FtcTc5C7YCh6SJmq/15XDmLNFT6Ozsb+pt2RAVz4+OiB1v
-         UKwN21dmJTXJLaNg8Bof65Qicsl6f4RnJ48bd95zKR2CP7pQ1YgWYiWw8iSrM68tZSjb
-         levg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qv9VZ/vdkXWlYpTQ4wVqr8Dh+vZPTpn4XvM2OS4ssaw=;
+        b=Hoa6/WOfkdDmyXdxlJ6VnSmQIZTCxAx2D21cB8txWwICPVReJBlsJ3lgtmoA9nm4zY
+         ZskXgZ7c2HoY4RfG6+IjDAZiNebS3ZW9E72QBOa4x6D/5f5hFg2ZDJE3n/uSfaPloefU
+         OERZgDsrNR8snr8/hfv++M1h/JhopQ+/p6/zJkbpzqWzuGTsxkuS3NhXT1CDizUvPn49
+         OnKUedJQOrnEfQc6/v3di8HppEHm9yGIZnCvOTjd2ugpLCpZ+GJ/SymOt0rhSjtd+NsJ
+         fphfn1lkOjXIN/0lK19K1Q2eUsJLsbJao3qpz9U2Uz4KBnnB14AAY4j80alCv9WntHQw
+         gNhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DablqqPCpx4w4xSuQkb4zjD/vUdE5t/EFHIl9EZBzFc=;
-        b=HzWyK/cnPdFsxMa7GW7x/I/ACEwOC+uA69t0WmW8XgR6TFGnXS66MNdFZLTlYKGq14
-         jNUJHh76oKXRd6J2HSMTHxWYc+VBmerANKVO5+3PjhfNTyg8M+uAP1a4WmH6HJbUkHy4
-         g3w8UQNua8eBJ6tJHgn5fRtLeviJkxpcofJQXMw30YUoQkhDRzMtdh/6tEuBySCVnrFU
-         9QKqVUQBBaymzIiP0QnrtyMBtT8KBjtRUK8F+LX910FCdQuWc8bQ47mmbVybEh7DWMiH
-         pD8QPDz1wFO41NUi3sOfZPbj8R/7sstlO/VK7jpfbGyUuzjr7mDmvPpqDm5I8q938eHM
-         RXKg==
-X-Gm-Message-State: AGi0Puag8ma8/zhDGB5iXElgR5VWcJOxj49e+H666qzfZqYaGuB/OZLs
-        2jpmfDT+dtSabFNJDH7DYaj1Dnld
-X-Google-Smtp-Source: APiQypKPtt65x//QawXlJJk5JP3u1ONmQykLAarkmktAy0Jck82jAPze6rA/KYza73c7X0tsZ6euNQ==
-X-Received: by 2002:adf:ec09:: with SMTP id x9mr605509wrn.21.1588601084779;
-        Mon, 04 May 2020 07:04:44 -0700 (PDT)
-Received: from [192.168.43.158] ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id y3sm2421305wrt.87.2020.05.04.07.04.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 07:04:44 -0700 (PDT)
-Subject: Re: [PATCH 1/2] splice: export do_tee()
-To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Clay Harris <bugs@claycon.org>
-References: <cover.1588421219.git.asml.silence@gmail.com>
- <56e9c3c84e5dbf0be8272b520a7f26b039724175.1588421219.git.asml.silence@gmail.com>
- <CAG48ez0h6950sPrwfirF2rJ7S0GZhHcBM=+Pm+T2ky=-iFyOKg@mail.gmail.com>
- <387c1e30-cdb0-532b-032e-6b334b9a69fa@gmail.com>
- <b62d84b0-c5a8-402f-d62e-e0b8d41221bb@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <1007c4ff-2af0-1473-a268-a0ae245d8188@gmail.com>
-Date:   Mon, 4 May 2020 17:03:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qv9VZ/vdkXWlYpTQ4wVqr8Dh+vZPTpn4XvM2OS4ssaw=;
+        b=M3eukG+D5QzWfYrfKBjCsxq7QR9g9D/Nlym/jYYt7B/MkqZf2wBipNxG9VlF5h+g2y
+         lYdcAkPzdBc6YKJbsr7bSPQP2z3cOrt3C0/RqWjrRVz3P6rgLNzG+lTVHRwC5HXAle0S
+         +0f60KAaIrRpUYuu8p5oL3rGDVNNy3VZdcpTw3h3ElHeSRz4zhOQA4OER+yn/SYq7IY6
+         T7pOY/+5y0tiwTJG060CFkEGRTlIA3SjSYLmAQeG7zRfHFmRf/VdAnpgrdQbBKezolQw
+         M6/Lh3vN45R37Luf8Elx8BSefmikMFpTa5xW0lPUSWPWX9MvJIdFimiRZYuIRengFian
+         OZ8w==
+X-Gm-Message-State: AGi0PuYD0f8iph5m/B5odO/ikvh1QjcUJLOq/BGptBmUOybmxd/nQnO4
+        ymu8KcuDCTV+AgjMxh50jPo=
+X-Google-Smtp-Source: APiQypIrE3NnD0YRvvKblCx0u2Ymj1FHj8pfr2ipwJZtxrHBHyWALEnVLhlrQeMzaUzw9OjvZq7pyw==
+X-Received: by 2002:a5d:4d0b:: with SMTP id z11mr9116427wrt.81.1588601144263;
+        Mon, 04 May 2020 07:05:44 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5bfcc8.dynamic.kabel-deutschland.de. [95.91.252.200])
+        by smtp.gmail.com with ESMTPSA id h137sm273832wme.0.2020.05.04.07.05.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 07:05:43 -0700 (PDT)
+From:   huobean@gmail.com
+X-Google-Original-From: beanhuo@micron.com
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, rdunlap@infradead.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org
+Subject: [PATCH RFC v3 0/5] scsi: ufs: add UFS Host Performance Booster(HPB) support
+Date:   Mon,  4 May 2020 16:05:26 +0200
+Message-Id: <20200504140531.16260-1-beanhuo@micron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <b62d84b0-c5a8-402f-d62e-e0b8d41221bb@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 16:43, Jens Axboe wrote:
-> On 5/4/20 6:31 AM, Pavel Begunkov wrote:
->> On 04/05/2020 14:09, Jann Horn wrote:
->>> On Sat, May 2, 2020 at 2:10 PM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>>> export do_tee() for use in io_uring
->>> [...]
->>>> diff --git a/fs/splice.c b/fs/splice.c
->>> [...]
->>>>   * The 'flags' used are the SPLICE_F_* variants, currently the only
->>>>   * applicable one is SPLICE_F_NONBLOCK.
->>>>   */
->>>> -static long do_tee(struct file *in, struct file *out, size_t len,
->>>> -                  unsigned int flags)
->>>> +long do_tee(struct file *in, struct file *out, size_t len, unsigned int flags)
->>>>  {
->>>>         struct pipe_inode_info *ipipe = get_pipe_info(in);
->>>>         struct pipe_inode_info *opipe = get_pipe_info(out);
->>>
->>> AFAICS do_tee() in its current form is not something you should be
->>> making available to anything else, because the file mode checks are
->>> performed in sys_tee() instead of in do_tee(). (And I don't see any
->>> check for file modes in your uring patch, but maybe I missed it?) If
->>> you want to make do_tee() available elsewhere, please refactor the
->>> file mode checks over into do_tee().
->>
->> Overlooked it indeed. Glad you found it
-> 
-> Yeah indeed, that's a glaring oversight on my part too. Will you send
-> a patch for 5.7-rc as well for splice?
+From: Bean Huo <beanhuo@micron.com>
 
-Absolutely
+This patchset is just an RFC to add UFS HPB support in the upstream Linux.
+Before this series, I have submitted two versions [2] and [4] of UFS
+HPB driver in the community. The first two series HPB driver patchsets
+follow the Samsung HPB driver[1] approach, in which the HPB driver submits
+its HPB READ BUFFER  and HPB WRITE BUFFER requests to the SCSI
+device->request_queueu to execute. Since this fly submission is unacceptable,
+in this RFC version, I changed it, and now the HPB requests will be directly
+submitted to UFS device, don't go backwards to SCSI mid-layer. In this
+approach, the L2P mapping entries loading path will be shorter, and the
+latency is smaller.
+
+Regarding the UFS HPB feature, which is defined in Jedec Standard Universal
+Flash (UFS) Host Performance Booster (HPB) Extension Version 1.0, its purpose
+is to improve read performance by utilizing the host side memory. For the more
+detail information about HPB, you can refer to the HPB Spec. If the approach
+in this RFC patchset is accepted and feasible, it is necessary to add a
+document to detail HPB feature and its implementation later.
+
+Based on the Avri's comments in the second patchset, to be reviewable patches,
+I shortened HPB driver, deleted HPB host control mode. Also, for change tracing,
+this patch is RFC v3, including the first two patchsets changes.
+
+This series patch is still based on the [4] branch 5.8/scsi-queue
+
+v2--v3
+    1. delete GET_BYTE_* and SHIFT_BYTE_* macro definition , using
+       get_unaligned_*()/put_unaligned_*() instead. (Bart Van Assche)
+    2. change Kconfig help message (Randy Dunlap)
+    3. delete HPB host control mode code
+    4. change the way of submission of HPB request, and let the HPB
+       driver directly submit HPB request to UFS.
+
+v1--v2:
+    1. Rebased the patch on the [3] branch 5.8/scsi-queue
+    2. Optimized and simplified several functions
+    3. Add parameter read_threshold in HPB sysfs, by which the user can change
+       read_threshold for the HPB host control mode
+    4. Add HPB memory limitation, let the user adjust its size according to the
+       system memory capacity
+
+
+Bean Huo (5):
+  scsi; ufs: add device descriptor for Host Performance Booster
+  scsi: ufs: make ufshcd_read_unit_desc_param() non-static func
+  scsi: ufs: add ufs_features parameter in structure ufs_dev_info
+  scsi: ufs: add unit and geometry parameters for HPB
+  scsi: ufs: UFS Host Performance Booster(HPB) driver
+
+ drivers/scsi/ufs/Kconfig  |   62 +
+ drivers/scsi/ufs/Makefile |    1 +
+ drivers/scsi/ufs/ufs.h    |   15 +
+ drivers/scsi/ufs/ufshcd.c |  245 +++-
+ drivers/scsi/ufs/ufshcd.h |   28 +-
+ drivers/scsi/ufs/ufshpb.c | 2767 +++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h |  423 ++++++
+ 7 files changed, 3534 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/scsi/ufs/ufshpb.c
+ create mode 100644 drivers/scsi/ufs/ufshpb.h
 
 -- 
-Pavel Begunkov
+2.17.1
+
