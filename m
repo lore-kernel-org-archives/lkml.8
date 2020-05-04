@@ -2,207 +2,118 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07830C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE8CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBA621655
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC58206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 08:46:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jH6Yj6DR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgEDIqK (ORCPT
+        id S1728333AbgEDIqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 04:46:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57627 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgEDIqK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 04:46:10 -0400
-Received: from mail-lf1-f72.google.com ([209.85.167.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1jVWj7-0002zr-Ni
-        for linux-kernel@vger.kernel.org; Mon, 04 May 2020 08:46:06 +0000
-Received: by mail-lf1-f72.google.com with SMTP id 85so5391706lfa.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 01:45:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B6wxkvYlDwcvNl28OAXd66foLiyX2Rf6xw2AGAy8rbg=;
-        b=PmRqfIsy6mk4Nh+quO89ohbI77kVKz3tEiSXyQJpVj6VhBmuolOtESOWx5VoOTlrW6
-         1p7eGngG4XveHaVtm2KcphlCAKFMuWO2MyUv1pUchXgQkUJBSPNu0o6FSoCw/8ooicj2
-         /4RIXpOVkdNVUS/DkEYX1K+TmaFOmgxixQihxjxims2+/t9iSv3I3h6SLtsSuYxK0K/V
-         xZGD54XrOr9+rOnwi71ZARSLHrkEFr7hUJJcI+x7t7EkqFqzRKopAwKJreyr4RXIjDnb
-         LU6aYtU00XfkyO2qNXm+CkTYQtzC7KQUpPLButDOycKly3OU9oEg29Cgj5DZcwaYgiBz
-         QPWA==
-X-Gm-Message-State: AGi0PuYSDeL5N1/Ay69Jn+80t69OgsaeHo3or7gks4sdgVC827so0ZFd
-        HFhPsTEMBoEsql33iAHu+gv/Gv2IMsYRMUeKCNECqjJ5xBDkrkTguXxvo0GQQYBYnu3iM8zu/gl
-        jxPo+c9JQhAq7f5GfUi+f2FsXwS4MFtPfuwPMUkH+mme9oFPJW1YWLE4/
-X-Received: by 2002:ac2:43c6:: with SMTP id u6mr11091157lfl.170.1588581925048;
-        Mon, 04 May 2020 01:45:25 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIFD22/DCljKnq+u7jZyFdo7Mol8bJVCRBOgP0jURuxOCQkhi9JrcMk24wR9tGnThznoIKAGBwM9EBBjnCRNbI=
-X-Received: by 2002:ac2:43c6:: with SMTP id u6mr11091134lfl.170.1588581924658;
- Mon, 04 May 2020 01:45:24 -0700 (PDT)
+        Mon, 4 May 2020 04:46:47 -0400
+Received: from mail-dm6nam12on2081.outbound.protection.outlook.com ([40.107.243.81]:11584
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726351AbgEDIqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 04:46:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I/KcCgQA/nTYr2IJ6e2iIujz+je/1xyLzA2QLXDD1fYohqQJtep+AUQu57++mmD/lu0O98xtYiGYD97z1aBRmjsGVS2rgjQQUCW6Kk3Jl95iyRmZ+hlNqY+huTQgDwnFh0t14DOsUpuIAdzSBd/Xl73POduRSUzj+qlXfwv+qIQsY/upGpFK/E7+BE3cqUnLb/BA+JJ4FRwMUzYuyr0sgfCGX7TPsn/PtQql8RTefyrqAyP8GKSz9t+F+jEfUEx7qXc/Rj7/5WIelZHeZmbgVj2RHIysXiI/BYCE/WgrAeUltdm+d1TkJbdzGKyofXLa8/pSLRFb0pEyPMQKhFnKGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13OCvDAIYJgJx8qmdxetZjYYsyPulJeXYYZeJTnOjq0=;
+ b=nGaWa2TiNmHA3Wbx+62vLEglK9G5OaWZOYlslO8KgnQ71TTjxB2zzK7B2UsYaKjf3TLe7NEQgZSu+Cl0Zo6Ed3rpchz521xmkTjU6nr47iorLoOfjrcTHUW4YMXSzGqHA/QHgs+a8SAUab7WEWfTBs6e2QOOZF1xcnQrfZVXZTwai67JaMULapJuPDT5pYaqTXkhyWgzYOHfd3amaZsXvYI58121y5MGJv93GsU27v/o5vuWhco8wPd0WBytw4Ebhoc4xXm8X17p3memsF60tFd0cu53H+xUFpqdKRkUIERoI1FXxlRUyE0H1dHKERgC8XMBIQBJR0keEQK85WgPUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=13OCvDAIYJgJx8qmdxetZjYYsyPulJeXYYZeJTnOjq0=;
+ b=jH6Yj6DRhGDKykBWIUu7ViRbX31yCrzjB/StgtZKOnTKtpGhQLATlnCmcte4J0vS8v4apk55FsUeehLO0aJst/Sl2MaZ9NJt7zJBmcWD+HpeR8NjNMhqAMwgqD3IIgMjC/74gpORhrDkIHt9k1SSNmV59xG2wlG96sTdB0Bv84c=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
+ DM5PR12MB1721.namprd12.prod.outlook.com (2603:10b6:3:10d::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20; Mon, 4 May 2020 08:46:44 +0000
+Received: from DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744]) by DM5PR12MB1163.namprd12.prod.outlook.com
+ ([fe80::d061:4c5:954e:4744%4]) with mapi id 15.20.2958.029; Mon, 4 May 2020
+ 08:46:44 +0000
+Subject: Re: AVIC related warning in enable_irq_window
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <9ce7bb5c4fb8bcc4ac21103f7534a6edfcbe195d.camel@redhat.com>
+ <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-ID: <c5c32371-4b4e-1382-c616-3830ba46bf85@amd.com>
+Date:   Mon, 4 May 2020 15:46:35 +0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
+In-Reply-To: <758b27a8-74c0-087d-d90b-d95faee2f561@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0122.apcprd06.prod.outlook.com
+ (2603:1096:1:1d::24) To DM5PR12MB1163.namprd12.prod.outlook.com
+ (2603:10b6:3:7a::18)
 MIME-Version: 1.0
-References: <20200429095044.24625-1-po-hsu.lin@canonical.com> <20200501105933.8ebf317da9be19884c7cd33e@kernel.org>
-In-Reply-To: <20200501105933.8ebf317da9be19884c7cd33e@kernel.org>
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-Date:   Mon, 4 May 2020 16:45:13 +0800
-Message-ID: <CAMy_GT91OyBCNFHHNyAd_6KcmBB6bexYZYO3xD8vEvC=wvOBFA@mail.gmail.com>
-Subject: Re: [PATCH] selftests/ftrace: treat module requirement unmet
- situation as unsupported
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>, mingo@redhat.com,
-        shuah <shuah@kernel.org>, Colin King <colin.king@canonical.com>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Suravees-MacBook-Pro.local (2403:6200:8862:d0e7:7c73:bebd:7e44:6839) by SG2PR06CA0122.apcprd06.prod.outlook.com (2603:1096:1:1d::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Mon, 4 May 2020 08:46:42 +0000
+X-Originating-IP: [2403:6200:8862:d0e7:7c73:bebd:7e44:6839]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2cbe73b6-8db0-46dc-dac3-08d7f007ac56
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1721:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1721240658279753532391F1F3A60@DM5PR12MB1721.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03932714EB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cYBGOJn4y+F1Pv1cuzYUXFeo92jaUQWy7gQy/f/4N1/GoUpw6jyKP9+gfRnVE8XVya9VNmgwS3ILIj3erZEgMyXWtNgs+S29hmmyyplDrV8BA99l7VgCCkgJ5hh//46zfWztM9AIt9HY1feS/MWrv6BvilnEIROJSRGHLQ+YWFjO2ffz0b67EjxFJIMo+VXX+dXjemGCCW1CZE9myaOgrLEZeksyOjZ6PjA7DnkJSBhJ7yyUpSnMkm0jRccisTNCuNHU/TxkefphWwQvsSDOLoH/SuP+6ncH3yUfIyz+QtNHSx2qCIdZUNqA4EfuUcE1pVHfPLbiFf+942L+5klLcp5q6x1kQuVOu3vXjEvpZjn6URnuk+QrJIVvmA3SDMG5oRQQpAewQRyspnD3befMdDRHz2MJ9yKRiIfJetIA0SBs3cN6wukeLHfDxBj7vc7O
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(396003)(136003)(8676002)(8936002)(6486002)(6512007)(4326008)(31696002)(2906002)(66556008)(31686004)(86362001)(66476007)(66946007)(316002)(110136005)(5660300002)(478600001)(2616005)(16526019)(36756003)(6666004)(44832011)(53546011)(6506007)(52116002)(4744005)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ceotyYTi6Wf7ZHLE81GMz6l2t2V9C1sacWzq/gFCjEYN4fTtMdLkStEf4CIsX/UYovvJ8fNkQXtLVJ2JC8UCBY3Ax+JpnK6WuBBYNx8O+UMMDHMB6LCCIVtj72A9LzXN4EkvyREfc1ibbBdKYIMq8Ch6GRC2e0hQ0tk3bwZ+R601lZkZTNTRtq81II5Pf7Lafv4Gy+9k0Yxnm69qzOcEVGUHOSgOsHJzQ4k0I38CPilrO77U8DL7RiA5wYASGqiK6NrpFH+K8Hlz9vsqyg7cAGRGX0m0Z308HpHIOitdbYNeFmV9mesGv0rkRUbIXwWFT566PDUirIlj31lTESASzWS1IBT+shbj4t93DCotlx9Rg9MlHrwNAzo9jgVL05cnJC2fQTMGItuMh7xRTWbL6oBik8jEefwTkLKqKVIRWvGto4qb5MV1Mp924HKX2stx3rOO/u706KRsHBX5yIrCNSD3iOTP+CuK8NMCkSmhIHZl1MIKdiBt/KhFLdJYsJvc62OZL5M/hKIPz7oXKhwLoNBl9xDvH+0yOLo2GPsXS86GYKZuRCmfcE6688+hMWGVRihHD5PP92aBnLcnhmm71v87DcJYb0RTpcRyERqG9nhw7xDvMzBy+PUhlgYrUF627WdgX3+WJo3K14Y74LalzrwhNxroAgEKOSBOffMcTbi+kKWpANdsDQr5MFL4fE9oJB+IbdtgOjh3OnyDiC2ecfnQY95wnhiXrUf2Iu5MUzj4dIkO8Iz/NkJUCGF/tZf45oBzqn6/AM2/bub4bhMLPAf+RJ1EoYTfB+pUgdWCbea9Sa+2Tyv51TqyJCx1dabKfFF+reKAEnn+3Hhypk+7T/RErJsSO3Ic5ElW6pnAtDi6Z/HNGrrtl9wzhU8vfIz3
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cbe73b6-8db0-46dc-dac3-08d7f007ac56
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2020 08:46:44.5863
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sxqFAWVeE39BrCgDzd4o1BGEMKBjiOFOE2/FIvbAGG3+onSql5NC4vXOyR6WqcFgterqEBdQbWLLy4IEHLNN3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1721
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 1, 2020 at 9:59 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Hi,
->
-> On Wed, 29 Apr 2020 17:50:44 +0800
-> Po-Hsu Lin <po-hsu.lin@canonical.com> wrote:
->
-> > When the required module for the test does not exist, use
-> > exit_unsupported instead of exit_unresolved to indicate this test is
-> > not supported.
->
-> Hmm, this doesn't mean "the function is not supported" but
-> "we can not resolve this because of the environmental issue".
-> For example, if you forgot to install the modules, but the
-> function itself is enabled, that can not be tested, but the
-> system supports that feature.
->
-> >
-> > By doing this we can make test behaviour in sync with the
-> > irqsoff_tracer.tc test in preemptirq, which is also treating module
-> > existence in this way. Moreover, the test won't exit with a non-zero
-> > return value if the module does not exist.
->
-> It is OK to return zero even if the result is "unresolved", but
-> I don't want to change the result of each test cases, because
-> it clarify that you must install modules correctly, instead of
-> enabling the feature.
+Paolo / Maxim,
 
-Hello Masami,
+On 5/2/20 11:42 PM, Paolo Bonzini wrote:
+> On 02/05/20 15:58, Maxim Levitsky wrote:
+>> The AVIC is disabled by svm_toggle_avic_for_irq_window, which calls
+>> kvm_request_apicv_update, which broadcasts the KVM_REQ_APICV_UPDATE vcpu request,
+>> however it doesn't broadcast it to CPU on which now we are running, which seems OK,
+>> because the code that handles that broadcast runs on each VCPU entry, thus
+>> when this CPU will enter guest mode it will notice and disable the AVIC.
+>>
+>> However later in svm_enable_vintr, there is test 'WARN_ON(kvm_vcpu_apicv_active(&svm->vcpu));'
+>> which is still true on current CPU because of the above.
+> Good point!  We can just remove the WARN_ON I think.  Can you send a patch?
 
-With Alan Maguire's recent commit b730d668138c ("ftrace/selftest: make
-unresolved cases cause failure if --fail-unresolved set") landed on
-the tree.
-I think this unresolved return value issue is all good here.
+Instead, as an alternative to remove the WARN_ON(), would it be better to just explicitly
+calling kvm_vcpu_update_apicv(vcpu) to update the apicv_active flag right after
+kvm_request_apicv_update()?
 
-It is indeed a good question to brainstorm with about how to
-distinguish a not enabled / enabled but not working feature.
-I will fix the irqsoff_tracer.tc test here to make them consistent first.
+Thanks,
+Suravee
 
-Thank you for your feedback.
-Po-Hsu
-
->
-> And OK, I found irqsoff_tracer.tc IS incorrect. It should be fixed to
-> return UNRESOLVED if there is no test module.
->
-> If you still think UNRESOLVED is unneeded, please propose the patch
-> which removes all UNRESOLVED related code. That can start another
-> discussion.
->
-> Thank you,
->
->
-> >
-> > Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
-> > Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
-> > Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
-> > Fixes: af2a0750f374 ("selftests/ftrace: Improve kprobe on module testcase to load/unload module")
-> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> > ---
-> >  tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
-> >  tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
-> >  tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
-> >  tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
-> >  tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
-> >  5 files changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> > index d75a869..3d6189e 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> > @@ -5,7 +5,7 @@
-> >  rmmod ftrace-direct ||:
-> >  if ! modprobe ftrace-direct ; then
-> >    echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
-> > -  exit_unresolved;
-> > +  exit_unsupported;
-> >  fi
-> >
-> >  echo "Let the module run a little"
-> > diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> > index 801ecb6..3d0e3ca 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> > @@ -5,7 +5,7 @@
-> >  rmmod ftrace-direct ||:
-> >  if ! modprobe ftrace-direct ; then
-> >    echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
-> > -  exit_unresolved;
-> > +  exit_unsupported;
-> >  fi
-> >
-> >  if [ ! -f kprobe_events ]; then
-> > diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> > index b02550b..dd8b10d 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> > @@ -5,7 +5,7 @@
-> >  rmmod trace-printk ||:
-> >  if ! modprobe trace-printk ; then
-> >    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
-> > -  exit_unresolved;
-> > +  exit_unsupported;
-> >  fi
-> >
-> >  echo "Waiting for irq work"
-> > diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> > index 1a4b4a4..26dc06a 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> > @@ -13,7 +13,7 @@ echo '*:mod:trace_printk' > set_ftrace_filter
-> >  if ! modprobe trace-printk ; then
-> >    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
-> >  m"
-> > -  exit_unresolved;
-> > +  exit_unsupported;
-> >  fi
-> >
-> >  : "Wildcard should be resolved after loading module"
-> > diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> > index d861bd7..4e07c69 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> > @@ -8,7 +8,7 @@ rmmod trace-printk ||:
-> >  if ! modprobe trace-printk ; then
-> >    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
-> >  m"
-> > -  exit_unresolved;
-> > +  exit_unsupported;
-> >  fi
-> >
-> >  MOD=trace_printk
-> > --
-> > 2.7.4
-> >
->
->
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
