@@ -2,132 +2,87 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4E6C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01776C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28D3720721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE1E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 11:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgEDLZq (ORCPT
+        id S1728554AbgEDL1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 07:25:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:42270 "EHLO foss.arm.com"
+        Mon, 4 May 2020 07:27:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59112 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgEDLZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 07:25:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 623631FB;
-        Mon,  4 May 2020 04:25:45 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 433BC3F71F;
-        Mon,  4 May 2020 04:25:44 -0700 (PDT)
-Date:   Mon, 4 May 2020 12:25:35 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] PCI: cadence: Fix to read 32-bit Vendor ID/Device
- ID property from DT
-Message-ID: <20200504112535.GA27662@e121166-lin.cambridge.arm.com>
-References: <20200417114322.31111-1-kishon@ti.com>
- <20200417114322.31111-5-kishon@ti.com>
- <20200501151131.GC7398@e121166-lin.cambridge.arm.com>
- <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
+        id S1726445AbgEDL1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 07:27:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 00A8CADD3;
+        Mon,  4 May 2020 11:27:10 +0000 (UTC)
+Date:   Mon, 4 May 2020 13:27:06 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v3 12/75] x86/boot/compressed/64: Switch to __KERNEL_CS
+ after GDT is loaded
+Message-ID: <20200504112706.GG8135@suse.de>
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-13-joro@8bytes.org>
+ <20200504104129.GD15046@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <47cc8236-4bec-244d-4ab3-cda8eb37d4bf@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200504104129.GD15046@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 02:22:30PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
+On Mon, May 04, 2020 at 12:41:29PM +0200, Borislav Petkov wrote:
+> On Tue, Apr 28, 2020 at 05:16:22PM +0200, Joerg Roedel wrote:
+> > +	/* Reload CS so IRET returns to a CS actually in the GDT */
+> > +	pushq	$__KERNEL_CS
+> > +	leaq	.Lon_kernel_cs(%rip), %rax
+> > +	pushq	%rax
+> > +	lretq
+> > +
+> > +.Lon_kernel_cs:
+> > +
+> >  	/*
+> >  	 * paging_prepare() sets up the trampoline and checks if we need to
+> >  	 * enable 5-level paging.
+> > -- 
 > 
-> On 5/1/2020 8:41 PM, Lorenzo Pieralisi wrote:
-> > On Fri, Apr 17, 2020 at 05:13:22PM +0530, Kishon Vijay Abraham I wrote:
-> >> The PCI Bus Binding specification (IEEE Std 1275-1994 Revision 2.1 [1])
-> >> defines both Vendor ID and Device ID to be 32-bits. Fix
-> >> pcie-cadence-host.c driver to read 32-bit Vendor ID and Device ID
-> >> properties from device tree.
-> >>
-> >> [1] -> https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
-> >>
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >> ---
-> >>  drivers/pci/controller/cadence/pcie-cadence-host.c | 4 ++--
-> >>  drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
-> >>  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > I don't see how you would use a 32-bit value for a 16-bit register so
-> > certainly the struct cdns_pcie_rc fields size is questionable anyway.
-> > 
-> > I *assume* you are referring to 4.1.2.1 and the property list
-> > encoded as "encode-int".
-> > 
-> > I would like to get RobH's opinion on this - I don't know myself
-> > whether the PCI OF bindings you added are still relevant and how
-> > they should be interpreted.
+> So I'm thinking I should take this one even now on the grounds that
+> it sanitizes CS to something known-good than what was there before and
+> who knows what set it and loaded the kernel...?
 > 
-> This change was made due to RobH's comment below [1]
-> 
-> [1] ->
-> https://lore.kernel.org/r/CAL_JsqLYScxGySy8xaN-UB6URfw8K_jSiuSXwVoTU9-RdJecww@mail.gmail.com/
+> And that is a good thing in itself.
 
-Thanks for the pointer - that's what I needed to proceed with this
-patch.
+Right, sure. CS is basically undefined at this point and depends on what
+loaded the kernel (EFI, legacy boot code, some container runtime...), so
+setting it to something known is definitly good.
 
-Lorenzo
+Regards,
 
-> Thanks
-> Kishon
-> 
-> > 
-> > Thanks
-> > Lorenzo
-> > 
-> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> index 8f72967f298f..31e67c9c88cf 100644
-> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> @@ -229,10 +229,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
-> >>  	}
-> >>  
-> >>  	rc->vendor_id = 0xffff;
-> >> -	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
-> >> +	of_property_read_u32(np, "vendor-id", &rc->vendor_id);
-> >>  
-> >>  	rc->device_id = 0xffff;
-> >> -	of_property_read_u16(np, "device-id", &rc->device_id);
-> >> +	of_property_read_u32(np, "device-id", &rc->device_id);
-> >>  
-> >>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> >>  	pcie->reg_base = devm_ioremap_resource(dev, res);
-> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> >> index 6bd89a21bb1c..df14ad002fe9 100644
-> >> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> >> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> >> @@ -262,8 +262,8 @@ struct cdns_pcie_rc {
-> >>  	struct resource		*bus_range;
-> >>  	void __iomem		*cfg_base;
-> >>  	u32			no_bar_nbits;
-> >> -	u16			vendor_id;
-> >> -	u16			device_id;
-> >> +	u32			vendor_id;
-> >> +	u32			device_id;
-> >>  };
-> >>  
-> >>  /**
-> >> -- 
-> >> 2.17.1
-> >>
+	Joerg
