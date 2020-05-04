@@ -2,110 +2,98 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF90C47247
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DC0C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC2D62054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB88F20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 10:27:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bX0hwGoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgEDK0l (ORCPT
+        id S1728636AbgEDK1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 06:26:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36533 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbgEDK0k (ORCPT
+        Mon, 4 May 2020 06:27:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725928AbgEDK1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 06:26:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t3so4593525otp.3;
-        Mon, 04 May 2020 03:26:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7y6CIeS04hagLJPRHwIReiVe4JI70J94WDHouhIzWFI=;
-        b=jgAxxs+maWviN3lTQq71uw3juBH9dJKZTztfpJJBDpUkVIreWNcer3+0sXZmW1WvUt
-         IO3aPAJG5FD3qQxeQxJN4b+kFcWNv1PlacsKJNHOmOHFukJMAtXk6yLTsoXAwSi7DQR3
-         KZu5n2MFcWvxwUmqw2jvz+j8tFDtU3N6A96M3Z7+jjuSkL3B7UDcc+Sh/SwjxzOHtD01
-         hPIuT9oW+SHyhdXeLxLG2H7FcDjKfbj+ELXhQrdCG7XgjEWnmb4JBP0txa0LjTNwPrhs
-         QumQovSj5AvcUwP5Jc0X2FEBzUL38fOlx/iGPdbUEAYqLMLfIApg8tFEjzCEIZw3JBMd
-         FQiA==
-X-Gm-Message-State: AGi0PuZF1H0mfI51BRkIczTDBlH8qsDsO9rgq2B2m9pO0tglfRiA0vbf
-        z2HUwKFuHBjJWBes9sUXj/JFtiVeDFdywewZjzM=
-X-Google-Smtp-Source: APiQypI/S3nQv6tWORCp4RyO1zVc/8orWhiN+nCb0rnWkV4pP4RtM5AF3V3Zb6d1pWnM+wPxKkDKhuf9JkEupBqpUk8=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr13252429otm.145.1588587998271;
- Mon, 04 May 2020 03:26:38 -0700 (PDT)
+        Mon, 4 May 2020 06:27:38 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1115C061A0E;
+        Mon,  4 May 2020 03:27:38 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49FzZH12j2z9sSc;
+        Mon,  4 May 2020 20:27:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1588588056;
+        bh=6kYgnh3xuavjou7j89KPt2ZLR/bBS6MAYSPgbK+bcWE=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=bX0hwGoTdTynk07RtOrX90klkiQMESa0oWs1CmtQ1/y2s7B/psw+249zKxxW1u5fV
+         2OdvG8ZpmiK9aahJjHsAnVKtBkzOCcxvnEQg1ra3z+uFHq97lOSPHJ+BC/WM/m1MGn
+         gfYSCLgKxGiKqC41qsAoPQNf22hSJ8aSstxX9+4I2AXhCoYvn5YPtEESwsbAFzr75l
+         TXQU4Pe5ejs+yOSPW9dbGaWDjgGrSrCx8fPl93cqknNhabjQkIKfd44XJml6eibRrb
+         gT7fT+DcA9JvATKuMMs0r2bmNJajWhGLjSJHh9wrAlPmCuqW2ymOgshWIaAw4VAuE8
+         HM1UkbyEsvxuw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Theodore Ts'o <tytso@mit.edu>, linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH 2/7] crypto: powerpc/sha1 - remove unused temporary workspace
+In-Reply-To: <20200502182427.104383-3-ebiggers@kernel.org>
+References: <20200502182427.104383-1-ebiggers@kernel.org> <20200502182427.104383-3-ebiggers@kernel.org>
+Date:   Mon, 04 May 2020 20:27:50 +1000
+Message-ID: <87d07kdmft.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 12:26:26 +0200
-Message-ID: <CAMuHMdWBp_+PAa9VNhHCxd8CwrZVeeH1swDrZhegS-7YuQaL2g@mail.gmail.com>
-Subject: Re: [PATCH v2 04/10] dt-bindings: mmc: renesas,mmcif: Document
- r8a7742 DT bindings
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
-
-On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) MMCIF is identical
-> to the R-Car Gen2 family.
+Eric Biggers <ebiggers@kernel.org> writes:
+> From: Eric Biggers <ebiggers@google.com>
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> The PowerPC implementation of SHA-1 doesn't actually use the 16-word
+> temporary array that's passed to the assembly code.  This was probably
+> meant to correspond to the 'W' array that lib/sha1.c uses.  However, in
+> sha1-powerpc-asm.S these values are actually stored in GPRs 16-31.
+>
+> Referencing SHA_WORKSPACE_WORDS from this code also isn't appropriate,
+> since it's an implementation detail of lib/sha1.c.
+>
+> Therefore, just remove this unneeded array.
+>
+> Tested with:
+>
+> 	export ARCH=powerpc CROSS_COMPILE=powerpc-linux-gnu-
+> 	make mpc85xx_defconfig
+> 	cat >> .config << EOF
+> 	# CONFIG_MODULES is not set
+> 	# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> 	CONFIG_DEBUG_KERNEL=y
+> 	CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+> 	CONFIG_CRYPTO_SHA1_PPC=y
+> 	EOF
+> 	make olddefconfig
+> 	make -j32
+> 	qemu-system-ppc -M mpc8544ds -cpu e500 -nographic \
+> 		-kernel arch/powerpc/boot/zImage \
+> 		-append "cryptomgr.fuzz_iterations=1000 cryptomgr.panic_on_fail=1"
 
-Thanks for your patch!
+Thanks for testing.
 
-> --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> @@ -11,6 +11,7 @@ Required properties:
->         - "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
->         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
->         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
-> +       - "renesas,mmcif-r8a7742" for the MMCIF found in r8a7742 SoCs
->         - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
->         - "renesas,mmcif-r8a7744" for the MMCIF found in r8a7744 SoCs
->         - "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
+I gave it a quick spin on a Power9 and it showed no issues.
 
-Please also update the paragraph stating the number of interrupts
-(1 for r8a7742).
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-With that fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+cheers
