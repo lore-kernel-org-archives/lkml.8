@@ -2,99 +2,76 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85089C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB12C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD6B24955
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:14:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OEfUXtRb"
+	by mail.kernel.org (Postfix) with ESMTP id 32C6E2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 17:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgEDROq (ORCPT
+        id S1730172AbgEDROv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 13:14:46 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60250 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730306AbgEDROm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:14:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588612481;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FXoRvADW59uS/gK1qR8SvIanK/aj5hYdLyqR/uzhDKM=;
-        b=OEfUXtRb3dyKwMttefNH7XCgZWHhPnnV+NFDN1UjMd4f5kmk9iTjqNmsHFDLiCbJdKsxwo
-        mC6DTVAGWee4VT5j0j74HBjo/R8GDH27h+a5sQuajOimehOFTlXS10FokuXceknweyd4kS
-        pEOMIAogFXk5u4WPFIjb8pOpvZMbE3k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-5TO57NPjPNCvBOk26NFs-g-1; Mon, 04 May 2020 13:14:40 -0400
-X-MC-Unique: 5TO57NPjPNCvBOk26NFs-g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28102460;
-        Mon,  4 May 2020 17:14:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-118-225.rdu2.redhat.com [10.10.118.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E2DB41000322;
-        Mon,  4 May 2020 17:14:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 47/61] afs: Remove afs_zero_fid as it's not used
-From:   David Howells <dhowells@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Jeff Layton <jlayton@redhat.com>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 May 2020 18:14:35 +0100
-Message-ID: <158861247513.340223.16370838447904994269.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-References: <158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Mon, 4 May 2020 13:14:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:49736 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730571AbgEDROn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:14:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34D0D1045;
+        Mon,  4 May 2020 10:14:43 -0700 (PDT)
+Received: from [192.168.0.14] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A5753F68F;
+        Mon,  4 May 2020 10:14:42 -0700 (PDT)
+Subject: Re: [PATCH] firmware: arm_sdei: Drop check for /firmware/ node and
+ always register driver
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "will@kernel.org" <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <20200422122823.1390-1-sudeep.holla@arm.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <bcadd00b-cd76-8321-e1c9-0a076fe64deb@arm.com>
+Date:   Mon, 4 May 2020 18:14:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200422122823.1390-1-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove afs_zero_fid as it's not used.
+Hi Sudeep,
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+(CC: +Will and +Catalin)
 
- fs/afs/yfsclient.c |    2 --
- 1 file changed, 2 deletions(-)
+On 22/04/2020 13:28, Sudeep Holla wrote:
+> As with most of the drivers, let us register this driver unconditionally
+> by dropping the checks for presence of firmware nodes(DT) or entries(ACPI).
+> 
+> Further, as mentioned in the commit acafce48b07b ("firmware: arm_sdei:
+> Fix DT platform device creation"), the core takes care of creation of
+> platform device when the appropriate device node is found and probe
+> is called accordingly.
+> 
+> Let us check only for the presence of ACPI firmware entry before creating
+> the platform device and flag warning if we fail.
 
-diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
-index b5b45c57e1b1..7f419f8bb943 100644
---- a/fs/afs/yfsclient.c
-+++ b/fs/afs/yfsclient.c
-@@ -15,8 +15,6 @@
- #include "xdr_fs.h"
- #include "protocol_yfs.h"
- 
--static const struct afs_fid afs_zero_fid;
--
- static inline void afs_use_fs_server(struct afs_call *call, struct afs_cb_interest *cbi)
- {
- 	call->cbi = afs_get_cb_interest(cbi);
+Reviewed-by: James Morse <james.morse@arm.com>
 
 
+Will/Catalin, any chance you could pick this up for v5.8?
+
+Original message:
+https://lore.kernel.org/linux-arm-kernel/20200422122823.1390-1-sudeep.holla@arm.com/
+
+
+Thanks!
+
+James
