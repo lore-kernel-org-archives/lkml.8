@@ -2,221 +2,70 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33A8C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A290FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB9C82075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="Ffwvw4KO"
+	by mail.kernel.org (Postfix) with ESMTP id 7FF4C206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588617512;
+	bh=y7Pu1FubvJ8XEaBkpZaNRpWFQQvvFrFooiqYxgdFwlI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=Wq9Pl1JApYDQ0vXLr6K3CIFBdcs2PbZRgOMDPIRX//XHs0wpRN6YcwEjVrWtXJRlP
+	 7T4Wn3jb1xOiPTUrPFISoDMm3EH/Fp5SzVPkaPahzk8EhDpBabp1mxlsN2FoKr2GBB
+	 2Cw9EFn/OKj0CXVL40SASCyDF3wanT1NYnxUMLr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgEDSh3 (ORCPT
+        id S1726770AbgEDSib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:37:29 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:6174 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725981AbgEDSh1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:37:27 -0400
-X-Greylist: delayed 10771 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 May 2020 14:37:27 EDT
-Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FVLif032765;
-        Mon, 4 May 2020 11:37:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=qKQjYVmtNTVgpbpac2gqElMiV14sV7QCUi4AU9A9xJo=;
- b=Ffwvw4KOWUQzKXiWWP0056LuzyE4Me+2yUY5XgAhf0vXZbfxsgeaSY0jY/ufipHDxErl
- VLQZQfgcMttzZq9VO2bVHdsSqtQ7arYubUsAp8CX/8b9/EsIhsHpcki7U8NBDcLfAkEW
- SqCiL2p19EmCcvdusbYp4wxokLeiZELS00HdzblfDN0rd5zNSjiFcPZkwzDnt7BzvOIT
- irOXmFjSd3uheocPw8k4KFZZYfW0gIG2cHha9UC+wsTd/V/U/3yoPmx5BtcHZaUPY14C
- BqyVtMYg8Dyn+GgPBkYDibi/Rs2tx+08XkxzcmZAoeGGIVN9Zav8n8PQakRr38scKYxq ZQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 30sxjm2eks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 11:37:54 -0400
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044FWhDC053426;
-        Mon, 4 May 2020 11:37:54 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0b-00154901.pphosted.com with ESMTP id 30s57eg0g7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 May 2020 11:37:54 -0400
-X-LoopCount0: from 10.166.132.128
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
-   d="scan'208";a="1384301358"
-From:   <Mario.Limonciello@dell.com>
-To:     <hdegoede@redhat.com>, <dvhart@infradead.org>, <andy@infradead.org>
-CC:     <linux-acpi@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
- switch on "Detachable" and "Portable" chassis-types
-Thread-Topic: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode
- switch on "Detachable" and "Portable" chassis-types
-Thread-Index: AQHWIK+7lmbxrem4aUOvjmuguWcpP6iYECVg
-Date:   Mon, 4 May 2020 15:37:51 +0000
-Message-ID: <7c3e5f844a224ff780cd8e3b3f5f7641@AUSX13MPC101.AMER.DELL.COM>
-References: <20200502182951.114231-1-hdegoede@redhat.com>
- <20200502182951.114231-5-hdegoede@redhat.com>
-In-Reply-To: <20200502182951.114231-5-hdegoede@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-05-04T15:37:48.8278993Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=5e6660b9-a2eb-46dd-82e8-74aa2b3a23f5;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.60]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_10:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- bulkscore=0 phishscore=0 clxscore=1011 mlxlogscore=999 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040126
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- malwarescore=0 adultscore=0 clxscore=1011 spamscore=0 priorityscore=1501
- phishscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005040126
+        Mon, 4 May 2020 14:38:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgEDSi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:38:29 -0400
+Subject: Re: [GIT PULL] vhost: fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588617305;
+        bh=y7Pu1FubvJ8XEaBkpZaNRpWFQQvvFrFooiqYxgdFwlI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=o0+z+lEgyX0XO0M7qlk60y8gvXxm+B6YVhwMNbOooUgwauzhVMCt/iHrM/8Us84/I
+         NQq+6lH48j3BGusVJfeNnvuYfBB5Hh356hYbLBSr3dG7hdxtouET22MjN64Tcun/cw
+         79y9gGmTovRi2prymYxytR1uEJmUKeN4JuEGaWJ4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200504081540-mutt-send-email-mst@kernel.org>
+References: <20200504081540-mutt-send-email-mst@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200504081540-mutt-send-email-mst@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+X-PR-Tracked-Commit-Id: 0b841030625cde5f784dd62aec72d6a766faae70
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a16a47e98a30ae6a424d30ce9f4f99e4d9384713
+Message-Id: <158861730512.3296.10840791650276451054.pr-tracker-bot@kernel.org>
+Date:   Mon, 04 May 2020 18:35:05 +0000
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        justin.he@arm.com, ldigby@redhat.com, mst@redhat.com, n.b@live.com,
+        stefanha@redhat.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Mon, 4 May 2020 08:15:40 -0400:
 
+> https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
 
-> -----Original Message-----
-> From: Hans de Goede <hdegoede@redhat.com>
-> Sent: Saturday, May 2, 2020 1:30 PM
-> To: Darren Hart; Andy Shevchenko; Limonciello, Mario
-> Cc: Hans de Goede; linux-acpi@vger.kernel.org; platform-driver-
-> x86@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 4/5] platform/x86: intel-vbtn: Also handle tablet-mode sw=
-itch
-> on "Detachable" and "Portable" chassis-types
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> Commit de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-> switch on 2-in-1's") added a DMI chassis-type check to avoid accidentally
-> reporting SW_TABLET_MODE =3D 1 to userspace on laptops.
->=20
-> Some devices with a detachable keyboard and using the intel-vbnt (INT33D6=
-)
-> interface to report if they are in tablet mode (keyboard detached) or not=
-,
-> report 32 / "Detachable" as chassis-type, e.g. the HP Pavilion X2 series.
->=20
-> Other devices with a detachable keyboard and using the intel-vbnt (INT33D=
-6)
-> interface to report SW_TABLET_MODE, report 8 / "Portable" as chassis-type=
-.
-> The Dell Venue 11 Pro 7130 is an example of this.
->=20
-> Extend the DMI chassis-type check to also accept Portables and Detachable=
-s
-> so that the intel-vbtn driver will report SW_TABLET_MODE on these devices=
-.
->=20
-> Note the chassis-type check was originally added to avoid a false-positiv=
-e
-> tablet-mode report on the Dell XPS 9360 laptop. To the best of my knowled=
-ge
-> that laptop is using a chassis-type of 9 / "Laptop", so after this commit
-> we still ignore the tablet-switch for that chassis-type.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a16a47e98a30ae6a424d30ce9f4f99e4d9384713
 
-Yes that's correct.
+Thank you!
 
->=20
-> Fixes: de9647efeaa9 ("platform/x86: intel-vbtn: Only activate tablet mode
-> switch on 2-in-1's")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Looking at the Microsoft Windows documentation for tablet-mode reporting:
-> https://docs.microsoft.com/en-us/windows-hardware/drivers/gpiobtn/button-
-> implementation
->=20
-> Then the presence of a tablet-mode switch is indicated by the presence
-> of a PNP0C60 compatible ACPI devices. There are 2 ways in which this devi=
-ce
-> can report the tablet-mode. 1. Directly providing a GpioInt resource insi=
-de
-> the PNP0C60 device, 2. Through injecting events from a Windows driver.
->=20
-> It seems that the intel-vbtn / the INT33D6 ACPI device is the ACPI side
-> of Intel's generic solution for the case where the tablet-mode comes from
-> the embedded-controller and needs to be "injected".
->=20
-> This all suggests that it might be better to replace the chassis-type
-> check with a acpi_dev_present("PNP0C60", NULL, -1) check.
->=20
-> Mario, can you provide an acpidump and alsa-info.sh output for the
-> Dell XPS 9360, so that I can check if that might help with the issue
-> there, and thus is a potential candidate to replace the chassis-type
-> check?
-
-Unfortunately with WFH right now, I don't have access to a XPS 9630 to
-double check the patch series.
-
-However I do agree this should be a good approach.
-
-Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
-
-> ---
->  drivers/platform/x86/intel-vbtn.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/int=
-el-
-> vbtn.c
-> index 500fae82e12c..4921fc15dc6c 100644
-> --- a/drivers/platform/x86/intel-vbtn.c
-> +++ b/drivers/platform/x86/intel-vbtn.c
-> @@ -158,12 +158,22 @@ static void detect_tablet_mode(struct platform_devi=
-ce
-> *device)
->  static bool intel_vbtn_has_switches(acpi_handle handle)
->  {
->  	const char *chassis_type =3D dmi_get_system_info(DMI_CHASSIS_TYPE);
-> +	unsigned long chassis_type_int;
->  	unsigned long long vgbs;
->  	acpi_status status;
->=20
-> -	if (!(chassis_type && strcmp(chassis_type, "31") =3D=3D 0))
-> +	if (kstrtoul(chassis_type, 10, &chassis_type_int))
->  		return false;
->=20
-> +	switch (chassis_type_int) {
-> +	case  8: /* Portable */
-> +	case 31: /* Convertible */
-> +	case 32: /* Detachable */
-> +		break;
-> +	default:
-> +		return false;
-> +	}
-> +
->  	status =3D acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
->  	return ACPI_SUCCESS(status);
->  }
-> --
-> 2.26.0
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
