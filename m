@@ -2,269 +2,220 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20236C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F6CC47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E816A206B9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A331C206B9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 14:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R04Fjb4R"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NucxclL+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgEDOtS (ORCPT
+        id S1729166AbgEDOtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 10:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728353AbgEDOtR (ORCPT
+        Mon, 4 May 2020 10:49:50 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17314 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728821AbgEDOtt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 10:49:17 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87531C061A0F
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 07:49:17 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s20so6849670plp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 07:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5lmoQJYoeg3ybSPwplhMkrooqQOGOYA7nU2sY4Dq1pc=;
-        b=R04Fjb4R2zQrBdDiS1rI1lH0gMnWxIPItV5U2BOiCIby5HxxzYV7c9vaEBIuSU6TKc
-         N9yJAqZKcVjZS3dG2Rah6YyW6mKqK9XGAwKP4ZTnARpmIBVYbSR+v9/ffySNScve9KAS
-         fFp6YUwxhiVFrKpnhfNdNztyuV6JtUulx7ImPpPksB5T3uIrbqLIc2QZ0DIaH7vmMYa/
-         mlSuf4zp+Oh+k8sETM+eBqNyneLDT6QlrGT3CmLeedUqmbAq6giRJxV29uKfbeWsbvDB
-         yM6pyiRw2db9pa0Tm3awQzKDxTdw3iafUgw096RzVZ2cKOSKyRo5hi5nclBmgK32UOHY
-         x8EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5lmoQJYoeg3ybSPwplhMkrooqQOGOYA7nU2sY4Dq1pc=;
-        b=W8u+RjVSjM/n211Y4YL3Bq1Em4agjqp81rBdZ9oGa5AxWX9/bR9v4MdQLnf0gsfhjp
-         lIkhPN5HEFXqMrvDbJlb7Qi69ATECn19jE/g1/ZDm0K3Uhlyd1Py26JNG3jaI56si+B0
-         sLRe3J/85lkdoJ5xEoaX1uSt1lDb8cVFS/eIY/aLftYmWGvxzzu8SuO0Z81HzZNBrdqP
-         uLPmajaEMWH938GjgfGBzdoVjZtAnjULwGAmJBOEgo1kv+3yyUydJ6i45gb2ZTBVGV6l
-         KUGRm/wQlAgoj1abYvpAdK72UoPRBfTgdp+WvYbRFxoHTolIO870cL/bfPr+wxED+gUw
-         TxYg==
-X-Gm-Message-State: AGi0Pub/cT28XuXllgeyH0/EsPY/krOEXilmeZUaGPN8Mdygd65frxky
-        Bdgmifjw9wRwKoeKD9CWhGo2
-X-Google-Smtp-Source: APiQypJjIapp5XKSell2YBv+inFoZ8mKXrHBT+VFs3IVljbQMp6IsqaBr1+529ONpM1jjcEHWag4sQ==
-X-Received: by 2002:a17:902:fe8e:: with SMTP id x14mr18541862plm.128.1588603756751;
-        Mon, 04 May 2020 07:49:16 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:41c:f7b5:bdcc:167e:2cd1:efea])
-        by smtp.gmail.com with ESMTPSA id p66sm9009181pfb.65.2020.05.04.07.49.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 May 2020 07:49:15 -0700 (PDT)
-Date:   Mon, 4 May 2020 20:19:06 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     davem@davemloft.net
-Cc:     gregkh@linuxfoundation.org, smohanad@codeaurora.org,
-        jhugo@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clew@codeaurora.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] net: qrtr: Add MHI transport layer
-Message-ID: <20200504144906.GF3391@Mani-XPS-13-9360>
-References: <20200427075829.9304-1-manivannan.sadhasivam@linaro.org>
- <20200427075829.9304-3-manivannan.sadhasivam@linaro.org>
+        Mon, 4 May 2020 10:49:49 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5eb02b470001>; Mon, 04 May 2020 07:48:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 May 2020 07:49:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 May 2020 07:49:49 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May
+ 2020 14:49:49 +0000
+Received: from [10.2.165.119] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 May 2020
+ 14:49:47 +0000
+Subject: Re: [RFC PATCH v11 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1588197606-32124-1-git-send-email-skomatineni@nvidia.com>
+ <668cc4a0-2c81-0d87-b801-9fbf64e19137@nvidia.com>
+ <bf3f654e-b8f8-d560-fc5e-03d73cb7eab0@nvidia.com>
+ <525e481b-9137-6fdd-bbf9-3779a5704e6b@nvidia.com>
+ <fe7ebad6-0368-b1f0-4f58-648baa5e3f79@nvidia.com>
+ <4f095181-2338-3b71-316c-f8bbfc7865cc@nvidia.com>
+ <50e872bb-913a-7b47-3264-af6b1cedb0e2@nvidia.com>
+ <e17a8a49-be53-465d-f64c-3f4c77391d98@nvidia.com>
+ <da5154b4-85f9-3e56-a440-f75debaec3a8@nvidia.com>
+ <cbb047ae-97dc-8b9a-a5ba-8e2a5dab3771@nvidia.com>
+ <6ae2d00d-7955-d12b-5b56-955ef72ece26@nvidia.com>
+ <f9073b28-f1f1-636c-be53-764fb0a531a1@gmail.com>
+ <1767e50f-efb7-5e89-22f6-0917821b660d@nvidia.com>
+ <235a4cd4-4d4a-04b8-6c65-43a4dba48a0b@nvidia.com>
+ <f8103170-7879-8597-3e3c-da9a3b6a40b3@nvidia.com>
+ <5d847770-dad9-8f18-67b5-c1ba79084957@nvidia.com>
+ <4abf30e0-fed9-ba39-ae38-350789bce99d@gmail.com>
+ <b5f6a4e0-6e97-05ae-f034-b84fc5a1129a@nvidia.com>
+ <eddb1de3-81c2-159b-b24b-2e30ba2ba948@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <89f0835c-d946-2288-b867-25f1ef1ae583@nvidia.com>
+Date:   Mon, 4 May 2020 07:50:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427075829.9304-3-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <eddb1de3-81c2-159b-b24b-2e30ba2ba948@xs4all.nl>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1588603719; bh=8yGX7LmfP3dxzmPn9zc00N6IVAfMQdLzgvlsfYKzE20=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=NucxclL+MWs/EZiDmzt/9XMxunSA8BNQkYR+W5SQ9uK5Oo9RdoTzPXRXBOrRcM+X7
+         iVTSKXM0IPLI5aFvp1u1AolhMMOFociSVO62PqC54l03qPx4L35Y4l/ZWJWczLeNaw
+         Clp6vjDkG0uKBQIrbX07gOcwNFk8YdrIiRHsSdyCm/rw7lpAI6scatQ4ELQOKoJ4r7
+         yn3npaYrkuNxUjYqNhT+IaDMWP1DTxCGJDo6BDZcEodbVtjOl0deCalsc8hq7wL+AU
+         iAiTYzq9q1QUKhEehgwE/vNHSA8EBtubrAFMchPUnPU0T43eJ/Mb3WZOwjc3Vk4yVa
+         VooggUMVe58fQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
 
-On Mon, Apr 27, 2020 at 01:28:28PM +0530, Manivannan Sadhasivam wrote:
-> MHI is the transport layer used for communicating to the external modems.
-> Hence, this commit adds MHI transport layer support to QRTR for
-> transferring the QMI messages over IPC Router.
-> 
+On 5/4/20 5:18 AM, Hans Verkuil wrote:
+> On 03/05/2020 00:46, Sowjanya Komatineni wrote:
+>> On 5/2/20 1:48 PM, Dmitry Osipenko wrote:
+>>> 02.05.2020 19:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Also stop stream ioctl request happens during suspend where both threa=
+ds
+>>>> will be stopped properly. done thread stop happens only after finishin=
+g
+>>>> all outstanding buffers.
+>>> Do you mean that V4L core takes care of stopping the streami on suspend
+>>> and re-starting it on resume from suspend?
+>>>
+>>>> Stop stream request happens from streaming applications so even withou=
+t
+>>>> driver suspend/resume implementation currently, streaming will be
+>>>> stopped prior to system=C2=A0 suspend where both threads will be stopp=
+ed
+>>>> properly (after finishing out standing buffers) and will be resumed by
+>>>> application on system resume
+>>> All userspace is frozen on suspend. System suspension is transparent fo=
+r
+>>> userspace applications. I'm not sure what you're meaning here.
+>>>
+>>>> Also tested suspending while streaming with this unconditional freeze,=
+ I
+>>>> don't see any issue as application stops stream where v4l_streamoff ge=
+ts
+>>>> executed during suspend and on resume streaming starts where
+>>>> v4l_streamon happens.
+>>>>
+>>>> So, I don't see any issue with existing implementation of unconditiona=
+l
+>>>> freeze.
+>>> I don't understand why freezing is needed at all if V4L core takes care
+>>> of stopping the stream on suspend, what is the point? If there is no
+>>> real point, then let's make threads non-freezable and done with that.
+>> video device fops unlocked_ioctl is set to video_ioctl2() in vi driver.
+>>
+>> video device fops unlocked_ioctl gets executed with stream off cmd
+>> during suspend and stream on cmd during resume which eventually calls
+>> v4l_streamoff and v4l_streamon during system suspend/resume.
+> That's news to me. The 'only' thing that suspend/resume needs to do is to
+> stop the HW DMA on suspend and to restart the HW DMA (and typically recon=
+figure
+> the whole HW video pipeline) on resume. Userspace doesn't do anything spe=
+cial.
+>
+> That's how e.g. a UVC webcam behaves when you close the lid of a laptop w=
+hile
+> it is streaming and open it again later.
+>
+> It can be hard to get this right, and I suspect many media drivers will f=
+ail
+> this test.
 
-Can you please review this driver? It'd be great if this ends up in v5.8
-along with all other MHI patches.
+when video device node path is kept opened during suspend, on suspend=20
+entry looks like inode path is tried to closes and on resume opened=20
+again causing v4l2 stream off/on thru v4l2 ioctl.
 
-Thanks,
-Mani
+Based on our testing even with downstream and user applications, we=20
+always see video device node path close/open during suspend/resume which=20
+does v4l2 stream off/on.
 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  net/qrtr/Kconfig  |   7 +++
->  net/qrtr/Makefile |   2 +
->  net/qrtr/mhi.c    | 127 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 136 insertions(+)
->  create mode 100644 net/qrtr/mhi.c
-> 
-> diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
-> index 63f89cc6e82c..8eb876471564 100644
-> --- a/net/qrtr/Kconfig
-> +++ b/net/qrtr/Kconfig
-> @@ -29,4 +29,11 @@ config QRTR_TUN
->  	  implement endpoints of QRTR, for purpose of tunneling data to other
->  	  hosts or testing purposes.
->  
-> +config QRTR_MHI
-> +	tristate "MHI IPC Router channels"
-> +	depends on MHI_BUS
-> +	help
-> +	  Say Y here to support MHI based ipcrouter channels. MHI is the
-> +	  transport used for communicating to external modems.
-> +
->  endif # QRTR
-> diff --git a/net/qrtr/Makefile b/net/qrtr/Makefile
-> index 32d4e923925d..1b1411d158a7 100644
-> --- a/net/qrtr/Makefile
-> +++ b/net/qrtr/Makefile
-> @@ -5,3 +5,5 @@ obj-$(CONFIG_QRTR_SMD) += qrtr-smd.o
->  qrtr-smd-y	:= smd.o
->  obj-$(CONFIG_QRTR_TUN) += qrtr-tun.o
->  qrtr-tun-y	:= tun.o
-> +obj-$(CONFIG_QRTR_MHI) += qrtr-mhi.o
-> +qrtr-mhi-y	:= mhi.o
-> diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
-> new file mode 100644
-> index 000000000000..2a2abf5b070d
-> --- /dev/null
-> +++ b/net/qrtr/mhi.c
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/mhi.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/skbuff.h>
-> +#include <net/sock.h>
-> +
-> +#include "qrtr.h"
-> +
-> +struct qrtr_mhi_dev {
-> +	struct qrtr_endpoint ep;
-> +	struct mhi_device *mhi_dev;
-> +	struct device *dev;
-> +};
-> +
-> +/* From MHI to QRTR */
-> +static void qcom_mhi_qrtr_dl_callback(struct mhi_device *mhi_dev,
-> +				      struct mhi_result *mhi_res)
-> +{
-> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
-> +	int rc;
-> +
-> +	if (!qdev || mhi_res->transaction_status)
-> +		return;
-> +
-> +	rc = qrtr_endpoint_post(&qdev->ep, mhi_res->buf_addr,
-> +				mhi_res->bytes_xferd);
-> +	if (rc == -EINVAL)
-> +		dev_err(qdev->dev, "invalid ipcrouter packet\n");
-> +}
-> +
-> +/* From QRTR to MHI */
-> +static void qcom_mhi_qrtr_ul_callback(struct mhi_device *mhi_dev,
-> +				      struct mhi_result *mhi_res)
-> +{
-> +	struct sk_buff *skb = (struct sk_buff *)mhi_res->buf_addr;
-> +
-> +	if (skb->sk)
-> +		sock_put(skb->sk);
-> +	consume_skb(skb);
-> +}
-> +
-> +/* Send data over MHI */
-> +static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff *skb)
-> +{
-> +	struct qrtr_mhi_dev *qdev = container_of(ep, struct qrtr_mhi_dev, ep);
-> +	int rc;
-> +
-> +	rc = skb_linearize(skb);
-> +	if (rc)
-> +		goto free_skb;
-> +
-> +	rc = mhi_queue_skb(qdev->mhi_dev, DMA_TO_DEVICE, skb, skb->len,
-> +			   MHI_EOT);
-> +	if (rc)
-> +		goto free_skb;
-> +
-> +	if (skb->sk)
-> +		sock_hold(skb->sk);
-> +
-> +	return rc;
-> +
-> +free_skb:
-> +	kfree_skb(skb);
-> +
-> +	return rc;
-> +}
-> +
-> +static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
-> +			       const struct mhi_device_id *id)
-> +{
-> +	struct qrtr_mhi_dev *qdev;
-> +	int rc;
-> +
-> +	qdev = devm_kzalloc(&mhi_dev->dev, sizeof(*qdev), GFP_KERNEL);
-> +	if (!qdev)
-> +		return -ENOMEM;
-> +
-> +	qdev->mhi_dev = mhi_dev;
-> +	qdev->dev = &mhi_dev->dev;
-> +	qdev->ep.xmit = qcom_mhi_qrtr_send;
-> +
-> +	dev_set_drvdata(&mhi_dev->dev, qdev);
-> +	rc = qrtr_endpoint_register(&qdev->ep, QRTR_EP_NID_AUTO);
-> +	if (rc)
-> +		return rc;
-> +
-> +	dev_dbg(qdev->dev, "Qualcomm MHI QRTR driver probed\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_mhi_qrtr_remove(struct mhi_device *mhi_dev)
-> +{
-> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
-> +
-> +	qrtr_endpoint_unregister(&qdev->ep);
-> +	dev_set_drvdata(&mhi_dev->dev, NULL);
-> +}
-> +
-> +static const struct mhi_device_id qcom_mhi_qrtr_id_table[] = {
-> +	{ .chan = "IPCR" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(mhi, qcom_mhi_qrtr_id_table);
-> +
-> +static struct mhi_driver qcom_mhi_qrtr_driver = {
-> +	.probe = qcom_mhi_qrtr_probe,
-> +	.remove = qcom_mhi_qrtr_remove,
-> +	.dl_xfer_cb = qcom_mhi_qrtr_dl_callback,
-> +	.ul_xfer_cb = qcom_mhi_qrtr_ul_callback,
-> +	.id_table = qcom_mhi_qrtr_id_table,
-> +	.driver = {
-> +		.name = "qcom_mhi_qrtr",
-> +	},
-> +};
-> +
-> +module_mhi_driver(qcom_mhi_qrtr_driver);
-> +
-> +MODULE_AUTHOR("Chris Lew <clew@codeaurora.org>");
-> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-> +MODULE_DESCRIPTION("Qualcomm IPC-Router MHI interface driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.17.1
-> 
+
+>> My understanding to have freezable threads is during system suspend user
+>> space applications are frozen prior to kernel freeze and during suspend
+>> when opened video character device node gets closed these ioctl gets
+>> invoked and stream off during suspend and stream on during resume
+>> happens. So probably we still need to use freezable threads to sync with
+>> user space application when frozen before really entering suspend.
+>>
+>> Will wait for Thierry/Hans comment to correct if my above understanding
+>> is wrong and help clarify if we need freezable threads at all in this
+>> case...
+>>
+>> Note: I see other drivers using freezable threads for capture drivers.
+> Well, it's often a copy-and-paste without truly understanding what is
+> going on. You should not assume that the author knew what was happening.
+>
+> To be honest, I'm not an expert on this either.
+>
+> Looking at the tegra start/finish threads: they basically look at the
+> chan->capture and chan->done lists. Freezing the threads should not be
+> a problem as long as the actual suspend/resume doesn't mess with those
+> lists. If it does, then it may get tricky to prove that it is safe to
+> do suspend/resume (I think).
+>
+> An alternative is to stop and restart those threads when suspending or
+> resuming. Then those threads do not need to be 'freezable' and it might
+> be easier to validate the code.
+>
+> In any case, I do not want to postpone the merger of the upcoming v12 for
+> this. Changes can be done in later patches, if needed.
+>
+> Regards,
+>
+> 	Hans
+
+Thanks Hans.
+
+Buffers list don't get altered after frozen and during suspend/resume=20
+till they are out of freeze.
+
+Will remove freezable threads and move on for v12.
+
+Will validate suspend/resume later after all sensor support.
+
+>>
+>> Assuming we use freezable threads, I was saying we don't need
+>> conditional try_to_freeze() like you pointed because even if finish
+>> thread freeze happens prior to frame capture initiated by start thread,
+>> vi hardware will still continue to update this single ongoing buffer and
+>> will finish max within 200ms and actually there is no direct processing
+>> of this done by finish thread itself except that it returns buffers back
+>> when done and in this case it returns back when unfreeze/wake up happens=
+.
+>>
+>> So, I don't see any issue of unconditional try_to_freeze() even with
+>> freezable threads.
+>>
+>> Thanks
+>>
+>> Sowjanya
+>>
+>>
