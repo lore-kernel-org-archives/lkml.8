@@ -2,81 +2,99 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FA4C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE25DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8A5C20746
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A30020746
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 07:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PRMxKoWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgEDHuH (ORCPT
+        id S1728079AbgEDHvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 03:50:07 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:54846 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgEDHuG (ORCPT
+        Mon, 4 May 2020 03:51:52 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13281 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727951AbgEDHvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 03:50:06 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 49Fw4X1fhdz1s2JQ;
-        Mon,  4 May 2020 09:50:04 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 49Fw4W6xgCz1r5Qh;
-        Mon,  4 May 2020 09:50:03 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id F_9UJHi4s1bK; Mon,  4 May 2020 09:50:03 +0200 (CEST)
-X-Auth-Info: zCP8j9WucMgE0ljkVLi9b0ZsyqeoqFTivgiAMvw7NZx8rvlJXclL55S702m2QlDj
-Received: from igel.home (ppp-46-244-166-96.dynamic.mnet-online.de [46.244.166.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 May 2020 03:51:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1588578712; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Gm+ck2cB95VAaRfiAV1AhlwdbM3i0yfSnXxwhtbbaZE=; b=PRMxKoWT7MJhMmJCpqxHCiQ+Gz6BhFh9ud6EkKL8oqBpWpZXOdpFaiEUt9kWiyVi8FhWDI/Q
+ TrYSHfD5L5rOMm5ZXkqR/elCdLdyctldAr/9ebNuRUeozRIL7rJhdpEJ3mevOJCkSkPaVqDb
+ t34vkEKN0qt5I6MEotJAK9w9Jwk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eafc987.7f4fa18ee9d0-smtp-out-n05;
+ Mon, 04 May 2020 07:51:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F5DAC432C2; Mon,  4 May 2020 07:51:34 +0000 (UTC)
+Received: from [10.110.9.159] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon,  4 May 2020 09:50:03 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id 8BB672C0B3F; Mon,  4 May 2020 09:50:02 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Zong Li <zong.li@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Atish Patra <atishp@atishpatra.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Greentime Hu <greentime.hu@sifive.com>
-Subject: Re: [PATCH v2] riscv: force __cpu_up_ variables to put in data section
-References: <20200504035448.13893-1-zong.li@sifive.com>
-        <CAAhSdy23jzYvZcmXoX_5F1wDenBQ8NpvNpoO41=aBGHoONPCgg@mail.gmail.com>
-X-Yow:  TAILFINS!!  ...click...
-Date:   Mon, 04 May 2020 09:50:02 +0200
-In-Reply-To: <CAAhSdy23jzYvZcmXoX_5F1wDenBQ8NpvNpoO41=aBGHoONPCgg@mail.gmail.com>
-        (Anup Patel's message of "Mon, 4 May 2020 11:55:05 +0530")
-Message-ID: <87tv0w3zrp.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE2CC433CB;
+        Mon,  4 May 2020 07:51:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE2CC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v6 0/5] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1586472749-18599-1-git-send-email-wcheng@codeaurora.org>
+ <20200504071502.GM1375924@vkoul-mobl>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <655be70d-918b-7a59-8a6d-48d542226486@codeaurora.org>
+Date:   Mon, 4 May 2020 00:51:32 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200504071502.GM1375924@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mai 04 2020, Anup Patel wrote:
 
-> Slightly improved text:
->
-> This issue happens on random booting of multiple harts, which means
-> it will manifest for BBL and OpenSBI v0.6 (or older version). In OpenSBI
-> v0.7 (or higher version), we have HSM extension so all the secondary harts
-> are brought-up by Linux kernel in an orderly fashion. This means we don't
-> this change for OpenSBI v0.7 (or higher version).
 
-  +need
+On 5/4/2020 12:15 AM, Vinod Koul wrote:
+> Hi Wesley,
+> 
+> On 09-04-20, 15:52, Wesley Cheng wrote:
+>> This series adds support for the Synopsis 7nm HSPHY USB driver being
+>> used in QCOM chipsets.  The HSPHY register map differs compared to 
+>> other PHY revisions.  In addition, modifications and updates are done
+>> to the QMP driver to add new registers/offsets, and to update the
+>> initialization sequence for enabling the SSUSB path on SM8150.
+> 
+> This fails to apply for me, Can you please rebase on
+> git://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git next and
+> send.
+> 
+> Also, I saw checkpatch --strict complain about "Alignment should match
+> open parenthesis" please check and fix while not sacrificing readablity.
+> 
+> Thanks
+> 
 
-Andreas.
+Hi Vinod,
+
+Got it!  Will rebase and fix warnings, and resend a patch revision
+tomorrow.  Thanks again.
 
 -- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
