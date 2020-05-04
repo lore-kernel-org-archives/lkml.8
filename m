@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3FEC4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525D6C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E540820705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2104F2073E
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bKAVJVfv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSYOfPqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbgEDQnI (ORCPT
+        id S1729738AbgEDQoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:43:08 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25802 "EHLO
+        Mon, 4 May 2020 12:44:13 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36414 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729763AbgEDQnH (ORCPT
+        by vger.kernel.org with ESMTP id S1729604AbgEDQoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:43:07 -0400
+        Mon, 4 May 2020 12:44:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588610585;
+        s=mimecast20190719; t=1588610651;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GtApzUfokLS7omIB/pNhaYPNg8NkAnWoGXJgtxsC+h4=;
-        b=bKAVJVfvEW0xUtvqDvXzj8cJJevyBqdkZufMOf2W796B5BBMdvrWgmWyxyJWfmi3HahPcY
-        8dSOigp7QEJKLKAhaMdCGa62e4ONc1aOYZ3yvAOV2xAfd30UYf54a786q+arsqWD/OxqsU
-        FCIgCl6cVge/IzsEZDALIKtxCXiZBRc=
+        bh=+M6/Lj841qYSV8Ztwzmd8tANiqUnsdBx4XN2CRc3s4s=;
+        b=BSYOfPqGieeWjyxbFqjxrj7k7juKd2Z7z3grK5yIax2YLdIzRDm9KeHqlXCEO4hfyTQ13O
+        XHKfoFAXLZ9quNNMxV62rRamhgt6xGM5O0vA7/LklrRZ+PlA+dZNXl//J3MvsubQDededi
+        7YcCMgWtAik919nZRrojfMkyXEGiMjs=
 Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
  [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-AspRJB_MPpmM-nmfPiYqKA-1; Mon, 04 May 2020 12:43:03 -0400
-X-MC-Unique: AspRJB_MPpmM-nmfPiYqKA-1
-Received: by mail-wr1-f70.google.com with SMTP id o6so6127wrn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:43:03 -0700 (PDT)
+ us-mta-150-OvWiR4lRPtmEsLslht8yWA-1; Mon, 04 May 2020 12:44:09 -0400
+X-MC-Unique: OvWiR4lRPtmEsLslht8yWA-1
+Received: by mail-wr1-f70.google.com with SMTP id 30so599393wrp.22
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:44:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=GtApzUfokLS7omIB/pNhaYPNg8NkAnWoGXJgtxsC+h4=;
-        b=T/W1QqFymjpHrwCQXe5A6F4X8KLXVr0w+EdbOxcCcTDUUI4QRsDBeVZwdPxQClRWXg
-         5qpKCcsGg7IWWFYrEnZXj7Iu0sRJgQhljB1n00fbxCO+TP9pZ6zdwZlAOGM9FgdpMZwB
-         OlySFpL6vIxBpVJxe6bkEAqY3lWgxa0lZuvEJoqJQqQ3CSXdkbo1ORW2Wcg7AG20a3eE
-         /ExZDrCcCirGUobeYJLZVtDx2k4k4G2Npft19EONQhSz1piYlgcubxvf25GqVuMP/n38
-         2Kr7rHfrPN1BUH0768UJj3rdjs1wTgYcTw5MGKOuEY7KQWmhpUOsvdSx+HuSIusT9p+K
-         CPGg==
-X-Gm-Message-State: AGi0PuYH+1nTaKhfhFM3Dfja8SeN6I4oAQlJJfsatLNJTIQhekJYWTzQ
-        S3AyqMuTDGCU+Z2+jmzMwdMdAkNjIWAudTnSsbOLgOfRQR9mP/ZSDuAPuuKqm7xPNwRRWEMoPLh
-        h4Wa4M1dPhxquWLDFjNrxuoqY
-X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr14954462wmc.14.1588610582082;
-        Mon, 04 May 2020 09:43:02 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL6zujbTZuyAEyDWYpc9QG2HnUm3DpX/89rPeuSrmhaQDiB3SMv56k2ZIGLdtlAFde93Nj3GQ==
-X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr14954433wmc.14.1588610581736;
-        Mon, 04 May 2020 09:43:01 -0700 (PDT)
+        bh=+M6/Lj841qYSV8Ztwzmd8tANiqUnsdBx4XN2CRc3s4s=;
+        b=ENivgWRZNFtolMixHom/d1ieuTQbY4EQhxXWKreyr3yo0BC/TFUNm7zZ5anaPH4Rn8
+         jsxz3nelY6vnKqtEsVlSuix5ewKZZkumQibGZygMvBySj6QItSZ7NBr9h+gd7bPAN8kg
+         51r4MinSLDq6jH0gMW0zHPhHcWaz44sVJkbv9egBJtSamp71cFg2dtpexn7Oo4qhzaXW
+         osmDv8xrsCSt2VN8IKWIxZpLKfdzmInA17OA0bQjnDQnRtHn3Npi8mJXIpCw504GPvqE
+         wmtDo0qnWD1bhmcRxxNrk92PV2ygDYJ1sC6zHoTZJl2IB2At0bcq54tIkCvqVvGt6Q6+
+         f1dw==
+X-Gm-Message-State: AGi0PubnxDLgelyhRijof/yhBq1OEiVD8kaukcaXWHMR6svXR1GJT//h
+        E1cnoYfJdJjJyM1QigJn1Ejxw2L6GQTGvkBdTXlxBRjoqiJJtBdurHb/06uI3AM8ndUlYkwIv3n
+        KdNltZbqHDgcnpODzHSSLnmn7
+X-Received: by 2002:a1c:dc0a:: with SMTP id t10mr15229834wmg.113.1588610648199;
+        Mon, 04 May 2020 09:44:08 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJ0cze6zl1D2HX7FNX7uCHrNwHQJxh/yuDMpozw7eywpNcw63bfUk8JeQLLBFlKl4OHEkTn5w==
+X-Received: by 2002:a1c:dc0a:: with SMTP id t10mr15229807wmg.113.1588610647828;
+        Mon, 04 May 2020 09:44:07 -0700 (PDT)
 Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id z11sm11650204wro.48.2020.05.04.09.43.00
+        by smtp.gmail.com with ESMTPSA id e13sm18351175wrw.88.2020.05.04.09.44.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:43:01 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: Tweak handling of failure code for nested
+        Mon, 04 May 2020 09:44:07 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: nVMX: Tweak handling of failure code for nested
  VM-Enter failure
 To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
@@ -71,14 +71,14 @@ Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200424171925.1178-1-sean.j.christopherson@intel.com>
+References: <20200428173217.5430-1-sean.j.christopherson@intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <199abef1-d534-d8d6-257f-860d3069cb64@redhat.com>
-Date:   Mon, 4 May 2020 18:43:00 +0200
+Message-ID: <32f20974-5c42-3eba-b586-4c156bb328d0@redhat.com>
+Date:   Mon, 4 May 2020 18:44:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200424171925.1178-1-sean.j.christopherson@intel.com>
+In-Reply-To: <20200428173217.5430-1-sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,7 +87,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/20 19:19, Sean Christopherson wrote:
+On 28/04/20 19:32, Sean Christopherson wrote:
 > Use an enum for passing around the failure code for a failed VM-Enter
 > that results in VM-Exit to provide a level of indirection from the final
 > resting place of the failure code, vmcs.EXIT_QUALIFICATION.  The exit
@@ -121,20 +121,31 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 > disassociating both from vmcs.EXIT_QUALIFICATION, which avoids the
 > conundrum where KVM has to choose between 'u32 exit_qual' and tracking
 > values as 'unsigned long' that have no business being tracked as such.
+> To cement the split, set vmcs12->exit_qualification directly from the
+> entry error code or failed MSR index instead of bouncing through a local
+> variable.
 > 
 > Opportunistically rename the variables in load_vmcs12_host_state() and
-> vmx_set_nested_state() to call out that they're ignored, and add a
-> comment in nested_vmx_load_msr() to call out that returning 'i + 1'
-> can't wrap.
+> vmx_set_nested_state() to call out that they're ignored, set exit_reason
+> on demand on nested VM-Enter failure, and add a comment in
+> nested_vmx_load_msr() to call out that returning 'i + 1' can't wrap.
 > 
 > No functional change intended.
 > 
 > Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Jim Mattson <jmattson@google.com>
 > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  arch/x86/include/asm/vmx.h | 10 ++++++----
->  arch/x86/kvm/vmx/nested.c  | 38 +++++++++++++++++++++-----------------
->  2 files changed, 27 insertions(+), 21 deletions(-)
+> 
+> v2:
+>   - Set vmcs12->exit_qualification directly to avoid writing the failed
+>     MSR index (a u32) to the entry_failure_code enum. [Jim]
+>   - Set exit_reason on demand since the "goto vm_exit" paths need to set
+>     vmcs12->exit_qualification anyways, i.e. already have curly braces.
+> 
+>  arch/x86/include/asm/vmx.h | 10 +++++----
+>  arch/x86/kvm/vmx/nested.c  | 44 ++++++++++++++++++++++----------------
+>  2 files changed, 31 insertions(+), 23 deletions(-)
 > 
 > diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
 > index 5e090d1f03f8..cd7de4b401fe 100644
@@ -158,10 +169,10 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  /*
 >   * Exit Qualifications for EPT Violations
 > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index b516c24494e3..e66320997910 100644
+> index 2c36f3f53108..dc00d1742480 100644
 > --- a/arch/x86/kvm/vmx/nested.c
 > +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -927,6 +927,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
+> @@ -922,6 +922,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
 >  	}
 >  	return 0;
 >  fail:
@@ -169,7 +180,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  	return i + 1;
 >  }
 >  
-> @@ -1122,7 +1123,7 @@ static bool nested_vmx_transition_mmu_sync(struct kvm_vcpu *vcpu)
+> @@ -1117,7 +1118,7 @@ static bool nested_vmx_transition_mmu_sync(struct kvm_vcpu *vcpu)
 >   * @entry_failure_code.
 >   */
 >  static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool nested_ept,
@@ -178,7 +189,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  {
 >  	if (cr3 != kvm_read_cr3(vcpu) || (!nested_ept && pdptrs_changed(vcpu))) {
 >  		if (CC(!nested_cr3_valid(vcpu, cr3))) {
-> @@ -2475,7 +2476,7 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
+> @@ -2470,7 +2471,7 @@ static void prepare_vmcs02_rare(struct vcpu_vmx *vmx, struct vmcs12 *vmcs12)
 >   * is assigned to entry_failure_code on failure.
 >   */
 >  static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
@@ -187,7 +198,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  {
 >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
 >  	struct hv_enlightened_vmcs *hv_evmcs = vmx->nested.hv_evmcs;
-> @@ -2935,11 +2936,11 @@ static int nested_check_guest_non_reg_state(struct vmcs12 *vmcs12)
+> @@ -2930,11 +2931,11 @@ static int nested_check_guest_non_reg_state(struct vmcs12 *vmcs12)
 >  
 >  static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
 >  					struct vmcs12 *vmcs12,
@@ -201,7 +212,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  
 >  	if (CC(!nested_guest_cr0_valid(vcpu, vmcs12->guest_cr0)) ||
 >  	    CC(!nested_guest_cr4_valid(vcpu, vmcs12->guest_cr4)))
-> @@ -2954,7 +2955,7 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
+> @@ -2949,7 +2950,7 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
 >  		return -EINVAL;
 >  
 >  	if (nested_vmx_check_vmcs_link_ptr(vcpu, vmcs12)) {
@@ -210,27 +221,32 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  		return -EINVAL;
 >  	}
 >  
-> @@ -3247,8 +3248,9 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+> @@ -3241,9 +3242,9 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+>  {
 >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
 >  	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
->  	bool evaluate_pending_interrupts;
 > +	enum vm_entry_failure_code entry_failure_code;
->  	u32 exit_reason = EXIT_REASON_INVALID_STATE;
+>  	bool evaluate_pending_interrupts;
+> -	u32 exit_reason = EXIT_REASON_INVALID_STATE;
 > -	u32 exit_qual;
-> +	u32 failed_msr;
+> +	u32 exit_reason, failed_index;
 >  
 >  	if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
 >  		kvm_vcpu_flush_tlb_current(vcpu);
-> @@ -3296,7 +3298,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+> @@ -3291,24 +3292,30 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
 >  			return NVMX_VMENTRY_VMFAIL;
 >  		}
 >  
 > -		if (nested_vmx_check_guest_state(vcpu, vmcs12, &exit_qual))
-> +		if (nested_vmx_check_guest_state(vcpu, vmcs12, &entry_failure_code))
+> +		if (nested_vmx_check_guest_state(vcpu, vmcs12,
+> +						 &entry_failure_code)) {
+> +			exit_reason = EXIT_REASON_INVALID_STATE;
+> +			vmcs12->exit_qualification = entry_failure_code;
 >  			goto vmentry_fail_vmexit;
+> +		}
 >  	}
 >  
-> @@ -3304,16 +3306,18 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+>  	enter_guest_mode(vcpu);
 >  	if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETTING)
 >  		vcpu->arch.tsc_offset += vmcs12->tsc_offset;
 >  
@@ -239,31 +255,31 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  		goto vmentry_fail_vmexit_guest_mode;
 >  
 >  	if (from_vmentry) {
->  		exit_reason = EXIT_REASON_MSR_LOAD_FAIL;
+> -		exit_reason = EXIT_REASON_MSR_LOAD_FAIL;
 > -		exit_qual = nested_vmx_load_msr(vcpu,
 > -						vmcs12->vm_entry_msr_load_addr,
 > -						vmcs12->vm_entry_msr_load_count);
 > -		if (exit_qual)
-> +		failed_msr = nested_vmx_load_msr(vcpu,
-> +						 vmcs12->vm_entry_msr_load_addr,
-> +						 vmcs12->vm_entry_msr_load_count);
-> +		if (failed_msr) {
-> +			entry_failure_code = failed_msr;
+> +		failed_index = nested_vmx_load_msr(vcpu,
+> +						   vmcs12->vm_entry_msr_load_addr,
+> +						   vmcs12->vm_entry_msr_load_count);
+> +		if (failed_index) {
+> +			exit_reason = EXIT_REASON_MSR_LOAD_FAIL;
+> +			vmcs12->exit_qualification = failed_index;
 >  			goto vmentry_fail_vmexit_guest_mode;
 > +		}
 >  	} else {
 >  		/*
 >  		 * The MMU is not initialized to point at the right entities yet and
-> @@ -3377,7 +3381,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
+> @@ -3372,7 +3379,6 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
 >  
 >  	load_vmcs12_host_state(vcpu, vmcs12);
 >  	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
 > -	vmcs12->exit_qualification = exit_qual;
-> +	vmcs12->exit_qualification = entry_failure_code;
 >  	if (enable_shadow_vmcs || vmx->nested.hv_evmcs)
 >  		vmx->nested.need_vmcs12_to_shadow_sync = true;
 >  	return NVMX_VMENTRY_VMEXIT;
-> @@ -4053,8 +4057,8 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+> @@ -4066,8 +4072,8 @@ static void prepare_vmcs12(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
 >  static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
 >  				   struct vmcs12 *vmcs12)
 >  {
@@ -273,7 +289,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  
 >  	if (vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_EFER)
 >  		vcpu->arch.efer = vmcs12->host_ia32_efer;
-> @@ -4089,7 +4093,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
+> @@ -4102,7 +4108,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
 >  	 * Only PDPTE load can fail as the value of cr3 was checked on entry and
 >  	 * couldn't have changed.
 >  	 */
@@ -282,7 +298,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  		nested_vmx_abort(vcpu, VMX_ABORT_LOAD_HOST_PDPTE_FAIL);
 >  
 >  	if (!enable_ept)
-> @@ -5989,7 +5993,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+> @@ -6002,7 +6008,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
 >  {
 >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
 >  	struct vmcs12 *vmcs12;
@@ -291,7 +307,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  	struct kvm_vmx_nested_state_data __user *user_vmx_nested_state =
 >  		&user_kvm_nested_state->data.vmx[0];
 >  	int ret;
-> @@ -6130,7 +6134,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+> @@ -6143,7 +6149,7 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
 >  
 >  	if (nested_vmx_check_controls(vcpu, vmcs12) ||
 >  	    nested_vmx_check_host_state(vcpu, vmcs12) ||
@@ -302,7 +318,7 @@ On 24/04/20 19:19, Sean Christopherson wrote:
 >  	vmx->nested.dirty_vmcs12 = true;
 > 
 
-Queued, thanks.
+Queued this one, actually.
 
 Paolo
 
