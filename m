@@ -2,176 +2,123 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC920C47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA07EC47247
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89AA720705
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA2E20721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge7/ZzHd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wDsu96lx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgEDUPc (ORCPT
+        id S1727933AbgEDUQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:15:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49984 "EHLO
+        Mon, 4 May 2020 16:16:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgEDUPc (ORCPT
+        with ESMTP id S1726441AbgEDUP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:15:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F57C061A0E;
-        Mon,  4 May 2020 13:15:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id s8so10309wrt.9;
-        Mon, 04 May 2020 13:15:31 -0700 (PDT)
+        Mon, 4 May 2020 16:15:59 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B717C061A0F
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 13:15:59 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 23so68939qkf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 13:15:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:references:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=i+RbthjxFM69yETzo2H0vFLgAF3qI0S5kE5s/KINk2o=;
-        b=Ge7/ZzHdrTSgcP4mmTUGts8VnUNeciffJcfbr2qYA7+Y5UVx3UYdVHl2kQ3KRTB6K7
-         l13PvwD/ng/zkLnMUFScRkKE378fQnVthUL9rT2VGWAKbB2tcJe+3/Ieu2E98IldiGJU
-         g5wVII4Fc5TZYWE7EQUoPBqhU8cvLsOLSr2Qc1+Lm1eQdpk1NqdMtkfYSLUU8zolMX34
-         oy1XsjBg+oR+z5zu12zWlooVEBvR3erDTGA0yVq4jIfdOnLsHzG+YMoe4PxXc46pf2FF
-         lFKZElW7brRPj8froiPqiyScsbKAS5fMqmjuJIExdsoUh5OZKedVYCxWlUCS4O/Y8dNo
-         eeLQ==
+        d=joelfernandes.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=qaBBk/smpYuQoJcHKGIGXo6xcNtXI58RrNOOaDplxxU=;
+        b=wDsu96lxuidwPq/rIpPZu8gJisG82ozSRJ7NNj6ko7TtFdbAeYJGVjk6aOy3pV+CtW
+         ajeSYBT41xX1sTt6eCX/FHevjVPJyrOfi9VjVOXFg9SRlaJ4gbccoLaaPymVcY4B3j90
+         ynUnlrHKv8DrlIgreWhw0bnqw7mXdjv7OQzoA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:references:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=i+RbthjxFM69yETzo2H0vFLgAF3qI0S5kE5s/KINk2o=;
-        b=Rqi8AxrOBFFH1JhRNxuHeaR0m3G7Sf+H7FnGPS6yDb6yO9PjqqZ2O5uGFfOrF12CJz
-         kobMKEhyuGAECXAnFI7uKpf1VV0wIalXSmPEb0DEdcMhScrkhDPHZVltGjSt57G61yBY
-         YxzYFd5Fij8XWbYvwc5poxaXybm1PZG4jJ2QmbUhtexaBPY9Z79PwK6MYb/jLQl3qKqu
-         AbN9wKcHcVvtTUekalvLkutDTxTHok48p2bNwTMgeCCaiiSBpEcjzTfBGTPsOuWkPvbU
-         Y2/cGc3X7eWWK80HsoM6SDmTSTpFfZflmul52J/jTLQltatiRWoNNn8kCkRfHmjwTZzt
-         UTJg==
-X-Gm-Message-State: AGi0PuZ7ZTB/NKtHRQEy/Ec1lHVBmghjH8T42K5hYXKpbcE9WCyKnv/z
-        KBqmOkRPClXQAkhnPe+POnxvWm70
-X-Google-Smtp-Source: APiQypLz8vk8hJf0nq3F12fm++iFM2tz6T6ZZ3EjufS3kTZgXajO6JWKOFcQ2i6oxb2zsZVzBPocUA==
-X-Received: by 2002:adf:dc81:: with SMTP id r1mr1246575wrj.0.1588623330087;
-        Mon, 04 May 2020 13:15:30 -0700 (PDT)
-Received: from [192.168.43.168] ([109.126.133.135])
-        by smtp.gmail.com with ESMTPSA id e21sm21847971wrc.1.2020.05.04.13.15.28
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=qaBBk/smpYuQoJcHKGIGXo6xcNtXI58RrNOOaDplxxU=;
+        b=Ke29Pg0Zd/uUaOoJ5WjWd8uoL4aJNOvHgyFzBmN8PYJtL3GtyTl/6sktMD6jQX8e9E
+         llYFs5OK7zlNpveMOG+r0calnd++dz4hcN0/QjugCDUC3WAUWrs6rdXw9zDxJG0RUWRD
+         HKCm+0cxbH0cncUQ1vIFFKF36kwLMVsDyvETAaMa4a6+y1ZqtU7kqGB8894QfqIOETTD
+         GqDxK7F9qsQuf+fQQFZtbAAsbKeJ9Aj70nCfd1ZgD8O02Ckpd+2ixqCRQUZ6iUAm42p6
+         FRPe1q7UTOOQR/HRrnaoEH730X8xqtcc49d3QyR4nD909Wr4G5BsbwOIOicI/lDYcVdq
+         BW+Q==
+X-Gm-Message-State: AGi0PuY6ZwokDnS7gFe/1vh9N5PzSRixfAkVKfbPc7YcGC/UjvXg7yDP
+        8wppH8josK3ck0Yyo7jcyrJR6g==
+X-Google-Smtp-Source: APiQypJ9UKDVGdImohIT4xO2OUyTFH6NvTu5Y1esqKZOwoVgIWuTkX4/x6/btb32Dtv51R4Y2vZh6A==
+X-Received: by 2002:a37:8d6:: with SMTP id 205mr120790qki.144.1588623358353;
+        Mon, 04 May 2020 13:15:58 -0700 (PDT)
+Received: from [192.168.1.8] (c-71-62-121-229.hsd1.va.comcast.net. [71.62.121.229])
+        by smtp.gmail.com with ESMTPSA id i42sm12553327qtc.83.2020.05.04.13.15.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 13:15:29 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, Jann Horn <jannh@google.com>,
-        io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [PATCH for-5.7] io_uring: fix zero len do_splice()
-Message-ID: <136e55c8-b28f-a987-d1c7-8e888cc1439a@gmail.com>
-Date:   Mon, 4 May 2020 23:14:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 04 May 2020 13:15:57 -0700 (PDT)
+Date:   Mon, 04 May 2020 16:15:55 -0400
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200504195128.GA21830@pc636>
+References: <20200428205903.61704-1-urezki@gmail.com> <20200428205903.61704-10-urezki@gmail.com> <20200501212749.GD7560@paulmck-ThinkPad-P72> <20200504124323.GA17577@pc636> <20200504152437.GK2869@paulmck-ThinkPad-P72> <20200504174822.GA20446@pc636> <20200504180805.GA172409@google.com> <20200504190138.GU2869@paulmck-ThinkPad-P72> <CAEXW_YQmrfbaDocsc7bLULRR1yUv4=MMMEw3b0s1mXM8sEVVzQ@mail.gmail.com> <20200504195128.GA21830@pc636>
 MIME-Version: 1.0
-In-Reply-To: <c7dc4d15f9065f41df5ad83e051d05e7c46f004f.1588622410.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
+To:     Uladzislau Rezki <urezki@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+From:   joel@joelfernandes.org
+Message-ID: <2A623E6F-878C-4C1F-9045-56710DE7851B@joelfernandes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/05/2020 23:00, Pavel Begunkov wrote:
-> do_splice() doesn't expect len to be 0. Just always return 0 in this
-> case as splice(2) do.
 
-There is a thing, splice/tee will always return success on len=0 even with
-invalid fds. Fast return for len=0, should really has been done after basic
-validation, but I don't want to break userspace.
 
-Any ideas?
+On May 4, 2020 3:51:28 PM EDT, Uladzislau Rezki <urezki@gmail=2Ecom> wrote=
+:
+>> > > Since we don't care about traversing backwards, isn't it better
+>to use llist
+>> > > for this usecase?
+>> > >
+>> > > I think Vlad is using locking as we're also tracking the size of
+>the llist to
+>> > > know when to free pages=2E This tracking could suffer from the
+>lost-update
+>> > > problem without any locking, 2 lockless llist_add happened
+>simulatenously=2E
+>> > >
+>> > > Also if list_head is used, it will take more space and still use
+>locking=2E
+>> >
+>> > Indeed, it would be best to use a non-concurrent singly linked
+>list=2E
+>>=20
+>> Ok cool :-)
+>>=20
+>> Is it safe to say something like the following is ruled out? ;-) :-D
+>> #define kfree_rcu_list_add llist_add
+>>=20
+>In that case i think it is better just to add a comment about using
+>llist_head=2E To state that it used as a singular list to save space
+>and the access is synchronized by the lock :)
+>
+>IMHO=2E
 
-> 
-> Fixes: 7d67af2c0134 ("io_uring: add splice(2) support")
-> Reported-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  fs/io_uring.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 65458eda2127..d53a1ef2a205 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -2772,16 +2772,19 @@ static int io_splice(struct io_kiocb *req, bool force_nonblock)
->  	struct file *out = sp->file_out;
->  	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
->  	loff_t *poff_in, *poff_out;
-> -	long ret;
-> +	long ret = 0;
->  
->  	if (force_nonblock)
->  		return -EAGAIN;
->  
->  	poff_in = (sp->off_in == -1) ? NULL : &sp->off_in;
->  	poff_out = (sp->off_out == -1) ? NULL : &sp->off_out;
-> -	ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
-> -	if (force_nonblock && ret == -EAGAIN)
-> -		return -EAGAIN;
-> +
-> +	if (sp->len) {
-> +		ret = do_splice(in, poff_in, out, poff_out, sp->len, flags);
-> +		if (force_nonblock && ret == -EAGAIN)
-> +			return -EAGAIN;
-> +	}
->  
->  	io_put_file(req, in, (sp->flags & SPLICE_F_FD_IN_FIXED));
->  	req->flags &= ~REQ_F_NEED_CLEANUP;
-> 
+Sounds good to me=2E thanks,
 
--- 
-Pavel Begunkov
+ - Joel
+
+>
+>--
+>Vlad Rezki
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
