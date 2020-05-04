@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC4DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38F8C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4A62078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E322078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588616160;
-	bh=Yl+InBKkRRTfPj7fX77sydsZUxlVXdAhpgkoZZ8rwIc=;
+	s=default; t=1588616165;
+	bh=5QUy5jYKJIIMfYKDgTPoFWmg2ibHT8Qm88KIdr9mHas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYqtR1at2HqbTj6JtXquv5Fw+gOHKqU+hG2Rd6uNVAzyvW2CmHb11w7siOIvbDJXI
-	 ZE0eIF7YpAvJM0pSPrstGiqIJZGZgjc5nWtOHFFDmApYzkderB24Zk0yBTl+teZIm8
-	 eIpKT3feKnHjyuDMiXq2F4VAojPzsSKkiXqVvMmA=
+	b=mo2gBcTe/BkoaczJRocPDOeyiAdKNtCjepdoaywiTuYojlQtRXuRfzt1F0X9K8blP
+	 33V6lDMwpGUGV2e6sm4fFFp6hZDyrGHu4n3Po2Y7/v6YT1mV/m/xLjpUEdRtodNVCs
+	 8FKTPfMWIApWcZahaeLyU/fwIXIr0VlVyyQmwQQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbgEDSP7 (ORCPT
+        id S1730679AbgEDR7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 13:59:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbgEDR7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 13:59:08 -0400
+        id S1730646AbgEDR7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 13:59:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C668C2078C;
-        Mon,  4 May 2020 17:59:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC3F2073E;
+        Mon,  4 May 2020 17:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615148;
-        bh=Yl+InBKkRRTfPj7fX77sydsZUxlVXdAhpgkoZZ8rwIc=;
+        s=default; t=1588615141;
+        bh=5QUy5jYKJIIMfYKDgTPoFWmg2ibHT8Qm88KIdr9mHas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3Bdqeyh1/2ZPc+18cut792F1lCkWQXqOI1WQbrEwebAAyyO20FlqKWC6qkFzjkdO
-         pGJ2LhhYzEJX0EgSxnBgZVTLUFZ3oEaTkSmEk0xsmrVBvm+KtS/fgVLALz2llSxICd
-         et6EXgKIdc2/c23GJ6CMW33qZ7HIzoxWiGN+k3PY=
+        b=GUHlZ+oveQ0cxWndxKQLDT2iBg6ZF1v2GWRWdzfPAiVWfPE1Z+x365+W10TbATD+1
+         dR1BnF0jfpTdWjArPnYVvZfWLAb/MU5W2w2RU+ni5a4po/YWoTIjfuexJjeC0rnDoe
+         QlwPEqgzkX91MOGRY/XAYL8cNewOwQ4yZ8EJdoE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Stuart Henderson <stuart.henderson@cirrus.com>,
-        Charles Keepax <ckeepax@opensource.wolfsonmicro.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.4 15/18] ASoC: wm8960: Fix WM8960_SYSCLK_PLL mode
-Date:   Mon,  4 May 2020 19:57:13 +0200
-Message-Id: <20200504165444.659934157@linuxfoundation.org>
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 12/18] powerpc/perf: Remove PPMU_HAS_SSLOT flag for Power8
+Date:   Mon,  4 May 2020 19:57:10 +0200
+Message-Id: <20200504165444.020859784@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165441.533160703@linuxfoundation.org>
 References: <20200504165441.533160703@linuxfoundation.org>
@@ -61,71 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stuart Henderson <stuart.henderson@cirrus.com>
+From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
 
-commit 6bb7451429084cefcb3a18fff809f7992595d2af upstream.
+commit 370f06c88528b3988fe24a372c10e1303bb94cf6 upstream.
 
-With the introduction of WM8960_SYSCLK_AUTO mode, WM8960_SYSCLK_PLL mode was
-made unusable.  Ensure we're not PLL mode before trying to use MCLK.
+Commit 7a7868326d77 ("powerpc/perf: Add an explict flag indicating
+presence of SLOT field") introduced the PPMU_HAS_SSLOT flag to remove
+the assumption that MMCRA[SLOT] was present when PPMU_ALT_SIPR was not
+set.
 
-Fixes: 3176bf2d7ccd ("ASoC: wm8960: update pll and clock setting function")
-Signed-off-by: Stuart Henderson <stuart.henderson@cirrus.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+That commit's changelog also mentions that Power8 does not support
+MMCRA[SLOT]. However when the Power8 PMU support was merged, it
+errnoeously included the PPMU_HAS_SSLOT flag.
+
+So remove PPMU_HAS_SSLOT from the Power8 flags.
+
+mpe: On systems where MMCRA[SLOT] exists, the field occupies bits 37:39
+(IBM numbering). On Power8 bit 37 is reserved, and 38:39 overlap with
+the high bits of the Threshold Event Counter Mantissa. I am not aware of
+any published events which use the threshold counting mechanism, which
+would cause the mantissa bits to be set. So in practice this bug is
+unlikely to trigger.
+
+Fixes: e05b9b9e5c10 ("powerpc/perf: Power8 PMU support")
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/wm8960.c |   32 +++++++++++++++++---------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ arch/powerpc/perf/power8-pmu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/codecs/wm8960.c
-+++ b/sound/soc/codecs/wm8960.c
-@@ -631,29 +631,31 @@ static int wm8960_configure_clocking(str
- 		return -EINVAL;
- 	}
- 
--	/* check if the sysclk frequency is available. */
--	for (i = 0; i < ARRAY_SIZE(sysclk_divs); ++i) {
--		if (sysclk_divs[i] == -1)
--			continue;
--		sysclk = freq_out / sysclk_divs[i];
--		for (j = 0; j < ARRAY_SIZE(dac_divs); ++j) {
--			if (sysclk == dac_divs[j] * lrclk) {
-+	if (wm8960->clk_id != WM8960_SYSCLK_PLL) {
-+		/* check if the sysclk frequency is available. */
-+		for (i = 0; i < ARRAY_SIZE(sysclk_divs); ++i) {
-+			if (sysclk_divs[i] == -1)
-+				continue;
-+			sysclk = freq_out / sysclk_divs[i];
-+			for (j = 0; j < ARRAY_SIZE(dac_divs); ++j) {
-+				if (sysclk != dac_divs[j] * lrclk)
-+					continue;
- 				for (k = 0; k < ARRAY_SIZE(bclk_divs); ++k)
- 					if (sysclk == bclk * bclk_divs[k] / 10)
- 						break;
- 				if (k != ARRAY_SIZE(bclk_divs))
- 					break;
- 			}
-+			if (j != ARRAY_SIZE(dac_divs))
-+				break;
- 		}
--		if (j != ARRAY_SIZE(dac_divs))
--			break;
--	}
- 
--	if (i != ARRAY_SIZE(sysclk_divs)) {
--		goto configure_clock;
--	} else if (wm8960->clk_id != WM8960_SYSCLK_AUTO) {
--		dev_err(codec->dev, "failed to configure clock\n");
--		return -EINVAL;
-+		if (i != ARRAY_SIZE(sysclk_divs)) {
-+			goto configure_clock;
-+		} else if (wm8960->clk_id != WM8960_SYSCLK_AUTO) {
-+			dev_err(codec->dev, "failed to configure clock\n");
-+			return -EINVAL;
-+		}
- 	}
- 	/* get a available pll out frequency and set pll */
- 	for (i = 0; i < ARRAY_SIZE(sysclk_divs); ++i) {
+--- a/arch/powerpc/perf/power8-pmu.c
++++ b/arch/powerpc/perf/power8-pmu.c
+@@ -816,7 +816,7 @@ static struct power_pmu power8_pmu = {
+ 	.get_constraint		= power8_get_constraint,
+ 	.get_alternatives	= power8_get_alternatives,
+ 	.disable_pmc		= power8_disable_pmc,
+-	.flags			= PPMU_HAS_SSLOT | PPMU_HAS_SIER | PPMU_ARCH_207S,
++	.flags			= PPMU_HAS_SIER | PPMU_ARCH_207S,
+ 	.n_generic		= ARRAY_SIZE(power8_generic_events),
+ 	.generic_events		= power8_generic_events,
+ 	.cache_events		= &power8_cache_events,
 
 
