@@ -2,150 +2,104 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90710C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F16C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1E420752
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C72206D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 16:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XynwaO9i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwTnWyDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgEDQru (ORCPT
+        id S1729703AbgEDQtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 12:47:50 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33291 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729643AbgEDQrt (ORCPT
+        Mon, 4 May 2020 12:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728655AbgEDQtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 12:47:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588610868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mqG4NiZOzEfqHtOMWsB/ZvHqz1Pp83h0dHQmV0QkakI=;
-        b=XynwaO9iMmA6NFsjGHQICXwaz+gS9BdigwUMsaTch2oeJdu8XLMsyeYnlJ680DBcmDG2fL
-        N0M+sXfBeY18kHQ3w7QZ+b5lks2KlFdJG6/NxGPPpsQgKsNMJSMHAymxo0zuzqkhCcZ9l5
-        qoW3m3YKC9sVu3ovCu+RioQyUo8KV2k=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-wlbjV_jAOcK_KhmpkK5-yA-1; Mon, 04 May 2020 12:47:46 -0400
-X-MC-Unique: wlbjV_jAOcK_KhmpkK5-yA-1
-Received: by mail-wm1-f69.google.com with SMTP id h184so97762wmf.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:47:46 -0700 (PDT)
+        Mon, 4 May 2020 12:49:33 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1069AC061A0E
+        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 09:49:33 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id p25so5761229pfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 09:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N98hzrvavUDmiZvqjRc8Y+NamEOGTTXQ9QYdiVbRQUI=;
+        b=VwTnWyDAqzkDtnfnRgQ+QgRKkew37qUbEFsl/e0olaTckk9POdNzFiORuokPHsU7cr
+         4+b3dqe/qJU/NBud1lZT3+CcNb91dNtjmBBneGSvFIy/k04EuQlHwdi0+/LGIoyrHg8C
+         VA9O9YNxP+kpn0ADakess8vbaTVtsneJ6CJNw1Xvy1DyjCv2xrFuQZQfKTn/u/q6QcjQ
+         QYTMpzlCno59ssPhfcoOU6vB/zaxSGVsF44ZuZeu8OonrkIW7BAyCkWUyqynEdE5oqtQ
+         tQD+7mlEdV048vuEWVlWORiIte+CqOOQcv9ssYtGSS3UUOnqPIlwdUP5lotDLCuiOe/j
+         E3qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mqG4NiZOzEfqHtOMWsB/ZvHqz1Pp83h0dHQmV0QkakI=;
-        b=Vjrjp3mjpvUSiVoZpM+TPlYmPGZn4ipbCiU8CPntP3EHY9IT1NiHNdAo+oN5q0StGg
-         3NNI7FTTy+QXEZ+dUIvA1SWXfYgMe7zPpaz54Nt7RhzeYtYa5QbzC7y1bH5yxPfywoER
-         FsIy5A1eG5jG0lPyICPknNikQGujmLxUpb4MLXzwAn59Sa80QPZjUoeEkduqIpiqGlm4
-         dz5ZHxBtDN3p+/FtoBo7FBHVeoTf3xg5fRKBJIHsTQZAldbpFJtuN5O35uk4BHY8vDRY
-         tufwF/MIvGqDXQ1ulP6ri/9Wsq3sUL8R6wd2VNJLVIkU3ozLulH7XtgFXUvycY5PF0wF
-         dC6Q==
-X-Gm-Message-State: AGi0PuZC7r3MNpPNsxlEzVp0NQRMt89hao3Gb6vpCEndODaJYQpYH/u0
-        RHmP1OSGEMZX+Xq3YfZ2bB5HcONGtCBBt4eZufKe1DIPwcotHqlHFbt2eAUSeAyEg6MmuSVw4xD
-        3qGU3g2JV/uvtsQZZrZgb1onp
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr15413158wmd.67.1588610865738;
-        Mon, 04 May 2020 09:47:45 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLDRC0oKvIrSTpQybtrO+sKCnZxuLzQYC4jjIPDre77gM0GB81TEH4UGwNEonZVOzx3VaVo3w==
-X-Received: by 2002:a1c:1d92:: with SMTP id d140mr15413134wmd.67.1588610865542;
-        Mon, 04 May 2020 09:47:45 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id a9sm40312wmm.38.2020.05.04.09.47.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 May 2020 09:47:45 -0700 (PDT)
-Subject: Re: [PATCH] x86: Fix RCU list usage to avoid false positive warnings
-To:     madhuparnabhowmik10@gmail.com, mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, bhelgaas@google.com,
-        sean.j.christopherson@intel.com, cai@lca.pw, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        frextrite@gmail.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6c992b7f-c6c7-44a6-fa5a-c3512646de05@redhat.com>
-Date:   Mon, 4 May 2020 18:47:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N98hzrvavUDmiZvqjRc8Y+NamEOGTTXQ9QYdiVbRQUI=;
+        b=OQjk/Pu9Sa3fKEp/vQ/RzcWfDP6/kfnbUElT+4PYTABtnGLVzkIwSILEA/P7AjG1A8
+         f0X0LQ1xlNfhMm57aVG5xZO+Adr3CBYISgs3E2fV5gJMxOMh2j5w71Po1mDuRBgGav1f
+         kSZKbz1r4ci5FZ+e9MF3Tz1Lh7GnxQ3RCftyUMdq6MqquRWiQ4Fhnuhyc6sL628BKchR
+         ndQyRk5nOVBDQdXYey7pJvO9z1T63ckHvisLqskbrv7U3wKELbEA6EA4IqzLXNxfHTAR
+         7UG9uWybvzoLNU24DGCxGWihtcKNRNHWl8VpHEQrRppX53NLrubi03UzW81X8hSsWJIu
+         vWzA==
+X-Gm-Message-State: AGi0PubAvHVP1ZUX3X2i6wy960/qHBKonp/jGHlwF1BtyRqVv0VIup7J
+        dVR8E1d9TLj2C8OdT6mw/iT5dg==
+X-Google-Smtp-Source: APiQypJ0UtE+FqSr0S/8CiLbts6PMUhrSDn8+4Okd3e/IXqVStp2R/N4PLwqQWR32HncAgCP22VImQ==
+X-Received: by 2002:a62:6341:: with SMTP id x62mr19109043pfb.289.1588610972562;
+        Mon, 04 May 2020 09:49:32 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id t20sm11014pjo.13.2020.05.04.09.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 May 2020 09:49:31 -0700 (PDT)
+Date:   Mon, 4 May 2020 10:49:30 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v2 1/2] coresight: Include required headers in C files
+Message-ID: <20200504164930.GA755@xps15>
+References: <20200428181010.170568-1-swboyd@chromium.org>
+ <20200428181010.170568-2-swboyd@chromium.org>
+ <20200429180818.GA3062@xps15>
+ <158818506575.117437.11635372928426076937@swboyd.mtv.corp.google.com>
+ <CANLsYkzkq=EuKx_=W2jv2TeWpM3P=Pd9NYS18VfG9KCey=2--g@mail.gmail.com>
+ <158852907765.11125.7786353455300506998@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200430192932.13371-1-madhuparnabhowmik10@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158852907765.11125.7786353455300506998@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/20 21:29, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Sun, May 03, 2020 at 11:04:37AM -0700, Stephen Boyd wrote:
+> Quoting Mathieu Poirier (2020-04-29 12:24:42)
+> > 
+> > >
+> > > So please remove slab.h from the two files (but not the other one) when
+> > > applying. Thanks.
+> > 
+> > You got it.
 > 
-> Use list_for_each_entry() instead of list_for_each_entry_rcu() whenever
-> spinlock or mutex is always held.
-> Otherwise, pass cond to list_for_each_entry_rcu().
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  arch/x86/kernel/nmi.c          | 2 +-
->  arch/x86/kvm/irq_comm.c        | 3 ++-
->  arch/x86/pci/mmconfig-shared.c | 2 +-
->  3 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index 6407ea21fa1b..999dc6c134d2 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -195,7 +195,7 @@ void unregister_nmi_handler(unsigned int type, const char *name)
->  
->  	raw_spin_lock_irqsave(&desc->lock, flags);
->  
-> -	list_for_each_entry_rcu(n, &desc->head, list) {
-> +	list_for_each_entry(n, &desc->head, list) {
->  		/*
->  		 * the name passed in to describe the nmi handler
->  		 * is used as the lookup key
-> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
-> index c47d2acec529..5b88a648e079 100644
-> --- a/arch/x86/kvm/irq_comm.c
-> +++ b/arch/x86/kvm/irq_comm.c
-> @@ -258,7 +258,8 @@ void kvm_fire_mask_notifiers(struct kvm *kvm, unsigned irqchip, unsigned pin,
->  	idx = srcu_read_lock(&kvm->irq_srcu);
->  	gsi = kvm_irq_map_chip_pin(kvm, irqchip, pin);
->  	if (gsi != -1)
-> -		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link)
-> +		hlist_for_each_entry_rcu(kimn, &kvm->arch.mask_notifier_list, link,
-> +					srcu_read_lock_held(&kvm->irq_srcu))
->  			if (kimn->irq == gsi)
->  				kimn->func(kimn, mask);
->  	srcu_read_unlock(&kvm->irq_srcu, idx);
-> diff --git a/arch/x86/pci/mmconfig-shared.c b/arch/x86/pci/mmconfig-shared.c
-> index 6fa42e9c4e6f..a096942690bd 100644
-> --- a/arch/x86/pci/mmconfig-shared.c
-> +++ b/arch/x86/pci/mmconfig-shared.c
-> @@ -797,7 +797,7 @@ int pci_mmconfig_delete(u16 seg, u8 start, u8 end)
->  	struct pci_mmcfg_region *cfg;
->  
->  	mutex_lock(&pci_mmcfg_lock);
-> -	list_for_each_entry_rcu(cfg, &pci_mmcfg_list, list)
-> +	list_for_each_entry(cfg, &pci_mmcfg_list, list)
->  		if (cfg->segment == seg && cfg->start_bus == start &&
->  		    cfg->end_bus == end) {
->  			list_del_rcu(&cfg->list);
-> 
+> I looked in next but coresight-cti-platform.c is missing slab.h even
+> though I included it in my patch. There's a bare kcalloc() call in that
+> file, so slab.h is required.
 
-For KVM parts, if the x86 maintainers want to apply the whole patch,
+I know what happened.  The above comment mentions removing slab.h in two and
+leaving the "other" one in place.  But looking at the original file only
+coresight-cti-platform.c and coresight-cti-sysfs.c had an slab.h.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-
-Paolo
+I have made the correction.
 
