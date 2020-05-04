@@ -2,114 +2,132 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6764C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2E5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78BFE20707
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588625290;
-	bh=uhstx6i6VStcX5tnxEtH4iTtQS0OGgGawfl0YTLt7FM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t6BJ9gl87wuGHL0DCgLSz5R4f86+Ddjo92DV31osQWQifAmAgUxwJVZSVzMuu5ktS
-	 daaZIMKOZgDCRhI64A8RK7X7yOjrcTX8jAD4quQ5yYqs979n/EQ6uUjXhsvUnasMEu
-	 fOF1qyFbIj0ZIkP5Yvhbmdd6T/dO6VA5kHrebJbY=
+	by mail.kernel.org (Postfix) with ESMTP id 67E742063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 20:49:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRa8YNTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgEDUsJ (ORCPT
+        id S1727887AbgEDUt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 16:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726433AbgEDUsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 16:48:09 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E01206A4;
-        Mon,  4 May 2020 20:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588625289;
-        bh=uhstx6i6VStcX5tnxEtH4iTtQS0OGgGawfl0YTLt7FM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xWVk+KqavPLzos8trQkkwJKJqC1RRw0zo6X3ZZmPzXdB1Z3iDAZMvN0af3UToUUiF
-         FeBKcul0IpAF/yLlCvP3KXWqB79UXjuFKubP6LkstHKFXB/97OeV862n3tG8I19fFc
-         4KFxgu7ymxHTr0OJVpfzNHafDm1zUTDqmKi4dFCo=
-Date:   Mon, 4 May 2020 21:48:04 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: Re: [PATCH v2] arm64: cacheflush: Fix KGDB trap detection
-Message-ID: <20200504204803.GA5657@willie-the-truck>
-References: <20200504170518.2959478-1-daniel.thompson@linaro.org>
+        Mon, 4 May 2020 16:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgEDUt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 16:49:58 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBE5C061A0E;
+        Mon,  4 May 2020 13:49:56 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id d16so14827280edv.8;
+        Mon, 04 May 2020 13:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q7L4B/gaHgFnBxED0brVOKXanT1Bbb8OHNvzGehf/HY=;
+        b=pRa8YNTVAoMCIiHLagX6utqSDmIjZ6LkSA6LaoNS28G484lIPlbtAvo5VBmaXwzwCE
+         cPE6QonvLeSTG/X5uRj8OcMXJNogyvxvYx5Az1eNFZ7TdANIQrAkMpeHylN12qS8OaYR
+         Sj7HSFw37DwuujRAQKCn+F/4EWg9QmwZLGcBe2tj8S1hmDcE/DbcXfe59ekfx7FE6gUo
+         8I/t1WubAlJPtGiX/JEd3mNmeVFRxziOLpuGamOTgQ+grdjcld82YsDC7/frH2J48bTG
+         MRNO4XBrWrutq5NMzCdqyfesG0iW0+wJ9n1Ldgfqfyzu14miFEwkOvAJc77Bm0oakLTO
+         M/MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q7L4B/gaHgFnBxED0brVOKXanT1Bbb8OHNvzGehf/HY=;
+        b=qTDIydbChH4FxUVpA+fnX+kFurFbush9/zM7oTAw92iDb74A7ltY2PFphLoOK8SQqm
+         OiXmr8dodW5oyH3z/2p6FHdYik12fSSENBQzqIA3UcWvtuDmNxDqD6JBm2zbO69XVIu5
+         oPm0ReZ8P8rohirBBBZm6EY9r3ewJk6ac2KprsquuKI+dx2pN1sLIrmi4NRLZTInfgvr
+         UtO8kT4V6khrS/JVCjzwM94K6XDxQhr8Iqvi8zIFKhYl3XnKQBi3gOD8fYTkYtYpIehO
+         0IB3kCQX+9FeTFTiBsJ2tr8NP+FMeu9+1B4hs7B9vmb+9sUuqbCx+P+J1mE5DgDCbp+f
+         yuLQ==
+X-Gm-Message-State: AGi0PubpGsnEYX7Mb8FYOHgdFUyBqTTQ3lZ3Fqh4yPxQLj4Lh0Oez3Lw
+        Jj29G9nQDVTyWJFzzhMV0nbZcG0w2/+3RNKOCFA=
+X-Google-Smtp-Source: APiQypJmnREIeOlbNsDjt6heZ3r3doPjenzdbFCihgL1iyJHHO9R/sqhDz60Org12nkqRsfKqbLzQzcxrDNhkzBpDPQ=
+X-Received: by 2002:a05:6402:6c4:: with SMTP id n4mr16683368edy.368.1588625395124;
+ Mon, 04 May 2020 13:49:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200504170518.2959478-1-daniel.thompson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200504201806.27192-1-f.fainelli@gmail.com> <CA+h21ho50twA=D=kZYxVuE=C6gf=8JeXmTEHhV30p_30oQZjjA@mail.gmail.com>
+ <b32f205a-6ff3-e1db-33d1-6518091f90b4@gmail.com>
+In-Reply-To: <b32f205a-6ff3-e1db-33d1-6518091f90b4@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 4 May 2020 23:49:44 +0300
+Message-ID: <CA+h21hpObEHt04igBBbX40niuqON=41=f35zTgYNOTZZscbivQ@mail.gmail.com>
+Subject: Re: [PATCH net] net: dsa: Do not leave DSA master with NULL netdev_ops
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>, allen.pais@oracle.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 06:05:18PM +0100, Daniel Thompson wrote:
-> flush_icache_range() contains a bodge to avoid issuing IPIs when the kgdb
-> trap handler is running because issuing IPIs is unsafe (and not needed)
-> in this execution context. However the current test, based on
-> kgdb_connected is flawed: it both over-matches and under-matches.
-> 
-> The over match occurs because kgdb_connected is set when gdb attaches
-> to the stub and remains set during normal running. This is relatively
-> harmelss because in almost all cases irq_disabled() will be false.
-> 
-> The under match is more serious. When kdb is used instead of kgdb to access
-> the debugger then kgdb_connected is not set in all the places that the
-> debug core updates sw breakpoints (and hence flushes the icache). This
-> can lead to deadlock.
-> 
-> Fix by replacing the ad-hoc check with the proper kgdb macro. This also
-> allows us to drop the #ifdef wrapper.
-> 
-> Fixes: 3b8c9f1cdfc5 ("arm64: IPI each CPU after invalidating the I-cache for kernel mappings")
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
-> Notes:
->     v2: Improve the commit message based based on feedback from Doug
->         Anderson
-> 
->  arch/arm64/include/asm/cacheflush.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-> index e6cca3d4acf7..ce50c1f1f1ea 100644
-> --- a/arch/arm64/include/asm/cacheflush.h
-> +++ b/arch/arm64/include/asm/cacheflush.h
-> @@ -79,7 +79,7 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
->  	 * IPI all online CPUs so that they undergo a context synchronization
->  	 * event and are forced to refetch the new instructions.
->  	 */
-> -#ifdef CONFIG_KGDB
-> +
->  	/*
->  	 * KGDB performs cache maintenance with interrupts disabled, so we
->  	 * will deadlock trying to IPI the secondary CPUs. In theory, we can
-> @@ -89,9 +89,9 @@ static inline void flush_icache_range(unsigned long start, unsigned long end)
->  	 * the patching operation, so we don't need extra IPIs here anyway.
->  	 * In which case, add a KGDB-specific bodge and return early.
->  	 */
-> -	if (kgdb_connected && irqs_disabled())
-> +	if (in_dbg_master())
+On Mon, 4 May 2020 at 23:40, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 5/4/2020 1:34 PM, Vladimir Oltean wrote:
+> > Hi Florian,
+> >
+> > On Mon, 4 May 2020 at 23:19, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>
+> >> When ndo_get_phys_port_name() for the CPU port was added we introduced
+> >> an early check for when the DSA master network device in
+> >> dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
+> >> we perform the teardown operation in dsa_master_ndo_teardown() we would
+> >> not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
+> >> non-NULL initialized.
+> >>
+> >> With network device drivers such as virtio_net, this leads to a NPD as
+> >> soon as the DSA switch hanging off of it gets torn down because we are
+> >> now assigning the virtio_net device's netdev_ops a NULL pointer.
+> >>
+> >> Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
+> >> Reported-by: Allen Pais <allen.pais@oracle.com>
+> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >> ---
+> >
+> > The fix makes complete sense.
+> > But on another note, if we don't overlay an ndo_get_phys_port_name if
+> > the master already has one, doesn't that render the entire mechanism
+> > of having a reliable way for user space to determine the CPU port
+> > number pointless?
+>
+> For the CPU port I would consider ndo_get_phys_port_name() to be more
+> best effort than an absolute need unlike the user facing ports, where
+> this is necessary for a variety of actions (e.g.: determining
+> queues/port numbers etc.) which is why there was no overlay being done
+> in that case. There is not a good way to cascade the information other
+> than do something like pX.Y and defining what the X and Y are, what do
+> you think?
+> --
+> Florian
 
-Does this imply that irqs are disabled?
+For the CPU/master port I am not actually sure who is the final
+consumer of the ndo_get_phys_port_name, I thought it is simply
+informational, with the observation that it may be unreliable in
+transmitting that information over.
+Speaking of which, if "informational" is the only purpose, could this
+not be used?
 
-Will
+devlink port | grep "flavour cpu"
+pci/0000:00:00.5/4: type notset flavour cpu port 4
+spi/spi2.0/4: type notset flavour cpu port 4
+spi/spi2.1/4: type notset flavour cpu port 4
+
+Thanks,
+-Vladimir
