@@ -2,197 +2,138 @@ Return-Path: <SRS0=VwT+=6S=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E402AC47257
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865C5C47257
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5C7206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:01:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PAODR2kW"
+	by mail.kernel.org (Postfix) with ESMTP id 5150520721
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 19:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1588618900;
+	bh=MZvTpriQkDCS6yqRxLTUdYn57GHFlfAnULhcVOgTV0s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=PrHr1FI0gWEmr29cl0kvPIrxVkrhxLIJ5x46SN99xqa0u3Z4L3O2OLqqpsJX91SyM
+	 RACjcTtZiEoXHuxsuzn2UIt7GbgpBOOuRHBpZh73UTCjYDuEn3cWMqJVddWjET8Sn3
+	 qXmPkOyCIYh/Sne4wBSz3b5gAZFSJUSMJ6e1+44I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgEDTBP (ORCPT
+        id S1727084AbgEDTBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 15:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726338AbgEDTBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 15:01:14 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17172C061A41
-        for <linux-kernel@vger.kernel.org>; Mon,  4 May 2020 12:01:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r14so6004195pfg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 May 2020 12:01:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nYFjkTQ/J9D4EU63dN0FFikbGAhF+LRtC+WCQwbW2tU=;
-        b=PAODR2kWLIQCPRYqkqyIdFR4k6cxeCTcVW1YMVscR7cA4wClEqMBJy9OpZ1qHUqOSD
-         7Q9ejnXg70wrUJp9Bz7sjaGojfO30MxpPoyv3mQVm1x4C/y5FRlKfiobLx8iMwGIWr75
-         IbOlJj8maIV6VMRn4ekVlm2cVBkVcBPVEBI6Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nYFjkTQ/J9D4EU63dN0FFikbGAhF+LRtC+WCQwbW2tU=;
-        b=PBSQvVoyzILFToI9ABmKXrROY6HoCvvwjq92DykYMBe5MD+pOYdYssxyxsTjE4wLoi
-         yDKIK3QxNFslhdSE3Urd+8zrFGcTU1rMdgcUgSeAyKRRLSZivXn0Jb8g9Nac1Ju4b+rd
-         fq2VMI1tEyDvX+OUabbHi9ozMNmbNkO4KkPFyGTrQJ45Ufw1HS7i1F/QuPo3hbdd1AEz
-         ZvwFyIa1iFvWh8EntYbB5OOTaVcX9HFTGmUoA3dqLEuR82RVJMhO3HR8d0OzVoRN3KdM
-         x9a6WP4GV68SrlbVy8BA1vYf/woVXULcXHylSQ4JmwzrCclN9V677HwEkZSMWJcdd0If
-         ij8A==
-X-Gm-Message-State: AGi0Pua6Jwzb6kGRflVkc2sC4N6mNPt56a+6kkHgKFie7+Gst2+btOBy
-        VlrcZ3S5VyJW2svn6SxkIa3DGQ==
-X-Google-Smtp-Source: APiQypL++aZZkzcir41Et1you9KunQZkaeZXnSeZAMZdvN+uRXbMIhhCUTrk8vcGvmD9Ym6nnNHuDA==
-X-Received: by 2002:aa7:9297:: with SMTP id j23mr18213294pfa.15.1588618873424;
-        Mon, 04 May 2020 12:01:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q21sm9348194pfg.131.2020.05.04.12.01.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2020 12:01:12 -0700 (PDT)
-Date:   Mon, 4 May 2020 12:01:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Iurii Zaikin <yzaikin@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Andrey Ignatov <rdna@fb.com>
-Subject: Re: [PATCH 5/5] sysctl: pass kernel pointers to ->proc_handler
-Message-ID: <202005041154.CC19F03@keescook>
-References: <20200424064338.538313-1-hch@lst.de>
- <20200424064338.538313-6-hch@lst.de>
+        Mon, 4 May 2020 15:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbgEDTBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 15:01:39 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98170206B8;
+        Mon,  4 May 2020 19:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588618898;
+        bh=MZvTpriQkDCS6yqRxLTUdYn57GHFlfAnULhcVOgTV0s=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=kKX+YspymTx4EdBCAjxYqJiqU8K7q7vqO/bLVWsljkl8gg1324SGBiQnFFnAt6yVj
+         Nfbe3D+4NtCAhkzP+5un/QtJ/7hC1Xrq80QVrBavvHpcz2Bd+aghzWi4q1nfwgzx0F
+         zkik0pTJmG3rLaLcP5FxyylUsIDhx5jEYkQsqqtE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 7989F35226F4; Mon,  4 May 2020 12:01:38 -0700 (PDT)
+Date:   Mon, 4 May 2020 12:01:38 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        RCU <rcu@vger.kernel.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 09/24] rcu/tree: cache specified number of objects
+Message-ID: <20200504190138.GU2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200428205903.61704-1-urezki@gmail.com>
+ <20200428205903.61704-10-urezki@gmail.com>
+ <20200501212749.GD7560@paulmck-ThinkPad-P72>
+ <20200504124323.GA17577@pc636>
+ <20200504152437.GK2869@paulmck-ThinkPad-P72>
+ <20200504174822.GA20446@pc636>
+ <20200504180805.GA172409@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200424064338.538313-6-hch@lst.de>
+In-Reply-To: <20200504180805.GA172409@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 08:43:38AM +0200, Christoph Hellwig wrote:
-> Instead of having all the sysctl handlers deal with user pointers, which
-> is rather hairy in terms of the BPF interaction, copy the input to and
-> from  userspace in common code.  This also means that the strings are
-> always NUL-terminated by the common code, making the API a little bit
-> safer.
+On Mon, May 04, 2020 at 02:08:05PM -0400, Joel Fernandes wrote:
+> On Mon, May 04, 2020 at 07:48:22PM +0200, Uladzislau Rezki wrote:
+> > On Mon, May 04, 2020 at 08:24:37AM -0700, Paul E. McKenney wrote:
+> [..] 
+> > > > > Presumably the list can also be accessed without holding this lock,
+> > > > > because otherwise we shouldn't need llist...
+> > > > > 
+> > > > Hm... We increase the number of elements in cache, therefore it is not
+> > > > lockless. From the other hand i used llist_head to maintain the cache
+> > > > because it is single linked list, we do not need "*prev" link. Also
+> > > > we do not need to init the list.
+> > > > 
+> > > > But i can change it to list_head. Please let me know if i need :)
+> > > 
+> > > Hmmm...  Maybe it is time for a non-atomic singly linked list?  In the RCU
+> > > callback processing, the operations were open-coded, but they have been
+> > > pushed into include/linux/rcu_segcblist.h and kernel/rcu/rcu_segcblist.*.
+> > > 
+> > > Maybe some non-atomic/protected/whatever macros in the llist.h file?
+> > > Or maybe just open-code the singly linked list?  (Probably not the
+> > > best choice, though.)  Add comments stating that the atomic properties
+> > > of the llist functions aren't neded?  Something else?
+> > >
+> > In order to keep it simple i can replace llist_head by the list_head?
 > 
-> As most handler just pass through the data to one of the common handlers
-> a lot of the changes are mechnical.
+> Just to clarify for me, what is the disadvantage of using llist here?
 
-This is a lovely cleanup; thank you!
+Are there some llist APIs that are not set up for concurrency?  I am
+not seeing any.
 
-Tiny notes below...
+The overhead isn't that much of a concern, given that these are not on the
+hotpath, but people reading the code and seeing the cmpxchg operations
+might be forgiven for believing that there is some concurrency involved
+somewhere.
 
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index b6f5d459b087d..df2143e05c571 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -539,13 +539,13 @@ static struct dentry *proc_sys_lookup(struct inode *dir, struct dentry *dentry,
->  	return err;
->  }
->  
-> -static ssize_t proc_sys_call_handler(struct file *filp, void __user *buf,
-> +static ssize_t proc_sys_call_handler(struct file *filp, void __user *ubuf,
->  		size_t count, loff_t *ppos, int write)
->  {
->  	struct inode *inode = file_inode(filp);
->  	struct ctl_table_header *head = grab_header(inode);
->  	struct ctl_table *table = PROC_I(inode)->sysctl_entry;
-> -	void *new_buf = NULL;
-> +	void *kbuf;
->  	ssize_t error;
->  
->  	if (IS_ERR(head))
-> @@ -564,27 +564,38 @@ static ssize_t proc_sys_call_handler(struct file *filp, void __user *buf,
->  	if (!table->proc_handler)
->  		goto out;
->  
-> -	error = BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, buf, &count,
-> -					   ppos, &new_buf);
-> +	if (write) {
-> +		kbuf = memdup_user_nul(ubuf, count);
-> +		if (IS_ERR(kbuf)) {
-> +			error = PTR_ERR(kbuf);
-> +			goto out;
-> +		}
-> +	} else {
-> +		error = -ENOMEM;
-> +		kbuf = kzalloc(count, GFP_KERNEL);
-> +		if (!kbuf)
-> +			goto out;
-> +	}
-> +
-> +	error = BPF_CGROUP_RUN_PROG_SYSCTL(head, table, write, &kbuf, &count,
-> +					   ppos);
->  	if (error)
-> -		goto out;
-> +		goto out_free_buf;
->  
->  	/* careful: calling conventions are nasty here */
+Or am I confused and there are now single-threaded add/delete operations
+for llist?
 
-Is this comment still valid after doing these cleanups?
+> Since we don't care about traversing backwards, isn't it better to use llist
+> for this usecase?
+> 
+> I think Vlad is using locking as we're also tracking the size of the llist to
+> know when to free pages. This tracking could suffer from the lost-update
+> problem without any locking, 2 lockless llist_add happened simulatenously.
+> 
+> Also if list_head is used, it will take more space and still use locking.
 
-> -	if (new_buf) {
-> -		mm_segment_t old_fs;
-> -
-> -		old_fs = get_fs();
-> -		set_fs(KERNEL_DS);
-> -		error = table->proc_handler(table, write, (void __user *)new_buf,
-> -					    &count, ppos);
-> -		set_fs(old_fs);
-> -		kfree(new_buf);
-> -	} else {
-> -		error = table->proc_handler(table, write, buf, &count, ppos);
-> +	error = table->proc_handler(table, write, kbuf, &count, ppos);
-> +	if (error)
-> +		goto out_free_buf;
-> +
-> +	if (!write) {
-> +		error = -EFAULT;
-> +		if (copy_to_user(ubuf, kbuf, count))
-> +			goto out_free_buf;
->  	}
+Indeed, it would be best to use a non-concurrent singly linked list.
 
-Something I noticed here that existed in the original code, but might be
-nice to improve while we're here is to make sure that the "count"
-returned from proc_handler() cannot grow _larger_, since then we might
-expose heap memory beyond the end of the allocation.
+							Thanx, Paul
 
-I'll send a patch for this...
-
->  
-> -	if (!error)
-> -		error = count;
-> +	error = count;
-> +out_free_buf:
-> +	kfree(kbuf);
->  out:
->  	sysctl_head_finish(head);
->  
-> [...]
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 511543d238794..e26fe7e8e19d7 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> [...]
-> @@ -682,7 +661,6 @@ static int do_proc_douintvec_w(unsigned int *tbl_data,
->  		left -= proc_skip_spaces(&p);
->  
->  out_free:
-> -	kfree(kbuf);
->  	if (err)
->  		return -EINVAL;
-
-This label name isn't accurate any more... *shrug*
-
--- 
-Kees Cook
+> Thoughts?
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> > > 
+> > > The comments would be a good start.  Just to take pity on people seeing
+> > > the potential for concurrency and wondering how the concurrent accesses
+> > > actually happen.  ;-)
+> > > 
+> > Sounds like you are kidding me :) 
+> > 
+> > --
+> > Vlad Rezki
