@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03964C4724C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBC5C4724C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B3E20721
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C014206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 May 2020 18:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1588615289;
-	bh=7/qnSfUBs+1jIHe1HqF94F0r4bVp2HssIChY1dp/Xlg=;
+	s=default; t=1588615295;
+	bh=3yxTTUPjFSSAXYVpitcAhssTLaI/KWzFDPPA2e7jZiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GrXcs/TebsLGCKMY/zu1jCPrfwm8/JrFs6uabKUPmMBKA5Wmd33lEYTzCJUOJzois
-	 dcQBYIO5ZRgvkxjrNeR/4eVV84Z0Y3SBxPebIE8dF+PdQUzikmZwYcFDrFTQ7ZKH0E
-	 szB4zCppPU+a0+HGrsihXvXVP93qeUDWN77e8c5U=
+	b=N6zKEJKzkDrWnox0UOcAAn7dZN6ESBvMAf2X1yi84wRDJpBWKYy4/LuyifaVKkcaD
+	 gAIH2Rph2Fd04yKI3s4STKTx1M7NmIO47v6e/rJAI1Uzy/pQYHqdO9lS2sQxEOkSmT
+	 fE8LWPSzkL6VHsZLrAWFFoLooTjLEaIoU1KP5RvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbgEDSB2 (ORCPT
+        id S1731175AbgEDSBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 May 2020 14:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56878 "EHLO mail.kernel.org"
+        Mon, 4 May 2020 14:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731145AbgEDSBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 May 2020 14:01:23 -0400
+        id S1731156AbgEDSBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 May 2020 14:01:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A1B0206B8;
-        Mon,  4 May 2020 18:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E6920707;
+        Mon,  4 May 2020 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588615282;
-        bh=7/qnSfUBs+1jIHe1HqF94F0r4bVp2HssIChY1dp/Xlg=;
+        s=default; t=1588615284;
+        bh=3yxTTUPjFSSAXYVpitcAhssTLaI/KWzFDPPA2e7jZiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2nHX4Kv3XYWnhjj3vHyfo+bFvThHBrmr22VFqqavo825xCQHHybF7BS0p9iskshZ
-         nksGHQG3AbmGny8mycG9TYqm+n8nTfA9Japrj02UJct5i83PECSRqHXw2FIuVK3Ajo
-         m5A3YiL5rUC2JPcz/t1XhHl9rRQJBT+t4k09C/Kg=
+        b=L71JM8ZPZ2KzBIC1TlxaXGGrnTctoFR+V210OooN25ehv3Gyn8k2EiIV+4EdLLoNL
+         7wsr6wSo1eckxEtNefWfXWsLPSGAhlKTFU/7oTifchdSTLyRulW8RVZYizypZknYL/
+         OvLkTdMF1pvUK1KDCcFSM2M/2gjaa/H8RV3SciaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        stable@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 13/37] dm writecache: fix data corruption when reloading the target
-Date:   Mon,  4 May 2020 19:57:26 +0200
-Message-Id: <20200504165449.916465238@linuxfoundation.org>
+Subject: [PATCH 4.19 14/37] dm multipath: use updated MPATHF_QUEUE_IO on mapping for bio-based mpath
+Date:   Mon,  4 May 2020 19:57:27 +0200
+Message-Id: <20200504165450.028545641@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200504165448.264746645@linuxfoundation.org>
 References: <20200504165448.264746645@linuxfoundation.org>
@@ -59,129 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-commit 31b22120194b5c0d460f59e0c98504de1d3f1f14 upstream.
+commit 5686dee34dbfe0238c0274e0454fa0174ac0a57a upstream.
 
-The dm-writecache reads metadata in the target constructor. However, when
-we reload the target, there could be another active instance running on
-the same device. This is the sequence of operations when doing a reload:
+When adding devices that don't have a scsi_dh on a BIO based multipath,
+I was able to consistently hit the warning below and lock-up the system.
 
-1. construct new target
-2. suspend old target
-3. resume new target
-4. destroy old target
+The problem is that __map_bio reads the flag before it potentially being
+modified by choose_pgpath, and ends up using the older value.
 
-Metadata that were written by the old target between steps 1 and 2 would
-not be visible by the new target.
+The WARN_ON below is not trivially linked to the issue. It goes like
+this: The activate_path delayed_work is not initialized for non-scsi_dh
+devices, but we always set MPATHF_QUEUE_IO, asking for initialization.
+That is fine, since MPATHF_QUEUE_IO would be cleared in choose_pgpath.
+Nevertheless, only for BIO-based mpath, we cache the flag before calling
+choose_pgpath, and use the older version when deciding if we should
+initialize the path.  Therefore, we end up trying to initialize the
+paths, and calling the non-initialized activate_path work.
 
-Fix the data corruption by loading the metadata in the resume handler.
+[   82.437100] ------------[ cut here ]------------
+[   82.437659] WARNING: CPU: 3 PID: 602 at kernel/workqueue.c:1624
+  __queue_delayed_work+0x71/0x90
+[   82.438436] Modules linked in:
+[   82.438911] CPU: 3 PID: 602 Comm: systemd-udevd Not tainted 5.6.0-rc6+ #339
+[   82.439680] RIP: 0010:__queue_delayed_work+0x71/0x90
+[   82.440287] Code: c1 48 89 4a 50 81 ff 00 02 00 00 75 2a 4c 89 cf e9
+94 d6 07 00 e9 7f e9 ff ff 0f 0b eb c7 0f 0b 48 81 7a 58 40 74 a8 94 74
+a7 <0f> 0b 48 83 7a 48 00 74 a5 0f 0b eb a1 89 fe 4c 89 cf e9 c8 c4 07
+[   82.441719] RSP: 0018:ffffb738803977c0 EFLAGS: 00010007
+[   82.442121] RAX: ffffa086389f9740 RBX: 0000000000000002 RCX: 0000000000000000
+[   82.442718] RDX: ffffa086350dd930 RSI: ffffa0863d76f600 RDI: 0000000000000200
+[   82.443484] RBP: 0000000000000200 R08: 0000000000000000 R09: ffffa086350dd970
+[   82.444128] R10: 0000000000000000 R11: 0000000000000000 R12: ffffa086350dd930
+[   82.444773] R13: ffffa0863d76f600 R14: 0000000000000000 R15: ffffa08636738008
+[   82.445427] FS:  00007f6abfe9dd40(0000) GS:ffffa0863dd80000(0000) knlGS:00000
+[   82.446040] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   82.446478] CR2: 0000557d288db4e8 CR3: 0000000078b36000 CR4: 00000000000006e0
+[   82.447104] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   82.447561] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   82.448012] Call Trace:
+[   82.448164]  queue_delayed_work_on+0x6d/0x80
+[   82.448472]  __pg_init_all_paths+0x7b/0xf0
+[   82.448714]  pg_init_all_paths+0x26/0x40
+[   82.448980]  __multipath_map_bio.isra.0+0x84/0x210
+[   82.449267]  __map_bio+0x3c/0x1f0
+[   82.449468]  __split_and_process_non_flush+0x14a/0x1b0
+[   82.449775]  __split_and_process_bio+0xde/0x340
+[   82.450045]  ? dm_get_live_table+0x5/0xb0
+[   82.450278]  dm_process_bio+0x98/0x290
+[   82.450518]  dm_make_request+0x54/0x120
+[   82.450778]  generic_make_request+0xd2/0x3e0
+[   82.451038]  ? submit_bio+0x3c/0x150
+[   82.451278]  submit_bio+0x3c/0x150
+[   82.451492]  mpage_readpages+0x129/0x160
+[   82.451756]  ? bdev_evict_inode+0x1d0/0x1d0
+[   82.452033]  read_pages+0x72/0x170
+[   82.452260]  __do_page_cache_readahead+0x1ba/0x1d0
+[   82.452624]  force_page_cache_readahead+0x96/0x110
+[   82.452903]  generic_file_read_iter+0x84f/0xae0
+[   82.453192]  ? __seccomp_filter+0x7c/0x670
+[   82.453547]  new_sync_read+0x10e/0x190
+[   82.453883]  vfs_read+0x9d/0x150
+[   82.454172]  ksys_read+0x65/0xe0
+[   82.454466]  do_syscall_64+0x4e/0x210
+[   82.454828]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[...]
+[   82.462501] ---[ end trace bb39975e9cf45daa ]---
 
-Also, validate block_size is at least as large as both the devices'
-logical block size and only read 1 block from the metadata during
-target constructor -- no need to read entirety of metadata now that it
-is done during resume.
-
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org # v4.18+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |   52 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 37 insertions(+), 15 deletions(-)
+ drivers/md/dm-mpath.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -884,6 +884,24 @@ static int writecache_alloc_entries(stru
- 	return 0;
- }
+--- a/drivers/md/dm-mpath.c
++++ b/drivers/md/dm-mpath.c
+@@ -586,10 +586,12 @@ static struct pgpath *__map_bio(struct m
  
-+static int writecache_read_metadata(struct dm_writecache *wc, sector_t n_sectors)
-+{
-+	struct dm_io_region region;
-+	struct dm_io_request req;
+ 	/* Do we need to select a new pgpath? */
+ 	pgpath = READ_ONCE(m->current_pgpath);
+-	queue_io = test_bit(MPATHF_QUEUE_IO, &m->flags);
+-	if (!pgpath || !queue_io)
++	if (!pgpath || !test_bit(MPATHF_QUEUE_IO, &m->flags))
+ 		pgpath = choose_pgpath(m, bio->bi_iter.bi_size);
+ 
++	/* MPATHF_QUEUE_IO might have been cleared by choose_pgpath. */
++	queue_io = test_bit(MPATHF_QUEUE_IO, &m->flags);
 +
-+	region.bdev = wc->ssd_dev->bdev;
-+	region.sector = wc->start_sector;
-+	region.count = n_sectors;
-+	req.bi_op = REQ_OP_READ;
-+	req.bi_op_flags = REQ_SYNC;
-+	req.mem.type = DM_IO_VMA;
-+	req.mem.ptr.vma = (char *)wc->memory_map;
-+	req.client = wc->dm_io;
-+	req.notify.fn = NULL;
-+
-+	return dm_io(&req, 1, &region, NULL);
-+}
-+
- static void writecache_resume(struct dm_target *ti)
- {
- 	struct dm_writecache *wc = ti->private;
-@@ -894,8 +912,18 @@ static void writecache_resume(struct dm_
- 
- 	wc_lock(wc);
- 
--	if (WC_MODE_PMEM(wc))
-+	if (WC_MODE_PMEM(wc)) {
- 		persistent_memory_invalidate_cache(wc->memory_map, wc->memory_map_size);
-+	} else {
-+		r = writecache_read_metadata(wc, wc->metadata_sectors);
-+		if (r) {
-+			size_t sb_entries_offset;
-+			writecache_error(wc, r, "unable to read metadata: %d", r);
-+			sb_entries_offset = offsetof(struct wc_memory_superblock, entries);
-+			memset((char *)wc->memory_map + sb_entries_offset, -1,
-+			       (wc->metadata_sectors << SECTOR_SHIFT) - sb_entries_offset);
-+		}
-+	}
- 
- 	wc->tree = RB_ROOT;
- 	INIT_LIST_HEAD(&wc->lru);
-@@ -1978,6 +2006,12 @@ static int writecache_ctr(struct dm_targ
- 		ti->error = "Invalid block size";
- 		goto bad;
- 	}
-+	if (wc->block_size < bdev_logical_block_size(wc->dev->bdev) ||
-+	    wc->block_size < bdev_logical_block_size(wc->ssd_dev->bdev)) {
-+		r = -EINVAL;
-+		ti->error = "Block size is smaller than device logical block size";
-+		goto bad;
-+	}
- 	wc->block_size_bits = __ffs(wc->block_size);
- 
- 	wc->max_writeback_jobs = MAX_WRITEBACK_JOBS;
-@@ -2066,8 +2100,6 @@ invalid_optional:
- 			goto bad;
- 		}
- 	} else {
--		struct dm_io_region region;
--		struct dm_io_request req;
- 		size_t n_blocks, n_metadata_blocks;
- 		uint64_t n_bitmap_bits;
- 
-@@ -2124,19 +2156,9 @@ invalid_optional:
- 			goto bad;
- 		}
- 
--		region.bdev = wc->ssd_dev->bdev;
--		region.sector = wc->start_sector;
--		region.count = wc->metadata_sectors;
--		req.bi_op = REQ_OP_READ;
--		req.bi_op_flags = REQ_SYNC;
--		req.mem.type = DM_IO_VMA;
--		req.mem.ptr.vma = (char *)wc->memory_map;
--		req.client = wc->dm_io;
--		req.notify.fn = NULL;
--
--		r = dm_io(&req, 1, &region, NULL);
-+		r = writecache_read_metadata(wc, wc->block_size >> SECTOR_SHIFT);
- 		if (r) {
--			ti->error = "Unable to read metadata";
-+			ti->error = "Unable to read first block of metadata";
- 			goto bad;
- 		}
- 	}
+ 	if ((pgpath && queue_io) ||
+ 	    (!pgpath && test_bit(MPATHF_QUEUE_IF_NO_PATH, &m->flags))) {
+ 		/* Queue for the daemon to resubmit */
 
 
